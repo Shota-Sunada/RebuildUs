@@ -1,0 +1,1 @@
+taskkill.exe /IM "Among Us.exe" /F
