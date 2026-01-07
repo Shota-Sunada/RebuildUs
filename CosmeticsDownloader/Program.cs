@@ -26,11 +26,11 @@ namespace CosmeticsDownloader
 
     public class MainForm : Form
     {
-        private ProgressBar progressBar;
-        private Label statusLabel;
-        private TextBox logBox;
-        private string[] args;
-        private static readonly HttpClient client = new();
+        private readonly ProgressBar ProgressBar;
+        private readonly Label StatusLabel;
+        private readonly TextBox LogBox;
+        private readonly string[] Args;
+        private static readonly HttpClient Client = new();
 
         [DllImport("ntdll.dll")]
         private static extern int NtSuspendProcess(IntPtr processHandle);
@@ -40,7 +40,7 @@ namespace CosmeticsDownloader
 
         [DllImport("user32.dll")]
         [return: MarshalAs(UnmanagedType.Bool)]
-        private static extern bool SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter, int X, int Y, int cx, int cy, uint uFlags);
+        private static extern bool SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter, int x, int y, int cx, int cy, uint uFlags);
 
         private static readonly IntPtr HWND_TOPMOST = new(-1);
         private const uint SWP_NOSIZE = 0x0001;
@@ -48,7 +48,7 @@ namespace CosmeticsDownloader
 
         public MainForm(string[] args)
         {
-            this.args = args;
+            this.Args = args;
             this.Text = "Rebuild-Us Cosmetics Downloader";
             this.Size = new System.Drawing.Size(700, 450);
             this.StartPosition = FormStartPosition.CenterScreen;
@@ -62,13 +62,13 @@ namespace CosmeticsDownloader
             layout.RowStyles.Add(new RowStyle(SizeType.Absolute, 30));
             layout.RowStyles.Add(new RowStyle(SizeType.Percent, 100));
 
-            statusLabel = new Label { Text = "Initializing...", Dock = DockStyle.Fill, TextAlign = System.Drawing.ContentAlignment.MiddleLeft, AutoEllipsis = true };
-            progressBar = new ProgressBar { Dock = DockStyle.Fill, Maximum = 100 };
-            logBox = new TextBox { Multiline = true, ReadOnly = true, Dock = DockStyle.Fill, ScrollBars = ScrollBars.Vertical };
+            StatusLabel = new Label { Text = "Initializing...", Dock = DockStyle.Fill, TextAlign = System.Drawing.ContentAlignment.MiddleLeft, AutoEllipsis = true };
+            ProgressBar = new ProgressBar { Dock = DockStyle.Fill, Maximum = 100 };
+            LogBox = new TextBox { Multiline = true, ReadOnly = true, Dock = DockStyle.Fill, ScrollBars = ScrollBars.Vertical };
 
-            layout.Controls.Add(statusLabel, 0, 0);
-            layout.Controls.Add(progressBar, 0, 1);
-            layout.Controls.Add(logBox, 0, 2);
+            layout.Controls.Add(StatusLabel, 0, 0);
+            layout.Controls.Add(ProgressBar, 0, 1);
+            layout.Controls.Add(LogBox, 0, 2);
 
             this.Controls.Add(layout);
 
@@ -89,7 +89,7 @@ namespace CosmeticsDownloader
                 return;
             }
             var line = $"[{DateTime.Now:HH:mm:ss}] {msg}{Environment.NewLine}";
-            logBox.AppendText(line);
+            LogBox.AppendText(line);
             try { File.AppendAllText("CosmeticsDownloader.log", line); } catch { }
         }
 
@@ -100,16 +100,16 @@ namespace CosmeticsDownloader
                 string repoURLs = null;
                 string targetDir = null;
 
-                for (int i = 0; i < args.Length; i++)
+                for (int i = 0; i < Args.Length; i++)
                 {
-                    if (args[i] == "-urls" && i + 1 < args.Length) repoURLs = args[++i];
-                    if (args[i] == "-dir" && i + 1 < args.Length) targetDir = args[++i];
+                    if (Args[i] == "-urls" && i + 1 < Args.Length) repoURLs = Args[++i];
+                    if (Args[i] == "-dir" && i + 1 < Args.Length) targetDir = Args[++i];
                 }
 
                 if (string.IsNullOrEmpty(repoURLs) || string.IsNullOrEmpty(targetDir))
                 {
                     AppendLog("Error: Missing required arguments (-urls, -dir).");
-                    this.Invoke(new Action(() => statusLabel.Text = "Error: Missing arguments"));
+                    this.Invoke(new Action(() => StatusLabel.Text = "Error: Missing arguments"));
                     return;
                 }
 
@@ -141,13 +141,13 @@ namespace CosmeticsDownloader
 
                         this.Invoke(new Action(() =>
                         {
-                            statusLabel.Text = $"Downloading manifest from: {url}";
+                            StatusLabel.Text = $"Downloading manifest from: {url}";
                         }));
                         var manifestURL = $"{url}/CustomHats.json";
                         var manifestPath = Path.Combine(repoDir, "CustomHats.json");
 
                         AppendLog($"Downloading manifest: {manifestURL}");
-                        var manifestData = await client.GetByteArrayAsync(manifestURL);
+                        var manifestData = await Client.GetByteArrayAsync(manifestURL);
                         await File.WriteAllBytesAsync(manifestPath, manifestData);
 
                         var config = JsonSerializer.Deserialize<SkinsConfigFile>(manifestData, new JsonSerializerOptions { AllowTrailingCommas = true });
@@ -183,7 +183,7 @@ namespace CosmeticsDownloader
                     }
 
                     // 重複を排除 (同じローカルパスへのダウンロード)
-                    allDownloadItems = allDownloadItems.GroupBy(x => x.LocalPath).Select(g => g.First()).ToList();
+                    allDownloadItems = [.. allDownloadItems.GroupBy(x => x.LocalPath).Select(g => g.First())];
 
                     int totalItems = allDownloadItems.Count;
                     int completedItems = 0;
@@ -200,10 +200,10 @@ namespace CosmeticsDownloader
                                 {
                                     this.Invoke(new Action(() =>
                                     {
-                                        statusLabel.Text = $"Downloading from: {item.RepoURL}";
+                                        StatusLabel.Text = $"Downloading from: {item.RepoURL}";
                                     }));
                                     AppendLog($"Downloading {item.FileName}...");
-                                    var fileData = await client.GetByteArrayAsync(item.URL);
+                                    var fileData = await Client.GetByteArrayAsync(item.URL);
                                     await File.WriteAllBytesAsync(item.LocalPath, fileData);
                                 }
                             }
@@ -217,7 +217,7 @@ namespace CosmeticsDownloader
                                 this.Invoke(new Action(() =>
                                 {
                                     int percent = Math.Min(100, (int)((double)completedItems / totalItems * 100));
-                                    progressBar.Value = percent;
+                                    ProgressBar.Value = percent;
                                     this.Text = $"[{completedItems}/{totalItems}] ({percent}%) Rebuild-Us Cosmetics Downloader";
                                 }));
                                 semaphore.Release();
@@ -228,12 +228,12 @@ namespace CosmeticsDownloader
                     }
 
                     AppendLog("Update finished successfully.");
-                    this.Invoke(new Action(() => statusLabel.Text = "Finished. Closing in 3 seconds..."));
+                    this.Invoke(new Action(() => StatusLabel.Text = "Finished. Closing in 3 seconds..."));
                 }
                 catch (Exception ex)
                 {
                     AppendLog($"Error: {ex.Message}");
-                    this.Invoke(new Action(() => statusLabel.Text = "Error occurred."));
+                    this.Invoke(new Action(() => StatusLabel.Text = "Error occurred."));
                 }
                 finally
                 {
