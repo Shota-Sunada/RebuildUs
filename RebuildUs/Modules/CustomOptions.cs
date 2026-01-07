@@ -133,13 +133,13 @@ namespace RebuildUs
             // make sure to reload all tabs, even the ones in the background, because they might have changed when the preset was switched!
             if (AmongUsClient.Instance?.AmHost == true)
             {
-                foreach (var entry in GameOptionsMenuStartPatch.CurrentGOMs)
+                foreach (var entry in CurrentGOMs)
                 {
                     CustomOptionType optionType = (CustomOptionType)entry.Key;
                     GameOptionsMenu gom = entry.Value;
                     if (gom != null)
                     {
-                        GameOptionsMenuStartPatch.UpdateGameOptionsMenu(optionType, gom);
+                        UpdateGameOptionsMenu(optionType, gom);
                     }
                 }
             }
@@ -147,7 +147,8 @@ namespace RebuildUs
 
         public static void SaveVanillaOptions()
         {
-            VanillaSettings.Value = Convert.ToBase64String(GameOptionsManager.Instance.gameOptionsFactory.ToBytes(GameManager.Instance.LogicOptions.currentGameOptions, false));
+            // TODO: エラー発生 修正余地絵
+            // VanillaSettings.Value = Convert.ToBase64String(GameOptionsManager.Instance.gameOptionsFactory.ToBytes(GameManager.Instance.LogicOptions.currentGameOptions, false));
         }
 
         public static bool LoadVanillaOptions()
@@ -229,7 +230,7 @@ namespace RebuildUs
                     Selection = newSelection;
                     if (GameStartManager.Instance != null && GameStartManager.Instance.LobbyInfoPane != null && GameStartManager.Instance.LobbyInfoPane.LobbyViewSettingsPane != null && GameStartManager.Instance.LobbyInfoPane.LobbyViewSettingsPane.gameObject.activeSelf)
                     {
-                        LobbyViewSettingsPaneChangeTabPatch.Postfix(GameStartManager.Instance.LobbyInfoPane.LobbyViewSettingsPane, GameStartManager.Instance.LobbyInfoPane.LobbyViewSettingsPane.currentTab);
+                        CustomOption.SettingsPaneChangeTab(GameStartManager.Instance.LobbyInfoPane.LobbyViewSettingsPane, GameStartManager.Instance.LobbyInfoPane.LobbyViewSettingsPane.currentTab);
                     }
                 }
                 catch { }
@@ -267,11 +268,11 @@ namespace RebuildUs
 
             if (AmongUsClient.Instance?.AmHost == true)
             {
-                var currentTab = GameOptionsMenuStartPatch.CurrentTabs.FirstOrDefault(x => x.active).GetComponent<GameOptionsMenu>();
+                var currentTab = SettingMenuCurrentTabs.FirstOrDefault(x => x.active).GetComponent<GameOptionsMenu>();
                 if (currentTab != null)
                 {
                     var optionType = AllOptions.First(x => x.OptionBehaviour == currentTab.Children[0]).Type;
-                    GameOptionsMenuStartPatch.UpdateGameOptionsMenu(optionType, currentTab);
+                    UpdateGameOptionsMenu(optionType, currentTab);
                 }
             }
         }
@@ -382,53 +383,41 @@ namespace RebuildUs
             }
             return Convert.ToInt32(vanillaOptionsFine) + torOptionsFine;
         }
-    }
 
-    [HarmonyPatch(typeof(GameSettingMenu), nameof(GameSettingMenu.ChangeTab))]
-    class GameOptionsMenuChangeTabPatch
-    {
-        public static void Postfix(GameSettingMenu __instance, int tabNum, bool previewOnly)
+        public static void SettingMenuChangeTab(GameSettingMenu __instance, int tabNum, bool previewOnly)
         {
             if (previewOnly) return;
-            foreach (var tab in GameOptionsMenuStartPatch.CurrentTabs)
+            foreach (var tab in SettingMenuCurrentTabs)
             {
                 tab?.SetActive(false);
             }
-            foreach (var pbutton in GameOptionsMenuStartPatch.CurrentButtons)
+            foreach (var pbutton in SettingMenuCurrentButtons)
             {
                 pbutton.SelectButton(false);
             }
             if (tabNum > 2)
             {
                 tabNum -= 3;
-                GameOptionsMenuStartPatch.CurrentTabs[tabNum].SetActive(true);
-                GameOptionsMenuStartPatch.CurrentButtons[tabNum].SelectButton(true);
+                SettingMenuCurrentTabs[tabNum].SetActive(true);
+                SettingMenuCurrentButtons[tabNum].SelectButton(true);
             }
         }
-    }
 
-    [HarmonyPatch(typeof(LobbyViewSettingsPane), nameof(LobbyViewSettingsPane.SetTab))]
-    class LobbyViewSettingsPaneRefreshTabPatch
-    {
-        public static bool Prefix(LobbyViewSettingsPane __instance)
+        public static bool SettingsPaneSetTab(LobbyViewSettingsPane __instance)
         {
             if ((int)__instance.currentTab < 15)
             {
-                LobbyViewSettingsPaneChangeTabPatch.Postfix(__instance, __instance.currentTab);
+                SettingsPaneChangeTab(__instance, __instance.currentTab);
                 return false;
             }
             return true;
         }
-    }
 
-    [HarmonyPatch(typeof(LobbyViewSettingsPane), nameof(LobbyViewSettingsPane.ChangeTab))]
-    class LobbyViewSettingsPaneChangeTabPatch
-    {
-        public static void Postfix(LobbyViewSettingsPane __instance, StringNames category)
+        public static void SettingsPaneChangeTab(LobbyViewSettingsPane __instance, StringNames category)
         {
             int tabNum = (int)category;
 
-            foreach (var pbutton in LobbyViewSettingsPatch.CurrentButtons)
+            foreach (var pbutton in SettingsPaneCurrentButtons)
             {
                 pbutton.SelectButton(false);
             }
@@ -440,31 +429,22 @@ namespace RebuildUs
             {
                 tabNum -= 3;
                 //GameOptionsMenuStartPatch.currentTabs[tabNum].SetActive(true);
-                LobbyViewSettingsPatch.CurrentButtons[tabNum].SelectButton(true);
-                LobbyViewSettingsPatch.DrawTab(__instance, LobbyViewSettingsPatch.CurrentButtonTypes[tabNum]);
+                SettingsPaneCurrentButtons[tabNum].SelectButton(true);
+                DrawTab(__instance, SettingsPaneCurrentButtonTypes[tabNum]);
             }
         }
-    }
 
-    [HarmonyPatch(typeof(LobbyViewSettingsPane), nameof(LobbyViewSettingsPane.Update))]
-    class LobbyViewSettingsPaneUpdatePatch
-    {
-        public static void Postfix(LobbyViewSettingsPane __instance)
+        public static void SettingsPaneUpdate(LobbyViewSettingsPane __instance)
         {
-            if (LobbyViewSettingsPatch.CurrentButtons.Count == 0)
+            if (SettingsPaneCurrentButtons.Count == 0)
             {
-                LobbyViewSettingsPatch.GameModeChangedFlag = true;
-                LobbyViewSettingsPatch.Postfix(__instance);
-
+                GameModeChangedFlag = true;
+                SettingsPaneAwake(__instance);
             }
         }
-    }
 
-    [HarmonyPatch(typeof(LobbyViewSettingsPane), nameof(LobbyViewSettingsPane.Awake))]
-    class LobbyViewSettingsPatch
-    {
-        public static List<PassiveButton> CurrentButtons = new();
-        public static List<CustomOptionType> CurrentButtonTypes = new();
+        public static List<PassiveButton> SettingsPaneCurrentButtons = new();
+        public static List<CustomOptionType> SettingsPaneCurrentButtonTypes = new();
         public static bool GameModeChangedFlag = false;
 
         public static void CreateCustomButton(LobbyViewSettingsPane __instance, int targetMenu, string buttonName, string buttonText, CustomOptionType optionType)
@@ -487,16 +467,16 @@ namespace RebuildUs
                 torSettingsPassiveButton.OnMouseOut.RemoveAllListeners();
                 torSettingsPassiveButton.OnMouseOver.RemoveAllListeners();
                 torSettingsPassiveButton.SelectButton(false);
-                CurrentButtons.Add(torSettingsPassiveButton);
-                CurrentButtonTypes.Add(optionType);
+                SettingsPaneCurrentButtons.Add(torSettingsPassiveButton);
+                SettingsPaneCurrentButtonTypes.Add(optionType);
             }
         }
 
-        public static void Postfix(LobbyViewSettingsPane __instance)
+        public static void SettingsPaneAwake(LobbyViewSettingsPane __instance)
         {
-            CurrentButtons.ForEach(x => x?.Destroy());
-            CurrentButtons.Clear();
-            CurrentButtonTypes.Clear();
+            SettingsPaneCurrentButtons.ForEach(x => x?.Destroy());
+            SettingsPaneCurrentButtons.Clear();
+            SettingsPaneCurrentButtonTypes.Clear();
 
             RemoveVanillaTabs(__instance);
 
@@ -521,7 +501,6 @@ namespace RebuildUs
 
         public static void DrawTab(LobbyViewSettingsPane __instance, CustomOptionType optionType)
         {
-
             var relevantOptions = AllOptions.Where(x => x.Type == optionType || x.Type == CustomOption.CustomOptionType.Guesser && optionType == CustomOptionType.General).ToList();
 
             if ((int)optionType == 99)
@@ -625,7 +604,7 @@ namespace RebuildUs
                     viewSettingsInfoPanel.titleText.outlineColor = Color.white;
                     viewSettingsInfoPanel.titleText.outlineWidth = 0.2f;
                     if (option.Type == CustomOptionType.Modifier)
-                        viewSettingsInfoPanel.settingText.text = viewSettingsInfoPanel.settingText.text + LegacyGameOptionsPatch.BuildModifierExtras(option);
+                        viewSettingsInfoPanel.settingText.text = viewSettingsInfoPanel.settingText.text + BuildModifierExtras(option);
                 }
                 __instance.settingsInfo.Add(viewSettingsInfoPanel.gameObject);
 
@@ -633,7 +612,6 @@ namespace RebuildUs
             }
             float actual_spacing = (headers * 1.05f + lines * 0.85f) / (headers + lines) * 1.01f;
             __instance.scrollBar.CalculateAndSetYBounds((float)(__instance.settingsInfo.Count + singles * 2 + headers), 2f, 5f, actual_spacing);
-
         }
 
         private static Tuple<string, string> HandleSpecialOptionsView(CustomOption option, string defaultString, string defaultVal)
@@ -723,41 +701,30 @@ namespace RebuildUs
                 CreateCustomButton(__instance, next++, "PropHunt", "Prop Hunt", CustomOptionType.PropHunt);
             }
         }
-    }
 
-    [HarmonyPatch(typeof(GameOptionsMenu), nameof(GameOptionsMenu.CreateSettings))]
-    class GameOptionsMenuCreateSettingsPatch
-    {
-        public static void Postfix(GameOptionsMenu __instance)
+        public static void AdaptTaskCount(GameOptionsMenu __instance)
         {
             if (__instance.gameObject.name == "GAME SETTINGS TAB")
-                AdaptTaskCount(__instance);
+            {
+                // Adapt task count for main options
+                var commonTasksOption = __instance.Children.ToArray().FirstOrDefault(x => x.TryCast<NumberOption>()?.intOptionName == Int32OptionNames.NumCommonTasks).Cast<NumberOption>();
+                commonTasksOption?.ValidRange = new FloatRange(0f, 4f);
+                var shortTasksOption = __instance.Children.ToArray().FirstOrDefault(x => x.TryCast<NumberOption>()?.intOptionName == Int32OptionNames.NumShortTasks).TryCast<NumberOption>();
+                shortTasksOption?.ValidRange = new FloatRange(0f, 23f);
+                var longTasksOption = __instance.Children.ToArray().FirstOrDefault(x => x.TryCast<NumberOption>()?.intOptionName == Int32OptionNames.NumLongTasks).TryCast<NumberOption>();
+                longTasksOption?.ValidRange = new FloatRange(0f, 15f);
+            }
         }
 
-        private static void AdaptTaskCount(GameOptionsMenu __instance)
-        {
-            // Adapt task count for main options
-            var commonTasksOption = __instance.Children.ToArray().FirstOrDefault(x => x.TryCast<NumberOption>()?.intOptionName == Int32OptionNames.NumCommonTasks).Cast<NumberOption>();
-            commonTasksOption?.ValidRange = new FloatRange(0f, 4f);
-            var shortTasksOption = __instance.Children.ToArray().FirstOrDefault(x => x.TryCast<NumberOption>()?.intOptionName == Int32OptionNames.NumShortTasks).TryCast<NumberOption>();
-            shortTasksOption?.ValidRange = new FloatRange(0f, 23f);
-            var longTasksOption = __instance.Children.ToArray().FirstOrDefault(x => x.TryCast<NumberOption>()?.intOptionName == Int32OptionNames.NumLongTasks).TryCast<NumberOption>();
-            longTasksOption?.ValidRange = new FloatRange(0f, 15f);
-        }
-    }
-
-    [HarmonyPatch(typeof(GameSettingMenu), nameof(GameSettingMenu.Start))]
-    class GameOptionsMenuStartPatch
-    {
-        public static List<GameObject> CurrentTabs = new();
-        public static List<PassiveButton> CurrentButtons = new();
+        public static List<GameObject> SettingMenuCurrentTabs = new();
+        public static List<PassiveButton> SettingMenuCurrentButtons = new();
         public static Dictionary<byte, GameOptionsMenu> CurrentGOMs = new();
-        public static void Postfix(GameSettingMenu __instance)
+        public static void SettingMenuStart(GameSettingMenu __instance)
         {
-            CurrentTabs.ForEach(x => x?.Destroy());
-            CurrentButtons.ForEach(x => x?.Destroy());
-            CurrentTabs = new();
-            CurrentButtons = new();
+            SettingMenuCurrentTabs.ForEach(x => x?.Destroy());
+            SettingMenuCurrentButtons.ForEach(x => x?.Destroy());
+            SettingMenuCurrentTabs = new();
+            SettingMenuCurrentButtons = new();
             CurrentGOMs.Clear();
 
             if (GameOptionsManager.Instance.currentGameOptions.GameMode == GameModes.HideNSeek) return;
@@ -924,14 +891,14 @@ namespace RebuildUs
                 torSettingsPassiveButton.OnMouseOut.RemoveAllListeners();
                 torSettingsPassiveButton.OnMouseOver.RemoveAllListeners();
                 torSettingsPassiveButton.SelectButton(false);
-                CurrentButtons.Add(torSettingsPassiveButton);
+                SettingMenuCurrentButtons.Add(torSettingsPassiveButton);
             }
         }
 
         public static void CreateGameOptionsMenu(GameSettingMenu __instance, CustomOptionType optionType, string settingName)
         {
             var tabTemplate = GameObject.Find("GAME SETTINGS TAB");
-            CurrentTabs.RemoveAll(x => x == null);
+            SettingMenuCurrentTabs.RemoveAll(x => x == null);
 
             var torSettingsTab = GameObject.Instantiate(tabTemplate, tabTemplate.transform.parent);
             torSettingsTab.name = settingName;
@@ -940,7 +907,7 @@ namespace RebuildUs
 
             UpdateGameOptionsMenu(optionType, torSettingsGOM);
 
-            CurrentTabs.Add(torSettingsTab);
+            SettingMenuCurrentTabs.Add(torSettingsTab);
             torSettingsTab.SetActive(false);
             CurrentGOMs.Add((byte)optionType, torSettingsGOM);
         }
@@ -1005,12 +972,8 @@ namespace RebuildUs
                 CreateGameOptionsMenu(__instance, CustomOptionType.PropHunt, "PropHunt");
             }
         }
-    }
 
-    [HarmonyPatch(typeof(StringOption), nameof(StringOption.Initialize))]
-    public class StringOptionEnablePatch
-    {
-        public static bool Prefix(StringOption __instance)
+        public static bool StringOptionInitialize(StringOption __instance)
         {
             CustomOption option = CustomOption.AllOptions.FirstOrDefault(option => option.OptionBehaviour == __instance);
             if (option == null) return true;
@@ -1022,12 +985,8 @@ namespace RebuildUs
 
             return false;
         }
-    }
 
-    [HarmonyPatch(typeof(StringOption), nameof(StringOption.Increase))]
-    public class StringOptionIncreasePatch
-    {
-        public static bool Prefix(StringOption __instance)
+        public static bool StringOptionIncrease(StringOption __instance)
         {
             CustomOption option = CustomOption.AllOptions.FirstOrDefault(option => option.OptionBehaviour == __instance);
             if (option == null) return true;
@@ -1041,12 +1000,8 @@ namespace RebuildUs
             }
             return false;
         }
-    }
 
-    [HarmonyPatch(typeof(StringOption), nameof(StringOption.Decrease))]
-    public class StringOptionDecreasePatch
-    {
-        public static bool Prefix(StringOption __instance)
+        public static bool StringOptionDecrease(StringOption __instance)
         {
             CustomOption option = CustomOption.AllOptions.FirstOrDefault(option => option.OptionBehaviour == __instance);
             if (option == null) return true;
@@ -1060,12 +1015,8 @@ namespace RebuildUs
             }
             return false;
         }
-    }
 
-    [HarmonyPatch(typeof(StringOption), nameof(StringOption.FixedUpdate))]
-    public class StringOptionFixedUpdate
-    {
-        public static void Postfix(StringOption __instance)
+        public static void StringOptionFixedUpdate(StringOption __instance)
         {
             if (!IL2CPPChainloader.Instance.Plugins.TryGetValue("com.DigiWorm.LevelImposter", out PluginInfo _)) return;
             CustomOption option = CustomOption.AllOptions.FirstOrDefault(option => option.OptionBehaviour == __instance);
@@ -1081,22 +1032,14 @@ namespace RebuildUs
                     stringOptionToo.ValueText.text = option.Selections[option.Selection].ToString();
                 }
         }
-    }
 
-    [HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.RpcSyncSettings))]
-    public class RpcSyncSettingsPatch
-    {
-        public static void Postfix()
+        public static void SyncVanillaSettings()
         {
             //CustomOption.ShareOptionSelections();
             CustomOption.SaveVanillaOptions();
         }
-    }
 
-    [HarmonyPatch(typeof(PlayerPhysics), nameof(PlayerPhysics.CoSpawnPlayer))]
-    public class AmongUsClientOnPlayerJoinedPatch
-    {
-        public static void Postfix()
+        public static void CoSpawnSyncSettings()
         {
             if (PlayerControl.LocalPlayer != null && AmongUsClient.Instance.AmHost)
             {
@@ -1104,11 +1047,7 @@ namespace RebuildUs
                 CustomOption.ShareOptionSelections();
             }
         }
-    }
 
-    [HarmonyPatch]
-    class LegacyGameOptionsPatch
-    {
         private static string BuildRoleOptions()
         {
             var impRoles = BuildOptionsOfType(CustomOption.CustomOptionType.Impostor, true) + "\n";
@@ -1312,21 +1251,12 @@ namespace RebuildUs
             return hudString;
         }
 
-        [HarmonyPatch(typeof(IGameOptionsExtensions), nameof(IGameOptionsExtensions.ToHudString))]
-        private static void Postfix(ref string __result)
+        public static void ToHudString(ref string __result)
         {
             if (GameOptionsManager.Instance.currentGameOptions.GameMode == AmongUs.GameOptions.GameModes.HideNSeek) return; // Allow Vanilla Hide N Seek
-            __result = BuildAllOptions(vanillaSettings: __result);
+            __result = BuildAllOptions(__result);
         }
-    }
-
-    [HarmonyPatch]
-    public class AddToKillDistanceSetting
-    {
-        [HarmonyPatch(typeof(LegacyGameOptions), nameof(LegacyGameOptions.AreInvalid))]
-        [HarmonyPrefix]
-
-        public static bool Prefix(LegacyGameOptions __instance, ref int maxExpectedPlayers)
+        public static bool LGOAreInvalid(LegacyGameOptions __instance, ref int maxExpectedPlayers)
         {
             //making the killdistances bound check higher since extra short is added
             return __instance.MaxPlayers > maxExpectedPlayers || __instance.NumImpostors < 1
@@ -1335,10 +1265,7 @@ namespace RebuildUs
                     || __instance.PlayerSpeedMod <= 0f || __instance.PlayerSpeedMod > 3f;
         }
 
-        [HarmonyPatch(typeof(NormalGameOptionsV07), nameof(NormalGameOptionsV07.AreInvalid))]
-        [HarmonyPrefix]
-
-        public static bool Prefix(NormalGameOptionsV07 __instance, ref int maxExpectedPlayers)
+        public static bool NGO10AreInvalid(NormalGameOptionsV10 __instance, ref int maxExpectedPlayers)
         {
             return __instance.MaxPlayers > maxExpectedPlayers || __instance.NumImpostors < 1
                     || __instance.NumImpostors > 3 || __instance.KillDistance < 0
@@ -1346,10 +1273,7 @@ namespace RebuildUs
                     || __instance.PlayerSpeedMod <= 0f || __instance.PlayerSpeedMod > 3f;
         }
 
-        [HarmonyPatch(typeof(StringOption), nameof(StringOption.Initialize))]
-        [HarmonyPrefix]
-
-        public static void Prefix(StringOption __instance)
+        public static void StringOptionInitializePrefix(StringOption __instance)
         {
             //prevents indexoutofrange exception breaking the setting if long happens to be selected
             //when host opens the laptop
@@ -1361,10 +1285,7 @@ namespace RebuildUs
             }
         }
 
-        [HarmonyPatch(typeof(StringOption), nameof(StringOption.Initialize))]
-        [HarmonyPostfix]
-
-        public static void Postfix(StringOption __instance)
+        public static void StringOptionInitializePostfix(StringOption __instance)
         {
             if (__instance.Title == StringNames.GameKillDistance && __instance.Values.Count == 3)
             {
@@ -1373,32 +1294,18 @@ namespace RebuildUs
             }
         }
 
-        [HarmonyPatch(typeof(IGameOptionsExtensions), nameof(IGameOptionsExtensions.AppendItem),
-            [typeof(Il2CppSystem.Text.StringBuilder), typeof(StringNames), typeof(string)])]
-        [HarmonyPrefix]
-
-        public static void Prefix(ref StringNames stringName, ref string value)
+        public static void AppendItem(ref StringNames stringName, ref string value)
         {
             if (stringName == StringNames.GameKillDistance)
             {
-                int index;
-                if (GameOptionsManager.Instance.currentGameMode == GameModes.Normal)
-                {
-                    index = GameOptionsManager.Instance.currentNormalGameOptions.KillDistance;
-                }
-                else
-                {
-                    index = GameOptionsManager.Instance.currentHideNSeekGameOptions.KillDistance;
-                }
+                int index = GameOptionsManager.Instance.currentGameMode == GameModes.Normal
+                    ? GameOptionsManager.Instance.currentNormalGameOptions.KillDistance
+                    : GameOptionsManager.Instance.currentHideNSeekGameOptions.KillDistance;
                 value = LegacyGameOptions.KillDistanceStrings[index];
             }
         }
 
-        [HarmonyPatch(typeof(TranslationController), nameof(TranslationController.GetString),
-            [typeof(StringNames), typeof(Il2CppReferenceArray<Il2CppSystem.Object>)])]
-        [HarmonyPriority(Priority.Last)]
-
-        public static bool Prefix(ref string __result, ref StringNames id)
+        public static bool VeryShortPatch(ref string __result, ref StringNames id)
         {
             if ((int)id == 49999)
             {
@@ -1414,355 +1321,340 @@ namespace RebuildUs
             LegacyGameOptions.KillDistanceStrings = new(["Very Short", "Short", "Medium", "Long"]);
         }
 
-        [HarmonyPatch(typeof(StringGameSetting), nameof(StringGameSetting.GetValueString))]
-        [HarmonyPrefix]
-        public static bool AjdustStringForViewPanel(StringGameSetting __instance, float value, ref string __result)
+        public static bool AdjustStringForViewPanel(StringGameSetting __instance, float value, ref string __result)
         {
             if (__instance.OptionName != Int32OptionNames.KillDistance) return true;
             __result = LegacyGameOptions.KillDistanceStrings[(int)value];
             return false;
         }
-    }
 
-    [HarmonyPatch(typeof(KeyboardJoystick), nameof(KeyboardJoystick.Update))]
-    public static class GameOptionsNextPagePatch
-    {
-        public static void Postfix(KeyboardJoystick __instance)
+        public static void KeyboardUpdate(KeyboardJoystick __instance)
         {
-            int page = RebuildUs.OptionsPage;
             if (Input.GetKeyDown(KeyCode.Tab))
             {
-                RebuildUs.OptionsPage = (RebuildUs.OptionsPage + 1) % 7;
+                OptionsPage = (OptionsPage + 1) % 7;
             }
             if (Input.GetKeyDown(KeyCode.Alpha1) || Input.GetKeyDown(KeyCode.Keypad1))
             {
-                RebuildUs.OptionsPage = 0;
+                OptionsPage = 0;
             }
             if (Input.GetKeyDown(KeyCode.Alpha2) || Input.GetKeyDown(KeyCode.Keypad2))
             {
-                RebuildUs.OptionsPage = 1;
+                OptionsPage = 1;
             }
             if (Input.GetKeyDown(KeyCode.Alpha3) || Input.GetKeyDown(KeyCode.Keypad3))
             {
-                RebuildUs.OptionsPage = 2;
+                OptionsPage = 2;
             }
             if (Input.GetKeyDown(KeyCode.Alpha4) || Input.GetKeyDown(KeyCode.Keypad4))
             {
-                RebuildUs.OptionsPage = 3;
+                OptionsPage = 3;
             }
             if (Input.GetKeyDown(KeyCode.Alpha5) || Input.GetKeyDown(KeyCode.Keypad5))
             {
-                RebuildUs.OptionsPage = 4;
+                OptionsPage = 4;
             }
             if (Input.GetKeyDown(KeyCode.Alpha6) || Input.GetKeyDown(KeyCode.Keypad6))
             {
-                RebuildUs.OptionsPage = 5;
+                OptionsPage = 5;
             }
             if (Input.GetKeyDown(KeyCode.Alpha7) || Input.GetKeyDown(KeyCode.Keypad7))
             {
-                RebuildUs.OptionsPage = 6;
+                OptionsPage = 6;
             }
             if (Input.GetKeyDown(KeyCode.F1))
-                HudManagerUpdate.ToggleSettings(HudManager.Instance);
+                HudSettingsManager.ToggleSettings(HudManager.Instance);
             if (Input.GetKeyDown(KeyCode.F2) && LobbyBehaviour.Instance)
-                HudManagerUpdate.ToggleSummary(HudManager.Instance);
-            if (RebuildUs.OptionsPage >= LegacyGameOptionsPatch.MaxPage) RebuildUs.OptionsPage = 0;
-        }
-    }
-
-    //This class is taken and adapted from Town of Us Reactivated, https://github.com/eDonnes124/Town-Of-Us-R/blob/master/source/Patches/CustomOption/Patches.cs, Licensed under GPLv3
-    [HarmonyPatch(typeof(HudManager), nameof(HudManager.Update))]
-    public class HudManagerUpdate
-    {
-        private static readonly GameObject GameSettingsObject;
-        private static readonly TextMeshPro GameSettings;
-        public static float
-            MinX,/*-5.3F*/
-            OriginalY = 2.9F,
-            MinY = 2.9F;
-
-        public static Scroller Scroller;
-        private static Vector3 LastPosition;
-        private static float LastAspect;
-        private static bool SetLastPosition = false;
-
-        public static void Prefix(HudManager __instance)
-        {
-            if (GameSettings?.transform == null) return;
-
-            // Sets the MinX position to the left edge of the screen + 0.1 units
-            Rect safeArea = Screen.safeArea;
-            float aspect = Mathf.Min((Camera.main).aspect, safeArea.width / safeArea.height);
-            float safeOrthographicSize = CameraSafeArea.GetSafeOrthographicSize(Camera.main);
-            MinX = 0.1f - safeOrthographicSize * aspect;
-
-            if (!SetLastPosition || aspect != LastAspect)
-            {
-                LastPosition = new Vector3(MinX, MinY);
-                LastAspect = aspect;
-                SetLastPosition = true;
-                Scroller?.ContentXBounds = new FloatRange(MinX, MinX);
-            }
-
-            CreateScroller(__instance);
-
-            Scroller.gameObject.SetActive(GameSettings.gameObject.activeSelf);
-
-            if (!Scroller.gameObject.active) return;
-
-            var rows = GameSettings.text.Count(c => c == '\n');
-            float lobbyTextRowHeight = 0.06F;
-            var maxY = Mathf.Max(MinY, rows * lobbyTextRowHeight + (rows - 38) * lobbyTextRowHeight);
-
-            Scroller.ContentYBounds = new FloatRange(MinY, maxY);
-
-            // Prevent scrolling when the player is interacting with a menu
-            if (PlayerControl.LocalPlayer.CanMove != true)
-            {
-                GameSettings.transform.localPosition = LastPosition;
-
-                return;
-            }
-
-            if (GameSettings.transform.localPosition.x != MinX ||
-                GameSettings.transform.localPosition.y < MinY) return;
-
-            LastPosition = GameSettings.transform.localPosition;
+                HudSettingsManager.ToggleSummary(HudManager.Instance);
+            if (OptionsPage >= MaxPage) OptionsPage = 0;
         }
 
-        private static void CreateScroller(HudManager __instance)
+        public class HudSettingsManager
         {
-            if (Scroller != null) return;
+            private static readonly GameObject GameSettingsObject;
+            private static readonly TextMeshPro GameSettings;
 
-            Transform target = GameSettings.transform;
+            public static float
+                MinX,/*-5.3F*/
+                OriginalY = 2.9F,
+                MinY = 2.9F;
 
-            Scroller = new GameObject("SettingsScroller").AddComponent<Scroller>();
-            Scroller.transform.SetParent(GameSettings.transform.parent);
-            Scroller.gameObject.layer = 5;
+            public static Scroller Scroller;
+            private static Vector3 LastPosition;
+            private static float LastAspect;
+            private static bool SetLastPosition = false;
 
-            Scroller.transform.localScale = Vector3.one;
-            Scroller.allowX = false;
-            Scroller.allowY = true;
-            Scroller.active = true;
-            Scroller.velocity = new Vector2(0, 0);
-            Scroller.ScrollbarYBounds = new FloatRange(0, 0);
-            Scroller.ContentXBounds = new FloatRange(MinX, MinX);
-            Scroller.enabled = true;
-
-            Scroller.Inner = target;
-            target.SetParent(Scroller.transform);
-        }
-
-        [HarmonyPrefix]
-        public static void Prefix2(HudManager __instance)
-        {
-            if (!SettingsTMPs[0]) return;
-            foreach (var tmp in SettingsTMPs) tmp.text = "";
-            var settingsString = LegacyGameOptionsPatch.BuildAllOptions(hideExtras: true);
-            var blocks = settingsString.Split("\n\n", StringSplitOptions.RemoveEmptyEntries); ;
-            string curString = "";
-            string curBlock;
-            int j = 0;
-            for (int i = 0; i < blocks.Length; i++)
+            public static void UpdateScrollerPosition(HudManager __instance)
             {
-                curBlock = blocks[i];
-                if (Helpers.LineCount(curBlock) + Helpers.LineCount(curString) < 43)
+                if (GameSettings?.transform == null) return;
+
+                // Sets the MinX position to the left edge of the screen + 0.1 units
+                Rect safeArea = Screen.safeArea;
+                float aspect = Mathf.Min((Camera.main).aspect, safeArea.width / safeArea.height);
+                float safeOrthographicSize = CameraSafeArea.GetSafeOrthographicSize(Camera.main);
+                MinX = 0.1f - safeOrthographicSize * aspect;
+
+                if (!SetLastPosition || aspect != LastAspect)
                 {
-                    curString += curBlock + "\n\n";
+                    LastPosition = new Vector3(MinX, MinY);
+                    LastAspect = aspect;
+                    SetLastPosition = true;
+                    Scroller?.ContentXBounds = new FloatRange(MinX, MinX);
                 }
-                else
+
+                CreateScroller(__instance);
+
+                Scroller.gameObject.SetActive(GameSettings.gameObject.activeSelf);
+
+                if (!Scroller.gameObject.active) return;
+
+                var rows = GameSettings.text.Count(c => c == '\n');
+                float lobbyTextRowHeight = 0.06F;
+                var maxY = Mathf.Max(MinY, rows * lobbyTextRowHeight + (rows - 38) * lobbyTextRowHeight);
+
+                Scroller.ContentYBounds = new FloatRange(MinY, maxY);
+
+                // Prevent scrolling when the player is interacting with a menu
+                if (PlayerControl.LocalPlayer.CanMove != true)
                 {
-                    SettingsTMPs[j].text = curString;
-                    j++;
+                    GameSettings.transform.localPosition = LastPosition;
 
-                    curString = "\n" + curBlock + "\n\n";
-                    if (curString.Substring(0, 2) != "\n\n") curString = "\n" + curString;
+                    return;
                 }
+
+                if (GameSettings.transform.localPosition.x != MinX ||
+                    GameSettings.transform.localPosition.y < MinY) return;
+
+                LastPosition = GameSettings.transform.localPosition;
             }
-            if (j < SettingsTMPs.Length) SettingsTMPs[j].text = curString;
-            int blockCount = 0;
-            foreach (var tmp in SettingsTMPs)
+
+            private static void CreateScroller(HudManager __instance)
             {
-                if (tmp.text != "")
-                    blockCount++;
+                if (Scroller != null) return;
+
+                Transform target = GameSettings.transform;
+
+                Scroller = new GameObject("SettingsScroller").AddComponent<Scroller>();
+                Scroller.transform.SetParent(GameSettings.transform.parent);
+                Scroller.gameObject.layer = 5;
+
+                Scroller.transform.localScale = Vector3.one;
+                Scroller.allowX = false;
+                Scroller.allowY = true;
+                Scroller.active = true;
+                Scroller.velocity = new Vector2(0, 0);
+                Scroller.ScrollbarYBounds = new FloatRange(0, 0);
+                Scroller.ContentXBounds = new FloatRange(MinX, MinX);
+                Scroller.enabled = true;
+
+                Scroller.Inner = target;
+                target.SetParent(Scroller.transform);
             }
-            for (int i = 0; i < blockCount; i++)
+
+            public static void UpdateHudSettings(HudManager __instance)
             {
-                SettingsTMPs[i].transform.localPosition = new Vector3(-blockCount * 1.2f + 2.7f * i, 2.2f, -500f);
-            }
-        }
-
-        private static readonly TMPro.TextMeshPro[] SettingsTMPs = new TMPro.TextMeshPro[4];
-        private static GameObject SettingsBackground;
-        public static void OpenSettings(HudManager __instance)
-        {
-            if (__instance.FullScreen == null || MapBehaviour.Instance && MapBehaviour.Instance.IsOpen) return;
-            if (SummaryTMP)
-            {
-                CloseSummary();
-            }
-            SettingsBackground = GameObject.Instantiate(__instance.FullScreen.gameObject, __instance.transform);
-            SettingsBackground.SetActive(true);
-            var renderer = SettingsBackground.GetComponent<SpriteRenderer>();
-            renderer.color = new Color(0.2f, 0.2f, 0.2f, 0.9f);
-            renderer.enabled = true;
-
-            for (int i = 0; i < SettingsTMPs.Length; i++)
-            {
-                SettingsTMPs[i] = GameObject.Instantiate(__instance.KillButton.cooldownTimerText, __instance.transform);
-                SettingsTMPs[i].alignment = TMPro.TextAlignmentOptions.TopLeft;
-                SettingsTMPs[i].enableWordWrapping = false;
-                SettingsTMPs[i].transform.localScale = Vector3.one * 0.25f;
-                SettingsTMPs[i].gameObject.SetActive(true);
-            }
-        }
-
-        public static void CloseSettings()
-        {
-            foreach (var tmp in SettingsTMPs)
-                if (tmp) tmp.gameObject.Destroy();
-
-            if (SettingsBackground) SettingsBackground.Destroy();
-        }
-
-        public static void ToggleSettings(HudManager __instance)
-        {
-            if (SettingsTMPs[0]) CloseSettings();
-            else OpenSettings(__instance);
-        }
-
-        [HarmonyPrefix]
-        public static void Prefix3(HudManager __instance)
-        {
-            if (!SummaryTMP) return;
-            SummaryTMP.text = Helpers.PreviousEndGameSummary;
-
-            SummaryTMP.transform.localPosition = new Vector3(-3 * 1.2f, 2.2f, -500f);
-
-        }
-
-        private static TMPro.TextMeshPro SummaryTMP = null;
-        private static GameObject SummaryBackground;
-        public static void OpenSummary(HudManager __instance)
-        {
-            if (__instance.FullScreen == null || MapBehaviour.Instance && MapBehaviour.Instance.IsOpen || Helpers.PreviousEndGameSummary.IsNullOrWhiteSpace()) return;
-            if (SettingsTMPs[0])
-            {
-                CloseSettings();
-            }
-            SummaryBackground = GameObject.Instantiate(__instance.FullScreen.gameObject, __instance.transform);
-            SummaryBackground.SetActive(true);
-            var renderer = SummaryBackground.GetComponent<SpriteRenderer>();
-            renderer.color = new Color(0.2f, 0.2f, 0.2f, 0.9f);
-            renderer.enabled = true;
-
-            SummaryTMP = GameObject.Instantiate(__instance.KillButton.cooldownTimerText, __instance.transform);
-            SummaryTMP.alignment = TMPro.TextAlignmentOptions.TopLeft;
-            SummaryTMP.enableWordWrapping = false;
-            SummaryTMP.transform.localScale = Vector3.one * 0.3f;
-            SummaryTMP.gameObject.SetActive(true);
-
-        }
-
-        public static void CloseSummary()
-        {
-            SummaryTMP?.gameObject.Destroy();
-            SummaryTMP = null;
-            if (SummaryBackground) SummaryBackground.Destroy();
-        }
-
-        public static void ToggleSummary(HudManager __instance)
-        {
-            if (SummaryTMP) CloseSummary();
-            else OpenSummary(__instance);
-        }
-
-        static PassiveButton ToggleSettingsButton;
-        static GameObject ToggleSettingsButtonObject;
-
-        static PassiveButton ToggleSummaryButton;
-        static GameObject ToggleSummaryButtonObject;
-
-        static GameObject ToggleZoomButtonObject;
-        static PassiveButton ToggleZoomButton;
-
-        [HarmonyPostfix]
-        public static void Postfix(HudManager __instance)
-        {
-            if (AmongUsClient.Instance.GameState != InnerNet.InnerNetClient.GameStates.Started) return;
-            if (!ToggleSettingsButton || !ToggleSettingsButtonObject)
-            {
-                // add a special button for settings viewing:
-                ToggleSettingsButtonObject = GameObject.Instantiate(__instance.MapButton.gameObject, __instance.MapButton.transform.parent);
-                ToggleSettingsButtonObject.transform.localPosition = __instance.MapButton.transform.localPosition + new Vector3(0, -1.25f, -500f);
-                ToggleSettingsButtonObject.name = "TOGGLESETTINGSBUTTON";
-                SpriteRenderer renderer = ToggleSettingsButtonObject.transform.Find("Inactive").GetComponent<SpriteRenderer>();
-                SpriteRenderer rendererActive = ToggleSettingsButtonObject.transform.Find("Active").GetComponent<SpriteRenderer>();
-                ToggleSettingsButtonObject.transform.Find("Background").localPosition = Vector3.zero;
-                renderer.sprite = Helpers.LoadSpriteFromResources("RebuildUs.Resources.Settings_Button.png", 100f);
-                rendererActive.sprite = Helpers.LoadSpriteFromResources("RebuildUs.Resources.Settings_ButtonActive.png", 100);
-                ToggleSettingsButton = ToggleSettingsButtonObject.GetComponent<PassiveButton>();
-                ToggleSettingsButton.OnClick.RemoveAllListeners();
-                ToggleSettingsButton.OnClick.AddListener((Action)(() => ToggleSettings(__instance)));
-            }
-            ToggleSettingsButtonObject.SetActive(__instance.MapButton.gameObject.active && !(MapBehaviour.Instance && MapBehaviour.Instance.IsOpen) && GameOptionsManager.Instance.currentGameOptions.GameMode != GameModes.HideNSeek);
-            ToggleSettingsButtonObject.transform.localPosition = __instance.MapButton.transform.localPosition + new Vector3(0, -0.8f, -500f);
-
-            if (!ToggleZoomButton || !ToggleZoomButtonObject)
-            {
-                // add a special button for settings viewing:
-                ToggleZoomButtonObject = GameObject.Instantiate(__instance.MapButton.gameObject, __instance.MapButton.transform.parent);
-                ToggleZoomButtonObject.transform.localPosition = __instance.MapButton.transform.localPosition + new Vector3(0, -1.25f, -500f);
-                ToggleZoomButtonObject.name = "TOGGLEZOOMBUTTON";
-                SpriteRenderer tZrenderer = ToggleZoomButtonObject.transform.Find("Inactive").GetComponent<SpriteRenderer>();
-                SpriteRenderer tZArenderer = ToggleZoomButtonObject.transform.Find("Active").GetComponent<SpriteRenderer>();
-                ToggleZoomButtonObject.transform.Find("Background").localPosition = Vector3.zero;
-                tZrenderer.sprite = Helpers.LoadSpriteFromResources("RebuildUs.Resources.Minus_Button.png", 100f);
-                tZArenderer.sprite = Helpers.LoadSpriteFromResources("RebuildUs.Resources.Minus_ButtonActive.png", 100);
-                ToggleZoomButton = ToggleZoomButtonObject.GetComponent<PassiveButton>();
-                ToggleZoomButton.OnClick.RemoveAllListeners();
-                ToggleZoomButton.OnClick.AddListener((Action)(() => Helpers.ToggleZoom()));
-            }
-            var (playerCompleted, playerTotal) = TasksHandler.TaskInfo(PlayerControl.LocalPlayer.Data);
-            int numberOfLeftTasks = playerTotal - playerCompleted;
-            bool zoomButtonActive = !(PlayerControl.LocalPlayer == null || !PlayerControl.LocalPlayer.Data.IsDead || (PlayerControl.LocalPlayer.Data.Role.IsImpostor && !CustomOptionHolder.DeadImpsBlockSabotage.GetBool()) || MeetingHud.Instance);
-            zoomButtonActive &= numberOfLeftTasks <= 0 || !CustomOptionHolder.FinishTasksBeforeHauntingOrZoomingOut.GetBool();
-            ToggleZoomButtonObject.SetActive(zoomButtonActive);
-            var posOffset = Helpers.ZoomOutStatus ? new Vector3(-1.27f, -7.92f, -52f) : new Vector3(0, -1.6f, -52f);
-            ToggleZoomButtonObject.transform.localPosition = HudManager.Instance.MapButton.transform.localPosition + posOffset;
-        }
-
-        [HarmonyPostfix]
-        public static void Postfix2(HudManager __instance)
-        {
-            if (AmongUsClient.Instance.GameState == InnerNet.InnerNetClient.GameStates.Started)
-            {
-                if (ToggleSummaryButtonObject != null)
+                if (!SettingsTMPs[0]) return;
+                foreach (var tmp in SettingsTMPs) tmp.text = "";
+                var settingsString = BuildAllOptions(hideExtras: true);
+                var blocks = settingsString.Split("\n\n", StringSplitOptions.RemoveEmptyEntries); ;
+                string curString = "";
+                string curBlock;
+                int j = 0;
+                for (int i = 0; i < blocks.Length; i++)
                 {
-                    ToggleSummaryButtonObject.SetActive(false);
-                    ToggleSummaryButtonObject.Destroy();
-                    ToggleSummaryButton.Destroy();
+                    curBlock = blocks[i];
+                    if (Helpers.LineCount(curBlock) + Helpers.LineCount(curString) < 43)
+                    {
+                        curString += curBlock + "\n\n";
+                    }
+                    else
+                    {
+                        SettingsTMPs[j].text = curString;
+                        j++;
+
+                        curString = "\n" + curBlock + "\n\n";
+                        if (curString.Substring(0, 2) != "\n\n") curString = "\n" + curString;
+                    }
                 }
-                return;
+                if (j < SettingsTMPs.Length) SettingsTMPs[j].text = curString;
+                int blockCount = 0;
+                foreach (var tmp in SettingsTMPs)
+                {
+                    if (tmp.text != "")
+                        blockCount++;
+                }
+                for (int i = 0; i < blockCount; i++)
+                {
+                    SettingsTMPs[i].transform.localPosition = new Vector3(-blockCount * 1.2f + 2.7f * i, 2.2f, -500f);
+                }
             }
-            if (!ToggleSummaryButton || !ToggleSummaryButtonObject)
+
+            private static readonly TMPro.TextMeshPro[] SettingsTMPs = new TMPro.TextMeshPro[4];
+            private static GameObject SettingsBackground;
+            public static void OpenSettings(HudManager __instance)
             {
-                // add a special button for settings viewing:
-                ToggleSummaryButtonObject = GameObject.Instantiate(__instance.MapButton.gameObject, __instance.MapButton.transform.parent);
-                ToggleSummaryButtonObject.transform.localPosition = __instance.MapButton.transform.localPosition + new Vector3(0, -1.25f, -500f);
-                ToggleSummaryButtonObject.name = "TOGGLESUMMARYSBUTTON";
-                SpriteRenderer renderer = ToggleSummaryButtonObject.transform.Find("Inactive").GetComponent<SpriteRenderer>();
-                SpriteRenderer rendererActive = ToggleSummaryButtonObject.transform.Find("Active").GetComponent<SpriteRenderer>();
-                ToggleSummaryButtonObject.transform.Find("Background").localPosition = Vector3.zero;
-                renderer.sprite = Helpers.LoadSpriteFromResources("RebuildUs.Resources.Endscreen.png", 100f);
-                rendererActive.sprite = Helpers.LoadSpriteFromResources("RebuildUs.Resources.EndscreenActive.png", 100f);
-                ToggleSummaryButton = ToggleSummaryButtonObject.GetComponent<PassiveButton>();
-                ToggleSummaryButton.OnClick.RemoveAllListeners();
-                ToggleSummaryButton.OnClick.AddListener((Action)(() => ToggleSummary(__instance)));
+                if (__instance.FullScreen == null || MapBehaviour.Instance && MapBehaviour.Instance.IsOpen) return;
+                if (SummaryTMP)
+                {
+                    CloseSummary();
+                }
+                SettingsBackground = GameObject.Instantiate(__instance.FullScreen.gameObject, __instance.transform);
+                SettingsBackground.SetActive(true);
+                var renderer = SettingsBackground.GetComponent<SpriteRenderer>();
+                renderer.color = new Color(0.2f, 0.2f, 0.2f, 0.9f);
+                renderer.enabled = true;
+
+                for (int i = 0; i < SettingsTMPs.Length; i++)
+                {
+                    SettingsTMPs[i] = GameObject.Instantiate(__instance.KillButton.cooldownTimerText, __instance.transform);
+                    SettingsTMPs[i].alignment = TMPro.TextAlignmentOptions.TopLeft;
+                    SettingsTMPs[i].enableWordWrapping = false;
+                    SettingsTMPs[i].transform.localScale = Vector3.one * 0.25f;
+                    SettingsTMPs[i].gameObject.SetActive(true);
+                }
             }
-            ToggleSummaryButtonObject.SetActive(__instance.SettingsButton.gameObject.active && LobbyBehaviour.Instance && !Helpers.PreviousEndGameSummary.IsNullOrWhiteSpace() && GameOptionsManager.Instance.currentGameOptions.GameMode != GameModes.HideNSeek
-                && AmongUsClient.Instance.GameState != InnerNet.InnerNetClient.GameStates.Started);
-            ToggleSummaryButtonObject.transform.localPosition = __instance.SettingsButton.transform.localPosition + new Vector3(-1.45f, 0.03f, -500f);
+
+            public static void CloseSettings()
+            {
+                foreach (var tmp in SettingsTMPs)
+                    if (tmp) tmp.gameObject.Destroy();
+
+                if (SettingsBackground) SettingsBackground.Destroy();
+            }
+
+            public static void ToggleSettings(HudManager __instance)
+            {
+                if (SettingsTMPs[0]) CloseSettings();
+                else OpenSettings(__instance);
+            }
+
+            public static void UpdateEndGameSummary(HudManager __instance)
+            {
+                if (!SummaryTMP) return;
+                SummaryTMP.text = Helpers.PreviousEndGameSummary;
+                SummaryTMP.transform.localPosition = new Vector3(-3 * 1.2f, 2.2f, -500f);
+            }
+
+            private static TMPro.TextMeshPro SummaryTMP = null;
+            private static GameObject SummaryBackground;
+            public static void OpenSummary(HudManager __instance)
+            {
+                if (__instance.FullScreen == null || MapBehaviour.Instance && MapBehaviour.Instance.IsOpen || Helpers.PreviousEndGameSummary.IsNullOrWhiteSpace()) return;
+                if (SettingsTMPs[0])
+                {
+                    CloseSettings();
+                }
+                SummaryBackground = GameObject.Instantiate(__instance.FullScreen.gameObject, __instance.transform);
+                SummaryBackground.SetActive(true);
+                var renderer = SummaryBackground.GetComponent<SpriteRenderer>();
+                renderer.color = new Color(0.2f, 0.2f, 0.2f, 0.9f);
+                renderer.enabled = true;
+
+                SummaryTMP = GameObject.Instantiate(__instance.KillButton.cooldownTimerText, __instance.transform);
+                SummaryTMP.alignment = TMPro.TextAlignmentOptions.TopLeft;
+                SummaryTMP.enableWordWrapping = false;
+                SummaryTMP.transform.localScale = Vector3.one * 0.3f;
+                SummaryTMP.gameObject.SetActive(true);
+            }
+
+            public static void CloseSummary()
+            {
+                SummaryTMP?.gameObject.Destroy();
+                SummaryTMP = null;
+                if (SummaryBackground) SummaryBackground.Destroy();
+            }
+
+            public static void ToggleSummary(HudManager __instance)
+            {
+                if (SummaryTMP) CloseSummary();
+                else OpenSummary(__instance);
+            }
+
+            static PassiveButton ToggleSettingsButton;
+            static GameObject ToggleSettingsButtonObject;
+
+            static PassiveButton ToggleSummaryButton;
+            static GameObject ToggleSummaryButtonObject;
+
+            static GameObject ToggleZoomButtonObject;
+            static PassiveButton ToggleZoomButton;
+
+            public static void UpdateHudButtons(HudManager __instance)
+            {
+                if (AmongUsClient.Instance.GameState != InnerNet.InnerNetClient.GameStates.Started) return;
+                if (!ToggleSettingsButton || !ToggleSettingsButtonObject)
+                {
+                    // add a special button for settings viewing:
+                    ToggleSettingsButtonObject = GameObject.Instantiate(__instance.MapButton.gameObject, __instance.MapButton.transform.parent);
+                    ToggleSettingsButtonObject.transform.localPosition = __instance.MapButton.transform.localPosition + new Vector3(0, -1.25f, -500f);
+                    ToggleSettingsButtonObject.name = "TOGGLESETTINGSBUTTON";
+                    SpriteRenderer renderer = ToggleSettingsButtonObject.transform.Find("Inactive").GetComponent<SpriteRenderer>();
+                    SpriteRenderer rendererActive = ToggleSettingsButtonObject.transform.Find("Active").GetComponent<SpriteRenderer>();
+                    ToggleSettingsButtonObject.transform.Find("Background").localPosition = Vector3.zero;
+                    renderer.sprite = Helpers.LoadSpriteFromResources("RebuildUs.Resources.Settings_Button.png", 100f);
+                    rendererActive.sprite = Helpers.LoadSpriteFromResources("RebuildUs.Resources.Settings_ButtonActive.png", 100);
+                    ToggleSettingsButton = ToggleSettingsButtonObject.GetComponent<PassiveButton>();
+                    ToggleSettingsButton.OnClick.RemoveAllListeners();
+                    ToggleSettingsButton.OnClick.AddListener((Action)(() => ToggleSettings(__instance)));
+                }
+                ToggleSettingsButtonObject.SetActive(__instance.MapButton.gameObject.active && !(MapBehaviour.Instance && MapBehaviour.Instance.IsOpen) && GameOptionsManager.Instance.currentGameOptions.GameMode != GameModes.HideNSeek);
+                ToggleSettingsButtonObject.transform.localPosition = __instance.MapButton.transform.localPosition + new Vector3(0, -0.8f, -500f);
+
+                if (!ToggleZoomButton || !ToggleZoomButtonObject)
+                {
+                    // add a special button for settings viewing:
+                    ToggleZoomButtonObject = GameObject.Instantiate(__instance.MapButton.gameObject, __instance.MapButton.transform.parent);
+                    ToggleZoomButtonObject.transform.localPosition = __instance.MapButton.transform.localPosition + new Vector3(0, -1.25f, -500f);
+                    ToggleZoomButtonObject.name = "TOGGLEZOOMBUTTON";
+                    SpriteRenderer tZrenderer = ToggleZoomButtonObject.transform.Find("Inactive").GetComponent<SpriteRenderer>();
+                    SpriteRenderer tZArenderer = ToggleZoomButtonObject.transform.Find("Active").GetComponent<SpriteRenderer>();
+                    ToggleZoomButtonObject.transform.Find("Background").localPosition = Vector3.zero;
+                    tZrenderer.sprite = Helpers.LoadSpriteFromResources("RebuildUs.Resources.Minus_Button.png", 100f);
+                    tZArenderer.sprite = Helpers.LoadSpriteFromResources("RebuildUs.Resources.Minus_ButtonActive.png", 100);
+                    ToggleZoomButton = ToggleZoomButtonObject.GetComponent<PassiveButton>();
+                    ToggleZoomButton.OnClick.RemoveAllListeners();
+                    ToggleZoomButton.OnClick.AddListener((Action)(() => Helpers.ToggleZoom()));
+                }
+                var (playerCompleted, playerTotal) = TasksHandler.TaskInfo(PlayerControl.LocalPlayer.Data);
+                int numberOfLeftTasks = playerTotal - playerCompleted;
+                bool zoomButtonActive = !(PlayerControl.LocalPlayer == null || !PlayerControl.LocalPlayer.Data.IsDead || (PlayerControl.LocalPlayer.Data.Role.IsImpostor && !CustomOptionHolder.DeadImpsBlockSabotage.GetBool()) || MeetingHud.Instance);
+                zoomButtonActive &= numberOfLeftTasks <= 0 || !CustomOptionHolder.FinishTasksBeforeHauntingOrZoomingOut.GetBool();
+                ToggleZoomButtonObject.SetActive(zoomButtonActive);
+                var posOffset = Helpers.ZoomOutStatus ? new Vector3(-1.27f, -7.92f, -52f) : new Vector3(0, -1.6f, -52f);
+                ToggleZoomButtonObject.transform.localPosition = HudManager.Instance.MapButton.transform.localPosition + posOffset;
+            }
+
+            public static void ToggleSummaryButtonHandler(HudManager __instance)
+            {
+                if (AmongUsClient.Instance.GameState == InnerNet.InnerNetClient.GameStates.Started)
+                {
+                    if (ToggleSummaryButtonObject != null)
+                    {
+                        ToggleSummaryButtonObject.SetActive(false);
+                        ToggleSummaryButtonObject.Destroy();
+                        ToggleSummaryButton.Destroy();
+                    }
+                    return;
+                }
+                if (!ToggleSummaryButton || !ToggleSummaryButtonObject)
+                {
+                    // add a special button for settings viewing:
+                    ToggleSummaryButtonObject = GameObject.Instantiate(__instance.MapButton.gameObject, __instance.MapButton.transform.parent);
+                    ToggleSummaryButtonObject.transform.localPosition = __instance.MapButton.transform.localPosition + new Vector3(0, -1.25f, -500f);
+                    ToggleSummaryButtonObject.name = "TOGGLESUMMARYSBUTTON";
+                    SpriteRenderer renderer = ToggleSummaryButtonObject.transform.Find("Inactive").GetComponent<SpriteRenderer>();
+                    SpriteRenderer rendererActive = ToggleSummaryButtonObject.transform.Find("Active").GetComponent<SpriteRenderer>();
+                    ToggleSummaryButtonObject.transform.Find("Background").localPosition = Vector3.zero;
+                    renderer.sprite = Helpers.LoadSpriteFromResources("RebuildUs.Resources.Endscreen.png", 100f);
+                    rendererActive.sprite = Helpers.LoadSpriteFromResources("RebuildUs.Resources.EndscreenActive.png", 100f);
+                    ToggleSummaryButton = ToggleSummaryButtonObject.GetComponent<PassiveButton>();
+                    ToggleSummaryButton.OnClick.RemoveAllListeners();
+                    ToggleSummaryButton.OnClick.AddListener((Action)(() => ToggleSummary(__instance)));
+                }
+                ToggleSummaryButtonObject.SetActive(__instance.SettingsButton.gameObject.active && LobbyBehaviour.Instance && !Helpers.PreviousEndGameSummary.IsNullOrWhiteSpace() && GameOptionsManager.Instance.currentGameOptions.GameMode != GameModes.HideNSeek
+                    && AmongUsClient.Instance.GameState != InnerNet.InnerNetClient.GameStates.Started);
+                ToggleSummaryButtonObject.transform.localPosition = __instance.SettingsButton.transform.localPosition + new Vector3(-1.45f, 0.03f, -500f);
+            }
         }
     }
 }

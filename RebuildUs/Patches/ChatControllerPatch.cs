@@ -7,7 +7,7 @@ public static class ChatControllerPatch
 {
     [HarmonyPrefix]
     [HarmonyPatch(typeof(ChatController), nameof(ChatController.Awake))]
-    private static void ChatControllerAwakePrefix()
+    private static void AwakePrefix()
     {
         if (!EOSManager.Instance.isKWSMinor)
         {

@@ -7,7 +7,7 @@ public static class PlayerBanDataPatch
 {
     [HarmonyPostfix]
     [HarmonyPatch(typeof(PlayerBanData), nameof(PlayerBanData.IsBanned), MethodType.Getter)]
-    public static void PlayerBanDataIsBannedPostfix(out bool __result)
+    public static void IsBannedPostfix(out bool __result)
     {
         __result = false;
     }
