@@ -27,4 +27,34 @@ public static class RPCProcedure
             option?.UpdateSelection((int)selection);
         }
     }
+
+    public static void UpdateMeeting(byte targetId, bool dead = true)
+    {
+        if (MeetingHud.Instance)
+        {
+            foreach (PlayerVoteArea pva in MeetingHud.Instance.playerStates)
+            {
+                if (pva.TargetPlayerId == targetId)
+                {
+                    pva.SetDead(pva.DidReport, dead);
+                    pva.Overlay.gameObject.SetActive(dead);
+                }
+
+                // Give players back their vote if target is shot dead
+                if (Helpers.RefundVotes && dead)
+                {
+                    if (pva.VotedFor != targetId) continue;
+                    pva.UnsetVote();
+                    var voteAreaPlayer = Helpers.PlayerById(pva.TargetPlayerId);
+                    if (!voteAreaPlayer.AmOwner) continue;
+                    MeetingHud.Instance.ClearVote();
+                }
+            }
+
+            if (AmongUsClient.Instance.AmHost)
+            {
+                MeetingHud.Instance.CheckForEndVoting();
+            }
+        }
+    }
 }

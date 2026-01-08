@@ -1,10 +1,11 @@
 using System.Reflection;
+using RebuildUs.Players;
 
 namespace RebuildUs;
 
 public static class Helpers
 {
-    public static Dictionary<string, Sprite> CachedSprites = new();
+    public static Dictionary<string, Sprite> CachedSprites = [];
 
     public static Sprite LoadSpriteFromResources(string path, float pixelsPerUnit, bool cache = true)
     {
@@ -117,5 +118,31 @@ public static class Helpers
         }
 
         ResolutionManager.ResolutionChanged.Invoke((float)Screen.width / Screen.height, Screen.width, Screen.height, Screen.fullScreen); // This will move button positions to the correct position.
+    }
+
+    public static bool RolesEnabled { get { return true; } }
+    public static bool RefundVotes { get { return true; } }
+
+    public static bool IsDead(this PlayerControl player)
+    {
+        return player == null || player?.Data?.IsDead == true || player?.Data?.Disconnected == true ||
+              (GameHistory.finalStatuses != null && GameHistory.finalStatuses.ContainsKey(player.PlayerId) && GameHistory.finalStatuses[player.PlayerId] != EFinalStatus.Alive);
+    }
+
+    public static bool IsAlive(this PlayerControl player)
+    {
+        return !IsDead(player);
+    }
+
+    public static PlayerControl PlayerById(byte id)
+    {
+        foreach (var player in CachedPlayer.AllPlayers)
+        {
+            if (player.PlayerId == id)
+            {
+                return player;
+            }
+        }
+        return null;
     }
 }
