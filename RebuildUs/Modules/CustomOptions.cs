@@ -358,9 +358,9 @@ namespace RebuildUs
             {
                 var settingsSplit = allSettings.Split("!");
                 Version versionInfo = Version.Parse(settingsSplit[0]);
-                string torSettings = settingsSplit[1];
+                string modSettings = settingsSplit[1];
                 string vanillaSettingsSub = settingsSplit[2];
-                torOptionsFine = DeserializeOptions(Convert.FromBase64String(torSettings));
+                torOptionsFine = DeserializeOptions(Convert.FromBase64String(modSettings));
                 ShareOptionSelections();
                 if (RebuildUs.Instance.Version > versionInfo && versionInfo < Version.Parse("4.6.0"))
                 {
@@ -451,23 +451,23 @@ namespace RebuildUs
         {
             buttonName = "View" + buttonName;
             var buttonTemplate = GameObject.Find("OverviewTab");
-            var torSettingsButton = GameObject.Find(buttonName);
-            if (torSettingsButton == null)
+            var modSettingsButton = GameObject.Find(buttonName);
+            if (modSettingsButton == null)
             {
-                torSettingsButton = GameObject.Instantiate(buttonTemplate, buttonTemplate.transform.parent);
-                torSettingsButton.transform.localPosition += Vector3.right * 1.75f * (targetMenu - 2);
-                torSettingsButton.name = buttonName;
-                __instance.StartCoroutine(Effects.Lerp(2f, new Action<float>(p => { torSettingsButton.transform.FindChild("FontPlacer").GetComponentInChildren<TextMeshPro>().text = buttonText; })));
-                var torSettingsPassiveButton = torSettingsButton.GetComponent<PassiveButton>();
-                torSettingsPassiveButton.OnClick.RemoveAllListeners();
-                torSettingsPassiveButton.OnClick.AddListener((System.Action)(() =>
+                modSettingsButton = GameObject.Instantiate(buttonTemplate, buttonTemplate.transform.parent);
+                modSettingsButton.transform.localPosition += Vector3.right * 1.75f * (targetMenu - 2);
+                modSettingsButton.name = buttonName;
+                __instance.StartCoroutine(Effects.Lerp(2f, new Action<float>(p => { modSettingsButton.transform.FindChild("FontPlacer").GetComponentInChildren<TextMeshPro>().text = buttonText; })));
+                var modSettingsPassiveButton = modSettingsButton.GetComponent<PassiveButton>();
+                modSettingsPassiveButton.OnClick.RemoveAllListeners();
+                modSettingsPassiveButton.OnClick.AddListener((System.Action)(() =>
                 {
                     __instance.ChangeTab((StringNames)targetMenu);
                 }));
-                torSettingsPassiveButton.OnMouseOut.RemoveAllListeners();
-                torSettingsPassiveButton.OnMouseOver.RemoveAllListeners();
-                torSettingsPassiveButton.SelectButton(false);
-                SettingsPaneCurrentButtons.Add(torSettingsPassiveButton);
+                modSettingsPassiveButton.OnMouseOut.RemoveAllListeners();
+                modSettingsPassiveButton.OnMouseOver.RemoveAllListeners();
+                modSettingsPassiveButton.SelectButton(false);
+                SettingsPaneCurrentButtons.Add(modSettingsPassiveButton);
                 SettingsPaneCurrentButtonTypes.Add(optionType);
             }
         }
