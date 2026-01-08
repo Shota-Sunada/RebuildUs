@@ -26,18 +26,18 @@ namespace RebuildUs
 
         // Updating values
         public static int MeetingsCount = 0;
-        public static List<SurvCamera> CamerasToAdd = new();
-        public static List<Vent> VentsToSeal = new();
-        public static Dictionary<byte, PoolablePlayer> PlayerIcons = new();
+        public static List<SurvCamera> CamerasToAdd = [];
+        public static List<Vent> VentsToSeal = [];
+        public static Dictionary<byte, PoolablePlayer> PlayerIcons = [];
         public static string FirstKillName;
         public static PlayerControl FirstKillPlayer;
 
         public static void ClearAndReloadMapOptions()
         {
             MeetingsCount = 0;
-            CamerasToAdd = new List<SurvCamera>();
-            VentsToSeal = new List<Vent>();
-            PlayerIcons = new Dictionary<byte, PoolablePlayer>(); ;
+            CamerasToAdd = [];
+            VentsToSeal = [];
+            PlayerIcons = []; ;
 
             // maxNumberOfMeetings = Mathf.RoundToInt(CustomOptionHolder.maxNumberOfMeetings.getSelection());
             // blockSkippingInEmergencyMeetings = CustomOptionHolder.blockSkippingInEmergencyMeetings.getBool();
