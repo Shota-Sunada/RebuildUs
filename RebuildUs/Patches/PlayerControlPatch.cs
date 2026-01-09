@@ -1,3 +1,4 @@
+using RebuildUs.Modules;
 using RebuildUs.Modules.RPC;
 
 namespace RebuildUs.Patches;
@@ -17,5 +18,12 @@ public static class PlayerControlPatch
     public static void RpcSyncSettingsPostfix()
     {
         CustomOption.SyncVanillaSettings();
+    }
+
+    [HarmonyPrefix]
+    [HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.CheckColor))]
+    public static bool CheckColorPrefix(PlayerControl __instance, [HarmonyArgument(0)] byte bodyColor)
+    {
+        return CustomColors.CheckColor(__instance, bodyColor);
     }
 }

@@ -41,6 +41,7 @@ public class RebuildUs : BasePlugin
         Instance = this;
 
         CustomOptionHolder.Load();
+        CustomColors.Load();
 
         Harmony.PatchAll();
 
