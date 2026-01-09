@@ -20,7 +20,7 @@ public static class Helpers
         }
         catch
         {
-            System.Console.WriteLine("Error loading sprite from path: " + path);
+            Logger.LogError("Error loading sprite from path: {0}", path);
         }
         return null;
     }
@@ -44,7 +44,7 @@ public static class Helpers
         }
         catch
         {
-            System.Console.WriteLine("Error loading texture from resources: " + path);
+            Logger.LogError("Error loading texture from resources: {0}", path);
         }
         return null;
     }
@@ -63,7 +63,7 @@ public static class Helpers
         }
         catch
         {
-            RebuildUs.Instance.Logger.LogError("Error loading texture from disk: " + path);
+            Logger.LogError("Error loading texture from disk: {0}", path);
         }
         return null;
     }

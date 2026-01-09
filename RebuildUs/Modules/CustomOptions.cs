@@ -158,7 +158,7 @@ namespace RebuildUs
             IGameOptions gameOptions = GameOptionsManager.Instance.gameOptionsFactory.FromBytes(Convert.FromBase64String(optionsString));
             if (gameOptions.Version < 8)
             {
-                RebuildUs.Instance.Logger.LogMessage("tried to paste old settings, not doing this!");
+                Logger.LogMessage("tried to paste old settings, not doing this!");
                 return false;
             }
             GameOptionsManager.Instance.GameHostOptions = gameOptions;
@@ -336,7 +336,7 @@ namespace RebuildUs
                 }
                 catch (Exception e)
                 {
-                    RebuildUs.Instance.Logger.LogWarning($"id:{lastId}:{e}: while deserializing - tried to paste invalid settings!");
+                    Logger.LogWarning($"id:{lastId}:{e}: while deserializing - tried to paste invalid settings!");
                     errors++;
                 }
             }
@@ -375,7 +375,7 @@ namespace RebuildUs
             }
             catch (Exception e)
             {
-                RebuildUs.Instance.Logger.LogWarning($"{e}: tried to paste invalid settings!\n{allSettings}");
+                Logger.LogWarning($"{e}: tried to paste invalid settings!\n{allSettings}");
                 string errorStr = allSettings.Length > 2 ? allSettings.Substring(0, 3) : "(empty clipboard) ";
                 FastDestroyableSingleton<HudManager>.Instance.Chat.AddChat(PlayerControl.LocalPlayer, $"Host Info: You tried to paste invalid settings: \"{errorStr}...\"");
                 // SoundEffectsManager.Load();

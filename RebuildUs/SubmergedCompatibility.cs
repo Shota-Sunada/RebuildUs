@@ -71,7 +71,7 @@ public static class SubmergedCompatibility
     {
         try
         {
-            RebuildUs.Instance.Logger.LogMessage("Trying to load Submerged...");
+            Logger.LogMessage("Trying to load Submerged...");
             var thisAsm = Assembly.GetCallingAssembly();
             var resourceName = thisAsm.GetManifestResourceNames().FirstOrDefault(s => s.EndsWith("Submerged.dll"));
             if (resourceName == default) return false;
@@ -92,7 +92,7 @@ public static class SubmergedCompatibility
         }
         catch (Exception e)
         {
-            RebuildUs.Instance.Logger.LogError(e);
+            Logger.LogError(e);
         }
         return false;
     }
@@ -174,9 +174,9 @@ public static class SubmergedCompatibility
             ShipStatus.Instance.RpcUpdateSystem((SystemTypes)130, 64);
             RepairDamageMethod.Invoke(SubmarineOxygenSystemInstanceField.Invoke(null, []), [PlayerControl.LocalPlayer, 64]);
         }
-        catch (System.NullReferenceException)
+        catch (NullReferenceException)
         {
-            RebuildUs.Instance.Logger.LogMessage("null reference in engineer oxygen fix");
+            Logger.LogMessage("null reference in engineer oxygen fix");
         }
     }
 }

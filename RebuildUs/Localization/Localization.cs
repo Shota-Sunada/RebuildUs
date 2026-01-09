@@ -26,7 +26,7 @@ public static class Tr
             }
             catch (Exception ex)
             {
-                RebuildUs.Instance.Logger.LogError($"Failed to load translation for {i}: {ex.Message}");
+                Logger.LogError($"Failed to load translation for {i}: {ex.Message}");
             }
         }
     }
@@ -72,7 +72,7 @@ public static class Tr
             }
             else
             {
-                RebuildUs.Instance.Logger.LogWarning($"There are no translation data. key: {key}");
+                Logger.LogWarning($"There are no translation data. key: {key}");
                 return key;
             }
         }

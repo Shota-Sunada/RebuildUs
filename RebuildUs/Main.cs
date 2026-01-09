@@ -31,13 +31,12 @@ public class RebuildUs : BasePlugin
     public static RebuildUs Instance;
     public Harmony Harmony { get; } = new(MOD_ID);
     public Version Version { get; } = Version.Parse(MOD_VERSION);
-    public ManualLogSource Logger;
 
     public static int OptionsPage = 0;
 
     public override void Load()
     {
-        Logger = Log;
+        Logger.Initialize(Log);
         Instance = this;
 
         CustomOptionHolder.Load();

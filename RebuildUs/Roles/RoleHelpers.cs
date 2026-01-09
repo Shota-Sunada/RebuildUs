@@ -15,14 +15,14 @@ public static class RoleHelpers
             }
         }
 
-        RebuildUs.Instance.Logger.LogWarning($"There is no role type: {roleType}");
+        Logger.LogWarning($"There is no role type: {roleType}");
 
         return false;
     }
 
     public static bool SetRole(this PlayerControl player, ERoleType roleType)
     {
-        RebuildUs.Instance.Logger.LogInfo($"{player?.Data?.PlayerName}({player?.PlayerId}): {Enum.GetName(typeof(ERoleType), roleType)}");
+        Logger.LogInfo($"{player?.Data?.PlayerName}({player?.PlayerId}): {Enum.GetName(typeof(ERoleType), roleType)}");
         foreach (var type in RoleData.AllRoleTypes)
         {
             if (roleType == type.RoleType)
@@ -31,7 +31,7 @@ public static class RoleHelpers
             }
         }
 
-        RebuildUs.Instance.Logger.LogWarning($"There is no role type: {roleType}");
+        Logger.LogWarning($"There is no role type: {roleType}");
 
         return false;
     }
@@ -49,7 +49,7 @@ public static class RoleHelpers
                 }
             }
 
-            RebuildUs.Instance.Logger.LogWarning($"There is no role type: {roleType}");
+            Logger.LogWarning($"There is no role type: {roleType}");
         }
     }
 
