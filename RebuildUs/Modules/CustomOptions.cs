@@ -23,6 +23,7 @@ using RebuildUs.Modules.RPC;
 using RebuildUs.Options;
 using RebuildUs.Extensions;
 using AmongUs.Data;
+using RebuildUs.Localization;
 
 namespace RebuildUs
 {
@@ -53,7 +54,7 @@ namespace RebuildUs
         public static ConfigEntry<string> VanillaSettings;
 
         public int Id;
-        public string Name;
+        public string NameKey;
         public System.Object[] Selections;
 
         public int DefaultSelection;
@@ -72,7 +73,7 @@ namespace RebuildUs
         public CustomOption(int id, CustomOptionType type, string name, System.Object[] selections, System.Object defaultValue, CustomOption parent, bool isHeader, Action onChange = null, string heading = "", bool invertedParent = false)
         {
             this.Id = id;
-            this.Name = parent == null ? name : "- " + name;
+            this.NameKey = parent == null ? name : "- " + name;
             this.Selections = selections;
             int index = Array.IndexOf(selections, defaultValue);
             this.DefaultSelection = index >= 0 ? index : 0;
@@ -217,6 +218,27 @@ namespace RebuildUs
         public int GetQuantity()
         {
             return Selection + 1;
+        }
+
+        public string GetString()
+        {
+            string sel = Selections[Selection].ToString();
+
+            if (sel == "On")
+            {
+                return "<color=#FFFF00FF>" + Tr.Get(("CustomOption", sel)) + "</color>";
+            }
+            else if (sel == "Off")
+            {
+                return "<color=#CCCCCCFF>" + Tr.Get(("CustomOption", sel)) + "</color>";
+            }
+
+            return Tr.Get(sel);
+        }
+
+        public string GetName()
+        {
+            return Tr.Get(("Role", NameKey));
         }
 
         public void UpdateSelection(int newSelection, bool notifyUsers = true)
@@ -556,7 +578,7 @@ namespace RebuildUs
                     headers++; // for header
                     CategoryHeaderMasked categoryHeaderMasked = UnityEngine.Object.Instantiate<CategoryHeaderMasked>(__instance.categoryHeaderOrigin);
                     categoryHeaderMasked.SetHeader(StringNames.ImpostorsCategory, 61);
-                    categoryHeaderMasked.Title.text = option.Heading != "" ? option.Heading : option.Name;
+                    categoryHeaderMasked.Title.text = option.Heading != "" ? option.Heading : option.NameKey;
                     if ((int)optionType == 99)
                         categoryHeaderMasked.Title.text = new Dictionary<CustomOptionType, string>() { { CustomOptionType.Impostor, "Impostor Roles" }, { CustomOptionType.Neutral, "Neutral Roles" },
                             { CustomOptionType.Crewmate, "Crewmate Roles" }, { CustomOptionType.Modifier, "Modifiers" } }[curType];
@@ -592,7 +614,7 @@ namespace RebuildUs
                 }
                 viewSettingsInfoPanel.transform.localPosition = new Vector3(num2, num, -2f);
                 int value = option.GetSelection();
-                var settingTuple = HandleSpecialOptionsView(option, option.Name, option.Selections[value].ToString());
+                var settingTuple = HandleSpecialOptionsView(option, option.NameKey, option.Selections[value].ToString());
                 viewSettingsInfoPanel.SetInfo(StringNames.ImpostorsCategory, settingTuple.Item2, 61);
                 viewSettingsInfoPanel.titleText.text = settingTuple.Item1;
                 if (option.IsHeader && (int)optionType != 99 && option.Heading == "" && (option.Type == CustomOptionType.Neutral || option.Type == CustomOptionType.Crewmate || option.Type == CustomOptionType.Impostor || option.Type == CustomOptionType.Modifier))
@@ -803,7 +825,7 @@ namespace RebuildUs
                 {
                     CategoryHeaderMasked categoryHeaderMasked = UnityEngine.Object.Instantiate<CategoryHeaderMasked>(menu.categoryHeaderOrigin, Vector3.zero, Quaternion.identity, menu.settingsContainer);
                     categoryHeaderMasked.SetHeader(StringNames.ImpostorsCategory, 20);
-                    categoryHeaderMasked.Title.text = option.Heading != "" ? option.Heading : option.Name;
+                    categoryHeaderMasked.Title.text = option.Heading != "" ? option.Heading : option.NameKey;
                     categoryHeaderMasked.Title.outlineColor = Color.white;
                     categoryHeaderMasked.Title.outlineWidth = 0.2f;
                     categoryHeaderMasked.transform.localScale = Vector3.one * 0.63f;
@@ -830,7 +852,7 @@ namespace RebuildUs
 
                 var stringOption = optionBehaviour as StringOption;
                 stringOption.OnValueChanged = new Action<OptionBehaviour>((o) => { });
-                stringOption.TitleText.text = option.Name;
+                stringOption.TitleText.text = option.NameKey;
                 if (option.IsHeader && option.Heading == "" && (option.Type == CustomOptionType.Neutral || option.Type == CustomOptionType.Crewmate || option.Type == CustomOptionType.Impostor || option.Type == CustomOptionType.Modifier))
                 {
                     stringOption.TitleText.text = "Spawn Chance";
@@ -1060,7 +1082,7 @@ namespace RebuildUs
         {
             // find options children with quantity
             var children = CustomOption.AllOptions.Where(o => o.Parent == customOption);
-            var quantity = children.Where(o => o.Name.Contains("Quantity")).ToList();
+            var quantity = children.Where(o => o.NameKey.Contains("Quantity")).ToList();
             if (customOption.GetSelection() == 0) return "";
             if (quantity.Count == 1) return $" ({quantity[0].GetQuantity()})";
             // if (customOption == CustomOptionHolder.modifierLover)
@@ -1092,7 +1114,7 @@ namespace RebuildUs
             {
                 if (option.Parent == null)
                 {
-                    string line = $"{option.Name}: {option.Selections[option.Selection]}";
+                    string line = $"{option.NameKey}: {option.Selections[option.Selection]}";
                     if (type == CustomOption.CustomOptionType.Modifier) line += BuildModifierExtras(option);
                     sb.AppendLine(line);
                 }
@@ -1119,7 +1141,7 @@ namespace RebuildUs
 
                     Color c = isIrrelevant ? Color.grey : Color.white;  // No use for now
                     if (isIrrelevant) continue;
-                    sb.AppendLine(Helpers.Cs(c, $"{option.Name}: {option.Selections[option.Selection]}"));
+                    sb.AppendLine(Helpers.Cs(c, $"{option.NameKey}: {option.Selections[option.Selection]}"));
                 }
                 else
                 {
@@ -1179,7 +1201,7 @@ namespace RebuildUs
                     }
                     else
                     {
-                        sb.AppendLine($"\n{option.Name}: {option.Selections[option.Selection].ToString()}");
+                        sb.AppendLine($"\n{option.NameKey}: {option.Selections[option.Selection].ToString()}");
                     }
                 }
             }
@@ -1289,8 +1311,7 @@ namespace RebuildUs
         {
             if (__instance.Title == StringNames.GameKillDistance && __instance.Values.Count == 3)
             {
-                __instance.Values = new(
-                        [(StringNames)49999, StringNames.SettingShort, StringNames.SettingMedium, StringNames.SettingLong]);
+                __instance.Values = new([(StringNames)49999, StringNames.SettingShort, StringNames.SettingMedium, StringNames.SettingLong]);
             }
         }
 
@@ -1327,6 +1348,29 @@ namespace RebuildUs
             __result = LegacyGameOptions.KillDistanceStrings[(int)value];
             return false;
         }
+
+        // public static string optionToString(CustomOption option)
+        // {
+        //     if (option == null) return "";
+        //     return $"{option.GetName()}: {option.GetString()}";
+        // }
+
+        // public static string optionsToString(CustomOption option, bool skipFirst = false)
+        // {
+        //     if (option == null) return "";
+
+        //     List<string> options = new();
+        //     if (!skipFirst) options.Add(optionToString(option));
+        //     if (option.enabled)
+        //     {
+        //         foreach (CustomOption op in option.children)
+        //         {
+        //             string str = optionsToString(op);
+        //             if (str != "") options.Add(str);
+        //         }
+        //     }
+        //     return string.Join("\n", options);
+        // }
 
         public static void KeyboardUpdate(KeyboardJoystick __instance)
         {

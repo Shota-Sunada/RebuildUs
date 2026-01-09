@@ -53,8 +53,8 @@ public static class Tr
         }
     }
 
-    public static string Get(string key, object[] args) => GetInternal(key, args);
-    public static string Get(string category, string key, object[] args) => GetInternal($"{category}.{key}", args);
+    public static string Get(string key, params object[] args) => GetInternal(key, args);
+    public static string Get((string category, string key) key, params object[] args) => GetInternal($"{key.category}.{key.key}", args);
 
     private static string GetInternal(string key, object[] args)
     {
