@@ -72,7 +72,7 @@ public static class Tr
             }
             else
             {
-                Logger.LogWarning($"There are no translation data. key: {key}");
+                Logger.LogWarn($"There are no translation data. key: {key}");
                 return key;
             }
         }

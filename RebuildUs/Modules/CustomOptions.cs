@@ -336,7 +336,7 @@ namespace RebuildUs
                 }
                 catch (Exception e)
                 {
-                    Logger.LogWarning($"id:{lastId}:{e}: while deserializing - tried to paste invalid settings!");
+                    Logger.LogWarn($"id:{lastId}:{e}: while deserializing - tried to paste invalid settings!");
                     errors++;
                 }
             }
@@ -375,7 +375,7 @@ namespace RebuildUs
             }
             catch (Exception e)
             {
-                Logger.LogWarning($"{e}: tried to paste invalid settings!\n{allSettings}");
+                Logger.LogWarn($"{e}: tried to paste invalid settings!\n{allSettings}");
                 string errorStr = allSettings.Length > 2 ? allSettings.Substring(0, 3) : "(empty clipboard) ";
                 FastDestroyableSingleton<HudManager>.Instance.Chat.AddChat(PlayerControl.LocalPlayer, $"Host Info: You tried to paste invalid settings: \"{errorStr}...\"");
                 // SoundEffectsManager.Load();

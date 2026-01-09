@@ -15,7 +15,7 @@ public static class RoleHelpers
             }
         }
 
-        Logger.LogWarning($"There is no role type: {roleType}");
+        Logger.LogWarn($"There is no role type: {roleType}");
 
         return false;
     }
@@ -31,7 +31,7 @@ public static class RoleHelpers
             }
         }
 
-        Logger.LogWarning($"There is no role type: {roleType}");
+        Logger.LogWarn($"There is no role type: {roleType}");
 
         return false;
     }
@@ -49,7 +49,7 @@ public static class RoleHelpers
                 }
             }
 
-            Logger.LogWarning($"There is no role type: {roleType}");
+            Logger.LogWarn($"There is no role type: {roleType}");
         }
     }
 
