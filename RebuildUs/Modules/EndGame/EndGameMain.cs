@@ -37,7 +37,7 @@ public static class EndGameMain
         {
             var roles = RoleInfo.GetRoleInfoForPlayer(player.PlayerControl);
             var (tasksCompleted, tasksTotal) = TasksHandler.TaskInfo(player.Data);
-            var finalStatus = GameHistory.finalStatuses[p.PlayerId] =
+            var finalStatus = GameHistory.finalStatuses[player.PlayerId] =
                 player.Data.Disconnected == true ? EFinalStatus.Disconnected :
                 GameHistory.finalStatuses.ContainsKey(player.PlayerId) ? GameHistory.finalStatuses[player.PlayerId] :
                 player.Data.IsDead == true ? EFinalStatus.Dead :
