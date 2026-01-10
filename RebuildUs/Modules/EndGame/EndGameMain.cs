@@ -53,13 +53,13 @@ public static class EndGameMain
                 ColorId = player.Data.DefaultOutfit.ColorId,
                 // NameSuffix = Lovers.getIcon(p.Object) + Cupid.getIcon(p.Object) + Akujo.getIcon(p.Object),
                 Roles = roles,
-                RoleNames = RoleInfo.GetRolesString(player.Data.Object, true, excludeRoles, true),
+                RoleNames = RoleInfo.GetRolesString(player.Data.Object, true, true, excludeRoles, true),
                 TasksTotal = tasksTotal,
                 TasksCompleted = tasksCompleted,
                 Status = finalStatus,
             });
 
-            AdditionalTempData.IsGM = CustomOptionHolder.GmEnabled.GetBool() && CachedPlayer.LocalPlayer.PlayerControl.IsGM();
+            // AdditionalTempData.IsGM = CustomOptionHolder.GmEnabled.GetBool() && CachedPlayer.LocalPlayer.PlayerControl.IsGM();
             // AdditionalTempData.plagueDoctorInfected = PlagueDoctor.infected;
             // AdditionalTempData.plagueDoctorProgress = PlagueDoctor.progress;
         }

@@ -192,4 +192,14 @@ public static class Helpers
             player.Data.Tasks.Clear();
         }
     }
+
+    public static bool IsCrewmateAlive()
+    {
+        foreach (var player in PlayerControl.AllPlayerControls.GetFastEnumerator())
+        {
+            if (player.IsTeamCrewmate() && player.IsAlive()) return true;
+            // if (p.IsTeamCrewmate() && !p.hasModifier(ModifierType.Madmate) && p.isAlive()) return true;
+        }
+        return false;
+    }
 }

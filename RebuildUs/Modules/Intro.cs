@@ -81,17 +81,18 @@ public static class Intro
 
     public static void SetupIntroTeam(IntroCutscene __instance, ref Il2CppSystem.Collections.Generic.List<PlayerControl> yourTeam)
     {
-        var infos = RoleInfo.GetRoleInfoForPlayer(CachedPlayer.LocalPlayer.PlayerControl);
-        var roleInfo = infos.Where(info => info.RoleType != ERoleType.Lovers).FirstOrDefault();
-        if (roleInfo == null) return;
-        // if (CachedPlayer.LocalPlayer.PlayerControl.IsNeutral() || CachedPlayer.LocalPlayer.PlayerControl.isGM())
-        if (CachedPlayer.LocalPlayer.PlayerControl.IsNeutral())
-        {
-            __instance.BackgroundBar.material.color = roleInfo.color;
-            __instance.TeamTitle.text = roleInfo.name;
-            __instance.TeamTitle.color = roleInfo.color;
-            __instance.ImpostorText.text = "";
-        }
+        // TODO: FIX LATER
+        // var infos = RoleInfo.GetRoleInfoForPlayer(CachedPlayer.LocalPlayer.PlayerControl);
+        // var roleInfo = infos.Where(info => info.RoleType != ERoleType.Lovers).FirstOrDefault();
+        // if (roleInfo == null) return;
+        // // if (CachedPlayer.LocalPlayer.PlayerControl.IsNeutral() || CachedPlayer.LocalPlayer.PlayerControl.isGM())
+        // if (CachedPlayer.LocalPlayer.PlayerControl.IsNeutral())
+        // {
+        //     __instance.BackgroundBar.material.color = roleInfo.color;
+        //     __instance.TeamTitle.text = roleInfo.name;
+        //     __instance.TeamTitle.color = roleInfo.color;
+        //     __instance.ImpostorText.text = "";
+        // }
     }
 
     public static IEnumerator CoBegin(IntroCutscene __instance)
@@ -103,12 +104,13 @@ public static class Intro
 
     private static IEnumerator WaitRoleAssign()
     {
-        if (!CustomOptionHolder.ActivateRoles.getBool()) yield break;
+        if (!CustomOptionHolder.ActivateRoles.GetBool()) yield break;
 
-        while (!RoleAssignmentPatch.isAssigned)
-        {
-            yield return null;
-        }
+        // TODO: FIX LATER
+        // while (!RoleAssignmentPatch.isAssigned)
+        // {
+        //     yield return null;
+        // }
         yield break;
     }
 
@@ -121,8 +123,9 @@ public static class Intro
 
     private static IEnumerator SetupRole(IntroCutscene __instance)
     {
-        List<RoleInfo> infos = RoleInfo.GetRoleInfoForPlayer(CachedPlayer.LocalPlayer.PlayerControl, new ERoleType[] { ERoleType.Lovers });
-        RoleInfo roleInfo = infos.FirstOrDefault();
+        // TODO: FIX LATER
+        // List<RoleInfo> infos = RoleInfo.GetRoleInfoForPlayer(CachedPlayer.LocalPlayer.PlayerControl, new ERoleType[] { ERoleType.Lovers });
+        // RoleInfo roleInfo = infos.FirstOrDefault();
 
         // Logger.LogInfo("----------Role Assign-----------", "Settings");
         // foreach (var pc in PlayerControl.AllPlayerControls.GetFastEnumerator())
@@ -151,11 +154,12 @@ public static class Intro
         // }
         // Logger.LogInfo("--------------------------------", "Settings");
 
-        __instance.YouAreText.color = roleInfo.Color;
-        __instance.RoleText.text = roleInfo.Name;
-        __instance.RoleText.color = roleInfo.Color;
-        __instance.RoleBlurbText.text = roleInfo.IntroDescription;
-        __instance.RoleBlurbText.color = roleInfo.Color;
+        // TODO: FIX LATER
+        // __instance.YouAreText.color = roleInfo.Color;
+        // __instance.RoleText.text = roleInfo.Name;
+        // __instance.RoleText.color = roleInfo.Color;
+        // __instance.RoleBlurbText.text = roleInfo.IntroDescription;
+        // __instance.RoleBlurbText.color = roleInfo.Color;
 
         // if (CachedPlayer.LocalPlayer.PlayerControl.HasModifier(EModifierType.Madmate))
         // {

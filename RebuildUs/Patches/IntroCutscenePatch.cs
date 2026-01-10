@@ -17,10 +17,10 @@ public static class IntroCutscenePatch
     [HarmonyPatch(typeof(IntroCutscene), nameof(IntroCutscene.CoBegin))]
     public static bool CoBeginPrefix(IntroCutscene __instance, ref Il2CppSystem.Collections.IEnumerator __result)
     {
-        if (RoleAssignmentPatch.isAssigned)
-        {
-            return true;
-        }
+        // if (RoleAssignmentPatch.isAssigned)
+        // {
+        //     return true;
+        // }
         __result = Intro.CoBegin(__instance).WrapToIl2Cpp();
         return false;
     }
@@ -48,15 +48,15 @@ public static class IntroCutscenePatch
 
     [HarmonyPrefix]
     [HarmonyPatch(typeof(IntroCutscene), nameof(IntroCutscene.BeginImpostor))]
-    public static void BeginImpostorPrefix(IntroCutscene __instance, ref Il2CppSystem.Collections.Generic.List<PlayerControl> teamToDisplay)
+    public static void BeginImpostorPrefix(IntroCutscene __instance, ref Il2CppSystem.Collections.Generic.List<PlayerControl> yourTeam)
     {
-        Intro.SetupIntroTeamIcons(__instance, ref teamToDisplay);
+        Intro.SetupIntroTeamIcons(__instance, ref yourTeam);
     }
 
     [HarmonyPostfix]
     [HarmonyPatch(typeof(IntroCutscene), nameof(IntroCutscene.BeginImpostor))]
-    public static void BeginImpostorPostfix(IntroCutscene __instance, ref Il2CppSystem.Collections.Generic.List<PlayerControl> teamToDisplay)
+    public static void BeginImpostorPostfix(IntroCutscene __instance, ref Il2CppSystem.Collections.Generic.List<PlayerControl> yourTeam)
     {
-        Intro.SetupIntroTeam(__instance, ref teamToDisplay);
+        Intro.SetupIntroTeam(__instance, ref yourTeam);
     }
 }
