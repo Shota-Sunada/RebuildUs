@@ -1,4 +1,5 @@
 using RebuildUs.Modules;
+using RebuildUs.Modules.CustomOptions;
 
 namespace RebuildUs.Modules.RPC;
 
@@ -10,6 +11,9 @@ public static class RPCProcedure
         {
             case CustomRPC.ShareOptions:
                 HandleShareOptions(reader);
+                break;
+            case CustomRPC.UncheckedSetTasks:
+                UncheckedSetTasks(reader.ReadByte(), reader.ReadBytesAndSize());
                 break;
             default:
                 break;
@@ -56,5 +60,13 @@ public static class RPCProcedure
                 MeetingHud.Instance.CheckForEndVoting();
             }
         }
+    }
+
+    public static void UncheckedSetTasks(byte playerId, byte[] taskTypeIds)
+    {
+        var player = Helpers.PlayerById(playerId);
+        player.ClearAllTasks();
+
+        player.Data.SetTasks(taskTypeIds);
     }
 }

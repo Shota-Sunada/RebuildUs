@@ -1,5 +1,6 @@
 using System.Reflection;
 using RebuildUs.Players;
+using RebuildUs.Utilities;
 
 namespace RebuildUs;
 
@@ -123,17 +124,6 @@ public static class Helpers
     public static bool RolesEnabled { get { return true; } }
     public static bool RefundVotes { get { return true; } }
 
-    public static bool IsDead(this PlayerControl player)
-    {
-        return player == null || player?.Data?.IsDead == true || player?.Data?.Disconnected == true ||
-              (GameHistory.finalStatuses != null && GameHistory.finalStatuses.ContainsKey(player.PlayerId) && GameHistory.finalStatuses[player.PlayerId] != EFinalStatus.Alive);
-    }
-
-    public static bool IsAlive(this PlayerControl player)
-    {
-        return !IsDead(player);
-    }
-
     public static PlayerControl PlayerById(byte id)
     {
         foreach (var player in CachedPlayer.AllPlayers)
@@ -156,8 +146,50 @@ public static class Helpers
         player.cosmetics.nameText.color = new Color(player.cosmetics.nameText.color.r, player.cosmetics.nameText.color.g, player.cosmetics.nameText.color.b, alpha);
     }
 
-    public static bool IsNeutral(this PlayerControl player)
+    public static List<byte> GenerateTasks(int numCommon, int numShort, int numLong)
     {
-        return false;
+        if (numCommon + numShort + numLong <= 0)
+        {
+            numShort = 1;
+        }
+
+        var tasks = new Il2CppSystem.Collections.Generic.List<byte>();
+        var hashSet = new Il2CppSystem.Collections.Generic.HashSet<TaskTypes>();
+
+        var commonTasks = new Il2CppSystem.Collections.Generic.List<NormalPlayerTask>();
+        foreach (var task in MapUtilities.CachedShipStatus.CommonTasks.OrderBy(x => rnd.Next())) commonTasks.Add(task);
+
+        var shortTasks = new Il2CppSystem.Collections.Generic.List<NormalPlayerTask>();
+        foreach (var task in MapUtilities.CachedShipStatus.ShortTasks.OrderBy(x => rnd.Next())) shortTasks.Add(task);
+
+        var longTasks = new Il2CppSystem.Collections.Generic.List<NormalPlayerTask>();
+        foreach (var task in MapUtilities.CachedShipStatus.LongTasks.OrderBy(x => rnd.Next())) longTasks.Add(task);
+
+        int start = 0;
+        MapUtilities.CachedShipStatus.AddTasksFromList(ref start, numCommon, tasks, hashSet, commonTasks);
+
+        start = 0;
+        MapUtilities.CachedShipStatus.AddTasksFromList(ref start, numShort, tasks, hashSet, shortTasks);
+
+        start = 0;
+        MapUtilities.CachedShipStatus.AddTasksFromList(ref start, numLong, tasks, hashSet, longTasks);
+
+        return tasks.ToArray().ToList();
+    }
+
+    public static void ClearAllTasks(this PlayerControl player)
+    {
+        if (player == null) return;
+        foreach (var playerTask in player.myTasks)
+        {
+            playerTask.OnRemove();
+            UnityEngine.Object.Destroy(playerTask.gameObject);
+        }
+        player.myTasks.Clear();
+
+        if (player.Data != null && player.Data.Tasks != null)
+        {
+            player.Data.Tasks.Clear();
+        }
     }
 }

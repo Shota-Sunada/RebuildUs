@@ -1,4 +1,5 @@
 using RebuildUs.Localization;
+using RebuildUs.Modules.CustomOptions;
 
 namespace RebuildUs.Roles;
 

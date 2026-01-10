@@ -1,0 +1,366 @@
+using System.Text;
+using RebuildUs.Utilities;
+using static RebuildUs.RebuildUs;
+using AmongUs.GameOptions;
+using RebuildUs.Modules.RPC;
+using RebuildUs.Options;
+using RebuildUs.Extensions;
+using RebuildUs.Localization;
+using RebuildUs.Roles;
+
+namespace RebuildUs.Modules.CustomOptions
+{
+    public enum CustomGamemodes
+    {
+        Classic,
+        Guesser,
+        HideNSeek,
+        PropHunt
+    }
+    public partial class CustomOption
+    {
+        public enum CustomOptionType
+        {
+            General,
+            Impostor,
+            Neutral,
+            Crewmate,
+            Modifier,
+            Guesser,
+            HideNSeekMain,
+            HideNSeekRoles,
+            PropHunt,
+        }
+
+        public static List<CustomOption> AllOptions = [];
+        public static int Preset = 0;
+
+        public int Id;
+        public string NameKey;
+        public string Format;
+        public object[] Selections;
+
+        public int DefaultSelection;
+        public ConfigEntry<int> Entry;
+        public int Selection;
+        public OptionBehaviour OptionBehavior;
+        public CustomOption Parent;
+        public List<CustomOption> Children;
+        public bool IsHeader;
+        public string HeaderText;
+        public CustomOptionType Type;
+        public Action OnChange = null;
+        public bool HideIfParentEnabled;
+
+        public virtual bool Enabled
+        {
+            get
+            {
+                return Helpers.RolesEnabled && GetBool();
+            }
+        }
+
+        public CustomOption() { }
+
+        // Option creation
+        public CustomOption(int id, CustomOptionType type, string nameKey, object[] selections, object defaultValue, CustomOption parent, bool isHeader, bool hideIfParentEnabled, string format, Action onChange = null)
+        {
+            Id = id;
+            NameKey = nameKey;
+            Selections = selections;
+            var index = Array.IndexOf(selections, defaultValue);
+            DefaultSelection = index >= 0 ? index : 0;
+            Parent = parent;
+            IsHeader = isHeader;
+            Type = type;
+            OnChange = onChange;
+            HideIfParentEnabled = hideIfParentEnabled;
+            Selection = 0;
+            if (id != 0)
+            {
+                Entry = Instance.Config.Bind($"Preset{Preset}", id.ToString(), DefaultSelection);
+                Selection = Mathf.Clamp(Entry.Value, 0, selections.Length - 1);
+
+#if DEBUG
+                if (AllOptions.Any(x => x.Id == id))
+                {
+                    Logger.LogDebug($"CustomOption id {id} is used in multiple places.");
+                }
+#endif
+            }
+            AllOptions.Add(this);
+        }
+
+        public static CustomOption CreateNormal(
+            int id,
+            CustomOptionType type,
+            string nameKey,
+            string[] selections,
+            CustomOption parent,
+            Action onChange = null,
+            bool hideIfParentEnabled = false,
+            string format = ""
+            )
+        {
+            return new CustomOption(id, type, nameKey, selections, "", parent, false, hideIfParentEnabled, format, onChange);
+        }
+
+        public static CustomOption CreateHeader(
+            int id,
+            CustomOptionType type,
+            string nameKey,
+            string[] selections,
+            string headerText,
+            Action onChange = null,
+            string format = ""
+            )
+        {
+            var opt = new CustomOption(id, type, nameKey, selections, "", null, false, false, format, onChange);
+            opt.SetHeader(headerText);
+            return opt;
+        }
+
+        public static CustomOption CreateNormal(
+            int id,
+            CustomOptionType type,
+            string nameKey,
+            float defaultValue,
+            float min,
+            float max,
+            float step,
+            CustomOption parent,
+            Action onChange = null,
+            bool hideIfParentEnabled = false,
+            string format = ""
+            )
+        {
+            List<object> selections = [];
+            for (float s = min; s <= max; s += step)
+            {
+                selections.Add(s);
+            }
+            return new CustomOption(id, type, nameKey, [.. selections], defaultValue, parent, false, hideIfParentEnabled, format, onChange);
+        }
+
+        public static CustomOption CreateHeader(
+            int id,
+            CustomOptionType type,
+            string nameKey,
+            float defaultValue,
+            float min,
+            float max,
+            float step,
+            string headerText,
+            Action onChange = null,
+            string format = ""
+            )
+        {
+            List<object> selections = [];
+            for (float s = min; s <= max; s += step)
+            {
+                selections.Add(s);
+            }
+
+            var opt = new CustomOption(id, type, nameKey, [.. selections], defaultValue, null, false, false, format, onChange);
+            opt.SetHeader(headerText);
+            return opt;
+        }
+
+        public static CustomOption CreateNormal(
+            int id,
+            CustomOptionType type,
+            string nameKey,
+            bool defaultValue,
+            CustomOption parent,
+            Action onChange = null,
+            bool hideIfParentEnabled = false,
+            string format = ""
+        )
+        {
+            return new CustomOption(id, type, nameKey, ["Off", "On"], defaultValue ? "On" : "Off", parent, false, hideIfParentEnabled, format, onChange);
+        }
+
+        public static CustomOption CreateHeader(
+            int id,
+            CustomOptionType type,
+            string nameKey,
+            bool defaultValue,
+            string headerText,
+            Action onChange = null,
+            string format = ""
+        )
+        {
+            var opt = new CustomOption(id, type, nameKey, ["Off", "On"], defaultValue ? "On" : "Off", null, false, false, format, onChange);
+            opt.SetHeader(headerText);
+            return opt;
+        }
+
+        private void SetHeader(string text)
+        {
+            IsHeader = true;
+            HeaderText = text;
+        }
+
+        // Static behaviour
+        public static void SwitchPreset(int newPreset)
+        {
+            Preset = newPreset;
+            foreach (CustomOption option in AllOptions)
+            {
+                if (option.Id == 0) continue;
+
+                option.Entry = Instance.Config.Bind($"Preset{Preset}", option.Id.ToString(), option.DefaultSelection);
+                option.Selection = Mathf.Clamp(option.Entry.Value, 0, option.Selections.Length - 1);
+                if (option.OptionBehavior != null && option.OptionBehavior is StringOption stringOption)
+                {
+                    stringOption.oldValue = stringOption.Value = option.Selection;
+                    stringOption.ValueText.text = option.Selections[option.Selection].ToString();
+                }
+            }
+
+            // make sure to reload all tabs, even the ones in the background, because they might have changed when the preset was switched!
+            if (AmongUsClient.Instance?.AmHost == true)
+            {
+                foreach (var entry in CurrentGOMs)
+                {
+                    CustomOptionType optionType = (CustomOptionType)entry.Key;
+                    GameOptionsMenu gom = entry.Value;
+                    if (gom != null)
+                    {
+                        UpdateGameOptionsMenu(optionType, gom);
+                    }
+                }
+            }
+        }
+
+        public static void ShareOptionChange(uint optionId)
+        {
+            var option = AllOptions.FirstOrDefault(x => x.Id == optionId);
+            if (option == null) return;
+            using var sender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.ShareOptions);
+            sender.Write((byte)1);
+            sender.WritePacked((uint)option.Id);
+            sender.WritePacked(Convert.ToUInt32(option.Selection));
+        }
+
+        public static void ShareOptionSelections()
+        {
+            if (PlayerControl.AllPlayerControls.Count <= 1 || AmongUsClient.Instance!.AmHost == false && PlayerControl.LocalPlayer == null) return;
+            var optionsList = new List<CustomOption>(AllOptions);
+            while (optionsList.Any())
+            {
+                byte amount = (byte)Math.Min(optionsList.Count, 200); // takes less than 3 bytes per option on average
+                using var sender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.ShareOptions);
+                sender.Write(amount);
+                for (int i = 0; i < amount; i++)
+                {
+                    var option = optionsList[0];
+                    optionsList.RemoveAt(0);
+                    sender.WritePacked((uint)option.Id);
+                    sender.WritePacked(Convert.ToUInt32(option.Selection));
+                }
+            }
+        }
+
+        // Getter
+        public int GetSelection()
+        {
+            return Selection;
+        }
+
+        public bool GetBool()
+        {
+            return Selection > 0;
+        }
+
+        public float GetFloat()
+        {
+            return (float)Selections[Selection];
+        }
+
+        public int GetQuantity()
+        {
+            return Selection + 1;
+        }
+
+        public string GetString()
+        {
+            var sel = Selections[Selection].ToString();
+
+            if (sel == "On")
+            {
+                return "<color=#FFFF00FF>" + Tr.Get(("CustomOption", sel)) + "</color>";
+            }
+            else if (sel == "Off")
+            {
+                return "<color=#CCCCCCFF>" + Tr.Get(("CustomOption", sel)) + "</color>";
+            }
+
+            return Tr.Get(sel);
+        }
+
+        public string GetName()
+        {
+            return Tr.Get(("Role", NameKey));
+        }
+
+        public void UpdateSelection(int newSelection, bool notifyUsers = true)
+        {
+            newSelection = Mathf.Clamp((newSelection + Selections.Length) % Selections.Length, 0, Selections.Length - 1);
+            if (AmongUsClient.Instance?.AmClient == true && notifyUsers && Selection != newSelection)
+            {
+                DestroyableSingleton<HudManager>.Instance.Notifier.AddSettingsChangeMessage((StringNames)(Id + 6000), Selections[newSelection].ToString(), false);
+                try
+                {
+                    Selection = newSelection;
+                    if (GameStartManager.Instance != null && GameStartManager.Instance.LobbyInfoPane != null && GameStartManager.Instance.LobbyInfoPane.LobbyViewSettingsPane != null && GameStartManager.Instance.LobbyInfoPane.LobbyViewSettingsPane.gameObject.activeSelf)
+                    {
+                        SettingsPaneChangeTab(GameStartManager.Instance.LobbyInfoPane.LobbyViewSettingsPane, GameStartManager.Instance.LobbyInfoPane.LobbyViewSettingsPane.currentTab);
+                    }
+                }
+                catch { }
+            }
+            Selection = newSelection;
+
+            try
+            {
+                OnChange?.Invoke();
+            }
+            catch { }
+
+            if (OptionBehavior != null && OptionBehavior is StringOption stringOption)
+            {
+                stringOption.oldValue = stringOption.Value = Selection;
+                stringOption.ValueText.text = Selections[Selection].ToString();
+                if (AmongUsClient.Instance?.AmHost == true && PlayerControl.LocalPlayer)
+                {
+                    if (Id == 0 && Selection != Preset)
+                    {
+                        SwitchPreset(Selection); // Switch presets
+                        ShareOptionSelections();
+                    }
+                    else if (Entry != null)
+                    {
+                        Entry.Value = Selection; // Save selection to config
+                        ShareOptionChange((uint)Id);// Share single selection
+                    }
+                }
+            }
+            else if (Id == 0 && AmongUsClient.Instance?.AmHost == true && PlayerControl.LocalPlayer)
+            {  // Share the preset switch for random maps, even if the menu isn't open!
+                SwitchPreset(Selection);
+                ShareOptionSelections();// Share all selections
+            }
+
+            if (AmongUsClient.Instance?.AmHost == true)
+            {
+                var currentTab = SettingMenuCurrentTabs.FirstOrDefault(x => x.active).GetComponent<GameOptionsMenu>();
+                if (currentTab != null)
+                {
+                    var optionType = AllOptions.First(x => x.OptionBehavior == currentTab.Children[0]).Type;
+                    UpdateGameOptionsMenu(optionType, currentTab);
+                }
+            }
+        }
+    }
+}
