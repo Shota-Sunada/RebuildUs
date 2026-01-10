@@ -19,4 +19,11 @@ public static class HudManagerPatch
         CustomOption.HudSettingsManager.UpdateHudButtons(__instance);
         CustomOption.HudSettingsManager.ToggleSummaryButtonHandler(__instance);
     }
+
+    [HarmonyPrefix]
+    [HarmonyPatch(typeof(HudManager), nameof(HudManager.CoShowIntro))]
+    public static void CoShowIntroPrefix()
+    {
+        RoleAssignment.IsAssigned = false;
+    }
 }

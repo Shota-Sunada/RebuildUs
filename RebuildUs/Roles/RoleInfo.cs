@@ -39,7 +39,8 @@ public partial class RoleInfo
         }
 
         // TODO: Write roles here
-        // if (player.IsRole(ERoleType.None)) infos.Add(jester);
+        if (player.IsRole(ERoleType.Jester)) infos.Add(Jester);
+        if (player.IsRole(ERoleType.Mayor)) infos.Add(Mayor);
 
         if (excludeRoles != null)
         {

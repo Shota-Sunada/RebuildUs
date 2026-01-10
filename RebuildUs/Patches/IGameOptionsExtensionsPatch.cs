@@ -16,4 +16,15 @@ public static class IGameOptionsExtensionsPatch
     {
         CustomOption.AppendItem(ref stringName, ref value);
     }
+
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(IGameOptionsExtensions), nameof(IGameOptionsExtensions.GetAdjustedNumImpostors))]
+    public static void GetAdjustedNumImpostorsPostfix(ref int __result)
+    {
+        if (GameOptionsManager.Instance.CurrentGameOptions.GameMode == AmongUs.GameOptions.GameModes.Normal)
+        {
+            // Ignore Vanilla impostor limits in TOR Games.
+            __result = Mathf.Clamp(GameOptionsManager.Instance.CurrentGameOptions.NumImpostors, 1, 3);
+        }
+    }
 }

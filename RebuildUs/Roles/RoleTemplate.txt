@@ -1,0 +1,34 @@
+namespace RebuildUs.Roles.[CHANGE HERE];
+
+[HarmonyPatch]
+public class Role : RoleBase<Role>
+{
+    public static Color RoleColor = Palette.CrewmateBlue;
+
+    // write configs here
+
+    public Role()
+    {
+        // write value init here
+        StaticRoleType = CurrentRoleType = ERoleType.[CHANGE HERE];
+    }
+
+    public override void OnMeetingStart() { }
+    public override void OnMeetingEnd() { }
+    public override void FixedUpdate() { }
+    public override void OnKill(PlayerControl target) { }
+    public override void OnDeath(PlayerControl killer = null) { }
+    public override void OnFinishShipStatusBegin() { }
+    public override void HandleDisconnect(PlayerControl player, DisconnectReasons reason) { }
+
+    public static void MakeButtons(HudManager hm) { }
+    public static void SetButtonCooldowns() { }
+
+    // write functions here
+
+    public static void Clear()
+    {
+        // reset configs here
+        Players.Clear();
+    }
+}

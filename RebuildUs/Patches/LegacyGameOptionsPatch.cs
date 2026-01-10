@@ -11,4 +11,12 @@ public static class LegacyGameOptionsPatch
     {
         return CustomOption.LGOAreInvalid(__instance, ref maxExpectedPlayers);
     }
+
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(LegacyGameOptions), nameof(LegacyGameOptions.Validate))]
+    public static void ValidatePostfix(LegacyGameOptions __instance)
+    {
+        if (MapOptions.GameMode == CustomGamemodes.HideNSeek || GameOptionsManager.Instance.CurrentGameOptions.GameMode != GameModes.Normal) return;
+        __instance.NumImpostors = GameOptionsManager.Instance.CurrentGameOptions.NumImpostors;
+    }
 }

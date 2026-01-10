@@ -1,5 +1,6 @@
 using System.Reflection;
 using RebuildUs.Players;
+using RebuildUs.Roles.Neutral;
 using RebuildUs.Utilities;
 
 namespace RebuildUs;
@@ -201,5 +202,36 @@ public static class Helpers
             // if (p.IsTeamCrewmate() && !p.hasModifier(ModifierType.Madmate) && p.isAlive()) return true;
         }
         return false;
+    }
+
+    public static bool HasImpostorVision(PlayerControl player)
+    {
+        if (player.IsTeamImpostor()
+        || (player.IsRole(ERoleType.Jester) && Jester.hasImpostorVision)
+        )
+        {
+            return true;
+        }
+
+        return false;
+    }
+
+    public static KeyValuePair<byte, int> MaxPair(this Dictionary<byte, int> self, out bool tie)
+    {
+        tie = true;
+        KeyValuePair<byte, int> result = new(byte.MaxValue, int.MinValue);
+        foreach (KeyValuePair<byte, int> keyValuePair in self)
+        {
+            if (keyValuePair.Value > result.Value)
+            {
+                result = keyValuePair;
+                tie = false;
+            }
+            else if (keyValuePair.Value == result.Value)
+            {
+                tie = true;
+            }
+        }
+        return result;
     }
 }

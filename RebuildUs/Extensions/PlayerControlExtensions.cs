@@ -2,6 +2,7 @@ using InnerNet;
 using RebuildUs.Modules.RPC;
 using RebuildUs.Players;
 using RebuildUs.Roles;
+using RebuildUs.Roles.Neutral;
 using RebuildUs.Utilities;
 
 namespace RebuildUs.Extensions;
@@ -140,8 +141,8 @@ public static class PlayerControlHelpers
         //     roleCouldUse = true;
         // else if (CreatedMadmate.canSabotage && player.hasModifier(ModifierType.CreatedMadmate))
         //     roleCouldUse = true;
-        // else if (Jester.canSabotage && player.isRole(RoleType.Jester))
-        //     roleCouldUse = true;
+        if (Jester.canSabotage && player.IsRole(ERoleType.Jester))
+            roleCouldUse = true;
         // else if (!Mafioso.canSabotage && player.isRole(RoleType.Mafioso))
         //     roleCouldUse = false;
         // else if (!Janitor.canSabotage && player.isRole(RoleType.Janitor))
@@ -164,4 +165,9 @@ public static class PlayerControlHelpers
 
     public static string GetRoleName(this PlayerControl player) => RoleInfo.GetRolesString(player, false, joinSeparator: " + ");
     public static string GetNameWithRole(this PlayerControl player) => $"{player.Data.PlayerName} ({player.GetRoleName()})";
+
+    public static void MurderPlayer(this PlayerControl player, PlayerControl target)
+    {
+        player.MurderPlayer(target, MurderResultFlags.Succeeded);
+    }
 }

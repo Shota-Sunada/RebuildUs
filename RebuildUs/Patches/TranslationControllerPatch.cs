@@ -31,25 +31,6 @@ public static class TranslationControllerPatch
     [HarmonyPatch(typeof(TranslationController), nameof(TranslationController.GetString), [typeof(StringNames), typeof(Il2CppReferenceArray<Il2CppSystem.Object>)])]
     public static void GetStringPostfix(ref string __result, [HarmonyArgument(0)] StringNames id)
     {
-        try
-        {
-            if (ExileController.Instance != null && ExileController.Instance.initData != null)
-            {
-                PlayerControl player = ExileController.Instance.initData.networkedPlayer.Object;
-                if (player == null) return;
-                // Exile role text
-                if (id == StringNames.ExileTextPN || id == StringNames.ExileTextSN || id == StringNames.ExileTextPP || id == StringNames.ExileTextSP)
-                {
-                    __result = player.Data.PlayerName + " was The " + string.Join(" ", [.. RoleInfo.GetRoleInfoForPlayer(player, false).Select(x => x.Name)]);
-                }
-                if (id == StringNames.ImpostorsRemainP || id == StringNames.ImpostorsRemainS)
-                {
-                }
-            }
-        }
-        catch
-        {
-            // pass - Hopefully prevent leaving while exiling to softlock game
-        }
+        Exile.ExileMessage(ref __result, id);
     }
 }

@@ -2,6 +2,7 @@ using System.Text;
 using RebuildUs.Modules.EndGame;
 using RebuildUs.Players;
 using RebuildUs.Roles;
+using RebuildUs.Roles.Neutral;
 
 namespace RebuildUs.Modules;
 
@@ -65,12 +66,14 @@ public static class EndGameMain
             // AdditionalTempData.plagueDoctorProgress = PlagueDoctor.progress;
 
             var notWinners = new List<PlayerControl>();
+            notWinners.AddRange(Jester.AllPlayers);
 
             var sabotageWin = gameOverReason is GameOverReason.ImpostorsBySabotage;
             var impostorWin = gameOverReason is GameOverReason.ImpostorsByVote or GameOverReason.ImpostorsByKill or GameOverReason.ImpostorDisconnect;
             var crewmateWin = gameOverReason is GameOverReason.CrewmatesByVote or GameOverReason.CrewmatesByTask or GameOverReason.CrewmateDisconnect;
 
             // ADD HERE MORE!
+            var jesterWin = Jester.Exists && gameOverReason == (GameOverReason)ECustomGameOverReason.JesterWin;
 
             var everyoneDead = AdditionalTempData.PlayerRoles.All(x => x.Status != EFinalStatus.Alive);
             var forceEnd = gameOverReason == (GameOverReason)ECustomGameOverReason.ForceEnd;
@@ -114,7 +117,16 @@ public static class EndGameMain
                 EndGameResult.CachedWinners.Remove(winner);
             }
 
-            if (everyoneDead)
+            if (jesterWin)
+            {
+                EndGameResult.CachedWinners = new Il2CppSystem.Collections.Generic.List<CachedPlayerData>();
+                foreach (var jester in Jester.Players)
+                {
+                    EndGameResult.CachedWinners.Add(new(jester.Player.Data));
+                }
+                AdditionalTempData.WinCondition = EWinCondition.JesterWin;
+            }
+            else if (everyoneDead)
             {
                 EndGameResult.CachedWinners = new Il2CppSystem.Collections.Generic.List<CachedPlayerData>();
                 AdditionalTempData.WinCondition = EWinCondition.EveryoneDied;
@@ -131,7 +143,7 @@ public static class EndGameMain
                 wpd.IsDead = wpd.IsDead || AdditionalTempData.PlayerRoles.Any(x => x.PlayerName == wpd.PlayerName && x.Status != EFinalStatus.Alive);
             }
 
-            RPCProcedure.ResetVariables();
+            RPCProcedure.resetVariables();
         }
     }
 

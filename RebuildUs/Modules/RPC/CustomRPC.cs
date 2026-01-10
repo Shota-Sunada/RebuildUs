@@ -2,7 +2,30 @@ namespace RebuildUs.Modules.RPC;
 
 public enum CustomRPC : byte
 {
-    ResetVariables = 100,
+    // Systems
+    ResetVariables = 70,
     ShareOptions,
+    WorkaroundSetRoles,
+    SetRole,
+    AddModifier,
+    VersionHandshake,
+    UseUncheckedVent,
+    UncheckedMurderPlayer,
+    UncheckedCmdReportDeadBody,
+    UncheckedExilePlayer,
+    DynamicMapOption,
+    SetGameStarting,
+    ShareGamemode,
+    FinishResetVariables,
+    FinishSetRole,
+    SetLovers,
+    OverrideNativeRole,
+    UncheckedEndGame,
     UncheckedSetTasks,
+    FinishShipStatusBegin,
+
+    // Roles
+    EngineerFixLights,
+    EngineerFixSubmergedOxygen,
+    EngineerUsedRepair,
 }
