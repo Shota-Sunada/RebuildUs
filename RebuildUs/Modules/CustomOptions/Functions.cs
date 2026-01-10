@@ -262,7 +262,7 @@ public partial class CustomOption
                 continue;  // Hides options, for which the parent is disabled!
             }
 
-            if (option == CustomOptionHolder.CrewmateRolesCountMax || option == CustomOptionHolder.NeutralRolesCountMax || option == CustomOptionHolder.ImpostorRolesCountMax || option == CustomOptionHolder.ModifiersCountMax || option == CustomOptionHolder.CrewmateRolesFill)
+            if (option == CustomOptionHolder.CrewmateRolesCountMax || option == CustomOptionHolder.NeutralRolesCountMax || option == CustomOptionHolder.ImpostorRolesCountMax || option == CustomOptionHolder.ModifiersCountMax)
                 continue;
 
             ViewSettingsInfoPanel viewSettingsInfoPanel = UnityEngine.Object.Instantiate<ViewSettingsInfoPanel>(__instance.infoPanelOrigin);
@@ -316,18 +316,6 @@ public partial class CustomOption
             name = "Crewmate Roles";
             var min = CustomOptionHolder.CrewmateRolesCountMin.GetSelection();
             var max = CustomOptionHolder.CrewmateRolesCountMax.GetSelection();
-            if (CustomOptionHolder.CrewmateRolesFill.GetBool())
-            {
-                var crewCount = PlayerControl.AllPlayerControls.Count - GameOptionsManager.Instance.currentGameOptions.NumImpostors;
-                int minNeutral = CustomOptionHolder.NeutralRolesCountMin.GetSelection();
-                int maxNeutral = CustomOptionHolder.NeutralRolesCountMax.GetSelection();
-                if (minNeutral > maxNeutral) minNeutral = maxNeutral;
-                min = crewCount - maxNeutral;
-                max = crewCount - minNeutral;
-                if (min < 0) min = 0;
-                if (max < 0) max = 0;
-                val = "Fill: ";
-            }
             if (min > max) min = max;
             val += (min == max) ? $"{max}" : $"{min} - {max}";
         }
@@ -724,7 +712,7 @@ public partial class CustomOption
         }
         else if (MapOptions.GameMode == CustomGamemodes.Classic)
         {
-            options = options.Where(x => !(x.Type == CustomOptionType.Guesser || x == CustomOptionHolder.CrewmateRolesFill));
+            options = options.Where(x => !(x.Type == CustomOptionType.Guesser));
         }
         else if (MapOptions.GameMode == CustomGamemodes.HideNSeek)
         {
@@ -776,18 +764,6 @@ public partial class CustomOption
                     var min = CustomOptionHolder.CrewmateRolesCountMin.GetSelection();
                     var max = CustomOptionHolder.CrewmateRolesCountMax.GetSelection();
                     string optionValue = "";
-                    if (CustomOptionHolder.CrewmateRolesFill.GetBool())
-                    {
-                        var crewCount = PlayerControl.AllPlayerControls.Count - GameOptionsManager.Instance.currentGameOptions.NumImpostors;
-                        int minNeutral = CustomOptionHolder.NeutralRolesCountMin.GetSelection();
-                        int maxNeutral = CustomOptionHolder.NeutralRolesCountMax.GetSelection();
-                        if (minNeutral > maxNeutral) minNeutral = maxNeutral;
-                        min = crewCount - maxNeutral;
-                        max = crewCount - minNeutral;
-                        if (min < 0) min = 0;
-                        if (max < 0) max = 0;
-                        optionValue = "Fill: ";
-                    }
                     if (min > max) min = max;
                     optionValue += (min == max) ? $"{max}" : $"{min} - {max}";
                     sb.AppendLine($"{optionName}: {optionValue}");

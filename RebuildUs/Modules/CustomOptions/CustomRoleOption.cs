@@ -14,7 +14,7 @@ public class CustomRoleOption : CustomOption
     public (int rate, int count) Data { get { return (Rate, Count); } }
 
     public CustomRoleOption(int baseId, CustomOptionType type, RoleInfo roleInfo, int max = 15, bool roleEnabled = true) :
-    base(baseId, type, Helpers.Cs(roleInfo.Color, roleInfo.NameKey), CustomOptionHolder.Rates, "", null, true, false, "")
+    base(baseId, type, Helpers.Cs(roleInfo.Color, roleInfo.NameKey), CustomOptionHolder.RATES, "", null, true, false, "")
     {
         IsRoleEnabled = roleEnabled;
 
@@ -25,7 +25,7 @@ public class CustomRoleOption : CustomOption
 
         if (max > 1)
         {
-            NumberOfRoleOption = CreateNormal(baseId + 10000, type, "CustomOption.NumberOfRole", 1f, 1f, 15f, 1f, this);
+            NumberOfRoleOption = Normal(baseId + 10000, type, "CustomOption.NumberOfRole", 1f, 1f, 15f, 1f, this);
         }
     }
 }

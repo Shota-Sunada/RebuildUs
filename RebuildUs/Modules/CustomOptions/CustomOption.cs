@@ -17,21 +17,20 @@ namespace RebuildUs.Modules.CustomOptions
         HideNSeek,
         PropHunt
     }
+    public enum CustomOptionType
+    {
+        General,
+        Impostor,
+        Neutral,
+        Crewmate,
+        Modifier,
+        Guesser,
+        HideNSeekMain,
+        HideNSeekRoles,
+        PropHunt,
+    }
     public partial class CustomOption
     {
-        public enum CustomOptionType
-        {
-            General,
-            Impostor,
-            Neutral,
-            Crewmate,
-            Modifier,
-            Guesser,
-            HideNSeekMain,
-            HideNSeekRoles,
-            PropHunt,
-        }
-
         public static List<CustomOption> AllOptions = [];
         public static int Preset = 0;
 
@@ -91,12 +90,12 @@ namespace RebuildUs.Modules.CustomOptions
             AllOptions.Add(this);
         }
 
-        public static CustomOption CreateNormal(
+        public static CustomOption Normal(
             int id,
             CustomOptionType type,
             string nameKey,
             string[] selections,
-            CustomOption parent,
+            CustomOption parent = null,
             Action onChange = null,
             bool hideIfParentEnabled = false,
             string format = ""
@@ -105,7 +104,7 @@ namespace RebuildUs.Modules.CustomOptions
             return new CustomOption(id, type, nameKey, selections, "", parent, false, hideIfParentEnabled, format, onChange);
         }
 
-        public static CustomOption CreateHeader(
+        public static CustomOption Header(
             int id,
             CustomOptionType type,
             string nameKey,
@@ -120,7 +119,7 @@ namespace RebuildUs.Modules.CustomOptions
             return opt;
         }
 
-        public static CustomOption CreateNormal(
+        public static CustomOption Normal(
             int id,
             CustomOptionType type,
             string nameKey,
@@ -128,7 +127,7 @@ namespace RebuildUs.Modules.CustomOptions
             float min,
             float max,
             float step,
-            CustomOption parent,
+            CustomOption parent = null,
             Action onChange = null,
             bool hideIfParentEnabled = false,
             string format = ""
@@ -142,7 +141,7 @@ namespace RebuildUs.Modules.CustomOptions
             return new CustomOption(id, type, nameKey, [.. selections], defaultValue, parent, false, hideIfParentEnabled, format, onChange);
         }
 
-        public static CustomOption CreateHeader(
+        public static CustomOption Header(
             int id,
             CustomOptionType type,
             string nameKey,
@@ -166,12 +165,12 @@ namespace RebuildUs.Modules.CustomOptions
             return opt;
         }
 
-        public static CustomOption CreateNormal(
+        public static CustomOption Normal(
             int id,
             CustomOptionType type,
             string nameKey,
             bool defaultValue,
-            CustomOption parent,
+            CustomOption parent = null,
             Action onChange = null,
             bool hideIfParentEnabled = false,
             string format = ""
@@ -180,7 +179,7 @@ namespace RebuildUs.Modules.CustomOptions
             return new CustomOption(id, type, nameKey, ["Off", "On"], defaultValue ? "On" : "Off", parent, false, hideIfParentEnabled, format, onChange);
         }
 
-        public static CustomOption CreateHeader(
+        public static CustomOption Header(
             int id,
             CustomOptionType type,
             string nameKey,

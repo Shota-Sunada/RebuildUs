@@ -81,7 +81,7 @@ public static class Intro
 
     public static void SetupIntroTeam(IntroCutscene __instance, ref Il2CppSystem.Collections.Generic.List<PlayerControl> yourTeam)
     {
-        var infos = RoleInfo.getRoleInfoForPlayer(CachedPlayer.LocalPlayer.PlayerControl);
+        var infos = RoleInfo.GetRoleInfoForPlayer(CachedPlayer.LocalPlayer.PlayerControl);
         var roleInfo = infos.Where(info => info.roleType != RoleType.Lovers).FirstOrDefault();
         if (roleInfo == null) return;
         // if (CachedPlayer.LocalPlayer.PlayerControl.IsNeutral() || CachedPlayer.LocalPlayer.PlayerControl.isGM())

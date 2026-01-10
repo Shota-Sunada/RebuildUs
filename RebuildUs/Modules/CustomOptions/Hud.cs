@@ -256,7 +256,7 @@ public partial class CustomOption
             }
             var (playerCompleted, playerTotal) = TasksHandler.TaskInfo(PlayerControl.LocalPlayer.Data);
             int numberOfLeftTasks = playerTotal - playerCompleted;
-            bool zoomButtonActive = !(PlayerControl.LocalPlayer == null || !PlayerControl.LocalPlayer.Data.IsDead || (PlayerControl.LocalPlayer.Data.Role.IsImpostor && !CustomOptionHolder.DeadImpsBlockSabotage.GetBool()) || MeetingHud.Instance);
+            bool zoomButtonActive = !(PlayerControl.LocalPlayer == null || !PlayerControl.LocalPlayer.Data.IsDead || (PlayerControl.LocalPlayer.Data.Role.IsImpostor && !CustomOptionHolder.BlockSabotageFromDeadImpostors.GetBool()) || MeetingHud.Instance);
             zoomButtonActive &= numberOfLeftTasks <= 0 || !CustomOptionHolder.FinishTasksBeforeHauntingOrZoomingOut.GetBool();
             ToggleZoomButtonObject.SetActive(zoomButtonActive);
             var posOffset = Helpers.ZoomOutStatus ? new Vector3(-1.27f, -7.92f, -52f) : new Vector3(0, -1.6f, -52f);
