@@ -17,7 +17,7 @@ public static class PlayerControlPatch
     [HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.RpcSyncSettings))]
     public static void RpcSyncSettingsPostfix()
     {
-        CustomOption.SyncVanillaSettings();
+        // CustomOption.SyncVanillaSettings();
     }
 
     [HarmonyPrefix]

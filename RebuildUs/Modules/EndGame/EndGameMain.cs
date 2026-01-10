@@ -44,7 +44,7 @@ public static class EndGameMain
                 gameOverReason == GameOverReason.ImpostorsBySabotage && !player.Data.Role.IsImpostor ? EFinalStatus.Sabotage :
                 EFinalStatus.Alive;
 
-            if (gameOverReason = GameOverReason.CrewmatesByTask && player.Data.Object.IsCrewmate()) tasksCompleted = tasksTotal;
+            if (gameOverReason == GameOverReason.CrewmatesByTask && player.Data.Object.IsTeamCrewmate()) tasksCompleted = tasksTotal;
 
             AdditionalTempData.PlayerRoles.Add(new PlayerRoleInfo()
             {

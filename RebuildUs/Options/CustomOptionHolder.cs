@@ -24,10 +24,10 @@ public static class CustomOptionHolder
 
     public static void Load()
     {
-        PresetSelection = CustomOption.CreateHeader(0, CustomOption.CustomOptionType.General, "Preset", Presets, () =>
-        {
-            CustomOption.SwitchPreset(PresetSelection.Selection);
-        });
+        // PresetSelection = CustomOption.CreateHeader(0, CustomOption.CustomOptionType.General, "Preset", Presets, () =>
+        // {
+        //     CustomOption.SwitchPreset(PresetSelection.Selection);
+        // });
 
     }
 }

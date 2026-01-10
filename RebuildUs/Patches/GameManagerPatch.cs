@@ -9,6 +9,6 @@ public static class GameManagerPatch
     [HarmonyPatch(typeof(GameManager), nameof(GameManager.CheckTaskCompletion))]
     public static bool CheckTaskCompletionPrefix(ref bool __result)
     {
-        return EndGame.CrewmateCantWinByTaskWithoutLivingPlayer(ref __result);
+        return EndGameMain.CrewmateCantWinByTaskWithoutLivingPlayer(ref __result);
     }
 }

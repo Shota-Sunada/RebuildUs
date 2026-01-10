@@ -14,8 +14,19 @@ global using BepInEx.Unity.IL2CPP;
 global using UnityEngine;
 global using TMPro;
 
-using RebuildUs.Options;
-using RebuildUs.Modules;
+global using RebuildUs;
+global using RebuildUs.Extensions;
+global using RebuildUs.Localization;
+global using RebuildUs.Modules;
+global using RebuildUs.Modules.Consoles;
+global using RebuildUs.Modules.CustomOptions;
+global using RebuildUs.Modules.EndGame;
+global using RebuildUs.Modules.RPC;
+global using RebuildUs.Options;
+global using RebuildUs.Patches;
+global using RebuildUs.Players;
+global using RebuildUs.Roles;
+global using RebuildUs.Utilities;
 
 namespace RebuildUs;
 
@@ -33,6 +44,8 @@ public class RebuildUs : BasePlugin
     public Version Version { get; } = Version.Parse(MOD_VERSION);
 
     public static int OptionsPage = 0;
+
+    public System.Random rnd = new((int)DateTime.Now.Ticks);
 
     public override void Load()
     {

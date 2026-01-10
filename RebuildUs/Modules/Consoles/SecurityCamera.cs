@@ -1,6 +1,6 @@
 namespace RebuildUs.Modules.Consoles;
 
-public static class Camera
+public static class SecurityCamera
 {
 
 }

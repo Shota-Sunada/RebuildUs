@@ -102,8 +102,8 @@ public static class Helpers
         float orthographicSize = reset || ZoomOutStatus ? 3f : 12f;
 
         ZoomOutStatus = !ZoomOutStatus && !reset;
-        Camera.main.orthographicSize = orthographicSize;
-        foreach (var cam in Camera.allCameras)
+        UnityEngine.Camera.main.orthographicSize = orthographicSize;
+        foreach (var cam in UnityEngine.Camera.allCameras)
         {
             if (cam != null && cam.gameObject.name == "UI Camera") cam.orthographicSize = orthographicSize;  // The UI is scaled too, else we cant click the buttons. Downside: map is super small.
         }
@@ -157,13 +157,13 @@ public static class Helpers
         var hashSet = new Il2CppSystem.Collections.Generic.HashSet<TaskTypes>();
 
         var commonTasks = new Il2CppSystem.Collections.Generic.List<NormalPlayerTask>();
-        foreach (var task in MapUtilities.CachedShipStatus.CommonTasks.OrderBy(x => rnd.Next())) commonTasks.Add(task);
+        foreach (var task in MapUtilities.CachedShipStatus.CommonTasks.OrderBy(x => RebuildUs.Instance.rnd.Next())) commonTasks.Add(task);
 
         var shortTasks = new Il2CppSystem.Collections.Generic.List<NormalPlayerTask>();
-        foreach (var task in MapUtilities.CachedShipStatus.ShortTasks.OrderBy(x => rnd.Next())) shortTasks.Add(task);
+        foreach (var task in MapUtilities.CachedShipStatus.ShortTasks.OrderBy(x => RebuildUs.Instance.rnd.Next())) shortTasks.Add(task);
 
         var longTasks = new Il2CppSystem.Collections.Generic.List<NormalPlayerTask>();
-        foreach (var task in MapUtilities.CachedShipStatus.LongTasks.OrderBy(x => rnd.Next())) longTasks.Add(task);
+        foreach (var task in MapUtilities.CachedShipStatus.LongTasks.OrderBy(x => RebuildUs.Instance.rnd.Next())) longTasks.Add(task);
 
         int start = 0;
         MapUtilities.CachedShipStatus.AddTasksFromList(ref start, numCommon, tasks, hashSet, commonTasks);
