@@ -5,6 +5,8 @@ public class AdditionalTempData
     public static EWinCondition WinCondition = EWinCondition.Default;
     public static List<EWinCondition> AdditionalWinConditions = [];
     public static List<PlayerRoleInfo> PlayerRoles = [];
+    public static bool IsGM = false;
+    public static GameOverReason GameOverReason;
     public static float Timer = 0;
 
     public static void Clear()
