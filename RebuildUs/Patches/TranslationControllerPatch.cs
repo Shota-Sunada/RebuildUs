@@ -11,11 +11,6 @@ public static class TranslationControllerPatch
     [HarmonyPatch(typeof(TranslationController), nameof(TranslationController.GetString), [typeof(StringNames), typeof(Il2CppReferenceArray<Il2CppSystem.Object>)])]
     public static bool GetStringPrefix(ref string __result, ref StringNames id)
     {
-        if (!CustomOption.VeryShortPatch(ref __result, ref id))
-        {
-            return false;
-        }
-
         return true;
     }
 

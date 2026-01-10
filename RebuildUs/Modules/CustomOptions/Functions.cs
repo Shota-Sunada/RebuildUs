@@ -927,22 +927,6 @@ public partial class CustomOption
         }
     }
 
-    public static bool VeryShortPatch(ref string __result, ref StringNames id)
-    {
-        if ((int)id == 49999)
-        {
-            __result = "Very Short";
-            return false;
-        }
-        return true;
-    }
-
-    public static void AddKillDistance()
-    {
-        LegacyGameOptions.KillDistances = new([0.5f, 1f, 1.8f, 2.5f]);
-        LegacyGameOptions.KillDistanceStrings = new(["Very Short", "Short", "Medium", "Long"]);
-    }
-
     public static bool AdjustStringForViewPanel(StringGameSetting __instance, float value, ref string __result)
     {
         if (__instance.OptionName != Int32OptionNames.KillDistance) return true;
