@@ -145,4 +145,19 @@ public static class Helpers
         }
         return null;
     }
+
+    public static void SetSemiTransparent(this PoolablePlayer player, bool value)
+    {
+        var alpha = value ? 0.25f : 1f;
+        foreach (SpriteRenderer r in player.gameObject.GetComponentsInChildren<SpriteRenderer>())
+        {
+            r.color = new Color(r.color.r, r.color.g, r.color.b, alpha);
+        }
+        player.cosmetics.nameText.color = new Color(player.cosmetics.nameText.color.r, player.cosmetics.nameText.color.g, player.cosmetics.nameText.color.b, alpha);
+    }
+
+    public static bool IsNeutral(this PlayerControl player)
+    {
+        return false;
+    }
 }
