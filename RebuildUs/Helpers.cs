@@ -21,7 +21,7 @@ public static class Helpers
         }
         catch
         {
-            Logger.LogError("Error loading sprite from path: {0}", path);
+            Logger.LogError("Error loading sprite from path: {0}", [path]);
         }
         return null;
     }
@@ -45,7 +45,7 @@ public static class Helpers
         }
         catch
         {
-            Logger.LogError("Error loading texture from resources: {0}", path);
+            Logger.LogError("Error loading texture from resources: {0}", [path]);
         }
         return null;
     }
@@ -64,7 +64,7 @@ public static class Helpers
         }
         catch
         {
-            Logger.LogError("Error loading texture from disk: {0}", path);
+            Logger.LogError("Error loading texture from disk: {0}", [path]);
         }
         return null;
     }
