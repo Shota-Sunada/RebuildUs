@@ -355,7 +355,7 @@ public partial class CustomOption
         {
 
             // create RU settings
-            CreateCustomButton(__instance, next++, "RUSettings", "TOR Settings", CustomOptionType.General);
+            CreateCustomButton(__instance, next++, "RUSettings", "RU Settings", CustomOptionType.General);
             // create role overview
             CreateCustomButton(__instance, next++, "RoleOverview", "Role Overview", (CustomOptionType)99);
             // IMp
@@ -564,7 +564,7 @@ public partial class CustomOption
         if (MapOptions.GameMode == CustomGamemodes.Guesser || MapOptions.GameMode == CustomGamemodes.Classic)
         {
 
-            // create TOR settings
+            // create RU settings
             CreateCustomButton(__instance, next++, "RUSettings", "RU Settings");
             CreateGameOptionsMenu(__instance, CustomOptionType.General, "RUSettings");
             // Guesser if applicable
@@ -898,40 +898,19 @@ public partial class CustomOption
 
     public static void StringOptionInitializePrefix(StringOption __instance)
     {
-        //prevents indexoutofrange exception breaking the setting if long happens to be selected
-        //when host opens the laptop
-        if (__instance.Title == StringNames.GameKillDistance && __instance.Value == 3)
-        {
-            __instance.Value = 1;
-            GameOptionsManager.Instance.currentNormalGameOptions.KillDistance = 1;
-            GameManager.Instance.LogicOptions.SyncOptions();
-        }
     }
 
     public static void StringOptionInitializePostfix(StringOption __instance)
     {
-        if (__instance.Title == StringNames.GameKillDistance && __instance.Values.Count == 3)
-        {
-            __instance.Values = new([(StringNames)49999, StringNames.SettingShort, StringNames.SettingMedium, StringNames.SettingLong]);
-        }
     }
 
     public static void AppendItem(ref StringNames stringName, ref string value)
     {
-        if (stringName == StringNames.GameKillDistance)
-        {
-            int index = GameOptionsManager.Instance.currentGameMode == GameModes.Normal
-                ? GameOptionsManager.Instance.currentNormalGameOptions.KillDistance
-                : GameOptionsManager.Instance.currentHideNSeekGameOptions.KillDistance;
-            value = LegacyGameOptions.KillDistanceStrings[index];
-        }
     }
 
     public static bool AdjustStringForViewPanel(StringGameSetting __instance, float value, ref string __result)
     {
-        if (__instance.OptionName != Int32OptionNames.KillDistance) return true;
-        __result = LegacyGameOptions.KillDistanceStrings[(int)value];
-        return false;
+        return true;
     }
 
     // public static string optionToString(CustomOption option)
