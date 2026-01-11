@@ -64,132 +64,132 @@ public static class EndGameMain
             // AdditionalTempData.IsGM = CustomOptionHolder.GmEnabled.GetBool() && CachedPlayer.LocalPlayer.PlayerControl.IsGM();
             // AdditionalTempData.plagueDoctorInfected = PlagueDoctor.infected;
             // AdditionalTempData.plagueDoctorProgress = PlagueDoctor.progress;
-        }
 
-        var notWinners = new List<PlayerControl>();
-        notWinners.AddRange(Jester.AllPlayers);
-        notWinners.AddRange(Arsonist.AllPlayers);
-        notWinners.AddRange(Vulture.AllPlayers);
-        notWinners.AddRange(Jackal.AllPlayers);
-        notWinners.AddRange(Sidekick.AllPlayers);
-        notWinners.AddRange(Jackal.FormerJackals);
+            var notWinners = new List<PlayerControl>();
+            notWinners.AddRange(Jester.AllPlayers);
+            notWinners.AddRange(Arsonist.AllPlayers);
+            notWinners.AddRange(Vulture.AllPlayers);
+            notWinners.AddRange(Jackal.AllPlayers);
+            notWinners.AddRange(Sidekick.AllPlayers);
+            notWinners.AddRange(Jackal.FormerJackals);
 
-        var sabotageWin = gameOverReason is GameOverReason.ImpostorsBySabotage;
-        var impostorWin = gameOverReason is GameOverReason.ImpostorsByVote or GameOverReason.ImpostorsByKill or GameOverReason.ImpostorDisconnect;
-        var crewmateWin = gameOverReason is GameOverReason.CrewmatesByVote or GameOverReason.CrewmatesByTask or GameOverReason.CrewmateDisconnect;
+            var sabotageWin = gameOverReason is GameOverReason.ImpostorsBySabotage;
+            var impostorWin = gameOverReason is GameOverReason.ImpostorsByVote or GameOverReason.ImpostorsByKill or GameOverReason.ImpostorDisconnect;
+            var crewmateWin = gameOverReason is GameOverReason.CrewmatesByVote or GameOverReason.CrewmatesByTask or GameOverReason.CrewmateDisconnect;
 
-        // ADD HERE MORE!
-        var jesterWin = Jester.Exists && gameOverReason == (GameOverReason)ECustomGameOverReason.JesterWin;
-        var arsonistWin = Arsonist.Exists && gameOverReason == (GameOverReason)ECustomGameOverReason.ArsonistWin;
-        var vultureWin = Vulture.Exists && gameOverReason == (GameOverReason)ECustomGameOverReason.VultureWin;
-        var teamJackalWin = gameOverReason == (GameOverReason)ECustomGameOverReason.TeamJackalWin;
+            // ADD HERE MORE!
+            var jesterWin = Jester.Exists && gameOverReason == (GameOverReason)ECustomGameOverReason.JesterWin;
+            var arsonistWin = Arsonist.Exists && gameOverReason == (GameOverReason)ECustomGameOverReason.ArsonistWin;
+            var vultureWin = Vulture.Exists && gameOverReason == (GameOverReason)ECustomGameOverReason.VultureWin;
+            var teamJackalWin = gameOverReason == (GameOverReason)ECustomGameOverReason.TeamJackalWin;
 
-        var everyoneDead = AdditionalTempData.PlayerRoles.All(x => x.Status != EFinalStatus.Alive);
-        var forceEnd = gameOverReason == (GameOverReason)ECustomGameOverReason.ForceEnd;
+            var everyoneDead = AdditionalTempData.PlayerRoles.All(x => x.Status != EFinalStatus.Alive);
+            var forceEnd = gameOverReason == (GameOverReason)ECustomGameOverReason.ForceEnd;
 
-        if (impostorWin)
-        {
-            EndGameResult.CachedWinners = new Il2CppSystem.Collections.Generic.List<CachedPlayerData>();
-            foreach (var p in PlayerControl.AllPlayerControls)
+            if (impostorWin)
             {
-                if (p.IsTeamImpostor() /*|| p.HasModifier(ModifierType.Madmate) || p.HasModifier(ModifierType.CreatedMadmate)*/)
+                EndGameResult.CachedWinners = new Il2CppSystem.Collections.Generic.List<CachedPlayerData>();
+                foreach (var p in PlayerControl.AllPlayerControls)
                 {
-                    var wpd = new CachedPlayerData(p.Data);
-                    EndGameResult.CachedWinners.Add(wpd);
+                    if (p.IsTeamImpostor() /*|| p.HasModifier(ModifierType.Madmate) || p.HasModifier(ModifierType.CreatedMadmate)*/)
+                    {
+                        var wpd = new CachedPlayerData(p.Data);
+                        EndGameResult.CachedWinners.Add(wpd);
+                    }
                 }
             }
-        }
-        else if (crewmateWin)
-        {
-            EndGameResult.CachedWinners = new Il2CppSystem.Collections.Generic.List<CachedPlayerData>();
-            foreach (var p in PlayerControl.AllPlayerControls)
+            else if (crewmateWin)
             {
-                if (p.IsTeamCrewmate() /*&& !p.HasModifier(ModifierType.Madmate) && !p.HasModifier(ModifierType.CreatedMadmate)*/)
+                EndGameResult.CachedWinners = new Il2CppSystem.Collections.Generic.List<CachedPlayerData>();
+                foreach (var p in PlayerControl.AllPlayerControls)
                 {
-                    var wpd = new CachedPlayerData(p.Data);
-                    EndGameResult.CachedWinners.Add(wpd);
+                    if (p.IsTeamCrewmate() /*&& !p.HasModifier(ModifierType.Madmate) && !p.HasModifier(ModifierType.CreatedMadmate)*/)
+                    {
+                        var wpd = new CachedPlayerData(p.Data);
+                        EndGameResult.CachedWinners.Add(wpd);
+                    }
                 }
             }
-        }
 
-        // 勝利画面から不要なキャラを追放する
-        var winnersToRemove = new List<CachedPlayerData>();
-        foreach (var winner in EndGameResult.CachedWinners)
-        {
-            if (notWinners.Any(x => x.Data.PlayerName == winner.PlayerName))
+            // 勝利画面から不要なキャラを追放する
+            var winnersToRemove = new List<CachedPlayerData>();
+            foreach (var winner in EndGameResult.CachedWinners)
             {
-                winnersToRemove.Add(winner);
+                if (notWinners.Any(x => x.Data.PlayerName == winner.PlayerName))
+                {
+                    winnersToRemove.Add(winner);
+                }
             }
-        }
-        foreach (var winner in winnersToRemove)
-        {
-            EndGameResult.CachedWinners.Remove(winner);
-        }
+            foreach (var winner in winnersToRemove)
+            {
+                EndGameResult.CachedWinners.Remove(winner);
+            }
 
-        if (jesterWin)
-        {
-            EndGameResult.CachedWinners = new Il2CppSystem.Collections.Generic.List<CachedPlayerData>();
-            foreach (var jester in Jester.Players)
+            if (jesterWin)
             {
-                EndGameResult.CachedWinners.Add(new(jester.Player.Data));
+                EndGameResult.CachedWinners = new Il2CppSystem.Collections.Generic.List<CachedPlayerData>();
+                foreach (var jester in Jester.Players)
+                {
+                    EndGameResult.CachedWinners.Add(new(jester.Player.Data));
+                }
+                AdditionalTempData.WinCondition = EWinCondition.JesterWin;
             }
-            AdditionalTempData.WinCondition = EWinCondition.JesterWin;
-        }
-        else if (arsonistWin)
-        {
-            EndGameResult.CachedWinners = new Il2CppSystem.Collections.Generic.List<CachedPlayerData>();
-            foreach (var arsonist in Arsonist.Players)
+            else if (arsonistWin)
             {
-                EndGameResult.CachedWinners.Add(new(arsonist.Player.Data));
+                EndGameResult.CachedWinners = new Il2CppSystem.Collections.Generic.List<CachedPlayerData>();
+                foreach (var arsonist in Arsonist.Players)
+                {
+                    EndGameResult.CachedWinners.Add(new(arsonist.Player.Data));
+                }
+                AdditionalTempData.WinCondition = EWinCondition.ArsonistWin;
             }
-            AdditionalTempData.WinCondition = EWinCondition.ArsonistWin;
-        }
-        else if (vultureWin)
-        {
-            EndGameResult.CachedWinners = new Il2CppSystem.Collections.Generic.List<CachedPlayerData>();
-            foreach (var vulture in Vulture.Players)
+            else if (vultureWin)
             {
-                EndGameResult.CachedWinners.Add(new(vulture.Player.Data));
+                EndGameResult.CachedWinners = new Il2CppSystem.Collections.Generic.List<CachedPlayerData>();
+                foreach (var vulture in Vulture.Players)
+                {
+                    EndGameResult.CachedWinners.Add(new(vulture.Player.Data));
+                }
+                AdditionalTempData.WinCondition = EWinCondition.VultureWin;
             }
-            AdditionalTempData.WinCondition = EWinCondition.VultureWin;
-        }
-        else if (teamJackalWin)
-        {
-            // Jackal wins if nobody except jackal is alive
-            AdditionalTempData.WinCondition = EWinCondition.JackalWin;
-            EndGameResult.CachedWinners = new Il2CppSystem.Collections.Generic.List<CachedPlayerData>();
-            foreach (var jackal in Jackal.AllPlayers)
+            else if (teamJackalWin)
             {
-                EndGameResult.CachedWinners.Add(new(jackal.Data) { IsImpostor = false });
+                // Jackal wins if nobody except jackal is alive
+                AdditionalTempData.WinCondition = EWinCondition.JackalWin;
+                EndGameResult.CachedWinners = new Il2CppSystem.Collections.Generic.List<CachedPlayerData>();
+                foreach (var jackal in Jackal.AllPlayers)
+                {
+                    EndGameResult.CachedWinners.Add(new(jackal.Data) { IsImpostor = false });
+                }
+                // If there is a sidekick. The sidekick also wins
+                foreach (var sidekick in Sidekick.AllPlayers)
+                {
+                    EndGameResult.CachedWinners.Add(new(sidekick.Data) { IsImpostor = false });
+                }
+                foreach (var jackal in Jackal.FormerJackals)
+                {
+                    EndGameResult.CachedWinners.Add(new(jackal.Data) { IsImpostor = false });
+                }
             }
-            // If there is a sidekick. The sidekick also wins
-            foreach (var sidekick in Sidekick.AllPlayers)
+            else if (everyoneDead)
             {
-                EndGameResult.CachedWinners.Add(new(sidekick.Data) { IsImpostor = false });
+                EndGameResult.CachedWinners = new Il2CppSystem.Collections.Generic.List<CachedPlayerData>();
+                AdditionalTempData.WinCondition = EWinCondition.EveryoneDied;
             }
-            foreach (var jackal in Jackal.FormerJackals)
-            {
-                EndGameResult.CachedWinners.Add(new(jackal.Data) { IsImpostor = false });
-            }
-        }
-        else if (everyoneDead)
-        {
-            EndGameResult.CachedWinners = new Il2CppSystem.Collections.Generic.List<CachedPlayerData>();
-            AdditionalTempData.WinCondition = EWinCondition.EveryoneDied;
-        }
 
-        if (forceEnd)
-        {
-            EndGameResult.CachedWinners = new Il2CppSystem.Collections.Generic.List<CachedPlayerData>();
-            AdditionalTempData.WinCondition = EWinCondition.ForceEnd;
-        }
+            if (forceEnd)
+            {
+                EndGameResult.CachedWinners = new Il2CppSystem.Collections.Generic.List<CachedPlayerData>();
+                AdditionalTempData.WinCondition = EWinCondition.ForceEnd;
+            }
 
-        foreach (var wpd in EndGameResult.CachedWinners)
-        {
-            wpd.IsDead = wpd.IsDead || AdditionalTempData.PlayerRoles.Any(x => x.PlayerName == wpd.PlayerName && x.Status != EFinalStatus.Alive);
-        }
+            foreach (var wpd in EndGameResult.CachedWinners)
+            {
+                wpd.IsDead = wpd.IsDead || AdditionalTempData.PlayerRoles.Any(x => x.PlayerName == wpd.PlayerName && x.Status != EFinalStatus.Alive);
+            }
 
-        RPCProcedure.ResetVariables();
+            RPCProcedure.ResetVariables();
+        }
     }
 
     public static TMP_Text TextRenderer;
@@ -254,7 +254,7 @@ public static class EndGameMain
 
         if (AdditionalTempData.IsGM)
         {
-            __instance.WinText.text = Tr.Get("EndGame.GMGameOver");
+            __instance.WinText.text = Tr.Get("EndGame","GMGameOver");
             // __instance.WinText.color = GM.color;
         }
 
@@ -389,11 +389,11 @@ public static class EndGameMain
 
         if (extraText.Length > 0)
         {
-            TextRenderer.text = string.Format(Tr.Get($"EndGame.{bonusText}Extra"), extraText);
+            TextRenderer.text = string.Format(Tr.Get("EndGame", $"{bonusText}Extra"), extraText);
         }
         else
         {
-            TextRenderer.text = Tr.Get($"EndGame.{bonusText}");
+            TextRenderer.text = Tr.Get("EndGame", bonusText);
         }
 
         foreach (EWinCondition cond in AdditionalTempData.AdditionalWinConditions)
@@ -417,7 +417,7 @@ public static class EndGameMain
             roleSummary.transform.localScale = new Vector3(1f, 1f, 1f);
 
             var roleSummaryText = new StringBuilder();
-            roleSummaryText.AppendLine(Tr.Get("RoleSummary.RoleSummaryText"));
+            roleSummaryText.AppendLine(Tr.Get("RoleSummary", "RoleSummaryText"));
             AdditionalTempData.PlayerRoles.Sort((x, y) =>
             {
                 var roleX = x.Roles.FirstOrDefault();
@@ -430,6 +430,7 @@ public static class EndGameMain
                     return idX == idY ? x.PlayerName.CompareTo(y.PlayerName) : idX.CompareTo(idY);
                 }
                 return x.Status.CompareTo(y.Status);
+
             });
             Logger.LogInfo(TextRenderer.text, "Result");
             Logger.LogInfo("----------Game Result-----------", "Result");
@@ -437,7 +438,7 @@ public static class EndGameMain
             {
                 if (data.PlayerName == "") continue;
                 var taskInfo = data.TasksTotal > 0 ? $"<color=#FAD934FF>{data.TasksCompleted}/{data.TasksTotal}</color>" : "";
-                var aliveDead = Tr.Get("RoleSummary." + data.Status.ToString());
+                var aliveDead = Tr.Get("RoleSummary", data.Status.ToString());
                 var result = $"{data.PlayerName + data.NameSuffix}<pos=18.5%>{taskInfo}<pos=25%>{aliveDead}<pos=34%>{data.RoleNames}";
                 roleSummaryText.AppendLine(result);
                 Logger.LogInfo(result, "Result");

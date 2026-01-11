@@ -3,11 +3,11 @@ namespace RebuildUs.Roles;
 public partial class RoleInfo(string nameKey, Color color, CustomOption baseOption, ERoleType roleType)
 {
     public Color Color = color;
-    public virtual string Name { get { return Tr.Get("Role." + NameKey); } }
+    public virtual string Name { get { return Tr.Get("Role", NameKey); } }
     public virtual string NameColored { get { return Helpers.Cs(Color, Name); } }
-    public virtual string IntroDescription { get { return Tr.Get("IntroDesc." + NameKey); } }
-    public virtual string ShortDescription { get { return Tr.Get("ShortDesc." + NameKey); } }
-    public virtual string FullDescription { get { return Tr.Get("FullDesc." + NameKey); } }
+    public virtual string IntroDescription { get { return Tr.Get(("IntroDesc", NameKey)); } }
+    public virtual string ShortDescription { get { return Tr.Get(("ShortDesc", NameKey)); } }
+    public virtual string FullDescription { get { return Tr.Get(("FullDesc", NameKey)); } }
     // public virtual string RoleOptions { get { return CustomOption.}}
     public bool Enabled { get { return Helpers.RolesEnabled && (BaseOption == null /*|| BaseOption.Enabled*/); } }
 
