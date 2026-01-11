@@ -122,7 +122,7 @@ public class Engineer : RoleBase<Engineer>
                     return sabotageActive && Local.RemainingFixes > 0 && CachedPlayer.LocalPlayer.PlayerControl.CanMove;
                 },
                 () => { },
-                GetButtonSprite(),
+                AssetLoader.EmergencyButton,
                 new Vector3(-1.8f, -0.06f, 0),
                 hm,
                 hm.UseButton,
@@ -135,15 +135,6 @@ public class Engineer : RoleBase<Engineer>
     public static void SetButtonCooldowns()
     {
         EngineerRepairButton.MaxTimer = 0f;
-    }
-
-    // write functions here
-    private static Sprite ButtonSprite;
-    public static Sprite GetButtonSprite()
-    {
-        if (ButtonSprite) return ButtonSprite;
-        ButtonSprite = Helpers.LoadSpriteFromResources("RebuildUs.Resources.EmergencyButton.png", 550f);
-        return ButtonSprite;
     }
 
     public static void Clear()
