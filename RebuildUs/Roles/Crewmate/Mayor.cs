@@ -6,7 +6,6 @@ public class Mayor : RoleBase<Mayor>
     public static Color RoleColor = new Color32(32, 77, 66, byte.MaxValue);
 
     public static Minigame Emergency = null;
-    public static Sprite EmergencySprite = null;
     public static CustomButton MayorMeetingButton;
 
     // write configs here
@@ -62,7 +61,7 @@ public class Mayor : RoleBase<Mayor>
                 return !sabotageActive && PlayerControl.LocalPlayer.CanMove && Local.RemoteMeetingsLeft > 0;
             },
             () => { MayorMeetingButton.Timer = MayorMeetingButton.MaxTimer; },
-            GetMeetingSprite(),
+            AssetLoader.EmergencyButton,
             CustomButton.ButtonPositions.LowerRowRight,
             hm,
             hm.AbilityButton,
@@ -77,14 +76,6 @@ public class Mayor : RoleBase<Mayor>
     public static void SetButtonCooldowns()
     {
         MayorMeetingButton.MaxTimer = GameManager.Instance.LogicOptions.GetEmergencyCooldown();
-    }
-
-    // write functions here
-    public static Sprite GetMeetingSprite()
-    {
-        if (EmergencySprite) return EmergencySprite;
-        EmergencySprite = Helpers.LoadSpriteFromResources("RebuildUs.Resources.EmergencyButton.png", 550f);
-        return EmergencySprite;
     }
 
     public static void Clear()

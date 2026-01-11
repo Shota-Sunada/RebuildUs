@@ -18,69 +18,6 @@ public enum MurderAttemptResult
 
 public static class Helpers
 {
-    public static Dictionary<string, Sprite> CachedSprites = [];
-
-    public static Sprite LoadSpriteFromResources(string path, float pixelsPerUnit, bool cache = true)
-    {
-        try
-        {
-            if (cache && CachedSprites.TryGetValue(path + pixelsPerUnit, out var sprite)) return sprite;
-            Texture2D texture = LoadTextureFromResources(path);
-            sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f), pixelsPerUnit);
-            if (cache) sprite.hideFlags |= HideFlags.HideAndDontSave | HideFlags.DontSaveInEditor;
-            if (!cache) return sprite;
-            return CachedSprites[path + pixelsPerUnit] = sprite;
-        }
-        catch
-        {
-            Logger.LogError("Error loading sprite from path: {0}", [path]);
-        }
-        return null;
-    }
-
-    public static unsafe Texture2D LoadTextureFromResources(string path)
-    {
-        try
-        {
-            Texture2D texture = new(2, 2, TextureFormat.ARGB32, true);
-            var assembly = Assembly.GetExecutingAssembly();
-            Stream stream = assembly.GetManifestResourceStream(path);
-            var length = stream.Length;
-            var byteTexture = new Il2CppStructArray<byte>(length);
-            stream.Read(new Span<byte>(IntPtr.Add(byteTexture.Pointer, IntPtr.Size * 4).ToPointer(), (int)length));
-            if (path.Contains("HorseHats"))
-            {
-                byteTexture = new Il2CppStructArray<byte>([.. byteTexture.Reverse()]);
-            }
-            ImageConversion.LoadImage(texture, byteTexture, false);
-            return texture;
-        }
-        catch
-        {
-            Logger.LogError("Error loading texture from resources: {0}", [path]);
-        }
-        return null;
-    }
-
-    public static Texture2D LoadTextureFromDisk(string path)
-    {
-        try
-        {
-            if (File.Exists(path))
-            {
-                Texture2D texture = new(2, 2, TextureFormat.ARGB32, true);
-                var byteTexture = Il2CppSystem.IO.File.ReadAllBytes(path);
-                ImageConversion.LoadImage(texture, byteTexture, false);
-                return texture;
-            }
-        }
-        catch
-        {
-            Logger.LogError("Error loading texture from disk: {0}", [path]);
-        }
-        return null;
-    }
-
     public static object TryCast(this Il2CppObjectBase self, Type type)
     {
         return AccessTools.Method(self.GetType(), nameof(Il2CppObjectBase.TryCast)).MakeGenericMethod(type).Invoke(self, []);
@@ -125,8 +62,8 @@ public static class Helpers
         {
             var rend = tzGO.transform.Find("Inactive").GetComponent<SpriteRenderer>();
             var rendActive = tzGO.transform.Find("Active").GetComponent<SpriteRenderer>();
-            rend.sprite = ZoomOutStatus ? Helpers.LoadSpriteFromResources("RebuildUs.Resources.Plus_Button.png", 100f) : Helpers.LoadSpriteFromResources("RebuildUs.Resources.Minus_Button.png", 100f);
-            rendActive.sprite = ZoomOutStatus ? Helpers.LoadSpriteFromResources("RebuildUs.Resources.Plus_ButtonActive.png", 100f) : Helpers.LoadSpriteFromResources("RebuildUs.Resources.Minus_ButtonActive.png", 100f);
+            rend.sprite = ZoomOutStatus ? AssetLoader.Plus_Button : AssetLoader.Minus_Button;
+            rendActive.sprite = ZoomOutStatus ? AssetLoader.Plus_ButtonActive : AssetLoader.Minus_ButtonActive;
             tzGO.transform.localScale = new Vector3(1.2f, 1.2f, 1f) * (ZoomOutStatus ? 4 : 1);
         }
 

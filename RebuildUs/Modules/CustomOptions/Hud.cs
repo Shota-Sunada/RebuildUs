@@ -230,8 +230,8 @@ public partial class CustomOption
                 SpriteRenderer renderer = ToggleSettingsButtonObject.transform.Find("Inactive").GetComponent<SpriteRenderer>();
                 SpriteRenderer rendererActive = ToggleSettingsButtonObject.transform.Find("Active").GetComponent<SpriteRenderer>();
                 ToggleSettingsButtonObject.transform.Find("Background").localPosition = Vector3.zero;
-                renderer.sprite = Helpers.LoadSpriteFromResources("RebuildUs.Resources.Settings_Button.png", 100f);
-                rendererActive.sprite = Helpers.LoadSpriteFromResources("RebuildUs.Resources.Settings_ButtonActive.png", 100);
+                renderer.sprite = AssetLoader.Settings_Button;
+                rendererActive.sprite = AssetLoader.Settings_ButtonActive;
                 ToggleSettingsButton = ToggleSettingsButtonObject.GetComponent<PassiveButton>();
                 ToggleSettingsButton.OnClick.RemoveAllListeners();
                 ToggleSettingsButton.OnClick.AddListener((Action)(() => ToggleSettings(__instance)));
@@ -248,8 +248,8 @@ public partial class CustomOption
                 SpriteRenderer tZRenderer = ToggleZoomButtonObject.transform.Find("Inactive").GetComponent<SpriteRenderer>();
                 SpriteRenderer tZRrenderer = ToggleZoomButtonObject.transform.Find("Active").GetComponent<SpriteRenderer>();
                 ToggleZoomButtonObject.transform.Find("Background").localPosition = Vector3.zero;
-                tZRenderer.sprite = Helpers.LoadSpriteFromResources("RebuildUs.Resources.Minus_Button.png", 100f);
-                tZRrenderer.sprite = Helpers.LoadSpriteFromResources("RebuildUs.Resources.Minus_ButtonActive.png", 100);
+                tZRenderer.sprite = AssetLoader.Minus_Button;
+                tZRrenderer.sprite = AssetLoader.Minus_ButtonActive;
                 ToggleZoomButton = ToggleZoomButtonObject.GetComponent<PassiveButton>();
                 ToggleZoomButton.OnClick.RemoveAllListeners();
                 ToggleZoomButton.OnClick.AddListener((Action)(() => Helpers.ToggleZoom()));
@@ -284,8 +284,8 @@ public partial class CustomOption
                 SpriteRenderer renderer = ToggleSummaryButtonObject.transform.Find("Inactive").GetComponent<SpriteRenderer>();
                 SpriteRenderer rendererActive = ToggleSummaryButtonObject.transform.Find("Active").GetComponent<SpriteRenderer>();
                 ToggleSummaryButtonObject.transform.Find("Background").localPosition = Vector3.zero;
-                renderer.sprite = Helpers.LoadSpriteFromResources("RebuildUs.Resources.Endscreen.png", 100f);
-                rendererActive.sprite = Helpers.LoadSpriteFromResources("RebuildUs.Resources.EndscreenActive.png", 100f);
+                renderer.sprite = AssetLoader.Endscreen;
+                rendererActive.sprite = AssetLoader.EndscreenActive;
                 ToggleSummaryButton = ToggleSummaryButtonObject.GetComponent<PassiveButton>();
                 ToggleSummaryButton.OnClick.RemoveAllListeners();
                 ToggleSummaryButton.OnClick.AddListener((Action)(() => ToggleSummary(__instance)));

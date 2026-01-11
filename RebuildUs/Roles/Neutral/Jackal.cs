@@ -86,7 +86,7 @@ public class Jackal : RoleBase<Jackal>
             () => { return CanCreateSidekick && CachedPlayer.LocalPlayer.PlayerControl.IsRole(ERoleType.Jackal) && CachedPlayer.LocalPlayer.PlayerControl.IsAlive(); },
             () => { return CanCreateSidekick && Local.CurrentTarget != null && CachedPlayer.LocalPlayer.PlayerControl.CanMove; },
             () => { JackalSidekickButton.Timer = JackalSidekickButton.MaxTimer; },
-            GetSidekickButtonSprite(),
+            AssetLoader.SidekickButton,
             new Vector3(-1.8f, -0.06f, 0),
             hm,
             hm.KillButton,
@@ -149,14 +149,6 @@ public class Jackal : RoleBase<Jackal>
     {
         JackalKillButton.MaxTimer = KillCooldown;
         JackalSidekickButton.MaxTimer = CreateSidekickCooldown;
-    }
-
-    public static Sprite ButtonSprite;
-    public static Sprite GetSidekickButtonSprite()
-    {
-        if (ButtonSprite) return ButtonSprite;
-        ButtonSprite = Helpers.LoadSpriteFromResources("SidekickButton", 115f);
-        return ButtonSprite;
     }
 
     // write functions here

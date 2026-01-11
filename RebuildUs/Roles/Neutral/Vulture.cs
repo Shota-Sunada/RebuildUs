@@ -119,7 +119,7 @@ public class Vulture : RoleBase<Vulture>
                     return hm.ReportButton.graphic.color == Palette.EnabledColor && CachedPlayer.LocalPlayer.PlayerControl.CanMove;
                 },
                 () => { VultureEatButton.Timer = VultureEatButton.MaxTimer; },
-                GetButtonSprite(),
+                AssetLoader.VultureButton,
                 new Vector3(-1.8f, -0.06f, 0),
                 hm,
                 hm.KillButton,
@@ -138,15 +138,6 @@ public class Vulture : RoleBase<Vulture>
     public static void SetButtonCooldowns()
     {
         VultureEatButton.MaxTimer = Cooldown;
-    }
-
-    // write functions here
-    private static Sprite ButtonSprite;
-    public static Sprite GetButtonSprite()
-    {
-        if (ButtonSprite) return ButtonSprite;
-        ButtonSprite = Helpers.LoadSpriteFromResources("RebuildUs.Resources.VultureButton.png", 115f);
-        return ButtonSprite;
     }
 
     public static void Clear()
