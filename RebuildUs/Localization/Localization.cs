@@ -9,7 +9,7 @@ namespace RebuildUs.Localization;
 
 public static class Tr
 {
-    private static readonly Dictionary<string, Dictionary<SupportedLangs, string>> Translations = [];
+    private static readonly Dictionary<SupportedLangs, Dictionary<string, string>> Translations = [];
 
     public static void Initialize()
     {
@@ -33,6 +33,12 @@ public static class Tr
 
     private static void LoadElement(JsonElement element, string prefix, SupportedLangs lang)
     {
+        if (!Translations.TryGetValue(lang, out var langDict))
+        {
+            langDict = [];
+            Translations[lang] = langDict;
+        }
+
         switch (element.ValueKind)
         {
             case JsonValueKind.Object:
@@ -43,45 +49,38 @@ public static class Tr
                 }
                 break;
             case JsonValueKind.String:
-                if (!Translations.TryGetValue(prefix, out var trans))
-                {
-                    trans = [];
-                    Translations[prefix] = trans;
-                }
-                trans[lang] = element.GetString();
+                langDict[prefix] = element.GetString();
                 break;
         }
     }
 
     public static string Get(string key, params object[] args) => GetInternal(key, args);
-    public static string Get((string category, string key) key, params object[] args) => GetInternal($"{key.category}.{key.key}", args);
 
     private static string GetInternal(string key, object[] args)
     {
-        if (string.IsNullOrEmpty(key)) return "";
+        if (string.IsNullOrEmpty(key)) return "[NO KEY]";
 
-        var lang = TranslationController.InstanceExists ? FastDestroyableSingleton<TranslationController>.Instance.currentLanguage.languageID : SupportedLangs.English;
-
-        if (!Translations.TryGetValue(key, out var langDic))
+        var lang = SupportedLangs.English;
+        if (TranslationController.InstanceExists)
         {
-            // Try to find by suffix if not found (e.g. "OptionOn" -> "GameSettings.OptionOn")
-            var alternativeKey = Translations.Keys.FirstOrDefault(k => k.EndsWith("." + key));
-            if (alternativeKey != null)
+            var tc = FastDestroyableSingleton<TranslationController>.Instance;
+            if (tc?.currentLanguage != null)
             {
-                langDic = Translations[alternativeKey];
-            }
-            else
-            {
-                Logger.LogWarn($"There are no translation data. key: {key}");
-                return key;
+                lang = tc.currentLanguage.languageID;
             }
         }
 
-        if (!langDic.TryGetValue(lang, out var str))
+        if (Translations.TryGetValue(lang, out var langDict) && langDict.TryGetValue(key, out var str))
         {
-            return !langDic.TryGetValue(SupportedLangs.English, out var enStr) ? key : args.Length > 0 ? string.Format(enStr, args) : enStr;
+            return args?.Length > 0 ? string.Format(str, args) : str;
         }
 
-        return args.Length > 0 ? string.Format(str, args) : str;
+        if (lang != SupportedLangs.English && Translations.TryGetValue(SupportedLangs.English, out var enDict) && enDict.TryGetValue(key, out str))
+        {
+            return args?.Length > 0 ? string.Format(str, args) : str;
+        }
+
+        Logger.LogWarn($"Translation key not found: {key}");
+        return $"[KEY NOT FOUND: {key}]";
     }
 }
