@@ -52,10 +52,6 @@ public class RebuildUs : BasePlugin
         Logger.Initialize(Log);
         Instance = this;
 
-        Tr.Initialize();
-
-        AssetLoader.LoadAssets();
-
         CustomOptionHolder.Load();
         RoleInfo.Load();
         CustomColors.Load();

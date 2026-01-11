@@ -14,7 +14,7 @@ public class Garlic
     public static Sprite GetGarlicSprite()
     {
         if (GarlicSprite) return GarlicSprite;
-        GarlicSprite = AssetLoader.Garlic;
+        GarlicSprite = Helpers.LoadSpriteFromResources("RebuildUs.Resources.Garlic.png", 300f);
         return GarlicSprite;
     }
 
@@ -22,7 +22,7 @@ public class Garlic
     public static Sprite GetBackgroundSprite()
     {
         if (BackgroundSprite) return BackgroundSprite;
-        BackgroundSprite = AssetLoader.GarlicBackground;
+        BackgroundSprite = Helpers.LoadSpriteFromResources("RebuildUs.Resources.GarlicBackground.png", 60f);
         return BackgroundSprite;
     }
 

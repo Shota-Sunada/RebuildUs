@@ -5,12 +5,17 @@ public class JackInTheBox
     public static List<JackInTheBox> AllJackInTheBoxes = [];
     public static int JackInTheBoxLimit = 3;
     public static bool BoxesConvertedToVents = false;
+    public static Sprite[] BoxAnimationSprites = new Sprite[18];
 
     public static Sprite GetBoxAnimationSprite(int index)
     {
-        if (AssetLoader.TricksterAnimations == null || AssetLoader.TricksterAnimations.Count == 0) return null;
-        index = Mathf.Clamp(index, 0, AssetLoader.TricksterAnimations.Count - 1);
-        return AssetLoader.TricksterAnimations[index];
+        if (BoxAnimationSprites == null || BoxAnimationSprites.Length == 0) return null;
+        index = Mathf.Clamp(index, 0, BoxAnimationSprites.Length - 1);
+        if (BoxAnimationSprites[index] == null)
+        {
+            BoxAnimationSprites[index] = Helpers.LoadSpriteFromResources($"RebuildUs.Resources.TricksterAnimation.trickster_box_00{index + 1:00}.png", 175f);
+        }
+        return BoxAnimationSprites[index];
     }
 
     public static void StartAnimation(int ventId)
@@ -22,7 +27,7 @@ public class JackInTheBox
         {
             if (box.BoxRenderer != null)
             {
-                box.BoxRenderer.sprite = GetBoxAnimationSprite((int)(p * AssetLoader.TricksterAnimations.Count));
+                box.BoxRenderer.sprite = GetBoxAnimationSprite((int)(p * BoxAnimationSprites.Length));
                 if (p == 1f) box.BoxRenderer.sprite = GetBoxAnimationSprite(0);
             }
         })));

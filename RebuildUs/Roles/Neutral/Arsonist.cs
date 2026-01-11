@@ -142,7 +142,7 @@ public class Arsonist : RoleBase<Arsonist>
             () => { return CachedPlayer.LocalPlayer.PlayerControl.IsRole(ERoleType.Arsonist) && Local.DousedEveryone && CachedPlayer.LocalPlayer.PlayerControl.IsAlive(); },
             () => { return CachedPlayer.LocalPlayer.PlayerControl.CanMove && Local.DousedEveryone; },
             () => { },
-            AssetLoader.IgniteButton,
+            GetIgniteSprite(),
             new Vector3(-1.8f, -0.06f, 0),
             hm,
             hm.KillButton,
@@ -210,8 +210,16 @@ public class Arsonist : RoleBase<Arsonist>
     public static Sprite GetDouseSprite()
     {
         if (DouseSprite) return DouseSprite;
-        DouseSprite = AssetLoader.DouseButton;
+        DouseSprite = Helpers.LoadSpriteFromResources("RebuildUs.Resources.DouseButton.png", 115f);
         return DouseSprite;
+    }
+
+    private static Sprite IgniteSprite;
+    public static Sprite GetIgniteSprite()
+    {
+        if (IgniteSprite) return IgniteSprite;
+        IgniteSprite = Helpers.LoadSpriteFromResources("RebuildUs.Resources.IgniteButton.png", 115f);
+        return IgniteSprite;
     }
 
     public static void Clear()
