@@ -12,7 +12,7 @@ public static class Usables
         if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(ERoleType.Jester) && !Jester.CanCallEmergency)
         {
             roleCanCallEmergency = false;
-            statusText = Tr.Get("jesterMeetingButton");
+            statusText = Tr.Get("InGameText","JesterMeetingButton");
         }
 
         if (!roleCanCallEmergency)
@@ -32,8 +32,8 @@ public static class Usables
             int teamRemaining = Mathf.Max(0, MapOptions.MaxNumberOfMeetings - MapOptions.MeetingsCount);
             int remaining = Mathf.Min(localRemaining, CachedPlayer.LocalPlayer.PlayerControl.IsRole(ERoleType.Mayor) ? 1 : teamRemaining);
 
-            __instance.StatusText.text = $"<size=100%> {string.Format(Tr.Get("meetingStatus"), CachedPlayer.LocalPlayer.PlayerControl.name)}</size>";
-            __instance.NumberText.text = string.Format(Tr.Get("meetingCount"), localRemaining.ToString(), teamRemaining.ToString());
+            __instance.StatusText.text = $"<size=100%> {string.Format(Tr.Get("InGameText", "MeetingStatus"), CachedPlayer.LocalPlayer.PlayerControl.name)}</size>";
+            __instance.NumberText.text = string.Format(Tr.Get("InGameText", "MeetingCount"), localRemaining.ToString(), teamRemaining.ToString());
             __instance.ButtonActive = remaining > 0;
             __instance.ClosedLid.gameObject.SetActive(!__instance.ButtonActive);
             __instance.OpenLid.gameObject.SetActive(__instance.ButtonActive);

@@ -254,7 +254,7 @@ public static class EndGameMain
 
         if (AdditionalTempData.IsGM)
         {
-            __instance.WinText.text = Tr.Get("gmGameOver");
+            __instance.WinText.text = Tr.Get("EndGame","GMGameOver");
             // __instance.WinText.color = GM.color;
         }
 
@@ -262,19 +262,19 @@ public static class EndGameMain
 
         if (AdditionalTempData.WinCondition == EWinCondition.JesterWin)
         {
-            bonusText = "jesterWin";
+            bonusText = "JesterWin";
             TextRenderer.color = Jester.RoleColor;
             __instance.BackgroundBar.material.SetColor("_Color", Jester.RoleColor);
         }
         else if (AdditionalTempData.WinCondition == EWinCondition.ArsonistWin)
         {
-            bonusText = "arsonistWin";
+            bonusText = "ArsonistWin";
             TextRenderer.color = Arsonist.RoleColor;
             __instance.BackgroundBar.material.SetColor("_Color", Arsonist.RoleColor);
         }
         else if (AdditionalTempData.WinCondition == EWinCondition.VultureWin)
         {
-            bonusText = "vultureWin";
+            bonusText = "VultureWin";
             TextRenderer.color = Vulture.RoleColor;
             __instance.BackgroundBar.material.SetColor("_Color", Vulture.RoleColor);
         }
@@ -334,20 +334,20 @@ public static class EndGameMain
         // }
         else if (AdditionalTempData.WinCondition == EWinCondition.JackalWin)
         {
-            bonusText = "jackalWin";
+            bonusText = "JackalWin";
             TextRenderer.color = Jackal.RoleColor;
             __instance.BackgroundBar.material.SetColor("_Color", Jackal.RoleColor);
         }
         // else if (AdditionalTempData.WinCondition == EWinCondition.EveryoneDied)
         if (AdditionalTempData.WinCondition == EWinCondition.EveryoneDied)
         {
-            bonusText = "everyoneDied";
+            bonusText = "EveryoneDied";
             TextRenderer.color = Palette.DisabledGrey;
             __instance.BackgroundBar.material.SetColor("_Color", Palette.DisabledGrey);
         }
         else if (AdditionalTempData.WinCondition == EWinCondition.ForceEnd)
         {
-            bonusText = "forceEnd";
+            bonusText = "ForceEnd";
             TextRenderer.color = Palette.DisabledGrey;
             __instance.BackgroundBar.material.SetColor("_Color", Palette.DisabledGrey);
         }
@@ -359,12 +359,12 @@ public static class EndGameMain
         // }
         else if (AdditionalTempData.GameOverReason is GameOverReason.CrewmatesByTask or GameOverReason.CrewmatesByVote)
         {
-            bonusText = "crewWin";
+            bonusText = "CrewmateWin";
             TextRenderer.color = Palette.White;
         }
         else if (AdditionalTempData.GameOverReason is GameOverReason.ImpostorsByKill or GameOverReason.ImpostorsBySabotage or GameOverReason.ImpostorsByVote)
         {
-            bonusText = "impostorWin";
+            bonusText = "ImpostorWin";
             TextRenderer.color = Palette.ImpostorRed;
         }
 
@@ -389,11 +389,11 @@ public static class EndGameMain
 
         if (extraText.Length > 0)
         {
-            TextRenderer.text = string.Format(Tr.Get(bonusText + "Extra"), extraText);
+            TextRenderer.text = string.Format(Tr.Get("EndGame", $"{bonusText}Extra"), extraText);
         }
         else
         {
-            TextRenderer.text = Tr.Get(bonusText);
+            TextRenderer.text = Tr.Get("EndGame", bonusText);
         }
 
         foreach (EWinCondition cond in AdditionalTempData.AdditionalWinConditions)
@@ -417,7 +417,7 @@ public static class EndGameMain
             roleSummary.transform.localScale = new Vector3(1f, 1f, 1f);
 
             var roleSummaryText = new StringBuilder();
-            roleSummaryText.AppendLine(Tr.Get("roleSummaryText"));
+            roleSummaryText.AppendLine(Tr.Get("RoleSummary", "RoleSummaryText"));
             AdditionalTempData.PlayerRoles.Sort((x, y) =>
             {
                 var roleX = x.Roles.FirstOrDefault();

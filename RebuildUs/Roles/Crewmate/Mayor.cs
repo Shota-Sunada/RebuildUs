@@ -70,7 +70,7 @@ public class Mayor : RoleBase<Mayor>
             0f,
             () => { },
             false,
-            "Meeting"
+            Tr.Get("RoleText", "MeetingText")
         );
     }
     public static void SetButtonCooldowns()
