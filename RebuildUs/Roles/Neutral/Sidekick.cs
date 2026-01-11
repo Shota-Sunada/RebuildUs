@@ -7,6 +7,9 @@ public class Sidekick : RoleBase<Sidekick>
     public static CustomButton sidekickKillButton;
     public static CustomButton sidekickSabotageLightsButton;
     public PlayerControl currentTarget;
+    public bool wasTeamRed = false;
+    public bool wasImpostor = false;
+    public bool wasSpy = false;
 
     public static bool canKill { get { return CustomOptionHolder.sidekickCanKill.GetBool(); } }
     public static bool canUseVents { get { return CustomOptionHolder.sidekickCanUseVents.GetBool(); } }
@@ -29,15 +32,15 @@ public class Sidekick : RoleBase<Sidekick>
         {
             var untargetablePlayers = new List<PlayerControl>();
             if (Jackal.Exists) untargetablePlayers.AddRange(Jackal.AllPlayers);
-            foreach (var mini in Mini.players)
-            {
-                if (!Mini.isGrownUp(mini.player))
-                {
-                    untargetablePlayers.Add(mini.player);
-                }
-            }
-            currentTarget = setTarget(untargetablePlayers: untargetablePlayers);
-            if (canKill) setPlayerOutline(currentTarget, Palette.ImpostorRed);
+            // foreach (var mini in Mini.players)
+            // {
+            //     if (!Mini.isGrownUp(mini.player))
+            //     {
+            //         untargetablePlayers.Add(mini.player);
+            //     }
+            // }
+            currentTarget = Helpers.setTarget(untargetablePlayers: untargetablePlayers);
+            if (canKill) Helpers.setPlayerOutline(currentTarget, Palette.ImpostorRed);
         }
     }
     public override void OnKill(PlayerControl target) { }
@@ -86,7 +89,8 @@ public class Sidekick : RoleBase<Sidekick>
             {
                 sidekickSabotageLightsButton.Timer = Helpers.sabotageTimer() + 5f;
             },
-            Trickster.getLightsOutButtonSprite(),
+            // Trickster.getLightsOutButtonSprite(),
+            null,
             CustomButton.ButtonPositions.upperRowCenter,
             hm,
             hm.AbilityButton,

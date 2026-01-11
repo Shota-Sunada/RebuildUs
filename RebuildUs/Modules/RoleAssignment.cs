@@ -140,41 +140,41 @@ public static class RoleAssignment
 
     public static void assignRoles()
     {
-        if (CustomOptionHolder.gmEnabled.getBool() && CustomOptionHolder.gmIsHost.getBool())
-        {
-            var host = AmongUsClient.Instance?.GetHost().Character;
-            if (host.Data.Role.IsImpostor)
-            {
-                var hostIsImpostor = host.Data.Role.IsImpostor;
-                if (host.Data.Role.IsImpostor)
-                {
-                    int newImpId = 0;
-                    PlayerControl newImp;
-                    while (true)
-                    {
-                        newImpId = RebuildUs.Instance.rnd.Next(0, PlayerControl.AllPlayerControls.Count);
-                        newImp = PlayerControl.AllPlayerControls[newImpId];
-                        if (newImp == host || newImp.Data.Role.IsImpostor)
-                        {
-                            continue;
-                        }
-                        break;
-                    }
+        // if (CustomOptionHolder.gmEnabled.getBool() && CustomOptionHolder.gmIsHost.getBool())
+        // {
+        //     var host = AmongUsClient.Instance?.GetHost().Character;
+        //     if (host.Data.Role.IsImpostor)
+        //     {
+        //         var hostIsImpostor = host.Data.Role.IsImpostor;
+        //         if (host.Data.Role.IsImpostor)
+        //         {
+        //             int newImpId = 0;
+        //             PlayerControl newImp;
+        //             while (true)
+        //             {
+        //                 newImpId = RebuildUs.Instance.rnd.Next(0, PlayerControl.AllPlayerControls.Count);
+        //                 newImp = PlayerControl.AllPlayerControls[newImpId];
+        //                 if (newImp == host || newImp.Data.Role.IsImpostor)
+        //                 {
+        //                     continue;
+        //                 }
+        //                 break;
+        //             }
 
-                    MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.OverrideNativeRole, Hazel.SendOption.Reliable, -1);
-                    writer.Write(host.PlayerId);
-                    writer.Write((byte)RoleTypes.Crewmate);
-                    AmongUsClient.Instance.FinishRpcImmediately(writer);
-                    RPCProcedure.overrideNativeRole(host.PlayerId, (byte)RoleTypes.Crewmate);
+        //             MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.OverrideNativeRole, Hazel.SendOption.Reliable, -1);
+        //             writer.Write(host.PlayerId);
+        //             writer.Write((byte)RoleTypes.Crewmate);
+        //             AmongUsClient.Instance.FinishRpcImmediately(writer);
+        //             RPCProcedure.overrideNativeRole(host.PlayerId, (byte)RoleTypes.Crewmate);
 
-                    writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.OverrideNativeRole, Hazel.SendOption.Reliable, -1);
-                    writer.Write(newImp.PlayerId);
-                    writer.Write((byte)RoleTypes.Impostor);
-                    AmongUsClient.Instance.FinishRpcImmediately(writer);
-                    RPCProcedure.overrideNativeRole(newImp.PlayerId, (byte)RoleTypes.Impostor);
-                }
-            }
-        }
+        //             writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.OverrideNativeRole, Hazel.SendOption.Reliable, -1);
+        //             writer.Write(newImp.PlayerId);
+        //             writer.Write((byte)RoleTypes.Impostor);
+        //             AmongUsClient.Instance.FinishRpcImmediately(writer);
+        //             RPCProcedure.overrideNativeRole(newImp.PlayerId, (byte)RoleTypes.Impostor);
+        //         }
+        //     }
+        // }
 
         blockLovers = [
                     (byte)ERoleType.Bait,
@@ -182,12 +182,10 @@ public static class RoleAssignment
                     (byte)ERoleType.Akujo
                 ];
 
-        if (!Lovers.hasTasks)
-        {
-            blockLovers.Add((byte)ERoleType.Snitch);
-            blockLovers.Add((byte)ERoleType.FortuneTeller);
-            blockLovers.Add((byte)ERoleType.Fox);
-        }
+        // if (!Lovers.hasTasks)
+        // {
+        //     blockLovers.Add((byte)ERoleType.Snitch);
+        // }
 
         if (!CustomOptionHolder.arsonistCanBeLovers.GetBool())
         {
@@ -761,12 +759,12 @@ public static class RoleAssignment
     {
         var index = RebuildUs.Instance.rnd.Next(0, playerList.Count);
         byte playerId = playerList[index].PlayerId;
-        if (RoleInfo.lovers.enabled &&
-            Helpers.PlayerById(playerId)?.IsLovers() == true &&
-            blockLovers.Contains(roleId))
-        {
-            return byte.MaxValue;
-        }
+        // if (RoleInfo.lovers.enabled &&
+        //     Helpers.PlayerById(playerId)?.IsLovers() == true &&
+        //     blockLovers.Contains(roleId))
+        // {
+        //     return byte.MaxValue;
+        // }
 
         if (removePlayer) playerList.RemoveAt(index);
         playerRoleMap.Add(new Tuple<byte, byte>(playerId, roleId));

@@ -54,8 +54,8 @@ public class Arsonist : RoleBase<Arsonist>
             {
                 untargetables = dousedPlayers;
             }
-            currentTarget = setTarget(untargetablePlayers: untargetables);
-            if (currentTarget != null) setPlayerOutline(currentTarget, RoleColor);
+            currentTarget = Helpers.setTarget(untargetablePlayers: untargetables);
+            if (currentTarget != null) Helpers.setPlayerOutline(currentTarget, RoleColor);
         }
     }
     public override void OnKill(PlayerControl target)

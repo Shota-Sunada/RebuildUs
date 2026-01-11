@@ -1,5 +1,6 @@
 using AmongUs.GameOptions;
 using RebuildUs.Objects;
+using RebuildUs.Roles.Neutral;
 
 namespace RebuildUs.Roles.Impostor;
 
@@ -82,12 +83,13 @@ public class BountyHunter : RoleBase<BountyHunter>
                 var possibleTargets = new List<PlayerControl>();
                 foreach (var p in CachedPlayer.AllPlayers)
                 {
-                    if (!p.Data.IsDead && !p.Data.Disconnected && !p.Data.Role.IsImpostor && p != Spy.spy
-                    && (p != Sidekick.sidekick || !Sidekick.wasTeamRed)
-                    && (p != Jackal.jackal || !Jackal.wasTeamRed)
-                    && !(p.hasModifier(ModifierType.Mini) && !Mini.isGrownUp(p))
-                    && !p.isGM()
-                    && Player.getPartner() != p)
+                    if (!p.Data.IsDead && !p.Data.Disconnected && !p.Data.Role.IsImpostor && !p.PlayerControl.IsRole(ERoleType.Spy)
+                    && (!p.PlayerControl.IsRole(ERoleType.Sidekick) || !Sidekick.GetRole(p).wasTeamRed)
+                    && (!p.PlayerControl.IsRole(ERoleType.Jackal) || !Jackal.GetRole(p).wasTeamRed)
+                    // && !(p.hasModifier(ModifierType.Mini) && !Mini.isGrownUp(p))
+                    && !p.PlayerControl.IsGM()
+                    // && Player.GetPartner() != p
+                    )
                     {
                         possibleTargets.Add(p);
                     }

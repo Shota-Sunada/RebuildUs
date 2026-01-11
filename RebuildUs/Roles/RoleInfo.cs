@@ -1,7 +1,3 @@
-using RebuildUs.Localization;
-using RebuildUs.Modules.CustomOptions;
-using RebuildUs.Roles.Neutral;
-
 namespace RebuildUs.Roles;
 
 public partial class RoleInfo(string nameKey, Color color, CustomOption baseOption, ERoleType roleType)
@@ -18,7 +14,7 @@ public partial class RoleInfo(string nameKey, Color color, CustomOption baseOpti
     public string NameKey = nameKey;
     public ERoleType RoleType = roleType;
     private readonly CustomOption BaseOption = baseOption;
-    public static List<RoleInfo> AllRoleInfos;
+    public static List<RoleInfo> AllRoleInfos = [];
 
     public static List<RoleInfo> GetRoleInfoForPlayer(PlayerControl player, bool showModifier = true, ERoleType[] excludeRoles = null)
     {
@@ -36,6 +32,8 @@ public partial class RoleInfo(string nameKey, Color color, CustomOption baseOpti
         if (player.IsRole(ERoleType.Engineer)) infos.Add(Engineer);
         if (player.IsRole(ERoleType.BountyHunter)) infos.Add(BountyHunter);
         if (player.IsRole(ERoleType.Arsonist)) infos.Add(Arsonist);
+        if (player.IsRole(ERoleType.Vulture)) infos.Add(Vulture);
+        if (player.IsRole(ERoleType.Spy)) infos.Add(Spy);
 
         if (player.IsRole(ERoleType.Jackal) || (Neutral.Jackal.formerJackals != null && Neutral.Jackal.formerJackals.Any(x => x.PlayerId == player.PlayerId))) infos.Add(Jackal);
         if (player.IsRole(ERoleType.Sidekick)) infos.Add(Sidekick);

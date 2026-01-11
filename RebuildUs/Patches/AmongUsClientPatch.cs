@@ -20,4 +20,11 @@ public static class AmongUsClientPatch
         __result = RoleAssignment.CoStartGameHost(__instance).WrapToIl2Cpp();
         return false;
     }
+
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(AmongUsClient), nameof(AmongUsClient.OnPlayerJoined))]
+    public static void OnPlayerJoinedPostfix(AmongUsClient __instance)
+    {
+        GameStart.OnPlayerJoined();
+    }
 }

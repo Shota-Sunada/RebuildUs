@@ -1,7 +1,8 @@
 using System.Reflection;
 using RebuildUs.Players;
 using RebuildUs.Roles.Neutral;
-using RebuildUs.Utilities;
+using AmongUs.GameOptions;
+using RebuildUs.Roles.Crewmate;
 
 namespace RebuildUs;
 
@@ -217,6 +218,7 @@ public static class Helpers
         return player.IsTeamImpostor()
         || ((player.IsRole(ERoleType.Jackal) || Jackal.formerJackals.Any(x => x.PlayerId == player.PlayerId)) && Jackal.hasImpostorVision)
         || (player.IsRole(ERoleType.Sidekick) && Sidekick.hasImpostorVision)
+        || (player.IsRole(ERoleType.Spy) && Spy.hasImpostorVision)
         || (player.IsRole(ERoleType.Jester) && Jester.hasImpostorVision);
     }
 
@@ -252,41 +254,42 @@ public static class Helpers
         if (MapOptions.ShieldFirstKill && MapOptions.FirstKillPlayer == target) return MurderAttemptResult.SuppressKill;
 
         // Block impostor shielded kill
-        if (!ignoreMedic && Medic.shielded != null && Medic.shielded == target)
-        {
-            MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(killer.NetId, (byte)CustomRPC.ShieldedMurderAttempt, Hazel.SendOption.Reliable, -1);
-            AmongUsClient.Instance.FinishRpcImmediately(writer);
-            RPCProcedure.shieldedMurderAttempt();
-            return MurderAttemptResult.SuppressKill;
-        }
+        // if (!ignoreMedic && Medic.shielded != null && Medic.shielded == target)
+        // {
+        //     MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(killer.NetId, (byte)CustomRPC.ShieldedMurderAttempt, Hazel.SendOption.Reliable, -1);
+        //     AmongUsClient.Instance.FinishRpcImmediately(writer);
+        //     RPCProcedure.shieldedMurderAttempt();
+        //     return MurderAttemptResult.SuppressKill;
+        // }
 
         // Block impostor not fully grown mini kill
-        else if (Mini.mini != null && target == Mini.mini && !Mini.isGrownUp())
-        {
-            return MurderAttemptResult.SuppressKill;
-        }
+        // else if (Mini.mini != null && target == Mini.mini && !Mini.isGrownUp())
+        // {
+        //     return MurderAttemptResult.SuppressKill;
+        // }
 
         // Block Time Master with time shield kill
-        else if (TimeMaster.shieldActive && TimeMaster.timeMaster != null && TimeMaster.timeMaster == target)
-        {
-            if (!blockRewind)
-            {
-                // Only rewind the attempt was not called because a meeting startet
-                MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(killer.NetId, (byte)CustomRPC.TimeMasterRewindTime, Hazel.SendOption.Reliable, -1);
-                AmongUsClient.Instance.FinishRpcImmediately(writer);
-                RPCProcedure.timeMasterRewindTime();
-            }
-            return MurderAttemptResult.SuppressKill;
-        }
+        // else if (TimeMaster.shieldActive && TimeMaster.timeMaster != null && TimeMaster.timeMaster == target)
+        // {
+        //     if (!blockRewind)
+        //     {
+        //         // Only rewind the attempt was not called because a meeting startet
+        //         MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(killer.NetId, (byte)CustomRPC.TimeMasterRewindTime, Hazel.SendOption.Reliable, -1);
+        //         AmongUsClient.Instance.FinishRpcImmediately(writer);
+        //         RPCProcedure.timeMasterRewindTime();
+        //     }
+        //     return MurderAttemptResult.SuppressKill;
+        // }
 
-        if (TransportationToolPatches.isUsingTransportation(target) && !blockRewind && killer == Vampire.vampire)
-        {
-            return MurderAttemptResult.DelayVampireKill;
-        }
-        else if (TransportationToolPatches.isUsingTransportation(target))
-        {
-            return MurderAttemptResult.SuppressKill;
-        }
+        // if (TransportationToolPatches.isUsingTransportation(target) && !blockRewind && killer == Vampire.vampire)
+        // {
+        //     return MurderAttemptResult.DelayVampireKill;
+        // }
+        // else if (TransportationToolPatches.isUsingTransportation(target))
+        // {
+        //     return MurderAttemptResult.SuppressKill;
+        // }
+
         return MurderAttemptResult.PerformKill;
     }
 
@@ -309,21 +312,21 @@ public static class Helpers
         {
             MurderPlayer(killer, target, showAnimation);
         }
-        else if (murder == MurderAttemptResult.DelayVampireKill)
-        {
-            HudManager.Instance.StartCoroutine(Effects.Lerp(10f, new Action<float>((p) =>
-            {
-                if (!TransportationToolPatches.isUsingTransportation(target) && Vampire.bitten != null)
-                {
-                    MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.VampireSetBitten, Hazel.SendOption.Reliable, -1);
-                    writer.Write(byte.MaxValue);
-                    writer.Write(byte.MaxValue);
-                    AmongUsClient.Instance.FinishRpcImmediately(writer);
-                    RPCProcedure.vampireSetBitten(byte.MaxValue, byte.MaxValue);
-                    MurderPlayer(killer, target, showAnimation);
-                }
-            })));
-        }
+        // else if (murder == MurderAttemptResult.DelayVampireKill)
+        // {
+        //     HudManager.Instance.StartCoroutine(Effects.Lerp(10f, new Action<float>((p) =>
+        //     {
+        //         if (!TransportationToolPatches.isUsingTransportation(target) && Vampire.bitten != null)
+        //         {
+        //             MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.VampireSetBitten, Hazel.SendOption.Reliable, -1);
+        //             writer.Write(byte.MaxValue);
+        //             writer.Write(byte.MaxValue);
+        //             AmongUsClient.Instance.FinishRpcImmediately(writer);
+        //             RPCProcedure.vampireSetBitten(byte.MaxValue, byte.MaxValue);
+        //             MurderPlayer(killer, target, showAnimation);
+        //         }
+        //     })));
+        // }
         return murder;
     }
 
@@ -348,5 +351,263 @@ public static class Helpers
             doors = systemType.CastFast<IActivatable>();
         }
         return GameManager.Instance.SabotagesEnabled() && sabSystem.Timer <= 0f && !sabSystem.AnyActive && !(doors != null && doors.IsActive);
+    }
+
+    public static PlayerControl setTarget(bool onlyCrewmates = false, bool targetPlayersInVents = false, List<PlayerControl> untargetablePlayers = null, PlayerControl targetingPlayer = null, int killDistance = 3)
+    {
+        PlayerControl result = null;
+        float num = NormalGameOptionsV10.KillDistances[Mathf.Clamp(GameOptionsManager.Instance.CurrentGameOptions.GetInt(Int32OptionNames.KillDistance), 0, 2)];
+        if (!MapUtilities.CachedShipStatus) return result;
+        if (targetingPlayer == null) targetingPlayer = PlayerControl.LocalPlayer;
+        if (targetingPlayer.Data.IsDead || targetingPlayer.inVent) return result;
+        if (targetingPlayer.IsGM()) return result;
+
+        untargetablePlayers ??= [];
+
+        // GM is untargetable by anything
+        // if (GM.gm != null)
+        // {
+        //     untargetablePlayers.Add(GM.gm);
+        // }
+
+        // Can't target stealthed ninjas if setting on
+        // if (!Ninja.canBeTargeted)
+        // {
+        //     foreach (Ninja n in Ninja.players)
+        //     {
+        //         if (n.stealthed) untargetablePlayers.Add(n.player);
+        //     }
+        // }
+
+        var truePosition = targetingPlayer.GetTruePosition();
+        foreach (var playerInfo in GameData.Instance.AllPlayers)
+        {
+            if (!playerInfo.Disconnected && playerInfo.PlayerId != targetingPlayer.PlayerId && !playerInfo.IsDead && (!onlyCrewmates || !playerInfo.Role.IsImpostor))
+            {
+                var @object = playerInfo.Object;
+                if (untargetablePlayers.Any(x => x == @object))
+                {
+                    // if that player is not targetable: skip check
+                    continue;
+                }
+
+                if (@object && (!@object.inVent || targetPlayersInVents))
+                {
+                    Vector2 vector = @object.GetTruePosition() - truePosition;
+                    float magnitude = vector.magnitude;
+                    if (magnitude <= num && !PhysicsHelpers.AnyNonTriggersBetween(truePosition, vector.normalized, magnitude, Constants.ShipAndObjectsMask))
+                    {
+                        result = @object;
+                        num = magnitude;
+                    }
+                }
+            }
+        }
+        return result;
+    }
+
+    public static void setPlayerOutline(PlayerControl target, Color color)
+    {
+        if (target == null || target.cosmetics?.currentBodySprite?.BodySprite == null) return;
+
+        target.cosmetics?.currentBodySprite?.BodySprite.material.SetFloat("_Outline", 1f);
+        target.cosmetics?.currentBodySprite?.BodySprite.material.SetColor("_OutlineColor", color);
+    }
+
+    // Update functions
+
+    public static void setBasePlayerOutlines()
+    {
+        foreach (PlayerControl target in CachedPlayer.AllPlayers)
+        {
+            if (target == null || target.cosmetics?.currentBodySprite?.BodySprite == null) continue;
+
+            // bool isMorphedMorphling = target == Morphling.morphling && Morphling.morphTarget != null && Morphling.morphTimer > 0f;
+            // bool hasVisibleShield = false;
+            // if (Camouflager.camouflageTimer <= 0f && Medic.shielded != null && ((target == Medic.shielded && !isMorphedMorphling) || (isMorphedMorphling && Morphling.morphTarget == Medic.shielded)))
+            // {
+            //     hasVisibleShield = Medic.showShielded == 0 // Everyone
+            //         || (Medic.showShielded == 1 && (CachedPlayer.LocalPlayer.PlayerControl == Medic.shielded || CachedPlayer.LocalPlayer.PlayerControl == Medic.medic)) // Shielded + Medic
+            //         || (Medic.showShielded == 2 && CachedPlayer.LocalPlayer.PlayerControl == Medic.medic); // Medic only
+            // }
+
+            // if (hasVisibleShield)
+            // {
+            //     target.cosmetics?.currentBodySprite?.BodySprite.material.SetFloat("_Outline", 1f);
+            //     target.cosmetics?.currentBodySprite?.BodySprite.material.SetColor("_OutlineColor", Medic.shieldedColor);
+            // }
+            // else
+            {
+                target.cosmetics?.currentBodySprite?.BodySprite.material.SetFloat("_Outline", 0f);
+            }
+        }
+    }
+
+    public static void refreshRoleDescription(PlayerControl player)
+    {
+        List<RoleInfo> infos = RoleInfo.GetRoleInfoForPlayer(player);
+        List<string> taskTexts = new(infos.Count);
+
+        foreach (var roleInfo in infos)
+        {
+            taskTexts.Add(getRoleString(roleInfo));
+        }
+
+        var toRemove = new List<PlayerTask>();
+        foreach (PlayerTask t in player.myTasks.GetFastEnumerator())
+        {
+            var textTask = t.TryCast<ImportantTextTask>();
+            if (textTask == null) continue;
+
+            var currentText = textTask.Text;
+
+            if (taskTexts.Contains(currentText)) taskTexts.Remove(currentText); // TextTask for this RoleInfo does not have to be added, as it already exists
+            else toRemove.Add(t); // TextTask does not have a corresponding RoleInfo and will hence be deleted
+        }
+
+        foreach (PlayerTask t in toRemove)
+        {
+            t.OnRemove();
+            player.myTasks.Remove(t);
+            UnityEngine.Object.Destroy(t.gameObject);
+        }
+
+        // Add TextTask for remaining RoleInfos
+        foreach (string title in taskTexts)
+        {
+            var task = new GameObject("RoleTask").AddComponent<ImportantTextTask>();
+            task.transform.SetParent(player.transform, false);
+            task.Text = title;
+            player.myTasks.Insert(0, task);
+        }
+    }
+
+    internal static string getRoleString(RoleInfo roleInfo)
+    {
+        if (roleInfo.Name == "Jackal")
+        {
+            var getSidekickText = Jackal.canCreateSidekick ? " and recruit a Sidekick" : "";
+            return Cs(roleInfo.Color, $"{roleInfo.Name}: Kill everyone{getSidekickText}");
+        }
+
+        return Cs(roleInfo.Color, $"{roleInfo.Name}: {roleInfo.ShortDescription}");
+    }
+
+    public static void updatePlayerInfo()
+    {
+        var colorBlindTextMeetingInitialLocalPos = new Vector3(0.3384f, -0.16666f, -0.01f);
+        var colorBlindTextMeetingInitialLocalScale = new Vector3(0.9f, 1f, 1f);
+        foreach (var p in PlayerControl.AllPlayerControls)
+        {
+            // Colorblind Text in Meeting
+            var playerVoteArea = MeetingHud.Instance?.playerStates?.FirstOrDefault(x => x.TargetPlayerId == p.PlayerId);
+            if (playerVoteArea != null && playerVoteArea.ColorBlindName.gameObject.active)
+            {
+                playerVoteArea.ColorBlindName.transform.localPosition = colorBlindTextMeetingInitialLocalPos + new Vector3(0f, 0.4f, 0f);
+                playerVoteArea.ColorBlindName.transform.localScale = colorBlindTextMeetingInitialLocalScale * 0.8f;
+            }
+
+            // Colorblind Text During the round
+            if (p.cosmetics.colorBlindText != null && p.cosmetics.showColorBlindText && p.cosmetics.colorBlindText.gameObject.active)
+            {
+                p.cosmetics.colorBlindText.transform.localPosition = new Vector3(0, -1f, 0f);
+            }
+
+            p.cosmetics.nameText.transform.parent.SetLocalZ(-0.0001f);  // This moves both the name AND the colorblind text behind objects (if the player is behind the object), like the rock on polus
+
+            if (p == PlayerControl.LocalPlayer || PlayerControl.LocalPlayer.Data.IsDead)
+            {
+                var playerInfoTransform = p.cosmetics.nameText.transform.parent.FindChild("Info");
+                var playerInfo = playerInfoTransform?.GetComponent<TMPro.TextMeshPro>();
+                if (playerInfo == null)
+                {
+                    playerInfo = UnityEngine.Object.Instantiate(p.cosmetics.nameText, p.cosmetics.nameText.transform.parent);
+                    playerInfo.transform.localPosition += Vector3.up * 0.225f;
+                    playerInfo.fontSize *= 0.75f;
+                    playerInfo.gameObject.name = "Info";
+                    playerInfo.color = playerInfo.color.SetAlpha(1f);
+                }
+
+                var meetingInfoTransform = playerVoteArea?.NameText.transform.parent.FindChild("Info");
+                var meetingInfo = meetingInfoTransform?.GetComponent<TMPro.TextMeshPro>();
+                if (meetingInfo == null && playerVoteArea != null)
+                {
+                    meetingInfo = UnityEngine.Object.Instantiate(playerVoteArea.NameText, playerVoteArea.NameText.transform.parent);
+                    meetingInfo.transform.localPosition += Vector3.down * 0.2f;
+                    meetingInfo.fontSize *= 0.60f;
+                    meetingInfo.gameObject.name = "Info";
+                }
+
+                // Set player name higher to align in middle
+                if (meetingInfo != null && playerVoteArea != null)
+                {
+                    var playerName = playerVoteArea.NameText;
+                    playerName.transform.localPosition = new Vector3(0.3384f, 0.0311f, -0.1f);
+                }
+
+                var (tasksCompleted, tasksTotal) = TasksHandler.TaskInfo(p.Data);
+                string roleNames = RoleInfo.GetRolesString(p, true, false);
+                string roleText = RoleInfo.GetRolesString(p, true, MapOptions.GhostsSeeModifier);
+                string taskInfo = tasksTotal > 0 ? $"<color=#FAD934FF>({tasksCompleted}/{tasksTotal})</color>" : "";
+
+                string playerInfoText = "";
+                string meetingInfoText = "";
+                if (p == PlayerControl.LocalPlayer)
+                {
+                    if (p.Data.IsDead) roleNames = roleText;
+                    playerInfoText = $"{roleNames}";
+                    // if (p == Swapper.swapper) playerInfoText = $"{roleNames}" + Helpers.cs(Swapper.color, $" ({Swapper.charges})");
+                    if (HudManager.Instance.TaskPanel != null)
+                    {
+                        var tabText = HudManager.Instance.TaskPanel.tab.transform.FindChild("TabText_TMP").GetComponent<TextMeshPro>();
+                        tabText.SetText($"Tasks {taskInfo}");
+                    }
+                    meetingInfoText = $"{roleNames} {taskInfo}".Trim();
+                }
+                else if (MapOptions.GhostsSeeRoles && MapOptions.GhostsSeeInformation)
+                {
+                    playerInfoText = $"{roleText} {taskInfo}".Trim();
+                    meetingInfoText = playerInfoText;
+                }
+                else if (MapOptions.GhostsSeeInformation)
+                {
+                    playerInfoText = $"{taskInfo}".Trim();
+                    meetingInfoText = playerInfoText;
+                }
+                else if (MapOptions.GhostsSeeRoles)
+                {
+                    playerInfoText = $"{roleText}";
+                    meetingInfoText = playerInfoText;
+                }
+
+                playerInfo.text = playerInfoText;
+                playerInfo.gameObject.SetActive(p.Visible);
+                meetingInfo?.text = MeetingHud.Instance.state == MeetingHud.VoteStates.Results ? "" : meetingInfoText;
+            }
+        }
+    }
+
+    public static void setPetVisibility()
+    {
+        var localDead = PlayerControl.LocalPlayer.Data.IsDead;
+        foreach (var player in PlayerControl.AllPlayerControls)
+        {
+            var playerAlive = !player.Data.IsDead;
+            player.cosmetics.SetPetVisible((localDead && playerAlive) || !localDead);
+        }
+    }
+
+    public static void shareGameVersion()
+    {
+        MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.VersionHandshake, SendOption.Reliable, -1);
+        writer.Write((byte)RebuildUs.Instance.Version.Major);
+        writer.Write((byte)RebuildUs.Instance.Version.Minor);
+        writer.Write((byte)RebuildUs.Instance.Version.Build);
+        writer.Write(AmongUsClient.Instance.AmHost ? GameStart.timer : -1f);
+        writer.WritePacked(AmongUsClient.Instance.ClientId);
+        writer.Write((byte)(RebuildUs.Instance.Version.Revision < 0 ? 0xFF : RebuildUs.Instance.Version.Revision));
+        writer.Write(Assembly.GetExecutingAssembly().ManifestModule.ModuleVersionId.ToByteArray());
+        AmongUsClient.Instance.FinishRpcImmediately(writer);
+        RPCProcedure.versionHandshake(RebuildUs.Instance.Version.Major, RebuildUs.Instance.Version.Minor, RebuildUs.Instance.Version.Build, RebuildUs.Instance.Version.Revision, Assembly.GetExecutingAssembly().ManifestModule.ModuleVersionId, AmongUsClient.Instance.ClientId);
     }
 }

@@ -10,6 +10,7 @@ public partial class RoleInfo
     public static RoleInfo Vulture;
     public static RoleInfo Jackal;
     public static RoleInfo Sidekick;
+    public static RoleInfo Spy;
 
     public static void Load()
     {
@@ -20,5 +21,6 @@ public partial class RoleInfo
         AllRoleInfos.Add(Arsonist = new("Arsonist", Neutral.Arsonist.RoleColor, CustomOptionHolder.arsonistSpawnRate, ERoleType.Arsonist));
         AllRoleInfos.Add(Jackal = new("Jackal", Neutral.Jackal.RoleColor, CustomOptionHolder.jackalSpawnRate, ERoleType.Jackal));
         AllRoleInfos.Add(Sidekick = new("Sidekick", Neutral.Jackal.RoleColor, CustomOptionHolder.jackalSpawnRate, ERoleType.Sidekick));
+        AllRoleInfos.Add(Spy = new("Spy", Crewmate.Spy.RoleColor, CustomOptionHolder.spySpawnRate, ERoleType.Spy));
     }
 }

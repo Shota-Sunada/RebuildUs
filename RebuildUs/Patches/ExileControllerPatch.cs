@@ -18,4 +18,11 @@ public static class ExileControllerPatch
         NetworkedPlayerInfo networkedPlayer = __instance.initData.networkedPlayer;
         Exile.WrapUpPostfix(networkedPlayer?.Object);
     }
+
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(ExileController), nameof(ExileController.ReEnableGameplay))]
+    public static void ReEnableGameplay(ExileController __instance)
+    {
+        RebuildUs.OnMeetingEnd();
+    }
 }

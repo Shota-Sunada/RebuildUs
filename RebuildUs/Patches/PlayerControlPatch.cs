@@ -43,4 +43,21 @@ public static class PlayerControlPatch
         FastDestroyableSingleton<HudManager>.Instance.KillButton.SetCoolDown(__instance.killTimer, GameOptionsManager.Instance.currentNormalGameOptions.KillCooldown * multiplier + addition);
         return false;
     }
+
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.FixedUpdate))]
+    public static void FixedUpdatePostfix(PlayerControl __instance)
+    {
+        if (AmongUsClient.Instance.GameState != InnerNet.InnerNetClient.GameStates.Started || GameOptionsManager.Instance.currentGameOptions.GameMode == AmongUs.GameOptions.GameModes.HideNSeek) return;
+
+        if (PlayerControl.LocalPlayer == __instance)
+        {
+            Helpers.setBasePlayerOutlines();
+            Helpers.refreshRoleDescription(__instance);
+            Helpers.updatePlayerInfo();
+            Helpers.setPetVisibility();
+        }
+
+        RebuildUs.FixedUpdate(__instance);
+    }
 }

@@ -2,7 +2,7 @@ using RebuildUs.Modules;
 using AmongUs.GameOptions;
 using RebuildUs.Roles.Crewmate;
 using RebuildUs.Roles.Neutral;
-using Epic.OnlineServices;
+using RebuildUs.Objects;
 
 namespace RebuildUs.Modules.RPC;
 
@@ -12,26 +12,25 @@ public static partial class RPCProcedure
     {
         Garlic.clearGarlics();
         JackInTheBox.clearJackInTheBoxes();
-        MapOptions.clearAndReloadMapOptions();
-        TheOtherRoles.clearAndReloadRoles();
+        MapOptions.ClearAndReloadMapOptions();
+        RebuildUs.ClearAndReloadRoles();
         GameHistory.ClearGameHistory();
-        setCustomButtonCooldowns();
-        AdminPatch.ResetData();
-        CameraPatch.ResetData();
-        VitalsPatch.ResetData();
-        MapBehaviorPatch.reset();
-        CustomOverlays.resetOverlays();
-        SpecimenVital.clearAndReload();
-        AdditionalVents.clearAndReload();
-        BombEffect.clearBombEffects();
-        Trap.clearAllTraps();
-        AssassinTrace.clearTraces();
-        SpawnInMinigamePatch.reset();
-        MapBehaviorPatch.resetRealTasks();
-        CustomNormalPlayerTask.reset();
-        Shrine.reset();
+        // setCustomButtonCooldowns();
+        // AdminPatch.ResetData();
+        // CameraPatch.ResetData();
+        // VitalsPatch.ResetData();
+        // MapBehaviorPatch.reset();
+        // CustomOverlays.resetOverlays();
+        // SpecimenVital.clearAndReload();
+        // AdditionalVents.clearAndReload();
+        // BombEffect.clearBombEffects();
+        // Trap.clearAllTraps();
+        // AssassinTrace.clearTraces();
+        // SpawnInMinigamePatch.reset();
+        // MapBehaviorPatch.resetRealTasks();
+        // CustomNormalPlayerTask.reset();
 
-        KillAnimationCoPerformKillPatch.hideNextAnimation = false;
+        KillAnimationPatch.HideNextAnimation = false;
 
         using var sender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.FinishResetVariables);
         sender.Write(PlayerControl.LocalPlayer.PlayerId);
@@ -78,16 +77,16 @@ public static partial class RPCProcedure
 
     public static void addModifier(byte modId, byte playerId)
     {
-        PlayerControl.AllPlayerControls.GetFastEnumerator().ToArray().DoIf(
-            x => x.PlayerId == playerId,
-            x => x.addModifier((ModifierType)modId)
-        );
+        // PlayerControl.AllPlayerControls.GetFastEnumerator().ToArray().DoIf(
+        //     x => x.PlayerId == playerId,
+        //     x => x.addModifier((ModifierType)modId)
+        // );
     }
 
     public static void versionHandshake(int major, int minor, int build, int revision, Guid guid, int clientId)
     {
-        Version ver = revision < 0 ? new Version(major, minor, build) : new Version(major, minor, build, revision);
-        GameStartManagerPatch.playerVersions[clientId] = new GameStartManagerPatch.PlayerVersion(ver, guid);
+        var ver = revision < 0 ? new Version(major, minor, build) : new Version(major, minor, build, revision);
+        GameStart.playerVersions[clientId] = new(ver, guid);
     }
 
     public static void finishSetRole()
@@ -157,7 +156,7 @@ public static partial class RPCProcedure
         var target = Helpers.PlayerById(targetId);
         if (source != null && target != null)
         {
-            if (showAnimation == 0) KillAnimationCoPerformKillPatch.hideNextAnimation = true;
+            if (showAnimation == 0) KillAnimationPatch.HideNextAnimation = true;
             source.MurderPlayer(target);
         }
     }
@@ -175,15 +174,24 @@ public static partial class RPCProcedure
 
     public static void setGameStarting()
     {
-        GameStartManagerPatch.GameStartManagerUpdatePatch.startingTimer = 5f;
+        GameStart.startingTimer = 5f;
+    }
+
+    public static void stopStart()
+    {
+        SoundManager.Instance.StopSound(GameStartManager.Instance.gameStartSound);
+        if (AmongUsClient.Instance.AmHost)
+        {
+            GameStartManager.Instance.ResetStartState();
+        }
     }
 
     public static void shareGamemode(byte gm)
     {
         MapOptions.GameMode = (CustomGamemodes)gm;
-        LobbyViewSettingsPatch.currentButtons?.ForEach(x => x.gameObject?.Destroy());
-        LobbyViewSettingsPatch.currentButtons?.Clear();
-        LobbyViewSettingsPatch.currentButtonTypes?.Clear();
+        CustomOption.SettingsPaneCurrentButtons?.ForEach(x => x.gameObject?.Destroy());
+        CustomOption.SettingsPaneCurrentButtons?.Clear();
+        CustomOption.SettingsPaneCurrentButtonTypes?.Clear();
     }
 
     public static void finishResetVariables(byte playerId)
@@ -200,7 +208,7 @@ public static partial class RPCProcedure
 
     public static void setLovers(byte playerId1, byte playerId2)
     {
-        Lovers.addCouple(Helpers.PlayerById(playerId1), Helpers.PlayerById(playerId2));
+        // Lovers.addCouple(Helpers.PlayerById(playerId1), Helpers.PlayerById(playerId2));
     }
 
     public static void overrideNativeRole(byte playerId, byte roleType)
@@ -320,13 +328,13 @@ public static partial class RPCProcedure
         }
 
         player.EraseAllRoles();
-        player.EraseAllModifiers();
+        // player.EraseAllModifiers();
 
-        if (!ignoreLovers && player.IsLovers())
-        {
-            // The whole Lover couple is being erased
-            Lovers.eraseCouple(player);
-        }
+        // if (!ignoreLovers && player.IsLovers())
+        // {
+        //     // The whole Lover couple is being erased
+        //     Lovers.eraseCouple(player);
+        // }
     }
 
     public static void jackalCreatesSidekick(byte targetId, byte jackalId)
@@ -342,15 +350,15 @@ public static partial class RPCProcedure
         }
         else
         {
-            var wasSpy = Spy.spy != null && target == Spy.spy;
+            var wasSpy = target.IsRole(ERoleType.Spy);
             var wasImpostor = target.IsTeamImpostor(); // This can only be reached if impostors can be sidekicked.
             FastDestroyableSingleton<RoleManager>.Instance.SetRole(target, RoleTypes.Crewmate);
             erasePlayerRoles(target.PlayerId, true);
-            Sidekick.sidekick = target;
+            target.SetRole(ERoleType.Sidekick);
             if (target.PlayerId == PlayerControl.LocalPlayer.PlayerId) PlayerControl.LocalPlayer.moveable = true;
-            if (wasSpy || wasImpostor) Sidekick.wasTeamRed = true;
-            Sidekick.wasSpy = wasSpy;
-            Sidekick.wasImpostor = wasImpostor;
+            if (wasSpy || wasImpostor) Sidekick.GetRole(target).wasTeamRed = true;
+            Sidekick.GetRole(target).wasSpy = wasSpy;
+            Sidekick.GetRole(target).wasImpostor = wasImpostor;
         }
         jackal.canSidekick = false;
         jackal.mySidekick = target;
@@ -359,8 +367,19 @@ public static partial class RPCProcedure
     public static void sidekickPromotes(byte sidekickId)
     {
         var sidekickPlayer = Helpers.PlayerById(sidekickId);
+        var sidekick = Sidekick.GetRole(sidekickPlayer);
+        var wasTeamRed = sidekick.wasTeamRed;
+        var wasImpostor = sidekick.wasImpostor;
+        var wasSpy = sidekick.wasSpy;
         Jackal.removeCurrentJackal();
+        FastDestroyableSingleton<RoleManager>.Instance.SetRole(sidekickPlayer, RoleTypes.Crewmate);
+        erasePlayerRoles(sidekickPlayer.PlayerId, true);
         sidekickPlayer.SetRole(ERoleType.Jackal);
+        var newJackal = Jackal.GetRole(sidekickPlayer);
+        newJackal.canSidekick = Jackal.jackalPromotedFromSidekickCanCreateSidekick;
+        newJackal.wasTeamRed = wasTeamRed;
+        newJackal.wasImpostor = wasImpostor;
+        newJackal.wasSpy = wasSpy;
         Sidekick.Clear();
         return;
     }

@@ -15,6 +15,7 @@ public enum CustomRPC : byte
     UncheckedExilePlayer,
     DynamicMapOption,
     SetGameStarting,
+    StopStart,
     ShareGamemode,
     FinishResetVariables,
     FinishSetRole,

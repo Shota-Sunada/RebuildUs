@@ -13,6 +13,9 @@ public class Jackal : RoleBase<Jackal>
     public PlayerControl mySidekick;
     public static List<PlayerControl> formerJackals = [];
     public bool canSidekick = false;
+    public bool wasTeamRed = false;
+    public bool wasImpostor = false;
+    public bool wasSpy = false;
 
     // write configs here
     public static float killCooldown { get { return CustomOptionHolder.jackalKillCooldown.GetFloat(); } }
@@ -44,15 +47,15 @@ public class Jackal : RoleBase<Jackal>
                 // Only exclude sidekick from being targeted if the jackal can create sidekicks from impostors
                 if (Sidekick.Exists) untargetablePlayers.AddRange(Sidekick.AllPlayers);
             }
-            foreach (var mini in Mini.players)
-            {
-                if (!Mini.isGrownUp(mini.player))
-                {
-                    untargetablePlayers.Add(mini.player);
-                }
-            }
-            currentTarget = setTarget(untargetablePlayers: untargetablePlayers);
-            setPlayerOutline(currentTarget, Palette.ImpostorRed);
+            // foreach (var mini in Mini.players)
+            // {
+            //     if (!Mini.isGrownUp(mini.player))
+            //     {
+            //         untargetablePlayers.Add(mini.player);
+            //     }
+            // }
+            currentTarget = Helpers.setTarget(untargetablePlayers: untargetablePlayers);
+            Helpers.setPlayerOutline(currentTarget, Palette.ImpostorRed);
         }
     }
     public override void OnKill(PlayerControl target) { }
@@ -134,7 +137,8 @@ public class Jackal : RoleBase<Jackal>
                 {
                     jackalSabotageLightsButton.Timer = Helpers.sabotageTimer() + 5f;
                 },
-                Trickster.getLightsOutButtonSprite(),
+                // Trickster.getLightsOutButtonSprite(),
+                null,
                 CustomButton.ButtonPositions.upperRowCenter,
                 hm,
                 hm.AbilityButton,
@@ -145,6 +149,14 @@ public class Jackal : RoleBase<Jackal>
     {
         jackalKillButton.MaxTimer = killCooldown;
         jackalSidekickButton.MaxTimer = createSidekickCooldown;
+    }
+
+    public static Sprite buttonSprite;
+    public static Sprite getSidekickButtonSprite()
+    {
+        if (buttonSprite) return buttonSprite;
+        buttonSprite = Helpers.LoadSpriteFromResources("SidekickButton", 115f);
+        return buttonSprite;
     }
 
     // write functions here

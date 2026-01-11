@@ -91,7 +91,7 @@ public static class EndGameMain
                 EndGameResult.CachedWinners = new Il2CppSystem.Collections.Generic.List<CachedPlayerData>();
                 foreach (var p in PlayerControl.AllPlayerControls)
                 {
-                    if (p.IsTeamImpostor() || p.HasModifier(ModifierType.Madmate) || p.HasModifier(ModifierType.CreatedMadmate))
+                    if (p.IsTeamImpostor() /*|| p.HasModifier(ModifierType.Madmate) || p.HasModifier(ModifierType.CreatedMadmate)*/)
                     {
                         var wpd = new CachedPlayerData(p.Data);
                         EndGameResult.CachedWinners.Add(wpd);
@@ -103,7 +103,7 @@ public static class EndGameMain
                 EndGameResult.CachedWinners = new Il2CppSystem.Collections.Generic.List<CachedPlayerData>();
                 foreach (var p in PlayerControl.AllPlayerControls)
                 {
-                    if (p.IsTeamCrewmate() && !p.HasModifier(ModifierType.Madmate) && !p.HasModifier(ModifierType.CreatedMadmate))
+                    if (p.IsTeamCrewmate() /*&& !p.HasModifier(ModifierType.Madmate) && !p.HasModifier(ModifierType.CreatedMadmate)*/)
                     {
                         var wpd = new CachedPlayerData(p.Data);
                         EndGameResult.CachedWinners.Add(wpd);
@@ -255,7 +255,7 @@ public static class EndGameMain
         if (AdditionalTempData.IsGM)
         {
             __instance.WinText.text = Tr.Get("gmGameOver");
-            __instance.WinText.color = GM.color;
+            // __instance.WinText.color = GM.color;
         }
 
         string bonusText = "";
@@ -504,11 +504,11 @@ public static class EndGameMain
 
     public static bool CheckAndEndGameForMiniLose()
     {
-        if (Mini.triggerMiniLose)
-        {
-            UncheckedEndGame(ECustomGameOverReason.MiniLose);
-            return true;
-        }
+        // if (Mini.triggerMiniLose)
+        // {
+        //     UncheckedEndGame(ECustomGameOverReason.MiniLose);
+        //     return true;
+        // }
         return false;
     }
 
@@ -573,11 +573,11 @@ public static class EndGameMain
 
     public static bool CheckAndEndGameForLoverWin(PlayerStatistics statistics)
     {
-        if (statistics.CouplesAlive == 1 && statistics.TotalAlive <= 3)
-        {
-            UncheckedEndGame(ECustomGameOverReason.LoversWin);
-            return true;
-        }
+        // if (statistics.CouplesAlive == 1 && statistics.TotalAlive <= 3)
+        // {
+        //     UncheckedEndGame(ECustomGameOverReason.LoversWin);
+        //     return true;
+        // }
         return false;
     }
 
@@ -601,7 +601,7 @@ public static class EndGameMain
             (statistics.TeamImpostorLovers == 0 || statistics.TeamImpostorLovers >= statistics.CouplesAlive * 2)
            )
         {
-            var endReason = TempData.LastDeathReason switch
+            var endReason = GameData.LastDeathReason switch
             {
                 DeathReason.Exile => GameOverReason.ImpostorsByVote,
                 DeathReason.Kill => GameOverReason.ImpostorsByKill,

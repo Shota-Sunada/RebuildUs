@@ -2,6 +2,7 @@ using InnerNet;
 using RebuildUs.Modules.RPC;
 using RebuildUs.Players;
 using RebuildUs.Roles;
+using RebuildUs.Roles.Crewmate;
 using RebuildUs.Roles.Neutral;
 using RebuildUs.Utilities;
 
@@ -102,15 +103,14 @@ public static class PlayerControlHelpers
     public static bool CanUseVents(this PlayerControl player)
     {
         bool roleCouldUse = false;
-        // if (player.IsRole(ERoleType.Engineer))
-        //     roleCouldUse = true;
-        // else if (Jackal.canUseVents && player.isRole(RoleType.Jackal))
-        if (Jackal.canUseVents && player.IsRole(ERoleType.Jackal))
+        if (player.IsRole(ERoleType.Engineer))
+            roleCouldUse = true;
+        else if (Jackal.canUseVents && player.IsRole(ERoleType.Jackal))
             roleCouldUse = true;
         else if (Sidekick.canUseVents && player.IsRole(ERoleType.Sidekick))
             roleCouldUse = true;
-        // else if (Spy.canEnterVents && player.isRole(RoleType.Spy))
-        //     roleCouldUse = true;
+        else if (Spy.canEnterVents && player.IsRole(ERoleType.Spy))
+            roleCouldUse = true;
         // else if (Madmate.canEnterVents && player.hasModifier(ModifierType.Madmate))
         //     roleCouldUse = true;
         // else if (CreatedMadmate.canEnterVents && player.hasModifier(ModifierType.CreatedMadmate))
