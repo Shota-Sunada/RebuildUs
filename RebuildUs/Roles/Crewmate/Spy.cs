@@ -6,9 +6,9 @@ public class Spy : RoleBase<Spy>
     public static Color RoleColor = Palette.ImpostorRed;
 
     // write configs here
-    public static bool impostorsCanKillAnyone { get { return CustomOptionHolder.spyImpostorsCanKillAnyone.GetBool(); } }
-    public static bool canEnterVents { get { return CustomOptionHolder.spyCanEnterVents.GetBool(); } }
-    public static bool hasImpostorVision { get { return CustomOptionHolder.spyHasImpostorVision.GetBool(); } }
+    public static bool ImpostorsCanKillAnyone { get { return CustomOptionHolder.SpyImpostorsCanKillAnyone.GetBool(); } }
+    public static bool CanEnterVents { get { return CustomOptionHolder.SpyCanEnterVents.GetBool(); } }
+    public static bool HasImpostorVision { get { return CustomOptionHolder.SpyHasImpostorVision.GetBool(); } }
 
     public Spy()
     {

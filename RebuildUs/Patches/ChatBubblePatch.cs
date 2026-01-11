@@ -11,7 +11,7 @@ public static class ChatBubblePatch
     {
         var sourcePlayer = PlayerControl.AllPlayerControls.GetFastEnumerator().ToArray().ToList().FirstOrDefault(x => x.Data.PlayerName.Equals(playerName));
         if (CachedPlayer.LocalPlayer.PlayerControl.IsTeamImpostor()
-            && (sourcePlayer.IsRole(ERoleType.Spy) || (sourcePlayer.IsRole(ERoleType.Sidekick) && Sidekick.GetRole(sourcePlayer).wasTeamRed) || (sourcePlayer.IsRole(ERoleType.Jackal) && Jackal.GetRole(sourcePlayer).wasTeamRed))
+            && (sourcePlayer.IsRole(ERoleType.Spy) || (sourcePlayer.IsRole(ERoleType.Sidekick) && Sidekick.GetRole(sourcePlayer).WasTeamRed) || (sourcePlayer.IsRole(ERoleType.Jackal) && Jackal.GetRole(sourcePlayer).WasTeamRed))
             && __instance != null)
         {
             __instance.NameText.color = Palette.ImpostorRed;

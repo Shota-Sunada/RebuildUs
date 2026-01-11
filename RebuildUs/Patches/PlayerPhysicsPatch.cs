@@ -3,7 +3,7 @@ namespace RebuildUs.Patches;
 [HarmonyPatch]
 public static class PlayerPhysicsPatch
 {
-[HarmonyPostfix]
+    [HarmonyPostfix]
     [HarmonyPatch(typeof(PlayerPhysics), nameof(PlayerPhysics.CoSpawnPlayer))]
     public static void CoSpawnPlayerPostfix()
     {

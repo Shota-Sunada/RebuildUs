@@ -16,7 +16,7 @@ public static class GameStartManagerPatch
     {
         if (!GameData.Instance) return; // No instance
         __instance.MinPlayers = 1;
-        GameStart.update = GameData.Instance.PlayerCount != __instance.LastPlayerCount;
+        GameStart.Update = GameData.Instance.PlayerCount != __instance.LastPlayerCount;
     }
 
     [HarmonyPostfix]

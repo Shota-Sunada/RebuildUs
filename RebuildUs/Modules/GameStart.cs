@@ -4,47 +4,47 @@ namespace RebuildUs.Modules;
 
 public static class GameStart
 {
-    public static Dictionary<int, PlayerVersion> playerVersions = [];
-    public static float timer = 600f;
-    public static float kickingTimer = 0f;
-    public static bool versionSent = false;
-    public static string lobbyCodeText = "";
+    public static Dictionary<int, PlayerVersion> PlayerVersions = [];
+    public static float Timer = 600f;
+    public static float KickingTimer = 0f;
+    public static bool VersionSent = false;
+    public static string LobbyCodeText = "";
 
-    public static float startingTimer = 0;
-    public static bool update = false;
-    public static string currentText = "";
-    public static GameObject copiedStartButton;
-    public static bool sendGamemode = true;
+    public static float StartingTimer = 0;
+    public static bool Update = false;
+    public static string CurrentText = "";
+    public static GameObject CopiedStartButton;
+    public static bool SendGamemode = true;
 
     public static void OnPlayerJoined()
     {
         if (PlayerControl.LocalPlayer != null)
         {
-            Helpers.shareGameVersion();
+            Helpers.ShareGameVersion();
         }
-        sendGamemode = true;
+        SendGamemode = true;
     }
 
     public static void Start(GameStartManager __instance)
     {
         // Trigger version refresh
-        versionSent = false;
+        VersionSent = false;
         // Reset lobby countdown timer
-        timer = 600f;
+        Timer = 600f;
         // Reset kicking timer
-        kickingTimer = 0f;
+        KickingTimer = 0f;
         // Copy lobby code
         var code = InnerNet.GameCode.IntToGameName(AmongUsClient.Instance.GameId);
         GUIUtility.systemCopyBuffer = code;
-        lobbyCodeText = FastDestroyableSingleton<TranslationController>.Instance.GetString(StringNames.RoomCode, new Il2CppReferenceArray<Il2CppSystem.Object>(0)) + "\r\n" + code;
+        LobbyCodeText = FastDestroyableSingleton<TranslationController>.Instance.GetString(StringNames.RoomCode, new Il2CppReferenceArray<Il2CppSystem.Object>(0)) + "\r\n" + code;
     }
 
     public static void UpdatePostfix(GameStartManager __instance)
     {
-        if (PlayerControl.LocalPlayer != null && !versionSent)
+        if (PlayerControl.LocalPlayer != null && !VersionSent)
         {
-            versionSent = true;
-            Helpers.shareGameVersion();
+            VersionSent = true;
+            Helpers.ShareGameVersion();
         }
 
         // Check version handshake infos
@@ -53,28 +53,28 @@ public static class GameStart
         foreach (InnerNet.ClientData client in AmongUsClient.Instance.allClients.ToArray())
         {
             if (client.Character == null) continue;
-            else if (!playerVersions.ContainsKey(client.Id))
+            else if (!PlayerVersions.ContainsKey(client.Id))
             {
                 versionMismatch = true;
                 message += $"<color=#FF0000FF>{client.Character.Data.PlayerName} has a different or no version of The Other Roles\n</color>";
             }
             else
             {
-                PlayerVersion PV = playerVersions[client.Id];
-                int diff = RebuildUs.Instance.Version.CompareTo(PV.version);
+                PlayerVersion pV = PlayerVersions[client.Id];
+                int diff = RebuildUs.Instance.Version.CompareTo(pV.Version);
                 if (diff > 0)
                 {
-                    message += $"<color=#FF0000FF>{client.Character.Data.PlayerName} has an older version of The Other Roles (v{playerVersions[client.Id].version})\n</color>";
+                    message += $"<color=#FF0000FF>{client.Character.Data.PlayerName} has an older version of The Other Roles (v{PlayerVersions[client.Id].Version})\n</color>";
                     versionMismatch = true;
                 }
                 else if (diff < 0)
                 {
-                    message += $"<color=#FF0000FF>{client.Character.Data.PlayerName} has a newer version of The Other Roles (v{playerVersions[client.Id].version})\n</color>";
+                    message += $"<color=#FF0000FF>{client.Character.Data.PlayerName} has a newer version of The Other Roles (v{PlayerVersions[client.Id].Version})\n</color>";
                     versionMismatch = true;
                 }
-                else if (!PV.GuidMatches())
+                else if (!pV.GuidMatches())
                 { // version presumably matches, check if Guid matches
-                    message += $"<color=#FF0000FF>{client.Character.Data.PlayerName} has a modified version of TOR v{playerVersions[client.Id].version} <size=30%>({PV.guid})</size>\n</color>";
+                    message += $"<color=#FF0000FF>{client.Character.Data.PlayerName} has a modified version of TOR v{PlayerVersions[client.Id].Version} <size=30%>({pV.Guid})</size>\n</color>";
                     versionMismatch = true;
                 }
             }
@@ -103,32 +103,32 @@ public static class GameStart
 
             if (__instance.startState != GameStartManager.StartingStates.Countdown)
             {
-                copiedStartButton?.Destroy();
+                CopiedStartButton?.Destroy();
             }
             // Make starting info available to clients:
-            if (startingTimer <= 0 && __instance.startState == GameStartManager.StartingStates.Countdown)
+            if (StartingTimer <= 0 && __instance.startState == GameStartManager.StartingStates.Countdown)
             {
                 MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.SetGameStarting, Hazel.SendOption.Reliable, -1);
                 AmongUsClient.Instance.FinishRpcImmediately(writer);
-                RPCProcedure.setGameStarting();
+                RPCProcedure.SetGameStarting();
                 // Activate Stop-Button
-                copiedStartButton = GameObject.Instantiate(__instance.StartButton.gameObject, __instance.StartButton.gameObject.transform.parent);
-                copiedStartButton.transform.localPosition = __instance.StartButton.transform.localPosition;
-                copiedStartButton.SetActive(true);
-                var startButtonText = copiedStartButton.GetComponentInChildren<TMPro.TextMeshPro>();
+                CopiedStartButton = GameObject.Instantiate(__instance.StartButton.gameObject, __instance.StartButton.gameObject.transform.parent);
+                CopiedStartButton.transform.localPosition = __instance.StartButton.transform.localPosition;
+                CopiedStartButton.SetActive(true);
+                var startButtonText = CopiedStartButton.GetComponentInChildren<TMPro.TextMeshPro>();
                 startButtonText.text = "";
                 startButtonText.fontSize *= 0.8f;
                 startButtonText.fontSizeMax = startButtonText.fontSize;
                 startButtonText.gameObject.transform.localPosition = Vector3.zero;
-                PassiveButton startButtonPassiveButton = copiedStartButton.GetComponent<PassiveButton>();
+                PassiveButton startButtonPassiveButton = CopiedStartButton.GetComponent<PassiveButton>();
                 void StopStartFunc()
                 {
                     __instance.ResetStartState();
                     MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.StopStart, SendOption.Reliable, -1);
                     writer.Write(PlayerControl.LocalPlayer.PlayerId);
                     AmongUsClient.Instance.FinishRpcImmediately(writer);
-                    copiedStartButton.Destroy();
-                    startingTimer = 0;
+                    CopiedStartButton.Destroy();
+                    StartingTimer = 0;
                     SoundManager.Instance.StopSound(GameStartManager.Instance.gameStartSound);
                 }
                 startButtonPassiveButton.OnClick.AddListener((Action)(() => StopStartFunc()));
@@ -142,17 +142,17 @@ public static class GameStart
         // Client update with handshake infos
         else
         {
-            if (!playerVersions.ContainsKey(AmongUsClient.Instance.HostId) || RebuildUs.Instance.Version.CompareTo(playerVersions[AmongUsClient.Instance.HostId].version) != 0)
+            if (!PlayerVersions.ContainsKey(AmongUsClient.Instance.HostId) || RebuildUs.Instance.Version.CompareTo(PlayerVersions[AmongUsClient.Instance.HostId].Version) != 0)
             {
-                kickingTimer += Time.deltaTime;
-                if (kickingTimer > 10)
+                KickingTimer += Time.deltaTime;
+                if (KickingTimer > 10)
                 {
-                    kickingTimer = 0;
+                    KickingTimer = 0;
                     AmongUsClient.Instance.ExitGame(DisconnectReasons.ExitGame);
                     SceneChanger.ChangeScene("MainMenu");
                 }
 
-                __instance.GameStartText.text = $"<color=#FF0000FF>The host has no or a different version of The Other Roles\nYou will be kicked in {Math.Round(10 - kickingTimer)}s</color>";
+                __instance.GameStartText.text = $"<color=#FF0000FF>The host has no or a different version of The Other Roles\nYou will be kicked in {Math.Round(10 - KickingTimer)}s</color>";
                 __instance.GameStartText.transform.localPosition = __instance.StartButton.transform.localPosition + Vector3.up * 5;
                 __instance.GameStartText.transform.localScale = new Vector3(2f, 2f, 1f);
                 __instance.GameStartTextParent.SetActive(true);
@@ -177,33 +177,33 @@ public static class GameStart
 
             if (!__instance.GameStartText.text.StartsWith("Starting"))
             {
-                copiedStartButton?.Destroy();
+                CopiedStartButton?.Destroy();
             }
         }
         // Start Timer
-        if (startingTimer > 0)
+        if (StartingTimer > 0)
         {
-            startingTimer -= Time.deltaTime;
+            StartingTimer -= Time.deltaTime;
         }
         // Lobby timer
         if (!GameData.Instance || !__instance.PlayerCounter) return; // No instance
 
-        if (update) currentText = __instance.PlayerCounter.text;
+        if (Update) CurrentText = __instance.PlayerCounter.text;
 
-        timer = Mathf.Max(0f, timer -= Time.deltaTime);
-        int minutes = (int)timer / 60;
-        int seconds = (int)timer % 60;
+        Timer = Mathf.Max(0f, Timer -= Time.deltaTime);
+        int minutes = (int)Timer / 60;
+        int seconds = (int)Timer % 60;
         string suffix = $" ({minutes:00}:{seconds:00})";
 
         if (!AmongUsClient.Instance) return;
 
-        if (AmongUsClient.Instance.AmHost && sendGamemode && PlayerControl.LocalPlayer != null)
+        if (AmongUsClient.Instance.AmHost && SendGamemode && PlayerControl.LocalPlayer != null)
         {
             MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.ShareGamemode, SendOption.Reliable, -1);
             writer.Write((byte)MapOptions.GameMode);
             AmongUsClient.Instance.FinishRpcImmediately(writer);
-            RPCProcedure.shareGamemode((byte)MapOptions.GameMode);
-            sendGamemode = false;
+            RPCProcedure.ShareGamemode((byte)MapOptions.GameMode);
+            SendGamemode = false;
         }
     }
 
@@ -221,15 +221,15 @@ public static class GameStart
                 if (dummyComponent != null && dummyComponent.enabled)
                     continue;
 
-                if (!playerVersions.ContainsKey(client.Id))
+                if (!PlayerVersions.ContainsKey(client.Id))
                 {
                     continueStart = false;
                     break;
                 }
 
-                PlayerVersion PV = playerVersions[client.Id];
-                int diff = RebuildUs.Instance.Version.CompareTo(PV.version);
-                if (diff != 0 || !PV.GuidMatches())
+                PlayerVersion pV = PlayerVersions[client.Id];
+                int diff = RebuildUs.Instance.Version.CompareTo(pV.Version);
+                if (diff != 0 || !pV.GuidMatches())
                 {
                     continueStart = false;
                     break;
@@ -244,7 +244,7 @@ public static class GameStart
                 MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.DynamicMapOption, Hazel.SendOption.Reliable, -1);
                 writer.Write(mapId);
                 AmongUsClient.Instance.FinishRpcImmediately(writer);
-                RPCProcedure.dynamicMapOption(mapId);
+                RPCProcedure.DynamicMapOption(mapId);
             }
             else if (CustomOptionHolder.RandomMap.GetBool() && continueStart)
             {
@@ -280,7 +280,7 @@ public static class GameStart
                 {  // Normalize to [0,1]
                     probabilities[i] /= sum;
                 }
-                float selection = (float)RebuildUs.Instance.rnd.NextDouble();
+                float selection = (float)RebuildUs.Instance.Rnd.NextDouble();
                 float cumSum = 0;
                 for (byte i = 0; i < probabilities.Length; i++)
                 {
@@ -295,7 +295,7 @@ public static class GameStart
                 MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.DynamicMapOption, Hazel.SendOption.Reliable, -1);
                 writer.Write(chosenMapId);
                 AmongUsClient.Instance.FinishRpcImmediately(writer);
-                RPCProcedure.dynamicMapOption(chosenMapId);
+                RPCProcedure.DynamicMapOption(chosenMapId);
             }
         }
         return continueStart;
@@ -304,11 +304,11 @@ public static class GameStart
 
 public class PlayerVersion(Version version, Guid guid)
 {
-    public readonly Version version = version;
-    public readonly Guid guid = guid;
+    public readonly Version Version = version;
+    public readonly Guid Guid = guid;
 
     public bool GuidMatches()
     {
-        return Assembly.GetExecutingAssembly().ManifestModule.ModuleVersionId.Equals(guid);
+        return Assembly.GetExecutingAssembly().ManifestModule.ModuleVersionId.Equals(Guid);
     }
 }

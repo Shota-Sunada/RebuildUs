@@ -5,7 +5,7 @@ public static class StringOptionPatch
 {
     [HarmonyPrefix]
     [HarmonyPatch(typeof(StringOption), nameof(StringOption.Initialize))]
-public static void InitializePrefix(StringOption __instance)
+    public static void InitializePrefix(StringOption __instance)
     {
         CustomOption.StringOptionInitializePrefix(__instance);
     }

@@ -4,63 +4,63 @@ namespace RebuildUs.Roles.Neutral;
 public class Arsonist : RoleBase<Arsonist>
 {
     public static Color RoleColor = new Color32(238, 112, 46, byte.MaxValue);
-    public static bool triggerArsonistWin = false;
-    public bool dousedEveryone = false;
-    public PlayerControl currentTarget;
-    public PlayerControl douseTarget;
-    public List<PlayerControl> dousedPlayers = [];
-    public static CustomButton arsonistButton;
-    public static CustomButton arsonistIgniteButton;
+    public static bool TriggerArsonistWin = false;
+    public bool DousedEveryone = false;
+    public PlayerControl CurrentTarget;
+    public PlayerControl DouseTarget;
+    public List<PlayerControl> DousedPlayers = [];
+    public static CustomButton ArsonistButton;
+    public static CustomButton ArsonistIgniteButton;
 
     // write configs here
-    public static float cooldown { get { return CustomOptionHolder.arsonistCooldown.GetFloat(); } }
-    public static float duration { get { return CustomOptionHolder.arsonistDuration.GetFloat(); } }
-    public static bool canBeLovers { get { return CustomOptionHolder.arsonistCanBeLovers.GetBool(); } }
+    public static float Cooldown { get { return CustomOptionHolder.ArsonistCooldown.GetFloat(); } }
+    public static float Duration { get { return CustomOptionHolder.ArsonistDuration.GetFloat(); } }
+    public static bool CanBeLovers { get { return CustomOptionHolder.ArsonistCanBeLovers.GetBool(); } }
 
-    public bool dousedEveryoneAlive()
+    public bool DousedEveryoneAlive()
     {
-        return PlayerControl.AllPlayerControls.GetFastEnumerator().ToArray().All(x => { return x.IsRole(ERoleType.Arsonist) || x.Data.IsDead || x.Data.Disconnected || x.IsGM() || dousedPlayers.Any(y => y.PlayerId == x.PlayerId); });
+        return PlayerControl.AllPlayerControls.GetFastEnumerator().ToArray().All(x => { return x.IsRole(ERoleType.Arsonist) || x.Data.IsDead || x.Data.Disconnected || x.IsGM() || DousedPlayers.Any(y => y.PlayerId == x.PlayerId); });
     }
 
     public Arsonist()
     {
         // write value init here
         StaticRoleType = CurrentRoleType = ERoleType.Arsonist;
-        dousedEveryone = false;
-        currentTarget = null;
-        douseTarget = null;
-        dousedPlayers = [];
+        DousedEveryone = false;
+        CurrentTarget = null;
+        DouseTarget = null;
+        DousedPlayers = [];
     }
 
     public override void OnMeetingStart() { }
     public override void OnMeetingEnd()
     {
-        updateIcons();
+        UpdateIcons();
     }
     public override void OnIntroEnd()
     {
-        updateIcons();
+        UpdateIcons();
     }
     public override void FixedUpdate()
     {
         if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(ERoleType.Arsonist))
         {
             List<PlayerControl> untargetables;
-            if (douseTarget != null)
+            if (DouseTarget != null)
             {
-                untargetables = [.. PlayerControl.AllPlayerControls.GetFastEnumerator().ToArray().Where(x => x.PlayerId != douseTarget.PlayerId)];
+                untargetables = [.. PlayerControl.AllPlayerControls.GetFastEnumerator().ToArray().Where(x => x.PlayerId != DouseTarget.PlayerId)];
             }
             else
             {
-                untargetables = dousedPlayers;
+                untargetables = DousedPlayers;
             }
-            currentTarget = Helpers.setTarget(untargetablePlayers: untargetables);
-            if (currentTarget != null) Helpers.setPlayerOutline(currentTarget, RoleColor);
+            CurrentTarget = Helpers.SetTarget(untargetablePlayers: untargetables);
+            if (CurrentTarget != null) Helpers.SetPlayerOutline(CurrentTarget, RoleColor);
         }
     }
     public override void OnKill(PlayerControl target)
     {
-        updateStatus();
+        UpdateStatus();
     }
     public override void OnDeath(PlayerControl killer = null) { }
     public override void OnFinishShipStatusBegin() { }
@@ -68,55 +68,55 @@ public class Arsonist : RoleBase<Arsonist>
 
     public static void MakeButtons(HudManager hm)
     {
-        arsonistButton = new CustomButton(
+        ArsonistButton = new CustomButton(
                 () =>
                 {
-                    if (Local.currentTarget != null)
+                    if (Local.CurrentTarget != null)
                     {
-                        Local.douseTarget = Local.currentTarget;
+                        Local.DouseTarget = Local.CurrentTarget;
                     }
                 },
-                () => { return CachedPlayer.LocalPlayer.PlayerControl.IsRole(ERoleType.Arsonist) && !Local.dousedEveryone && CachedPlayer.LocalPlayer.PlayerControl.IsAlive(); },
+                () => { return CachedPlayer.LocalPlayer.PlayerControl.IsRole(ERoleType.Arsonist) && !Local.DousedEveryone && CachedPlayer.LocalPlayer.PlayerControl.IsAlive(); },
                 () =>
                 {
-                    if (arsonistButton.isEffectActive && Local.douseTarget != Local.currentTarget)
+                    if (ArsonistButton.IsEffectActive && Local.DouseTarget != Local.CurrentTarget)
                     {
-                        Local.douseTarget = null;
-                        arsonistButton.Timer = 0f;
-                        arsonistButton.isEffectActive = false;
+                        Local.DouseTarget = null;
+                        ArsonistButton.Timer = 0f;
+                        ArsonistButton.IsEffectActive = false;
                     }
 
-                    return CachedPlayer.LocalPlayer.PlayerControl.CanMove && Local.currentTarget != null;
+                    return CachedPlayer.LocalPlayer.PlayerControl.CanMove && Local.CurrentTarget != null;
                 },
                 () =>
                 {
-                    arsonistButton.Timer = arsonistButton.MaxTimer;
-                    arsonistButton.isEffectActive = false;
-                    Local.douseTarget = null;
-                    Local.updateStatus();
+                    ArsonistButton.Timer = ArsonistButton.MaxTimer;
+                    ArsonistButton.IsEffectActive = false;
+                    Local.DouseTarget = null;
+                    Local.UpdateStatus();
                 },
-                getDouseSprite(),
+                GetDouseSprite(),
                 new Vector3(-1.8f, -0.06f, 0),
                 hm,
                 hm.KillButton,
                 KeyCode.F,
                 true,
-                duration,
+                Duration,
                 () =>
                 {
-                    if (Local.douseTarget != null)
+                    if (Local.DouseTarget != null)
                     {
                         using var sender = new RPCSender(CachedPlayer.LocalPlayer.PlayerControl.NetId, CustomRPC.ArsonistDouse);
-                        sender.Write(Local.douseTarget.PlayerId);
+                        sender.Write(Local.DouseTarget.PlayerId);
                         sender.Write(CachedPlayer.LocalPlayer.PlayerControl.PlayerId);
-                        RPCProcedure.arsonistDouse(Local.douseTarget.PlayerId, CachedPlayer.LocalPlayer.PlayerControl.PlayerId);
+                        RPCProcedure.ArsonistDouse(Local.DouseTarget.PlayerId, CachedPlayer.LocalPlayer.PlayerControl.PlayerId);
                     }
 
-                    Local.douseTarget = null;
-                    Local.updateStatus();
-                    arsonistButton.Timer = Local.dousedEveryone ? 0 : arsonistButton.MaxTimer;
+                    Local.DouseTarget = null;
+                    Local.UpdateStatus();
+                    ArsonistButton.Timer = Local.DousedEveryone ? 0 : ArsonistButton.MaxTimer;
 
-                    foreach (var p in Local.dousedPlayers)
+                    foreach (var p in Local.DousedPlayers)
                     {
                         if (MapOptions.PlayerIcons.ContainsKey(p.PlayerId))
                         {
@@ -126,50 +126,50 @@ public class Arsonist : RoleBase<Arsonist>
                 }
             )
         {
-            buttonText = Tr.Get("DouseText")
+            ButtonText = Tr.Get("DouseText")
         };
 
-        arsonistIgniteButton = new CustomButton(
+        ArsonistIgniteButton = new CustomButton(
             () =>
             {
-                if (Local.dousedEveryone)
+                if (Local.DousedEveryone)
                 {
                     using var sender = new RPCSender(CachedPlayer.LocalPlayer.PlayerControl.NetId, CustomRPC.ArsonistWin);
                     sender.Write(CachedPlayer.LocalPlayer.PlayerControl.PlayerId);
-                    RPCProcedure.arsonistWin(CachedPlayer.LocalPlayer.PlayerControl.PlayerId);
+                    RPCProcedure.ArsonistWin(CachedPlayer.LocalPlayer.PlayerControl.PlayerId);
                 }
             },
-            () => { return CachedPlayer.LocalPlayer.PlayerControl.IsRole(ERoleType.Arsonist) && Local.dousedEveryone && CachedPlayer.LocalPlayer.PlayerControl.IsAlive(); },
-            () => { return CachedPlayer.LocalPlayer.PlayerControl.CanMove && Local.dousedEveryone; },
+            () => { return CachedPlayer.LocalPlayer.PlayerControl.IsRole(ERoleType.Arsonist) && Local.DousedEveryone && CachedPlayer.LocalPlayer.PlayerControl.IsAlive(); },
+            () => { return CachedPlayer.LocalPlayer.PlayerControl.CanMove && Local.DousedEveryone; },
             () => { },
-            getIgniteSprite(),
+            GetIgniteSprite(),
             new Vector3(-1.8f, -0.06f, 0),
             hm,
             hm.KillButton,
             KeyCode.Q
         )
         {
-            buttonText = Tr.Get("IgniteText")
+            ButtonText = Tr.Get("IgniteText")
         };
     }
     public static void SetButtonCooldowns()
     {
-        arsonistButton.MaxTimer = cooldown;
-        arsonistButton.EffectDuration = duration;
-        arsonistIgniteButton.MaxTimer = 0f;
-        arsonistIgniteButton.Timer = 0f;
+        ArsonistButton.MaxTimer = Cooldown;
+        ArsonistButton.EffectDuration = Duration;
+        ArsonistIgniteButton.MaxTimer = 0f;
+        ArsonistIgniteButton.Timer = 0f;
 
     }
 
-    public void updateStatus()
+    public void UpdateStatus()
     {
         if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(ERoleType.Arsonist))
         {
-            dousedEveryone = dousedEveryoneAlive();
+            DousedEveryone = DousedEveryoneAlive();
         }
     }
 
-    public void updateIcons()
+    public void UpdateIcons()
     {
         foreach (var pp in MapOptions.PlayerIcons.Values)
         {
@@ -199,34 +199,34 @@ public class Arsonist : RoleBase<Arsonist>
                     MapOptions.PlayerIcons[p.PlayerId].transform.localPosition = bottomLeft + Vector3.right * visibleCounter * 0.45f;
                     visibleCounter++;
                 }
-                var isDoused = dousedPlayers.Any(x => x.PlayerId == p.PlayerId);
+                var isDoused = DousedPlayers.Any(x => x.PlayerId == p.PlayerId);
                 MapOptions.PlayerIcons[p.PlayerId].SetSemiTransparent(!isDoused);
             }
         }
     }
 
     // write functions here
-    private static Sprite douseSprite;
-    public static Sprite getDouseSprite()
+    private static Sprite DouseSprite;
+    public static Sprite GetDouseSprite()
     {
-        if (douseSprite) return douseSprite;
-        douseSprite = Helpers.LoadSpriteFromResources("RebuildUs.Resources.DouseButton.png", 115f);
-        return douseSprite;
+        if (DouseSprite) return DouseSprite;
+        DouseSprite = Helpers.LoadSpriteFromResources("RebuildUs.Resources.DouseButton.png", 115f);
+        return DouseSprite;
     }
 
-    private static Sprite igniteSprite;
-    public static Sprite getIgniteSprite()
+    private static Sprite IgniteSprite;
+    public static Sprite GetIgniteSprite()
     {
-        if (igniteSprite) return igniteSprite;
-        igniteSprite = Helpers.LoadSpriteFromResources("RebuildUs.Resources.IgniteButton.png", 115f);
-        return igniteSprite;
+        if (IgniteSprite) return IgniteSprite;
+        IgniteSprite = Helpers.LoadSpriteFromResources("RebuildUs.Resources.IgniteButton.png", 115f);
+        return IgniteSprite;
     }
 
     public static void Clear()
     {
         // reset configs here
         Players.Clear();
-        triggerArsonistWin = false;
+        TriggerArsonistWin = false;
         foreach (var p in MapOptions.PlayerIcons.Values)
         {
             if (p != null && p.gameObject != null)

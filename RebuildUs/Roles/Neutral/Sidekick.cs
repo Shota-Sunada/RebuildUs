@@ -4,18 +4,18 @@ namespace RebuildUs.Roles.Neutral;
 public class Sidekick : RoleBase<Sidekick>
 {
     // write configs here
-    public static CustomButton sidekickKillButton;
-    public static CustomButton sidekickSabotageLightsButton;
-    public PlayerControl currentTarget;
-    public bool wasTeamRed = false;
-    public bool wasImpostor = false;
-    public bool wasSpy = false;
+    public static CustomButton SidekickKillButton;
+    public static CustomButton SidekickSabotageLightsButton;
+    public PlayerControl CurrentTarget;
+    public bool WasTeamRed = false;
+    public bool WasImpostor = false;
+    public bool WasSpy = false;
 
-    public static bool canKill { get { return CustomOptionHolder.sidekickCanKill.GetBool(); } }
-    public static bool canUseVents { get { return CustomOptionHolder.sidekickCanUseVents.GetBool(); } }
-    public static bool canSabotageLights { get { return CustomOptionHolder.sidekickCanSabotageLights.GetBool(); } }
-    public static bool hasImpostorVision { get { return CustomOptionHolder.sidekickHasImpostorVision.GetBool(); } }
-    public static bool promotesToJackal { get { return CustomOptionHolder.sidekickPromotesToJackal.GetBool(); } }
+    public static bool CanKill { get { return CustomOptionHolder.SidekickCanKill.GetBool(); } }
+    public static bool CanUseVents { get { return CustomOptionHolder.SidekickCanUseVents.GetBool(); } }
+    public static bool CanSabotageLights { get { return CustomOptionHolder.SidekickCanSabotageLights.GetBool(); } }
+    public static bool HasImpostorVision { get { return CustomOptionHolder.SidekickHasImpostorVision.GetBool(); } }
+    public static bool PromotesToJackal { get { return CustomOptionHolder.SidekickPromotesToJackal.GetBool(); } }
 
     public Sidekick()
     {
@@ -39,8 +39,8 @@ public class Sidekick : RoleBase<Sidekick>
             //         untargetablePlayers.Add(mini.player);
             //     }
             // }
-            currentTarget = Helpers.setTarget(untargetablePlayers: untargetablePlayers);
-            if (canKill) Helpers.setPlayerOutline(currentTarget, Palette.ImpostorRed);
+            CurrentTarget = Helpers.SetTarget(untargetablePlayers: untargetablePlayers);
+            if (CanKill) Helpers.SetPlayerOutline(CurrentTarget, Palette.ImpostorRed);
         }
     }
     public override void OnKill(PlayerControl target) { }
@@ -50,16 +50,16 @@ public class Sidekick : RoleBase<Sidekick>
 
     public static void MakeButtons(HudManager hm)
     {
-        sidekickKillButton = new CustomButton(
+        SidekickKillButton = new CustomButton(
                 () =>
                 {
-                    if (Helpers.checkMurderAttemptAndKill(Local.Player, Local.currentTarget) == MurderAttemptResult.SuppressKill) return;
-                    sidekickKillButton.Timer = sidekickKillButton.MaxTimer;
-                    Local.currentTarget = null;
+                    if (Helpers.CheckMurderAttemptAndKill(Local.Player, Local.CurrentTarget) == MurderAttemptResult.SuppressKill) return;
+                    SidekickKillButton.Timer = SidekickKillButton.MaxTimer;
+                    Local.CurrentTarget = null;
                 },
-                () => { return canKill && CachedPlayer.LocalPlayer.PlayerControl.IsRole(ERoleType.Sidekick) && CachedPlayer.LocalPlayer.PlayerControl.IsAlive(); },
-                () => { return Local.currentTarget && CachedPlayer.LocalPlayer.PlayerControl.CanMove; },
-                () => { sidekickKillButton.Timer = sidekickKillButton.MaxTimer; },
+                () => { return CanKill && CachedPlayer.LocalPlayer.PlayerControl.IsRole(ERoleType.Sidekick) && CachedPlayer.LocalPlayer.PlayerControl.IsAlive(); },
+                () => { return Local.CurrentTarget && CachedPlayer.LocalPlayer.PlayerControl.CanMove; },
+                () => { SidekickKillButton.Timer = SidekickKillButton.MaxTimer; },
                 hm.KillButton.graphic.sprite,
                 new Vector3(0, 1f, 0),
                 hm,
@@ -67,31 +67,31 @@ public class Sidekick : RoleBase<Sidekick>
                 KeyCode.Q
             );
 
-        sidekickSabotageLightsButton = new CustomButton(
+        SidekickSabotageLightsButton = new CustomButton(
             () =>
             {
                 ShipStatus.Instance.RpcUpdateSystem(SystemTypes.Sabotage, (byte)SystemTypes.Electrical);
             },
             () =>
             {
-                return PlayerControl.LocalPlayer.IsRole(ERoleType.Sidekick) && canSabotageLights && PlayerControl.LocalPlayer.IsAlive();
+                return PlayerControl.LocalPlayer.IsRole(ERoleType.Sidekick) && CanSabotageLights && PlayerControl.LocalPlayer.IsAlive();
             },
             () =>
             {
-                if (Helpers.sabotageTimer() > sidekickSabotageLightsButton.Timer || Helpers.sabotageActive())
+                if (Helpers.SabotageTimer() > SidekickSabotageLightsButton.Timer || Helpers.SabotageActive())
                 {
                     // this will give imps time to do another sabotage.
-                    sidekickSabotageLightsButton.Timer = Helpers.sabotageTimer() + 5f;
+                    SidekickSabotageLightsButton.Timer = Helpers.SabotageTimer() + 5f;
                 }
-                return Helpers.canUseSabotage();
+                return Helpers.CanUseSabotage();
             },
             () =>
             {
-                sidekickSabotageLightsButton.Timer = Helpers.sabotageTimer() + 5f;
+                SidekickSabotageLightsButton.Timer = Helpers.SabotageTimer() + 5f;
             },
             // Trickster.getLightsOutButtonSprite(),
             null,
-            CustomButton.ButtonPositions.upperRowCenter,
+            CustomButton.ButtonPositions.UpperRowCenter,
             hm,
             hm.AbilityButton,
             KeyCode.G
@@ -99,7 +99,7 @@ public class Sidekick : RoleBase<Sidekick>
     }
     public static void SetButtonCooldowns()
     {
-        sidekickKillButton.MaxTimer = Jackal.killCooldown;
+        SidekickKillButton.MaxTimer = Jackal.KillCooldown;
     }
 
     // write functions here

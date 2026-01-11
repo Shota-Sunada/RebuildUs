@@ -8,11 +8,11 @@ namespace RebuildUs.Modules.RPC;
 
 public static partial class RPCProcedure
 {
-    public static void resetVariables()
+    public static void ResetVariables()
     {
         RoleAssignment.IsAssigned = false;
-        Garlic.clearGarlics();
-        JackInTheBox.clearJackInTheBoxes();
+        Garlic.ClearGarlics();
+        JackInTheBox.ClearJackInTheBoxes();
         MapOptions.ClearAndReloadMapOptions();
         RebuildUs.ClearAndReloadRoles();
         GameHistory.ClearGameHistory();
@@ -35,7 +35,7 @@ public static partial class RPCProcedure
 
         using var sender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.FinishResetVariables);
         sender.Write(PlayerControl.LocalPlayer.PlayerId);
-        finishResetVariables(PlayerControl.LocalPlayer.PlayerId);
+        FinishResetVariables(PlayerControl.LocalPlayer.PlayerId);
     }
 
     private static void ShareOptions(MessageReader reader)
@@ -50,7 +50,7 @@ public static partial class RPCProcedure
         }
     }
 
-    public static void workaroundSetRoles(byte numberOfRoles, MessageReader reader)
+    public static void WorkaroundSetRoles(byte numberOfRoles, MessageReader reader)
     {
         for (int i = 0; i < numberOfRoles; i++)
         {
@@ -58,7 +58,7 @@ public static partial class RPCProcedure
             byte roleId = (byte)reader.ReadPackedUInt32();
             try
             {
-                setRole(roleId, playerId);
+                SetRole(roleId, playerId);
             }
             catch (Exception e)
             {
@@ -67,7 +67,7 @@ public static partial class RPCProcedure
         }
     }
 
-    public static void setRole(byte roleId, byte playerId)
+    public static void SetRole(byte roleId, byte playerId)
     {
         Logger.LogInfo($"{GameData.Instance.GetPlayerById(playerId).PlayerName}({playerId}): {Enum.GetName(typeof(ERoleType), roleId)}", "setRole");
         PlayerControl.AllPlayerControls.GetFastEnumerator().ToArray().DoIf(
@@ -76,7 +76,7 @@ public static partial class RPCProcedure
         );
     }
 
-    public static void addModifier(byte modId, byte playerId)
+    public static void AddModifier(byte modId, byte playerId)
     {
         // PlayerControl.AllPlayerControls.GetFastEnumerator().ToArray().DoIf(
         //     x => x.PlayerId == playerId,
@@ -84,13 +84,13 @@ public static partial class RPCProcedure
         // );
     }
 
-    public static void versionHandshake(int major, int minor, int build, int revision, Guid guid, int clientId)
+    public static void VersionHandshake(int major, int minor, int build, int revision, Guid guid, int clientId)
     {
         var ver = revision < 0 ? new Version(major, minor, build) : new Version(major, minor, build, revision);
-        GameStart.playerVersions[clientId] = new(ver, guid);
+        GameStart.PlayerVersions[clientId] = new(ver, guid);
     }
 
-    public static void finishSetRole()
+    public static void FinishSetRole()
     {
         RoleAssignment.IsAssigned = true;
     }
@@ -125,14 +125,14 @@ public static partial class RPCProcedure
         }
     }
 
-    public static void uncheckedCmdReportDeadBody(byte sourceId, byte targetId)
+    public static void UncheckedCmdReportDeadBody(byte sourceId, byte targetId)
     {
         var source = Helpers.PlayerById(sourceId);
         var target = targetId == byte.MaxValue ? null : Helpers.PlayerById(targetId).Data;
         source?.ReportDeadBody(target);
     }
 
-    public static void useUncheckedVent(int ventId, byte playerId, byte isEnter)
+    public static void UseUncheckedVent(int ventId, byte playerId, byte isEnter)
     {
         var player = Helpers.PlayerById(playerId);
         if (player == null) return;
@@ -146,11 +146,11 @@ public static partial class RPCProcedure
         reader.Buffer = bytes;
         reader.Length = bytes.Length;
 
-        JackInTheBox.startAnimation(ventId);
+        JackInTheBox.StartAnimation(ventId);
         player.MyPhysics.HandleRpc(isEnter != 0 ? (byte)19 : (byte)20, reader);
     }
 
-    public static void uncheckedMurderPlayer(byte sourceId, byte targetId, byte showAnimation)
+    public static void UncheckedMurderPlayer(byte sourceId, byte targetId, byte showAnimation)
     {
         if (AmongUsClient.Instance.GameState != InnerNet.InnerNetClient.GameStates.Started) return;
         var source = Helpers.PlayerById(sourceId);
@@ -162,23 +162,23 @@ public static partial class RPCProcedure
         }
     }
 
-    public static void uncheckedExilePlayer(byte targetId)
+    public static void UncheckedExilePlayer(byte targetId)
     {
         var target = Helpers.PlayerById(targetId);
         target?.Exiled();
     }
 
-    public static void dynamicMapOption(byte mapId)
+    public static void DynamicMapOption(byte mapId)
     {
         GameOptionsManager.Instance.currentNormalGameOptions.SetByte(ByteOptionNames.MapId, mapId);
     }
 
-    public static void setGameStarting()
+    public static void SetGameStarting()
     {
-        GameStart.startingTimer = 5f;
+        GameStart.StartingTimer = 5f;
     }
 
-    public static void stopStart()
+    public static void StopStart()
     {
         SoundManager.Instance.StopSound(GameStartManager.Instance.gameStartSound);
         if (AmongUsClient.Instance.AmHost)
@@ -187,7 +187,7 @@ public static partial class RPCProcedure
         }
     }
 
-    public static void shareGamemode(byte gm)
+    public static void ShareGamemode(byte gm)
     {
         MapOptions.GameMode = (CustomGamemodes)gm;
         CustomOption.SettingsPaneCurrentButtons?.ForEach(x => x.gameObject?.Destroy());
@@ -195,9 +195,9 @@ public static partial class RPCProcedure
         CustomOption.SettingsPaneCurrentButtonTypes?.Clear();
     }
 
-    public static void finishResetVariables(byte playerId)
+    public static void FinishResetVariables(byte playerId)
     {
-        var checkList = RoleAssignment.checkList;
+        var checkList = RoleAssignment.CheckList;
         if (checkList != null)
         {
             if (checkList.ContainsKey(playerId))
@@ -207,19 +207,19 @@ public static partial class RPCProcedure
         }
     }
 
-    public static void setLovers(byte playerId1, byte playerId2)
+    public static void SetLovers(byte playerId1, byte playerId2)
     {
         // Lovers.addCouple(Helpers.PlayerById(playerId1), Helpers.PlayerById(playerId2));
     }
 
-    public static void overrideNativeRole(byte playerId, byte roleType)
+    public static void OverrideNativeRole(byte playerId, byte roleType)
     {
         var player = Helpers.PlayerById(playerId);
         player.roleAssigned = false;
         FastDestroyableSingleton<RoleManager>.Instance.SetRole(player, (RoleTypes)roleType);
     }
 
-    public static void uncheckedEndGame(byte reason)
+    public static void UncheckedEndGame(byte reason)
     {
         AmongUsClient.Instance.GameState = InnerNet.InnerNetClient.GameStates.Ended;
         var obj2 = AmongUsClient.Instance.allClients;
@@ -253,47 +253,47 @@ public static partial class RPCProcedure
         player.Data.SetTasks(taskTypeIds);
     }
 
-    public static void finishShipStatusBegin()
+    public static void FinishShipStatusBegin()
     {
         PlayerControl.LocalPlayer.OnFinishShipStatusBegin();
     }
 
-    public static void engineerFixLights()
+    public static void EngineerFixLights()
     {
         SwitchSystem switchSystem = MapUtilities.CachedShipStatus.Systems[SystemTypes.Electrical].Cast<SwitchSystem>();
         switchSystem.ActualSwitches = switchSystem.ExpectedSwitches;
     }
 
-    public static void engineerFixSubmergedOxygen()
+    public static void EngineerFixSubmergedOxygen()
     {
         SubmergedCompatibility.RepairOxygen();
     }
 
-    public static void engineerUsedRepair(byte engineerId)
+    public static void EngineerUsedRepair(byte engineerId)
     {
         var engineer = Helpers.PlayerById(engineerId);
-        Engineer.GetRole(engineer).remainingFixes--;
+        Engineer.GetRole(engineer).RemainingFixes--;
     }
 
-    public static void arsonistDouse(byte playerId, byte arsonistId)
+    public static void ArsonistDouse(byte playerId, byte arsonistId)
     {
         var arsonist = Helpers.PlayerById(arsonistId);
-        Arsonist.GetRole(arsonist).dousedPlayers.Add(Helpers.PlayerById(playerId));
+        Arsonist.GetRole(arsonist).DousedPlayers.Add(Helpers.PlayerById(playerId));
     }
 
-    public static void arsonistWin(byte arsonistId)
+    public static void ArsonistWin(byte arsonistId)
     {
         var arsonist = Helpers.PlayerById(arsonistId);
-        Arsonist.triggerArsonistWin = true;
+        Arsonist.TriggerArsonistWin = true;
         var livingPlayers = PlayerControl.AllPlayerControls.GetFastEnumerator().ToArray().Where(p => !p.IsRole(ERoleType.Arsonist) && p.IsAlive());
         foreach (var p in livingPlayers)
         {
             p.Exiled();
-            GameHistory.finalStatuses[p.PlayerId] = EFinalStatus.Torched;
+            GameHistory.FinalStatuses[p.PlayerId] = EFinalStatus.Torched;
         }
     }
 
-    public static void cleanBody(byte playerId)
+    public static void CleanBody(byte playerId)
     {
         DeadBody[] array = UnityEngine.Object.FindObjectsOfType<DeadBody>();
         for (int i = 0; i < array.Length; i++)
@@ -305,19 +305,19 @@ public static partial class RPCProcedure
         }
     }
 
-    public static void vultureEat(byte playerId, byte vultureId)
+    public static void VultureEat(byte playerId, byte vultureId)
     {
-        cleanBody(playerId);
+        CleanBody(playerId);
         var vulture = Helpers.PlayerById(vultureId);
-        Vulture.GetRole(vulture).eatenBodies++;
+        Vulture.GetRole(vulture).EatenBodies++;
     }
 
-    public static void vultureWin()
+    public static void VultureWin()
     {
-        Vulture.triggerVultureWin = true;
+        Vulture.TriggerVultureWin = true;
     }
 
-    public static void erasePlayerRoles(byte playerId, bool ignoreLovers = false, bool clearNeutralTasks = true)
+    public static void ErasePlayerRoles(byte playerId, bool ignoreLovers = false, bool clearNeutralTasks = true)
     {
         var player = Helpers.PlayerById(playerId);
         if (player == null) return;
@@ -338,49 +338,49 @@ public static partial class RPCProcedure
         // }
     }
 
-    public static void jackalCreatesSidekick(byte targetId, byte jackalId)
+    public static void JackalCreatesSidekick(byte targetId, byte jackalId)
     {
         var target = Helpers.PlayerById(targetId);
         var jackalPlayer = Helpers.PlayerById(jackalId);
         var jackal = Jackal.GetRole(jackalPlayer);
         if (target == null) return;
 
-        if (!Jackal.canCreateSidekickFromImpostor && target.Data.Role.IsImpostor)
+        if (!Jackal.CanCreateSidekickFromImpostor && target.Data.Role.IsImpostor)
         {
-            jackal.fakeSidekick = target;
+            jackal.FakeSidekick = target;
         }
         else
         {
             var wasSpy = target.IsRole(ERoleType.Spy);
             var wasImpostor = target.IsTeamImpostor(); // This can only be reached if impostors can be sidekicked.
             FastDestroyableSingleton<RoleManager>.Instance.SetRole(target, RoleTypes.Crewmate);
-            erasePlayerRoles(target.PlayerId, true);
+            ErasePlayerRoles(target.PlayerId, true);
             target.SetRole(ERoleType.Sidekick);
             if (target.PlayerId == PlayerControl.LocalPlayer.PlayerId) PlayerControl.LocalPlayer.moveable = true;
-            if (wasSpy || wasImpostor) Sidekick.GetRole(target).wasTeamRed = true;
-            Sidekick.GetRole(target).wasSpy = wasSpy;
-            Sidekick.GetRole(target).wasImpostor = wasImpostor;
+            if (wasSpy || wasImpostor) Sidekick.GetRole(target).WasTeamRed = true;
+            Sidekick.GetRole(target).WasSpy = wasSpy;
+            Sidekick.GetRole(target).WasImpostor = wasImpostor;
         }
-        jackal.canSidekick = false;
-        jackal.mySidekick = target;
+        jackal.CanSidekick = false;
+        jackal.MySidekick = target;
     }
 
-    public static void sidekickPromotes(byte sidekickId)
+    public static void SidekickPromotes(byte sidekickId)
     {
         var sidekickPlayer = Helpers.PlayerById(sidekickId);
         var sidekick = Sidekick.GetRole(sidekickPlayer);
-        var wasTeamRed = sidekick.wasTeamRed;
-        var wasImpostor = sidekick.wasImpostor;
-        var wasSpy = sidekick.wasSpy;
-        Jackal.removeCurrentJackal();
+        var wasTeamRed = sidekick.WasTeamRed;
+        var wasImpostor = sidekick.WasImpostor;
+        var wasSpy = sidekick.WasSpy;
+        Jackal.RemoveCurrentJackal();
         FastDestroyableSingleton<RoleManager>.Instance.SetRole(sidekickPlayer, RoleTypes.Crewmate);
-        erasePlayerRoles(sidekickPlayer.PlayerId, true);
+        ErasePlayerRoles(sidekickPlayer.PlayerId, true);
         sidekickPlayer.SetRole(ERoleType.Jackal);
         var newJackal = Jackal.GetRole(sidekickPlayer);
-        newJackal.canSidekick = Jackal.jackalPromotedFromSidekickCanCreateSidekick;
-        newJackal.wasTeamRed = wasTeamRed;
-        newJackal.wasImpostor = wasImpostor;
-        newJackal.wasSpy = wasSpy;
+        newJackal.CanSidekick = Jackal.JackalPromotedFromSidekickCanCreateSidekick;
+        newJackal.WasTeamRed = wasTeamRed;
+        newJackal.WasImpostor = wasImpostor;
+        newJackal.WasSpy = wasSpy;
         Sidekick.Clear();
         return;
     }

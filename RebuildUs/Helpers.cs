@@ -169,13 +169,13 @@ public static class Helpers
         var hashSet = new Il2CppSystem.Collections.Generic.HashSet<TaskTypes>();
 
         var commonTasks = new Il2CppSystem.Collections.Generic.List<NormalPlayerTask>();
-        foreach (var task in MapUtilities.CachedShipStatus.CommonTasks.OrderBy(x => RebuildUs.Instance.rnd.Next())) commonTasks.Add(task);
+        foreach (var task in MapUtilities.CachedShipStatus.CommonTasks.OrderBy(x => RebuildUs.Instance.Rnd.Next())) commonTasks.Add(task);
 
         var shortTasks = new Il2CppSystem.Collections.Generic.List<NormalPlayerTask>();
-        foreach (var task in MapUtilities.CachedShipStatus.ShortTasks.OrderBy(x => RebuildUs.Instance.rnd.Next())) shortTasks.Add(task);
+        foreach (var task in MapUtilities.CachedShipStatus.ShortTasks.OrderBy(x => RebuildUs.Instance.Rnd.Next())) shortTasks.Add(task);
 
         var longTasks = new Il2CppSystem.Collections.Generic.List<NormalPlayerTask>();
-        foreach (var task in MapUtilities.CachedShipStatus.LongTasks.OrderBy(x => RebuildUs.Instance.rnd.Next())) longTasks.Add(task);
+        foreach (var task in MapUtilities.CachedShipStatus.LongTasks.OrderBy(x => RebuildUs.Instance.Rnd.Next())) longTasks.Add(task);
 
         int start = 0;
         MapUtilities.CachedShipStatus.AddTasksFromList(ref start, numCommon, tasks, hashSet, commonTasks);
@@ -218,10 +218,10 @@ public static class Helpers
     public static bool HasImpostorVision(PlayerControl player)
     {
         return player.IsTeamImpostor()
-        || ((player.IsRole(ERoleType.Jackal) || Jackal.formerJackals.Any(x => x.PlayerId == player.PlayerId)) && Jackal.hasImpostorVision)
-        || (player.IsRole(ERoleType.Sidekick) && Sidekick.hasImpostorVision)
-        || (player.IsRole(ERoleType.Spy) && Spy.hasImpostorVision)
-        || (player.IsRole(ERoleType.Jester) && Jester.hasImpostorVision);
+        || ((player.IsRole(ERoleType.Jackal) || Jackal.FormerJackals.Any(x => x.PlayerId == player.PlayerId)) && Jackal.HasImpostorVision)
+        || (player.IsRole(ERoleType.Sidekick) && Sidekick.HasImpostorVision)
+        || (player.IsRole(ERoleType.Spy) && Spy.HasImpostorVision)
+        || (player.IsRole(ERoleType.Jester) && Jester.HasImpostorVision);
     }
 
     public static KeyValuePair<byte, int> MaxPair(this Dictionary<byte, int> self, out bool tie)
@@ -243,7 +243,7 @@ public static class Helpers
         return result;
     }
 
-    public static MurderAttemptResult checkMurderAttempt(PlayerControl killer, PlayerControl target, bool blockRewind = false, bool ignoreBlank = false, bool ignoreIfKillerIsDead = false, bool ignoreMedic = false)
+    public static MurderAttemptResult CheckMurderAttempt(PlayerControl killer, PlayerControl target, bool blockRewind = false, bool ignoreBlank = false, bool ignoreIfKillerIsDead = false, bool ignoreMedic = false)
     {
         var targetRole = RoleInfo.GetRoleInfoForPlayer(target, false).FirstOrDefault();
         // Modified vanilla checks
@@ -301,14 +301,14 @@ public static class Helpers
         sender.Write(killer.PlayerId);
         sender.Write(target.PlayerId);
         sender.Write(showAnimation ? byte.MaxValue : 0);
-        RPCProcedure.uncheckedMurderPlayer(killer.PlayerId, target.PlayerId, showAnimation ? byte.MaxValue : (byte)0);
+        RPCProcedure.UncheckedMurderPlayer(killer.PlayerId, target.PlayerId, showAnimation ? byte.MaxValue : (byte)0);
     }
 
-    public static MurderAttemptResult checkMurderAttemptAndKill(PlayerControl killer, PlayerControl target, bool isMeetingStart = false, bool showAnimation = true, bool ignoreBlank = false, bool ignoreIfKillerIsDead = false)
+    public static MurderAttemptResult CheckMurderAttemptAndKill(PlayerControl killer, PlayerControl target, bool isMeetingStart = false, bool showAnimation = true, bool ignoreBlank = false, bool ignoreIfKillerIsDead = false)
     {
         // The local player checks for the validity of the kill and performs it afterwards (different to vanilla, where the host performs all the checks)
         // The kill attempt will be shared using a custom RPC, hence combining modded and unmodded versions is impossible
-        var murder = checkMurderAttempt(killer, target, isMeetingStart, ignoreBlank, ignoreIfKillerIsDead);
+        var murder = CheckMurderAttempt(killer, target, isMeetingStart, ignoreBlank, ignoreIfKillerIsDead);
 
         if (murder == MurderAttemptResult.PerformKill)
         {
@@ -332,18 +332,18 @@ public static class Helpers
         return murder;
     }
 
-    public static bool sabotageActive()
+    public static bool SabotageActive()
     {
         var sabSystem = ShipStatus.Instance.Systems[SystemTypes.Sabotage].CastFast<SabotageSystemType>();
         return sabSystem.AnyActive;
     }
 
-    public static float sabotageTimer()
+    public static float SabotageTimer()
     {
         var sabSystem = ShipStatus.Instance.Systems[SystemTypes.Sabotage].CastFast<SabotageSystemType>();
         return sabSystem.Timer;
     }
-    public static bool canUseSabotage()
+    public static bool CanUseSabotage()
     {
         var sabSystem = ShipStatus.Instance.Systems[SystemTypes.Sabotage].CastFast<SabotageSystemType>();
         ISystemType systemType;
@@ -355,7 +355,7 @@ public static class Helpers
         return GameManager.Instance.SabotagesEnabled() && sabSystem.Timer <= 0f && !sabSystem.AnyActive && !(doors != null && doors.IsActive);
     }
 
-    public static PlayerControl setTarget(bool onlyCrewmates = false, bool targetPlayersInVents = false, List<PlayerControl> untargetablePlayers = null, PlayerControl targetingPlayer = null, int killDistance = 3)
+    public static PlayerControl SetTarget(bool onlyCrewmates = false, bool targetPlayersInVents = false, List<PlayerControl> untargetablePlayers = null, PlayerControl targetingPlayer = null, int killDistance = 3)
     {
         PlayerControl result = null;
         float num = NormalGameOptionsV10.KillDistances[Mathf.Clamp(GameOptionsManager.Instance.CurrentGameOptions.GetInt(Int32OptionNames.KillDistance), 0, 2)];
@@ -408,7 +408,7 @@ public static class Helpers
         return result;
     }
 
-    public static void setPlayerOutline(PlayerControl target, Color color)
+    public static void SetPlayerOutline(PlayerControl target, Color color)
     {
         if (target == null || target.cosmetics?.currentBodySprite?.BodySprite == null) return;
 
@@ -418,7 +418,7 @@ public static class Helpers
 
     // Update functions
 
-    public static void setBasePlayerOutlines()
+    public static void SetBasePlayerOutlines()
     {
         foreach (PlayerControl target in CachedPlayer.AllPlayers)
         {
@@ -445,14 +445,14 @@ public static class Helpers
         }
     }
 
-    public static void refreshRoleDescription(PlayerControl player)
+    public static void RefreshRoleDescription(PlayerControl player)
     {
         List<RoleInfo> infos = RoleInfo.GetRoleInfoForPlayer(player);
         List<string> taskTexts = new(infos.Count);
 
         foreach (var roleInfo in infos)
         {
-            taskTexts.Add(getRoleString(roleInfo));
+            taskTexts.Add(GetRoleString(roleInfo));
         }
 
         var toRemove = new List<PlayerTask>();
@@ -484,18 +484,18 @@ public static class Helpers
         }
     }
 
-    internal static string getRoleString(RoleInfo roleInfo)
+    internal static string GetRoleString(RoleInfo roleInfo)
     {
         if (roleInfo.Name == "Jackal")
         {
-            var getSidekickText = Jackal.canCreateSidekick ? " and recruit a Sidekick" : "";
+            var getSidekickText = Jackal.CanCreateSidekick ? " and recruit a Sidekick" : "";
             return Cs(roleInfo.Color, $"{roleInfo.Name}: Kill everyone{getSidekickText}");
         }
 
         return Cs(roleInfo.Color, $"{roleInfo.Name}: {roleInfo.ShortDescription}");
     }
 
-    public static void updatePlayerInfo()
+    public static void UpdatePlayerInfo()
     {
         var colorBlindTextMeetingInitialLocalPos = new Vector3(0.3384f, -0.16666f, -0.01f);
         var colorBlindTextMeetingInitialLocalScale = new Vector3(0.9f, 1f, 1f);
@@ -589,7 +589,7 @@ public static class Helpers
         }
     }
 
-    public static void setPetVisibility()
+    public static void SetPetVisibility()
     {
         var localDead = PlayerControl.LocalPlayer.Data.IsDead;
         foreach (var player in PlayerControl.AllPlayerControls)
@@ -599,18 +599,18 @@ public static class Helpers
         }
     }
 
-    public static void shareGameVersion()
+    public static void ShareGameVersion()
     {
         MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.VersionHandshake, SendOption.Reliable, -1);
         writer.Write((byte)RebuildUs.Instance.Version.Major);
         writer.Write((byte)RebuildUs.Instance.Version.Minor);
         writer.Write((byte)RebuildUs.Instance.Version.Build);
-        writer.Write(AmongUsClient.Instance.AmHost ? GameStart.timer : -1f);
+        writer.Write(AmongUsClient.Instance.AmHost ? GameStart.Timer : -1f);
         writer.WritePacked(AmongUsClient.Instance.ClientId);
         writer.Write((byte)(RebuildUs.Instance.Version.Revision < 0 ? 0xFF : RebuildUs.Instance.Version.Revision));
         writer.Write(Assembly.GetExecutingAssembly().ManifestModule.ModuleVersionId.ToByteArray());
         AmongUsClient.Instance.FinishRpcImmediately(writer);
-        RPCProcedure.versionHandshake(RebuildUs.Instance.Version.Major, RebuildUs.Instance.Version.Minor, RebuildUs.Instance.Version.Build, RebuildUs.Instance.Version.Revision, Assembly.GetExecutingAssembly().ManifestModule.ModuleVersionId, AmongUsClient.Instance.ClientId);
+        RPCProcedure.VersionHandshake(RebuildUs.Instance.Version.Major, RebuildUs.Instance.Version.Minor, RebuildUs.Instance.Version.Build, RebuildUs.Instance.Version.Revision, Assembly.GetExecutingAssembly().ManifestModule.ModuleVersionId, AmongUsClient.Instance.ClientId);
     }
 
     public static string PadRightV2(this object text, int num)
@@ -621,6 +621,6 @@ public static class Helpers
         return t?.PadRight(num - (bc - t.Length));
     }
 
-    public static string removeHtml(this string text) => Regex.Replace(text, "<[^>]*?>", "");
+    public static string RemoveHtml(this string text) => Regex.Replace(text, "<[^>]*?>", "");
 
 }

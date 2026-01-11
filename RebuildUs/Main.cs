@@ -45,7 +45,7 @@ public class RebuildUs : BasePlugin
 
     public static int OptionsPage = 0;
 
-    public System.Random rnd = new((int)DateTime.Now.Ticks);
+    public System.Random Rnd = new((int)DateTime.Now.Ticks);
 
     public override void Load()
     {
@@ -109,7 +109,7 @@ public class RebuildUs : BasePlugin
             // Lovers.HandleDisconnect(player, reason);
             // Shifter.HandleDisconnect(player, reason);
 
-            GameHistory.finalStatuses[player.PlayerId] = EFinalStatus.Disconnected;
+            GameHistory.FinalStatuses[player.PlayerId] = EFinalStatus.Disconnected;
         }
     }
 }

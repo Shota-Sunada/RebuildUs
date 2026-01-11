@@ -37,7 +37,7 @@ public static class PlayerControlPatch
         var multiplier = 1f;
         var addition = 0f;
         // if (Mini.mini != null && PlayerControl.LocalPlayer == Mini.mini) multiplier = Mini.isGrownUp() ? 0.66f : 2f;
-        if (PlayerControl.LocalPlayer.IsRole(ERoleType.BountyHunter)) addition = BountyHunter.punishmentTime;
+        if (PlayerControl.LocalPlayer.IsRole(ERoleType.BountyHunter)) addition = BountyHunter.PunishmentTime;
 
         __instance.killTimer = Mathf.Clamp(time, 0f, GameOptionsManager.Instance.currentNormalGameOptions.KillCooldown * multiplier + addition);
         FastDestroyableSingleton<HudManager>.Instance.KillButton.SetCoolDown(__instance.killTimer, GameOptionsManager.Instance.currentNormalGameOptions.KillCooldown * multiplier + addition);
@@ -52,10 +52,10 @@ public static class PlayerControlPatch
 
         if (PlayerControl.LocalPlayer == __instance)
         {
-            Helpers.setBasePlayerOutlines();
-            Helpers.refreshRoleDescription(__instance);
-            Helpers.updatePlayerInfo();
-            Helpers.setPetVisibility();
+            Helpers.SetBasePlayerOutlines();
+            Helpers.RefreshRoleDescription(__instance);
+            Helpers.UpdatePlayerInfo();
+            Helpers.SetPetVisibility();
         }
 
         RebuildUs.FixedUpdate(__instance);

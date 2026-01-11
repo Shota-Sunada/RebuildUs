@@ -7,26 +7,26 @@ public static partial class RPCProcedure
         switch (callId)
         {
             case CustomRPC.ResetVariables:
-                resetVariables();
+                ResetVariables();
                 break;
             case CustomRPC.ShareOptions:
                 ShareOptions(reader);
                 break;
             case CustomRPC.WorkaroundSetRoles:
-                workaroundSetRoles(reader.ReadByte(), reader);
+                WorkaroundSetRoles(reader.ReadByte(), reader);
                 break;
             case CustomRPC.SetRole:
-                setRole(reader.ReadByte(), reader.ReadByte());
+                SetRole(reader.ReadByte(), reader.ReadByte());
                 break;
             case CustomRPC.AddModifier:
-                addModifier(reader.ReadByte(), reader.ReadByte());
+                AddModifier(reader.ReadByte(), reader.ReadByte());
                 break;
             case CustomRPC.VersionHandshake:
                 byte major = reader.ReadByte();
                 byte minor = reader.ReadByte();
                 byte patch = reader.ReadByte();
                 float timer = reader.ReadSingle();
-                if (!AmongUsClient.Instance.AmHost && timer >= 0f) GameStart.timer = timer;
+                if (!AmongUsClient.Instance.AmHost && timer >= 0f) GameStart.Timer = timer;
                 int versionOwnerId = reader.ReadPackedInt32();
                 byte revision = 0xFF;
                 Guid guid;
@@ -42,79 +42,79 @@ public static partial class RPCProcedure
                 {
                     guid = new Guid(new byte[16]);
                 }
-                versionHandshake(major, minor, patch, revision == 0xFF ? -1 : revision, guid, versionOwnerId);
+                VersionHandshake(major, minor, patch, revision == 0xFF ? -1 : revision, guid, versionOwnerId);
                 break;
             case CustomRPC.UseUncheckedVent:
-                useUncheckedVent(reader.ReadPackedInt32(), reader.ReadByte(), reader.ReadByte());
+                UseUncheckedVent(reader.ReadPackedInt32(), reader.ReadByte(), reader.ReadByte());
                 break;
             case CustomRPC.UncheckedMurderPlayer:
-                uncheckedMurderPlayer(reader.ReadByte(), reader.ReadByte(), reader.ReadByte());
+                UncheckedMurderPlayer(reader.ReadByte(), reader.ReadByte(), reader.ReadByte());
                 break;
             case CustomRPC.UncheckedExilePlayer:
-                uncheckedExilePlayer(reader.ReadByte());
+                UncheckedExilePlayer(reader.ReadByte());
                 break;
             case CustomRPC.UncheckedCmdReportDeadBody:
-                uncheckedCmdReportDeadBody(reader.ReadByte(), reader.ReadByte());
+                UncheckedCmdReportDeadBody(reader.ReadByte(), reader.ReadByte());
                 break;
             case CustomRPC.DynamicMapOption:
-                dynamicMapOption(reader.ReadByte());
+                DynamicMapOption(reader.ReadByte());
                 break;
             case CustomRPC.SetGameStarting:
-                setGameStarting();
+                SetGameStarting();
                 break;
             case CustomRPC.StopStart:
-                stopStart();
+                StopStart();
                 break;
             case CustomRPC.ShareGamemode:
-                shareGamemode(reader.ReadByte());
+                ShareGamemode(reader.ReadByte());
                 break;
             case CustomRPC.FinishResetVariables:
-                finishResetVariables(reader.ReadByte());
+                FinishResetVariables(reader.ReadByte());
                 break;
             case CustomRPC.FinishSetRole:
-                finishSetRole();
+                FinishSetRole();
                 break;
             case CustomRPC.SetLovers:
-                setLovers(reader.ReadByte(), reader.ReadByte());
+                SetLovers(reader.ReadByte(), reader.ReadByte());
                 break;
             case CustomRPC.OverrideNativeRole:
-                overrideNativeRole(reader.ReadByte(), reader.ReadByte());
+                OverrideNativeRole(reader.ReadByte(), reader.ReadByte());
                 break;
             case CustomRPC.UncheckedEndGame:
-                uncheckedEndGame(reader.ReadByte());
+                UncheckedEndGame(reader.ReadByte());
                 break;
             case CustomRPC.UncheckedSetTasks:
                 UncheckedSetTasks(reader.ReadByte(), reader.ReadBytesAndSize());
                 break;
             case CustomRPC.FinishShipStatusBegin:
-                finishShipStatusBegin();
+                FinishShipStatusBegin();
                 break;
             case CustomRPC.EngineerFixLights:
-                engineerFixLights();
+                EngineerFixLights();
                 break;
             case CustomRPC.EngineerFixSubmergedOxygen:
-                engineerFixSubmergedOxygen();
+                EngineerFixSubmergedOxygen();
                 break;
             case CustomRPC.EngineerUsedRepair:
-                engineerUsedRepair(reader.ReadByte());
+                EngineerUsedRepair(reader.ReadByte());
                 break;
             case CustomRPC.ArsonistDouse:
-                arsonistDouse(reader.ReadByte(), reader.ReadByte());
+                ArsonistDouse(reader.ReadByte(), reader.ReadByte());
                 break;
             case CustomRPC.ArsonistWin:
-                arsonistWin(reader.ReadByte());
+                ArsonistWin(reader.ReadByte());
                 break;
             case CustomRPC.CleanBody:
-                cleanBody(reader.ReadByte());
+                CleanBody(reader.ReadByte());
                 break;
             case CustomRPC.VultureWin:
-                vultureWin();
+                VultureWin();
                 break;
             case CustomRPC.VultureEat:
-                vultureEat(reader.ReadByte(), reader.ReadByte());
+                VultureEat(reader.ReadByte(), reader.ReadByte());
                 break;
             case CustomRPC.ErasePlayerRoles:
-                erasePlayerRoles(reader.ReadByte());
+                ErasePlayerRoles(reader.ReadByte());
                 break;
             default:
                 break;

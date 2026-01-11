@@ -9,7 +9,7 @@ public static class Usables
         var roleCanCallEmergency = true;
         var statusText = "";
 
-        if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(ERoleType.Jester) && !Jester.canCallEmergency)
+        if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(ERoleType.Jester) && !Jester.CanCallEmergency)
         {
             roleCanCallEmergency = false;
             statusText = Tr.Get("jesterMeetingButton");

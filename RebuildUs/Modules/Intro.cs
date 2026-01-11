@@ -10,8 +10,8 @@ namespace RebuildUs.Modules;
 
 public static class Intro
 {
-    public static PoolablePlayer playerPrefab;
-    public static Vector3 bottomLeft;
+    public static PoolablePlayer PlayerPrefab;
+    public static Vector3 BottomLeft;
 
     public static void GenerateMiniCrewIcons(IntroCutscene __instance)
     {
@@ -22,14 +22,14 @@ public static class Intro
             float safeOrthographicSize = CameraSafeArea.GetSafeOrthographicSize(Camera.main);
             float xpos = 1.75f - safeOrthographicSize * aspect * 1.70f;
             float ypos = 0.15f - safeOrthographicSize * 1.7f;
-            bottomLeft = new Vector3(xpos / 2, ypos / 2, -61f);
+            BottomLeft = new Vector3(xpos / 2, ypos / 2, -61f);
 
             foreach (var p in PlayerControl.AllPlayerControls)
             {
                 if (p.Data == null) continue; // Null check for p.Data
                 var data = p.Data;
                 var player = UnityEngine.Object.Instantiate(__instance.PlayerPrefab, FastDestroyableSingleton<HudManager>.Instance.transform);
-                playerPrefab = __instance.PlayerPrefab;
+                PlayerPrefab = __instance.PlayerPrefab;
                 p.SetPlayerMaterialColors(player.cosmetics.currentBodySprite.BodySprite);
                 player.SetSkin(data.DefaultOutfit.SkinId, data.DefaultOutfit.ColorId);
                 player.cosmetics.SetHat(data.DefaultOutfit.HatId, data.DefaultOutfit.ColorId);
@@ -42,13 +42,13 @@ public static class Intro
 
                 if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(ERoleType.BountyHunter))
                 {
-                    player.transform.localPosition = bottomLeft + new Vector3(-0.25f, 0f, 0);
+                    player.transform.localPosition = BottomLeft + new Vector3(-0.25f, 0f, 0);
                     player.transform.localScale = Vector3.one * 0.4f;
                     player.gameObject.SetActive(false);
                 }
 
                 //  This can be done for all players not just for the bounty hunter as it was before. Allows the thief to have the correct position and scaling
-                player.transform.localPosition = bottomLeft;
+                player.transform.localPosition = BottomLeft;
                 player.transform.localScale = Vector3.one * 0.4f;
                 player.gameObject.SetActive(false);
             }
@@ -149,7 +149,7 @@ public static class Intro
         {
             if (o.Parent == null ? !o.GetString().Equals("0%") : o.Parent.Enabled)
             {
-                Logger.LogInfo(string.Format("{0}:{1}", o.Parent == null ? o.NameKey.removeHtml().PadRightV2(43) : $"┗ {o.NameKey.removeHtml().PadRightV2(41)}", o.GetString().removeHtml()), "Settings");
+                Logger.LogInfo(string.Format("{0}:{1}", o.Parent == null ? o.NameKey.RemoveHtml().PadRightV2(43) : $"┗ {o.NameKey.RemoveHtml().PadRightV2(41)}", o.GetString().RemoveHtml()), "Settings");
             }
         }
         Logger.LogInfo("--------------------------------", "Settings");

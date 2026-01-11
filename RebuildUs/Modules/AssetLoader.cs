@@ -4,11 +4,11 @@ namespace RebuildUs.Modules;
 
 public static class AssetLoader
 {
-    private static bool isLoaded = false;
+    private static bool IsLoaded = false;
     public static void LoadAssets()
     {
-        if (isLoaded) return;
-        isLoaded = true;
+        if (IsLoaded) return;
+        IsLoaded = true;
 
         LoadButtonAssets();
         LoadAnimationAssets();

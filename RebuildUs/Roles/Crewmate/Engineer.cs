@@ -4,19 +4,19 @@ namespace RebuildUs.Roles.Crewmate;
 public class Engineer : RoleBase<Engineer>
 {
     public static Color RoleColor = new Color32(0, 40, 245, byte.MaxValue);
-    private static CustomButton engineerRepairButton;
+    private static CustomButton EngineerRepairButton;
 
     // write configs here
-    public int remainingFixes = 1;
-    public static int numberOfFixes { get { return (int)CustomOptionHolder.engineerNumberOfFixes.GetFloat(); } }
-    public static bool highlightForImpostors { get { return CustomOptionHolder.engineerHighlightForImpostors.GetBool(); } }
-    public static bool highlightForTeamJackal { get { return CustomOptionHolder.engineerHighlightForTeamJackal.GetBool(); } }
+    public int RemainingFixes = 1;
+    public static int NumberOfFixes { get { return (int)CustomOptionHolder.EngineerNumberOfFixes.GetFloat(); } }
+    public static bool HighlightForImpostors { get { return CustomOptionHolder.EngineerHighlightForImpostors.GetBool(); } }
+    public static bool HighlightForTeamJackal { get { return CustomOptionHolder.EngineerHighlightForTeamJackal.GetBool(); } }
 
     public Engineer()
     {
         // write value init here
         StaticRoleType = CurrentRoleType = ERoleType.Engineer;
-        remainingFixes = numberOfFixes;
+        RemainingFixes = NumberOfFixes;
     }
 
     public override void OnMeetingStart() { }
@@ -24,8 +24,8 @@ public class Engineer : RoleBase<Engineer>
     public override void OnIntroEnd() { }
     public override void FixedUpdate()
     {
-        var jackalHighlight = highlightForTeamJackal && (CachedPlayer.LocalPlayer.PlayerControl.IsRole(ERoleType.Jackal) || CachedPlayer.LocalPlayer.PlayerControl.IsRole(ERoleType.Sidekick));
-        var impostorHighlight = highlightForImpostors && CachedPlayer.LocalPlayer.PlayerControl.IsTeamImpostor();
+        var jackalHighlight = HighlightForTeamJackal && (CachedPlayer.LocalPlayer.PlayerControl.IsRole(ERoleType.Jackal) || CachedPlayer.LocalPlayer.PlayerControl.IsRole(ERoleType.Sidekick));
+        var impostorHighlight = HighlightForImpostors && CachedPlayer.LocalPlayer.PlayerControl.IsTeamImpostor();
         if ((jackalHighlight || impostorHighlight) && MapUtilities.CachedShipStatus?.AllVents != null)
         {
             foreach (var vent in MapUtilities.CachedShipStatus.AllVents)
@@ -60,21 +60,21 @@ public class Engineer : RoleBase<Engineer>
     public static void MakeButtons(HudManager hm)
     {
 
-        engineerRepairButton = new CustomButton(
+        EngineerRepairButton = new CustomButton(
                 () =>
                 {
-                    engineerRepairButton.Timer = 0f;
+                    EngineerRepairButton.Timer = 0f;
 
                     using var sender = new RPCSender(CachedPlayer.LocalPlayer.PlayerControl.NetId, CustomRPC.EngineerUsedRepair);
                     sender.Write(CachedPlayer.LocalPlayer.PlayerControl.PlayerId);
-                    RPCProcedure.engineerUsedRepair(CachedPlayer.LocalPlayer.PlayerControl.PlayerId);
+                    RPCProcedure.EngineerUsedRepair(CachedPlayer.LocalPlayer.PlayerControl.PlayerId);
 
                     foreach (var task in CachedPlayer.LocalPlayer.PlayerControl.myTasks)
                     {
                         if (task.TaskType == TaskTypes.FixLights)
                         {
                             using var sender2 = new RPCSender(CachedPlayer.LocalPlayer.PlayerControl.NetId, CustomRPC.EngineerFixLights);
-                            RPCProcedure.engineerFixLights();
+                            RPCProcedure.EngineerFixLights();
                         }
                         else if (task.TaskType is TaskTypes.RestoreOxy)
                         {
@@ -102,11 +102,11 @@ public class Engineer : RoleBase<Engineer>
                         else if (SubmergedCompatibility.IsSubmerged && task.TaskType == SubmergedCompatibility.RetrieveOxygenMask)
                         {
                             using var sender3 = new RPCSender(CachedPlayer.LocalPlayer.PlayerControl.NetId, CustomRPC.EngineerFixSubmergedOxygen);
-                            RPCProcedure.engineerFixSubmergedOxygen();
+                            RPCProcedure.EngineerFixSubmergedOxygen();
                         }
                     }
                 },
-                () => { return CachedPlayer.LocalPlayer.PlayerControl.IsRole(ERoleType.Engineer) && Local.remainingFixes > 0 && CachedPlayer.LocalPlayer.PlayerControl.IsAlive(); },
+                () => { return CachedPlayer.LocalPlayer.PlayerControl.IsRole(ERoleType.Engineer) && Local.RemainingFixes > 0 && CachedPlayer.LocalPlayer.PlayerControl.IsAlive(); },
                 () =>
                 {
                     bool sabotageActive = false;
@@ -119,31 +119,31 @@ public class Engineer : RoleBase<Engineer>
                         }
                     }
 
-                    return sabotageActive && Local.remainingFixes > 0 && CachedPlayer.LocalPlayer.PlayerControl.CanMove;
+                    return sabotageActive && Local.RemainingFixes > 0 && CachedPlayer.LocalPlayer.PlayerControl.CanMove;
                 },
                 () => { },
-                getButtonSprite(),
+                GetButtonSprite(),
                 new Vector3(-1.8f, -0.06f, 0),
                 hm,
                 hm.UseButton,
                 KeyCode.F
             )
         {
-            buttonText = Tr.Get("RepairText")
+            ButtonText = Tr.Get("RepairText")
         };
     }
     public static void SetButtonCooldowns()
     {
-        engineerRepairButton.MaxTimer = 0f;
+        EngineerRepairButton.MaxTimer = 0f;
     }
 
     // write functions here
-    private static Sprite buttonSprite;
-    public static Sprite getButtonSprite()
+    private static Sprite ButtonSprite;
+    public static Sprite GetButtonSprite()
     {
-        if (buttonSprite) return buttonSprite;
-        buttonSprite = Helpers.LoadSpriteFromResources("RebuildUs.Resources.EmergencyButton.png", 550f);
-        return buttonSprite;
+        if (ButtonSprite) return ButtonSprite;
+        ButtonSprite = Helpers.LoadSpriteFromResources("RebuildUs.Resources.EmergencyButton.png", 550f);
+        return ButtonSprite;
     }
 
     public static void Clear()

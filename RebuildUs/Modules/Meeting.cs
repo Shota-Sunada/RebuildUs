@@ -15,7 +15,7 @@ public static class Meeting
                 var player = Helpers.PlayerById(playerVoteArea.TargetPlayerId);
                 if (player == null || player.Data == null || player.Data.IsDead || player.Data.Disconnected) continue;
 
-                var additionalVotes = (Mayor.Exists && Helpers.PlayerById(playerVoteArea.TargetPlayerId).IsRole(ERoleType.Mayor)) ? Mayor.numVotes : 1; // Mayor vote
+                var additionalVotes = (Mayor.Exists && Helpers.PlayerById(playerVoteArea.TargetPlayerId).IsRole(ERoleType.Mayor)) ? Mayor.NumVotes : 1; // Mayor vote
                 dictionary[playerVoteArea.VotedFor] = dictionary.TryGetValue(playerVoteArea.VotedFor, out int currentVotes) ? currentVotes + additionalVotes : additionalVotes;
             }
         }
@@ -54,7 +54,7 @@ public static class Meeting
         var spriteRenderer = UnityEngine.Object.Instantiate(__instance.PlayerVotePrefab);
         var showVoteColors = !GameManager.Instance.LogicOptions.GetAnonymousVotes() ||
                             (PlayerControl.LocalPlayer.Data.IsDead && MapOptions.GhostsSeeVotes) ||
-                            (PlayerControl.LocalPlayer.IsRole(ERoleType.Mayor) && Mayor.mayorCanSeeVoteColors && TasksHandler.TaskInfo(PlayerControl.LocalPlayer.Data).Item1 >= Mayor.mayorTasksNeededToSeeVoteColors);
+                            (PlayerControl.LocalPlayer.IsRole(ERoleType.Mayor) && Mayor.MayorCanSeeVoteColors && TasksHandler.TaskInfo(PlayerControl.LocalPlayer.Data).Item1 >= Mayor.MayorTasksNeededToSeeVoteColors);
         if (showVoteColors)
         {
             PlayerMaterial.SetColors(voterPlayer.DefaultOutfit.ColorId, spriteRenderer);
@@ -135,7 +135,7 @@ public static class Meeting
                 votesApplied[voter.PlayerId]++;
 
                 // Major vote, redo this iteration to place a second vote
-                if (voter.IsRole(ERoleType.Mayor) && votesApplied[voter.PlayerId] < Mayor.numVotes)
+                if (voter.IsRole(ERoleType.Mayor) && votesApplied[voter.PlayerId] < Mayor.NumVotes)
                 {
                     j--;
                 }

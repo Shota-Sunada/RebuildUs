@@ -4,47 +4,47 @@ namespace RebuildUs.Objects;
 
 public class Arrow
 {
-    public float perc = 0.925f;
-    public SpriteRenderer image;
-    public GameObject arrow;
-    private Vector3 oldTarget;
-    private ArrowBehaviour arrowBehaviour;
+    public float Perc = 0.925f;
+    public SpriteRenderer Image;
+    public GameObject ArrowObject;
+    private Vector3 OldTarget;
+    private readonly ArrowBehaviour ArrowBehaviour;
 
-    private static Sprite sprite;
-    public static Sprite getSprite()
+    private static Sprite Sprite;
+    public static Sprite GetSprite()
     {
-        if (sprite) return sprite;
-        sprite = Helpers.LoadSpriteFromResources("TheOtherRoles.Resources.Arrow.png", 200f);
-        return sprite;
+        if (Sprite) return Sprite;
+        Sprite = Helpers.LoadSpriteFromResources("TheOtherRoles.Resources.Arrow.png", 200f);
+        return Sprite;
     }
 
     public Arrow(Color color)
     {
-        arrow = new GameObject("Arrow")
+        ArrowObject = new GameObject("Arrow")
         {
             layer = 5
         };
-        image = arrow.AddComponent<SpriteRenderer>();
-        image.sprite = getSprite();
-        image.color = color;
-        arrowBehaviour = arrow.AddComponent<ArrowBehaviour>();
-        arrowBehaviour.image = image;
+        Image = ArrowObject.AddComponent<SpriteRenderer>();
+        Image.sprite = GetSprite();
+        Image.color = color;
+        ArrowBehaviour = ArrowObject.AddComponent<ArrowBehaviour>();
+        ArrowBehaviour.image = Image;
     }
 
     public void Update()
     {
-        var target = oldTarget;
+        var target = OldTarget;
         Update(target);
     }
 
     public void Update(Vector3 target, Color? color = null)
     {
-        if (arrow == null) return;
-        oldTarget = target;
+        if (ArrowObject == null) return;
+        OldTarget = target;
 
-        if (color.HasValue) image.color = color.Value;
+        if (color.HasValue) Image.color = color.Value;
 
-        arrowBehaviour.target = target;
-        arrowBehaviour.Update();
+        ArrowBehaviour.target = target;
+        ArrowBehaviour.Update();
     }
 }

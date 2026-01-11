@@ -26,7 +26,7 @@ public static class PlayerControlHelpers
         return player == null
             || player?.Data?.IsDead == true
             || player?.Data?.Disconnected == true
-            || (GameHistory.finalStatuses != null && GameHistory.finalStatuses.ContainsKey(player.PlayerId) && GameHistory.finalStatuses[player.PlayerId] != EFinalStatus.Alive);
+            || (GameHistory.FinalStatuses != null && GameHistory.FinalStatuses.ContainsKey(player.PlayerId) && GameHistory.FinalStatuses[player.PlayerId] != EFinalStatus.Alive);
     }
 
     public static bool IsAlive(this PlayerControl player)
@@ -105,17 +105,17 @@ public static class PlayerControlHelpers
         bool roleCouldUse = false;
         if (player.IsRole(ERoleType.Engineer))
             roleCouldUse = true;
-        else if (Jackal.canUseVents && player.IsRole(ERoleType.Jackal))
+        else if (Jackal.CanUseVents && player.IsRole(ERoleType.Jackal))
             roleCouldUse = true;
-        else if (Sidekick.canUseVents && player.IsRole(ERoleType.Sidekick))
+        else if (Sidekick.CanUseVents && player.IsRole(ERoleType.Sidekick))
             roleCouldUse = true;
-        else if (Spy.canEnterVents && player.IsRole(ERoleType.Spy))
+        else if (Spy.CanEnterVents && player.IsRole(ERoleType.Spy))
             roleCouldUse = true;
         // else if (Madmate.canEnterVents && player.hasModifier(ModifierType.Madmate))
         //     roleCouldUse = true;
         // else if (CreatedMadmate.canEnterVents && player.hasModifier(ModifierType.CreatedMadmate))
         //     roleCouldUse = true;
-        else if (Vulture.canUseVents && player.IsRole(ERoleType.Vulture))
+        else if (Vulture.CanUseVents && player.IsRole(ERoleType.Vulture))
             roleCouldUse = true;
         // else if (player.isRole(RoleType.JekyllAndHyde) && !JekyllAndHyde.isJekyll())
         //     roleCouldUse = true;
@@ -142,7 +142,7 @@ public static class PlayerControlHelpers
         //     roleCouldUse = true;
         // else if (CreatedMadmate.canSabotage && player.hasModifier(ModifierType.CreatedMadmate))
         //     roleCouldUse = true;
-        if (Jester.canSabotage && player.IsRole(ERoleType.Jester))
+        if (Jester.CanSabotage && player.IsRole(ERoleType.Jester))
             roleCouldUse = true;
         // else if (!Mafioso.canSabotage && player.isRole(RoleType.Mafioso))
         //     roleCouldUse = false;

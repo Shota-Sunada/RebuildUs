@@ -39,9 +39,9 @@ public static class EndGameMain
         {
             var roles = RoleInfo.GetRoleInfoForPlayer(player.PlayerControl);
             var (tasksCompleted, tasksTotal) = TasksHandler.TaskInfo(player.Data);
-            var finalStatus = GameHistory.finalStatuses[player.PlayerId] =
+            var finalStatus = GameHistory.FinalStatuses[player.PlayerId] =
                 player.Data.Disconnected == true ? EFinalStatus.Disconnected :
-                GameHistory.finalStatuses.ContainsKey(player.PlayerId) ? GameHistory.finalStatuses[player.PlayerId] :
+                GameHistory.FinalStatuses.ContainsKey(player.PlayerId) ? GameHistory.FinalStatuses[player.PlayerId] :
                 player.Data.IsDead == true ? EFinalStatus.Dead :
                 gameOverReason == GameOverReason.ImpostorsBySabotage && !player.Data.Role.IsImpostor ? EFinalStatus.Sabotage :
                 EFinalStatus.Alive;
@@ -71,7 +71,7 @@ public static class EndGameMain
             notWinners.AddRange(Vulture.AllPlayers);
             notWinners.AddRange(Jackal.AllPlayers);
             notWinners.AddRange(Sidekick.AllPlayers);
-            notWinners.AddRange(Jackal.formerJackals);
+            notWinners.AddRange(Jackal.FormerJackals);
 
             var sabotageWin = gameOverReason is GameOverReason.ImpostorsBySabotage;
             var impostorWin = gameOverReason is GameOverReason.ImpostorsByVote or GameOverReason.ImpostorsByKill or GameOverReason.ImpostorDisconnect;
@@ -166,7 +166,7 @@ public static class EndGameMain
                 {
                     EndGameResult.CachedWinners.Add(new(sidekick.Data) { IsImpostor = false });
                 }
-                foreach (var jackal in Jackal.formerJackals)
+                foreach (var jackal in Jackal.FormerJackals)
                 {
                     EndGameResult.CachedWinners.Add(new(jackal.Data) { IsImpostor = false });
                 }
@@ -188,7 +188,7 @@ public static class EndGameMain
                 wpd.IsDead = wpd.IsDead || AdditionalTempData.PlayerRoles.Any(x => x.PlayerName == wpd.PlayerName && x.Status != EFinalStatus.Alive);
             }
 
-            RPCProcedure.resetVariables();
+            RPCProcedure.ResetVariables();
         }
     }
 
@@ -209,7 +209,7 @@ public static class EndGameMain
 
         for (int i = 0; i < list.Count; i++)
         {
-            var CachedPlayerData2 = list[i];
+            var cachedPlayerData2 = list[i];
             var num2 = (i % 2 == 0) ? -1 : 1;
             var num3 = (i + 1) / 2;
             var num4 = num3 / (float)num;
@@ -221,7 +221,7 @@ public static class EndGameMain
             var poolablePlayer = UnityEngine.Object.Instantiate(__instance.PlayerPrefab, __instance.transform);
             poolablePlayer.transform.localPosition = new Vector3(1f * num2 * num3 * num5, FloatRange.SpreadToEdges(-1.125f, 0f, num3, num), num6 + num3 * 0.01f) * 0.9f;
             poolablePlayer.transform.localScale = vector;
-            if (CachedPlayerData2.IsDead)
+            if (cachedPlayerData2.IsDead)
             {
                 poolablePlayer.SetBodyAsGhost();
                 poolablePlayer.SetDeadFlipX(i % 2 == 0);
@@ -230,17 +230,17 @@ public static class EndGameMain
             {
                 poolablePlayer.SetFlipX(i % 2 == 0);
             }
-            poolablePlayer.UpdateFromPlayerOutfit(CachedPlayerData2.Outfit, PlayerMaterial.MaskType.None, CachedPlayerData2.IsDead, true);
+            poolablePlayer.UpdateFromPlayerOutfit(cachedPlayerData2.Outfit, PlayerMaterial.MaskType.None, cachedPlayerData2.IsDead, true);
 
             poolablePlayer.cosmetics.nameText.color = Color.white;
             poolablePlayer.cosmetics.nameText.lineSpacing *= 0.7f;
             poolablePlayer.cosmetics.nameText.transform.localScale = new Vector3(1f / vector.x, 1f / vector.y, 1f / vector.z);
             poolablePlayer.cosmetics.nameText.transform.localPosition = new Vector3(poolablePlayer.cosmetics.nameText.transform.localPosition.x, poolablePlayer.cosmetics.nameText.transform.localPosition.y, -15f);
-            poolablePlayer.cosmetics.nameText.text = CachedPlayerData2.PlayerName;
+            poolablePlayer.cosmetics.nameText.text = cachedPlayerData2.PlayerName;
 
             foreach (var data in AdditionalTempData.PlayerRoles)
             {
-                if (data.PlayerName != CachedPlayerData2.PlayerName) continue;
+                if (data.PlayerName != cachedPlayerData2.PlayerName) continue;
                 poolablePlayer.cosmetics.nameText.text += data.NameSuffix + $"\n<size=80%>{data.RoleNames}</size>";
             }
         }
@@ -514,7 +514,7 @@ public static class EndGameMain
 
     public static bool CheckAndEndGameForJesterWin()
     {
-        if (Jester.triggerJesterWin)
+        if (Jester.TriggerJesterWin)
         {
             UncheckedEndGame(ECustomGameOverReason.JesterWin);
             return true;
@@ -524,7 +524,7 @@ public static class EndGameMain
 
     public static bool CheckAndEndGameForArsonistWin()
     {
-        if (Arsonist.triggerArsonistWin)
+        if (Arsonist.TriggerArsonistWin)
         {
             UncheckedEndGame(ECustomGameOverReason.ArsonistWin);
             return true;
@@ -534,7 +534,7 @@ public static class EndGameMain
 
     public static bool CheckAndEndGameForVultureWin()
     {
-        if (Vulture.triggerVultureWin)
+        if (Vulture.TriggerVultureWin)
         {
             UncheckedEndGame(ECustomGameOverReason.VultureWin);
             return true;

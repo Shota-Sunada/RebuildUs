@@ -17,8 +17,8 @@ public partial class RoleInfo
 
         foreach (var reg in RoleData.Roles)
         {
-            var info = new RoleInfo(Enum.GetName(reg.RoleType), reg.GetColor(), reg.GetOption(), reg.RoleType);
-            RoleDict[reg.RoleType] = info;
+            var info = new RoleInfo(Enum.GetName(reg.roleType), reg.getColor(), reg.getOption(), reg.roleType);
+            RoleDict[reg.roleType] = info;
             AllRoleInfos.Add(info);
         }
 

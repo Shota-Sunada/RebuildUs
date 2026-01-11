@@ -6,25 +6,25 @@ namespace RebuildUs.Roles.Neutral;
 public class Vulture : RoleBase<Vulture>
 {
     public static Color RoleColor = new Color32(139, 69, 19, byte.MaxValue);
-    public static bool triggerVultureWin = false;
-    public List<Arrow> localArrows = [];
-    public int eatenBodies = 0;
+    public static bool TriggerVultureWin = false;
+    public List<Arrow> LocalArrows = [];
+    public int EatenBodies = 0;
 
-    public static CustomButton vultureEatButton;
-    public static TMP_Text vultureNumCorpsesText;
+    public static CustomButton VultureEatButton;
+    public static TMP_Text VultureNumCorpsesText;
 
     // write configs here
-    public static float cooldown { get { return CustomOptionHolder.vultureCooldown.GetFloat(); } }
-    public static int numberToWin { get { return (int)CustomOptionHolder.vultureNumberToWin.GetFloat(); } }
-    public static bool canUseVents { get { return CustomOptionHolder.vultureCanUseVents.GetBool(); } }
-    public static bool showArrows { get { return CustomOptionHolder.vultureShowArrows.GetBool(); } }
+    public static float Cooldown { get { return CustomOptionHolder.VultureCooldown.GetFloat(); } }
+    public static int NumberToWin { get { return (int)CustomOptionHolder.VultureNumberToWin.GetFloat(); } }
+    public static bool CanUseVents { get { return CustomOptionHolder.VultureCanUseVents.GetBool(); } }
+    public static bool ShowArrows { get { return CustomOptionHolder.VultureShowArrows.GetBool(); } }
 
     public Vulture()
     {
         // write value init here
         StaticRoleType = CurrentRoleType = ERoleType.Vulture;
-        eatenBodies = 0;
-        localArrows = [];
+        EatenBodies = 0;
+        LocalArrows = [];
     }
 
     public override void OnMeetingStart() { }
@@ -32,39 +32,41 @@ public class Vulture : RoleBase<Vulture>
     public override void OnIntroEnd() { }
     public override void FixedUpdate()
     {
-        if (localArrows == null || !showArrows) return;
+        if (LocalArrows == null || !ShowArrows) return;
 
         if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(ERoleType.Vulture))
         {
             if (Player.IsDead())
             {
-                foreach (var arrow in localArrows)
+                foreach (var arrow in LocalArrows)
                 {
-                    UnityEngine.Object.Destroy(arrow.arrow);
+                    UnityEngine.Object.Destroy(arrow.ArrowObject);
                 }
-                localArrows = [];
+                LocalArrows = [];
                 return;
             }
 
             DeadBody[] deadBodies = UnityEngine.Object.FindObjectsOfType<DeadBody>();
-            var arrowUpdate = localArrows.Count != deadBodies.Length;
+            var arrowUpdate = LocalArrows.Count != deadBodies.Length;
             int index = 0;
 
             if (arrowUpdate)
             {
-                foreach (var arrow in localArrows) {
-                    UnityEngine.Object.Destroy(arrow.arrow);}
-                localArrows = [];
+                foreach (var arrow in LocalArrows)
+                {
+                    UnityEngine.Object.Destroy(arrow.ArrowObject);
+                }
+                LocalArrows = [];
             }
 
             foreach (var db in deadBodies)
             {
                 if (arrowUpdate)
                 {
-                    localArrows.Add(new(Color.blue));
-                    localArrows[index].arrow.SetActive(true);
+                    LocalArrows.Add(new(Color.blue));
+                    LocalArrows[index].ArrowObject.SetActive(true);
                 }
-                localArrows[index]?.Update(db.transform.position);
+                LocalArrows[index]?.Update(db.transform.position);
                 index++;
             }
         }
@@ -76,7 +78,7 @@ public class Vulture : RoleBase<Vulture>
 
     public static void MakeButtons(HudManager hm)
     {
-        vultureEatButton = new CustomButton(
+        VultureEatButton = new CustomButton(
                 () =>
                 {
                     foreach (var collider2D in Physics2D.OverlapCircleAll(CachedPlayer.LocalPlayer.PlayerControl.GetTruePosition(), CachedPlayer.LocalPlayer.PlayerControl.MaxReportDistance, Constants.PlayersOnlyMask))
@@ -95,62 +97,62 @@ public class Vulture : RoleBase<Vulture>
                                     using var sender = new RPCSender(CachedPlayer.LocalPlayer.PlayerControl.NetId, CustomRPC.VultureEat);
                                     sender.Write(playerInfo.PlayerId);
                                     sender.Write(CachedPlayer.LocalPlayer.PlayerControl.PlayerId);
-                                    RPCProcedure.vultureEat(playerInfo.PlayerId, CachedPlayer.LocalPlayer.PlayerControl.PlayerId);
+                                    RPCProcedure.VultureEat(playerInfo.PlayerId, CachedPlayer.LocalPlayer.PlayerControl.PlayerId);
 
-                                    vultureEatButton.Timer = vultureEatButton.MaxTimer;
+                                    VultureEatButton.Timer = VultureEatButton.MaxTimer;
                                     break;
                                 }
                             }
                         }
                     }
-                    if (Local.eatenBodies >= numberToWin)
+                    if (Local.EatenBodies >= NumberToWin)
                     {
                         using var sender = new RPCSender(CachedPlayer.LocalPlayer.PlayerControl.NetId, CustomRPC.VultureWin);
-                        RPCProcedure.vultureWin();
+                        RPCProcedure.VultureWin();
                         return;
                     }
                 },
                 () => { return CachedPlayer.LocalPlayer.PlayerControl.IsRole(ERoleType.Vulture) && CachedPlayer.LocalPlayer.PlayerControl.IsAlive(); },
                 () =>
                 {
-                    vultureNumCorpsesText?.text = string.Format(Tr.Get("vultureCorpses"), numberToWin - Local.eatenBodies);
+                    VultureNumCorpsesText?.text = string.Format(Tr.Get("vultureCorpses"), NumberToWin - Local.EatenBodies);
                     return hm.ReportButton.graphic.color == Palette.EnabledColor && CachedPlayer.LocalPlayer.PlayerControl.CanMove;
                 },
-                () => { vultureEatButton.Timer = vultureEatButton.MaxTimer; },
-                getButtonSprite(),
+                () => { VultureEatButton.Timer = VultureEatButton.MaxTimer; },
+                GetButtonSprite(),
                 new Vector3(-1.8f, -0.06f, 0),
                 hm,
                 hm.KillButton,
                 KeyCode.F
             )
         {
-            buttonText = Tr.Get("VultureText")
+            ButtonText = Tr.Get("VultureText")
         };
 
-        vultureNumCorpsesText = UnityEngine.Object.Instantiate(vultureEatButton.actionButton.cooldownTimerText, vultureEatButton.actionButton.cooldownTimerText.transform.parent);
-        vultureNumCorpsesText.text = "";
-        vultureNumCorpsesText.enableWordWrapping = false;
-        vultureNumCorpsesText.transform.localScale = Vector3.one * 0.5f;
-        vultureNumCorpsesText.transform.localPosition += new Vector3(0.0f, 0.7f, 0);
+        VultureNumCorpsesText = UnityEngine.Object.Instantiate(VultureEatButton.ActionButton.cooldownTimerText, VultureEatButton.ActionButton.cooldownTimerText.transform.parent);
+        VultureNumCorpsesText.text = "";
+        VultureNumCorpsesText.enableWordWrapping = false;
+        VultureNumCorpsesText.transform.localScale = Vector3.one * 0.5f;
+        VultureNumCorpsesText.transform.localPosition += new Vector3(0.0f, 0.7f, 0);
     }
     public static void SetButtonCooldowns()
     {
-        vultureEatButton.MaxTimer = cooldown;
+        VultureEatButton.MaxTimer = Cooldown;
     }
 
     // write functions here
-    private static Sprite buttonSprite;
-    public static Sprite getButtonSprite()
+    private static Sprite ButtonSprite;
+    public static Sprite GetButtonSprite()
     {
-        if (buttonSprite) return buttonSprite;
-        buttonSprite = Helpers.LoadSpriteFromResources("RebuildUs.Resources.VultureButton.png", 115f);
-        return buttonSprite;
+        if (ButtonSprite) return ButtonSprite;
+        ButtonSprite = Helpers.LoadSpriteFromResources("RebuildUs.Resources.VultureButton.png", 115f);
+        return ButtonSprite;
     }
 
     public static void Clear()
     {
         // reset configs here
-        triggerVultureWin = false;
+        TriggerVultureWin = false;
         Players.Clear();
     }
 }

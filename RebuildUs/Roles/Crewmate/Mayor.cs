@@ -5,22 +5,22 @@ public class Mayor : RoleBase<Mayor>
 {
     public static Color RoleColor = new Color32(32, 77, 66, byte.MaxValue);
 
-    public static Minigame emergency = null;
-    public static Sprite emergencySprite = null;
-    public static CustomButton mayorMeetingButton;
+    public static Minigame Emergency = null;
+    public static Sprite EmergencySprite = null;
+    public static CustomButton MayorMeetingButton;
 
     // write configs here
-    public int remoteMeetingsLeft = 1;
-    public static int numVotes { get { return CustomOptionHolder.mayorNumVotes.GetSelection(); } }
-    public static bool mayorCanSeeVoteColors { get { return CustomOptionHolder.mayorCanSeeVoteColors.GetBool(); } }
-    public static int mayorTasksNeededToSeeVoteColors { get { return (int)CustomOptionHolder.mayorTasksNeededToSeeVoteColors.GetFloat(); } }
-    public static bool mayorHasMeetingButton { get { return CustomOptionHolder.mayorMeetingButton.GetBool(); } }
-    public static int mayorMaxRemoteMeetings { get { return (int)CustomOptionHolder.mayorMaxRemoteMeetings.GetFloat(); } }
+    public int RemoteMeetingsLeft = 1;
+    public static int NumVotes { get { return CustomOptionHolder.MayorNumVotes.GetSelection(); } }
+    public static bool MayorCanSeeVoteColors { get { return CustomOptionHolder.MayorCanSeeVoteColors.GetBool(); } }
+    public static int MayorTasksNeededToSeeVoteColors { get { return (int)CustomOptionHolder.MayorTasksNeededToSeeVoteColors.GetFloat(); } }
+    public static bool MayorHasMeetingButton { get { return CustomOptionHolder.MayorMeetingButton.GetBool(); } }
+    public static int MayorMaxRemoteMeetings { get { return (int)CustomOptionHolder.MayorMaxRemoteMeetings.GetFloat(); } }
 
     public Mayor()
     {
         StaticRoleType = CurrentRoleType = ERoleType.Mayor;
-        Local.remoteMeetingsLeft = mayorMaxRemoteMeetings;
+        Local.RemoteMeetingsLeft = MayorMaxRemoteMeetings;
     }
 
     public override void OnMeetingStart() { }
@@ -34,21 +34,21 @@ public class Mayor : RoleBase<Mayor>
 
     public static void MakeButtons(HudManager hm)
     {
-        mayorMeetingButton = new CustomButton(
+        MayorMeetingButton = new CustomButton(
             () =>
             {
                 PlayerControl.LocalPlayer.NetTransform.Halt(); // Stop current movement
-                Local.remoteMeetingsLeft--;
+                Local.RemoteMeetingsLeft--;
                 using var sender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.UncheckedCmdReportDeadBody);
                 sender.Write(PlayerControl.LocalPlayer.PlayerId);
                 sender.Write(byte.MaxValue);
-                RPCProcedure.uncheckedCmdReportDeadBody(PlayerControl.LocalPlayer.PlayerId, byte.MaxValue);
-                mayorMeetingButton.Timer = 1f;
+                RPCProcedure.UncheckedCmdReportDeadBody(PlayerControl.LocalPlayer.PlayerId, byte.MaxValue);
+                MayorMeetingButton.Timer = 1f;
             },
-            () => { return CachedPlayer.LocalPlayer.PlayerControl.IsRole(ERoleType.Mayor) && !PlayerControl.LocalPlayer.Data.IsDead && mayorHasMeetingButton; },
+            () => { return CachedPlayer.LocalPlayer.PlayerControl.IsRole(ERoleType.Mayor) && !PlayerControl.LocalPlayer.Data.IsDead && MayorHasMeetingButton; },
             () =>
             {
-                mayorMeetingButton.actionButton.OverrideText("Emergency (" + Local.remoteMeetingsLeft + ")");
+                MayorMeetingButton.ActionButton.OverrideText("Emergency (" + Local.RemoteMeetingsLeft + ")");
                 bool sabotageActive = false;
                 foreach (var task in CachedPlayer.LocalPlayer.PlayerControl.myTasks.GetFastEnumerator())
                 {
@@ -59,11 +59,11 @@ public class Mayor : RoleBase<Mayor>
                     }
                 }
 
-                return !sabotageActive && PlayerControl.LocalPlayer.CanMove && Local.remoteMeetingsLeft > 0;
+                return !sabotageActive && PlayerControl.LocalPlayer.CanMove && Local.RemoteMeetingsLeft > 0;
             },
-            () => { mayorMeetingButton.Timer = mayorMeetingButton.MaxTimer; },
-            getMeetingSprite(),
-            CustomButton.ButtonPositions.lowerRowRight,
+            () => { MayorMeetingButton.Timer = MayorMeetingButton.MaxTimer; },
+            GetMeetingSprite(),
+            CustomButton.ButtonPositions.LowerRowRight,
             hm,
             hm.AbilityButton,
             KeyCode.F,
@@ -76,15 +76,15 @@ public class Mayor : RoleBase<Mayor>
     }
     public static void SetButtonCooldowns()
     {
-        mayorMeetingButton.MaxTimer = GameManager.Instance.LogicOptions.GetEmergencyCooldown();
+        MayorMeetingButton.MaxTimer = GameManager.Instance.LogicOptions.GetEmergencyCooldown();
     }
 
     // write functions here
-    public static Sprite getMeetingSprite()
+    public static Sprite GetMeetingSprite()
     {
-        if (emergencySprite) return emergencySprite;
-        emergencySprite = Helpers.LoadSpriteFromResources("RebuildUs.Resources.EmergencyButton.png", 550f);
-        return emergencySprite;
+        if (EmergencySprite) return EmergencySprite;
+        EmergencySprite = Helpers.LoadSpriteFromResources("RebuildUs.Resources.EmergencyButton.png", 550f);
+        return EmergencySprite;
     }
 
     public static void Clear()

@@ -10,7 +10,7 @@ public static class Exile
 
         if (exiled != null && exiled.IsRole(ERoleType.Jester))
         {
-            Jester.triggerJesterWin = true;
+            Jester.TriggerJesterWin = true;
         }
     }
 

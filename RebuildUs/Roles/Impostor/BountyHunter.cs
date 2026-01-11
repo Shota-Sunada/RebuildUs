@@ -8,25 +8,25 @@ namespace RebuildUs.Roles.Impostor;
 public class BountyHunter : RoleBase<BountyHunter>
 {
     public static Color RoleColor = Palette.ImpostorRed;
-    public Arrow arrow;
-    public PlayerControl bounty;
-    public TextMeshPro cooldownText;
-    public float arrowUpdateTimer = 0f;
-    public float bountyUpdateTimer = 0f;
+    public Arrow Arrow;
+    public PlayerControl Bounty;
+    public TextMeshPro CooldownText;
+    public float ArrowUpdateTimer = 0f;
+    public float BountyUpdateTimer = 0f;
 
     // write configs here
-    public static int bountyDuration { get { return (int)CustomOptionHolder.bountyHunterBountyDuration.GetFloat(); } }
-    public static int reducedCooldown { get { return (int)CustomOptionHolder.bountyHunterReducedCooldown.GetFloat(); } }
-    public static int punishmentTime { get { return (int)CustomOptionHolder.bountyHunterPunishmentTime.GetFloat(); } }
-    public static bool showArrow { get { return CustomOptionHolder.bountyHunterShowArrow.GetBool(); } }
-    public static int arrowUpdateInterval { get { return (int)CustomOptionHolder.bountyHunterArrowUpdateInterval.GetFloat(); } }
+    public static int BountyDuration { get { return (int)CustomOptionHolder.BountyHunterBountyDuration.GetFloat(); } }
+    public static int ReducedCooldown { get { return (int)CustomOptionHolder.BountyHunterReducedCooldown.GetFloat(); } }
+    public static int PunishmentTime { get { return (int)CustomOptionHolder.BountyHunterPunishmentTime.GetFloat(); } }
+    public static bool ShowArrow { get { return CustomOptionHolder.BountyHunterShowArrow.GetBool(); } }
+    public static int ArrowUpdateInterval { get { return (int)CustomOptionHolder.BountyHunterArrowUpdateInterval.GetFloat(); } }
 
     public BountyHunter()
     {
         // write value init here
-        arrow = new Arrow(RoleColor);
-        arrowUpdateTimer = 0f;
-        bountyUpdateTimer = 0f;
+        Arrow = new Arrow(RoleColor);
+        ArrowUpdateTimer = 0f;
+        BountyUpdateTimer = 0f;
         StaticRoleType = CurrentRoleType = ERoleType.BountyHunter;
     }
 
@@ -35,21 +35,21 @@ public class BountyHunter : RoleBase<BountyHunter>
     {
         if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(ERoleType.BountyHunter))
         {
-            bountyUpdateTimer = 0f;
+            BountyUpdateTimer = 0f;
         }
     }
     public override void OnIntroEnd()
     {
         if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(ERoleType.BountyHunter))
         {
-            bountyUpdateTimer = 0f;
+            BountyUpdateTimer = 0f;
             if (FastDestroyableSingleton<HudManager>.Instance != null)
             {
                 var bottomLeft = new Vector3(-FastDestroyableSingleton<HudManager>.Instance.UseButton.transform.localPosition.x, FastDestroyableSingleton<HudManager>.Instance.UseButton.transform.localPosition.y, FastDestroyableSingleton<HudManager>.Instance.UseButton.transform.localPosition.z) + new Vector3(-0.25f, 1f, 0);
-                cooldownText = UnityEngine.Object.Instantiate(FastDestroyableSingleton<HudManager>.Instance.KillButton.cooldownTimerText, FastDestroyableSingleton<HudManager>.Instance.transform);
-                cooldownText.alignment = TextAlignmentOptions.Center;
-                cooldownText.transform.localPosition = bottomLeft + new Vector3(0f, -1f, -1f);
-                cooldownText.gameObject.SetActive(true);
+                CooldownText = UnityEngine.Object.Instantiate(FastDestroyableSingleton<HudManager>.Instance.KillButton.cooldownTimerText, FastDestroyableSingleton<HudManager>.Instance.transform);
+                CooldownText.alignment = TextAlignmentOptions.Center;
+                CooldownText.transform.localPosition = bottomLeft + new Vector3(0f, -1f, -1f);
+                CooldownText.gameObject.SetActive(true);
             }
         }
     }
@@ -59,11 +59,11 @@ public class BountyHunter : RoleBase<BountyHunter>
         {
             if (Player.IsDead())
             {
-                if (arrow != null || arrow.arrow != null) UnityEngine.Object.Destroy(arrow.arrow);
-                arrow = null;
-                if (cooldownText != null && cooldownText.gameObject != null) UnityEngine.Object.Destroy(cooldownText.gameObject);
-                cooldownText = null;
-                bounty = null;
+                if (Arrow != null || Arrow.ArrowObject != null) UnityEngine.Object.Destroy(Arrow.ArrowObject);
+                Arrow = null;
+                if (CooldownText != null && CooldownText.gameObject != null) UnityEngine.Object.Destroy(CooldownText.gameObject);
+                CooldownText = null;
+                Bounty = null;
                 foreach (PoolablePlayer p in MapOptions.PlayerIcons.Values)
                 {
                     if (p != null && p.gameObject != null) p.gameObject.SetActive(false);
@@ -71,21 +71,21 @@ public class BountyHunter : RoleBase<BountyHunter>
                 return;
             }
 
-            arrowUpdateTimer -= Time.fixedDeltaTime;
-            bountyUpdateTimer -= Time.fixedDeltaTime;
+            ArrowUpdateTimer -= Time.fixedDeltaTime;
+            BountyUpdateTimer -= Time.fixedDeltaTime;
 
-            if (bounty == null || bountyUpdateTimer <= 0f)
+            if (Bounty == null || BountyUpdateTimer <= 0f)
             {
                 // Set new bounty
-                bounty = null;
-                arrowUpdateTimer = 0f; // Force arrow to update
-                bountyUpdateTimer = bountyDuration;
+                Bounty = null;
+                ArrowUpdateTimer = 0f; // Force arrow to update
+                BountyUpdateTimer = BountyDuration;
                 var possibleTargets = new List<PlayerControl>();
                 foreach (var p in CachedPlayer.AllPlayers)
                 {
                     if (!p.Data.IsDead && !p.Data.Disconnected && !p.Data.Role.IsImpostor && !p.PlayerControl.IsRole(ERoleType.Spy)
-                    && (!p.PlayerControl.IsRole(ERoleType.Sidekick) || !Sidekick.GetRole(p).wasTeamRed)
-                    && (!p.PlayerControl.IsRole(ERoleType.Jackal) || !Jackal.GetRole(p).wasTeamRed)
+                    && (!p.PlayerControl.IsRole(ERoleType.Sidekick) || !Sidekick.GetRole(p).WasTeamRed)
+                    && (!p.PlayerControl.IsRole(ERoleType.Jackal) || !Jackal.GetRole(p).WasTeamRed)
                     // && !(p.hasModifier(ModifierType.Mini) && !Mini.isGrownUp(p))
                     && !p.PlayerControl.IsGM()
                     // && Player.GetPartner() != p
@@ -94,8 +94,8 @@ public class BountyHunter : RoleBase<BountyHunter>
                         possibleTargets.Add(p);
                     }
                 }
-                bounty = possibleTargets[RebuildUs.Instance.rnd.Next(0, possibleTargets.Count)];
-                if (bounty == null) return;
+                Bounty = possibleTargets[RebuildUs.Instance.Rnd.Next(0, possibleTargets.Count)];
+                if (Bounty == null) return;
 
                 // Show poolable player
                 if (FastDestroyableSingleton<HudManager>.Instance != null && FastDestroyableSingleton<HudManager>.Instance.UseButton != null)
@@ -104,32 +104,32 @@ public class BountyHunter : RoleBase<BountyHunter>
                     {
                         pp.gameObject.SetActive(false);
                     }
-                    if (MapOptions.PlayerIcons.ContainsKey(bounty.PlayerId) && MapOptions.PlayerIcons[bounty.PlayerId].gameObject != null)
+                    if (MapOptions.PlayerIcons.ContainsKey(Bounty.PlayerId) && MapOptions.PlayerIcons[Bounty.PlayerId].gameObject != null)
                     {
-                        MapOptions.PlayerIcons[bounty.PlayerId].gameObject.SetActive(true);
+                        MapOptions.PlayerIcons[Bounty.PlayerId].gameObject.SetActive(true);
                     }
                 }
             }
 
             // Hide in meeting
-            if (MeetingHud.Instance && MapOptions.PlayerIcons.ContainsKey(bounty.PlayerId) && MapOptions.PlayerIcons[bounty.PlayerId].gameObject != null)
+            if (MeetingHud.Instance && MapOptions.PlayerIcons.ContainsKey(Bounty.PlayerId) && MapOptions.PlayerIcons[Bounty.PlayerId].gameObject != null)
             {
-                MapOptions.PlayerIcons[bounty.PlayerId].gameObject.SetActive(false);
+                MapOptions.PlayerIcons[Bounty.PlayerId].gameObject.SetActive(false);
             }
 
             // Update Cooldown Text
-            cooldownText?.text = Mathf.CeilToInt(Mathf.Clamp(bountyUpdateTimer, 0, bountyDuration)).ToString();
+            CooldownText?.text = Mathf.CeilToInt(Mathf.Clamp(BountyUpdateTimer, 0, BountyDuration)).ToString();
 
             // Update Arrow
-            if (showArrow && bounty != null)
+            if (ShowArrow && Bounty != null)
             {
-                arrow ??= new Arrow(RoleColor);
-                if (arrowUpdateTimer <= 0f)
+                Arrow ??= new Arrow(RoleColor);
+                if (ArrowUpdateTimer <= 0f)
                 {
-                    arrow.Update(bounty.transform.position);
-                    arrowUpdateTimer = arrowUpdateInterval;
+                    Arrow.Update(Bounty.transform.position);
+                    ArrowUpdateTimer = ArrowUpdateInterval;
                 }
-                arrow.Update();
+                Arrow.Update();
             }
         }
     }
@@ -138,14 +138,14 @@ public class BountyHunter : RoleBase<BountyHunter>
     {
         if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(ERoleType.BountyHunter))
         {
-            if (target == bounty)
+            if (target == Bounty)
             {
-                Player.SetKillTimer(reducedCooldown);
-                bountyUpdateTimer = 0f; // Force bounty update
+                Player.SetKillTimer(ReducedCooldown);
+                BountyUpdateTimer = 0f; // Force bounty update
             }
             else
             {
-                Player.SetKillTimer(GameOptionsManager.Instance.CurrentGameOptions.GetFloat(FloatOptionNames.KillCooldown) + punishmentTime);
+                Player.SetKillTimer(GameOptionsManager.Instance.CurrentGameOptions.GetFloat(FloatOptionNames.KillCooldown) + PunishmentTime);
             }
         }
     }

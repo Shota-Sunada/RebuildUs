@@ -7,10 +7,10 @@ public class Jester : RoleBase<Jester>
 {
     public static Color RoleColor = new Color32(236, 98, 165, byte.MaxValue);
 
-    public static bool triggerJesterWin = false;
-    public static bool canCallEmergency { get { return CustomOptionHolder.jesterCanCallEmergency.GetBool(); } }
-    public static bool canSabotage { get { return CustomOptionHolder.jesterCanSabotage.GetBool(); } }
-    public static bool hasImpostorVision { get { return CustomOptionHolder.jesterHasImpostorVision.GetBool(); } }
+    public static bool TriggerJesterWin = false;
+    public static bool CanCallEmergency { get { return CustomOptionHolder.JesterCanCallEmergency.GetBool(); } }
+    public static bool CanSabotage { get { return CustomOptionHolder.JesterCanSabotage.GetBool(); } }
+    public static bool HasImpostorVision { get { return CustomOptionHolder.JesterHasImpostorVision.GetBool(); } }
 
     public Jester()
     {
@@ -35,7 +35,7 @@ public class Jester : RoleBase<Jester>
     public static void Clear()
     {
         // reset configs here
-        triggerJesterWin = false;
+        TriggerJesterWin = false;
         Players.Clear();
     }
 }

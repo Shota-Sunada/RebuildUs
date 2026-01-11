@@ -10,7 +10,7 @@ public static class GameSettingMenuPatch
         CustomOption.SettingMenuChangeTab(__instance, tabNum, previewOnly);
     }
 
-[HarmonyPostfix]
+    [HarmonyPostfix]
     [HarmonyPatch(typeof(GameSettingMenu), nameof(GameSettingMenu.Start))]
     public static void GameSettingMenuStartPostfix(GameSettingMenu __instance)
     {

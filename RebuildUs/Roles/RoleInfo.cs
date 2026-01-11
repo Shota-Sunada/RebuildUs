@@ -32,7 +32,7 @@ public partial class RoleInfo(string nameKey, Color color, CustomOption baseOpti
             if (player.IsRole(info.RoleType)) infos.Add(info);
         }
 
-        if (player.IsRole(ERoleType.Jackal) || (Neutral.Jackal.formerJackals != null && Neutral.Jackal.formerJackals.Any(x => x.PlayerId == player.PlayerId))) infos.Add(Jackal);
+        if (player.IsRole(ERoleType.Jackal) || (Neutral.Jackal.FormerJackals != null && Neutral.Jackal.FormerJackals.Any(x => x.PlayerId == player.PlayerId))) infos.Add(Jackal);
 
         if (infos.Count == 0 && player.Data.Role != null)
         {

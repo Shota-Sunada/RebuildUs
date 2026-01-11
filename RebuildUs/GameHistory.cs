@@ -2,30 +2,30 @@ namespace RebuildUs;
 
 public class DeadPlayer
 {
-    public PlayerControl player;
-    public DateTime timeOfDeath;
-    public DeathReason deathReason;
-    public PlayerControl killerIfExisting;
+    public PlayerControl Player;
+    public DateTime TimeOfDeath;
+    public DeathReason DeathReason;
+    public PlayerControl KillerIfExisting;
 
     public DeadPlayer(PlayerControl player, DateTime timeOfDeath, DeathReason deathReason, PlayerControl killerIfExisting)
     {
-        this.player = player;
-        this.timeOfDeath = timeOfDeath;
-        this.deathReason = deathReason;
-        this.killerIfExisting = killerIfExisting;
+        this.Player = player;
+        this.TimeOfDeath = timeOfDeath;
+        this.DeathReason = deathReason;
+        this.KillerIfExisting = killerIfExisting;
     }
 }
 
 static class GameHistory
 {
-    public static List<Tuple<Vector3, bool>> localPlayerPositions = [];
-    public static List<DeadPlayer> deadPlayers = [];
-    public static Dictionary<int, EFinalStatus> finalStatuses = [];
+    public static List<Tuple<Vector3, bool>> LocalPlayerPositions = [];
+    public static List<DeadPlayer> DeadPlayers = [];
+    public static Dictionary<int, EFinalStatus> FinalStatuses = [];
 
     public static void ClearGameHistory()
     {
-        localPlayerPositions = [];
-        deadPlayers = [];
-        finalStatuses = [];
+        LocalPlayerPositions = [];
+        DeadPlayers = [];
+        FinalStatuses = [];
     }
 }
