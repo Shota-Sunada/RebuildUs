@@ -27,16 +27,13 @@ public partial class RoleInfo(string nameKey, Color color, CustomOption baseOpti
         }
 
         // TODO: Write roles here
-        if (player.IsRole(ERoleType.Jester)) infos.Add(Jester);
-        if (player.IsRole(ERoleType.Mayor)) infos.Add(Mayor);
-        if (player.IsRole(ERoleType.Engineer)) infos.Add(Engineer);
-        if (player.IsRole(ERoleType.BountyHunter)) infos.Add(BountyHunter);
-        if (player.IsRole(ERoleType.Arsonist)) infos.Add(Arsonist);
-        if (player.IsRole(ERoleType.Vulture)) infos.Add(Vulture);
-        if (player.IsRole(ERoleType.Spy)) infos.Add(Spy);
+        foreach (var info in AllRoleInfos)
+        {
+            if (info.RoleType == ERoleType.Jackal) continue; // Jackalは後で特殊判定を行う
+            if (player.IsRole(info.RoleType)) infos.Add(info);
+        }
 
         if (player.IsRole(ERoleType.Jackal) || (Neutral.Jackal.formerJackals != null && Neutral.Jackal.formerJackals.Any(x => x.PlayerId == player.PlayerId))) infos.Add(Jackal);
-        if (player.IsRole(ERoleType.Sidekick)) infos.Add(Sidekick);
 
         if (excludeRoles != null)
         {
