@@ -21,6 +21,7 @@ public class Engineer : RoleBase<Engineer>
 
     public override void OnMeetingStart() { }
     public override void OnMeetingEnd() { }
+    public override void OnIntroEnd() { }
     public override void FixedUpdate()
     {
         var jackalHighlight = highlightForTeamJackal && (CachedPlayer.LocalPlayer.PlayerControl.IsRole(ERoleType.Jackal) || CachedPlayer.LocalPlayer.PlayerControl.IsRole(ERoleType.Sidekick));
@@ -65,7 +66,8 @@ public class Engineer : RoleBase<Engineer>
                     engineerRepairButton.Timer = 0f;
 
                     using var sender = new RPCSender(CachedPlayer.LocalPlayer.PlayerControl.NetId, CustomRPC.EngineerUsedRepair);
-                    RPCProcedure.engineerUsedRepair();
+                    sender.Write(CachedPlayer.LocalPlayer.PlayerControl.PlayerId);
+                    RPCProcedure.engineerUsedRepair(CachedPlayer.LocalPlayer.PlayerControl.PlayerId);
 
                     foreach (var task in CachedPlayer.LocalPlayer.PlayerControl.myTasks)
                     {

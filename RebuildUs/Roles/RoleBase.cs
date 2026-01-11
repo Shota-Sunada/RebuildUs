@@ -10,6 +10,7 @@ public abstract class PlayerRole
 
     public abstract void OnMeetingStart();
     public abstract void OnMeetingEnd();
+    public abstract void OnIntroEnd();
     public abstract void FixedUpdate();
     public abstract void OnKill(PlayerControl target);
     public abstract void OnDeath(PlayerControl killer = null);

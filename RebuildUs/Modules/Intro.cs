@@ -1,6 +1,7 @@
 using BepInEx.Unity.IL2CPP.Utils.Collections;
 using RebuildUs.Players;
 using RebuildUs.Roles;
+using RebuildUs.Roles.Impostor;
 using RebuildUs.Utilities;
 using System.Collections;
 
@@ -9,6 +10,8 @@ namespace RebuildUs.Modules;
 public static class Intro
 {
     public static PoolablePlayer playerPrefab;
+    public static Vector3 bottomLeft;
+
     public static void GenerateMiniCrewIcons(IntroCutscene __instance)
     {
         // int playerCounter = 0;
@@ -18,11 +21,11 @@ public static class Intro
             float safeOrthographicSize = CameraSafeArea.GetSafeOrthographicSize(Camera.main);
             float xpos = 1.75f - safeOrthographicSize * aspect * 1.70f;
             float ypos = 0.15f - safeOrthographicSize * 1.7f;
-            var bottomLeft = new Vector3(xpos / 2, ypos / 2, -61f);
+            bottomLeft = new Vector3(xpos / 2, ypos / 2, -61f);
 
-            foreach (PlayerControl p in PlayerControl.AllPlayerControls)
+            foreach (var p in PlayerControl.AllPlayerControls)
             {
-                NetworkedPlayerInfo data = p.Data;
+                var data = p.Data;
                 var player = UnityEngine.Object.Instantiate(__instance.PlayerPrefab, FastDestroyableSingleton<HudManager>.Instance.transform);
                 playerPrefab = __instance.PlayerPrefab;
                 p.SetPlayerMaterialColors(player.cosmetics.currentBodySprite.BodySprite);
@@ -33,7 +36,14 @@ public static class Intro
                 player.SetFlipX(true);
                 MapOptions.PlayerIcons[p.PlayerId] = player;
                 player.gameObject.SetActive(false);
+                MapOptions.PlayerIcons[p.PlayerId] = player;
 
+                if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(ERoleType.BountyHunter))
+                {
+                    player.transform.localPosition = bottomLeft + new Vector3(-0.25f, 0f, 0);
+                    player.transform.localScale = Vector3.one * 0.4f;
+                    player.gameObject.SetActive(false);
+                }
                 // if (PlayerControl.LocalPlayer == Arsonist.arsonist && p != Arsonist.arsonist)
                 // {
                 //     player.transform.localPosition = bottomLeft + new Vector3(-0.25f, -0.25f, 0) + Vector3.right * playerCounter++ * 0.35f;
@@ -41,7 +51,7 @@ public static class Intro
                 //     player.SetSemiTransparent(true);
                 //     player.gameObject.SetActive(true);
                 // }
-                // else
+                else
                 {
                     //  This can be done for all players not just for the bounty hunter as it was before. Allows the thief to have the correct position and scaling
                     player.transform.localPosition = bottomLeft;

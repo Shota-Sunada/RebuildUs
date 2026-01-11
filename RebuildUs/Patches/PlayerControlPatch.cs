@@ -1,5 +1,6 @@
 using RebuildUs.Modules;
 using RebuildUs.Modules.RPC;
+using RebuildUs.Roles.Impostor;
 
 namespace RebuildUs.Patches;
 
@@ -25,5 +26,21 @@ public static class PlayerControlPatch
     public static bool CheckColorPrefix(PlayerControl __instance, [HarmonyArgument(0)] byte bodyColor)
     {
         return CustomColors.CheckColor(__instance, bodyColor);
+    }
+
+    [HarmonyPrefix]
+    [HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.SetKillTimer))]
+    public static bool SetKillTimerPrefix(PlayerControl __instance, [HarmonyArgument(0)] float time)
+    {
+        if (GameOptionsManager.Instance.currentGameOptions.GameMode == AmongUs.GameOptions.GameModes.HideNSeek) return true;
+        if (GameOptionsManager.Instance.currentNormalGameOptions.KillCooldown <= 0f) return false;
+        var multiplier = 1f;
+        var addition = 0f;
+        // if (Mini.mini != null && PlayerControl.LocalPlayer == Mini.mini) multiplier = Mini.isGrownUp() ? 0.66f : 2f;
+        if (PlayerControl.LocalPlayer.IsRole(ERoleType.BountyHunter)) addition = BountyHunter.punishmentTime;
+
+        __instance.killTimer = Mathf.Clamp(time, 0f, GameOptionsManager.Instance.currentNormalGameOptions.KillCooldown * multiplier + addition);
+        FastDestroyableSingleton<HudManager>.Instance.KillButton.SetCoolDown(__instance.killTimer, GameOptionsManager.Instance.currentNormalGameOptions.KillCooldown * multiplier + addition);
+        return false;
     }
 }

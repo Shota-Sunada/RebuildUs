@@ -20,6 +20,7 @@ public class Jester : RoleBase<Jester>
 
     public override void OnMeetingStart() { }
     public override void OnMeetingEnd() { }
+    public override void OnIntroEnd() { }
     public override void FixedUpdate() { }
     public override void OnKill(PlayerControl target) { }
     public override void OnDeath(PlayerControl killer = null) { }

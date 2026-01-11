@@ -105,17 +105,18 @@ public static class PlayerControlHelpers
         // if (player.IsRole(ERoleType.Engineer))
         //     roleCouldUse = true;
         // else if (Jackal.canUseVents && player.isRole(RoleType.Jackal))
-        //     roleCouldUse = true;
-        // else if (Sidekick.canUseVents && player.isRole(RoleType.Sidekick))
-        //     roleCouldUse = true;
+        if (Jackal.canUseVents && player.IsRole(ERoleType.Jackal))
+            roleCouldUse = true;
+        else if (Sidekick.canUseVents && player.IsRole(ERoleType.Sidekick))
+            roleCouldUse = true;
         // else if (Spy.canEnterVents && player.isRole(RoleType.Spy))
         //     roleCouldUse = true;
         // else if (Madmate.canEnterVents && player.hasModifier(ModifierType.Madmate))
         //     roleCouldUse = true;
         // else if (CreatedMadmate.canEnterVents && player.hasModifier(ModifierType.CreatedMadmate))
         //     roleCouldUse = true;
-        // else if (Vulture.canUseVents && player.isRole(RoleType.Vulture))
-        //     roleCouldUse = true;
+        else if (Vulture.canUseVents && player.IsRole(ERoleType.Vulture))
+            roleCouldUse = true;
         // else if (player.isRole(RoleType.JekyllAndHyde) && !JekyllAndHyde.isJekyll())
         //     roleCouldUse = true;
         // else if (player.isRole(RoleType.Moriarty))

@@ -93,7 +93,25 @@ public static partial class RPCProcedure
                 engineerFixSubmergedOxygen();
                 break;
             case CustomRPC.EngineerUsedRepair:
-                engineerUsedRepair();
+                engineerUsedRepair(reader.ReadByte());
+                break;
+            case CustomRPC.ArsonistDouse:
+                arsonistDouse(reader.ReadByte(), reader.ReadByte());
+                break;
+            case CustomRPC.ArsonistWin:
+                arsonistWin(reader.ReadByte());
+                break;
+            case CustomRPC.CleanBody:
+                cleanBody(reader.ReadByte());
+                break;
+            case CustomRPC.VultureWin:
+                vultureWin();
+                break;
+            case CustomRPC.VultureEat:
+                vultureEat(reader.ReadByte(), reader.ReadByte());
+                break;
+            case CustomRPC.ErasePlayerRoles:
+                erasePlayerRoles(reader.ReadByte());
                 break;
             default:
                 break;

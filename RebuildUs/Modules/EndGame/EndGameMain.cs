@@ -67,6 +67,11 @@ public static class EndGameMain
 
             var notWinners = new List<PlayerControl>();
             notWinners.AddRange(Jester.AllPlayers);
+            notWinners.AddRange(Arsonist.AllPlayers);
+            notWinners.AddRange(Vulture.AllPlayers);
+            notWinners.AddRange(Jackal.AllPlayers);
+            notWinners.AddRange(Sidekick.AllPlayers);
+            notWinners.AddRange(Jackal.formerJackals);
 
             var sabotageWin = gameOverReason is GameOverReason.ImpostorsBySabotage;
             var impostorWin = gameOverReason is GameOverReason.ImpostorsByVote or GameOverReason.ImpostorsByKill or GameOverReason.ImpostorDisconnect;
@@ -74,6 +79,9 @@ public static class EndGameMain
 
             // ADD HERE MORE!
             var jesterWin = Jester.Exists && gameOverReason == (GameOverReason)ECustomGameOverReason.JesterWin;
+            var arsonistWin = Arsonist.Exists && gameOverReason == (GameOverReason)ECustomGameOverReason.ArsonistWin;
+            var vultureWin = Vulture.Exists && gameOverReason == (GameOverReason)ECustomGameOverReason.VultureWin;
+            var teamJackalWin = gameOverReason == (GameOverReason)ECustomGameOverReason.TeamJackalWin;
 
             var everyoneDead = AdditionalTempData.PlayerRoles.All(x => x.Status != EFinalStatus.Alive);
             var forceEnd = gameOverReason == (GameOverReason)ECustomGameOverReason.ForceEnd;
@@ -125,6 +133,43 @@ public static class EndGameMain
                     EndGameResult.CachedWinners.Add(new(jester.Player.Data));
                 }
                 AdditionalTempData.WinCondition = EWinCondition.JesterWin;
+            }
+            else if (arsonistWin)
+            {
+                EndGameResult.CachedWinners = new Il2CppSystem.Collections.Generic.List<CachedPlayerData>();
+                foreach (var arsonist in Arsonist.Players)
+                {
+                    EndGameResult.CachedWinners.Add(new(arsonist.Player.Data));
+                }
+                AdditionalTempData.WinCondition = EWinCondition.ArsonistWin;
+            }
+            else if (vultureWin)
+            {
+                EndGameResult.CachedWinners = new Il2CppSystem.Collections.Generic.List<CachedPlayerData>();
+                foreach (var vulture in Vulture.Players)
+                {
+                    EndGameResult.CachedWinners.Add(new(vulture.Player.Data));
+                }
+                AdditionalTempData.WinCondition = EWinCondition.VultureWin;
+            }
+            else if (teamJackalWin)
+            {
+                // Jackal wins if nobody except jackal is alive
+                AdditionalTempData.WinCondition = EWinCondition.JackalWin;
+                EndGameResult.CachedWinners = new Il2CppSystem.Collections.Generic.List<CachedPlayerData>();
+                foreach (var jackal in Jackal.AllPlayers)
+                {
+                    EndGameResult.CachedWinners.Add(new(jackal.Data) { IsImpostor = false });
+                }
+                // If there is a sidekick. The sidekick also wins
+                foreach (var sidekick in Sidekick.AllPlayers)
+                {
+                    EndGameResult.CachedWinners.Add(new(sidekick.Data) { IsImpostor = false });
+                }
+                foreach (var jackal in Jackal.formerJackals)
+                {
+                    EndGameResult.CachedWinners.Add(new(jackal.Data) { IsImpostor = false });
+                }
             }
             else if (everyoneDead)
             {
@@ -215,24 +260,24 @@ public static class EndGameMain
 
         string bonusText = "";
 
-        // if (AdditionalTempData.WinCondition == EWinCondition.JesterWin)
-        // {
-        //     bonusText = "jesterWin";
-        //     TextRenderer.color = Jester.color;
-        //     __instance.BackgroundBar.material.SetColor("_Color", Jester.color);
-        // }
-        // else if (AdditionalTempData.WinCondition == EWinCondition.ArsonistWin)
-        // {
-        //     bonusText = "arsonistWin";
-        //     TextRenderer.color = Arsonist.color;
-        //     __instance.BackgroundBar.material.SetColor("_Color", Arsonist.color);
-        // }
-        // else if (AdditionalTempData.WinCondition == EWinCondition.VultureWin)
-        // {
-        //     bonusText = "vultureWin";
-        //     TextRenderer.color = Vulture.color;
-        //     __instance.BackgroundBar.material.SetColor("_Color", Vulture.color);
-        // }
+        if (AdditionalTempData.WinCondition == EWinCondition.JesterWin)
+        {
+            bonusText = "jesterWin";
+            TextRenderer.color = Jester.RoleColor;
+            __instance.BackgroundBar.material.SetColor("_Color", Jester.RoleColor);
+        }
+        else if (AdditionalTempData.WinCondition == EWinCondition.ArsonistWin)
+        {
+            bonusText = "arsonistWin";
+            TextRenderer.color = Arsonist.RoleColor;
+            __instance.BackgroundBar.material.SetColor("_Color", Arsonist.RoleColor);
+        }
+        else if (AdditionalTempData.WinCondition == EWinCondition.VultureWin)
+        {
+            bonusText = "vultureWin";
+            TextRenderer.color = Vulture.RoleColor;
+            __instance.BackgroundBar.material.SetColor("_Color", Vulture.RoleColor);
+        }
         // else if (AdditionalTempData.WinCondition == EWinCondition.LawyerSoloWin)
         // {
         //     bonusText = "lawyerWin";
@@ -287,12 +332,12 @@ public static class EndGameMain
         //     TextRenderer.color = Akujo.color;
         //     __instance.BackgroundBar.material.SetColor("_Color", Akujo.color);
         // }
-        // else if (AdditionalTempData.WinCondition == EWinCondition.JackalWin)
-        // {
-        //     bonusText = "jackalWin";
-        //     TextRenderer.color = Jackal.color;
-        //     __instance.BackgroundBar.material.SetColor("_Color", Jackal.color);
-        // }
+        else if (AdditionalTempData.WinCondition == EWinCondition.JackalWin)
+        {
+            bonusText = "jackalWin";
+            TextRenderer.color = Jackal.RoleColor;
+            __instance.BackgroundBar.material.SetColor("_Color", Jackal.RoleColor);
+        }
         // else if (AdditionalTempData.WinCondition == EWinCondition.EveryoneDied)
         if (AdditionalTempData.WinCondition == EWinCondition.EveryoneDied)
         {
@@ -541,7 +586,7 @@ public static class EndGameMain
         if (statistics.TeamJackalAlive >= statistics.TotalAlive - statistics.TeamJackalAlive &&
             statistics.TeamImpostorsAlive == 0 &&
             (statistics.TeamJackalLovers == 0 || statistics.TeamJackalLovers >= statistics.CouplesAlive * 2)
-           )
+        )
         {
             UncheckedEndGame(ECustomGameOverReason.TeamJackalWin);
             return true;

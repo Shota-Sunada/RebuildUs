@@ -189,7 +189,7 @@ public static class RoleAssignment
             blockLovers.Add((byte)ERoleType.Fox);
         }
 
-        if (!CustomOptionHolder.arsonistCanBeLovers.getBool())
+        if (!CustomOptionHolder.arsonistCanBeLovers.GetBool())
         {
             blockLovers.Add((byte)ERoleType.Arsonist);
         }

@@ -1,11 +1,12 @@
 using RebuildUs.Localization;
 using RebuildUs.Modules.CustomOptions;
+using RebuildUs.Roles.Neutral;
 
 namespace RebuildUs.Roles;
 
-public partial class RoleInfo
+public partial class RoleInfo(string nameKey, Color color, CustomOption baseOption, ERoleType roleType)
 {
-    public Color Color;
+    public Color Color = color;
     public virtual string Name { get { return Tr.Get(NameKey); } }
     public virtual string NameColored { get { return Helpers.Cs(Color, Name); } }
     public virtual string IntroDescription { get { return Tr.Get(("IntroDesc", NameKey)); } }
@@ -14,18 +15,9 @@ public partial class RoleInfo
     // public virtual string RoleOptions { get { return CustomOption.}}
     public bool Enabled { get { return Helpers.RolesEnabled && (BaseOption == null /*|| BaseOption.Enabled*/); } }
 
-    public string NameKey;
-    public ERoleType RoleType;
-    private CustomOption BaseOption;
-
-    public RoleInfo(string nameKey, Color color, CustomOption baseOption, ERoleType roleType)
-    {
-        NameKey = nameKey;
-        Color = color;
-        BaseOption = baseOption;
-        RoleType = roleType;
-    }
-
+    public string NameKey = nameKey;
+    public ERoleType RoleType = roleType;
+    private readonly CustomOption BaseOption = baseOption;
     public static List<RoleInfo> AllRoleInfos;
 
     public static List<RoleInfo> GetRoleInfoForPlayer(PlayerControl player, bool showModifier = true, ERoleType[] excludeRoles = null)
@@ -41,6 +33,12 @@ public partial class RoleInfo
         // TODO: Write roles here
         if (player.IsRole(ERoleType.Jester)) infos.Add(Jester);
         if (player.IsRole(ERoleType.Mayor)) infos.Add(Mayor);
+        if (player.IsRole(ERoleType.Engineer)) infos.Add(Engineer);
+        if (player.IsRole(ERoleType.BountyHunter)) infos.Add(BountyHunter);
+        if (player.IsRole(ERoleType.Arsonist)) infos.Add(Arsonist);
+
+        if (player.IsRole(ERoleType.Jackal) || (Neutral.Jackal.formerJackals != null && Neutral.Jackal.formerJackals.Any(x => x.PlayerId == player.PlayerId))) infos.Add(Jackal);
+        if (player.IsRole(ERoleType.Sidekick)) infos.Add(Sidekick);
 
         if (excludeRoles != null)
         {

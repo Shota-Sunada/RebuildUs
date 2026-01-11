@@ -28,4 +28,12 @@ public enum CustomRPC : byte
     EngineerFixLights,
     EngineerFixSubmergedOxygen,
     EngineerUsedRepair,
+    ArsonistDouse,
+    ArsonistWin,
+    CleanBody,
+    VultureWin,
+    VultureEat,
+    ErasePlayerRoles,
+    JackalCreatesSidekick,
+    SidekickPromotes,
 }

@@ -5,6 +5,14 @@ using RebuildUs.Utilities;
 
 namespace RebuildUs;
 
+public enum MurderAttemptResult
+{
+    PerformKill,
+    SuppressKill,
+    BlankKill,
+    DelayVampireKill
+}
+
 public static class Helpers
 {
     public static Dictionary<string, Sprite> CachedSprites = [];
@@ -206,14 +214,10 @@ public static class Helpers
 
     public static bool HasImpostorVision(PlayerControl player)
     {
-        if (player.IsTeamImpostor()
-        || (player.IsRole(ERoleType.Jester) && Jester.hasImpostorVision)
-        )
-        {
-            return true;
-        }
-
-        return false;
+        return player.IsTeamImpostor()
+        || ((player.IsRole(ERoleType.Jackal) || Jackal.formerJackals.Any(x => x.PlayerId == player.PlayerId)) && Jackal.hasImpostorVision)
+        || (player.IsRole(ERoleType.Sidekick) && Sidekick.hasImpostorVision)
+        || (player.IsRole(ERoleType.Jester) && Jester.hasImpostorVision);
     }
 
     public static KeyValuePair<byte, int> MaxPair(this Dictionary<byte, int> self, out bool tie)
@@ -233,5 +237,116 @@ public static class Helpers
             }
         }
         return result;
+    }
+
+    public static MurderAttemptResult checkMurderAttempt(PlayerControl killer, PlayerControl target, bool blockRewind = false, bool ignoreBlank = false, bool ignoreIfKillerIsDead = false, bool ignoreMedic = false)
+    {
+        var targetRole = RoleInfo.GetRoleInfoForPlayer(target, false).FirstOrDefault();
+        // Modified vanilla checks
+        if (AmongUsClient.Instance.IsGameOver) return MurderAttemptResult.SuppressKill;
+        if (killer == null || killer.Data == null || (killer.Data.IsDead && !ignoreIfKillerIsDead) || killer.Data.Disconnected) return MurderAttemptResult.SuppressKill; // Allow non Impostor kills compared to vanilla code
+        if (target == null || target.Data == null || target.Data.IsDead || target.Data.Disconnected) return MurderAttemptResult.SuppressKill; // Allow killing players in vents compared to vanilla code
+        if (GameOptionsManager.Instance.currentGameOptions.GameMode == AmongUs.GameOptions.GameModes.HideNSeek) return MurderAttemptResult.PerformKill;
+
+        // Handle first kill attempt
+        if (MapOptions.ShieldFirstKill && MapOptions.FirstKillPlayer == target) return MurderAttemptResult.SuppressKill;
+
+        // Block impostor shielded kill
+        if (!ignoreMedic && Medic.shielded != null && Medic.shielded == target)
+        {
+            MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(killer.NetId, (byte)CustomRPC.ShieldedMurderAttempt, Hazel.SendOption.Reliable, -1);
+            AmongUsClient.Instance.FinishRpcImmediately(writer);
+            RPCProcedure.shieldedMurderAttempt();
+            return MurderAttemptResult.SuppressKill;
+        }
+
+        // Block impostor not fully grown mini kill
+        else if (Mini.mini != null && target == Mini.mini && !Mini.isGrownUp())
+        {
+            return MurderAttemptResult.SuppressKill;
+        }
+
+        // Block Time Master with time shield kill
+        else if (TimeMaster.shieldActive && TimeMaster.timeMaster != null && TimeMaster.timeMaster == target)
+        {
+            if (!blockRewind)
+            {
+                // Only rewind the attempt was not called because a meeting startet
+                MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(killer.NetId, (byte)CustomRPC.TimeMasterRewindTime, Hazel.SendOption.Reliable, -1);
+                AmongUsClient.Instance.FinishRpcImmediately(writer);
+                RPCProcedure.timeMasterRewindTime();
+            }
+            return MurderAttemptResult.SuppressKill;
+        }
+
+        if (TransportationToolPatches.isUsingTransportation(target) && !blockRewind && killer == Vampire.vampire)
+        {
+            return MurderAttemptResult.DelayVampireKill;
+        }
+        else if (TransportationToolPatches.isUsingTransportation(target))
+        {
+            return MurderAttemptResult.SuppressKill;
+        }
+        return MurderAttemptResult.PerformKill;
+    }
+
+    public static void MurderPlayer(PlayerControl killer, PlayerControl target, bool showAnimation)
+    {
+        using var sender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.UncheckedMurderPlayer);
+        sender.Write(killer.PlayerId);
+        sender.Write(target.PlayerId);
+        sender.Write(showAnimation ? byte.MaxValue : 0);
+        RPCProcedure.uncheckedMurderPlayer(killer.PlayerId, target.PlayerId, showAnimation ? byte.MaxValue : (byte)0);
+    }
+
+    public static MurderAttemptResult checkMurderAttemptAndKill(PlayerControl killer, PlayerControl target, bool isMeetingStart = false, bool showAnimation = true, bool ignoreBlank = false, bool ignoreIfKillerIsDead = false)
+    {
+        // The local player checks for the validity of the kill and performs it afterwards (different to vanilla, where the host performs all the checks)
+        // The kill attempt will be shared using a custom RPC, hence combining modded and unmodded versions is impossible
+        var murder = checkMurderAttempt(killer, target, isMeetingStart, ignoreBlank, ignoreIfKillerIsDead);
+
+        if (murder == MurderAttemptResult.PerformKill)
+        {
+            MurderPlayer(killer, target, showAnimation);
+        }
+        else if (murder == MurderAttemptResult.DelayVampireKill)
+        {
+            HudManager.Instance.StartCoroutine(Effects.Lerp(10f, new Action<float>((p) =>
+            {
+                if (!TransportationToolPatches.isUsingTransportation(target) && Vampire.bitten != null)
+                {
+                    MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.VampireSetBitten, Hazel.SendOption.Reliable, -1);
+                    writer.Write(byte.MaxValue);
+                    writer.Write(byte.MaxValue);
+                    AmongUsClient.Instance.FinishRpcImmediately(writer);
+                    RPCProcedure.vampireSetBitten(byte.MaxValue, byte.MaxValue);
+                    MurderPlayer(killer, target, showAnimation);
+                }
+            })));
+        }
+        return murder;
+    }
+
+    public static bool sabotageActive()
+    {
+        var sabSystem = ShipStatus.Instance.Systems[SystemTypes.Sabotage].CastFast<SabotageSystemType>();
+        return sabSystem.AnyActive;
+    }
+
+    public static float sabotageTimer()
+    {
+        var sabSystem = ShipStatus.Instance.Systems[SystemTypes.Sabotage].CastFast<SabotageSystemType>();
+        return sabSystem.Timer;
+    }
+    public static bool canUseSabotage()
+    {
+        var sabSystem = ShipStatus.Instance.Systems[SystemTypes.Sabotage].CastFast<SabotageSystemType>();
+        ISystemType systemType;
+        IActivatable doors = null;
+        if (ShipStatus.Instance.Systems.TryGetValue(SystemTypes.Doors, out systemType))
+        {
+            doors = systemType.CastFast<IActivatable>();
+        }
+        return GameManager.Instance.SabotagesEnabled() && sabSystem.Timer <= 0f && !sabSystem.AnyActive && !(doors != null && doors.IsActive);
     }
 }

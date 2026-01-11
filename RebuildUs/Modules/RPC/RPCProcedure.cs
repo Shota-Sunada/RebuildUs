@@ -1,5 +1,8 @@
 using RebuildUs.Modules;
 using AmongUs.GameOptions;
+using RebuildUs.Roles.Crewmate;
+using RebuildUs.Roles.Neutral;
+using Epic.OnlineServices;
 
 namespace RebuildUs.Modules.RPC;
 
@@ -11,7 +14,7 @@ public static partial class RPCProcedure
         JackInTheBox.clearJackInTheBoxes();
         MapOptions.clearAndReloadMapOptions();
         TheOtherRoles.clearAndReloadRoles();
-        GameHistory.clearGameHistory();
+        GameHistory.ClearGameHistory();
         setCustomButtonCooldowns();
         AdminPatch.ResetData();
         CameraPatch.ResetData();
@@ -257,8 +260,108 @@ public static partial class RPCProcedure
         SubmergedCompatibility.RepairOxygen();
     }
 
-    public static void engineerUsedRepair()
+    public static void engineerUsedRepair(byte engineerId)
     {
-        Engineer.remainingFixes--;
+        var engineer = Helpers.PlayerById(engineerId);
+        Engineer.GetRole(engineer).remainingFixes--;
+    }
+
+    public static void arsonistDouse(byte playerId, byte arsonistId)
+    {
+        var arsonist = Helpers.PlayerById(arsonistId);
+        Arsonist.GetRole(arsonist).dousedPlayers.Add(Helpers.PlayerById(playerId));
+    }
+
+    public static void arsonistWin(byte arsonistId)
+    {
+        var arsonist = Helpers.PlayerById(arsonistId);
+        Arsonist.triggerArsonistWin = true;
+        var livingPlayers = PlayerControl.AllPlayerControls.GetFastEnumerator().ToArray().Where(p => !p.IsRole(ERoleType.Arsonist) && p.IsAlive());
+        foreach (var p in livingPlayers)
+        {
+            p.Exiled();
+            GameHistory.finalStatuses[p.PlayerId] = EFinalStatus.Torched;
+        }
+    }
+
+    public static void cleanBody(byte playerId)
+    {
+        DeadBody[] array = UnityEngine.Object.FindObjectsOfType<DeadBody>();
+        for (int i = 0; i < array.Length; i++)
+        {
+            if (GameData.Instance.GetPlayerById(array[i].ParentId).PlayerId == playerId)
+            {
+                UnityEngine.Object.Destroy(array[i].gameObject);
+            }
+        }
+    }
+
+    public static void vultureEat(byte playerId, byte vultureId)
+    {
+        cleanBody(playerId);
+        var vulture = Helpers.PlayerById(vultureId);
+        Vulture.GetRole(vulture).eatenBodies++;
+    }
+
+    public static void vultureWin()
+    {
+        Vulture.triggerVultureWin = true;
+    }
+
+    public static void erasePlayerRoles(byte playerId, bool ignoreLovers = false, bool clearNeutralTasks = true)
+    {
+        var player = Helpers.PlayerById(playerId);
+        if (player == null) return;
+
+        // Don't give a former neutral role tasks because that destroys the balance.
+        if (player.IsNeutral() && clearNeutralTasks)
+        {
+            player.ClearAllTasks();
+        }
+
+        player.EraseAllRoles();
+        player.EraseAllModifiers();
+
+        if (!ignoreLovers && player.IsLovers())
+        {
+            // The whole Lover couple is being erased
+            Lovers.eraseCouple(player);
+        }
+    }
+
+    public static void jackalCreatesSidekick(byte targetId, byte jackalId)
+    {
+        var target = Helpers.PlayerById(targetId);
+        var jackalPlayer = Helpers.PlayerById(jackalId);
+        var jackal = Jackal.GetRole(jackalPlayer);
+        if (target == null) return;
+
+        if (!Jackal.canCreateSidekickFromImpostor && target.Data.Role.IsImpostor)
+        {
+            jackal.fakeSidekick = target;
+        }
+        else
+        {
+            var wasSpy = Spy.spy != null && target == Spy.spy;
+            var wasImpostor = target.IsTeamImpostor(); // This can only be reached if impostors can be sidekicked.
+            FastDestroyableSingleton<RoleManager>.Instance.SetRole(target, RoleTypes.Crewmate);
+            erasePlayerRoles(target.PlayerId, true);
+            Sidekick.sidekick = target;
+            if (target.PlayerId == PlayerControl.LocalPlayer.PlayerId) PlayerControl.LocalPlayer.moveable = true;
+            if (wasSpy || wasImpostor) Sidekick.wasTeamRed = true;
+            Sidekick.wasSpy = wasSpy;
+            Sidekick.wasImpostor = wasImpostor;
+        }
+        jackal.canSidekick = false;
+        jackal.mySidekick = target;
+    }
+
+    public static void sidekickPromotes(byte sidekickId)
+    {
+        var sidekickPlayer = Helpers.PlayerById(sidekickId);
+        Jackal.removeCurrentJackal();
+        sidekickPlayer.SetRole(ERoleType.Jackal);
+        Sidekick.Clear();
+        return;
     }
 }
