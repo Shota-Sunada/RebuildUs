@@ -130,6 +130,7 @@ public static class RoleAssignment
                 break;
             }
         }
+        Logger.LogInfo("waitResetVariables done.");
         yield break;
     }
 

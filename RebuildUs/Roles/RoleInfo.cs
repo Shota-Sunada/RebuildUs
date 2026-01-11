@@ -26,7 +26,6 @@ public partial class RoleInfo(string nameKey, Color color, CustomOption baseOpti
             // TODO: Write modifiers here
         }
 
-        // TODO: Write roles here
         foreach (var info in AllRoleInfos)
         {
             if (info.RoleType == ERoleType.Jackal) continue; // Jackalは後で特殊判定を行う
@@ -34,6 +33,12 @@ public partial class RoleInfo(string nameKey, Color color, CustomOption baseOpti
         }
 
         if (player.IsRole(ERoleType.Jackal) || (Neutral.Jackal.formerJackals != null && Neutral.Jackal.formerJackals.Any(x => x.PlayerId == player.PlayerId))) infos.Add(Jackal);
+
+        if (infos.Count == 0 && player.Data.Role != null)
+        {
+            if (player.IsTeamImpostor()) infos.Add(Impostor);
+            else infos.Add(Crewmate);
+        }
 
         if (excludeRoles != null)
         {

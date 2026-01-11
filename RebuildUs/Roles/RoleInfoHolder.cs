@@ -7,6 +7,8 @@ public partial class RoleInfo
     public static RoleInfo Get(ERoleType type) => RoleDict.GetValueOrDefault(type);
 
     public static RoleInfo Jackal => Get(ERoleType.Jackal);
+    public static RoleInfo Crewmate => Get(ERoleType.Crewmate);
+    public static RoleInfo Impostor => Get(ERoleType.Impostor);
 
     public static void Load()
     {
@@ -19,5 +21,8 @@ public partial class RoleInfo
             RoleDict[reg.RoleType] = info;
             AllRoleInfos.Add(info);
         }
+
+        RoleDict[ERoleType.Crewmate] = new(Enum.GetName(ERoleType.Crewmate), Palette.CrewmateBlue, null, ERoleType.Crewmate);
+        RoleDict[ERoleType.Impostor] = new(Enum.GetName(ERoleType.Impostor), Palette.ImpostorRed, null, ERoleType.Impostor);
     }
 }

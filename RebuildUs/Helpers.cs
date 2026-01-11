@@ -3,6 +3,8 @@ using RebuildUs.Players;
 using RebuildUs.Roles.Neutral;
 using AmongUs.GameOptions;
 using RebuildUs.Roles.Crewmate;
+using System.Text;
+using System.Text.RegularExpressions;
 
 namespace RebuildUs;
 
@@ -610,4 +612,15 @@ public static class Helpers
         AmongUsClient.Instance.FinishRpcImmediately(writer);
         RPCProcedure.versionHandshake(RebuildUs.Instance.Version.Major, RebuildUs.Instance.Version.Minor, RebuildUs.Instance.Version.Build, RebuildUs.Instance.Version.Revision, Assembly.GetExecutingAssembly().ManifestModule.ModuleVersionId, AmongUsClient.Instance.ClientId);
     }
+
+    public static string PadRightV2(this object text, int num)
+    {
+        int bc = 0;
+        var t = text.ToString();
+        foreach (char c in t) bc += Encoding.GetEncoding("UTF-8").GetByteCount(c.ToString()) == 1 ? 1 : 2;
+        return t?.PadRight(num - (bc - t.Length));
+    }
+
+    public static string removeHtml(this string text) => Regex.Replace(text, "<[^>]*?>", "");
+
 }

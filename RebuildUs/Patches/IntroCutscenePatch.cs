@@ -17,10 +17,10 @@ public static class IntroCutscenePatch
     [HarmonyPatch(typeof(IntroCutscene), nameof(IntroCutscene.CoBegin))]
     public static bool CoBeginPrefix(IntroCutscene __instance, ref Il2CppSystem.Collections.IEnumerator __result)
     {
-        // if (RoleAssignmentPatch.isAssigned)
-        // {
-        //     return true;
-        // }
+        if (RoleAssignment.IsAssigned)
+        {
+            return true;
+        }
         __result = Intro.CoBegin(__instance).WrapToIl2Cpp();
         return false;
     }

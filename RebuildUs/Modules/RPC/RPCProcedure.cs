@@ -10,6 +10,7 @@ public static partial class RPCProcedure
 {
     public static void resetVariables()
     {
+        RoleAssignment.IsAssigned = false;
         Garlic.clearGarlics();
         JackInTheBox.clearJackInTheBoxes();
         MapOptions.ClearAndReloadMapOptions();

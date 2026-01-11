@@ -1,6 +1,7 @@
 using BepInEx.Unity.IL2CPP.Utils.Collections;
 using RebuildUs.Players;
 using RebuildUs.Roles;
+using RebuildUs.Roles.Crewmate;
 using RebuildUs.Roles.Impostor;
 using RebuildUs.Utilities;
 using System.Collections;
@@ -15,7 +16,7 @@ public static class Intro
     public static void GenerateMiniCrewIcons(IntroCutscene __instance)
     {
         // int playerCounter = 0;
-        if (CachedPlayer.LocalPlayer.PlayerControl != null && FastDestroyableSingleton<HudManager>.Instance != null)
+        if (CachedPlayer.LocalPlayer.PlayerControl != null && FastDestroyableSingleton<HudManager>.Instance != null && __instance.PlayerPrefab != null)
         {
             float aspect = Camera.main.aspect;
             float safeOrthographicSize = CameraSafeArea.GetSafeOrthographicSize(Camera.main);
@@ -25,6 +26,7 @@ public static class Intro
 
             foreach (var p in PlayerControl.AllPlayerControls)
             {
+                if (p.Data == null) continue; // Null check for p.Data
                 var data = p.Data;
                 var player = UnityEngine.Object.Instantiate(__instance.PlayerPrefab, FastDestroyableSingleton<HudManager>.Instance.transform);
                 playerPrefab = __instance.PlayerPrefab;
@@ -44,20 +46,11 @@ public static class Intro
                     player.transform.localScale = Vector3.one * 0.4f;
                     player.gameObject.SetActive(false);
                 }
-                // if (PlayerControl.LocalPlayer == Arsonist.arsonist && p != Arsonist.arsonist)
-                // {
-                //     player.transform.localPosition = bottomLeft + new Vector3(-0.25f, -0.25f, 0) + Vector3.right * playerCounter++ * 0.35f;
-                //     player.transform.localScale = Vector3.one * 0.2f;
-                //     player.SetSemiTransparent(true);
-                //     player.gameObject.SetActive(true);
-                // }
-                else
-                {
-                    //  This can be done for all players not just for the bounty hunter as it was before. Allows the thief to have the correct position and scaling
-                    player.transform.localPosition = bottomLeft;
-                    player.transform.localScale = Vector3.one * 0.4f;
-                    player.gameObject.SetActive(false);
-                }
+
+                //  This can be done for all players not just for the bounty hunter as it was before. Allows the thief to have the correct position and scaling
+                player.transform.localPosition = bottomLeft;
+                player.transform.localScale = Vector3.one * 0.4f;
+                player.gameObject.SetActive(false);
             }
         }
     }
@@ -73,36 +66,35 @@ public static class Intro
         }
 
         // Add the Spy to the Impostor team (for the Impostors)
-        // if (Spy.spy != null && PlayerControl.LocalPlayer.Data.Role.IsImpostor)
-        // {
-        //     var players = PlayerControl.AllPlayerControls.ToArray().ToList().OrderBy(x => Guid.NewGuid()).ToList();
-        //     var fakeImpostorTeam = new Il2CppSystem.Collections.Generic.List<PlayerControl>(); // The local player always has to be the first one in the list (to be displayed in the center)
-        //     fakeImpostorTeam.Add(PlayerControl.LocalPlayer);
-        //     foreach (var p in players)
-        //     {
-        //         if (PlayerControl.LocalPlayer != p && (p == Spy.spy || p.Data.Role.IsImpostor))
-        //         {
-        //             fakeImpostorTeam.Add(p);
-        //         }
-        //     }
-        //     yourTeam = fakeImpostorTeam;
-        // }
+        if (Spy.Exists && PlayerControl.LocalPlayer.Data.Role.IsImpostor)
+        {
+            var players = PlayerControl.AllPlayerControls.ToArray().ToList().OrderBy(x => Guid.NewGuid()).ToList();
+            var fakeImpostorTeam = new Il2CppSystem.Collections.Generic.List<PlayerControl>(); // The local player always has to be the first one in the list (to be displayed in the center)
+            fakeImpostorTeam.Add(PlayerControl.LocalPlayer);
+            foreach (var p in players)
+            {
+                if (PlayerControl.LocalPlayer != p && (p.IsRole(ERoleType.Spy) || p.Data.Role.IsImpostor))
+                {
+                    fakeImpostorTeam.Add(p);
+                }
+            }
+            yourTeam = fakeImpostorTeam;
+        }
     }
 
     public static void SetupIntroTeam(IntroCutscene __instance, ref Il2CppSystem.Collections.Generic.List<PlayerControl> yourTeam)
     {
-        // TODO: FIX LATER
-        // var infos = RoleInfo.GetRoleInfoForPlayer(CachedPlayer.LocalPlayer.PlayerControl);
-        // var roleInfo = infos.Where(info => info.RoleType != ERoleType.Lovers).FirstOrDefault();
-        // if (roleInfo == null) return;
-        // // if (CachedPlayer.LocalPlayer.PlayerControl.IsNeutral() || CachedPlayer.LocalPlayer.PlayerControl.isGM())
-        // if (CachedPlayer.LocalPlayer.PlayerControl.IsNeutral())
-        // {
-        //     __instance.BackgroundBar.material.color = roleInfo.color;
-        //     __instance.TeamTitle.text = roleInfo.name;
-        //     __instance.TeamTitle.color = roleInfo.color;
-        //     __instance.ImpostorText.text = "";
-        // }
+        var infos = RoleInfo.GetRoleInfoForPlayer(CachedPlayer.LocalPlayer.PlayerControl);
+        var roleInfo = infos.FirstOrDefault(info => info.RoleType != ERoleType.Lovers);
+        if (roleInfo == null) return;
+        // if (CachedPlayer.LocalPlayer.PlayerControl.IsNeutral() || CachedPlayer.LocalPlayer.PlayerControl.isGM())
+        if (CachedPlayer.LocalPlayer.PlayerControl.IsNeutral())
+        {
+            __instance.BackgroundBar.material.color = roleInfo.Color;
+            __instance.TeamTitle.text = roleInfo.Name;
+            __instance.TeamTitle.color = roleInfo.Color;
+            __instance.ImpostorText.text = "";
+        }
     }
 
     public static IEnumerator CoBegin(IntroCutscene __instance)
@@ -116,11 +108,10 @@ public static class Intro
     {
         if (!CustomOptionHolder.ActivateRoles.GetBool()) yield break;
 
-        // TODO: FIX LATER
-        // while (!RoleAssignmentPatch.isAssigned)
-        // {
-        //     yield return null;
-        // }
+        while (!RoleAssignment.IsAssigned)
+        {
+            yield return null;
+        }
         yield break;
     }
 
@@ -133,43 +124,42 @@ public static class Intro
 
     private static IEnumerator SetupRole(IntroCutscene __instance)
     {
-        // TODO: FIX LATER
-        // List<RoleInfo> infos = RoleInfo.GetRoleInfoForPlayer(CachedPlayer.LocalPlayer.PlayerControl, new ERoleType[] { ERoleType.Lovers });
-        // RoleInfo roleInfo = infos.FirstOrDefault();
+        var infos = RoleInfo.GetRoleInfoForPlayer(CachedPlayer.LocalPlayer.PlayerControl, false, [ERoleType.Lovers]);
+        var roleInfo = infos.FirstOrDefault();
 
-        // Logger.LogInfo("----------Role Assign-----------", "Settings");
-        // foreach (var pc in PlayerControl.AllPlayerControls.GetFastEnumerator())
-        // {
-        //     Logger.LogInfo(string.Format("{0,-3}{1,-2}:{2}:{3}", pc.AmOwner ? "[*]" : "", pc.PlayerId, pc.Data.PlayerName.PadRightV2(20), RoleInfo.GetRolesString(pc, false, joinSeparator: " + ")), "Settings");
-        // }
-        // Logger.LogInfo("-----------Platforms------------", "Settings");
-        // foreach (var pc in PlayerControl.AllPlayerControls.GetFastEnumerator())
-        // {
-        //     Logger.LogInfo(string.Format("{0,-3}{1,-2}:{2}:{3}", pc.AmOwner ? "[*]" : "", pc.PlayerId, pc.Data.PlayerName.PadRightV2(20), pc.getPlatform().Replace("Standalone", "")), "Settings");
-        // }
-        // Logger.LogInfo("---------Game Settings----------", "Settings");
-        // RebuildUs.OptionsPage = 0;
-        // var tmp = PlayerControl.GameOptions.ToHudString(GameData.Instance ? GameData.Instance.PlayerCount : 10).Split("\r\n");
-        // foreach (var t in tmp[1..(tmp.Length - 2)])
-        // {
-        //     Logger.LogInfo(t, "Settings");
-        // }
-        // Logger.LogInfo("--------Advance Settings--------", "Settings");
-        // foreach (var o in CustomOption.AllOptions)
-        // {
-        //     if (o.Parent == null ? !o.GetString().Equals("0%") : o.Parent.Enabled)
-        //     {
-        //         Logger.LogInfo(string.Format("{0}:{1}", o.Parent == null ? o.name.removeHtml().PadRightV2(43) : $"┗ {o.name.removeHtml().PadRightV2(41)}", o.getString().removeHtml()), "Settings");
-        //     }
-        // }
-        // Logger.LogInfo("--------------------------------", "Settings");
+        Logger.LogInfo("----------Role Assign-----------", "Settings");
+        foreach (var pc in PlayerControl.AllPlayerControls.GetFastEnumerator())
+        {
+            Logger.LogInfo(string.Format("{0,-3}{1,-2}:{2}:{3}", pc.AmOwner ? "[*]" : "", pc.PlayerId, pc.Data.PlayerName.PadRightV2(20), RoleInfo.GetRolesString(pc, false, joinSeparator: " + ")), "Settings");
+        }
+        Logger.LogInfo("-----------Platforms------------", "Settings");
+        foreach (var pc in PlayerControl.AllPlayerControls.GetFastEnumerator())
+        {
+            Logger.LogInfo(string.Format("{0,-3}{1,-2}:{2}:{3}", pc.AmOwner ? "[*]" : "", pc.PlayerId, pc.Data.PlayerName.PadRightV2(20), pc.GetPlatform().Replace("Standalone", "")), "Settings");
+        }
+        Logger.LogInfo("---------Game Settings----------", "Settings");
+        RebuildUs.OptionsPage = 0;
+        var tmp = GameOptionsManager.Instance.CurrentGameOptions.ToHudString(GameData.Instance ? GameData.Instance.PlayerCount : 10).Split("\r\n");
+        foreach (var t in tmp[1..(tmp.Length - 2)])
+        {
+            Logger.LogInfo(t, "Settings");
+        }
+        Logger.LogInfo("--------Advance Settings--------", "Settings");
+        foreach (var o in CustomOption.AllOptions)
+        {
+            if (o.Parent == null ? !o.GetString().Equals("0%") : o.Parent.Enabled)
+            {
+                Logger.LogInfo(string.Format("{0}:{1}", o.Parent == null ? o.NameKey.removeHtml().PadRightV2(43) : $"┗ {o.NameKey.removeHtml().PadRightV2(41)}", o.GetString().removeHtml()), "Settings");
+            }
+        }
+        Logger.LogInfo("--------------------------------", "Settings");
 
         // TODO: FIX LATER
-        // __instance.YouAreText.color = roleInfo.Color;
-        // __instance.RoleText.text = roleInfo.Name;
-        // __instance.RoleText.color = roleInfo.Color;
-        // __instance.RoleBlurbText.text = roleInfo.IntroDescription;
-        // __instance.RoleBlurbText.color = roleInfo.Color;
+        __instance.YouAreText.color = roleInfo.Color;
+        __instance.RoleText.text = roleInfo.Name;
+        __instance.RoleText.color = roleInfo.Color;
+        __instance.RoleBlurbText.text = roleInfo.IntroDescription;
+        __instance.RoleBlurbText.color = roleInfo.Color;
 
         // if (CachedPlayer.LocalPlayer.PlayerControl.HasModifier(EModifierType.Madmate))
         // {
@@ -187,10 +177,10 @@ public static class Intro
         //     __instance.RoleBlurbText.color = Madmate.color;
         // }
 
-        // if (infos.Any(info => info.roleType == RoleType.Lovers))
+        // if (infos.Any(info => info.RoleType == ERoleType.Lovers))
         // {
-        //     PlayerControl otherLover = CachedPlayer.LocalPlayer.PlayerControl.getPartner();
-        //     __instance.RoleBlurbText.text += "\n" + Helpers.cs(Lovers.color, String.Format(ModTranslation.getString("loversFlavor"), otherLover?.Data?.PlayerName ?? ""));
+        //     PlayerControl otherLover = CachedPlayer.LocalPlayer.PlayerControl.GetPartner();
+        //     __instance.RoleBlurbText.text += "\n" + Helpers.cs(Lovers.color, string.Format(ModTranslation.getString("loversFlavor"), otherLover?.Data?.PlayerName ?? ""));
         // }
 
         // 従来処理

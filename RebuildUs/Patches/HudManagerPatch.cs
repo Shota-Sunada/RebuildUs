@@ -24,6 +24,5 @@ public static class HudManagerPatch
     [HarmonyPatch(typeof(HudManager), nameof(HudManager.CoShowIntro))]
     public static void CoShowIntroPrefix()
     {
-        RoleAssignment.IsAssigned = false;
     }
 }
