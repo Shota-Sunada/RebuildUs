@@ -14,7 +14,7 @@ public class Arrow
     public static Sprite GetSprite()
     {
         if (Sprite) return Sprite;
-        Sprite = Helpers.LoadSpriteFromResources("TheOtherRoles.Resources.Arrow.png", 200f);
+        Sprite = Helpers.LoadSpriteFromResources("RebuildUs.Resources.Arrow.png", 200f);
         return Sprite;
     }
 

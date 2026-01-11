@@ -125,8 +125,8 @@ public static class Helpers
         {
             var rend = tzGO.transform.Find("Inactive").GetComponent<SpriteRenderer>();
             var rendActive = tzGO.transform.Find("Active").GetComponent<SpriteRenderer>();
-            rend.sprite = ZoomOutStatus ? Helpers.LoadSpriteFromResources("TheOtherRoles.Resources.Plus_Button.png", 100f) : Helpers.LoadSpriteFromResources("TheOtherRoles.Resources.Minus_Button.png", 100f);
-            rendActive.sprite = ZoomOutStatus ? Helpers.LoadSpriteFromResources("TheOtherRoles.Resources.Plus_ButtonActive.png", 100f) : Helpers.LoadSpriteFromResources("TheOtherRoles.Resources.Minus_ButtonActive.png", 100f);
+            rend.sprite = ZoomOutStatus ? Helpers.LoadSpriteFromResources("RebuildUs.Resources.Plus_Button.png", 100f) : Helpers.LoadSpriteFromResources("RebuildUs.Resources.Minus_Button.png", 100f);
+            rendActive.sprite = ZoomOutStatus ? Helpers.LoadSpriteFromResources("RebuildUs.Resources.Plus_ButtonActive.png", 100f) : Helpers.LoadSpriteFromResources("RebuildUs.Resources.Minus_ButtonActive.png", 100f);
             tzGO.transform.localScale = new Vector3(1.2f, 1.2f, 1f) * (ZoomOutStatus ? 4 : 1);
         }
 
