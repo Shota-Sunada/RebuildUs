@@ -213,7 +213,7 @@ namespace RebuildUs.Modules.CustomOptions
                 if (option.OptionBehavior != null && option.OptionBehavior is StringOption stringOption)
                 {
                     stringOption.oldValue = stringOption.Value = option.Selection;
-                    stringOption.ValueText.text = Tr.Get("CustomOption", option.Selections[option.Selection]);
+                    stringOption.ValueText.text = option.Selections[option.Selection].ToString();
                 }
             }
 
@@ -288,14 +288,19 @@ namespace RebuildUs.Modules.CustomOptions
 
             if (sel == "On")
             {
-                return $"<color=#FFFF00FF>{Tr.Get("CustomOption", sel)}</color>";
+                return "<color=#FFFF00FF>" + Tr.Get(("CustomOption", sel)) + "</color>";
             }
             else if (sel == "Off")
             {
-                return $"<color=#CCCCCCFF>{Tr.Get("CustomOption", sel)}</color>";
+                return "<color=#CCCCCCFF>" + Tr.Get(("CustomOption", sel)) + "</color>";
             }
 
-            return Tr.Get("CustomOption", sel);
+            return Tr.Get(sel);
+        }
+
+        public string GetName()
+        {
+            return Tr.Get(("Role", NameKey));
         }
 
         public void UpdateSelection(int newSelection, bool notifyUsers = true)
@@ -303,7 +308,7 @@ namespace RebuildUs.Modules.CustomOptions
             newSelection = Mathf.Clamp((newSelection + Selections.Length) % Selections.Length, 0, Selections.Length - 1);
             if (AmongUsClient.Instance?.AmClient == true && notifyUsers && Selection != newSelection)
             {
-                DestroyableSingleton<HudManager>.Instance.Notifier.AddSettingsChangeMessage((StringNames)(Id + 6000), Tr.Get("CustomOption", Selections[newSelection]), false);
+                DestroyableSingleton<HudManager>.Instance.Notifier.AddSettingsChangeMessage((StringNames)(Id + 6000), Selections[newSelection].ToString(), false);
                 try
                 {
                     Selection = newSelection;
@@ -325,7 +330,7 @@ namespace RebuildUs.Modules.CustomOptions
             if (OptionBehavior != null && OptionBehavior is StringOption stringOption)
             {
                 stringOption.oldValue = stringOption.Value = Selection;
-                stringOption.ValueText.text = Tr.Get("CustomOption", Selections[Selection]);
+                stringOption.ValueText.text = Selections[Selection].ToString();
                 if (AmongUsClient.Instance?.AmHost == true && PlayerControl.LocalPlayer)
                 {
                     if (Id == 0 && Selection != Preset)

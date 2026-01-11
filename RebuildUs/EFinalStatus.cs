@@ -10,5 +10,6 @@ public enum EFinalStatus
     Dead,
     Suicide,
     Misfire,
+    Scapegoat,
     Disconnected
 }

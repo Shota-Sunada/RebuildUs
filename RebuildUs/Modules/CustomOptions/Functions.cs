@@ -56,7 +56,7 @@ public partial class CustomOption
                 if (option.OptionBehavior != null && option.OptionBehavior is StringOption stringOption)
                 {
                     stringOption.oldValue = stringOption.Value = option.Selection;
-                    stringOption.ValueText.text = Tr.Get("CustomOption", option.Selections[option.Selection]);
+                    stringOption.ValueText.text = option.Selections[option.Selection].ToString();
                 }
                 somethingApplied = true;
             }
@@ -241,15 +241,11 @@ public partial class CustomOption
                 headers++; // for header
                 CategoryHeaderMasked categoryHeaderMasked = UnityEngine.Object.Instantiate(__instance.categoryHeaderOrigin);
                 categoryHeaderMasked.SetHeader(StringNames.ImpostorsCategory, 61);
-                categoryHeaderMasked.Title.text = option.HeaderText != "" ? option.HeaderText.Contains('.') ? Tr.Get(option.HeaderText) : Tr.Get("CustomOptionHeader", option.HeaderText) : option.NameKey.Contains('.') ? Tr.Get(option.NameKey) : Tr.Get("CustomOptionItem", option.NameKey);
+                categoryHeaderMasked.Title.text = option.HeaderText != "" ? option.HeaderText : option.NameKey;
                 if ((int)optionType == 99)
                 {
-                    categoryHeaderMasked.Title.text = new Dictionary<CustomOptionType, string>() {
-                        { CustomOptionType.Impostor, Tr.Get("CustomOption", "ImpostorRoles") },
-                        { CustomOptionType.Neutral, Tr.Get("CustomOption", "NeutralRoles") },
-                        { CustomOptionType.Crewmate, Tr.Get("CustomOption", "CrewmateRoles") },
-                        { CustomOptionType.Modifier, Tr.Get("CustomOption", "Modifiers") }
-                    }[curType];
+                    categoryHeaderMasked.Title.text = new Dictionary<CustomOptionType, string>() { { CustomOptionType.Impostor, "Impostor Roles" }, { CustomOptionType.Neutral, "Neutral Roles" },
+                            { CustomOptionType.Crewmate, "Crewmate Roles" }, { CustomOptionType.Modifier, "Modifiers" } }[curType];
                 }
 
                 categoryHeaderMasked.Title.outlineColor = Color.white;
@@ -288,12 +284,12 @@ public partial class CustomOption
             }
             viewSettingsInfoPanel.transform.localPosition = new Vector3(num2, num, -2f);
             int value = option.GetSelection();
-            var settingTuple = HandleSpecialOptionsView(option, option.NameKey.Contains('.') ? Tr.Get(option.NameKey) : Tr.Get("CustomOptionItem", option.NameKey), Tr.Get("CustomOption", option.Selections[value]));
+            var settingTuple = HandleSpecialOptionsView(option, option.NameKey, option.Selections[value].ToString());
             viewSettingsInfoPanel.SetInfo(StringNames.ImpostorsCategory, settingTuple.Item2, 61);
             viewSettingsInfoPanel.titleText.text = settingTuple.Item1;
             if (option.IsHeader && (int)optionType != 99 && option.HeaderText == "" && (option.Type == CustomOptionType.Neutral || option.Type == CustomOptionType.Crewmate || option.Type == CustomOptionType.Impostor || option.Type == CustomOptionType.Modifier))
             {
-                viewSettingsInfoPanel.titleText.text = Tr.Get("CustomOption.SpawnChance");
+                viewSettingsInfoPanel.titleText.text = "Spawn Chance";
             }
             if ((int)optionType == 99)
             {
@@ -317,7 +313,7 @@ public partial class CustomOption
         if (option == CustomOptionHolder.CrewmateRolesCountMin)
         {
             val = "";
-            name = Tr.Get("CustomOption", "CrewmateRoles");
+            name = "Crewmate Roles";
             var min = CustomOptionHolder.CrewmateRolesCountMin.GetSelection();
             var max = CustomOptionHolder.CrewmateRolesCountMax.GetSelection();
             if (min > max) min = max;
@@ -325,7 +321,7 @@ public partial class CustomOption
         }
         if (option == CustomOptionHolder.NeutralRolesCountMin)
         {
-            name = Tr.Get("CustomOption", "NeutralRoles");
+            name = "Neutral Roles";
             var min = CustomOptionHolder.NeutralRolesCountMin.GetSelection();
             var max = CustomOptionHolder.NeutralRolesCountMax.GetSelection();
             if (min > max) min = max;
@@ -333,7 +329,7 @@ public partial class CustomOption
         }
         if (option == CustomOptionHolder.ImpostorRolesCountMin)
         {
-            name = Tr.Get("CustomOption", "ImpostorRoles");
+            name = "Impostor Roles";
             var min = CustomOptionHolder.ImpostorRolesCountMin.GetSelection();
             var max = CustomOptionHolder.ImpostorRolesCountMax.GetSelection();
             if (max > GameOptionsManager.Instance.currentGameOptions.NumImpostors) max = GameOptionsManager.Instance.currentGameOptions.NumImpostors;
@@ -342,7 +338,7 @@ public partial class CustomOption
         }
         if (option == CustomOptionHolder.ModifiersCountMin)
         {
-            name = Tr.Get("CustomOption", "Modifiers");
+            name = "Modifiers";
             var min = CustomOptionHolder.ModifiersCountMin.GetSelection();
             var max = CustomOptionHolder.ModifiersCountMax.GetSelection();
             if (min > max) min = max;
@@ -359,18 +355,18 @@ public partial class CustomOption
         {
 
             // create RU settings
-            CreateCustomButton(__instance, next++, "RUSettings", Tr.Get("CustomOption", "RUSettings"), CustomOptionType.General);
+            CreateCustomButton(__instance, next++, "RUSettings", "RU Settings", CustomOptionType.General);
             // create role overview
-            CreateCustomButton(__instance, next++, "RoleOverview", Tr.Get("CustomOption", "RoleOverview"), (CustomOptionType)99);
+            CreateCustomButton(__instance, next++, "RoleOverview", "Role Overview", (CustomOptionType)99);
             // IMp
-            CreateCustomButton(__instance, next++, "ImpostorSettings", Tr.Get("CustomOption", "ImpostorSettings"), CustomOptionType.Impostor);
+            CreateCustomButton(__instance, next++, "ImpostorSettings", "Impostor Roles", CustomOptionType.Impostor);
 
             // Neutral
-            CreateCustomButton(__instance, next++, "NeutralSettings", Tr.Get("CustomOption", "NeutralSettings"), CustomOptionType.Neutral);
+            CreateCustomButton(__instance, next++, "NeutralSettings", "Neutral Roles", CustomOptionType.Neutral);
             // Crew
-            CreateCustomButton(__instance, next++, "CrewmateSettings", Tr.Get("CustomOption", "CrewmateSettings"), CustomOptionType.Crewmate);
+            CreateCustomButton(__instance, next++, "CrewmateSettings", "Crewmate Roles", CustomOptionType.Crewmate);
             // Modifier
-            CreateCustomButton(__instance, next++, "ModifierSettings", Tr.Get("CustomOption", "ModifierSettings"), CustomOptionType.Modifier);
+            CreateCustomButton(__instance, next++, "ModifierSettings", "Modifiers", CustomOptionType.Modifier);
 
         }
         else if (MapOptions.GameMode == CustomGamemodes.HideNSeek)
@@ -427,7 +423,7 @@ public partial class CustomOption
             {
                 var categoryHeaderMasked = UnityEngine.Object.Instantiate(menu.categoryHeaderOrigin, Vector3.zero, Quaternion.identity, menu.settingsContainer);
                 categoryHeaderMasked.SetHeader(StringNames.ImpostorsCategory, 20);
-                categoryHeaderMasked.Title.text = option.HeaderText != "" ? option.HeaderText.Contains('.') ? Tr.Get(option.HeaderText) : Tr.Get("CustomOptionHeader", option.HeaderText) : option.NameKey.Contains('.') ? Tr.Get(option.NameKey) : Tr.Get("CustomOptionItem", option.NameKey);
+                categoryHeaderMasked.Title.text = option.HeaderText != "" ? option.HeaderText : option.NameKey;
                 categoryHeaderMasked.Title.outlineColor = Color.white;
                 categoryHeaderMasked.Title.outlineWidth = 0.2f;
                 categoryHeaderMasked.transform.localScale = Vector3.one * 0.63f;
@@ -461,10 +457,10 @@ public partial class CustomOption
 
             var stringOption = optionBehaviour as StringOption;
             stringOption.OnValueChanged = new Action<OptionBehaviour>((o) => { });
-            stringOption.TitleText.text = option.NameKey.Contains('.') ? Tr.Get(option.NameKey) : Tr.Get("CustomOptionItem", option.NameKey);
+            stringOption.TitleText.text = option.NameKey;
             if (option.IsHeader && option.HeaderText == "" && (option.Type == CustomOptionType.Neutral || option.Type == CustomOptionType.Crewmate || option.Type == CustomOptionType.Impostor || option.Type == CustomOptionType.Modifier))
             {
-                stringOption.TitleText.text = Tr.Get("CustomOption.SpawnChance");
+                stringOption.TitleText.text = "Spawn Chance";
             }
             if (stringOption.TitleText.text.Length > 25)
             {
@@ -475,7 +471,7 @@ public partial class CustomOption
                 stringOption.TitleText.fontSize = 2f;
             }
             stringOption.Value = stringOption.oldValue = option.Selection;
-            stringOption.ValueText.text = Tr.Get("CustomOption", option.Selections[option.Selection]);
+            stringOption.ValueText.text = option.Selections[option.Selection].ToString();
             option.OptionBehavior = stringOption;
 
             menu.Children.Add(optionBehaviour);
@@ -495,9 +491,9 @@ public partial class CustomOption
 
     private static void RemoveVanillaTabs(GameSettingMenu __instance)
     {
-        __instance.GamePresetsButton.Destroy();
-        __instance.RoleSettingsButton.Destroy();
         GameObject.Find("What Is This?")?.Destroy();
+        GameObject.Find("GamePresetButton")?.Destroy();
+        GameObject.Find("RoleSettingsButton")?.Destroy();
         __instance.ChangeTab(1, false);
     }
 
@@ -567,8 +563,9 @@ public partial class CustomOption
         int next = 3;
         if (MapOptions.GameMode == CustomGamemodes.Guesser || MapOptions.GameMode == CustomGamemodes.Classic)
         {
+
             // create RU settings
-            CreateCustomButton(__instance, next++, "RUSettings", Tr.Get("CustomOption", "RUSettings"));
+            CreateCustomButton(__instance, next++, "RUSettings", "RU Settings");
             CreateGameOptionsMenu(__instance, CustomOptionType.General, "RUSettings");
             // Guesser if applicable
             if (MapOptions.GameMode == CustomGamemodes.Guesser)
@@ -577,18 +574,19 @@ public partial class CustomOption
                 CreateGameOptionsMenu(__instance, CustomOptionType.Guesser, "GuesserSettings");
             }
             // IMp
-            CreateCustomButton(__instance, next++, "ImpostorSettings", Tr.Get("CustomOption", "ImpostorSettings"));
+            CreateCustomButton(__instance, next++, "ImpostorSettings", "Impostor Roles");
             CreateGameOptionsMenu(__instance, CustomOptionType.Impostor, "ImpostorSettings");
 
             // Neutral
-            CreateCustomButton(__instance, next++, "NeutralSettings", Tr.Get("CustomOption", "NeutralSettings"));
+            CreateCustomButton(__instance, next++, "NeutralSettings", "Neutral Roles");
             CreateGameOptionsMenu(__instance, CustomOptionType.Neutral, "NeutralSettings");
             // Crew
-            CreateCustomButton(__instance, next++, "CrewmateSettings", Tr.Get("CustomOption", "CrewmateSettings"));
+            CreateCustomButton(__instance, next++, "CrewmateSettings", "Crewmate Roles");
             CreateGameOptionsMenu(__instance, CustomOptionType.Crewmate, "CrewmateSettings");
             // Modifier
-            CreateCustomButton(__instance, next++, "ModifierSettings", Tr.Get("CustomOption", "ModifierSettings"));
+            CreateCustomButton(__instance, next++, "ModifierSettings", "Modifiers");
             CreateGameOptionsMenu(__instance, CustomOptionType.Modifier, "ModifierSettings");
+
         }
         else if (MapOptions.GameMode == CustomGamemodes.HideNSeek)
         {
@@ -614,7 +612,7 @@ public partial class CustomOption
         __instance.OnValueChanged = new Action<OptionBehaviour>((o) => { });
         //__instance.TitleText.text = option.name;
         __instance.Value = __instance.oldValue = option.Selection;
-        __instance.ValueText.text = Tr.Get("CustomOption", option.Selections[option.Selection]);
+        __instance.ValueText.text = option.Selections[option.Selection].ToString();
 
         return false;
     }
@@ -658,12 +656,12 @@ public partial class CustomOption
         {
             if (option.OptionBehavior != null && option.OptionBehavior is StringOption stringOption)
             {
-                stringOption.ValueText.text = Tr.Get("CustomOption", option.Selections[option.Selection]);
+                stringOption.ValueText.text = option.Selections[option.Selection].ToString();
             }
             else if (option.OptionBehavior != null && option.OptionBehavior is StringOption stringOptionToo)
             {
                 stringOptionToo.oldValue = stringOptionToo.Value = option.Selection;
-                stringOptionToo.ValueText.text = Tr.Get("CustomOption", option.Selections[option.Selection]);
+                stringOptionToo.ValueText.text = option.Selections[option.Selection].ToString();
             }
         }
     }
@@ -729,7 +727,7 @@ public partial class CustomOption
         {
             if (option.Parent == null)
             {
-                string line = $"{(option.NameKey.Contains('.') ? Tr.Get(option.NameKey) : Tr.Get("CustomOptionItem", option.NameKey))}: {Tr.Get("CustomOption", option.Selections[option.Selection])}";
+                string line = $"{option.NameKey}: {option.Selections[option.Selection]}";
                 if (type == CustomOptionType.Modifier) line += BuildModifierExtras(option);
                 sb.AppendLine(line);
             }
@@ -756,7 +754,7 @@ public partial class CustomOption
 
                 Color c = isIrrelevant ? Color.grey : Color.white;  // No use for now
                 if (isIrrelevant) continue;
-                sb.AppendLine(Helpers.Cs(c, $"{(option.NameKey.Contains('.') ? Tr.Get(option.NameKey) : Tr.Get("CustomOptionItem", option.NameKey))}: {Tr.Get("CustomOption", option.Selections[option.Selection])}"));
+                sb.AppendLine(Helpers.Cs(c, $"{option.NameKey}: {option.Selections[option.Selection]}"));
             }
             else
             {
@@ -804,7 +802,7 @@ public partial class CustomOption
                 }
                 else
                 {
-                    sb.AppendLine($"\n{(option.NameKey.Contains('.') ? Tr.Get(option.NameKey) : Tr.Get("CustomOptionItem", option.NameKey))}: {Tr.Get("CustomOption", option.Selections[option.Selection])}");
+                    sb.AppendLine($"\n{option.NameKey}: {option.Selections[option.Selection].ToString()}");
                 }
             }
         }

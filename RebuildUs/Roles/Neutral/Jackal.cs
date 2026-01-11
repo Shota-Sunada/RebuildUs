@@ -93,7 +93,7 @@ public class Jackal : RoleBase<Jackal>
             KeyCode.F
         )
         {
-            ButtonText = Tr.Get("RoleText", "SidekickText")
+            ButtonText = Tr.Get("SidekickText")
         };
 
         // Jackal Kill
