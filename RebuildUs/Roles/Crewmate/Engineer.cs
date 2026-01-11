@@ -129,7 +129,7 @@ public class Engineer : RoleBase<Engineer>
                 KeyCode.F
             )
         {
-            ButtonText = Tr.Get("RoleText.RepairText")
+            ButtonText = Tr.Get("RoleText", "RepairText")
         };
     }
     public static void SetButtonCooldowns()

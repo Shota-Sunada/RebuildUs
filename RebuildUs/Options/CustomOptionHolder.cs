@@ -280,11 +280,11 @@ public static partial class CustomOptionHolder
 
         #region ROLES IMPOSTOR
         BountyHunterSpawnRate = new(2000, CustomOptionType.Impostor, ERoleType.BountyHunter, BountyHunter.RoleColor, 1);
-        BountyHunterBountyDuration = CustomOption.Normal(2001, CustomOptionType.Impostor, "BountyHunterBountyDuration", 60f, 10f, 180f, 10f, BountyHunterSpawnRate);
-        BountyHunterReducedCooldown = CustomOption.Normal(20002, CustomOptionType.Impostor, "BountyHunterReducedCooldown", 2.5f, 2.5f, 30f, 2.5f, BountyHunterSpawnRate);
-        BountyHunterPunishmentTime = CustomOption.Normal(2003, CustomOptionType.Impostor, "BountyHunterPunishmentTime", 20f, 0f, 60f, 2.5f, BountyHunterSpawnRate);
-        BountyHunterShowArrow = CustomOption.Normal(2004, CustomOptionType.Impostor, "BountyHunterShowArrow", true, BountyHunterSpawnRate);
-        BountyHunterArrowUpdateInterval = CustomOption.Normal(2005, CustomOptionType.Impostor, "BountyHunterArrowUpdateInterval", 15f, 2.5f, 60f, 2.5f, BountyHunterShowArrow);
+        BountyHunterBountyDuration = CustomOption.Normal(2001, CustomOptionType.Impostor, "", 60f, 10f, 180f, 10f, BountyHunterSpawnRate);
+        BountyHunterReducedCooldown = CustomOption.Normal(20002, CustomOptionType.Impostor, "", 2.5f, 2.5f, 30f, 2.5f, BountyHunterSpawnRate);
+        BountyHunterPunishmentTime = CustomOption.Normal(2003, CustomOptionType.Impostor, "", 20f, 0f, 60f, 2.5f, BountyHunterSpawnRate);
+        BountyHunterShowArrow = CustomOption.Normal(2004, CustomOptionType.Impostor, "", true, BountyHunterSpawnRate);
+        BountyHunterArrowUpdateInterval = CustomOption.Normal(2005, CustomOptionType.Impostor, "", 15f, 2.5f, 60f, 2.5f, BountyHunterShowArrow);
         #endregion
 
         #region ROLES NEUTRAL

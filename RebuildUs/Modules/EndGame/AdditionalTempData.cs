@@ -14,7 +14,6 @@ public class AdditionalTempData
         PlayerRoles.Clear();
         AdditionalWinConditions.Clear();
         WinCondition = EWinCondition.Default;
-        IsGM = false;
         Timer = 0;
     }
 }
