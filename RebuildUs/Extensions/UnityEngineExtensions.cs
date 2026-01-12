@@ -6,4 +6,9 @@ public static class UnityEngineExtensions
     {
         UnityEngine.Object.Destroy(obj);
     }
+
+    public static Transform FindEx(this Transform transform, string name)
+    {
+        return transform.Find(name) ?? throw new Exception($"{name} was not found");
+    }
 }

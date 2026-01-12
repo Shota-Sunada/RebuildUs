@@ -73,6 +73,14 @@
       }
     },
     {
+      "label": "Boot AmongUs",
+      "command": "powershell -ExecutionPolicy Bypass .\\start-debug-boot.ps1",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      }
+    },
+    {
       "label": "Format",
       "command": "dotnet format RebuildUs.sln",
       "group": {
