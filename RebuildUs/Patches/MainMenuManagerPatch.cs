@@ -7,9 +7,9 @@ public static class MainMenuManagerPatch
 {
     [HarmonyPostfix]
     [HarmonyPatch(typeof(MainMenuManager), nameof(MainMenuManager.Start))]
-    public static void StartPostfix()
+    public static void StartPostfix(MainMenuManager __instance)
     {
         ModStamp.Show();
-        Credits.EditMainMenu();
+        Credits.EditMainMenu(__instance);
     }
 }

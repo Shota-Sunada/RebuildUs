@@ -22,7 +22,7 @@ public static class Credits
         position.AdjustPosition();
     }
 
-    public static void EditMainMenu()
+    public static void EditMainMenu(MainMenuManager __instance)
     {
         var ruLogo = new GameObject("RULogo");
         ruLogo.transform.SetParent(GameObject.Find("RightPanel").transform, false);
@@ -36,5 +36,22 @@ public static class Credits
 
         text.transform.SetParent(ruLogo.transform);
         text.transform.localPosition = Vector3.down * 1.25f;
+
+        var howToPlayButton = __instance.howToPlayButton;
+        var freePlayButton = __instance.freePlayButton;
+        howToPlayButton.gameObject.SetActive(false);
+        freePlayButton.gameObject.SetActive(false);
+
+        var createGameButton = __instance.createGameButton;
+        // var enterCodeButtons = __instance.enterCodeButtons;
+        var enterCodeButtons = createGameButton.transform.parent.Find("Enter Code Button");
+        var findGameButton = __instance.findGameButton;
+
+        // remove line
+        findGameButton.gameObject.transform.parent.Find("Line")?.gameObject.SetActive(false);
+        findGameButton.gameObject.SetActive(false);
+
+        createGameButton.transform.SetLocalX(0);
+        enterCodeButtons?.transform.SetLocalX(0);
     }
 }
