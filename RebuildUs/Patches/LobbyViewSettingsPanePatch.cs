@@ -7,21 +7,23 @@ public static class LobbyViewSettingsPanePatch
     [HarmonyPatch(typeof(LobbyViewSettingsPane), nameof(LobbyViewSettingsPane.SetTab))]
     public static bool LobbyViewSettingsPaneSetTabPrefix(LobbyViewSettingsPane __instance)
     {
-        return CustomOption.SettingsPaneSetTab(__instance);
+        CustomOption.SetTab(__instance, (PanePage)__instance.currentTab);
+        return false;
     }
 
-    [HarmonyPostfix]
+    [HarmonyPrefix]
     [HarmonyPatch(typeof(LobbyViewSettingsPane), nameof(LobbyViewSettingsPane.ChangeTab))]
-    public static void LobbyViewSettingsPaneChangeTabPostfix(LobbyViewSettingsPane __instance, StringNames category)
+    public static bool LobbyViewSettingsPaneChangeTabPrefix(LobbyViewSettingsPane __instance, StringNames category)
     {
-        CustomOption.SettingsPaneChangeTab(__instance, category);
+        CustomOption.SettingsPaneChangeTab(__instance, (PanePage)category);
+        return false;
     }
 
     [HarmonyPostfix]
     [HarmonyPatch(typeof(LobbyViewSettingsPane), nameof(LobbyViewSettingsPane.Update))]
     public static void UpdatePostfix(LobbyViewSettingsPane __instance)
     {
-        CustomOption.SettingsPaneUpdate(__instance);
+        // CustomOption.SettingsPaneUpdate(__instance);
     }
 
     [HarmonyPostfix]

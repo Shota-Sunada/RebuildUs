@@ -190,9 +190,6 @@ public static partial class RPCProcedure
     public static void ShareGamemode(byte gm)
     {
         MapOptions.GameMode = (CustomGamemodes)gm;
-        CustomOption.SettingsPaneCurrentButtons?.ForEach(x => x.gameObject?.Destroy());
-        CustomOption.SettingsPaneCurrentButtons?.Clear();
-        CustomOption.SettingsPaneCurrentButtonTypes?.Clear();
     }
 
     public static void FinishResetVariables(byte playerId)
