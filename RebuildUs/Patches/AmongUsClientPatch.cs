@@ -26,6 +26,6 @@ public static class AmongUsClientPatch
     [HarmonyPatch(typeof(AmongUsClient), nameof(AmongUsClient.OnPlayerJoined))]
     public static void OnPlayerJoinedPostfix(AmongUsClient __instance, ClientData data)
     {
-        GameStart.OnPlayerJoined(__instance, data);
+        GameStart.OnPlayerJoined();
     }
 }
