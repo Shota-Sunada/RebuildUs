@@ -173,6 +173,12 @@ public static partial class RPCProcedure
         GameOptionsManager.Instance.currentNormalGameOptions.SetByte(ByteOptionNames.MapId, mapId);
     }
 
+    public static void ShareGamemode(byte gameMode)
+    {
+        MapOptions.GameMode = (CustomGamemodes)gameMode;
+        GameStart.SendGamemode = false;
+    }
+
     public static void SetGameStarting()
     {
         GameStart.StartingTimer = 5f;
@@ -185,11 +191,6 @@ public static partial class RPCProcedure
         {
             GameStartManager.Instance.ResetStartState();
         }
-    }
-
-    public static void ShareGamemode(byte gm)
-    {
-        MapOptions.GameMode = (CustomGamemodes)gm;
     }
 
     public static void FinishResetVariables(byte playerId)

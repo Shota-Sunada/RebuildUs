@@ -342,9 +342,10 @@ public partial class CustomOption
             }
         }
         else if (Id == 0 && AmongUsClient.Instance?.AmHost == true && PlayerControl.LocalPlayer)
-        {  // Share the preset switch for random maps, even if the menu isn't open!
+        {
+            // Share the preset switch for random maps, even if the menu isn't open!
             SwitchPreset(Selection);
-            ShareOptionSelections();// Share all selections
+            ShareOptionSelections(); // Share all selections
         }
 
         if (AmongUsClient.Instance?.AmHost == true)

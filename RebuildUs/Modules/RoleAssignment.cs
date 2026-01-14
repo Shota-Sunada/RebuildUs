@@ -77,16 +77,15 @@ public static class RoleAssignment
 
         // 独自処理開始
         CreateCheckList();
-        MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.ResetVariables, Hazel.SendOption.Reliable, -1);
-        AmongUsClient.Instance.FinishRpcImmediately(writer);
+        using var sender = new RPCSender(CachedPlayer.LocalPlayer.PlayerControl.NetId, CustomRPC.ResetVariables);
         RPCProcedure.ResetVariables();
         yield return WaitResetVariables().WrapToIl2Cpp();
 
         if (!DestroyableSingleton<TutorialManager>.InstanceExists && CustomOptionHolder.ActivateRoles.GetBool()) // Don't assign Roles in Tutorial or if deactivated
         {
             AssignRoles();
-            writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.FinishSetRole, Hazel.SendOption.Reliable, -1);
-            AmongUsClient.Instance.FinishRpcImmediately(writer);
+            using var sender2 = new RPCSender(CachedPlayer.LocalPlayer.PlayerControl.NetId, CustomRPC.FinishSetRole);
+            RPCProcedure.ResetVariables();
             RPCProcedure.FinishSetRole();
         }
         // 独自処理終了
@@ -644,11 +643,11 @@ public static class RoleAssignment
     {
         byte playerId = host.PlayerId;
 
-        MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.SetRole, Hazel.SendOption.Reliable, -1);
-        writer.Write(roleId);
-        writer.Write(playerId);
-        AmongUsClient.Instance.FinishRpcImmediately(writer);
+        using var sender = new RPCSender(CachedPlayer.LocalPlayer.PlayerControl.NetId, CustomRPC.SetRole);
+        sender.Write(roleId);
+        sender.Write(playerId);
         RPCProcedure.SetRole(roleId, playerId);
+
         return playerId;
     }
 
@@ -770,11 +769,11 @@ public static class RoleAssignment
         if (removePlayer) playerList.RemoveAt(index);
         PlayerRoleMap.Add(new Tuple<byte, byte>(playerId, roleId));
 
-        MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.SetRole, Hazel.SendOption.Reliable, -1);
-        writer.Write(roleId);
-        writer.Write(playerId);
-        AmongUsClient.Instance.FinishRpcImmediately(writer);
+        using var sender = new RPCSender(CachedPlayer.LocalPlayer.PlayerControl.NetId, CustomRPC.SetRole);
+        sender.Write(roleId);
+        sender.Write(playerId);
         RPCProcedure.SetRole(roleId, playerId);
+
         return playerId;
     }
 
@@ -788,11 +787,11 @@ public static class RoleAssignment
         var index = RebuildUs.Instance.Rnd.Next(0, playerList.Count);
         byte playerId = playerList[index].PlayerId;
 
-        MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.AddModifier, Hazel.SendOption.Reliable, -1);
-        writer.Write(modId);
-        writer.Write(playerId);
-        AmongUsClient.Instance.FinishRpcImmediately(writer);
+        using var sender = new RPCSender(CachedPlayer.LocalPlayer.PlayerControl.NetId, CustomRPC.AddModifier);
+        sender.Write(modId);
+        sender.Write(playerId);
         RPCProcedure.AddModifier(modId, playerId);
+
         return playerId;
     }
 

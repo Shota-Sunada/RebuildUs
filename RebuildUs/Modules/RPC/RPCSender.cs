@@ -54,6 +54,11 @@ public class RPCSender(uint netId, CustomRPC callId, int targetId = -1) : IDispo
         Writer.Write(value);
     }
 
+    public void Write(Il2CppStructArray<byte> bytes)
+    {
+        Writer.Write(bytes);
+    }
+
     public void WriteBytesAndSize(Il2CppStructArray<byte> bytes)
     {
         Writer.WriteBytesAndSize(bytes);

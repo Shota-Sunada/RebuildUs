@@ -1,4 +1,5 @@
 using BepInEx.Unity.IL2CPP.Utils.Collections;
+using InnerNet;
 using RebuildUs.Modules;
 
 namespace RebuildUs.Patches;
@@ -23,8 +24,8 @@ public static class AmongUsClientPatch
 
     [HarmonyPostfix]
     [HarmonyPatch(typeof(AmongUsClient), nameof(AmongUsClient.OnPlayerJoined))]
-    public static void OnPlayerJoinedPostfix(AmongUsClient __instance)
+    public static void OnPlayerJoinedPostfix(AmongUsClient __instance, ClientData data)
     {
-        GameStart.OnPlayerJoined();
+        GameStart.OnPlayerJoined(__instance, data);
     }
 }
