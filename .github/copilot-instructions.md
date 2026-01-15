@@ -58,6 +58,8 @@ Development conventions
 - Single class per file; small methods; favor composition.
 - When applying patches with Harmony, always create a file named `{ClassName}Patcher.cs` in the `Patches` folder and call functions within that file.
 - Implementing function logic directly within the `Patches` folder is discouraged. Create functions in their respective module or role implementation files and call them from the `Patches`.
+- When porting code, place only the Harmony patch definitions in the `Patches` folder and move other cohesive features to the `Modules` folder.
+- When porting code, if a function or variable is not yet implemented in the destination, leave a comment with a `TODO`.
 - When sending RPCs, use `RPCSender` as much as possible for smart and efficient communication.
 - When using RPCSender, surround the declaration with {} to explicitly dispose of it.
 - Strictly ensure weight reduction (lightweight performance and binary size).
