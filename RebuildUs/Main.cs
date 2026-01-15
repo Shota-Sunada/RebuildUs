@@ -54,6 +54,7 @@ public class RebuildUs : BasePlugin
 
         AssetLoader.LoadAssets();
 
+        Tr.Initialize();
         CustomOptionHolder.Load();
         RoleInfo.Load();
         CustomColors.Load();
