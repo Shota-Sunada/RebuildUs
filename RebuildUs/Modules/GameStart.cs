@@ -12,6 +12,11 @@ public static class GameStart
     public static float StartingTimer = 0;
     public static bool SendGamemode = true;
 
+    private static TextMeshPro warningText;
+    private static TextMeshPro timerText;
+    private static PassiveButton cancelButton;
+    private static float timer = 600f;
+
     public static void OnPlayerJoined()
     {
         if (PlayerControl.LocalPlayer != null)
@@ -27,6 +32,47 @@ public static class GameStart
         VersionSent = false;
         // Reset kicking timer
         KickingTimer = 0f;
+
+        warningText = UnityEngine.Object.Instantiate(__instance.GameStartText, __instance.transform);
+        warningText.name = "WarningText";
+        warningText.transform.localPosition = new(0f, 0f - __instance.transform.localPosition.y, -1f);
+        warningText.gameObject.SetActive(false);
+
+        timerText = UnityEngine.Object.Instantiate(__instance.PlayerCounter, __instance.PlayerCounter.transform.parent);
+        timerText.autoSizeTextContainer = true;
+        timerText.fontSize = 3.2f;
+        timerText.name = "Timer";
+        timerText.DestroyChildren();
+        timerText.transform.localPosition += new Vector3(0.3f, -3.4f, 0f);
+        timerText.gameObject.SetActive(AmongUsClient.Instance.NetworkMode == NetworkModes.OnlineGame && AmongUsClient.Instance.AmHost);
+
+        cancelButton = UnityEngine.Object.Instantiate(__instance.StartButton, __instance.transform);
+        cancelButton.name = "CancelButton";
+        var cancelLabel = cancelButton.buttonText;
+        cancelLabel.GetComponent<TextTranslatorTMP>()?.Destroy();
+        cancelLabel.text = "Cancel";
+        cancelButton.transform.localScale = new(0.5f, 0.5f, 1f);
+        var cancelButtonInactiveRenderer = cancelButton.inactiveSprites.GetComponent<SpriteRenderer>();
+        cancelButtonInactiveRenderer.color = new(0.8f, 0f, 0f, 1f);
+        var cancelButtonActiveRenderer = cancelButton.activeSprites.GetComponent<SpriteRenderer>();
+        cancelButtonActiveRenderer.color = Color.red;
+        var cancelButtonInactiveShine = cancelButton.inactiveSprites.transform.Find("Shine");
+        if (cancelButtonInactiveShine)
+        {
+            cancelButtonInactiveShine.gameObject.SetActive(false);
+        }
+        cancelButton.activeTextColor = cancelButton.inactiveTextColor = Color.white;
+        cancelButton.transform.localPosition = new(2f, 0.13f, 0f);
+        cancelButton.OnClick = new();
+        cancelButton.OnClick.AddListener((Action)(() =>
+        {
+            __instance.ResetStartState();
+            SoundManager.Instance.StopSound(GameStartManager.Instance.gameStartSound);
+            {
+                using var sender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.StopStart);
+            }
+        }));
+        cancelButton.gameObject.SetActive(false);
     }
 
     public static void UpdatePostfix(GameStartManager __instance)
@@ -40,7 +86,7 @@ public static class GameStart
         // // Check version handshake infos
         bool versionMismatch = false;
         string message = "";
-        foreach (InnerNet.ClientData client in AmongUsClient.Instance.allClients.ToArray())
+        foreach (var client in AmongUsClient.Instance.allClients.ToArray())
         {
             if (client.Character == null)
             {
@@ -73,20 +119,12 @@ public static class GameStart
         {
             if (versionMismatch)
             {
-                __instance.GameStartText.text = message;
-                __instance.GameStartText.transform.localPosition = __instance.StartButton.transform.localPosition + Vector3.up * 5;
-                __instance.GameStartText.transform.localScale = new Vector3(2f, 2f, 1f);
-                __instance.GameStartTextParent.SetActive(true);
+                warningText.text = message;
+                warningText.gameObject.SetActive(true);
             }
             else
             {
-                __instance.GameStartText.transform.localPosition = Vector3.zero;
-                __instance.GameStartText.transform.localScale = new Vector3(1.2f, 1.2f, 1f);
-                if (!__instance.GameStartText.text.StartsWith("Starting"))
-                {
-                    __instance.GameStartText.text = String.Empty;
-                    __instance.GameStartTextParent.SetActive(false);
-                }
+                warningText.gameObject.SetActive(false);
             }
         }
         // Client update with handshake infos
@@ -102,27 +140,17 @@ public static class GameStart
                     SceneChanger.ChangeScene("MainMenu");
                 }
 
-                __instance.GameStartText.text = $"<color=#FF0000FF>The host has no or a different version of RebuildUs\nYou will be kicked in {Math.Round(10 - KickingTimer)}s</color>";
-                __instance.GameStartText.transform.localPosition = __instance.StartButton.transform.localPosition + Vector3.up * 5;
-                __instance.GameStartText.transform.localScale = new Vector3(2f, 2f, 1f);
-                __instance.GameStartTextParent.SetActive(true);
+                warningText.text = $"<color=#FF0000FF>The host has no or a different version of RebuildUs\nYou will be kicked in {Math.Round(10 - KickingTimer)}s</color>";
+                warningText.gameObject.SetActive(true);
             }
             else if (versionMismatch)
             {
-                __instance.GameStartText.text = $"<color=#FF0000FF>Players With Different Versions:\n</color>" + message;
-                __instance.GameStartText.transform.localPosition = __instance.StartButton.transform.localPosition + Vector3.up * 5;
-                __instance.GameStartText.transform.localScale = new Vector3(2f, 2f, 1f);
-                __instance.GameStartTextParent.SetActive(true);
+                warningText.text = $"<color=#FF0000FF>Players With Different Versions:\n</color>" + message;
+                warningText.gameObject.SetActive(true);
             }
             else
             {
-                __instance.GameStartText.transform.localPosition = Vector3.zero;
-                __instance.GameStartText.transform.localScale = new Vector3(1.2f, 1.2f, 1f);
-                if (!__instance.GameStartText.text.StartsWith("Starting"))
-                {
-                    __instance.GameStartText.text = string.Empty;
-                    __instance.GameStartTextParent.SetActive(false);
-                }
+                warningText.gameObject.SetActive(false);
             }
         }
         // Start Timer
@@ -130,7 +158,28 @@ public static class GameStart
         {
             StartingTimer -= Time.deltaTime;
         }
+
+        if (AmongUsClient.Instance.AmHost && cancelButton != null)
+        {
+            cancelButton.gameObject.SetActive(__instance.startState == GameStartManager.StartingStates.Countdown);
+        }
+
         // Lobby timer
+        if (
+            !AmongUsClient.Instance.AmHost ||
+            !GameData.Instance ||
+            AmongUsClient.Instance.NetworkMode != NetworkModes.OnlineGame)
+        {
+            return;
+        }
+
+        timer = Mathf.Max(0f, timer -= Time.deltaTime);
+        int minutes = (int)timer / 60;
+        int seconds = (int)timer % 60;
+        string countDown = $"{minutes:00}:{seconds:00}";
+        if (timer <= 60) countDown = Helpers.Cs(Color.red, countDown);
+        timerText.text = countDown;
+
         if (!GameData.Instance || !__instance.PlayerCounter) return; // No instance
 
         if (!AmongUsClient.Instance) return;
@@ -157,7 +206,9 @@ public static class GameStart
                 if (client.Character == null) continue;
                 var dummyComponent = client.Character.GetComponent<DummyBehaviour>();
                 if (dummyComponent != null && dummyComponent.enabled)
+                {
                     continue;
+                }
 
                 if (!PlayerVersions.ContainsKey(client.Id))
                 {
@@ -172,6 +223,11 @@ public static class GameStart
                     continueStart = false;
                     break;
                 }
+            }
+
+            if (!continueStart)
+            {
+                __instance.ResetStartState();
             }
 
             if (CustomOptionHolder.RandomMap.GetBool() && continueStart)
@@ -203,9 +259,11 @@ public static class GameStart
                 }
 
                 float sum = probabilities.Sum();
-                if (sum == 0) return continueStart;  // All maps set to 0, why are you doing this???
+                // All maps set to 0, why are you doing this???
+                if (sum == 0) return continueStart;
                 for (int i = 0; i < probabilities.Length; i++)
-                {  // Normalize to [0,1]
+                {
+                    // Normalize to [0,1]
                     probabilities[i] /= sum;
                 }
                 float selection = (float)RebuildUs.Instance.Rnd.NextDouble();

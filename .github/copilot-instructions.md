@@ -59,12 +59,13 @@ Development conventions
 - When applying patches with Harmony, always create a file named `{ClassName}Patcher.cs` in the `Patches` folder and call functions within that file.
 - Implementing function logic directly within the `Patches` folder is discouraged. Create functions in their respective module or role implementation files and call them from the `Patches`.
 - When sending RPCs, use `RPCSender` as much as possible for smart and efficient communication.
+- When using RPCSender, surround the declaration with {} to explicitly dispose of it.
 - Strictly ensure weight reduction (lightweight performance and binary size).
 - Always use the latest C# language version features and syntax.
 - Public API: keep surface area small. Mark internals with InternalsVisibleTo for tests if needed.
 - Logging: use BepInEx logging facilities. Log at appropriate levels (Info, Warning, Error). Avoid verbose logs in Release.
 - Config: use BepInEx configuration APIs for user settings. Provide sensible defaults.
-- Translations: do not include translations in repository. English-only strings in code/resources. Localization will be handled via Crowdin by users.
+- Translations: do not include translations in repository. English-only strings in code/resources. Localization will be handled via GitLocalize by users.
   - Provide English text keys and default English values only.
 - Tests: prefer light unit tests for pure logic. Mock heavy game interactions.
 
@@ -72,6 +73,7 @@ Runtime integration notes
 - Target the game’s architecture and version the mod is intended for.
 - Keep IL2CPP compatibility in mind: some reflection techniques differ; use BepInEx helpers and the AmongUs.GameLibs.Steam APIs when possible.
 - Ensure the compiled assemblies are placed in the correct BepInEx plugin folder for testing with the game.
+- There is Among Us source code in folders starting with "Assembly-CSharp", so please refer to it.
 
 Submerged integration
 - If your mod requires integration with Submerged (https://github.com/SubmergedAmongUs/Submerged), add a clear compatibility section in your README and code comments.

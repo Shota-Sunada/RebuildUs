@@ -25,6 +25,7 @@ public static class GameStartManagerPatch
         GameStart.UpdatePostfix(__instance);
     }
 
+    [HarmonyPrefix]
     [HarmonyPatch(typeof(GameStartManager), nameof(GameStartManager.BeginGame))]
     public static bool BeginGamePrefix(GameStartManager __instance)
     {
