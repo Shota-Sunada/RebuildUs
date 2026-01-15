@@ -1,6 +1,4 @@
 {
-  "Options": {
-    "On": "On",
-    "Off": "Off"
-  }
+  "OptionsOn": "On",
+  "OptionsOff": "Off"
 }

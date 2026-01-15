@@ -284,11 +284,11 @@ public partial class CustomOption
 
         if (sel == "On")
         {
-            return "<color=#FFFF00FF>" + Tr.Get(("CustomOption", sel)) + "</color>";
+            return "<color=#FFFF00FF>" + Tr.Get(sel) + "</color>";
         }
         else if (sel == "Off")
         {
-            return "<color=#CCCCCCFF>" + Tr.Get(("CustomOption", sel)) + "</color>";
+            return "<color=#CCCCCCFF>" + Tr.Get(sel) + "</color>";
         }
 
         return Tr.Get(sel);
@@ -296,7 +296,7 @@ public partial class CustomOption
 
     public string GetName()
     {
-        return Tr.Get(("Role", NameKey));
+        return Tr.Get(NameKey);
     }
 
     public void UpdateSelection(int newSelection, bool notifyUsers = true)

@@ -14,7 +14,7 @@ public static class Tr
     public static void Initialize()
     {
         Translations.Clear();
-        for (var i = SupportedLangs.English; i <= SupportedLangs.Irish; i++)
+        foreach (SupportedLangs i in Enum.GetValues(typeof(SupportedLangs)))
         {
             var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream($"RebuildUs.Localization.Translations.{i}.json");
             if (stream == null) continue;
@@ -38,7 +38,7 @@ public static class Tr
             case JsonValueKind.Object:
                 foreach (var property in element.EnumerateObject())
                 {
-                    var key = string.IsNullOrEmpty(prefix) ? property.Name : $"{prefix}.{property.Name}";
+                    var key = string.IsNullOrEmpty(prefix) ? property.Name : $"{prefix}{property.Name}";
                     LoadElement(property.Value, key, lang);
                 }
                 break;
@@ -53,10 +53,7 @@ public static class Tr
         }
     }
 
-    public static string Get(string key, params object[] args) => GetInternal(key, args);
-    public static string Get((string category, string key) key, params object[] args) => GetInternal($"{key.category}.{key.key}", args);
-
-    private static string GetInternal(string key, object[] args)
+    public static string Get(string key, params object[] args)
     {
         if (string.IsNullOrEmpty(key)) return "";
 
@@ -64,17 +61,8 @@ public static class Tr
 
         if (!Translations.TryGetValue(key, out var langDic))
         {
-            // Try to find by suffix if not found (e.g. "OptionOn" -> "GameSettings.OptionOn")
-            var alternativeKey = Translations.Keys.FirstOrDefault(k => k.EndsWith("." + key));
-            if (alternativeKey != null)
-            {
-                langDic = Translations[alternativeKey];
-            }
-            else
-            {
-                Logger.LogWarn($"There are no translation data. key: {key}");
-                return key;
-            }
+            Logger.LogWarn($"There are no translation data. key: {key}");
+            return key;
         }
 
         if (!langDic.TryGetValue(lang, out var str))
