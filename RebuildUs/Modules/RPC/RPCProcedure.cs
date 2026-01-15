@@ -84,10 +84,10 @@ public static partial class RPCProcedure
         // );
     }
 
-    public static void VersionHandshake(int major, int minor, int build, int revision, Guid guid, int clientId)
+    public static void VersionHandshake(int major, int minor, int build, int revision, int clientId)
     {
         var ver = revision < 0 ? new Version(major, minor, build) : new Version(major, minor, build, revision);
-        GameStart.PlayerVersions[clientId] = new(ver, guid);
+        GameStart.PlayerVersions[clientId] = ver;
     }
 
     public static void FinishSetRole()
@@ -173,6 +173,12 @@ public static partial class RPCProcedure
         GameOptionsManager.Instance.currentNormalGameOptions.SetByte(ByteOptionNames.MapId, mapId);
     }
 
+    public static void ShareGamemode(byte gameMode)
+    {
+        MapOptions.GameMode = (CustomGamemodes)gameMode;
+        GameStart.SendGamemode = false;
+    }
+
     public static void SetGameStarting()
     {
         GameStart.StartingTimer = 5f;
@@ -185,14 +191,6 @@ public static partial class RPCProcedure
         {
             GameStartManager.Instance.ResetStartState();
         }
-    }
-
-    public static void ShareGamemode(byte gm)
-    {
-        MapOptions.GameMode = (CustomGamemodes)gm;
-        CustomOption.SettingsPaneCurrentButtons?.ForEach(x => x.gameObject?.Destroy());
-        CustomOption.SettingsPaneCurrentButtons?.Clear();
-        CustomOption.SettingsPaneCurrentButtonTypes?.Clear();
     }
 
     public static void FinishResetVariables(byte playerId)

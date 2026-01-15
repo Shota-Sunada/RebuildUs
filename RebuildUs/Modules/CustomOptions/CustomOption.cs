@@ -204,7 +204,7 @@ public partial class CustomOption
     public static void SwitchPreset(int newPreset)
     {
         Preset = newPreset;
-        foreach (CustomOption option in AllOptions)
+        foreach (var option in AllOptions)
         {
             if (option.Id == 0) continue;
 
@@ -220,15 +220,11 @@ public partial class CustomOption
         // make sure to reload all tabs, even the ones in the background, because they might have changed when the preset was switched!
         if (AmongUsClient.Instance?.AmHost == true)
         {
-            foreach (var entry in CurrentGOMs)
-            {
-                CustomOptionType optionType = (CustomOptionType)entry.Key;
-                GameOptionsMenu gom = entry.Value;
-                if (gom != null)
-                {
-                    UpdateGameOptionsMenu(optionType, gom);
-                }
-            }
+            UpdateGameOptionsMenu(CustomOptionType.General, GeneralTab.GetComponent<GameOptionsMenu>());
+            UpdateGameOptionsMenu(CustomOptionType.Impostor, ImpostorTab.GetComponent<GameOptionsMenu>());
+            UpdateGameOptionsMenu(CustomOptionType.Crewmate, CrewmateTab.GetComponent<GameOptionsMenu>());
+            UpdateGameOptionsMenu(CustomOptionType.Neutral, NeutralTab.GetComponent<GameOptionsMenu>());
+            UpdateGameOptionsMenu(CustomOptionType.Modifier, ModifierTab.GetComponent<GameOptionsMenu>());
         }
     }
 
@@ -314,7 +310,7 @@ public partial class CustomOption
                 Selection = newSelection;
                 if (GameStartManager.Instance != null && GameStartManager.Instance.LobbyInfoPane != null && GameStartManager.Instance.LobbyInfoPane.LobbyViewSettingsPane != null && GameStartManager.Instance.LobbyInfoPane.LobbyViewSettingsPane.gameObject.activeSelf)
                 {
-                    SettingsPaneChangeTab(GameStartManager.Instance.LobbyInfoPane.LobbyViewSettingsPane, GameStartManager.Instance.LobbyInfoPane.LobbyViewSettingsPane.currentTab);
+                    SettingsPaneChangeTab(GameStartManager.Instance.LobbyInfoPane.LobbyViewSettingsPane, (PanePage)GameStartManager.Instance.LobbyInfoPane.LobbyViewSettingsPane.currentTab);
                 }
             }
             catch { }
@@ -346,18 +342,53 @@ public partial class CustomOption
             }
         }
         else if (Id == 0 && AmongUsClient.Instance?.AmHost == true && PlayerControl.LocalPlayer)
-        {  // Share the preset switch for random maps, even if the menu isn't open!
+        {
+            // Share the preset switch for random maps, even if the menu isn't open!
             SwitchPreset(Selection);
-            ShareOptionSelections();// Share all selections
+            ShareOptionSelections(); // Share all selections
         }
 
         if (AmongUsClient.Instance?.AmHost == true)
         {
-            var currentTab = SettingMenuCurrentTabs.FirstOrDefault(x => x.active).GetComponent<GameOptionsMenu>();
-            if (currentTab != null)
+            if (GeneralTab.active)
             {
-                var optionType = AllOptions.First(x => x.OptionBehavior == currentTab.Children[0]).Type;
-                UpdateGameOptionsMenu(optionType, currentTab);
+                var tab = GeneralTab.GetComponent<GameOptionsMenu>();
+                if (tab != null)
+                {
+                    UpdateGameOptionsMenu(CustomOptionType.General, tab);
+                }
+            }
+            else if (ImpostorTab.active)
+            {
+                var tab = ImpostorTab.GetComponent<GameOptionsMenu>();
+                if (tab != null)
+                {
+                    UpdateGameOptionsMenu(CustomOptionType.Impostor, tab);
+                }
+            }
+            else if (CrewmateTab.active)
+            {
+                var tab = CrewmateTab.GetComponent<GameOptionsMenu>();
+                if (tab != null)
+                {
+                    UpdateGameOptionsMenu(CustomOptionType.Crewmate, tab);
+                }
+            }
+            else if (NeutralTab.active)
+            {
+                var tab = NeutralTab.GetComponent<GameOptionsMenu>();
+                if (tab != null)
+                {
+                    UpdateGameOptionsMenu(CustomOptionType.Neutral, tab);
+                }
+            }
+            else if (ModifierTab.active)
+            {
+                var tab = ModifierTab.GetComponent<GameOptionsMenu>();
+                if (tab != null)
+                {
+                    UpdateGameOptionsMenu(CustomOptionType.Modifier, tab);
+                }
             }
         }
     }

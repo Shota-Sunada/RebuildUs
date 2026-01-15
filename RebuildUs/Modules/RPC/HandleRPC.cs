@@ -1,3 +1,5 @@
+using RebuildUs;
+
 namespace RebuildUs.Modules.RPC;
 
 public static partial class RPCProcedure
@@ -25,8 +27,6 @@ public static partial class RPCProcedure
                 byte major = reader.ReadByte();
                 byte minor = reader.ReadByte();
                 byte patch = reader.ReadByte();
-                float timer = reader.ReadSingle();
-                if (!AmongUsClient.Instance.AmHost && timer >= 0f) GameStart.Timer = timer;
                 int versionOwnerId = reader.ReadPackedInt32();
                 byte revision = 0xFF;
                 Guid guid;
@@ -42,7 +42,13 @@ public static partial class RPCProcedure
                 {
                     guid = new Guid(new byte[16]);
                 }
-                VersionHandshake(major, minor, patch, revision == 0xFF ? -1 : revision, guid, versionOwnerId);
+                VersionHandshake(major, minor, patch, revision == 0xFF ? -1 : revision, versionOwnerId);
+
+                // If I am host, send my version back to the person who sent it
+                if (AmongUsClient.Instance.AmHost && versionOwnerId != AmongUsClient.Instance.ClientId)
+                {
+                    Helpers.ShareGameVersion((byte)versionOwnerId);
+                }
                 break;
             case CustomRPC.UseUncheckedVent:
                 UseUncheckedVent(reader.ReadPackedInt32(), reader.ReadByte(), reader.ReadByte());

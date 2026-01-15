@@ -9,7 +9,7 @@ public static class TranslationControllerPatch
     [HarmonyPrefix]
     [HarmonyPriority(Priority.Last)]
     [HarmonyPatch(typeof(TranslationController), nameof(TranslationController.GetString), [typeof(StringNames), typeof(Il2CppReferenceArray<Il2CppSystem.Object>)])]
-    public static bool GetStringPrefix(ref string __result, ref StringNames id)
+    public static bool GetStringPrefix(ref string __result, StringNames id)
     {
         return true;
     }

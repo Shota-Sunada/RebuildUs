@@ -632,10 +632,9 @@ public static class EndGameMain
     public static void UncheckedEndGame(GameOverReason reason)
     {
         GameManager.Instance.RpcEndGame(reason, false);
-        /*MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.UncheckedEndGame, Hazel.SendOption.Reliable, -1);
-        writer.Write((byte)reason);
-        AmongUsClient.Instance.FinishRpcImmediately(writer);
-        RPCProcedure.uncheckedEndGame((byte)reason);*/
+        using var sender = new RPCSender(CachedPlayer.LocalPlayer.PlayerControl.NetId, CustomRPC.UncheckedEndGame);
+        sender.Write((byte)reason);
+        RPCProcedure.UncheckedEndGame((byte)reason);
     }
 
     public static void UncheckedEndGame(ECustomGameOverReason reason)

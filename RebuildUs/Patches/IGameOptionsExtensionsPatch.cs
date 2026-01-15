@@ -23,7 +23,7 @@ public static class IGameOptionsExtensionsPatch
     {
         if (GameOptionsManager.Instance.CurrentGameOptions.GameMode == AmongUs.GameOptions.GameModes.Normal)
         {
-            // Ignore Vanilla impostor limits in TOR Games.
+            // Ignore Vanilla impostor limits in RebuildUs Games.
             __result = Mathf.Clamp(GameOptionsManager.Instance.CurrentGameOptions.NumImpostors, 1, 3);
         }
     }

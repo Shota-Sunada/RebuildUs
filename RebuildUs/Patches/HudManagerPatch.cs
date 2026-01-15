@@ -16,8 +16,6 @@ public static class HudManagerPatch
     [HarmonyPatch(typeof(HudManager), nameof(HudManager.Update))]
     public static void UpdatePostfix(HudManager __instance)
     {
-        CustomOption.HudSettingsManager.UpdateHudButtons(__instance);
-        CustomOption.HudSettingsManager.ToggleSummaryButtonHandler(__instance);
     }
 
     [HarmonyPrefix]

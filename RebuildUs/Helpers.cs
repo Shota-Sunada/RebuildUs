@@ -536,18 +536,16 @@ public static class Helpers
         }
     }
 
-    public static void ShareGameVersion()
+    public static void ShareGameVersion(byte hostId)
     {
-        MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.VersionHandshake, SendOption.Reliable, -1);
-        writer.Write((byte)RebuildUs.Instance.Version.Major);
-        writer.Write((byte)RebuildUs.Instance.Version.Minor);
-        writer.Write((byte)RebuildUs.Instance.Version.Build);
-        writer.Write(AmongUsClient.Instance.AmHost ? GameStart.Timer : -1f);
-        writer.WritePacked(AmongUsClient.Instance.ClientId);
-        writer.Write((byte)(RebuildUs.Instance.Version.Revision < 0 ? 0xFF : RebuildUs.Instance.Version.Revision));
-        writer.Write(Assembly.GetExecutingAssembly().ManifestModule.ModuleVersionId.ToByteArray());
-        AmongUsClient.Instance.FinishRpcImmediately(writer);
-        RPCProcedure.VersionHandshake(RebuildUs.Instance.Version.Major, RebuildUs.Instance.Version.Minor, RebuildUs.Instance.Version.Build, RebuildUs.Instance.Version.Revision, Assembly.GetExecutingAssembly().ManifestModule.ModuleVersionId, AmongUsClient.Instance.ClientId);
+        using var sender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.VersionHandshake, hostId);
+        sender.Write((byte)RebuildUs.Instance.Version.Major);
+        sender.Write((byte)RebuildUs.Instance.Version.Minor);
+        sender.Write((byte)RebuildUs.Instance.Version.Build);
+        sender.WritePacked(AmongUsClient.Instance.ClientId);
+        sender.Write((byte)(RebuildUs.Instance.Version.Revision < 0 ? 0xFF : RebuildUs.Instance.Version.Revision));
+        sender.Write(Assembly.GetExecutingAssembly().ManifestModule.ModuleVersionId.ToByteArray());
+        RPCProcedure.VersionHandshake(RebuildUs.Instance.Version.Major, RebuildUs.Instance.Version.Minor, RebuildUs.Instance.Version.Build, RebuildUs.Instance.Version.Revision, AmongUsClient.Instance.ClientId);
     }
 
     public static string PadRightV2(this object text, int num)
