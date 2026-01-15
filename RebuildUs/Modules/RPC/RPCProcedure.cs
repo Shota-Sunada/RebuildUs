@@ -84,10 +84,10 @@ public static partial class RPCProcedure
         // );
     }
 
-    public static void VersionHandshake(int major, int minor, int build, int revision, Guid guid, int clientId)
+    public static void VersionHandshake(int major, int minor, int build, int revision, int clientId)
     {
         var ver = revision < 0 ? new Version(major, minor, build) : new Version(major, minor, build, revision);
-        GameStart.PlayerVersions[clientId] = new(ver, guid);
+        GameStart.PlayerVersions[clientId] = ver;
     }
 
     public static void FinishSetRole()

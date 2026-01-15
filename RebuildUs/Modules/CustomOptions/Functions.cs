@@ -613,7 +613,7 @@ public partial class CustomOption
                     hudString += (!hideExtras ? "" : "Page 1: Vanilla Settings \n\n") + vanillaSettings;
                     break;
                 case 1:
-                    hudString += "Page 2: The Other Roles Settings \n" + BuildOptionsOfType(CustomOptionType.General, false);
+                    hudString += "Page 2: RebuildUs Settings \n" + BuildOptionsOfType(CustomOptionType.General, false);
                     break;
                 case 2:
                     hudString += "Page 3: Role and Modifier Rates \n" + BuildRoleOptions();
@@ -733,10 +733,6 @@ public partial class CustomOption
         {
             RebuildUs.OptionsPage = 6;
         }
-        if (Input.GetKeyDown(KeyCode.F1))
-            HudSettingsManager.ToggleSettings(HudManager.Instance);
-        if (Input.GetKeyDown(KeyCode.F2) && LobbyBehaviour.Instance)
-            HudSettingsManager.ToggleSummary(HudManager.Instance);
         if (RebuildUs.OptionsPage >= MaxPage) RebuildUs.OptionsPage = 0;
     }
 }

@@ -65,6 +65,14 @@
       }
     },
     {
+      "label": "Start Debug 2",
+      "command": "powershell -ExecutionPolicy Bypass .\\start-debug-2.ps1",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      }
+    },
+    {
       "label": "Start Debug 4",
       "command": "powershell -ExecutionPolicy Bypass .\\start-debug-4.ps1",
       "group": {

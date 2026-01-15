@@ -536,17 +536,16 @@ public static class Helpers
         }
     }
 
-    public static void ShareGameVersion()
+    public static void ShareGameVersion(byte hostId)
     {
-        using var sender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.VersionHandshake);
+        using var sender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.VersionHandshake, hostId);
         sender.Write((byte)RebuildUs.Instance.Version.Major);
         sender.Write((byte)RebuildUs.Instance.Version.Minor);
         sender.Write((byte)RebuildUs.Instance.Version.Build);
         sender.WritePacked(AmongUsClient.Instance.ClientId);
-        sender.Write(AmongUsClient.Instance.AmHost ? GameStart.Timer : -1f);
         sender.Write((byte)(RebuildUs.Instance.Version.Revision < 0 ? 0xFF : RebuildUs.Instance.Version.Revision));
         sender.Write(Assembly.GetExecutingAssembly().ManifestModule.ModuleVersionId.ToByteArray());
-        RPCProcedure.VersionHandshake(RebuildUs.Instance.Version.Major, RebuildUs.Instance.Version.Minor, RebuildUs.Instance.Version.Build, RebuildUs.Instance.Version.Revision, Assembly.GetExecutingAssembly().ManifestModule.ModuleVersionId, AmongUsClient.Instance.ClientId);
+        RPCProcedure.VersionHandshake(RebuildUs.Instance.Version.Major, RebuildUs.Instance.Version.Minor, RebuildUs.Instance.Version.Build, RebuildUs.Instance.Version.Revision, AmongUsClient.Instance.ClientId);
     }
 
     public static string PadRightV2(this object text, int num)
