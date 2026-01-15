@@ -18,61 +18,81 @@ public static class RoleAssignment
 
         if (!ShipStatus.Instance)
         {
-            int num = Mathf.Clamp(GameOptionsManager.Instance.currentNormalGameOptions.GetByte(AmongUs.GameOptions.ByteOptionNames.MapId), 0, Constants.MapNames.Length - 1);
+            var index = Mathf.Clamp(GameOptionsManager.Instance.CurrentGameOptions.GetByte(ByteOptionNames.MapId), 0, Constants.MapNames.Length - 1);
             try
             {
-                if (num == 0 && AprilFoolsMode.ShouldFlipSkeld())
+                if (index == 0 && AprilFoolsMode.ShouldFlipSkeld())
                 {
-                    num = 3;
+                    index = 3;
                 }
-                else if (num == 3 && !AprilFoolsMode.ShouldFlipSkeld())
+                else if (index == 3)
                 {
-                    num = 0;
+                    if (!AprilFoolsMode.ShouldFlipSkeld())
+                    {
+                        index = 0;
+                    }
                 }
             }
             catch (Exception ex)
             {
-                __instance.logger.Error("AmongUsClient::CoStartGame: Exception:", null);
-                Logger.LogError($"{ex.Message}");
+                Logger.LogError("AmongUsClient::CoStartGame: Exception:");
+                var client2 = __instance;
+                Logger.LogError(ex);
+                Logger.LogError(client2);
             }
-            AsyncOperationHandle<GameObject> shipPrefab = __instance.ShipPrefabs[num].InstantiateAsync(null, false);
-            yield return shipPrefab;
-            ShipStatus.Instance = shipPrefab.Result.GetComponent<ShipStatus>();
-            shipPrefab = default;
+            __instance.ShipLoadingAsyncHandle = __instance.ShipPrefabs[index].InstantiateAsync(null, false);
+            yield return __instance.ShipLoadingAsyncHandle;
+            var result = __instance.ShipLoadingAsyncHandle.Result;
+            __instance.ShipLoadingAsyncHandle = new AsyncOperationHandle<GameObject>();
+            ShipStatus.Instance = result.GetComponent<ShipStatus>();
+            __instance.Spawn(ShipStatus.Instance);
         }
-        __instance.Spawn(ShipStatus.Instance, -2, InnerNet.SpawnFlags.None);
-        float timer = 0f;
-        for (; ; )
+
+        var start = DateTime.Now;
+        while (true)
         {
-            var stopWaiting = true;
-            var allClients = __instance.allClients;
-            lock (allClients)
+            var flag = true;
+            var num = 10;
+            var totalSeconds = (float)(DateTime.Now - start).TotalSeconds;
+            if (GameOptionsManager.Instance.CurrentGameOptions.GetByte(ByteOptionNames.MapId) is 4 or 5)
             {
-                for (int i = 0; i < __instance.allClients.Count; i++)
+                num = 15;
+            }
+            lock (__instance.allClients)
+            {
+                for (int index = 0; index < __instance.allClients.Count; ++index)
                 {
-                    InnerNet.ClientData clientData = __instance.allClients[i];
-                    if (clientData.Id != __instance.ClientId && !clientData.IsReady)
+                    var allClient = __instance.allClients[index];
+                    if (allClient.Id != __instance.ClientId && !allClient.IsReady)
                     {
-                        if (timer < 10 /*__instance.MAX_CLIENT_WAIT_TIME*/)
+                        if (totalSeconds < num)
                         {
-                            stopWaiting = false;
+                            flag = false;
                         }
                         else
                         {
-                            __instance.SendLateRejection(clientData.Id, DisconnectReasons.Error);
-                            clientData.IsReady = true;
-                            __instance.OnPlayerLeft(clientData, DisconnectReasons.Error);
+                            __instance.SendLateRejection(allClient.Id, DisconnectReasons.ClientTimeout);
+                            allClient.IsReady = true;
+                            __instance.OnPlayerLeft(allClient, DisconnectReasons.ClientTimeout);
                         }
                     }
                 }
             }
-            yield return null;
-            if (stopWaiting)
+            if (totalSeconds > 1.0 && totalSeconds < num)
+            {
+                DestroyableSingleton<LoadingBarManager>.Instance.ToggleLoadingBar(true);
+                DestroyableSingleton<LoadingBarManager>.Instance.SetLoadingPercent((float)((double)totalSeconds / num * 100.0), StringNames.LoadingBarGameStartWaitingPlayers);
+            }
+            if (!flag)
+            {
+                yield return new WaitForEndOfFrame();
+            }
+            else
             {
                 break;
             }
-            timer += Time.deltaTime;
         }
+        DestroyableSingleton<LoadingBarManager>.Instance.ToggleLoadingBar(false);
         DestroyableSingleton<RoleManager>.Instance.SelectRoles();
 
         // 独自処理開始
@@ -92,6 +112,7 @@ public static class RoleAssignment
 
         ShipStatus.Instance.Begin();
         __instance.SendClientReady();
+
         yield break;
     }
     public static Dictionary<byte, bool> CheckList;

@@ -184,19 +184,20 @@ public static class Intro
         // }
 
         // 従来処理
-        SoundManager.Instance.PlaySound(CachedPlayer.LocalPlayer.PlayerControl.Data.Role.IntroSound, false, 1f);
+        SoundManager.Instance.PlaySound(PlayerControl.LocalPlayer.Data.Role.IntroSound, false);
         __instance.YouAreText.gameObject.SetActive(true);
         __instance.RoleText.gameObject.SetActive(true);
         __instance.RoleBlurbText.gameObject.SetActive(true);
 
         if (__instance.ourCrewmate == null)
         {
-            __instance.ourCrewmate = __instance.CreatePlayer(0, 1, CachedPlayer.LocalPlayer.PlayerControl.Data, false);
+            __instance.ourCrewmate = __instance.CreatePlayer(0, 1, PlayerControl.LocalPlayer.Data, false);
             __instance.ourCrewmate.gameObject.SetActive(false);
         }
         __instance.ourCrewmate.gameObject.SetActive(true);
-        __instance.ourCrewmate.transform.localPosition = new Vector3(0f, -1.05f, -18f);
+        __instance.ourCrewmate.transform.localPosition = new Vector3(0.0f, -1.05f, -18f);
         __instance.ourCrewmate.transform.localScale = new Vector3(1f, 1f, 1f);
+        __instance.ourCrewmate.ToggleName(false);
         yield return new WaitForSeconds(2.5f);
         __instance.YouAreText.gameObject.SetActive(false);
         __instance.RoleText.gameObject.SetActive(false);

@@ -27,10 +27,6 @@ public static class GameStart
         VersionSent = false;
         // Reset kicking timer
         KickingTimer = 0f;
-        // Copy lobby code
-        var code = InnerNet.GameCode.IntToGameName(AmongUsClient.Instance.GameId);
-        GUIUtility.systemCopyBuffer = code;
-        LobbyCodeText = FastDestroyableSingleton<TranslationController>.Instance.GetString(StringNames.RoomCode, new Il2CppReferenceArray<Il2CppSystem.Object>(0)) + "\r\n" + code;
     }
 
     public static void UpdatePostfix(GameStartManager __instance)
