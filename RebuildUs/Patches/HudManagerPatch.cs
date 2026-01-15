@@ -8,8 +8,6 @@ public static class HudManagerPatch
     public static void UpdatePrefix(HudManager __instance)
     {
         CustomOption.HudSettingsManager.UpdateScrollerPosition(__instance);
-        CustomOption.HudSettingsManager.UpdateHudSettings(__instance);
-        CustomOption.HudSettingsManager.UpdateEndGameSummary(__instance);
     }
 
     [HarmonyPostfix]
