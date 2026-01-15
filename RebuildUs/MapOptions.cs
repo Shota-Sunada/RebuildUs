@@ -10,12 +10,15 @@ namespace RebuildUs
         public static bool BlockSkippingInEmergencyMeetings = false;
         public static bool NoVoteIsSelfVote = false;
         public static bool HidePlayerNames = false;
+        public static bool AllowParallelMedBayScans = false;
+        public static bool HideOutOfSightNametags = false;
+
         public static bool GhostsSeeRoles = true;
         public static bool GhostsSeeModifier = true;
         public static bool GhostsSeeInformation = true;
         public static bool GhostsSeeVotes = true;
         public static bool ShowRoleSummary = true;
-        public static bool AllowParallelMedBayScans = false;
+
         public static bool ShowLighterDarker = true;
         public static bool EnableSoundEffects = true;
         public static bool EnableHorseMode = false;
@@ -39,12 +42,13 @@ namespace RebuildUs
             VentsToSeal = [];
             PlayerIcons = []; ;
 
-            // maxNumberOfMeetings = Mathf.RoundToInt(CustomOptionHolder.maxNumberOfMeetings.getSelection());
-            // blockSkippingInEmergencyMeetings = CustomOptionHolder.blockSkippingInEmergencyMeetings.getBool();
-            // noVoteIsSelfVote = CustomOptionHolder.noVoteIsSelfVote.getBool();
-            // hidePlayerNames = CustomOptionHolder.hidePlayerNames.getBool();
-            // allowParallelMedBayScans = CustomOptionHolder.allowParallelMedBayScans.getBool();
-            // shieldFirstKill = CustomOptionHolder.shieldFirstKill.getBool();
+            MaxNumberOfMeetings = Mathf.RoundToInt(CustomOptionHolder.MaxNumberOfMeetings.GetSelection());
+            BlockSkippingInEmergencyMeetings = CustomOptionHolder.BlockSkippingInEmergencyMeetings.GetBool();
+            NoVoteIsSelfVote = CustomOptionHolder.NoVoteIsSelfVote.GetBool();
+            HidePlayerNames = CustomOptionHolder.HidePlayerNames.GetBool();
+            AllowParallelMedBayScans = CustomOptionHolder.AllowParallelMedBayScans.GetBool();
+            HideOutOfSightNametags = CustomOptionHolder.HideOutOfSightNametags.GetBool();
+            // shieldFirstKill = CustomOptionHolder.shieldFirstKill.GetBool();
             // firstKillPlayer = null;
         }
 

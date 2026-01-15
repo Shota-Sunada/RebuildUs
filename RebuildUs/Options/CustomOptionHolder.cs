@@ -29,9 +29,9 @@ public static partial class CustomOptionHolder
 
     #region GAME OPTIONS
     public static CustomOption MaxNumberOfMeetings;
-    public static CustomOption BlockSkippingInEmergencyMeeting;
+    public static CustomOption BlockSkippingInEmergencyMeetings;
     public static CustomOption NoVoteIsSelfVote;
-    public static CustomOption HidePlayerName;
+    public static CustomOption HidePlayerNames;
     public static CustomOption AllowParallelMedBayScans;
     public static CustomOption HideOutOfSightNametags;
     public static CustomOption RefundVotesOnDeath;
@@ -184,13 +184,13 @@ public static partial class CustomOptionHolder
 
         #region GAME OPTIONS
         MaxNumberOfMeetings = CustomOption.Header(20, CustomOptionType.General, "MaxNumberOfMeetings", 10, 0, 15, 1, "GameOptions");
-        BlockSkippingInEmergencyMeeting = CustomOption.Normal(21, CustomOptionType.General, "BlockSkippingInEmergencyMeeting", false);
+        BlockSkippingInEmergencyMeetings = CustomOption.Normal(21, CustomOptionType.General, "BlockSkippingInEmergencyMeetings", false);
         NoVoteIsSelfVote = CustomOption.Normal(22, CustomOptionType.General, "NoVoteIsSelfVote", false);
-        HidePlayerName = CustomOption.Normal(23, CustomOptionType.General, "HidePlayerName", false);
+        HidePlayerNames = CustomOption.Normal(23, CustomOptionType.General, "HidePlayerNames", false);
         AllowParallelMedBayScans = CustomOption.Normal(24, CustomOptionType.General, "AllowParallelMedBayScans", false);
         HideOutOfSightNametags = CustomOption.Normal(25, CustomOptionType.General, "HideOutOfSightNametags", true);
         RefundVotesOnDeath = CustomOption.Normal(26, CustomOptionType.General, "RefundVotesOnDeath", true);
-        DelayBeforeMeeting = CustomOption.Normal(27, CustomOptionType.General, "DelayBeforeMeeting", true);
+        DelayBeforeMeeting = CustomOption.Normal(27, CustomOptionType.General, "DelayBeforeMeeting", 0f, 0f, 10f, 0.25f);
         DisableVentAnimation = CustomOption.Normal(28, CustomOptionType.General, "DisableVentAnimation", false);
         StopCooldownOnFixingElecSabotage = CustomOption.Normal(29, CustomOptionType.General, "StopCooldownOnFixingElecSabotage", true);
         EnableHawkMode = CustomOption.Normal(30, CustomOptionType.General, "EnableHawkMode", true);

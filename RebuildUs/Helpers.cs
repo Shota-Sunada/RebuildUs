@@ -18,6 +18,14 @@ public enum MurderAttemptResult
 
 public static class Helpers
 {
+    public static bool RefundVotes
+    {
+        get
+        {
+            return CustomOptionHolder.RefundVotesOnDeath.GetBool();
+        }
+    }
+
     public static object TryCast(this Il2CppObjectBase self, Type type)
     {
         return AccessTools.Method(self.GetType(), nameof(Il2CppObjectBase.TryCast)).MakeGenericMethod(type).Invoke(self, []);
@@ -71,7 +79,6 @@ public static class Helpers
     }
 
     public static bool RolesEnabled { get { return true; } }
-    public static bool RefundVotes { get { return true; } }
 
     public static PlayerControl PlayerById(byte id)
     {
@@ -558,4 +565,31 @@ public static class Helpers
 
     public static string RemoveHtml(this string text) => Regex.Replace(text, "<[^>]*?>", "");
 
+    public static bool HidePlayerName(PlayerControl target)
+    {
+        return HidePlayerName(CachedPlayer.LocalPlayer.PlayerControl, target);
+    }
+
+    public static bool HidePlayerName(PlayerControl source, PlayerControl target)
+    {
+        if (source == target) return false;
+        if (source == null || target == null) return true;
+        if (source.IsDead()) return false;
+        if (target.IsDead()) return true;
+        // if (Camouflager.camouflageTimer > 0f) return true; // No names are visible
+        // if (!source.isImpostor() && Ninja.isStealthed(target)) return true; // Hide ninja nametags from non-impostors
+        if (MapOptions.HideOutOfSightNametags && GameStarted && MapUtilities.CachedShipStatus != null && source.transform != null && target.transform != null)
+        {
+            float distMod = 1.025f;
+            float distance = Vector3.Distance(source.transform.position, target.transform.position);
+            bool anythingBetween = PhysicsHelpers.AnythingBetween(source.GetTruePosition(), target.GetTruePosition(), Constants.ShadowMask, false);
+
+            if (distance > MapUtilities.CachedShipStatus.CalculateLightRadius(source.Data) * distMod || anythingBetween) return true;
+        }
+        if (!MapOptions.HidePlayerNames) return false; // All names are visible
+        if (source.IsTeamImpostor() && (target.IsTeamImpostor() || target.IsRole(ERoleType.Spy) || (target.IsRole(ERoleType.Sidekick) && Sidekick.GetRole(target).WasTeamRed) || (target.IsRole(ERoleType.Jackal) && Jackal.GetRole(target).WasTeamRed))) return false; // Members of team Impostors see the names of Impostors/Spies
+        // if (source.GetPartner() == target) return false; // Members of team Lovers see the names of each other
+        if ((source.IsRole(ERoleType.Jackal) || source.IsRole(ERoleType.Sidekick)) && (target.IsRole(ERoleType.Jackal) || target.IsRole(ERoleType.Sidekick) || target == Jackal.GetRole(target).FakeSidekick)) return false; // Members of team Jackal see the names of each other
+        return true;
+    }
 }
