@@ -31,6 +31,8 @@ public enum CustomOptionType
 }
 public partial class CustomOption
 {
+    public const int CUSTOM_OPTION_PRE_ID = 6000;
+
     public static List<CustomOption> AllOptions = [];
     public static int Preset = 0;
 
@@ -304,7 +306,7 @@ public partial class CustomOption
         newSelection = Mathf.Clamp((newSelection + Selections.Length) % Selections.Length, 0, Selections.Length - 1);
         if (AmongUsClient.Instance?.AmClient == true && notifyUsers && Selection != newSelection)
         {
-            DestroyableSingleton<HudManager>.Instance.Notifier.AddSettingsChangeMessage((StringNames)(Id + 6000), Selections[newSelection].ToString(), false);
+            DestroyableSingleton<HudManager>.Instance.Notifier.AddSettingsChangeMessage((StringNames)(Id + CUSTOM_OPTION_PRE_ID), Selections[newSelection].ToString(), false);
             try
             {
                 Selection = newSelection;

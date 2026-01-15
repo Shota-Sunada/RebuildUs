@@ -11,7 +11,19 @@ public static class TranslationControllerPatch
     [HarmonyPatch(typeof(TranslationController), nameof(TranslationController.GetString), [typeof(StringNames), typeof(Il2CppReferenceArray<Il2CppSystem.Object>)])]
     public static bool GetStringPrefix(ref string __result, StringNames id)
     {
-        return true;
+        if ((int)id < CustomOption.CUSTOM_OPTION_PRE_ID)
+        {
+            return true;
+        }
+        string ourString = "";
+
+        // For now only do this in custom options.
+        int idInt = (int)id - CustomOption.CUSTOM_OPTION_PRE_ID;
+        var opt = CustomOption.AllOptions.FirstOrDefault(x => x.Id == idInt);
+        ourString = opt?.NameKey;
+
+        __result = ourString;
+        return false;
     }
 
     [HarmonyPrefix]
