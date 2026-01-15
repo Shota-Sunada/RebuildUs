@@ -97,16 +97,19 @@ public static class RoleAssignment
 
         // 独自処理開始
         CreateCheckList();
-        using var sender = new RPCSender(CachedPlayer.LocalPlayer.PlayerControl.NetId, CustomRPC.ResetVariables);
-        RPCProcedure.ResetVariables();
+        {
+            using var sender = new RPCSender(CachedPlayer.LocalPlayer.PlayerControl.NetId, CustomRPC.ResetVariables);
+            RPCProcedure.ResetVariables();
+        }
         yield return WaitResetVariables().WrapToIl2Cpp();
 
         if (!DestroyableSingleton<TutorialManager>.InstanceExists && CustomOptionHolder.ActivateRoles.GetBool()) // Don't assign Roles in Tutorial or if deactivated
         {
             AssignRoles();
-            using var sender2 = new RPCSender(CachedPlayer.LocalPlayer.PlayerControl.NetId, CustomRPC.FinishSetRole);
-            RPCProcedure.ResetVariables();
-            RPCProcedure.FinishSetRole();
+            {
+                using var sender2 = new RPCSender(CachedPlayer.LocalPlayer.PlayerControl.NetId, CustomRPC.FinishSetRole);
+                RPCProcedure.FinishSetRole();
+            }
         }
         // 独自処理終了
 
@@ -121,6 +124,7 @@ public static class RoleAssignment
         CheckList = [];
         foreach (var player in PlayerControl.AllPlayerControls)
         {
+            if (player.Data == null || player.Data.Disconnected) continue;
             CheckList.Add(player.PlayerId, false);
         }
     }
