@@ -420,14 +420,14 @@ public static class RoleAssignment
         //     }
         // }
 
-        // // Assign Mafia
-        // if (data.impostors.Count >= 3 && data.maxImpostorRoles >= 3 && (rnd.Next(1, 101) <= CustomOptionHolder.mafiaSpawnRate.getSelection() * 10))
-        // {
-        //     setRoleToRandomPlayer((byte)ERoleType.Godfather, data.impostors);
-        //     setRoleToRandomPlayer((byte)ERoleType.Janitor, data.impostors);
-        //     setRoleToRandomPlayer((byte)ERoleType.Mafioso, data.impostors);
-        //     data.maxImpostorRoles -= 3;
-        // }
+        // Assign Mafia
+        if (data.Impostors.Count >= 3 && data.MaxImpostorRoles >= 3 && (RebuildUs.Instance.Rnd.Next(1, 101) <= CustomOptionHolder.mafiaSpawnRate.GetSelection() * 10))
+        {
+            SetRoleToRandomPlayer((byte)RoleType.Godfather, data.Impostors);
+            SetRoleToRandomPlayer((byte)RoleType.Janitor, data.Impostors);
+            SetRoleToRandomPlayer((byte)RoleType.Mafioso, data.Impostors);
+            data.MaxImpostorRoles -= 3;
+        }
 
         // // Assign Bomber
         // if (data.impostors.Count >= 2 && data.maxImpostorRoles >= 2 && (rnd.Next(1, 101) <= CustomOptionHolder.bomberSpawnRate.getSelection() * 10))

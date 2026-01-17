@@ -3,6 +3,7 @@ using RebuildUs.Modules.RPC;
 using RebuildUs.Players;
 using RebuildUs.Roles;
 using RebuildUs.Roles.Crewmate;
+using RebuildUs.Roles.Impostor;
 using RebuildUs.Roles.Neutral;
 using RebuildUs.Utilities;
 
@@ -104,34 +105,50 @@ public static class PlayerControlHelpers
     {
         bool roleCouldUse = false;
         if (player.IsRole(RoleType.Engineer))
+        {
             roleCouldUse = true;
+        }
         else if (Jackal.CanUseVents && player.IsRole(RoleType.Jackal))
+        {
             roleCouldUse = true;
+        }
         else if (Sidekick.CanUseVents && player.IsRole(RoleType.Sidekick))
+        {
             roleCouldUse = true;
+        }
         else if (Spy.CanEnterVents && player.IsRole(RoleType.Spy))
+        {
             roleCouldUse = true;
+        }
         // else if (Madmate.canEnterVents && player.hasModifier(ModifierType.Madmate))
         //     roleCouldUse = true;
         // else if (CreatedMadmate.canEnterVents && player.hasModifier(ModifierType.CreatedMadmate))
         //     roleCouldUse = true;
         else if (Vulture.CanUseVents && player.IsRole(RoleType.Vulture))
+        {
             roleCouldUse = true;
+        }
         // else if (player.IsRole(RoleType.JekyllAndHyde) && !JekyllAndHyde.isJekyll())
         //     roleCouldUse = true;
         // else if (player.IsRole(RoleType.Moriarty))
         //     roleCouldUse = true;
-        // else if (player.Data?.Role != null && player.Data.Role.CanVent)
-        // {
-        //     if (!Janitor.canVent && player.IsRole(RoleType.Janitor))
-        //         roleCouldUse = false;
-        //     else if (!Mafioso.canVent && player.IsRole(RoleType.Mafioso))
-        //         roleCouldUse = false;
-        //     else if (!Ninja.canUseVents && player.IsRole(RoleType.Ninja))
-        //         roleCouldUse = false;
-        //     else
-        //         roleCouldUse = true;
-        // }
+        else if (player.Data?.Role != null && player.Data.Role.CanVent)
+        {
+            if (!Mafia.Janitor.canVent && player.IsRole(RoleType.Janitor))
+            {
+                roleCouldUse = false;
+            }
+            else if (!Mafia.Mafioso.canVent && player.IsRole(RoleType.Mafioso))
+            {
+                roleCouldUse = false;
+            }
+            // else if (!Ninja.canUseVents && player.IsRole(RoleType.Ninja))
+            //     roleCouldUse = false;
+            else
+            {
+                roleCouldUse = true;
+            }
+        }
         return roleCouldUse;
     }
 
@@ -143,11 +160,17 @@ public static class PlayerControlHelpers
         // else if (CreatedMadmate.canSabotage && player.hasModifier(ModifierType.CreatedMadmate))
         //     roleCouldUse = true;
         if (Jester.CanSabotage && player.IsRole(RoleType.Jester))
+        {
             roleCouldUse = true;
-        // else if (!Mafioso.canSabotage && player.IsRole(RoleType.Mafioso))
-        //     roleCouldUse = false;
-        // else if (!Janitor.canSabotage && player.IsRole(RoleType.Janitor))
-        //     roleCouldUse = false;
+        }
+        else if (!Mafia.Mafioso.canSabotage && player.IsRole(RoleType.Mafioso))
+        {
+            roleCouldUse = false;
+        }
+        else if (!Mafia.Janitor.canSabotage && player.IsRole(RoleType.Janitor))
+        {
+            roleCouldUse = false;
+        }
         // else if (player.Data?.Role != null && player.Data.Role.IsImpostor)
         //     roleCouldUse = true;
 

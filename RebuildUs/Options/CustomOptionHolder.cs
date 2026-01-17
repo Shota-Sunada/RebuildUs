@@ -128,6 +128,15 @@ public static partial class CustomOptionHolder
     public static CustomOption BountyHunterPunishmentTime;
     public static CustomOption BountyHunterShowArrow;
     public static CustomOption BountyHunterArrowUpdateInterval;
+
+    public static CustomRoleOption mafiaSpawnRate;
+    public static CustomOption mafiosoCanSabotage;
+    public static CustomOption mafiosoCanRepair;
+    public static CustomOption mafiosoCanVent;
+    public static CustomOption janitorCooldown;
+    public static CustomOption janitorCanSabotage;
+    public static CustomOption janitorCanRepair;
+    public static CustomOption janitorCanVent;
     #endregion
 
     #region ROLES NEUTRAL
@@ -287,6 +296,15 @@ public static partial class CustomOptionHolder
         BountyHunterPunishmentTime = CustomOption.Normal(2003, CustomOptionType.Impostor, "", 20f, 0f, 60f, 2.5f, BountyHunterSpawnRate);
         BountyHunterShowArrow = CustomOption.Normal(2004, CustomOptionType.Impostor, "", true, BountyHunterSpawnRate);
         BountyHunterArrowUpdateInterval = CustomOption.Normal(2005, CustomOptionType.Impostor, "", 15f, 2.5f, 60f, 2.5f, BountyHunterShowArrow);
+
+        mafiaSpawnRate = new(2010, CustomOptionType.Impostor, RoleType.Godfather, Mafia.RoleColor, 1);
+        mafiosoCanSabotage = CustomOption.Normal(2011, CustomOptionType.Impostor, "mafiosoCanSabotage", false, mafiaSpawnRate);
+        mafiosoCanRepair = CustomOption.Normal(2012, CustomOptionType.Impostor, "mafiosoCanRepair", false, mafiaSpawnRate);
+        mafiosoCanVent = CustomOption.Normal(2013, CustomOptionType.Impostor, "mafiosoCanVent", false, mafiaSpawnRate);
+        janitorCooldown = CustomOption.Normal(2014, CustomOptionType.Impostor, "janitorCooldown", 30f, 2.5f, 60f, 2.5f, mafiaSpawnRate);
+        janitorCanSabotage = CustomOption.Normal(2015, CustomOptionType.Impostor, "janitorCanSabotage", false, mafiaSpawnRate);
+        janitorCanRepair = CustomOption.Normal(2016, CustomOptionType.Impostor, "janitorCanRepair", false, mafiaSpawnRate);
+        janitorCanVent = CustomOption.Normal(2017, CustomOptionType.Impostor, "janitorCanVent", false, mafiaSpawnRate);
         #endregion
 
         #region ROLES NEUTRAL

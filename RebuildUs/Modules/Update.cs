@@ -1,3 +1,5 @@
+using RebuildUs.Roles.Impostor;
+
 namespace RebuildUs.Patches;
 
 public static class Update
@@ -402,23 +404,37 @@ public static class Update
             foreach (PlayerControl player in CachedPlayer.AllPlayers)
             {
                 if (player.cosmetics.nameText.text == "") continue;
-                if (Godfather.godfather != null && Godfather.godfather == player)
+                if (player.IsRole(RoleType.Godfather))
+                {
                     player.cosmetics.nameText.text = player.Data.PlayerName + $" ({Tr.Get("mafiaG")})";
-                else if (Mafioso.mafioso != null && Mafioso.mafioso == player)
+                }
+                else if (player.IsRole(RoleType.Mafioso))
+                {
                     player.cosmetics.nameText.text = player.Data.PlayerName + $" ({Tr.Get("mafiaM")})";
-                else if (Janitor.janitor != null && Janitor.janitor == player)
+                }
+                else if (player.IsRole(RoleType.Janitor))
+                {
                     player.cosmetics.nameText.text = player.Data.PlayerName + $" ({Tr.Get("mafiaJ")})";
+                }
             }
             if (MeetingHud.Instance != null)
             {
-                foreach (PlayerVoteArea player in MeetingHud.Instance.playerStates)
+                foreach (var voteArea in MeetingHud.Instance.playerStates)
                 {
-                    if (Godfather.godfather != null && Godfather.godfather.PlayerId == player.TargetPlayerId)
-                        player.NameText.text = Godfather.godfather.Data.PlayerName + $" ({Tr.Get("mafiaG")})";
-                    else if (Mafioso.mafioso != null && Mafioso.mafioso.PlayerId == player.TargetPlayerId)
-                        player.NameText.text = Mafioso.mafioso.Data.PlayerName + $" ({Tr.Get("mafiaM")})";
-                    else if (Janitor.janitor != null && Janitor.janitor.PlayerId == player.TargetPlayerId)
-                        player.NameText.text = Janitor.janitor.Data.PlayerName + $" ({Tr.Get("mafiaJ")})";
+                    var player = Helpers.PlayerById(voteArea.TargetPlayerId);
+
+                    if (player.IsRole(RoleType.Godfather))
+                    {
+                        voteArea.NameText.text = player.Data.PlayerName + $" ({Tr.Get("mafiaG")})";
+                    }
+                    else if (player.IsRole(RoleType.Mafioso))
+                    {
+                        voteArea.NameText.text = player.Data.PlayerName + $" ({Tr.Get("mafiaM")})";
+                    }
+                    else if (player.IsRole(RoleType.Janitor))
+                    {
+                        voteArea.NameText.text = player.Data.PlayerName + $" ({Tr.Get("mafiaJ")})";
+                    }
                 }
             }
         }
@@ -590,17 +606,17 @@ public static class Update
         }
         bool enabled = Helpers.ShowButtons;
         if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Vampire))
+        {
             enabled &= false;
-        else if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Mafioso) && !Mafioso.canKill)
+        }
+        else if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Mafioso) && !Mafia.Mafioso.canKill)
+        {
             enabled &= false;
+        }
         else if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Janitor))
+        {
             enabled &= false;
-        else if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.BomberA) && BomberB.isAlive())
-            enabled &= false;
-        else if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.BomberB) && BomberA.isAlive())
-            enabled &= false;
-        else if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.MimicA) && MimicK.isAlive())
-            enabled &= false;
+        }
 
         if (enabled) __instance.KillButton.Show();
         else __instance.KillButton.Hide();

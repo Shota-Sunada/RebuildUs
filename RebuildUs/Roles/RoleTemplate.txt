@@ -10,7 +10,7 @@ public class Role : RoleBase<Role>
     public Role()
     {
         // write value init here
-        StaticRoleType = CurrentRoleType = ERoleType.[CHANGE HERE];
+        StaticRoleType = CurrentRoleType = RoleType.[CHANGE HERE];
     }
 
     public override void OnMeetingStart() { }

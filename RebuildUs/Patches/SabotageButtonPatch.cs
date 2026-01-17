@@ -1,3 +1,5 @@
+using RebuildUs.Roles.Impostor;
+
 namespace RebuildUs.Patches;
 
 [HarmonyPatch]
@@ -9,7 +11,7 @@ public static class SabotageButtonPatch
     {
         // Mafia disable sabotage button for Janitor and sometimes for Mafioso
         bool blockSabotageJanitor = CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Janitor);
-        bool blockSabotageMafioso = CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Mafioso) && Godfather.godfather != null && !Godfather.godfather.Data.IsDead;
+        bool blockSabotageMafioso = CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Mafioso) && !Mafia.IsGodfatherDead;
         if (blockSabotageJanitor || blockSabotageMafioso)
         {
             FastDestroyableSingleton<HudManager>.Instance.SabotageButton.SetDisabled();

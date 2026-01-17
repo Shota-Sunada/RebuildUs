@@ -1,3 +1,4 @@
+using RebuildUs.Roles.Impostor;
 using RebuildUs.Roles.Neutral;
 
 namespace RebuildUs.Modules;
@@ -134,12 +135,12 @@ public static class Usables
             return true;
         }
 
-        if (pc.IsRole(RoleType.Mafioso) && !Mafioso.canRepair && (isLights || isComms))
+        if (pc.IsRole(RoleType.Mafioso) && !Mafia.Mafioso.canRepair && (isLights || isComms))
         {
             return true;
         }
 
-        if (pc.IsRole(RoleType.Janitor) && !Janitor.canRepair && (isLights || isComms))
+        if (pc.IsRole(RoleType.Janitor) && !Mafia.Janitor.canRepair && (isLights || isComms))
         {
             return true;
         }

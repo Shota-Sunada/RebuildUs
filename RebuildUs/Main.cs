@@ -29,6 +29,7 @@ global using RebuildUs.Patches;
 global using RebuildUs.Players;
 global using RebuildUs.Roles;
 global using RebuildUs.Utilities;
+using RebuildUs.Roles.Impostor;
 
 namespace RebuildUs;
 
@@ -102,7 +103,7 @@ public class RebuildUs : BasePlugin
 
     public static void ClearAndReloadRoles()
     {
-
+        Mafia.ClearAndReload();
     }
 
     public static void FixedUpdate(PlayerControl player)

@@ -1,3 +1,5 @@
+using RebuildUs.Roles.Impostor;
+
 namespace RebuildUs.Modules.EndGame;
 
 public class PlayerStatistics
@@ -79,10 +81,10 @@ public class PlayerStatistics
 
         // In the special case of Mafia being enabled, but only the janitor's left alive,
         // count it as zero impostors alive bc they can't actually do anything.
-        // if (Godfather.godfather?.isDead() == true && Mafioso.mafioso?.isDead() == true && Janitor.janitor?.isDead() == false)
-        // {
-        //     numImpostorsAlive = 0;
-        // }
+        if (Mafia.IsGodfatherDead && Mafia.IsMafiosoDead && !Mafia.IsJanitorDead)
+        {
+            numImpostorsAlive = 0;
+        }
 
         TeamCrew = numCrewmate;
         TeamJackalAlive = numJackalAlive;
