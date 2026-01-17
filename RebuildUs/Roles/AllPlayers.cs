@@ -4,7 +4,7 @@ namespace RebuildUs.Roles;
 
 public static class AllPlayers
 {
-    public static void OnKill(PlayerControl __instance, PlayerControl target)
+    public static void OnKill(PlayerControl __instance, PlayerControl target, DeadPlayer deadPlayer)
     {
         // Remove fake tasks when player dies
         if (target.HasFakeTasks())
@@ -65,7 +65,7 @@ public static class AllPlayers
         // Medium add body
         if (Medium.deadBodies != null)
         {
-            Medium.featureDeadBodies.Add(new Tuple<DeadPlayer, Vector3>(deadPlayer, target.transform.position));
+            Medium.featureDeadBodies.Add(new(deadPlayer, target.transform.position));
         }
 
         // Mini set adapted kill cooldown

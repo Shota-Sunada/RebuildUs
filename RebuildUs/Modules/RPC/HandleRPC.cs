@@ -140,6 +140,12 @@ public static partial class RPCProcedure
             case CustomRPC.GuesserShoot:
                 guesserShoot(reader.ReadByte(), reader.ReadByte(), reader.ReadByte(), reader.ReadByte());
                 break;
+            case CustomRPC.PlaceJackInTheBox:
+                placeJackInTheBox(reader.ReadBytesAndSize());
+                break;
+            case CustomRPC.LightsOut:
+                lightsOut();
+                break;
             default:
                 break;
         }

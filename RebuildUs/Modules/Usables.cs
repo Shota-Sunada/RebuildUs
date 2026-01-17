@@ -85,11 +85,11 @@ public static class Usables
     public static void VentButtonSetTarget(VentButton __instance)
     {
         // Trickster render special vent button
-        if (Trickster.trickster != null && Trickster.trickster == CachedPlayer.LocalPlayer.PlayerControl)
+        if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Trickster))
         {
             if (defaultVentSprite == null) defaultVentSprite = __instance.graphic.sprite;
             bool isSpecialVent = __instance.currentTarget != null && __instance.currentTarget.gameObject != null && __instance.currentTarget.gameObject.name.StartsWith("JackInTheBoxVent_");
-            __instance.graphic.sprite = isSpecialVent ? Trickster.getTricksterVentButtonSprite() : defaultVentSprite;
+            __instance.graphic.sprite = isSpecialVent ? Trickster.GetTricksterVentButtonSprite() : defaultVentSprite;
             __instance.buttonLabelText.enabled = !isSpecialVent;
         }
     }

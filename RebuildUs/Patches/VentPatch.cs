@@ -52,7 +52,7 @@ public static class VentPatch
         var usableDistance = __instance.UsableDistance;
         if (__instance.name.StartsWith("JackInTheBoxVent_"))
         {
-            if (Trickster.trickster != CachedPlayer.LocalPlayer.PlayerControl && !CachedPlayer.LocalPlayer.PlayerControl.IsGM())
+            if (!CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Trickster) && !CachedPlayer.LocalPlayer.PlayerControl.IsGM())
             {
                 // Only the Trickster can use the Jack-In-The-Boxes!
                 canUse = false;

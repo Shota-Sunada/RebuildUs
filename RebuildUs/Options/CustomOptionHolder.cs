@@ -142,6 +142,11 @@ public static partial class CustomOptionHolder
     public static CustomOption detectiveFootprintDuration;
     public static CustomOption detectiveReportNameDuration;
     public static CustomOption detectiveReportColorDuration;
+
+    public static CustomRoleOption mediumSpawnRate;
+    public static CustomOption mediumCooldown;
+    public static CustomOption mediumDuration;
+    public static CustomOption mediumOneTimeUse;
     #endregion
 
     #region ROLES IMPOSTOR
@@ -160,6 +165,11 @@ public static partial class CustomOptionHolder
     public static CustomOption janitorCanSabotage;
     public static CustomOption janitorCanRepair;
     public static CustomOption janitorCanVent;
+
+    public static CustomRoleOption tricksterSpawnRate;
+    public static CustomOption tricksterPlaceBoxCooldown;
+    public static CustomOption tricksterLightsOutCooldown;
+    public static CustomOption tricksterLightsOutDuration;
     #endregion
 
     #region ROLES NEUTRAL
@@ -343,6 +353,11 @@ public static partial class CustomOptionHolder
         detectiveFootprintDuration = CustomOption.Normal(1063, CustomOptionType.Crewmate, "detectiveFootprintDuration", 5f, 0.25f, 10f, 0.25f, detectiveSpawnRate);
         detectiveReportNameDuration = CustomOption.Normal(1064, CustomOptionType.Crewmate, "detectiveReportNameDuration", 0, 0, 60, 2.5f, detectiveSpawnRate);
         detectiveReportColorDuration = CustomOption.Normal(1065, CustomOptionType.Crewmate, "detectiveReportColorDuration", 20, 0, 120, 2.5f, detectiveSpawnRate);
+
+        mediumSpawnRate = new(1070, CustomOptionType.Crewmate, RoleType.Medium, Medium.RoleColor, 1);
+        mediumCooldown = CustomOption.Normal(1071, CustomOptionType.Crewmate, "mediumCooldown", 30f, 5f, 120f, 5f, mediumSpawnRate);
+        mediumDuration = CustomOption.Normal(1072, CustomOptionType.Crewmate, "mediumDuration", 3f, 0f, 15f, 1f, mediumSpawnRate);
+        mediumOneTimeUse = CustomOption.Normal(1073, CustomOptionType.Crewmate, "mediumOneTimeUse", false, mediumSpawnRate);
         #endregion
 
         #region ROLES IMPOSTOR
@@ -361,6 +376,11 @@ public static partial class CustomOptionHolder
         janitorCanSabotage = CustomOption.Normal(2015, CustomOptionType.Impostor, "janitorCanSabotage", false, mafiaSpawnRate);
         janitorCanRepair = CustomOption.Normal(2016, CustomOptionType.Impostor, "janitorCanRepair", false, mafiaSpawnRate);
         janitorCanVent = CustomOption.Normal(2017, CustomOptionType.Impostor, "janitorCanVent", false, mafiaSpawnRate);
+
+        tricksterSpawnRate = new(2020, CustomOptionType.Impostor, RoleType.Trickster, Trickster.RoleColor, 1);
+        tricksterPlaceBoxCooldown = CustomOption.Normal(2021, CustomOptionType.Impostor, "tricksterPlaceBoxCooldown", 10f, 2.5f, 30f, 2.5f, tricksterSpawnRate);
+        tricksterLightsOutCooldown = CustomOption.Normal(2022, CustomOptionType.Impostor, "tricksterLightsOutCooldown", 30f, 5f, 60f, 5f, tricksterSpawnRate);
+        tricksterLightsOutDuration = CustomOption.Normal(2023, CustomOptionType.Impostor, "tricksterLightsOutDuration", 15f, 5f, 60f, 2.5f, tricksterSpawnRate);
         #endregion
 
         #region ROLES NEUTRAL
@@ -395,7 +415,7 @@ public static partial class CustomOptionHolder
         JackalPromotedFromSidekickCanCreateSidekick = CustomOption.Normal(3042, CustomOptionType.Neutral, "", false, SidekickPromotesToJackal);
         JackalCanCreateSidekickFromImpostor = CustomOption.Normal(3043, CustomOptionType.Neutral, "", false, JackalCanCreateSidekick);
 
-        guesserSpawnRate = new(3050, CustomOptionType.Neutral, "Guesser", Guesser.NiceGuesser.RoleColor, 1);
+        guesserSpawnRate = new(3050, CustomOptionType.Neutral, nameof(Guesser), Guesser.NiceGuesser.RoleColor, 1);
         guesserIsImpGuesserRate = CustomOption.Normal(3051, CustomOptionType.Neutral, "guesserIsImpGuesserRate", RATES, guesserSpawnRate);
         guesserSpawnBothRate = CustomOption.Normal(3052, CustomOptionType.Neutral, "guesserSpawnBothRate", RATES, guesserSpawnRate);
         guesserNumberOfShots = CustomOption.Normal(3053, CustomOptionType.Neutral, "guesserNumberOfShots", 2f, 1f, 15f, 1f, guesserSpawnRate);

@@ -1,3 +1,5 @@
+using RebuildUs.Roles.Impostor;
+
 namespace RebuildUs.Modules;
 
 public static class Ship
@@ -25,7 +27,7 @@ public static class Ship
         }
 
         // If there is a Trickster with their ability active
-        if (Trickster.trickster != null && Trickster.lightsOutTimer > 0f)
+        if (Trickster.Exists && Trickster.lightsOutTimer > 0f)
         {
             float lerpValue = 1f;
             if (Trickster.lightsOutDuration - Trickster.lightsOutTimer < 0.5f)
@@ -37,15 +39,7 @@ public static class Ship
                 lerpValue = Mathf.Clamp01(Trickster.lightsOutTimer * 2);
             }
 
-            __result = Mathf.Lerp(__instance.MinLightRadius, __instance.MaxLightRadius, 1 - lerpValue) * PlayerControl.GameOptions.CrewLightMod;
-            return false;
-        }
-
-        // If player is Lawyer, apply Lawyer vision modifier
-        if (Lawyer.lawyer != null && Lawyer.lawyer.PlayerId == player.PlayerId)
-        {
-            float unlerped = Mathf.InverseLerp(__instance.MinLightRadius, __instance.MaxLightRadius, GetNeutralLightRadius(__instance, false));
-            __result = Mathf.Lerp(__instance.MinLightRadius, __instance.MaxLightRadius * Lawyer.vision, unlerped);
+            __result = Mathf.Lerp(__instance.MinLightRadius, __instance.MaxLightRadius, 1 - lerpValue) * Helpers.GetOption(FloatOptionNames.CrewLightMod);
             return false;
         }
 

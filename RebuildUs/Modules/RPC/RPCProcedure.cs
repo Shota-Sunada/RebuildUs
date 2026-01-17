@@ -4,6 +4,8 @@ using RebuildUs.Roles.Crewmate;
 using RebuildUs.Roles.Neutral;
 using RebuildUs.Objects;
 using Epic.OnlineServices;
+using UnityEngine.UIElements;
+using RebuildUs.Roles.Impostor;
 
 namespace RebuildUs.Modules.RPC;
 
@@ -496,6 +498,24 @@ public static partial class RPCProcedure
             {
                 FastDestroyableSingleton<Assets.CoreScripts.UnityTelemetry>.Instance.SendWho();
             }
+        }
+    }
+
+    public static void placeJackInTheBox(byte[] buff)
+    {
+        Vector3 position = Vector3.zero;
+        position.x = BitConverter.ToSingle(buff, 0 * sizeof(float));
+        position.y = BitConverter.ToSingle(buff, 1 * sizeof(float));
+        new JackInTheBox(position);
+    }
+
+    public static void lightsOut()
+    {
+        Trickster.lightsOutTimer = Trickster.lightsOutDuration;
+        // If the local player is impostor indicate lights out
+        if (CachedPlayer.LocalPlayer.PlayerControl.Data.Role.IsImpostor)
+        {
+            new CustomMessage(Tr.Get("tricksterLightsOutText"), Trickster.lightsOutDuration);
         }
     }
 }

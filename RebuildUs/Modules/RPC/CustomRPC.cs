@@ -43,4 +43,6 @@ public enum CustomRPC : byte
     TimeMasterShield,
     TimeMasterRewindTime,
     GuesserShoot,
+    PlaceJackInTheBox,
+    LightsOut,
 }

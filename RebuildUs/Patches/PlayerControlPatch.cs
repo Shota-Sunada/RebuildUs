@@ -188,7 +188,7 @@ public static class PlayerControlPatch
         if (resetToCrewmate) __instance.Data.Role.TeamType = RoleTeamTypes.Crewmate;
         if (resetToDead) __instance.Data.IsDead = true;
 
-        AllPlayers.OnKill(__instance, target);
+        AllPlayers.OnKill(__instance, target, deadPlayer);
 
         __instance.OnKill(target);
         target.OnDeath(__instance);
