@@ -58,8 +58,6 @@ public static class RoleHelpers
         {
             type.Type.GetMethod("EraseRole", BindingFlags.Public | BindingFlags.Static)?.Invoke(null, [player]);
         }
-
-        // if (player.IsRole(RoleType.Mayor)) Mayor.clearAndReload();
     }
 
     public static void SwapRoles(this PlayerControl player, PlayerControl target)
@@ -85,26 +83,30 @@ public static class RoleHelpers
             }
         }
 
-        // foreach (var mod in Modifier.allModifiers)
-        // {
-        //     if (mod.player == player)
-        //         nameText = mod.modifyNameText(nameText);
-        // }
+        foreach (var mod in PlayerModifier.AllModifiers)
+        {
+            if (mod.Player == player)
+            {
+                nameText = mod.ModifyNameText(nameText);
+            }
+        }
 
-        // nameText += Lovers.getIcon(player);
+        nameText += Lovers.getIcon(player);
 
         return nameText;
     }
 
-    // public static string ModifyRoleText(this PlayerControl player, string roleText, List<RoleInfo> roleInfo, bool useColors = true, bool includeHidden = false)
-    // {
-    //     foreach (var mod in Modifier.allModifiers)
-    //     {
-    //         if (mod.player == player)
-    //             roleText = mod.modifyRoleText(roleText, roleInfo, useColors, includeHidden);
-    //     }
-    //     return roleText;
-    // }
+    public static string ModifyRoleText(this PlayerControl player, string roleText, List<RoleInfo> roleInfo, bool useColors = true, bool includeHidden = false)
+    {
+        foreach (var mod in PlayerModifier.AllModifiers)
+        {
+            if (mod.Player == player)
+            {
+                roleText = mod.ModifyRoleText(roleText, roleInfo, useColors, includeHidden);
+            }
+        }
+        return roleText;
+    }
 
     public static void OnKill(this PlayerControl player, PlayerControl target)
     {

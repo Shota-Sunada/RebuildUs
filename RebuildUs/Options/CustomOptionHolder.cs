@@ -2,6 +2,7 @@ using RebuildUs.Modules;
 using RebuildUs.Modules.CustomOptions;
 using RebuildUs.Roles.Crewmate;
 using RebuildUs.Roles.Impostor;
+using RebuildUs.Roles.Modifier;
 using RebuildUs.Roles.Neutral;
 
 namespace RebuildUs.Options;
@@ -240,6 +241,17 @@ public static partial class CustomOptionHolder
     #endregion
 
     #region MODIFIERS
+    public static CustomModifierOption madmateSpawnRate;
+    public static CustomOption madmateCanDieToSheriff;
+    public static CustomOption madmateCanEnterVents;
+    public static CustomOption madmateHasImpostorVision;
+    public static CustomOption madmateCanSabotage;
+    public static CustomOption madmateCanFixComm;
+    public static CustomOption madmateType;
+    public static CustomRoleSelectionOption madmateFixedRole;
+    public static CustomOption madmateAbility;
+    public static CustomTasksOption madmateTasks;
+    public static CustomOption madmateExilePlayer;
     #endregion
 
     internal static Dictionary<byte, byte[]> BlockedRolePairings = [];
@@ -475,6 +487,17 @@ public static partial class CustomOptionHolder
         #endregion
 
         #region MODIFIERS
+        madmateSpawnRate = new(4000, CustomOptionType.Modifier, ModifierType.Madmate, Madmate.ModifierColor);
+        madmateType = CustomOption.Normal(4001, CustomOptionType.Modifier, "madmateType", ["madmateDefault", "madmateWithRole", "madmateRandom"], madmateSpawnRate);
+        madmateFixedRole = new CustomRoleSelectionOption(4002, CustomOptionType.Modifier, "madmateFixedRole", Madmate.ValidRoles, madmateType);
+        madmateAbility = CustomOption.Normal(4003, CustomOptionType.Modifier, "madmateAbility", ["madmateNone", "madmateFanatic"], madmateSpawnRate);
+        madmateTasks = new((4004, 4005, 4006), CustomOptionType.Modifier, (1, 1, 3), madmateAbility);
+        madmateCanDieToSheriff = CustomOption.Normal(4007, CustomOptionType.Modifier, "madmateCanDieToSheriff", false, madmateSpawnRate);
+        madmateCanEnterVents = CustomOption.Normal(4008, CustomOptionType.Modifier, "madmateCanEnterVents", false, madmateSpawnRate);
+        madmateHasImpostorVision = CustomOption.Normal(4009, CustomOptionType.Modifier, "madmateHasImpostorVision", false, madmateSpawnRate);
+        madmateCanSabotage = CustomOption.Normal(4010, CustomOptionType.Modifier, "madmateCanSabotage", false, madmateSpawnRate);
+        madmateCanFixComm = CustomOption.Normal(4011, CustomOptionType.Modifier, "madmateCanFixComm", true, madmateSpawnRate);
+        madmateExilePlayer = CustomOption.Normal(4012, CustomOptionType.Modifier, "madmateExileCrewmate", false, madmateSpawnRate);
         #endregion
 
         BlockedRolePairings.Add((byte)RoleType.Vulture, [(byte)RoleType.Cleaner]);

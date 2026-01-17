@@ -23,6 +23,7 @@ public abstract class PlayerModifier
     public virtual void ResetRole() { }
     public virtual void PostInit() { }
     public virtual string ModifyNameText(string nameText) { return nameText; }
+    public virtual string ModifyRoleText(string roleText, List<RoleInfo> roleInfo, bool useColors = true, bool includeHidden = false) { return roleText; }
     public virtual string MeetingInfoText() { return ""; }
 
     public static void ClearAll()

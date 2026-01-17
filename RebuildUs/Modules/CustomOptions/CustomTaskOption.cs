@@ -1,6 +1,6 @@
 namespace RebuildUs.Modules.CustomOptions;
 
-public class CustomTaskOption((int commonId, int shortId, int longId) ids, CustomOptionType type, (int commonTasks, int shortTasks, int longTasks) defaultValue, CustomOption parent = null) : CustomOption
+public class CustomTasksOption((int commonId, int shortId, int longId) ids, CustomOptionType type, (int commonTasks, int shortTasks, int longTasks) defaultValue, CustomOption parent = null) : CustomOption
 {
     public CustomOption CommonTaskOption = Normal(ids.commonId, type, "CustomOption.NumCommonTask", defaultValue.commonTasks, 0f, 4f, 1f, parent);
     public CustomOption ShortTaskOption = Normal(ids.shortId, type, "CustomOption.NumShortTask", defaultValue.shortTasks, 0f, 15f, 1f, parent);
