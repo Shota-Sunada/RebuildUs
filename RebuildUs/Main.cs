@@ -13,15 +13,18 @@ global using BepInEx.Unity;
 global using BepInEx.Unity.IL2CPP;
 global using UnityEngine;
 global using TMPro;
+global using AmongUs.GameOptions;
 
 global using RebuildUs;
 global using RebuildUs.Extensions;
+global using RebuildUs.Helpers;
 global using RebuildUs.Localization;
 global using RebuildUs.Modules;
 global using RebuildUs.Modules.Consoles;
 global using RebuildUs.Modules.CustomOptions;
 global using RebuildUs.Modules.EndGame;
 global using RebuildUs.Modules.RPC;
+global using RebuildUs.Objects;
 global using RebuildUs.Options;
 global using RebuildUs.Patches;
 global using RebuildUs.Players;
@@ -45,6 +48,18 @@ public class RebuildUs : BasePlugin
 
     public static int OptionsPage = 0;
 
+    public static ConfigEntry<bool> GhostsSeeInformation { get; set; }
+    public static ConfigEntry<bool> GhostsSeeRoles { get; set; }
+    public static ConfigEntry<bool> GhostsSeeModifier { get; set; }
+    public static ConfigEntry<bool> GhostsSeeVotes { get; set; }
+    public static ConfigEntry<bool> ShowRoleSummary { get; set; }
+    public static ConfigEntry<bool> ShowLighterDarker { get; set; }
+    public static ConfigEntry<bool> ShowVentsOnMap { get; set; }
+    public static ConfigEntry<bool> ShowChatNotifications { get; set; }
+    public static ConfigEntry<string> Ip { get; set; }
+    public static ConfigEntry<ushort> Port { get; set; }
+    public static IRegionInfo[] defaultRegions;
+
     public System.Random Rnd = new((int)DateTime.Now.Ticks);
 
     public override void Load()
@@ -52,12 +67,26 @@ public class RebuildUs : BasePlugin
         Logger.Initialize(Log);
         Instance = this;
 
+        GhostsSeeInformation = Config.Bind("Custom", "Ghosts See Remaining Tasks", true);
+        GhostsSeeRoles = Config.Bind("Custom", "Ghosts See Roles", true);
+        GhostsSeeModifier = Config.Bind("Custom", "Ghosts See Modifier", true);
+        GhostsSeeVotes = Config.Bind("Custom", "Ghosts See Votes", true);
+        ShowRoleSummary = Config.Bind("Custom", "Show Role Summary", true);
+        ShowLighterDarker = Config.Bind("Custom", "Show Lighter / Darker", true);
+        ShowVentsOnMap = Config.Bind("Custom", "Show vent positions on minimap", false);
+        ShowChatNotifications = Config.Bind("Custom", "Show Chat Notifications", true);
+
+        Ip = Config.Bind("Custom", "Custom Server IP", "127.0.0.1");
+        Port = Config.Bind("Custom", "Custom Server Port", (ushort)22023);
+        defaultRegions = ServerManager.DefaultRegions;
+
         AssetLoader.LoadAssets();
 
         Tr.Initialize();
         CustomOptionHolder.Load();
         RoleInfo.Load();
         CustomColors.Load();
+        SubmergedCompatibility.Initialize();
 
         Harmony.PatchAll();
 
@@ -100,6 +129,12 @@ public class RebuildUs : BasePlugin
         // CustomOverlays.hideInfoOverlay();
         // CustomOverlays.hideRoleOverlay();
         // CustomOverlays.hideBlackBG();
+    }
+
+    public static void OnIntroEnd()
+    {
+        PlayerRole.AllRoles.Do(x => x.OnIntroEnd());
+        // PlayerModifier.AllModifiers.Do(x => x.OnIntroEnd());
     }
 
     public static void HandleDisconnect(PlayerControl player, DisconnectReasons reason)

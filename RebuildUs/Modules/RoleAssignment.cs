@@ -18,7 +18,7 @@ public static class RoleAssignment
 
         if (!ShipStatus.Instance)
         {
-            var index = Mathf.Clamp(GameOptionsManager.Instance.CurrentGameOptions.GetByte(ByteOptionNames.MapId), 0, Constants.MapNames.Length - 1);
+            var index = Mathf.Clamp(GameOptions.Get(ByteOptionNames.MapId), 0, Constants.MapNames.Length - 1);
             try
             {
                 if (index == 0 && AprilFoolsMode.ShouldFlipSkeld())
@@ -54,7 +54,7 @@ public static class RoleAssignment
             var flag = true;
             var num = 10;
             var totalSeconds = (float)(DateTime.Now - start).TotalSeconds;
-            if (GameOptionsManager.Instance.CurrentGameOptions.GetByte(ByteOptionNames.MapId) is 4 or 5)
+            if (GameOptions.Get(ByteOptionNames.MapId) is 4 or 5)
             {
                 num = 15;
             }
@@ -227,7 +227,7 @@ public static class RoleAssignment
         SetRolesAgain();
     }
 
-    private static RoleAssignmentData GetRoleAssignmentData()
+    public static RoleAssignmentData GetRoleAssignmentData()
     {
         // Get the players that we want to assign the roles to. Crewmate and Neutral roles are assigned to natural crewmates. Impostor roles to impostors.
         List<PlayerControl> crewmates = [.. PlayerControl.AllPlayerControls.GetFastEnumerator().ToArray().ToList().OrderBy(x => Guid.NewGuid())];

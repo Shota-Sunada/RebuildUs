@@ -9,6 +9,6 @@ public static class RoleOptionsCollectionV10Patch
     [HarmonyPatch(typeof(RoleOptionsCollectionV10), nameof(RoleOptionsCollectionV10.GetNumPerGame))]
     public static void GetNumPerGamePostfix(ref int __result)
     {
-        if (GameOptionsManager.Instance.CurrentGameOptions.GameMode == GameModes.Normal) __result = 0; // Deactivate Vanilla Roles if the mod roles are active
+        if (GameOptions.IsNormalMode) __result = 0; // Deactivate Vanilla Roles if the mod roles are active
     }
 }

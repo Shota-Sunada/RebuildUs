@@ -6,7 +6,7 @@ using RebuildUs.Roles.Crewmate;
 using System.Text;
 using System.Text.RegularExpressions;
 
-namespace RebuildUs;
+namespace RebuildUs.Helpers;
 
 public enum MurderAttemptResult
 {
@@ -194,7 +194,7 @@ public static class Helpers
         if (AmongUsClient.Instance.IsGameOver) return MurderAttemptResult.SuppressKill;
         if (killer == null || killer.Data == null || (killer.Data.IsDead && !ignoreIfKillerIsDead) || killer.Data.Disconnected) return MurderAttemptResult.SuppressKill; // Allow non Impostor kills compared to vanilla code
         if (target == null || target.Data == null || target.Data.IsDead || target.Data.Disconnected) return MurderAttemptResult.SuppressKill; // Allow killing players in vents compared to vanilla code
-        if (GameOptionsManager.Instance.currentGameOptions.GameMode == AmongUs.GameOptions.GameModes.HideNSeek) return MurderAttemptResult.PerformKill;
+        if (GameOptions.IsHideNSeekMode) return MurderAttemptResult.PerformKill;
 
         // Handle first kill attempt
         if (MapOptions.ShieldFirstKill && MapOptions.FirstKillPlayer == target) return MurderAttemptResult.SuppressKill;
@@ -302,7 +302,7 @@ public static class Helpers
     public static PlayerControl SetTarget(bool onlyCrewmates = false, bool targetPlayersInVents = false, List<PlayerControl> untargetablePlayers = null, PlayerControl targetingPlayer = null, int killDistance = 3)
     {
         PlayerControl result = null;
-        float num = NormalGameOptionsV10.KillDistances[Mathf.Clamp(GameOptionsManager.Instance.CurrentGameOptions.GetInt(Int32OptionNames.KillDistance), 0, 2)];
+        float num = NormalGameOptionsV10.KillDistances[Mathf.Clamp(GameOptions.Get(Int32OptionNames.KillDistance), 0, 2)];
         if (!MapUtilities.CachedShipStatus) return result;
         if (targetingPlayer == null) targetingPlayer = PlayerControl.LocalPlayer;
         if (targetingPlayer.Data.IsDead || targetingPlayer.inVent) return result;
@@ -591,5 +591,10 @@ public static class Helpers
         // if (source.GetPartner() == target) return false; // Members of team Lovers see the names of each other
         if ((source.IsRole(ERoleType.Jackal) || source.IsRole(ERoleType.Sidekick)) && (target.IsRole(ERoleType.Jackal) || target.IsRole(ERoleType.Sidekick) || target == Jackal.GetRole(target).FakeSidekick)) return false; // Members of team Jackal see the names of each other
         return true;
+    }
+
+    public static bool isOnElecTask()
+    {
+        return Camera.main.gameObject.GetComponentInChildren<SwitchMinigame>() != null;
     }
 }

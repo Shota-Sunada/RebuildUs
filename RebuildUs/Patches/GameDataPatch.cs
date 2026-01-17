@@ -8,5 +8,9 @@ public static class GameDataPatch
     public static void HandleDisconnectPostfix(GameData __instance, PlayerControl player, DisconnectReasons reason)
     {
         RebuildUs.HandleDisconnect(player, reason);
+        if (MeetingHud.Instance)
+        {
+            Meeting.swapperCheckAndReturnSwap(MeetingHud.Instance, player.PlayerId);
+        }
     }
 }

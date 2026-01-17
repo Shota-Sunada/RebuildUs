@@ -11,5 +11,6 @@ public static class MainMenuManagerPatch
     {
         ModStamp.Show();
         Credits.EditMainMenu(__instance);
+        ClientOptions.Start(__instance);
     }
 }

@@ -6,16 +6,16 @@ public static class ExileControllerPatch
     [HarmonyPrefix]
     [HarmonyPriority(Priority.First)]
     [HarmonyPatch(typeof(ExileController), nameof(ExileController.BeginForGameplay))]
-    public static void BeginForGameplayPrefix(ExileController __instance, [HarmonyArgument(0)] ref NetworkedPlayerInfo exiled)
+    public static void BeginForGameplayPrefix(ExileController __instance, NetworkedPlayerInfo player, bool voteTie)
     {
-
+        Exile.BeginForGameplay(__instance, player, voteTie);
     }
 
     [HarmonyPostfix]
     [HarmonyPatch(typeof(ExileController), nameof(ExileController.WrapUp))]
     public static void WrapUpPostfix(ExileController __instance)
     {
-        NetworkedPlayerInfo networkedPlayer = __instance.initData.networkedPlayer;
+        var networkedPlayer = __instance.initData.networkedPlayer;
         Exile.WrapUpPostfix(networkedPlayer?.Object);
     }
 
@@ -23,6 +23,6 @@ public static class ExileControllerPatch
     [HarmonyPatch(typeof(ExileController), nameof(ExileController.ReEnableGameplay))]
     public static void ReEnableGameplay(ExileController __instance)
     {
-        RebuildUs.OnMeetingEnd();
+        Exile.ReEnableGameplay();
     }
 }

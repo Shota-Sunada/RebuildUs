@@ -145,7 +145,7 @@ public class BountyHunter : RoleBase<BountyHunter>
             }
             else
             {
-                Player.SetKillTimer(GameOptionsManager.Instance.CurrentGameOptions.GetFloat(FloatOptionNames.KillCooldown) + PunishmentTime);
+                Player.SetKillTimer(GameOptions.Get(FloatOptionNames.KillCooldown) + PunishmentTime);
             }
         }
     }

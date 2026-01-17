@@ -21,10 +21,10 @@ public static class IGameOptionsExtensionsPatch
     [HarmonyPatch(typeof(IGameOptionsExtensions), nameof(IGameOptionsExtensions.GetAdjustedNumImpostors))]
     public static void GetAdjustedNumImpostorsPostfix(ref int __result)
     {
-        if (GameOptionsManager.Instance.CurrentGameOptions.GameMode == AmongUs.GameOptions.GameModes.Normal)
+        if (GameOptions.IsNormalMode)
         {
             // Ignore Vanilla impostor limits in RebuildUs Games.
-            __result = Mathf.Clamp(GameOptionsManager.Instance.CurrentGameOptions.NumImpostors, 1, 3);
+            __result = Mathf.Clamp(GameOptions.Get(Int32OptionNames.NumImpostors), 1, 3);
         }
     }
 }

@@ -342,7 +342,7 @@ public partial class CustomOption
             name = "Impostor Roles";
             var min = CustomOptionHolder.ImpostorRolesCountMin.GetSelection();
             var max = CustomOptionHolder.ImpostorRolesCountMax.GetSelection();
-            if (max > GameOptionsManager.Instance.currentGameOptions.NumImpostors) max = GameOptionsManager.Instance.currentGameOptions.NumImpostors;
+            if (max > GameOptions.Get(Int32OptionNames.NumImpostors)) max = GameOptions.Get(Int32OptionNames.NumImpostors);
             if (min > max) min = max;
             val = (min == max) ? $"{max}" : $"{min} - {max}";
         }

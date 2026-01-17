@@ -28,21 +28,71 @@ public static class MeetingHudPatch
     [HarmonyPatch(typeof(MeetingHud), nameof(MeetingHud.Update))]
     public static void UpdatePostfix(MeetingHud __instance)
     {
-        if (MapOptions.BlockSkippingInEmergencyMeetings)
-        {
-            __instance.SkipVoteButton?.gameObject?.SetActive(false);
-        }
+        Meeting.Update(__instance);
+        ShowHost.Update(__instance);
     }
 
     [HarmonyPrefix]
     [HarmonyPatch(typeof(MeetingHud), nameof(MeetingHud.Select))]
     public static bool SelectPrefix(ref bool __result, MeetingHud __instance, [HarmonyArgument(0)] int suspectStateIdx)
     {
-        __result = false;
-        // if (GM.gm != null && GM.gm.PlayerId == suspectStateIdx) return false;
-        if (MapOptions.NoVoteIsSelfVote && CachedPlayer.LocalPlayer.PlayerControl.PlayerId == suspectStateIdx) return false;
-        if (MapOptions.BlockSkippingInEmergencyMeetings && suspectStateIdx == -1) return false;
+        return Meeting.Select(ref __result, __instance, suspectStateIdx);
+    }
 
-        return true;
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(MeetingHud), nameof(MeetingHud.VotingComplete))]
+    public static void VotingCompletePostfix(MeetingHud __instance, Il2CppStructArray<MeetingHud.VoterState> states, NetworkedPlayerInfo exiled, bool tie)
+    {
+        Meeting.VotingComplete(__instance, states, exiled, tie);
+    }
+
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(MeetingHud), nameof(MeetingHud.ServerStart))]
+    public static void ServerStartPostfix(MeetingHud __instance)
+    {
+        Meeting.populateButtonsPostfix(__instance);
+    }
+
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(MeetingHud), nameof(MeetingHud.Deserialize))]
+    public static void DeserializePostfix(MeetingHud __instance, MessageReader reader, bool initialState)
+    {
+        Meeting.Deserialize(__instance, reader, initialState);
+    }
+
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(MeetingHud), nameof(MeetingHud.Start))]
+    public static void StartPostfix(MeetingHud __instance)
+    {
+        ShowHost.Setup(__instance);
+    }
+
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(MeetingHud), nameof(MeetingHud.Close))]
+    public static void ClosePostfix(MeetingHud __instance)
+    {
+        if (GameOptions.Get(ByteOptionNames.MapId) == 2 && CustomOptionHolder.PolusRandomSpawn.GetBool())
+        {
+            if (AmongUsClient.Instance.AmHost)
+            {
+                foreach (PlayerControl player in CachedPlayer.AllPlayers)
+                {
+                    System.Random rand = new();
+                    int randVal = rand.Next(0, 6);
+                    MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.RandomSpawn, Hazel.SendOption.Reliable, -1);
+                    writer.Write((byte)player.Data.PlayerId);
+                    writer.Write((byte)randVal);
+                    AmongUsClient.Instance.FinishRpcImmediately(writer);
+                    RPCProcedure.randomSpawn((byte)player.Data.PlayerId, (byte)randVal);
+                }
+            }
+        }
+    }
+
+    [HarmonyPrefix]
+    [HarmonyPatch(typeof(MeetingHud), nameof(MeetingHud.PopulateButtons))]
+    public static bool PopulateButtonsPrefix(MeetingHud __instance, byte reporter)
+    {
+        return false;
     }
 }

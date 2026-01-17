@@ -1,4 +1,5 @@
 using BepInEx.Unity.IL2CPP.Utils.Collections;
+using RebuildUs.Objects;
 using RebuildUs.Players;
 using RebuildUs.Roles;
 using RebuildUs.Roles.Crewmate;
@@ -52,6 +53,83 @@ public static class Intro
                 player.transform.localScale = Vector3.one * 0.4f;
                 player.gameObject.SetActive(false);
             }
+        }
+
+        RebuildUs.OnIntroEnd();
+
+        // インポスター視界の場合に昇降機右の影を無効化
+        if (GameOptions.Get(ByteOptionNames.MapId) == 4 && CustomOptionHolder.AirshipOptions.GetBool() && Helpers.HasImpostorVision(CachedPlayer.LocalPlayer.PlayerControl))
+        {
+            var obj = ShipStatus.Instance.FastRooms[SystemTypes.GapRoom].gameObject;
+            var oneWayShadow = obj.transform.FindChild("Shadow").FindChild("LedgeShadow").GetComponent<OneWayShadows>();
+            oneWayShadow.gameObject.SetActive(false);
+        }
+
+        // ベントを追加する
+        AdditionalVents.AddAdditionalVents();
+
+        // スペシメンにバイタルを移動する
+        SpecimenVital.moveVital();
+
+        // アーカイブのアドミンを消す
+        if (GameOptions.Get(ByteOptionNames.MapId) == 4 && CustomOptionHolder.AirshipOldAdmin.GetBool())
+        {
+            GameObject records = ShipStatus.Instance.FastRooms[SystemTypes.Records].gameObject;
+            records.GetComponentsInChildren<MapConsole>().FirstOrDefault(x => x.name == "records_admin_map")?.gameObject.SetActive(false);
+        }
+
+        if (ShipStatus.Instance.FastRooms.ContainsKey(SystemTypes.GapRoom))
+        {
+            var gapRoom = ShipStatus.Instance.FastRooms[SystemTypes.GapRoom].gameObject;
+            // GapRoomの配電盤を消す
+            if (GameOptions.Get(ByteOptionNames.MapId) == 4 && CustomOptionHolder.AirshipDisableGapSwitchBoard.GetBool())
+            {
+                var sabotage = gapRoom.GetComponentsInChildren<Console>().FirstOrDefault(x => x.name == "task_lightssabotage (gap)")?.gameObject;
+                sabotage.SetActive(false);
+                MapUtilities.CachedShipStatus.AllConsoles = MapUtilities.CachedShipStatus.AllConsoles.Where(x => x != sabotage.GetComponent<Console>()).ToArray();
+            }
+
+            // ぬ～んを消す
+            if (GameOptions.Get(ByteOptionNames.MapId) == 4 && CustomOptionHolder.AirshipDisableMovingPlatform.GetBool())
+            {
+                gapRoom.GetComponentInChildren<MovingPlatformBehaviour>().gameObject.SetActive(false);
+                gapRoom.GetComponentsInChildren<PlatformConsole>().ForEach(x => x.gameObject.SetActive(false));
+            }
+        }
+
+        //タスクバグ修正
+        if (GameOptions.Get(ByteOptionNames.MapId) == 4 && CustomOptionHolder.AirshipEnableWallCheck.GetBool())
+        {
+            var objects = UnityEngine.GameObject.FindObjectsOfType<Console>().ToList();
+            objects.Find(x => x.name == "task_garbage1").checkWalls = true;
+            objects.Find(x => x.name == "task_garbage2").checkWalls = true;
+            objects.Find(x => x.name == "task_garbage3").checkWalls = true;
+            objects.Find(x => x.name == "task_garbage4").checkWalls = true;
+            objects.Find(x => x.name == "task_garbage5").checkWalls = true;
+            objects.Find(x => x.name == "task_shower").checkWalls = true;
+            objects.Find(x => x.name == "task_developphotos").checkWalls = true;
+            objects.Find(x => x.name == "DivertRecieve" && x.Room == SystemTypes.Armory).checkWalls = true;
+            objects.Find(x => x.name == "DivertRecieve" && x.Room == SystemTypes.MainHall).checkWalls = true;
+        }
+
+        // 最初から一人の場合はLast Impostorになる
+        if (AmongUsClient.Instance.AmHost)
+        {
+            LastImpostor.promoteToLastImpostor();
+        }
+
+        // タスクパネルの表示優先度を上げる
+        var taskPanel = FastDestroyableSingleton<HudManager>.Instance.TaskStuff;
+        var pos = taskPanel.transform.position;
+        taskPanel.transform.position = new Vector3(pos.x, pos.y, -20);
+
+        // Cornucopiaのバナーを表示する
+        Cornucopia.showBanner();
+
+        // マップデータのコピーを読み込み
+        if (CustomOptionHolder.AirshipReplaceSafeTask.GetBool())
+        {
+            MapData.LoadAssets(AmongUsClient.Instance);
         }
     }
 
@@ -165,22 +243,22 @@ public static class Intro
         // {
         //     if (roleInfo == RoleInfo.crewmate)
         //     {
-        //         __instance.RoleText.text = ModTranslation.getString("madmate");
+        //         __instance.RoleText.text = Tr.Get("madmate");
         //     }
         //     else
         //     {
-        //         __instance.RoleText.text = ModTranslation.getString("madmatePrefix") + __instance.RoleText.text;
+        //         __instance.RoleText.text = Tr.Get("madmatePrefix") + __instance.RoleText.text;
         //     }
         //     __instance.YouAreText.color = Madmate.color;
         //     __instance.RoleText.color = Madmate.color;
-        //     __instance.RoleBlurbText.text = ModTranslation.getString("madmateIntroDesc");
+        //     __instance.RoleBlurbText.text = Tr.Get("madmateIntroDesc");
         //     __instance.RoleBlurbText.color = Madmate.color;
         // }
 
         // if (infos.Any(info => info.RoleType == ERoleType.Lovers))
         // {
         //     PlayerControl otherLover = CachedPlayer.LocalPlayer.PlayerControl.GetPartner();
-        //     __instance.RoleBlurbText.text += "\n" + Helpers.cs(Lovers.color, string.Format(ModTranslation.getString("loversFlavor"), otherLover?.Data?.PlayerName ?? ""));
+        //     __instance.RoleBlurbText.text += "\n" + Helpers.cs(Lovers.color, string.Format(Tr.Get("loversFlavor"), otherLover?.Data?.PlayerName ?? ""));
         // }
 
         // 従来処理

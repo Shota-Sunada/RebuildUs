@@ -7,7 +7,7 @@ public static class AirshipExileControllerPatch
     [HarmonyPatch(typeof(AirshipExileController), nameof(AirshipExileController.WrapUpAndSpawn))]
     public static void WrapUpAndSpawnPostfix(AirshipExileController __instance)
     {
-        NetworkedPlayerInfo networkedPlayer = __instance.initData.networkedPlayer;
+        var networkedPlayer = __instance.initData.networkedPlayer;
         Exile.WrapUpPostfix(networkedPlayer?.Object);
     }
 }

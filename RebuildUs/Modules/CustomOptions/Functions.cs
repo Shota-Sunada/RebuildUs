@@ -177,7 +177,7 @@ public partial class CustomOption
 
     public static void SettingMenuStart(GameSettingMenu __instance)
     {
-        if (GameOptionsManager.Instance.currentGameOptions.GameMode == GameModes.HideNSeek) return;
+        if (GameOptions.IsHideNSeekMode) return;
 
         // Initialize vanilla tabs
         __instance.ChangeTab((int)OptionPage.GameSettings, false);
@@ -545,7 +545,7 @@ public partial class CustomOption
                     var optionName = CustomOptionHolderHelpers.Cs(new Color(204f / 255f, 204f / 255f, 0, 1f), "Impostor Roles");
                     var min = CustomOptionHolder.ImpostorRolesCountMin.GetSelection();
                     var max = CustomOptionHolder.ImpostorRolesCountMax.GetSelection();
-                    if (max > GameOptionsManager.Instance.currentGameOptions.NumImpostors) max = GameOptionsManager.Instance.currentGameOptions.NumImpostors;
+                    if (max > GameOptions.Get(Int32OptionNames.NumImpostors)) max = GameOptions.Get(Int32OptionNames.NumImpostors);
                     if (min > max) min = max;
                     var optionValue = (min == max) ? $"{max}" : $"{min} - {max}";
                     sb.AppendLine($"{optionName}: {optionValue}");
@@ -639,7 +639,7 @@ public partial class CustomOption
 
     public static void ToHudString(ref string __result)
     {
-        if (GameOptionsManager.Instance.currentGameOptions.GameMode == GameModes.HideNSeek) return; // Allow Vanilla Hide N Seek
+        if (GameOptions.IsHideNSeekMode) return; // Allow Vanilla Hide N Seek
         __result = BuildAllOptions(__result);
     }
     public static bool LGOAreInvalid(LegacyGameOptions __instance, ref int maxExpectedPlayers)

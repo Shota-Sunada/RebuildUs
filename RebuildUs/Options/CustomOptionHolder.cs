@@ -36,27 +36,27 @@ public static partial class CustomOptionHolder
     public static CustomOption HideOutOfSightNametags;
     public static CustomOption RefundVotesOnDeath;
     public static CustomOption DelayBeforeMeeting;
+    public static CustomOption DisableVentAnimation;
+    public static CustomOption StopCooldownOnFixingElecSabotage;
+    public static CustomOption EnableHawkMode;
+    public static CustomOption CanWinByTaskWithoutLivingPlayer;
+
     public static CustomOption RandomWireTask;
     public static CustomOption NumWireTask;
-    public static CustomOption DisableVentAnimation;
+
+    public static CustomOption AdditionalEmergencyCooldown;
+    public static CustomOption AdditionalEmergencyCooldownTime;
+
     public static CustomOption RestrictDevices;
     public static CustomOption RestrictAdmin;
     public static CustomOption RestrictAdminTime;
     public static CustomOption RestrictAdminText;
+    public static CustomOption RestrictCameras;
     public static CustomOption RestrictCamerasTime;
     public static CustomOption RestrictCamerasText;
+    public static CustomOption RestrictVitals;
     public static CustomOption RestrictVitalsTime;
     public static CustomOption RestrictVitalsText;
-    public static CustomOption StopCooldownOnFixingElecSabotage;
-    public static CustomOption AdditionalEmergencyCooldown;
-    public static CustomOption AdditionalEmergencyCooldownTime;
-    public static CustomOption EnableHawkMode;
-    public static CustomOption CanWinByTaskWithoutLivingPlayer;
-    public static CustomOption DeadPlayerCanSeeCooldown;
-    public static CustomOption ImpostorCanIgnoreCommSabotage;
-    public static CustomOption BlockSabotageFromDeadImpostors;
-    public static CustomOption ShieldFirstKill;
-    public static CustomOption FinishTasksBeforeHauntingOrZoomingOut;
     #endregion
 
     #region POLUS OPTIONS
@@ -195,10 +195,10 @@ public static partial class CustomOptionHolder
         StopCooldownOnFixingElecSabotage = CustomOption.Normal(29, CustomOptionType.General, "StopCooldownOnFixingElecSabotage", true);
         EnableHawkMode = CustomOption.Normal(30, CustomOptionType.General, "EnableHawkMode", true);
         CanWinByTaskWithoutLivingPlayer = CustomOption.Normal(31, CustomOptionType.General, "CanWinByTaskLivingPlayer", true);
-        DeadPlayerCanSeeCooldown = CustomOption.Normal(32, CustomOptionType.General, "DeadPlayerCanSeeCooldown", true);
-        ImpostorCanIgnoreCommSabotage = CustomOption.Normal(33, CustomOptionType.General, "ImpostorCanIgnoreCommSabotage", false);
-        BlockSabotageFromDeadImpostors = CustomOption.Normal(34, CustomOptionType.General, "BlockSabotageFromDeadImpostors", false);
-        ShieldFirstKill = CustomOption.Normal(35, CustomOptionType.General, "ShieldFirstKill", false);
+        // DeadPlayerCanSeeCooldown = CustomOption.Normal(32, CustomOptionType.General, "DeadPlayerCanSeeCooldown", true);
+        // ImpostorCanIgnoreCommSabotage = CustomOption.Normal(33, CustomOptionType.General, "ImpostorCanIgnoreCommSabotage", false);
+        // BlockSabotageFromDeadImpostors = CustomOption.Normal(34, CustomOptionType.General, "BlockSabotageFromDeadImpostors", false);
+        // ShieldFirstKill = CustomOption.Normal(35, CustomOptionType.General, "ShieldFirstKill", false);
 
         RandomWireTask = CustomOption.Normal(50, CustomOptionType.General, "RandomWireTask", false);
         NumWireTask = CustomOption.Normal(51, CustomOptionType.General, "NumWireTask", 3f, 1f, 10f, 1f, RandomWireTask);
@@ -208,12 +208,14 @@ public static partial class CustomOptionHolder
 
         RestrictDevices = CustomOption.Normal(60, CustomOptionType.General, "RestrictDevices", ["Off", "RestrictPerTurn", "RestrictPerGame"]);
         RestrictAdmin = CustomOption.Normal(61, CustomOptionType.General, "RestrictAdmin", true, RestrictDevices);
-        RestrictAdminTime = CustomOption.Normal(62, CustomOptionType.General, "RestrictAdminTime", true, RestrictDevices);
-        RestrictAdminText = CustomOption.Normal(63, CustomOptionType.General, "RestrictAdminText", true, RestrictDevices);
-        RestrictCamerasTime = CustomOption.Normal(64, CustomOptionType.General, "RestrictCamerasTime", true, RestrictDevices);
-        RestrictCamerasText = CustomOption.Normal(65, CustomOptionType.General, "RestrictCamerasText", true, RestrictDevices);
-        RestrictVitalsTime = CustomOption.Normal(66, CustomOptionType.General, "RestrictVitalsTime", true, RestrictDevices);
-        RestrictVitalsText = CustomOption.Normal(67, CustomOptionType.General, "RestrictVitalsText", true, RestrictDevices);
+        RestrictAdminTime = CustomOption.Normal(62, CustomOptionType.General, "RestrictAdminTime", true, RestrictAdmin);
+        RestrictAdminText = CustomOption.Normal(63, CustomOptionType.General, "RestrictAdminText", true, RestrictAdmin);
+        RestrictCameras = CustomOption.Normal(64, CustomOptionType.General, "RestrictCameras", true, RestrictDevices);
+        RestrictCamerasTime = CustomOption.Normal(65, CustomOptionType.General, "RestrictCamerasTime", true, RestrictCameras);
+        RestrictCamerasText = CustomOption.Normal(66, CustomOptionType.General, "RestrictCamerasText", true, RestrictCameras);
+        RestrictVitals = CustomOption.Normal(67, CustomOptionType.General, "RestrictVitals", true, RestrictDevices);
+        RestrictVitalsTime = CustomOption.Normal(68, CustomOptionType.General, "RestrictVitalsTime", true, RestrictVitals);
+        RestrictVitalsText = CustomOption.Normal(69, CustomOptionType.General, "RestrictVitalsText", true, RestrictVitals);
         #endregion
 
         #region POLUS OPTIONS
