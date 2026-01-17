@@ -170,6 +170,22 @@ public static partial class CustomOptionHolder
     public static CustomOption tricksterPlaceBoxCooldown;
     public static CustomOption tricksterLightsOutCooldown;
     public static CustomOption tricksterLightsOutDuration;
+
+    public static CustomRoleOption evilHackerSpawnRate;
+    public static CustomOption evilHackerCanHasBetterAdmin;
+    public static CustomOption evilHackerCanCreateMadmate;
+    public static CustomOption evilHackerCanCreateMadmateFromJackal;
+    public static CustomOption evilHackerCanMoveEvenIfUsesAdmin;
+    public static CustomOption evilHackerCanInheritAbility;
+    public static CustomOption evilHackerCanSeeDoorStatus;
+    public static CustomOption createdMadmateCanDieToSheriff;
+    public static CustomOption createdMadmateCanEnterVents;
+    public static CustomOption createdMadmateHasImpostorVision;
+    public static CustomOption createdMadmateCanSabotage;
+    public static CustomOption createdMadmateCanFixComm;
+    public static CustomOption createdMadmateAbility;
+    public static CustomOption createdMadmateNumTasks;
+    public static CustomOption createdMadmateExileCrewmate;
     #endregion
 
     #region ROLES NEUTRAL
@@ -381,6 +397,22 @@ public static partial class CustomOptionHolder
         tricksterPlaceBoxCooldown = CustomOption.Normal(2021, CustomOptionType.Impostor, "tricksterPlaceBoxCooldown", 10f, 2.5f, 30f, 2.5f, tricksterSpawnRate);
         tricksterLightsOutCooldown = CustomOption.Normal(2022, CustomOptionType.Impostor, "tricksterLightsOutCooldown", 30f, 5f, 60f, 5f, tricksterSpawnRate);
         tricksterLightsOutDuration = CustomOption.Normal(2023, CustomOptionType.Impostor, "tricksterLightsOutDuration", 15f, 5f, 60f, 2.5f, tricksterSpawnRate);
+
+        evilHackerSpawnRate = new CustomRoleOption(2030, CustomOptionType.Impostor, RoleType.EvilHacker, EvilHacker.RoleColor, 1);
+        evilHackerCanHasBetterAdmin = CustomOption.Normal(2031, CustomOptionType.Impostor, "evilHackerCanHasBetterAdmin", false, evilHackerSpawnRate);
+        evilHackerCanMoveEvenIfUsesAdmin = CustomOption.Normal(2032, CustomOptionType.Impostor, "evilHackerCanMoveEvenIfUsesAdmin", true, evilHackerSpawnRate);
+        evilHackerCanInheritAbility = CustomOption.Normal(2033, CustomOptionType.Impostor, "evilHackerCanInheritAbility", false, evilHackerSpawnRate);
+        evilHackerCanSeeDoorStatus = CustomOption.Normal(2034, CustomOptionType.Impostor, "evilHackerCanSeeDoorStatus", true, evilHackerSpawnRate);
+        evilHackerCanCreateMadmate = CustomOption.Normal(2035, CustomOptionType.Impostor, "evilHackerCanCreateMadmate", false, evilHackerSpawnRate);
+        createdMadmateCanDieToSheriff = CustomOption.Normal(2036, CustomOptionType.Impostor, "createdMadmateCanDieToSheriff", false, evilHackerCanCreateMadmate);
+        createdMadmateCanEnterVents = CustomOption.Normal(2037, CustomOptionType.Impostor, "createdMadmateCanEnterVents", false, evilHackerCanCreateMadmate);
+        evilHackerCanCreateMadmateFromJackal = CustomOption.Normal(2038, CustomOptionType.Impostor, "evilHackerCanCreateMadmateFromJackal", false, evilHackerCanCreateMadmate);
+        createdMadmateHasImpostorVision = CustomOption.Normal(2039, CustomOptionType.Impostor, "createdMadmateHasImpostorVision", false, evilHackerCanCreateMadmate);
+        createdMadmateCanSabotage = CustomOption.Normal(2040, CustomOptionType.Impostor, "createdMadmateCanSabotage", false, evilHackerCanCreateMadmate);
+        createdMadmateCanFixComm = CustomOption.Normal(2041, CustomOptionType.Impostor, "createdMadmateCanFixComm", true, evilHackerCanCreateMadmate);
+        createdMadmateAbility = CustomOption.Normal(2042, CustomOptionType.Impostor, "madmateAbility", ["madmateNone", "madmateFanatic"], evilHackerCanCreateMadmate);
+        createdMadmateNumTasks = CustomOption.Normal(2043, CustomOptionType.Impostor, "createdMadmateNumTasks", 4f, 1f, 20f, 1f, createdMadmateAbility);
+        createdMadmateExileCrewmate = CustomOption.Normal(2044, CustomOptionType.Impostor, "createdMadmateExileCrewmate", false, evilHackerCanCreateMadmate);
         #endregion
 
         #region ROLES NEUTRAL

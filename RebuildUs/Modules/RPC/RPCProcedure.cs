@@ -517,4 +517,40 @@ public static partial class RPCProcedure
             new CustomMessage(Tr.Get("tricksterLightsOutText"), Trickster.lightsOutDuration);
         }
     }
+
+    public static void evilHackerCreatesMadmate(byte targetId, byte evilHackerId)
+    {
+        var targetPlayer = Helpers.PlayerById(targetId);
+        var evilHackerPlayer = Helpers.PlayerById(evilHackerId);
+        var evilHacker = EvilHacker.GetRole(evilHackerPlayer);
+        if (!EvilHacker.canCreateMadmateFromJackal && targetPlayer.IsRole(RoleType.Jackal))
+        {
+            evilHacker.fakeMadmate = targetPlayer;
+        }
+        else
+        {
+            // Jackalバグ対応
+            List<PlayerControl> tmpFormerJackals = [.. Jackal.FormerJackals];
+
+            // タスクがないプレイヤーがMadmateになった場合はショートタスクを必要数割り当てる
+            if (Helpers.HasFakeTasks(targetPlayer))
+            {
+                if (CreatedMadmate.hasTasks)
+                {
+                    Helpers.ClearAllTasks(targetPlayer);
+                    targetPlayer.GenerateAndAssignTasks(0, CreatedMadmate.numTasks, 0);
+                }
+            }
+
+            targetPlayer.RemoveInfected();
+            ErasePlayerRoles(targetPlayer.PlayerId, true, false);
+
+            // Jackalバグ対応
+            Jackal.FormerJackals = tmpFormerJackals;
+
+            targetPlayer.addModifier(ModifierType.CreatedMadmate);
+        }
+        evilHacker.canCreateMadmate = false;
+        return;
+    }
 }

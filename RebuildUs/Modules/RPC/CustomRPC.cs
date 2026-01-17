@@ -45,4 +45,5 @@ public enum CustomRPC : byte
     GuesserShoot,
     PlaceJackInTheBox,
     LightsOut,
+    EvilHackerCreatesMadmate,
 }

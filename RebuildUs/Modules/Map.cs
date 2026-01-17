@@ -1,3 +1,5 @@
+using RebuildUs.Roles.Impostor;
+
 namespace RebuildUs.Modules;
 
 public static class Map
@@ -235,7 +237,7 @@ public static class Map
 
     public static bool IsOpenStopped(ref bool __result, MapBehaviour __instance)
     {
-        if ((CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.EvilHacker) || EvilHacker.isInherited()) && CustomOptionHolder.evilHackerCanMoveEvenIfUsesAdmin.getBool())
+        if ((CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.EvilHacker) || EvilHacker.isInherited()) && CustomOptionHolder.evilHackerCanMoveEvenIfUsesAdmin.GetBool())
         {
             __result = false;
             return false;

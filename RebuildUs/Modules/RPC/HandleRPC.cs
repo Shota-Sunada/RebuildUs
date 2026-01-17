@@ -146,6 +146,9 @@ public static partial class RPCProcedure
             case CustomRPC.LightsOut:
                 lightsOut();
                 break;
+            case CustomRPC.EvilHackerCreatesMadmate:
+                evilHackerCreatesMadmate(reader.ReadByte(), reader.ReadByte());
+                break;
             default:
                 break;
         }
