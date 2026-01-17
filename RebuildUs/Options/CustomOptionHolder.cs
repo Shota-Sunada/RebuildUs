@@ -130,6 +130,18 @@ public static partial class CustomOptionHolder
     public static CustomOption seerMode;
     public static CustomOption seerSoulDuration;
     public static CustomOption seerLimitSoulDuration;
+
+    public static CustomRoleOption timeMasterSpawnRate;
+    public static CustomOption timeMasterCooldown;
+    public static CustomOption timeMasterRewindTime;
+    public static CustomOption timeMasterShieldDuration;
+
+    public static CustomRoleOption detectiveSpawnRate;
+    public static CustomOption detectiveAnonymousFootprints;
+    public static CustomOption detectiveFootprintInterval;
+    public static CustomOption detectiveFootprintDuration;
+    public static CustomOption detectiveReportNameDuration;
+    public static CustomOption detectiveReportColorDuration;
     #endregion
 
     #region ROLES IMPOSTOR
@@ -181,6 +193,16 @@ public static partial class CustomOptionHolder
     public static CustomOption SidekickHasImpostorVision;
     public static CustomOption JackalPromotedFromSidekickCanCreateSidekick;
     public static CustomOption JackalCanCreateSidekickFromImpostor;
+
+    public static CustomRoleOption guesserSpawnRate;
+    public static CustomOption guesserIsImpGuesserRate;
+    public static CustomOption guesserNumberOfShots;
+    public static CustomOption guesserOnlyAvailableRoles;
+    public static CustomOption guesserHasMultipleShotsPerMeeting;
+    public static CustomOption guesserShowInfoInGhostChat;
+    public static CustomOption guesserKillsThroughShield;
+    public static CustomOption guesserEvilCanKillSpy;
+    public static CustomOption guesserSpawnBothRate;
     #endregion
 
     #region MODIFIERS
@@ -309,6 +331,18 @@ public static partial class CustomOptionHolder
         seerMode = CustomOption.Normal(1041, CustomOptionType.Crewmate, "seerMode", ["seerModeBoth", "seerModeFlash", "seerModeSouls"], seerSpawnRate);
         seerLimitSoulDuration = CustomOption.Normal(1042, CustomOptionType.Crewmate, "seerLimitSoulDuration", false, seerSpawnRate);
         seerSoulDuration = CustomOption.Normal(1043, CustomOptionType.Crewmate, "seerSoulDuration", 15f, 0f, 120f, 5f, seerLimitSoulDuration);
+
+        timeMasterSpawnRate = new(1050, CustomOptionType.Crewmate, RoleType.TimeMaster, TimeMaster.RoleColor, 1);
+        timeMasterCooldown = CustomOption.Normal(1051, CustomOptionType.Crewmate, "timeMasterCooldown", 30f, 2.5f, 120f, 2.5f, timeMasterSpawnRate);
+        timeMasterRewindTime = CustomOption.Normal(1052, CustomOptionType.Crewmate, "timeMasterRewindTime", 3f, 1f, 10f, 1f, timeMasterSpawnRate);
+        timeMasterShieldDuration = CustomOption.Normal(1053, CustomOptionType.Crewmate, "timeMasterShieldDuration", 3f, 1f, 20f, 1f, timeMasterSpawnRate);
+
+        detectiveSpawnRate = new(1060, CustomOptionType.Crewmate, RoleType.Detective, Detective.RoleColor, 1);
+        detectiveAnonymousFootprints = CustomOption.Normal(1061, CustomOptionType.Crewmate, "detectiveAnonymousFootprints", false, detectiveSpawnRate);
+        detectiveFootprintInterval = CustomOption.Normal(1062, CustomOptionType.Crewmate, "detectiveFootprintInterval", 0.5f, 0.25f, 10f, 0.25f, detectiveSpawnRate);
+        detectiveFootprintDuration = CustomOption.Normal(1063, CustomOptionType.Crewmate, "detectiveFootprintDuration", 5f, 0.25f, 10f, 0.25f, detectiveSpawnRate);
+        detectiveReportNameDuration = CustomOption.Normal(1064, CustomOptionType.Crewmate, "detectiveReportNameDuration", 0, 0, 60, 2.5f, detectiveSpawnRate);
+        detectiveReportColorDuration = CustomOption.Normal(1065, CustomOptionType.Crewmate, "detectiveReportColorDuration", 20, 0, 120, 2.5f, detectiveSpawnRate);
         #endregion
 
         #region ROLES IMPOSTOR
@@ -360,6 +394,16 @@ public static partial class CustomOptionHolder
         SidekickPromotesToJackal = CustomOption.Normal(3037, CustomOptionType.Neutral, "", false, JackalCanCreateSidekick);
         JackalPromotedFromSidekickCanCreateSidekick = CustomOption.Normal(3042, CustomOptionType.Neutral, "", false, SidekickPromotesToJackal);
         JackalCanCreateSidekickFromImpostor = CustomOption.Normal(3043, CustomOptionType.Neutral, "", false, JackalCanCreateSidekick);
+
+        guesserSpawnRate = new(3050, CustomOptionType.Neutral, "Guesser", Guesser.NiceGuesser.RoleColor, 1);
+        guesserIsImpGuesserRate = CustomOption.Normal(3051, CustomOptionType.Neutral, "guesserIsImpGuesserRate", RATES, guesserSpawnRate);
+        guesserSpawnBothRate = CustomOption.Normal(3052, CustomOptionType.Neutral, "guesserSpawnBothRate", RATES, guesserSpawnRate);
+        guesserNumberOfShots = CustomOption.Normal(3053, CustomOptionType.Neutral, "guesserNumberOfShots", 2f, 1f, 15f, 1f, guesserSpawnRate);
+        guesserOnlyAvailableRoles = CustomOption.Normal(3054, CustomOptionType.Neutral, "guesserOnlyAvailableRoles", true, guesserSpawnRate);
+        guesserHasMultipleShotsPerMeeting = CustomOption.Normal(3055, CustomOptionType.Neutral, "guesserHasMultipleShotsPerMeeting", false, guesserSpawnRate);
+        guesserShowInfoInGhostChat = CustomOption.Normal(3056, CustomOptionType.Neutral, "guesserToGhostChat", true, guesserSpawnRate);
+        guesserKillsThroughShield = CustomOption.Normal(3057, CustomOptionType.Neutral, "guesserPierceShield", true, guesserSpawnRate);
+        guesserEvilCanKillSpy = CustomOption.Normal(3058, CustomOptionType.Neutral, "guesserEvilCanKillSpy", true, guesserSpawnRate);
         #endregion
 
         #region MODIFIERS

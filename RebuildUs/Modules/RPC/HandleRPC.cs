@@ -131,6 +131,15 @@ public static partial class RPCProcedure
             case CustomRPC.SetFutureShielded:
                 setFutureShielded(reader.ReadByte(), reader.ReadByte());
                 break;
+            case CustomRPC.TimeMasterRewindTime:
+                timeMasterRewindTime();
+                break;
+            case CustomRPC.TimeMasterShield:
+                timeMasterShield();
+                break;
+            case CustomRPC.GuesserShoot:
+                guesserShoot(reader.ReadByte(), reader.ReadByte(), reader.ReadByte(), reader.ReadByte());
+                break;
             default:
                 break;
         }

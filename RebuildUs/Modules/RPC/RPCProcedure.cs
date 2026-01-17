@@ -418,4 +418,84 @@ public static partial class RPCProcedure
         medic.futureShielded = Helpers.PlayerById(playerId);
         medic.usedShield = true;
     }
+
+    public static void timeMasterRewindTime()
+    {
+        TimeMaster.shieldActive = false; // Shield is no longer active when rewinding
+        if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.TimeMaster))
+        {
+            TimeMaster.resetTimeMasterButton();
+        }
+        FastDestroyableSingleton<HudManager>.Instance.FullScreen.color = new Color(0f, 0.5f, 0.8f, 0.3f);
+        FastDestroyableSingleton<HudManager>.Instance.FullScreen.enabled = true;
+        FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(TimeMaster.rewindTime / 2, new Action<float>((p) =>
+        {
+            if (p == 1f) FastDestroyableSingleton<HudManager>.Instance.FullScreen.enabled = false;
+        })));
+
+        if (!TimeMaster.Exists || CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.TimeMaster)) return; // Time Master himself does not rewind
+        if (CachedPlayer.LocalPlayer.PlayerControl.IsGM()) return; // GM does not rewind
+
+        TimeMaster.isRewinding = true;
+
+        if (MapBehaviour.Instance)
+        {
+            MapBehaviour.Instance.Close();
+        }
+        if (Minigame.Instance)
+        {
+            Minigame.Instance.ForceClose();
+        }
+        CachedPlayer.LocalPlayer.PlayerControl.moveable = false;
+    }
+
+    public static void timeMasterShield()
+    {
+        TimeMaster.shieldActive = true;
+        FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(TimeMaster.shieldDuration, new Action<float>((p) =>
+        {
+            if (p == 1f) TimeMaster.shieldActive = false;
+        })));
+    }
+
+    public static void guesserShoot(byte killerId, byte dyingTargetId, byte guessedTargetId, byte guessedRoleType)
+    {
+        var killer = Helpers.PlayerById(killerId);
+        var dyingTarget = Helpers.PlayerById(dyingTargetId);
+        if (dyingTarget == null) return;
+        dyingTarget.Exiled();
+        var dyingLoverPartner = Lovers.bothDie ? dyingTarget.GetPartner() : null; // Lover check
+
+        Guesser.remainingShots(killer, true);
+
+        if (Constants.ShouldPlaySfx()) SoundManager.Instance.PlaySound(dyingTarget.KillSfx, false, 0.8f);
+
+        PlayerControl guesser = Helpers.PlayerById(killerId);
+        if (FastDestroyableSingleton<HudManager>.Instance != null && guesser != null)
+        {
+            if (CachedPlayer.LocalPlayer.PlayerControl == dyingTarget)
+            {
+                FastDestroyableSingleton<HudManager>.Instance.KillOverlay.ShowKillAnimation(guesser.Data, dyingTarget.Data);
+            }
+            else if (dyingLoverPartner != null && CachedPlayer.LocalPlayer.PlayerControl == dyingLoverPartner)
+            {
+                FastDestroyableSingleton<HudManager>.Instance.KillOverlay.ShowKillAnimation(dyingLoverPartner.Data, dyingLoverPartner.Data);
+            }
+        }
+
+        var guessedTarget = Helpers.PlayerById(guessedTargetId);
+        if (Guesser.showInfoInGhostChat && CachedPlayer.LocalPlayer.PlayerControl.Data.IsDead && guessedTarget != null)
+        {
+            var roleInfo = RoleInfo.AllRoleInfos.FirstOrDefault(x => (byte)x.RoleType == guessedRoleType);
+            string msg = string.Format(Tr.Get("guesserGuessChat"), roleInfo.Name, guessedTarget.Data.PlayerName);
+            if (AmongUsClient.Instance.AmClient && FastDestroyableSingleton<HudManager>.Instance)
+            {
+                FastDestroyableSingleton<HudManager>.Instance.Chat.AddChat(guesser, msg);
+            }
+            if (msg.Contains("who", StringComparison.OrdinalIgnoreCase))
+            {
+                FastDestroyableSingleton<Assets.CoreScripts.UnityTelemetry>.Instance.SendWho();
+            }
+        }
+    }
 }

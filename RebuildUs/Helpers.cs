@@ -190,7 +190,7 @@ public static class Helpers
         if (AmongUsClient.Instance.IsGameOver) return MurderAttemptResult.SuppressKill;
         if (killer == null || killer.Data == null || (killer.Data.IsDead && !ignoreIfKillerIsDead) || killer.Data.Disconnected) return MurderAttemptResult.SuppressKill; // Allow non Impostor kills compared to vanilla code
         if (target == null || target.Data == null || target.Data.IsDead || target.Data.Disconnected) return MurderAttemptResult.SuppressKill; // Allow killing players in vents compared to vanilla code
-        if (Helpers.IsHideNSeekMode) return MurderAttemptResult.PerformKill;
+        if (IsHideNSeekMode) return MurderAttemptResult.PerformKill;
 
         // Handle first kill attempt
         if (ModMapOptions.ShieldFirstKill && ModMapOptions.FirstKillPlayer == target) return MurderAttemptResult.SuppressKill;
@@ -217,17 +217,20 @@ public static class Helpers
         // }
 
         // Block Time Master with time shield kill
-        // else if (TimeMaster.shieldActive && TimeMaster.timeMaster != null && TimeMaster.timeMaster == target)
-        // {
-        //     if (!blockRewind)
-        //     {
-        //         // Only rewind the attempt was not called because a meeting startet
-        //         MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(killer.NetId, (byte)CustomRPC.TimeMasterRewindTime, Hazel.SendOption.Reliable, -1);
-        //         AmongUsClient.Instance.FinishRpcImmediately(writer);
-        //         RPCProcedure.timeMasterRewindTime();
-        //     }
-        //     return MurderAttemptResult.SuppressKill;
-        // }
+        else if (TimeMaster.Exists)
+        {
+            if (TimeMaster.shieldActive && target.IsRole(RoleType.TimeMaster))
+            {
+                if (!blockRewind)
+                {
+                    // Only rewind the attempt was not called because a meeting started
+                    MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(killer.NetId, (byte)CustomRPC.TimeMasterRewindTime, Hazel.SendOption.Reliable, -1);
+                    AmongUsClient.Instance.FinishRpcImmediately(writer);
+                    RPCProcedure.timeMasterRewindTime();
+                }
+                return MurderAttemptResult.SuppressKill;
+            }
+        }
 
         // if (TransportationToolPatches.isUsingTransportation(target) && !blockRewind && killer == Vampire.vampire)
         // {

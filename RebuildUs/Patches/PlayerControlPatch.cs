@@ -1,5 +1,6 @@
 using RebuildUs.Modules;
 using RebuildUs.Modules.RPC;
+using RebuildUs.Roles.Crewmate;
 using RebuildUs.Roles.Impostor;
 
 namespace RebuildUs.Patches;
@@ -105,9 +106,8 @@ public static class PlayerControlPatch
         Logger.LogInfo($"{__instance.GetNameWithRole()} => {target.Object?.GetNameWithRole() ?? "null"}", "ReportDeadBody");
         // Medic or Detective report
         bool isMedicReport = CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Medic) && __instance.PlayerId == CachedPlayer.LocalPlayer.PlayerControl.PlayerId;
-        // bool isDetectiveReport = Detective.detective != null && Detective.detective == CachedPlayer.LocalPlayer.PlayerControl && __instance.PlayerId == Detective.detective.PlayerId;
-        if (isMedicReport)
-        // if (isMedicReport || isDetectiveReport)
+        bool isDetectiveReport = Detective.Exists && CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Detective) && __instance.PlayerId == CachedPlayer.LocalPlayer.PlayerControl.PlayerId;
+        if (isMedicReport || isDetectiveReport)
         {
             var deadPlayer = GameHistory.DeadPlayers?.Where(x => x.Player?.PlayerId == target?.PlayerId)?.FirstOrDefault();
 
@@ -118,26 +118,26 @@ public static class PlayerControlPatch
 
                 if (isMedicReport)
                 {
-                    msg = String.Format(Tr.Get("medicReport"), Math.Round(timeSinceDeath / 1000));
+                    msg = string.Format(Tr.Get("medicReport"), Math.Round(timeSinceDeath / 1000));
                 }
-                // else if (isDetectiveReport)
-                // {
-                //     if (timeSinceDeath < Detective.reportNameDuration * 1000)
-                //     {
-                //         msg = String.Format(Tr.Get("detectiveReportName"), deadPlayer.killerIfExisting.Data.PlayerName);
-                //     }
-                //     else if (timeSinceDeath < Detective.reportColorDuration * 1000)
-                //     {
-                //         var typeOfColor = Helpers.isLighterColor(deadPlayer.killerIfExisting.Data.DefaultOutfit.ColorId) ?
-                //             Tr.Get("detectiveColorLight") :
-                //             Tr.Get("detectiveColorDark");
-                //         msg = String.Format(Tr.Get("detectiveReportColor"), typeOfColor);
-                //     }
-                //     else
-                //     {
-                //         msg = Tr.Get("detectiveReportNone");
-                //     }
-                // }
+                else if (isDetectiveReport)
+                {
+                    if (timeSinceDeath < Detective.reportNameDuration * 1000)
+                    {
+                        msg = string.Format(Tr.Get("detectiveReportName"), deadPlayer.KillerIfExisting.Data.PlayerName);
+                    }
+                    else if (timeSinceDeath < Detective.reportColorDuration * 1000)
+                    {
+                        var typeOfColor = Helpers.isLighterColor(deadPlayer.KillerIfExisting.Data.DefaultOutfit.ColorId) ?
+                            Tr.Get("detectiveColorLight") :
+                            Tr.Get("detectiveColorDark");
+                        msg = string.Format(Tr.Get("detectiveReportColor"), typeOfColor);
+                    }
+                    else
+                    {
+                        msg = Tr.Get("detectiveReportNone");
+                    }
+                }
 
                 if (!string.IsNullOrWhiteSpace(msg))
                 {

@@ -40,4 +40,7 @@ public enum CustomRPC : byte
     MedicSetShielded,
     ShieldedMurderAttempt,
     SetFutureShielded,
+    TimeMasterShield,
+    TimeMasterRewindTime,
+    GuesserShoot,
 }

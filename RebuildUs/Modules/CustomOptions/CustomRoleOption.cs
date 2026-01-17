@@ -25,7 +25,23 @@ public class CustomRoleOption : CustomOption
 
         if (max > 1)
         {
-            NumberOfRoleOption = Normal(baseId + 10000, type, "CustomOption.NumberOfRole", 1f, 1f, 15f, 1f, this);
+            NumberOfRoleOption = Normal(baseId + 10000, type, "NumberOfRole", 1f, 1f, 15f, 1f, this);
+        }
+    }
+
+    public CustomRoleOption(int baseId, CustomOptionType type, string name, Color color, int max = 15, bool roleEnabled = true) :
+    base(baseId, type, Helpers.Cs(color, name), CustomOptionHolder.RATES, "", null, true, false, "")
+    {
+        IsRoleEnabled = roleEnabled;
+
+        if (max <= 0 || !roleEnabled)
+        {
+            IsRoleEnabled = false;
+        }
+
+        if (max > 1)
+        {
+            NumberOfRoleOption = Normal(baseId + 10000, type, "NumberOfRole", 1f, 1f, 15f, 1f, this);
         }
     }
 }
