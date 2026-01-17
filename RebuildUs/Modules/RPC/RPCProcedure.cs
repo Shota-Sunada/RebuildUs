@@ -3,6 +3,7 @@ using AmongUs.GameOptions;
 using RebuildUs.Roles.Crewmate;
 using RebuildUs.Roles.Neutral;
 using RebuildUs.Objects;
+using Epic.OnlineServices;
 
 namespace RebuildUs.Modules.RPC;
 
@@ -381,5 +382,40 @@ public static partial class RPCProcedure
         newJackal.WasSpy = wasSpy;
         Sidekick.Clear();
         return;
+    }
+
+    public static void medicSetShielded(byte medicId, byte shieldedId)
+    {
+        var medicPlayer = Helpers.PlayerById(medicId);
+        var medic = Medic.GetRole(medicPlayer);
+        medic.usedShield = true;
+        medic.shielded = Helpers.PlayerById(shieldedId);
+        medic.futureShielded = null;
+    }
+
+    public static void shieldedMurderAttempt(byte medicId)
+    {
+        var medicPlayer = Helpers.PlayerById(medicId);
+        var medic = Medic.GetRole(medicPlayer);
+
+        if (!Medic.Exists || medic.shielded == null) return;
+
+        bool isShieldedAndShow = medic.shielded == CachedPlayer.LocalPlayer.PlayerControl && Medic.showAttemptToShielded;
+        bool isMedicAndShow = CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Medic) && Medic.showAttemptToMedic;
+
+        if ((isShieldedAndShow || isMedicAndShow) && FastDestroyableSingleton<HudManager>.Instance?.FullScreen != null)
+        {
+            var c = Palette.ImpostorRed;
+            Helpers.showFlash(new Color(c.r, c.g, c.b));
+        }
+    }
+
+    public static void setFutureShielded(byte medicId, byte playerId)
+    {
+        var medicPlayer = Helpers.PlayerById(medicId);
+        var medic = Medic.GetRole(medicPlayer);
+
+        medic.futureShielded = Helpers.PlayerById(playerId);
+        medic.usedShield = true;
     }
 }

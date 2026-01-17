@@ -119,6 +119,17 @@ public static partial class CustomOptionHolder
     public static CustomOption SpyImpostorsCanKillAnyone;
     public static CustomOption SpyCanEnterVents;
     public static CustomOption SpyHasImpostorVision;
+
+    public static CustomRoleOption medicSpawnRate;
+    public static CustomOption medicShowShielded;
+    public static CustomOption medicShowAttemptToShielded;
+    public static CustomOption medicSetShieldAfterMeeting;
+    public static CustomOption medicShowAttemptToMedic;
+
+    public static CustomRoleOption seerSpawnRate;
+    public static CustomOption seerMode;
+    public static CustomOption seerSoulDuration;
+    public static CustomOption seerLimitSoulDuration;
     #endregion
 
     #region ROLES IMPOSTOR
@@ -287,6 +298,17 @@ public static partial class CustomOptionHolder
         SpyImpostorsCanKillAnyone = CustomOption.Normal(1022, CustomOptionType.Crewmate, "", true, SpySpawnRate);
         SpyCanEnterVents = CustomOption.Normal(1023, CustomOptionType.Crewmate, "", false, SpySpawnRate);
         SpyHasImpostorVision = CustomOption.Normal(1024, CustomOptionType.Crewmate, "", false, SpySpawnRate);
+
+        medicSpawnRate = new(1030, CustomOptionType.Crewmate, RoleType.Medic, Medic.RoleColor, 1);
+        medicShowShielded = CustomOption.Normal(1031, CustomOptionType.Crewmate, "medicShowShielded", ["medicShowShieldedAll", "medicShowShieldedBoth", "medicShowShieldedMedic"], medicSpawnRate);
+        medicShowAttemptToShielded = CustomOption.Normal(1032, CustomOptionType.Crewmate, "medicShowAttemptToShielded", false, medicSpawnRate);
+        medicSetShieldAfterMeeting = CustomOption.Normal(1033, CustomOptionType.Crewmate, "medicSetShieldAfterMeeting", false, medicSpawnRate);
+        medicShowAttemptToMedic = CustomOption.Normal(1034, CustomOptionType.Crewmate, "medicSeesMurderAttempt", false, medicSpawnRate);
+
+        seerSpawnRate = new(1040, CustomOptionType.Crewmate, RoleType.Seer, Seer.RoleColor, 1);
+        seerMode = CustomOption.Normal(1041, CustomOptionType.Crewmate, "seerMode", ["seerModeBoth", "seerModeFlash", "seerModeSouls"], seerSpawnRate);
+        seerLimitSoulDuration = CustomOption.Normal(1042, CustomOptionType.Crewmate, "seerLimitSoulDuration", false, seerSpawnRate);
+        seerSoulDuration = CustomOption.Normal(1043, CustomOptionType.Crewmate, "seerSoulDuration", 15f, 0f, 120f, 5f, seerLimitSoulDuration);
         #endregion
 
         #region ROLES IMPOSTOR

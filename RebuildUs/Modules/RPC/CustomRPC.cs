@@ -37,4 +37,7 @@ public enum CustomRPC : byte
     ErasePlayerRoles,
     JackalCreatesSidekick,
     SidekickPromotes,
+    MedicSetShielded,
+    ShieldedMurderAttempt,
+    SetFutureShielded,
 }

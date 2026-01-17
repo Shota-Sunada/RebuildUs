@@ -196,13 +196,19 @@ public static class Helpers
         if (ModMapOptions.ShieldFirstKill && ModMapOptions.FirstKillPlayer == target) return MurderAttemptResult.SuppressKill;
 
         // Block impostor shielded kill
-        // if (!ignoreMedic && Medic.shielded != null && Medic.shielded == target)
-        // {
-        //     MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(killer.NetId, (byte)CustomRPC.ShieldedMurderAttempt, Hazel.SendOption.Reliable, -1);
-        //     AmongUsClient.Instance.FinishRpcImmediately(writer);
-        //     RPCProcedure.shieldedMurderAttempt();
-        //     return MurderAttemptResult.SuppressKill;
-        // }
+        if (Medic.Exists)
+        {
+            foreach (var medic in Medic.Players)
+            {
+                if (!ignoreMedic && medic.shielded != null && medic.shielded == target)
+                {
+                    MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(killer.NetId, (byte)CustomRPC.ShieldedMurderAttempt, Hazel.SendOption.Reliable, -1);
+                    AmongUsClient.Instance.FinishRpcImmediately(writer);
+                    RPCProcedure.shieldedMurderAttempt(medic.Player.PlayerId);
+                    return MurderAttemptResult.SuppressKill;
+                }
+            }
+        }
 
         // Block impostor not fully grown mini kill
         // else if (Mini.mini != null && target == Mini.mini && !Mini.isGrownUp())

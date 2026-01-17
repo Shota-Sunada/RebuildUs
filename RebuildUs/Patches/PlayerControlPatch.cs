@@ -102,41 +102,42 @@ public static class PlayerControlPatch
     [HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.CmdReportDeadBody))]
     public static void CmdReportDeadBodyPostfix(PlayerControl __instance, [HarmonyArgument(0)] NetworkedPlayerInfo target)
     {
-        Logger.info($"{__instance.getNameWithRole()} => {target?.getNameWithRole() ?? "null"}", "ReportDeadBody");
+        Logger.LogInfo($"{__instance.GetNameWithRole()} => {target.Object?.GetNameWithRole() ?? "null"}", "ReportDeadBody");
         // Medic or Detective report
-        bool isMedicReport = Medic.medic != null && Medic.medic == CachedPlayer.LocalPlayer.PlayerControl && __instance.PlayerId == Medic.medic.PlayerId;
-        bool isDetectiveReport = Detective.detective != null && Detective.detective == CachedPlayer.LocalPlayer.PlayerControl && __instance.PlayerId == Detective.detective.PlayerId;
-        if (isMedicReport || isDetectiveReport)
+        bool isMedicReport = CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Medic) && __instance.PlayerId == CachedPlayer.LocalPlayer.PlayerControl.PlayerId;
+        // bool isDetectiveReport = Detective.detective != null && Detective.detective == CachedPlayer.LocalPlayer.PlayerControl && __instance.PlayerId == Detective.detective.PlayerId;
+        if (isMedicReport)
+        // if (isMedicReport || isDetectiveReport)
         {
-            DeadPlayer deadPlayer = deadPlayers?.Where(x => x.player?.PlayerId == target?.PlayerId)?.FirstOrDefault();
+            var deadPlayer = GameHistory.DeadPlayers?.Where(x => x.Player?.PlayerId == target?.PlayerId)?.FirstOrDefault();
 
-            if (deadPlayer != null && deadPlayer.killerIfExisting != null)
+            if (deadPlayer != null && deadPlayer.KillerIfExisting != null)
             {
-                float timeSinceDeath = (float)(DateTime.UtcNow - deadPlayer.timeOfDeath).TotalMilliseconds;
+                float timeSinceDeath = (float)(DateTime.UtcNow - deadPlayer.TimeOfDeath).TotalMilliseconds;
                 string msg = "";
 
                 if (isMedicReport)
                 {
                     msg = String.Format(Tr.Get("medicReport"), Math.Round(timeSinceDeath / 1000));
                 }
-                else if (isDetectiveReport)
-                {
-                    if (timeSinceDeath < Detective.reportNameDuration * 1000)
-                    {
-                        msg = String.Format(Tr.Get("detectiveReportName"), deadPlayer.killerIfExisting.Data.PlayerName);
-                    }
-                    else if (timeSinceDeath < Detective.reportColorDuration * 1000)
-                    {
-                        var typeOfColor = Helpers.isLighterColor(deadPlayer.killerIfExisting.Data.DefaultOutfit.ColorId) ?
-                            Tr.Get("detectiveColorLight") :
-                            Tr.Get("detectiveColorDark");
-                        msg = String.Format(Tr.Get("detectiveReportColor"), typeOfColor);
-                    }
-                    else
-                    {
-                        msg = Tr.Get("detectiveReportNone");
-                    }
-                }
+                // else if (isDetectiveReport)
+                // {
+                //     if (timeSinceDeath < Detective.reportNameDuration * 1000)
+                //     {
+                //         msg = String.Format(Tr.Get("detectiveReportName"), deadPlayer.killerIfExisting.Data.PlayerName);
+                //     }
+                //     else if (timeSinceDeath < Detective.reportColorDuration * 1000)
+                //     {
+                //         var typeOfColor = Helpers.isLighterColor(deadPlayer.killerIfExisting.Data.DefaultOutfit.ColorId) ?
+                //             Tr.Get("detectiveColorLight") :
+                //             Tr.Get("detectiveColorDark");
+                //         msg = String.Format(Tr.Get("detectiveReportColor"), typeOfColor);
+                //     }
+                //     else
+                //     {
+                //         msg = Tr.Get("detectiveReportNone");
+                //     }
+                // }
 
                 if (!string.IsNullOrWhiteSpace(msg))
                 {
@@ -146,7 +147,7 @@ public static class PlayerControlPatch
                     }
                     if (msg.IndexOf("who", StringComparison.OrdinalIgnoreCase) >= 0)
                     {
-                        FastDestroyableSingleton<Assets.CoreScripts.Telemetry>.Instance.SendWho();
+                        FastDestroyableSingleton<Assets.CoreScripts.UnityTelemetry>.Instance.SendWho();
                     }
                 }
             }
@@ -178,125 +179,18 @@ public static class PlayerControlPatch
     [HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.MurderPlayer))]
     public static void Postfix(PlayerControl __instance, [HarmonyArgument(0)] PlayerControl target)
     {
-        Logger.info($"{__instance.getNameWithRole()} => {target.getNameWithRole()}", "MurderPlayer");
+        Logger.LogInfo($"{__instance.GetNameWithRole()} => {target.GetNameWithRole()}", "MurderPlayer");
         // Collect dead player info
-        DeadPlayer deadPlayer = new(target, DateTime.UtcNow, DeathReason.Kill, __instance);
-        GameHistory.deadPlayers.Add(deadPlayer);
+        var deadPlayer = new DeadPlayer(target, DateTime.UtcNow, DeathReason.Kill, __instance);
+        GameHistory.DeadPlayers.Add(deadPlayer);
 
         // Reset killer to crewmate if resetToCrewmate
         if (resetToCrewmate) __instance.Data.Role.TeamType = RoleTeamTypes.Crewmate;
         if (resetToDead) __instance.Data.IsDead = true;
 
-        // Remove fake tasks when player dies
-        if (target.hasFakeTasks())
-            target.clearAllTasks();
-
-        // Sidekick promotion trigger on murder
-        if (Sidekick.promotesToJackal && Sidekick.sidekick != null && !Sidekick.sidekick.Data.IsDead && target == Jackal.jackal && Jackal.jackal == CachedPlayer.LocalPlayer.PlayerControl)
-        {
-            MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.SidekickPromotes, Hazel.SendOption.Reliable, -1);
-            AmongUsClient.Instance.FinishRpcImmediately(writer);
-            RPCProcedure.sidekickPromotes();
-        }
-
-        // Pursuer promotion trigger on murder (the host sends the call such that everyone receives the update before a possible game End)
-        if (target == Lawyer.target && AmongUsClient.Instance.AmHost)
-        {
-            MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.LawyerPromotesToPursuer, Hazel.SendOption.Reliable, -1);
-            AmongUsClient.Instance.FinishRpcImmediately(writer);
-            RPCProcedure.lawyerPromotesToPursuer();
-        }
-
-        // Cleaner Button Sync
-        if (Cleaner.cleaner != null && CachedPlayer.LocalPlayer.PlayerControl == Cleaner.cleaner && __instance == Cleaner.cleaner && HudManagerStartPatch.cleanerCleanButton != null)
-            HudManagerStartPatch.cleanerCleanButton.Timer = Cleaner.cleaner.killTimer;
-
-        // Witch Button Sync
-        if (Witch.triggerBothCooldowns && Witch.witch != null && CachedPlayer.LocalPlayer.PlayerControl == Witch.witch && __instance == Witch.witch && HudManagerStartPatch.witchSpellButton != null)
-            HudManagerStartPatch.witchSpellButton.Timer = HudManagerStartPatch.witchSpellButton.MaxTimer;
-
-        // Warlock Button Sync
-        if (Warlock.warlock != null && CachedPlayer.LocalPlayer.PlayerControl == Warlock.warlock && __instance == Warlock.warlock && HudManagerStartPatch.warlockCurseButton != null)
-        {
-            if (Warlock.warlock.killTimer > HudManagerStartPatch.warlockCurseButton.Timer)
-            {
-                HudManagerStartPatch.warlockCurseButton.Timer = Warlock.warlock.killTimer;
-            }
-        }
-
-        // Assassin Button Sync
-        if (Assassin.assassin != null && CachedPlayer.LocalPlayer.PlayerControl == Assassin.assassin && __instance == Assassin.assassin && HudManagerStartPatch.assassinButton != null)
-            HudManagerStartPatch.assassinButton.Timer = HudManagerStartPatch.assassinButton.MaxTimer;
-
-        // Seer show flash and add dead player position
-        if (Seer.seer != null && CachedPlayer.LocalPlayer.PlayerControl == Seer.seer && !Seer.seer.Data.IsDead && Seer.seer != target && Seer.mode <= 1)
-        {
-            Helpers.showFlash(new Color(42f / 255f, 187f / 255f, 245f / 255f));
-        }
-        if (Seer.deadBodyPositions != null) Seer.deadBodyPositions.Add(target.transform.position);
-
-        // Tracker store body positions
-        if (Tracker.deadBodyPositions != null) Tracker.deadBodyPositions.Add(target.transform.position);
-
-        // Medium add body
-        if (Medium.deadBodies != null)
-        {
-            Medium.featureDeadBodies.Add(new Tuple<DeadPlayer, Vector3>(deadPlayer, target.transform.position));
-        }
-
-        // Mini set adapted kill cooldown
-        if (CachedPlayer.LocalPlayer.PlayerControl.hasModifier(ModifierType.Mini) && CachedPlayer.LocalPlayer.PlayerControl.Data.Role.IsImpostor && CachedPlayer.LocalPlayer.PlayerControl == __instance)
-        {
-            var multiplier = Mini.isGrownUp(CachedPlayer.LocalPlayer.PlayerControl) ? 0.66f : 2f;
-            CachedPlayer.LocalPlayer.PlayerControl.SetKillTimer(PlayerControl.GameOptions.KillCooldown * multiplier);
-        }
-
-        // Set bountyHunter cooldown
-        if (BountyHunter.bountyHunter != null && CachedPlayer.LocalPlayer.PlayerControl == BountyHunter.bountyHunter && __instance == BountyHunter.bountyHunter)
-        {
-            if (target == BountyHunter.bounty)
-            {
-                BountyHunter.bountyHunter.SetKillTimer(BountyHunter.bountyKillCooldown);
-                BountyHunter.bountyUpdateTimer = 0f; // Force bounty update
-            }
-            else
-                BountyHunter.bountyHunter.SetKillTimer(PlayerControl.GameOptions.KillCooldown + BountyHunter.punishmentTime);
-        }
-
-        // Update arsonist status
-        Arsonist.updateStatus();
-
-        // Show flash on bait kill to the killer if enabled
-        if (Bait.bait != null && target == Bait.bait && Bait.showKillFlash && __instance != Bait.bait && __instance == CachedPlayer.LocalPlayer.PlayerControl)
-        {
-            Helpers.showFlash(new Color(42f / 255f, 187f / 255f, 245f / 255f));
-        }
-
-        // impostor promote to last impostor
-        if (target.IsTeamImpostor() && AmongUsClient.Instance.AmHost)
-        {
-            LastImpostor.promoteToLastImpostor();
-        }
-
-        // 人形使いのダミー死亡処理
-        if (target == Puppeteer.dummy)
-        {
-            // 蘇生する
-            target.Revive();
-            // 死体を消す
-            DeadBody[] array = UnityEngine.Object.FindObjectsOfType<DeadBody>();
-            for (int i = 0; i < array.Length; i++)
-            {
-                if (GameData.Instance.GetPlayerById(array[i].ParentId).PlayerId == target.PlayerId)
-                {
-                    array[i].gameObject.active = false;
-                }
-            }
-            Puppeteer.OnDummyDeath(__instance);
-        }
+        AllPlayers.OnKill(__instance, target);
 
         __instance.OnKill(target);
-        Sherlock.recordKillLog(__instance, target);
         target.OnDeath(__instance);
     }
 
@@ -305,12 +199,14 @@ public static class PlayerControlPatch
     public static void ExiledPostfix(PlayerControl __instance)
     {
         // Collect dead player info
-        DeadPlayer deadPlayer = new(__instance, DateTime.UtcNow, DeathReason.Exile, null);
-        GameHistory.deadPlayers.Add(deadPlayer);
+        var deadPlayer = new(__instance, DateTime.UtcNow, DeathReason.Exile, null);
+        GameHistory.DeadPlayers.Add(deadPlayer);
 
         // Remove fake tasks when player dies
-        if (__instance.hasFakeTasks())
-            __instance.clearAllTasks();
+        if (__instance.HasFakeTasks())
+        {
+            __instance.ClearAllTasks();
+        }
 
         __instance.OnDeath(killer: null);
 

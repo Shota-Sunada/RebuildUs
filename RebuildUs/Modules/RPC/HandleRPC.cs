@@ -122,6 +122,15 @@ public static partial class RPCProcedure
             case CustomRPC.ErasePlayerRoles:
                 ErasePlayerRoles(reader.ReadByte());
                 break;
+            case CustomRPC.MedicSetShielded:
+                medicSetShielded(reader.ReadByte(), reader.ReadByte());
+                break;
+            case CustomRPC.ShieldedMurderAttempt:
+                shieldedMurderAttempt(reader.ReadByte());
+                break;
+            case CustomRPC.SetFutureShielded:
+                setFutureShielded(reader.ReadByte(), reader.ReadByte());
+                break;
             default:
                 break;
         }

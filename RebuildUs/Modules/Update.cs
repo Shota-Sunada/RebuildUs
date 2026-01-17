@@ -1,3 +1,4 @@
+using RebuildUs.Roles.Crewmate;
 using RebuildUs.Roles.Impostor;
 
 namespace RebuildUs.Patches;
@@ -715,11 +716,14 @@ public static class Update
 
             bool isMorphedMorphling = target == Morphling.morphling && Morphling.morphTarget != null && Morphling.morphTimer > 0f;
             bool hasVisibleShield = false;
-            if (Camouflager.camouflageTimer <= 0f && Medic.shielded != null && ((target == Medic.shielded && !isMorphedMorphling) || (isMorphedMorphling && Morphling.morphTarget == Medic.shielded)))
+            foreach (var medic in Medic.Players)
             {
-                hasVisibleShield = Medic.showShielded == 0 // Everyone
-                    || (Medic.showShielded == 1 && (CachedPlayer.LocalPlayer.PlayerControl == Medic.shielded || CachedPlayer.LocalPlayer.PlayerControl == Medic.medic)) // Shielded + Medic
-                    || (Medic.showShielded == 2 && CachedPlayer.LocalPlayer.PlayerControl == Medic.medic); // Medic only
+                if (Camouflager.camouflageTimer <= 0f && medic.shielded != null && ((target == medic.shielded && !isMorphedMorphling) || (isMorphedMorphling && Morphling.morphTarget == medic.shielded)))
+                {
+                    hasVisibleShield = Medic.showShielded == 0 // Everyone
+                    || (Medic.showShielded == 1 && (CachedPlayer.LocalPlayer.PlayerControl == medic.shielded || CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Medic))) // Shielded + Medic
+                    || (Medic.showShielded == 2 && CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Medic)); // Medic only
+                }
             }
 
             if (hasVisibleShield)
