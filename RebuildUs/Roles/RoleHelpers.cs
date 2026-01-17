@@ -109,13 +109,13 @@ public static class RoleHelpers
     public static void OnKill(this PlayerControl player, PlayerControl target)
     {
         PlayerRole.AllRoles.DoIf(x => x.Player == player, x => x.OnKill(target));
-        // Modifier.allModifiers.DoIf(x => x.player == player, x => x.OnKill(target));
+        PlayerModifier.AllModifiers.DoIf(x => x.Player == player, x => x.OnKill(target));
     }
 
     public static void OnDeath(this PlayerControl player, PlayerControl killer)
     {
         PlayerRole.AllRoles.DoIf(x => x.Player == player, x => x.OnDeath(killer));
-        // Modifier.allModifiers.DoIf(x => x.player == player, x => x.OnDeath(killer));
+        PlayerModifier.AllModifiers.DoIf(x => x.Player == player, x => x.OnDeath(killer));
 
         // Lover suicide trigger on exile/death
         // if (player.isLovers())
@@ -134,7 +134,7 @@ public static class RoleHelpers
             if (p == 1f)
             {
                 PlayerRole.AllRoles.DoIf(x => x.Player == player, x => x.OnFinishShipStatusBegin());
-                // Modifier.allModifiers.DoIf(x => x.player == player, x => x.OnFinishShipStatusBegin());
+                PlayerModifier.AllModifiers.DoIf(x => x.Player == player, x => x.OnFinishShipStatusBegin());
             }
         })));
     }

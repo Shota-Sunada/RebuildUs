@@ -63,11 +63,11 @@ public static class Map
 
     static void initializeIcons(MapBehaviour __instance, PlayerControl pc = null)
     {
-        List<PlayerControl> players = new();
+        List<PlayerControl> players = [];
         if (pc == null)
         {
-            mapIcons = new Dictionary<byte, SpriteRenderer>();
-            corpseIcons = new Dictionary<byte, SpriteRenderer>();
+            mapIcons = [];
+            corpseIcons = [];
             foreach (PlayerControl p in CachedPlayer.AllPlayers)
             {
                 players.Add(p);
@@ -270,7 +270,7 @@ public static class Map
         }
 
         // if (plainDoors == null) plainDoors = GameObject.FindObjectsOfType<PlainDoor>();
-        if (doorMarks == null) doorMarks = new();
+        if (doorMarks == null) doorMarks = [];
 
         foreach (var door in plainDoors)
         {
@@ -380,7 +380,7 @@ public static class Map
         }
 
         // インポスターの位置をマップに表示
-        if (impostorHerePoint == null) impostorHerePoint = new();
+        if (impostorHerePoint == null) impostorHerePoint = [];
         foreach (PlayerControl p in CachedPlayer.AllPlayers)
         {
             if (p.IsTeamImpostor() && p != CachedPlayer.LocalPlayer.PlayerControl)
@@ -476,7 +476,7 @@ public static class Map
         return false;
     }
 
-    public static Dictionary<byte, Il2CppSystem.Collections.Generic.List<Vector2>> realTasks = new();
+    public static Dictionary<byte, Il2CppSystem.Collections.Generic.List<Vector2>> realTasks = [];
     public static void resetRealTasks()
     {
         realTasks.Clear();
