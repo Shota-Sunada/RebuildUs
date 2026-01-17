@@ -201,11 +201,7 @@ public static class RoleAssignment
         //     }
         // }
 
-        BlockLovers = [
-                    (byte)RoleType.Bait,
-                    (byte)RoleType.Cupid,
-                    (byte)RoleType.Akujo
-                ];
+        BlockLovers = [(byte)RoleType.Bait,];
 
         // if (!Lovers.hasTasks)
         // {

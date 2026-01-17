@@ -317,7 +317,7 @@ public static class Map
 
     private static void changeSabotageLayout(MapBehaviour __instance)
     {
-        if (PlayerControl.GameOptions.MapId == 4)
+        if (Helpers.GetOption(ByteOptionNames.MapId) == 4)
         {
             // サボタージュアイコンのレイアウトを変更
             Vector3 halfScale = new Vector3(0.75f, 0.75f, 0.75f);
@@ -402,7 +402,7 @@ public static class Map
                 {
                     impostorHerePoint[p.PlayerId] = GameObject.Instantiate<SpriteRenderer>(__instance.HerePoint, __instance.HerePoint.transform.parent);
                 }
-                impostorHerePoint[p.PlayerId].gameObject.SetActive(p.isAlive());
+                impostorHerePoint[p.PlayerId].gameObject.SetActive(p.IsAlive());
                 NetworkedPlayerInfo playerById = GameData.Instance.GetPlayerById(p.PlayerId);
                 PlayerMaterial.SetColors(0, impostorHerePoint[p.PlayerId]);
                 Vector3 pos = new Vector3(p.transform.position.x, p.transform.position.y, p.transform.position.z);

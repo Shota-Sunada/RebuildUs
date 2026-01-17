@@ -11,7 +11,7 @@ public static class Ship
         if ((!__instance.Systems.ContainsKey(SystemTypes.Electrical) && !Helpers.isFungle()) || Helpers.IsHideNSeekMode) return true;
 
         // If player is a role which has Impostor vision
-        if (Helpers.hasImpostorVision(player.Object))
+        if (Helpers.HasImpostorVision(player.Object))
         {
             // __result = __instance.MaxLightRadius * PlayerControl.GameOptions.ImpostorLightMod;
             __result = GetNeutralLightRadius(__instance, true);
@@ -94,7 +94,6 @@ public static class Ship
         if (Helpers.GetOption(Int32OptionNames.NumShortTasks) > normalTaskCount) Helpers.SetOption(Int32OptionNames.NumShortTasks, normalTaskCount);
         if (Helpers.GetOption(Int32OptionNames.NumLongTasks) > longTaskCount) Helpers.SetOption(Int32OptionNames.NumLongTasks, longTaskCount);
 
-        MapBehaviourPatch.VentNetworks.Clear();
         return true;
     }
 
@@ -110,7 +109,7 @@ public static class Ship
         // 一部役職のタスクを再割り当てする
         MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.FinishShipStatusBegin, Hazel.SendOption.Reliable, -1);
         AmongUsClient.Instance.FinishRpcImmediately(writer);
-        RPCProcedure.finishShipStatusBegin();
+        RPCProcedure.FinishShipStatusBegin();
     }
 
     [HarmonyPatch(typeof(ShipStatus), nameof(ShipStatus.Start))]
@@ -127,7 +126,7 @@ public static class Ship
     public static void Postfix(ShipStatus __instance, PlayerControl player, int numPlayers, bool initialSpawn)
     {
         // Polusの湧き位置をランダムにする 無駄に人数分シャッフルが走るのをそのうち直す
-        if (PlayerControl.GameOptions.MapId == 2 && CustomOptionHolder.PolusRandomSpawn.GetBool())
+        if (Helpers.GetOption(ByteOptionNames.MapId) == 2 && CustomOptionHolder.PolusRandomSpawn.GetBool())
         {
             if (AmongUsClient.Instance.AmHost)
             {
