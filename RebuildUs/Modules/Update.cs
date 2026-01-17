@@ -9,7 +9,7 @@ public static class Update
         foreach (PlayerControl player in CachedPlayer.AllPlayers)
         {
             player.cosmetics.nameText.text = Helpers.hidePlayerName(CachedPlayer.LocalPlayer.PlayerControl, player) ? "" : player.CurrentOutfit.PlayerName;
-            if (CachedPlayer.LocalPlayer.PlayerControl.isImpostor() && player.isImpostor())
+            if (CachedPlayer.LocalPlayer.PlayerControl.IsTeamImpostor() && player.IsTeamImpostor())
             {
                 player.cosmetics.nameText.color = Palette.ImpostorRed;
             }
@@ -57,63 +57,63 @@ public static class Update
 
     public static void setNameColors()
     {
-        if (CachedPlayer.LocalPlayer.PlayerControl.isRole(RoleType.Jester))
+        if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Jester))
         {
             setPlayerNameColor(CachedPlayer.LocalPlayer.PlayerControl, Jester.color);
         }
-        else if (CachedPlayer.LocalPlayer.PlayerControl.isRole(RoleType.Mayor))
+        else if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Mayor))
         {
             setPlayerNameColor(CachedPlayer.LocalPlayer.PlayerControl, Mayor.color);
         }
-        else if (CachedPlayer.LocalPlayer.PlayerControl.isRole(RoleType.Engineer))
+        else if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Engineer))
         {
             setPlayerNameColor(CachedPlayer.LocalPlayer.PlayerControl, Engineer.color);
         }
-        else if (CachedPlayer.LocalPlayer.PlayerControl.isRole(RoleType.Sheriff))
+        else if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Sheriff))
         {
             setPlayerNameColor(CachedPlayer.LocalPlayer.PlayerControl, Sheriff.color);
         }
-        else if (CachedPlayer.LocalPlayer.PlayerControl.isRole(RoleType.Lighter))
+        else if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Lighter))
         {
             setPlayerNameColor(CachedPlayer.LocalPlayer.PlayerControl, Lighter.color);
         }
-        else if (CachedPlayer.LocalPlayer.PlayerControl.isRole(RoleType.Detective))
+        else if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Detective))
         {
             setPlayerNameColor(CachedPlayer.LocalPlayer.PlayerControl, Detective.color);
         }
-        else if (CachedPlayer.LocalPlayer.PlayerControl.isRole(RoleType.TimeMaster))
+        else if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.TimeMaster))
         {
             setPlayerNameColor(CachedPlayer.LocalPlayer.PlayerControl, TimeMaster.color);
         }
-        else if (CachedPlayer.LocalPlayer.PlayerControl.isRole(RoleType.Medic))
+        else if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Medic))
         {
             setPlayerNameColor(CachedPlayer.LocalPlayer.PlayerControl, Medic.color);
         }
-        else if (CachedPlayer.LocalPlayer.PlayerControl.isRole(RoleType.Shifter))
+        else if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Shifter))
         {
             setPlayerNameColor(CachedPlayer.LocalPlayer.PlayerControl, Shifter.color);
         }
-        else if (CachedPlayer.LocalPlayer.PlayerControl.isRole(RoleType.Swapper))
+        else if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Swapper))
         {
             setPlayerNameColor(CachedPlayer.LocalPlayer.PlayerControl, Swapper.swapper.Data.Role.IsImpostor ? Palette.ImpostorRed : Swapper.color);
         }
-        else if (CachedPlayer.LocalPlayer.PlayerControl.isRole(RoleType.Seer))
+        else if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Seer))
         {
             setPlayerNameColor(CachedPlayer.LocalPlayer.PlayerControl, Seer.color);
         }
-        else if (CachedPlayer.LocalPlayer.PlayerControl.isRole(RoleType.Hacker))
+        else if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Hacker))
         {
             setPlayerNameColor(CachedPlayer.LocalPlayer.PlayerControl, Hacker.color);
         }
-        else if (CachedPlayer.LocalPlayer.PlayerControl.isRole(RoleType.Tracker))
+        else if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Tracker))
         {
             setPlayerNameColor(CachedPlayer.LocalPlayer.PlayerControl, Tracker.color);
         }
-        else if (CachedPlayer.LocalPlayer.PlayerControl.isRole(RoleType.Snitch))
+        else if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Snitch))
         {
             setPlayerNameColor(CachedPlayer.LocalPlayer.PlayerControl, Snitch.color);
         }
-        else if (CachedPlayer.LocalPlayer.PlayerControl.isRole(RoleType.Jackal))
+        else if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Jackal))
         {
             // Jackal can see his sidekick
             setPlayerNameColor(CachedPlayer.LocalPlayer.PlayerControl, Jackal.color);
@@ -126,75 +126,75 @@ public static class Update
                 setPlayerNameColor(Jackal.fakeSidekick, Jackal.color);
             }
         }
-        else if (CachedPlayer.LocalPlayer.PlayerControl.isRole(RoleType.Spy))
+        else if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Spy))
         {
             setPlayerNameColor(CachedPlayer.LocalPlayer.PlayerControl, Spy.color);
         }
-        else if (CachedPlayer.LocalPlayer.PlayerControl.isRole(RoleType.SecurityGuard))
+        else if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.SecurityGuard))
         {
             setPlayerNameColor(CachedPlayer.LocalPlayer.PlayerControl, SecurityGuard.color);
         }
-        else if (CachedPlayer.LocalPlayer.PlayerControl.isRole(RoleType.Arsonist))
+        else if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Arsonist))
         {
             setPlayerNameColor(CachedPlayer.LocalPlayer.PlayerControl, Arsonist.color);
         }
-        else if (CachedPlayer.LocalPlayer.PlayerControl.isRole(RoleType.NiceGuesser))
+        else if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.NiceGuesser))
         {
             setPlayerNameColor(CachedPlayer.LocalPlayer.PlayerControl, Guesser.color);
         }
-        else if (CachedPlayer.LocalPlayer.PlayerControl.isRole(RoleType.EvilGuesser))
+        else if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.EvilGuesser))
         {
             setPlayerNameColor(CachedPlayer.LocalPlayer.PlayerControl, Palette.ImpostorRed);
         }
-        else if (CachedPlayer.LocalPlayer.PlayerControl.isRole(RoleType.Bait))
+        else if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Bait))
         {
             setPlayerNameColor(CachedPlayer.LocalPlayer.PlayerControl, Bait.color);
         }
-        else if (CachedPlayer.LocalPlayer.PlayerControl.isRole(RoleType.Opportunist))
+        else if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Opportunist))
         {
             setPlayerNameColor(CachedPlayer.LocalPlayer.PlayerControl, Opportunist.color);
         }
-        else if (CachedPlayer.LocalPlayer.PlayerControl.isRole(RoleType.Vulture))
+        else if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Vulture))
         {
             setPlayerNameColor(CachedPlayer.LocalPlayer.PlayerControl, Vulture.color);
         }
-        else if (CachedPlayer.LocalPlayer.PlayerControl.isRole(RoleType.Medium))
+        else if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Medium))
         {
             setPlayerNameColor(CachedPlayer.LocalPlayer.PlayerControl, Medium.color);
         }
-        else if (CachedPlayer.LocalPlayer.PlayerControl.isRole(RoleType.Lawyer))
+        else if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Lawyer))
         {
             setPlayerNameColor(CachedPlayer.LocalPlayer.PlayerControl, Lawyer.color);
         }
-        else if (CachedPlayer.LocalPlayer.PlayerControl.isRole(RoleType.Pursuer))
+        else if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Pursuer))
         {
             setPlayerNameColor(CachedPlayer.LocalPlayer.PlayerControl, Pursuer.color);
         }
-        else if (CachedPlayer.LocalPlayer.PlayerControl.isRole(RoleType.PlagueDoctor))
+        else if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.PlagueDoctor))
         {
             setPlayerNameColor(CachedPlayer.LocalPlayer.PlayerControl, PlagueDoctor.color);
         }
-        else if (CachedPlayer.LocalPlayer.PlayerControl.isRole(RoleType.Fox))
+        else if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Fox))
         {
             setPlayerNameColor(CachedPlayer.LocalPlayer.PlayerControl, Fox.color);
         }
-        else if (CachedPlayer.LocalPlayer.PlayerControl.isRole(RoleType.Immoralist))
+        else if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Immoralist))
         {
             setPlayerNameColor(CachedPlayer.LocalPlayer.PlayerControl, Immoralist.color);
         }
-        else if (CachedPlayer.LocalPlayer.PlayerControl.isRole(RoleType.FortuneTeller) && (FortuneTeller.isCompletedNumTasks(CachedPlayer.LocalPlayer.PlayerControl) || CachedPlayer.LocalPlayer.PlayerControl.Data.IsDead))
+        else if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.FortuneTeller) && (FortuneTeller.isCompletedNumTasks(CachedPlayer.LocalPlayer.PlayerControl) || CachedPlayer.LocalPlayer.PlayerControl.Data.IsDead))
         {
             setPlayerNameColor(CachedPlayer.LocalPlayer.PlayerControl, FortuneTeller.color);
         }
-        else if (CachedPlayer.LocalPlayer.PlayerControl.isRole(RoleType.Akujo))
+        else if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Akujo))
         {
             setPlayerNameColor(CachedPlayer.LocalPlayer.PlayerControl, Akujo.color);
         }
-        else if (PlayerControl.LocalPlayer.isRole(RoleType.Sherlock))
+        else if (PlayerControl.LocalPlayer.IsRole(RoleType.Sherlock))
         {
             setPlayerNameColor(PlayerControl.LocalPlayer, Sherlock.color);
         }
-        else if (CachedPlayer.LocalPlayer.PlayerControl.isRole(RoleType.Cupid) && CachedPlayer.LocalPlayer.PlayerControl.isAlive())
+        else if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Cupid) && CachedPlayer.LocalPlayer.PlayerControl.isAlive())
         {
             setPlayerNameColor(CachedPlayer.LocalPlayer.PlayerControl, Cupid.color);
             var cupid = Cupid.allRoles.FirstOrDefault(x => x.player == PlayerControl.LocalPlayer) as Cupid;
@@ -230,7 +230,7 @@ public static class Update
             {
                 foreach (var p in PlayerControl.AllPlayerControls.GetFastEnumerator())
                 {
-                    if (p.isImpostor() || p.isRole(RoleType.Spy) || (p.isRole(RoleType.Jackal) && Jackal.wasTeamRed) || (p.isRole(RoleType.Sidekick) && Sidekick.wasTeamRed))
+                    if (p.IsTeamImpostor() || p.IsRole(RoleType.Spy) || (p.IsRole(RoleType.Jackal) && Jackal.wasTeamRed) || (p.IsRole(RoleType.Sidekick) && Sidekick.wasTeamRed))
                     {
                         setPlayerNameColor(p, Palette.ImpostorRed);
                     }
@@ -246,7 +246,7 @@ public static class Update
             {
                 foreach (var p in PlayerControl.AllPlayerControls.GetFastEnumerator())
                 {
-                    if (p.isImpostor() || p.isRole(RoleType.Spy) || (p.isRole(RoleType.Jackal) && Jackal.wasTeamRed) || (p.isRole(RoleType.Sidekick) && Sidekick.wasTeamRed))
+                    if (p.IsTeamImpostor() || p.IsRole(RoleType.Spy) || (p.IsRole(RoleType.Jackal) && Jackal.wasTeamRed) || (p.IsRole(RoleType.Sidekick) && Sidekick.wasTeamRed))
                     {
                         setPlayerNameColor(p, Palette.ImpostorRed);
                     }
@@ -275,7 +275,7 @@ public static class Update
         }
 
         // No else if here, as a Lover of team Jackal needs the colors
-        if (CachedPlayer.LocalPlayer.PlayerControl.isRole(RoleType.Sidekick))
+        if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Sidekick))
         {
             // Sidekick can see the jackal
             setPlayerNameColor(Sidekick.sidekick, Sidekick.color);
@@ -299,7 +299,7 @@ public static class Update
             setPlayerNameColor(Jackal.jackal, Spy.color);
         }
 
-        if (Immoralist.exists && CachedPlayer.LocalPlayer.PlayerControl.isRole(RoleType.Fox))
+        if (Immoralist.exists && CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Fox))
         {
             foreach (var immoralist in Immoralist.allPlayers)
             {
@@ -307,7 +307,7 @@ public static class Update
             }
         }
 
-        if (CachedPlayer.LocalPlayer.PlayerControl.isRole(RoleType.Immoralist))
+        if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Immoralist))
         {
             foreach (var fox in Fox.allPlayers)
             {
@@ -316,10 +316,10 @@ public static class Update
         }
 
         var player = CachedPlayer.LocalPlayer.PlayerControl;
-        bool impostorFlag = player.isRole(RoleType.SchrodingersCat) || player.isImpostor();
-        bool jackalFlag = player.isRole(RoleType.SchrodingersCat) || player.isRole(RoleType.Jackal) || player.isRole(RoleType.Sidekick);
-        bool jekyllAndHydeFlag = player.isRole(RoleType.SchrodingersCat) || player.isRole(RoleType.JekyllAndHyde);
-        bool moriartyFlag = player.isRole(RoleType.SchrodingersCat) || player.isRole(RoleType.Moriarty);
+        bool impostorFlag = player.IsRole(RoleType.SchrodingersCat) || player.IsTeamImpostor();
+        bool jackalFlag = player.IsRole(RoleType.SchrodingersCat) || player.IsRole(RoleType.Jackal) || player.IsRole(RoleType.Sidekick);
+        bool jekyllAndHydeFlag = player.IsRole(RoleType.SchrodingersCat) || player.IsRole(RoleType.JekyllAndHyde);
+        bool moriartyFlag = player.IsRole(RoleType.SchrodingersCat) || player.IsRole(RoleType.Moriarty);
         if (!SchrodingersCat.hasTeam() && SchrodingersCat.hideRole && CachedPlayer.LocalPlayer.PlayerControl.isAlive())
         {
             // 何もしない
@@ -337,11 +337,11 @@ public static class Update
             {
                 setPlayerNameColor(p, Palette.ImpostorRed);
             }
-            if (player.isRole(RoleType.SchrodingersCat))
+            if (player.IsRole(RoleType.SchrodingersCat))
             {
                 foreach (var p in PlayerControl.AllPlayerControls.GetFastEnumerator())
                 {
-                    if (p.isImpostor()) setPlayerNameColor(p, Palette.ImpostorRed);
+                    if (p.IsTeamImpostor()) setPlayerNameColor(p, Palette.ImpostorRed);
                 }
             }
         }
@@ -351,7 +351,7 @@ public static class Update
             {
                 setPlayerNameColor(p, Jackal.color);
             }
-            if (player.isRole(RoleType.SchrodingersCat))
+            if (player.IsRole(RoleType.SchrodingersCat))
             {
                 setPlayerNameColor(Jackal.jackal, Jackal.color);
                 if (Sidekick.sidekick != null) setPlayerNameColor(Sidekick.sidekick, Sidekick.color);
@@ -363,7 +363,7 @@ public static class Update
             {
                 setPlayerNameColor(p, JekyllAndHyde.color);
             }
-            if (player.isRole(RoleType.SchrodingersCat))
+            if (player.IsRole(RoleType.SchrodingersCat))
             {
                 foreach (var p in JekyllAndHyde.allPlayers)
                 {
@@ -377,7 +377,7 @@ public static class Update
             {
                 setPlayerNameColor(p, Moriarty.color);
             }
-            if (player.isRole(RoleType.SchrodingersCat))
+            if (player.IsRole(RoleType.SchrodingersCat))
             {
                 foreach (var p in Moriarty.allPlayers)
                 {
@@ -385,7 +385,7 @@ public static class Update
                 }
             }
         }
-        else if (player.isRole(RoleType.SchrodingersCat))
+        else if (player.IsRole(RoleType.SchrodingersCat))
         {
             setPlayerNameColor(player, SchrodingersCat.color);
         }
@@ -500,7 +500,7 @@ public static class Update
             }
         }
 
-        if (MapOptions.ghostsSeeRoles && CachedPlayer.LocalPlayer.PlayerControl.isDead())
+        if (ModMapOptions.ghostsSeeRoles && CachedPlayer.LocalPlayer.PlayerControl.isDead())
         {
             foreach (var couple in Lovers.couples)
             {
@@ -565,7 +565,7 @@ public static class Update
         }
 
         // Hacker and Detective
-        if (CachedPlayer.LocalPlayer.PlayerControl != null && MapOptions.showLighterDarker)
+        if (CachedPlayer.LocalPlayer.PlayerControl != null && ModMapOptions.showLighterDarker)
         {
             if (meetingShow)
             {
@@ -589,17 +589,17 @@ public static class Update
             return;
         }
         bool enabled = Helpers.ShowButtons;
-        if (CachedPlayer.LocalPlayer.PlayerControl.isRole(RoleType.Vampire))
+        if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Vampire))
             enabled &= false;
-        else if (CachedPlayer.LocalPlayer.PlayerControl.isRole(RoleType.Mafioso) && !Mafioso.canKill)
+        else if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Mafioso) && !Mafioso.canKill)
             enabled &= false;
-        else if (CachedPlayer.LocalPlayer.PlayerControl.isRole(RoleType.Janitor))
+        else if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Janitor))
             enabled &= false;
-        else if (CachedPlayer.LocalPlayer.PlayerControl.isRole(RoleType.BomberA) && BomberB.isAlive())
+        else if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.BomberA) && BomberB.isAlive())
             enabled &= false;
-        else if (CachedPlayer.LocalPlayer.PlayerControl.isRole(RoleType.BomberB) && BomberA.isAlive())
+        else if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.BomberB) && BomberA.isAlive())
             enabled &= false;
-        else if (CachedPlayer.LocalPlayer.PlayerControl.isRole(RoleType.MimicA) && MimicK.isAlive())
+        else if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.MimicA) && MimicK.isAlive())
             enabled &= false;
 
         if (enabled) __instance.KillButton.Show();
@@ -633,8 +633,8 @@ public static class Update
         float num = GameOptionsData.KillDistances[Mathf.Clamp(kd, 0, 2)];
         if (!MapUtilities.CachedShipStatus) return result;
         if (targetingPlayer == null) targetingPlayer = PlayerControl.LocalPlayer;
-        if ((targetingPlayer.Data.IsDead && !targetingPlayer.isRole(RoleType.Puppeteer)) || targetingPlayer.inVent) return result;
-        if (targetingPlayer.isGM()) return result;
+        if ((targetingPlayer.Data.IsDead && !targetingPlayer.IsRole(RoleType.Puppeteer)) || targetingPlayer.inVent) return result;
+        if (targetingPlayer.IsGM()) return result;
 
         if (untargetablePlayers == null)
         {
@@ -730,7 +730,7 @@ public static class Update
             }
         }
 
-        var canSeeEverything = CachedPlayer.LocalPlayer.PlayerControl.isDead() || CachedPlayer.LocalPlayer.PlayerControl.isGM();
+        var canSeeEverything = CachedPlayer.LocalPlayer.PlayerControl.isDead() || CachedPlayer.LocalPlayer.PlayerControl.IsGM();
         foreach (PlayerControl p in CachedPlayer.AllPlayers)
         {
             if (p == null) continue;
@@ -739,7 +739,7 @@ public static class Update
 
             var canSeeInfo =
                 canSeeEverything || isAkujo ||
-                p == CachedPlayer.LocalPlayer.PlayerControl || p.isGM() ||
+                p == CachedPlayer.LocalPlayer.PlayerControl || p.IsGM() ||
                 (Lawyer.lawyerKnowsRole && CachedPlayer.LocalPlayer.PlayerControl == Lawyer.lawyer && p == Lawyer.target);
 
             if (canSeeInfo)
@@ -810,22 +810,22 @@ public static class Update
                         playerInfoText = Helpers.cs(Akujo.color, Tr.Get("akujoKeep"));
                     }
                 }
-                else if (MapOptions.ghostsSeeRoles && MapOptions.ghostsSeeTasks)
+                else if (ModMapOptions.GhostsSeeRoles && ModMapOptions.ghostsSeeTasks)
                 {
                     playerInfoText = $"{roleNames} {taskInfo}".Trim();
                     meetingInfoText = playerInfoText;
                 }
-                else if (MapOptions.ghostsSeeTasks)
+                else if (ModMapOptions.ghostsSeeTasks)
                 {
                     playerInfoText = $"{taskInfo}".Trim();
                     meetingInfoText = playerInfoText;
                 }
-                else if (MapOptions.ghostsSeeRoles || (Lawyer.lawyerKnowsRole && CachedPlayer.LocalPlayer.PlayerControl == Lawyer.lawyer && p == Lawyer.target))
+                else if (ModMapOptions.ghostsSeeRoles || (Lawyer.lawyerKnowsRole && CachedPlayer.LocalPlayer.PlayerControl == Lawyer.lawyer && p == Lawyer.target))
                 {
                     playerInfoText = $"{roleNames}";
                     meetingInfoText = playerInfoText;
                 }
-                else if (p.isGM() || CachedPlayer.LocalPlayer.PlayerControl.isGM())
+                else if (p.IsGM() || CachedPlayer.LocalPlayer.PlayerControl.IsGM())
                 {
                     playerInfoText = $"{roleNames} {taskInfo}".Trim();
                     meetingInfoText = playerInfoText;

@@ -27,20 +27,20 @@ public class BountyHunter : RoleBase<BountyHunter>
         Arrow = new Arrow(RoleColor);
         ArrowUpdateTimer = 0f;
         BountyUpdateTimer = 0f;
-        StaticRoleType = CurrentRoleType = ERoleType.BountyHunter;
+        StaticRoleType = CurrentRoleType = RoleType.BountyHunter;
     }
 
     public override void OnMeetingStart() { }
     public override void OnMeetingEnd()
     {
-        if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(ERoleType.BountyHunter))
+        if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.BountyHunter))
         {
             BountyUpdateTimer = 0f;
         }
     }
     public override void OnIntroEnd()
     {
-        if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(ERoleType.BountyHunter))
+        if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.BountyHunter))
         {
             BountyUpdateTimer = 0f;
             if (FastDestroyableSingleton<HudManager>.Instance != null)
@@ -55,7 +55,7 @@ public class BountyHunter : RoleBase<BountyHunter>
     }
     public override void FixedUpdate()
     {
-        if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(ERoleType.BountyHunter))
+        if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.BountyHunter))
         {
             if (Player.IsDead())
             {
@@ -64,7 +64,7 @@ public class BountyHunter : RoleBase<BountyHunter>
                 if (CooldownText != null && CooldownText.gameObject != null) UnityEngine.Object.Destroy(CooldownText.gameObject);
                 CooldownText = null;
                 Bounty = null;
-                foreach (PoolablePlayer p in MapOptions.PlayerIcons.Values)
+                foreach (PoolablePlayer p in ModMapOptions.PlayerIcons.Values)
                 {
                     if (p != null && p.gameObject != null) p.gameObject.SetActive(false);
                 }
@@ -83,9 +83,9 @@ public class BountyHunter : RoleBase<BountyHunter>
                 var possibleTargets = new List<PlayerControl>();
                 foreach (var p in CachedPlayer.AllPlayers)
                 {
-                    if (!p.Data.IsDead && !p.Data.Disconnected && !p.Data.Role.IsImpostor && !p.PlayerControl.IsRole(ERoleType.Spy)
-                    && (!p.PlayerControl.IsRole(ERoleType.Sidekick) || !Sidekick.GetRole(p).WasTeamRed)
-                    && (!p.PlayerControl.IsRole(ERoleType.Jackal) || !Jackal.GetRole(p).WasTeamRed)
+                    if (!p.Data.IsDead && !p.Data.Disconnected && !p.Data.Role.IsImpostor && !p.PlayerControl.IsRole(RoleType.Spy)
+                    && (!p.PlayerControl.IsRole(RoleType.Sidekick) || !Sidekick.GetRole(p).WasTeamRed)
+                    && (!p.PlayerControl.IsRole(RoleType.Jackal) || !Jackal.GetRole(p).WasTeamRed)
                     // && !(p.hasModifier(ModifierType.Mini) && !Mini.isGrownUp(p))
                     && !p.PlayerControl.IsGM()
                     // && Player.GetPartner() != p
@@ -100,21 +100,21 @@ public class BountyHunter : RoleBase<BountyHunter>
                 // Show poolable player
                 if (FastDestroyableSingleton<HudManager>.Instance != null && FastDestroyableSingleton<HudManager>.Instance.UseButton != null)
                 {
-                    foreach (var pp in MapOptions.PlayerIcons.Values)
+                    foreach (var pp in ModMapOptions.PlayerIcons.Values)
                     {
                         pp.gameObject.SetActive(false);
                     }
-                    if (MapOptions.PlayerIcons.ContainsKey(Bounty.PlayerId) && MapOptions.PlayerIcons[Bounty.PlayerId].gameObject != null)
+                    if (ModMapOptions.PlayerIcons.ContainsKey(Bounty.PlayerId) && ModMapOptions.PlayerIcons[Bounty.PlayerId].gameObject != null)
                     {
-                        MapOptions.PlayerIcons[Bounty.PlayerId].gameObject.SetActive(true);
+                        ModMapOptions.PlayerIcons[Bounty.PlayerId].gameObject.SetActive(true);
                     }
                 }
             }
 
             // Hide in meeting
-            if (MeetingHud.Instance && MapOptions.PlayerIcons.ContainsKey(Bounty.PlayerId) && MapOptions.PlayerIcons[Bounty.PlayerId].gameObject != null)
+            if (MeetingHud.Instance && ModMapOptions.PlayerIcons.ContainsKey(Bounty.PlayerId) && ModMapOptions.PlayerIcons[Bounty.PlayerId].gameObject != null)
             {
-                MapOptions.PlayerIcons[Bounty.PlayerId].gameObject.SetActive(false);
+                ModMapOptions.PlayerIcons[Bounty.PlayerId].gameObject.SetActive(false);
             }
 
             // Update Cooldown Text
@@ -136,7 +136,7 @@ public class BountyHunter : RoleBase<BountyHunter>
 
     public override void OnKill(PlayerControl target)
     {
-        if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(ERoleType.BountyHunter))
+        if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.BountyHunter))
         {
             if (target == Bounty)
             {
@@ -145,7 +145,7 @@ public class BountyHunter : RoleBase<BountyHunter>
             }
             else
             {
-                Player.SetKillTimer(GameOptions.Get(FloatOptionNames.KillCooldown) + PunishmentTime);
+                Player.SetKillTimer(Helpers.GetOption(FloatOptionNames.KillCooldown) + PunishmentTime);
             }
         }
     }

@@ -2,7 +2,7 @@ namespace RebuildUs.Modules.Consoles;
 
 public static class Admin
 {
-    static Dictionary<SystemTypes, List<Color>> playerColors = new();
+    static Dictionary<SystemTypes, List<Color>> playerColors = [];
     static float adminTimer = 0f;
     static TMPro.TextMeshPro OutOfTime;
     static TMPro.TextMeshPro TimeRemaining;
@@ -14,25 +14,13 @@ public static class Admin
     static GameObject newmap;
 
     static PlainShipRoom room;
-    static List<SystemTypes> filterCockpitAdmin = new(){
-            SystemTypes.Cockpit,
-            SystemTypes.Armory,
-            SystemTypes.Kitchen,
-            SystemTypes.VaultRoom,
-            SystemTypes.Comms
-        };
-    static List<SystemTypes> filterRecordsAdmin = new(){
-            SystemTypes.Records,
-            SystemTypes.Lounge,
-            SystemTypes.CargoBay,
-            SystemTypes.Showers,
-            SystemTypes.Ventilation
-        };
+    static readonly SystemTypes[] filterCockpitAdmin = [SystemTypes.Cockpit, SystemTypes.Armory, SystemTypes.Kitchen, SystemTypes.VaultRoom, SystemTypes.Comms];
+    static readonly SystemTypes[] filterRecordsAdmin = [SystemTypes.Records, SystemTypes.Lounge, SystemTypes.CargoBay, SystemTypes.Showers, SystemTypes.Ventilation];
 
     private static bool filterAdmin(SystemTypes type)
     {
         // イビルハッカーのアドミンは今まで通り
-        if (CachedPlayer.LocalPlayer.PlayerControl.isRole(RoleType.EvilHacker) || EvilHacker.isInherited()) return true;
+        if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.EvilHacker) || EvilHacker.isInherited()) return true;
 
         if (CustomOptionHolder.AirshipRestrictedAdmin.GetBool())
         {
@@ -47,7 +35,6 @@ public static class Admin
         }
         return true;
     }
-
 
     public static void ResetData()
     {
@@ -70,8 +57,8 @@ public static class Admin
         // Don't waste network traffic if we're out of time.
         if (!isEvilHackerAdmin)
         {
-            if (MapOptions.restrictDevices > 0 && MapOptions.restrictAdmin && MapOptions.restrictAdminTime > 0f && CachedPlayer.LocalPlayer.PlayerControl.isAlive() &&
-                    !CachedPlayer.LocalPlayer.PlayerControl.isRole(RoleType.MimicA))
+            if (ModMapOptions.restrictDevices > 0 && ModMapOptions.restrictAdmin && ModMapOptions.restrictAdminTime > 0f && CachedPlayer.LocalPlayer.PlayerControl.isAlive() &&
+                    !CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.MimicA))
             {
                 MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.UseAdminTime, Hazel.SendOption.Reliable, -1);
                 writer.Write(adminTimer);
@@ -96,9 +83,9 @@ public static class Admin
         }
         __instance.timer = 0f;
 
-        playerColors = new Dictionary<SystemTypes, List<Color>>();
+        playerColors = [];
 
-        if (MapOptions.restrictDevices > 0 && MapOptions.restrictAdmin)
+        if (ModMapOptions.restrictDevices > 0 && ModMapOptions.restrictAdmin)
         {
             if (OutOfTime == null)
             {
@@ -108,7 +95,7 @@ public static class Admin
 
             if (TimeRemaining == null)
             {
-                TimeRemaining = UnityEngine.Object.Instantiate(FastDestroyableSingleton<HudManager>.Instance.TaskText, __instance.transform);
+                TimeRemaining = UnityEngine.Object.Instantiate(FastDestroyableSingleton<TaskPanelBehaviour>.Instance.taskText, __instance.transform);
                 TimeRemaining.alignment = TMPro.TextAlignmentOptions.BottomRight;
                 TimeRemaining.transform.position = Vector3.zero;
                 TimeRemaining.transform.localPosition = new Vector3(3.25f, 5.25f);
@@ -116,13 +103,13 @@ public static class Admin
                 TimeRemaining.color = Palette.White;
             }
 
-            if (CachedPlayer.LocalPlayer.PlayerControl.isRole(RoleType.MimicA))
+            if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.MimicA))
             {
                 TimeRemaining.gameObject.SetActive(false);
             }
             else
             {
-                if (MapOptions.restrictAdminTime <= 0f && !CachedPlayer.LocalPlayer.PlayerControl.isImpostor())
+                if (ModMapOptions.restrictAdminTime <= 0f && !CachedPlayer.LocalPlayer.PlayerControl.IsTeamImpostor())
                 {
                     __instance.BackgroundColor.SetColor(Palette.DisabledGrey);
                     OutOfTime.gameObject.SetActive(true);
@@ -137,7 +124,7 @@ public static class Admin
 
                 clearedIcons = false;
                 OutOfTime.gameObject.SetActive(false);
-                string timeString = TimeSpan.FromSeconds(MapOptions.restrictAdminTime).ToString(@"mm\:ss\.ff");
+                string timeString = TimeSpan.FromSeconds(ModMapOptions.restrictAdminTime).ToString(@"mm\:ss\.ff");
                 TimeRemaining.text = String.Format(Tr.Get("timeRemaining"), timeString);
                 //TimeRemaining.color = MapOptions.restrictAdminTime > 10f ? Palette.AcceptedGreen : Palette.ImpostorRed;
                 TimeRemaining.gameObject.SetActive(true);
@@ -147,7 +134,7 @@ public static class Admin
         bool commsActive = false;
         foreach (PlayerTask task in CachedPlayer.LocalPlayer.PlayerControl.myTasks)
             if (task.TaskType == TaskTypes.FixComms) commsActive = true;
-        if (CustomOptionHolder.impostorCanIgnoreComms.getBool() && CachedPlayer.LocalPlayer.PlayerControl.isImpostor()) commsActive = false;
+        if (CustomOptionHolder.ImpostorCanIgnoreCommSabotage.GetBool() && CachedPlayer.LocalPlayer.PlayerControl.IsTeamImpostor()) commsActive = false;
 
         if (!__instance.isSab && commsActive)
         {
@@ -169,7 +156,7 @@ public static class Admin
         for (int i = 0; i < __instance.CountAreas.Length; i++)
         {
             CounterArea counterArea = __instance.CountAreas[i];
-            List<Color> roomColors = new();
+            List<Color> roomColors = [];
             playerColors.Add(counterArea.RoomType, roomColors);
 
             if (!commsActive && counterArea.RoomType > SystemTypes.Hallway)
@@ -182,7 +169,7 @@ public static class Admin
                     int num2 = num;
 
                     // ロミジュリと絵画の部屋をアドミンの対象から外す
-                    if (CustomOptionHolder.airshipOldAdmin.getBool() && (counterArea.RoomType == SystemTypes.Ventilation || counterArea.RoomType == SystemTypes.HallOfPortraits))
+                    if (CustomOptionHolder.AirshipOldAdmin.GetBool() && (counterArea.RoomType is SystemTypes.Ventilation or SystemTypes.HallOfPortraits))
                     {
                         num2 = 0;
                     }
@@ -203,7 +190,7 @@ public static class Admin
                             {
                                 num2--;
                             }
-                            else if (component.isRole(RoleType.Puppeteer) && Puppeteer.stealthed)
+                            else if (component.IsRole(RoleType.Puppeteer) && Puppeteer.stealthed)
                             {
                                 num2--;
                             }
@@ -228,7 +215,7 @@ public static class Admin
                             DeadBody component = collider2D.GetComponent<DeadBody>();
                             if (component)
                             {
-                                GameData.PlayerInfo playerInfo = GameData.Instance.GetPlayerById(component.ParentId);
+                                NetworkedPlayerInfo playerInfo = GameData.Instance.GetPlayerById(component.ParentId);
                                 if (playerInfo != null)
                                 {
                                     var color = Palette.PlayerColors[playerInfo.Object.CurrentOutfit.ColorId];
@@ -265,7 +252,7 @@ public static class Admin
         if (room == null) return;
 
         // アドミンの画像を差し替える
-        if (!CachedPlayer.LocalPlayer.PlayerControl.isRole(RoleType.EvilHacker) && !EvilHacker.isInherited() && PlayerControl.GameOptions.MapId == 4 && CustomOptionHolder.airshipRestrictedAdmin.getBool() && (room.name == "Cockpit" || room.name == "Records"))
+        if (!CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.EvilHacker) && !EvilHacker.isInherited() && PlayerControl.GameOptions.MapId == 4 && CustomOptionHolder.airshipRestrictedAdmin.getBool() && (room.name == "Cockpit" || room.name == "Records"))
         {
             if (room.name == "Cockpit" && !adminCockpitSprite) adminCockpitSprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.admin_cockpit.png", 100f);
             if (room.name == "Records" && !adminRecordsSprite) adminRecordsSprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.admin_records.png", 100f);
@@ -306,17 +293,17 @@ public static class Admin
         if (playerColors.ContainsKey(__instance.RoomType))
         {
             List<Color> colors = playerColors[__instance.RoomType];
-            List<Color> impostorColors = new();
-            List<Color> mimicKColors = new();
-            List<Color> deadBodyColors = new();
+            List<Color> impostorColors = [];
+            List<Color> mimicKColors = [];
+            List<Color> deadBodyColors = [];
             foreach (var p in PlayerControl.AllPlayerControls.GetFastEnumerator())
             {
                 // var color = p.myRend.material.GetColor("_BodyColor");
                 var color = Palette.PlayerColors[p.Data.DefaultOutfit.ColorId];
-                if (p.isImpostor())
+                if (p.IsTeamImpostor())
                 {
                     impostorColors.Add(color);
-                    if (p.isRole(RoleType.MimicK))
+                    if (p.IsRole(RoleType.MimicK))
                     {
                         mimicKColors.Add(color);
                     }
@@ -352,7 +339,7 @@ public static class Admin
                         }
                         renderer.material.SetColor("_VisorColor", Palette.VisorColor);
                     }
-                    else if (((CachedPlayer.LocalPlayer.PlayerControl.isRole(RoleType.EvilHacker) || EvilHacker.isInherited()) && EvilHacker.canHasBetterAdmin) || CachedPlayer.LocalPlayer.PlayerControl.isRole(RoleType.MimicA))
+                    else if (((CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.EvilHacker) || EvilHacker.isInherited()) && EvilHacker.canHasBetterAdmin) || CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.MimicA))
                     {
                         renderer.material = newMat;
                         var color = colors[i];

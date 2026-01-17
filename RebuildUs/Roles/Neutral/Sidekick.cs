@@ -20,7 +20,7 @@ public class Sidekick : RoleBase<Sidekick>
     public Sidekick()
     {
         // write value init here
-        StaticRoleType = CurrentRoleType = ERoleType.Sidekick;
+        StaticRoleType = CurrentRoleType = RoleType.Sidekick;
     }
 
     public override void OnMeetingStart() { }
@@ -28,7 +28,7 @@ public class Sidekick : RoleBase<Sidekick>
     public override void OnIntroEnd() { }
     public override void FixedUpdate()
     {
-        if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(ERoleType.Sidekick))
+        if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Sidekick))
         {
             var untargetablePlayers = new List<PlayerControl>();
             if (Jackal.Exists) untargetablePlayers.AddRange(Jackal.AllPlayers);
@@ -57,7 +57,7 @@ public class Sidekick : RoleBase<Sidekick>
                     SidekickKillButton.Timer = SidekickKillButton.MaxTimer;
                     Local.CurrentTarget = null;
                 },
-                () => { return CanKill && CachedPlayer.LocalPlayer.PlayerControl.IsRole(ERoleType.Sidekick) && CachedPlayer.LocalPlayer.PlayerControl.IsAlive(); },
+                () => { return CanKill && CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Sidekick) && CachedPlayer.LocalPlayer.PlayerControl.IsAlive(); },
                 () => { return Local.CurrentTarget && CachedPlayer.LocalPlayer.PlayerControl.CanMove; },
                 () => { SidekickKillButton.Timer = SidekickKillButton.MaxTimer; },
                 hm.KillButton.graphic.sprite,
@@ -74,7 +74,7 @@ public class Sidekick : RoleBase<Sidekick>
             },
             () =>
             {
-                return PlayerControl.LocalPlayer.IsRole(ERoleType.Sidekick) && CanSabotageLights && PlayerControl.LocalPlayer.IsAlive();
+                return PlayerControl.LocalPlayer.IsRole(RoleType.Sidekick) && CanSabotageLights && PlayerControl.LocalPlayer.IsAlive();
             },
             () =>
             {

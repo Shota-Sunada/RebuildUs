@@ -6,7 +6,7 @@ using RebuildUs.Roles.Crewmate;
 using System.Text;
 using System.Text.RegularExpressions;
 
-namespace RebuildUs.Helpers;
+namespace RebuildUs;
 
 public enum MurderAttemptResult
 {
@@ -162,10 +162,10 @@ public static class Helpers
     public static bool HasImpostorVision(PlayerControl player)
     {
         return player.IsTeamImpostor()
-        || ((player.IsRole(ERoleType.Jackal) || Jackal.FormerJackals.Any(x => x.PlayerId == player.PlayerId)) && Jackal.HasImpostorVision)
-        || (player.IsRole(ERoleType.Sidekick) && Sidekick.HasImpostorVision)
-        || (player.IsRole(ERoleType.Spy) && Spy.HasImpostorVision)
-        || (player.IsRole(ERoleType.Jester) && Jester.HasImpostorVision);
+        || ((player.IsRole(RoleType.Jackal) || Jackal.FormerJackals.Any(x => x.PlayerId == player.PlayerId)) && Jackal.HasImpostorVision)
+        || (player.IsRole(RoleType.Sidekick) && Sidekick.HasImpostorVision)
+        || (player.IsRole(RoleType.Spy) && Spy.HasImpostorVision)
+        || (player.IsRole(RoleType.Jester) && Jester.HasImpostorVision);
     }
 
     public static KeyValuePair<byte, int> MaxPair(this Dictionary<byte, int> self, out bool tie)
@@ -194,10 +194,10 @@ public static class Helpers
         if (AmongUsClient.Instance.IsGameOver) return MurderAttemptResult.SuppressKill;
         if (killer == null || killer.Data == null || (killer.Data.IsDead && !ignoreIfKillerIsDead) || killer.Data.Disconnected) return MurderAttemptResult.SuppressKill; // Allow non Impostor kills compared to vanilla code
         if (target == null || target.Data == null || target.Data.IsDead || target.Data.Disconnected) return MurderAttemptResult.SuppressKill; // Allow killing players in vents compared to vanilla code
-        if (GameOptions.IsHideNSeekMode) return MurderAttemptResult.PerformKill;
+        if (Helpers.IsHideNSeekMode) return MurderAttemptResult.PerformKill;
 
         // Handle first kill attempt
-        if (MapOptions.ShieldFirstKill && MapOptions.FirstKillPlayer == target) return MurderAttemptResult.SuppressKill;
+        if (ModMapOptions.ShieldFirstKill && ModMapOptions.FirstKillPlayer == target) return MurderAttemptResult.SuppressKill;
 
         // Block impostor shielded kill
         // if (!ignoreMedic && Medic.shielded != null && Medic.shielded == target)
@@ -302,7 +302,7 @@ public static class Helpers
     public static PlayerControl SetTarget(bool onlyCrewmates = false, bool targetPlayersInVents = false, List<PlayerControl> untargetablePlayers = null, PlayerControl targetingPlayer = null, int killDistance = 3)
     {
         PlayerControl result = null;
-        float num = NormalGameOptionsV10.KillDistances[Mathf.Clamp(GameOptions.Get(Int32OptionNames.KillDistance), 0, 2)];
+        float num = NormalGameOptionsV10.KillDistances[Mathf.Clamp(Helpers.GetOption(Int32OptionNames.KillDistance), 0, 2)];
         if (!MapUtilities.CachedShipStatus) return result;
         if (targetingPlayer == null) targetingPlayer = PlayerControl.LocalPlayer;
         if (targetingPlayer.Data.IsDead || targetingPlayer.inVent) return result;
@@ -493,7 +493,7 @@ public static class Helpers
 
                 var (tasksCompleted, tasksTotal) = TasksHandler.TaskInfo(p.Data);
                 string roleNames = RoleInfo.GetRolesString(p, true, false);
-                string roleText = RoleInfo.GetRolesString(p, true, MapOptions.GhostsSeeModifier);
+                string roleText = RoleInfo.GetRolesString(p, true, ModMapOptions.GhostsSeeModifier);
                 string taskInfo = tasksTotal > 0 ? $"<color=#FAD934FF>({tasksCompleted}/{tasksTotal})</color>" : "";
 
                 string playerInfoText = "";
@@ -510,17 +510,17 @@ public static class Helpers
                     }
                     meetingInfoText = $"{roleNames} {taskInfo}".Trim();
                 }
-                else if (MapOptions.GhostsSeeRoles && MapOptions.GhostsSeeInformation)
+                else if (ModMapOptions.GhostsSeeRoles && ModMapOptions.GhostsSeeInformation)
                 {
                     playerInfoText = $"{roleText} {taskInfo}".Trim();
                     meetingInfoText = playerInfoText;
                 }
-                else if (MapOptions.GhostsSeeInformation)
+                else if (ModMapOptions.GhostsSeeInformation)
                 {
                     playerInfoText = $"{taskInfo}".Trim();
                     meetingInfoText = playerInfoText;
                 }
-                else if (MapOptions.GhostsSeeRoles)
+                else if (ModMapOptions.GhostsSeeRoles)
                 {
                     playerInfoText = $"{roleText}";
                     meetingInfoText = playerInfoText;
@@ -577,8 +577,8 @@ public static class Helpers
         if (source.IsDead()) return false;
         if (target.IsDead()) return true;
         // if (Camouflager.camouflageTimer > 0f) return true; // No names are visible
-        // if (!source.isImpostor() && Ninja.isStealthed(target)) return true; // Hide ninja nametags from non-impostors
-        if (MapOptions.HideOutOfSightNametags && GameStarted && MapUtilities.CachedShipStatus != null && source.transform != null && target.transform != null)
+        // if (!source.IsTeamImpostor() && Ninja.isStealthed(target)) return true; // Hide ninja nametags from non-impostors
+        if (ModMapOptions.HideOutOfSightNametags && GameStarted && MapUtilities.CachedShipStatus != null && source.transform != null && target.transform != null)
         {
             float distMod = 1.025f;
             float distance = Vector3.Distance(source.transform.position, target.transform.position);
@@ -586,15 +586,80 @@ public static class Helpers
 
             if (distance > MapUtilities.CachedShipStatus.CalculateLightRadius(source.Data) * distMod || anythingBetween) return true;
         }
-        if (!MapOptions.HidePlayerNames) return false; // All names are visible
-        if (source.IsTeamImpostor() && (target.IsTeamImpostor() || target.IsRole(ERoleType.Spy) || (target.IsRole(ERoleType.Sidekick) && Sidekick.GetRole(target).WasTeamRed) || (target.IsRole(ERoleType.Jackal) && Jackal.GetRole(target).WasTeamRed))) return false; // Members of team Impostors see the names of Impostors/Spies
+        if (!ModMapOptions.HidePlayerNames) return false; // All names are visible
+        if (source.IsTeamImpostor() && (target.IsTeamImpostor() || target.IsRole(RoleType.Spy) || (target.IsRole(RoleType.Sidekick) && Sidekick.GetRole(target).WasTeamRed) || (target.IsRole(RoleType.Jackal) && Jackal.GetRole(target).WasTeamRed))) return false; // Members of team Impostors see the names of Impostors/Spies
         // if (source.GetPartner() == target) return false; // Members of team Lovers see the names of each other
-        if ((source.IsRole(ERoleType.Jackal) || source.IsRole(ERoleType.Sidekick)) && (target.IsRole(ERoleType.Jackal) || target.IsRole(ERoleType.Sidekick) || target == Jackal.GetRole(target).FakeSidekick)) return false; // Members of team Jackal see the names of each other
+        if ((source.IsRole(RoleType.Jackal) || source.IsRole(RoleType.Sidekick)) && (target.IsRole(RoleType.Jackal) || target.IsRole(RoleType.Sidekick) || target == Jackal.GetRole(target).FakeSidekick)) return false; // Members of team Jackal see the names of each other
         return true;
     }
 
     public static bool isOnElecTask()
     {
         return Camera.main.gameObject.GetComponentInChildren<SwitchMinigame>() != null;
+    }
+    public static bool IsHideNSeekMode
+    {
+        get
+        {
+            return GameOptionsManager.Instance.CurrentGameOptions.GameMode == GameModes.HideNSeek;
+        }
+    }
+
+    public static bool IsNormalMode
+    {
+        get
+        {
+            return GameOptionsManager.Instance.CurrentGameOptions.GameMode == GameModes.Normal;
+        }
+    }
+
+    public static int GetOption(Int32OptionNames opt)
+    {
+        return GameOptionsManager.Instance.CurrentGameOptions.GetInt(opt);
+    }
+
+    public static int[] GetOption(Int32ArrayOptionNames opt)
+    {
+        return GameOptionsManager.Instance.CurrentGameOptions.GetIntArray(opt);
+    }
+
+    public static float GetOption(FloatOptionNames opt)
+    {
+        return GameOptionsManager.Instance.CurrentGameOptions.GetFloat(opt);
+    }
+
+    public static float[] GetOption(FloatArrayOptionNames opt)
+    {
+        return GameOptionsManager.Instance.CurrentGameOptions.GetFloatArray(opt);
+    }
+
+    public static bool GetOption(BoolOptionNames opt)
+    {
+        return GameOptionsManager.Instance.CurrentGameOptions.GetBool(opt);
+    }
+
+    public static byte GetOption(ByteOptionNames opt)
+    {
+        return GameOptionsManager.Instance.CurrentGameOptions.GetByte(opt);
+    }
+
+    public static void SetOption(Int32OptionNames opt, int value)
+    {
+        GameOptionsManager.Instance.CurrentGameOptions.SetInt(opt, value);
+    }
+
+    public static void SetOption(FloatOptionNames opt, float value)
+    {
+        GameOptionsManager.Instance.CurrentGameOptions.SetFloat(opt, value);
+    }
+
+    public static void SetOption(BoolOptionNames opt, bool value)
+    {
+        GameOptionsManager.Instance.CurrentGameOptions.SetBool(opt, value);
+    }
+
+    public static void SetOption(ByteOptionNames opt, byte value)
+    {
+        GameOptionsManager.Instance.CurrentGameOptions.SetByte(opt, value);
     }
 }

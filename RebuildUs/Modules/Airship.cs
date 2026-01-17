@@ -6,9 +6,9 @@ public static class Airship
 {
     public static void Awake()
     {
-        addWireTasks(GameOptions.Get(ByteOptionNames.MapId));
-        optimizeMap(GameOptions.Get(ByteOptionNames.MapId));
-        addLadder(GameOptions.Get(ByteOptionNames.MapId));
+        addWireTasks(Helpers.GetOption(ByteOptionNames.MapId));
+        optimizeMap(Helpers.GetOption(ByteOptionNames.MapId));
+        addLadder(Helpers.GetOption(ByteOptionNames.MapId));
     }
 
     private static Sprite ladderSprite;

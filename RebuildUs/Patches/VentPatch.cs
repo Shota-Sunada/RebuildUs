@@ -5,7 +5,7 @@ public static class VentPatch
 {
     [HarmonyPrefix]
     [HarmonyPatch(typeof(Vent), nameof(Vent.CanUse))]
-    public static bool CanUsePrefix(Vent __instance, ref float __result, [HarmonyArgument(0)] GameData.PlayerInfo pc, [HarmonyArgument(1)] out bool canUse, [HarmonyArgument(2)] out bool couldUse)
+    public static bool CanUsePrefix(Vent __instance, ref float __result, [HarmonyArgument(0)] NetworkedPlayerInfo pc, [HarmonyArgument(1)] out bool canUse, [HarmonyArgument(2)] out bool couldUse)
     {
         float num = float.MaxValue;
         PlayerControl @object = pc.Object;
@@ -52,7 +52,7 @@ public static class VentPatch
         var usableDistance = __instance.UsableDistance;
         if (__instance.name.StartsWith("JackInTheBoxVent_"))
         {
-            if (Trickster.trickster != CachedPlayer.LocalPlayer.PlayerControl && !CachedPlayer.LocalPlayer.PlayerControl.isGM())
+            if (Trickster.trickster != CachedPlayer.LocalPlayer.PlayerControl && !CachedPlayer.LocalPlayer.PlayerControl.IsGM())
             {
                 // Only the Trickster can use the Jack-In-The-Boxes!
                 canUse = false;

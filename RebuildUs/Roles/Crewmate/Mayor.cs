@@ -18,7 +18,7 @@ public class Mayor : RoleBase<Mayor>
 
     public Mayor()
     {
-        StaticRoleType = CurrentRoleType = ERoleType.Mayor;
+        StaticRoleType = CurrentRoleType = RoleType.Mayor;
         Local.RemoteMeetingsLeft = MayorMaxRemoteMeetings;
     }
 
@@ -44,7 +44,7 @@ public class Mayor : RoleBase<Mayor>
                 RPCProcedure.UncheckedCmdReportDeadBody(PlayerControl.LocalPlayer.PlayerId, byte.MaxValue);
                 MayorMeetingButton.Timer = 1f;
             },
-            () => { return CachedPlayer.LocalPlayer.PlayerControl.IsRole(ERoleType.Mayor) && !PlayerControl.LocalPlayer.Data.IsDead && MayorHasMeetingButton; },
+            () => { return CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Mayor) && !PlayerControl.LocalPlayer.Data.IsDead && MayorHasMeetingButton; },
             () =>
             {
                 MayorMeetingButton.ActionButton.OverrideText("Emergency (" + Local.RemoteMeetingsLeft + ")");

@@ -29,7 +29,7 @@ public static class Meeting
         }
 
         // Deactivate skip Button if skipping on emergency meetings is disabled
-        if (MapOptions.BlockSkippingInEmergencyMeetings)
+        if (ModMapOptions.BlockSkippingInEmergencyMeetings)
         {
             __instance.SkipVoteButton?.gameObject?.SetActive(false);
         }
@@ -68,7 +68,7 @@ public static class Meeting
                 var player = Helpers.PlayerById(playerVoteArea.TargetPlayerId);
                 if (player == null || player.Data == null || player.Data.IsDead || player.Data.Disconnected) continue;
 
-                var additionalVotes = (Mayor.Exists && Helpers.PlayerById(playerVoteArea.TargetPlayerId).IsRole(ERoleType.Mayor)) ? Mayor.NumVotes : 1; // Mayor vote
+                var additionalVotes = (Mayor.Exists && Helpers.PlayerById(playerVoteArea.TargetPlayerId).IsRole(RoleType.Mayor)) ? Mayor.NumVotes : 1; // Mayor vote
                 dictionary[playerVoteArea.VotedFor] = dictionary.TryGetValue(playerVoteArea.VotedFor, out int currentVotes) ? currentVotes + additionalVotes : additionalVotes;
             }
         }
@@ -101,7 +101,7 @@ public static class Meeting
     {
         if (__instance.playerStates.All(ps => ps.AmDead || ps.DidVote))
         {
-            if (target == null && MapOptions.BlockSkippingInEmergencyMeetings && MapOptions.NoVoteIsSelfVote)
+            if (target == null && ModMapOptions.BlockSkippingInEmergencyMeetings && ModMapOptions.NoVoteIsSelfVote)
             {
                 foreach (var playerVoteArea in __instance.playerStates)
                 {
@@ -137,8 +137,8 @@ public static class Meeting
     {
         var spriteRenderer = UnityEngine.Object.Instantiate(__instance.PlayerVotePrefab);
         var showVoteColors = !GameManager.Instance.LogicOptions.GetAnonymousVotes() ||
-                            (PlayerControl.LocalPlayer.Data.IsDead && MapOptions.GhostsSeeVotes) ||
-                            (PlayerControl.LocalPlayer.IsRole(ERoleType.Mayor) && Mayor.MayorCanSeeVoteColors && TasksHandler.TaskInfo(PlayerControl.LocalPlayer.Data).Item1 >= Mayor.MayorTasksNeededToSeeVoteColors);
+                            (PlayerControl.LocalPlayer.Data.IsDead && ModMapOptions.GhostsSeeVotes) ||
+                            (PlayerControl.LocalPlayer.IsRole(RoleType.Mayor) && Mayor.MayorCanSeeVoteColors && TasksHandler.TaskInfo(PlayerControl.LocalPlayer.Data).Item1 >= Mayor.MayorTasksNeededToSeeVoteColors);
         if (showVoteColors)
         {
             PlayerMaterial.SetColors(voterPlayer.DefaultOutfit.ColorId, spriteRenderer);
@@ -221,7 +221,7 @@ public static class Meeting
                 votesApplied[voter.PlayerId]++;
 
                 // Major vote, redo this iteration to place a second vote
-                if (voter.IsRole(ERoleType.Mayor) && votesApplied[voter.PlayerId] < Mayor.NumVotes)
+                if (voter.IsRole(RoleType.Mayor) && votesApplied[voter.PlayerId] < Mayor.NumVotes)
                 {
                     j--;
                 }
@@ -264,8 +264,8 @@ public static class Meeting
     {
         __result = false;
         // if (GM.gm != null && GM.gm.PlayerId == suspectStateIdx) return false;
-        if (MapOptions.NoVoteIsSelfVote && CachedPlayer.LocalPlayer.PlayerControl.PlayerId == suspectStateIdx) return false;
-        if (MapOptions.BlockSkippingInEmergencyMeetings && suspectStateIdx == -1) return false;
+        if (ModMapOptions.NoVoteIsSelfVote && CachedPlayer.LocalPlayer.PlayerControl.PlayerId == suspectStateIdx) return false;
+        if (ModMapOptions.BlockSkippingInEmergencyMeetings && suspectStateIdx == -1) return false;
 
         return true;
     }
@@ -438,22 +438,22 @@ public static class Meeting
 
         foreach (var roleInfo in RoleInfo.AllRoleInfos)
         {
-            var guesserRole = (Guesser.niceGuesser != null && PlayerControl.LocalPlayer.PlayerId == Guesser.niceGuesser.PlayerId) ? ERoleType.NiceGuesser : ERoleType.EvilGuesser;
+            var guesserRole = (Guesser.niceGuesser != null && PlayerControl.LocalPlayer.PlayerId == Guesser.niceGuesser.PlayerId) ? RoleType.NiceGuesser : RoleType.EvilGuesser;
 
-            if (roleInfo.isModifier || roleInfo.RoleType == guesserRole || (!HandleGuesser.evilGuesserCanGuessSpy && guesserRole == ERoleType.EvilGuesser && roleInfo.RoleType == ERoleType.Spy && !HandleGuesser.isGuesserGm)) continue; // Not guessable roles & modifier
+            if (roleInfo.isModifier || roleInfo.RoleType == guesserRole || (!HandleGuesser.evilGuesserCanGuessSpy && guesserRole == RoleType.EvilGuesser && roleInfo.RoleType == RoleType.Spy && !HandleGuesser.isGuesserGm)) continue; // Not guessable roles & modifier
             // remove all roles that cannot spawn due to the settings from the ui.
             var roleData = RoleAssignment.GetRoleAssignmentData();
             if (roleData.neutralSettings.ContainsKey((byte)roleInfo.RoleType) && roleData.neutralSettings[(byte)roleInfo.RoleType] == 0) continue;
             else if (roleData.impSettings.ContainsKey((byte)roleInfo.RoleType) && roleData.impSettings[(byte)roleInfo.RoleType] == 0) continue;
             else if (roleData.crewSettings.ContainsKey((byte)roleInfo.RoleType) && roleData.crewSettings[(byte)roleInfo.RoleType] == 0) continue;
-            else if (new List<ERoleType>() { ERoleType.Janitor, ERoleType.Godfather, ERoleType.Mafioso }.Contains(roleInfo.RoleType) && (CustomOptionHolder.mafiaSpawnRate.getSelection() == 0 || GameOptions.Get(Int32OptionNames.NumImpostors) < 3)) continue;
-            else if (roleInfo.RoleType == ERoleType.Sidekick && (!CustomOptionHolder.jackalCanCreateSidekick.getBool() || CustomOptionHolder.jackalSpawnRate.getSelection() == 0)) continue;
-            if (roleInfo.RoleType == ERoleType.Spy && roleData.impostors.Count <= 1) continue;
+            else if (new List<RoleType>() { RoleType.Janitor, RoleType.Godfather, RoleType.Mafioso }.Contains(roleInfo.RoleType) && (CustomOptionHolder.mafiaSpawnRate.getSelection() == 0 || Helpers.GetOption(Int32OptionNames.NumImpostors) < 3)) continue;
+            else if (roleInfo.RoleType == RoleType.Sidekick && (!CustomOptionHolder.jackalCanCreateSidekick.getBool() || CustomOptionHolder.jackalSpawnRate.getSelection() == 0)) continue;
+            if (roleInfo.RoleType == RoleType.Spy && roleData.impostors.Count <= 1) continue;
             if (Snitch.snitch != null && HandleGuesser.guesserCantGuessSnitch)
             {
                 var (playerCompleted, playerTotal) = TasksHandler.TaskInfo(Snitch.snitch.Data);
                 int numberOfLeftTasks = playerTotal - playerCompleted;
-                if (numberOfLeftTasks <= 0 && roleInfo.RoleType == ERoleType.Snitch) continue;
+                if (numberOfLeftTasks <= 0 && roleInfo.RoleType == RoleType.Snitch) continue;
             }
 
             var buttonParent = new GameObject().transform;
@@ -673,7 +673,7 @@ public static class Meeting
         // Uses remaining text for guesser/swapper
         if (meetingInfoText == null)
         {
-            meetingInfoText = UnityEngine.Object.Instantiate(FastDestroyableSingleton<HudManager>.Instance.TaskText, __instance.transform);
+            meetingInfoText = UnityEngine.Object.Instantiate(FastDestroyableSingleton<TaskPanelBehaviour>.Instance.taskText, __instance.transform);
             meetingInfoText.alignment = TextAlignmentOptions.BottomLeft;
             meetingInfoText.transform.position = Vector3.zero;
             meetingInfoText.transform.localPosition = new Vector3(-3.07f, 3.33f, -20f);
@@ -690,7 +690,7 @@ public static class Meeting
             return;
         }
 
-        if (CachedPlayer.LocalPlayer.PlayerControl.isRole(ERoleType.Swapper) && Swapper.numSwaps > 0 && !Swapper.swapper.Data.IsDead)
+        if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Swapper) && Swapper.numSwaps > 0 && !Swapper.swapper.Data.IsDead)
         {
             meetingInfoText.text = string.Format(Tr.Get("swapperSwapsLeft"), Swapper.numSwaps);
             meetingInfoText.gameObject.SetActive(true);
@@ -703,7 +703,7 @@ public static class Meeting
             meetingInfoText.gameObject.SetActive(true);
         }
 
-        if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(ERoleType.Shifter) && Shifter.futureShift != null)
+        if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Shifter) && Shifter.futureShift != null)
         {
             meetingInfoText.text = string.Format(Tr.Get("shifterTargetInfo"), Shifter.futureShift.Data.PlayerName);
             meetingInfoText.gameObject.SetActive(true);

@@ -56,6 +56,10 @@ public class RebuildUs : BasePlugin
     public static ConfigEntry<bool> ShowLighterDarker { get; set; }
     public static ConfigEntry<bool> ShowVentsOnMap { get; set; }
     public static ConfigEntry<bool> ShowChatNotifications { get; set; }
+    public static ConfigEntry<bool> ForceNormalSabotageMap { get; set; }
+    public static ConfigEntry<bool> BetterSabotageMap { get; set; }
+    public static ConfigEntry<bool> TransparentMap { get; set; }
+    public static ConfigEntry<bool> HideFakeTasks { get; set; }
     public static ConfigEntry<string> Ip { get; set; }
     public static ConfigEntry<ushort> Port { get; set; }
     public static IRegionInfo[] defaultRegions;
@@ -72,9 +76,13 @@ public class RebuildUs : BasePlugin
         GhostsSeeModifier = Config.Bind("Custom", "Ghosts See Modifier", true);
         GhostsSeeVotes = Config.Bind("Custom", "Ghosts See Votes", true);
         ShowRoleSummary = Config.Bind("Custom", "Show Role Summary", true);
-        ShowLighterDarker = Config.Bind("Custom", "Show Lighter / Darker", true);
+        ShowLighterDarker = Config.Bind("Custom", "Show Lighter / Darker", false);
         ShowVentsOnMap = Config.Bind("Custom", "Show vent positions on minimap", false);
         ShowChatNotifications = Config.Bind("Custom", "Show Chat Notifications", true);
+        ForceNormalSabotageMap = Config.Bind("Custom", "Force Normal Sabotage Map", false);
+        BetterSabotageMap = Config.Bind("Custom", "Better Sabotage Map", false);
+        TransparentMap = Config.Bind("Custom", "Transparent Map", false);
+        HideFakeTasks = Config.Bind("Custom", "Hide Fake Tasks", false);
 
         Ip = Config.Bind("Custom", "Custom Server IP", "127.0.0.1");
         Port = Config.Bind("Custom", "Custom Server Port", (ushort)22023);

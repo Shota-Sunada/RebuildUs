@@ -19,13 +19,13 @@ public class Arsonist : RoleBase<Arsonist>
 
     public bool DousedEveryoneAlive()
     {
-        return PlayerControl.AllPlayerControls.GetFastEnumerator().ToArray().All(x => { return x.IsRole(ERoleType.Arsonist) || x.Data.IsDead || x.Data.Disconnected || x.IsGM() || DousedPlayers.Any(y => y.PlayerId == x.PlayerId); });
+        return PlayerControl.AllPlayerControls.GetFastEnumerator().ToArray().All(x => { return x.IsRole(RoleType.Arsonist) || x.Data.IsDead || x.Data.Disconnected || x.IsGM() || DousedPlayers.Any(y => y.PlayerId == x.PlayerId); });
     }
 
     public Arsonist()
     {
         // write value init here
-        StaticRoleType = CurrentRoleType = ERoleType.Arsonist;
+        StaticRoleType = CurrentRoleType = RoleType.Arsonist;
         DousedEveryone = false;
         CurrentTarget = null;
         DouseTarget = null;
@@ -43,7 +43,7 @@ public class Arsonist : RoleBase<Arsonist>
     }
     public override void FixedUpdate()
     {
-        if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(ERoleType.Arsonist))
+        if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Arsonist))
         {
             List<PlayerControl> untargetables;
             if (DouseTarget != null)
@@ -76,7 +76,7 @@ public class Arsonist : RoleBase<Arsonist>
                         Local.DouseTarget = Local.CurrentTarget;
                     }
                 },
-                () => { return CachedPlayer.LocalPlayer.PlayerControl.IsRole(ERoleType.Arsonist) && !Local.DousedEveryone && CachedPlayer.LocalPlayer.PlayerControl.IsAlive(); },
+                () => { return CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Arsonist) && !Local.DousedEveryone && CachedPlayer.LocalPlayer.PlayerControl.IsAlive(); },
                 () =>
                 {
                     if (ArsonistButton.IsEffectActive && Local.DouseTarget != Local.CurrentTarget)
@@ -118,9 +118,9 @@ public class Arsonist : RoleBase<Arsonist>
 
                     foreach (var p in Local.DousedPlayers)
                     {
-                        if (MapOptions.PlayerIcons.ContainsKey(p.PlayerId))
+                        if (ModMapOptions.PlayerIcons.ContainsKey(p.PlayerId))
                         {
-                            MapOptions.PlayerIcons[p.PlayerId].SetSemiTransparent(false);
+                            ModMapOptions.PlayerIcons[p.PlayerId].SetSemiTransparent(false);
                         }
                     }
                 }
@@ -139,7 +139,7 @@ public class Arsonist : RoleBase<Arsonist>
                     RPCProcedure.ArsonistWin(CachedPlayer.LocalPlayer.PlayerControl.PlayerId);
                 }
             },
-            () => { return CachedPlayer.LocalPlayer.PlayerControl.IsRole(ERoleType.Arsonist) && Local.DousedEveryone && CachedPlayer.LocalPlayer.PlayerControl.IsAlive(); },
+            () => { return CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Arsonist) && Local.DousedEveryone && CachedPlayer.LocalPlayer.PlayerControl.IsAlive(); },
             () => { return CachedPlayer.LocalPlayer.PlayerControl.CanMove && Local.DousedEveryone; },
             () => { },
             AssetLoader.IgniteButton,
@@ -163,7 +163,7 @@ public class Arsonist : RoleBase<Arsonist>
 
     public void UpdateStatus()
     {
-        if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(ERoleType.Arsonist))
+        if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Arsonist))
         {
             DousedEveryone = DousedEveryoneAlive();
         }
@@ -171,12 +171,12 @@ public class Arsonist : RoleBase<Arsonist>
 
     public void UpdateIcons()
     {
-        foreach (var pp in MapOptions.PlayerIcons.Values)
+        foreach (var pp in ModMapOptions.PlayerIcons.Values)
         {
             pp.gameObject.SetActive(false);
         }
 
-        if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(ERoleType.Arsonist))
+        if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Arsonist))
         {
             var visibleCounter = 0;
             var bottomLeft = FastDestroyableSingleton<HudManager>.Instance.UseButton.transform.localPosition;
@@ -186,21 +186,21 @@ public class Arsonist : RoleBase<Arsonist>
             foreach (var p in CachedPlayer.AllPlayers)
             {
                 if (p.PlayerId == CachedPlayer.LocalPlayer.PlayerControl.PlayerId) continue;
-                if (!MapOptions.PlayerIcons.ContainsKey(p.PlayerId)) continue;
+                if (!ModMapOptions.PlayerIcons.ContainsKey(p.PlayerId)) continue;
 
                 if (p.Data.IsDead || p.Data.Disconnected)
                 {
-                    MapOptions.PlayerIcons[p.PlayerId].gameObject.SetActive(false);
+                    ModMapOptions.PlayerIcons[p.PlayerId].gameObject.SetActive(false);
                 }
                 else
                 {
-                    MapOptions.PlayerIcons[p.PlayerId].gameObject.SetActive(true);
-                    MapOptions.PlayerIcons[p.PlayerId].transform.localScale = Vector3.one * 0.25f;
-                    MapOptions.PlayerIcons[p.PlayerId].transform.localPosition = bottomLeft + Vector3.right * visibleCounter * 0.45f;
+                    ModMapOptions.PlayerIcons[p.PlayerId].gameObject.SetActive(true);
+                    ModMapOptions.PlayerIcons[p.PlayerId].transform.localScale = Vector3.one * 0.25f;
+                    ModMapOptions.PlayerIcons[p.PlayerId].transform.localPosition = bottomLeft + Vector3.right * visibleCounter * 0.45f;
                     visibleCounter++;
                 }
                 var isDoused = DousedPlayers.Any(x => x.PlayerId == p.PlayerId);
-                MapOptions.PlayerIcons[p.PlayerId].SetSemiTransparent(!isDoused);
+                ModMapOptions.PlayerIcons[p.PlayerId].SetSemiTransparent(!isDoused);
             }
         }
     }
@@ -219,7 +219,7 @@ public class Arsonist : RoleBase<Arsonist>
         // reset configs here
         Players.Clear();
         TriggerArsonistWin = false;
-        foreach (var p in MapOptions.PlayerIcons.Values)
+        foreach (var p in ModMapOptions.PlayerIcons.Values)
         {
             if (p != null && p.gameObject != null)
             {

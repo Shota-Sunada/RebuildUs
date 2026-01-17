@@ -106,7 +106,7 @@
 //         {
 //             nameplatesChanged = true;
 
-//             if (CachedPlayer.LocalPlayer.PlayerControl.isRole(RoleType.GM) && GM.canKill)
+//             if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.GM) && GM.canKill)
 //             {
 //                 renderers = new SpriteRenderer[__instance.playerStates.Length];
 
@@ -133,7 +133,7 @@
 //             }
 
 //             // Add Swapper Buttons
-//             if (CachedPlayer.LocalPlayer.PlayerControl.isRole(RoleType.Swapper) && Swapper.numSwaps > 0 && !Swapper.swapper.Data.IsDead)
+//             if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Swapper) && Swapper.numSwaps > 0 && !Swapper.swapper.Data.IsDead)
 //             {
 //                 selections = new bool[__instance.playerStates.Length];
 //                 renderers = new SpriteRenderer[__instance.playerStates.Length];
@@ -180,7 +180,7 @@
 //             }
 
 //             // トラックボタン
-//             bool isTrackerButton = EvilTracker.canSetTargetOnMeeting && EvilTracker.target == null && CachedPlayer.LocalPlayer.PlayerControl.isRole(RoleType.EvilTracker) && CachedPlayer.LocalPlayer.PlayerControl.isAlive();
+//             bool isTrackerButton = EvilTracker.canSetTargetOnMeeting && EvilTracker.target == null && CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.EvilTracker) && CachedPlayer.LocalPlayer.PlayerControl.isAlive();
 //             if (isTrackerButton)
 //             {
 //                 for (int i = 0; i < __instance.playerStates.Length; i++)

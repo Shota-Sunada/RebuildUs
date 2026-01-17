@@ -13,7 +13,7 @@ public class CustomRoleOption : CustomOption
     public int Count { get { return !Enabled ? 0 : NumberOfRoleOption != null ? Mathf.RoundToInt(NumberOfRoleOption.GetFloat()) : 1; } }
     public (int rate, int count) Data { get { return (Rate, Count); } }
 
-    public CustomRoleOption(int baseId, CustomOptionType type, ERoleType roleType, Color color, int max = 15, bool roleEnabled = true) :
+    public CustomRoleOption(int baseId, CustomOptionType type, RoleType roleType, Color color, int max = 15, bool roleEnabled = true) :
     base(baseId, type, Helpers.Cs(color, Enum.GetName(roleType)), CustomOptionHolder.RATES, "", null, true, false, "")
     {
         IsRoleEnabled = roleEnabled;

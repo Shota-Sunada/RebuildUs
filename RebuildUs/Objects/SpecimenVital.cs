@@ -13,15 +13,15 @@ public class SpecimenVital
 
     public static void moveVital()
     {
-        if (SpecimenVital.flag) return;
+        if (flag) return;
         if (PlayerControl.GameOptions.MapId == 2 && CustomOptionHolder.PolisSpecimenVital.GetBool())
         {
             var panel = GameObject.Find("panel_vitals");
             if (panel != null)
             {
                 var transform = panel.GetComponent<Transform>();
-                transform.SetPositionAndRotation(SpecimenVital.pos, transform.rotation);
-                SpecimenVital.flag = true;
+                transform.SetPositionAndRotation(pos, transform.rotation);
+                flag = true;
             }
         }
     }

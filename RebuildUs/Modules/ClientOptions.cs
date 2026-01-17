@@ -4,23 +4,16 @@ namespace RebuildUs.Modules;
 
 public static class ClientOptions
 {
-    private static SelectionBehaviour[] AllOptions = [
-            new SelectionBehaviour("ghostsSeeTasksButton", () => MapOptions.ghostsSeeTasks = RebuildUs.GhostsSeeTasks.Value = !RebuildUs.GhostsSeeTasks.Value, RebuildUs.GhostsSeeTasks.Value),
-            new SelectionBehaviour("ghostsSeeVotesButton", () => MapOptions.ghostsSeeVotes = RebuildUs.GhostsSeeVotes.Value = !RebuildUs.GhostsSeeVotes.Value, RebuildUs.GhostsSeeVotes.Value),
-            new SelectionBehaviour("ghostsSeeRolesButton", () => MapOptions.ghostsSeeRoles = RebuildUs.GhostsSeeRoles.Value = !RebuildUs.GhostsSeeRoles.Value, RebuildUs.GhostsSeeRoles.Value),
-            new SelectionBehaviour("showRoleSummaryButton", () => MapOptions.showRoleSummary = RebuildUs.ShowRoleSummary.Value = !RebuildUs.ShowRoleSummary.Value, RebuildUs.ShowRoleSummary.Value),
-            new SelectionBehaviour("hideNameplates", () => {
-                MapOptions.HideNameplates = RebuildUs.HideNameplates.Value = !RebuildUs.HideNameplates.Value;
-                MeetingHudPatch.nameplatesChanged = true;
-                return MapOptions.hideNameplates;
-            }, RebuildUs.HideNameplates.Value),
-            new SelectionBehaviour("showLighterDarker", () => MapOptions.showLighterDarker = RebuildUs.ShowLighterDarker.Value = !RebuildUs.ShowLighterDarker.Value, RebuildUs.ShowLighterDarker.Value),
-            new SelectionBehaviour("hideTaskArrows", () => MapOptions.hideTaskArrows = RebuildUs.HideTaskArrows.Value = !RebuildUs.HideTaskArrows.Value, RebuildUs.HideTaskArrows.Value),
-            new SelectionBehaviour("offlineHats", () => MapOptions.offlineHats = RebuildUs.OfflineHats.Value = !RebuildUs.OfflineHats.Value, RebuildUs.OfflineHats.Value),
-            new SelectionBehaviour("hideFakeTasks", () => MapOptions.hideFakeTasks = RebuildUs.HideFakeTasks.Value = !RebuildUs.HideFakeTasks.Value, RebuildUs.HideFakeTasks.Value),
-            new SelectionBehaviour("betterSabotageMap", () => MapOptions.betterSabotageMap = RebuildUs.BetterSabotageMap.Value = !RebuildUs.BetterSabotageMap.Value, RebuildUs.BetterSabotageMap.Value),
-            new SelectionBehaviour("forceNormalSabotageMap", () => MapOptions.forceNormalSabotageMap = RebuildUs.ForceNormalSabotageMap.Value = !RebuildUs.ForceNormalSabotageMap.Value, RebuildUs.ForceNormalSabotageMap.Value),
-            new SelectionBehaviour("transparentMap", () => MapOptions.transparentMap = RebuildUs.TransparentMap.Value = !RebuildUs.TransparentMap.Value, RebuildUs.TransparentMap.Value),
+    private static readonly SelectionBehaviour[] AllOptions = [
+        new SelectionBehaviour("ghostsSeeTasksButton", () => ModMapOptions.GhostsSeeInformation = RebuildUs.GhostsSeeInformation.Value = !RebuildUs.GhostsSeeInformation.Value, RebuildUs.GhostsSeeInformation.Value),
+        new SelectionBehaviour("ghostsSeeVotesButton", () => ModMapOptions.GhostsSeeVotes = RebuildUs.GhostsSeeVotes.Value = !RebuildUs.GhostsSeeVotes.Value, RebuildUs.GhostsSeeVotes.Value),
+        new SelectionBehaviour("ghostsSeeRolesButton", () => ModMapOptions.GhostsSeeRoles = RebuildUs.GhostsSeeRoles.Value = !RebuildUs.GhostsSeeRoles.Value, RebuildUs.GhostsSeeRoles.Value),
+        new SelectionBehaviour("showRoleSummaryButton", () => ModMapOptions.ShowRoleSummary = RebuildUs.ShowRoleSummary.Value = !RebuildUs.ShowRoleSummary.Value, RebuildUs.ShowRoleSummary.Value),
+        new SelectionBehaviour("showLighterDarker", () => ModMapOptions.ShowLighterDarker = RebuildUs.ShowLighterDarker.Value = !RebuildUs.ShowLighterDarker.Value, RebuildUs.ShowLighterDarker.Value),
+        new SelectionBehaviour("betterSabotageMap", () => ModMapOptions.BetterSabotageMap = RebuildUs.BetterSabotageMap.Value = !RebuildUs.BetterSabotageMap.Value, RebuildUs.BetterSabotageMap.Value),
+        new SelectionBehaviour("forceNormalSabotageMap", () => ModMapOptions.ForceNormalSabotageMap = RebuildUs.ForceNormalSabotageMap.Value = !RebuildUs.ForceNormalSabotageMap.Value, RebuildUs.ForceNormalSabotageMap.Value),
+        new SelectionBehaviour("transparentMap", () => ModMapOptions.TransparentMap = RebuildUs.TransparentMap.Value = !RebuildUs.TransparentMap.Value, RebuildUs.TransparentMap.Value),
+        new SelectionBehaviour("hideFakeTasks", () => ModMapOptions.HideFakeTasks = RebuildUs.HideFakeTasks.Value = !RebuildUs.HideFakeTasks.Value, RebuildUs.HideFakeTasks.Value),
     ];
 
     private static GameObject popUp;

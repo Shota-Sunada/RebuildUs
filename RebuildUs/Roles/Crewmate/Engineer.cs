@@ -15,7 +15,7 @@ public class Engineer : RoleBase<Engineer>
     public Engineer()
     {
         // write value init here
-        StaticRoleType = CurrentRoleType = ERoleType.Engineer;
+        StaticRoleType = CurrentRoleType = RoleType.Engineer;
         RemainingFixes = NumberOfFixes;
     }
 
@@ -24,7 +24,7 @@ public class Engineer : RoleBase<Engineer>
     public override void OnIntroEnd() { }
     public override void FixedUpdate()
     {
-        var jackalHighlight = HighlightForTeamJackal && (CachedPlayer.LocalPlayer.PlayerControl.IsRole(ERoleType.Jackal) || CachedPlayer.LocalPlayer.PlayerControl.IsRole(ERoleType.Sidekick));
+        var jackalHighlight = HighlightForTeamJackal && (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Jackal) || CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Sidekick));
         var impostorHighlight = HighlightForImpostors && CachedPlayer.LocalPlayer.PlayerControl.IsTeamImpostor();
         if ((jackalHighlight || impostorHighlight) && MapUtilities.CachedShipStatus?.AllVents != null)
         {
@@ -106,7 +106,7 @@ public class Engineer : RoleBase<Engineer>
                         }
                     }
                 },
-                () => { return CachedPlayer.LocalPlayer.PlayerControl.IsRole(ERoleType.Engineer) && Local.RemainingFixes > 0 && CachedPlayer.LocalPlayer.PlayerControl.IsAlive(); },
+                () => { return CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Engineer) && Local.RemainingFixes > 0 && CachedPlayer.LocalPlayer.PlayerControl.IsAlive(); },
                 () =>
                 {
                     bool sabotageActive = false;

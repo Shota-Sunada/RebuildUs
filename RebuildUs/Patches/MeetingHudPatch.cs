@@ -71,7 +71,7 @@ public static class MeetingHudPatch
     [HarmonyPatch(typeof(MeetingHud), nameof(MeetingHud.Close))]
     public static void ClosePostfix(MeetingHud __instance)
     {
-        if (GameOptions.Get(ByteOptionNames.MapId) == 2 && CustomOptionHolder.PolusRandomSpawn.GetBool())
+        if (Helpers.GetOption(ByteOptionNames.MapId) == 2 && CustomOptionHolder.PolusRandomSpawn.GetBool())
         {
             if (AmongUsClient.Instance.AmHost)
             {

@@ -4,7 +4,7 @@ namespace RebuildUs.Roles;
 
 public static class RoleHelpers
 {
-    public static bool IsRole(this PlayerControl player, ERoleType roleType)
+    public static bool IsRole(this PlayerControl player, RoleType roleType)
     {
         foreach (var type in RoleData.AllRoleTypes)
         {
@@ -19,9 +19,9 @@ public static class RoleHelpers
         return false;
     }
 
-    public static bool SetRole(this PlayerControl player, ERoleType roleType)
+    public static bool SetRole(this PlayerControl player, RoleType roleType)
     {
-        Logger.LogInfo($"{player?.Data?.PlayerName}({player?.PlayerId}): {Enum.GetName(typeof(ERoleType), roleType)}");
+        Logger.LogInfo($"{player?.Data?.PlayerName}({player?.PlayerId}): {Enum.GetName(typeof(RoleType), roleType)}");
         foreach (var type in RoleData.AllRoleTypes)
         {
             if (roleType == type.RoleType)
@@ -35,7 +35,7 @@ public static class RoleHelpers
         return false;
     }
 
-    public static void EraseRole(this PlayerControl player, ERoleType roleType)
+    public static void EraseRole(this PlayerControl player, RoleType roleType)
     {
         if (IsRole(player, roleType))
         {
@@ -59,7 +59,7 @@ public static class RoleHelpers
             type.Type.GetMethod("EraseRole", BindingFlags.Public | BindingFlags.Static)?.Invoke(null, [player]);
         }
 
-        // if (player.isRole(RoleType.Mayor)) Mayor.clearAndReload();
+        // if (player.IsRole(RoleType.Mayor)) Mayor.clearAndReload();
     }
 
     public static void SwapRoles(this PlayerControl player, PlayerControl target)

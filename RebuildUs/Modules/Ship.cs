@@ -6,7 +6,7 @@ public static class Ship
     [HarmonyPatch(typeof(ShipStatus), nameof(ShipStatus.CalculateLightRadius))]
     public static bool CalculateLightRadiusPrefix(ref float __result, ShipStatus __instance, NetworkedPlayerInfo player)
     {
-        if ((!__instance.Systems.ContainsKey(SystemTypes.Electrical) && !Helpers.isFungle()) || GameOptions.IsHideNSeekMode) return true;
+        if ((!__instance.Systems.ContainsKey(SystemTypes.Electrical) && !Helpers.isFungle()) || Helpers.IsHideNSeekMode) return true;
 
         // If player is a role which has Impostor vision
         if (Helpers.hasImpostorVision(player.Object))
@@ -17,7 +17,7 @@ public static class Ship
         }
 
         // If player is Lighter with ability active
-        if (CachedPlayer.LocalPlayer.PlayerControl.isRole(RoleType.Lighter) && Lighter.isLightActive(CachedPlayer.LocalPlayer.PlayerControl))
+        if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Lighter) && Lighter.isLightActive(CachedPlayer.LocalPlayer.PlayerControl))
         {
             float unlerped = Mathf.InverseLerp(__instance.MinLightRadius, __instance.MaxLightRadius, GetNeutralLightRadius(__instance, true));
             __result = Mathf.Lerp(__instance.MaxLightRadius * Lighter.lighterModeLightsOffVision, __instance.MaxLightRadius * Lighter.lighterModeLightsOnVision, unlerped);
@@ -92,13 +92,13 @@ public static class Ship
         var normalTaskCount = __instance.ShortTasks.Count;
         var longTaskCount = __instance.LongTasks.Count;
 
-        originalNumCommonTasksOption = PlayerControl.GameOptions.NumCommonTasks;
-        originalNumShortTasksOption = PlayerControl.GameOptions.NumShortTasks;
-        originalNumLongTasksOption = PlayerControl.GameOptions.NumLongTasks;
+        originalNumCommonTasksOption = Helpers.GetOption(Int32OptionNames.NumCommonTasks);
+        originalNumShortTasksOption = Helpers.GetOption(Int32OptionNames.NumShortTasks);
+        originalNumLongTasksOption = Helpers.GetOption(Int32OptionNames.NumLongTasks);
 
-        if (PlayerControl.GameOptions.NumCommonTasks > commonTaskCount) PlayerControl.GameOptions.NumCommonTasks = commonTaskCount;
-        if (PlayerControl.GameOptions.NumShortTasks > normalTaskCount) PlayerControl.GameOptions.NumShortTasks = normalTaskCount;
-        if (PlayerControl.GameOptions.NumLongTasks > longTaskCount) PlayerControl.GameOptions.NumLongTasks = longTaskCount;
+        if (Helpers.GetOption(Int32OptionNames.NumCommonTasks) > commonTaskCount) Helpers.SetOption(Int32OptionNames.NumCommonTasks, commonTaskCount);
+        if (Helpers.GetOption(Int32OptionNames.NumShortTasks) > normalTaskCount) Helpers.SetOption(Int32OptionNames.NumShortTasks, normalTaskCount);
+        if (Helpers.GetOption(Int32OptionNames.NumLongTasks) > longTaskCount) Helpers.SetOption(Int32OptionNames.NumLongTasks, longTaskCount);
 
         MapBehaviourPatch.VentNetworks.Clear();
         return true;
@@ -109,9 +109,9 @@ public static class Ship
     public static void Postfix3(ShipStatus __instance)
     {
         // Restore original settings after the tasks have been selected
-        PlayerControl.GameOptions.NumCommonTasks = originalNumCommonTasksOption;
-        PlayerControl.GameOptions.NumShortTasks = originalNumShortTasksOption;
-        PlayerControl.GameOptions.NumLongTasks = originalNumLongTasksOption;
+        Helpers.SetOption(Int32OptionNames.NumCommonTasks, originalNumCommonTasksOption);
+        Helpers.SetOption(Int32OptionNames.NumShortTasks, originalNumShortTasksOption);
+        Helpers.SetOption(Int32OptionNames.NumLongTasks, originalNumLongTasksOption);
 
         // 一部役職のタスクを再割り当てする
         MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.FinishShipStatusBegin, Hazel.SendOption.Reliable, -1);
@@ -119,13 +119,12 @@ public static class Ship
         RPCProcedure.finishShipStatusBegin();
     }
 
-
     [HarmonyPatch(typeof(ShipStatus), nameof(ShipStatus.Start))]
     class ShipStatusStartPatch
     {
         public static void Postfix()
         {
-            Logger.info("Game Started", "Phase");
+            Logger.LogInfo("Game Started", "Phase");
         }
     }
 
@@ -134,7 +133,7 @@ public static class Ship
     public static void Postfix(ShipStatus __instance, PlayerControl player, int numPlayers, bool initialSpawn)
     {
         // Polusの湧き位置をランダムにする 無駄に人数分シャッフルが走るのをそのうち直す
-        if (PlayerControl.GameOptions.MapId == 2 && CustomOptionHolder.polusRandomSpawn.getBool())
+        if (PlayerControl.GameOptions.MapId == 2 && CustomOptionHolder.PolusRandomSpawn.GetBool())
         {
             if (AmongUsClient.Instance.AmHost)
             {

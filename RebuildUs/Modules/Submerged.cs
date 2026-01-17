@@ -1,11 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using BepInEx;
-using BepInEx.IL2CPP;
-using HarmonyLib;
-using TheOtherRoles;
 
 namespace RebuildUs.Modules;
 
@@ -73,8 +66,8 @@ public class Submerged
         public static void Prefix() { }
         public static void Postfix()
         {
-            CachedPlayer.LocalPlayer.PlayerControl.SetKillTimer(PlayerControl.GameOptions.KillCooldown);
-            MapUtilities.CachedShipStatus.EmergencyCooldown = (float)PlayerControl.GameOptions.EmergencyCooldown;
+            CachedPlayer.LocalPlayer.PlayerControl.SetKillTimer(Helpers.GetOption(FloatOptionNames.KillCooldown));
+            MapUtilities.CachedShipStatus.EmergencyCooldown = Helpers.GetOption(Int32OptionNames.EmergencyCooldown);
             Exile.ReEnableGameplay();
         }
     }
@@ -82,7 +75,7 @@ public class Submerged
     {
         public static bool Prefix(ref int __result)
         {
-            __result = Enumerable.Count<NetworkedPlayerInfo>(GameData.Instance.AllPlayers.ToSystemList<GameData.PlayerInfo>(), delegate (NetworkedPlayerInfo p)
+            __result = Enumerable.Count<NetworkedPlayerInfo>(GameData.Instance.AllPlayers.ToSystemList<NetworkedPlayerInfo>(), delegate (NetworkedPlayerInfo p)
             {
                 if (p != null && !p.IsDead && !p.Disconnected && Helpers.PlayerById(p.PlayerId) != Puppeteer.dummy)
                 {

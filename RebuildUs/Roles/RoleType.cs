@@ -1,6 +1,6 @@
 namespace RebuildUs.Roles;
 
-public enum ERoleType
+public enum RoleType
 {
     // Crewmate
     Crewmate = 0,

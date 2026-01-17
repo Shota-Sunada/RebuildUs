@@ -187,9 +187,9 @@ public static class GameStart
         if (AmongUsClient.Instance.AmHost && SendGamemode && PlayerControl.LocalPlayer != null)
         {
             MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.ShareGamemode, SendOption.Reliable, -1);
-            writer.Write((byte)MapOptions.GameMode);
+            writer.Write((byte)ModMapOptions.GameMode);
             AmongUsClient.Instance.FinishRpcImmediately(writer);
-            RPCProcedure.ShareGamemode((byte)MapOptions.GameMode);
+            RPCProcedure.ShareGamemode((byte)ModMapOptions.GameMode);
             SendGamemode = false;
         }
     }

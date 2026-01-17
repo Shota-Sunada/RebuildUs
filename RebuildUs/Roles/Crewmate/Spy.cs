@@ -13,7 +13,7 @@ public class Spy : RoleBase<Spy>
     public Spy()
     {
         // write value init here
-        StaticRoleType = CurrentRoleType = ERoleType.Spy;
+        StaticRoleType = CurrentRoleType = RoleType.Spy;
     }
 
     public override void OnMeetingStart() { }

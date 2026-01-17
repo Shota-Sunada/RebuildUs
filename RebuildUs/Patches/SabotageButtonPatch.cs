@@ -8,8 +8,8 @@ public static class SabotageButtonPatch
     public static void RefreshPostfix()
     {
         // Mafia disable sabotage button for Janitor and sometimes for Mafioso
-        bool blockSabotageJanitor = CachedPlayer.LocalPlayer.PlayerControl.IsRole(ERoleType.Janitor);
-        bool blockSabotageMafioso = CachedPlayer.LocalPlayer.PlayerControl.IsRole(ERoleType.Mafioso) && Godfather.godfather != null && !Godfather.godfather.Data.IsDead;
+        bool blockSabotageJanitor = CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Janitor);
+        bool blockSabotageMafioso = CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Mafioso) && Godfather.godfather != null && !Godfather.godfather.Data.IsDead;
         if (blockSabotageJanitor || blockSabotageMafioso)
         {
             FastDestroyableSingleton<HudManager>.Instance.SabotageButton.SetDisabled();
@@ -23,7 +23,8 @@ public static class SabotageButtonPatch
         // The sabotage button behaves just fine if it's a regular impostor
         if (CachedPlayer.LocalPlayer.PlayerControl.Data.Role.TeamType == RoleTeamTypes.Impostor) return true;
 
-        FastDestroyableSingleton<HudManager>.Instance.ShowMap((Il2CppSystem.Action<MapBehaviour>)((m) => { m.ShowSabotageMap(); }));
+        // FastDestroyableSingleton<HudManager>.Instance.ToggleMapVisible((Il2CppSystem.Action<MapBehaviour>)((m) => { m.ShowSabotageMap(); }));
+        FastDestroyableSingleton<MapBehaviour>.Instance.ShowSabotageMap();
         return false;
     }
 }

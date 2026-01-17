@@ -1,6 +1,6 @@
 namespace RebuildUs.Roles;
 
-public partial class RoleInfo(string nameKey, Color color, CustomOption baseOption, ERoleType roleType)
+public partial class RoleInfo(string nameKey, Color color, CustomOption baseOption, RoleType roleType)
 {
     public Color Color = color;
     public virtual string Name { get { return NameKey; } }
@@ -16,11 +16,11 @@ public partial class RoleInfo(string nameKey, Color color, CustomOption baseOpti
     public bool Enabled { get { return Helpers.RolesEnabled && (BaseOption == null /*|| BaseOption.Enabled*/); } }
 
     public string NameKey = nameKey;
-    public ERoleType RoleType = roleType;
+    public RoleType RoleType = roleType;
     private readonly CustomOption BaseOption = baseOption;
     public static List<RoleInfo> AllRoleInfos = [];
 
-    public static List<RoleInfo> GetRoleInfoForPlayer(PlayerControl player, bool showModifier = true, ERoleType[] excludeRoles = null)
+    public static List<RoleInfo> GetRoleInfoForPlayer(PlayerControl player, bool showModifier = true, RoleType[] excludeRoles = null)
     {
         var infos = new List<RoleInfo>();
         if (player == null) return infos;
@@ -32,11 +32,11 @@ public partial class RoleInfo(string nameKey, Color color, CustomOption baseOpti
 
         foreach (var info in AllRoleInfos)
         {
-            if (info.RoleType == ERoleType.Jackal) continue; // Jackalは後で特殊判定を行う
+            if (info.RoleType == RoleType.Jackal) continue; // Jackalは後で特殊判定を行う
             if (player.IsRole(info.RoleType)) infos.Add(info);
         }
 
-        if (player.IsRole(ERoleType.Jackal) || (Neutral.Jackal.FormerJackals != null && Neutral.Jackal.FormerJackals.Any(x => x.PlayerId == player.PlayerId))) infos.Add(Jackal);
+        if (player.IsRole(RoleType.Jackal) || (Neutral.Jackal.FormerJackals != null && Neutral.Jackal.FormerJackals.Any(x => x.PlayerId == player.PlayerId))) infos.Add(Jackal);
 
         if (infos.Count == 0 && player.Data.Role != null)
         {
@@ -52,7 +52,7 @@ public partial class RoleInfo(string nameKey, Color color, CustomOption baseOpti
         return infos;
     }
 
-    public static string GetRolesString(PlayerControl p, bool useColors, bool showModifier = true, ERoleType[] excludeRoles = null, bool includeHidden = false, string joinSeparator = " ")
+    public static string GetRolesString(PlayerControl p, bool useColors, bool showModifier = true, RoleType[] excludeRoles = null, bool includeHidden = false, string joinSeparator = " ")
     {
         if (p?.Data?.Disconnected != false) return "";
 

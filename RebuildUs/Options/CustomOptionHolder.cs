@@ -40,6 +40,10 @@ public static partial class CustomOptionHolder
     public static CustomOption StopCooldownOnFixingElecSabotage;
     public static CustomOption EnableHawkMode;
     public static CustomOption CanWinByTaskWithoutLivingPlayer;
+    // public static CustomOption DeadPlayerCanSeeCooldown;
+    public static CustomOption ImpostorCanIgnoreCommSabotage;
+    // public static CustomOption BlockSabotageFromDeadImpostors;
+    // public static CustomOption ShieldFirstKill;
 
     public static CustomOption RandomWireTask;
     public static CustomOption NumWireTask;
@@ -196,7 +200,7 @@ public static partial class CustomOptionHolder
         EnableHawkMode = CustomOption.Normal(30, CustomOptionType.General, "EnableHawkMode", true);
         CanWinByTaskWithoutLivingPlayer = CustomOption.Normal(31, CustomOptionType.General, "CanWinByTaskLivingPlayer", true);
         // DeadPlayerCanSeeCooldown = CustomOption.Normal(32, CustomOptionType.General, "DeadPlayerCanSeeCooldown", true);
-        // ImpostorCanIgnoreCommSabotage = CustomOption.Normal(33, CustomOptionType.General, "ImpostorCanIgnoreCommSabotage", false);
+        ImpostorCanIgnoreCommSabotage = CustomOption.Normal(33, CustomOptionType.General, "ImpostorCanIgnoreCommSabotage", false);
         // BlockSabotageFromDeadImpostors = CustomOption.Normal(34, CustomOptionType.General, "BlockSabotageFromDeadImpostors", false);
         // ShieldFirstKill = CustomOption.Normal(35, CustomOptionType.General, "ShieldFirstKill", false);
 
@@ -257,19 +261,19 @@ public static partial class CustomOptionHolder
         #endregion
 
         #region ROLES CREWMATE
-        MayorSpawnRate = new(1000, CustomOptionType.Crewmate, ERoleType.Mayor, Mayor.RoleColor);
+        MayorSpawnRate = new(1000, CustomOptionType.Crewmate, RoleType.Mayor, Mayor.RoleColor);
         MayorNumVotes = CustomOption.Normal(1001, CustomOptionType.Crewmate, "", 2f, 2f, 10f, 1f, MayorSpawnRate);
         MayorCanSeeVoteColors = CustomOption.Normal(1002, CustomOptionType.Crewmate, "", false, MayorSpawnRate);
         MayorTasksNeededToSeeVoteColors = CustomOption.Normal(1003, CustomOptionType.Crewmate, "", true, MayorCanSeeVoteColors);
         MayorMeetingButton = CustomOption.Normal(1004, CustomOptionType.Crewmate, "", true, MayorSpawnRate);
         MayorMaxRemoteMeetings = CustomOption.Normal(1005, CustomOptionType.Crewmate, "", 1f, 0f, 10f, 1f, MayorMeetingButton);
 
-        EngineerSpawnRate = new(1010, CustomOptionType.Crewmate, ERoleType.Engineer, Engineer.RoleColor);
+        EngineerSpawnRate = new(1010, CustomOptionType.Crewmate, RoleType.Engineer, Engineer.RoleColor);
         EngineerNumberOfFixes = CustomOption.Normal(1011, CustomOptionType.Crewmate, "", 1f, 0f, 3f, 1f, EngineerSpawnRate);
         EngineerHighlightForImpostors = CustomOption.Normal(1012, CustomOptionType.Crewmate, "", true, EngineerSpawnRate);
         EngineerHighlightForTeamJackal = CustomOption.Normal(1013, CustomOptionType.Crewmate, "", true, EngineerSpawnRate);
 
-        SpySpawnRate = new(1020, CustomOptionType.Crewmate, ERoleType.Spy, Spy.RoleColor, 1);
+        SpySpawnRate = new(1020, CustomOptionType.Crewmate, RoleType.Spy, Spy.RoleColor, 1);
         SpyCanDieToSheriff = CustomOption.Normal(1021, CustomOptionType.Crewmate, "", false, SpySpawnRate);
         SpyImpostorsCanKillAnyone = CustomOption.Normal(1022, CustomOptionType.Crewmate, "", true, SpySpawnRate);
         SpyCanEnterVents = CustomOption.Normal(1023, CustomOptionType.Crewmate, "", false, SpySpawnRate);
@@ -277,7 +281,7 @@ public static partial class CustomOptionHolder
         #endregion
 
         #region ROLES IMPOSTOR
-        BountyHunterSpawnRate = new(2000, CustomOptionType.Impostor, ERoleType.BountyHunter, BountyHunter.RoleColor, 1);
+        BountyHunterSpawnRate = new(2000, CustomOptionType.Impostor, RoleType.BountyHunter, BountyHunter.RoleColor, 1);
         BountyHunterBountyDuration = CustomOption.Normal(2001, CustomOptionType.Impostor, "", 60f, 10f, 180f, 10f, BountyHunterSpawnRate);
         BountyHunterReducedCooldown = CustomOption.Normal(20002, CustomOptionType.Impostor, "", 2.5f, 2.5f, 30f, 2.5f, BountyHunterSpawnRate);
         BountyHunterPunishmentTime = CustomOption.Normal(2003, CustomOptionType.Impostor, "", 20f, 0f, 60f, 2.5f, BountyHunterSpawnRate);
@@ -286,23 +290,23 @@ public static partial class CustomOptionHolder
         #endregion
 
         #region ROLES NEUTRAL
-        JesterSpawnRate = new(3000, CustomOptionType.Neutral, ERoleType.Jester, Jester.RoleColor, 1);
+        JesterSpawnRate = new(3000, CustomOptionType.Neutral, RoleType.Jester, Jester.RoleColor, 1);
         JesterCanCallEmergency = CustomOption.Normal(3001, CustomOptionType.Neutral, "", true, JesterSpawnRate);
         JesterCanSabotage = CustomOption.Normal(3002, CustomOptionType.Neutral, "", true, JesterSpawnRate);
         JesterHasImpostorVision = CustomOption.Normal(3003, CustomOptionType.Neutral, "", false, JesterSpawnRate);
 
-        ArsonistSpawnRate = new(3010, CustomOptionType.Neutral, ERoleType.Arsonist, Arsonist.RoleColor, 1);
+        ArsonistSpawnRate = new(3010, CustomOptionType.Neutral, RoleType.Arsonist, Arsonist.RoleColor, 1);
         ArsonistCooldown = CustomOption.Normal(3011, CustomOptionType.Neutral, "", 12.5f, 2.5f, 60f, 2.5f, ArsonistSpawnRate);
         ArsonistDuration = CustomOption.Normal(3012, CustomOptionType.Neutral, "", 3f, 0f, 10f, 1f, ArsonistSpawnRate);
         ArsonistCanBeLovers = CustomOption.Normal(3013, CustomOptionType.Neutral, "", false, ArsonistSpawnRate);
 
-        VultureSpawnRate = new(3020, CustomOptionType.Neutral, ERoleType.Vulture, Vulture.RoleColor, 1);
+        VultureSpawnRate = new(3020, CustomOptionType.Neutral, RoleType.Vulture, Vulture.RoleColor, 1);
         VultureCooldown = CustomOption.Normal(3021, CustomOptionType.Neutral, "", 15f, 2.5f, 60f, 2.5f, VultureSpawnRate);
         VultureNumberToWin = CustomOption.Normal(3022, CustomOptionType.Neutral, "", 4f, 1f, 12f, 1f, VultureSpawnRate);
         VultureCanUseVents = CustomOption.Normal(3023, CustomOptionType.Neutral, "", true, VultureSpawnRate);
         VultureShowArrows = CustomOption.Normal(3024, CustomOptionType.Neutral, "", true, VultureSpawnRate);
 
-        JackalSpawnRate = new(3030, CustomOptionType.Neutral, ERoleType.Jackal, Jackal.RoleColor, 1);
+        JackalSpawnRate = new(3030, CustomOptionType.Neutral, RoleType.Jackal, Jackal.RoleColor, 1);
         JackalKillCooldown = CustomOption.Normal(3031, CustomOptionType.Neutral, "", 30f, 10f, 60f, 2.5f, JackalSpawnRate);
         JackalCanSabotageLights = CustomOption.Normal(3032, CustomOptionType.Neutral, "", true, JackalSpawnRate);
         JackalCanUseVents = CustomOption.Normal(3033, CustomOptionType.Neutral, "", true, JackalSpawnRate);
@@ -321,7 +325,7 @@ public static partial class CustomOptionHolder
         #region MODIFIERS
         #endregion
 
-        BlockedRolePairings.Add((byte)ERoleType.Vulture, [(byte)ERoleType.Cleaner]);
-        BlockedRolePairings.Add((byte)ERoleType.Cleaner, [(byte)ERoleType.Vulture]);
+        BlockedRolePairings.Add((byte)RoleType.Vulture, [(byte)RoleType.Cleaner]);
+        BlockedRolePairings.Add((byte)RoleType.Cleaner, [(byte)RoleType.Vulture]);
     }
 }

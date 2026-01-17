@@ -63,7 +63,7 @@ public static class PlayerControlHelpers
         return false;
         // if (player.IsRole(RoleType.SchrodingersCat) && SchrodingersCat.hideRole) return true;
         // if (player.IsRole(RoleType.JekyllAndHyde)) return true;
-        // return player.IsNeutral() && (player.IsRole(ERoleType.Lawyer) || player.isRole(RoleType.Pursuer) || player.isRole(RoleType.Shifter) || player.isRole(RoleType.Fox));
+        // return player.IsNeutral() && (player.IsRole(ERoleType.Lawyer) || player.IsRole(RoleType.Pursuer) || player.IsRole(RoleType.Shifter) || player.IsRole(RoleType.Fox));
     }
 
     public static bool IsGM(this PlayerControl player)
@@ -103,31 +103,31 @@ public static class PlayerControlHelpers
     public static bool CanUseVents(this PlayerControl player)
     {
         bool roleCouldUse = false;
-        if (player.IsRole(ERoleType.Engineer))
+        if (player.IsRole(RoleType.Engineer))
             roleCouldUse = true;
-        else if (Jackal.CanUseVents && player.IsRole(ERoleType.Jackal))
+        else if (Jackal.CanUseVents && player.IsRole(RoleType.Jackal))
             roleCouldUse = true;
-        else if (Sidekick.CanUseVents && player.IsRole(ERoleType.Sidekick))
+        else if (Sidekick.CanUseVents && player.IsRole(RoleType.Sidekick))
             roleCouldUse = true;
-        else if (Spy.CanEnterVents && player.IsRole(ERoleType.Spy))
+        else if (Spy.CanEnterVents && player.IsRole(RoleType.Spy))
             roleCouldUse = true;
         // else if (Madmate.canEnterVents && player.hasModifier(ModifierType.Madmate))
         //     roleCouldUse = true;
         // else if (CreatedMadmate.canEnterVents && player.hasModifier(ModifierType.CreatedMadmate))
         //     roleCouldUse = true;
-        else if (Vulture.CanUseVents && player.IsRole(ERoleType.Vulture))
+        else if (Vulture.CanUseVents && player.IsRole(RoleType.Vulture))
             roleCouldUse = true;
-        // else if (player.isRole(RoleType.JekyllAndHyde) && !JekyllAndHyde.isJekyll())
+        // else if (player.IsRole(RoleType.JekyllAndHyde) && !JekyllAndHyde.isJekyll())
         //     roleCouldUse = true;
-        // else if (player.isRole(RoleType.Moriarty))
+        // else if (player.IsRole(RoleType.Moriarty))
         //     roleCouldUse = true;
         // else if (player.Data?.Role != null && player.Data.Role.CanVent)
         // {
-        //     if (!Janitor.canVent && player.isRole(RoleType.Janitor))
+        //     if (!Janitor.canVent && player.IsRole(RoleType.Janitor))
         //         roleCouldUse = false;
-        //     else if (!Mafioso.canVent && player.isRole(RoleType.Mafioso))
+        //     else if (!Mafioso.canVent && player.IsRole(RoleType.Mafioso))
         //         roleCouldUse = false;
-        //     else if (!Ninja.canUseVents && player.isRole(RoleType.Ninja))
+        //     else if (!Ninja.canUseVents && player.IsRole(RoleType.Ninja))
         //         roleCouldUse = false;
         //     else
         //         roleCouldUse = true;
@@ -142,11 +142,11 @@ public static class PlayerControlHelpers
         //     roleCouldUse = true;
         // else if (CreatedMadmate.canSabotage && player.hasModifier(ModifierType.CreatedMadmate))
         //     roleCouldUse = true;
-        if (Jester.CanSabotage && player.IsRole(ERoleType.Jester))
+        if (Jester.CanSabotage && player.IsRole(RoleType.Jester))
             roleCouldUse = true;
-        // else if (!Mafioso.canSabotage && player.isRole(RoleType.Mafioso))
+        // else if (!Mafioso.canSabotage && player.IsRole(RoleType.Mafioso))
         //     roleCouldUse = false;
-        // else if (!Janitor.canSabotage && player.isRole(RoleType.Janitor))
+        // else if (!Janitor.canSabotage && player.IsRole(RoleType.Janitor))
         //     roleCouldUse = false;
         // else if (player.Data?.Role != null && player.Data.Role.IsImpostor)
         //     roleCouldUse = true;

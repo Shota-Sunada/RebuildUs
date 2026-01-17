@@ -19,7 +19,7 @@ public static class Vitals
     static void UseVitalsTime()
     {
         // Don't waste network traffic if we're out of time.
-        if (MapOptions.restrictDevices > 0 && MapOptions.restrictVitals && MapOptions.restrictVitalsTime > 0f && CachedPlayer.LocalPlayer.PlayerControl.isAlive())
+        if (ModMapOptions.restrictDevices > 0 && ModMapOptions.restrictVitals && ModMapOptions.restrictVitalsTime > 0f && CachedPlayer.LocalPlayer.PlayerControl.isAlive())
         {
             MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.UseVitalsTime, Hazel.SendOption.Reliable, -1);
             writer.Write(vitalsTimer);
@@ -55,11 +55,11 @@ public static class Vitals
         if (vitalsTimer > 0.05f)
             UseVitalsTime();
 
-        if (MapOptions.restrictDevices > 0 && MapOptions.restrictVitals)
+        if (ModMapOptions.restrictDevices > 0 && ModMapOptions.restrictVitals)
         {
             if (TimeRemaining == null)
             {
-                TimeRemaining = UnityEngine.Object.Instantiate(FastDestroyableSingleton<HudManager>.Instance.TaskText, __instance.transform);
+                TimeRemaining = UnityEngine.Object.Instantiate(FastDestroyableSingleton<TaskPanelBehaviour>.Instance.taskText, __instance.transform);
                 TimeRemaining.alignment = TMPro.TextAlignmentOptions.BottomRight;
                 TimeRemaining.transform.position = Vector3.zero;
                 TimeRemaining.transform.localPosition = new Vector3(1.7f, 4.45f);
@@ -67,13 +67,13 @@ public static class Vitals
                 TimeRemaining.color = Palette.White;
             }
 
-            if (MapOptions.restrictVitalsTime <= 0f)
+            if (ModMapOptions.restrictVitalsTime <= 0f)
             {
                 __instance.Close();
                 return false;
             }
 
-            string timeString = TimeSpan.FromSeconds(MapOptions.restrictVitalsTime).ToString(@"mm\:ss\.ff");
+            string timeString = TimeSpan.FromSeconds(ModMapOptions.restrictVitalsTime).ToString(@"mm\:ss\.ff");
             TimeRemaining.text = String.Format(Tr.Get("timeRemaining"), timeString);
             TimeRemaining.gameObject.SetActive(true);
         }
@@ -89,7 +89,7 @@ public static class Vitals
             for (int k = 0; k < __instance.vitals.Length; k++)
             {
                 VitalsPanel vitalsPanel = __instance.vitals[k];
-                GameData.PlayerInfo player = GameData.Instance.AllPlayers[k];
+                NetworkedPlayerInfo player = GameData.Instance.AllPlayers[k];
 
                 // Hacker update
                 if (vitalsPanel.IsDead)

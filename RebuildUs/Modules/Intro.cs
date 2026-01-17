@@ -37,11 +37,11 @@ public static class Intro
                 // PlayerControl.SetPetImage(data.DefaultOutfit.PetId, data.DefaultOutfit.ColorId, player.PetSlot);
                 player.cosmetics.nameText.text = data.PlayerName;
                 player.SetFlipX(true);
-                MapOptions.PlayerIcons[p.PlayerId] = player;
+                ModMapOptions.PlayerIcons[p.PlayerId] = player;
                 player.gameObject.SetActive(false);
-                MapOptions.PlayerIcons[p.PlayerId] = player;
+                ModMapOptions.PlayerIcons[p.PlayerId] = player;
 
-                if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(ERoleType.BountyHunter))
+                if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.BountyHunter))
                 {
                     player.transform.localPosition = BottomLeft + new Vector3(-0.25f, 0f, 0);
                     player.transform.localScale = Vector3.one * 0.4f;
@@ -58,7 +58,7 @@ public static class Intro
         RebuildUs.OnIntroEnd();
 
         // インポスター視界の場合に昇降機右の影を無効化
-        if (GameOptions.Get(ByteOptionNames.MapId) == 4 && CustomOptionHolder.AirshipOptions.GetBool() && Helpers.HasImpostorVision(CachedPlayer.LocalPlayer.PlayerControl))
+        if (Helpers.GetOption(ByteOptionNames.MapId) == 4 && CustomOptionHolder.AirshipOptions.GetBool() && Helpers.HasImpostorVision(CachedPlayer.LocalPlayer.PlayerControl))
         {
             var obj = ShipStatus.Instance.FastRooms[SystemTypes.GapRoom].gameObject;
             var oneWayShadow = obj.transform.FindChild("Shadow").FindChild("LedgeShadow").GetComponent<OneWayShadows>();
@@ -72,7 +72,7 @@ public static class Intro
         SpecimenVital.moveVital();
 
         // アーカイブのアドミンを消す
-        if (GameOptions.Get(ByteOptionNames.MapId) == 4 && CustomOptionHolder.AirshipOldAdmin.GetBool())
+        if (Helpers.GetOption(ByteOptionNames.MapId) == 4 && CustomOptionHolder.AirshipOldAdmin.GetBool())
         {
             GameObject records = ShipStatus.Instance.FastRooms[SystemTypes.Records].gameObject;
             records.GetComponentsInChildren<MapConsole>().FirstOrDefault(x => x.name == "records_admin_map")?.gameObject.SetActive(false);
@@ -82,7 +82,7 @@ public static class Intro
         {
             var gapRoom = ShipStatus.Instance.FastRooms[SystemTypes.GapRoom].gameObject;
             // GapRoomの配電盤を消す
-            if (GameOptions.Get(ByteOptionNames.MapId) == 4 && CustomOptionHolder.AirshipDisableGapSwitchBoard.GetBool())
+            if (Helpers.GetOption(ByteOptionNames.MapId) == 4 && CustomOptionHolder.AirshipDisableGapSwitchBoard.GetBool())
             {
                 var sabotage = gapRoom.GetComponentsInChildren<Console>().FirstOrDefault(x => x.name == "task_lightssabotage (gap)")?.gameObject;
                 sabotage.SetActive(false);
@@ -90,7 +90,7 @@ public static class Intro
             }
 
             // ぬ～んを消す
-            if (GameOptions.Get(ByteOptionNames.MapId) == 4 && CustomOptionHolder.AirshipDisableMovingPlatform.GetBool())
+            if (Helpers.GetOption(ByteOptionNames.MapId) == 4 && CustomOptionHolder.AirshipDisableMovingPlatform.GetBool())
             {
                 gapRoom.GetComponentInChildren<MovingPlatformBehaviour>().gameObject.SetActive(false);
                 gapRoom.GetComponentsInChildren<PlatformConsole>().ForEach(x => x.gameObject.SetActive(false));
@@ -98,7 +98,7 @@ public static class Intro
         }
 
         //タスクバグ修正
-        if (GameOptions.Get(ByteOptionNames.MapId) == 4 && CustomOptionHolder.AirshipEnableWallCheck.GetBool())
+        if (Helpers.GetOption(ByteOptionNames.MapId) == 4 && CustomOptionHolder.AirshipEnableWallCheck.GetBool())
         {
             var objects = UnityEngine.GameObject.FindObjectsOfType<Console>().ToList();
             objects.Find(x => x.name == "task_garbage1").checkWalls = true;
@@ -151,7 +151,7 @@ public static class Intro
             fakeImpostorTeam.Add(PlayerControl.LocalPlayer);
             foreach (var p in players)
             {
-                if (PlayerControl.LocalPlayer != p && (p.IsRole(ERoleType.Spy) || p.Data.Role.IsImpostor))
+                if (PlayerControl.LocalPlayer != p && (p.IsRole(RoleType.Spy) || p.Data.Role.IsImpostor))
                 {
                     fakeImpostorTeam.Add(p);
                 }
@@ -163,9 +163,9 @@ public static class Intro
     public static void SetupIntroTeam(IntroCutscene __instance, ref Il2CppSystem.Collections.Generic.List<PlayerControl> yourTeam)
     {
         var infos = RoleInfo.GetRoleInfoForPlayer(CachedPlayer.LocalPlayer.PlayerControl);
-        var roleInfo = infos.FirstOrDefault(info => info.RoleType != ERoleType.Lovers);
+        var roleInfo = infos.FirstOrDefault(info => info.RoleType != RoleType.Lovers);
         if (roleInfo == null) return;
-        // if (CachedPlayer.LocalPlayer.PlayerControl.IsNeutral() || CachedPlayer.LocalPlayer.PlayerControl.isGM())
+        // if (CachedPlayer.LocalPlayer.PlayerControl.IsNeutral() || CachedPlayer.LocalPlayer.PlayerControl.IsGM())
         if (CachedPlayer.LocalPlayer.PlayerControl.IsNeutral())
         {
             __instance.BackgroundBar.material.color = roleInfo.Color;
@@ -202,7 +202,7 @@ public static class Intro
 
     private static IEnumerator SetupRole(IntroCutscene __instance)
     {
-        var infos = RoleInfo.GetRoleInfoForPlayer(CachedPlayer.LocalPlayer.PlayerControl, false, [ERoleType.Lovers]);
+        var infos = RoleInfo.GetRoleInfoForPlayer(CachedPlayer.LocalPlayer.PlayerControl, false, [RoleType.Lovers]);
         var roleInfo = infos.FirstOrDefault();
 
         Logger.LogInfo("----------Role Assign-----------", "Settings");

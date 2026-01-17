@@ -22,7 +22,7 @@ public class Vulture : RoleBase<Vulture>
     public Vulture()
     {
         // write value init here
-        StaticRoleType = CurrentRoleType = ERoleType.Vulture;
+        StaticRoleType = CurrentRoleType = RoleType.Vulture;
         EatenBodies = 0;
         LocalArrows = [];
     }
@@ -34,7 +34,7 @@ public class Vulture : RoleBase<Vulture>
     {
         if (LocalArrows == null || !ShowArrows) return;
 
-        if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(ERoleType.Vulture))
+        if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Vulture))
         {
             if (Player.IsDead())
             {
@@ -112,7 +112,7 @@ public class Vulture : RoleBase<Vulture>
                         return;
                     }
                 },
-                () => { return CachedPlayer.LocalPlayer.PlayerControl.IsRole(ERoleType.Vulture) && CachedPlayer.LocalPlayer.PlayerControl.IsAlive(); },
+                () => { return CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Vulture) && CachedPlayer.LocalPlayer.PlayerControl.IsAlive(); },
                 () =>
                 {
                     VultureNumCorpsesText?.text = string.Format(Tr.Get("vultureCorpses"), NumberToWin - Local.EatenBodies);

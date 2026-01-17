@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace RebuildUs
 {
-    static class MapOptions
+    static class ModMapOptions
     {
         // Set values
         public static int MaxNumberOfMeetings = 10;
@@ -32,10 +32,12 @@ namespace RebuildUs
         public static bool GhostsSeeInformation = true;
         public static bool GhostsSeeVotes = true;
         public static bool ShowRoleSummary = true;
+        public static bool ShowLighterDarker = false;
+        public static bool BetterSabotageMap = false;
+        public static bool ForceNormalSabotageMap = false;
+        public static bool TransparentMap = false;
+        public static bool HideFakeTasks = false;
 
-        public static bool ShowLighterDarker = true;
-        public static bool EnableSoundEffects = true;
-        public static bool EnableHorseMode = false;
         public static bool ShieldFirstKill = false;
         public static bool ShowVentsOnMap = true;
         public static bool ShowChatNotifications = true;
@@ -161,7 +163,7 @@ namespace RebuildUs
             // Admin
             if (restrictAdminText)
             {
-                AdminTimerText = UnityEngine.Object.Instantiate(FastDestroyableSingleton<HudManager>.Instance.TaskText, FastDestroyableSingleton<HudManager>.Instance.transform);
+                AdminTimerText = UnityEngine.Object.Instantiate(FastDestroyableSingleton<TaskPanelBehaviour>.Instance.taskText, FastDestroyableSingleton<HudManager>.Instance.transform);
                 float y = -4.0f;
                 if (restrictCamerasText)
                     y += 0.2f;
@@ -178,7 +180,7 @@ namespace RebuildUs
             // Cameras
             if (restrictCamerasText)
             {
-                CamerasTimerText = UnityEngine.Object.Instantiate(FastDestroyableSingleton<HudManager>.Instance.TaskText, FastDestroyableSingleton<HudManager>.Instance.transform);
+                CamerasTimerText = UnityEngine.Object.Instantiate(FastDestroyableSingleton<TaskPanelBehaviour>.Instance.taskText, FastDestroyableSingleton<HudManager>.Instance.transform);
                 float y = -4.0f;
                 if (restrictVitalsText)
                     y += 0.2f;
@@ -193,7 +195,7 @@ namespace RebuildUs
             // Vitals
             if (restrictVitalsText)
             {
-                VitalsTimerText = UnityEngine.Object.Instantiate(FastDestroyableSingleton<HudManager>.Instance.TaskText, FastDestroyableSingleton<HudManager>.Instance.transform);
+                VitalsTimerText = UnityEngine.Object.Instantiate(FastDestroyableSingleton<TaskPanelBehaviour>.Instance.taskText, FastDestroyableSingleton<HudManager>.Instance.transform);
                 VitalsTimerText.transform.localPosition = new Vector3(-3.5f, -4.0f, 0);
                 if (restrictVitalsTime > 0)
                     VitalsTimerText.text = String.Format(Tr.Get("vitalsText"), restrictVitalsTime.ToString("0.00"));

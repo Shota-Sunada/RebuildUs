@@ -6,7 +6,7 @@ public abstract class PlayerRole
 {
     public static List<PlayerRole> AllRoles = [];
     public PlayerControl Player;
-    public ERoleType CurrentRoleType;
+    public RoleType CurrentRoleType;
 
     public abstract void OnMeetingStart();
     public abstract void OnMeetingEnd();
@@ -32,7 +32,7 @@ public abstract class PlayerRole
 public abstract class RoleBase<T> : PlayerRole where T : RoleBase<T>, new()
 {
     public static List<T> Players = [];
-    public static ERoleType StaticRoleType;
+    public static RoleType StaticRoleType;
 
     public void Init(PlayerControl player)
     {

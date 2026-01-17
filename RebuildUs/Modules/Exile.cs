@@ -94,14 +94,14 @@ public static class Exile
 
         // SecurityGuard vents and cameras
         var allCameras = MapUtilities.CachedShipStatus.AllCameras.ToList();
-        MapOptions.CamerasToAdd.ForEach(camera =>
+        ModMapOptions.CamerasToAdd.ForEach(camera =>
         {
             camera.gameObject.SetActive(true);
             camera.gameObject.GetComponent<SpriteRenderer>().color = Color.white;
             allCameras.Add(camera);
         });
         MapUtilities.CachedShipStatus.AllCameras = allCameras.ToArray();
-        MapOptions.CamerasToAdd = [];
+        ModMapOptions.CamerasToAdd = [];
 
         // foreach (var vent in MapOptions.VentsToSeal)
         // {
@@ -124,9 +124,9 @@ public static class Exile
         // MapOptions.VentsToSeal = [];
 
         // 1 = reset per turn
-        if (MapOptions.restrictDevices == 1)
+        if (ModMapOptions.restrictDevices == 1)
         {
-            MapOptions.resetDeviceTimes();
+            ModMapOptions.resetDeviceTimes();
         }
     }
 
@@ -169,7 +169,7 @@ public static class Exile
 
         if (exiled != null)
         {
-            if (exiled.IsRole(ERoleType.Jester))
+            if (exiled.IsRole(RoleType.Jester))
             {
                 Jester.TriggerJesterWin = true;
             }
@@ -185,7 +185,7 @@ public static class Exile
     public static void ReEnableGameplay()
     {
         CustomButton.MeetingEndedUpdate();
-        MapOptions.MeetingEndedUpdate();
+        ModMapOptions.MeetingEndedUpdate();
         RebuildUs.OnMeetingEnd();
 
         // // Mini set adapted cooldown
@@ -298,7 +298,7 @@ public static class Exile
         }
         if (deadPlayers < (int)CustomOptionHolder.AdditionalEmergencyCooldown.GetFloat())
         {
-            ShipStatus.Instance.EmergencyCooldown = GameOptions.Get(Int32OptionNames.EmergencyCooldown) + CustomOptionHolder.AdditionalEmergencyCooldownTime.GetFloat();
+            ShipStatus.Instance.EmergencyCooldown = Helpers.GetOption(Int32OptionNames.EmergencyCooldown) + CustomOptionHolder.AdditionalEmergencyCooldownTime.GetFloat();
         }
     }
 
@@ -317,7 +317,7 @@ public static class Exile
                 }
                 if (id == StringNames.ImpostorsRemainP || id == StringNames.ImpostorsRemainS)
                 {
-                    if (player.IsRole(ERoleType.Jester)) __result = "";
+                    if (player.IsRole(RoleType.Jester)) __result = "";
                 }
             }
         }

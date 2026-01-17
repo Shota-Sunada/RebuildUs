@@ -23,7 +23,7 @@ public static class SecurityCamera
     public static void UseCameraTime()
     {
         // Don't waste network traffic if we're out of time.
-        if (MapOptions.restrictDevices > 0 && MapOptions.restrictCameras && MapOptions.restrictCamerasTime > 0f && CachedPlayer.LocalPlayer.PlayerControl.isAlive())
+        if (ModMapOptions.restrictDevices > 0 && ModMapOptions.restrictCameras && ModMapOptions.restrictCamerasTime > 0f && CachedPlayer.LocalPlayer.PlayerControl.isAlive())
         {
             MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.UseCameraTime, Hazel.SendOption.Reliable, -1);
             writer.Write(cameraTimer);
@@ -66,11 +66,11 @@ public static class SecurityCamera
         if (cameraTimer > 0.1f)
             UseCameraTime();
 
-        if (MapOptions.restrictDevices > 0 && MapOptions.restrictCameras)
+        if (ModMapOptions.restrictDevices > 0 && ModMapOptions.restrictCameras)
         {
             if (TimeRemaining == null)
             {
-                TimeRemaining = UnityEngine.Object.Instantiate(FastDestroyableSingleton<HudManager>.Instance.TaskText, __instance.transform);
+                TimeRemaining = UnityEngine.Object.Instantiate(FastDestroyableSingleton<TaskPanelBehaviour>.Instance.taskText, __instance.transform);
                 TimeRemaining.alignment = TMPro.TextAlignmentOptions.BottomRight;
                 TimeRemaining.transform.position = Vector3.zero;
                 TimeRemaining.transform.localPosition = new Vector3(0.95f, 4.45f);
@@ -78,13 +78,13 @@ public static class SecurityCamera
                 TimeRemaining.color = Palette.White;
             }
 
-            if (MapOptions.restrictCamerasTime <= 0f)
+            if (ModMapOptions.restrictCamerasTime <= 0f)
             {
                 __instance.Close();
                 return false;
             }
 
-            string timeString = TimeSpan.FromSeconds(MapOptions.restrictCamerasTime).ToString(@"mm\:ss\.ff");
+            string timeString = TimeSpan.FromSeconds(ModMapOptions.restrictCamerasTime).ToString(@"mm\:ss\.ff");
             TimeRemaining.text = String.Format(Tr.Get("timeRemaining"), timeString);
             TimeRemaining.gameObject.SetActive(true);
         }
@@ -100,11 +100,11 @@ public static class SecurityCamera
             UseCameraTime();
         }
 
-        if (MapOptions.restrictDevices > 0 && MapOptions.restrictCameras)
+        if (ModMapOptions.restrictDevices > 0 && ModMapOptions.restrictCameras)
         {
             if (TimeRemaining == null)
             {
-                TimeRemaining = UnityEngine.Object.Instantiate(FastDestroyableSingleton<HudManager>.Instance.TaskText, __instance.transform);
+                TimeRemaining = UnityEngine.Object.Instantiate(FastDestroyableSingleton<TaskPanelBehaviour>.Instance.taskText, __instance.transform);
                 TimeRemaining.alignment = TMPro.TextAlignmentOptions.Center;
                 TimeRemaining.transform.position = Vector3.zero;
                 TimeRemaining.transform.localPosition = new Vector3(0.0f, -1.7f);
@@ -112,13 +112,13 @@ public static class SecurityCamera
                 TimeRemaining.color = Palette.White;
             }
 
-            if (MapOptions.restrictCamerasTime <= 0f)
+            if (ModMapOptions.restrictCamerasTime <= 0f)
             {
                 __instance.Close();
                 return false;
             }
 
-            string timeString = TimeSpan.FromSeconds(MapOptions.restrictCamerasTime).ToString(@"mm\:ss\.ff");
+            string timeString = TimeSpan.FromSeconds(ModMapOptions.restrictCamerasTime).ToString(@"mm\:ss\.ff");
             TimeRemaining.text = String.Format(Tr.Get("timeRemaining"), timeString);
             TimeRemaining.gameObject.SetActive(true);
 
@@ -175,11 +175,11 @@ public static class SecurityCamera
         if (cameraTimer > 0.05f)
             UseCameraTime();
 
-        if (MapOptions.restrictDevices > 0)
+        if (ModMapOptions.restrictDevices > 0)
         {
             if (TimeRemaining == null)
             {
-                TimeRemaining = UnityEngine.Object.Instantiate(FastDestroyableSingleton<HudManager>.Instance.TaskText, __instance.transform);
+                TimeRemaining = UnityEngine.Object.Instantiate(FastDestroyableSingleton<TaskPanelBehaviour>.Instance.taskText, __instance.transform);
                 TimeRemaining.alignment = TMPro.TextAlignmentOptions.BottomRight;
                 TimeRemaining.transform.position = Vector3.zero;
                 TimeRemaining.transform.localPosition = new Vector3(1.0f, 4.25f);
@@ -187,13 +187,13 @@ public static class SecurityCamera
                 TimeRemaining.color = Palette.White;
             }
 
-            if (MapOptions.restrictCamerasTime <= 0f)
+            if (ModMapOptions.restrictCamerasTime <= 0f)
             {
                 __instance.Close();
                 return false;
             }
 
-            string timeString = TimeSpan.FromSeconds(MapOptions.restrictCamerasTime).ToString(@"mm\:ss\.ff");
+            string timeString = TimeSpan.FromSeconds(ModMapOptions.restrictCamerasTime).ToString(@"mm\:ss\.ff");
             TimeRemaining.text = String.Format(Tr.Get("timeRemaining"), timeString);
             TimeRemaining.gameObject.SetActive(true);
         }

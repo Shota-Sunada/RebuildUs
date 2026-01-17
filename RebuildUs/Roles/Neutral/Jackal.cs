@@ -30,7 +30,7 @@ public class Jackal : RoleBase<Jackal>
     public Jackal()
     {
         // write value init here
-        StaticRoleType = CurrentRoleType = ERoleType.Jackal;
+        StaticRoleType = CurrentRoleType = RoleType.Jackal;
         CanSidekick = CanCreateSidekick;
     }
 
@@ -39,7 +39,7 @@ public class Jackal : RoleBase<Jackal>
     public override void OnIntroEnd() { }
     public override void FixedUpdate()
     {
-        if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(ERoleType.Jackal))
+        if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Jackal))
         {
             var untargetablePlayers = new List<PlayerControl>();
             if (CanCreateSidekickFromImpostor)
@@ -83,7 +83,7 @@ public class Jackal : RoleBase<Jackal>
                 sender.Write(CachedPlayer.LocalPlayer.PlayerControl.PlayerId);
                 RPCProcedure.JackalCreatesSidekick(Local.CurrentTarget.PlayerId, CachedPlayer.LocalPlayer.PlayerControl.PlayerId);
             },
-            () => { return CanCreateSidekick && CachedPlayer.LocalPlayer.PlayerControl.IsRole(ERoleType.Jackal) && CachedPlayer.LocalPlayer.PlayerControl.IsAlive(); },
+            () => { return CanCreateSidekick && CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Jackal) && CachedPlayer.LocalPlayer.PlayerControl.IsAlive(); },
             () => { return CanCreateSidekick && Local.CurrentTarget != null && CachedPlayer.LocalPlayer.PlayerControl.CanMove; },
             () => { JackalSidekickButton.Timer = JackalSidekickButton.MaxTimer; },
             AssetLoader.SidekickButton,
@@ -105,7 +105,7 @@ public class Jackal : RoleBase<Jackal>
                 JackalKillButton.Timer = JackalKillButton.MaxTimer;
                 Local.CurrentTarget = null;
             },
-            () => { return CachedPlayer.LocalPlayer.PlayerControl.IsRole(ERoleType.Jackal) && CachedPlayer.LocalPlayer.PlayerControl.IsAlive(); },
+            () => { return CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Jackal) && CachedPlayer.LocalPlayer.PlayerControl.IsAlive(); },
             () => { return Local.CurrentTarget && CachedPlayer.LocalPlayer.PlayerControl.CanMove; },
             () => { JackalKillButton.Timer = JackalKillButton.MaxTimer; },
             hm.KillButton.graphic.sprite,
@@ -122,7 +122,7 @@ public class Jackal : RoleBase<Jackal>
                 },
                 () =>
                 {
-                    return PlayerControl.LocalPlayer.IsRole(ERoleType.Jackal) && CanSabotageLights && PlayerControl.LocalPlayer.IsAlive();
+                    return PlayerControl.LocalPlayer.IsRole(RoleType.Jackal) && CanSabotageLights && PlayerControl.LocalPlayer.IsAlive();
                 },
                 () =>
                 {

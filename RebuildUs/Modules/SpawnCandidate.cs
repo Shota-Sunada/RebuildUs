@@ -3,7 +3,7 @@ namespace RebuildUs.Modules;
 public class SpawnCandidate
 {
 #nullable enable
-    static private Il2CppArrayBase<UnityEngine.Object>? audioClips = null;
+    private static readonly Il2CppArrayBase<UnityEngine.Object>? audioClips = null;
 
     public Vector2 SpawnLocation;
     public Texture2D? Texture;

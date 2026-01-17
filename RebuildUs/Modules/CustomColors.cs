@@ -250,7 +250,7 @@ public class CustomColors
 
     public static bool ChatNotificationSetup(ChatNotification __instance, PlayerControl sender, string text)
     {
-        if (ShipStatus.Instance && !MapOptions.ShowChatNotifications)
+        if (ShipStatus.Instance && !ModMapOptions.ShowChatNotifications)
         {
             return false;
         }

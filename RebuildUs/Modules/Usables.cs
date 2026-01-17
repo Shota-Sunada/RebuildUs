@@ -34,7 +34,7 @@ public static class Usables
         if (__instance.isActiveAndEnabled && __instance.currentTarget && !__instance.isCoolingDown && CachedPlayer.LocalPlayer.PlayerControl.isAlive() && CachedPlayer.LocalPlayer.PlayerControl.CanMove)
         {
             bool showAnimation = true;
-            if (CachedPlayer.LocalPlayer.PlayerControl.isRole(ERoleType.Ninja) && Ninja.isStealthed(CachedPlayer.LocalPlayer.PlayerControl))
+            if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Ninja) && Ninja.isStealthed(CachedPlayer.LocalPlayer.PlayerControl))
             {
                 showAnimation = false;
             }
@@ -114,7 +114,7 @@ public static class Usables
         bool isReactor = task.TaskType is TaskTypes.StopCharles or TaskTypes.ResetSeismic or TaskTypes.ResetReactor;
         bool isO2 = task.TaskType == TaskTypes.RestoreOxy;
 
-        if (pc.isRole(RoleType.Swapper) && (isLights || isComms))
+        if (pc.IsRole(RoleType.Swapper) && (isLights || isComms))
         {
             return true;
         }
@@ -129,22 +129,22 @@ public static class Usables
             return true;
         }
 
-        if (pc.isGM() && (isLights || isComms || isReactor || isO2))
+        if (pc.IsGM() && (isLights || isComms || isReactor || isO2))
         {
             return true;
         }
 
-        if (pc.isRole(RoleType.Mafioso) && !Mafioso.canRepair && (isLights || isComms))
+        if (pc.IsRole(RoleType.Mafioso) && !Mafioso.canRepair && (isLights || isComms))
         {
             return true;
         }
 
-        if (pc.isRole(RoleType.Janitor) && !Janitor.canRepair && (isLights || isComms))
+        if (pc.IsRole(RoleType.Janitor) && !Janitor.canRepair && (isLights || isComms))
         {
             return true;
         }
 
-        if (pc.isRole(RoleType.Fox) && (isLights || isComms || isReactor || isO2))
+        if (pc.IsRole(RoleType.Fox) && (isLights || isComms || isReactor || isO2))
         {
             if (isReactor)
             {
@@ -182,7 +182,7 @@ public static class Usables
         bool isVitals = name == "panel_vitals";
         bool isButton = name is "EmergencyButton" or "EmergencyConsole" or "task_emergency";
 
-        if ((isSecurity && !MapOptions.canUseCameras) || (isVitals && !MapOptions.canUseVitals)) return true;
+        if ((isSecurity && !ModMapOptions.canUseCameras) || (isVitals && !ModMapOptions.canUseVitals)) return true;
         return false;
     }
 
@@ -195,7 +195,7 @@ public static class Usables
         MapConsole targetMapConsole = target.TryCast<MapConsole>();
 
         // Hydeの時にはタスクができない
-        if (CachedPlayer.LocalPlayer.PlayerControl.isRole(RoleType.JekyllAndHyde) && !JekyllAndHyde.isJekyll())
+        if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.JekyllAndHyde) && !JekyllAndHyde.isJekyll())
         {
             string name = targetSysConsole == null ? "" : targetSysConsole.name;
             bool isSecurity = name is "task_cams" or "Surv_Panel" or "SurvLogConsole" or "SurvConsole";
@@ -214,7 +214,7 @@ public static class Usables
 
         if ((targetConsole != null && IsBlocked(targetConsole, pc)) ||
             (targetSysConsole != null && IsBlocked(targetSysConsole, pc)) ||
-            (targetMapConsole != null && !MapOptions.canUseAdmin))
+            (targetMapConsole != null && !ModMapOptions.canUseAdmin))
         {
             return true;
         }
@@ -226,7 +226,7 @@ public static class Usables
         var roleCanCallEmergency = true;
         var statusText = "";
 
-        if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(ERoleType.Jester) && !Jester.CanCallEmergency)
+        if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Jester) && !Jester.CanCallEmergency)
         {
             roleCanCallEmergency = false;
             statusText = Tr.Get("jesterMeetingButton");
@@ -246,8 +246,8 @@ public static class Usables
         if (__instance.state == 1)
         {
             int localRemaining = CachedPlayer.LocalPlayer.PlayerControl.RemainingEmergencies;
-            int teamRemaining = Mathf.Max(0, MapOptions.MaxNumberOfMeetings - MapOptions.MeetingsCount);
-            int remaining = Mathf.Min(localRemaining, CachedPlayer.LocalPlayer.PlayerControl.IsRole(ERoleType.Mayor) ? 1 : teamRemaining);
+            int teamRemaining = Mathf.Max(0, ModMapOptions.MaxNumberOfMeetings - ModMapOptions.MeetingsCount);
+            int remaining = Mathf.Min(localRemaining, CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Mayor) ? 1 : teamRemaining);
 
             __instance.StatusText.text = $"<size=100%> {string.Format(Tr.Get("meetingStatus"), CachedPlayer.LocalPlayer.PlayerControl.name)}</size>";
             __instance.NumberText.text = string.Format(Tr.Get("meetingCount"), localRemaining.ToString(), teamRemaining.ToString());

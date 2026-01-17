@@ -34,7 +34,7 @@ public static class EndGameMain
         var gameOverReason = AdditionalTempData.GameOverReason;
         AdditionalTempData.Clear();
 
-        ERoleType[] excludeRoles = [];
+        RoleType[] excludeRoles = [];
         foreach (var player in CachedPlayer.AllPlayers)
         {
             var roles = RoleInfo.GetRoleInfoForPlayer(player.PlayerControl);
@@ -409,7 +409,7 @@ public static class EndGameMain
             // }
         }
 
-        if (MapOptions.ShowRoleSummary)
+        if (ModMapOptions.ShowRoleSummary)
         {
             var position = Camera.main.ViewportToWorldPoint(new Vector3(0f, 1f, Camera.main.nearClipPlane));
             GameObject roleSummary = UnityEngine.Object.Instantiate(__instance.WinText.gameObject);
@@ -422,8 +422,8 @@ public static class EndGameMain
             {
                 var roleX = x.Roles.FirstOrDefault();
                 var roleY = y.Roles.FirstOrDefault();
-                var idX = roleX == null ? ERoleType.NoRole : roleX.RoleType;
-                var idY = roleY == null ? ERoleType.NoRole : roleY.RoleType;
+                var idX = roleX == null ? RoleType.NoRole : roleX.RoleType;
+                var idY = roleY == null ? RoleType.NoRole : roleY.RoleType;
 
                 if (x.Status == y.Status)
                 {

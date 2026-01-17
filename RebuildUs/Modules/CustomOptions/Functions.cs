@@ -177,7 +177,7 @@ public partial class CustomOption
 
     public static void SettingMenuStart(GameSettingMenu __instance)
     {
-        if (GameOptions.IsHideNSeekMode) return;
+        if (Helpers.IsHideNSeekMode) return;
 
         // Initialize vanilla tabs
         __instance.ChangeTab((int)OptionPage.GameSettings, false);
@@ -464,7 +464,7 @@ public partial class CustomOption
     {
         StringBuilder sb = new("\n");
         var options = AllOptions.Where(o => o.Type == type);
-        if (MapOptions.GameMode == CustomGamemodes.Guesser)
+        if (ModMapOptions.GameMode == CustomGamemodes.Guesser)
         {
             if (type == CustomOptionType.General)
             {
@@ -473,15 +473,15 @@ public partial class CustomOption
             List<int> remove = [308, 310, 311, 312, 313, 314, 315, 316, 317, 318];
             options = options.Where(x => !remove.Contains(x.Id));
         }
-        else if (MapOptions.GameMode == CustomGamemodes.Classic)
+        else if (ModMapOptions.GameMode == CustomGamemodes.Classic)
         {
             options = options.Where(x => !(x.Type == CustomOptionType.Guesser));
         }
-        else if (MapOptions.GameMode == CustomGamemodes.HideNSeek)
+        else if (ModMapOptions.GameMode == CustomGamemodes.HideNSeek)
         {
             options = options.Where(x => x.Type == CustomOptionType.HideNSeekMain || x.Type == CustomOptionType.HideNSeekRoles);
         }
-        else if (MapOptions.GameMode == CustomGamemodes.PropHunt)
+        else if (ModMapOptions.GameMode == CustomGamemodes.PropHunt)
         {
             options = options.Where(x => x.Type == CustomOptionType.PropHunt);
         }
@@ -509,8 +509,8 @@ public partial class CustomOption
 
         foreach (CustomOption option in options)
         {
-            if (MapOptions.GameMode == CustomGamemodes.HideNSeek && option.Type != CustomOptionType.HideNSeekMain && option.Type != CustomOptionType.HideNSeekRoles) continue;
-            if (MapOptions.GameMode == CustomGamemodes.PropHunt && option.Type != CustomOptionType.PropHunt) continue;
+            if (ModMapOptions.GameMode == CustomGamemodes.HideNSeek && option.Type != CustomOptionType.HideNSeekMain && option.Type != CustomOptionType.HideNSeekRoles) continue;
+            if (ModMapOptions.GameMode == CustomGamemodes.PropHunt && option.Type != CustomOptionType.PropHunt) continue;
             if (option.Parent != null)
             {
                 bool isIrrelevant = (option.Parent.GetSelection() == 0 && !option.HideIfParentEnabled) || (option.Parent.Parent != null && option.Parent.Parent.GetSelection() == 0 && !option.Parent.HideIfParentEnabled);
@@ -545,7 +545,7 @@ public partial class CustomOption
                     var optionName = CustomOptionHolderHelpers.Cs(new Color(204f / 255f, 204f / 255f, 0, 1f), "Impostor Roles");
                     var min = CustomOptionHolder.ImpostorRolesCountMin.GetSelection();
                     var max = CustomOptionHolder.ImpostorRolesCountMax.GetSelection();
-                    if (max > GameOptions.Get(Int32OptionNames.NumImpostors)) max = GameOptions.Get(Int32OptionNames.NumImpostors);
+                    if (max > Helpers.GetOption(Int32OptionNames.NumImpostors)) max = Helpers.GetOption(Int32OptionNames.NumImpostors);
                     if (min > max) min = max;
                     var optionValue = (min == max) ? $"{max}" : $"{min} - {max}";
                     sb.AppendLine($"{optionName}: {optionValue}");
@@ -580,7 +580,7 @@ public partial class CustomOption
         int counter = RebuildUs.OptionsPage;
         string hudString = counter != 0 && !hideExtras ? Helpers.Cs(DateTime.Now.Second % 2 == 0 ? Color.white : Color.red, "(Use scroll wheel if necessary)\n\n") : "";
 
-        if (MapOptions.GameMode == CustomGamemodes.HideNSeek)
+        if (ModMapOptions.GameMode == CustomGamemodes.HideNSeek)
         {
             if (RebuildUs.OptionsPage > 1) RebuildUs.OptionsPage = 0;
             MaxPage = 2;
@@ -594,7 +594,7 @@ public partial class CustomOption
                     break;
             }
         }
-        else if (MapOptions.GameMode == CustomGamemodes.PropHunt)
+        else if (ModMapOptions.GameMode == CustomGamemodes.PropHunt)
         {
             MaxPage = 1;
             switch (counter)
@@ -639,7 +639,7 @@ public partial class CustomOption
 
     public static void ToHudString(ref string __result)
     {
-        if (GameOptions.IsHideNSeekMode) return; // Allow Vanilla Hide N Seek
+        if (Helpers.IsHideNSeekMode) return; // Allow Vanilla Hide N Seek
         __result = BuildAllOptions(__result);
     }
     public static bool LGOAreInvalid(LegacyGameOptions __instance, ref int maxExpectedPlayers)

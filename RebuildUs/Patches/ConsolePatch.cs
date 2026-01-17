@@ -15,7 +15,7 @@ public static class ConsolePatch
         if (CustomOptionHolder.AirshipReplaceSafeTask.GetBool())
         {
             var playerTask = __instance.FindTask(PlayerControl.LocalPlayer);
-            var alignTelescopeMinigame = MapData.PolusShip.NormalTasks.FirstOrDefault(x => x.name == "AlignTelescope").MinigamePrefab;
+            var alignTelescopeMinigame = MapData.PolusShip.ShortTasks.FirstOrDefault(x => x.name == "AlignTelescope").MinigamePrefab;
             if (playerTask.MinigamePrefab.name == "SafeGame")
             {
                 playerTask.MinigamePrefab = alignTelescopeMinigame;

@@ -32,16 +32,16 @@ public static class PlayerControlPatch
     [HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.SetKillTimer))]
     public static bool SetKillTimerPrefix(PlayerControl __instance, [HarmonyArgument(0)] float time)
     {
-        if (GameOptions.Get(FloatOptionNames.KillCooldown) <= 0f) return false;
-        if (GameOptions.IsHideNSeekMode) return true;
+        if (Helpers.GetOption(FloatOptionNames.KillCooldown) <= 0f) return false;
+        if (Helpers.IsHideNSeekMode) return true;
 
         var multiplier = 1f;
         var addition = 0f;
         // if (Mini.mini != null && PlayerControl.LocalPlayer == Mini.mini) multiplier = Mini.isGrownUp() ? 0.66f : 2f;
-        if (PlayerControl.LocalPlayer.IsRole(ERoleType.BountyHunter)) addition = BountyHunter.PunishmentTime;
+        if (PlayerControl.LocalPlayer.IsRole(RoleType.BountyHunter)) addition = BountyHunter.PunishmentTime;
 
-        __instance.killTimer = Mathf.Clamp(time, 0f, GameOptions.Get(FloatOptionNames.KillCooldown) * multiplier + addition);
-        FastDestroyableSingleton<HudManager>.Instance.KillButton.SetCoolDown(__instance.killTimer, GameOptions.Get(FloatOptionNames.KillCooldown) * multiplier + addition);
+        __instance.killTimer = Mathf.Clamp(time, 0f, Helpers.GetOption(FloatOptionNames.KillCooldown) * multiplier + addition);
+        FastDestroyableSingleton<HudManager>.Instance.KillButton.SetCoolDown(__instance.killTimer, Helpers.GetOption(FloatOptionNames.KillCooldown) * multiplier + addition);
         return false;
     }
 
@@ -49,7 +49,7 @@ public static class PlayerControlPatch
     [HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.FixedUpdate))]
     public static void FixedUpdatePostfix(PlayerControl __instance)
     {
-        if (AmongUsClient.Instance.GameState != InnerNet.InnerNetClient.GameStates.Started || GameOptions.IsHideNSeekMode) return;
+        if (AmongUsClient.Instance.GameState != InnerNet.InnerNetClient.GameStates.Started || Helpers.IsHideNSeekMode) return;
 
         if (PlayerControl.LocalPlayer == __instance)
         {
@@ -91,7 +91,7 @@ public static class PlayerControlPatch
     {
         Helpers.handleVampireBiteOnBodyReport();
 
-        if (__instance.isGM())
+        if (__instance.IsGM())
         {
             return false;
         }
@@ -100,7 +100,7 @@ public static class PlayerControlPatch
 
     [HarmonyPostfix]
     [HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.CmdReportDeadBody))]
-    public static void CmdReportDeadBodyPostfix(PlayerControl __instance, [HarmonyArgument(0)] GameData.PlayerInfo target)
+    public static void CmdReportDeadBodyPostfix(PlayerControl __instance, [HarmonyArgument(0)] NetworkedPlayerInfo target)
     {
         Logger.info($"{__instance.getNameWithRole()} => {target?.getNameWithRole() ?? "null"}", "ReportDeadBody");
         // Medic or Detective report
@@ -273,7 +273,7 @@ public static class PlayerControlPatch
         }
 
         // impostor promote to last impostor
-        if (target.isImpostor() && AmongUsClient.Instance.AmHost)
+        if (target.IsTeamImpostor() && AmongUsClient.Instance.AmHost)
         {
             LastImpostor.promoteToLastImpostor();
         }
@@ -331,7 +331,7 @@ public static class PlayerControlPatch
         }
 
         // impostor promote to last impostor
-        if (__instance.isImpostor() && AmongUsClient.Instance.AmHost)
+        if (__instance.IsTeamImpostor() && AmongUsClient.Instance.AmHost)
         {
             LastImpostor.promoteToLastImpostor();
         }
@@ -370,7 +370,7 @@ public static class PlayerControlPatch
     {
         public static bool Prefix(ref bool __result)
         {
-            if (GameOptions.IsHideNSeekMode) return true;
+            if (Helpers.IsHideNSeekMode) return true;
             __result = false;
             if (!PlayerControl.LocalPlayer.Data.IsDead && Lighter.lighter != null && Lighter.lighter.PlayerId == PlayerControl.LocalPlayer.PlayerId)
             {

@@ -18,7 +18,7 @@ public static class RoleAssignment
 
         if (!ShipStatus.Instance)
         {
-            var index = Mathf.Clamp(GameOptions.Get(ByteOptionNames.MapId), 0, Constants.MapNames.Length - 1);
+            var index = Mathf.Clamp(Helpers.GetOption(ByteOptionNames.MapId), 0, Constants.MapNames.Length - 1);
             try
             {
                 if (index == 0 && AprilFoolsMode.ShouldFlipSkeld())
@@ -54,7 +54,7 @@ public static class RoleAssignment
             var flag = true;
             var num = 10;
             var totalSeconds = (float)(DateTime.Now - start).TotalSeconds;
-            if (GameOptions.Get(ByteOptionNames.MapId) is 4 or 5)
+            if (Helpers.GetOption(ByteOptionNames.MapId) is 4 or 5)
             {
                 num = 15;
             }
@@ -202,9 +202,9 @@ public static class RoleAssignment
         // }
 
         BlockLovers = [
-                    (byte)ERoleType.Bait,
-                    (byte)ERoleType.Cupid,
-                    (byte)ERoleType.Akujo
+                    (byte)RoleType.Bait,
+                    (byte)RoleType.Cupid,
+                    (byte)RoleType.Akujo
                 ];
 
         // if (!Lovers.hasTasks)
@@ -214,7 +214,7 @@ public static class RoleAssignment
 
         if (!CustomOptionHolder.ArsonistCanBeLovers.GetBool())
         {
-            BlockLovers.Add((byte)ERoleType.Arsonist);
+            BlockLovers.Add((byte)RoleType.Arsonist);
         }
 
         var data = GetRoleAssignmentData();
@@ -279,7 +279,7 @@ public static class RoleAssignment
         // impSettings.Add((byte)ERoleType.Trapper, CustomOptionHolder.trapperSpawnRate.data);
         // impSettings.Add((byte)ERoleType.EvilTracker, CustomOptionHolder.evilTrackerSpawnRate.data);
 
-        neutralSettings.Add((byte)ERoleType.Jester, CustomOptionHolder.JesterSpawnRate.Data);
+        neutralSettings.Add((byte)RoleType.Jester, CustomOptionHolder.JesterSpawnRate.Data);
         // neutralSettings.Add((byte)ERoleType.Arsonist, CustomOptionHolder.arsonistSpawnRate.data);
         // neutralSettings.Add((byte)ERoleType.Jackal, CustomOptionHolder.jackalSpawnRate.data);
         // neutralSettings.Add((byte)ERoleType.Opportunist, CustomOptionHolder.opportunistSpawnRate.data);
@@ -295,7 +295,7 @@ public static class RoleAssignment
         // neutralSettings.Add((byte)ERoleType.Cupid, CustomOptionHolder.cupidSpawnRate.data);
 
         // crewSettings.Add((byte)ERoleType.FortuneTeller, CustomOptionHolder.fortuneTellerSpawnRate.data);
-        crewSettings.Add((byte)ERoleType.Mayor, CustomOptionHolder.MayorSpawnRate.Data);
+        crewSettings.Add((byte)RoleType.Mayor, CustomOptionHolder.MayorSpawnRate.Data);
         // crewSettings.Add((byte)ERoleType.Engineer, CustomOptionHolder.engineerSpawnRate.data);
         // crewSettings.Add((byte)ERoleType.Sheriff, CustomOptionHolder.sheriffSpawnRate.data);
         // crewSettings.Add((byte)ERoleType.Lighter, CustomOptionHolder.lighterSpawnRate.data);
@@ -839,7 +839,7 @@ public static class RoleAssignment
         }
     }
 
-    private class RoleAssignmentData
+    public class RoleAssignmentData
     {
         public List<PlayerControl> Crewmates { get; set; }
         public List<PlayerControl> Impostors { get; set; }

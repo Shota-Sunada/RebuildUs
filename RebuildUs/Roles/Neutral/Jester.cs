@@ -15,7 +15,7 @@ public class Jester : RoleBase<Jester>
     public Jester()
     {
         // write value init here
-        StaticRoleType = CurrentRoleType = ERoleType.Jester;
+        StaticRoleType = CurrentRoleType = RoleType.Jester;
     }
 
     public override void OnMeetingStart() { }

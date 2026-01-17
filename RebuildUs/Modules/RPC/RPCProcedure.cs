@@ -13,7 +13,7 @@ public static partial class RPCProcedure
         RoleAssignment.IsAssigned = false;
         Garlic.ClearGarlics();
         JackInTheBox.ClearJackInTheBoxes();
-        MapOptions.ClearAndReloadMapOptions();
+        ModMapOptions.ClearAndReloadMapOptions();
         RebuildUs.ClearAndReloadRoles();
         GameHistory.ClearGameHistory();
         // setCustomButtonCooldowns();
@@ -69,10 +69,10 @@ public static partial class RPCProcedure
 
     public static void SetRole(byte roleId, byte playerId)
     {
-        Logger.LogInfo($"{GameData.Instance.GetPlayerById(playerId).PlayerName}({playerId}): {Enum.GetName(typeof(ERoleType), roleId)}", "setRole");
+        Logger.LogInfo($"{GameData.Instance.GetPlayerById(playerId).PlayerName}({playerId}): {Enum.GetName(typeof(RoleType), roleId)}", "setRole");
         PlayerControl.AllPlayerControls.GetFastEnumerator().ToArray().DoIf(
             x => x.PlayerId == playerId,
-            x => x.SetRole((ERoleType)roleId)
+            x => x.SetRole((RoleType)roleId)
         );
     }
 
@@ -175,7 +175,7 @@ public static partial class RPCProcedure
 
     public static void ShareGamemode(byte gameMode)
     {
-        MapOptions.GameMode = (CustomGamemodes)gameMode;
+        ModMapOptions.GameMode = (CustomGamemodes)gameMode;
         GameStart.SendGamemode = false;
     }
 
@@ -283,7 +283,7 @@ public static partial class RPCProcedure
     {
         var arsonist = Helpers.PlayerById(arsonistId);
         Arsonist.TriggerArsonistWin = true;
-        var livingPlayers = PlayerControl.AllPlayerControls.GetFastEnumerator().ToArray().Where(p => !p.IsRole(ERoleType.Arsonist) && p.IsAlive());
+        var livingPlayers = PlayerControl.AllPlayerControls.GetFastEnumerator().ToArray().Where(p => !p.IsRole(RoleType.Arsonist) && p.IsAlive());
         foreach (var p in livingPlayers)
         {
             p.Exiled();
@@ -349,11 +349,11 @@ public static partial class RPCProcedure
         }
         else
         {
-            var wasSpy = target.IsRole(ERoleType.Spy);
+            var wasSpy = target.IsRole(RoleType.Spy);
             var wasImpostor = target.IsTeamImpostor(); // This can only be reached if impostors can be sidekicked.
             FastDestroyableSingleton<RoleManager>.Instance.SetRole(target, RoleTypes.Crewmate);
             ErasePlayerRoles(target.PlayerId, true);
-            target.SetRole(ERoleType.Sidekick);
+            target.SetRole(RoleType.Sidekick);
             if (target.PlayerId == PlayerControl.LocalPlayer.PlayerId) PlayerControl.LocalPlayer.moveable = true;
             if (wasSpy || wasImpostor) Sidekick.GetRole(target).WasTeamRed = true;
             Sidekick.GetRole(target).WasSpy = wasSpy;
@@ -373,7 +373,7 @@ public static partial class RPCProcedure
         Jackal.RemoveCurrentJackal();
         FastDestroyableSingleton<RoleManager>.Instance.SetRole(sidekickPlayer, RoleTypes.Crewmate);
         ErasePlayerRoles(sidekickPlayer.PlayerId, true);
-        sidekickPlayer.SetRole(ERoleType.Jackal);
+        sidekickPlayer.SetRole(RoleType.Jackal);
         var newJackal = Jackal.GetRole(sidekickPlayer);
         newJackal.CanSidekick = Jackal.JackalPromotedFromSidekickCanCreateSidekick;
         newJackal.WasTeamRed = wasTeamRed;

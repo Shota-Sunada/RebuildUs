@@ -16,7 +16,7 @@ public static class LegacyGameOptionsPatch
     [HarmonyPatch(typeof(LegacyGameOptions), nameof(LegacyGameOptions.Validate))]
     public static void ValidatePostfix(LegacyGameOptions __instance)
     {
-        if (MapOptions.GameMode == CustomGamemodes.HideNSeek || !GameOptions.IsNormalMode) return;
-        __instance.NumImpostors = GameOptions.Get(Int32OptionNames.NumImpostors);
+        if (ModMapOptions.GameMode == CustomGamemodes.HideNSeek || !Helpers.IsNormalMode) return;
+        __instance.NumImpostors = Helpers.GetOption(Int32OptionNames.NumImpostors);
     }
 }
