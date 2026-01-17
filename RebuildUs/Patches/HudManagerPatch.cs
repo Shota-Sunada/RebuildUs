@@ -45,6 +45,14 @@ public static class HudManagerPatch
     [HarmonyPatch(typeof(HudManager), nameof(HudManager.OpenMeetingRoom))]
     public static void Prefix(HudManager __instance)
     {
-        Meeting.startMeeting();
+        Meeting.startMeetingClear();
+    }
+
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(HudManager), nameof(HudManager.Start))]
+    public static void StartPostfix(HudManager __instance)
+    {
+        RebuildUs.MakeButtons(__instance);
+        RebuildUs.SetButtonCooldowns();
     }
 }

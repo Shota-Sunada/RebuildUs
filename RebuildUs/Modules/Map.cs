@@ -311,7 +311,6 @@ public static class Map
                 mark.gameObject.SetActive(false);
             }
         }
-
     }
 
     private static void changeSabotageLayout(MapBehaviour __instance)
@@ -330,7 +329,6 @@ public static class Map
             Transform brig = __instance.infectedOverlay.transform.FindChild("Brig");
             Transform kitchen = __instance.infectedOverlay.transform.FindChild("Kitchen");
             Transform medbay = __instance.infectedOverlay.transform.FindChild("Medbay");
-
 
             comms.localScale = scale;
             electrical.localScale = scale;

@@ -71,8 +71,7 @@ public class Jackal : RoleBase<Jackal>
     }
     public override void OnFinishShipStatusBegin() { }
     public override void HandleDisconnect(PlayerControl player, DisconnectReasons reason) { }
-
-    public static void MakeButtons(HudManager hm)
+    public override void MakeButtons(HudManager hm)
     {
         // Jackal Sidekick Button
         JackalSidekickButton = new CustomButton(
@@ -145,7 +144,7 @@ public class Jackal : RoleBase<Jackal>
                 KeyCode.G
             );
     }
-    public static void SetButtonCooldowns()
+    public override void SetButtonCooldowns()
     {
         JackalKillButton.MaxTimer = KillCooldown;
         JackalSidekickButton.MaxTimer = CreateSidekickCooldown;
@@ -157,7 +156,7 @@ public class Jackal : RoleBase<Jackal>
         if (!FormerJackals.Any(x => x.PlayerId == Local.Player.PlayerId)) FormerJackals.Add(Local.Player);
     }
 
-    public static void Clear()
+    public override void Clear()
     {
         // reset configs here
         FormerJackals = [];

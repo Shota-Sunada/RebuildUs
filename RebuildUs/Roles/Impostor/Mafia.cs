@@ -35,13 +35,12 @@ public static class Mafia
         }
         public override void OnFinishShipStatusBegin() { }
         public override void HandleDisconnect(PlayerControl player, DisconnectReasons reason) { }
-
-        public static void MakeButtons(HudManager hm) { }
-        public static void SetButtonCooldowns() { }
+        public override void MakeButtons(HudManager hm) { }
+        public override void SetButtonCooldowns() { }
 
         // write functions here
 
-        public static void Clear()
+        public override void Clear()
         {
             // reset configs here
             Players.Clear();
@@ -75,13 +74,12 @@ public static class Mafia
         }
         public override void OnFinishShipStatusBegin() { }
         public override void HandleDisconnect(PlayerControl player, DisconnectReasons reason) { }
-
-        public static void MakeButtons(HudManager hm) { }
-        public static void SetButtonCooldowns() { }
+        public override void MakeButtons(HudManager hm) { }
+        public override void SetButtonCooldowns() { }
 
         // write functions here
 
-        public static void Clear()
+        public override void Clear()
         {
             // reset configs here
             Players.Clear();
@@ -115,8 +113,7 @@ public static class Mafia
         }
         public override void OnFinishShipStatusBegin() { }
         public override void HandleDisconnect(PlayerControl player, DisconnectReasons reason) { }
-
-        public static void MakeButtons(HudManager hm)
+        public override void MakeButtons(HudManager hm)
         {
             janitorCleanButton = new CustomButton(
                 () =>
@@ -159,14 +156,14 @@ public static class Mafia
                 ButtonText = Tr.Get("CleanText")
             };
         }
-        public static void SetButtonCooldowns()
+        public override void SetButtonCooldowns()
         {
             janitorCleanButton.MaxTimer = Janitor.cooldown;
         }
 
         // write functions here
 
-        public static void Clear()
+        public override void Clear()
         {
             // reset configs here
             Players.Clear();

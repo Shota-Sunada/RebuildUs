@@ -30,7 +30,7 @@ public class Trickster : RoleBase<Trickster>
     public override void OnIntroEnd() { }
     public override void FixedUpdate()
     {
-        
+
         lightsOutTimer -= Time.deltaTime;
     }
     public override void OnKill(PlayerControl target) { }
@@ -38,7 +38,7 @@ public class Trickster : RoleBase<Trickster>
     public override void OnFinishShipStatusBegin() { }
     public override void HandleDisconnect(PlayerControl player, DisconnectReasons reason) { }
 
-    public static void MakeButtons(HudManager hm)
+    public override void MakeButtons(HudManager hm)
     {
         placeJackInTheBoxButton = new CustomButton(
             () =>
@@ -96,7 +96,7 @@ public class Trickster : RoleBase<Trickster>
             ButtonText = Tr.Get("LightsOutText")
         };
     }
-    public static void SetButtonCooldowns()
+    public override void SetButtonCooldowns()
     {
         placeJackInTheBoxButton.MaxTimer = placeBoxCooldown;
         lightsOutButton.MaxTimer = lightsOutCooldown;
@@ -105,7 +105,7 @@ public class Trickster : RoleBase<Trickster>
 
     // write functions here
 
-    public static void Clear()
+    public override void Clear()
     {
         // reset configs here
         lightsOutTimer = 0f;

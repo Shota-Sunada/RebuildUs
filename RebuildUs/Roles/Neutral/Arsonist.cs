@@ -65,8 +65,7 @@ public class Arsonist : RoleBase<Arsonist>
     public override void OnDeath(PlayerControl killer = null) { }
     public override void OnFinishShipStatusBegin() { }
     public override void HandleDisconnect(PlayerControl player, DisconnectReasons reason) { }
-
-    public static void MakeButtons(HudManager hm)
+    public override void MakeButtons(HudManager hm)
     {
         ArsonistButton = new CustomButton(
                 () =>
@@ -152,7 +151,7 @@ public class Arsonist : RoleBase<Arsonist>
             ButtonText = Tr.Get("IgniteText")
         };
     }
-    public static void SetButtonCooldowns()
+    public override void SetButtonCooldowns()
     {
         ArsonistButton.MaxTimer = Cooldown;
         ArsonistButton.EffectDuration = Duration;
@@ -214,7 +213,7 @@ public class Arsonist : RoleBase<Arsonist>
         return DouseSprite;
     }
 
-    public static void Clear()
+    public override void Clear()
     {
         // reset configs here
         Players.Clear();

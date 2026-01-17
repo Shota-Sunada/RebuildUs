@@ -85,8 +85,7 @@ public class TimeMaster : RoleBase<TimeMaster>
     public override void OnDeath(PlayerControl killer = null) { }
     public override void OnFinishShipStatusBegin() { }
     public override void HandleDisconnect(PlayerControl player, DisconnectReasons reason) { }
-
-    public static void MakeButtons(HudManager hm)
+    public override void MakeButtons(HudManager hm)
     {
         timeMasterShieldButton = new CustomButton
         (
@@ -117,7 +116,7 @@ public class TimeMaster : RoleBase<TimeMaster>
             ButtonText = Tr.Get("TimeShieldText")
         };
     }
-    public static void SetButtonCooldowns()
+    public override void SetButtonCooldowns()
     {
         timeMasterShieldButton.MaxTimer = cooldown;
         timeMasterShieldButton.EffectDuration = shieldDuration;
@@ -132,7 +131,7 @@ public class TimeMaster : RoleBase<TimeMaster>
 
     // write functions here
 
-    public static void Clear()
+    public override void Clear()
     {
         // reset configs here
         Players.Clear();

@@ -58,8 +58,7 @@ public class Medic : RoleBase<Medic>
     }
     public override void OnFinishShipStatusBegin() { }
     public override void HandleDisconnect(PlayerControl player, DisconnectReasons reason) { }
-
-    public static void MakeButtons(HudManager hm)
+    public override void MakeButtons(HudManager hm)
     {
         medicShieldButton = new CustomButton(
             () =>
@@ -90,14 +89,14 @@ public class Medic : RoleBase<Medic>
             ButtonText = Tr.Get("ShieldText")
         };
     }
-    public static void SetButtonCooldowns()
+    public override void SetButtonCooldowns()
     {
         medicShieldButton.MaxTimer = 0f;
     }
 
     // write functions here
 
-    public static void Clear()
+    public override void Clear()
     {
         // reset configs here
         Players.Clear();

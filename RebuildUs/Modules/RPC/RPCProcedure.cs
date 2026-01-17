@@ -19,19 +19,18 @@ public static partial class RPCProcedure
         ModMapOptions.ClearAndReloadMapOptions();
         RebuildUs.ClearAndReloadRoles();
         GameHistory.ClearGameHistory();
-        // setCustomButtonCooldowns();
-        // AdminPatch.ResetData();
-        // CameraPatch.ResetData();
-        // VitalsPatch.ResetData();
-        // MapBehaviorPatch.reset();
+        RebuildUs.SetButtonCooldowns();
+        Admin.ResetData();
+        SecurityCamera.ResetData();
+        Vitals.ResetData();
+        Map.reset();
         // CustomOverlays.resetOverlays();
-        // SpecimenVital.clearAndReload();
-        // AdditionalVents.clearAndReload();
-        // BombEffect.clearBombEffects();
+        SpecimenVital.clearAndReload();
+        AdditionalVents.clearAndReload();
         // Trap.clearAllTraps();
         // AssassinTrace.clearTraces();
-        // SpawnInMinigamePatch.reset();
-        // MapBehaviorPatch.resetRealTasks();
+        SpawnIn.reset();
+        Map.resetRealTasks();
         // CustomNormalPlayerTask.reset();
 
         KillAnimationPatch.HideNextAnimation = false;

@@ -16,6 +16,9 @@ public abstract class PlayerRole
     public abstract void OnDeath(PlayerControl killer = null);
     public abstract void OnFinishShipStatusBegin();
     public abstract void HandleDisconnect(PlayerControl player, DisconnectReasons reason);
+    public abstract void MakeButtons(HudManager hm);
+    public abstract void SetButtonCooldowns();
+    public abstract void Clear();
 
     public virtual void ResetRole() { }
     public virtual void PostInit() { }

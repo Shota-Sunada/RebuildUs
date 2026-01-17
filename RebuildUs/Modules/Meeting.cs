@@ -729,14 +729,14 @@ public static class Meeting
         }
     }
 
-    public static void startMeeting()
+    public static void startMeetingClear()
     {
         animateSwap = false;
-        CustomOverlays.showBlackBG();
-        CustomOverlays.hideInfoOverlay();
-        CustomOverlays.hideRoleOverlay();
-        TheOtherRolesGM.OnMeetingStart();
-        MapBehaviorPatch.shareRealTasks();
+        // CustomOverlays.showBlackBG();
+        // CustomOverlays.hideInfoOverlay();
+        // CustomOverlays.hideRoleOverlay();
+        RebuildUs.OnMeetingStart();
+        Map.shareRealTasks();
     }
 
     public static bool StartMeetingPrefix(PlayerControl __instance, [HarmonyArgument(0)] NetworkedPlayerInfo meetingTarget)
@@ -853,6 +853,8 @@ public static class Meeting
                     })));
                 }
             }
+
+            startMeetingClear();
 
             if (PlayerControl.LocalPlayer.Data.IsDead && output != "") FastDestroyableSingleton<HudManager>.Instance.Chat.AddChat(PlayerControl.LocalPlayer, $"{output}");
 

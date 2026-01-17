@@ -83,13 +83,12 @@ public static class Guesser
         public override void OnDeath(PlayerControl killer = null) { }
         public override void OnFinishShipStatusBegin() { }
         public override void HandleDisconnect(PlayerControl player, DisconnectReasons reason) { }
-
-        public static void MakeButtons(HudManager hm) { }
-        public static void SetButtonCooldowns() { }
+        public override void MakeButtons(HudManager hm) { }
+        public override void SetButtonCooldowns() { }
 
         // write functions here
 
-        public static void Clear()
+        public override void Clear()
         {
             // reset configs here
             Players.Clear();
@@ -117,13 +116,12 @@ public static class Guesser
         public override void OnDeath(PlayerControl killer = null) { }
         public override void OnFinishShipStatusBegin() { }
         public override void HandleDisconnect(PlayerControl player, DisconnectReasons reason) { }
-
-        public static void MakeButtons(HudManager hm) { }
-        public static void SetButtonCooldowns() { }
+        public override void MakeButtons(HudManager hm) { }
+        public override void SetButtonCooldowns() { }
 
         // write functions here
 
-        public static void Clear()
+        public override void Clear()
         {
             // reset configs here
             Players.Clear();

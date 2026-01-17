@@ -95,6 +95,7 @@ public class RebuildUs : BasePlugin
         RoleInfo.Load();
         CustomColors.Load();
         SubmergedCompatibility.Initialize();
+        Submerged.Patch();
 
         Harmony.PatchAll();
 
@@ -103,7 +104,9 @@ public class RebuildUs : BasePlugin
 
     public static void ClearAndReloadRoles()
     {
+        PlayerRole.AllRoles.Do(x => x.Clear());
         Mafia.ClearAndReload();
+        PlayerRole.ClearAll();
     }
 
     public static void FixedUpdate(PlayerControl player)
@@ -112,7 +115,6 @@ public class RebuildUs : BasePlugin
         // PlayerModifier.AllModifiers.DoIf(x => x.Player == player, x => x.FixedUpdate());
     }
 
-    // TODO: 実装お願いします
     public static void OnMeetingStart()
     {
         PlayerRole.AllRoles.Do(x => x.OnMeetingStart());
@@ -157,5 +159,15 @@ public class RebuildUs : BasePlugin
 
             GameHistory.FinalStatuses[player.PlayerId] = EFinalStatus.Disconnected;
         }
+    }
+
+    public static void MakeButtons(HudManager hm)
+    {
+        PlayerRole.AllRoles.Do(x => x.MakeButtons(hm));
+    }
+
+    public static void SetButtonCooldowns()
+    {
+        PlayerRole.AllRoles.Do(x => x.SetButtonCooldowns());
     }
 }

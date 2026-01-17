@@ -47,8 +47,7 @@ public class Sidekick : RoleBase<Sidekick>
     public override void OnDeath(PlayerControl killer = null) { }
     public override void OnFinishShipStatusBegin() { }
     public override void HandleDisconnect(PlayerControl player, DisconnectReasons reason) { }
-
-    public static void MakeButtons(HudManager hm)
+    public override void MakeButtons(HudManager hm)
     {
         SidekickKillButton = new CustomButton(
                 () =>
@@ -97,14 +96,14 @@ public class Sidekick : RoleBase<Sidekick>
             KeyCode.G
         );
     }
-    public static void SetButtonCooldowns()
+    public override void SetButtonCooldowns()
     {
         SidekickKillButton.MaxTimer = Jackal.KillCooldown;
     }
 
     // write functions here
 
-    public static void Clear()
+    public override void Clear()
     {
         // reset configs here
         Players.Clear();

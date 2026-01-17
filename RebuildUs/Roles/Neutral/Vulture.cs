@@ -75,8 +75,7 @@ public class Vulture : RoleBase<Vulture>
     public override void OnDeath(PlayerControl killer = null) { }
     public override void OnFinishShipStatusBegin() { }
     public override void HandleDisconnect(PlayerControl player, DisconnectReasons reason) { }
-
-    public static void MakeButtons(HudManager hm)
+    public override void MakeButtons(HudManager hm)
     {
         VultureEatButton = new CustomButton(
                 () =>
@@ -135,12 +134,12 @@ public class Vulture : RoleBase<Vulture>
         VultureNumCorpsesText.transform.localScale = Vector3.one * 0.5f;
         VultureNumCorpsesText.transform.localPosition += new Vector3(0.0f, 0.7f, 0);
     }
-    public static void SetButtonCooldowns()
+    public override void SetButtonCooldowns()
     {
         VultureEatButton.MaxTimer = Cooldown;
     }
 
-    public static void Clear()
+    public override void Clear()
     {
         // reset configs here
         TriggerVultureWin = false;
