@@ -18,13 +18,11 @@ public enum MurderAttemptResult
 
 public static class Helpers
 {
-    public static bool RefundVotes
-    {
-        get
-        {
-            return CustomOptionHolder.RefundVotesOnDeath.GetBool();
-        }
-    }
+    public static bool ShowButtons { get { return !(MapBehaviour.Instance && MapBehaviour.Instance.IsOpen) && !MeetingHud.Instance && !ExileController.Instance; } }
+    public static bool ShowMeetingText { get { return MeetingHud.Instance != null && (MeetingHud.Instance.state is MeetingHud.VoteStates.Voted or MeetingHud.VoteStates.NotVoted or MeetingHud.VoteStates.Discussion); } }
+    public static bool GameStarted { get { return AmongUsClient.Instance?.GameState == InnerNet.InnerNetClient.GameStates.Started; } }
+    public static bool RolesEnabled { get { return CustomOptionHolder.ActivateRoles.GetBool(); } }
+    public static bool RefundVotes { get { return CustomOptionHolder.RefundVotesOnDeath.GetBool(); } }
 
     public static object TryCast(this Il2CppObjectBase self, Type type)
     {
@@ -77,8 +75,6 @@ public static class Helpers
 
         ResolutionManager.ResolutionChanged.Invoke((float)Screen.width / Screen.height, Screen.width, Screen.height, Screen.fullScreen); // This will move button positions to the correct position.
     }
-
-    public static bool RolesEnabled { get { return true; } }
 
     public static PlayerControl PlayerById(byte id)
     {

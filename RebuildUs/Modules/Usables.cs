@@ -15,12 +15,12 @@ public static class Usables
 
             if (Helpers.ShowButtons)
             {
-                if (__instance.roleCanUseVents())
+                if (__instance.CanUseVents())
                 {
                     FastDestroyableSingleton<HudManager>.Instance.ImpostorVentButton.Show();
                 }
 
-                if (__instance.roleCanSabotage())
+                if (__instance.CanUseVents())
                 {
                     FastDestroyableSingleton<HudManager>.Instance.SabotageButton.Show();
                     FastDestroyableSingleton<HudManager>.Instance.SabotageButton.gameObject.SetActive(true);

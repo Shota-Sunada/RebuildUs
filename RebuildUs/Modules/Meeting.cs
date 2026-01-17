@@ -1,6 +1,8 @@
 using System.Collections;
 using AmongUs.Data;
 using Assets.CoreScripts;
+using BepInEx.Unity.IL2CPP.Utils;
+using BepInEx.Unity.IL2CPP.Utils.Collections;
 using RebuildUs.Roles.Crewmate;
 
 namespace RebuildUs.Modules;
@@ -840,9 +842,6 @@ public static class Meeting
             Trapper.playersOnMap = new();
             Snitch.playerRoomMap = new Dictionary<byte, byte>();
 
-            // Reset zoomed out ghosts
-            Helpers.toggleZoom(reset: true);
-
             // Close In-Game Settings Display if open
             HudManagerUpdate.CloseSettings();
         }
@@ -854,7 +853,7 @@ public static class Meeting
             ShipStatus.Instance.StartCoroutine(CoStartMeeting(__instance, target).WrapToIl2Cpp());
             if (!__instance.AmOwner)
             {
-                return;
+                return false;
             }
             if (isEmergency)
             {

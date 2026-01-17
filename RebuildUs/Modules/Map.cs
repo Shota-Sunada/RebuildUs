@@ -258,7 +258,7 @@ public static class Map
 
     public static void ShowSabotageMapPostfix(MapBehaviour __instance)
     {
-        if (TheOtherRolesPlugin.HideFakeTasks.Value)
+        if (RebuildUs.HideFakeTasks.Value)
         {
             __instance.taskOverlay.Hide();
         }
@@ -267,7 +267,7 @@ public static class Map
     private static void showDoorStatus(MapBehaviour __instance)
     {
         if (!EvilHacker.canSeeDoorStatus) return;
-        if (MeetingHud.Instance == null && TheOtherRolesPlugin.ForceNormalSabotageMap.Value)
+        if (MeetingHud.Instance == null && RebuildUs.ForceNormalSabotageMap.Value)
         {
             foreach (var mark in doorMarks.Values)
             {
@@ -321,7 +321,7 @@ public static class Map
             // サボタージュアイコンのレイアウトを変更
             Vector3 halfScale = new Vector3(0.75f, 0.75f, 0.75f);
             Vector3 originalScale = new Vector3(1f, 1f, 1f);
-            Vector3 scale = TheOtherRolesPlugin.BetterSabotageMap.Value ? halfScale : originalScale;
+            Vector3 scale = RebuildUs.BetterSabotageMap.Value ? halfScale : originalScale;
             Transform comms = __instance.infectedOverlay.transform.FindChild("Comms");
             Transform electrical = __instance.infectedOverlay.transform.FindChild("Electrical");
             Transform mainHall = __instance.infectedOverlay.transform.FindChild("MainHall");
@@ -341,7 +341,7 @@ public static class Map
             kitchen.localScale = scale;
             medbay.localScale = scale;
 
-            if (TheOtherRolesPlugin.BetterSabotageMap.Value)
+            if (RebuildUs.BetterSabotageMap.Value)
             {
                 comms.FindChild("bomb").localPosition = new Vector3(-0.1f, 0.9f, -1f);
                 comms.FindChild("Doors").localPosition = new Vector3(0.5f, 0.45f, -1f);
@@ -433,7 +433,7 @@ public static class Map
         __instance.GenericShow();
         __instance.gameObject.SetActive(true);
         __instance.infectedOverlay.gameObject.SetActive(MeetingHud.Instance ? false : true);
-        if (TheOtherRolesPlugin.HideFakeTasks.Value && !(CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.EvilTracker) && EvilTracker.target != null))
+        if (RebuildUs.HideFakeTasks.Value && !(CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.EvilTracker) && EvilTracker.target != null))
         {
             __instance.taskOverlay.Hide();
         }
@@ -467,14 +467,14 @@ public static class Map
         CachedPlayer.LocalPlayer.PlayerControl.SetPlayerMaterialColors(__instance.HerePoint);
         __instance.GenericShow();
         __instance.gameObject.SetActive(true);
-        AdminPatch.isEvilHackerAdmin = true;
+        Admin.isEvilHackerAdmin = true;
         __instance.countOverlay.gameObject.SetActive(true);
         __instance.infectedOverlay.gameObject.SetActive(MeetingHud.Instance ? false : true);
         if (MeetingHud.Instance != null && CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.EvilTracker) && EvilTracker.canSeeTargetTask)
         {
             __instance.taskOverlay.Show();
         }
-        else if (TheOtherRolesPlugin.HideFakeTasks.Value)
+        else if (RebuildUs.HideFakeTasks.Value)
         {
             __instance.taskOverlay.Hide();
         }
@@ -619,7 +619,7 @@ public static class Map
 
     public static void AlphaPulseUpdate(AlphaPulse __instance)
     {
-        if (!TheOtherRolesPlugin.TransparentMap.Value) return;
+        if (!RebuildUs.TransparentMap.Value) return;
         if (__instance.rend)
         {
             __instance.rend.color = new Color(__instance.rend.color.r, __instance.rend.color.g, __instance.rend.color.b, 0.2f);

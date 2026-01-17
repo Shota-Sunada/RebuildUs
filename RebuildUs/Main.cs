@@ -17,7 +17,6 @@ global using AmongUs.GameOptions;
 
 global using RebuildUs;
 global using RebuildUs.Extensions;
-global using RebuildUs.Helpers;
 global using RebuildUs.Localization;
 global using RebuildUs.Modules;
 global using RebuildUs.Modules.Consoles;
