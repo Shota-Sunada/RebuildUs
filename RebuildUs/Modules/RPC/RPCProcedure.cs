@@ -553,4 +553,19 @@ public static partial class RPCProcedure
         evilHacker.canCreateMadmate = false;
         return;
     }
+
+    public static void UseAdminTime(float time)
+    {
+        ModMapOptions.restrictAdminTime -= time;
+    }
+
+    public static void UseCameraTime(float time)
+    {
+        ModMapOptions.restrictCamerasTime -= time;
+    }
+
+    public static void UseVitalsTime(float time)
+    {
+        ModMapOptions.restrictVitalsTime -= time;
+    }
 }

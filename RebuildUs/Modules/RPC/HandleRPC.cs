@@ -149,6 +149,15 @@ public static partial class RPCProcedure
             case CustomRPC.EvilHackerCreatesMadmate:
                 evilHackerCreatesMadmate(reader.ReadByte(), reader.ReadByte());
                 break;
+            case CustomRPC.UseAdminTime:
+                UseAdminTime(reader.ReadSingle());
+                break;
+            case CustomRPC.UseCameraTime:
+                UseCameraTime(reader.ReadSingle());
+                break;
+            case CustomRPC.UseVitalsTime:
+                UseVitalsTime(reader.ReadSingle());
+                break;
             default:
                 break;
         }

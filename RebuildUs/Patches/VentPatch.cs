@@ -1,3 +1,5 @@
+using RebuildUs.Roles.Crewmate;
+
 namespace RebuildUs.Patches;
 
 [HarmonyPatch]
@@ -101,7 +103,7 @@ public static class VentPatch
     public static bool UsePrefix(Vent __instance)
     {
         __instance.CanUse(CachedPlayer.LocalPlayer.PlayerControl.Data, out bool canUse, out bool couldUse);
-        bool canMoveInVents = CachedPlayer.LocalPlayer.PlayerControl != Spy.spy && !CachedPlayer.LocalPlayer.PlayerControl.hasModifier(ModifierType.Madmate) && !CachedPlayer.LocalPlayer.PlayerControl.hasModifier(ModifierType.CreatedMadmate);
+        bool canMoveInVents = !CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Spy) && !CachedPlayer.LocalPlayer.PlayerControl.HasModifier(ModifierType.Madmate) && !CachedPlayer.LocalPlayer.PlayerControl.HasModifier(ModifierType.CreatedMadmate);
         if (!canUse) return false; // No need to execute the native method as using is disallowed anyways
 
         bool isEnter = !CachedPlayer.LocalPlayer.PlayerControl.inVent;
@@ -114,7 +116,7 @@ public static class VentPatch
             writer.Write(CachedPlayer.LocalPlayer.PlayerControl.PlayerId);
             writer.Write(isEnter ? byte.MaxValue : (byte)0);
             writer.EndMessage();
-            RPCProcedure.useUncheckedVent(__instance.Id, CachedPlayer.LocalPlayer.PlayerControl.PlayerId, isEnter ? byte.MaxValue : (byte)0);
+            RPCProcedure.UseUncheckedVent(__instance.Id, CachedPlayer.LocalPlayer.PlayerControl.PlayerId, isEnter ? byte.MaxValue : (byte)0);
             return false;
         }
 

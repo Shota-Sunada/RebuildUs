@@ -1,3 +1,5 @@
+using RebuildUs.Roles.Crewmate;
+
 namespace RebuildUs.Modules.Consoles;
 
 public static class Vitals
@@ -24,7 +26,7 @@ public static class Vitals
             MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.UseVitalsTime, Hazel.SendOption.Reliable, -1);
             writer.Write(vitalsTimer);
             AmongUsClient.Instance.FinishRpcImmediately(writer);
-            RPCProcedure.useVitalsTime(vitalsTimer);
+            RPCProcedure.UseVitalsTime(vitalsTimer);
         }
         vitalsTimer = 0f;
     }
@@ -33,7 +35,7 @@ public static class Vitals
     {
         vitalsTimer = 0f;
 
-        if (Hacker.hacker != null && CachedPlayer.LocalPlayer.PlayerControl == Hacker.hacker)
+        if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Hacker))
         {
             hackerTexts = [];
             foreach (VitalsPanel panel in __instance.vitals)
@@ -84,7 +86,7 @@ public static class Vitals
     public static void UpdatePostfix(VitalsMinigame __instance)
     {
         // Hacker show time since death
-        if (Hacker.hacker != null && Hacker.hacker == CachedPlayer.LocalPlayer.PlayerControl && Hacker.hackerTimer > 0)
+        if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Hacker) && Hacker.GetRole().hackerTimer > 0)
         {
             for (int k = 0; k < __instance.vitals.Length; k++)
             {

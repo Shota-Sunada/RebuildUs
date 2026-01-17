@@ -93,7 +93,10 @@ public static class Intro
             if (Helpers.GetOption(ByteOptionNames.MapId) == 4 && CustomOptionHolder.AirshipDisableMovingPlatform.GetBool())
             {
                 gapRoom.GetComponentInChildren<MovingPlatformBehaviour>().gameObject.SetActive(false);
-                gapRoom.GetComponentsInChildren<PlatformConsole>().ForEach(x => x.gameObject.SetActive(false));
+                foreach(var obj in gapRoom.GetComponentsInChildren<PlatformConsole>())
+                {
+                    obj.gameObject.SetActive(false);
+                }
             }
         }
 
@@ -112,19 +115,16 @@ public static class Intro
             objects.Find(x => x.name == "DivertRecieve" && x.Room == SystemTypes.MainHall).checkWalls = true;
         }
 
-        // 最初から一人の場合はLast Impostorになる
-        if (AmongUsClient.Instance.AmHost)
-        {
-            LastImpostor.promoteToLastImpostor();
-        }
+        // // 最初から一人の場合はLast Impostorになる
+        // if (AmongUsClient.Instance.AmHost)
+        // {
+        //     LastImpostor.promoteToLastImpostor();
+        // }
 
         // タスクパネルの表示優先度を上げる
         var taskPanel = FastDestroyableSingleton<HudManager>.Instance.TaskStuff;
         var pos = taskPanel.transform.position;
         taskPanel.transform.position = new Vector3(pos.x, pos.y, -20);
-
-        // Cornucopiaのバナーを表示する
-        Cornucopia.showBanner();
 
         // マップデータのコピーを読み込み
         if (CustomOptionHolder.AirshipReplaceSafeTask.GetBool())

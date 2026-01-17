@@ -1,3 +1,4 @@
+using RebuildUs.Roles.Crewmate;
 using RebuildUs.Roles.Impostor;
 
 namespace RebuildUs.Modules.Consoles;
@@ -62,7 +63,7 @@ public static class Admin
                 MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.UseAdminTime, Hazel.SendOption.Reliable, -1);
                 writer.Write(adminTimer);
                 AmongUsClient.Instance.FinishRpcImmediately(writer);
-                RPCProcedure.useAdminTime(adminTimer);
+                RPCProcedure.UseAdminTime(adminTimer);
             }
         }
         adminTimer = 0f;
@@ -187,7 +188,7 @@ public static class Admin
                             {
                                 num2--;
                             }
-                            lse if (component?.cosmetics?.currentBodySprite?.BodySprite.material != null)
+                            else if (component?.cosmetics?.currentBodySprite?.BodySprite.material != null)
                             {
                                 // Color color = component.myRend.material.GetColor("_BodyColor");
                                 Color color = Palette.PlayerColors[component.Data.DefaultOutfit.ColorId];
@@ -278,7 +279,7 @@ public static class Admin
     public static void UpdateCount(CounterArea __instance)
     {
         // Hacker display saved colors on the admin panel
-        bool showHackerInfo = Hacker.hacker != null && Hacker.hacker == CachedPlayer.LocalPlayer.PlayerControl && Hacker.hackerTimer > 0;
+        bool showHackerInfo = CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Hacker) && Hacker.GetRole().hackerTimer > 0;
         if (playerColors.ContainsKey(__instance.RoomType))
         {
             List<Color> colors = playerColors[__instance.RoomType];

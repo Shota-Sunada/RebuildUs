@@ -778,22 +778,6 @@ public static class Meeting
             // Save the meeting target
             target = meetingTarget;
 
-            // Add Portal info into Portalmaker Chat:
-            if (Portalmaker.portalmaker != null && (PlayerControl.LocalPlayer == Portalmaker.portalmaker || Helpers.shouldShowGhostInfo()) && !Portalmaker.portalmaker.Data.IsDead)
-            {
-                if (Portal.teleportedPlayers.Count > 0)
-                {
-                    string msg = "Portal Log:\n";
-                    foreach (var entry in Portal.teleportedPlayers)
-                    {
-                        float timeBeforeMeeting = ((float)(DateTime.UtcNow - entry.time).TotalMilliseconds) / 1000;
-                        msg += Portalmaker.logShowsTime ? $"{(int)timeBeforeMeeting}s ago: " : "";
-                        msg = msg + $"{entry.name} used the teleporter\n";
-                    }
-                    FastDestroyableSingleton<HudManager>.Instance.Chat.AddChat(Portalmaker.portalmaker, $"{msg}");
-                }
-            }
-
             // Add trapped Info into Trapper chat
             if (Trapper.trapper != null && (PlayerControl.LocalPlayer == Trapper.trapper || Helpers.shouldShowGhostInfo()) && !Trapper.trapper.Data.IsDead)
             {

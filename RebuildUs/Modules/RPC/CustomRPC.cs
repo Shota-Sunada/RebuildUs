@@ -46,4 +46,7 @@ public enum CustomRPC : byte
     PlaceJackInTheBox,
     LightsOut,
     EvilHackerCreatesMadmate,
+    UseAdminTime,
+    UseCameraTime,
+    UseVitalsTime,
 }

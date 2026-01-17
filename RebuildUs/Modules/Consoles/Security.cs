@@ -23,12 +23,12 @@ public static class SecurityCamera
     public static void UseCameraTime()
     {
         // Don't waste network traffic if we're out of time.
-        if (ModMapOptions.restrictDevices > 0 && ModMapOptions.restrictCameras && ModMapOptions.restrictCamerasTime > 0f && CachedPlayer.LocalPlayer.PlayerControl.isAlive())
+        if (ModMapOptions.restrictDevices > 0 && ModMapOptions.restrictCameras && ModMapOptions.restrictCamerasTime > 0f && CachedPlayer.LocalPlayer.PlayerControl.IsAlive())
         {
             MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.UseCameraTime, Hazel.SendOption.Reliable, -1);
             writer.Write(cameraTimer);
             AmongUsClient.Instance.FinishRpcImmediately(writer);
-            RPCProcedure.useCameraTime(cameraTimer);
+            RPCProcedure.UseCameraTime(cameraTimer);
         }
         cameraTimer = 0f;
     }

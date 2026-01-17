@@ -147,6 +147,14 @@ public static partial class CustomOptionHolder
     public static CustomOption mediumCooldown;
     public static CustomOption mediumDuration;
     public static CustomOption mediumOneTimeUse;
+
+    public static CustomRoleOption hackerSpawnRate;
+    public static CustomOption hackerCooldown;
+    public static CustomOption hackerHackingDuration;
+    public static CustomOption hackerOnlyColorType;
+    public static CustomOption hackerToolsNumber;
+    public static CustomOption hackerRechargeTasksNumber;
+    public static CustomOption hackerNoMove;
     #endregion
 
     #region ROLES IMPOSTOR
@@ -374,6 +382,14 @@ public static partial class CustomOptionHolder
         mediumCooldown = CustomOption.Normal(1071, CustomOptionType.Crewmate, "mediumCooldown", 30f, 5f, 120f, 5f, mediumSpawnRate);
         mediumDuration = CustomOption.Normal(1072, CustomOptionType.Crewmate, "mediumDuration", 3f, 0f, 15f, 1f, mediumSpawnRate);
         mediumOneTimeUse = CustomOption.Normal(1073, CustomOptionType.Crewmate, "mediumOneTimeUse", false, mediumSpawnRate);
+
+        hackerSpawnRate = new(1080, CustomOptionType.Crewmate, RoleType.Hacker, Hacker.RoleColor, 1);
+        hackerCooldown = CustomOption.Normal(1081, CustomOptionType.Crewmate, "hackerCooldown", 30f, 5f, 60f, 5f, hackerSpawnRate);
+        hackerHackingDuration = CustomOption.Normal(1082, CustomOptionType.Crewmate, "hackerHackingDuration", 10f, 2.5f, 60f, 2.5f, hackerSpawnRate);
+        hackerOnlyColorType = CustomOption.Normal(1083, CustomOptionType.Crewmate, "hackerOnlyColorType", false, hackerSpawnRate);
+        hackerToolsNumber = CustomOption.Normal(1084, CustomOptionType.Crewmate, "hackerToolsNumber", 5f, 1f, 30f, 1f, hackerSpawnRate);
+        hackerRechargeTasksNumber = CustomOption.Normal(1085, CustomOptionType.Crewmate, "hackerRechargeTasksNumber", 2f, 1f, 5f, 1f, hackerSpawnRate);
+        hackerNoMove = CustomOption.Normal(1086, CustomOptionType.Crewmate, "hackerNoMove", true, hackerSpawnRate);
         #endregion
 
         #region ROLES IMPOSTOR
