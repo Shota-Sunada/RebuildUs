@@ -4,8 +4,8 @@ public static class Admin
 {
     static Dictionary<SystemTypes, List<Color>> playerColors = [];
     static float adminTimer = 0f;
-    static TMPro.TextMeshPro OutOfTime;
-    static TMPro.TextMeshPro TimeRemaining;
+    static TextMeshPro OutOfTime;
+    static TextMeshPro TimeRemaining;
     static bool clearedIcons = false;
     public static bool isEvilHackerAdmin = false;
     static Sprite adminCockpitSprite;
@@ -190,15 +190,7 @@ public static class Admin
                             {
                                 num2--;
                             }
-                            else if (component.IsRole(RoleType.Puppeteer) && Puppeteer.stealthed)
-                            {
-                                num2--;
-                            }
-                            else if (component == Puppeteer.dummy && !Puppeteer.stealthed)
-                            {
-                                num2--;
-                            }
-                            else if (component?.cosmetics?.currentBodySprite?.BodySprite.material != null)
+                            lse if (component?.cosmetics?.currentBodySprite?.BodySprite.material != null)
                             {
                                 // Color color = component.myRend.material.GetColor("_BodyColor");
                                 Color color = Palette.PlayerColors[component.Data.DefaultOutfit.ColorId];
@@ -220,7 +212,9 @@ public static class Admin
                                 {
                                     var color = Palette.PlayerColors[playerInfo.Object.CurrentOutfit.ColorId];
                                     if (Hacker.onlyColorType)
+                                    {
                                         color = Helpers.isLighterColor(playerInfo.Object.CurrentOutfit.ColorId) ? Palette.PlayerColors[7] : Palette.PlayerColors[6];
+                                    }
                                     roomColors.Add(color);
                                 }
                             }
@@ -258,7 +252,7 @@ public static class Admin
             if (room.name == "Records" && !adminRecordsSprite) adminRecordsSprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.admin_records.png", 100f);
             if (!map)
             {
-                map = DestroyableSingleton<MapBehaviour>.Instance.gameObject.GetComponentsInChildren<SpriteRenderer>().Where(x => x.name == "Background").FirstOrDefault().gameObject;
+                map = DestroyableSingleton<MapBehaviour>.Instance.gameObject.GetComponentsInChildren<SpriteRenderer>().FirstOrDefault(x => x.name == "Background").gameObject;
             }
             if (!newmap) newmap = UnityEngine.Object.Instantiate(map, map.transform.parent);
 
@@ -308,7 +302,7 @@ public static class Admin
                         mimicKColors.Add(color);
                     }
                 }
-                else if (p.isDead())
+                else if (p.IsDead())
                 {
                     deadBodyColors.Add(color);
                 }
@@ -322,7 +316,7 @@ public static class Admin
                 if (renderer != null)
                 {
                     if (defaultMat == null) defaultMat = renderer.material;
-                    if (newMat == null) newMat = UnityEngine.Object.Instantiate<Material>(defaultMat);
+                    if (newMat == null) newMat = UnityEngine.Object.Instantiate(defaultMat);
                     if (showHackerInfo && colors.Count > i)
                     {
                         renderer.material = newMat;

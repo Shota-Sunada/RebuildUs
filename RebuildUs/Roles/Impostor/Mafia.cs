@@ -156,7 +156,7 @@ public static class Mafia
                 KeyCode.F
             )
             {
-                ButtonText = ModTranslation.getString("CleanText")
+                ButtonText = Tr.Get("CleanText")
             };
         }
         public static void SetButtonCooldowns()

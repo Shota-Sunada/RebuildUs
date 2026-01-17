@@ -87,7 +87,7 @@ public class Medic : RoleBase<Medic>
             KeyCode.F
         )
         {
-            ButtonText = ModTranslation.getString("ShieldText")
+            ButtonText = Tr.Get("ShieldText")
         };
     }
     public static void SetButtonCooldowns()
