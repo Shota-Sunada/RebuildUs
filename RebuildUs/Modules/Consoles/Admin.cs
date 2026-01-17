@@ -239,7 +239,7 @@ public static class Admin
         adminTimer = 0f;
 
         // 現在地からどのアドミンを使っているか特定する
-        room = Helpers.getPlainShipRoom(PlayerControl.LocalPlayer);
+        room = Helpers.GetPlainShipRoom(PlayerControl.LocalPlayer);
 
         if (room == null) return;
 

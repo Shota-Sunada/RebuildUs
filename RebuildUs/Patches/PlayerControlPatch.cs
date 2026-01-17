@@ -199,7 +199,7 @@ public static class PlayerControlPatch
     public static void ExiledPostfix(PlayerControl __instance)
     {
         // Collect dead player info
-        var deadPlayer = new(__instance, DateTime.UtcNow, DeathReason.Exile, null);
+        var deadPlayer = new DeadPlayer(__instance, DateTime.UtcNow, DeathReason.Exile, null);
         GameHistory.DeadPlayers.Add(deadPlayer);
 
         // Remove fake tasks when player dies
@@ -209,22 +209,6 @@ public static class PlayerControlPatch
         }
 
         __instance.OnDeath(killer: null);
-
-        // Sidekick promotion trigger on exile
-        if (Sidekick.promotesToJackal && Sidekick.sidekick != null && !Sidekick.sidekick.Data.IsDead && __instance == Jackal.jackal && Jackal.jackal == CachedPlayer.LocalPlayer.PlayerControl)
-        {
-            MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.SidekickPromotes, Hazel.SendOption.Reliable, -1);
-            AmongUsClient.Instance.FinishRpcImmediately(writer);
-            RPCProcedure.sidekickPromotes();
-        }
-
-        // Pursuer promotion trigger on exile (the host sends the call such that everyone receives the update before a possible game End)
-        if (__instance == Lawyer.target && AmongUsClient.Instance.AmHost)
-        {
-            MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.LawyerPromotesToPursuer, Hazel.SendOption.Reliable, -1);
-            AmongUsClient.Instance.FinishRpcImmediately(writer);
-            RPCProcedure.lawyerPromotesToPursuer();
-        }
 
         // impostor promote to last impostor
         if (__instance.IsTeamImpostor() && AmongUsClient.Instance.AmHost)
@@ -239,26 +223,12 @@ public static class PlayerControlPatch
     {
         __result = __instance.moveable &&
             !Minigame.Instance &&
-            (!DestroyableSingleton<HudManager>.InstanceExists || (!FastDestroyableSingleton<HudManager>.Instance.Chat.IsOpen && !FastDestroyableSingleton<HudManager>.Instance.KillOverlay.IsOpen && !FastDestroyableSingleton<HudManager>.Instance.GameMenu.IsOpen)) &&
+            (!DestroyableSingleton<HudManager>.InstanceExists || (!FastDestroyableSingleton<HudManager>.Instance.Chat.IsOpenOrOpening && !FastDestroyableSingleton<HudManager>.Instance.KillOverlay.IsOpen && !FastDestroyableSingleton<HudManager>.Instance.GameMenu.IsOpen)) &&
             (!MapBehaviour.Instance || !MapBehaviour.Instance.IsOpenStopped) &&
             !MeetingHud.Instance &&
             !ExileController.Instance &&
             !IntroCutscene.Instance;
         return false;
-    }
-
-    [HarmonyPrefix]
-    [HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.CheckName))]
-    public static bool CheckNamePrefix(PlayerControl __instance, [HarmonyArgument(0)] string name)
-    {
-        if (CustomOptionHolder.uselessOptions.getBool() && CustomOptionHolder.playerNameDupes.getBool())
-        {
-            __instance.RpcSetName(name);
-            GameData.Instance.UpdateName(__instance.PlayerId, name, false);
-            return false;
-        }
-
-        return true;
     }
 
     [HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.IsFlashlightEnabled))]

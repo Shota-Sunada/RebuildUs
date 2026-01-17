@@ -1,4 +1,5 @@
 using RebuildUs.Roles.Impostor;
+using RebuildUs.Roles.Modifier;
 using RebuildUs.Roles.Neutral;
 
 namespace RebuildUs.Modules;
@@ -35,13 +36,9 @@ public static class Usables
         if (__instance.isActiveAndEnabled && __instance.currentTarget && !__instance.isCoolingDown && CachedPlayer.LocalPlayer.PlayerControl.isAlive() && CachedPlayer.LocalPlayer.PlayerControl.CanMove)
         {
             bool showAnimation = true;
-            if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Ninja) && Ninja.isStealthed(CachedPlayer.LocalPlayer.PlayerControl))
-            {
-                showAnimation = false;
-            }
 
             // Use an unchecked kill command, to allow shorter kill cooldowns etc. without getting kicked
-            var res = Helpers.checkMuderAttemptAndKill(CachedPlayer.LocalPlayer.PlayerControl, __instance.currentTarget, showAnimation: showAnimation);
+            var res = Helpers.CheckMurderAttemptAndKill(CachedPlayer.LocalPlayer.PlayerControl, __instance.currentTarget, showAnimation: showAnimation);
             // Handle blank kill
             if (res == MurderAttemptResult.BlankKill)
             {
@@ -120,12 +117,12 @@ public static class Usables
             return true;
         }
 
-        if (pc.hasModifier(ModifierType.Madmate) && (isLights || (isComms && !Madmate.canFixComm)))
+        if (pc.HasModifier(ModifierType.Madmate) && (isLights || (isComms && !Madmate.canFixComm)))
         {
             return true;
         }
 
-        if (pc.hasModifier(ModifierType.CreatedMadmate) && (isLights || (isComms && !CreatedMadmate.canFixComm)))
+        if (pc.HasModifier(ModifierType.CreatedMadmate) && (isLights || (isComms && !CreatedMadmate.canFixComm)))
         {
             return true;
         }
@@ -143,18 +140,6 @@ public static class Usables
         if (pc.IsRole(RoleType.Janitor) && !Mafia.Janitor.canRepair && (isLights || isComms))
         {
             return true;
-        }
-
-        if (pc.IsRole(RoleType.Fox) && (isLights || isComms || isReactor || isO2))
-        {
-            if (isReactor)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
         }
 
         return false;

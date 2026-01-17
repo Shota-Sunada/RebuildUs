@@ -91,7 +91,7 @@ public static class RoleHelpers
             }
         }
 
-        nameText += Lovers.getIcon(player);
+        // nameText += Lovers.getIcon(player);
 
         return nameText;
     }

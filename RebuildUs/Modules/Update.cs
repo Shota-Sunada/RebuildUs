@@ -1,5 +1,6 @@
 using RebuildUs.Roles.Crewmate;
 using RebuildUs.Roles.Impostor;
+using RebuildUs.Roles.Modifier;
 using RebuildUs.Roles.Neutral;
 
 namespace RebuildUs.Patches;
@@ -12,7 +13,7 @@ public static class Update
 
         foreach (PlayerControl player in CachedPlayer.AllPlayers)
         {
-            player.cosmetics.nameText.text = Helpers.hidePlayerName(CachedPlayer.LocalPlayer.PlayerControl, player) ? "" : player.CurrentOutfit.PlayerName;
+            player.cosmetics.nameText.text = Helpers.HidePlayerName(CachedPlayer.LocalPlayer.PlayerControl, player) ? "" : player.CurrentOutfit.PlayerName;
             if (CachedPlayer.LocalPlayer.PlayerControl.IsTeamImpostor() && player.IsTeamImpostor())
             {
                 player.cosmetics.nameText.color = Palette.ImpostorRed;
@@ -107,7 +108,7 @@ public static class Update
         }
         else if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Hacker))
         {
-            setPlayerNameColor(CachedPlayer.LocalPlayer.PlayerControl, Hacker.color);
+            setPlayerNameColor(CachedPlayer.LocalPlayer.PlayerControl, Hacker.RoleColor);
         }
         else if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Tracker))
         {
@@ -120,14 +121,15 @@ public static class Update
         else if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Jackal))
         {
             // Jackal can see his sidekick
-            setPlayerNameColor(CachedPlayer.LocalPlayer.PlayerControl, Jackal.color);
-            if (Sidekick.sidekick != null)
+            setPlayerNameColor(CachedPlayer.LocalPlayer.PlayerControl, Jackal.RoleColor);
+            var jackal = Jackal.GetRole();
+            if (Sidekick.Exists)
             {
-                setPlayerNameColor(Sidekick.sidekick, Jackal.color);
+                setPlayerNameColor(jackal.MySidekick, Jackal.RoleColor);
             }
-            if (Jackal.fakeSidekick != null)
+            if (jackal.FakeSidekick != null)
             {
-                setPlayerNameColor(Jackal.fakeSidekick, Jackal.color);
+                setPlayerNameColor(jackal.FakeSidekick, Jackal.RoleColor);
             }
         }
         else if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Spy))
@@ -166,75 +168,28 @@ public static class Update
         {
             setPlayerNameColor(CachedPlayer.LocalPlayer.PlayerControl, Medium.RoleColor);
         }
-        else if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Lawyer))
-        {
-            setPlayerNameColor(CachedPlayer.LocalPlayer.PlayerControl, Lawyer.color);
-        }
-        else if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Pursuer))
-        {
-            setPlayerNameColor(CachedPlayer.LocalPlayer.PlayerControl, Pursuer.color);
-        }
         else if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.PlagueDoctor))
         {
             setPlayerNameColor(CachedPlayer.LocalPlayer.PlayerControl, PlagueDoctor.color);
-        }
-        else if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Fox))
-        {
-            setPlayerNameColor(CachedPlayer.LocalPlayer.PlayerControl, Fox.color);
-        }
-        else if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Immoralist))
-        {
-            setPlayerNameColor(CachedPlayer.LocalPlayer.PlayerControl, Immoralist.color);
         }
         else if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.FortuneTeller) && (FortuneTeller.isCompletedNumTasks(CachedPlayer.LocalPlayer.PlayerControl) || CachedPlayer.LocalPlayer.PlayerControl.Data.IsDead))
         {
             setPlayerNameColor(CachedPlayer.LocalPlayer.PlayerControl, FortuneTeller.color);
         }
-        else if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Akujo))
-        {
-            setPlayerNameColor(CachedPlayer.LocalPlayer.PlayerControl, Akujo.color);
-        }
         else if (PlayerControl.LocalPlayer.IsRole(RoleType.Sherlock))
         {
             setPlayerNameColor(PlayerControl.LocalPlayer, Sherlock.color);
         }
-        else if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Cupid) && CachedPlayer.LocalPlayer.PlayerControl.isAlive())
-        {
-            setPlayerNameColor(CachedPlayer.LocalPlayer.PlayerControl, Cupid.color);
-            var cupid = Cupid.allRoles.FirstOrDefault(x => x.player == PlayerControl.LocalPlayer) as Cupid;
-            bool meetingShow = MeetingHud.Instance != null &&
-                (MeetingHud.Instance.state == MeetingHud.VoteStates.Voted ||
-                MeetingHud.Instance.state == MeetingHud.VoteStates.NotVoted ||
-                MeetingHud.Instance.state == MeetingHud.VoteStates.Discussion);
-            string suffix = Helpers.cs(Cupid.color, " ♥");
-            foreach (var p in PlayerControl.AllPlayerControls.GetFastEnumerator())
-            {
-                if (p == cupid.lovers1 || p == cupid.lovers2)
-                {
-                    p.cosmetics.nameText.text += suffix;
-                    if (meetingShow)
-                    {
-                        foreach (PlayerVoteArea pva in MeetingHud.Instance.playerStates)
-                        {
-                            if (p.PlayerId == pva.TargetPlayerId)
-                            {
-                                pva.NameText.text += suffix;
-                            }
-                        }
-                    }
-                }
-            }
-        }
 
-        if (CachedPlayer.LocalPlayer.PlayerControl.hasModifier(ModifierType.Madmate))
+        if (CachedPlayer.LocalPlayer.PlayerControl.HasModifier(ModifierType.Madmate))
         {
-            setPlayerNameColor(CachedPlayer.LocalPlayer.PlayerControl, Madmate.color);
+            setPlayerNameColor(CachedPlayer.LocalPlayer.PlayerControl, Madmate.ModifierColor);
 
             if (Madmate.knowsImpostors(CachedPlayer.LocalPlayer.PlayerControl))
             {
                 foreach (var p in PlayerControl.AllPlayerControls.GetFastEnumerator())
                 {
-                    if (p.IsTeamImpostor() || p.IsRole(RoleType.Spy) || (p.IsRole(RoleType.Jackal) && Jackal.wasTeamRed) || (p.IsRole(RoleType.Sidekick) && Sidekick.wasTeamRed))
+                    if (p.IsTeamImpostor() || p.IsRole(RoleType.Spy) || (p.IsRole(RoleType.Jackal) && Jackal.GetRole(p).WasTeamRed) || (p.IsRole(RoleType.Sidekick) && Sidekick.GetRole(p).WasTeamRed))
                     {
                         setPlayerNameColor(p, Palette.ImpostorRed);
                     }
@@ -242,7 +197,7 @@ public static class Update
             }
         }
 
-        else if (CachedPlayer.LocalPlayer.PlayerControl.hasModifier(ModifierType.CreatedMadmate))
+        else if (CachedPlayer.LocalPlayer.PlayerControl.HasModifier(ModifierType.CreatedMadmate))
         {
             setPlayerNameColor(CachedPlayer.LocalPlayer.PlayerControl, Madmate.color);
 
@@ -250,7 +205,7 @@ public static class Update
             {
                 foreach (var p in PlayerControl.AllPlayerControls.GetFastEnumerator())
                 {
-                    if (p.IsTeamImpostor() || p.IsRole(RoleType.Spy) || (p.IsRole(RoleType.Jackal) && Jackal.wasTeamRed) || (p.IsRole(RoleType.Sidekick) && Sidekick.wasTeamRed))
+                    if (p.IsTeamImpostor() || p.IsRole(RoleType.Spy) || (p.IsRole(RoleType.Jackal) && Jackal.GetRole(p).WasTeamRed) || (p.IsRole(RoleType.Sidekick) && Sidekick.GetRole(p).WasTeamRed))
                     {
                         setPlayerNameColor(p, Palette.ImpostorRed);
                     }
@@ -282,10 +237,10 @@ public static class Update
         if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Sidekick))
         {
             // Sidekick can see the jackal
-            setPlayerNameColor(Sidekick.sidekick, Sidekick.color);
-            if (Jackal.jackal != null)
+            setPlayerNameColor(CachedPlayer.LocalPlayer.PlayerControl, Jackal.RoleColor);
+            if (Jackal.Exists)
             {
-                setPlayerNameColor(Jackal.jackal, Jackal.color);
+                setPlayerNameColor(Jackal.jackal, Jackal.RoleColor);
             }
         }
 
@@ -353,18 +308,14 @@ public static class Update
         bool meetingShow = MeetingHud.Instance != null && (MeetingHud.Instance.state is MeetingHud.VoteStates.Voted or MeetingHud.VoteStates.NotVoted or MeetingHud.VoteStates.Discussion);
 
         // Lovers
-        if (CachedPlayer.LocalPlayer.PlayerControl.isLovers() && CachedPlayer.LocalPlayer.PlayerControl.isAlive())
+        if (CachedPlayer.LocalPlayer.PlayerControl.IsLovers() && CachedPlayer.LocalPlayer.PlayerControl.IsAlive())
         {
             string suffix = Lovers.getIcon(CachedPlayer.LocalPlayer.PlayerControl);
-            if (Cupid.isCupidLovers(CachedPlayer.LocalPlayer))
-            {
-                suffix = Helpers.cs(Cupid.color, " ♥");
-            }
             var lover1 = CachedPlayer.LocalPlayer.PlayerControl;
             var lover2 = CachedPlayer.LocalPlayer.PlayerControl.getPartner();
 
             lover1.cosmetics.nameText.text += suffix;
-            if (!Helpers.hidePlayerName(lover2))
+            if (!Helpers.HidePlayerName(lover2))
                 lover2.cosmetics.nameText.text += suffix;
 
             if (meetingShow)
@@ -382,10 +333,6 @@ public static class Update
             foreach (var couple in Lovers.couples)
             {
                 string suffix = Lovers.getIcon(couple.lover1);
-                if (Cupid.isCupidLovers(couple.lover1))
-                {
-                    suffix = Helpers.cs(Cupid.color, " ♥");
-                }
                 couple.lover1.cosmetics.nameText.text += suffix;
                 couple.lover2.cosmetics.nameText.text += suffix;
 
@@ -394,26 +341,6 @@ public static class Update
                     foreach (PlayerVoteArea player in MeetingHud.Instance.playerStates)
                     {
                         if (couple.lover1.PlayerId == player.TargetPlayerId || couple.lover2.PlayerId == player.TargetPlayerId)
-                            player.NameText.text += suffix;
-                    }
-                }
-            }
-            foreach (var akujo in Akujo.players)
-            {
-                string suffix = Helpers.cs(akujo.iconColor, " ♥");
-                akujo.player.cosmetics.nameText.text += suffix;
-                if (akujo.honmei != null)
-                    akujo.honmei.player.cosmetics.nameText.text += suffix;
-                foreach (var keep in akujo.keeps)
-                    keep.player.cosmetics.nameText.text += suffix;
-
-                if (Helpers.ShowMeetingText)
-                {
-                    foreach (PlayerVoteArea player in MeetingHud.Instance.playerStates)
-                    {
-                        if (akujo.player.PlayerId == player.TargetPlayerId ||
-                            akujo.honmei?.player?.PlayerId == player.TargetPlayerId ||
-                            akujo.keeps.Any(x => x.player.PlayerId == player.TargetPlayerId))
                         {
                             player.NameText.text += suffix;
                         }
@@ -423,13 +350,13 @@ public static class Update
         }
 
         // Hacker and Detective
-        if (CachedPlayer.LocalPlayer.PlayerControl != null && ModMapOptions.showLighterDarker)
+        if (CachedPlayer.LocalPlayer.PlayerControl != null && ModMapOptions.ShowLighterDarker)
         {
             if (meetingShow)
             {
                 foreach (PlayerVoteArea player in MeetingHud.Instance.playerStates)
                 {
-                    var target = Helpers.playerById(player.TargetPlayerId);
+                    var target = Helpers.PlayerById(player.TargetPlayerId);
                     if (target != null) player.NameText.text += $" ({(Helpers.isLighterColor(target.Data.DefaultOutfit.ColorId) ? Tr.Get("detectiveLightLabel") : Tr.Get("detectiveDarkLabel"))})";
                 }
             }
@@ -489,7 +416,7 @@ public static class Update
         float num = NormalGameOptionsV10.KillDistances[Mathf.Clamp(kd, 0, 2)];
         if (!MapUtilities.CachedShipStatus) return result;
         if (targetingPlayer == null) targetingPlayer = PlayerControl.LocalPlayer;
-        if ((targetingPlayer.Data.IsDead && !targetingPlayer.IsRole(RoleType.Puppeteer)) || targetingPlayer.inVent) return result;
+        if (targetingPlayer.Data.IsDead || targetingPlayer.inVent) return result;
         if (targetingPlayer.IsGM()) return result;
 
         untargetablePlayers ??= [];
@@ -621,7 +548,7 @@ public static class Update
                     playerName.transform.localPosition = new Vector3(0.3384f, 0.0311f + 0.0683f, -0.1f);
                 }
 
-                var (tasksCompleted, tasksTotal) = TasksHandler.taskInfo(p.Data);
+                var (tasksCompleted, tasksTotal) = TasksHandler.TaskInfo(p.Data);
                 string roleNames = RoleInfo.GetRolesString(p, true, new RoleType[] { RoleType.Lovers });
                 string roleNamesFull = RoleInfo.GetRolesString(p, true, new RoleType[] { RoleType.Lovers }, true);
 
@@ -640,33 +567,17 @@ public static class Update
                     }
                     meetingInfoText = $"{roleNames} {taskInfo}".Trim();
                 }
-                else if (CachedPlayer.LocalPlayer.PlayerControl.isAlive() && isAkujo)
-                {
-                    if (Akujo.knowsRoles)
-                    {
-                        playerInfoText = roleNamesFull;
-                        meetingInfoText = roleNamesFull;
-                    }
-                    else if (p.hasModifier(ModifierType.AkujoHonmei))
-                    {
-                        playerInfoText = Helpers.cs(Akujo.color, Tr.Get("akujoHonmei"));
-                    }
-                    else if (p.hasModifier(ModifierType.AkujoKeep))
-                    {
-                        playerInfoText = Helpers.cs(Akujo.color, Tr.Get("akujoKeep"));
-                    }
-                }
-                else if (ModMapOptions.GhostsSeeRoles && ModMapOptions.ghostsSeeTasks)
+                else if (ModMapOptions.GhostsSeeRoles && ModMapOptions.GhostsSeeInformation)
                 {
                     playerInfoText = $"{roleNames} {taskInfo}".Trim();
                     meetingInfoText = playerInfoText;
                 }
-                else if (ModMapOptions.ghostsSeeTasks)
+                else if (ModMapOptions.GhostsSeeInformation)
                 {
                     playerInfoText = $"{taskInfo}".Trim();
                     meetingInfoText = playerInfoText;
                 }
-                else if (ModMapOptions.ghostsSeeRoles || (Lawyer.lawyerKnowsRole && CachedPlayer.LocalPlayer.PlayerControl == Lawyer.lawyer && p == Lawyer.target))
+                else if (ModMapOptions.GhostsSeeRoles)
                 {
                     playerInfoText = $"{roleNames}";
                     meetingInfoText = playerInfoText;
@@ -678,8 +589,8 @@ public static class Update
                 }
 
                 playerInfo.text = playerInfoText;
-                playerInfo.gameObject.SetActive(p.Visible && !Helpers.hidePlayerName(p));
-                if (meetingInfo != null) meetingInfo.text = MeetingHud.Instance.state == MeetingHud.VoteStates.Results ? "" : meetingInfoText;
+                playerInfo.gameObject.SetActive(p.Visible && !Helpers.HidePlayerName(p));
+                meetingInfo?.text = MeetingHud.Instance.state == MeetingHud.VoteStates.Results ? "" : meetingInfoText;
             }
         }
     }
@@ -706,19 +617,19 @@ public static class Update
         PlayerControl target = null;
         if (Spy.spy != null || Sidekick.wasSpy || Jackal.wasSpy)
         {
-            if (Spy.impostorsCanKillAnyone)
+            if (Spy.ImpostorsCanKillAnyone)
             {
                 target = setTarget(false, true);
             }
             else
             {
-                var listp = new List<PlayerControl>
+                var listP = new List<PlayerControl>
                     {
                         Spy.spy
                     };
-                if (Sidekick.wasTeamRed) listp.Add(Sidekick.sidekick);
-                if (Jackal.wasTeamRed) listp.Add(Jackal.jackal);
-                target = setTarget(true, true, listp);
+                if (Sidekick.wasTeamRed) listP.Add(Sidekick.sidekick);
+                if (Jackal.wasTeamRed) listP.Add(Jackal.jackal);
+                target = setTarget(true, true, listP);
             }
         }
         else
@@ -731,11 +642,11 @@ public static class Update
 
     public static void setPetVisibility()
     {
-        bool localalive = PlayerControl.LocalPlayer.Data.IsDead;
+        bool localAlive = PlayerControl.LocalPlayer.Data.IsDead;
         foreach (var player in PlayerControl.AllPlayerControls)
         {
-            bool playeralive = !player.Data.IsDead;
-            player.cosmetics.SetPetVisible((localalive && playeralive) || !localalive);
+            bool playerAlive = !player.Data.IsDead;
+            player.cosmetics.SetPetVisible((localAlive && playerAlive) || !localAlive);
         }
     }
 }

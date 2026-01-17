@@ -489,7 +489,7 @@ public static partial class CustomOptionHolder
         #region MODIFIERS
         madmateSpawnRate = new(4000, CustomOptionType.Modifier, ModifierType.Madmate, Madmate.ModifierColor);
         madmateType = CustomOption.Normal(4001, CustomOptionType.Modifier, "madmateType", ["madmateDefault", "madmateWithRole", "madmateRandom"], madmateSpawnRate);
-        madmateFixedRole = new CustomRoleSelectionOption(4002, CustomOptionType.Modifier, "madmateFixedRole", Madmate.ValidRoles, madmateType);
+        madmateFixedRole = new CustomRoleSelectionOption(4002, CustomOptionType.Modifier, "madmateFixedRole", Madmate.validRoles, madmateType);
         madmateAbility = CustomOption.Normal(4003, CustomOptionType.Modifier, "madmateAbility", ["madmateNone", "madmateFanatic"], madmateSpawnRate);
         madmateTasks = new((4004, 4005, 4006), CustomOptionType.Modifier, (1, 1, 3), madmateAbility);
         madmateCanDieToSheriff = CustomOption.Normal(4007, CustomOptionType.Modifier, "madmateCanDieToSheriff", false, madmateSpawnRate);

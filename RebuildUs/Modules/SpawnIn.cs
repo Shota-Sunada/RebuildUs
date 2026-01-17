@@ -43,7 +43,7 @@ public static class SpawnIn
         isFirstSpawn = false;
         if (CustomOptionHolder.AirshipSetOriginalCooldown.GetBool())
         {
-            CachedPlayer.LocalPlayer.PlayerControl.SetKillTimerUnchecked(PlayerControl.GameOptions.killCooldown);
+            CachedPlayer.LocalPlayer.PlayerControl.SetKillTimerUnchecked(Helpers.GetOption(FloatOptionNames.KillCooldown));
             foreach (var b in CustomButton.Buttons)
             {
                 b.Timer = b.MaxTimer;
@@ -87,7 +87,7 @@ public static class SpawnIn
         }
 
         SpawnInMinigame.SpawnLocation[] array = [.. list];
-        array.Shuffle(0);
+        array.shuffle(0);
         array = [.. from s in array.Take(__instance.LocationButtons.Length)
                  orderby s.Location.x, s.Location.y descending
                  select s];
@@ -220,7 +220,7 @@ public static class SpawnIn
                         FastDestroyableSingleton<HudManager>.Instance.PlayerCam.SnapToTarget();
                         synchronizeData.Reset(SynchronizeTag.PreSpawnMinigame);
                         __instance.Close();
-                        CustomButton.StopCountdown = false;
+                        CustomButton.stopCountdown = false;
                         // サボタージュのクールダウンをリセット
                         var sabotageSystem = MapUtilities.CachedShipStatus.Systems[SystemTypes.Sabotage].Cast<SabotageSystemType>();
                         sabotageSystem.IsDirty = true;

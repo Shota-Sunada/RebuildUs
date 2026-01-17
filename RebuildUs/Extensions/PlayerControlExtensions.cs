@@ -4,6 +4,7 @@ using RebuildUs.Players;
 using RebuildUs.Roles;
 using RebuildUs.Roles.Crewmate;
 using RebuildUs.Roles.Impostor;
+using RebuildUs.Roles.Modifier;
 using RebuildUs.Roles.Neutral;
 using RebuildUs.Utilities;
 
@@ -37,7 +38,16 @@ public static class PlayerControlHelpers
 
     public static bool IsNeutral(this PlayerControl player)
     {
-        return false;
+        return player != null
+            && (player.IsRole(RoleType.Jackal) ||
+                player.IsRole(RoleType.Sidekick) ||
+                Jackal.FormerJackals.Contains(player) ||
+                player.IsRole(RoleType.Arsonist) ||
+                player.IsRole(RoleType.Jester) ||
+                player.IsRole(RoleType.Opportunist) ||
+                player.IsRole(RoleType.PlagueDoctor) ||
+                player.IsRole(RoleType.Vulture) ||
+                (player.IsRole(RoleType.Shifter) && Shifter.IsNeutral));
     }
 
     public static bool IsTeamCrewmate(this PlayerControl player)
@@ -52,19 +62,15 @@ public static class PlayerControlHelpers
 
     public static bool HasFakeTasks(this PlayerControl player)
     {
-        return false;
-        // return (player.IsNeutral() && !player.NeutralHasTasks()) ||
-        //        (player.HasModifier(ModifierType.CreatedMadmate) && !CreatedMadmate.hasTasks) ||
-        //        (player.HasModifier(ModifierType.Madmate) && !Madmate.hasTasks) ||
-        //        (player.IsLovers() && Lovers.separateTeam && !Lovers.tasksCount);
+        return (player.IsNeutral() && !player.NeutralHasTasks())
+            || (player.HasModifier(ModifierType.CreatedMadmate) && !CreatedMadmate.hasTasks)
+            || (player.HasModifier(ModifierType.Madmate) && !Madmate.hasTasks)
+            || (player.IsLovers() && Lovers.separateTeam && !Lovers.tasksCount);
     }
 
     public static bool NeutralHasTasks(this PlayerControl player)
     {
-        return false;
-        // if (player.IsRole(RoleType.SchrodingersCat) && SchrodingersCat.hideRole) return true;
-        // if (player.IsRole(RoleType.JekyllAndHyde)) return true;
-        // return player.IsNeutral() && (player.IsRole(ERoleType.Lawyer) || player.IsRole(RoleType.Pursuer) || player.IsRole(RoleType.Shifter) || player.IsRole(RoleType.Fox));
+        return player.IsNeutral() && player.IsRole(RoleType.Shifter);
     }
 
     public static bool IsGM(this PlayerControl player)
@@ -75,14 +81,17 @@ public static class PlayerControlHelpers
 
     public static bool IsLovers(this PlayerControl player)
     {
-        return false;
-        // return player != null && Lovers.isLovers(player);
+        return player != null && Lovers.isLovers(player);
+    }
+
+    public static PlayerControl getPartner(this PlayerControl player)
+    {
+        return Lovers.getPartner(player);
     }
 
     public static bool CanBeErased(this PlayerControl player)
     {
-        return false;
-        // return player != Jackal.jackal && player != Sidekick.sidekick && !Jackal.formerJackals.Contains(player);
+        return !player.IsRole(RoleType.Jackal) && !player.IsRole(RoleType.Sidekick) && !Jackal.FormerJackals.Contains(player);
     }
 
     public static void ClearAllTasks(this PlayerControl player)
@@ -120,18 +129,18 @@ public static class PlayerControlHelpers
         {
             roleCouldUse = true;
         }
-        // else if (Madmate.canEnterVents && player.hasModifier(ModifierType.Madmate))
-        //     roleCouldUse = true;
-        // else if (CreatedMadmate.canEnterVents && player.hasModifier(ModifierType.CreatedMadmate))
-        //     roleCouldUse = true;
+        else if (Madmate.canEnterVents && player.HasModifier(ModifierType.Madmate))
+        {
+            roleCouldUse = true;
+        }
+        else if (CreatedMadmate.canEnterVents && player.HasModifier(ModifierType.CreatedMadmate))
+        {
+            roleCouldUse = true;
+        }
         else if (Vulture.CanUseVents && player.IsRole(RoleType.Vulture))
         {
             roleCouldUse = true;
         }
-        // else if (player.IsRole(RoleType.JekyllAndHyde) && !JekyllAndHyde.isJekyll())
-        //     roleCouldUse = true;
-        // else if (player.IsRole(RoleType.Moriarty))
-        //     roleCouldUse = true;
         else if (player.Data?.Role != null && player.Data.Role.CanVent)
         {
             if (!Mafia.Janitor.canVent && player.IsRole(RoleType.Janitor))
@@ -155,11 +164,15 @@ public static class PlayerControlHelpers
     public static bool CanSabotage(this PlayerControl player)
     {
         bool roleCouldUse = false;
-        // if (Madmate.canSabotage && player.hasModifier(ModifierType.Madmate))
-        //     roleCouldUse = true;
-        // else if (CreatedMadmate.canSabotage && player.hasModifier(ModifierType.CreatedMadmate))
-        //     roleCouldUse = true;
-        if (Jester.CanSabotage && player.IsRole(RoleType.Jester))
+        if (Madmate.canSabotage && player.HasModifier(ModifierType.Madmate))
+        {
+            roleCouldUse = true;
+        }
+        else if (CreatedMadmate.canSabotage && player.HasModifier(ModifierType.CreatedMadmate))
+        {
+            roleCouldUse = true;
+        }
+        else if (Jester.CanSabotage && player.IsRole(RoleType.Jester))
         {
             roleCouldUse = true;
         }
@@ -171,8 +184,10 @@ public static class PlayerControlHelpers
         {
             roleCouldUse = false;
         }
-        // else if (player.Data?.Role != null && player.Data.Role.IsImpostor)
-        //     roleCouldUse = true;
+        else if (player.Data?.Role != null && player.Data.Role.IsImpostor)
+        {
+            roleCouldUse = true;
+        }
 
         return roleCouldUse;
     }

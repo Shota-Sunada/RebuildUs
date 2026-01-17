@@ -75,9 +75,9 @@ public class Submerged
     {
         public static bool Prefix(ref int __result)
         {
-            __result = Enumerable.Count<NetworkedPlayerInfo>(GameData.Instance.AllPlayers.ToSystemList<NetworkedPlayerInfo>(), delegate (NetworkedPlayerInfo p)
+            __result = Enumerable.Count(GameData.Instance.AllPlayers.ToSystemList(), delegate (NetworkedPlayerInfo p)
             {
-                if (p != null && !p.IsDead && !p.Disconnected && Helpers.PlayerById(p.PlayerId) != Puppeteer.dummy)
+                if (p != null && !p.IsDead && !p.Disconnected )
                 {
                     PlayerControl @object = p.Object;
                     if (@object != null)

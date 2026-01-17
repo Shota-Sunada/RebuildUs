@@ -2,7 +2,7 @@ namespace RebuildUs.Modules.CustomOptions;
 
 public class CustomRoleSelectionOption : CustomOption
 {
-    public List<RoleType> roleTypes;
+    public RoleType[] roleTypes;
     public RoleType Role
     {
         get
@@ -11,7 +11,7 @@ public class CustomRoleSelectionOption : CustomOption
         }
     }
 
-    public CustomRoleSelectionOption(int id, CustomOptionType type, string name, List<RoleType> roleTypes = null, CustomOption parent = null)
+    public CustomRoleSelectionOption(int id, CustomOptionType type, string name, RoleType[] roleTypes = null, CustomOption parent = null)
     {
         roleTypes ??= [.. Enum.GetValues(typeof(RoleType)).Cast<RoleType>()];
 

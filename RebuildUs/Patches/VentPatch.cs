@@ -12,7 +12,7 @@ public static class VentPatch
         float num = float.MaxValue;
         PlayerControl @object = pc.Object;
 
-        bool roleCouldUse = @object.roleCanUseVents();
+        bool roleCouldUse = @object.CanUseVents();
 
         if (__instance.name.StartsWith("SealedVent_"))
         {

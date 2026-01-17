@@ -27,6 +27,8 @@ public class CustomButton
     public bool Mirror;
     public KeyCode? Hotkey;
 
+    public static bool stopCountdown = true;
+
     public static class ButtonPositions
     {
         public static readonly Vector3 LowerRowRight = new(-2f, -0.06f, 0);  // Not usable for imps because of new button positions!
@@ -239,7 +241,7 @@ public class CustomButton
             ActionButton.graphic.material.SetFloat("_Desat", 1f);
         }
 
-        if (Timer >= 0)
+        if (Timer >= 0 && !stopCountdown)
         {
             // Make sure role draft has finished or isn't running
             if (HasEffect && IsEffectActive)

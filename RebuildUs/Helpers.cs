@@ -5,6 +5,7 @@ using AmongUs.GameOptions;
 using RebuildUs.Roles.Crewmate;
 using System.Text;
 using System.Text.RegularExpressions;
+using RebuildUs.Roles.Modifier;
 
 namespace RebuildUs;
 
@@ -23,6 +24,61 @@ public static class Helpers
     public static bool GameStarted { get { return AmongUsClient.Instance?.GameState == InnerNet.InnerNetClient.GameStates.Started; } }
     public static bool RolesEnabled { get { return CustomOptionHolder.ActivateRoles.GetBool(); } }
     public static bool RefundVotes { get { return CustomOptionHolder.RefundVotesOnDeath.GetBool(); } }
+
+    public static void destroyList<T>(Il2CppSystem.Collections.Generic.List<T> items) where T : UnityEngine.Object
+    {
+        if (items == null) return;
+        foreach (T item in items)
+        {
+            UnityEngine.Object.Destroy(item);
+        }
+    }
+
+    public static void destroyList<T>(List<T> items) where T : UnityEngine.Object
+    {
+        if (items == null) return;
+        foreach (T item in items)
+        {
+            UnityEngine.Object.Destroy(item);
+        }
+    }
+
+    public static void generateAndAssignTasks(this PlayerControl player, int numCommon, int numShort, int numLong)
+    {
+        if (player == null) return;
+
+        var taskTypeIds = GenerateTasks(numCommon, numShort, numLong);
+
+        MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.UncheckedSetTasks, Hazel.SendOption.Reliable, -1);
+        writer.Write(player.PlayerId);
+        writer.WriteBytesAndSize(taskTypeIds.ToArray());
+        AmongUsClient.Instance.FinishRpcImmediately(writer);
+        RPCProcedure.UncheckedSetTasks(player.PlayerId, [.. taskTypeIds]);
+    }
+
+    public static void setSkinWithAnim(PlayerPhysics playerPhysics, string SkinId)
+    {
+        // SkinData nextSkin = FastDestroyableSingleton<HatManager>.Instance.GetSkinById(SkinId);
+        // AnimationClip clip = null;
+        // var spriteAnim = playerPhysics.myPlayer.cosmetics.skin.animator;
+        // var anim = spriteAnim.m_animator;
+        // var skinLayer = playerPhysics.myPlayer.cosmetics.skin;
+
+        // var currentPhysicsAnim = playerPhysics.Animator.GetCurrentAnimation();
+        // if (currentPhysicsAnim == playerPhysics.CurrentAnimationGroup.RunAnim) clip = nextSkin.viewData.viewData.RunAnim;
+        // else if (currentPhysicsAnim == playerPhysics.CurrentAnimationGroup.SpawnAnim) clip = nextSkin.viewData.viewData.SpawnAnim;
+        // else if (currentPhysicsAnim == playerPhysics.CurrentAnimationGroup.EnterVentAnim) clip = nextSkin.viewData.viewData.EnterVentAnim;
+        // else if (currentPhysicsAnim == playerPhysics.CurrentAnimationGroup.ExitVentAnim) clip = nextSkin.viewData.viewData.ExitVentAnim;
+        // else if (currentPhysicsAnim == playerPhysics.CurrentAnimationGroup.IdleAnim) clip = nextSkin.viewData.viewData.IdleAnim;
+        // else clip = nextSkin.viewData.viewData.IdleAnim;
+
+        // float progress = playerPhysics.Animator.m_animator.GetCurrentAnimatorStateInfo(0).normalizedTime;
+        // skinLayer.skin = nextSkin.viewData.viewData;
+
+        // spriteAnim.Play(clip, 1f);
+        // anim.Play("a", 0, progress % 1);
+        // anim.Update(0f);
+    }
 
     public static object TryCast(this Il2CppObjectBase self, Type type)
     {
@@ -62,6 +118,91 @@ public static class Helpers
             }
         }
         return null;
+    }
+
+    public static Dictionary<byte, PlayerControl> allPlayersById()
+    {
+        Dictionary<byte, PlayerControl> res = [];
+        foreach (PlayerControl player in CachedPlayer.AllPlayers)
+        {
+            res.Add(player.PlayerId, player);
+        }
+        return res;
+    }
+    public static void handleVampireBiteOnBodyReport()
+    {
+        // Murder the bitten player and reset bitten (regardless whether the kill was successful or not)
+        Helpers.CheckMurderAttemptAndKill(Vampire.vampire, Vampire.bitten, true, false);
+        MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.VampireSetBitten, Hazel.SendOption.Reliable, -1);
+        writer.Write(byte.MaxValue);
+        writer.Write(byte.MaxValue);
+        AmongUsClient.Instance.FinishRpcImmediately(writer);
+        RPCProcedure.vampireSetBitten(byte.MaxValue, byte.MaxValue);
+    }
+
+    public static void refreshRoleDescription(PlayerControl player)
+    {
+        if (player == null) return;
+
+        List<RoleInfo> infos = RoleInfo.GetRoleInfoForPlayer(player);
+
+        var toRemove = new List<PlayerTask>();
+        foreach (PlayerTask t in player.myTasks)
+        {
+            var textTask = t.gameObject.GetComponent<ImportantTextTask>();
+            if (textTask != null)
+            {
+                var info = infos.FirstOrDefault(x => textTask.Text.StartsWith(x.Name));
+                if (info != null)
+                    infos.Remove(info); // TextTask for this RoleInfo does not have to be added, as it already exists
+                else
+                    toRemove.Add(t); // TextTask does not have a corresponding RoleInfo and will hence be deleted
+            }
+        }
+
+        foreach (PlayerTask t in toRemove)
+        {
+            t.OnRemove();
+            player.myTasks.Remove(t);
+            UnityEngine.Object.Destroy(t.gameObject);
+        }
+
+        // Add TextTask for remaining RoleInfos
+        foreach (RoleInfo roleInfo in infos)
+        {
+            var task = new GameObject("RoleTask").AddComponent<ImportantTextTask>();
+            task.transform.SetParent(player.transform, false);
+
+            if (roleInfo.RoleType == RoleType.Jackal)
+            {
+                if (Jackal.CanCreateSidekick)
+                {
+                    task.Text = Cs(roleInfo.Color, $"{roleInfo.Name}: " + Tr.Get("jackalWithSidekick"));
+                }
+                else
+                {
+                    task.Text = Cs(roleInfo.Color, $"{roleInfo.Name}: " + Tr.Get("jackalShortDesc"));
+                }
+            }
+            else
+            {
+                task.Text = Cs(roleInfo.Color, $"{roleInfo.Name}: {roleInfo.ShortDescription}");
+            }
+
+            player.myTasks.Insert(0, task);
+        }
+
+        if (player.HasModifier(ModifierType.Madmate) || player.HasModifier(ModifierType.CreatedMadmate))
+        {
+            var task = new GameObject("RoleTask").AddComponent<ImportantTextTask>();
+            task.transform.SetParent(player.transform, false);
+            task.Text = Cs(Madmate.ModifierColor, $"{Madmate.fullName}: " + Tr.Get("madmateShortDesc"));
+            player.myTasks.Insert(0, task);
+        }
+    }
+    public static bool isLighterColor(int colorId)
+    {
+        return CustomColors.LighterColors.Contains(colorId);
     }
 
     public static void SetSemiTransparent(this PoolablePlayer player, bool value)
@@ -569,9 +710,99 @@ public static class Helpers
         }
         if (!ModMapOptions.HidePlayerNames) return false; // All names are visible
         if (source.IsTeamImpostor() && (target.IsTeamImpostor() || target.IsRole(RoleType.Spy) || (target.IsRole(RoleType.Sidekick) && Sidekick.GetRole(target).WasTeamRed) || (target.IsRole(RoleType.Jackal) && Jackal.GetRole(target).WasTeamRed))) return false; // Members of team Impostors see the names of Impostors/Spies
-        // if (source.GetPartner() == target) return false; // Members of team Lovers see the names of each other
+        if (source.getPartner() == target) return false; // Members of team Lovers see the names of each other
         if ((source.IsRole(RoleType.Jackal) || source.IsRole(RoleType.Sidekick)) && (target.IsRole(RoleType.Jackal) || target.IsRole(RoleType.Sidekick) || target == Jackal.GetRole(target).FakeSidekick)) return false; // Members of team Jackal see the names of each other
         return true;
+    }
+
+    public static void showFlash(Color color, float duration = 1f)
+    {
+        if (FastDestroyableSingleton<HudManager>.Instance == null || FastDestroyableSingleton<HudManager>.Instance.FullScreen == null) return;
+        FastDestroyableSingleton<HudManager>.Instance.FullScreen.gameObject.SetActive(true);
+        FastDestroyableSingleton<HudManager>.Instance.FullScreen.enabled = true;
+        FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(duration, new Action<float>((p) =>
+        {
+            var renderer = FastDestroyableSingleton<HudManager>.Instance.FullScreen;
+
+            if (p < 0.5)
+            {
+                renderer?.color = new Color(color.r, color.g, color.b, Mathf.Clamp01(p * 2 * 0.75f));
+            }
+            else
+            {
+                renderer?.color = new Color(color.r, color.g, color.b, Mathf.Clamp01((1 - p) * 2 * 0.75f));
+            }
+            if (p == 1f && renderer != null)
+            {
+                bool reactorActive = false;
+                foreach (PlayerTask task in CachedPlayer.LocalPlayer.PlayerControl.myTasks)
+                {
+                    if (task.TaskType == TaskTypes.StopCharles)
+                    {
+                        reactorActive = true;
+                    }
+                }
+                if (!reactorActive && Helpers.GetOption(ByteOptionNames.MapId) == 4) renderer.color = Color.black;
+                renderer.gameObject.SetActive(false);
+            }
+        })));
+    }
+
+    public static List<T> ToSystemList<T>(this Il2CppSystem.Collections.Generic.List<T> iList)
+    {
+        List<T> systemList = [.. iList];
+        return systemList;
+    }
+
+    public static T Random<T>(this IList<T> self)
+    {
+        return self.Count > 0 ? self[UnityEngine.Random.Range(0, self.Count)] : default;
+    }
+
+    public static void SetKillTimerUnchecked(this PlayerControl player, float time, float max = float.NegativeInfinity)
+    {
+        if (max == float.NegativeInfinity) max = time;
+
+        player.killTimer = time;
+        FastDestroyableSingleton<HudManager>.Instance.KillButton.SetCoolDown(time, max);
+    }
+
+    public static void shuffle<T>(this IList<T> self, int startAt = 0)
+    {
+        for (int i = startAt; i < self.Count - 1; i++)
+        {
+            T value = self[i];
+            int index = UnityEngine.Random.Range(i, self.Count);
+            self[i] = self[index];
+            self[index] = value;
+        }
+    }
+
+    public static PlainShipRoom GetPlainShipRoom(PlayerControl p)
+    {
+        var buffer = new Collider2D[10];
+        var filter = default(ContactFilter2D);
+        filter.layerMask = Constants.PlayersOnlyMask;
+        filter.useLayerMask = true;
+        filter.useTriggers = false;
+        var array = MapUtilities.CachedShipStatus?.AllRooms;
+        if (array == null) return null;
+        foreach (var plainShipRoom in array)
+        {
+            if (plainShipRoom.roomArea)
+            {
+                int hitCount = plainShipRoom.roomArea.OverlapCollider(filter, buffer);
+                if (hitCount == 0) continue;
+                for (int i = 0; i < hitCount; i++)
+                {
+                    if (buffer[i]?.gameObject == p.gameObject)
+                    {
+                        return plainShipRoom;
+                    }
+                }
+            }
+        }
+        return null;
     }
 
     public static bool isOnElecTask()

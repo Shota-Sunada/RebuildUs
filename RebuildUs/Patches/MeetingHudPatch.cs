@@ -83,7 +83,7 @@ public static class MeetingHudPatch
                     writer.Write((byte)player.Data.PlayerId);
                     writer.Write((byte)randVal);
                     AmongUsClient.Instance.FinishRpcImmediately(writer);
-                    RPCProcedure.randomSpawn((byte)player.Data.PlayerId, (byte)randVal);
+                    RPCProcedure.RandomSpawn((byte)player.Data.PlayerId, (byte)randVal);
                 }
             }
         }
