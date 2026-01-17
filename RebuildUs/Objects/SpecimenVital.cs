@@ -14,7 +14,7 @@ public class SpecimenVital
     public static void moveVital()
     {
         if (flag) return;
-        if (PlayerControl.GameOptions.MapId == 2 && CustomOptionHolder.PolisSpecimenVital.GetBool())
+        if (Helpers.GetOption(ByteOptionNames.MapId) == 2 && CustomOptionHolder.PolisSpecimenVital.GetBool())
         {
             var panel = GameObject.Find("panel_vitals");
             if (panel != null)

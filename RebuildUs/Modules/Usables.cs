@@ -45,7 +45,7 @@ public static class Usables
             // Handle blank kill
             if (res == MurderAttemptResult.BlankKill)
             {
-                CachedPlayer.LocalPlayer.PlayerControl.killTimer = PlayerControl.GameOptions.KillCooldown;
+                CachedPlayer.LocalPlayer.PlayerControl.killTimer = Helpers.GetOption(FloatOptionNames.KillCooldown);
                 if (CachedPlayer.LocalPlayer.PlayerControl == Cleaner.cleaner)
                     Cleaner.cleaner.killTimer = HudManagerStartPatch.cleanerCleanButton.Timer = HudManagerStartPatch.cleanerCleanButton.MaxTimer;
                 else if (CachedPlayer.LocalPlayer.PlayerControl == Warlock.warlock)
@@ -191,35 +191,13 @@ public static class Usables
     {
         if (target == null) return false;
 
-        Console targetConsole = target.TryCast<Console>();
-        SystemConsole targetSysConsole = target.TryCast<SystemConsole>();
-        MapConsole targetMapConsole = target.TryCast<MapConsole>();
+        var targetConsole = target.TryCast<Console>();
+        var targetSysConsole = target.TryCast<SystemConsole>();
+        var targetMapConsole = target.TryCast<MapConsole>();
 
-        // Hydeの時にはタスクができない
-        if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.JekyllAndHyde) && !JekyllAndHyde.isJekyll())
-        {
-            string name = targetSysConsole == null ? "" : targetSysConsole.name;
-            bool isSecurity = name is "task_cams" or "Surv_Panel" or "SurvLogConsole" or "SurvConsole";
-            bool isVitals = name == "panel_vitals";
-            bool isButton = name is "EmergencyButton" or "EmergencyConsole" or "task_emergency";
-            PlayerTask task = targetConsole.FindTask(pc);
-            bool isLights = task?.TaskType == TaskTypes.FixLights;
-            bool isComms = task?.TaskType == TaskTypes.FixComms;
-            bool isReactor = task?.TaskType is TaskTypes.StopCharles or TaskTypes.ResetSeismic or TaskTypes.ResetReactor;
-            bool isO2 = task?.TaskType == TaskTypes.RestoreOxy;
-            if (!isSecurity || !isVitals || !isButton || !isLights || !isComms || !isReactor || !isO2)
-            {
-                return true;
-            }
-        }
-
-        if ((targetConsole != null && IsBlocked(targetConsole, pc)) ||
+        return (targetConsole != null && IsBlocked(targetConsole, pc)) ||
             (targetSysConsole != null && IsBlocked(targetSysConsole, pc)) ||
-            (targetMapConsole != null && !ModMapOptions.canUseAdmin))
-        {
-            return true;
-        }
-        return false;
+            (targetMapConsole != null && !ModMapOptions.canUseAdmin);
     }
 
     public static void EmergencyMinigameUpdate(EmergencyMinigame __instance)
