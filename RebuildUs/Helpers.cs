@@ -51,30 +51,6 @@ public static class Helpers
         // return (player == Jester.jester || player == Jackal.jackal || player == Sidekick.sidekick || player == Arsonist.arsonist || player == Vulture.vulture || Jackal.formerJackals.Any(x => x == player));
         return false;
     }
-    public static bool ZoomOutStatus = false;
-    public static void ToggleZoom(bool reset = false)
-    {
-        float orthographicSize = reset || ZoomOutStatus ? 3f : 12f;
-
-        ZoomOutStatus = !ZoomOutStatus && !reset;
-        UnityEngine.Camera.main.orthographicSize = orthographicSize;
-        foreach (var cam in UnityEngine.Camera.allCameras)
-        {
-            if (cam != null && cam.gameObject.name == "UI Camera") cam.orthographicSize = orthographicSize;  // The UI is scaled too, else we cant click the buttons. Downside: map is super small.
-        }
-
-        var tzGO = GameObject.Find("TOGGLEZOOMBUTTON");
-        if (tzGO != null)
-        {
-            var rend = tzGO.transform.Find("Inactive").GetComponent<SpriteRenderer>();
-            var rendActive = tzGO.transform.Find("Active").GetComponent<SpriteRenderer>();
-            rend.sprite = ZoomOutStatus ? AssetLoader.Plus_Button : AssetLoader.Minus_Button;
-            rendActive.sprite = ZoomOutStatus ? AssetLoader.Plus_ButtonActive : AssetLoader.Minus_ButtonActive;
-            tzGO.transform.localScale = new Vector3(1.2f, 1.2f, 1f) * (ZoomOutStatus ? 4 : 1);
-        }
-
-        ResolutionManager.ResolutionChanged.Invoke((float)Screen.width / Screen.height, Screen.width, Screen.height, Screen.fullScreen); // This will move button positions to the correct position.
-    }
 
     public static PlayerControl PlayerById(byte id)
     {

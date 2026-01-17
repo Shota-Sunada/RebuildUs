@@ -22,22 +22,18 @@ public static class SpawnIn
         SpawnCandidates = [];
         if (CustomOptionHolder.AirshipAdditionalSpawn.GetBool())
         {
-            SpawnCandidates.Add(new(StringNames.VaultRoom, new Vector2(-8.8f, 8.6f), "TheOtherRoles.Resources.Locations.VaultButton.png", "rollover_brig"));
-            SpawnCandidates.Add(new(StringNames.MeetingRoom, new Vector2(11.0f, 14.7f), "TheOtherRoles.Resources.Locations.MeetingButton.png", "rollover_brig"));
-            SpawnCandidates.Add(new(StringNames.Cockpit, new Vector2(-22.0f, -1.2f), "TheOtherRoles.Resources.Locations.CockpitButton.png", "rollover_brig"));
-            SpawnCandidates.Add(new(StringNames.Electrical, new Vector2(16.4f, -8.5f), "TheOtherRoles.Resources.Locations.ElectricalButton.png", "rollover_brig"));
-            SpawnCandidates.Add(new(StringNames.Lounge, new Vector2(30.9f, 7.5f), "TheOtherRoles.Resources.Locations.LoungeButton.png", "rollover_brig"));
-            SpawnCandidates.Add(new(StringNames.Medical, new Vector2(25.5f, -5.0f), "TheOtherRoles.Resources.Locations.MedicalButton.png", "rollover_brig"));
-            SpawnCandidates.Add(new(StringNames.Security, new Vector2(10.3f, -16.2f), "TheOtherRoles.Resources.Locations.SecurityButton.png", "rollover_brig"));
-            SpawnCandidates.Add(new(StringNames.ViewingDeck, new Vector2(-14.1f, -16.2f), "TheOtherRoles.Resources.Locations.ViewingButton.png", "rollover_brig"));
-            SpawnCandidates.Add(new(StringNames.Armory, new Vector2(-10.7f, -6.3f), "TheOtherRoles.Resources.Locations.ArmoryButton.png", "rollover_brig"));
-            SpawnCandidates.Add(new(StringNames.Comms, new Vector2(-11.8f, 3.2f), "TheOtherRoles.Resources.Locations.CommunicationsButton.png", "rollover_brig"));
-            SpawnCandidates.Add(new(StringNames.Showers, new Vector2(20.8f, 2.8f), "TheOtherRoles.Resources.Locations.ShowersButton.png", "rollover_brig"));
-            SpawnCandidates.Add(new(StringNames.GapRoom, new Vector2(13.8f, 6.4f), "TheOtherRoles.Resources.Locations.GapButton.png", "rollover_brig"));
-            foreach (var spawnCandidate in SpawnCandidates)
-            {
-                spawnCandidate.ReloadTexture();
-            }
+            SpawnCandidates.Add(new(StringNames.VaultRoom, new Vector2(-8.8f, 8.6f), AssetLoader.VaultButton));
+            SpawnCandidates.Add(new(StringNames.MeetingRoom, new Vector2(11.0f, 14.7f), AssetLoader.MeetingButton));
+            SpawnCandidates.Add(new(StringNames.Cockpit, new Vector2(-22.0f, -1.2f), AssetLoader.CockpitButton));
+            SpawnCandidates.Add(new(StringNames.Electrical, new Vector2(16.4f, -8.5f), AssetLoader.ElectricalButton));
+            SpawnCandidates.Add(new(StringNames.Lounge, new Vector2(30.9f, 7.5f), AssetLoader.LoungeButton));
+            SpawnCandidates.Add(new(StringNames.Medical, new Vector2(25.5f, -5.0f), AssetLoader.MedicalButton));
+            SpawnCandidates.Add(new(StringNames.Security, new Vector2(10.3f, -16.2f), AssetLoader.SecurityButton));
+            SpawnCandidates.Add(new(StringNames.ViewingDeck, new Vector2(-14.1f, -16.2f), AssetLoader.ViewingButton));
+            SpawnCandidates.Add(new(StringNames.Armory, new Vector2(-10.7f, -6.3f), AssetLoader.ArmoryButton));
+            SpawnCandidates.Add(new(StringNames.Comms, new Vector2(-11.8f, 3.2f), AssetLoader.CommunicationsButton));
+            SpawnCandidates.Add(new(StringNames.Showers, new Vector2(20.8f, 2.8f), AssetLoader.ShowersButton));
+            SpawnCandidates.Add(new(StringNames.GapRoom, new Vector2(13.8f, 6.4f), AssetLoader.GapButton));
         }
     }
 
@@ -82,7 +78,7 @@ public static class SpawnIn
             SpawnInMinigame.SpawnLocation spawnLocation = new()
             {
                 Location = spawnCandidate.SpawnLocation,
-                Image = spawnCandidate.GetSprite(),
+                Image = spawnCandidate.Sprite,
                 Name = spawnCandidate.LocationKey,
                 Rollover = new AnimationClip(),
                 RolloverSfx = __instance.DefaultRolloverSound

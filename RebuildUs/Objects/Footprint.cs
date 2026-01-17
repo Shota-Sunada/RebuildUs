@@ -3,19 +3,11 @@ namespace RebuildUs.Objects;
 public class Footprint
 {
     private static List<Footprint> footprints = [];
-    private static Sprite sprite;
     private Color color;
     private GameObject footprint;
     private SpriteRenderer spriteRenderer;
     private PlayerControl owner;
     private bool anonymousFootprints;
-
-    public static Sprite getFootprintSprite()
-    {
-        if (sprite) return sprite;
-        sprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.Footprint.png", 600f);
-        return sprite;
-    }
 
     public Footprint(float footprintDuration, bool anonymousFootprints, PlayerControl player)
     {
@@ -32,7 +24,7 @@ public class Footprint
         footprint.transform.Rotate(0.0f, 0.0f, UnityEngine.Random.Range(0.0f, 360.0f));
 
         spriteRenderer = footprint.AddComponent<SpriteRenderer>();
-        spriteRenderer.sprite = getFootprintSprite();
+        spriteRenderer.sprite = AssetLoader.Footprint;
         spriteRenderer.color = color;
 
         footprint.SetActive(true);

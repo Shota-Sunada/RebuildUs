@@ -13,6 +13,7 @@ public static class AssetLoader
         LoadButtonAssets();
         LoadAnimationAssets();
         LoadSpriteAssets();
+        LoadLocationAssets();
     }
 
     // Animations
@@ -25,19 +26,34 @@ public static class AssetLoader
     public static Sprite SidekickButton;
 
     public static Sprite IgniteButton;
-    public static Sprite Minus_Button;
-    public static Sprite Minus_ButtonActive;
-    public static Sprite Plus_Button;
-    public static Sprite Plus_ButtonActive;
-    public static Sprite Settings_Button;
-    public static Sprite Settings_ButtonActive;
 
     // Sprites
     public static Sprite Arrow;
-    public static Sprite Endscreen;
-    public static Sprite EndscreenActive;
     public static Sprite Garlic;
     public static Sprite GarlicBackground;
+    public static Sprite Ladder;
+    public static Sprite LadderBackground;
+    public static Sprite AirshipFence;
+    public static Sprite AirshipDownloadG;
+    public static Sprite CorpseIcon;
+    public static Sprite Cross;
+    public static Sprite AdminCockpit;
+    public static Sprite AdminRecords;
+    public static Sprite Footprint;
+
+    // Locations
+    public static Sprite ArmoryButton;
+    public static Sprite CockpitButton;
+    public static Sprite CommunicationsButton;
+    public static Sprite ElectricalButton;
+    public static Sprite GapButton;
+    public static Sprite LoungeButton;
+    public static Sprite MedicalButton;
+    public static Sprite MeetingButton;
+    public static Sprite SecurityButton;
+    public static Sprite ShowersButton;
+    public static Sprite VaultButton;
+    public static Sprite ViewingButton;
 
     private static void LoadButtonAssets()
     {
@@ -50,18 +66,13 @@ public static class AssetLoader
         SidekickButton = ab.LoadAsset<Sprite>("SidekickButton.png").DontUnload();
 
         IgniteButton = ab.LoadAsset<Sprite>("IgniteButton.png").DontUnload();
-        Minus_Button = ab.LoadAsset<Sprite>("Minus_Button.png").DontUnload();
-        Minus_ButtonActive = ab.LoadAsset<Sprite>("Minus_ButtonActive.png").DontUnload();
-        Plus_Button = ab.LoadAsset<Sprite>("Plus_Button.png").DontUnload();
-        Plus_ButtonActive = ab.LoadAsset<Sprite>("Plus_ButtonActive.png").DontUnload();
-        Settings_Button = ab.LoadAsset<Sprite>("Settings_Button.png").DontUnload();
-        Settings_ButtonActive = ab.LoadAsset<Sprite>("Settings_ButtonActive.png").DontUnload();
     }
 
     private static void LoadAnimationAssets()
     {
         var resource = Assembly.GetExecutingAssembly().GetManifestResourceStream("RebuildUs.Resources.tricksteranimation");
         var ab = AssetBundle.LoadFromMemory(resource.ReadFully());
+
         TricksterAnimations.Add(ab.LoadAsset<Sprite>("trickster_box_0001.png").DontUnload());
         TricksterAnimations.Add(ab.LoadAsset<Sprite>("trickster_box_0002.png").DontUnload());
         TricksterAnimations.Add(ab.LoadAsset<Sprite>("trickster_box_0003.png").DontUnload());
@@ -88,10 +99,36 @@ public static class AssetLoader
         var ab = AssetBundle.LoadFromMemory(resource.ReadFully());
 
         Arrow = ab.LoadAsset<Sprite>("Arrow.png").DontUnload();
-        Endscreen = ab.LoadAsset<Sprite>("Endscreen.png").DontUnload();
-        EndscreenActive = ab.LoadAsset<Sprite>("EndscreenActive.png").DontUnload();
         Garlic = ab.LoadAsset<Sprite>("Garlic.png").DontUnload();
         GarlicBackground = ab.LoadAsset<Sprite>("GarlicBackground.png").DontUnload();
+        Ladder = ab.LoadAsset<Sprite>("Ladder.png").DontUnload();
+        LadderBackground = ab.LoadAsset<Sprite>("LadderBackground.png").DontUnload();
+        AirshipFence = ab.LoadAsset<Sprite>("AirshipFence.png").DontUnload();
+        AirshipDownloadG = ab.LoadAsset<Sprite>("AirshipDownloadG.png").DontUnload();
+        CorpseIcon = ab.LoadAsset<Sprite>("CorpseIcon.png").DontUnload();
+        Cross = ab.LoadAsset<Sprite>("Cross.png").DontUnload();
+        AdminCockpit = ab.LoadAsset<Sprite>("AdminCockpit.png").DontUnload();
+        AdminRecords = ab.LoadAsset<Sprite>("AdminRecords.png").DontUnload();
+        Footprint = ab.LoadAsset<Sprite>("Footprint.png").DontUnload();
+    }
+
+    private static void LoadLocationAssets()
+    {
+        var resource = Assembly.GetExecutingAssembly().GetManifestResourceStream("RebuildUs.Resources.sprites");
+        var ab = AssetBundle.LoadFromMemory(resource.ReadFully());
+
+        ArmoryButton = ab.LoadAsset<Sprite>("ArmoryButton.png").DontUnload();
+        CockpitButton = ab.LoadAsset<Sprite>("CockpitButton.png").DontUnload();
+        CommunicationsButton = ab.LoadAsset<Sprite>("CommunicationsButton.png").DontUnload();
+        ElectricalButton = ab.LoadAsset<Sprite>("ElectricalButton.png").DontUnload();
+        GapButton = ab.LoadAsset<Sprite>("GapButton.png").DontUnload();
+        LoungeButton = ab.LoadAsset<Sprite>("LoungeButton.png").DontUnload();
+        MedicalButton = ab.LoadAsset<Sprite>("MedicalButton.png").DontUnload();
+        MeetingButton = ab.LoadAsset<Sprite>("MeetingButton.png").DontUnload();
+        SecurityButton = ab.LoadAsset<Sprite>("SecurityButton.png").DontUnload();
+        ShowersButton = ab.LoadAsset<Sprite>("ShowersButton.png").DontUnload();
+        VaultButton = ab.LoadAsset<Sprite>("VaultButton.png").DontUnload();
+        ViewingButton = ab.LoadAsset<Sprite>("ViewingButton.png").DontUnload();
     }
 
     public static byte[] ReadFully(this Stream input)

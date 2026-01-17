@@ -7,21 +7,12 @@ public static class Map
     public static Dictionary<byte, SpriteRenderer> mapIcons = null;
     public static Dictionary<byte, SpriteRenderer> corpseIcons = null;
 
-    public static Sprite corpseSprite;
-    public static Sprite doorClosedSprite;
     public static Dictionary<String, SpriteRenderer> doorMarks;
     public static Il2CppArrayBase<PlainDoor> plainDoors;
     private static Vector3 useButtonPos;
 
     public static SpriteRenderer targetHerePoint;
     public static Dictionary<byte, SpriteRenderer> impostorHerePoint;
-
-    public static Sprite getCorpseSprite()
-    {
-        if (corpseSprite) return corpseSprite;
-        corpseSprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.CorpseIcon.png", 115f);
-        return corpseSprite;
-    }
 
     public static void reset()
     {
@@ -96,7 +87,7 @@ public static class Map
             p.SetPlayerMaterialColors(mapIcons[id]);
 
             corpseIcons[id] = UnityEngine.Object.Instantiate(__instance.HerePoint, __instance.HerePoint.transform.parent);
-            corpseIcons[id].sprite = getCorpseSprite();
+            corpseIcons[id].sprite = AssetLoader.CorpseIcon;
             corpseIcons[id].transform.localScale = Vector3.one * 0.20f;
             p.SetPlayerMaterialColors(corpseIcons[id]);
         }
@@ -278,10 +269,6 @@ public static class Map
             return;
         }
 
-        if (doorClosedSprite == null)
-        {
-            doorClosedSprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.cross.png", 500f);
-        }
         // if (plainDoors == null) plainDoors = GameObject.FindObjectsOfType<PlainDoor>();
         if (doorMarks == null) doorMarks = new();
 
@@ -303,7 +290,7 @@ public static class Map
             if (!door.Open)
             {
                 mark.gameObject.SetActive(true);
-                mark.sprite = doorClosedSprite;
+                mark.sprite = AssetLoader.Cross;
                 PlayerMaterial.SetColors(0, mark);
                 mark.transform.localPosition = pos;
                 mark.gameObject.SetActive(true);

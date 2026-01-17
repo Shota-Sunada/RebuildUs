@@ -11,9 +11,6 @@ public static class Airship
         addLadder(Helpers.GetOption(ByteOptionNames.MapId));
     }
 
-    private static Sprite ladderSprite;
-    private static Sprite ladderBgSprite;
-
     private static void optimizeMap(int mapId)
     {
         if (!CustomOptionHolder.AirshipOptions.GetBool()) return;
@@ -43,7 +40,7 @@ public static class Airship
             Collider.points = new Vector2[] { new(1.5f, -0.2f), new(-1.5f, -0.2f), new(-1.5f, 1.5f) };
             Collider.enabled = true;
             renderer = fence.AddComponent<SpriteRenderer>();
-            renderer.sprite = Helpers.LoadSpriteFromResources("TheOtherRoles.Resources.AirshipFance.png", 100f);
+            renderer.sprite = AssetLoader.AirshipFence;
 
             // GameObject pole = new("DownloadPole")
             // {
@@ -53,7 +50,7 @@ public static class Airship
             // pole.transform.localPosition = new Vector3(4.1f, 0.75f, 0.8f);
             // pole.transform.localScale = new Vector3(1f, 1f, 1f);
             // renderer = pole.AddComponent<SpriteRenderer>();
-            // renderer.sprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.AirshipDownloadG.png", 100f);
+            // renderer.sprite = AssetLoader.AirshipDownloadG;
 
             var panel = obj.transform.FindChild("panel_data");
             panel.localPosition = new Vector3(4.52f, -3.95f, 0.1f);
@@ -82,8 +79,7 @@ public static class Airship
                     id++;
                 }
                 newLadder.transform.position = new Vector3(15.442f, 12.18f, 0.1f);
-                if (!ladderSprite) ladderSprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.ladder.png", 100f);
-                newLadder.GetComponentInChildren<SpriteRenderer>().sprite = ladderSprite;
+                newLadder.GetComponentInChildren<SpriteRenderer>().sprite = AssetLoader.Ladder;
 
                 // 梯子の周りの影を消す
                 UnityEngine.Object.Destroy(gapRoom.GetComponentsInChildren<EdgeCollider2D>().FirstOrDefault(x => Math.Abs(x.points[0].x + 6.2984f) < 0.1));
@@ -108,8 +104,7 @@ public static class Airship
                 // 梯子の背景を変更
                 SpriteRenderer side = meetingRoom.GetComponentsInChildren<SpriteRenderer>().FirstOrDefault(x => x.name == "meeting_side");
                 SpriteRenderer bg = UnityEngine.Object.Instantiate(side, side.transform.parent);
-                if (!ladderBgSprite) ladderBgSprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.ladder_bg.png", 100f);
-                bg.sprite = ladderBgSprite;
+                bg.sprite = AssetLoader.LadderBackground;
                 bg.transform.localPosition = new Vector3(9.57f, -3.355f, 4.9f);
             }
             if (CustomOptionHolder.AirshipOneWayLadder.GetBool())

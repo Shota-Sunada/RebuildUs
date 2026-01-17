@@ -10,8 +10,6 @@ public static class Admin
     static TextMeshPro TimeRemaining;
     static bool clearedIcons = false;
     public static bool isEvilHackerAdmin = false;
-    static Sprite adminCockpitSprite;
-    static Sprite adminRecordsSprite;
     static GameObject map;
     static GameObject newMap;
 
@@ -247,8 +245,6 @@ public static class Admin
         // アドミンの画像を差し替える
         if (!CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.EvilHacker) && !EvilHacker.isInherited() && Helpers.GetOption(ByteOptionNames.MapId) == 4 && CustomOptionHolder.AirshipRestrictedAdmin.GetBool() && (room.name is "Cockpit" or "Records"))
         {
-            if (room.name == "Cockpit" && !adminCockpitSprite) adminCockpitSprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.admin_cockpit.png", 100f);
-            if (room.name == "Records" && !adminRecordsSprite) adminRecordsSprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.admin_records.png", 100f);
             if (!map)
             {
                 map = DestroyableSingleton<MapBehaviour>.Instance.gameObject.GetComponentsInChildren<SpriteRenderer>().FirstOrDefault(x => x.name == "Background").gameObject;
@@ -258,12 +254,12 @@ public static class Admin
             SpriteRenderer renderer = newMap.GetComponent<SpriteRenderer>();
             if (room.name == "Cockpit")
             {
-                renderer.sprite = adminCockpitSprite;
+                renderer.sprite = AssetLoader.AdminCockpit;
                 newMap.transform.position = new Vector3(map.transform.position.x + 0.5f, map.transform.position.y, map.transform.position.z - 0.1f);
             }
             if (room.name == "Records")
             {
-                renderer.sprite = adminRecordsSprite;
+                renderer.sprite = AssetLoader.AdminRecords;
                 newMap.transform.position = new Vector3(map.transform.position.x - 0.38f, map.transform.position.y, map.transform.position.z - 0.1f);
             }
             newMap.SetActive(true);
