@@ -186,10 +186,11 @@ public static class GameStart
 
         if (AmongUsClient.Instance.AmHost && SendGamemode && PlayerControl.LocalPlayer != null)
         {
-            MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.ShareGamemode, SendOption.Reliable, -1);
-            writer.Write((byte)ModMapOptions.GameMode);
-            AmongUsClient.Instance.FinishRpcImmediately(writer);
-            RPCProcedure.ShareGamemode((byte)ModMapOptions.GameMode);
+            {
+                using var sender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.ShareGamemode);
+                sender.Write((byte)ModMapOptions.GameMode);
+                RPCProcedure.ShareGamemode((byte)ModMapOptions.GameMode);
+            }
             SendGamemode = false;
         }
     }
@@ -278,10 +279,11 @@ public static class GameStart
                     }
                 }
 
-                MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.DynamicMapOption, Hazel.SendOption.Reliable, -1);
-                writer.Write(chosenMapId);
-                AmongUsClient.Instance.FinishRpcImmediately(writer);
-                RPCProcedure.DynamicMapOption(chosenMapId);
+                {
+                    using var sender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.DynamicMapOption);
+                    sender.Write(chosenMapId);
+                    RPCProcedure.DynamicMapOption(chosenMapId);
+                }
             }
         }
         return continueStart;

@@ -91,8 +91,7 @@ public class TimeMaster : RoleBase<TimeMaster>
         (
             () =>
             {
-                MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.TimeMasterShield, Hazel.SendOption.Reliable, -1);
-                AmongUsClient.Instance.FinishRpcImmediately(writer);
+                using var sender = new RPCSender(CachedPlayer.LocalPlayer.PlayerControl.NetId, CustomRPC.TimeMasterShield);
                 RPCProcedure.timeMasterShield();
             },
             () => { return CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.TimeMaster) && CachedPlayer.LocalPlayer.PlayerControl.IsAlive(); },

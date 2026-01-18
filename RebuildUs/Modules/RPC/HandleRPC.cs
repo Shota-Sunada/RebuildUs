@@ -164,6 +164,18 @@ public static partial class RPCProcedure
             case CustomRPC.SetFutureErased:
                 setFutureErased(reader.ReadByte());
                 break;
+            case CustomRPC.VampireSetBitten:
+                vampireSetBitten(reader.ReadByte(), reader.ReadByte());
+                break;
+            case CustomRPC.ShareRealTasks:
+                shareRealTasks(reader);
+                break;
+            case CustomRPC.PolusRandomSpawn:
+                PolusRandomSpawn(reader.ReadByte(), reader.ReadByte());
+                break;
+            case CustomRPC.Synchronize:
+                synchronize(reader.ReadByte(), reader.ReadInt32());
+                break;
             default:
                 break;
         }

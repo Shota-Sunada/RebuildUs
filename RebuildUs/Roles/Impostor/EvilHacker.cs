@@ -82,9 +82,8 @@ public class EvilHacker : RoleBase<EvilHacker>
         evilHackerCreatesMadmateButton = new CustomButton(
             () =>
             {
-                MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.EvilHackerCreatesMadmate, Hazel.SendOption.Reliable, -1);
-                writer.Write(currentTarget.PlayerId);
-                AmongUsClient.Instance.FinishRpcImmediately(writer);
+                using var sender = new RPCSender(CachedPlayer.LocalPlayer.PlayerControl.NetId, CustomRPC.EvilHackerCreatesMadmate);
+                sender.Write(currentTarget.PlayerId);
                 RPCProcedure.evilHackerCreatesMadmate(currentTarget.PlayerId, Player.PlayerId);
             },
             () =>

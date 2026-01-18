@@ -51,4 +51,8 @@ public enum CustomRPC : byte
     UseVitalsTime,
     TrackerUsedTracker,
     SetFutureErased,
+    VampireSetBitten,
+    ShareRealTasks,
+    PolusRandomSpawn,
+    Synchronize,
 }

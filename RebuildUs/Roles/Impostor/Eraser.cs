@@ -67,9 +67,8 @@ public class Eraser : RoleBase<Eraser>
                     eraserButton.MaxTimer += cooldownIncrease;
                     eraserButton.Timer = eraserButton.MaxTimer;
 
-                    MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.SetFutureErased, Hazel.SendOption.Reliable, -1);
-                    writer.Write(currentTarget.PlayerId);
-                    AmongUsClient.Instance.FinishRpcImmediately(writer);
+                    using var sender = new RPCSender(CachedPlayer.LocalPlayer.PlayerControl.NetId, CustomRPC.SetFutureErased);
+                    sender.Write(currentTarget.PlayerId);
                     RPCProcedure.setFutureErased(currentTarget.PlayerId);
                 },
                 () => { return CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Eraser) && CachedPlayer.LocalPlayer.PlayerControl.IsAlive(); },

@@ -585,4 +585,76 @@ public static partial class RPCProcedure
             Eraser.futureErased.Add(player);
         }
     }
+
+    public static void vampireSetBitten(byte targetId, byte performReset)
+    {
+        if (performReset != 0)
+        {
+            Vampire.bitten = null;
+            return;
+        }
+
+        if (Vampire.vampire == null) return;
+        foreach (PlayerControl player in CachedPlayer.AllPlayers)
+        {
+            if (player.PlayerId == targetId && !player.Data.IsDead)
+            {
+                Vampire.bitten = player;
+            }
+        }
+    }
+
+    public static void shareRealTasks(MessageReader reader)
+    {
+        var count = reader.ReadByte();
+        for (int i = 0; i < count; i++)
+        {
+            var playerId = reader.ReadByte();
+            var taskTmp = reader.ReadBytes(4);
+            var x = System.BitConverter.ToSingle(taskTmp, 0);
+            taskTmp = reader.ReadBytes(4);
+            var y = System.BitConverter.ToSingle(taskTmp, 0);
+            var pos = new Vector2(x, y);
+            if (!Map.realTasks.ContainsKey(playerId)) Map.realTasks[playerId] = new Il2CppSystem.Collections.Generic.List<Vector2>();
+            Map.realTasks[playerId].Add(pos);
+        }
+    }
+    public static void PolusRandomSpawn(byte playerId, byte locId)
+    {
+        FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(3f, new Action<float>((p) =>
+        {
+            // Delayed action
+            if (p == 1f)
+            {
+                Vector2 InitialSpawnCenter = new(16.64f, -2.46f);
+                Vector2 MeetingSpawnCenter = new(17.4f, -16.286f);
+                Vector2 ElectricalSpawn = new(5.53f, -9.84f);
+                Vector2 O2Spawn = new(3.28f, -21.67f);
+                Vector2 SpecimenSpawn = new(36.54f, -20.84f);
+                Vector2 LaboratorySpawn = new(34.91f, -6.50f);
+                var loc = locId switch
+                {
+                    0 => InitialSpawnCenter,
+                    1 => MeetingSpawnCenter,
+                    2 => ElectricalSpawn,
+                    3 => O2Spawn,
+                    4 => SpecimenSpawn,
+                    5 => LaboratorySpawn,
+                    _ => InitialSpawnCenter,
+                };
+                foreach (var player in CachedPlayer.AllPlayers)
+                {
+                    if (player.Data.PlayerId == playerId)
+                    {
+                        player.PlayerControl.transform.position = loc;
+                        break;
+                    }
+                }
+            }
+        })));
+    }
+    public static void synchronize(byte playerId, int tag)
+    {
+        SpawnIn.synchronizeData.Synchronize((SynchronizeTag)tag, playerId);
+    }
 }

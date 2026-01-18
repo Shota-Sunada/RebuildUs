@@ -131,10 +131,11 @@ public static class Mafia
                                 {
                                     var playerInfo = GameData.Instance.GetPlayerById(component.ParentId);
 
-                                    MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.CleanBody, Hazel.SendOption.Reliable, -1);
-                                    writer.Write(playerInfo.PlayerId);
-                                    AmongUsClient.Instance.FinishRpcImmediately(writer);
-                                    RPCProcedure.CleanBody(playerInfo.PlayerId);
+                                    {
+                                        using var sender = new RPCSender(CachedPlayer.LocalPlayer.PlayerControl.NetId, CustomRPC.CleanBody);
+                                        sender.Write(playerInfo.PlayerId);
+                                        RPCProcedure.CleanBody(playerInfo.PlayerId);
+                                    }
                                     janitorCleanButton.Timer = janitorCleanButton.MaxTimer;
 
                                     break;

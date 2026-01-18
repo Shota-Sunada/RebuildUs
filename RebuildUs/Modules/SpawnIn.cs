@@ -143,10 +143,9 @@ public static class SpawnIn
 
     public static void Synchronize(SynchronizeTag tag, byte playerId)
     {
-        MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.Synchronize, Hazel.SendOption.Reliable, -1);
-        writer.Write(playerId);
-        writer.Write((int)tag);
-        AmongUsClient.Instance.FinishRpcImmediately(writer);
+        using var sender = new RPCSender(CachedPlayer.LocalPlayer.PlayerControl.NetId, CustomRPC.Synchronize);
+        sender.Write(playerId);
+        sender.Write((int)tag);
         RPCProcedure.synchronize(playerId, (int)tag);
     }
 

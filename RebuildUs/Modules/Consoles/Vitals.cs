@@ -23,9 +23,8 @@ public static class Vitals
         // Don't waste network traffic if we're out of time.
         if (ModMapOptions.restrictDevices > 0 && ModMapOptions.restrictVitals && ModMapOptions.restrictVitalsTime > 0f && CachedPlayer.LocalPlayer.PlayerControl.IsAlive())
         {
-            MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.UseVitalsTime, Hazel.SendOption.Reliable, -1);
-            writer.Write(vitalsTimer);
-            AmongUsClient.Instance.FinishRpcImmediately(writer);
+            using var sender = new RPCSender(CachedPlayer.LocalPlayer.PlayerControl.NetId, CustomRPC.UseVitalsTime);
+            sender.Write(vitalsTimer);
             RPCProcedure.UseVitalsTime(vitalsTimer);
         }
         vitalsTimer = 0f;

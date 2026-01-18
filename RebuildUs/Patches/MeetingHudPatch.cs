@@ -79,11 +79,10 @@ public static class MeetingHudPatch
                 {
                     System.Random rand = new();
                     int randVal = rand.Next(0, 6);
-                    MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.RandomSpawn, Hazel.SendOption.Reliable, -1);
-                    writer.Write((byte)player.Data.PlayerId);
-                    writer.Write((byte)randVal);
-                    AmongUsClient.Instance.FinishRpcImmediately(writer);
-                    RPCProcedure.RandomSpawn((byte)player.Data.PlayerId, (byte)randVal);
+                    using var sender = new RPCSender(CachedPlayer.LocalPlayer.PlayerControl.NetId, CustomRPC.PolusRandomSpawn);
+                    sender.Write(player.Data.PlayerId);
+                    sender.Write((byte)randVal);
+                    RPCProcedure.PolusRandomSpawn(player.Data.PlayerId, (byte)randVal);
                 }
             }
         }

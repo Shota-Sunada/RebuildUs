@@ -111,12 +111,13 @@ public static class VentPatch
         if (__instance.name.StartsWith("JackInTheBoxVent_"))
         {
             __instance.SetButtons(isEnter && canMoveInVents);
-            MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.UseUncheckedVent, Hazel.SendOption.Reliable);
-            writer.WritePacked(__instance.Id);
-            writer.Write(CachedPlayer.LocalPlayer.PlayerControl.PlayerId);
-            writer.Write(isEnter ? byte.MaxValue : (byte)0);
-            writer.EndMessage();
-            RPCProcedure.UseUncheckedVent(__instance.Id, CachedPlayer.LocalPlayer.PlayerControl.PlayerId, isEnter ? byte.MaxValue : (byte)0);
+            {
+                using var sender = new RPCSender(CachedPlayer.LocalPlayer.PlayerControl.NetId, CustomRPC.UseUncheckedVent);
+                sender.WritePacked(__instance.Id);
+                sender.Write(CachedPlayer.LocalPlayer.PlayerControl.PlayerId);
+                sender.Write(isEnter ? byte.MaxValue : (byte)0);
+                RPCProcedure.UseUncheckedVent(__instance.Id, CachedPlayer.LocalPlayer.PlayerControl.PlayerId, isEnter ? byte.MaxValue : (byte)0);
+            }
             return false;
         }
 

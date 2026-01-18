@@ -15,9 +15,8 @@ public static class Exile
         if (Medic.Exists && AmongUsClient.Instance.AmHost && Medic.futureShielded != null && !Medic.medic.Data.IsDead)
         {
             // We need to send the RPC from the host here, to make sure that the order of shifting and setting the shield is correct(for that reason the futureShifted and futureShielded are being synced)
-            MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.MedicSetShielded, Hazel.SendOption.Reliable, -1);
-            writer.Write(Medic.futureShielded.PlayerId);
-            AmongUsClient.Instance.FinishRpcImmediately(writer);
+            using var sender = new RPCSender(CachedPlayer.LocalPlayer.PlayerControl.NetId, CustomRPC.MedicSetShielded);
+            sender.Write(Medic.futureShielded.PlayerId);
             RPCProcedure.medicSetShielded(Medic.futureShielded.PlayerId);
         }
 
@@ -33,7 +32,7 @@ public static class Exile
         //     if (target != null)
         //     {
         //         // exile the picked crewmate
-        //         MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
+        //         writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
         //             (byte)CustomRPC.UncheckedExilePlayer,
         //             Hazel.SendOption.Reliable,
         //             -1);
@@ -46,7 +45,7 @@ public static class Exile
         // Shifter shift
         // if (Shifter.shifter != null && AmongUsClient.Instance.AmHost && Shifter.futureShift != null)
         // { // We need to send the RPC from the host here, to make sure that the order of shifting and erasing is correct (for that reason the futureShifted and futureErased are being synced)
-        //     MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.ShifterShift, Hazel.SendOption.Reliable, -1);
+        //     writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.ShifterShift, Hazel.SendOption.Reliable, -1);
         //     writer.Write(Shifter.futureShift.PlayerId);
         //     AmongUsClient.Instance.FinishRpcImmediately(writer);
         //     RPCProcedure.shifterShift(Shifter.futureShift.PlayerId);
@@ -60,9 +59,8 @@ public static class Exile
             {
                 if (target != null && target.CanBeErased())
                 {
-                    MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.ErasePlayerRoles, Hazel.SendOption.Reliable, -1);
-                    writer.Write(target.PlayerId);
-                    AmongUsClient.Instance.FinishRpcImmediately(writer);
+                    using var sender = new RPCSender(CachedPlayer.LocalPlayer.PlayerControl.NetId, CustomRPC.ErasePlayerRoles);
+                    sender.Write(target.PlayerId);
                     RPCProcedure.ErasePlayerRoles(target.PlayerId);
                 }
             }
@@ -86,7 +84,7 @@ public static class Exile
         //     {
         //         if (target != null && !target.Data.IsDead && Helpers.checkMuderAttempt(Witch.witch, target, true) == MurderAttemptResult.PerformKill)
         //         {
-        //             MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.WitchSpellCast, Hazel.SendOption.Reliable, -1);
+        //             writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.WitchSpellCast, Hazel.SendOption.Reliable, -1);
         //             writer.Write(target.PlayerId);
         //             AmongUsClient.Instance.FinishRpcImmediately(writer);
         //             RPCProcedure.witchSpellCast(target.PlayerId);

@@ -53,16 +53,19 @@ public class Medic : RoleBase<Medic>
             () =>
             {
                 medicShieldButton.Timer = 0f;
-                MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, Medic.setShieldAfterMeeting ? (byte)CustomRPC.SetFutureShielded : (byte)CustomRPC.MedicSetShielded, Hazel.SendOption.Reliable, -1);
-                writer.Write(Local.currentTarget.PlayerId);
-                AmongUsClient.Instance.FinishRpcImmediately(writer);
-                if (Medic.setShieldAfterMeeting)
                 {
-                    RPCProcedure.setFutureShielded(Local.currentTarget.PlayerId);
-                }
-                else
-                {
-                    RPCProcedure.medicSetShielded(Local.currentTarget.PlayerId);
+                    if (setShieldAfterMeeting)
+                    {
+                        using var sender = new RPCSender(CachedPlayer.LocalPlayer.PlayerControl.NetId, CustomRPC.SetFutureShielded);
+                        sender.Write(Local.currentTarget.PlayerId);
+                        RPCProcedure.setFutureShielded(Local.currentTarget.PlayerId);
+                    }
+                    else
+                    {
+                        using var sender = new RPCSender(CachedPlayer.LocalPlayer.PlayerControl.NetId, CustomRPC.MedicSetShielded);
+                        sender.Write(Local.currentTarget.PlayerId);
+                        RPCProcedure.medicSetShielded(Local.currentTarget.PlayerId);
+                    }
                 }
             },
             () => { return CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Medic) && CachedPlayer.LocalPlayer.PlayerControl.IsAlive(); },

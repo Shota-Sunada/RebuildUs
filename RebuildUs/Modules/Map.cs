@@ -477,7 +477,7 @@ public static class Map
     }
     public static void shareRealTasks()
     {
-        MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.ShareRealTasks, Hazel.SendOption.Reliable, -1);
+        using var sender = new RPCSender(CachedPlayer.LocalPlayer.PlayerControl.NetId, CustomRPC.ShareRealTasks);
         int count = 0;
         foreach (var task in CachedPlayer.LocalPlayer.PlayerControl.myTasks)
         {
@@ -489,20 +489,19 @@ public static class Map
                 }
             }
         }
-        writer.Write((byte)count);
+        sender.Write((byte)count);
         foreach (var task in CachedPlayer.LocalPlayer.PlayerControl.myTasks)
         {
             if (!task.IsComplete && task.HasLocation && !PlayerTask.TaskIsEmergency(task))
             {
                 foreach (var loc in task.Locations)
                 {
-                    writer.Write(CachedPlayer.LocalPlayer.PlayerControl.PlayerId);
-                    writer.Write(loc.x);
-                    writer.Write(loc.y);
+                    sender.Write(CachedPlayer.LocalPlayer.PlayerControl.PlayerId);
+                    sender.Write(loc.x);
+                    sender.Write(loc.y);
                 }
             }
         }
-        AmongUsClient.Instance.FinishRpcImmediately(writer);
     }
 
     public static bool ShowOverlay(MapTaskOverlay __instance)

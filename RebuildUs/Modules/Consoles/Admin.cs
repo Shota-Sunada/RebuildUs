@@ -60,9 +60,8 @@ public static class Admin
         {
             if (ModMapOptions.restrictDevices > 0 && ModMapOptions.restrictAdmin && ModMapOptions.restrictAdminTime > 0f && CachedPlayer.LocalPlayer.PlayerControl.IsAlive())
             {
-                MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.UseAdminTime, Hazel.SendOption.Reliable, -1);
-                writer.Write(adminTimer);
-                AmongUsClient.Instance.FinishRpcImmediately(writer);
+                using var sender = new RPCSender(CachedPlayer.LocalPlayer.PlayerControl.NetId, CustomRPC.UseAdminTime);
+                sender.Write(adminTimer);
                 RPCProcedure.UseAdminTime(adminTimer);
             }
         }

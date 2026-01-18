@@ -344,7 +344,7 @@ public static class Meeting
         // }
         // if (firstPlayer != null && secondPlayer != null)
         // {
-        //     MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.SwapperSwap, Hazel.SendOption.Reliable, -1);
+        //     writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.SwapperSwap, Hazel.SendOption.Reliable, -1);
         //     writer.Write(firstPlayer.TargetPlayerId);
         //     writer.Write(secondPlayer.TargetPlayerId);
         //     AmongUsClient.Instance.FinishRpcImmediately(writer);
@@ -495,9 +495,10 @@ public static class Meeting
                             __instance.playerStates.ToList().ForEach(x => x.gameObject.SetActive(true));
                             UnityEngine.Object.Destroy(container.gameObject);
 
-                            MessageWriter murderAttemptWriter = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.ShieldedMurderAttempt, Hazel.SendOption.Reliable, -1);
-                            AmongUsClient.Instance.FinishRpcImmediately(murderAttemptWriter);
-                            RPCProcedure.shieldedMurderAttempt();
+                            {
+                                using var sender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.ShieldedMurderAttempt);
+                                RPCProcedure.shieldedMurderAttempt();
+                            }
                             return;
                         }
                     }
@@ -532,13 +533,14 @@ public static class Meeting
                     }
 
                     // Shoot player and send chat info if activated
-                    MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.GuesserShoot, Hazel.SendOption.Reliable, -1);
-                    writer.Write(PlayerControl.LocalPlayer.PlayerId);
-                    writer.Write(dyingTarget.PlayerId);
-                    writer.Write(focusedTarget.PlayerId);
-                    writer.Write((byte)roleInfo.RoleType);
-                    AmongUsClient.Instance.FinishRpcImmediately(writer);
-                    RPCProcedure.guesserShoot(PlayerControl.LocalPlayer.PlayerId, dyingTarget.PlayerId, focusedTarget.PlayerId, (byte)roleInfo.RoleType);
+                    {
+                        using var sender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.GuesserShoot);
+                        sender.Write(PlayerControl.LocalPlayer.PlayerId);
+                        sender.Write(dyingTarget.PlayerId);
+                        sender.Write(focusedTarget.PlayerId);
+                        sender.Write((byte)roleInfo.RoleType);
+                        RPCProcedure.guesserShoot(PlayerControl.LocalPlayer.PlayerId, dyingTarget.PlayerId, focusedTarget.PlayerId, (byte)roleInfo.RoleType);
+                    }
                 }
             }));
 
@@ -790,13 +792,6 @@ public static class Meeting
             if (roomTracker != null && roomTracker.LastRoom != null)
             {
                 roomId = (byte)roomTracker.LastRoom?.RoomId;
-            }
-            if (Snitch.snitch != null && roomTracker != null)
-            {
-                MessageWriter roomWriter = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.ShareRoom, Hazel.SendOption.Reliable, -1);
-                roomWriter.Write(PlayerControl.LocalPlayer.PlayerId);
-                roomWriter.Write(roomId);
-                AmongUsClient.Instance.FinishRpcImmediately(roomWriter);
             }
 
             // Resett Bait list

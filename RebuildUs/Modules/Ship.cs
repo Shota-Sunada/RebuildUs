@@ -108,9 +108,10 @@ public static class Ship
         Helpers.SetOption(Int32OptionNames.NumLongTasks, originalNumLongTasksOption);
 
         // 一部役職のタスクを再割り当てする
-        MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.FinishShipStatusBegin, Hazel.SendOption.Reliable, -1);
-        AmongUsClient.Instance.FinishRpcImmediately(writer);
-        RPCProcedure.FinishShipStatusBegin();
+        {
+            using var sender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.FinishShipStatusBegin);
+            RPCProcedure.FinishShipStatusBegin();
+        }
     }
 
     [HarmonyPatch(typeof(ShipStatus), nameof(ShipStatus.Start))]
@@ -132,12 +133,11 @@ public static class Ship
             if (AmongUsClient.Instance.AmHost)
             {
                 System.Random rand = new();
-                int randVal = rand.Next(0, 6);
-                MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.RandomSpawn, Hazel.SendOption.Reliable, -1);
-                writer.Write((byte)player.Data.PlayerId);
-                writer.Write((byte)randVal);
-                AmongUsClient.Instance.FinishRpcImmediately(writer);
-                RPCProcedure.randomSpawn((byte)player.Data.PlayerId, (byte)randVal);
+                byte randVal = (byte)rand.Next(0, 6);
+                using var sender = new RPCSender(CachedPlayer.LocalPlayer.PlayerControl.NetId, CustomRPC.PolusRandomSpawn);
+                sender.Write(player.Data.PlayerId);
+                sender.Write(randVal);
+                RPCProcedure.PolusRandomSpawn((byte)player.Data.PlayerId, (byte)randVal);
             }
         }
 

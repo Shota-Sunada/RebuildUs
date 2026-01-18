@@ -22,7 +22,7 @@
 //             {
 //                 if (target.AmDead)
 //                 {
-//                     MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.GMRevive, Hazel.SendOption.Reliable, -1);
+//                     writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.GMRevive, Hazel.SendOption.Reliable, -1);
 //                     writer.Write((byte)target.TargetPlayerId);
 //                     AmongUsClient.Instance.FinishRpcImmediately(writer);
 //                     RPCProcedure.GMRevive(target.TargetPlayerId);
@@ -32,7 +32,7 @@
 //                 }
 //                 else
 //                 {
-//                     MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.GMKill, Hazel.SendOption.Reliable, -1);
+//                     writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.GMKill, Hazel.SendOption.Reliable, -1);
 //                     writer.Write((byte)target.TargetPlayerId);
 //                     AmongUsClient.Instance.FinishRpcImmediately(writer);
 //                     RPCProcedure.GMKill(target.TargetPlayerId);
@@ -89,7 +89,7 @@
 
 //                     if (firstPlayer != null && secondPlayer != null)
 //                     {
-//                         MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.SwapperSwap, Hazel.SendOption.Reliable, -1);
+//                         writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.SwapperSwap, Hazel.SendOption.Reliable, -1);
 //                         writer.Write((byte)firstPlayer.TargetPlayerId);
 //                         writer.Write((byte)secondPlayer.TargetPlayerId);
 //                         AmongUsClient.Instance.FinishRpcImmediately(writer);

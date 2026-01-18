@@ -48,12 +48,12 @@ public static class Helpers
         if (player == null) return;
 
         var taskTypeIds = GenerateTasks(numCommon, numShort, numLong);
-
-        MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.UncheckedSetTasks, Hazel.SendOption.Reliable, -1);
-        writer.Write(player.PlayerId);
-        writer.WriteBytesAndSize(taskTypeIds.ToArray());
-        AmongUsClient.Instance.FinishRpcImmediately(writer);
-        RPCProcedure.UncheckedSetTasks(player.PlayerId, [.. taskTypeIds]);
+        {
+            using var sender = new RPCSender(CachedPlayer.LocalPlayer.PlayerControl.NetId, CustomRPC.UncheckedSetTasks);
+            sender.Write(player.PlayerId);
+            sender.WriteBytesAndSize(taskTypeIds.ToArray());
+            RPCProcedure.UncheckedSetTasks(player.PlayerId, [.. taskTypeIds]);
+        }
     }
 
     public static void setSkinWithAnim(PlayerPhysics playerPhysics, string SkinId)
@@ -133,11 +133,12 @@ public static class Helpers
     {
         // Murder the bitten player and reset bitten (regardless whether the kill was successful or not)
         Helpers.CheckMurderAttemptAndKill(Vampire.vampire, Vampire.bitten, true, false);
-        MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.VampireSetBitten, Hazel.SendOption.Reliable, -1);
-        writer.Write(byte.MaxValue);
-        writer.Write(byte.MaxValue);
-        AmongUsClient.Instance.FinishRpcImmediately(writer);
-        RPCProcedure.vampireSetBitten(byte.MaxValue, byte.MaxValue);
+        {
+            using var sender = new RPCSender(CachedPlayer.LocalPlayer.PlayerControl.NetId, CustomRPC.VampireSetBitten);
+            sender.Write(byte.MaxValue);
+            sender.Write(byte.MaxValue);
+            RPCProcedure.vampireSetBitten(byte.MaxValue, byte.MaxValue);
+        }
     }
 
     public static void refreshRoleDescription(PlayerControl player)
@@ -317,9 +318,10 @@ public static class Helpers
         {
             if (!ignoreMedic && Medic.shielded != null && Medic.shielded == target)
             {
-                MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(killer.NetId, (byte)CustomRPC.ShieldedMurderAttempt, Hazel.SendOption.Reliable, -1);
-                AmongUsClient.Instance.FinishRpcImmediately(writer);
-                RPCProcedure.shieldedMurderAttempt();
+                {
+                    using var sender = new RPCSender(killer.NetId, CustomRPC.ShieldedMurderAttempt);
+                    RPCProcedure.shieldedMurderAttempt();
+                }
                 return MurderAttemptResult.SuppressKill;
             }
         }
@@ -338,8 +340,7 @@ public static class Helpers
                 if (!blockRewind)
                 {
                     // Only rewind the attempt was not called because a meeting started
-                    MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(killer.NetId, (byte)CustomRPC.TimeMasterRewindTime, Hazel.SendOption.Reliable, -1);
-                    AmongUsClient.Instance.FinishRpcImmediately(writer);
+                    using var sender = new RPCSender(killer.NetId, CustomRPC.TimeMasterRewindTime);
                     RPCProcedure.timeMasterRewindTime();
                 }
                 return MurderAttemptResult.SuppressKill;
@@ -383,7 +384,7 @@ public static class Helpers
         //     {
         //         if (!TransportationToolPatches.isUsingTransportation(target) && Vampire.bitten != null)
         //         {
-        //             MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.VampireSetBitten, Hazel.SendOption.Reliable, -1);
+        //             writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.VampireSetBitten, Hazel.SendOption.Reliable, -1);
         //             writer.Write(byte.MaxValue);
         //             writer.Write(byte.MaxValue);
         //             AmongUsClient.Instance.FinishRpcImmediately(writer);

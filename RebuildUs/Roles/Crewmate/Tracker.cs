@@ -116,9 +116,8 @@ public class Tracker : RoleBase<Tracker>
         trackerTrackPlayerButton = new CustomButton(
                () =>
                {
-                   MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.TrackerUsedTracker, SendOption.Reliable, -1);
-                   writer.Write(currentTarget.PlayerId);
-                   AmongUsClient.Instance.FinishRpcImmediately(writer);
+                   using var sender = new RPCSender(CachedPlayer.LocalPlayer.PlayerControl.NetId, CustomRPC.TrackerUsedTracker);
+                   sender.Write(currentTarget.PlayerId);
                    RPCProcedure.trackerUsedTracker(currentTarget.PlayerId, Player.PlayerId);
                },
                () => { return CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Tracker) && CachedPlayer.LocalPlayer.PlayerControl.IsAlive(); },
