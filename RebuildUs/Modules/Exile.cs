@@ -40,9 +40,10 @@ public static class Exile
         if (Shifter.Exists && AmongUsClient.Instance.AmHost && Shifter.futureShift != null)
         {
             // We need to send the RPC from the host here, to make sure that the order of shifting and erasing is correct (for that reason the futureShifted and futureErased are being synced)
-            writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.ShifterShift, Hazel.SendOption.Reliable, -1);
-            writer.Write(Shifter.futureShift.PlayerId);
-            AmongUsClient.Instance.FinishRpcImmediately(writer);
+            using (var sender = new RPCSender(CachedPlayer.LocalPlayer.PlayerControl.NetId, CustomRPC.ShifterShift))
+            {
+                sender.Write(Shifter.futureShift.PlayerId);
+            }
             RPCProcedure.shifterShift(Shifter.futureShift.PlayerId);
         }
         Shifter.futureShift = null;

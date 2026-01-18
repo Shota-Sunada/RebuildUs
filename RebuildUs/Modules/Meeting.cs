@@ -449,7 +449,6 @@ public static class Meeting
                     : RoleType.NiceGuesser;
 
             if (roleInfo == null ||
-                roleInfo.isModifier ||
                 roleInfo.RoleType == guesserRole ||
                 (Guesser.onlyAvailableRoles && !roleInfo.Enabled) ||
                 (!Guesser.evilCanKillSpy && guesserRole == RoleType.EvilGuesser && roleInfo.RoleType == RoleType.Spy))
@@ -841,7 +840,7 @@ public static class Meeting
 
     private static float delay { get { return CustomOptionHolder.DelayBeforeMeeting.GetFloat(); } }
 
-    private static IEnumerable CoStartMeeting(PlayerControl reporter, NetworkedPlayerInfo target)
+    private static IEnumerator CoStartMeeting(PlayerControl reporter, NetworkedPlayerInfo target)
     {
         // 既存処理の移植
         {
