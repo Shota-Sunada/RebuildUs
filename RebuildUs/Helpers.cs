@@ -87,8 +87,13 @@ public static class Helpers
 
     public static bool HasFakeTasks(this PlayerControl player)
     {
-        // return (player == Jester.jester || player == Jackal.jackal || player == Sidekick.sidekick || player == Arsonist.arsonist || player == Vulture.vulture || Jackal.formerJackals.Any(x => x == player));
-        return false;
+        return player.IsRole(RoleType.Jester)
+            || player.IsRole(RoleType.Jackal)
+            || player.IsRole(RoleType.Sidekick)
+            || player.IsRole(RoleType.Arsonist)
+            || player.IsRole(RoleType.Vulture)
+            || Jackal.FormerJackals.Any(x => x == player)
+        ;
     }
 
     public static PlayerControl PlayerById(byte id)
@@ -112,10 +117,11 @@ public static class Helpers
         }
         return res;
     }
+
     public static void handleVampireBiteOnBodyReport()
     {
         // Murder the bitten player and reset bitten (regardless whether the kill was successful or not)
-        Helpers.CheckMurderAttemptAndKill(Vampire.vampire, Vampire.bitten, true, false);
+        CheckMurderAttemptAndKill(Vampire.AllPlayers.FirstOrDefault(), Vampire.bitten, true, false);
         {
             using var sender = new RPCSender(CachedPlayer.LocalPlayer.PlayerControl.NetId, CustomRPC.VampireSetBitten);
             sender.Write(byte.MaxValue);
@@ -254,8 +260,7 @@ public static class Helpers
     {
         foreach (var player in PlayerControl.AllPlayerControls.GetFastEnumerator())
         {
-            if (player.IsTeamCrewmate() && player.IsAlive()) return true;
-            // if (p.IsTeamCrewmate() && !p.hasModifier(ModifierType.Madmate) && p.isAlive()) return true;
+            if (player.IsTeamCrewmate() && !player.HasModifier(ModifierType.Madmate) && player.IsAlive()) return true;
         }
         return false;
     }
@@ -297,9 +302,6 @@ public static class Helpers
         if (target == null || target.Data == null || target.Data.IsDead || target.Data.Disconnected) return MurderAttemptResult.SuppressKill; // Allow killing players in vents compared to vanilla code
         if (IsHideNSeekMode) return MurderAttemptResult.PerformKill;
 
-        // Handle first kill attempt
-        if (ModMapOptions.ShieldFirstKill && ModMapOptions.FirstKillPlayer == target) return MurderAttemptResult.SuppressKill;
-
         // Block impostor shielded kill
         if (Medic.Exists)
         {
@@ -314,10 +316,10 @@ public static class Helpers
         }
 
         // Block impostor not fully grown mini kill
-        // else if (Mini.mini != null && target == Mini.mini && !Mini.isGrownUp())
-        // {
-        //     return MurderAttemptResult.SuppressKill;
-        // }
+        else if (Mini.Exists && target.HasModifier(ModifierType.Mini) && !Mini.isGrownUp(target))
+        {
+            return MurderAttemptResult.SuppressKill;
+        }
 
         // Block Time Master with time shield kill
         else if (TimeMaster.Exists)
@@ -365,21 +367,20 @@ public static class Helpers
         {
             MurderPlayer(killer, target, showAnimation);
         }
-        // else if (murder == MurderAttemptResult.DelayVampireKill)
-        // {
-        //     HudManager.Instance.StartCoroutine(Effects.Lerp(10f, new Action<float>((p) =>
-        //     {
-        //         if (!TransportationToolPatches.isUsingTransportation(target) && Vampire.bitten != null)
-        //         {
-        //             writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.VampireSetBitten, Hazel.SendOption.Reliable, -1);
-        //             writer.Write(byte.MaxValue);
-        //             writer.Write(byte.MaxValue);
-        //             AmongUsClient.Instance.FinishRpcImmediately(writer);
-        //             RPCProcedure.vampireSetBitten(byte.MaxValue, byte.MaxValue);
-        //             MurderPlayer(killer, target, showAnimation);
-        //         }
-        //     })));
-        // }
+        else if (murder == MurderAttemptResult.DelayVampireKill)
+        {
+            HudManager.Instance.StartCoroutine(Effects.Lerp(10f, new Action<float>((p) =>
+            {
+                if (!TransportationToolPatches.isUsingTransportation(target) && Vampire.bitten != null)
+                {
+                    using var sender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.VampireSetBitten);
+                    sender.Write(byte.MaxValue);
+                    sender.Write(byte.MaxValue);
+                    RPCProcedure.vampireSetBitten(byte.MaxValue, byte.MaxValue);
+                    MurderPlayer(killer, target, showAnimation);
+                }
+            })));
+        }
         return murder;
     }
 
@@ -421,15 +422,6 @@ public static class Helpers
         // if (GM.gm != null)
         // {
         //     untargetablePlayers.Add(GM.gm);
-        // }
-
-        // Can't target stealthed ninjas if setting on
-        // if (!Ninja.canBeTargeted)
-        // {
-        //     foreach (Ninja n in Ninja.players)
-        //     {
-        //         if (n.stealthed) untargetablePlayers.Add(n.player);
-        //     }
         // }
 
         var truePosition = targetingPlayer.GetTruePosition();
@@ -684,8 +676,7 @@ public static class Helpers
         if (source == null || target == null) return true;
         if (source.IsDead()) return false;
         if (target.IsDead()) return true;
-        // if (Camouflager.camouflageTimer > 0f) return true; // No names are visible
-        // if (!source.IsTeamImpostor() && Ninja.isStealthed(target)) return true; // Hide ninja nametags from non-impostors
+        if (Camouflager.camouflageTimer > 0f) return true; // No names are visible
         if (ModMapOptions.HideOutOfSightNametags && GameStarted && MapUtilities.CachedShipStatus != null && source.transform != null && target.transform != null)
         {
             float distMod = 1.025f;

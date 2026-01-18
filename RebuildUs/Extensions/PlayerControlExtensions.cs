@@ -151,8 +151,6 @@ public static class PlayerControlHelpers
             {
                 roleCouldUse = false;
             }
-            // else if (!Ninja.canUseVents && player.IsRole(RoleType.Ninja))
-            //     roleCouldUse = false;
             else
             {
                 roleCouldUse = true;

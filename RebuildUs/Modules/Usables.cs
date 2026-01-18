@@ -93,7 +93,7 @@ public static class Usables
         {
             if (defaultVentSprite == null) defaultVentSprite = __instance.graphic.sprite;
             bool isSpecialVent = __instance.currentTarget != null && __instance.currentTarget.gameObject != null && __instance.currentTarget.gameObject.name.StartsWith("JackInTheBoxVent_");
-            __instance.graphic.sprite = isSpecialVent ? Trickster.GetTricksterVentButtonSprite() : defaultVentSprite;
+            __instance.graphic.sprite = isSpecialVent ? AssetLoader.TricksterVentButton : defaultVentSprite;
             __instance.buttonLabelText.enabled = !isSpecialVent;
         }
     }

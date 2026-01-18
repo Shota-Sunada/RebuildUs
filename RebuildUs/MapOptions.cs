@@ -38,7 +38,6 @@ namespace RebuildUs
         public static bool TransparentMap = false;
         public static bool HideFakeTasks = false;
 
-        public static bool ShieldFirstKill = false;
         public static bool ShowVentsOnMap = true;
         public static bool ShowChatNotifications = true;
         public static CustomGamemodes GameMode = CustomGamemodes.Classic;
@@ -48,8 +47,6 @@ namespace RebuildUs
         public static List<SurvCamera> CamerasToAdd = [];
         public static List<Vent> VentsToSeal = [];
         public static Dictionary<byte, PoolablePlayer> PlayerIcons = [];
-        public static string FirstKillName;
-        public static PlayerControl FirstKillPlayer;
 
         public static TextMeshPro AdminTimerText = null;
         public static TextMeshPro CamerasTimerText = null;
