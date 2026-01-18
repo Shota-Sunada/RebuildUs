@@ -1,51 +1,33 @@
 using System.Reflection;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 
 namespace RebuildUs.Localization;
 
 public static class Tr
 {
-    private static readonly Dictionary<string, Dictionary<SupportedLangs, string>> Translations = [];
+    private static readonly Dictionary<SupportedLangs, Dictionary<string, string>> Translations = [];
 
     public static void Initialize()
     {
         Translations.Clear();
-        foreach (SupportedLangs i in Enum.GetValues(typeof(SupportedLangs)))
+        foreach (SupportedLangs lang in Enum.GetValues(typeof(SupportedLangs)))
         {
-            var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream($"RebuildUs.Localization.Translations.{i}.json");
+            var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream($"RebuildUs.Localization.Translations.{lang}.json");
             if (stream == null) continue;
 
             try
             {
-                using var document = JsonDocument.Parse(stream);
-                LoadElement(document.RootElement, "", i);
+                var dict = JsonSerializer.Deserialize<Dictionary<string, string>>(stream);
+                if (dict != null)
+                {
+                    Translations[lang] = new Dictionary<string, string>(dict, StringComparer.OrdinalIgnoreCase);
+                }
             }
             catch (Exception ex)
             {
-                Logger.LogError($"Failed to load translation for {i}: {ex.Message}");
+                Logger.LogError($"Failed to load translation for {lang}: {ex.Message}");
             }
-        }
-    }
-
-    private static void LoadElement(JsonElement element, string prefix, SupportedLangs lang)
-    {
-        switch (element.ValueKind)
-        {
-            case JsonValueKind.Object:
-                foreach (var property in element.EnumerateObject())
-                {
-                    var key = string.IsNullOrEmpty(prefix) ? property.Name : $"{prefix}{property.Name}";
-                    LoadElement(property.Value, key, lang);
-                }
-                break;
-            case JsonValueKind.String:
-                if (!Translations.TryGetValue(prefix, out var trans))
-                {
-                    trans = [];
-                    Translations[prefix] = trans;
-                }
-                trans[lang] = element.GetString();
-                break;
         }
     }
 
@@ -53,19 +35,38 @@ public static class Tr
     {
         if (string.IsNullOrEmpty(key)) return "";
 
+        // Strip out color tags and leading dashes
+        string keyClean = Regex.Replace(key, "<.*?>", "");
+        keyClean = Regex.Replace(keyClean, "^-\\s*", "");
+        keyClean = keyClean.Trim();
+
         var lang = TranslationController.InstanceExists ? FastDestroyableSingleton<TranslationController>.Instance.currentLanguage.languageID : SupportedLangs.English;
 
-        if (!Translations.TryGetValue(key, out var langDic))
+        string result = null;
+        if (Translations.TryGetValue(lang, out var langDic) && langDic.TryGetValue(keyClean, out var translated))
         {
-            Logger.LogWarn($"There are no translation data. key: {key}");
-            return key;
+            result = translated;
+        }
+        else if (lang != SupportedLangs.English && Translations.TryGetValue(SupportedLangs.English, out var enDic) && enDic.TryGetValue(keyClean, out translated))
+        {
+            result = translated;
         }
 
-        if (!langDic.TryGetValue(lang, out var str))
+        if (result == null)
         {
-            return !langDic.TryGetValue(SupportedLangs.English, out var enStr) ? key : args.Length > 0 ? string.Format(enStr, args) : enStr;
+            return args.Length > 0 ? string.Format(key, args) : key;
         }
 
-        return args.Length > 0 ? string.Format(str, args) : str;
+        string finalStr = key.Replace(keyClean, result);
+
+        try
+        {
+            return args.Length > 0 ? string.Format(finalStr, args) : finalStr;
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError($"Failed to format string for key {key}: {ex.Message}");
+            return finalStr;
+        }
     }
 }
