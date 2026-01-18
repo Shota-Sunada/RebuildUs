@@ -70,7 +70,7 @@ public static class Usables
         if (IsBlocked(target, pc))
         {
             __instance.currentTarget = null;
-            __instance.buttonLabelText.text = Tr.Get("buttonBlocked");
+            __instance.buttonLabelText.text = Tr.Get("Hud.ButtonBlocked");
             __instance.enabled = false;
             __instance.graphic.color = Palette.DisabledClear;
             __instance.graphic.material.SetFloat("_Desat", 0f);
@@ -195,13 +195,13 @@ public static class Usables
         if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Jester) && !Jester.CanCallEmergency)
         {
             roleCanCallEmergency = false;
-            statusText = Tr.Get("jesterMeetingButton");
+            statusText = Tr.Get("Hud.JesterMeetingButton");
         }
 
         if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Swapper) && !Swapper.CanCallEmergency)
         {
             roleCanCallEmergency = false;
-            statusText = Tr.Get("swapperMeetingButton");
+            statusText = Tr.Get("Hud.SwapperMeetingButton");
         }
 
         if (!roleCanCallEmergency)
@@ -221,8 +221,8 @@ public static class Usables
             int teamRemaining = Mathf.Max(0, ModMapOptions.MaxNumberOfMeetings - ModMapOptions.MeetingsCount);
             int remaining = Mathf.Min(localRemaining, CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Mayor) ? 1 : teamRemaining);
 
-            __instance.StatusText.text = $"<size=100%> {string.Format(Tr.Get("meetingStatus"), CachedPlayer.LocalPlayer.PlayerControl.name)}</size>";
-            __instance.NumberText.text = string.Format(Tr.Get("meetingCount"), localRemaining.ToString(), teamRemaining.ToString());
+            __instance.StatusText.text = $"<size=100%> {string.Format(Tr.Get("Hud.MeetingStatus"), CachedPlayer.LocalPlayer.PlayerControl.name)}</size>";
+            __instance.NumberText.text = string.Format(Tr.Get("Hud.MeetingCount"), localRemaining.ToString(), teamRemaining.ToString());
             __instance.ButtonActive = remaining > 0;
             __instance.ClosedLid.gameObject.SetActive(!__instance.ButtonActive);
             __instance.OpenLid.gameObject.SetActive(__instance.ButtonActive);

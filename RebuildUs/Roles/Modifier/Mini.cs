@@ -47,14 +47,14 @@ public class Mini : ModifierBase<Mini>
     {
         get
         {
-            return Tr.Get("miniPostfix");
+            return Tr.Get("Option.MiniPostfix");
         }
     }
     public static string FullName
     {
         get
         {
-            return Tr.Get("mini");
+            return Tr.Get("Role.Mini");
         }
     }
 

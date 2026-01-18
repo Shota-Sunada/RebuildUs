@@ -278,11 +278,11 @@ public partial class CustomOption
 
         if (sel == "On")
         {
-            return "<color=#FFFF00FF>" + Tr.Get(sel) + "</color>";
+            return "<color=#FFFF00FF>" + Tr.Get("Hud.On") + "</color>";
         }
         else if (sel == "Off")
         {
-            return "<color=#CCCCCCFF>" + Tr.Get(sel) + "</color>";
+            return "<color=#CCCCCCFF>" + Tr.Get("Hud.Off") + "</color>";
         }
 
         return Tr.Get(sel);

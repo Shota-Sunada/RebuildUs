@@ -136,7 +136,7 @@ public class Witch : RoleBase<Witch>
                 }
             )
         {
-            ButtonText = Tr.Get("WitchText")
+            ButtonText = Tr.Get("Hud.WitchText")
         };
     }
     public override void SetButtonCooldowns()

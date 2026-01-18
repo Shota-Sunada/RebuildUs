@@ -1,4 +1,6 @@
 {
-  "OptionsOn": "オン",
-  "OptionsOff": "オフ"
+  "General": {
+    "OptionsOff": "オフ",
+    "OptionsOn": "オン"
+  }
 }

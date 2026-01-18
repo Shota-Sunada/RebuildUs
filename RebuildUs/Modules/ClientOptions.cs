@@ -88,7 +88,7 @@ public static class ClientOptions
         MoreOptions.transform.localPosition = __instance.CensorChatButton.transform.localPosition + Vector3.down * 1.0f;
 
         MoreOptions.gameObject.SetActive(true);
-        MoreOptions.Text.text = Tr.Get("modOptionsText");
+        MoreOptions.Text.text = Tr.Get("Hud.ModOptionsText");
         var moreOptionsButton = MoreOptions.GetComponent<PassiveButton>();
         moreOptionsButton.OnClick = new Button.ButtonClickedEvent();
         moreOptionsButton.OnClick.AddListener((Action)(() =>
@@ -128,7 +128,7 @@ public static class ClientOptions
         var title = TitleTextTitle = UnityEngine.Object.Instantiate(TitleText, PopUp.transform);
         title.GetComponent<RectTransform>().localPosition = Vector3.up * 2.3f;
         title.gameObject.SetActive(true);
-        title.text = Tr.Get("moreOptionsText");
+        title.text = Tr.Get("Hud.MoreOptionsText");
         title.name = "TitleText";
     }
 
@@ -195,7 +195,7 @@ public static class ClientOptions
             var pos = new Vector3(1.2f, -2.5f, -0.5f);
             var transform = button.transform;
             transform.localPosition = pos;
-            button.Text.text = Tr.Get("next");
+            button.Text.text = Tr.Get("Hud.Next");
             button.Text.fontSizeMin = button.Text.fontSizeMax = 2.2f;
             button.Text.font = UnityEngine.Object.Instantiate(TitleText.font);
             button.Text.GetComponent<RectTransform>().sizeDelta = new Vector2(2, 2);
@@ -219,7 +219,7 @@ public static class ClientOptions
             var pos = new Vector3(-1.2f, -2.5f, -0.5f);
             var transform = button.transform;
             transform.localPosition = pos;
-            button.Text.text = Tr.Get("previous");
+            button.Text.text = Tr.Get("Hud.Previous");
             button.Text.fontSizeMin = button.Text.fontSizeMax = 2.2f;
             button.Text.font = UnityEngine.Object.Instantiate(TitleText.font);
             button.Text.GetComponent<RectTransform>().sizeDelta = new Vector2(2, 2);

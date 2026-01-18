@@ -69,7 +69,7 @@ public class Shifter : RoleBase<Shifter>
                 KeyCode.F
             )
         {
-            ButtonText = Tr.Get("ShiftText")
+            ButtonText = Tr.Get("Hud.ShiftText")
         };
     }
     public override void SetButtonCooldowns()

@@ -79,7 +79,7 @@ public class Hacker : RoleBase<Hacker>
                 () => { HackerButton.Timer = HackerButton.MaxTimer; }
             )
         {
-            ButtonText = Tr.Get("HackerText")
+            ButtonText = Tr.Get("Hud.HackerText")
         };
 
         HackerAdminTableButton = new CustomButton(
@@ -95,7 +95,7 @@ public class Hacker : RoleBase<Hacker>
            () => { return CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Hacker) && ModMapOptions.CouldUseAdmin && CachedPlayer.LocalPlayer.PlayerControl.IsAlive(); },
            () =>
            {
-               HackerAdminTableChargesText?.text = HackerVitalsChargesText.text = string.Format(Tr.Get("hackerChargesText"), Local.ChargesAdminTable, ToolsNumber);
+               HackerAdminTableChargesText?.text = HackerVitalsChargesText.text = string.Format(Tr.Get("Hud.HackerChargesText"), Local.ChargesAdminTable, ToolsNumber);
                return Local.ChargesAdminTable > 0 && ModMapOptions.CanUseAdmin; ;
            },
            () =>
@@ -164,7 +164,7 @@ public class Hacker : RoleBase<Hacker>
            () => { return CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Hacker) && ModMapOptions.CouldUseVitals && CachedPlayer.LocalPlayer.PlayerControl.IsAlive() && Helpers.GetOption(ByteOptionNames.MapId) != 0 && Helpers.GetOption(ByteOptionNames.MapId) != 3; },
            () =>
            {
-               HackerVitalsChargesText?.text = string.Format(Tr.Get("hackerChargesText"), Local.ChargesVitals, ToolsNumber);
+               HackerVitalsChargesText?.text = string.Format(Tr.Get("Hud.HackerChargesText"), Local.ChargesVitals, ToolsNumber);
                HackerVitalsButton.ActionButton.graphic.sprite = Helpers.IsMiraHQ ? FastDestroyableSingleton<HudManager>.Instance.UseButton.fastUseSettings[ImageNames.DoorLogsButton].Image : FastDestroyableSingleton<HudManager>.Instance.UseButton.fastUseSettings[ImageNames.VitalsButton].Image;
                HackerVitalsButton.ActionButton.OverrideText(Helpers.IsMiraHQ ? TranslationController.Instance.GetString(StringNames.DoorlogLabel) : TranslationController.Instance.GetString(StringNames.VitalsLabel));
                return Local.ChargesVitals > 0 && ModMapOptions.CanUseVitals;

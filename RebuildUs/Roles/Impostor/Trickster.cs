@@ -59,7 +59,7 @@ public class Trickster : RoleBase<Trickster>
             KeyCode.F
         )
         {
-            ButtonText = Tr.Get("PlaceJackInTheBoxText")
+            ButtonText = Tr.Get("Hud.PlaceJackInTheBoxText")
         };
 
         LightsOutButton = new CustomButton(
@@ -86,7 +86,7 @@ public class Trickster : RoleBase<Trickster>
             () => { LightsOutButton.Timer = LightsOutButton.MaxTimer; }
         )
         {
-            ButtonText = Tr.Get("LightsOutText")
+            ButtonText = Tr.Get("Hud.LightsOutText")
         };
     }
     public override void SetButtonCooldowns()

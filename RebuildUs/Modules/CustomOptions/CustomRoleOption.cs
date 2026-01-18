@@ -11,9 +11,10 @@ public class CustomRoleOption : CustomOption
     public (int rate, int count) Data { get { return (Rate, Count); } }
 
     public CustomRoleOption(int baseId, CustomOptionType type, RoleType roleType, Color color, int max = 15, bool roleEnabled = true) :
-    base(baseId, type, Helpers.Cs(color, Enum.GetName(roleType)), CustomOptionHolder.RATES, "", null, true, false, "")
+    base(baseId, type, Helpers.Cs(color, "Role." + Enum.GetName(roleType)), CustomOptionHolder.RATES, 0, null, true, false, "")
     {
         IsRoleEnabled = roleEnabled;
+        HeaderText = NameKey;
 
         if (max <= 0 || !roleEnabled)
         {
@@ -22,23 +23,26 @@ public class CustomRoleOption : CustomOption
 
         if (max > 1)
         {
-            NumberOfRoleOption = Normal(baseId + 10000, type, "NumberOfRole", 1f, 1f, 15f, 1f, this);
+            NumberOfRoleOption = Normal(baseId + 10000, type, "Option.NumberOfRole", 1f, 1f, 15f, 1f, this);
         }
     }
 
     public CustomRoleOption(int baseId, CustomOptionType type, string name, Color color, int max = 15, bool roleEnabled = true) :
-    base(baseId, type, Helpers.Cs(color, name), CustomOptionHolder.RATES, "", null, true, false, "")
+    base(baseId, type, Helpers.Cs(color, "Role." + name), CustomOptionHolder.RATES, 0, null, true, false, "")
     {
         IsRoleEnabled = roleEnabled;
-
-        if (max <= 0 || !roleEnabled)
+        HeaderText = NameKey;
         {
-            IsRoleEnabled = false;
-        }
+            IsRoleEnabled = roleEnabled;
 
-        if (max > 1)
-        {
-            NumberOfRoleOption = Normal(baseId + 10000, type, "NumberOfRole", 1f, 1f, 15f, 1f, this);
+            if (max <= 0 || !roleEnabled)
+            {
+                IsRoleEnabled = false;
+            }
+
+            if (max > 1)
+            {
+                NumberOfRoleOption = Normal(baseId + 10000, type, "Option.NumberOfRole", 1f, 1f, 15f, 1f, this);
+            }
         }
     }
-}

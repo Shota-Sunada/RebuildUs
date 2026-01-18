@@ -128,7 +128,7 @@ public class Engineer : RoleBase<Engineer>
                 KeyCode.F
             )
         {
-            ButtonText = Tr.Get("RepairText")
+            ButtonText = Tr.Get("Hud.RepairText")
         };
     }
     public override void SetButtonCooldowns()

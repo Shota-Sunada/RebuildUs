@@ -250,7 +250,7 @@ public static class EndGameMain
 
         if (AdditionalTempData.IsGM)
         {
-            __instance.WinText.text = Tr.Get("gmGameOver");
+            __instance.WinText.text = Tr.Get("Hud.GmGameOver");
             // __instance.WinText.color = GM.color;
         }
 
@@ -413,7 +413,7 @@ public static class EndGameMain
             roleSummary.transform.localScale = new Vector3(1f, 1f, 1f);
 
             var roleSummaryText = new StringBuilder();
-            roleSummaryText.AppendLine(Tr.Get("roleSummaryText"));
+            roleSummaryText.AppendLine(Tr.Get("Hud.RoleSummaryText"));
             AdditionalTempData.PlayerRoles.Sort((x, y) =>
             {
                 var roleX = x.Roles.FirstOrDefault();

@@ -70,7 +70,7 @@ public class Cleaner : RoleBase<Cleaner>
                 KeyCode.F
             )
         {
-            ButtonText = Tr.Get("CleanText")
+            ButtonText = Tr.Get("Hud.CleanText")
         };
     }
     public override void SetButtonCooldowns()

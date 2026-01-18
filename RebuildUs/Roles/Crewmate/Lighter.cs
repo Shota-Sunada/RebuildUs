@@ -69,7 +69,7 @@ public class Lighter : RoleBase<Lighter>
             }
         )
         {
-            ButtonText = Tr.Get("LighterText")
+            ButtonText = Tr.Get("Hud.LighterText")
         };
     }
     public override void SetButtonCooldowns()

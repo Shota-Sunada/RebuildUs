@@ -140,21 +140,21 @@ public class CustomOverlays
                 CustomOption.OptionToString(CustomOptionHolder.PresetSelection),
             ];
 
-            var optionName = Helpers.Cs(new Color(204f / 255f, 204f / 255f, 0, 1f), Tr.Get("crewmateRoles"));
+            var optionName = Helpers.Cs(new Color(204f / 255f, 204f / 255f, 0, 1f), Tr.Get("Hud.CrewmateRoles"));
             var min = CustomOptionHolder.CrewmateRolesCountMin.GetSelection();
             var max = CustomOptionHolder.CrewmateRolesCountMax.GetSelection();
             if (min > max) min = max;
             var optionValue = (min == max) ? $"{max}" : $"{min} - {max}";
             entry.AppendLine($"{optionName}: {optionValue}");
 
-            optionName = Helpers.Cs(new Color(204f / 255f, 204f / 255f, 0, 1f), Tr.Get("neutralRoles"));
+            optionName = Helpers.Cs(new Color(204f / 255f, 204f / 255f, 0, 1f), Tr.Get("Hud.NeutralRoles"));
             min = CustomOptionHolder.NeutralRolesCountMin.GetSelection();
             max = CustomOptionHolder.NeutralRolesCountMax.GetSelection();
             if (min > max) min = max;
             optionValue = (min == max) ? $"{max}" : $"{min} - {max}";
             entry.AppendLine($"{optionName}: {optionValue}");
 
-            optionName = Helpers.Cs(new Color(204f / 255f, 204f / 255f, 0, 1f), Tr.Get("impostorRoles"));
+            optionName = Helpers.Cs(new Color(204f / 255f, 204f / 255f, 0, 1f), Tr.Get("Hud.ImpostorRoles"));
             min = CustomOptionHolder.ImpostorRolesCountMin.GetSelection();
             max = CustomOptionHolder.ImpostorRolesCountMax.GetSelection();
             if (min > max) min = max;

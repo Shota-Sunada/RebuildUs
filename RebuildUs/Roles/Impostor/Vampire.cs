@@ -97,7 +97,7 @@ public class Vampire : RoleBase<Vampire>
                     else
                     {
                         VampireKillButton.Sprite = AssetLoader.VampireButton;
-                        VampireKillButton.ButtonText = Tr.Get("VampireText");
+                        VampireKillButton.ButtonText = Tr.Get("Hud.VampireText");
                     }
                     return Vampire.CurrentTarget != null && CachedPlayer.LocalPlayer.PlayerControl.CanMove && (!Vampire.TargetNearGarlic || Vampire.CanKillNearGarlics);
                 },
@@ -120,7 +120,7 @@ public class Vampire : RoleBase<Vampire>
                 }
             )
         {
-            ButtonText = Tr.Get("VampireText")
+            ButtonText = Tr.Get("Hud.VampireText")
         };
 
         GarlicButton = new CustomButton(
@@ -148,7 +148,7 @@ public class Vampire : RoleBase<Vampire>
             true
         )
         {
-            ButtonText = Tr.Get("GarlicText")
+            ButtonText = Tr.Get("Hud.GarlicText")
         };
     }
     public override void SetButtonCooldowns()

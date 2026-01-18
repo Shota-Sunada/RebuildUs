@@ -79,7 +79,7 @@ public class Eraser : RoleBase<Eraser>
                 KeyCode.F
             )
         {
-            ButtonText = Tr.Get("EraserText")
+            ButtonText = Tr.Get("Hud.EraserText")
         };
     }
     public override void SetButtonCooldowns()

@@ -113,7 +113,7 @@ public class Vulture : RoleBase<Vulture>
                 () => { return CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Vulture) && CachedPlayer.LocalPlayer.PlayerControl.IsAlive(); },
                 () =>
                 {
-                    VultureNumCorpsesText?.text = string.Format(Tr.Get("vultureCorpses"), NumberToWin - Local.EatenBodies);
+                    VultureNumCorpsesText?.text = string.Format(Tr.Get("Hud.VultureCorpses"), NumberToWin - Local.EatenBodies);
                     return hm.ReportButton.graphic.color == Palette.EnabledColor && CachedPlayer.LocalPlayer.PlayerControl.CanMove;
                 },
                 () => { VultureEatButton.Timer = VultureEatButton.MaxTimer; },
@@ -124,7 +124,7 @@ public class Vulture : RoleBase<Vulture>
                 KeyCode.F
             )
         {
-            ButtonText = Tr.Get("VultureText")
+            ButtonText = Tr.Get("Hud.VultureText")
         };
 
         VultureNumCorpsesText = UnityEngine.Object.Instantiate(VultureEatButton.ActionButton.cooldownTimerText, VultureEatButton.ActionButton.cooldownTimerText.transform.parent);

@@ -98,7 +98,7 @@ public class EvilHacker : RoleBase<EvilHacker>
             null
         )
         {
-            ButtonText = Tr.Get("MadmateText")
+            ButtonText = Tr.Get("Role.Madmate")
         };
     }
     public override void SetButtonCooldowns()

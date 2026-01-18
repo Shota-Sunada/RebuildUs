@@ -131,7 +131,7 @@ public class Tracker : RoleBase<Tracker>
                KeyCode.F
            )
         {
-            ButtonText = Tr.Get("TrackerText")
+            ButtonText = Tr.Get("Hud.TrackerText")
         };
 
         TrackerTrackCorpsesButton = new CustomButton(
@@ -157,7 +157,7 @@ public class Tracker : RoleBase<Tracker>
             }
         )
         {
-            ButtonText = Tr.Get("PathfindText")
+            ButtonText = Tr.Get("Hud.PathfindText")
         };
     }
     public override void SetButtonCooldowns()

@@ -18,10 +18,26 @@ public static class Tr
 
             try
             {
-                var dict = JsonSerializer.Deserialize<Dictionary<string, string>>(stream);
-                if (dict != null)
+                var nestedDict = JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(stream);
+                if (nestedDict != null)
                 {
-                    Translations[lang] = new Dictionary<string, string>(dict, StringComparer.OrdinalIgnoreCase);
+                    var flattened = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+                    foreach (var category in nestedDict)
+                    {
+                        if (category.Value.ValueKind == JsonValueKind.Object)
+                        {
+                            foreach (var property in category.Value.EnumerateObject())
+                            {
+                                var key = category.Key == "General" ? property.Name : $"{category.Key}.{property.Name}";
+                                flattened[key] = property.Value.GetString() ?? "";
+                            }
+                        }
+                        else
+                        {
+                            flattened[category.Key] = category.Value.GetString() ?? "";
+                        }
+                    }
+                    Translations[lang] = flattened;
                 }
             }
             catch (Exception ex)

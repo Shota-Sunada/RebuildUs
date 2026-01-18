@@ -161,11 +161,11 @@ public static class Helpers
             {
                 if (Jackal.CanCreateSidekick)
                 {
-                    task.Text = Cs(roleInfo.Color, $"{roleInfo.Name}: " + Tr.Get("jackalWithSidekick"));
+                    task.Text = Cs(roleInfo.Color, $"{roleInfo.Name}: " + Tr.Get("Option.JackalWithSidekick"));
                 }
                 else
                 {
-                    task.Text = Cs(roleInfo.Color, $"{roleInfo.Name}: " + Tr.Get("jackalShortDesc"));
+                    task.Text = Cs(roleInfo.Color, $"{roleInfo.Name}: " + Tr.Get("ShortDesc.Jackal"));
                 }
             }
             else
@@ -180,7 +180,7 @@ public static class Helpers
         {
             var task = new GameObject("RoleTask").AddComponent<ImportantTextTask>();
             task.transform.SetParent(player.transform, false);
-            task.Text = Cs(Madmate.NameColor, $"{Madmate.FullName}: " + Tr.Get("madmateShortDesc"));
+            task.Text = Cs(Madmate.NameColor, $"{Madmate.FullName}: " + Tr.Get("ShortDesc.Madmate"));
             player.myTasks.Insert(0, task);
         }
     }

@@ -73,7 +73,7 @@ public static class Vitals
             }
 
             string timeString = TimeSpan.FromSeconds(ModMapOptions.RestrictVitalsTime).ToString(@"mm\:ss\.ff");
-            TimeRemaining.text = String.Format(Tr.Get("timeRemaining"), timeString);
+            TimeRemaining.text = String.Format(Tr.Get("Hud.TimeRemaining"), timeString);
             TimeRemaining.gameObject.SetActive(true);
         }
 

@@ -67,7 +67,7 @@ public class EvilTracker : RoleBase<EvilTracker>
             KeyCode.F
         )
         {
-            ButtonText = Tr.Get("TrackerText")
+            ButtonText = Tr.Get("Hud.TrackerText")
         };
     }
     public override void SetButtonCooldowns()

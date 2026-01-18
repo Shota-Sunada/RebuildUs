@@ -165,9 +165,9 @@ namespace RebuildUs
                     y += 0.2f;
                 AdminTimerText.transform.localPosition = new Vector3(-3.5f, y, 0);
                 if (RestrictAdminTime > 0)
-                    AdminTimerText.text = String.Format(Tr.Get("adminText"), RestrictAdminTime.ToString("0.00"));
+                    AdminTimerText.text = String.Format(Tr.Get("Hud.AdminText"), RestrictAdminTime.ToString("0.00"));
                 else
-                    AdminTimerText.text = Tr.Get("adminRanOut");
+                    AdminTimerText.text = Tr.Get("Hud.AdminRanOut");
                 AdminTimerText.gameObject.SetActive(true);
             }
 
@@ -180,9 +180,9 @@ namespace RebuildUs
                     y += 0.2f;
                 CamerasTimerText.transform.localPosition = new Vector3(-3.5f, y, 0);
                 if (RestrictCamerasTime > 0)
-                    CamerasTimerText.text = String.Format(Tr.Get("camerasText"), RestrictCamerasTime.ToString("0.00"));
+                    CamerasTimerText.text = String.Format(Tr.Get("Hud.CamerasText"), RestrictCamerasTime.ToString("0.00"));
                 else
-                    CamerasTimerText.text = Tr.Get("camerasRanOut");
+                    CamerasTimerText.text = Tr.Get("Hud.CamerasRanOut");
                 CamerasTimerText.gameObject.SetActive(true);
             }
 
@@ -192,9 +192,9 @@ namespace RebuildUs
                 VitalsTimerText = UnityEngine.Object.Instantiate(FastDestroyableSingleton<TaskPanelBehaviour>.Instance.taskText, FastDestroyableSingleton<HudManager>.Instance.transform);
                 VitalsTimerText.transform.localPosition = new Vector3(-3.5f, -4.0f, 0);
                 if (RestrictVitalsTime > 0)
-                    VitalsTimerText.text = String.Format(Tr.Get("vitalsText"), RestrictVitalsTime.ToString("0.00"));
+                    VitalsTimerText.text = String.Format(Tr.Get("Hud.VitalsText"), RestrictVitalsTime.ToString("0.00"));
                 else
-                    VitalsTimerText.text = Tr.Get("vitalsRanOut");
+                    VitalsTimerText.text = Tr.Get("Hud.VitalsRanOut");
                 VitalsTimerText.gameObject.SetActive(true);
             }
         }

@@ -18,8 +18,8 @@ public class CustomRoleSelectionOption : CustomOption
         this.RoleTypes = roleTypes;
         var strings = roleTypes.Select(
             x =>
-                x == RoleType.NoRole ? "optionOff" :
-                Tr.Get(x.ToString()[..1].ToLower() + x.ToString()[1..])
+                x == RoleType.NoRole ? Tr.Get("Option.NoRole") :
+                Tr.Get("Role." + x.ToString())
             // RoleInfo.allRoleInfos.First(y => y.roleType == x).nameColored
             ).ToArray();
 

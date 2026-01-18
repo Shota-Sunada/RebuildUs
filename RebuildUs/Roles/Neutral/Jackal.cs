@@ -115,18 +115,14 @@ public class Jackal : RoleBase<Jackal>
             KeyCode.F
         )
         {
-            ButtonText = Tr.Get("SidekickText")
-        };
-
-        // Jackal Kill
-        JackalKillButton = new CustomButton(
+            ButtonText = Tr.Get("Hud.SidekickText")
             () =>
             {
-                if (Helpers.CheckMurderAttemptAndKill(Local.Player, Local.CurrentTarget) == MurderAttemptResult.SuppressKill) return;
+            if (Helpers.CheckMurderAttemptAndKill(Local.Player, Local.CurrentTarget) == MurderAttemptResult.SuppressKill) return;
 
-                JackalKillButton.Timer = JackalKillButton.MaxTimer;
-                Local.CurrentTarget = null;
-            },
+            JackalKillButton.Timer = JackalKillButton.MaxTimer;
+            Local.CurrentTarget = null;
+        },
             () => { return CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Jackal) && CachedPlayer.LocalPlayer.PlayerControl.IsAlive(); },
             () => { return Local.CurrentTarget && CachedPlayer.LocalPlayer.PlayerControl.CanMove; },
             () => { JackalKillButton.Timer = JackalKillButton.MaxTimer; },

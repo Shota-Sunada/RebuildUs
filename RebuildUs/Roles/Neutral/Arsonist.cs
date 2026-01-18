@@ -126,7 +126,7 @@ public class Arsonist : RoleBase<Arsonist>
                 }
             )
         {
-            ButtonText = Tr.Get("DouseText")
+            ButtonText = Tr.Get("Hud.DouseText")
         };
 
         ArsonistIgniteButton = new CustomButton(
@@ -149,7 +149,7 @@ public class Arsonist : RoleBase<Arsonist>
             KeyCode.Q
         )
         {
-            ButtonText = Tr.Get("IgniteText")
+            ButtonText = Tr.Get("Hud.IgniteText")
         };
     }
     public override void SetButtonCooldowns()

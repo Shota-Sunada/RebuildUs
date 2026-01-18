@@ -104,24 +104,24 @@ public static class PlayerControlPatch
 
                 if (isMedicReport)
                 {
-                    msg = string.Format(Tr.Get("medicReport"), Math.Round(timeSinceDeath / 1000));
+                    msg = string.Format(Tr.Get("Hud.MedicReport"), Math.Round(timeSinceDeath / 1000));
                 }
                 else if (isDetectiveReport)
                 {
                     if (timeSinceDeath < Detective.ReportNameDuration * 1000)
                     {
-                        msg = string.Format(Tr.Get("detectiveReportName"), deadPlayer.KillerIfExisting.Data.PlayerName);
+                        msg = string.Format(Tr.Get("Hud.DetectiveReportName"), deadPlayer.KillerIfExisting.Data.PlayerName);
                     }
                     else if (timeSinceDeath < Detective.ReportColorDuration * 1000)
                     {
                         var typeOfColor = Helpers.IsLighterColor(deadPlayer.KillerIfExisting.Data.DefaultOutfit.ColorId) ?
-                            Tr.Get("detectiveColorLight") :
-                            Tr.Get("detectiveColorDark");
-                        msg = string.Format(Tr.Get("detectiveReportColor"), typeOfColor);
+                            Tr.Get("Color.DetectiveColorLight") :
+                            Tr.Get("Color.DetectiveColorDark");
+                        msg = string.Format(Tr.Get("Hud.DetectiveReportColor"), typeOfColor);
                     }
                     else
                     {
-                        msg = Tr.Get("detectiveReportNone");
+                        msg = Tr.Get("Hud.DetectiveReportNone");
                     }
                 }
 

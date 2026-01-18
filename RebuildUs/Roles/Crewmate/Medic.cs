@@ -79,7 +79,7 @@ public class Medic : RoleBase<Medic>
             KeyCode.F
         )
         {
-            ButtonText = Tr.Get("ShieldText")
+            ButtonText = Tr.Get("Hud.ShieldText")
         };
     }
     public override void SetButtonCooldowns()

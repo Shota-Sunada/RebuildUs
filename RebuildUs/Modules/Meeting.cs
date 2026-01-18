@@ -751,20 +751,20 @@ public static class Meeting
 
         if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Swapper) && Swapper.RemainSwaps > 0 && Swapper.LivingPlayers.Count != 0)
         {
-            MeetingInfoText.text = string.Format(Tr.Get("swapperSwapsLeft"), Swapper.RemainSwaps);
+            MeetingInfoText.text = string.Format(Tr.Get("Hud.SwapperSwapsLeft"), Swapper.RemainSwaps);
             MeetingInfoText.gameObject.SetActive(true);
         }
 
         int numGuesses = Guesser.RemainingShots(CachedPlayer.LocalPlayer.PlayerControl);
         if ((Guesser.IsGuesser(CachedPlayer.LocalPlayer.PlayerControl.PlayerId) || CachedPlayer.LocalPlayer.PlayerControl.HasModifier(ModifierType.LastImpostor)) && CachedPlayer.LocalPlayer.PlayerControl.IsAlive() && numGuesses > 0)
         {
-            MeetingInfoText.text = string.Format(Tr.Get("guesserGuessesLeft"), numGuesses);
+            MeetingInfoText.text = string.Format(Tr.Get("Hud.GuesserGuessesLeft"), numGuesses);
             MeetingInfoText.gameObject.SetActive(true);
         }
 
         if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Shifter) && Shifter.FutureShift != null)
         {
-            MeetingInfoText.text = string.Format(Tr.Get("shifterTargetInfo"), Shifter.FutureShift.Data.PlayerName);
+            MeetingInfoText.text = string.Format(Tr.Get("Hud.ShifterTargetInfo"), Shifter.FutureShift.Data.PlayerName);
             MeetingInfoText.gameObject.SetActive(true);
         }
     }

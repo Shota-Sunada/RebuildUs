@@ -86,7 +86,7 @@ public static class Admin
             if (OutOfTime == null)
             {
                 OutOfTime = UnityEngine.Object.Instantiate(__instance.SabotageText, __instance.SabotageText.transform.parent);
-                OutOfTime.text = Tr.Get("restrictOutOfTime");
+                OutOfTime.text = Tr.Get("Option.RestrictOutOfTime");
             }
 
             if (TimeRemaining == null)
@@ -115,7 +115,7 @@ public static class Admin
             ClearedIcons = false;
             OutOfTime.gameObject.SetActive(false);
             string timeString = TimeSpan.FromSeconds(ModMapOptions.RestrictAdminTime).ToString(@"mm\:ss\.ff");
-            TimeRemaining.text = String.Format(Tr.Get("timeRemaining"), timeString);
+            TimeRemaining.text = String.Format(Tr.Get("Hud.TimeRemaining"), timeString);
             //TimeRemaining.color = MapOptions.restrictAdminTime > 10f ? Palette.AcceptedGreen : Palette.ImpostorRed;
             TimeRemaining.gameObject.SetActive(true);
         }

@@ -468,7 +468,7 @@ public static partial class RPCProcedure
         if (Guesser.ShowInfoInGhostChat && CachedPlayer.LocalPlayer.PlayerControl.Data.IsDead && guessedTarget != null)
         {
             var roleInfo = RoleInfo.AllRoleInfos.FirstOrDefault(x => (byte)x.RoleType == guessedRoleType);
-            string msg = string.Format(Tr.Get("guesserGuessChat"), roleInfo.Name, guessedTarget.Data.PlayerName);
+            string msg = string.Format(Tr.Get("Hud.GuesserGuessChat"), roleInfo.Name, guessedTarget.Data.PlayerName);
             if (AmongUsClient.Instance.AmClient && FastDestroyableSingleton<HudManager>.Instance)
             {
                 FastDestroyableSingleton<HudManager>.Instance.Chat.AddChat(guesser, msg);
@@ -494,7 +494,7 @@ public static partial class RPCProcedure
         // If the local player is impostor indicate lights out
         if (CachedPlayer.LocalPlayer.PlayerControl.Data.Role.IsImpostor)
         {
-            new CustomMessage(Tr.Get("tricksterLightsOutText"), Trickster.LightsOutDuration);
+            new CustomMessage(Tr.Get("Hud.TricksterLightsOutText"), Trickster.LightsOutDuration);
         }
     }
 

@@ -84,7 +84,7 @@ public static class SecurityCamera
             }
 
             string timeString = TimeSpan.FromSeconds(ModMapOptions.RestrictCamerasTime).ToString(@"mm\:ss\.ff");
-            TimeRemaining.text = String.Format(Tr.Get("timeRemaining"), timeString);
+            TimeRemaining.text = String.Format(Tr.Get("Hud.TimeRemaining"), timeString);
             TimeRemaining.gameObject.SetActive(true);
         }
 
@@ -118,7 +118,7 @@ public static class SecurityCamera
             }
 
             string timeString = TimeSpan.FromSeconds(ModMapOptions.RestrictCamerasTime).ToString(@"mm\:ss\.ff");
-            TimeRemaining.text = String.Format(Tr.Get("timeRemaining"), timeString);
+            TimeRemaining.text = String.Format(Tr.Get("Hud.TimeRemaining"), timeString);
             TimeRemaining.gameObject.SetActive(true);
 
         }
@@ -193,7 +193,7 @@ public static class SecurityCamera
             }
 
             string timeString = TimeSpan.FromSeconds(ModMapOptions.RestrictCamerasTime).ToString(@"mm\:ss\.ff");
-            TimeRemaining.text = String.Format(Tr.Get("timeRemaining"), timeString);
+            TimeRemaining.text = String.Format(Tr.Get("Hud.TimeRemaining"), timeString);
             TimeRemaining.gameObject.SetActive(true);
         }
 

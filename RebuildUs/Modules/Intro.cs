@@ -237,15 +237,15 @@ public static class Intro
         // {
         //     if (roleInfo == RoleInfo.crewmate)
         //     {
-        //         __instance.RoleText.text = Tr.Get("madmate");
+        //         __instance.RoleText.text = Tr.Get("Role.Madmate");
         //     }
         //     else
         //     {
-        //         __instance.RoleText.text = Tr.Get("madmatePrefix") + __instance.RoleText.text;
+        //         __instance.RoleText.text = Tr.Get("Option.MadmatePrefix") + __instance.RoleText.text;
         //     }
         //     __instance.YouAreText.color = Madmate.color;
         //     __instance.RoleText.color = Madmate.color;
-        //     __instance.RoleBlurbText.text = Tr.Get("madmateIntroDesc");
+        //     __instance.RoleBlurbText.text = Tr.Get("IntroDesc.Madmate");
         //     __instance.RoleBlurbText.color = Madmate.color;
         // }
 

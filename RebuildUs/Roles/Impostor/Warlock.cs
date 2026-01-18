@@ -67,7 +67,7 @@ public class Warlock : RoleBase<Warlock>
                         CurseVictim = CurrentTarget;
                         WarlockCurseButton.Sprite = AssetLoader.CurseKillButton;
                         WarlockCurseButton.Timer = 1f;
-                        WarlockCurseButton.ButtonText = Tr.Get("CurseKillText");
+                        WarlockCurseButton.ButtonText = Tr.Get("Hud.CurseKillText");
                     }
                     else if (CurseVictim != null && CurseVictimTarget != null)
                     {
@@ -75,7 +75,7 @@ public class Warlock : RoleBase<Warlock>
                         if (murder == MurderAttemptResult.SuppressKill) return;
 
                         // If blanked or killed
-                        WarlockCurseButton.ButtonText = Tr.Get("CurseText");
+                        WarlockCurseButton.ButtonText = Tr.Get("Hud.CurseText");
                         if (RootTime > 0)
                         {
                             CachedPlayer.LocalPlayer.PlayerControl.moveable = false;
@@ -101,7 +101,7 @@ public class Warlock : RoleBase<Warlock>
                 {
                     WarlockCurseButton.Timer = WarlockCurseButton.MaxTimer;
                     WarlockCurseButton.Sprite = AssetLoader.CurseButton;
-                    WarlockCurseButton.ButtonText = Tr.Get("CurseText");
+                    WarlockCurseButton.ButtonText = Tr.Get("Hud.CurseText");
                     CurseVictim = null;
                     CurseVictimTarget = null;
                 },
@@ -112,7 +112,7 @@ public class Warlock : RoleBase<Warlock>
                 KeyCode.F
             )
         {
-            ButtonText = Tr.Get("CurseText")
+            ButtonText = Tr.Get("Hud.CurseText")
         };
     }
     public override void SetButtonCooldowns()

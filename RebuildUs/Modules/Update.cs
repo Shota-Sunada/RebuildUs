@@ -123,7 +123,7 @@ public static class Update
                 // Hacker and Detective Lighter/Darker
                 if (ModMapOptions.ShowLighterDarker && meetingShow)
                 {
-                    voteArea.NameText.text += $" ({(Helpers.IsLighterColor(target.Data.DefaultOutfit.ColorId) ? Tr.Get("detectiveLightLabel") : Tr.Get("detectiveDarkLabel"))})";
+                    voteArea.NameText.text += $" ({(Helpers.IsLighterColor(target.Data.DefaultOutfit.ColorId) ? Tr.Get("Hud.DetectiveLightLabel") : Tr.Get("Hud.DetectiveDarkLabel"))})";
                 }
             }
         }
