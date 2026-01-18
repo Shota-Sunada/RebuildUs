@@ -1,5 +1,3 @@
-using UnityEngine;
-
 namespace RebuildUs.Objects;
 
 public class Arrow

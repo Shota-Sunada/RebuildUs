@@ -1,5 +1,3 @@
-using RebuildUs.Roles;
-
 namespace RebuildUs.Modules.EndGame;
 
 public class PlayerRoleInfo

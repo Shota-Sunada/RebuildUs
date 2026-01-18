@@ -1,7 +1,3 @@
-using System.Collections.Generic;
-using System.Linq;
-using UnityEngine;
-
 namespace RebuildUs.Objects;
 
 public class AdditionalVents

@@ -1,12 +1,6 @@
 // TODO: 設定画面開いたときに説明文章が更新されない問題があります
 
-using AmongUs.GameOptions;
-using RebuildUs.Options;
-using RebuildUs.Extensions;
 using System.Text;
-using Epic.OnlineServices.RTC;
-using UnityEngine.ProBuilder;
-using System.Collections;
 
 namespace RebuildUs.Modules.CustomOptions;
 

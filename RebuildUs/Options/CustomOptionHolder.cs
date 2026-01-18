@@ -1,10 +1,3 @@
-using RebuildUs.Modules;
-using RebuildUs.Modules.CustomOptions;
-using RebuildUs.Roles.Crewmate;
-using RebuildUs.Roles.Impostor;
-using RebuildUs.Roles.Modifier;
-using RebuildUs.Roles.Neutral;
-
 namespace RebuildUs.Options;
 
 public static partial class CustomOptionHolder

@@ -1,5 +1,3 @@
-using RebuildUs.Roles.Impostor;
-
 namespace RebuildUs.Patches;
 
 [HarmonyPatch]

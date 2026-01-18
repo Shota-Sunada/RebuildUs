@@ -1,15 +1,13 @@
-using RebuildUs.Roles.Impostor;
-
 namespace RebuildUs.Objects;
 
 public class Footprint
 {
-    private static List<Footprint> footprints = [];
+    private static readonly List<Footprint> footprints = [];
     private Color color;
-    private GameObject footprint;
-    private SpriteRenderer spriteRenderer;
-    private PlayerControl owner;
-    private bool anonymousFootprints;
+    private readonly GameObject footprint;
+    private readonly SpriteRenderer spriteRenderer;
+    private readonly PlayerControl owner;
+    private readonly bool anonymousFootprints;
 
     public Footprint(float footprintDuration, bool anonymousFootprints, PlayerControl player)
     {

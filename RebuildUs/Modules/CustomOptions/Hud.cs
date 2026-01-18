@@ -1,7 +1,3 @@
-using RebuildUs.Extensions;
-using RebuildUs.Options;
-using AmongUs.GameOptions;
-
 namespace RebuildUs.Modules.CustomOptions;
 
 public partial class CustomOption

@@ -1,6 +1,3 @@
-using RebuildUs.Roles.Crewmate;
-using RebuildUs.Roles.Neutral;
-
 namespace RebuildUs.Roles.Impostor;
 
 public static class Impostor

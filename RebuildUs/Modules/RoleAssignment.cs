@@ -1,5 +1,4 @@
 using System.Collections;
-using AmongUs.GameOptions;
 using BepInEx.Unity.IL2CPP.Utils.Collections;
 using UnityEngine.ResourceManagement.AsyncOperations;
 

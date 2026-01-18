@@ -1,5 +1,3 @@
-using RebuildUs.Roles.Impostor;
-
 namespace RebuildUs.Modules.EndGame;
 
 public class PlayerStatistics

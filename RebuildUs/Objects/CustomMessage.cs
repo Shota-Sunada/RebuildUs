@@ -1,13 +1,9 @@
-using System;
-using System.Collections.Generic;
-using UnityEngine;
-
 namespace RebuildUs.Objects;
 
 public class CustomMessage
 {
-    private TMP_Text text;
-    private static List<CustomMessage> customMessages = [];
+    private readonly TMP_Text text;
+    private static readonly List<CustomMessage> customMessages = [];
 
     public CustomMessage(string message, float duration)
     {

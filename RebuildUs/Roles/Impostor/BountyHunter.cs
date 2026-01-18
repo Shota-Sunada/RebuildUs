@@ -1,7 +1,3 @@
-using AmongUs.GameOptions;
-using RebuildUs.Objects;
-using RebuildUs.Roles.Neutral;
-
 namespace RebuildUs.Roles.Impostor;
 
 [HarmonyPatch]

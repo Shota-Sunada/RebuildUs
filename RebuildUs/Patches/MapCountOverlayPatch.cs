@@ -1,5 +1,3 @@
-using RebuildUs.Modules.Consoles;
-
 namespace RebuildUs.Patches;
 
 [HarmonyPatch]

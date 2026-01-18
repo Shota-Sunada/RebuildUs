@@ -77,7 +77,7 @@ public class Submerged
         {
             __result = Enumerable.Count(GameData.Instance.AllPlayers.ToSystemList(), delegate (NetworkedPlayerInfo p)
             {
-                if (p != null && !p.IsDead && !p.Disconnected )
+                if (p != null && !p.IsDead && !p.Disconnected)
                 {
                     PlayerControl @object = p.Object;
                     if (@object != null)

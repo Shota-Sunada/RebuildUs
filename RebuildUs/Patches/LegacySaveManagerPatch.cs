@@ -1,5 +1,4 @@
 using AmongUs.Data.Legacy;
-using RebuildUs.Modules;
 
 namespace RebuildUs.Patches;
 

@@ -1,5 +1,3 @@
-using Epic.OnlineServices;
-
 namespace RebuildUs.Roles.Crewmate;
 
 [HarmonyPatch]

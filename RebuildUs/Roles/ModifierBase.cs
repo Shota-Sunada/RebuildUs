@@ -1,6 +1,3 @@
-using UnityEngine;
-using RebuildUs.Players;
-
 namespace RebuildUs.Roles;
 
 public abstract class PlayerModifier

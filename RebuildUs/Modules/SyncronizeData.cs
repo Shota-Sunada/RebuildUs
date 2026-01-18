@@ -7,7 +7,7 @@ public enum SynchronizeTag
 
 public class SynchronizeData
 {
-    private Dictionary<SynchronizeTag, ulong> dic;
+    private readonly Dictionary<SynchronizeTag, ulong> dic;
 
     public SynchronizeData()
     {

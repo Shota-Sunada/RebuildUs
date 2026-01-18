@@ -1,12 +1,4 @@
 using InnerNet;
-using RebuildUs.Modules.RPC;
-using RebuildUs.Players;
-using RebuildUs.Roles;
-using RebuildUs.Roles.Crewmate;
-using RebuildUs.Roles.Impostor;
-using RebuildUs.Roles.Modifier;
-using RebuildUs.Roles.Neutral;
-using RebuildUs.Utilities;
 
 namespace RebuildUs.Extensions;
 

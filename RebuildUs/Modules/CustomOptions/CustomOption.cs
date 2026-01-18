@@ -1,12 +1,4 @@
-using System.Text;
-using RebuildUs.Utilities;
 using static RebuildUs.RebuildUs;
-using AmongUs.GameOptions;
-using RebuildUs.Modules.RPC;
-using RebuildUs.Options;
-using RebuildUs.Extensions;
-using RebuildUs.Localization;
-using RebuildUs.Roles;
 
 namespace RebuildUs.Modules.CustomOptions;
 

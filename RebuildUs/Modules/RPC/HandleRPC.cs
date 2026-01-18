@@ -1,5 +1,3 @@
-using RebuildUs;
-
 namespace RebuildUs.Modules.RPC;
 
 public static partial class RPCProcedure

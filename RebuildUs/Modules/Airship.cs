@@ -1,5 +1,3 @@
-using AmongUs.GameOptions;
-
 namespace RebuildUs.Modules;
 
 public static class Airship

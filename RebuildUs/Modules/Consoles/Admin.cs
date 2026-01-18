@@ -1,6 +1,3 @@
-using RebuildUs.Roles.Crewmate;
-using RebuildUs.Roles.Impostor;
-
 namespace RebuildUs.Modules.Consoles;
 
 public static class Admin

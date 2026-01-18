@@ -1,5 +1,3 @@
-using RebuildUs.Roles.Crewmate;
-
 namespace RebuildUs.Patches;
 
 [HarmonyPatch]

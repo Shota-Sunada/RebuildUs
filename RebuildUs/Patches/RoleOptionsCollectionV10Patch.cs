@@ -1,5 +1,3 @@
-using AmongUs.GameOptions;
-
 namespace RebuildUs.Patches;
 
 [HarmonyPatch]

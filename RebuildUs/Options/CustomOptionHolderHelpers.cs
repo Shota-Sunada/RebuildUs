@@ -1,5 +1,3 @@
-using RebuildUs.Modules.CustomOptions;
-
 namespace RebuildUs.Options;
 
 public static class CustomOptionHolderHelpers

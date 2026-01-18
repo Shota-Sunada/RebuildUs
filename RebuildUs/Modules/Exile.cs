@@ -1,7 +1,3 @@
-using RebuildUs.Roles.Crewmate;
-using RebuildUs.Roles.Impostor;
-using RebuildUs.Roles.Neutral;
-
 namespace RebuildUs.Modules;
 
 public static class Exile

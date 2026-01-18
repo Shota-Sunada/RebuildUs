@@ -1,5 +1,3 @@
-using Sentry.Unity.NativeUtils;
-
 namespace RebuildUs.Roles.Crewmate;
 
 [HarmonyPatch]

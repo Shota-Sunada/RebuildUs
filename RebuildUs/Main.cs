@@ -1,5 +1,4 @@
 global using Il2CppInterop.Runtime;
-global using Il2CppInterop.Runtime.Attributes;
 global using Il2CppInterop.Runtime.InteropTypes;
 global using Il2CppInterop.Runtime.InteropTypes.Arrays;
 global using Il2CppInterop.Runtime.Injection;
@@ -9,13 +8,10 @@ global using Hazel;
 global using BepInEx;
 global using BepInEx.Logging;
 global using BepInEx.Configuration;
-global using BepInEx.Unity;
 global using BepInEx.Unity.IL2CPP;
 global using UnityEngine;
 global using TMPro;
 global using AmongUs.GameOptions;
-
-global using RebuildUs;
 global using RebuildUs.Extensions;
 global using RebuildUs.Localization;
 global using RebuildUs.Modules;

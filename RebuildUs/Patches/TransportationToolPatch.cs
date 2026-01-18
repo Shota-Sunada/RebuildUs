@@ -1,9 +1,3 @@
-using HarmonyLib;
-using Il2CppSystem.Collections.Generic;
-using System;
-using UnityEngine.Windows.Speech;
-using static UnityEngine.GraphicsBuffer;
-
 namespace RebuildUs.Patches;
 
 [HarmonyPatch]
@@ -42,7 +36,7 @@ public static class TransportationToolPatches
             {
                 if (Camouflager.camouflageTimer <= 0 && !Helpers.MushroomSabotageActive())
                 {
-                    if (player .IsRole(RoleType.Morphing) && Morphing.morphTimer > 0)
+                    if (player.IsRole(RoleType.Morphing) && Morphing.morphTimer > 0)
                     {
                         hand.SetPlayerColor(Morphing.morphTarget.CurrentOutfit, PlayerMaterial.MaskType.None, 1f);
                         // Also set hat color, cause the line destroys it...

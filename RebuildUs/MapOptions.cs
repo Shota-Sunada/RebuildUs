@@ -1,6 +1,3 @@
-using System.Collections.Generic;
-using UnityEngine;
-
 namespace RebuildUs
 {
     static class ModMapOptions

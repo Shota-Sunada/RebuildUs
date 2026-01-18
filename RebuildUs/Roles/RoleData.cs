@@ -1,9 +1,3 @@
-using RebuildUs.Roles.Crewmate;
-using RebuildUs.Roles.Impostor;
-using RebuildUs.Roles.Neutral;
-using RebuildUs.Options;
-using RebuildUs.Modules.CustomOptions;
-
 namespace RebuildUs.Roles;
 
 public static class RoleData

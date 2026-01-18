@@ -1,5 +1,3 @@
-using RebuildUs.Objects;
-
 namespace RebuildUs.Roles.Neutral;
 
 [HarmonyPatch]

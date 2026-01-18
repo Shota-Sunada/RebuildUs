@@ -1,6 +1,3 @@
-using System.CodeDom.Compiler;
-using RebuildUs.Modules;
-
 namespace RebuildUs.Patches;
 
 [HarmonyPatch]
