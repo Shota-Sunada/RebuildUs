@@ -22,10 +22,10 @@ public static class HudManagerPatch
     }
 
     [HarmonyPostfix]
-    [HarmonyPatch(typeof(HudManager), nameof(HudManager.SetHudActive))]
+    [HarmonyPatch(typeof(HudManager), nameof(HudManager.SetHudActive), typeof(PlayerControl), typeof(RoleBehaviour), typeof(bool))]
     public static void SetHudActivePostfix(HudManager __instance)
     {
-        __instance.transform.FindChild("TaskDisplay").FindChild("TaskPanel").gameObject.SetActive(true);
+        __instance.TaskPanel.gameObject.SetActive(true);
     }
 
     [HarmonyPrefix]

@@ -67,9 +67,9 @@ public static class PlayerControlPatch
 
     [HarmonyPrefix]
     [HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.StartMeeting))]
-    public static void StartMeeting(PlayerControl __instance, NetworkedPlayerInfo meetingTarget)
+    public static void StartMeeting(PlayerControl __instance, NetworkedPlayerInfo target)
     {
-        Meeting.StartMeetingPrefix(__instance, meetingTarget);
+        Meeting.StartMeetingPrefix(__instance, target);
     }
 
     [HarmonyPrefix]

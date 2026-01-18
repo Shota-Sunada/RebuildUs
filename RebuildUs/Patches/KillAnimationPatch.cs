@@ -18,7 +18,7 @@ public static class KillAnimationPatch
 
     private static int? ColorId = null;
     [HarmonyPrefix]
-    [HarmonyPatch(typeof(KillAnimation), nameof(KillAnimation.SetMovement))]
+    [HarmonyPatch(typeof(KillAnimation), nameof(KillAnimation.SetMovement), typeof(PlayerControl), typeof(bool))]
     public static void SetMovementPrefix(PlayerControl source, bool canMove)
     {
         var color = source.cosmetics.currentBodySprite.BodySprite.material.GetColor("_BodyColor");
@@ -29,6 +29,8 @@ public static class KillAnimationPatch
         }
     }
 
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(KillAnimation), nameof(KillAnimation.SetMovement), typeof(PlayerControl), typeof(bool))]
     public static void Postfix(PlayerControl source, bool canMove)
     {
         if (ColorId.HasValue) source.RawSetColor(ColorId.Value);

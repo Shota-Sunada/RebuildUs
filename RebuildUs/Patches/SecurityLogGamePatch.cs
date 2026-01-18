@@ -4,8 +4,8 @@ namespace RebuildUs.Patches;
 public static class SecurityLogGamePatch
 {
     [HarmonyPrefix]
-    [HarmonyPatch(typeof(SecurityLogGame), nameof(SecurityLogGame.Begin))]
-    public static void BeginPrefix(SecurityLogGame __instance)
+    [HarmonyPatch(typeof(SecurityLogGame), nameof(SecurityLogGame.Awake))]
+    public static void AwakePrefix(SecurityLogGame __instance)
     {
         SecurityCamera.BeginCommon();
     }
