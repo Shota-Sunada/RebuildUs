@@ -136,7 +136,7 @@ public class Engineer : RoleBase<Engineer>
         EngineerRepairButton.MaxTimer = 0f;
     }
 
-    public override void Clear()
+    public static void Clear()
     {
         // reset configs here
         Players.Clear();

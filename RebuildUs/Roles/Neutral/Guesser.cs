@@ -15,6 +15,8 @@ public static class Guesser
     {
         RemainingShotsNiceGuesser = Mathf.RoundToInt(CustomOptionHolder.GuesserNumberOfShots.GetFloat());
         RemainingShotsEvilGuesser = Mathf.RoundToInt(CustomOptionHolder.GuesserNumberOfShots.GetFloat());
+        NiceGuesser.Clear();
+        EvilGuesser.Clear();
     }
 
     public static bool IsGuesser(byte playerId)
@@ -89,7 +91,7 @@ public static class Guesser
 
         // write functions here
 
-        public override void Clear()
+        public static void Clear()
         {
             // reset configs here
             Players.Clear();
@@ -123,7 +125,7 @@ public static class Guesser
 
         // write functions here
 
-        public override void Clear()
+        public static void Clear()
         {
             // reset configs here
             Players.Clear();

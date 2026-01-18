@@ -131,7 +131,7 @@ public class Warlock : RoleBase<Warlock>
         CurseVictimTarget = null;
     }
 
-    public override void Clear()
+    public static void Clear()
     {
         // reset configs here
         Players.Clear();

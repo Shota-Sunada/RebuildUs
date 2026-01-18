@@ -98,7 +98,7 @@ public class Trickster : RoleBase<Trickster>
 
     // write functions here
 
-    public override void Clear()
+    public static void Clear()
     {
         // reset configs here
         LightsOutTimer = 0f;

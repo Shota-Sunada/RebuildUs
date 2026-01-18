@@ -89,7 +89,7 @@ public class Eraser : RoleBase<Eraser>
 
     // write functions here
 
-    public override void Clear()
+    public static void Clear()
     {
         // reset configs here
         Players.Clear();

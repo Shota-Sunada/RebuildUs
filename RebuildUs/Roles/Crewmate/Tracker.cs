@@ -177,18 +177,21 @@ public class Tracker : RoleBase<Tracker>
         Arrow.ArrowObject?.SetActive(false);
     }
 
-    public override void Clear()
+    public static void Clear()
     {
         // reset configs here
         DeadBodyPositions = [];
-        ResetTracked();
-        if (LocalArrows != null)
+        foreach (var p in Players)
         {
-            foreach (var arrow in LocalArrows)
+            p.ResetTracked();
+            if (p.LocalArrows != null)
             {
-                if (arrow?.ArrowObject != null)
+                foreach (var arrow in p.LocalArrows)
                 {
-                    UnityEngine.Object.Destroy(arrow.ArrowObject);
+                    if (arrow?.ArrowObject != null)
+                    {
+                        UnityEngine.Object.Destroy(arrow.ArrowObject);
+                    }
                 }
             }
         }

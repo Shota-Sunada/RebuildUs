@@ -112,7 +112,7 @@ public class Camouflager : RoleBase<Camouflager>
         }
     }
 
-    public override void Clear()
+    public static void Clear()
     {
         // reset configs here
         Players.Clear();

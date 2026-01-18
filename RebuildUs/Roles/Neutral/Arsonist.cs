@@ -214,7 +214,7 @@ public class Arsonist : RoleBase<Arsonist>
         return DouseSprite;
     }
 
-    public override void Clear()
+    public static void Clear()
     {
         // reset configs here
         Players.Clear();

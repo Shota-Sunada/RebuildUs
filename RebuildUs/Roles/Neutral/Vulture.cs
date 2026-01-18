@@ -138,10 +138,23 @@ public class Vulture : RoleBase<Vulture>
         VultureEatButton.MaxTimer = Cooldown;
     }
 
-    public override void Clear()
+    public static void Clear()
     {
         // reset configs here
         TriggerVultureWin = false;
+        foreach (var p in Players)
+        {
+            if (p.LocalArrows != null)
+            {
+                foreach (var arrow in p.LocalArrows)
+                {
+                    if (arrow?.ArrowObject != null)
+                    {
+                        UnityEngine.Object.Destroy(arrow.ArrowObject);
+                    }
+                }
+            }
+        }
         Players.Clear();
     }
 }

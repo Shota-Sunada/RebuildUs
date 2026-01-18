@@ -113,7 +113,7 @@ public class EvilHacker : RoleBase<EvilHacker>
         return CanInheritAbility && Exists && LivingPlayers.Count == 0 && CachedPlayer.LocalPlayer.PlayerControl.IsTeamImpostor();
     }
 
-    public override void Clear()
+    public static void Clear()
     {
         // reset configs here
         Players.Clear();

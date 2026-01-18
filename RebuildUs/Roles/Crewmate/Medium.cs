@@ -204,7 +204,7 @@ public class Medium : RoleBase<Medium>
 
     // write functions here
 
-    public override void Clear()
+    public static void Clear()
     {
         // reset configs here
         DeadBodies = [];

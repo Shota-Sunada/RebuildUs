@@ -234,7 +234,7 @@ public class SecurityGuard : RoleBase<SecurityGuard>
 
     // write functions here
 
-    public override void Clear()
+    public static void Clear()
     {
         // reset configs here
         Players.Clear();

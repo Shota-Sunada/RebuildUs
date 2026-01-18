@@ -13,6 +13,9 @@ public static class Mafia
         IsGodfatherDead = false;
         IsMafiosoDead = false;
         IsJanitorDead = false;
+        Godfather.Clear();
+        Mafioso.Clear();
+        Janitor.Clear();
     }
 
     [HarmonyPatch]
@@ -44,7 +47,7 @@ public static class Mafia
 
         // write functions here
 
-        public override void Clear()
+        public static void Clear()
         {
             // reset configs here
             Players.Clear();
@@ -87,7 +90,7 @@ public static class Mafia
 
         // write functions here
 
-        public override void Clear()
+        public static void Clear()
         {
             // reset configs here
             Players.Clear();
@@ -176,7 +179,7 @@ public static class Mafia
 
         // write functions here
 
-        public override void Clear()
+        public static void Clear()
         {
             // reset configs here
             Players.Clear();

@@ -126,7 +126,7 @@ public class Sheriff : RoleBase<Sheriff>
 
     // write functions here
 
-    public override void Clear()
+    public static void Clear()
     {
         // reset configs here
         Players.Clear();

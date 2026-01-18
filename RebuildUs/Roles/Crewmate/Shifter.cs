@@ -77,7 +77,7 @@ public class Shifter : RoleBase<Shifter>
         ShifterShiftButton.MaxTimer = 0f;
     }
 
-    public override void Clear()
+    public static void Clear()
     {
         // reset configs here
         Players.Clear();

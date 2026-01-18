@@ -103,9 +103,57 @@ public class RebuildUs : BasePlugin
 
     public static void ClearAndReloadRoles()
     {
-        PlayerRole.AllRoles.Do(x => x.Clear());
+        // Crewmate
+        Bait.Clear();
+        Detective.Clear();
+        Engineer.Clear();
+        Hacker.Clear();
+        Lighter.Clear();
+        Mayor.Clear();
+        Medic.Clear();
+        Medium.Clear();
+        SecurityGuard.Clear();
+        Seer.Clear();
+        Sheriff.Clear();
+        Shifter.Clear();
+        Snitch.Clear();
+        Spy.Clear();
+        Swapper.Clear();
+        TimeMaster.Clear();
+        Tracker.Clear();
+
+        // Impostor
+        BountyHunter.Clear();
+        Camouflager.Clear();
+        Cleaner.Clear();
+        Eraser.Clear();
+        EvilHacker.Clear();
+        EvilTracker.Clear();
+        Morphing.Clear();
+        Trickster.Clear();
+        Vampire.Clear();
+        Warlock.Clear();
+        Witch.Clear();
         Mafia.ClearAndReload();
+
+        // Neutral
+        Arsonist.Clear();
+        Jackal.Clear();
+        Jester.Clear();
+        Guesser.ClearAndReload();
+        Sidekick.Clear();
+        Vulture.Clear();
+
+        // Modifier
+        AntiTeleport.Clear();
+        CreatedMadmate.Clear();
+        LastImpostor.Clear();
+        Lovers.Clear();
+        Madmate.Clear();
+        Mini.Clear();
+
         PlayerRole.ClearAll();
+        PlayerModifier.ClearAll();
     }
 
     public static void FixedUpdate(PlayerControl player)

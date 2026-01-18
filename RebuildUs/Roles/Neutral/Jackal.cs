@@ -179,7 +179,7 @@ public class Jackal : RoleBase<Jackal>
         if (!FormerJackals.Any(x => x.PlayerId == Local.Player.PlayerId)) FormerJackals.Add(Local.Player);
     }
 
-    public override void Clear()
+    public static void Clear()
     {
         // reset configs here
         FormerJackals = [];

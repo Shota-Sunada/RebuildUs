@@ -174,7 +174,7 @@ public class Madmate : ModifierBase<Madmate>
         return counter == totalTasks;
     }
 
-    public override void Clear()
+    public static void Clear()
     {
         // reset configs here
         Players.Clear();

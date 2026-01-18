@@ -80,7 +80,7 @@ public class Lighter : RoleBase<Lighter>
 
     // write functions here
 
-    public override void Clear()
+    public static void Clear()
     {
         // reset configs here
         Players.Clear();
