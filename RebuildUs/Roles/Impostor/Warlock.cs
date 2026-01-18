@@ -3,7 +3,8 @@ namespace RebuildUs.Roles.Impostor;
 [HarmonyPatch]
 public class Warlock : RoleBase<Warlock>
 {
-    public static Color RoleColor = Palette.ImpostorRed;
+    public static Color NameColor = Palette.ImpostorRed;
+    public override Color RoleColor => NameColor;
     public static CustomButton warlockCurseButton;
 
     // write configs here

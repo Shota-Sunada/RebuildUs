@@ -3,7 +3,8 @@ namespace RebuildUs.Roles.Impostor;
 [HarmonyPatch]
 public class Trickster : RoleBase<Trickster>
 {
-    public static Color RoleColor = Palette.ImpostorRed;
+    public static Color NameColor = Palette.ImpostorRed;
+    public override Color RoleColor => NameColor;
     private static CustomButton placeJackInTheBoxButton;
     private static CustomButton lightsOutButton;
 

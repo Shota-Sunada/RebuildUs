@@ -795,12 +795,9 @@ public static class Meeting
                 roomId = (byte)roomTracker.LastRoom?.RoomId;
             }
 
-            // Resett Bait list
-            Bait.active = new Dictionary<DeadPlayer, float>();
             // Save AntiTeleport position, if the player is able to move (i.e. not on a ladder or a gap thingy)
             if (PlayerControl.LocalPlayer.MyPhysics.enabled && (PlayerControl.LocalPlayer.moveable || PlayerControl.LocalPlayer.inVent
-                || Hacker.hackerVitalsButton.IsEffectActive || Hacker.hackerAdminTableButton.IsEffectActive || SecurityGuard.securityGuardCamButton.IsEffectActive
-                || Portal.isTeleporting && Portal.teleportedPlayers.Last().playerId == PlayerControl.LocalPlayer.PlayerId))
+                || Hacker.hackerVitalsButton.IsEffectActive || Hacker.hackerAdminTableButton.IsEffectActive || SecurityGuard.securityGuardCamButton.IsEffectActive))
             {
                 if (!PlayerControl.LocalPlayer.inMovingPlat)
                 {
@@ -808,19 +805,15 @@ public static class Meeting
                 }
             }
 
-            // Mini
-            Mini.timeOfMeetingStart = DateTime.UtcNow;
-            Mini.ageOnMeetingStart = Mathf.FloorToInt(Mini.growingProgress() * 18);
             // Reset vampire bitten
             Vampire.bitten = null;
             // Count meetings
-            if (meetingTarget == null) meetingsCount++;
+            if (meetingTarget == null) ModMapOptions.MeetingsCount++;
             // Save the meeting target
             target = meetingTarget;
+            Medium.meetingStartTime = DateTime.UtcNow;
 
             startMeetingClear();
-
-            if (PlayerControl.LocalPlayer.Data.IsDead && output != "") FastDestroyableSingleton<HudManager>.Instance.Chat.AddChat(PlayerControl.LocalPlayer, $"{output}");
         }
 
         {

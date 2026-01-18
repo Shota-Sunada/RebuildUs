@@ -3,7 +3,8 @@ namespace RebuildUs.Roles.Crewmate;
 [HarmonyPatch]
 public class Lighter : RoleBase<Lighter>
 {
-    public static Color RoleColor = new Color32(238, 229, 190, byte.MaxValue);
+    public static Color NameColor = new Color32(238, 229, 190, byte.MaxValue);
+    public override Color RoleColor => NameColor;
     private static CustomButton lighterButton;
     private bool lightActive = false;
 

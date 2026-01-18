@@ -3,7 +3,8 @@ namespace RebuildUs.Roles.Crewmate;
 [HarmonyPatch]
 public class Seer : RoleBase<Seer>
 {
-    public static Color RoleColor = new Color32(97, 178, 108, byte.MaxValue);
+    public static Color NameColor = new Color32(97, 178, 108, byte.MaxValue);
+    public override Color RoleColor => NameColor;
     public static List<Vector3> deadBodyPositions = [];
 
     // write configs here

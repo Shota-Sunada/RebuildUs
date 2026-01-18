@@ -3,7 +3,8 @@ namespace RebuildUs.Roles.Crewmate;
 [HarmonyPatch]
 public class Tracker : RoleBase<Tracker>
 {
-    public static Color RoleColor = new Color32(100, 58, 220, byte.MaxValue);
+    public static Color NameColor = new Color32(100, 58, 220, byte.MaxValue);
+    public override Color RoleColor => NameColor;
     private static CustomButton trackerTrackPlayerButton;
     private static CustomButton trackerTrackCorpsesButton;
     public static List<Vector3> deadBodyPositions = [];

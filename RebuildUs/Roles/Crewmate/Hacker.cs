@@ -5,7 +5,8 @@ namespace RebuildUs.Roles.Crewmate;
 [HarmonyPatch]
 public class Hacker : RoleBase<Hacker>
 {
-    public static Color RoleColor = new Color32(117, 250, 76, byte.MaxValue);
+    public static Color NameColor = new Color32(117, 250, 76, byte.MaxValue);
+    public override Color RoleColor => NameColor;
     private static CustomButton hackerButton;
     public static CustomButton hackerVitalsButton;
     public static CustomButton hackerAdminTableButton;

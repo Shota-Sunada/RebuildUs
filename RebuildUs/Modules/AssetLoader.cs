@@ -74,6 +74,7 @@ public static class AssetLoader
     public static Sprite SwapperCheck;
     public static Sprite GarlicButton;
     public static Sprite VampireButton;
+    public static Sprite ShiftButton;
 
     private static void LoadButtonAssets()
     {
@@ -108,6 +109,7 @@ public static class AssetLoader
         SwapperCheck = ab.LoadAsset<Sprite>("SwapperCheck.png").DontUnload();
         GarlicButton = ab.LoadAsset<Sprite>("GarlicButton.png").DontUnload();
         VampireButton = ab.LoadAsset<Sprite>("VampireButton.png").DontUnload();
+        ShiftButton = ab.LoadAsset<Sprite>("ShiftButton.png").DontUnload();
     }
     #endregion
 

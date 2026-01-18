@@ -3,7 +3,8 @@ namespace RebuildUs.Roles.Crewmate;
 [HarmonyPatch]
 public class Medium : RoleBase<Medium>
 {
-    public static Color RoleColor = new Color32(98, 120, 115, byte.MaxValue);
+    public static Color NameColor = new Color32(98, 120, 115, byte.MaxValue);
+    public override Color RoleColor => NameColor;
     public static CustomButton mediumButton;
     public static List<(DeadPlayer deadPlayer, Vector3 pos)> deadBodies = [];
     public static List<(DeadPlayer deadPlayer, Vector3 pos)> featureDeadBodies = [];
@@ -16,7 +17,7 @@ public class Medium : RoleBase<Medium>
 
     public DeadPlayer target;
     public DeadPlayer soulTarget;
-    public DateTime meetingStartTime = DateTime.UtcNow;
+    public static DateTime meetingStartTime = DateTime.UtcNow;
 
     public Medium()
     {
@@ -134,7 +135,7 @@ public class Medium : RoleBase<Medium>
                     }
                 }
                 string typeOfColor = Helpers.isLighterColor(Local.target.KillerIfExisting.Data.DefaultOutfit.ColorId) ? Tr.Get("detectiveColorLight") : Tr.Get("detectiveColorDark");
-                float timeSinceDeath = (float)(Local.meetingStartTime - Local.target.TimeOfDeath).TotalMilliseconds;
+                float timeSinceDeath = (float)(meetingStartTime - Local.target.TimeOfDeath).TotalMilliseconds;
                 string name = " (" + Local.target.Player.Data.PlayerName + ")";
 
                 msg = randomNumber == 0

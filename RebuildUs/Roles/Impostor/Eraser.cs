@@ -6,7 +6,8 @@ namespace RebuildUs.Roles.Impostor;
 [HarmonyPatch]
 public class Eraser : RoleBase<Eraser>
 {
-    public static Color RoleColor = Palette.ImpostorRed;
+    public static Color NameColor = Palette.ImpostorRed;
+    public override Color RoleColor => NameColor;
     private static CustomButton eraserButton;
 
     // write configs here
@@ -52,7 +53,7 @@ public class Eraser : RoleBase<Eraser>
                 }
             }
             currentTarget = Helpers.SetTarget(onlyCrewmates: !canEraseAnyone, untargetablePlayers: canEraseAnyone ? [] : untargetables);
-            Helpers.SetPlayerOutline(currentTarget, Eraser.RoleColor);
+            Helpers.SetPlayerOutline(currentTarget, NameColor);
         }
     }
     public override void OnKill(PlayerControl target) { }

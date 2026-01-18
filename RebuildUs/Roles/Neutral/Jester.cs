@@ -5,7 +5,8 @@ namespace RebuildUs.Roles.Neutral;
 [HarmonyPatch]
 public class Jester : RoleBase<Jester>
 {
-    public static Color RoleColor = new Color32(236, 98, 165, byte.MaxValue);
+    public static Color NameColor = new Color32(236, 98, 165, byte.MaxValue);
+    public override Color RoleColor => NameColor;
 
     public static bool TriggerJesterWin = false;
     public static bool CanCallEmergency { get { return CustomOptionHolder.JesterCanCallEmergency.GetBool(); } }

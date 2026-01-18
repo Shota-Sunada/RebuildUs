@@ -3,7 +3,8 @@ namespace RebuildUs.Roles.Crewmate;
 [HarmonyPatch]
 public class Engineer : RoleBase<Engineer>
 {
-    public static Color RoleColor = new Color32(0, 40, 245, byte.MaxValue);
+    public static Color NameColor = new Color32(0, 40, 245, byte.MaxValue);
+    public override Color RoleColor => NameColor;
     private static CustomButton EngineerRepairButton;
 
     // write configs here

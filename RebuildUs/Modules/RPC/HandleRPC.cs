@@ -203,6 +203,18 @@ public static partial class RPCProcedure
             case CustomRPC.ImpostorPromotesToLastImpostor:
                 impostorPromotesToLastImpostor(reader.ReadByte());
                 break;
+            case CustomRPC.ShifterShift:
+                shifterShift(reader.ReadByte());
+                break;
+            case CustomRPC.SetFutureShifted:
+                setFutureShifted(reader.ReadByte());
+                break;
+            case CustomRPC.SetShifterType:
+                setShifterType(reader.ReadBoolean());
+                break;
+            case CustomRPC.FortuneTellerUsedDivine:
+                fortuneTellerUsedDivine(reader.ReadByte(), reader.ReadByte());
+                break;
             default:
                 break;
         }

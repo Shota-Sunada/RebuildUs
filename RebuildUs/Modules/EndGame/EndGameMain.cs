@@ -264,20 +264,20 @@ public static class EndGameMain
         if (AdditionalTempData.WinCondition == EWinCondition.JesterWin)
         {
             bonusText = "jesterWin";
-            TextRenderer.color = Jester.RoleColor;
-            __instance.BackgroundBar.material.SetColor("_Color", Jester.RoleColor);
+            TextRenderer.color = Jester.NameColor;
+            __instance.BackgroundBar.material.SetColor("_Color", Jester.NameColor);
         }
         else if (AdditionalTempData.WinCondition == EWinCondition.ArsonistWin)
         {
             bonusText = "arsonistWin";
-            TextRenderer.color = Arsonist.RoleColor;
-            __instance.BackgroundBar.material.SetColor("_Color", Arsonist.RoleColor);
+            TextRenderer.color = Arsonist.NameColor;
+            __instance.BackgroundBar.material.SetColor("_Color", Arsonist.NameColor);
         }
         else if (AdditionalTempData.WinCondition == EWinCondition.VultureWin)
         {
             bonusText = "vultureWin";
-            TextRenderer.color = Vulture.RoleColor;
-            __instance.BackgroundBar.material.SetColor("_Color", Vulture.RoleColor);
+            TextRenderer.color = Vulture.NameColor;
+            __instance.BackgroundBar.material.SetColor("_Color", Vulture.NameColor);
         }
         // else if (AdditionalTempData.WinCondition == EWinCondition.LawyerSoloWin)
         // {
@@ -336,8 +336,8 @@ public static class EndGameMain
         else if (AdditionalTempData.WinCondition == EWinCondition.JackalWin)
         {
             bonusText = "jackalWin";
-            TextRenderer.color = Jackal.RoleColor;
-            __instance.BackgroundBar.material.SetColor("_Color", Jackal.RoleColor);
+            TextRenderer.color = Jackal.NameColor;
+            __instance.BackgroundBar.material.SetColor("_Color", Jackal.NameColor);
         }
         // else if (AdditionalTempData.WinCondition == EWinCondition.EveryoneDied)
         if (AdditionalTempData.WinCondition == EWinCondition.EveryoneDied)

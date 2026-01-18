@@ -47,7 +47,7 @@ public static class PlayerControlHelpers
                 player.IsRole(RoleType.Opportunist) ||
                 player.IsRole(RoleType.PlagueDoctor) ||
                 player.IsRole(RoleType.Vulture) ||
-                (player.IsRole(RoleType.Shifter) && Shifter.IsNeutral));
+                (player.IsRole(RoleType.Shifter) && Shifter.isNeutral));
     }
 
     public static bool IsTeamCrewmate(this PlayerControl player)

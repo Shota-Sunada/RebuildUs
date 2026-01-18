@@ -3,7 +3,26 @@ namespace RebuildUs.Roles.Modifier;
 [HarmonyPatch]
 public class CreatedMadmate : ModifierBase<CreatedMadmate>
 {
-    public static Color ModifierColor = Palette.ImpostorRed;
+    public override Color ModifierColor => Madmate.NameColor;
+
+    public override void OnUpdateNameColors()
+    {
+        if (Player == CachedPlayer.LocalPlayer.PlayerControl)
+        {
+            Update.setPlayerNameColor(Player, ModifierColor);
+
+            if (Madmate.knowsImpostors(Player))
+            {
+                foreach (var p in PlayerControl.AllPlayerControls.GetFastEnumerator())
+                {
+                    if (p.IsTeamImpostor() || p.IsRole(RoleType.Spy) || (p.IsRole(RoleType.Jackal) && Jackal.GetRole(p).WasTeamRed) || (p.IsRole(RoleType.Sidekick) && Sidekick.GetRole(p).WasTeamRed))
+                    {
+                        Update.setPlayerNameColor(p, Palette.ImpostorRed);
+                    }
+                }
+            }
+        }
+    }
 
     public enum CreatedMadmateType
     {

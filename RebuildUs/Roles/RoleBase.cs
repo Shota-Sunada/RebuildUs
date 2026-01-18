@@ -1,3 +1,4 @@
+using UnityEngine;
 using RebuildUs.Players;
 
 namespace RebuildUs.Roles;
@@ -7,6 +8,11 @@ public abstract class PlayerRole
     public static List<PlayerRole> AllRoles = [];
     public PlayerControl Player;
     public RoleType CurrentRoleType;
+    public virtual Color RoleColor => Color.white;
+    public virtual string NameTag => "";
+
+    public virtual void OnUpdateNameColors() { }
+    public virtual void OnUpdateNameTags() { }
 
     public abstract void OnMeetingStart();
     public abstract void OnMeetingEnd();
@@ -28,6 +34,11 @@ public abstract class PlayerRole
     public static void ClearAll()
     {
         AllRoles = [];
+    }
+
+    public static PlayerRole GetRole(PlayerControl player)
+    {
+        return AllRoles.FirstOrDefault(x => x.Player == player);
     }
 }
 
@@ -81,7 +92,7 @@ public abstract class RoleBase<T> : PlayerRole where T : RoleBase<T>, new()
         get { return Helpers.RolesEnabled && Players.Count > 0; }
     }
 
-    public static T GetRole(PlayerControl player = null)
+    public static new T GetRole(PlayerControl player = null)
     {
         player ??= CachedPlayer.LocalPlayer.PlayerControl;
         return Players.FirstOrDefault(x => x.Player == player);

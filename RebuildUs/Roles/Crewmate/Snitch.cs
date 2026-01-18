@@ -5,7 +5,8 @@ namespace RebuildUs.Roles.Crewmate;
 [HarmonyPatch]
 public class Snitch : RoleBase<Snitch>
 {
-    public static Color RoleColor = new Color32(184, 251, 79, byte.MaxValue);
+    public static Color NameColor = new Color32(184, 251, 79, byte.MaxValue);
+    public override Color RoleColor => Snitch.NameColor;
 
     // write configs here
     public static List<Arrow> localArrows = [];
@@ -56,7 +57,7 @@ public class Snitch : RoleBase<Snitch>
                 Color c = Palette.ImpostorRed;
                 if (arrowForTeamJackal)
                 {
-                    c = Jackal.RoleColor;
+                    c = Jackal.NameColor;
                 }
                 if (!p.Data.IsDead && (arrowForImp || arrowForTeamJackal))
                 {

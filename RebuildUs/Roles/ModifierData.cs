@@ -17,7 +17,7 @@ public static class ModifierData
 
     public static readonly ModifierRegistration[] Roles =
     [
-        // new(RoleType.Jester, typeof(RoleBase<Jester>), () => Jester.RoleColor, () => CustomOptionHolder.JesterSpawnRate),
+        // new(RoleType.Jester, typeof(RoleBase<Jester>), () => Jester.color, () => CustomOptionHolder.JesterSpawnRate),
     ];
 
     public static (ModifierType ModifierType, Type Type)[] AllModifierTypes => [.. Roles.Select(r => (r.modType, r.classType))];

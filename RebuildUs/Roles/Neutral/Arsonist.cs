@@ -3,7 +3,8 @@ namespace RebuildUs.Roles.Neutral;
 [HarmonyPatch]
 public class Arsonist : RoleBase<Arsonist>
 {
-    public static Color RoleColor = new Color32(238, 112, 46, byte.MaxValue);
+    public static Color NameColor = new Color32(238, 112, 46, byte.MaxValue);
+    public override Color RoleColor => NameColor;
     public static bool TriggerArsonistWin = false;
     public bool DousedEveryone = false;
     public PlayerControl CurrentTarget;

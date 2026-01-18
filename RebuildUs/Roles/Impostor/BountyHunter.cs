@@ -7,7 +7,8 @@ namespace RebuildUs.Roles.Impostor;
 [HarmonyPatch]
 public class BountyHunter : RoleBase<BountyHunter>
 {
-    public static Color RoleColor = Palette.ImpostorRed;
+    public static Color NameColor = Palette.ImpostorRed;
+    public override Color RoleColor => NameColor;
     public Arrow Arrow;
     public static PlayerControl Bounty;
     public static TextMeshPro CooldownText;

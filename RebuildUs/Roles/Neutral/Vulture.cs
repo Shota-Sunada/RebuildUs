@@ -5,7 +5,8 @@ namespace RebuildUs.Roles.Neutral;
 [HarmonyPatch]
 public class Vulture : RoleBase<Vulture>
 {
-    public static Color RoleColor = new Color32(139, 69, 19, byte.MaxValue);
+    public static Color NameColor = new Color32(139, 69, 19, byte.MaxValue);
+    public override Color RoleColor => NameColor;
     public static bool TriggerVultureWin = false;
     public List<Arrow> LocalArrows = [];
     public int EatenBodies = 0;

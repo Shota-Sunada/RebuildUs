@@ -17,18 +17,18 @@ public static class RoleData
 
     public static readonly RoleRegistration[] Roles =
     [
-        new(RoleType.Jester, typeof(RoleBase<Jester>), () => Jester.RoleColor, () => CustomOptionHolder.JesterSpawnRate),
-        new(RoleType.Mayor, typeof(RoleBase<Mayor>), () => Mayor.RoleColor, () => CustomOptionHolder.MayorSpawnRate),
-        new(RoleType.Engineer, typeof(RoleBase<Engineer>), () => Engineer.RoleColor, () => CustomOptionHolder.EngineerSpawnRate),
-        new(RoleType.BountyHunter, typeof(RoleBase<BountyHunter>), () => BountyHunter.RoleColor, () => CustomOptionHolder.BountyHunterSpawnRate),
-        new(RoleType.Arsonist, typeof(RoleBase<Arsonist>), () => Arsonist.RoleColor, () => CustomOptionHolder.ArsonistSpawnRate),
-        new(RoleType.Vulture, typeof(RoleBase<Vulture>), () => Vulture.RoleColor, () => CustomOptionHolder.VultureSpawnRate),
-        new(RoleType.Jackal, typeof(RoleBase<Jackal>), () => Jackal.RoleColor, () => CustomOptionHolder.JackalSpawnRate),
-        new(RoleType.Sidekick, typeof(RoleBase<Sidekick>), () => Jackal.RoleColor, () => CustomOptionHolder.JackalSpawnRate),
-        new(RoleType.Spy, typeof(RoleBase<Spy>), () => Spy.RoleColor, () => CustomOptionHolder.SpySpawnRate),
-        new(RoleType.Godfather, typeof(RoleBase<Mafia.Godfather>), () => Mafia.RoleColor, () => CustomOptionHolder.mafiaSpawnRate),
-        new(RoleType.Mafioso, typeof(RoleBase<Mafia.Mafioso>), () => Mafia.RoleColor, () => CustomOptionHolder.mafiaSpawnRate),
-        new(RoleType.Janitor, typeof(RoleBase<Mafia.Janitor>), () => Mafia.RoleColor, () => CustomOptionHolder.mafiaSpawnRate),
+        new(RoleType.Jester, typeof(RoleBase<Jester>), () => Jester.NameColor, () => CustomOptionHolder.JesterSpawnRate),
+        new(RoleType.Mayor, typeof(RoleBase<Mayor>), () => Mayor.NameColor, () => CustomOptionHolder.MayorSpawnRate),
+        new(RoleType.Engineer, typeof(RoleBase<Engineer>), () => Engineer.NameColor, () => CustomOptionHolder.EngineerSpawnRate),
+        new(RoleType.BountyHunter, typeof(RoleBase<BountyHunter>), () => BountyHunter.NameColor, () => CustomOptionHolder.BountyHunterSpawnRate),
+        new(RoleType.Arsonist, typeof(RoleBase<Arsonist>), () => Arsonist.NameColor, () => CustomOptionHolder.ArsonistSpawnRate),
+        new(RoleType.Vulture, typeof(RoleBase<Vulture>), () => Vulture.NameColor, () => CustomOptionHolder.VultureSpawnRate),
+        new(RoleType.Jackal, typeof(RoleBase<Jackal>), () => Jackal.NameColor, () => CustomOptionHolder.JackalSpawnRate),
+        new(RoleType.Sidekick, typeof(RoleBase<Sidekick>), () => Jackal.NameColor, () => CustomOptionHolder.JackalSpawnRate),
+        new(RoleType.Spy, typeof(RoleBase<Spy>), () => Spy.NameColor, () => CustomOptionHolder.SpySpawnRate),
+        new(RoleType.Godfather, typeof(RoleBase<Mafia.Godfather>), () => Mafia.NameColor, () => CustomOptionHolder.mafiaSpawnRate),
+        new(RoleType.Mafioso, typeof(RoleBase<Mafia.Mafioso>), () => Mafia.NameColor, () => CustomOptionHolder.mafiaSpawnRate),
+        new(RoleType.Janitor, typeof(RoleBase<Mafia.Janitor>), () => Mafia.NameColor, () => CustomOptionHolder.mafiaSpawnRate),
     ];
 
     public static (RoleType RoleType, Type Type)[] AllRoleTypes => [.. Roles.Select(r => (r.roleType, r.classType))];

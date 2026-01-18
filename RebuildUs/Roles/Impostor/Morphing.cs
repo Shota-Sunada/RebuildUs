@@ -3,7 +3,8 @@ namespace RebuildUs.Roles.Impostor;
 [HarmonyPatch]
 public class Morphing : RoleBase<Morphing>
 {
-    public static Color RoleColor = Palette.ImpostorRed;
+    public static Color NameColor = Palette.ImpostorRed;
+    public override Color RoleColor => NameColor;
     private static CustomButton morphingButton;
     public static PlayerControl currentTarget;
     public static PlayerControl sampledTarget;

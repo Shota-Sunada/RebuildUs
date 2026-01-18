@@ -3,7 +3,8 @@ namespace RebuildUs.Roles.Crewmate;
 [HarmonyPatch]
 public class Detective : RoleBase<Detective>
 {
-    public static Color RoleColor = new Color32(45, 106, 165, byte.MaxValue);
+    public static Color NameColor = new Color32(45, 106, 165, byte.MaxValue);
+    public override Color RoleColor => NameColor;
 
     // write configs here
     public static bool anonymousFootprints { get { return CustomOptionHolder.detectiveAnonymousFootprints.GetBool(); } }

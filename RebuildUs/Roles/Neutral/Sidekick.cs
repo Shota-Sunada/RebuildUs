@@ -3,6 +3,8 @@ namespace RebuildUs.Roles.Neutral;
 [HarmonyPatch]
 public class Sidekick : RoleBase<Sidekick>
 {
+    public override Color RoleColor => Jackal.NameColor;
+
     // write configs here
     public static CustomButton SidekickKillButton;
     public static CustomButton SidekickSabotageLightsButton;
@@ -10,6 +12,24 @@ public class Sidekick : RoleBase<Sidekick>
     public bool WasTeamRed = false;
     public bool WasImpostor = false;
     public bool WasSpy = false;
+
+    public override void OnUpdateNameColors()
+    {
+        var lp = CachedPlayer.LocalPlayer.PlayerControl;
+        if (Player == lp)
+        {
+            Update.setPlayerNameColor(Player, RoleColor);
+            if (Jackal.Exists)
+            {
+                var jk = Jackal.Players.FirstOrDefault();
+                if (jk != null) Update.setPlayerNameColor(jk.Player, RoleColor);
+            }
+        }
+        else if (lp.IsTeamImpostor() && WasTeamRed)
+        {
+            Update.setPlayerNameColor(Player, RoleColor);
+        }
+    }
 
     public static bool CanKill { get { return CustomOptionHolder.SidekickCanKill.GetBool(); } }
     public static bool CanUseVents { get { return CustomOptionHolder.SidekickCanUseVents.GetBool(); } }
@@ -32,13 +52,13 @@ public class Sidekick : RoleBase<Sidekick>
         {
             var untargetablePlayers = new List<PlayerControl>();
             if (Jackal.Exists) untargetablePlayers.AddRange(Jackal.AllPlayers);
-            // foreach (var mini in Mini.players)
-            // {
-            //     if (!Mini.isGrownUp(mini.player))
-            //     {
-            //         untargetablePlayers.Add(mini.player);
-            //     }
-            // }
+            foreach (var mini in Mini.Players)
+            {
+                if (!Mini.isGrownUp(mini.Player))
+                {
+                    untargetablePlayers.Add(mini.Player);
+                }
+            }
             CurrentTarget = Helpers.SetTarget(untargetablePlayers: untargetablePlayers);
             if (CanKill) Helpers.SetPlayerOutline(CurrentTarget, Palette.ImpostorRed);
         }

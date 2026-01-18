@@ -45,7 +45,7 @@ public static class Update
         }
     }
 
-    private static void setPlayerNameColor(PlayerControl p, Color color)
+    public static void setPlayerNameColor(PlayerControl p, Color color)
     {
         p.cosmetics.nameText.color = color;
         if (MeetingHud.Instance != null)
@@ -62,253 +62,83 @@ public static class Update
 
     public static void setNameColors()
     {
-        if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Jester))
+        var lp = CachedPlayer.LocalPlayer.PlayerControl;
+        if (lp == null) return;
+
+        resetNameTagsAndColors();
+
+        // 1. Set Local Player Color
+        var roleInstance = PlayerRole.GetRole(lp);
+        if (roleInstance != null)
         {
-            setPlayerNameColor(CachedPlayer.LocalPlayer.PlayerControl, Jester.RoleColor);
-        }
-        else if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Mayor))
-        {
-            setPlayerNameColor(CachedPlayer.LocalPlayer.PlayerControl, Mayor.RoleColor);
-        }
-        else if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Engineer))
-        {
-            setPlayerNameColor(CachedPlayer.LocalPlayer.PlayerControl, Engineer.RoleColor);
-        }
-        else if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Sheriff))
-        {
-            setPlayerNameColor(CachedPlayer.LocalPlayer.PlayerControl, Sheriff.color);
-        }
-        else if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Lighter))
-        {
-            setPlayerNameColor(CachedPlayer.LocalPlayer.PlayerControl, Lighter.RoleColor);
-        }
-        else if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Detective))
-        {
-            setPlayerNameColor(CachedPlayer.LocalPlayer.PlayerControl, Detective.RoleColor);
-        }
-        else if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.TimeMaster))
-        {
-            setPlayerNameColor(CachedPlayer.LocalPlayer.PlayerControl, TimeMaster.RoleColor);
-        }
-        else if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Medic))
-        {
-            setPlayerNameColor(CachedPlayer.LocalPlayer.PlayerControl, Medic.RoleColor);
-        }
-        else if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Shifter))
-        {
-            setPlayerNameColor(CachedPlayer.LocalPlayer.PlayerControl, Shifter.color);
-        }
-        else if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Swapper))
-        {
-            setPlayerNameColor(CachedPlayer.LocalPlayer.PlayerControl, Swapper.swapper.Data.Role.IsImpostor ? Palette.ImpostorRed : Swapper.color);
-        }
-        else if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Seer))
-        {
-            setPlayerNameColor(CachedPlayer.LocalPlayer.PlayerControl, Seer.RoleColor);
-        }
-        else if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Hacker))
-        {
-            setPlayerNameColor(CachedPlayer.LocalPlayer.PlayerControl, Hacker.RoleColor);
-        }
-        else if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Tracker))
-        {
-            setPlayerNameColor(CachedPlayer.LocalPlayer.PlayerControl, Tracker.RoleColor);
-        }
-        else if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Snitch))
-        {
-            setPlayerNameColor(CachedPlayer.LocalPlayer.PlayerControl, Snitch.RoleColor);
-        }
-        else if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Jackal))
-        {
-            // Jackal can see his sidekick
-            setPlayerNameColor(CachedPlayer.LocalPlayer.PlayerControl, Jackal.RoleColor);
-            var jackal = Jackal.GetRole();
-            if (Sidekick.Exists)
-            {
-                setPlayerNameColor(jackal.MySidekick, Jackal.RoleColor);
-            }
-            if (jackal.FakeSidekick != null)
-            {
-                setPlayerNameColor(jackal.FakeSidekick, Jackal.RoleColor);
-            }
-        }
-        else if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Spy))
-        {
-            setPlayerNameColor(CachedPlayer.LocalPlayer.PlayerControl, Spy.RoleColor);
-        }
-        else if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.SecurityGuard))
-        {
-            setPlayerNameColor(CachedPlayer.LocalPlayer.PlayerControl, SecurityGuard.RoleColor);
-        }
-        else if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Arsonist))
-        {
-            setPlayerNameColor(CachedPlayer.LocalPlayer.PlayerControl, Arsonist.RoleColor);
-        }
-        else if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.NiceGuesser))
-        {
-            setPlayerNameColor(CachedPlayer.LocalPlayer.PlayerControl, Guesser.NiceGuesser.RoleColor);
-        }
-        else if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.EvilGuesser))
-        {
-            setPlayerNameColor(CachedPlayer.LocalPlayer.PlayerControl, Palette.ImpostorRed);
-        }
-        else if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Bait))
-        {
-            setPlayerNameColor(CachedPlayer.LocalPlayer.PlayerControl, Bait.color);
-        }
-        else if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Opportunist))
-        {
-            setPlayerNameColor(CachedPlayer.LocalPlayer.PlayerControl, Opportunist.color);
-        }
-        else if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Vulture))
-        {
-            setPlayerNameColor(CachedPlayer.LocalPlayer.PlayerControl, Vulture.RoleColor);
-        }
-        else if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Medium))
-        {
-            setPlayerNameColor(CachedPlayer.LocalPlayer.PlayerControl, Medium.RoleColor);
-        }
-        else if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.PlagueDoctor))
-        {
-            setPlayerNameColor(CachedPlayer.LocalPlayer.PlayerControl, PlagueDoctor.color);
-        }
-        else if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.FortuneTeller) && (FortuneTeller.isCompletedNumTasks(CachedPlayer.LocalPlayer.PlayerControl) || CachedPlayer.LocalPlayer.PlayerControl.Data.IsDead))
-        {
-            setPlayerNameColor(CachedPlayer.LocalPlayer.PlayerControl, FortuneTeller.color);
+            setPlayerNameColor(lp, roleInstance.RoleColor);
         }
 
-        if (CachedPlayer.LocalPlayer.PlayerControl.HasModifier(ModifierType.Madmate))
+        foreach (var mod in PlayerModifier.GetModifiers(lp))
         {
-            setPlayerNameColor(CachedPlayer.LocalPlayer.PlayerControl, Madmate.ModifierColor);
-
-            if (Madmate.knowsImpostors(CachedPlayer.LocalPlayer.PlayerControl))
-            {
-                foreach (var p in PlayerControl.AllPlayerControls.GetFastEnumerator())
-                {
-                    if (p.IsTeamImpostor() || p.IsRole(RoleType.Spy) || (p.IsRole(RoleType.Jackal) && Jackal.GetRole(p).WasTeamRed) || (p.IsRole(RoleType.Sidekick) && Sidekick.GetRole(p).WasTeamRed))
-                    {
-                        setPlayerNameColor(p, Palette.ImpostorRed);
-                    }
-                }
-            }
+            setPlayerNameColor(lp, mod.ModifierColor);
         }
 
-        else if (CachedPlayer.LocalPlayer.PlayerControl.HasModifier(ModifierType.CreatedMadmate))
-        {
-            setPlayerNameColor(CachedPlayer.LocalPlayer.PlayerControl, Madmate.ModifierColor);
-
-            if (CreatedMadmate.knowsImpostors(CachedPlayer.LocalPlayer.PlayerControl))
-            {
-                foreach (var p in PlayerControl.AllPlayerControls.GetFastEnumerator())
-                {
-                    if (p.IsTeamImpostor() || p.IsRole(RoleType.Spy) || (p.IsRole(RoleType.Jackal) && Jackal.GetRole(p).WasTeamRed) || (p.IsRole(RoleType.Sidekick) && Sidekick.GetRole(p).WasTeamRed))
-                    {
-                        setPlayerNameColor(p, Palette.ImpostorRed);
-                    }
-                }
-            }
-        }
-
-        else if (CachedPlayer.LocalPlayer.PlayerControl.HasModifier(ModifierType.LastImpostor))
-        {
-            setPlayerNameColor(CachedPlayer.LocalPlayer.PlayerControl, LastImpostor.color);
-        }
-
-        else if (CachedPlayer.LocalPlayer.PlayerControl.HasModifier(ModifierType.Munou) && CachedPlayer.LocalPlayer.PlayerControl.Data.IsDead)
-        {
-            setPlayerNameColor(CachedPlayer.LocalPlayer.PlayerControl, Munou.color);
-        }
-
-        else if (CachedPlayer.LocalPlayer.PlayerControl.HasModifier(ModifierType.AntiTeleport) && CachedPlayer.LocalPlayer.PlayerControl.Data.IsDead)
-        {
-            setPlayerNameColor(CachedPlayer.LocalPlayer.PlayerControl, AntiTeleport.color);
-        }
-
-        if (GM.gm != null)
-        {
-            setPlayerNameColor(GM.gm, GM.color);
-        }
-
-        // No else if here, as a Lover of team Jackal needs the colors
-        if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Sidekick))
-        {
-            // Sidekick can see the jackal
-            setPlayerNameColor(CachedPlayer.LocalPlayer.PlayerControl, Jackal.RoleColor);
-            if (Jackal.Exists)
-            {
-                setPlayerNameColor(Jackal.jackal, Jackal.RoleColor);
-            }
-        }
-
-        // No else if here, as the Impostors need the Spy name to be colored
-        if (Spy.spy != null && CachedPlayer.LocalPlayer.PlayerControl.Data.Role.IsImpostor)
-        {
-            setPlayerNameColor(Spy.spy, Spy.color);
-        }
-        if (Sidekick.sidekick != null && Sidekick.wasTeamRed && CachedPlayer.LocalPlayer.PlayerControl.Data.Role.IsImpostor)
-        {
-            setPlayerNameColor(Sidekick.sidekick, Spy.color);
-        }
-        if (Jackal.jackal != null && Jackal.wasTeamRed && CachedPlayer.LocalPlayer.PlayerControl.Data.Role.IsImpostor)
-        {
-            setPlayerNameColor(Jackal.jackal, Spy.color);
-        }
-
-        // Crewmate roles with no changes: Mini
-        // Impostor roles with no changes: Morphing, Camouflager, Vampire, Godfather, Eraser, Janitor, Cleaner, Warlock, BountyHunter,  Witch and Mafioso
+        // 2. Process logic-heavy vision (Jackal seeing Sidekick, Spy seeing Impostors, etc.)
+        foreach (var r in PlayerRole.AllRoles) r.OnUpdateNameColors();
+        foreach (var m in PlayerModifier.AllModifiers) m.OnUpdateNameColors();
     }
 
     public static void setNameTags()
     {
-        // Mafia
-        if (CachedPlayer.LocalPlayer.PlayerControl != null && CachedPlayer.LocalPlayer.PlayerControl.Data.Role.IsImpostor)
-        {
-            foreach (PlayerControl player in CachedPlayer.AllPlayers)
-            {
-                if (player.cosmetics.nameText.text == "") continue;
-                if (player.IsRole(RoleType.Godfather))
-                {
-                    player.cosmetics.nameText.text = player.Data.PlayerName + $" ({Tr.Get("mafiaG")})";
-                }
-                else if (player.IsRole(RoleType.Mafioso))
-                {
-                    player.cosmetics.nameText.text = player.Data.PlayerName + $" ({Tr.Get("mafiaM")})";
-                }
-                else if (player.IsRole(RoleType.Janitor))
-                {
-                    player.cosmetics.nameText.text = player.Data.PlayerName + $" ({Tr.Get("mafiaJ")})";
-                }
-            }
-            if (MeetingHud.Instance != null)
-            {
-                foreach (var voteArea in MeetingHud.Instance.playerStates)
-                {
-                    var player = Helpers.PlayerById(voteArea.TargetPlayerId);
+        var lp = CachedPlayer.LocalPlayer.PlayerControl;
+        if (lp == null) return;
 
-                    if (player.IsRole(RoleType.Godfather))
-                    {
-                        voteArea.NameText.text = player.Data.PlayerName + $" ({Tr.Get("mafiaG")})";
-                    }
-                    else if (player.IsRole(RoleType.Mafioso))
-                    {
-                        voteArea.NameText.text = player.Data.PlayerName + $" ({Tr.Get("mafiaM")})";
-                    }
-                    else if (player.IsRole(RoleType.Janitor))
-                    {
-                        voteArea.NameText.text = player.Data.PlayerName + $" ({Tr.Get("mafiaJ")})";
-                    }
-                }
-            }
+        resetNameTagsAndColors();
+
+        // 1. Process Roles and Modifiers NameTags
+        foreach (var r in PlayerRole.AllRoles)
+        {
+            if (string.IsNullOrEmpty(r.Player.cosmetics.nameText.text)) continue;
+            var tag = r.NameTag;
+            if (!string.IsNullOrEmpty(tag)) r.Player.cosmetics.nameText.text += tag;
+            r.OnUpdateNameTags();
+        }
+
+        foreach (var m in PlayerModifier.AllModifiers)
+        {
+            if (string.IsNullOrEmpty(m.Player.cosmetics.nameText.text)) continue;
+            var tag = m.NameTag;
+            if (!string.IsNullOrEmpty(tag)) m.Player.cosmetics.nameText.text += tag;
+            m.OnUpdateNameTags();
         }
 
         bool meetingShow = MeetingHud.Instance != null && (MeetingHud.Instance.state is MeetingHud.VoteStates.Voted or MeetingHud.VoteStates.NotVoted or MeetingHud.VoteStates.Discussion);
 
-        // Lovers
-        if (CachedPlayer.LocalPlayer.PlayerControl.IsLovers() && CachedPlayer.LocalPlayer.PlayerControl.IsAlive())
+        // 2. Voting Area NameTags
+        if (MeetingHud.Instance != null)
         {
-            string suffix = Lovers.getIcon(CachedPlayer.LocalPlayer.PlayerControl);
-            var lover1 = CachedPlayer.LocalPlayer.PlayerControl;
-            var lover2 = CachedPlayer.LocalPlayer.PlayerControl.getPartner();
+            foreach (var voteArea in MeetingHud.Instance.playerStates)
+            {
+                var target = Helpers.PlayerById(voteArea.TargetPlayerId);
+                if (target == null) continue;
+
+                var targetRole = PlayerRole.GetRole(target);
+                if (targetRole != null)
+                {
+                    var tag = targetRole.NameTag;
+                    if (!string.IsNullOrEmpty(tag)) voteArea.NameText.text += tag;
+                }
+
+                // Hacker and Detective Lighter/Darker
+                if (ModMapOptions.ShowLighterDarker && meetingShow)
+                {
+                    voteArea.NameText.text += $" ({(Helpers.isLighterColor(target.Data.DefaultOutfit.ColorId) ? Tr.Get("detectiveLightLabel") : Tr.Get("detectiveDarkLabel"))})";
+                }
+            }
+        }
+
+        // 3. Lovers (Special Logic)
+        if (lp.IsLovers() && lp.IsAlive())
+        {
+            string suffix = Lovers.getIcon(lp);
+            var lover1 = lp;
+            var lover2 = lp.getPartner();
 
             lover1.cosmetics.nameText.text += suffix;
             if (!Helpers.HidePlayerName(lover2))
@@ -324,7 +154,7 @@ public static class Update
             }
         }
 
-        if (ModMapOptions.GhostsSeeRoles && CachedPlayer.LocalPlayer.PlayerControl.IsDead())
+        if (ModMapOptions.GhostsSeeRoles && lp.IsDead())
         {
             foreach (var couple in Lovers.couples)
             {
@@ -341,19 +171,6 @@ public static class Update
                             player.NameText.text += suffix;
                         }
                     }
-                }
-            }
-        }
-
-        // Hacker and Detective
-        if (CachedPlayer.LocalPlayer.PlayerControl != null && ModMapOptions.ShowLighterDarker)
-        {
-            if (meetingShow)
-            {
-                foreach (PlayerVoteArea player in MeetingHud.Instance.playerStates)
-                {
-                    var target = Helpers.PlayerById(player.TargetPlayerId);
-                    if (target != null) player.NameText.text += $" ({(Helpers.isLighterColor(target.Data.DefaultOutfit.ColorId) ? Tr.Get("detectiveLightLabel") : Tr.Get("detectiveDarkLabel"))})";
                 }
             }
         }
@@ -419,13 +236,14 @@ public static class Update
     public static void impostorSetTarget()
     {
         if (!CachedPlayer.LocalPlayer.PlayerControl.Data.Role.IsImpostor || !CachedPlayer.LocalPlayer.PlayerControl.CanMove || CachedPlayer.LocalPlayer.PlayerControl.Data.IsDead)
-        { // !isImpostor || !canMove || isDead
+        {
+            // !isImpostor || !canMove || isDead
             FastDestroyableSingleton<HudManager>.Instance.KillButton.SetTarget(null);
             return;
         }
 
         PlayerControl target = null;
-        if (Spy.spy != null || Sidekick.wasSpy || Jackal.wasSpy)
+        if (Spy.Exists || Sidekick.Players.Any(x => x.WasTeamRed) || Jackal.Players.Any(x => x.WasTeamRed))
         {
             if (Spy.ImpostorsCanKillAnyone)
             {
@@ -433,12 +251,21 @@ public static class Update
             }
             else
             {
-                var listP = new List<PlayerControl>
+                List<PlayerControl> listP = [.. Spy.AllPlayers];
+                foreach (var sidekick in Sidekick.Players)
+                {
+                    if (sidekick.WasTeamRed)
                     {
-                        Spy.spy
-                    };
-                if (Sidekick.wasTeamRed) listP.Add(Sidekick.sidekick);
-                if (Jackal.wasTeamRed) listP.Add(Jackal.jackal);
+                        listP.Add(sidekick.Player);
+                    }
+                }
+                foreach (var jackal in Jackal.Players)
+                {
+                    if (jackal.WasTeamRed)
+                    {
+                        listP.Add(jackal.Player);
+                    }
+                }
                 target = Helpers.SetTarget(true, true, listP);
             }
         }
@@ -448,6 +275,37 @@ public static class Update
         }
 
         FastDestroyableSingleton<HudManager>.Instance.KillButton.SetTarget(target); // Includes setPlayerOutline(target, Palette.ImpstorRed);
+    }
+
+    public static void playerSizeUpdate(PlayerControl p)
+    {
+        // Set default player size
+        CircleCollider2D collider = p.GetComponent<CircleCollider2D>();
+
+        p.transform.localScale = new Vector3(0.7f, 0.7f, 1f);
+        collider.radius = Mini.defaultColliderRadius;
+        collider.offset = Mini.defaultColliderOffset * Vector2.down;
+
+        // Set adapted player size to Mini and Morphing
+        if (Camouflager.camouflageTimer > 0f) return;
+
+        foreach (var mini in Mini.Players)
+        {
+            float growingProgress = mini.growingProgress();
+            float scale = growingProgress * 0.35f + 0.35f;
+            float correctedColliderRadius = Mini.defaultColliderRadius * 0.7f / scale; // scale / 0.7f is the factor by which we decrease the player size, hence we need to increase the collider size by 0.7f / scale
+
+            if (p.HasModifier(ModifierType.Mini))
+            {
+                p.transform.localScale = new Vector3(scale, scale, 1f);
+                collider.radius = correctedColliderRadius;
+            }
+            if (Morphing.Exists && p.IsRole(RoleType.Morphing) && Morphing.morphTarget.HasModifier(ModifierType.Mini) && Morphing.morphTimer > 0f)
+            {
+                p.transform.localScale = new Vector3(scale, scale, 1f);
+                collider.radius = correctedColliderRadius;
+            }
+        }
     }
 
     public static void CamouflageAndMorphActions()

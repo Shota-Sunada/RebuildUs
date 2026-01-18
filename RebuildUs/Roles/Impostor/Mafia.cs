@@ -2,7 +2,7 @@ namespace RebuildUs.Roles.Impostor;
 
 public static class Mafia
 {
-    public static Color RoleColor = Palette.ImpostorRed;
+    public static Color NameColor = Palette.ImpostorRed;
 
     public static bool IsGodfatherDead = false;
     public static bool IsMafiosoDead = false;
@@ -18,11 +18,15 @@ public static class Mafia
     [HarmonyPatch]
     public class Godfather : RoleBase<Godfather>
     {
+        public override Color RoleColor => NameColor;
+
         public Godfather()
         {
             // write value init here
             StaticRoleType = CurrentRoleType = RoleType.Godfather;
         }
+
+        public override string NameTag => (CachedPlayer.LocalPlayer.PlayerControl?.Data.Role.IsImpostor ?? false) ? $" ({Tr.Get("mafiaG")})" : "";
 
         public override void OnMeetingStart() { }
         public override void OnMeetingEnd() { }
@@ -50,6 +54,8 @@ public static class Mafia
     [HarmonyPatch]
     public class Mafioso : RoleBase<Mafioso>
     {
+        public override Color RoleColor => NameColor;
+
         // write configs here
 
         public static bool canSabotage { get { return canKill || CustomOptionHolder.mafiosoCanSabotage.GetBool(); } }
@@ -62,6 +68,8 @@ public static class Mafia
             // write value init here
             StaticRoleType = CurrentRoleType = RoleType.Mafioso;
         }
+
+        public override string NameTag => (CachedPlayer.LocalPlayer.PlayerControl?.Data.Role.IsImpostor ?? false) ? $" ({Tr.Get("mafiaM")})" : "";
 
         public override void OnMeetingStart() { }
         public override void OnMeetingEnd() { }
@@ -89,6 +97,8 @@ public static class Mafia
     [HarmonyPatch]
     public class Janitor : RoleBase<Janitor>
     {
+        public override Color RoleColor => NameColor;
+
         // write configs here
         private static CustomButton janitorCleanButton;
         public static float cooldown { get { return CustomOptionHolder.janitorCooldown.GetFloat(); } }
@@ -101,6 +111,8 @@ public static class Mafia
             // write value init here
             StaticRoleType = CurrentRoleType = RoleType.Janitor;
         }
+
+        public override string NameTag => (CachedPlayer.LocalPlayer.PlayerControl?.Data.Role.IsImpostor ?? false) ? $" ({Tr.Get("mafiaJ")})" : "";
 
         public override void OnMeetingStart() { }
         public override void OnMeetingEnd() { }

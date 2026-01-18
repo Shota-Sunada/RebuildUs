@@ -95,7 +95,7 @@ public static class Map
 
     public static void UpdatePrefix(MapBehaviour __instance)
     {
-        Vector3 vector = AntiTeleport.position ?? CachedPlayer.LocalPlayer.PlayerControl.transform.position;
+        var vector = AntiTeleport.position;
         vector /= MapUtilities.CachedShipStatus.MapScale;
         vector.x *= Mathf.Sign(MapUtilities.CachedShipStatus.transform.localScale.x);
         vector.z = -1f;

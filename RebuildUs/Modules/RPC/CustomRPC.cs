@@ -65,4 +65,8 @@ public enum CustomRPC : byte
     WitchSpellCast,
     PlaceGarlic,
     ImpostorPromotesToLastImpostor,
+    ShifterShift,
+    SetFutureShifted,
+    SetShifterType,
+    FortuneTellerUsedDivine,
 }

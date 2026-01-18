@@ -3,7 +3,8 @@ namespace RebuildUs.Roles.Crewmate;
 [HarmonyPatch]
 public class Bait : RoleBase<Bait>
 {
-    public static Color RoleColor = new Color32(0, 247, 255, byte.MaxValue);
+    public static Color NameColor = new Color32(0, 247, 255, byte.MaxValue);
+    public override Color RoleColor => NameColor;
 
     // write configs here
     public static bool highlightAllVents { get { return CustomOptionHolder.baitHighlightAllVents.GetBool(); } }

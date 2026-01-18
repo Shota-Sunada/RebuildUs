@@ -3,7 +3,8 @@ namespace RebuildUs.Roles.Neutral;
 [HarmonyPatch]
 public class Jackal : RoleBase<Jackal>
 {
-    public static Color RoleColor = new Color32(0, 180, 235, byte.MaxValue);
+    public static Color NameColor = new Color32(0, 180, 235, byte.MaxValue);
+    public override Color RoleColor => NameColor;
     public static CustomButton JackalKillButton;
     private static CustomButton JackalSidekickButton;
     public static CustomButton JackalSabotageLightsButton;
@@ -34,6 +35,28 @@ public class Jackal : RoleBase<Jackal>
         CanSidekick = CanCreateSidekick;
     }
 
+    public override void OnUpdateNameColors()
+    {
+        var lp = CachedPlayer.LocalPlayer.PlayerControl;
+        if (Player == lp)
+        {
+            Update.setPlayerNameColor(Player, RoleColor);
+            if (Sidekick.Exists)
+            {
+                var sk = Sidekick.Players.FirstOrDefault();
+                if (sk != null) Update.setPlayerNameColor(sk.Player, RoleColor);
+            }
+            if (FakeSidekick != null)
+            {
+                Update.setPlayerNameColor(FakeSidekick, RoleColor);
+            }
+        }
+        else if (lp.IsTeamImpostor() && WasTeamRed)
+        {
+            Update.setPlayerNameColor(Player, RoleColor);
+        }
+    }
+
     public override void OnMeetingStart() { }
     public override void OnMeetingEnd() { }
     public override void OnIntroEnd() { }
@@ -47,13 +70,13 @@ public class Jackal : RoleBase<Jackal>
                 // Only exclude sidekick from being targeted if the jackal can create sidekicks from impostors
                 if (Sidekick.Exists) untargetablePlayers.AddRange(Sidekick.AllPlayers);
             }
-            // foreach (var mini in Mini.players)
-            // {
-            //     if (!Mini.isGrownUp(mini.player))
-            //     {
-            //         untargetablePlayers.Add(mini.player);
-            //     }
-            // }
+            foreach (var mini in Mini.Players)
+            {
+                if (!Mini.isGrownUp(mini.Player))
+                {
+                    untargetablePlayers.Add(mini.Player);
+                }
+            }
             CurrentTarget = Helpers.SetTarget(untargetablePlayers: untargetablePlayers);
             Helpers.SetPlayerOutline(CurrentTarget, Palette.ImpostorRed);
         }

@@ -5,7 +5,8 @@ namespace RebuildUs.Roles.Modifier;
 [HarmonyPatch]
 public class LastImpostor : ModifierBase<LastImpostor>
 {
-    public static Color ModifierColor = Palette.ImpostorRed;
+    public static Color NameColor = Palette.ImpostorRed;
+    public override Color ModifierColor => NameColor;
     public enum DivineResults
     {
         BlackWhite,
@@ -285,11 +286,10 @@ public class LastImpostor : ModifierBase<LastImpostor>
         string msg = string.Format(Tr.Get(msgBase), p.name, msgInfo);
         if (!string.IsNullOrWhiteSpace(msg))
         {
-            FortuneTeller.fortuneTellerMessage(msg, 5f, color);
+            // TODO: FortuneTeller.fortuneTellerMessage(msg, 5f, color);
         }
 
         if (Constants.ShouldPlaySfx()) SoundManager.Instance.PlaySound(FastDestroyableSingleton<HudManager>.Instance.TaskCompleteSound, false, 0.8f);
-        numUsed += 1;
 
         // 占いを実行したことで発火される処理を他クライアントに通知
         MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.FortuneTellerUsedDivine, Hazel.SendOption.Reliable, -1);
@@ -297,7 +297,6 @@ public class LastImpostor : ModifierBase<LastImpostor>
         writer.Write(p.PlayerId);
         AmongUsClient.Instance.FinishRpcImmediately(writer);
         RPCProcedure.fortuneTellerUsedDivine(CachedPlayer.LocalPlayer.PlayerControl.PlayerId, p.PlayerId);
-        numUsed += 1;
     }
 
     public static void OnIntroDestroy(IntroCutscene __instance)

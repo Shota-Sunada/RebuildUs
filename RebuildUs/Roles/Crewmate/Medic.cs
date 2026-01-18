@@ -5,7 +5,8 @@ namespace RebuildUs.Roles.Crewmate;
 [HarmonyPatch]
 public class Medic : RoleBase<Medic>
 {
-    public static Color RoleColor = new Color32(126, 251, 194, byte.MaxValue);
+    public static Color NameColor = new Color32(126, 251, 194, byte.MaxValue);
+    public override Color RoleColor => NameColor;
     public static Color shieldedColor = new Color32(0, 221, 255, byte.MaxValue);
     private static CustomButton medicShieldButton;
 

@@ -21,36 +21,31 @@ public static class Exile
         }
 
         // Madmate exiled
-        // if (AmongUsClient.Instance.AmHost
-        //     && exiled != null
-        //     && ((CreatedMadmate.exileCrewmate && exiled.Object.hasModifier(ModifierType.CreatedMadmate))
-        //     || (Madmate.exileCrewmate && exiled.Object.hasModifier(ModifierType.Madmate)))
-        // )
-        // {
-        //     // pick random crewmate
-        //     PlayerControl target = pickRandomCrewmate(exiled.PlayerId);
-        //     if (target != null)
-        //     {
-        //         // exile the picked crewmate
-        //         writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId,
-        //             (byte)CustomRPC.UncheckedExilePlayer,
-        //             Hazel.SendOption.Reliable,
-        //             -1);
-        //         writer.Write(target.PlayerId);
-        //         AmongUsClient.Instance.FinishRpcImmediately(writer);
-        //         RPCProcedure.uncheckedExilePlayer(target.PlayerId);
-        //     }
-        // }
+        if (AmongUsClient.Instance.AmHost && player != null && ((CreatedMadmate.exileCrewmate && player.Object.HasModifier(ModifierType.CreatedMadmate))
+            || (Madmate.exileCrewmate && player.Object.HasModifier(ModifierType.Madmate)))
+        )
+        {
+            // pick random crewmate
+            var target = pickRandomCrewmate(player.PlayerId);
+            if (target != null)
+            {
+                // exile the picked crewmate
+                using var sender = new RPCSender(CachedPlayer.LocalPlayer.PlayerControl.NetId, CustomRPC.UncheckedExilePlayer);
+                sender.Write(target.PlayerId);
+                RPCProcedure.UncheckedExilePlayer(target.PlayerId);
+            }
+        }
 
         // Shifter shift
-        // if (Shifter.shifter != null && AmongUsClient.Instance.AmHost && Shifter.futureShift != null)
-        // { // We need to send the RPC from the host here, to make sure that the order of shifting and erasing is correct (for that reason the futureShifted and futureErased are being synced)
-        //     writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.ShifterShift, Hazel.SendOption.Reliable, -1);
-        //     writer.Write(Shifter.futureShift.PlayerId);
-        //     AmongUsClient.Instance.FinishRpcImmediately(writer);
-        //     RPCProcedure.shifterShift(Shifter.futureShift.PlayerId);
-        // }
-        // Shifter.futureShift = null;
+        if (Shifter.Exists && AmongUsClient.Instance.AmHost && Shifter.futureShift != null)
+        {
+            // We need to send the RPC from the host here, to make sure that the order of shifting and erasing is correct (for that reason the futureShifted and futureErased are being synced)
+            writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.ShifterShift, Hazel.SendOption.Reliable, -1);
+            writer.Write(Shifter.futureShift.PlayerId);
+            AmongUsClient.Instance.FinishRpcImmediately(writer);
+            RPCProcedure.shifterShift(Shifter.futureShift.PlayerId);
+        }
+        Shifter.futureShift = null;
 
         // Eraser erase
         if (Eraser.Exists && AmongUsClient.Instance.AmHost && Eraser.futureErased != null)
@@ -169,6 +164,12 @@ public static class Exile
 
         if (exiled != null)
         {
+            var p = Helpers.PlayerById(exiled.PlayerId);
+            if (p.HasModifier(ModifierType.Mini) && !Mini.isGrownUp(p) && !p.Data.Role.IsImpostor && !p.IsNeutral())
+            {
+                Mini.triggerMiniLose = true;
+            }
+
             if (exiled.IsRole(RoleType.Jester))
             {
                 Jester.TriggerJesterWin = true;
@@ -188,12 +189,12 @@ public static class Exile
         ModMapOptions.MeetingEndedUpdate();
         RebuildUs.OnMeetingEnd();
 
-        // // Mini set adapted cooldown
-        // if (CachedPlayer.LocalPlayer.PlayerControl.hasModifier(ModifierType.Mini) && CachedPlayer.LocalPlayer.PlayerControl.Data.Role.IsImpostor)
-        // {
-        //     var multiplier = Mini.isGrownUp(CachedPlayer.LocalPlayer.PlayerControl) ? 0.66f : 2f;
-        //     CachedPlayer.LocalPlayer.PlayerControl.SetKillTimer(PlayerControl.GameOptions.KillCooldown * multiplier);
-        // }
+        // Mini set adapted cooldown
+        if (CachedPlayer.LocalPlayer.PlayerControl.HasModifier(ModifierType.Mini) && CachedPlayer.LocalPlayer.PlayerControl.Data.Role.IsImpostor)
+        {
+            var multiplier = Mini.isGrownUp(CachedPlayer.LocalPlayer.PlayerControl) ? 0.66f : 2f;
+            CachedPlayer.LocalPlayer.PlayerControl.SetKillTimer(Helpers.GetOption(FloatOptionNames.KillCooldown) * multiplier);
+        }
 
         // // Seer spawn souls
         // if (Seer.deadBodyPositions != null && Seer.seer != null && CachedPlayer.LocalPlayer.PlayerControl == Seer.seer && (Seer.mode == 0 || Seer.mode == 2))
@@ -265,17 +266,17 @@ public static class Exile
         // if (Lawyer.lawyer != null && CachedPlayer.LocalPlayer.PlayerControl == Lawyer.lawyer && !Lawyer.lawyer.Data.IsDead)
         //     Lawyer.meetings++;
 
-        // if (CachedPlayer.LocalPlayer.PlayerControl.hasModifier(ModifierType.AntiTeleport))
-        // {
-        //     if (AntiTeleport.position != new Vector3())
-        //     {
-        //         CachedPlayer.LocalPlayer.PlayerControl.transform.position = AntiTeleport.position;
-        //         if (SubmergedCompatibility.isSubmerged())
-        //         {
-        //             SubmergedCompatibility.ChangeFloor(AntiTeleport.position.y > -7);
-        //         }
-        //     }
-        // }
+        if (CachedPlayer.LocalPlayer.PlayerControl.HasModifier(ModifierType.AntiTeleport))
+        {
+            if (AntiTeleport.position != new Vector3())
+            {
+                CachedPlayer.LocalPlayer.PlayerControl.transform.position = AntiTeleport.position;
+                if (SubmergedCompatibility.IsSubmerged)
+                {
+                    SubmergedCompatibility.ChangeFloor(AntiTeleport.position.y > -7);
+                }
+            }
+        }
 
         // Remove DeadBodies
         var array = UnityEngine.Object.FindObjectsOfType<DeadBody>();

@@ -5,7 +5,8 @@ namespace RebuildUs.Roles.Impostor;
 [HarmonyPatch]
 public class EvilHacker : RoleBase<EvilHacker>
 {
-    public static Color RoleColor = Palette.ImpostorRed;
+    public static Color NameColor = Palette.ImpostorRed;
+    public override Color RoleColor => NameColor;
     public PlayerControl currentTarget;
     public PlayerControl fakeMadmate;
     public bool canCreateMadmate = false;

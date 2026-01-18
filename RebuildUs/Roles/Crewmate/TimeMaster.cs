@@ -3,7 +3,8 @@ namespace RebuildUs.Roles.Crewmate;
 [HarmonyPatch]
 public class TimeMaster : RoleBase<TimeMaster>
 {
-    public static Color RoleColor = new Color32(112, 142, 239, byte.MaxValue);
+    public static Color NameColor = new Color32(112, 142, 239, byte.MaxValue);
+    public override Color RoleColor => NameColor;
     private static CustomButton timeMasterShieldButton;
 
     // write configs here

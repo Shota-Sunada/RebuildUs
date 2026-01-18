@@ -1,3 +1,4 @@
+using UnityEngine;
 using RebuildUs.Players;
 
 namespace RebuildUs.Roles;
@@ -7,6 +8,11 @@ public abstract class PlayerModifier
     public static List<PlayerModifier> AllModifiers = [];
     public PlayerControl Player;
     public ModifierType CurrentModifierType;
+    public virtual Color ModifierColor => Color.white;
+    public virtual string NameTag => "";
+
+    public virtual void OnUpdateNameColors() { }
+    public virtual void OnUpdateNameTags() { }
 
     public abstract void OnMeetingStart();
     public abstract void OnMeetingEnd();
@@ -29,6 +35,16 @@ public abstract class PlayerModifier
     public static void ClearAll()
     {
         AllModifiers = [];
+    }
+
+    public static PlayerModifier GetModifier(PlayerControl player, ModifierType type)
+    {
+        return AllModifiers.FirstOrDefault(x => x.Player == player && x.CurrentModifierType == type);
+    }
+
+    public static List<PlayerModifier> GetModifiers(PlayerControl player)
+    {
+        return [.. AllModifiers.Where(x => x.Player == player)];
     }
 }
 

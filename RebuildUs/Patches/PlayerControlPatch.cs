@@ -60,6 +60,7 @@ public static class PlayerControlPatch
             Helpers.UpdatePlayerInfo();
             Helpers.SetPetVisibility();
             Update.impostorSetTarget();
+            Update.playerSizeUpdate(__instance);
 
             Garlic.UpdateAll();
         }

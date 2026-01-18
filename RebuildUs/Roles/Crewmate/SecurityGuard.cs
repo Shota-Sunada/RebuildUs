@@ -5,7 +5,8 @@ namespace RebuildUs.Roles.Crewmate;
 [HarmonyPatch]
 public class SecurityGuard : RoleBase<SecurityGuard>
 {
-    public static Color RoleColor = new Color32(195, 178, 95, byte.MaxValue);
+    public static Color NameColor = new Color32(195, 178, 95, byte.MaxValue);
+    public override Color RoleColor => NameColor;
     public static CustomButton securityGuardButton;
     public static CustomButton securityGuardCamButton;
     public static TMP_Text securityGuardButtonScrewsText;

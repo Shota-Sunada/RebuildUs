@@ -66,12 +66,12 @@ public partial class RoleInfo(string nameKey, Color color, CustomOption baseOpti
             // Madmate only
             if (roleInfo.Contains(Crewmate))
             {
-                roleName = useColors ? Helpers.Cs(Madmate.ModifierColor, Madmate.fullName) : Madmate.fullName;
+                roleName = useColors ? Helpers.Cs(Madmate.NameColor, Madmate.fullName) : Madmate.fullName;
             }
             else
             {
-                string prefix = useColors ? Helpers.Cs(Madmate.ModifierColor, Madmate.prefix) : Madmate.prefix;
-                roleName = string.Join(joinSeparator, [.. roleInfo.Select(x => useColors ? Helpers.Cs(Madmate.ModifierColor, x.Name) : x.Name)]);
+                string prefix = useColors ? Helpers.Cs(Madmate.NameColor, Madmate.prefix) : Madmate.prefix;
+                roleName = string.Join(joinSeparator, [.. roleInfo.Select(x => useColors ? Helpers.Cs(Madmate.NameColor, x.Name) : x.Name)]);
                 roleName = prefix + roleName;
             }
         }
@@ -80,11 +80,11 @@ public partial class RoleInfo(string nameKey, Color color, CustomOption baseOpti
         {
             if (roleInfo.Contains(Impostor))
             {
-                roleName = useColors ? Helpers.Cs(LastImpostor.ModifierColor, LastImpostor.fullName) : LastImpostor.fullName;
+                roleName = useColors ? Helpers.Cs(LastImpostor.NameColor, LastImpostor.fullName) : LastImpostor.fullName;
             }
             else
             {
-                string postfix = useColors ? Helpers.Cs(LastImpostor.ModifierColor, LastImpostor.postfix) : LastImpostor.postfix;
+                string postfix = useColors ? Helpers.Cs(LastImpostor.NameColor, LastImpostor.postfix) : LastImpostor.postfix;
                 roleName = string.Join(joinSeparator, [.. roleInfo.Select(x => useColors ? Helpers.Cs(x.Color, x.Name) : x.Name)]);
                 roleName += postfix;
             }
@@ -92,18 +92,18 @@ public partial class RoleInfo(string nameKey, Color color, CustomOption baseOpti
 
         if (p.HasModifier(ModifierType.Munou))
         {
+            /* TODO: Munou is not implemented
             if (CachedPlayer.LocalPlayer.PlayerControl.Data.IsDead || Munou.endGameFlag)
             {
-                string postfix = useColors ? Helpers.cs(Munou.color, Munou.postfix) : Munou.postfix;
-                // roleName = String.Join(joinSeparator, roleInfo.Select(x => useColors? Helpers.cs(x.color, x.name)  : x.name).ToArray());
+                string postfix = useColors ? Helpers.Cs(Munou.color, Munou.postfix) : Munou.postfix;
                 roleName += postfix;
             }
+            */
         }
 
         if (p.HasModifier(ModifierType.AntiTeleport))
         {
-            string postfix = useColors ? Helpers.cs(AntiTeleport.color, AntiTeleport.postfix) : AntiTeleport.postfix;
-            // roleName = String.Join(joinSeparator, roleInfo.Select(x => useColors? Helpers.cs(x.color, x.name)  : x.name).ToArray());
+            string postfix = useColors ? Helpers.Cs(AntiTeleport.NameColor, AntiTeleport.postfix) : AntiTeleport.postfix;
             roleName += postfix;
         }
 

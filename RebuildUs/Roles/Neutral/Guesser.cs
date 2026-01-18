@@ -67,7 +67,8 @@ public static class Guesser
     [HarmonyPatch]
     public class NiceGuesser : RoleBase<NiceGuesser>
     {
-        public static Color RoleColor = new Color32(255, 255, 0, byte.MaxValue);
+        public static Color NameColor = new Color32(255, 255, 0, byte.MaxValue);
+        public override Color RoleColor => NameColor;
 
         // write configs here
 
@@ -100,7 +101,8 @@ public static class Guesser
     [HarmonyPatch]
     public class EvilGuesser : RoleBase<EvilGuesser>
     {
-        public static Color RoleColor = Palette.ImpostorRed;
+        public static Color NameColor = Palette.ImpostorRed;
+        public override Color RoleColor => NameColor;
 
         // write configs here
 

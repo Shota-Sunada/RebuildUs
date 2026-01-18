@@ -188,6 +188,10 @@ public static class Helpers
     {
         return CustomColors.LighterColors.Contains(colorId);
     }
+    public static bool MushroomSabotageActive()
+    {
+        return PlayerControl.LocalPlayer.myTasks.ToArray().Any((x) => x.TaskType == TaskTypes.MushroomMixupSabotage);
+    }
 
     public static void SetSemiTransparent(this PoolablePlayer player, bool value)
     {

@@ -3,7 +3,8 @@ namespace RebuildUs.Roles.Crewmate;
 [HarmonyPatch]
 public class Spy : RoleBase<Spy>
 {
-    public static Color RoleColor = Palette.ImpostorRed;
+    public static Color NameColor = Palette.ImpostorRed;
+    public override Color RoleColor => NameColor;
 
     // write configs here
     public static bool ImpostorsCanKillAnyone { get { return CustomOptionHolder.SpyImpostorsCanKillAnyone.GetBool(); } }
@@ -14,6 +15,14 @@ public class Spy : RoleBase<Spy>
     {
         // write value init here
         StaticRoleType = CurrentRoleType = RoleType.Spy;
+    }
+
+    public override void OnUpdateNameColors()
+    {
+        if (CachedPlayer.LocalPlayer.PlayerControl.IsTeamImpostor())
+        {
+            Update.setPlayerNameColor(Player, NameColor);
+        }
     }
 
     public override void OnMeetingStart() { }

@@ -3,7 +3,8 @@ namespace RebuildUs.Roles.Impostor;
 [HarmonyPatch]
 public class EvilTracker : RoleBase<EvilTracker>
 {
-    public static Color RoleColor = Palette.ImpostorRed;
+    public static Color NameColor = Palette.ImpostorRed;
+    public override Color RoleColor => NameColor;
 
     // write configs here
     public static float cooldown { get { return CustomOptionHolder.evilTrackerCooldown.GetFloat(); } }

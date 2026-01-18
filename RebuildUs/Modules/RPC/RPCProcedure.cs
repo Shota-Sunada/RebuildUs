@@ -455,7 +455,7 @@ public static partial class RPCProcedure
         var dyingTarget = Helpers.PlayerById(dyingTargetId);
         if (dyingTarget == null) return;
         dyingTarget.Exiled();
-        var dyingLoverPartner = Lovers.bothDie ? dyingTarget.GetPartner() : null; // Lover check
+        var dyingLoverPartner = Lovers.bothDie ? dyingTarget.getPartner() : null; // Lover check
 
         Guesser.remainingShots(killer, true);
 
@@ -818,5 +818,85 @@ public static partial class RPCProcedure
     {
         var player = Helpers.PlayerById(targetId);
         player.AddModifier(ModifierType.LastImpostor);
+    }
+
+    public static void shifterShift(byte targetId)
+    {
+        PlayerControl oldShifter = Shifter.shifter;
+        PlayerControl player = Helpers.PlayerById(targetId);
+        if (player == null || oldShifter == null) return;
+
+        Shifter.futureShift = null;
+        if (!Shifter.isNeutral)
+        {
+            Shifter.Clear();
+        }
+
+        if (player == GM.gm)
+        {
+            return;
+        }
+
+        // Suicide (exile) when impostor or impostor variants
+        if (!Shifter.isNeutral && (player.Data.Role.IsImpostor || player.IsNeutral() || player.HasModifier(ModifierType.Madmate) || player.HasModifier(ModifierType.CreatedMadmate)))
+        {
+            oldShifter.Exiled();
+            GameHistory.FinalStatuses[oldShifter.PlayerId] = EFinalStatus.Suicide;
+            return;
+        }
+
+        if (Shifter.shiftModifiers)
+        {
+            // Switch shield
+            if (Medic.shielded != null && Medic.shielded == player)
+            {
+                Medic.shielded = oldShifter;
+            }
+            else if (Medic.shielded != null && Medic.shielded == oldShifter)
+            {
+                Medic.shielded = player;
+            }
+
+            player.SwapModifiers(oldShifter);
+            Lovers.swapLovers(oldShifter, player);
+        }
+
+        // Shift role
+        player.SwapRoles(oldShifter);
+
+        if (Shifter.isNeutral)
+        {
+            Shifter.shifter = player;
+            Shifter.pastShifters.Add(oldShifter.PlayerId);
+
+            if (player.Data.Role.IsImpostor)
+            {
+                FastDestroyableSingleton<RoleManager>.Instance.SetRole(player, RoleTypes.Crewmate);
+                FastDestroyableSingleton<RoleManager>.Instance.SetRole(oldShifter, RoleTypes.Impostor);
+            }
+        }
+
+        // Set cooldowns to max for both players
+        if (CachedPlayer.LocalPlayer.PlayerControl == oldShifter || CachedPlayer.LocalPlayer.PlayerControl == player)
+        {
+            CustomButton.ResetAllCooldowns();
+        }
+    }
+
+    public static void setFutureShifted(byte playerId)
+    {
+        if (Shifter.isNeutral && !Shifter.shiftPastShifters && Shifter.pastShifters.Contains(playerId))
+            return;
+        Shifter.futureShift = Helpers.PlayerById(playerId);
+    }
+
+    public static void setShifterType(bool isNeutral)
+    {
+        Shifter.isNeutral = isNeutral;
+    }
+
+    public static void fortuneTellerUsedDivine(byte killerId, byte targetId)
+    {
+        LastImpostor.numUsed += 1;
     }
 }

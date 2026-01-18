@@ -3,7 +3,8 @@ namespace RebuildUs.Roles.Crewmate;
 [HarmonyPatch]
 public class Mayor : RoleBase<Mayor>
 {
-    public static Color RoleColor = new Color32(32, 77, 66, byte.MaxValue);
+    public static Color NameColor = new Color32(32, 77, 66, byte.MaxValue);
+    public override Color RoleColor => NameColor;
 
     public static Minigame Emergency = null;
     public static CustomButton MayorMeetingButton;
