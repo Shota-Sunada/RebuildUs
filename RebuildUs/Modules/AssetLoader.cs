@@ -181,7 +181,7 @@ public static class AssetLoader
 
     private static void LoadLocationAssets()
     {
-        var resource = Assembly.GetExecutingAssembly().GetManifestResourceStream("RebuildUs.Resources.sprites");
+        var resource = Assembly.GetExecutingAssembly().GetManifestResourceStream("RebuildUs.Resources.locations");
         var ab = AssetBundle.LoadFromMemory(resource.ReadFully());
 
         ArmoryButton = ab.LoadAsset<Sprite>("ArmoryButton.png").DontUnload();
