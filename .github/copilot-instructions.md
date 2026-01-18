@@ -68,7 +68,10 @@ Development conventions
 - Logging: use BepInEx logging facilities. Log at appropriate levels (Info, Warning, Error). Avoid verbose logs in Release.
 - Config: use BepInEx configuration APIs for user settings. Provide sensible defaults.
 - Translations: do not include translations in repository. English-only strings in code/resources. Localization will be handled via GitLocalize by users.
-  - Provide English text keys and default English values only.
+  - Provide English text keys and default English values in `English.json`.
+  - Translation keys must start with an uppercase letter and must be unique.
+  - Translations can be shared if the translated result is the same.
+  - Translation keys may be provided as variables or other dynamic forms.
 - Tests: prefer light unit tests for pure logic. Mock heavy game interactions.
 
 Runtime integration notes
