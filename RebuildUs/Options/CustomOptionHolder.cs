@@ -194,6 +194,13 @@ public static partial class CustomOptionHolder
     public static CustomOption ShifterIsNeutralRate;
     public static CustomOption ShifterShiftsModifiers;
     public static CustomOption ShifterPastShifters;
+
+    public static CustomRoleOption sheriffSpawnRate;
+    public static CustomOption sheriffCooldown;
+    public static CustomOption sheriffNumShots;
+    public static CustomOption sheriffCanKillNeutrals;
+    public static CustomOption sheriffMisfireKillsTarget;
+    public static CustomOption sheriffCanKillNoDeadBody;
     #endregion
 
     #region ROLES IMPOSTOR
@@ -548,6 +555,12 @@ public static partial class CustomOptionHolder
         ShifterShiftsModifiers = CustomOption.Normal(1152, CustomOptionType.Neutral, "shifterShiftsModifiers", false, ShifterSpawnRate);
         ShifterPastShifters = CustomOption.Normal(1153, CustomOptionType.Neutral, "shifterPastShifters", false, ShifterSpawnRate);
 
+        sheriffSpawnRate = new(1160, CustomOptionType.Crewmate, RoleType.Sheriff, Sheriff.NameColor, 15);
+        sheriffCooldown = CustomOption.Normal(1161, CustomOptionType.Crewmate, "sheriffCooldown", 30f, 2.5f, 60f, 2.5f, sheriffSpawnRate, format: "unitSeconds");
+        sheriffNumShots = CustomOption.Normal(1162, CustomOptionType.Crewmate, "sheriffNumShots", 2f, 1f, 15f, 1f, sheriffSpawnRate, format: "unitShots");
+        sheriffMisfireKillsTarget = CustomOption.Normal(1163, CustomOptionType.Crewmate, "sheriffMisfireKillsTarget", false, sheriffSpawnRate);
+        sheriffCanKillNoDeadBody = CustomOption.Normal(1164, CustomOptionType.Crewmate, "sheriffCanKillNoDeadBody", true, sheriffSpawnRate);
+        sheriffCanKillNeutrals = CustomOption.Normal(1165, CustomOptionType.Crewmate, "sheriffCanKillNeutrals", false, sheriffSpawnRate);
         #endregion
 
         #region ROLES IMPOSTOR

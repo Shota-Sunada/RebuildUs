@@ -889,4 +889,28 @@ public static partial class RPCProcedure
     {
         LastImpostor.NumUsed += 1;
     }
+
+    public static void sheriffKill(byte sheriffId, byte targetId, bool misfire)
+    {
+        PlayerControl sheriff = Helpers.PlayerById(sheriffId);
+        PlayerControl target = Helpers.PlayerById(targetId);
+        if (sheriff == null || target == null) return;
+
+        Sheriff role = Sheriff.GetRole(sheriff);
+        if (role != null)
+        {
+            role.numShots--;
+        }
+
+        if (misfire)
+        {
+            sheriff.MurderPlayer(sheriff);
+            GameHistory.FinalStatuses[sheriffId] = EFinalStatus.Misfire;
+
+            if (!Sheriff.misfireKillsTarget) return;
+            GameHistory.FinalStatuses[targetId] = EFinalStatus.Misfire;
+        }
+
+        sheriff.MurderPlayer(target);
+    }
 }

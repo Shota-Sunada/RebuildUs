@@ -69,4 +69,5 @@ public enum CustomRPC : byte
     SetFutureShifted,
     SetShifterType,
     FortuneTellerUsedDivine,
+    SheriffKill,
 }
