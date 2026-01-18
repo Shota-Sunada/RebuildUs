@@ -37,7 +37,7 @@ public class Tracker : RoleBase<Tracker>
     public override void OnIntroEnd() { }
     public override void FixedUpdate()
     {
-        if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Tracker)) return;
+        if (PlayerControl.LocalPlayer.IsRole(RoleType.Tracker)) return;
 
         CurrentTarget = Helpers.SetTarget();
         if (!UsedTracker) Helpers.SetPlayerOutline(CurrentTarget, RoleColor);
@@ -117,12 +117,12 @@ public class Tracker : RoleBase<Tracker>
         TrackerTrackPlayerButton = new CustomButton(
                () =>
                {
-                   using var sender = new RPCSender(CachedPlayer.LocalPlayer.PlayerControl.NetId, CustomRPC.TrackerUsedTracker);
+                   using var sender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.TrackerUsedTracker);
                    sender.Write(CurrentTarget.PlayerId);
                    RPCProcedure.TrackerUsedTracker(CurrentTarget.PlayerId, Player.PlayerId);
                },
-               () => { return CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Tracker) && CachedPlayer.LocalPlayer.PlayerControl.IsAlive(); },
-               () => { return CachedPlayer.LocalPlayer.PlayerControl.CanMove && CurrentTarget != null && !UsedTracker; },
+               () => { return PlayerControl.LocalPlayer.IsRole(RoleType.Tracker) && PlayerControl.LocalPlayer.IsAlive(); },
+               () => { return PlayerControl.LocalPlayer.CanMove && CurrentTarget != null && !UsedTracker; },
                () => { if (ResetTargetAfterMeeting) ResetTracked(); },
                AssetLoader.TrackerButton,
                new Vector3(-1.8f, -0.06f, 0),
@@ -136,8 +136,8 @@ public class Tracker : RoleBase<Tracker>
 
         TrackerTrackCorpsesButton = new CustomButton(
             () => { CorpsesTrackingTimer = CorpsesTrackingDuration; },
-            () => { return CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Tracker) && CachedPlayer.LocalPlayer.PlayerControl.IsAlive() && CanTrackCorpses; },
-            () => { return CachedPlayer.LocalPlayer.PlayerControl.CanMove; },
+            () => { return PlayerControl.LocalPlayer.IsRole(RoleType.Tracker) && PlayerControl.LocalPlayer.IsAlive() && CanTrackCorpses; },
+            () => { return PlayerControl.LocalPlayer.CanMove; },
             () =>
             {
                 TrackerTrackCorpsesButton.Timer = TrackerTrackCorpsesButton.MaxTimer;

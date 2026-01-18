@@ -11,7 +11,7 @@ public static class Intro
     public static void GenerateMiniCrewIcons(IntroCutscene __instance)
     {
         // int playerCounter = 0;
-        if (CachedPlayer.LocalPlayer.PlayerControl != null && FastDestroyableSingleton<HudManager>.Instance != null && __instance.PlayerPrefab != null)
+        if (PlayerControl.LocalPlayer != null && FastDestroyableSingleton<HudManager>.Instance != null && __instance.PlayerPrefab != null)
         {
             float aspect = Camera.main.aspect;
             float safeOrthographicSize = CameraSafeArea.GetSafeOrthographicSize(Camera.main);
@@ -35,7 +35,7 @@ public static class Intro
                 player.gameObject.SetActive(false);
                 ModMapOptions.PlayerIcons[p.PlayerId] = player;
 
-                if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.BountyHunter))
+                if (PlayerControl.LocalPlayer.IsRole(RoleType.BountyHunter))
                 {
                     player.transform.localPosition = BottomLeft + new Vector3(-0.25f, 0f, 0);
                     player.transform.localScale = Vector3.one * 0.4f;
@@ -52,7 +52,7 @@ public static class Intro
         RebuildUs.OnIntroEnd();
 
         // インポスター視界の場合に昇降機右の影を無効化
-        if (Helpers.IsAirship && CustomOptionHolder.AirshipOptions.GetBool() && Helpers.HasImpostorVision(CachedPlayer.LocalPlayer.PlayerControl))
+        if (Helpers.IsAirship && CustomOptionHolder.AirshipOptions.GetBool() && Helpers.HasImpostorVision(PlayerControl.LocalPlayer))
         {
             var obj = ShipStatus.Instance.FastRooms[SystemTypes.GapRoom].gameObject;
             var oneWayShadow = obj.transform.FindChild("Shadow").FindChild("LedgeShadow").GetComponent<OneWayShadows>();
@@ -130,7 +130,7 @@ public static class Intro
     public static void SetupIntroTeamIcons(IntroCutscene __instance, ref Il2CppSystem.Collections.Generic.List<PlayerControl> yourTeam)
     {
         // Intro solo teams
-        if (CachedPlayer.LocalPlayer.PlayerControl.IsNeutral())
+        if (PlayerControl.LocalPlayer.IsNeutral())
         {
             var soloTeam = new Il2CppSystem.Collections.Generic.List<PlayerControl>();
             soloTeam.Add(PlayerControl.LocalPlayer);
@@ -156,11 +156,11 @@ public static class Intro
 
     public static void SetupIntroTeam(IntroCutscene __instance, ref Il2CppSystem.Collections.Generic.List<PlayerControl> yourTeam)
     {
-        var infos = RoleInfo.GetRoleInfoForPlayer(CachedPlayer.LocalPlayer.PlayerControl);
+        var infos = RoleInfo.GetRoleInfoForPlayer(PlayerControl.LocalPlayer);
         var roleInfo = infos.FirstOrDefault(info => info.RoleType != RoleType.Lovers);
         if (roleInfo == null) return;
-        // if (CachedPlayer.LocalPlayer.PlayerControl.IsNeutral() || CachedPlayer.LocalPlayer.PlayerControl.IsGM())
-        if (CachedPlayer.LocalPlayer.PlayerControl.IsNeutral())
+        // if (PlayerControl.LocalPlayer.IsNeutral() || PlayerControl.LocalPlayer.IsGM())
+        if (PlayerControl.LocalPlayer.IsNeutral())
         {
             __instance.BackgroundBar.material.color = roleInfo.Color;
             __instance.TeamTitle.text = roleInfo.Name;
@@ -196,7 +196,7 @@ public static class Intro
 
     private static IEnumerator SetupRole(IntroCutscene __instance)
     {
-        var infos = RoleInfo.GetRoleInfoForPlayer(CachedPlayer.LocalPlayer.PlayerControl, false, [RoleType.Lovers]);
+        var infos = RoleInfo.GetRoleInfoForPlayer(PlayerControl.LocalPlayer, false, [RoleType.Lovers]);
         var roleInfo = infos.FirstOrDefault();
 
         Logger.LogInfo("----------Role Assign-----------", "Settings");
@@ -233,7 +233,7 @@ public static class Intro
         __instance.RoleBlurbText.text = roleInfo.IntroDescription;
         __instance.RoleBlurbText.color = roleInfo.Color;
 
-        // if (CachedPlayer.LocalPlayer.PlayerControl.HasModifier(EModifierType.Madmate))
+        // if (PlayerControl.LocalPlayer.HasModifier(EModifierType.Madmate))
         // {
         //     if (roleInfo == RoleInfo.crewmate)
         //     {
@@ -251,7 +251,7 @@ public static class Intro
 
         // if (infos.Any(info => info.RoleType == ERoleType.Lovers))
         // {
-        //     PlayerControl otherLover = CachedPlayer.LocalPlayer.PlayerControl.GetPartner();
+        //     PlayerControl otherLover = PlayerControl.LocalPlayer.GetPartner();
         //     __instance.RoleBlurbText.text += "\n" + Helpers.cs(Lovers.color, string.Format(Tr.Get("loversFlavor"), otherLover?.Data?.PlayerName ?? ""));
         // }
 

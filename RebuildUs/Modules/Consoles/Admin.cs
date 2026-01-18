@@ -18,7 +18,7 @@ public static class Admin
     private static bool FilterAdmin(SystemTypes type)
     {
         // イビルハッカーのアドミンは今まで通り
-        if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.EvilHacker) || EvilHacker.IsInherited()) return true;
+        if (PlayerControl.LocalPlayer.IsRole(RoleType.EvilHacker) || EvilHacker.IsInherited()) return true;
 
         if (CustomOptionHolder.AirshipRestrictedAdmin.GetBool())
         {
@@ -55,9 +55,9 @@ public static class Admin
         // Don't waste network traffic if we're out of time.
         if (!IsEvilHackerAdmin)
         {
-            if (ModMapOptions.RestrictDevices > 0 && ModMapOptions.RestrictAdmin && ModMapOptions.RestrictAdminTime > 0f && CachedPlayer.LocalPlayer.PlayerControl.IsAlive())
+            if (ModMapOptions.RestrictDevices > 0 && ModMapOptions.RestrictAdmin && ModMapOptions.RestrictAdminTime > 0f && PlayerControl.LocalPlayer.IsAlive())
             {
-                using var sender = new RPCSender(CachedPlayer.LocalPlayer.PlayerControl.NetId, CustomRPC.UseAdminTime);
+                using var sender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.UseAdminTime);
                 sender.Write(AdminTimer);
                 RPCProcedure.UseAdminTime(AdminTimer);
             }
@@ -99,7 +99,7 @@ public static class Admin
                 TimeRemaining.color = Palette.White;
             }
 
-            if (ModMapOptions.RestrictAdminTime <= 0f && !CachedPlayer.LocalPlayer.PlayerControl.IsTeamImpostor())
+            if (ModMapOptions.RestrictAdminTime <= 0f && !PlayerControl.LocalPlayer.IsTeamImpostor())
             {
                 __instance.BackgroundColor.SetColor(Palette.DisabledGrey);
                 OutOfTime.gameObject.SetActive(true);
@@ -121,14 +121,14 @@ public static class Admin
         }
 
         bool commsActive = false;
-        foreach (var task in CachedPlayer.LocalPlayer.PlayerControl.myTasks)
+        foreach (var task in PlayerControl.LocalPlayer.myTasks)
         {
             if (task.TaskType == TaskTypes.FixComms)
             {
                 commsActive = true;
             }
         }
-        if (CustomOptionHolder.ImpostorCanIgnoreCommSabotage.GetBool() && CachedPlayer.LocalPlayer.PlayerControl.IsTeamImpostor()) commsActive = false;
+        if (CustomOptionHolder.ImpostorCanIgnoreCommSabotage.GetBool() && PlayerControl.LocalPlayer.IsTeamImpostor()) commsActive = false;
 
         if (!__instance.isSab && commsActive)
         {
@@ -240,7 +240,7 @@ public static class Admin
         if (Room == null) return;
 
         // アドミンの画像を差し替える
-        if (!CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.EvilHacker) && !EvilHacker.IsInherited() && Helpers.IsAirship && CustomOptionHolder.AirshipRestrictedAdmin.GetBool() && (Room.name is "Cockpit" or "Records"))
+        if (!PlayerControl.LocalPlayer.IsRole(RoleType.EvilHacker) && !EvilHacker.IsInherited() && Helpers.IsAirship && CustomOptionHolder.AirshipRestrictedAdmin.GetBool() && (Room.name is "Cockpit" or "Records"))
         {
             if (!Map)
             {
@@ -275,7 +275,7 @@ public static class Admin
     public static void UpdateCount(CounterArea __instance)
     {
         // Hacker display saved colors on the admin panel
-        bool showHackerInfo = CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Hacker) && Hacker.GetRole().HackerTimer > 0;
+        bool showHackerInfo = PlayerControl.LocalPlayer.IsRole(RoleType.Hacker) && Hacker.GetRole().HackerTimer > 0;
         if (PlayerColors.ContainsKey(__instance.RoomType))
         {
             List<Color> colors = PlayerColors[__instance.RoomType];
@@ -321,7 +321,7 @@ public static class Admin
                         }
                         renderer.material.SetColor("_VisorColor", Palette.VisorColor);
                     }
-                    else if ((CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.EvilHacker) || EvilHacker.IsInherited()) && EvilHacker.CanHasBetterAdmin)
+                    else if ((PlayerControl.LocalPlayer.IsRole(RoleType.EvilHacker) || EvilHacker.IsInherited()) && EvilHacker.CanHasBetterAdmin)
                     {
                         renderer.material = NewMat;
                         var color = colors[i];

@@ -202,7 +202,7 @@ public class CustomButton
 
     public void Update()
     {
-        if (CachedPlayer.LocalPlayer.PlayerControl.Data == null || MeetingHud.Instance || ExileController.Instance || !HasButton())
+        if (PlayerControl.LocalPlayer.Data == null || MeetingHud.Instance || ExileController.Instance || !HasButton())
         {
             SetActive(false);
             return;
@@ -247,7 +247,7 @@ public class CustomButton
             {
                 Timer -= Time.deltaTime;
             }
-            else if (!CachedPlayer.LocalPlayer.PlayerControl.inVent && CachedPlayer.LocalPlayer.PlayerControl.moveable)
+            else if (!PlayerControl.LocalPlayer.inVent && PlayerControl.LocalPlayer.moveable)
             {
                 Timer -= Time.deltaTime;
             }

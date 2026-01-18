@@ -8,7 +8,7 @@ public static class MedScanMinigamePatch
     {
         if (ModMapOptions.AllowParallelMedBayScans)
         {
-            __instance.medscan.CurrentUser = CachedPlayer.LocalPlayer.PlayerControl.PlayerId;
+            __instance.medscan.CurrentUser = PlayerControl.LocalPlayer.PlayerId;
             __instance.medscan.UsersList.Clear();
         }
     }

@@ -262,7 +262,7 @@ public static class Meeting
     {
         __result = false;
         // if (GM.gm != null && GM.gm.PlayerId == suspectStateIdx) return false;
-        if (ModMapOptions.NoVoteIsSelfVote && CachedPlayer.LocalPlayer.PlayerControl.PlayerId == suspectStateIdx) return false;
+        if (ModMapOptions.NoVoteIsSelfVote && PlayerControl.LocalPlayer.PlayerId == suspectStateIdx) return false;
         if (ModMapOptions.BlockSkippingInEmergencyMeetings && suspectStateIdx == -1) return false;
 
         return true;
@@ -437,9 +437,9 @@ public static class Meeting
 
         foreach (var roleInfo in RoleInfo.AllRoleInfos)
         {
-            RoleType guesserRole = CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.NiceGuesser)
+            RoleType guesserRole = PlayerControl.LocalPlayer.IsRole(RoleType.NiceGuesser)
                 ? RoleType.NiceGuesser
-                : CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.EvilGuesser) || CachedPlayer.LocalPlayer.PlayerControl.HasModifier(ModifierType.LastImpostor)
+                : PlayerControl.LocalPlayer.IsRole(RoleType.EvilGuesser) || PlayerControl.LocalPlayer.HasModifier(ModifierType.LastImpostor)
                     ? RoleType.EvilGuesser
                     : RoleType.NiceGuesser;
 
@@ -479,7 +479,7 @@ public static class Meeting
                 {
                     var focusedTarget = Helpers.PlayerById(__instance.playerStates[buttonTarget].TargetPlayerId);
                     if (!(__instance.state is MeetingHud.VoteStates.Voted or MeetingHud.VoteStates.NotVoted) || focusedTarget == null || Guesser.RemainingShots(PlayerControl.LocalPlayer) <= 0) return;
-                    if (Guesser.RemainingShots(CachedPlayer.LocalPlayer.PlayerControl) <= 0) return;
+                    if (Guesser.RemainingShots(PlayerControl.LocalPlayer) <= 0) return;
 
                     if (!Guesser.KillsThroughShield)
                     {
@@ -642,13 +642,13 @@ public static class Meeting
         }
 
         // トラックボタン
-        bool isTrackerButton = EvilTracker.CanSetTargetOnMeeting && EvilTracker.Target == null && CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.EvilTracker) && CachedPlayer.LocalPlayer.PlayerControl.IsAlive();
+        bool isTrackerButton = EvilTracker.CanSetTargetOnMeeting && EvilTracker.Target == null && PlayerControl.LocalPlayer.IsRole(RoleType.EvilTracker) && PlayerControl.LocalPlayer.IsAlive();
         if (isTrackerButton)
         {
             for (int i = 0; i < __instance.playerStates.Length; i++)
             {
                 PlayerVoteArea playerVoteArea = __instance.playerStates[i];
-                if (playerVoteArea.AmDead || playerVoteArea.TargetPlayerId == CachedPlayer.LocalPlayer.PlayerControl.PlayerId) continue;
+                if (playerVoteArea.AmDead || playerVoteArea.TargetPlayerId == PlayerControl.LocalPlayer.PlayerId) continue;
                 GameObject template = playerVoteArea.Buttons.transform.Find("CancelButton").gameObject;
                 GameObject targetBox = UnityEngine.Object.Instantiate(template, playerVoteArea.transform);
                 targetBox.name = "EvilTrackerButton";
@@ -674,8 +674,8 @@ public static class Meeting
                     renderer.sprite = AssetLoader.Arrow;
                     renderer.color = Palette.CrewmateBlue;
 
-                    bool isGuesserButton = Guesser.IsGuesser(CachedPlayer.LocalPlayer.PlayerControl.PlayerId) && CachedPlayer.LocalPlayer.PlayerControl.IsAlive() && Guesser.RemainingShots(CachedPlayer.LocalPlayer.PlayerControl) > 0;
-                    bool isLastImpostorButton = CachedPlayer.LocalPlayer.PlayerControl.HasModifier(ModifierType.LastImpostor) && CachedPlayer.LocalPlayer.PlayerControl.IsAlive() && LastImpostor.CanGuess();
+                    bool isGuesserButton = Guesser.IsGuesser(PlayerControl.LocalPlayer.PlayerId) && PlayerControl.LocalPlayer.IsAlive() && Guesser.RemainingShots(PlayerControl.LocalPlayer) > 0;
+                    bool isLastImpostorButton = PlayerControl.LocalPlayer.HasModifier(ModifierType.LastImpostor) && PlayerControl.LocalPlayer.IsAlive() && LastImpostor.CanGuess();
                     if (isGuesserButton || isLastImpostorButton)
                     {
                         CreateGuesserButton(__instance);
@@ -686,7 +686,7 @@ public static class Meeting
 
         // Add Guesser Buttons
         bool isGuesser = Guesser.IsGuesser(PlayerControl.LocalPlayer.PlayerId) && PlayerControl.LocalPlayer.IsAlive() && Guesser.RemainingShots(PlayerControl.LocalPlayer) > 0;
-        bool isLastImpostorButton = !isTrackerButton && CachedPlayer.LocalPlayer.PlayerControl.HasModifier(ModifierType.LastImpostor) && CachedPlayer.LocalPlayer.PlayerControl.IsAlive() && LastImpostor.CanGuess();
+        bool isLastImpostorButton = !isTrackerButton && PlayerControl.LocalPlayer.HasModifier(ModifierType.LastImpostor) && PlayerControl.LocalPlayer.IsAlive() && LastImpostor.CanGuess();
         if (isGuesser || isLastImpostorButton)
         {
             CreateGuesserButton(__instance);
@@ -749,20 +749,20 @@ public static class Meeting
             return;
         }
 
-        if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Swapper) && Swapper.RemainSwaps > 0 && Swapper.LivingPlayers.Count != 0)
+        if (PlayerControl.LocalPlayer.IsRole(RoleType.Swapper) && Swapper.RemainSwaps > 0 && Swapper.LivingPlayers.Count != 0)
         {
             MeetingInfoText.text = string.Format(Tr.Get("Hud.SwapperSwapsLeft"), Swapper.RemainSwaps);
             MeetingInfoText.gameObject.SetActive(true);
         }
 
-        int numGuesses = Guesser.RemainingShots(CachedPlayer.LocalPlayer.PlayerControl);
-        if ((Guesser.IsGuesser(CachedPlayer.LocalPlayer.PlayerControl.PlayerId) || CachedPlayer.LocalPlayer.PlayerControl.HasModifier(ModifierType.LastImpostor)) && CachedPlayer.LocalPlayer.PlayerControl.IsAlive() && numGuesses > 0)
+        int numGuesses = Guesser.RemainingShots(PlayerControl.LocalPlayer);
+        if ((Guesser.IsGuesser(PlayerControl.LocalPlayer.PlayerId) || PlayerControl.LocalPlayer.HasModifier(ModifierType.LastImpostor)) && PlayerControl.LocalPlayer.IsAlive() && numGuesses > 0)
         {
             MeetingInfoText.text = string.Format(Tr.Get("Hud.GuesserGuessesLeft"), numGuesses);
             MeetingInfoText.gameObject.SetActive(true);
         }
 
-        if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Shifter) && Shifter.FutureShift != null)
+        if (PlayerControl.LocalPlayer.IsRole(RoleType.Shifter) && Shifter.FutureShift != null)
         {
             MeetingInfoText.text = string.Format(Tr.Get("Hud.ShifterTargetInfo"), Shifter.FutureShift.Data.PlayerName);
             MeetingInfoText.gameObject.SetActive(true);

@@ -17,7 +17,7 @@ public static class Ship
         }
 
         // If player is Lighter with ability active
-        if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Lighter) && Lighter.IsLightActive(CachedPlayer.LocalPlayer.PlayerControl))
+        if (PlayerControl.LocalPlayer.IsRole(RoleType.Lighter) && Lighter.IsLightActive(PlayerControl.LocalPlayer))
         {
             float unLerp = Mathf.InverseLerp(__instance.MinLightRadius, __instance.MaxLightRadius, GetNeutralLightRadius(__instance, true));
             __result = Mathf.Lerp(__instance.MaxLightRadius * Lighter.ModeLightsOffVision, __instance.MaxLightRadius * Lighter.ModeLightsOnVision, unLerp);
@@ -131,7 +131,7 @@ public static class Ship
             {
                 System.Random rand = new();
                 byte randVal = (byte)rand.Next(0, 6);
-                using var sender = new RPCSender(CachedPlayer.LocalPlayer.PlayerControl.NetId, CustomRPC.PolusRandomSpawn);
+                using var sender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.PolusRandomSpawn);
                 sender.Write(player.Data.PlayerId);
                 sender.Write(randVal);
                 RPCProcedure.PolusRandomSpawn((byte)player.Data.PlayerId, (byte)randVal);

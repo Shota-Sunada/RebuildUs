@@ -40,7 +40,7 @@ public class EvilHacker : RoleBase<EvilHacker>
     public override void FixedUpdate()
     {
 
-        if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.EvilHacker))
+        if (PlayerControl.LocalPlayer.IsRole(RoleType.EvilHacker))
         {
             CurrentTarget = Helpers.SetTarget(true);
             Helpers.SetPlayerOutline(CurrentTarget, RoleColor);
@@ -55,16 +55,16 @@ public class EvilHacker : RoleBase<EvilHacker>
         EvilHackerButton = new CustomButton(
             () =>
             {
-                CachedPlayer.LocalPlayer.PlayerControl.NetTransform.Halt();
+                PlayerControl.LocalPlayer.NetTransform.Halt();
                 Admin.IsEvilHackerAdmin = true;
                 FastDestroyableSingleton<MapBehaviour>.Instance.ShowCountOverlay(true, true, true);
             },
             () =>
             {
-                return ((CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.EvilHacker) && CachedPlayer.LocalPlayer.PlayerControl.IsAlive()) ||
-                        (IsInherited() && CachedPlayer.LocalPlayer.PlayerControl.IsTeamImpostor())) && !RebuildUs.BetterSabotageMap.Value;
+                return ((PlayerControl.LocalPlayer.IsRole(RoleType.EvilHacker) && PlayerControl.LocalPlayer.IsAlive()) ||
+                        (IsInherited() && PlayerControl.LocalPlayer.IsTeamImpostor())) && !RebuildUs.BetterSabotageMap.Value;
             },
-            () => { return CachedPlayer.LocalPlayer.PlayerControl.CanMove; },
+            () => { return PlayerControl.LocalPlayer.CanMove; },
             () => { },
             Hacker.GetAdminSprite(),
             new Vector3(0f, 2.0f, 0),
@@ -81,15 +81,15 @@ public class EvilHacker : RoleBase<EvilHacker>
         EvilHackerCreatesMadmateButton = new CustomButton(
             () =>
             {
-                using var sender = new RPCSender(CachedPlayer.LocalPlayer.PlayerControl.NetId, CustomRPC.EvilHackerCreatesMadmate);
+                using var sender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.EvilHackerCreatesMadmate);
                 sender.Write(CurrentTarget.PlayerId);
                 RPCProcedure.EvilHackerCreatesMadmate(CurrentTarget.PlayerId, Player.PlayerId);
             },
             () =>
             {
-                return CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.EvilHacker) && CanCreateMadmate && CachedPlayer.LocalPlayer.PlayerControl.IsAlive();
+                return PlayerControl.LocalPlayer.IsRole(RoleType.EvilHacker) && CanCreateMadmate && PlayerControl.LocalPlayer.IsAlive();
             },
-            () => { return CurrentTarget && CachedPlayer.LocalPlayer.PlayerControl.CanMove; },
+            () => { return CurrentTarget && PlayerControl.LocalPlayer.CanMove; },
             () => { },
             AssetLoader.SidekickButton,
             new Vector3(-2.7f, -0.06f, 0),
@@ -110,7 +110,7 @@ public class EvilHacker : RoleBase<EvilHacker>
     // write functions here
     public static bool IsInherited()
     {
-        return CanInheritAbility && Exists && LivingPlayers.Count == 0 && CachedPlayer.LocalPlayer.PlayerControl.IsTeamImpostor();
+        return CanInheritAbility && Exists && LivingPlayers.Count == 0 && PlayerControl.LocalPlayer.IsTeamImpostor();
     }
 
     public static void Clear()

@@ -295,7 +295,7 @@ public class CustomOverlays
         if (OverlayShown) return;
 
         HudManager hudManager = FastDestroyableSingleton<HudManager>.Instance;
-        if (MapUtilities.CachedShipStatus == null || CachedPlayer.LocalPlayer.PlayerControl == null || hudManager == null || FastDestroyableSingleton<HudManager>.Instance.IsIntroDisplayed || (!CachedPlayer.LocalPlayer.PlayerControl.CanMove && MeetingHud.Instance == null))
+        if (MapUtilities.CachedShipStatus == null || PlayerControl.LocalPlayer == null || hudManager == null || FastDestroyableSingleton<HudManager>.Instance.IsIntroDisplayed || (!PlayerControl.LocalPlayer.CanMove && MeetingHud.Instance == null))
             return;
 
         if (!InitializeOverlays()) return;
@@ -325,7 +325,7 @@ public class CustomOverlays
         InfoOverlayRules.enabled = true;
 
         string rolesText = "";
-        foreach (var r in RoleInfo.GetRoleInfoForPlayer(CachedPlayer.LocalPlayer.PlayerControl))
+        foreach (var r in RoleInfo.GetRoleInfoForPlayer(PlayerControl.LocalPlayer))
         {
             string roleOptions = r.RoleOptions;
             string roleDesc = r.FullDescription;
@@ -396,7 +396,7 @@ public class CustomOverlays
         if (RolePage != 0) return;
 
         HudManager hudManager = FastDestroyableSingleton<HudManager>.Instance;
-        if (MapUtilities.CachedShipStatus == null || CachedPlayer.LocalPlayer.PlayerControl == null || hudManager == null || FastDestroyableSingleton<HudManager>.Instance.IsIntroDisplayed || (!CachedPlayer.LocalPlayer.PlayerControl.CanMove && MeetingHud.Instance == null))
+        if (MapUtilities.CachedShipStatus == null || PlayerControl.LocalPlayer == null || hudManager == null || FastDestroyableSingleton<HudManager>.Instance.IsIntroDisplayed || (!PlayerControl.LocalPlayer.CanMove && MeetingHud.Instance == null))
         {
             return;
         }

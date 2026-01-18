@@ -26,7 +26,7 @@ public class Warlock : RoleBase<Warlock>
     public override void OnIntroEnd() { }
     public override void FixedUpdate()
     {
-        if (!CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Warlock)) return;
+        if (!PlayerControl.LocalPlayer.IsRole(RoleType.Warlock)) return;
         if (CurseVictim != null && (CurseVictim.Data.Disconnected || CurseVictim.Data.IsDead))
         {
             // If the cursed victim is disconnected or dead reset the curse so a new curse can be applied
@@ -45,7 +45,7 @@ public class Warlock : RoleBase<Warlock>
     }
     public override void OnKill(PlayerControl target)
     {
-        if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Warlock) && WarlockCurseButton != null)
+        if (PlayerControl.LocalPlayer.IsRole(RoleType.Warlock) && WarlockCurseButton != null)
         {
             if (Player.killTimer > WarlockCurseButton.Timer)
             {
@@ -78,13 +78,13 @@ public class Warlock : RoleBase<Warlock>
                         WarlockCurseButton.ButtonText = Tr.Get("Hud.CurseText");
                         if (RootTime > 0)
                         {
-                            CachedPlayer.LocalPlayer.PlayerControl.moveable = false;
-                            CachedPlayer.LocalPlayer.PlayerControl.NetTransform.Halt(); // Stop current movement so the warlock is not just running straight into the next object
+                            PlayerControl.LocalPlayer.moveable = false;
+                            PlayerControl.LocalPlayer.NetTransform.Halt(); // Stop current movement so the warlock is not just running straight into the next object
                             FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(RootTime, new Action<float>((p) =>
                             { // Delayed action
                                 if (p == 1f)
                                 {
-                                    CachedPlayer.LocalPlayer.PlayerControl.moveable = true;
+                                    PlayerControl.LocalPlayer.moveable = true;
                                 }
                             })));
                         }
@@ -95,8 +95,8 @@ public class Warlock : RoleBase<Warlock>
                         Player.killTimer = WarlockCurseButton.Timer = WarlockCurseButton.MaxTimer;
                     }
                 },
-                () => { return CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Warlock) && CachedPlayer.LocalPlayer.PlayerControl.IsAlive(); },
-                () => { return ((CurseVictim == null && CurrentTarget != null) || (CurseVictim != null && CurseVictimTarget != null)) && CachedPlayer.LocalPlayer.PlayerControl.CanMove; },
+                () => { return PlayerControl.LocalPlayer.IsRole(RoleType.Warlock) && PlayerControl.LocalPlayer.IsAlive(); },
+                () => { return ((CurseVictim == null && CurrentTarget != null) || (CurseVictim != null && CurseVictimTarget != null)) && PlayerControl.LocalPlayer.CanMove; },
                 () =>
                 {
                     WarlockCurseButton.Timer = WarlockCurseButton.MaxTimer;

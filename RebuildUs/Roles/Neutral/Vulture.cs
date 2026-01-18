@@ -33,7 +33,7 @@ public class Vulture : RoleBase<Vulture>
     {
         if (LocalArrows == null || !ShowArrows) return;
 
-        if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Vulture))
+        if (PlayerControl.LocalPlayer.IsRole(RoleType.Vulture))
         {
             if (Player.IsDead())
             {
@@ -79,23 +79,23 @@ public class Vulture : RoleBase<Vulture>
         VultureEatButton = new CustomButton(
                 () =>
                 {
-                    foreach (var collider2D in Physics2D.OverlapCircleAll(CachedPlayer.LocalPlayer.PlayerControl.GetTruePosition(), CachedPlayer.LocalPlayer.PlayerControl.MaxReportDistance, Constants.PlayersOnlyMask))
+                    foreach (var collider2D in Physics2D.OverlapCircleAll(PlayerControl.LocalPlayer.GetTruePosition(), PlayerControl.LocalPlayer.MaxReportDistance, Constants.PlayersOnlyMask))
                     {
                         if (collider2D.tag == "DeadBody")
                         {
                             var component = collider2D.GetComponent<DeadBody>();
                             if (component && !component.Reported)
                             {
-                                var truePosition = CachedPlayer.LocalPlayer.PlayerControl.GetTruePosition();
+                                var truePosition = PlayerControl.LocalPlayer.GetTruePosition();
                                 var truePosition2 = component.TruePosition;
-                                if (Vector2.Distance(truePosition2, truePosition) <= CachedPlayer.LocalPlayer.PlayerControl.MaxReportDistance && CachedPlayer.LocalPlayer.PlayerControl.CanMove && !PhysicsHelpers.AnythingBetween(truePosition, truePosition2, Constants.ShipAndObjectsMask, false))
+                                if (Vector2.Distance(truePosition2, truePosition) <= PlayerControl.LocalPlayer.MaxReportDistance && PlayerControl.LocalPlayer.CanMove && !PhysicsHelpers.AnythingBetween(truePosition, truePosition2, Constants.ShipAndObjectsMask, false))
                                 {
                                     var playerInfo = GameData.Instance.GetPlayerById(component.ParentId);
 
-                                    using var sender = new RPCSender(CachedPlayer.LocalPlayer.PlayerControl.NetId, CustomRPC.VultureEat);
+                                    using var sender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.VultureEat);
                                     sender.Write(playerInfo.PlayerId);
-                                    sender.Write(CachedPlayer.LocalPlayer.PlayerControl.PlayerId);
-                                    RPCProcedure.VultureEat(playerInfo.PlayerId, CachedPlayer.LocalPlayer.PlayerControl.PlayerId);
+                                    sender.Write(PlayerControl.LocalPlayer.PlayerId);
+                                    RPCProcedure.VultureEat(playerInfo.PlayerId, PlayerControl.LocalPlayer.PlayerId);
 
                                     VultureEatButton.Timer = VultureEatButton.MaxTimer;
                                     break;
@@ -105,16 +105,16 @@ public class Vulture : RoleBase<Vulture>
                     }
                     if (Local.EatenBodies >= NumberToWin)
                     {
-                        using var sender = new RPCSender(CachedPlayer.LocalPlayer.PlayerControl.NetId, CustomRPC.VultureWin);
+                        using var sender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.VultureWin);
                         RPCProcedure.VultureWin();
                         return;
                     }
                 },
-                () => { return CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Vulture) && CachedPlayer.LocalPlayer.PlayerControl.IsAlive(); },
+                () => { return PlayerControl.LocalPlayer.IsRole(RoleType.Vulture) && PlayerControl.LocalPlayer.IsAlive(); },
                 () =>
                 {
                     VultureNumCorpsesText?.text = string.Format(Tr.Get("Hud.VultureCorpses"), NumberToWin - Local.EatenBodies);
-                    return hm.ReportButton.graphic.color == Palette.EnabledColor && CachedPlayer.LocalPlayer.PlayerControl.CanMove;
+                    return hm.ReportButton.graphic.color == Palette.EnabledColor && PlayerControl.LocalPlayer.CanMove;
                 },
                 () => { VultureEatButton.Timer = VultureEatButton.MaxTimer; },
                 AssetLoader.VultureButton,

@@ -29,7 +29,7 @@ public class Morphing : RoleBase<Morphing>
     }
     public override void FixedUpdate()
     {
-        if (!CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Morphing)) return;
+        if (!PlayerControl.LocalPlayer.IsRole(RoleType.Morphing)) return;
         CurrentTarget = Helpers.SetTarget();
         Helpers.SetPlayerOutline(CurrentTarget, RoleColor);
     }
@@ -45,7 +45,7 @@ public class Morphing : RoleBase<Morphing>
                     if (SampledTarget != null)
                     {
                         {
-                            using var sender = new RPCSender(CachedPlayer.LocalPlayer.PlayerControl.NetId, CustomRPC.MorphingMorph);
+                            using var sender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.MorphingMorph);
                             sender.Write(SampledTarget.PlayerId);
                             sender.Write(Player.PlayerId);
                         }
@@ -61,8 +61,8 @@ public class Morphing : RoleBase<Morphing>
                         MorphingButton.EffectDuration = 1f;
                     }
                 },
-                () => { return CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Morphing) && CachedPlayer.LocalPlayer.PlayerControl.IsAlive(); },
-                () => { return (CurrentTarget || SampledTarget) && CachedPlayer.LocalPlayer.PlayerControl.CanMove; },
+                () => { return PlayerControl.LocalPlayer.IsRole(RoleType.Morphing) && PlayerControl.LocalPlayer.IsAlive(); },
+                () => { return (CurrentTarget || SampledTarget) && PlayerControl.LocalPlayer.CanMove; },
                 () =>
                 {
                     MorphingButton.Timer = MorphingButton.MaxTimer;

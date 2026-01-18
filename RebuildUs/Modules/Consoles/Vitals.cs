@@ -19,9 +19,9 @@ public static class Vitals
     static void UseVitalsTime()
     {
         // Don't waste network traffic if we're out of time.
-        if (ModMapOptions.RestrictDevices > 0 && ModMapOptions.RestrictVitals && ModMapOptions.RestrictVitalsTime > 0f && CachedPlayer.LocalPlayer.PlayerControl.IsAlive())
+        if (ModMapOptions.RestrictDevices > 0 && ModMapOptions.RestrictVitals && ModMapOptions.RestrictVitalsTime > 0f && PlayerControl.LocalPlayer.IsAlive())
         {
-            using var sender = new RPCSender(CachedPlayer.LocalPlayer.PlayerControl.NetId, CustomRPC.UseVitalsTime);
+            using var sender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.UseVitalsTime);
             sender.Write(VitalsTimer);
             RPCProcedure.UseVitalsTime(VitalsTimer);
         }
@@ -32,7 +32,7 @@ public static class Vitals
     {
         VitalsTimer = 0f;
 
-        if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Hacker))
+        if (PlayerControl.LocalPlayer.IsRole(RoleType.Hacker))
         {
             HackerTexts = [];
             foreach (VitalsPanel panel in __instance.vitals)
@@ -83,7 +83,7 @@ public static class Vitals
     public static void UpdatePostfix(VitalsMinigame __instance)
     {
         // Hacker show time since death
-        if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Hacker) && Hacker.GetRole().HackerTimer > 0)
+        if (PlayerControl.LocalPlayer.IsRole(RoleType.Hacker) && Hacker.GetRole().HackerTimer > 0)
         {
             for (int k = 0; k < __instance.vitals.Length; k++)
             {

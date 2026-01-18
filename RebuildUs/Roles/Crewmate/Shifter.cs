@@ -27,7 +27,7 @@ public class Shifter : RoleBase<Shifter>
     public override void OnIntroEnd() { }
     public override void FixedUpdate()
     {
-        if (!CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Shifter)) return;
+        if (!PlayerControl.LocalPlayer.IsRole(RoleType.Shifter)) return;
 
         List<PlayerControl> blockShift = null;
         if (Shifter.IsNeutral && !Shifter.ShiftPastShifters)
@@ -55,13 +55,13 @@ public class Shifter : RoleBase<Shifter>
                 () =>
                 {
                     {
-                        using var sender = new RPCSender(CachedPlayer.LocalPlayer.PlayerControl.NetId, CustomRPC.SetFutureShifted);
+                        using var sender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.SetFutureShifted);
                         sender.Write(Shifter.CurrentTarget.PlayerId);
                     }
                     RPCProcedure.SetFutureShifted(Shifter.CurrentTarget.PlayerId);
                 },
-                () => { return CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Shifter) && CachedPlayer.LocalPlayer.PlayerControl.IsAlive(); },
-                () => { return Shifter.CurrentTarget && Shifter.FutureShift == null && CachedPlayer.LocalPlayer.PlayerControl.CanMove; },
+                () => { return PlayerControl.LocalPlayer.IsRole(RoleType.Shifter) && PlayerControl.LocalPlayer.IsAlive(); },
+                () => { return Shifter.CurrentTarget && Shifter.FutureShift == null && PlayerControl.LocalPlayer.CanMove; },
                 () => { },
                 AssetLoader.ShiftButton,
                 new Vector3(-1.8f, -0.06f, 0),

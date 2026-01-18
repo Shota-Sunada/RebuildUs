@@ -25,7 +25,7 @@ public class Eraser : RoleBase<Eraser>
     public override void OnIntroEnd() { }
     public override void FixedUpdate()
     {
-        if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Eraser))
+        if (PlayerControl.LocalPlayer.IsRole(RoleType.Eraser))
         {
             List<PlayerControl> untargetables = [];
             if (Spy.Exists) untargetables.AddRange(Spy.AllPlayers);
@@ -65,12 +65,12 @@ public class Eraser : RoleBase<Eraser>
                     EraserButton.MaxTimer += CooldownIncrease;
                     EraserButton.Timer = EraserButton.MaxTimer;
 
-                    using var sender = new RPCSender(CachedPlayer.LocalPlayer.PlayerControl.NetId, CustomRPC.SetFutureErased);
+                    using var sender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.SetFutureErased);
                     sender.Write(CurrentTarget.PlayerId);
                     RPCProcedure.SetFutureErased(CurrentTarget.PlayerId);
                 },
-                () => { return CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Eraser) && CachedPlayer.LocalPlayer.PlayerControl.IsAlive(); },
-                () => { return CachedPlayer.LocalPlayer.PlayerControl.CanMove && CurrentTarget != null; },
+                () => { return PlayerControl.LocalPlayer.IsRole(RoleType.Eraser) && PlayerControl.LocalPlayer.IsAlive(); },
+                () => { return PlayerControl.LocalPlayer.CanMove && CurrentTarget != null; },
                 () => { EraserButton.Timer = EraserButton.MaxTimer; },
                 AssetLoader.EraserButton,
                 new Vector3(-1.8f, -0.06f, 0),

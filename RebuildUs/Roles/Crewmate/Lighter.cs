@@ -46,8 +46,8 @@ public class Lighter : RoleBase<Lighter>
             {
                 Local.LightActive = true;
             },
-            () => { return CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Lighter) && !CachedPlayer.LocalPlayer.PlayerControl.Data.IsDead; },
-            () => { return CachedPlayer.LocalPlayer.PlayerControl.CanMove; },
+            () => { return PlayerControl.LocalPlayer.IsRole(RoleType.Lighter) && !PlayerControl.LocalPlayer.Data.IsDead; },
+            () => { return PlayerControl.LocalPlayer.CanMove; },
             () =>
             {
                 Local?.LightActive = false;

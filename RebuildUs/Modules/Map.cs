@@ -98,22 +98,22 @@ public static class Map
         vector.x *= Mathf.Sign(MapUtilities.CachedShipStatus.transform.localScale.x);
         vector.z = -1f;
         __instance.HerePoint.transform.localPosition = vector;
-        CachedPlayer.LocalPlayer.PlayerControl.SetPlayerMaterialColors(__instance.HerePoint);
+        PlayerControl.LocalPlayer.SetPlayerMaterialColors(__instance.HerePoint);
     }
 
     public static void UpdatePostfix(MapBehaviour __instance)
     {
-        if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.EvilTracker) && EvilTracker.CanSeeTargetPosition)
+        if (PlayerControl.LocalPlayer.IsRole(RoleType.EvilTracker) && EvilTracker.CanSeeTargetPosition)
         {
             EvilTrackerFixedUpdate(__instance);
         }
 
-        if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.EvilHacker) || EvilHacker.IsInherited())
+        if (PlayerControl.LocalPlayer.IsRole(RoleType.EvilHacker) || EvilHacker.IsInherited())
         {
             EvilHackerFixedUpdate(__instance);
         }
 
-        if (CachedPlayer.LocalPlayer.PlayerControl.IsGM())
+        if (PlayerControl.LocalPlayer.IsGM())
         {
             foreach (PlayerControl p in CachedPlayer.AllPlayers)
             {
@@ -161,15 +161,15 @@ public static class Map
 
     public static bool ShowNormalMap(MapBehaviour __instance)
     {
-        if (CachedPlayer.LocalPlayer.PlayerControl.IsTeamImpostor())
+        if (PlayerControl.LocalPlayer.IsTeamImpostor())
         {
             Vector3 pos = __instance.HerePoint.transform.parent.transform.position;
             __instance.HerePoint.transform.parent.transform.position = new Vector3(pos.x, pos.y, -60f);
             ChangeSabotageLayout(__instance);
-            if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.EvilHacker) || EvilHacker.IsInherited()) return EvilHackerShowMap(__instance);
-            if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.EvilTracker)) return EvilTrackerShowMap(__instance);
+            if (PlayerControl.LocalPlayer.IsRole(RoleType.EvilHacker) || EvilHacker.IsInherited()) return EvilHackerShowMap(__instance);
+            if (PlayerControl.LocalPlayer.IsRole(RoleType.EvilTracker)) return EvilTrackerShowMap(__instance);
         }
-        CachedPlayer.LocalPlayer.PlayerControl.SetPlayerMaterialColors(__instance.HerePoint);
+        PlayerControl.LocalPlayer.SetPlayerMaterialColors(__instance.HerePoint);
         __instance.GenericShow();
         __instance.taskOverlay.Show();
         __instance.ColorControl.SetColor(new Color(0.05f, 0.2f, 1f, 1f));
@@ -180,7 +180,7 @@ public static class Map
 
     public static void GenericShowPrefix(MapBehaviour __instance)
     {
-        if (CachedPlayer.LocalPlayer.PlayerControl.IsGM())
+        if (PlayerControl.LocalPlayer.IsGM())
         {
             UseButtonPos = FastDestroyableSingleton<HudManager>.Instance.UseButton.transform.localPosition;
         }
@@ -190,7 +190,7 @@ public static class Map
 
     public static void GenericShowPostfix(MapBehaviour __instance)
     {
-        if (CachedPlayer.LocalPlayer.PlayerControl.IsGM())
+        if (PlayerControl.LocalPlayer.IsGM())
         {
             if (MapIcons == null || CorpseIcons == null)
             {
@@ -217,7 +217,7 @@ public static class Map
 
     public static void Close(MapBehaviour __instance)
     {
-        if (CachedPlayer.LocalPlayer.PlayerControl.IsGM())
+        if (PlayerControl.LocalPlayer.IsGM())
         {
             FastDestroyableSingleton<HudManager>.Instance.UseButton.transform.localPosition = UseButtonPos;
         }
@@ -226,7 +226,7 @@ public static class Map
 
     public static bool IsOpenStopped(ref bool __result, MapBehaviour __instance)
     {
-        if ((CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.EvilHacker) || EvilHacker.IsInherited()) && CustomOptionHolder.EvilHackerCanMoveEvenIfUsesAdmin.GetBool())
+        if ((PlayerControl.LocalPlayer.IsRole(RoleType.EvilHacker) || EvilHacker.IsInherited()) && CustomOptionHolder.EvilHackerCanMoveEvenIfUsesAdmin.GetBool())
         {
             __result = false;
             return false;
@@ -242,8 +242,8 @@ public static class Map
         Vector3 pos = __instance.HerePoint.transform.parent.transform.position;
         __instance.HerePoint.transform.parent.transform.position = new Vector3(pos.x, pos.y, -60f);
         ChangeSabotageLayout(__instance);
-        if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.EvilHacker) || EvilHacker.IsInherited()) return EvilHackerShowMap(__instance);
-        if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.EvilTracker)) return EvilTrackerShowMap(__instance);
+        if (PlayerControl.LocalPlayer.IsRole(RoleType.EvilHacker) || EvilHacker.IsInherited()) return EvilHackerShowMap(__instance);
+        if (PlayerControl.LocalPlayer.IsRole(RoleType.EvilTracker)) return EvilTrackerShowMap(__instance);
         return true;
     }
 
@@ -381,7 +381,7 @@ public static class Map
         if (ImpostorHerePoint == null) ImpostorHerePoint = [];
         foreach (PlayerControl p in CachedPlayer.AllPlayers)
         {
-            if (p.IsTeamImpostor() && p != CachedPlayer.LocalPlayer.PlayerControl)
+            if (p.IsTeamImpostor() && p != PlayerControl.LocalPlayer)
             {
                 if (!ImpostorHerePoint.ContainsKey(p.PlayerId))
                 {
@@ -405,16 +405,16 @@ public static class Map
             __instance.Close();
             return false;
         }
-        // if (!CachedPlayer.LocalPlayer.PlayerControl.CanMove)
+        // if (!PlayerControl.LocalPlayer.CanMove)
         // {
         //     return false;
         // }
         __instance.specialInputHandler?.disableVirtualCursor = true;
-        CachedPlayer.LocalPlayer.PlayerControl.SetPlayerMaterialColors(__instance.HerePoint);
+        PlayerControl.LocalPlayer.SetPlayerMaterialColors(__instance.HerePoint);
         __instance.GenericShow();
         __instance.gameObject.SetActive(true);
         __instance.infectedOverlay.gameObject.SetActive(MeetingHud.Instance ? false : true);
-        if (RebuildUs.HideFakeTasks.Value && !(CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.EvilTracker) && EvilTracker.Target != null))
+        if (RebuildUs.HideFakeTasks.Value && !(PlayerControl.LocalPlayer.IsRole(RoleType.EvilTracker) && EvilTracker.Target != null))
         {
             __instance.taskOverlay.Hide();
         }
@@ -436,19 +436,19 @@ public static class Map
             __instance.Close();
             return false;
         }
-        // if (!CachedPlayer.LocalPlayer.PlayerControl.CanMove)
+        // if (!PlayerControl.LocalPlayer.CanMove)
         // {
         //     return false;
         // }
         __instance.specialInputHandler?.disableVirtualCursor = true;
         PlainDoors = UnityEngine.Object.FindObjectsOfType<PlainDoor>();
-        CachedPlayer.LocalPlayer.PlayerControl.SetPlayerMaterialColors(__instance.HerePoint);
+        PlayerControl.LocalPlayer.SetPlayerMaterialColors(__instance.HerePoint);
         __instance.GenericShow();
         __instance.gameObject.SetActive(true);
         Admin.IsEvilHackerAdmin = true;
         __instance.countOverlay.gameObject.SetActive(true);
         __instance.infectedOverlay.gameObject.SetActive(MeetingHud.Instance ? false : true);
-        if (MeetingHud.Instance != null && CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.EvilTracker) && EvilTracker.CanSeeTargetTask)
+        if (MeetingHud.Instance != null && PlayerControl.LocalPlayer.IsRole(RoleType.EvilTracker) && EvilTracker.CanSeeTargetTask)
         {
             __instance.taskOverlay.Show();
         }
@@ -474,9 +474,9 @@ public static class Map
     }
     public static void ShareRealTasks()
     {
-        using var sender = new RPCSender(CachedPlayer.LocalPlayer.PlayerControl.NetId, CustomRPC.ShareRealTasks);
+        using var sender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.ShareRealTasks);
         int count = 0;
-        foreach (var task in CachedPlayer.LocalPlayer.PlayerControl.myTasks)
+        foreach (var task in PlayerControl.LocalPlayer.myTasks)
         {
             if (!task.IsComplete && task.HasLocation && !PlayerTask.TaskIsEmergency(task))
             {
@@ -487,13 +487,13 @@ public static class Map
             }
         }
         sender.Write((byte)count);
-        foreach (var task in CachedPlayer.LocalPlayer.PlayerControl.myTasks)
+        foreach (var task in PlayerControl.LocalPlayer.myTasks)
         {
             if (!task.IsComplete && task.HasLocation && !PlayerTask.TaskIsEmergency(task))
             {
                 foreach (var loc in task.Locations)
                 {
-                    sender.Write(CachedPlayer.LocalPlayer.PlayerControl.PlayerId);
+                    sender.Write(PlayerControl.LocalPlayer.PlayerId);
                     sender.Write(loc.x);
                     sender.Write(loc.y);
                 }
@@ -503,7 +503,7 @@ public static class Map
 
     public static bool ShowOverlay(MapTaskOverlay __instance)
     {
-        if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.EvilTracker))
+        if (PlayerControl.LocalPlayer.IsRole(RoleType.EvilTracker))
         {
             return EvilTrackerShowTask(__instance);
         }
@@ -513,7 +513,7 @@ public static class Map
     private static bool EvilTrackerShowTask(MapTaskOverlay __instance)
     {
         if (!MeetingHud.Instance) return true;  // Only run in meetings, and then set the Position of the HerePoint to the Position before the Meeting!
-        if (!CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.EvilTracker) || !CustomOptionHolder.EvilTrackerCanSeeTargetTask.GetBool()) return true;
+        if (!PlayerControl.LocalPlayer.IsRole(RoleType.EvilTracker) || !CustomOptionHolder.EvilTrackerCanSeeTargetTask.GetBool()) return true;
         if (EvilTracker.Target == null) return true;
         if (RealTasks[EvilTracker.Target.PlayerId] == null) return false;
         __instance.gameObject.SetActive(true);
@@ -545,7 +545,7 @@ public static class Map
 
     public static bool OverlayOnEnablePrefix(MapCountOverlay __instance)
     {
-        if (CustomOptionHolder.ImpostorCanIgnoreCommSabotage.GetBool() && CachedPlayer.LocalPlayer.PlayerControl.IsTeamImpostor())
+        if (CustomOptionHolder.ImpostorCanIgnoreCommSabotage.GetBool() && PlayerControl.LocalPlayer.IsTeamImpostor())
         {
             return false;
         }
@@ -554,7 +554,7 @@ public static class Map
 
     public static bool OverlayOnEnablePostfix(MapCountOverlay __instance)
     {
-        if (CustomOptionHolder.ImpostorCanIgnoreCommSabotage.GetBool() && CachedPlayer.LocalPlayer.PlayerControl.IsTeamImpostor())
+        if (CustomOptionHolder.ImpostorCanIgnoreCommSabotage.GetBool() && PlayerControl.LocalPlayer.IsTeamImpostor())
         {
             __instance.timer += Time.deltaTime;
             if (__instance.timer < 0.1f)

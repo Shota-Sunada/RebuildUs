@@ -1,3 +1,5 @@
+using RebuildUs.Roles.Modifier;
+
 namespace RebuildUs.Roles;
 
 public static class ModifierData
@@ -9,10 +11,14 @@ public static class ModifierData
         Func<CustomOption> getOption
     );
 
-    public static readonly ModifierRegistration[] Roles =
+    public static readonly ModifierRegistration[] Modifiers =
     [
-        // new(RoleType.Jester, typeof(RoleBase<Jester>), () => Jester.color, () => CustomOptionHolder.JesterSpawnRate),
+        new(ModifierType.Madmate, typeof(Madmate), () => Madmate.NameColor, () => CustomOptionHolder.MadmateSpawnRate),
+        new(ModifierType.CreatedMadmate, typeof(CreatedMadmate), () => Madmate.NameColor, null),
+        new(ModifierType.LastImpostor, typeof(LastImpostor), () => LastImpostor.NameColor, () => CustomOptionHolder.LastImpostorEnable),
+        new(ModifierType.Mini, typeof(Mini), () => Mini.NameColor, () => CustomOptionHolder.MiniSpawnRate),
+        new(ModifierType.AntiTeleport, typeof(AntiTeleport), () => AntiTeleport.NameColor, null),
     ];
 
-    public static (ModifierType ModifierType, Type Type)[] AllModifierTypes => [.. Roles.Select(r => (r.modType, r.classType))];
+    public static (ModifierType ModifierType, Type Type)[] AllModifierTypes => [.. Modifiers.Select(r => (r.modType, r.classType))];
 }

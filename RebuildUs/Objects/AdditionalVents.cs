@@ -37,9 +37,9 @@ public class AdditionalVents
         // Polusにベントを追加する
         if (Helpers.IsPolus && CustomOptionHolder.PolusAdditionalVents.GetBool())
         {
-            AdditionalVents vents1 = new(new Vector3(36.54f, -21.77f, CachedPlayer.LocalPlayer.PlayerControl.transform.position.z + 1f)); // Specimen
-            AdditionalVents vents2 = new(new Vector3(16.64f, -2.46f, CachedPlayer.LocalPlayer.PlayerControl.transform.position.z + 1f)); // InitialSpawn
-            AdditionalVents vents3 = new(new Vector3(26.67f, -17.54f, CachedPlayer.LocalPlayer.PlayerControl.transform.position.z + 1f)); // Vital
+            AdditionalVents vents1 = new(new Vector3(36.54f, -21.77f, PlayerControl.LocalPlayer.transform.position.z + 1f)); // Specimen
+            AdditionalVents vents2 = new(new Vector3(16.64f, -2.46f, PlayerControl.LocalPlayer.transform.position.z + 1f)); // InitialSpawn
+            AdditionalVents vents3 = new(new Vector3(26.67f, -17.54f, PlayerControl.LocalPlayer.transform.position.z + 1f)); // Vital
             vents1.Vent.Left = vents3.Vent; // Specimen - Vital
             vents2.Vent.Center = vents3.Vent; // InitialSpawn - Vital
             vents3.Vent.Right = vents1.Vent; // Vital - Specimen
@@ -48,8 +48,8 @@ public class AdditionalVents
 
         // AirShipにベントを追加する
         // if(PlayerControl.GameOptions.MapId == 4 && CustomOptionHolder.additionalVents.getBool()){
-        //     AdditionalVents vents1 = new AdditionalVents(new Vector3(17.086f, 15.24f, CachedPlayer.LocalPlayer.PlayerControl.transform.position.z + 1f)); // MeetingRoom
-        //     AdditionalVents vents2 = new AdditionalVents(new Vector3(19.137f, -11.32f, CachedPlayer.LocalPlayer.PlayerControl.transform.position.z + 1f)); // Electrical
+        //     AdditionalVents vents1 = new AdditionalVents(new Vector3(17.086f, 15.24f, PlayerControl.LocalPlayer.transform.position.z + 1f)); // MeetingRoom
+        //     AdditionalVents vents2 = new AdditionalVents(new Vector3(19.137f, -11.32f, PlayerControl.LocalPlayer.transform.position.z + 1f)); // Electrical
         //     vents1.vent.Right = vents2.vent;
         //     vents2.vent.Left = vents1.vent;
         // }

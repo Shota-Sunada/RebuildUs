@@ -66,7 +66,7 @@ public class Submerged
         public static void Prefix() { }
         public static void Postfix()
         {
-            CachedPlayer.LocalPlayer.PlayerControl.SetKillTimer(Helpers.GetOption(FloatOptionNames.KillCooldown));
+            PlayerControl.LocalPlayer.SetKillTimer(Helpers.GetOption(FloatOptionNames.KillCooldown));
             MapUtilities.CachedShipStatus.EmergencyCooldown = Helpers.GetOption(Int32OptionNames.EmergencyCooldown);
             Exile.ReEnableGameplay();
         }

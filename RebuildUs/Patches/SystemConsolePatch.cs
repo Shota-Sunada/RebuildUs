@@ -18,6 +18,6 @@ public static class SystemConsolePatch
     [HarmonyPatch(typeof(SystemConsole), nameof(SystemConsole.Use))]
     public static bool UsePrefix(SystemConsole __instance)
     {
-        return !Usables.IsBlocked(__instance, CachedPlayer.LocalPlayer.PlayerControl);
+        return !Usables.IsBlocked(__instance, PlayerControl.LocalPlayer);
     }
 }

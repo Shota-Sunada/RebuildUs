@@ -44,7 +44,7 @@ public class Vampire : RoleBase<Vampire>
                         if (Vampire.TargetNearGarlic)
                         {
                             {
-                                using var sender = new RPCSender(CachedPlayer.LocalPlayer.PlayerControl.NetId, CustomRPC.UncheckedMurderPlayer);
+                                using var sender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.UncheckedMurderPlayer);
                                 sender.Write(Player.PlayerId);
                                 sender.Write(Vampire.CurrentTarget.PlayerId);
                                 sender.Write(Byte.MaxValue);
@@ -59,7 +59,7 @@ public class Vampire : RoleBase<Vampire>
                             Vampire.Bitten = Vampire.CurrentTarget;
                             // Notify players about bitten
                             {
-                                using var sender = new RPCSender(CachedPlayer.LocalPlayer.PlayerControl.NetId, CustomRPC.VampireSetBitten);
+                                using var sender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.VampireSetBitten);
                                 sender.Write(Vampire.Bitten.PlayerId);
                                 sender.Write((byte)0);
                             }
@@ -72,7 +72,7 @@ public class Vampire : RoleBase<Vampire>
                                     // Perform kill if possible and reset bitten (regardless whether the kill was successful or not)
                                     Helpers.CheckMurderAttemptAndKill(Player, Vampire.Bitten, showAnimation: false);
                                     {
-                                        using var sender = new RPCSender(CachedPlayer.LocalPlayer.PlayerControl.NetId, CustomRPC.VampireSetBitten);
+                                        using var sender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.VampireSetBitten);
                                         sender.Write(byte.MaxValue);
                                         sender.Write(byte.MaxValue);
                                     }
@@ -89,7 +89,7 @@ public class Vampire : RoleBase<Vampire>
                         VampireKillButton.HasEffect = false;
                     }
                 },
-                () => { return CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Vampire) && CachedPlayer.LocalPlayer.PlayerControl.IsAlive(); },
+                () => { return PlayerControl.LocalPlayer.IsRole(RoleType.Vampire) && PlayerControl.LocalPlayer.IsAlive(); },
                 () =>
                 {
                     if (Vampire.TargetNearGarlic && Vampire.CanKillNearGarlics)
@@ -102,7 +102,7 @@ public class Vampire : RoleBase<Vampire>
                         VampireKillButton.Sprite = AssetLoader.VampireButton;
                         VampireKillButton.ButtonText = Tr.Get("Hud.VampireText");
                     }
-                    return Vampire.CurrentTarget != null && CachedPlayer.LocalPlayer.PlayerControl.CanMove && (!Vampire.TargetNearGarlic || Vampire.CanKillNearGarlics);
+                    return Vampire.CurrentTarget != null && PlayerControl.LocalPlayer.CanMove && (!Vampire.TargetNearGarlic || Vampire.CanKillNearGarlics);
                 },
                 () =>
                 {
@@ -130,19 +130,19 @@ public class Vampire : RoleBase<Vampire>
             () =>
             {
                 Vampire.LocalPlacedGarlic = true;
-                var pos = CachedPlayer.LocalPlayer.PlayerControl.transform.position;
+                var pos = PlayerControl.LocalPlayer.transform.position;
                 byte[] buff = new byte[sizeof(float) * 2];
                 Buffer.BlockCopy(BitConverter.GetBytes(pos.x), 0, buff, 0 * sizeof(float), sizeof(float));
                 Buffer.BlockCopy(BitConverter.GetBytes(pos.y), 0, buff, 1 * sizeof(float), sizeof(float));
 
                 {
-                    using var sender = new RPCSender(CachedPlayer.LocalPlayer.PlayerControl.NetId, CustomRPC.PlaceGarlic);
+                    using var sender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.PlaceGarlic);
                     sender.WriteBytesAndSize(buff);
                 }
                 RPCProcedure.PlaceGarlic(buff);
             },
-            () => { return !Vampire.LocalPlacedGarlic && CachedPlayer.LocalPlayer.PlayerControl.IsAlive() && Vampire.GarlicsActive && !CachedPlayer.LocalPlayer.PlayerControl.IsGM(); },
-            () => { return CachedPlayer.LocalPlayer.PlayerControl.CanMove && !Vampire.LocalPlacedGarlic; },
+            () => { return !Vampire.LocalPlacedGarlic && PlayerControl.LocalPlayer.IsAlive() && Vampire.GarlicsActive && !PlayerControl.LocalPlayer.IsGM(); },
+            () => { return PlayerControl.LocalPlayer.CanMove && !Vampire.LocalPlacedGarlic; },
             () => { },
             AssetLoader.GarlicButton,
             new Vector3(0, -0.06f, 0),

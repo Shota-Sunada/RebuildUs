@@ -19,7 +19,7 @@ public static class Airship
             // 昇降機右に影を追加
             var oneWayShadow = obj.transform.FindChild("Shadow").FindChild("LedgeShadow").GetComponent<OneWayShadows>();
             oneWayShadow.enabled = false;
-            if (CachedPlayer.LocalPlayer.PlayerControl.IsTeamImpostor())
+            if (PlayerControl.LocalPlayer.IsTeamImpostor())
             {
                 oneWayShadow.gameObject.SetActive(false);
             }

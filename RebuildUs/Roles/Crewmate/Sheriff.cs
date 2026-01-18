@@ -39,7 +39,7 @@ public class Sheriff : RoleBase<Sheriff>
     public override void OnIntroEnd() { }
     public override void FixedUpdate()
     {
-        if (Player == CachedPlayer.LocalPlayer.PlayerControl && numShots > 0)
+        if (Player == PlayerControl.LocalPlayer && numShots > 0)
         {
             currentTarget = Helpers.SetTarget();
             Helpers.SetPlayerOutline(currentTarget, NameColor);
@@ -60,7 +60,7 @@ public class Sheriff : RoleBase<Sheriff>
                     return;
                 }
 
-                MurderAttemptResult murderAttemptResult = Helpers.CheckMurderAttempt(CachedPlayer.LocalPlayer.PlayerControl, currentTarget);
+                MurderAttemptResult murderAttemptResult = Helpers.CheckMurderAttempt(PlayerControl.LocalPlayer, currentTarget);
                 if (murderAttemptResult == MurderAttemptResult.SuppressKill) return;
 
                 if (murderAttemptResult == MurderAttemptResult.PerformKill)
@@ -79,7 +79,7 @@ public class Sheriff : RoleBase<Sheriff>
                     }
                     else
                     {
-                        //targetId = CachedPlayer.LocalPlayer.PlayerControl.PlayerId;
+                        //targetId = PlayerControl.LocalPlayer.PlayerId;
                         misfire = true;
                     }
 
@@ -89,22 +89,22 @@ public class Sheriff : RoleBase<Sheriff>
                         misfire = true;
                     }
                     {
-                        using var killSender = new RPCSender(CachedPlayer.LocalPlayer.PlayerControl.NetId, CustomRPC.SheriffKill);
-                        killSender.Write(CachedPlayer.LocalPlayer.PlayerControl.Data.PlayerId);
+                        using var killSender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.SheriffKill);
+                        killSender.Write(PlayerControl.LocalPlayer.Data.PlayerId);
                         killSender.Write(targetId);
                         killSender.Write(misfire);
                     }
-                    RPCProcedure.sheriffKill(CachedPlayer.LocalPlayer.PlayerControl.Data.PlayerId, targetId, misfire);
+                    RPCProcedure.sheriffKill(PlayerControl.LocalPlayer.Data.PlayerId, targetId, misfire);
                 }
 
                 sheriffKillButton.Timer = sheriffKillButton.MaxTimer;
                 currentTarget = null;
             },
-            () => { return CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Sheriff) && numShots > 0 && !CachedPlayer.LocalPlayer.PlayerControl.Data.IsDead && canKill; },
+            () => { return PlayerControl.LocalPlayer.IsRole(RoleType.Sheriff) && numShots > 0 && !PlayerControl.LocalPlayer.Data.IsDead && canKill; },
             () =>
             {
                 sheriffNumShotsText?.text = numShots > 0 ? string.Format(Tr.Get("Hud.SheriffShots"), numShots) : "";
-                return currentTarget && CachedPlayer.LocalPlayer.PlayerControl.CanMove;
+                return currentTarget && PlayerControl.LocalPlayer.CanMove;
             },
             () => { sheriffKillButton.Timer = sheriffKillButton.MaxTimer; },
             hm.KillButton.graphic.sprite,

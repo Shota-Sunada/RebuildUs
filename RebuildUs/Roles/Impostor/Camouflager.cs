@@ -49,12 +49,12 @@ public class Camouflager : RoleBase<Camouflager>
                 () =>
                 {
                     {
-                        using var sender = new RPCSender(CachedPlayer.LocalPlayer.PlayerControl.NetId, CustomRPC.CamouflagerCamouflage);
+                        using var sender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.CamouflagerCamouflage);
                     }
                     RPCProcedure.CamouflagerCamouflage();
                 },
-                () => { return CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Camouflager) && CachedPlayer.LocalPlayer.PlayerControl.IsAlive(); },
-                () => { return CachedPlayer.LocalPlayer.PlayerControl.CanMove; },
+                () => { return PlayerControl.LocalPlayer.IsRole(RoleType.Camouflager) && PlayerControl.LocalPlayer.IsAlive(); },
+                () => { return PlayerControl.LocalPlayer.CanMove; },
                 () =>
                 {
                     CamouflagerButton.Timer = CamouflagerButton.MaxTimer;

@@ -31,7 +31,7 @@ public class Medium : RoleBase<Medium>
     }
     public override void OnMeetingEnd()
     {
-        if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Medium))
+        if (PlayerControl.LocalPlayer.IsRole(RoleType.Medium))
         {
             if (Souls != null)
             {
@@ -63,10 +63,10 @@ public class Medium : RoleBase<Medium>
     public override void OnIntroEnd() { }
     public override void FixedUpdate()
     {
-        if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Medium) || CachedPlayer.LocalPlayer.PlayerControl.Data.IsDead || DeadBodies != null || MapUtilities.CachedShipStatus?.AllVents != null)
+        if (PlayerControl.LocalPlayer.IsRole(RoleType.Medium) || PlayerControl.LocalPlayer.Data.IsDead || DeadBodies != null || MapUtilities.CachedShipStatus?.AllVents != null)
         {
             DeadPlayer target = null;
-            Vector2 truePosition = CachedPlayer.LocalPlayer.PlayerControl.GetTruePosition();
+            Vector2 truePosition = PlayerControl.LocalPlayer.GetTruePosition();
             float closestDistance = float.MaxValue;
             float usableDistance = MapUtilities.CachedShipStatus.AllVents.FirstOrDefault().UsableDistance;
             foreach ((DeadPlayer dp, Vector3 ps) in Medium.DeadBodies)
@@ -96,7 +96,7 @@ public class Medium : RoleBase<Medium>
                     MediumButton.HasEffect = true;
                 }
             },
-            () => { return CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Medium) && CachedPlayer.LocalPlayer.PlayerControl.IsAlive(); },
+            () => { return PlayerControl.LocalPlayer.IsRole(RoleType.Medium) && PlayerControl.LocalPlayer.IsAlive(); },
             () =>
             {
                 if (MediumButton.IsEffectActive && Local.Target != Local.SoulTarget)
@@ -105,7 +105,7 @@ public class Medium : RoleBase<Medium>
                     MediumButton.Timer = 0f;
                     MediumButton.IsEffectActive = false;
                 }
-                return Local.Target != null && CachedPlayer.LocalPlayer.PlayerControl.CanMove;
+                return Local.Target != null && PlayerControl.LocalPlayer.CanMove;
             },
             () =>
             {
@@ -150,7 +150,7 @@ public class Medium : RoleBase<Medium>
 
                 bool censorChat = AmongUs.Data.DataManager.Settings.Multiplayer.CensorChat;
                 if (censorChat) AmongUs.Data.DataManager.Settings.Multiplayer.CensorChat = false;
-                FastDestroyableSingleton<HudManager>.Instance.Chat.AddChat(CachedPlayer.LocalPlayer.PlayerControl, $"{msg}");
+                FastDestroyableSingleton<HudManager>.Instance.Chat.AddChat(PlayerControl.LocalPlayer, $"{msg}");
                 AmongUs.Data.DataManager.Settings.Multiplayer.CensorChat = censorChat;
 
                 // Remove soul
@@ -169,7 +169,7 @@ public class Medium : RoleBase<Medium>
                     }
                     foreach (var rend in Souls)
                     {
-                        float distance = Vector2.Distance(rend.transform.position, CachedPlayer.LocalPlayer.PlayerControl.GetTruePosition());
+                        float distance = Vector2.Distance(rend.transform.position, PlayerControl.LocalPlayer.GetTruePosition());
                         if (distance < closestDistance)
                         {
                             closestDistance = distance;

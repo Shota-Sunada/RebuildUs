@@ -21,7 +21,7 @@ public class Seer : RoleBase<Seer>
     public override void OnMeetingStart() { }
     public override void OnMeetingEnd()
     {
-        if (DeadBodyPositions != null && CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Seer) && (Mode is 0 or 2))
+        if (DeadBodyPositions != null && PlayerControl.LocalPlayer.IsRole(RoleType.Seer) && (Mode is 0 or 2))
         {
             foreach (var pos in DeadBodyPositions)
             {

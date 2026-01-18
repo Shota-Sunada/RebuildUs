@@ -33,7 +33,7 @@ public class Snitch : RoleBase<Snitch>
         var (playerCompleted, playerTotal) = TasksHandler.TaskInfo(Player.Data);
         int numberOfTasks = playerTotal - playerCompleted;
 
-        if (numberOfTasks <= LeftTasksForReveal && (CachedPlayer.LocalPlayer.PlayerControl.Data.Role.IsImpostor || (IncludeTeamJackal && (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Jackal) || CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Sidekick)))))
+        if (numberOfTasks <= LeftTasksForReveal && (PlayerControl.LocalPlayer.Data.Role.IsImpostor || (IncludeTeamJackal && (PlayerControl.LocalPlayer.IsRole(RoleType.Jackal) || PlayerControl.LocalPlayer.IsRole(RoleType.Sidekick)))))
         {
             if (LocalArrows.Count == 0) LocalArrows.Add(new Arrow(Color.blue));
             if (LocalArrows.Count != 0 && LocalArrows[0] != null)
@@ -43,7 +43,7 @@ public class Snitch : RoleBase<Snitch>
                 LocalArrows[0].Update(Player.transform.position);
             }
         }
-        else if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Snitch) && numberOfTasks == 0)
+        else if (PlayerControl.LocalPlayer.IsRole(RoleType.Snitch) && numberOfTasks == 0)
         {
             int arrowIndex = 0;
             foreach (PlayerControl p in CachedPlayer.AllPlayers)

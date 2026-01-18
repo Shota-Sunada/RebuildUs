@@ -40,17 +40,17 @@ public class Trickster : RoleBase<Trickster>
             {
                 PlaceJackInTheBoxButton.Timer = PlaceJackInTheBoxButton.MaxTimer;
 
-                var pos = CachedPlayer.LocalPlayer.PlayerControl.transform.position;
+                var pos = PlayerControl.LocalPlayer.transform.position;
                 byte[] buff = new byte[sizeof(float) * 2];
                 Buffer.BlockCopy(BitConverter.GetBytes(pos.x), 0, buff, 0 * sizeof(float), sizeof(float));
                 Buffer.BlockCopy(BitConverter.GetBytes(pos.y), 0, buff, 1 * sizeof(float), sizeof(float));
 
-                using var sender = new RPCSender(CachedPlayer.LocalPlayer.PlayerControl.NetId, CustomRPC.PlaceJackInTheBox);
+                using var sender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.PlaceJackInTheBox);
                 sender.WriteBytesAndSize(buff);
                 RPCProcedure.PlaceJackInTheBox(buff);
             },
-            () => { return CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Trickster) && CachedPlayer.LocalPlayer.PlayerControl.IsAlive() && !JackInTheBox.HasJackInTheBoxLimitReached(); },
-            () => { return CachedPlayer.LocalPlayer.PlayerControl.CanMove && !JackInTheBox.HasJackInTheBoxLimitReached(); },
+            () => { return PlayerControl.LocalPlayer.IsRole(RoleType.Trickster) && PlayerControl.LocalPlayer.IsAlive() && !JackInTheBox.HasJackInTheBoxLimitReached(); },
+            () => { return PlayerControl.LocalPlayer.CanMove && !JackInTheBox.HasJackInTheBoxLimitReached(); },
             () => { PlaceJackInTheBoxButton.Timer = PlaceJackInTheBoxButton.MaxTimer; },
             AssetLoader.PlaceJackInTheBoxButton,
             new Vector3(-1.8f, -0.06f, 0),
@@ -65,11 +65,11 @@ public class Trickster : RoleBase<Trickster>
         LightsOutButton = new CustomButton(
             () =>
             {
-                using var sender = new RPCSender(CachedPlayer.LocalPlayer.PlayerControl.NetId, CustomRPC.LightsOut);
+                using var sender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.LightsOut);
                 RPCProcedure.LightsOut();
             },
-            () => { return CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Trickster) && CachedPlayer.LocalPlayer.PlayerControl.IsAlive() && JackInTheBox.HasJackInTheBoxLimitReached() && JackInTheBox.BoxesConvertedToVents; },
-            () => { return CachedPlayer.LocalPlayer.PlayerControl.CanMove && JackInTheBox.HasJackInTheBoxLimitReached() && JackInTheBox.BoxesConvertedToVents; },
+            () => { return PlayerControl.LocalPlayer.IsRole(RoleType.Trickster) && PlayerControl.LocalPlayer.IsAlive() && JackInTheBox.HasJackInTheBoxLimitReached() && JackInTheBox.BoxesConvertedToVents; },
+            () => { return PlayerControl.LocalPlayer.CanMove && JackInTheBox.HasJackInTheBoxLimitReached() && JackInTheBox.BoxesConvertedToVents; },
             () =>
             {
                 LightsOutButton.Timer = LightsOutButton.MaxTimer;

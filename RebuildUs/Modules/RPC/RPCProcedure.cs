@@ -384,8 +384,8 @@ public static partial class RPCProcedure
     {
         if (!Medic.Exists || Medic.Shielded == null) return;
 
-        bool isShieldedAndShow = Medic.Shielded == CachedPlayer.LocalPlayer.PlayerControl && Medic.ShowAttemptToShielded;
-        bool isMedicAndShow = CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Medic) && Medic.ShowAttemptToMedic;
+        bool isShieldedAndShow = Medic.Shielded == PlayerControl.LocalPlayer && Medic.ShowAttemptToShielded;
+        bool isMedicAndShow = PlayerControl.LocalPlayer.IsRole(RoleType.Medic) && Medic.ShowAttemptToMedic;
 
         if ((isShieldedAndShow || isMedicAndShow) && FastDestroyableSingleton<HudManager>.Instance?.FullScreen != null)
         {
@@ -403,7 +403,7 @@ public static partial class RPCProcedure
     public static void TimeMasterRewindTime()
     {
         TimeMaster.ShieldActive = false; // Shield is no longer active when rewinding
-        if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.TimeMaster))
+        if (PlayerControl.LocalPlayer.IsRole(RoleType.TimeMaster))
         {
             TimeMaster.ResetTimeMasterButton();
         }
@@ -414,8 +414,8 @@ public static partial class RPCProcedure
             if (p == 1f) FastDestroyableSingleton<HudManager>.Instance.FullScreen.enabled = false;
         })));
 
-        if (!TimeMaster.Exists || CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.TimeMaster)) return; // Time Master himself does not rewind
-        if (CachedPlayer.LocalPlayer.PlayerControl.IsGM()) return; // GM does not rewind
+        if (!TimeMaster.Exists || PlayerControl.LocalPlayer.IsRole(RoleType.TimeMaster)) return; // Time Master himself does not rewind
+        if (PlayerControl.LocalPlayer.IsGM()) return; // GM does not rewind
 
         TimeMaster.IsRewinding = true;
 
@@ -427,7 +427,7 @@ public static partial class RPCProcedure
         {
             Minigame.Instance.ForceClose();
         }
-        CachedPlayer.LocalPlayer.PlayerControl.moveable = false;
+        PlayerControl.LocalPlayer.moveable = false;
     }
 
     public static void TimeMasterShield()
@@ -454,18 +454,18 @@ public static partial class RPCProcedure
         PlayerControl guesser = Helpers.PlayerById(killerId);
         if (FastDestroyableSingleton<HudManager>.Instance != null && guesser != null)
         {
-            if (CachedPlayer.LocalPlayer.PlayerControl == dyingTarget)
+            if (PlayerControl.LocalPlayer == dyingTarget)
             {
                 FastDestroyableSingleton<HudManager>.Instance.KillOverlay.ShowKillAnimation(guesser.Data, dyingTarget.Data);
             }
-            else if (dyingLoverPartner != null && CachedPlayer.LocalPlayer.PlayerControl == dyingLoverPartner)
+            else if (dyingLoverPartner != null && PlayerControl.LocalPlayer == dyingLoverPartner)
             {
                 FastDestroyableSingleton<HudManager>.Instance.KillOverlay.ShowKillAnimation(dyingLoverPartner.Data, dyingLoverPartner.Data);
             }
         }
 
         var guessedTarget = Helpers.PlayerById(guessedTargetId);
-        if (Guesser.ShowInfoInGhostChat && CachedPlayer.LocalPlayer.PlayerControl.Data.IsDead && guessedTarget != null)
+        if (Guesser.ShowInfoInGhostChat && PlayerControl.LocalPlayer.Data.IsDead && guessedTarget != null)
         {
             var roleInfo = RoleInfo.AllRoleInfos.FirstOrDefault(x => (byte)x.RoleType == guessedRoleType);
             string msg = string.Format(Tr.Get("Hud.GuesserGuessChat"), roleInfo.Name, guessedTarget.Data.PlayerName);
@@ -492,7 +492,7 @@ public static partial class RPCProcedure
     {
         Trickster.LightsOutTimer = Trickster.LightsOutDuration;
         // If the local player is impostor indicate lights out
-        if (CachedPlayer.LocalPlayer.PlayerControl.Data.Role.IsImpostor)
+        if (PlayerControl.LocalPlayer.Data.Role.IsImpostor)
         {
             new CustomMessage(Tr.Get("Hud.TricksterLightsOutText"), Trickster.LightsOutDuration);
         }
@@ -717,7 +717,7 @@ public static partial class RPCProcedure
         };
         if (Helpers.GetOption(ByteOptionNames.MapId) is 2 or 4) camera.transform.localRotation = new Quaternion(0, 0, 1, 1); // Polus and Airship
 
-        if (CachedPlayer.LocalPlayer.PlayerControl.PlayerId == sgId)
+        if (PlayerControl.LocalPlayer.PlayerId == sgId)
         {
             camera.gameObject.SetActive(true);
             camera.gameObject.GetComponent<SpriteRenderer>().color = new Color(1f, 1f, 1f, 0.5f);
@@ -738,7 +738,7 @@ public static partial class RPCProcedure
         if (vent == null) return;
 
         sg.RemainingScrews -= SecurityGuard.VentPrice;
-        if (CachedPlayer.LocalPlayer.PlayerControl.PlayerId == sgId)
+        if (PlayerControl.LocalPlayer.PlayerId == sgId)
         {
             PowerTools.SpriteAnim animator = vent.GetComponent<PowerTools.SpriteAnim>();
             animator?.Stop();
@@ -867,7 +867,7 @@ public static partial class RPCProcedure
         }
 
         // Set cooldowns to max for both players
-        if (CachedPlayer.LocalPlayer.PlayerControl == oldShifter.Player || CachedPlayer.LocalPlayer.PlayerControl == player)
+        if (PlayerControl.LocalPlayer == oldShifter.Player || PlayerControl.LocalPlayer == player)
         {
             CustomButton.ResetAllCooldowns();
         }

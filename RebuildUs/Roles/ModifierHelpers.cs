@@ -26,7 +26,13 @@ public static class ModifierHelpers
         {
             if (modType == type.ModifierType)
             {
-                return (bool)type.Type.GetMethod("SetRole", BindingFlags.Public | BindingFlags.Static)?.Invoke(null, [player]);
+                var method = type.Type.GetMethod("AddModifier", BindingFlags.Public | BindingFlags.Static)
+                          ?? type.Type.GetMethod("SetRole", BindingFlags.Public | BindingFlags.Static);
+                if (method != null)
+                {
+                    method.Invoke(null, [player]);
+                    return true;
+                }
             }
         }
 

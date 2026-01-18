@@ -79,7 +79,7 @@ public static class MeetingHudPatch
                 {
                     System.Random rand = new();
                     int randVal = rand.Next(0, 6);
-                    using var sender = new RPCSender(CachedPlayer.LocalPlayer.PlayerControl.NetId, CustomRPC.PolusRandomSpawn);
+                    using var sender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.PolusRandomSpawn);
                     sender.Write(player.Data.PlayerId);
                     sender.Write((byte)randVal);
                     RPCProcedure.PolusRandomSpawn(player.Data.PlayerId, (byte)randVal);

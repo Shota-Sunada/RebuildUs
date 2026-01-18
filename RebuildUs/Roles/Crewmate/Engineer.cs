@@ -25,8 +25,8 @@ public class Engineer : RoleBase<Engineer>
     public override void OnIntroEnd() { }
     public override void FixedUpdate()
     {
-        var jackalHighlight = HighlightForTeamJackal && (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Jackal) || CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Sidekick));
-        var impostorHighlight = HighlightForImpostors && CachedPlayer.LocalPlayer.PlayerControl.IsTeamImpostor();
+        var jackalHighlight = HighlightForTeamJackal && (PlayerControl.LocalPlayer.IsRole(RoleType.Jackal) || PlayerControl.LocalPlayer.IsRole(RoleType.Sidekick));
+        var impostorHighlight = HighlightForImpostors && PlayerControl.LocalPlayer.IsTeamImpostor();
         if ((jackalHighlight || impostorHighlight) && MapUtilities.CachedShipStatus?.AllVents != null)
         {
             foreach (var vent in MapUtilities.CachedShipStatus.AllVents)
@@ -64,15 +64,15 @@ public class Engineer : RoleBase<Engineer>
                 {
                     EngineerRepairButton.Timer = 0f;
 
-                    using var sender = new RPCSender(CachedPlayer.LocalPlayer.PlayerControl.NetId, CustomRPC.EngineerUsedRepair);
-                    sender.Write(CachedPlayer.LocalPlayer.PlayerControl.PlayerId);
-                    RPCProcedure.EngineerUsedRepair(CachedPlayer.LocalPlayer.PlayerControl.PlayerId);
+                    using var sender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.EngineerUsedRepair);
+                    sender.Write(PlayerControl.LocalPlayer.PlayerId);
+                    RPCProcedure.EngineerUsedRepair(PlayerControl.LocalPlayer.PlayerId);
 
-                    foreach (var task in CachedPlayer.LocalPlayer.PlayerControl.myTasks)
+                    foreach (var task in PlayerControl.LocalPlayer.myTasks)
                     {
                         if (task.TaskType == TaskTypes.FixLights)
                         {
-                            using var sender2 = new RPCSender(CachedPlayer.LocalPlayer.PlayerControl.NetId, CustomRPC.EngineerFixLights);
+                            using var sender2 = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.EngineerFixLights);
                             RPCProcedure.EngineerFixLights();
                         }
                         else if (task.TaskType is TaskTypes.RestoreOxy)
@@ -100,16 +100,16 @@ public class Engineer : RoleBase<Engineer>
                         }
                         else if (SubmergedCompatibility.IsSubmerged && task.TaskType == SubmergedCompatibility.RetrieveOxygenMask)
                         {
-                            using var sender3 = new RPCSender(CachedPlayer.LocalPlayer.PlayerControl.NetId, CustomRPC.EngineerFixSubmergedOxygen);
+                            using var sender3 = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.EngineerFixSubmergedOxygen);
                             RPCProcedure.EngineerFixSubmergedOxygen();
                         }
                     }
                 },
-                () => { return CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Engineer) && Local.RemainingFixes > 0 && CachedPlayer.LocalPlayer.PlayerControl.IsAlive(); },
+                () => { return PlayerControl.LocalPlayer.IsRole(RoleType.Engineer) && Local.RemainingFixes > 0 && PlayerControl.LocalPlayer.IsAlive(); },
                 () =>
                 {
                     bool sabotageActive = false;
-                    foreach (PlayerTask task in CachedPlayer.LocalPlayer.PlayerControl.myTasks)
+                    foreach (PlayerTask task in PlayerControl.LocalPlayer.myTasks)
                     {
                         if (task.TaskType is TaskTypes.FixLights or TaskTypes.RestoreOxy or TaskTypes.ResetReactor or TaskTypes.ResetSeismic or TaskTypes.FixComms or TaskTypes.StopCharles
                         || (SubmergedCompatibility.IsSubmerged && task.TaskType == SubmergedCompatibility.RetrieveOxygenMask))
@@ -118,7 +118,7 @@ public class Engineer : RoleBase<Engineer>
                         }
                     }
 
-                    return sabotageActive && Local.RemainingFixes > 0 && CachedPlayer.LocalPlayer.PlayerControl.CanMove;
+                    return sabotageActive && Local.RemainingFixes > 0 && PlayerControl.LocalPlayer.CanMove;
                 },
                 () => { },
                 AssetLoader.EmergencyButton,

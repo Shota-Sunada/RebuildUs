@@ -44,7 +44,7 @@ public class Arsonist : RoleBase<Arsonist>
     }
     public override void FixedUpdate()
     {
-        if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Arsonist))
+        if (PlayerControl.LocalPlayer.IsRole(RoleType.Arsonist))
         {
             List<PlayerControl> untargetables;
             if (DouseTarget != null)
@@ -76,7 +76,7 @@ public class Arsonist : RoleBase<Arsonist>
                         Local.DouseTarget = Local.CurrentTarget;
                     }
                 },
-                () => { return CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Arsonist) && !Local.DousedEveryone && CachedPlayer.LocalPlayer.PlayerControl.IsAlive(); },
+                () => { return PlayerControl.LocalPlayer.IsRole(RoleType.Arsonist) && !Local.DousedEveryone && PlayerControl.LocalPlayer.IsAlive(); },
                 () =>
                 {
                     if (ArsonistButton.IsEffectActive && Local.DouseTarget != Local.CurrentTarget)
@@ -86,7 +86,7 @@ public class Arsonist : RoleBase<Arsonist>
                         ArsonistButton.IsEffectActive = false;
                     }
 
-                    return CachedPlayer.LocalPlayer.PlayerControl.CanMove && Local.CurrentTarget != null;
+                    return PlayerControl.LocalPlayer.CanMove && Local.CurrentTarget != null;
                 },
                 () =>
                 {
@@ -106,10 +106,10 @@ public class Arsonist : RoleBase<Arsonist>
                 {
                     if (Local.DouseTarget != null)
                     {
-                        using var sender = new RPCSender(CachedPlayer.LocalPlayer.PlayerControl.NetId, CustomRPC.ArsonistDouse);
+                        using var sender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.ArsonistDouse);
                         sender.Write(Local.DouseTarget.PlayerId);
-                        sender.Write(CachedPlayer.LocalPlayer.PlayerControl.PlayerId);
-                        RPCProcedure.ArsonistDouse(Local.DouseTarget.PlayerId, CachedPlayer.LocalPlayer.PlayerControl.PlayerId);
+                        sender.Write(PlayerControl.LocalPlayer.PlayerId);
+                        RPCProcedure.ArsonistDouse(Local.DouseTarget.PlayerId, PlayerControl.LocalPlayer.PlayerId);
                     }
 
                     Local.DouseTarget = null;
@@ -134,13 +134,13 @@ public class Arsonist : RoleBase<Arsonist>
             {
                 if (Local.DousedEveryone)
                 {
-                    using var sender = new RPCSender(CachedPlayer.LocalPlayer.PlayerControl.NetId, CustomRPC.ArsonistWin);
-                    sender.Write(CachedPlayer.LocalPlayer.PlayerControl.PlayerId);
-                    RPCProcedure.ArsonistWin(CachedPlayer.LocalPlayer.PlayerControl.PlayerId);
+                    using var sender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.ArsonistWin);
+                    sender.Write(PlayerControl.LocalPlayer.PlayerId);
+                    RPCProcedure.ArsonistWin(PlayerControl.LocalPlayer.PlayerId);
                 }
             },
-            () => { return CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Arsonist) && Local.DousedEveryone && CachedPlayer.LocalPlayer.PlayerControl.IsAlive(); },
-            () => { return CachedPlayer.LocalPlayer.PlayerControl.CanMove && Local.DousedEveryone; },
+            () => { return PlayerControl.LocalPlayer.IsRole(RoleType.Arsonist) && Local.DousedEveryone && PlayerControl.LocalPlayer.IsAlive(); },
+            () => { return PlayerControl.LocalPlayer.CanMove && Local.DousedEveryone; },
             () => { },
             AssetLoader.IgniteButton,
             new Vector3(-1.8f, -0.06f, 0),
@@ -163,7 +163,7 @@ public class Arsonist : RoleBase<Arsonist>
 
     public void UpdateStatus()
     {
-        if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Arsonist))
+        if (PlayerControl.LocalPlayer.IsRole(RoleType.Arsonist))
         {
             DousedEveryone = DousedEveryoneAlive();
         }
@@ -176,7 +176,7 @@ public class Arsonist : RoleBase<Arsonist>
             pp.gameObject.SetActive(false);
         }
 
-        if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Arsonist))
+        if (PlayerControl.LocalPlayer.IsRole(RoleType.Arsonist))
         {
             var visibleCounter = 0;
             var bottomLeft = FastDestroyableSingleton<HudManager>.Instance.UseButton.transform.localPosition;
@@ -185,7 +185,7 @@ public class Arsonist : RoleBase<Arsonist>
 
             foreach (var p in CachedPlayer.AllPlayers)
             {
-                if (p.PlayerId == CachedPlayer.LocalPlayer.PlayerControl.PlayerId) continue;
+                if (p.PlayerId == PlayerControl.LocalPlayer.PlayerId) continue;
                 if (!ModMapOptions.PlayerIcons.ContainsKey(p.PlayerId)) continue;
 
                 if (p.Data.IsDead || p.Data.Disconnected)

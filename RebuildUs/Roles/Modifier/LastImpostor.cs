@@ -81,7 +81,7 @@ public class LastImpostor : ModifierBase<LastImpostor>
             return () =>
             {
                 if (SelectedFunction == 1) return false;
-                var p = CachedPlayer.LocalPlayer.PlayerControl;
+                var p = PlayerControl.LocalPlayer;
                 if (!p.HasModifier(ModifierType.LastImpostor)) return false;
                 if (p.HasModifier(ModifierType.LastImpostor) && p.CanMove && p.IsAlive() & p.PlayerId != index
                     && ModMapOptions.PlayerIcons.ContainsKey(index) && NumUsed < 1 && IsCounterMax())
@@ -93,7 +93,7 @@ public class LastImpostor : ModifierBase<LastImpostor>
                     if (PlayerIcons.ContainsKey(index))
                     {
                         PlayerIcons[index].gameObject.SetActive(false);
-                        if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.BountyHunter))
+                        if (PlayerControl.LocalPlayer.IsRole(RoleType.BountyHunter))
                             SetBountyIconPos(Vector3.zero);
                     }
                     if (LastImpostorButtons.Count > index)
@@ -123,7 +123,7 @@ public class LastImpostor : ModifierBase<LastImpostor>
         void SetIconStatus(byte index, bool transparent)
         {
             PlayerIcons[index].transform.localScale = Vector3.one * 0.25f;
-            PlayerIcons[index].gameObject.SetActive(CachedPlayer.LocalPlayer.PlayerControl.CanMove);
+            PlayerIcons[index].gameObject.SetActive(PlayerControl.LocalPlayer.CanMove);
             PlayerIcons[index].SetSemiTransparent(transparent);
         }
 
@@ -144,7 +144,7 @@ public class LastImpostor : ModifierBase<LastImpostor>
                 //　ラストインポスター以外の場合、リソースがない場合はボタンを表示しない
                 var p = Helpers.PlayerById(index);
                 if (!PlayerIcons.ContainsKey(index) ||
-                    !CachedPlayer.LocalPlayer.PlayerControl.HasModifier(ModifierType.LastImpostor) ||
+                    !PlayerControl.LocalPlayer.HasModifier(ModifierType.LastImpostor) ||
                     !IsCounterMax())
                 {
                     return false;
@@ -154,19 +154,19 @@ public class LastImpostor : ModifierBase<LastImpostor>
                 SetButtonPos(index);
 
                 // ボタンにテキストを設定
-                LastImpostorButtons[index].ButtonText = CachedPlayer.LocalPlayer.PlayerControl.IsAlive() ? "生存" : "死亡";
+                LastImpostorButtons[index].ButtonText = PlayerControl.LocalPlayer.IsAlive() ? "生存" : "死亡";
 
                 // アイコンの位置と透明度を変更
                 SetIconStatus(index, false);
 
                 // Bounty Hunterの場合賞金首の位置をずらして表示する
-                if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.BountyHunter))
+                if (PlayerControl.LocalPlayer.IsRole(RoleType.BountyHunter))
                 {
                     Vector3 offset = new(0f, 1f, 0f);
                     SetBountyIconPos(offset);
                 }
 
-                return CachedPlayer.LocalPlayer.PlayerControl.CanMove && NumUsed < 1;
+                return PlayerControl.LocalPlayer.CanMove && NumUsed < 1;
             };
         }
 
@@ -229,7 +229,7 @@ public class LastImpostor : ModifierBase<LastImpostor>
         if (impList.Count == 1)
         {
             {
-                using var sender = new RPCSender(CachedPlayer.LocalPlayer.PlayerControl.NetId, CustomRPC.ImpostorPromotesToLastImpostor);
+                using var sender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.ImpostorPromotesToLastImpostor);
                 sender.Write(impList[0].PlayerId);
             }
             RPCProcedure.ImpostorPromotesToLastImpostor(impList[0].PlayerId);
@@ -292,16 +292,16 @@ public class LastImpostor : ModifierBase<LastImpostor>
 
         // 占いを実行したことで発火される処理を他クライアントに通知
         {
-            using var sender = new RPCSender(CachedPlayer.LocalPlayer.PlayerControl.NetId, CustomRPC.FortuneTellerUsedDivine);
-            sender.Write(CachedPlayer.LocalPlayer.PlayerControl.PlayerId);
+            using var sender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.FortuneTellerUsedDivine);
+            sender.Write(PlayerControl.LocalPlayer.PlayerId);
             sender.Write(p.PlayerId);
         }
-        RPCProcedure.FortuneTellerUsedDivine(CachedPlayer.LocalPlayer.PlayerControl.PlayerId, p.PlayerId);
+        RPCProcedure.FortuneTellerUsedDivine(PlayerControl.LocalPlayer.PlayerId, p.PlayerId);
     }
 
     public static void OnIntroDestroy(IntroCutscene __instance)
     {
-        if (CachedPlayer.LocalPlayer.PlayerControl != null && FastDestroyableSingleton<HudManager>.Instance != null)
+        if (PlayerControl.LocalPlayer != null && FastDestroyableSingleton<HudManager>.Instance != null)
         {
             foreach (PlayerControl p in CachedPlayer.AllPlayers)
             {

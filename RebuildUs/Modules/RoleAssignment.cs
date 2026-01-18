@@ -1,6 +1,8 @@
 using System.Collections;
 using BepInEx.Unity.IL2CPP.Utils.Collections;
 using UnityEngine.ResourceManagement.AsyncOperations;
+using RebuildUs.Roles;
+using RebuildUs.Modules.CustomOptions;
 
 namespace RebuildUs.Modules;
 
@@ -97,7 +99,7 @@ public static class RoleAssignment
         // 独自処理開始
         CreateCheckList();
         {
-            using var sender = new RPCSender(CachedPlayer.LocalPlayer.PlayerControl.NetId, CustomRPC.ResetVariables);
+            using var sender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.ResetVariables);
             RPCProcedure.ResetVariables();
         }
         yield return WaitResetVariables().WrapToIl2Cpp();
@@ -106,7 +108,7 @@ public static class RoleAssignment
         {
             AssignRoles();
             {
-                using var sender2 = new RPCSender(CachedPlayer.LocalPlayer.PlayerControl.NetId, CustomRPC.FinishSetRole);
+                using var sender2 = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.FinishSetRole);
                 RPCProcedure.FinishSetRole();
             }
         }
@@ -185,13 +187,13 @@ public static class RoleAssignment
         //                 break;
         //             }
 
-        //             writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.OverrideNativeRole, Hazel.SendOption.Reliable, -1);
+        //             writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.OverrideNativeRole, Hazel.SendOption.Reliable, -1);
         //             writer.Write(host.PlayerId);
         //             writer.Write((byte)RoleTypes.Crewmate);
         //             AmongUsClient.Instance.FinishRpcImmediately(writer);
         //             RPCProcedure.overrideNativeRole(host.PlayerId, (byte)RoleTypes.Crewmate);
 
-        //             writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.OverrideNativeRole, Hazel.SendOption.Reliable, -1);
+        //             writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.OverrideNativeRole, Hazel.SendOption.Reliable, -1);
         //             writer.Write(newImp.PlayerId);
         //             writer.Write((byte)RoleTypes.Impostor);
         //             AmongUsClient.Instance.FinishRpcImmediately(writer);
@@ -257,59 +259,33 @@ public static class RoleAssignment
         Dictionary<byte, (int rate, int count)> neutralSettings = [];
         Dictionary<byte, (int rate, int count)> crewSettings = [];
 
-        // impSettings.Add((byte)ERoleType.Morphling, CustomOptionHolder.morphlingSpawnRate.data);
-        // impSettings.Add((byte)ERoleType.Camouflager, CustomOptionHolder.camouflagerSpawnRate.data);
-        // impSettings.Add((byte)ERoleType.EvilHacker, CustomOptionHolder.evilHackerSpawnRate.data);
-        // impSettings.Add((byte)ERoleType.Vampire, CustomOptionHolder.vampireSpawnRate.data);
-        // impSettings.Add((byte)ERoleType.Eraser, CustomOptionHolder.eraserSpawnRate.data);
-        // impSettings.Add((byte)ERoleType.Trickster, CustomOptionHolder.tricksterSpawnRate.data);
-        // impSettings.Add((byte)ERoleType.Cleaner, CustomOptionHolder.cleanerSpawnRate.data);
-        // impSettings.Add((byte)ERoleType.Warlock, CustomOptionHolder.warlockSpawnRate.data);
-        // impSettings.Add((byte)ERoleType.BountyHunter, CustomOptionHolder.bountyHunterSpawnRate.data);
-        // impSettings.Add((byte)ERoleType.Witch, CustomOptionHolder.witchSpawnRate.data);
-        // impSettings.Add((byte)ERoleType.Assassin, CustomOptionHolder.assassinSpawnRate.data);
-        // impSettings.Add((byte)ERoleType.Ninja, CustomOptionHolder.ninjaSpawnRate.data);
-        // impSettings.Add((byte)ERoleType.NekoKabocha, CustomOptionHolder.nekoKabochaSpawnRate.data);
-        // impSettings.Add((byte)ERoleType.SerialKiller, CustomOptionHolder.serialKillerSpawnRate.data);
-        // impSettings.Add((byte)ERoleType.Trapper, CustomOptionHolder.trapperSpawnRate.data);
-        // impSettings.Add((byte)ERoleType.EvilTracker, CustomOptionHolder.evilTrackerSpawnRate.data);
+        foreach (var role in RoleData.Roles)
+        {
+            if (role.getOption != null && role.getOption() is CustomRoleOption roleOption)
+            {
+                // ここで例外的な役職を個別に弾く
+                if (role.roleType is RoleType.Godfather or RoleType.Mafioso or RoleType.Janitor or
+                    RoleType.NiceGuesser or RoleType.EvilGuesser or
+                    RoleType.Swapper or RoleType.Shifter or
+                    RoleType.Lovers or RoleType.Sidekick) continue;
 
-        neutralSettings.Add((byte)RoleType.Jester, CustomOptionHolder.JesterSpawnRate.Data);
-        // neutralSettings.Add((byte)ERoleType.Arsonist, CustomOptionHolder.arsonistSpawnRate.data);
-        // neutralSettings.Add((byte)ERoleType.Jackal, CustomOptionHolder.jackalSpawnRate.data);
-        // neutralSettings.Add((byte)ERoleType.Opportunist, CustomOptionHolder.opportunistSpawnRate.data);
-        // neutralSettings.Add((byte)ERoleType.Vulture, CustomOptionHolder.vultureSpawnRate.data);
-        // neutralSettings.Add((byte)ERoleType.Lawyer, CustomOptionHolder.lawyerSpawnRate.data);
-        // neutralSettings.Add((byte)ERoleType.PlagueDoctor, CustomOptionHolder.plagueDoctorSpawnRate.data);
-        // neutralSettings.Add((byte)ERoleType.Fox, CustomOptionHolder.foxSpawnRate.data);
-        // neutralSettings.Add((byte)ERoleType.SchrodingersCat, CustomOptionHolder.schrodingersCatSpawnRate.data);
-        // neutralSettings.Add((byte)ERoleType.Puppeteer, CustomOptionHolder.puppeteerSpawnRate.data);
-        // neutralSettings.Add((byte)ERoleType.JekyllAndHyde, CustomOptionHolder.jekyllAndHydeSpawnRate.data);
-        // neutralSettings.Add((byte)ERoleType.Akujo, CustomOptionHolder.akujoSpawnRate.data);
-        // neutralSettings.Add((byte)ERoleType.Moriarty, CustomOptionHolder.moriartySpawnRate.data);
-        // neutralSettings.Add((byte)ERoleType.Cupid, CustomOptionHolder.cupidSpawnRate.data);
+                // Spyはインポスターが1人以下の時は出現しない
+                if (role.roleType == RoleType.Spy && impostors.Count <= 1) continue;
 
-        // crewSettings.Add((byte)ERoleType.FortuneTeller, CustomOptionHolder.fortuneTellerSpawnRate.data);
-        crewSettings.Add((byte)RoleType.Mayor, CustomOptionHolder.MayorSpawnRate.Data);
-        // crewSettings.Add((byte)ERoleType.Engineer, CustomOptionHolder.engineerSpawnRate.data);
-        // crewSettings.Add((byte)ERoleType.Sheriff, CustomOptionHolder.sheriffSpawnRate.data);
-        // crewSettings.Add((byte)ERoleType.Lighter, CustomOptionHolder.lighterSpawnRate.data);
-        // crewSettings.Add((byte)ERoleType.Detective, CustomOptionHolder.detectiveSpawnRate.data);
-        // crewSettings.Add((byte)ERoleType.TimeMaster, CustomOptionHolder.timeMasterSpawnRate.data);
-        // crewSettings.Add((byte)ERoleType.Medic, CustomOptionHolder.medicSpawnRate.data);
-        // crewSettings.Add((byte)ERoleType.Seer, CustomOptionHolder.seerSpawnRate.data);
-        // crewSettings.Add((byte)ERoleType.Hacker, CustomOptionHolder.hackerSpawnRate.data);
-        // crewSettings.Add((byte)ERoleType.Tracker, CustomOptionHolder.trackerSpawnRate.data);
-        // crewSettings.Add((byte)ERoleType.Snitch, CustomOptionHolder.snitchSpawnRate.data);
-        // crewSettings.Add((byte)ERoleType.Bait, CustomOptionHolder.baitSpawnRate.data);
-        // crewSettings.Add((byte)ERoleType.SecurityGuard, CustomOptionHolder.securityGuardSpawnRate.data);
-        // crewSettings.Add((byte)ERoleType.Medium, CustomOptionHolder.mediumSpawnRate.data);
-        // crewSettings.Add((byte)ERoleType.Sherlock, CustomOptionHolder.sherlockSpawnRate.data);
-        // if (impostors.Count > 1)
-        // {
-        //     // Only add Spy if more than 1 impostor as the spy role is otherwise useless
-        //     crewSettings.Add((byte)ERoleType.Spy, CustomOptionHolder.spySpawnRate.data);
-        // }
+                if (role.roleTeam == RoleTeam.Crewmate)
+                {
+                    crewSettings.TryAdd((byte)role.roleType, roleOption.Data);
+                }
+                else if (role.roleTeam == RoleTeam.Impostor)
+                {
+                    impSettings.TryAdd((byte)role.roleType, roleOption.Data);
+                }
+                else if (role.roleTeam == RoleTeam.Neutral)
+                {
+                    neutralSettings.TryAdd((byte)role.roleType, roleOption.Data);
+                }
+            }
+        }
 
         return new RoleAssignmentData
         {
@@ -405,7 +381,7 @@ public static class RoleAssignment
 
         //             if (lover1 >= 0 && lover2 >= 0)
         //             {
-        //                 writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.SetLovers, Hazel.SendOption.Reliable, -1);
+        //                 writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.SetLovers, Hazel.SendOption.Reliable, -1);
         //                 writer.Write((byte)lover1);
         //                 writer.Write((byte)lover2);
         //                 AmongUsClient.Instance.FinishRpcImmediately(writer);
@@ -526,7 +502,7 @@ public static class RoleAssignment
         //         data.impSettings.Add((byte)option.roleType, (option.rate, evilCount));
         // }
 
-        //  writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.SetShifterType, Hazel.SendOption.Reliable, -1);
+        //  writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.SetShifterType, Hazel.SendOption.Reliable, -1);
         // writer.Write(shifterIsNeutral);
         // AmongUsClient.Instance.FinishRpcImmediately(writer);
         // RPCProcedure.setShifterType(shifterIsNeutral);
@@ -663,7 +639,7 @@ public static class RoleAssignment
     {
         byte playerId = host.PlayerId;
 
-        using var sender = new RPCSender(CachedPlayer.LocalPlayer.PlayerControl.NetId, CustomRPC.SetRole);
+        using var sender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.SetRole);
         sender.Write(roleId);
         sender.Write(playerId);
         RPCProcedure.SetRole(roleId, playerId);
@@ -684,14 +660,14 @@ public static class RoleAssignment
         //     }
         //     if (possibleTargets.Count == 0)
         //     {
-        //         w = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.LawyerPromotesToPursuer, Hazel.SendOption.Reliable, -1);
+        //         w = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.LawyerPromotesToPursuer, Hazel.SendOption.Reliable, -1);
         //         AmongUsClient.Instance.FinishRpcImmediately(w);
         //         RPCProcedure.lawyerPromotesToPursuer();
         //     }
         //     else
         //     {
         //         var target = possibleTargets[TheOtherRoles.rnd.Next(0, possibleTargets.Count)];
-        //         writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.LawyerSetTarget, Hazel.SendOption.Reliable, -1);
+        //         writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.LawyerSetTarget, Hazel.SendOption.Reliable, -1);
         //         writer.Write(target.PlayerId);
         //         AmongUsClient.Instance.FinishRpcImmediately(writer);
         //         RPCProcedure.lawyerSetTarget(target.PlayerId);
@@ -789,7 +765,7 @@ public static class RoleAssignment
         if (removePlayer) playerList.RemoveAt(index);
         PlayerRoleMap.Add(new Tuple<byte, byte>(playerId, roleId));
 
-        using var sender = new RPCSender(CachedPlayer.LocalPlayer.PlayerControl.NetId, CustomRPC.SetRole);
+        using var sender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.SetRole);
         sender.Write(roleId);
         sender.Write(playerId);
         RPCProcedure.SetRole(roleId, playerId);
@@ -807,7 +783,7 @@ public static class RoleAssignment
         var index = RebuildUs.Instance.Rnd.Next(0, playerList.Count);
         byte playerId = playerList[index].PlayerId;
 
-        using var sender = new RPCSender(CachedPlayer.LocalPlayer.PlayerControl.NetId, CustomRPC.AddModifier);
+        using var sender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.AddModifier);
         sender.Write(modId);
         sender.Write(playerId);
         RPCProcedure.AddModifier(modId, playerId);
@@ -821,7 +797,7 @@ public static class RoleAssignment
         while (PlayerRoleMap.Any())
         {
             byte amount = (byte)Math.Min(PlayerRoleMap.Count, 20);
-            var writer = AmongUsClient.Instance!.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.WorkaroundSetRoles, SendOption.Reliable, -1);
+            var writer = AmongUsClient.Instance!.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.WorkaroundSetRoles, SendOption.Reliable, -1);
             writer.Write(amount);
             for (int i = 0; i < amount; i++)
             {

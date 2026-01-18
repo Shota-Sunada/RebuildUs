@@ -57,7 +57,7 @@ public static class EndGameMain
                 Status = finalStatus,
             });
 
-            // AdditionalTempData.IsGM = CustomOptionHolder.GmEnabled.GetBool() && CachedPlayer.LocalPlayer.PlayerControl.IsGM();
+            // AdditionalTempData.IsGM = CustomOptionHolder.GmEnabled.GetBool() && PlayerControl.LocalPlayer.IsGM();
             // AdditionalTempData.plagueDoctorInfected = PlagueDoctor.infected;
             // AdditionalTempData.plagueDoctorProgress = PlagueDoctor.progress;
 
@@ -628,7 +628,7 @@ public static class EndGameMain
     public static void UncheckedEndGame(GameOverReason reason)
     {
         GameManager.Instance.RpcEndGame(reason, false);
-        using var sender = new RPCSender(CachedPlayer.LocalPlayer.PlayerControl.NetId, CustomRPC.UncheckedEndGame);
+        using var sender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.UncheckedEndGame);
         sender.Write((byte)reason);
         RPCProcedure.UncheckedEndGame((byte)reason);
     }

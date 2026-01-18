@@ -40,10 +40,10 @@ public class SecurityGuard : RoleBase<SecurityGuard>
     public override void OnIntroEnd() { }
     public override void FixedUpdate()
     {
-        if (!CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.SecurityGuard) || MapUtilities.CachedShipStatus == null || MapUtilities.CachedShipStatus.AllVents == null) return;
+        if (!PlayerControl.LocalPlayer.IsRole(RoleType.SecurityGuard) || MapUtilities.CachedShipStatus == null || MapUtilities.CachedShipStatus.AllVents == null) return;
 
         Vent target = null;
-        Vector2 truePosition = CachedPlayer.LocalPlayer.PlayerControl.GetTruePosition();
+        Vector2 truePosition = PlayerControl.LocalPlayer.GetTruePosition();
         float closestDistance = float.MaxValue;
         for (int i = 0; i < MapUtilities.CachedShipStatus.AllVents.Length; i++)
         {
@@ -78,7 +78,7 @@ public class SecurityGuard : RoleBase<SecurityGuard>
                     if (VentTarget != null)
                     {
                         // Seal vent
-                        using var sender = new RPCSender(CachedPlayer.LocalPlayer.PlayerControl.NetId, CustomRPC.SealVent);
+                        using var sender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.SealVent);
                         sender.WritePacked(VentTarget.Id);
                         sender.Write(Player.PlayerId);
                         RPCProcedure.SealVent(VentTarget.Id, Player.PlayerId);
@@ -87,7 +87,7 @@ public class SecurityGuard : RoleBase<SecurityGuard>
                     else if (Helpers.GetOption(ByteOptionNames.MapId) != 1 && ModMapOptions.CouldUseCameras && !SubmergedCompatibility.IsSubmerged)
                     {
                         // Place camera if there's no vent and it's not MiraHQ
-                        var pos = CachedPlayer.LocalPlayer.PlayerControl.transform.position;
+                        var pos = PlayerControl.LocalPlayer.transform.position;
                         byte[] buff = new byte[sizeof(float) * 2];
                         Buffer.BlockCopy(BitConverter.GetBytes(pos.x), 0, buff, 0 * sizeof(float), sizeof(float));
                         Buffer.BlockCopy(BitConverter.GetBytes(pos.y), 0, buff, 1 * sizeof(float), sizeof(float));
@@ -102,7 +102,7 @@ public class SecurityGuard : RoleBase<SecurityGuard>
                             roomId = 255;
                         }
 
-                        using var sender = new RPCSender(CachedPlayer.LocalPlayer.PlayerControl.NetId, CustomRPC.PlaceCamera);
+                        using var sender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.PlaceCamera);
                         sender.WriteBytesAndSize(buff);
                         sender.Write(roomId);
                         sender.Write(Player.PlayerId);
@@ -110,7 +110,7 @@ public class SecurityGuard : RoleBase<SecurityGuard>
                     }
                     SecurityGuardButton.Timer = SecurityGuardButton.MaxTimer;
                 },
-                () => { return CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.SecurityGuard) && CachedPlayer.LocalPlayer.PlayerControl.IsAlive() && Local.RemainingScrews >= Mathf.Min(SecurityGuard.VentPrice, SecurityGuard.CamPrice); },
+                () => { return PlayerControl.LocalPlayer.IsRole(RoleType.SecurityGuard) && PlayerControl.LocalPlayer.IsAlive() && Local.RemainingScrews >= Mathf.Min(SecurityGuard.VentPrice, SecurityGuard.CamPrice); },
                 () =>
                 {
                     if (Local.VentTarget == null && Helpers.GetOption(ByteOptionNames.MapId) != 1 && SubmergedCompatibility.IsSubmerged)
@@ -126,8 +126,8 @@ public class SecurityGuard : RoleBase<SecurityGuard>
                     SecurityGuardButtonScrewsText?.text = String.Format(Tr.Get("Hud.SecurityGuardScrews"), Local.RemainingScrews);
 
                     return Local.VentTarget != null
-                        ? Local.RemainingScrews >= SecurityGuard.VentPrice && CachedPlayer.LocalPlayer.PlayerControl.CanMove
-                        : Helpers.GetOption(ByteOptionNames.MapId) != 1 && SubmergedCompatibility.IsSubmerged && ModMapOptions.CouldUseCameras && Local.RemainingScrews >= SecurityGuard.CamPrice && CachedPlayer.LocalPlayer.PlayerControl.CanMove;
+                        ? Local.RemainingScrews >= SecurityGuard.VentPrice && PlayerControl.LocalPlayer.CanMove
+                        : Helpers.GetOption(ByteOptionNames.MapId) != 1 && SubmergedCompatibility.IsSubmerged && ModMapOptions.CouldUseCameras && Local.RemainingScrews >= SecurityGuard.CamPrice && PlayerControl.LocalPlayer.CanMove;
                 },
                 () => { SecurityGuardButton.Timer = SecurityGuardButton.MaxTimer; },
                 AssetLoader.PlaceCameraButton,
@@ -178,10 +178,10 @@ public class SecurityGuard : RoleBase<SecurityGuard>
                 }
                 Local.Charges--;
 
-                if (NoMove) CachedPlayer.LocalPlayer.PlayerControl.moveable = false;
-                CachedPlayer.LocalPlayer.PlayerControl.NetTransform.Halt(); // Stop current movement
+                if (NoMove) PlayerControl.LocalPlayer.moveable = false;
+                PlayerControl.LocalPlayer.NetTransform.Halt(); // Stop current movement
             },
-            () => { return CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.SecurityGuard) && !CachedPlayer.LocalPlayer.PlayerControl.Data.IsDead && Local.RemainingScrews < Mathf.Min(SecurityGuard.VentPrice, SecurityGuard.CamPrice) && SubmergedCompatibility.IsSubmerged; },
+            () => { return PlayerControl.LocalPlayer.IsRole(RoleType.SecurityGuard) && !PlayerControl.LocalPlayer.Data.IsDead && Local.RemainingScrews < Mathf.Min(SecurityGuard.VentPrice, SecurityGuard.CamPrice) && SubmergedCompatibility.IsSubmerged; },
             () =>
             {
                 SecurityGuardChargesText?.text = SecurityGuardChargesText.text = string.Format(Tr.Get("Hud.HackerChargesText"), Local.Charges, CamMaxCharges);
@@ -189,7 +189,7 @@ public class SecurityGuard : RoleBase<SecurityGuard>
                 SecurityGuardCamButton.ActionButton.OverrideText(Helpers.IsMiraHQ ?
                     TranslationController.Instance.GetString(StringNames.SecurityLogsSystem) :
                     TranslationController.Instance.GetString(StringNames.SecurityCamsSystem));
-                return CachedPlayer.LocalPlayer.PlayerControl.CanMove && Local.Charges > 0;
+                return PlayerControl.LocalPlayer.CanMove && Local.Charges > 0;
             },
             () =>
             {
@@ -211,7 +211,7 @@ public class SecurityGuard : RoleBase<SecurityGuard>
                 {
                     Local.Minigame.ForceClose();
                 }
-                CachedPlayer.LocalPlayer.PlayerControl.moveable = true;
+                PlayerControl.LocalPlayer.moveable = true;
             },
             false,
             Helpers.IsMiraHQ ? TranslationController.Instance.GetString(StringNames.SecurityLogsSystem) : TranslationController.Instance.GetString(StringNames.SecurityCamsSystem)

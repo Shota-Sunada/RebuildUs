@@ -25,7 +25,7 @@ public class Detective : RoleBase<Detective>
     public override void OnIntroEnd() { }
     public override void FixedUpdate()
     {
-        if (!Exists || !CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Detective)) return;
+        if (!Exists || !PlayerControl.LocalPlayer.IsRole(RoleType.Detective)) return;
 
         Timer -= Time.fixedDeltaTime;
         if (Timer <= 0f)
@@ -33,7 +33,7 @@ public class Detective : RoleBase<Detective>
             Timer = FootprintInterval;
             foreach (var player in CachedPlayer.AllPlayers)
             {
-                if (player.PlayerControl != null && player.PlayerControl != CachedPlayer.LocalPlayer.PlayerControl && !player.Data.IsDead && !player.PlayerControl.inVent && !player.PlayerControl.IsGM())
+                if (player.PlayerControl != null && player.PlayerControl != PlayerControl.LocalPlayer && !player.Data.IsDead && !player.PlayerControl.inVent && !player.PlayerControl.IsGM())
                 {
                     new Footprint(FootprintDuration, AnonymousFootprints, player);
                 }

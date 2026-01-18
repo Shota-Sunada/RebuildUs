@@ -15,7 +15,7 @@ public class Sidekick : RoleBase<Sidekick>
 
     public override void OnUpdateNameColors()
     {
-        var lp = CachedPlayer.LocalPlayer.PlayerControl;
+        var lp = PlayerControl.LocalPlayer;
         if (Player == lp)
         {
             Update.SetPlayerNameColor(Player, RoleColor);
@@ -48,7 +48,7 @@ public class Sidekick : RoleBase<Sidekick>
     public override void OnIntroEnd() { }
     public override void FixedUpdate()
     {
-        if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Sidekick))
+        if (PlayerControl.LocalPlayer.IsRole(RoleType.Sidekick))
         {
             var untargetablePlayers = new List<PlayerControl>();
             if (Jackal.Exists) untargetablePlayers.AddRange(Jackal.AllPlayers);
@@ -76,8 +76,8 @@ public class Sidekick : RoleBase<Sidekick>
                     SidekickKillButton.Timer = SidekickKillButton.MaxTimer;
                     Local.CurrentTarget = null;
                 },
-                () => { return CanKill && CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Sidekick) && CachedPlayer.LocalPlayer.PlayerControl.IsAlive(); },
-                () => { return Local.CurrentTarget && CachedPlayer.LocalPlayer.PlayerControl.CanMove; },
+                () => { return CanKill && PlayerControl.LocalPlayer.IsRole(RoleType.Sidekick) && PlayerControl.LocalPlayer.IsAlive(); },
+                () => { return Local.CurrentTarget && PlayerControl.LocalPlayer.CanMove; },
                 () => { SidekickKillButton.Timer = SidekickKillButton.MaxTimer; },
                 hm.KillButton.graphic.sprite,
                 new Vector3(0, 1f, 0),

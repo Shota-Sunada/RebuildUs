@@ -37,7 +37,7 @@ public class Jackal : RoleBase<Jackal>
 
     public override void OnUpdateNameColors()
     {
-        var lp = CachedPlayer.LocalPlayer.PlayerControl;
+        var lp = PlayerControl.LocalPlayer;
         if (Player == lp)
         {
             Update.SetPlayerNameColor(Player, RoleColor);
@@ -62,7 +62,7 @@ public class Jackal : RoleBase<Jackal>
     public override void OnIntroEnd() { }
     public override void FixedUpdate()
     {
-        if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Jackal))
+        if (PlayerControl.LocalPlayer.IsRole(RoleType.Jackal))
         {
             var untargetablePlayers = new List<PlayerControl>();
             if (CanCreateSidekickFromImpostor)
@@ -87,7 +87,7 @@ public class Jackal : RoleBase<Jackal>
         // If LocalPlayer is Sidekick, the Jackal is disconnected and Sidekick promotion is enabled, then trigger promotion
         if (Sidekick.PromotesToJackal && MySidekick != null && MySidekick.IsAlive())
         {
-            using var sender = new RPCSender(CachedPlayer.LocalPlayer.PlayerControl.NetId, CustomRPC.SidekickPromotes);
+            using var sender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.SidekickPromotes);
             sender.Write(MySidekick.PlayerId);
             RPCProcedure.SidekickPromotes(MySidekick.PlayerId);
         }
@@ -100,13 +100,13 @@ public class Jackal : RoleBase<Jackal>
         JackalSidekickButton = new CustomButton(
             () =>
             {
-                using var sender = new RPCSender(CachedPlayer.LocalPlayer.PlayerControl.NetId, CustomRPC.JackalCreatesSidekick);
+                using var sender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.JackalCreatesSidekick);
                 sender.Write(Local.CurrentTarget.PlayerId);
-                sender.Write(CachedPlayer.LocalPlayer.PlayerControl.PlayerId);
-                RPCProcedure.JackalCreatesSidekick(Local.CurrentTarget.PlayerId, CachedPlayer.LocalPlayer.PlayerControl.PlayerId);
+                sender.Write(PlayerControl.LocalPlayer.PlayerId);
+                RPCProcedure.JackalCreatesSidekick(Local.CurrentTarget.PlayerId, PlayerControl.LocalPlayer.PlayerId);
             },
-            () => { return CanCreateSidekick && CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Jackal) && CachedPlayer.LocalPlayer.PlayerControl.IsAlive(); },
-            () => { return CanCreateSidekick && Local.CurrentTarget != null && CachedPlayer.LocalPlayer.PlayerControl.CanMove; },
+            () => { return CanCreateSidekick && PlayerControl.LocalPlayer.IsRole(RoleType.Jackal) && PlayerControl.LocalPlayer.IsAlive(); },
+            () => { return CanCreateSidekick && Local.CurrentTarget != null && PlayerControl.LocalPlayer.CanMove; },
             () => { JackalSidekickButton.Timer = JackalSidekickButton.MaxTimer; },
             AssetLoader.SidekickButton,
             new Vector3(-1.8f, -0.06f, 0),

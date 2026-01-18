@@ -8,8 +8,8 @@ public static class Update
 
         foreach (PlayerControl player in CachedPlayer.AllPlayers)
         {
-            player.cosmetics.nameText.text = Helpers.HidePlayerName(CachedPlayer.LocalPlayer.PlayerControl, player) ? "" : player.CurrentOutfit.PlayerName;
-            if (CachedPlayer.LocalPlayer.PlayerControl.IsTeamImpostor() && player.IsTeamImpostor())
+            player.cosmetics.nameText.text = Helpers.HidePlayerName(PlayerControl.LocalPlayer, player) ? "" : player.CurrentOutfit.PlayerName;
+            if (PlayerControl.LocalPlayer.IsTeamImpostor() && player.IsTeamImpostor())
             {
                 player.cosmetics.nameText.color = Palette.ImpostorRed;
             }
@@ -27,7 +27,7 @@ public static class Update
                 if (playerControl != null)
                 {
                     player.NameText.text = playerControl.Data.PlayerName;
-                    if (CachedPlayer.LocalPlayer.PlayerControl.Data.Role.IsImpostor && playerControl.Data.Role.IsImpostor)
+                    if (PlayerControl.LocalPlayer.Data.Role.IsImpostor && playerControl.Data.Role.IsImpostor)
                     {
                         player.NameText.color = Palette.ImpostorRed;
                     }
@@ -57,7 +57,7 @@ public static class Update
 
     public static void SetNameColors()
     {
-        var lp = CachedPlayer.LocalPlayer.PlayerControl;
+        var lp = PlayerControl.LocalPlayer;
         if (lp == null) return;
 
         ResetNameTagsAndColors();
@@ -81,7 +81,7 @@ public static class Update
 
     public static void SetNameTags()
     {
-        var lp = CachedPlayer.LocalPlayer.PlayerControl;
+        var lp = PlayerControl.LocalPlayer;
         if (lp == null) return;
 
         ResetNameTagsAndColors();
@@ -173,22 +173,22 @@ public static class Update
 
     public static void UpdateImpostorKillButton(HudManager __instance)
     {
-        if (!CachedPlayer.LocalPlayer.PlayerControl.Data.Role.IsImpostor) return;
+        if (!PlayerControl.LocalPlayer.Data.Role.IsImpostor) return;
         if (MeetingHud.Instance)
         {
             __instance.KillButton.Hide();
             return;
         }
         bool enabled = Helpers.ShowButtons;
-        if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Vampire))
+        if (PlayerControl.LocalPlayer.IsRole(RoleType.Vampire))
         {
             enabled &= false;
         }
-        else if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Mafioso) && !Mafia.Mafioso.CanKill)
+        else if (PlayerControl.LocalPlayer.IsRole(RoleType.Mafioso) && !Mafia.Mafioso.CanKill)
         {
             enabled &= false;
         }
-        else if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Janitor))
+        else if (PlayerControl.LocalPlayer.IsRole(RoleType.Janitor))
         {
             enabled &= false;
         }
@@ -230,7 +230,7 @@ public static class Update
 
     public static void ImpostorSetTarget()
     {
-        if (!CachedPlayer.LocalPlayer.PlayerControl.Data.Role.IsImpostor || !CachedPlayer.LocalPlayer.PlayerControl.CanMove || CachedPlayer.LocalPlayer.PlayerControl.Data.IsDead)
+        if (!PlayerControl.LocalPlayer.Data.Role.IsImpostor || !PlayerControl.LocalPlayer.CanMove || PlayerControl.LocalPlayer.Data.IsDead)
         {
             // !isImpostor || !canMove || isDead
             FastDestroyableSingleton<HudManager>.Instance.KillButton.SetTarget(null);

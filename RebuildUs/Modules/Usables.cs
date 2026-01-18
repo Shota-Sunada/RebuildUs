@@ -29,31 +29,31 @@ public static class Usables
 
     public static bool KillButtonDoClick(KillButton __instance)
     {
-        if (__instance.isActiveAndEnabled && __instance.currentTarget && !__instance.isCoolingDown && CachedPlayer.LocalPlayer.PlayerControl.IsAlive() && CachedPlayer.LocalPlayer.PlayerControl.CanMove)
+        if (__instance.isActiveAndEnabled && __instance.currentTarget && !__instance.isCoolingDown && PlayerControl.LocalPlayer.IsAlive() && PlayerControl.LocalPlayer.CanMove)
         {
             bool showAnimation = true;
 
             // Use an unchecked kill command, to allow shorter kill cooldowns etc. without getting kicked
-            var res = Helpers.CheckMurderAttemptAndKill(CachedPlayer.LocalPlayer.PlayerControl, __instance.currentTarget, showAnimation: showAnimation);
+            var res = Helpers.CheckMurderAttemptAndKill(PlayerControl.LocalPlayer, __instance.currentTarget, showAnimation: showAnimation);
             // Handle blank kill
             if (res == MurderAttemptResult.BlankKill)
             {
-                CachedPlayer.LocalPlayer.PlayerControl.SetKillTimer(Helpers.GetOption(FloatOptionNames.KillCooldown));
-                if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Cleaner))
+                PlayerControl.LocalPlayer.SetKillTimer(Helpers.GetOption(FloatOptionNames.KillCooldown));
+                if (PlayerControl.LocalPlayer.IsRole(RoleType.Cleaner))
                 {
-                    CachedPlayer.LocalPlayer.PlayerControl.killTimer = Cleaner.CleanerCleanButton.Timer = Cleaner.CleanerCleanButton.MaxTimer;
+                    PlayerControl.LocalPlayer.killTimer = Cleaner.CleanerCleanButton.Timer = Cleaner.CleanerCleanButton.MaxTimer;
                 }
-                else if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Warlock))
+                else if (PlayerControl.LocalPlayer.IsRole(RoleType.Warlock))
                 {
-                    CachedPlayer.LocalPlayer.PlayerControl.killTimer = Warlock.WarlockCurseButton.Timer = Warlock.WarlockCurseButton.MaxTimer;
+                    PlayerControl.LocalPlayer.killTimer = Warlock.WarlockCurseButton.Timer = Warlock.WarlockCurseButton.MaxTimer;
                 }
-                else if (CachedPlayer.LocalPlayer.PlayerControl.HasModifier(ModifierType.Mini) && CachedPlayer.LocalPlayer.PlayerControl.Data.Role.IsImpostor)
+                else if (PlayerControl.LocalPlayer.HasModifier(ModifierType.Mini) && PlayerControl.LocalPlayer.Data.Role.IsImpostor)
                 {
-                    CachedPlayer.LocalPlayer.PlayerControl.SetKillTimer(Helpers.GetOption(FloatOptionNames.KillCooldown) * (Mini.IsGrownUp(CachedPlayer.LocalPlayer.PlayerControl) ? 0.66f : 2f));
+                    PlayerControl.LocalPlayer.SetKillTimer(Helpers.GetOption(FloatOptionNames.KillCooldown) * (Mini.IsGrownUp(PlayerControl.LocalPlayer) ? 0.66f : 2f));
                 }
-                else if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Witch))
+                else if (PlayerControl.LocalPlayer.IsRole(RoleType.Witch))
                 {
-                    CachedPlayer.LocalPlayer.PlayerControl.killTimer = Witch.WitchSpellButton.Timer = Witch.WitchSpellButton.MaxTimer;
+                    PlayerControl.LocalPlayer.killTimer = Witch.WitchSpellButton.Timer = Witch.WitchSpellButton.MaxTimer;
                 }
             }
 
@@ -64,7 +64,7 @@ public static class Usables
 
     public static bool UseButtonSetTarget(UseButton __instance, IUsable target)
     {
-        var pc = CachedPlayer.LocalPlayer.PlayerControl;
+        var pc = PlayerControl.LocalPlayer;
         __instance.enabled = true;
 
         if (IsBlocked(target, pc))
@@ -84,7 +84,7 @@ public static class Usables
     public static void VentButtonSetTarget(VentButton __instance)
     {
         // Trickster render special vent button
-        if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Trickster))
+        if (PlayerControl.LocalPlayer.IsRole(RoleType.Trickster))
         {
             if (DefaultVentSprite == null) DefaultVentSprite = __instance.graphic.sprite;
             bool isSpecialVent = __instance.currentTarget != null && __instance.currentTarget.gameObject != null && __instance.currentTarget.gameObject.name.StartsWith("JackInTheBoxVent_");
@@ -107,7 +107,7 @@ public static class Usables
 
     public static bool IsBlocked(PlayerTask task, PlayerControl pc)
     {
-        if (task == null || pc == null || pc != CachedPlayer.LocalPlayer.PlayerControl) return false;
+        if (task == null || pc == null || pc != PlayerControl.LocalPlayer) return false;
 
         bool isLights = task.TaskType == TaskTypes.FixLights;
         bool isComms = task.TaskType == TaskTypes.FixComms;
@@ -149,7 +149,7 @@ public static class Usables
 
     public static bool IsBlocked(Console console, PlayerControl pc)
     {
-        if (console == null || pc == null || pc != CachedPlayer.LocalPlayer.PlayerControl)
+        if (console == null || pc == null || pc != PlayerControl.LocalPlayer)
         {
             return false;
         }
@@ -160,7 +160,7 @@ public static class Usables
 
     public static bool IsBlocked(SystemConsole console, PlayerControl pc)
     {
-        if (console == null || pc == null || pc != CachedPlayer.LocalPlayer.PlayerControl)
+        if (console == null || pc == null || pc != PlayerControl.LocalPlayer)
         {
             return false;
         }
@@ -192,13 +192,13 @@ public static class Usables
         var roleCanCallEmergency = true;
         var statusText = "";
 
-        if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Jester) && !Jester.CanCallEmergency)
+        if (PlayerControl.LocalPlayer.IsRole(RoleType.Jester) && !Jester.CanCallEmergency)
         {
             roleCanCallEmergency = false;
             statusText = Tr.Get("Hud.JesterMeetingButton");
         }
 
-        if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Swapper) && !Swapper.CanCallEmergency)
+        if (PlayerControl.LocalPlayer.IsRole(RoleType.Swapper) && !Swapper.CanCallEmergency)
         {
             roleCanCallEmergency = false;
             statusText = Tr.Get("Hud.SwapperMeetingButton");
@@ -217,11 +217,11 @@ public static class Usables
         // Handle max number of meetings
         if (__instance.state == 1)
         {
-            int localRemaining = CachedPlayer.LocalPlayer.PlayerControl.RemainingEmergencies;
+            int localRemaining = PlayerControl.LocalPlayer.RemainingEmergencies;
             int teamRemaining = Mathf.Max(0, ModMapOptions.MaxNumberOfMeetings - ModMapOptions.MeetingsCount);
-            int remaining = Mathf.Min(localRemaining, CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Mayor) ? 1 : teamRemaining);
+            int remaining = Mathf.Min(localRemaining, PlayerControl.LocalPlayer.IsRole(RoleType.Mayor) ? 1 : teamRemaining);
 
-            __instance.StatusText.text = $"<size=100%> {string.Format(Tr.Get("Hud.MeetingStatus"), CachedPlayer.LocalPlayer.PlayerControl.name)}</size>";
+            __instance.StatusText.text = $"<size=100%> {string.Format(Tr.Get("Hud.MeetingStatus"), PlayerControl.LocalPlayer.name)}</size>";
             __instance.NumberText.text = string.Format(Tr.Get("Hud.MeetingCount"), localRemaining.ToString(), teamRemaining.ToString());
             __instance.ButtonActive = remaining > 0;
             __instance.ClosedLid.gameObject.SetActive(!__instance.ButtonActive);

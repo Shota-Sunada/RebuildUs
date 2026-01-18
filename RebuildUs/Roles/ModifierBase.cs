@@ -61,7 +61,7 @@ public abstract class ModifierBase<T> : PlayerModifier where T : ModifierBase<T>
     {
         get
         {
-            return Players.FirstOrDefault(x => x.Player == CachedPlayer.LocalPlayer.PlayerControl);
+            return Players.FirstOrDefault(x => x.Player == PlayerControl.LocalPlayer);
         }
     }
 
@@ -96,7 +96,7 @@ public abstract class ModifierBase<T> : PlayerModifier where T : ModifierBase<T>
 
     public static T GetModifier(PlayerControl player = null)
     {
-        player ??= CachedPlayer.LocalPlayer.PlayerControl;
+        player ??= PlayerControl.LocalPlayer;
         return Players.FirstOrDefault(x => x.Player == player);
     }
 

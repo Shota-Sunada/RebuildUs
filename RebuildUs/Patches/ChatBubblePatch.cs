@@ -8,7 +8,7 @@ public static class ChatBubblePatch
     public static void Postfix(ChatBubble __instance, [HarmonyArgument(0)] string playerName)
     {
         var sourcePlayer = PlayerControl.AllPlayerControls.GetFastEnumerator().ToArray().ToList().FirstOrDefault(x => x.Data.PlayerName.Equals(playerName));
-        if (CachedPlayer.LocalPlayer.PlayerControl.IsTeamImpostor()
+        if (PlayerControl.LocalPlayer.IsTeamImpostor()
             && (sourcePlayer.IsRole(RoleType.Spy) || (sourcePlayer.IsRole(RoleType.Sidekick) && Sidekick.GetRole(sourcePlayer).WasTeamRed) || (sourcePlayer.IsRole(RoleType.Jackal) && Jackal.GetRole(sourcePlayer).WasTeamRed))
             && __instance != null)
         {

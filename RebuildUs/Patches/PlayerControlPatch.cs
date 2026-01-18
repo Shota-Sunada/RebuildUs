@@ -91,8 +91,8 @@ public static class PlayerControlPatch
     {
         Logger.LogInfo($"{__instance.GetNameWithRole()} => {target.Object?.GetNameWithRole() ?? "null"}", "ReportDeadBody");
         // Medic or Detective report
-        bool isMedicReport = CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Medic) && __instance.PlayerId == CachedPlayer.LocalPlayer.PlayerControl.PlayerId;
-        bool isDetectiveReport = Detective.Exists && CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Detective) && __instance.PlayerId == CachedPlayer.LocalPlayer.PlayerControl.PlayerId;
+        bool isMedicReport = PlayerControl.LocalPlayer.IsRole(RoleType.Medic) && __instance.PlayerId == PlayerControl.LocalPlayer.PlayerId;
+        bool isDetectiveReport = Detective.Exists && PlayerControl.LocalPlayer.IsRole(RoleType.Detective) && __instance.PlayerId == PlayerControl.LocalPlayer.PlayerId;
         if (isMedicReport || isDetectiveReport)
         {
             var deadPlayer = GameHistory.DeadPlayers?.Where(x => x.Player?.PlayerId == target?.PlayerId)?.FirstOrDefault();
@@ -129,7 +129,7 @@ public static class PlayerControlPatch
                 {
                     if (AmongUsClient.Instance.AmClient && FastDestroyableSingleton<HudManager>.Instance)
                     {
-                        FastDestroyableSingleton<HudManager>.Instance.Chat.AddChat(CachedPlayer.LocalPlayer.PlayerControl, msg);
+                        FastDestroyableSingleton<HudManager>.Instance.Chat.AddChat(PlayerControl.LocalPlayer, msg);
                     }
                     if (msg.IndexOf("who", StringComparison.OrdinalIgnoreCase) >= 0)
                     {

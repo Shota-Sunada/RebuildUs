@@ -29,7 +29,7 @@ public static class Mafia
             StaticRoleType = CurrentRoleType = RoleType.Godfather;
         }
 
-        public override string NameTag => (CachedPlayer.LocalPlayer.PlayerControl?.Data.Role.IsImpostor ?? false) ? $" ({Tr.Get("Role.MafiaG")})" : "";
+        public override string NameTag => (PlayerControl.LocalPlayer?.Data.Role.IsImpostor ?? false) ? $" ({Tr.Get("Role.MafiaG")})" : "";
 
         public override void OnMeetingStart() { }
         public override void OnMeetingEnd() { }
@@ -72,7 +72,7 @@ public static class Mafia
             StaticRoleType = CurrentRoleType = RoleType.Mafioso;
         }
 
-        public override string NameTag => (CachedPlayer.LocalPlayer.PlayerControl?.Data.Role.IsImpostor ?? false) ? $" ({Tr.Get("Role.MafiaM")})" : "";
+        public override string NameTag => (PlayerControl.LocalPlayer?.Data.Role.IsImpostor ?? false) ? $" ({Tr.Get("Role.MafiaM")})" : "";
 
         public override void OnMeetingStart() { }
         public override void OnMeetingEnd() { }
@@ -115,7 +115,7 @@ public static class Mafia
             StaticRoleType = CurrentRoleType = RoleType.Janitor;
         }
 
-        public override string NameTag => (CachedPlayer.LocalPlayer.PlayerControl?.Data.Role.IsImpostor ?? false) ? $" ({Tr.Get("Role.MafiaJ")})" : "";
+        public override string NameTag => (PlayerControl.LocalPlayer?.Data.Role.IsImpostor ?? false) ? $" ({Tr.Get("Role.MafiaJ")})" : "";
 
         public override void OnMeetingStart() { }
         public override void OnMeetingEnd() { }
@@ -133,21 +133,21 @@ public static class Mafia
             JanitorCleanButton = new CustomButton(
                 () =>
                 {
-                    foreach (var collider2D in Physics2D.OverlapCircleAll(CachedPlayer.LocalPlayer.PlayerControl.GetTruePosition(), CachedPlayer.LocalPlayer.PlayerControl.MaxReportDistance, Constants.PlayersOnlyMask))
+                    foreach (var collider2D in Physics2D.OverlapCircleAll(PlayerControl.LocalPlayer.GetTruePosition(), PlayerControl.LocalPlayer.MaxReportDistance, Constants.PlayersOnlyMask))
                     {
                         if (collider2D.tag == "DeadBody")
                         {
                             DeadBody component = collider2D.GetComponent<DeadBody>();
                             if (component && !component.Reported)
                             {
-                                Vector2 truePosition = CachedPlayer.LocalPlayer.PlayerControl.GetTruePosition();
+                                Vector2 truePosition = PlayerControl.LocalPlayer.GetTruePosition();
                                 Vector2 truePosition2 = component.TruePosition;
-                                if (Vector2.Distance(truePosition2, truePosition) <= CachedPlayer.LocalPlayer.PlayerControl.MaxReportDistance && CachedPlayer.LocalPlayer.PlayerControl.CanMove && !PhysicsHelpers.AnythingBetween(truePosition, truePosition2, Constants.ShipAndObjectsMask, false))
+                                if (Vector2.Distance(truePosition2, truePosition) <= PlayerControl.LocalPlayer.MaxReportDistance && PlayerControl.LocalPlayer.CanMove && !PhysicsHelpers.AnythingBetween(truePosition, truePosition2, Constants.ShipAndObjectsMask, false))
                                 {
                                     var playerInfo = GameData.Instance.GetPlayerById(component.ParentId);
 
                                     {
-                                        using var sender = new RPCSender(CachedPlayer.LocalPlayer.PlayerControl.NetId, CustomRPC.CleanBody);
+                                        using var sender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.CleanBody);
                                         sender.Write(playerInfo.PlayerId);
                                         RPCProcedure.CleanBody(playerInfo.PlayerId);
                                     }
@@ -159,8 +159,8 @@ public static class Mafia
                         }
                     }
                 },
-                () => { return CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Janitor) && CachedPlayer.LocalPlayer.PlayerControl.IsAlive(); },
-                () => { return hm.ReportButton.graphic.color == Palette.EnabledColor && CachedPlayer.LocalPlayer.PlayerControl.CanMove; },
+                () => { return PlayerControl.LocalPlayer.IsRole(RoleType.Janitor) && PlayerControl.LocalPlayer.IsAlive(); },
+                () => { return hm.ReportButton.graphic.color == Palette.EnabledColor && PlayerControl.LocalPlayer.CanMove; },
                 () => { JanitorCleanButton.Timer = JanitorCleanButton.MaxTimer; },
                 AssetLoader.CleanButton,
                 new Vector3(-1.8f, -0.06f, 0),

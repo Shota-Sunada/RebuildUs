@@ -44,12 +44,12 @@ public class Mayor : RoleBase<Mayor>
                 RPCProcedure.UncheckedCmdReportDeadBody(PlayerControl.LocalPlayer.PlayerId, byte.MaxValue);
                 MayorMeetingButton.Timer = 1f;
             },
-            () => { return CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Mayor) && !PlayerControl.LocalPlayer.Data.IsDead && MayorHasMeetingButton; },
+            () => { return PlayerControl.LocalPlayer.IsRole(RoleType.Mayor) && !PlayerControl.LocalPlayer.Data.IsDead && MayorHasMeetingButton; },
             () =>
             {
                 MayorMeetingButton.ActionButton.OverrideText("Emergency (" + Local.RemoteMeetingsLeft + ")");
                 bool sabotageActive = false;
-                foreach (var task in CachedPlayer.LocalPlayer.PlayerControl.myTasks.GetFastEnumerator())
+                foreach (var task in PlayerControl.LocalPlayer.myTasks.GetFastEnumerator())
                 {
                     if (task.TaskType is TaskTypes.FixLights or TaskTypes.RestoreOxy or TaskTypes.ResetReactor or TaskTypes.ResetSeismic or TaskTypes.FixComms or TaskTypes.StopCharles
                     || (SubmergedCompatibility.IsSubmerged && task.TaskType == SubmergedCompatibility.RetrieveOxygenMask))

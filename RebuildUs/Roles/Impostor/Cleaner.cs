@@ -22,7 +22,7 @@ public class Cleaner : RoleBase<Cleaner>
     public override void FixedUpdate() { }
     public override void OnKill(PlayerControl target)
     {
-        if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Cleaner) && CleanerCleanButton != null)
+        if (PlayerControl.LocalPlayer.IsRole(RoleType.Cleaner) && CleanerCleanButton != null)
         {
             CleanerCleanButton.Timer = Player.killTimer;
         }
@@ -35,21 +35,21 @@ public class Cleaner : RoleBase<Cleaner>
         CleanerCleanButton = new CustomButton(
                 () =>
                 {
-                    foreach (Collider2D collider2D in Physics2D.OverlapCircleAll(CachedPlayer.LocalPlayer.PlayerControl.GetTruePosition(), CachedPlayer.LocalPlayer.PlayerControl.MaxReportDistance, Constants.PlayersOnlyMask))
+                    foreach (Collider2D collider2D in Physics2D.OverlapCircleAll(PlayerControl.LocalPlayer.GetTruePosition(), PlayerControl.LocalPlayer.MaxReportDistance, Constants.PlayersOnlyMask))
                     {
                         if (collider2D.tag == "DeadBody")
                         {
                             DeadBody component = collider2D.GetComponent<DeadBody>();
                             if (component && !component.Reported)
                             {
-                                Vector2 truePosition = CachedPlayer.LocalPlayer.PlayerControl.GetTruePosition();
+                                Vector2 truePosition = PlayerControl.LocalPlayer.GetTruePosition();
                                 Vector2 truePosition2 = component.TruePosition;
-                                if (Vector2.Distance(truePosition2, truePosition) <= CachedPlayer.LocalPlayer.PlayerControl.MaxReportDistance && CachedPlayer.LocalPlayer.PlayerControl.CanMove && !PhysicsHelpers.AnythingBetween(truePosition, truePosition2, Constants.ShipAndObjectsMask, false))
+                                if (Vector2.Distance(truePosition2, truePosition) <= PlayerControl.LocalPlayer.MaxReportDistance && PlayerControl.LocalPlayer.CanMove && !PhysicsHelpers.AnythingBetween(truePosition, truePosition2, Constants.ShipAndObjectsMask, false))
                                 {
                                     var playerInfo = GameData.Instance.GetPlayerById(component.ParentId);
 
                                     {
-                                        using var sender = new RPCSender(CachedPlayer.LocalPlayer.PlayerControl.NetId, CustomRPC.CleanBody);
+                                        using var sender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.CleanBody);
                                         sender.Write(playerInfo.PlayerId);
                                     }
                                     RPCProcedure.CleanBody(playerInfo.PlayerId);
@@ -61,8 +61,8 @@ public class Cleaner : RoleBase<Cleaner>
                         }
                     }
                 },
-                () => { return CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Cleaner) && CachedPlayer.LocalPlayer.PlayerControl.IsAlive(); },
-                () => { return hm.ReportButton.graphic.color == Palette.EnabledColor && CachedPlayer.LocalPlayer.PlayerControl.CanMove; },
+                () => { return PlayerControl.LocalPlayer.IsRole(RoleType.Cleaner) && PlayerControl.LocalPlayer.IsAlive(); },
+                () => { return hm.ReportButton.graphic.color == Palette.EnabledColor && PlayerControl.LocalPlayer.CanMove; },
                 () => { CleanerCleanButton.Timer = CleanerCleanButton.MaxTimer; },
                 AssetLoader.CleanButton,
                 new Vector3(-1.8f, -0.06f, 0),

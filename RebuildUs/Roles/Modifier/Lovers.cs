@@ -117,6 +117,10 @@ public static class Lovers
         return GetCouple(player) != null;
     }
 
+    public static void SetRole(PlayerControl player)
+    {
+    }
+
     public static Couple GetCouple(PlayerControl player)
     {
         foreach (var pair in Couples)

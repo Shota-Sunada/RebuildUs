@@ -26,7 +26,7 @@ public class Bait : RoleBase<Bait>
     public override void OnIntroEnd() { }
     public override void FixedUpdate()
     {
-        if (!CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Bait)) return;
+        if (!PlayerControl.LocalPlayer.IsRole(RoleType.Bait)) return;
 
         // Bait report
         if (Player.Data.IsDead && !Reported)
@@ -46,7 +46,7 @@ public class Bait : RoleBase<Bait>
                 }
 
                 {
-                    using var sender = new RPCSender(CachedPlayer.LocalPlayer.PlayerControl.NetId, CustomRPC.UncheckedCmdReportDeadBody);
+                    using var sender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.UncheckedCmdReportDeadBody);
                     sender.Write(reporter);
                     sender.Write(Player.PlayerId);
                 }

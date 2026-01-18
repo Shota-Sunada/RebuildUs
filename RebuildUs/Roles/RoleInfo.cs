@@ -87,7 +87,7 @@ public partial class RoleInfo(string nameKey, Color color, CustomOption baseOpti
         if (p.HasModifier(ModifierType.Munou))
         {
             /* TODO: Munou is not implemented
-            if (CachedPlayer.LocalPlayer.PlayerControl.Data.IsDead || Munou.endGameFlag)
+            if (PlayerControl.LocalPlayer.Data.IsDead || Munou.endGameFlag)
             {
                 string postfix = useColors ? Helpers.Cs(Munou.color, Munou.postfix) : Munou.postfix;
                 roleName += postfix;

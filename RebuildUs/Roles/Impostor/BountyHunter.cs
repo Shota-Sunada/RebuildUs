@@ -30,14 +30,14 @@ public class BountyHunter : RoleBase<BountyHunter>
     public override void OnMeetingStart() { }
     public override void OnMeetingEnd()
     {
-        if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.BountyHunter))
+        if (PlayerControl.LocalPlayer.IsRole(RoleType.BountyHunter))
         {
             BountyUpdateTimer = 0f;
         }
     }
     public override void OnIntroEnd()
     {
-        if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.BountyHunter))
+        if (PlayerControl.LocalPlayer.IsRole(RoleType.BountyHunter))
         {
             BountyUpdateTimer = 0f;
             if (FastDestroyableSingleton<HudManager>.Instance != null)
@@ -52,7 +52,7 @@ public class BountyHunter : RoleBase<BountyHunter>
     }
     public override void FixedUpdate()
     {
-        if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.BountyHunter))
+        if (PlayerControl.LocalPlayer.IsRole(RoleType.BountyHunter))
         {
             if (Player.IsDead())
             {
@@ -133,7 +133,7 @@ public class BountyHunter : RoleBase<BountyHunter>
 
     public override void OnKill(PlayerControl target)
     {
-        if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.BountyHunter))
+        if (PlayerControl.LocalPlayer.IsRole(RoleType.BountyHunter))
         {
             if (target == Bounty)
             {

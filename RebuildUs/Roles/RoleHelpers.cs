@@ -26,7 +26,12 @@ public static class RoleHelpers
         {
             if (roleType == type.RoleType)
             {
-                return (bool)type.Type.GetMethod("SetRole", BindingFlags.Public | BindingFlags.Static)?.Invoke(null, [player]);
+                var method = type.Type.GetMethod("SetRole", BindingFlags.Public | BindingFlags.Static);
+                if (method != null)
+                {
+                    method.Invoke(null, [player]);
+                    return true;
+                }
             }
         }
 

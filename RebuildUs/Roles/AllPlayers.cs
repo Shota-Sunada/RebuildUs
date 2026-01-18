@@ -13,7 +13,7 @@ public static class AllPlayers
         // Seer show flash and add dead player position
         if (Seer.Exists)
         {
-            if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Seer) && !CachedPlayer.LocalPlayer.PlayerControl.Data.IsDead && !target.IsRole(RoleType.Seer) && Seer.Mode <= 1)
+            if (PlayerControl.LocalPlayer.IsRole(RoleType.Seer) && !PlayerControl.LocalPlayer.Data.IsDead && !target.IsRole(RoleType.Seer) && Seer.Mode <= 1)
             {
                 Helpers.ShowFlash(new Color(42f / 255f, 187f / 255f, 245f / 255f));
             }
@@ -30,14 +30,14 @@ public static class AllPlayers
         }
 
         // // Mini set adapted kill cooldown
-        // if (CachedPlayer.LocalPlayer.PlayerControl.hasModifier(ModifierType.Mini) && CachedPlayer.LocalPlayer.PlayerControl.Data.Role.IsImpostor && CachedPlayer.LocalPlayer.PlayerControl == __instance)
+        // if (PlayerControl.LocalPlayer.hasModifier(ModifierType.Mini) && PlayerControl.LocalPlayer.Data.Role.IsImpostor && PlayerControl.LocalPlayer == __instance)
         // {
-        //     var multiplier = Mini.isGrownUp(CachedPlayer.LocalPlayer.PlayerControl) ? 0.66f : 2f;
-        //     CachedPlayer.LocalPlayer.PlayerControl.SetKillTimer(PlayerControl.GameOptions.KillCooldown * multiplier);
+        //     var multiplier = Mini.isGrownUp(PlayerControl.LocalPlayer) ? 0.66f : 2f;
+        //     PlayerControl.LocalPlayer.SetKillTimer(PlayerControl.GameOptions.KillCooldown * multiplier);
         // }
 
         // Show flash on bait kill to the killer if enabled
-        if (target.IsRole(RoleType.Bait) && Bait.ShowKillFlash && !__instance.IsRole(RoleType.Bait) && __instance == CachedPlayer.LocalPlayer.PlayerControl)
+        if (target.IsRole(RoleType.Bait) && Bait.ShowKillFlash && !__instance.IsRole(RoleType.Bait) && __instance == PlayerControl.LocalPlayer)
         {
             Helpers.ShowFlash(new Color(42f / 255f, 187f / 255f, 245f / 255f));
         }

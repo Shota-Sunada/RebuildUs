@@ -10,7 +10,7 @@ public static class PlayerControlHelpers
 
         var taskTypeIds = Helpers.GenerateTasks(numCommon, numShort, numLong);
         {
-            using var sender = new RPCSender(CachedPlayer.LocalPlayer.PlayerControl.NetId, CustomRPC.UncheckedSetTasks);
+            using var sender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.UncheckedSetTasks);
             sender.Write(player.PlayerId);
             sender.WriteBytesAndSize(taskTypeIds.ToArray());
         }

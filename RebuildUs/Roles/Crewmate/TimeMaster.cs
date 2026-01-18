@@ -35,24 +35,24 @@ public class TimeMaster : RoleBase<TimeMaster>
                 if (next.Item2 == true)
                 {
                     // Exit current vent if necessary
-                    if (CachedPlayer.LocalPlayer.PlayerControl.inVent)
+                    if (PlayerControl.LocalPlayer.inVent)
                     {
                         foreach (Vent vent in MapUtilities.CachedShipStatus.AllVents)
                         {
-                            vent.CanUse(CachedPlayer.LocalPlayer.PlayerControl.Data, out bool canUse, out bool couldUse);
+                            vent.CanUse(PlayerControl.LocalPlayer.Data, out bool canUse, out bool couldUse);
                             if (canUse)
                             {
-                                CachedPlayer.LocalPlayer.PlayerControl.MyPhysics.RpcExitVent(vent.Id);
+                                PlayerControl.LocalPlayer.MyPhysics.RpcExitVent(vent.Id);
                                 vent.SetButtons(false);
                             }
                         }
                     }
                     // Set position
-                    CachedPlayer.LocalPlayer.PlayerControl.transform.position = next.Item1;
+                    PlayerControl.LocalPlayer.transform.position = next.Item1;
                 }
                 else if (GameHistory.LocalPlayerPositions.Any(x => x.Item2 == true))
                 {
-                    CachedPlayer.LocalPlayer.PlayerControl.transform.position = next.Item1;
+                    PlayerControl.LocalPlayer.transform.position = next.Item1;
                 }
                 if (SubmergedCompatibility.IsSubmerged)
                 {
@@ -70,7 +70,7 @@ public class TimeMaster : RoleBase<TimeMaster>
             else
             {
                 IsRewinding = false;
-                CachedPlayer.LocalPlayer.PlayerControl.moveable = true;
+                PlayerControl.LocalPlayer.moveable = true;
             }
         }
         else
@@ -79,7 +79,7 @@ public class TimeMaster : RoleBase<TimeMaster>
             {
                 GameHistory.LocalPlayerPositions.RemoveAt(GameHistory.LocalPlayerPositions.Count - 1);
             }
-            GameHistory.LocalPlayerPositions.Insert(0, new Tuple<Vector3, bool>(CachedPlayer.LocalPlayer.PlayerControl.transform.position, CachedPlayer.LocalPlayer.PlayerControl.CanMove)); // CanMove = CanMove
+            GameHistory.LocalPlayerPositions.Insert(0, new Tuple<Vector3, bool>(PlayerControl.LocalPlayer.transform.position, PlayerControl.LocalPlayer.CanMove)); // CanMove = CanMove
         }
     }
     public override void OnKill(PlayerControl target) { }
@@ -92,11 +92,11 @@ public class TimeMaster : RoleBase<TimeMaster>
         (
             () =>
             {
-                using var sender = new RPCSender(CachedPlayer.LocalPlayer.PlayerControl.NetId, CustomRPC.TimeMasterShield);
+                using var sender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.TimeMasterShield);
                 RPCProcedure.TimeMasterShield();
             },
-            () => { return CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.TimeMaster) && CachedPlayer.LocalPlayer.PlayerControl.IsAlive(); },
-            () => { return CachedPlayer.LocalPlayer.PlayerControl.CanMove; },
+            () => { return PlayerControl.LocalPlayer.IsRole(RoleType.TimeMaster) && PlayerControl.LocalPlayer.IsAlive(); },
+            () => { return PlayerControl.LocalPlayer.CanMove; },
             () =>
             {
                 TimeMasterShieldButton.Timer = TimeMasterShieldButton.MaxTimer;

@@ -23,9 +23,9 @@ public static class SecurityCamera
     public static void UseCameraTime()
     {
         // Don't waste network traffic if we're out of time.
-        if (ModMapOptions.RestrictDevices > 0 && ModMapOptions.RestrictCameras && ModMapOptions.RestrictCamerasTime > 0f && CachedPlayer.LocalPlayer.PlayerControl.IsAlive())
+        if (ModMapOptions.RestrictDevices > 0 && ModMapOptions.RestrictCameras && ModMapOptions.RestrictCamerasTime > 0f && PlayerControl.LocalPlayer.IsAlive())
         {
-            using var sender = new RPCSender(CachedPlayer.LocalPlayer.PlayerControl.NetId, CustomRPC.UseCameraTime);
+            using var sender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.UseCameraTime);
             sender.Write(CameraTimer);
             RPCProcedure.UseCameraTime(CameraTimer);
         }
@@ -142,7 +142,7 @@ public static class SecurityCamera
             Timer = 0f;
         }
 
-        if ((__instance.isStatic || update) && !PlayerTask.PlayerHasTaskOfType<IHudOverrideTask>(CachedPlayer.LocalPlayer.PlayerControl))
+        if ((__instance.isStatic || update) && !PlayerTask.PlayerHasTaskOfType<IHudOverrideTask>(PlayerControl.LocalPlayer))
         {
             __instance.isStatic = false;
             for (int i = 0; i < __instance.ViewPorts.Length; i++)
@@ -155,7 +155,7 @@ public static class SecurityCamera
                     __instance.ViewPorts[i].sharedMaterial = __instance.StaticMaterial;
             }
         }
-        else if (!__instance.isStatic && PlayerTask.PlayerHasTaskOfType<HudOverrideTask>(CachedPlayer.LocalPlayer.PlayerControl))
+        else if (!__instance.isStatic && PlayerTask.PlayerHasTaskOfType<HudOverrideTask>(PlayerControl.LocalPlayer))
         {
             __instance.isStatic = true;
             for (int j = 0; j < __instance.ViewPorts.Length; j++)

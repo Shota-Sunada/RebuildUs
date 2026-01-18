@@ -36,7 +36,7 @@ public class EvilTracker : RoleBase<EvilTracker>
     public override void OnIntroEnd() { }
     public override void FixedUpdate()
     {
-        if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.EvilTracker))
+        if (PlayerControl.LocalPlayer.IsRole(RoleType.EvilTracker))
         {
             ArrowUpdate();
         }
@@ -57,8 +57,8 @@ public class EvilTracker : RoleBase<EvilTracker>
             {
                 Target = CurrentTarget;
             },
-            () => { return Target == null && CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.EvilTracker) && CachedPlayer.LocalPlayer.PlayerControl.IsAlive(); },
-            () => { return CurrentTarget != null && Target == null && CachedPlayer.LocalPlayer.PlayerControl.CanMove; },
+            () => { return Target == null && PlayerControl.LocalPlayer.IsRole(RoleType.EvilTracker) && PlayerControl.LocalPlayer.IsAlive(); },
+            () => { return CurrentTarget != null && Target == null && PlayerControl.LocalPlayer.CanMove; },
             () => { TrackerButton.Timer = TrackerButton.MaxTimer; },
             AssetLoader.TrackerButton,
             new Vector3(-1.8f, -0.06f, 0),
@@ -125,7 +125,7 @@ public class EvilTracker : RoleBase<EvilTracker>
                     continue;
                 }
                 Arrow arrow;
-                if (p.IsTeamImpostor() && p != CachedPlayer.LocalPlayer.PlayerControl)
+                if (p.IsTeamImpostor() && p != PlayerControl.LocalPlayer)
                 {
                     arrow = new Arrow(Palette.ImpostorRed);
                     arrow.ArrowObject.SetActive(true);

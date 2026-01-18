@@ -30,7 +30,7 @@ public class Witch : RoleBase<Witch>
     public override void OnIntroEnd() { }
     public override void FixedUpdate()
     {
-        if (!CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Witch)) return;
+        if (!PlayerControl.LocalPlayer.IsRole(RoleType.Witch)) return;
         List<PlayerControl> untargetables;
         if (SpellCastingTarget != null)
         {
@@ -66,7 +66,7 @@ public class Witch : RoleBase<Witch>
     }
     public override void OnKill(PlayerControl target)
     {
-        if (TriggerBothCooldowns && CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Witch) && WitchSpellButton != null)
+        if (TriggerBothCooldowns && PlayerControl.LocalPlayer.IsRole(RoleType.Witch) && WitchSpellButton != null)
         {
             WitchSpellButton.Timer = WitchSpellButton.MaxTimer;
         }
@@ -84,7 +84,7 @@ public class Witch : RoleBase<Witch>
                         SpellCastingTarget = CurrentTarget;
                     }
                 },
-                () => { return CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Witch) && CachedPlayer.LocalPlayer.PlayerControl.IsAlive(); },
+                () => { return PlayerControl.LocalPlayer.IsRole(RoleType.Witch) && PlayerControl.LocalPlayer.IsAlive(); },
                 () =>
                 {
                     if (WitchSpellButton.IsEffectActive && SpellCastingTarget != CurrentTarget)
@@ -93,7 +93,7 @@ public class Witch : RoleBase<Witch>
                         WitchSpellButton.Timer = 0f;
                         WitchSpellButton.IsEffectActive = false;
                     }
-                    return CachedPlayer.LocalPlayer.PlayerControl.CanMove && CurrentTarget != null;
+                    return PlayerControl.LocalPlayer.CanMove && CurrentTarget != null;
                 },
                 () =>
                 {
@@ -115,7 +115,7 @@ public class Witch : RoleBase<Witch>
                     if (attempt == MurderAttemptResult.PerformKill)
                     {
                         {
-                            using var sender = new RPCSender(CachedPlayer.LocalPlayer.PlayerControl.NetId, CustomRPC.SetFutureSpelled);
+                            using var sender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.SetFutureSpelled);
                             sender.Write(CurrentTarget.PlayerId);
                         }
                         RPCProcedure.SetFutureSpelled(CurrentTarget.PlayerId);

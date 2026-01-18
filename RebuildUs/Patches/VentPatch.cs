@@ -31,7 +31,7 @@ public static class VentPatch
             switch (__instance.Id)
             {
                 case 9:  // Cannot enter vent 9 (Engine Room Exit Only Vent)!
-                    if (CachedPlayer.LocalPlayer.PlayerControl.inVent) break;
+                    if (PlayerControl.LocalPlayer.inVent) break;
                     __result = float.MaxValue;
                     return canUse = couldUse = false;
                 case 14: // Lower Central
@@ -52,7 +52,7 @@ public static class VentPatch
         var usableDistance = __instance.UsableDistance;
         if (__instance.name.StartsWith("JackInTheBoxVent_"))
         {
-            if (!CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Trickster) && !CachedPlayer.LocalPlayer.PlayerControl.IsGM())
+            if (!PlayerControl.LocalPlayer.IsRole(RoleType.Trickster) && !PlayerControl.LocalPlayer.IsGM())
             {
                 // Only the Trickster can use the Jack-In-The-Boxes!
                 canUse = false;
@@ -100,32 +100,32 @@ public static class VentPatch
     [HarmonyPatch(typeof(Vent), nameof(Vent.Use))]
     public static bool UsePrefix(Vent __instance)
     {
-        __instance.CanUse(CachedPlayer.LocalPlayer.PlayerControl.Data, out bool canUse, out bool couldUse);
-        bool canMoveInVents = !CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Spy) && !CachedPlayer.LocalPlayer.PlayerControl.HasModifier(ModifierType.Madmate) && !CachedPlayer.LocalPlayer.PlayerControl.HasModifier(ModifierType.CreatedMadmate);
+        __instance.CanUse(PlayerControl.LocalPlayer.Data, out bool canUse, out bool couldUse);
+        bool canMoveInVents = !PlayerControl.LocalPlayer.IsRole(RoleType.Spy) && !PlayerControl.LocalPlayer.HasModifier(ModifierType.Madmate) && !PlayerControl.LocalPlayer.HasModifier(ModifierType.CreatedMadmate);
         if (!canUse) return false; // No need to execute the native method as using is disallowed anyways
 
-        bool isEnter = !CachedPlayer.LocalPlayer.PlayerControl.inVent;
+        bool isEnter = !PlayerControl.LocalPlayer.inVent;
 
         if (__instance.name.StartsWith("JackInTheBoxVent_"))
         {
             __instance.SetButtons(isEnter && canMoveInVents);
             {
-                using var sender = new RPCSender(CachedPlayer.LocalPlayer.PlayerControl.NetId, CustomRPC.UseUncheckedVent);
+                using var sender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.UseUncheckedVent);
                 sender.WritePacked(__instance.Id);
-                sender.Write(CachedPlayer.LocalPlayer.PlayerControl.PlayerId);
+                sender.Write(PlayerControl.LocalPlayer.PlayerId);
                 sender.Write(isEnter ? byte.MaxValue : (byte)0);
-                RPCProcedure.UseUncheckedVent(__instance.Id, CachedPlayer.LocalPlayer.PlayerControl.PlayerId, isEnter ? byte.MaxValue : (byte)0);
+                RPCProcedure.UseUncheckedVent(__instance.Id, PlayerControl.LocalPlayer.PlayerId, isEnter ? byte.MaxValue : (byte)0);
             }
             return false;
         }
 
         if (isEnter)
         {
-            CachedPlayer.LocalPlayer.PlayerControl.MyPhysics.RpcEnterVent(__instance.Id);
+            PlayerControl.LocalPlayer.MyPhysics.RpcEnterVent(__instance.Id);
         }
         else
         {
-            CachedPlayer.LocalPlayer.PlayerControl.MyPhysics.RpcExitVent(__instance.Id);
+            PlayerControl.LocalPlayer.MyPhysics.RpcExitVent(__instance.Id);
         }
         __instance.SetButtons(isEnter && canMoveInVents);
         return false;

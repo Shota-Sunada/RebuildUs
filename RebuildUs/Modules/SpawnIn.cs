@@ -43,7 +43,7 @@ public static class SpawnIn
         IsFirstSpawn = false;
         if (CustomOptionHolder.AirshipSetOriginalCooldown.GetBool())
         {
-            CachedPlayer.LocalPlayer.PlayerControl.SetKillTimerUnchecked(Helpers.GetOption(FloatOptionNames.KillCooldown));
+            PlayerControl.LocalPlayer.SetKillTimerUnchecked(Helpers.GetOption(FloatOptionNames.KillCooldown));
             foreach (var b in CustomButton.Buttons)
             {
                 b.Timer = b.MaxTimer;
@@ -51,7 +51,7 @@ public static class SpawnIn
         }
         else
         {
-            CachedPlayer.LocalPlayer.PlayerControl.SetKillTimerUnchecked(10f);
+            PlayerControl.LocalPlayer.SetKillTimerUnchecked(10f);
             CustomButton.Buttons.ForEach(x => x.Timer = 10f);
         }
     }
@@ -62,13 +62,13 @@ public static class SpawnIn
         // base.Begin(task);
         __instance.MyTask = task;
         __instance.MyNormTask = task as NormalPlayerTask;
-        if (CachedPlayer.LocalPlayer.PlayerControl)
+        if (PlayerControl.LocalPlayer)
         {
             if (MapBehaviour.Instance)
             {
                 MapBehaviour.Instance.Close();
             }
-            CachedPlayer.LocalPlayer.PlayerControl.NetTransform.Halt();
+            PlayerControl.LocalPlayer.NetTransform.Halt();
         }
         __instance.StartCoroutine(__instance.CoAnimateOpen());
 
@@ -91,7 +91,7 @@ public static class SpawnIn
         array = [.. from s in array.Take(__instance.LocationButtons.Length)
                  orderby s.Location.x, s.Location.y descending
                  select s];
-        CachedPlayer.LocalPlayer.PlayerControl.NetTransform.RpcSnapTo(new Vector2(-25f, 40f));
+        PlayerControl.LocalPlayer.NetTransform.RpcSnapTo(new Vector2(-25f, 40f));
 
         for (int i = 0; i < __instance.LocationButtons.Length; i++)
         {
@@ -108,8 +108,8 @@ public static class SpawnIn
             component.HoverSound = pt.RolloverSfx ? pt.RolloverSfx : __instance.DefaultRolloverSound;
         }
 
-        CachedPlayer.LocalPlayer.PlayerControl.gameObject.SetActive(false);
-        CachedPlayer.LocalPlayer.PlayerControl.NetTransform.RpcSnapTo(new Vector2(-25f, 40f));
+        PlayerControl.LocalPlayer.gameObject.SetActive(false);
+        PlayerControl.LocalPlayer.NetTransform.RpcSnapTo(new Vector2(-25f, 40f));
         if (CustomOptionHolder.AirshipRandomSpawn.GetBool())
         {
             __instance.LocationButtons.Random<PassiveButton>().ReceiveClickUp();
@@ -143,7 +143,7 @@ public static class SpawnIn
 
     public static void Synchronize(SynchronizeTag tag, byte playerId)
     {
-        using var sender = new RPCSender(CachedPlayer.LocalPlayer.PlayerControl.NetId, CustomRPC.Synchronize);
+        using var sender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.Synchronize);
         sender.Write(playerId);
         sender.Write((int)tag);
         RPCProcedure.Synchronize(playerId, (int)tag);
@@ -160,15 +160,15 @@ public static class SpawnIn
                 return;
             }
             __instance.gotButton = true;
-            CachedPlayer.LocalPlayer.PlayerControl.gameObject.SetActive(true);
+            PlayerControl.LocalPlayer.gameObject.SetActive(true);
             __instance.StopAllCoroutines();
-            CachedPlayer.LocalPlayer.PlayerControl.NetTransform.RpcSnapTo(spawnAt);
+            PlayerControl.LocalPlayer.NetTransform.RpcSnapTo(spawnAt);
             FastDestroyableSingleton<HudManager>.Instance.PlayerCam.SnapToTarget();
             __instance.Close();
         }
         else
         {
-            Synchronize(SynchronizeTag.PreSpawnMinigame, CachedPlayer.LocalPlayer.PlayerControl.PlayerId);
+            Synchronize(SynchronizeTag.PreSpawnMinigame, PlayerControl.LocalPlayer.PlayerId);
             if (__instance.amClosing != Minigame.CloseState.None)
             {
                 return;
@@ -213,9 +213,9 @@ public static class SpawnIn
 
                     if (SynchronizeData.Align(SynchronizeTag.PreSpawnMinigame, false) || p == 1f)
                     {
-                        CachedPlayer.LocalPlayer.PlayerControl.gameObject.SetActive(true);
+                        PlayerControl.LocalPlayer.gameObject.SetActive(true);
                         __instance.StopAllCoroutines();
-                        CachedPlayer.LocalPlayer.PlayerControl.NetTransform.RpcSnapTo(spawnAt);
+                        PlayerControl.LocalPlayer.NetTransform.RpcSnapTo(spawnAt);
                         FastDestroyableSingleton<HudManager>.Instance.PlayerCam.SnapToTarget();
                         SynchronizeData.Reset(SynchronizeTag.PreSpawnMinigame);
                         __instance.Close();

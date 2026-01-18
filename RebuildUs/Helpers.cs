@@ -50,7 +50,7 @@ public static class Helpers
 
         var taskTypeIds = GenerateTasks(numCommon, numShort, numLong);
         {
-            using var sender = new RPCSender(CachedPlayer.LocalPlayer.PlayerControl.NetId, CustomRPC.UncheckedSetTasks);
+            using var sender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.UncheckedSetTasks);
             sender.Write(player.PlayerId);
             sender.WriteBytesAndSize(taskTypeIds.ToArray());
             RPCProcedure.UncheckedSetTasks(player.PlayerId, [.. taskTypeIds]);
@@ -117,7 +117,7 @@ public static class Helpers
         // Murder the bitten player and reset bitten (regardless whether the kill was successful or not)
         CheckMurderAttemptAndKill(Vampire.AllPlayers.FirstOrDefault(), Vampire.Bitten, true, false);
         {
-            using var sender = new RPCSender(CachedPlayer.LocalPlayer.PlayerControl.NetId, CustomRPC.VampireSetBitten);
+            using var sender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.VampireSetBitten);
             sender.Write(byte.MaxValue);
             sender.Write(byte.MaxValue);
             RPCProcedure.VampireSetBitten(byte.MaxValue, byte.MaxValue);
@@ -468,8 +468,8 @@ public static class Helpers
             if (Camouflager.CamouflageTimer <= 0f && Medic.Shielded != null && ((target == Medic.Shielded && !isMorphedMorphing) || (isMorphedMorphing && Morphing.MorphTarget == Medic.Shielded)))
             {
                 hasVisibleShield = Medic.ShowShielded == 0 // Everyone
-                || (Medic.ShowShielded == 1 && (CachedPlayer.LocalPlayer.PlayerControl == Medic.Shielded || CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Medic))) // Shielded + Medic
-                || (Medic.ShowShielded == 2 && CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Medic)); // Medic only
+                || (Medic.ShowShielded == 1 && (PlayerControl.LocalPlayer == Medic.Shielded || PlayerControl.LocalPlayer.IsRole(RoleType.Medic))) // Shielded + Medic
+                || (Medic.ShowShielded == 2 && PlayerControl.LocalPlayer.IsRole(RoleType.Medic)); // Medic only
             }
 
             if (hasVisibleShield)
@@ -615,7 +615,7 @@ public static class Helpers
 
     public static bool HidePlayerName(PlayerControl target)
     {
-        return HidePlayerName(CachedPlayer.LocalPlayer.PlayerControl, target);
+        return HidePlayerName(PlayerControl.LocalPlayer, target);
     }
 
     public static bool HidePlayerName(PlayerControl source, PlayerControl target)
@@ -660,7 +660,7 @@ public static class Helpers
             if (p == 1f && renderer != null)
             {
                 bool reactorActive = false;
-                foreach (PlayerTask task in CachedPlayer.LocalPlayer.PlayerControl.myTasks)
+                foreach (PlayerTask task in PlayerControl.LocalPlayer.myTasks)
                 {
                     if (task.TaskType == TaskTypes.StopCharles)
                     {

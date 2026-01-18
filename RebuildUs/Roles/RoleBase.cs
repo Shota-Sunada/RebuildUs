@@ -55,7 +55,7 @@ public abstract class RoleBase<T> : PlayerRole where T : RoleBase<T>, new()
     {
         get
         {
-            return Players.FirstOrDefault(x => x.Player == CachedPlayer.LocalPlayer.PlayerControl);
+            return Players.FirstOrDefault(x => x.Player == PlayerControl.LocalPlayer);
         }
     }
 
@@ -90,7 +90,7 @@ public abstract class RoleBase<T> : PlayerRole where T : RoleBase<T>, new()
 
     public static new T GetRole(PlayerControl player = null)
     {
-        player ??= CachedPlayer.LocalPlayer.PlayerControl;
+        player ??= PlayerControl.LocalPlayer;
         return Players.FirstOrDefault(x => x.Player == player);
     }
 

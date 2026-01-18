@@ -39,7 +39,7 @@ public class Hacker : RoleBase<Hacker>
     public override void FixedUpdate()
     {
         HackerTimer -= Time.deltaTime;
-        if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Hacker) && CachedPlayer.LocalPlayer.PlayerControl.IsAlive())
+        if (PlayerControl.LocalPlayer.IsRole(RoleType.Hacker) && PlayerControl.LocalPlayer.IsAlive())
         {
             var (playerCompleted, _) = TasksHandler.TaskInfo(Player.Data);
             if (playerCompleted == RechargedTasks)
@@ -61,7 +61,7 @@ public class Hacker : RoleBase<Hacker>
                 {
                     HackerTimer = Duration;
                 },
-                () => { return CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Hacker) && CachedPlayer.LocalPlayer.PlayerControl.IsAlive(); },
+                () => { return PlayerControl.LocalPlayer.IsRole(RoleType.Hacker) && PlayerControl.LocalPlayer.IsAlive(); },
                 () => { return true; },
                 () =>
                 {
@@ -89,10 +89,10 @@ public class Hacker : RoleBase<Hacker>
                {
                    FastDestroyableSingleton<MapBehaviour>.Instance.ShowCountOverlay(NoMove, true, true);
                }
-               CachedPlayer.LocalPlayer.PlayerControl.NetTransform.Halt(); // Stop current movement
+               PlayerControl.LocalPlayer.NetTransform.Halt(); // Stop current movement
                Local.ChargesAdminTable--;
            },
-           () => { return CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Hacker) && ModMapOptions.CouldUseAdmin && CachedPlayer.LocalPlayer.PlayerControl.IsAlive(); },
+           () => { return PlayerControl.LocalPlayer.IsRole(RoleType.Hacker) && ModMapOptions.CouldUseAdmin && PlayerControl.LocalPlayer.IsAlive(); },
            () =>
            {
                HackerAdminTableChargesText?.text = HackerVitalsChargesText.text = string.Format(Tr.Get("Hud.HackerChargesText"), Local.ChargesAdminTable, ToolsNumber);
@@ -114,7 +114,7 @@ public class Hacker : RoleBase<Hacker>
            () =>
            {
                HackerAdminTableButton.Timer = HackerAdminTableButton.MaxTimer;
-               if (!HackerVitalsButton.IsEffectActive) CachedPlayer.LocalPlayer.PlayerControl.moveable = true;
+               if (!HackerVitalsButton.IsEffectActive) PlayerControl.LocalPlayer.moveable = true;
                if (MapBehaviour.Instance && MapBehaviour.Instance.isActiveAndEnabled) MapBehaviour.Instance.Close();
            },
            Helpers.GetOption(ByteOptionNames.MapId) == 3,
@@ -156,12 +156,12 @@ public class Hacker : RoleBase<Hacker>
                    Local.DoorLog.Begin(null);
                }
 
-               if (NoMove) CachedPlayer.LocalPlayer.PlayerControl.moveable = false;
-               CachedPlayer.LocalPlayer.PlayerControl.NetTransform.Halt(); // Stop current movement
+               if (NoMove) PlayerControl.LocalPlayer.moveable = false;
+               PlayerControl.LocalPlayer.NetTransform.Halt(); // Stop current movement
 
                Local.ChargesVitals--;
            },
-           () => { return CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Hacker) && ModMapOptions.CouldUseVitals && CachedPlayer.LocalPlayer.PlayerControl.IsAlive() && Helpers.GetOption(ByteOptionNames.MapId) != 0 && Helpers.GetOption(ByteOptionNames.MapId) != 3; },
+           () => { return PlayerControl.LocalPlayer.IsRole(RoleType.Hacker) && ModMapOptions.CouldUseVitals && PlayerControl.LocalPlayer.IsAlive() && Helpers.GetOption(ByteOptionNames.MapId) != 0 && Helpers.GetOption(ByteOptionNames.MapId) != 3; },
            () =>
            {
                HackerVitalsChargesText?.text = string.Format(Tr.Get("Hud.HackerChargesText"), Local.ChargesVitals, ToolsNumber);
@@ -185,7 +185,7 @@ public class Hacker : RoleBase<Hacker>
            () =>
            {
                HackerVitalsButton.Timer = HackerVitalsButton.MaxTimer;
-               if (!HackerAdminTableButton.IsEffectActive) CachedPlayer.LocalPlayer.PlayerControl.moveable = true;
+               if (!HackerAdminTableButton.IsEffectActive) PlayerControl.LocalPlayer.moveable = true;
                if (Minigame.Instance)
                {
                    if (Helpers.IsMiraHQ) Local.DoorLog.ForceClose();

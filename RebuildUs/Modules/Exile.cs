@@ -11,7 +11,7 @@ public static class Exile
         if (Medic.Exists && AmongUsClient.Instance.AmHost && Medic.FutureShielded != null && Medic.LivingPlayers.Count != 0)
         {
             // We need to send the RPC from the host here, to make sure that the order of shifting and setting the shield is correct(for that reason the futureShifted and futureShielded are being synced)
-            using var sender = new RPCSender(CachedPlayer.LocalPlayer.PlayerControl.NetId, CustomRPC.MedicSetShielded);
+            using var sender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.MedicSetShielded);
             sender.Write(Medic.FutureShielded.PlayerId);
             RPCProcedure.MedicSetShielded(Medic.FutureShielded.PlayerId);
         }
@@ -26,7 +26,7 @@ public static class Exile
             if (target != null)
             {
                 // exile the picked crewmate
-                using var sender = new RPCSender(CachedPlayer.LocalPlayer.PlayerControl.NetId, CustomRPC.UncheckedExilePlayer);
+                using var sender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.UncheckedExilePlayer);
                 sender.Write(target.PlayerId);
                 RPCProcedure.UncheckedExilePlayer(target.PlayerId);
             }
@@ -36,7 +36,7 @@ public static class Exile
         if (Shifter.Exists && AmongUsClient.Instance.AmHost && Shifter.FutureShift != null)
         {
             // We need to send the RPC from the host here, to make sure that the order of shifting and erasing is correct (for that reason the futureShifted and futureErased are being synced)
-            using (var sender = new RPCSender(CachedPlayer.LocalPlayer.PlayerControl.NetId, CustomRPC.ShifterShift))
+            using (var sender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.ShifterShift))
             {
                 sender.Write(Shifter.FutureShift.PlayerId);
             }
@@ -51,7 +51,7 @@ public static class Exile
             {
                 if (target != null && target.CanBeErased())
                 {
-                    using var sender = new RPCSender(CachedPlayer.LocalPlayer.PlayerControl.NetId, CustomRPC.ErasePlayerRoles);
+                    using var sender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.ErasePlayerRoles);
                     sender.Write(target.PlayerId);
                     RPCProcedure.ErasePlayerRoles(target.PlayerId);
                 }
@@ -76,7 +76,7 @@ public static class Exile
             {
                 if (target != null && !target.Data.IsDead && Helpers.CheckMurderAttempt(player.Object, target, true) == MurderAttemptResult.PerformKill)
                 {
-                    using var sender = new RPCSender(CachedPlayer.LocalPlayer.PlayerControl.NetId, CustomRPC.WitchSpellCast);
+                    using var sender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.WitchSpellCast);
                     sender.Write(target.PlayerId);
                     RPCProcedure.WitchSpellCast(target.PlayerId);
                 }
@@ -187,14 +187,14 @@ public static class Exile
         RebuildUs.OnMeetingEnd();
 
         // Mini set adapted cooldown
-        if (CachedPlayer.LocalPlayer.PlayerControl.HasModifier(ModifierType.Mini) && CachedPlayer.LocalPlayer.PlayerControl.Data.Role.IsImpostor)
+        if (PlayerControl.LocalPlayer.HasModifier(ModifierType.Mini) && PlayerControl.LocalPlayer.Data.Role.IsImpostor)
         {
-            var multiplier = Mini.IsGrownUp(CachedPlayer.LocalPlayer.PlayerControl) ? 0.66f : 2f;
-            CachedPlayer.LocalPlayer.PlayerControl.SetKillTimer(Helpers.GetOption(FloatOptionNames.KillCooldown) * multiplier);
+            var multiplier = Mini.IsGrownUp(PlayerControl.LocalPlayer) ? 0.66f : 2f;
+            PlayerControl.LocalPlayer.SetKillTimer(Helpers.GetOption(FloatOptionNames.KillCooldown) * multiplier);
         }
 
         // // Seer spawn souls
-        // if (Seer.deadBodyPositions != null && Seer.seer != null && CachedPlayer.LocalPlayer.PlayerControl == Seer.seer && (Seer.mode == 0 || Seer.mode == 2))
+        // if (Seer.deadBodyPositions != null && Seer.seer != null && PlayerControl.LocalPlayer == Seer.seer && (Seer.mode == 0 || Seer.mode == 2))
         // {
         //     foreach (Vector3 pos in Seer.deadBodyPositions)
         //     {
@@ -230,11 +230,11 @@ public static class Exile
         // Arsonist.updateIcons();
 
         // // Force Bounty Hunter Bounty Update
-        // if (BountyHunter.bountyHunter != null && BountyHunter.bountyHunter == CachedPlayer.LocalPlayer.PlayerControl)
+        // if (BountyHunter.bountyHunter != null && BountyHunter.bountyHunter == PlayerControl.LocalPlayer)
         //     BountyHunter.bountyUpdateTimer = 0f;
 
         // // Medium spawn souls
-        // if (Medium.medium != null && CachedPlayer.LocalPlayer.PlayerControl == Medium.medium)
+        // if (Medium.medium != null && PlayerControl.LocalPlayer == Medium.medium)
         // {
         //     if (Medium.souls != null)
         //     {
@@ -260,14 +260,14 @@ public static class Exile
         //     }
         // }
 
-        // if (Lawyer.lawyer != null && CachedPlayer.LocalPlayer.PlayerControl == Lawyer.lawyer && !Lawyer.lawyer.Data.IsDead)
+        // if (Lawyer.lawyer != null && PlayerControl.LocalPlayer == Lawyer.lawyer && !Lawyer.lawyer.Data.IsDead)
         //     Lawyer.meetings++;
 
-        if (CachedPlayer.LocalPlayer.PlayerControl.HasModifier(ModifierType.AntiTeleport))
+        if (PlayerControl.LocalPlayer.HasModifier(ModifierType.AntiTeleport))
         {
             if (AntiTeleport.Position != new Vector3())
             {
-                CachedPlayer.LocalPlayer.PlayerControl.transform.position = AntiTeleport.Position;
+                PlayerControl.LocalPlayer.transform.position = AntiTeleport.Position;
                 if (SubmergedCompatibility.IsSubmerged)
                 {
                     SubmergedCompatibility.ChangeFloor(AntiTeleport.Position.y > -7);

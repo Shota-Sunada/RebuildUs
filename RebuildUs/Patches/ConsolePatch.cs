@@ -7,7 +7,7 @@ public static class ConsolePatch
     [HarmonyPatch(typeof(Console), nameof(Console.Use))]
     public static bool UsePrefix(Console __instance)
     {
-        if (Usables.IsBlocked(__instance, CachedPlayer.LocalPlayer.PlayerControl))
+        if (Usables.IsBlocked(__instance, PlayerControl.LocalPlayer))
         {
             return false;
         }

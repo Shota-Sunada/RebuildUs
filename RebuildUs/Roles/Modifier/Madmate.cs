@@ -21,7 +21,7 @@ public class Madmate : ModifierBase<Madmate>
 
     public override void OnUpdateNameColors()
     {
-        if (Player == CachedPlayer.LocalPlayer.PlayerControl)
+        if (Player == PlayerControl.LocalPlayer)
         {
             Update.SetPlayerNameColor(Player, NameColor);
 
