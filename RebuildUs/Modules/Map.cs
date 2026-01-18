@@ -390,9 +390,8 @@ public static class Map
                     impostorHerePoint[p.PlayerId] = GameObject.Instantiate<SpriteRenderer>(__instance.HerePoint, __instance.HerePoint.transform.parent);
                 }
                 impostorHerePoint[p.PlayerId].gameObject.SetActive(p.IsAlive());
-                NetworkedPlayerInfo playerById = GameData.Instance.GetPlayerById(p.PlayerId);
                 PlayerMaterial.SetColors(0, impostorHerePoint[p.PlayerId]);
-                Vector3 pos = new Vector3(p.transform.position.x, p.transform.position.y, p.transform.position.z);
+                var pos = new Vector3(p.transform.position.x, p.transform.position.y, p.transform.position.z);
                 pos /= MapUtilities.CachedShipStatus.MapScale;
                 pos.x *= Mathf.Sign(MapUtilities.CachedShipStatus.transform.localScale.x);
                 pos.z = -10;

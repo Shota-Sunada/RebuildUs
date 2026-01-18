@@ -25,7 +25,7 @@ public static partial class RPCProcedure
         SecurityCamera.ResetData();
         Vitals.ResetData();
         Map.reset();
-        // CustomOverlays.resetOverlays();
+        CustomOverlays.resetOverlays();
         SpecimenVital.clearAndReload();
         AdditionalVents.clearAndReload();
         // Trap.clearAllTraps();

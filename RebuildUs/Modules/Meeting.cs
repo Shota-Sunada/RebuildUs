@@ -761,7 +761,7 @@ public static class Meeting
         }
 
         int numGuesses = Guesser.remainingShots(CachedPlayer.LocalPlayer.PlayerControl);
-        if ((Guesser.IsGuesser(CachedPlayer.LocalPlayer.PlayerControl.PlayerId) || CachedPlayer.LocalPlayer.PlayerControl.hasModifier(ModifierType.LastImpostor)) && CachedPlayer.LocalPlayer.PlayerControl.isAlive() && numGuesses > 0)
+        if ((Guesser.IsGuesser(CachedPlayer.LocalPlayer.PlayerControl.PlayerId) || CachedPlayer.LocalPlayer.PlayerControl.HasModifier(ModifierType.LastImpostor)) && CachedPlayer.LocalPlayer.PlayerControl.isAlive() && numGuesses > 0)
         {
             meetingInfoText.text = string.Format(Tr.Get("guesserGuessesLeft"), numGuesses);
             meetingInfoText.gameObject.SetActive(true);
@@ -777,9 +777,9 @@ public static class Meeting
     public static void startMeetingClear()
     {
         animateSwap = false;
-        // CustomOverlays.showBlackBG();
-        // CustomOverlays.hideInfoOverlay();
-        // CustomOverlays.hideRoleOverlay();
+        CustomOverlays.showBlackBG();
+        CustomOverlays.hideInfoOverlay();
+        CustomOverlays.hideRoleOverlay();
         RebuildUs.OnMeetingStart();
         Map.shareRealTasks();
     }
@@ -805,8 +805,6 @@ public static class Meeting
                     AntiTeleport.position = PlayerControl.LocalPlayer.transform.position;
             }
 
-            // Medium meeting start time
-            Medium.meetingStartTime = DateTime.UtcNow;
             // Mini
             Mini.timeOfMeetingStart = DateTime.UtcNow;
             Mini.ageOnMeetingStart = Mathf.FloorToInt(Mini.growingProgress() * 18);
@@ -842,46 +840,11 @@ public static class Meeting
                 }
             }
 
-            // Add Snitch info
-            string output = "";
-
-            if (Snitch.snitch != null && Snitch.mode != Snitch.Mode.Map && (PlayerControl.LocalPlayer == Snitch.snitch || Helpers.shouldShowGhostInfo()) && !Snitch.snitch.Data.IsDead)
-            {
-                var (playerCompleted, playerTotal) = TasksHandler.TaskInfo(Snitch.snitch.Data);
-                int numberOfTasks = playerTotal - playerCompleted;
-                if (numberOfTasks == 0)
-                {
-                    output = $"Bad alive roles in game: \n \n";
-                    FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(0.4f, new Action<float>((x) =>
-                    {
-                        if (x == 1f)
-                        {
-                            foreach (PlayerControl p in PlayerControl.AllPlayerControls)
-                            {
-                                if (Snitch.targets == Snitch.Targets.Killers && !Helpers.isKiller(p)) continue;
-                                if (Snitch.targets == Snitch.Targets.EvilPlayers && !Helpers.isEvil(p)) continue;
-                                if (!Snitch.playerRoomMap.ContainsKey(p.PlayerId)) continue;
-                                if (p.Data.IsDead) continue;
-                                var room = Snitch.playerRoomMap[p.PlayerId];
-                                var roomName = "open fields";
-                                if (room != byte.MinValue)
-                                {
-                                    roomName = DestroyableSingleton<TranslationController>.Instance.GetString((SystemTypes)room);
-                                }
-                                output += "- " + RoleInfo.GetRolesString(p, false, false, true) + ", was last seen " + roomName + "\n";
-                            }
-                            FastDestroyableSingleton<HudManager>.Instance.Chat.AddChat(Snitch.snitch, $"{output}");
-                        }
-                    })));
-                }
-            }
-
             startMeetingClear();
 
             if (PlayerControl.LocalPlayer.Data.IsDead && output != "") FastDestroyableSingleton<HudManager>.Instance.Chat.AddChat(PlayerControl.LocalPlayer, $"{output}");
 
             Trapper.playersOnMap = new();
-            Snitch.playerRoomMap = new Dictionary<byte, byte>();
         }
 
         {

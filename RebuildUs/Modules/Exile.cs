@@ -12,7 +12,7 @@ public static class Exile
         lastExiled = player;
 
         // Medic shield
-        if (Medic.Exists && AmongUsClient.Instance.AmHost && Medic.futureShielded != null && !Medic.medic.Data.IsDead)
+        if (Medic.Exists && AmongUsClient.Instance.AmHost && Medic.futureShielded != null && Medic.LivingPlayers.Count != 0)
         {
             // We need to send the RPC from the host here, to make sure that the order of shifting and setting the shield is correct(for that reason the futureShifted and futureShielded are being synced)
             using var sender = new RPCSender(CachedPlayer.LocalPlayer.PlayerControl.NetId, CustomRPC.MedicSetShielded);
