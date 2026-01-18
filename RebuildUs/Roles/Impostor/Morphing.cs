@@ -5,15 +5,15 @@ public class Morphing : RoleBase<Morphing>
 {
     public static Color NameColor = Palette.ImpostorRed;
     public override Color RoleColor => NameColor;
-    private static CustomButton morphingButton;
-    public static PlayerControl currentTarget;
-    public static PlayerControl sampledTarget;
-    public static PlayerControl morphTarget;
-    public static float morphTimer = 0f;
+    private static CustomButton MorphingButton;
+    public static PlayerControl CurrentTarget;
+    public static PlayerControl SampledTarget;
+    public static PlayerControl MorphTarget;
+    public static float MorphTimer = 0f;
 
     // write configs here
-    public static float cooldown { get { return CustomOptionHolder.morphingCooldown.GetFloat(); } }
-    public static float duration { get { return CustomOptionHolder.morphingDuration.GetFloat(); } }
+    public static float Cooldown { get { return CustomOptionHolder.MorphingCooldown.GetFloat(); } }
+    public static float Duration { get { return CustomOptionHolder.MorphingDuration.GetFloat(); } }
 
     public Morphing()
     {
@@ -25,13 +25,13 @@ public class Morphing : RoleBase<Morphing>
     public override void OnMeetingEnd() { }
     public override void OnIntroEnd()
     {
-        resetMorph();
+        ResetMorph();
     }
     public override void FixedUpdate()
     {
         if (!CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Morphing)) return;
-        currentTarget = Helpers.SetTarget();
-        Helpers.SetPlayerOutline(currentTarget, RoleColor);
+        CurrentTarget = Helpers.SetTarget();
+        Helpers.SetPlayerOutline(CurrentTarget, RoleColor);
     }
     public override void OnKill(PlayerControl target) { }
     public override void OnDeath(PlayerControl killer = null) { }
@@ -39,37 +39,37 @@ public class Morphing : RoleBase<Morphing>
     public override void HandleDisconnect(PlayerControl player, DisconnectReasons reason) { }
     public override void MakeButtons(HudManager hm)
     {
-        morphingButton = new CustomButton(
+        MorphingButton = new CustomButton(
                 () =>
                 {
-                    if (sampledTarget != null)
+                    if (SampledTarget != null)
                     {
                         MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.MorphingMorph, Hazel.SendOption.Reliable, -1);
-                        writer.Write(sampledTarget.PlayerId);
+                        writer.Write(SampledTarget.PlayerId);
                         writer.Write(Player.PlayerId);
                         AmongUsClient.Instance.FinishRpcImmediately(writer);
-                        RPCProcedure.morphingMorph(sampledTarget.PlayerId, Player.PlayerId);
-                        sampledTarget = null;
-                        morphingButton.EffectDuration = duration;
+                        RPCProcedure.MorphingMorph(SampledTarget.PlayerId, Player.PlayerId);
+                        SampledTarget = null;
+                        MorphingButton.EffectDuration = Duration;
                     }
-                    else if (currentTarget != null)
+                    else if (CurrentTarget != null)
                     {
-                        sampledTarget = currentTarget;
-                        morphingButton.Sprite = AssetLoader.MorphButton;
-                        morphingButton.ButtonText = Tr.Get("MorphText");
-                        morphingButton.EffectDuration = 1f;
+                        SampledTarget = CurrentTarget;
+                        MorphingButton.Sprite = AssetLoader.MorphButton;
+                        MorphingButton.ButtonText = Tr.Get("MorphText");
+                        MorphingButton.EffectDuration = 1f;
                     }
                 },
                 () => { return CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Morphing) && CachedPlayer.LocalPlayer.PlayerControl.IsAlive(); },
-                () => { return (currentTarget || sampledTarget) && CachedPlayer.LocalPlayer.PlayerControl.CanMove; },
+                () => { return (CurrentTarget || SampledTarget) && CachedPlayer.LocalPlayer.PlayerControl.CanMove; },
                 () =>
                 {
-                    morphingButton.Timer = morphingButton.MaxTimer;
-                    morphingButton.Sprite = AssetLoader.SampleButton;
-                    morphingButton.ButtonText = Tr.Get("SampleText");
-                    morphingButton.IsEffectActive = false;
-                    morphingButton.ActionButton.cooldownTimerText.color = Palette.EnabledColor;
-                    sampledTarget = null;
+                    MorphingButton.Timer = MorphingButton.MaxTimer;
+                    MorphingButton.Sprite = AssetLoader.SampleButton;
+                    MorphingButton.ButtonText = Tr.Get("SampleText");
+                    MorphingButton.IsEffectActive = false;
+                    MorphingButton.ActionButton.cooldownTimerText.color = Palette.EnabledColor;
+                    SampledTarget = null;
                 },
                 AssetLoader.SampleButton,
                 new Vector3(-1.8f, -0.06f, 0),
@@ -77,14 +77,14 @@ public class Morphing : RoleBase<Morphing>
                 hm.KillButton,
                 KeyCode.F,
                 true,
-                duration,
+                Duration,
                 () =>
                 {
-                    if (sampledTarget == null)
+                    if (SampledTarget == null)
                     {
-                        morphingButton.Timer = morphingButton.MaxTimer;
-                        morphingButton.Sprite = AssetLoader.SampleButton;
-                        morphingButton.ButtonText = Tr.Get("SampleText");
+                        MorphingButton.Timer = MorphingButton.MaxTimer;
+                        MorphingButton.Sprite = AssetLoader.SampleButton;
+                        MorphingButton.ButtonText = Tr.Get("SampleText");
                     }
                 }
             )
@@ -94,41 +94,41 @@ public class Morphing : RoleBase<Morphing>
     }
     public override void SetButtonCooldowns()
     {
-        morphingButton.MaxTimer = cooldown;
-        morphingButton.EffectDuration = duration;
+        MorphingButton.MaxTimer = Cooldown;
+        MorphingButton.EffectDuration = Duration;
     }
 
     // write functions here
-    public void handleMorphing()
+    public void HandleMorphing()
     {
         // first, if camouflager is active, don't do anything
-        if (Camouflager.Exists && Camouflager.camouflageTimer > 0f) return;
+        if (Camouflager.Exists && Camouflager.CamouflageTimer > 0f) return;
 
         // next, if we're currently morphed, set our skin to the target
-        if (morphTimer > 0f && morphTarget != null)
+        if (MorphTimer > 0f && MorphTarget != null)
         {
-            Player.morphToPlayer(morphTarget);
+            Player.MorphToPlayer(MorphTarget);
         }
         else
         {
-            Player.resetMorph();
+            Player.ResetMorph();
         }
     }
 
-    public void startMorph(PlayerControl target)
+    public void StartMorph(PlayerControl target)
     {
-        morphTarget = target;
-        morphTimer = duration;
-        handleMorphing();
+        MorphTarget = target;
+        MorphTimer = Duration;
+        HandleMorphing();
     }
 
-    public static void resetMorph()
+    public static void ResetMorph()
     {
-        morphTarget = null;
-        morphTimer = 0f;
+        MorphTarget = null;
+        MorphTimer = 0f;
         foreach (var morph in Players)
         {
-            morph.handleMorphing();
+            morph.HandleMorphing();
         }
     }
 
@@ -136,9 +136,9 @@ public class Morphing : RoleBase<Morphing>
     {
         // reset configs here
         Players.Clear();
-        currentTarget = null;
-        sampledTarget = null;
-        morphTarget = null;
-        morphTimer = 0;
+        CurrentTarget = null;
+        SampledTarget = null;
+        MorphTarget = null;
+        MorphTimer = 0;
     }
 }

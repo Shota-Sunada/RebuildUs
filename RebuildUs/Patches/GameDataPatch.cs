@@ -10,7 +10,7 @@ public static class GameDataPatch
         RebuildUs.HandleDisconnect(player, reason);
         if (MeetingHud.Instance)
         {
-            Meeting.swapperCheckAndReturnSwap(MeetingHud.Instance, player.PlayerId);
+            Meeting.SwapperCheckAndReturnSwap(MeetingHud.Instance, player.PlayerId);
         }
     }
 }

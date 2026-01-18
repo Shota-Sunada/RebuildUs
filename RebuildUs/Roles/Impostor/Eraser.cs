@@ -5,14 +5,14 @@ public class Eraser : RoleBase<Eraser>
 {
     public static Color NameColor = Palette.ImpostorRed;
     public override Color RoleColor => NameColor;
-    private static CustomButton eraserButton;
+    private static CustomButton EraserButton;
 
     // write configs here
-    public static List<PlayerControl> futureErased = [];
-    public PlayerControl currentTarget;
-    public static float cooldown { get { return CustomOptionHolder.eraserCooldown.GetFloat(); } }
-    public static float cooldownIncrease { get { return CustomOptionHolder.eraserCooldownIncrease.GetFloat(); } }
-    public static bool canEraseAnyone { get { return CustomOptionHolder.eraserCanEraseAnyone.GetBool(); } }
+    public static List<PlayerControl> FutureErased = [];
+    public PlayerControl CurrentTarget;
+    public static float Cooldown { get { return CustomOptionHolder.EraserCooldown.GetFloat(); } }
+    public static float CooldownIncrease { get { return CustomOptionHolder.EraserCooldownIncrease.GetFloat(); } }
+    public static bool CanEraseAnyone { get { return CustomOptionHolder.EraserCanEraseAnyone.GetBool(); } }
 
     public Eraser()
     {
@@ -49,8 +49,8 @@ public class Eraser : RoleBase<Eraser>
                     }
                 }
             }
-            currentTarget = Helpers.SetTarget(onlyCrewmates: !canEraseAnyone, untargetablePlayers: canEraseAnyone ? [] : untargetables);
-            Helpers.SetPlayerOutline(currentTarget, NameColor);
+            CurrentTarget = Helpers.SetTarget(onlyCrewmates: !CanEraseAnyone, untargetablePlayers: CanEraseAnyone ? [] : untargetables);
+            Helpers.SetPlayerOutline(CurrentTarget, NameColor);
         }
     }
     public override void OnKill(PlayerControl target) { }
@@ -59,19 +59,19 @@ public class Eraser : RoleBase<Eraser>
     public override void HandleDisconnect(PlayerControl player, DisconnectReasons reason) { }
     public override void MakeButtons(HudManager hm)
     {
-        eraserButton = new CustomButton(
+        EraserButton = new CustomButton(
                 () =>
                 {
-                    eraserButton.MaxTimer += cooldownIncrease;
-                    eraserButton.Timer = eraserButton.MaxTimer;
+                    EraserButton.MaxTimer += CooldownIncrease;
+                    EraserButton.Timer = EraserButton.MaxTimer;
 
                     using var sender = new RPCSender(CachedPlayer.LocalPlayer.PlayerControl.NetId, CustomRPC.SetFutureErased);
-                    sender.Write(currentTarget.PlayerId);
-                    RPCProcedure.setFutureErased(currentTarget.PlayerId);
+                    sender.Write(CurrentTarget.PlayerId);
+                    RPCProcedure.SetFutureErased(CurrentTarget.PlayerId);
                 },
                 () => { return CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Eraser) && CachedPlayer.LocalPlayer.PlayerControl.IsAlive(); },
-                () => { return CachedPlayer.LocalPlayer.PlayerControl.CanMove && currentTarget != null; },
-                () => { eraserButton.Timer = eraserButton.MaxTimer; },
+                () => { return CachedPlayer.LocalPlayer.PlayerControl.CanMove && CurrentTarget != null; },
+                () => { EraserButton.Timer = EraserButton.MaxTimer; },
                 AssetLoader.EraserButton,
                 new Vector3(-1.8f, -0.06f, 0),
                 hm,
@@ -84,7 +84,7 @@ public class Eraser : RoleBase<Eraser>
     }
     public override void SetButtonCooldowns()
     {
-        eraserButton.MaxTimer = cooldown;
+        EraserButton.MaxTimer = Cooldown;
     }
 
     // write functions here

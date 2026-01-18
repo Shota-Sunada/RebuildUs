@@ -26,7 +26,7 @@ public static class Helpers
     public static bool IsAirship { get { return GetOption(ByteOptionNames.MapId) == 4; } }
     public static bool IsFungle { get { return GetOption(ByteOptionNames.MapId) == 5; } }
 
-    public static void destroyList<T>(Il2CppSystem.Collections.Generic.List<T> items) where T : UnityEngine.Object
+    public static void DestroyList<T>(Il2CppSystem.Collections.Generic.List<T> items) where T : UnityEngine.Object
     {
         if (items == null) return;
         foreach (T item in items)
@@ -44,7 +44,7 @@ public static class Helpers
         }
     }
 
-    public static void generateAndAssignTasks(this PlayerControl player, int numCommon, int numShort, int numLong)
+    public static void GenerateAndAssignTasks(this PlayerControl player, int numCommon, int numShort, int numLong)
     {
         if (player == null) return;
 
@@ -102,7 +102,7 @@ public static class Helpers
         return null;
     }
 
-    public static Dictionary<byte, PlayerControl> allPlayersById()
+    public static Dictionary<byte, PlayerControl> AllPlayersById()
     {
         Dictionary<byte, PlayerControl> res = [];
         foreach (PlayerControl player in CachedPlayer.AllPlayers)
@@ -112,19 +112,19 @@ public static class Helpers
         return res;
     }
 
-    public static void handleVampireBiteOnBodyReport()
+    public static void HandleVampireBiteOnBodyReport()
     {
         // Murder the bitten player and reset bitten (regardless whether the kill was successful or not)
-        CheckMurderAttemptAndKill(Vampire.AllPlayers.FirstOrDefault(), Vampire.bitten, true, false);
+        CheckMurderAttemptAndKill(Vampire.AllPlayers.FirstOrDefault(), Vampire.Bitten, true, false);
         {
             using var sender = new RPCSender(CachedPlayer.LocalPlayer.PlayerControl.NetId, CustomRPC.VampireSetBitten);
             sender.Write(byte.MaxValue);
             sender.Write(byte.MaxValue);
-            RPCProcedure.vampireSetBitten(byte.MaxValue, byte.MaxValue);
+            RPCProcedure.VampireSetBitten(byte.MaxValue, byte.MaxValue);
         }
     }
 
-    public static void refreshRoleDescription(PlayerControl player)
+    public static void RefreshRoleDescription(PlayerControl player)
     {
         if (player == null) return;
 
@@ -180,11 +180,11 @@ public static class Helpers
         {
             var task = new GameObject("RoleTask").AddComponent<ImportantTextTask>();
             task.transform.SetParent(player.transform, false);
-            task.Text = Cs(Madmate.NameColor, $"{Madmate.fullName}: " + Tr.Get("madmateShortDesc"));
+            task.Text = Cs(Madmate.NameColor, $"{Madmate.FullName}: " + Tr.Get("madmateShortDesc"));
             player.myTasks.Insert(0, task);
         }
     }
-    public static bool isLighterColor(int colorId)
+    public static bool IsLighterColor(int colorId)
     {
         return CustomColors.LighterColors.Contains(colorId);
     }
@@ -299,18 +299,18 @@ public static class Helpers
         // Block impostor shielded kill
         if (Medic.Exists)
         {
-            if (!ignoreMedic && Medic.shielded != null && Medic.shielded == target)
+            if (!ignoreMedic && Medic.Shielded != null && Medic.Shielded == target)
             {
                 {
                     using var sender = new RPCSender(killer.NetId, CustomRPC.ShieldedMurderAttempt);
-                    RPCProcedure.shieldedMurderAttempt();
+                    RPCProcedure.ShieldedMurderAttempt();
                 }
                 return MurderAttemptResult.SuppressKill;
             }
         }
 
         // Block impostor not fully grown mini kill
-        else if (Mini.Exists && target.HasModifier(ModifierType.Mini) && !Mini.isGrownUp(target))
+        else if (Mini.Exists && target.HasModifier(ModifierType.Mini) && !Mini.IsGrownUp(target))
         {
             return MurderAttemptResult.SuppressKill;
         }
@@ -318,13 +318,13 @@ public static class Helpers
         // Block Time Master with time shield kill
         else if (TimeMaster.Exists)
         {
-            if (TimeMaster.shieldActive && target.IsRole(RoleType.TimeMaster))
+            if (TimeMaster.ShieldActive && target.IsRole(RoleType.TimeMaster))
             {
                 if (!blockRewind)
                 {
                     // Only rewind the attempt was not called because a meeting started
                     using var sender = new RPCSender(killer.NetId, CustomRPC.TimeMasterRewindTime);
-                    RPCProcedure.timeMasterRewindTime();
+                    RPCProcedure.TimeMasterRewindTime();
                 }
                 return MurderAttemptResult.SuppressKill;
             }
@@ -365,12 +365,12 @@ public static class Helpers
         {
             HudManager.Instance.StartCoroutine(Effects.Lerp(10f, new Action<float>((p) =>
             {
-                if (!TransportationToolPatches.isUsingTransportation(target) && Vampire.bitten != null)
+                if (!TransportationToolPatches.IsUsingTransportation(target) && Vampire.Bitten != null)
                 {
                     using var sender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.VampireSetBitten);
                     sender.Write(byte.MaxValue);
                     sender.Write(byte.MaxValue);
-                    RPCProcedure.vampireSetBitten(byte.MaxValue, byte.MaxValue);
+                    RPCProcedure.VampireSetBitten(byte.MaxValue, byte.MaxValue);
                     MurderPlayer(killer, target, showAnimation);
                 }
             })));
@@ -461,75 +461,25 @@ public static class Helpers
         {
             if (target == null || target.cosmetics?.currentBodySprite?.BodySprite == null) continue;
 
-            bool isMorphedMorphing = target.IsRole(RoleType.Morphing) && Morphing.morphTarget != null && Morphing.morphTimer > 0f;
+            bool isMorphedMorphing = target.IsRole(RoleType.Morphing) && Morphing.MorphTarget != null && Morphing.MorphTimer > 0f;
             bool hasVisibleShield = false;
-            if (Camouflager.camouflageTimer <= 0f && Medic.shielded != null && ((target == Medic.shielded && !isMorphedMorphing) || (isMorphedMorphing && Morphing.morphTarget == Medic.shielded)))
+            if (Camouflager.CamouflageTimer <= 0f && Medic.Shielded != null && ((target == Medic.Shielded && !isMorphedMorphing) || (isMorphedMorphing && Morphing.MorphTarget == Medic.Shielded)))
             {
-                hasVisibleShield = Medic.showShielded == 0 // Everyone
-                || (Medic.showShielded == 1 && (CachedPlayer.LocalPlayer.PlayerControl == Medic.shielded || CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Medic))) // Shielded + Medic
-                || (Medic.showShielded == 2 && CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Medic)); // Medic only
+                hasVisibleShield = Medic.ShowShielded == 0 // Everyone
+                || (Medic.ShowShielded == 1 && (CachedPlayer.LocalPlayer.PlayerControl == Medic.Shielded || CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Medic))) // Shielded + Medic
+                || (Medic.ShowShielded == 2 && CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Medic)); // Medic only
             }
 
             if (hasVisibleShield)
             {
                 target.cosmetics?.currentBodySprite?.BodySprite.material.SetFloat("_Outline", 1f);
-                target.cosmetics?.currentBodySprite?.BodySprite.material.SetColor("_OutlineColor", Medic.shieldedColor);
+                target.cosmetics?.currentBodySprite?.BodySprite.material.SetColor("_OutlineColor", Medic.ShieldedColor);
             }
             else
             {
                 target.cosmetics?.currentBodySprite?.BodySprite.material.SetFloat("_Outline", 0f);
             }
         }
-    }
-
-    public static void RefreshRoleDescription(PlayerControl player)
-    {
-        List<RoleInfo> infos = RoleInfo.GetRoleInfoForPlayer(player);
-        List<string> taskTexts = new(infos.Count);
-
-        foreach (var roleInfo in infos)
-        {
-            taskTexts.Add(GetRoleString(roleInfo));
-        }
-
-        var toRemove = new List<PlayerTask>();
-        foreach (PlayerTask t in player.myTasks.GetFastEnumerator())
-        {
-            var textTask = t.TryCast<ImportantTextTask>();
-            if (textTask == null) continue;
-
-            var currentText = textTask.Text;
-
-            if (taskTexts.Contains(currentText)) taskTexts.Remove(currentText); // TextTask for this RoleInfo does not have to be added, as it already exists
-            else toRemove.Add(t); // TextTask does not have a corresponding RoleInfo and will hence be deleted
-        }
-
-        foreach (PlayerTask t in toRemove)
-        {
-            t.OnRemove();
-            player.myTasks.Remove(t);
-            UnityEngine.Object.Destroy(t.gameObject);
-        }
-
-        // Add TextTask for remaining RoleInfos
-        foreach (string title in taskTexts)
-        {
-            var task = new GameObject("RoleTask").AddComponent<ImportantTextTask>();
-            task.transform.SetParent(player.transform, false);
-            task.Text = title;
-            player.myTasks.Insert(0, task);
-        }
-    }
-
-    internal static string GetRoleString(RoleInfo roleInfo)
-    {
-        if (roleInfo.Name == "Jackal")
-        {
-            var getSidekickText = Jackal.CanCreateSidekick ? " and recruit a Sidekick" : "";
-            return Cs(roleInfo.Color, $"{roleInfo.Name}: Kill everyone{getSidekickText}");
-        }
-
-        return Cs(roleInfo.Color, $"{roleInfo.Name}: {roleInfo.ShortDescription}");
     }
 
     // TODO: 更新
@@ -670,7 +620,7 @@ public static class Helpers
         if (source == null || target == null) return true;
         if (source.IsDead()) return false;
         if (target.IsDead()) return true;
-        if (Camouflager.camouflageTimer > 0f) return true; // No names are visible
+        if (Camouflager.CamouflageTimer > 0f) return true; // No names are visible
         if (ModMapOptions.HideOutOfSightNametags && GameStarted && MapUtilities.CachedShipStatus != null && source.transform != null && target.transform != null)
         {
             float distMod = 1.025f;
@@ -681,12 +631,12 @@ public static class Helpers
         }
         if (!ModMapOptions.HidePlayerNames) return false; // All names are visible
         if (source.IsTeamImpostor() && (target.IsTeamImpostor() || target.IsRole(RoleType.Spy) || (target.IsRole(RoleType.Sidekick) && Sidekick.GetRole(target).WasTeamRed) || (target.IsRole(RoleType.Jackal) && Jackal.GetRole(target).WasTeamRed))) return false; // Members of team Impostors see the names of Impostors/Spies
-        if (source.getPartner() == target) return false; // Members of team Lovers see the names of each other
+        if (source.GetPartner() == target) return false; // Members of team Lovers see the names of each other
         if ((source.IsRole(RoleType.Jackal) || source.IsRole(RoleType.Sidekick)) && (target.IsRole(RoleType.Jackal) || target.IsRole(RoleType.Sidekick) || target == Jackal.GetRole(target).FakeSidekick)) return false; // Members of team Jackal see the names of each other
         return true;
     }
 
-    public static void showFlash(Color color, float duration = 1f)
+    public static void ShowFlash(Color color, float duration = 1f)
     {
         if (FastDestroyableSingleton<HudManager>.Instance == null || FastDestroyableSingleton<HudManager>.Instance.FullScreen == null) return;
         FastDestroyableSingleton<HudManager>.Instance.FullScreen.gameObject.SetActive(true);
@@ -738,7 +688,7 @@ public static class Helpers
         FastDestroyableSingleton<HudManager>.Instance.KillButton.SetCoolDown(time, max);
     }
 
-    public static void shuffle<T>(this IList<T> self, int startAt = 0)
+    public static void Shuffle<T>(this IList<T> self, int startAt = 0)
     {
         for (int i = startAt; i < self.Count - 1; i++)
         {
@@ -776,7 +726,7 @@ public static class Helpers
         return null;
     }
 
-    public static bool isOnElecTask()
+    public static bool IsOnElecTask()
     {
         return Camera.main.gameObject.GetComponentInChildren<SwitchMinigame>() != null;
     }

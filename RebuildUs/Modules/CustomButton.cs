@@ -26,7 +26,7 @@ public class CustomButton
     public bool Mirror;
     public KeyCode? Hotkey;
 
-    public static bool stopCountdown = true;
+    public static bool StopCountdown = true;
 
     public static class ButtonPositions
     {
@@ -89,12 +89,12 @@ public class CustomButton
 
 #nullable enable
     public CustomButton(
-        Action OnClick,
-        Func<bool> HasButton,
-        Func<bool> CouldUse,
-        Action OnMeetingEnds,
-        Sprite Sprite,
-        Vector3 PositionOffset,
+        Action onClick,
+        Func<bool> hasButton,
+        Func<bool> couldUse,
+        Action onMeetingEnds,
+        Sprite sprite,
+        Vector3 positionOffset,
         HudManager hudManager,
         ActionButton? textTemplate,
         KeyCode? hotkey,
@@ -102,12 +102,12 @@ public class CustomButton
         string buttonText = ""
     )
     : this(
-        OnClick,
-        HasButton,
-        CouldUse,
-        OnMeetingEnds,
-        Sprite,
-        PositionOffset,
+        onClick,
+        hasButton,
+        couldUse,
+        onMeetingEnds,
+        sprite,
+        positionOffset,
         hudManager,
         textTemplate,
         hotkey,
@@ -240,7 +240,7 @@ public class CustomButton
             ActionButton.graphic.material.SetFloat("_Desat", 1f);
         }
 
-        if (Timer >= 0 && !stopCountdown)
+        if (Timer >= 0 && !StopCountdown)
         {
             // Make sure role draft has finished or isn't running
             if (HasEffect && IsEffectActive)

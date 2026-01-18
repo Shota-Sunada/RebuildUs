@@ -2,24 +2,24 @@ namespace RebuildUs.Roles.Modifier;
 
 public class Couple(PlayerControl lover1, PlayerControl lover2, Color color)
 {
-    public PlayerControl lover1 = lover1;
-    public PlayerControl lover2 = lover2;
-    public Color color = color;
+    public PlayerControl Lover1 = lover1;
+    public PlayerControl Lover2 = lover2;
+    public Color Color = color;
 
-    public string icon { get { return Helpers.Cs(color, " ♥"); } }
-    public bool existing { get { return lover1 != null && lover2 != null && !lover1.Data.Disconnected && !lover2.Data.Disconnected; } }
-    public bool alive { get { return lover1 != null && lover2 != null && lover1.IsAlive() && lover2.IsAlive(); } }
-    public bool existingAndAlive { get { return existing && alive; } }
-    public bool existingWithKiller
+    public string Icon { get { return Helpers.Cs(Color, " ♥"); } }
+    public bool Existing { get { return Lover1 != null && Lover2 != null && !Lover1.Data.Disconnected && !Lover2.Data.Disconnected; } }
+    public bool Alive { get { return Lover1 != null && Lover2 != null && Lover1.IsAlive() && Lover2.IsAlive(); } }
+    public bool ExistingAndAlive { get { return Existing && Alive; } }
+    public bool ExistingWithKiller
     {
         get
         {
-            return existing
-                && (lover1.IsRole(RoleType.Jackal) || lover2.IsRole(RoleType.Jackal))
-                && (lover1.IsRole(RoleType.Sidekick) || lover2.IsRole(RoleType.Sidekick))
-                && (lover1.IsTeamImpostor() || lover2.IsTeamImpostor()
+            return Existing
+                && (Lover1.IsRole(RoleType.Jackal) || Lover2.IsRole(RoleType.Jackal))
+                && (Lover1.IsRole(RoleType.Sidekick) || Lover2.IsRole(RoleType.Sidekick))
+                && (Lover1.IsTeamImpostor() || Lover2.IsTeamImpostor()
             );
         }
     }
-    public bool hasAliveKillingLover { get { return existingAndAlive && existingWithKiller; } }
+    public bool HasAliveKillingLover { get { return ExistingAndAlive && ExistingWithKiller; } }
 }

@@ -6,7 +6,7 @@ public class Mini : ModifierBase<Mini>
     public static Color NameColor = Color.yellow;
     public override Color ModifierColor => NameColor;
 
-    public static List<PlayerControl> candidates
+    public static List<PlayerControl> Candidates
     {
         get
         {
@@ -24,33 +24,33 @@ public class Mini : ModifierBase<Mini>
         }
     }
 
-    public const float defaultColliderRadius = 0.2233912f;
-    public const float defaultColliderOffset = 0.3636057f;
+    public const float DefaultColliderRadius = 0.2233912f;
+    public const float DefaultColliderOffset = 0.3636057f;
 
-    public static float growingUpDuration = 400f;
-    public DateTime timeOfGrowthStart = DateTime.UtcNow;
-    public static bool triggerMiniLose = false;
+    public static float GrowingUpDuration = 400f;
+    public DateTime TimeOfGrowthStart = DateTime.UtcNow;
+    public static bool TriggerMiniLose = false;
 
-    public float growingProgress()
+    public float GrowingProgress()
     {
-        float timeSinceStart = (float)(DateTime.UtcNow - timeOfGrowthStart).TotalMilliseconds;
-        return Mathf.Clamp(timeSinceStart / (growingUpDuration * 1000), 0f, 1f);
+        float timeSinceStart = (float)(DateTime.UtcNow - TimeOfGrowthStart).TotalMilliseconds;
+        return Mathf.Clamp(timeSinceStart / (GrowingUpDuration * 1000), 0f, 1f);
     }
 
-    public static bool isGrownUp(PlayerControl player)
+    public static bool IsGrownUp(PlayerControl player)
     {
         Mini mini = Players.First(x => x.Player == player);
         if (mini == null) return true;
-        return mini.growingProgress() == 1f;
+        return mini.GrowingProgress() == 1f;
     }
-    public static string postfix
+    public static string Postfix
     {
         get
         {
             return Tr.Get("miniPostfix");
         }
     }
-    public static string fullName
+    public static string FullName
     {
         get
         {
@@ -81,7 +81,7 @@ public class Mini : ModifierBase<Mini>
     {
         // reset configs here
         Players.Clear();
-        triggerMiniLose = false;
-        growingUpDuration = CustomOptionHolder.miniGrowingUpDuration.GetFloat();
+        TriggerMiniLose = false;
+        GrowingUpDuration = CustomOptionHolder.MiniGrowingUpDuration.GetFloat();
     }
 }

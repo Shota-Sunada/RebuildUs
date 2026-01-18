@@ -5,15 +5,15 @@ public class TimeMaster : RoleBase<TimeMaster>
 {
     public static Color NameColor = new Color32(112, 142, 239, byte.MaxValue);
     public override Color RoleColor => NameColor;
-    private static CustomButton timeMasterShieldButton;
+    private static CustomButton TimeMasterShieldButton;
 
     // write configs here
-    public static float cooldown { get { return CustomOptionHolder.timeMasterCooldown.GetFloat(); } }
-    public static float rewindTime { get { return CustomOptionHolder.timeMasterRewindTime.GetFloat(); } }
-    public static float shieldDuration { get { return CustomOptionHolder.timeMasterShieldDuration.GetFloat(); } }
+    public static float Cooldown { get { return CustomOptionHolder.TimeMasterCooldown.GetFloat(); } }
+    public static float RewindTime { get { return CustomOptionHolder.TimeMasterRewindTime.GetFloat(); } }
+    public static float ShieldDuration { get { return CustomOptionHolder.TimeMasterShieldDuration.GetFloat(); } }
 
-    public static bool shieldActive = false;
-    public static bool isRewinding = false;
+    public static bool ShieldActive = false;
+    public static bool IsRewinding = false;
 
     public TimeMaster()
     {
@@ -26,7 +26,7 @@ public class TimeMaster : RoleBase<TimeMaster>
     public override void OnIntroEnd() { }
     public override void FixedUpdate()
     {
-        if (isRewinding)
+        if (IsRewinding)
         {
             if (GameHistory.LocalPlayerPositions.Count > 0)
             {
@@ -69,13 +69,13 @@ public class TimeMaster : RoleBase<TimeMaster>
             }
             else
             {
-                isRewinding = false;
+                IsRewinding = false;
                 CachedPlayer.LocalPlayer.PlayerControl.moveable = true;
             }
         }
         else
         {
-            while (GameHistory.LocalPlayerPositions.Count >= Mathf.Round(rewindTime / Time.fixedDeltaTime))
+            while (GameHistory.LocalPlayerPositions.Count >= Mathf.Round(RewindTime / Time.fixedDeltaTime))
             {
                 GameHistory.LocalPlayerPositions.RemoveAt(GameHistory.LocalPlayerPositions.Count - 1);
             }
@@ -88,20 +88,20 @@ public class TimeMaster : RoleBase<TimeMaster>
     public override void HandleDisconnect(PlayerControl player, DisconnectReasons reason) { }
     public override void MakeButtons(HudManager hm)
     {
-        timeMasterShieldButton = new CustomButton
+        TimeMasterShieldButton = new CustomButton
         (
             () =>
             {
                 using var sender = new RPCSender(CachedPlayer.LocalPlayer.PlayerControl.NetId, CustomRPC.TimeMasterShield);
-                RPCProcedure.timeMasterShield();
+                RPCProcedure.TimeMasterShield();
             },
             () => { return CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.TimeMaster) && CachedPlayer.LocalPlayer.PlayerControl.IsAlive(); },
             () => { return CachedPlayer.LocalPlayer.PlayerControl.CanMove; },
             () =>
             {
-                timeMasterShieldButton.Timer = timeMasterShieldButton.MaxTimer;
-                timeMasterShieldButton.IsEffectActive = false;
-                timeMasterShieldButton.ActionButton.cooldownTimerText.color = Palette.EnabledColor;
+                TimeMasterShieldButton.Timer = TimeMasterShieldButton.MaxTimer;
+                TimeMasterShieldButton.IsEffectActive = false;
+                TimeMasterShieldButton.ActionButton.cooldownTimerText.color = Palette.EnabledColor;
             },
             AssetLoader.TimeShieldButton,
             new Vector3(-1.8f, -0.06f, 0),
@@ -109,8 +109,8 @@ public class TimeMaster : RoleBase<TimeMaster>
             hm.UseButton,
             KeyCode.F,
             true,
-            shieldDuration,
-            () => { timeMasterShieldButton.Timer = timeMasterShieldButton.MaxTimer; }
+            ShieldDuration,
+            () => { TimeMasterShieldButton.Timer = TimeMasterShieldButton.MaxTimer; }
         )
         {
             ButtonText = Tr.Get("TimeShieldText")
@@ -118,15 +118,15 @@ public class TimeMaster : RoleBase<TimeMaster>
     }
     public override void SetButtonCooldowns()
     {
-        timeMasterShieldButton.MaxTimer = cooldown;
-        timeMasterShieldButton.EffectDuration = shieldDuration;
+        TimeMasterShieldButton.MaxTimer = Cooldown;
+        TimeMasterShieldButton.EffectDuration = ShieldDuration;
     }
 
-    public static void resetTimeMasterButton()
+    public static void ResetTimeMasterButton()
     {
-        timeMasterShieldButton.Timer = timeMasterShieldButton.MaxTimer;
-        timeMasterShieldButton.IsEffectActive = false;
-        timeMasterShieldButton.ActionButton.cooldownTimerText.color = Palette.EnabledColor;
+        TimeMasterShieldButton.Timer = TimeMasterShieldButton.MaxTimer;
+        TimeMasterShieldButton.IsEffectActive = false;
+        TimeMasterShieldButton.ActionButton.cooldownTimerText.color = Palette.EnabledColor;
     }
 
     // write functions here

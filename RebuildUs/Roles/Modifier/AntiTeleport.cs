@@ -5,8 +5,8 @@ public class AntiTeleport : ModifierBase<AntiTeleport>
 {
     public static Color NameColor = Palette.Orange;
     public override Color ModifierColor => NameColor;
-    public static Vector3 position = new();
-    public static List<PlayerControl> candidates
+    public static Vector3 Position = new();
+    public static List<PlayerControl> Candidates
     {
         get
         {
@@ -23,14 +23,14 @@ public class AntiTeleport : ModifierBase<AntiTeleport>
             return validPlayers;
         }
     }
-    public static string postfix
+    public static string Postfix
     {
         get
         {
             return Tr.Get("antiTeleportPostfix");
         }
     }
-    public static string fullName
+    public static string FullName
     {
         get
         {
@@ -61,6 +61,6 @@ public class AntiTeleport : ModifierBase<AntiTeleport>
     {
         // reset configs here
         Players.Clear();
-        position = new Vector3();
+        Position = new Vector3();
     }
 }

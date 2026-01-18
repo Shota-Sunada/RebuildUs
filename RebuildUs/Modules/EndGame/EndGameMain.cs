@@ -16,8 +16,8 @@ public static class EndGameMain
 
     public static void OnGameEndPrefix(ref EndGameResult endGameResult)
     {
-        Camouflager.resetCamouflage();
-        Morphing.resetMorph();
+        Camouflager.ResetCamouflage();
+        Morphing.ResetMorph();
 
         AdditionalTempData.GameOverReason = endGameResult.GameOverReason;
         if ((int)endGameResult.GameOverReason >= 10) endGameResult.GameOverReason = GameOverReason.ImpostorsByKill;

@@ -21,7 +21,7 @@ public class Spy : RoleBase<Spy>
     {
         if (CachedPlayer.LocalPlayer.PlayerControl.IsTeamImpostor())
         {
-            Update.setPlayerNameColor(Player, NameColor);
+            Update.SetPlayerNameColor(Player, NameColor);
         }
     }
 

@@ -7,19 +7,19 @@ public class Swapper : RoleBase<Swapper>
     public override Color RoleColor => NameColor;
 
     // write configs here
-    public static int numSwaps { get { return Mathf.RoundToInt(CustomOptionHolder.swapperNumSwaps.GetFloat()); } }
-    public static bool canCallEmergency { get { return CustomOptionHolder.swapperCanCallEmergency.GetBool(); } }
-    public static bool canOnlySwapOthers { get { return CustomOptionHolder.swapperCanOnlySwapOthers.GetBool(); } }
-    public static int remainSwaps = 2;
+    public static int NumSwaps { get { return Mathf.RoundToInt(CustomOptionHolder.SwapperNumSwaps.GetFloat()); } }
+    public static bool CanCallEmergency { get { return CustomOptionHolder.SwapperCanCallEmergency.GetBool(); } }
+    public static bool CanOnlySwapOthers { get { return CustomOptionHolder.SwapperCanOnlySwapOthers.GetBool(); } }
+    public static int RemainSwaps = 2;
 
-    public static byte playerId1 = byte.MaxValue;
-    public static byte playerId2 = byte.MaxValue;
+    public static byte PlayerId1 = byte.MaxValue;
+    public static byte PlayerId2 = byte.MaxValue;
 
     public override void OnUpdateNameColors()
     {
         if (Player == CachedPlayer.LocalPlayer.PlayerControl)
         {
-            Update.setPlayerNameColor(Player, NameColor);
+            Update.SetPlayerNameColor(Player, NameColor);
         }
     }
 
@@ -27,7 +27,7 @@ public class Swapper : RoleBase<Swapper>
     {
         // write value init here
         StaticRoleType = CurrentRoleType = RoleType.Swapper;
-        remainSwaps = numSwaps;
+        RemainSwaps = NumSwaps;
     }
 
     public override void OnMeetingStart() { }
@@ -47,8 +47,8 @@ public class Swapper : RoleBase<Swapper>
     {
         // reset configs here
         Players.Clear();
-        playerId1 = byte.MaxValue;
-        playerId2 = byte.MaxValue;
-        remainSwaps = 2;
+        PlayerId1 = byte.MaxValue;
+        PlayerId2 = byte.MaxValue;
+        RemainSwaps = 2;
     }
 }

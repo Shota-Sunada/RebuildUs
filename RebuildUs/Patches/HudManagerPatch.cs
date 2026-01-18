@@ -3,13 +3,6 @@ namespace RebuildUs.Patches;
 [HarmonyPatch]
 public static class HudManagerPatch
 {
-    [HarmonyPrefix]
-    [HarmonyPatch(typeof(HudManager), nameof(HudManager.Update))]
-    public static void UpdatePrefix(HudManager __instance)
-    {
-        CustomOption.HudSettingsManager.UpdateScrollerPosition(__instance);
-    }
-
     [HarmonyPostfix]
     [HarmonyPatch(typeof(HudManager), nameof(HudManager.Update))]
     public static void UpdatePostfix(HudManager __instance)
@@ -17,15 +10,15 @@ public static class HudManagerPatch
         if (AmongUsClient.Instance.GameState != InnerNet.InnerNetClient.GameStates.Started) return;
 
         CustomButton.HudUpdate();
-        Update.resetNameTagsAndColors();
-        Update.setNameColors();
-        Update.setNameTags();
+        Update.ResetNameTagsAndColors();
+        Update.SetNameColors();
+        Update.SetNameTags();
         Update.CamouflageAndMorphActions();
-        Update.updateImpostorKillButton(__instance);
-        Update.updateSabotageButton(__instance);
-        Update.updateUseButton(__instance);
-        Update.updateReportButton(__instance);
-        Update.updateVentButton(__instance);
+        Update.UpdateImpostorKillButton(__instance);
+        Update.UpdateSabotageButton(__instance);
+        Update.UpdateUseButton(__instance);
+        Update.UpdateReportButton(__instance);
+        Update.UpdateVentButton(__instance);
     }
 
     [HarmonyPostfix]
@@ -39,7 +32,7 @@ public static class HudManagerPatch
     [HarmonyPatch(typeof(HudManager), nameof(HudManager.OpenMeetingRoom))]
     public static void Prefix(HudManager __instance)
     {
-        Meeting.startMeetingClear();
+        Meeting.StartMeetingClear();
     }
 
     [HarmonyPostfix]

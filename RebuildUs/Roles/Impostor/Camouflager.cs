@@ -5,22 +5,22 @@ public class Camouflager : RoleBase<Camouflager>
 {
     public static Color NameColor = Palette.ImpostorRed;
     public override Color RoleColor => NameColor;
-    private static CustomButton camouflagerButton;
+    private static CustomButton CamouflagerButton;
 
     // write configs here
-    public static float cooldown { get { return CustomOptionHolder.camouflagerCooldown.GetFloat(); } }
-    public static float duration { get { return CustomOptionHolder.camouflagerDuration.GetFloat(); } }
-    public static bool randomColors { get { return CustomOptionHolder.camouflagerRandomColors.GetBool(); } }
-    public static float camouflageTimer = 0f;
-    public static NetworkedPlayerInfo.PlayerOutfit data;
+    public static float Cooldown { get { return CustomOptionHolder.CamouflagerCooldown.GetFloat(); } }
+    public static float Duration { get { return CustomOptionHolder.CamouflagerDuration.GetFloat(); } }
+    public static bool RandomColors { get { return CustomOptionHolder.CamouflagerRandomColors.GetBool(); } }
+    public static float CamouflageTimer = 0f;
+    public static NetworkedPlayerInfo.PlayerOutfit Data;
 
     public Camouflager()
     {
         // write value init here
         StaticRoleType = CurrentRoleType = RoleType.Camouflager;
-        camouflageTimer = 0f;
+        CamouflageTimer = 0f;
 
-        data = new()
+        Data = new()
         {
             PlayerName = "",
             HatId = "",
@@ -36,7 +36,7 @@ public class Camouflager : RoleBase<Camouflager>
     public override void OnMeetingEnd() { }
     public override void OnIntroEnd()
     {
-        resetCamouflage();
+        ResetCamouflage();
     }
     public override void FixedUpdate() { }
     public override void OnKill(PlayerControl target) { }
@@ -45,20 +45,20 @@ public class Camouflager : RoleBase<Camouflager>
     public override void HandleDisconnect(PlayerControl player, DisconnectReasons reason) { }
     public override void MakeButtons(HudManager hm)
     {
-        camouflagerButton = new CustomButton(
+        CamouflagerButton = new CustomButton(
                 () =>
                 {
                     MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.CamouflagerCamouflage, Hazel.SendOption.Reliable, -1);
                     AmongUsClient.Instance.FinishRpcImmediately(writer);
-                    RPCProcedure.camouflagerCamouflage();
+                    RPCProcedure.CamouflagerCamouflage();
                 },
                 () => { return CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Camouflager) && CachedPlayer.LocalPlayer.PlayerControl.IsAlive(); },
                 () => { return CachedPlayer.LocalPlayer.PlayerControl.CanMove; },
                 () =>
                 {
-                    camouflagerButton.Timer = camouflagerButton.MaxTimer;
-                    camouflagerButton.IsEffectActive = false;
-                    camouflagerButton.ActionButton.cooldownTimerText.color = Palette.EnabledColor;
+                    CamouflagerButton.Timer = CamouflagerButton.MaxTimer;
+                    CamouflagerButton.IsEffectActive = false;
+                    CamouflagerButton.ActionButton.cooldownTimerText.color = Palette.EnabledColor;
                 },
                 AssetLoader.CamouflageButton,
                 new Vector3(-1.8f, -0.06f, 0),
@@ -66,8 +66,8 @@ public class Camouflager : RoleBase<Camouflager>
                 hm.KillButton,
                 KeyCode.F,
                 true,
-                Camouflager.duration,
-                () => { camouflagerButton.Timer = camouflagerButton.MaxTimer; }
+                Camouflager.Duration,
+                () => { CamouflagerButton.Timer = CamouflagerButton.MaxTimer; }
             )
         {
             ButtonText = Tr.Get("CamoText")
@@ -75,27 +75,27 @@ public class Camouflager : RoleBase<Camouflager>
     }
     public override void SetButtonCooldowns()
     {
-        camouflagerButton.MaxTimer = Camouflager.cooldown;
-        camouflagerButton.EffectDuration = Camouflager.duration;
+        CamouflagerButton.MaxTimer = Camouflager.Cooldown;
+        CamouflagerButton.EffectDuration = Camouflager.Duration;
     }
 
     // write functions here
-    public static void startCamouflage()
+    public static void StartCamouflage()
     {
-        camouflageTimer = duration;
+        CamouflageTimer = Duration;
 
-        data.ColorId = randomColors ? (byte)RebuildUs.Instance.Rnd.Next(0, Palette.PlayerColors.Length) : 6;
+        Data.ColorId = RandomColors ? (byte)RebuildUs.Instance.Rnd.Next(0, Palette.PlayerColors.Length) : 6;
 
         foreach (PlayerControl p in CachedPlayer.AllPlayers)
         {
             if (p == null) continue;
-            p.setOutfit(data, visible: false);
+            p.SetOutfit(Data, visible: false);
         }
     }
 
-    public static void resetCamouflage()
+    public static void ResetCamouflage()
     {
-        camouflageTimer = 0f;
+        CamouflageTimer = 0f;
         foreach (var p in CachedPlayer.AllPlayers)
         {
             if (p.PlayerControl == null) continue;
@@ -103,11 +103,11 @@ public class Camouflager : RoleBase<Camouflager>
             // special case for morphing
             if (p.PlayerControl.IsRole(RoleType.Morphing))
             {
-                Morphing.GetRole(p).handleMorphing();
+                Morphing.GetRole(p).HandleMorphing();
             }
             else
             {
-                p.PlayerControl.resetMorph();
+                p.PlayerControl.ResetMorph();
             }
         }
     }

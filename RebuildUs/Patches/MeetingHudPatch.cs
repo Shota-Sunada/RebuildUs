@@ -50,7 +50,7 @@ public static class MeetingHudPatch
     [HarmonyPatch(typeof(MeetingHud), nameof(MeetingHud.ServerStart))]
     public static void ServerStartPostfix(MeetingHud __instance)
     {
-        Meeting.populateButtonsPostfix(__instance);
+        Meeting.PopulateButtonsPostfix(__instance);
     }
 
     [HarmonyPostfix]

@@ -53,8 +53,8 @@ public static class PlayerControlPatch
             Helpers.RefreshRoleDescription(__instance);
             Helpers.UpdatePlayerInfo();
             Helpers.SetPetVisibility();
-            Update.impostorSetTarget();
-            Update.playerSizeUpdate(__instance);
+            Update.ImpostorSetTarget();
+            Update.PlayerSizeUpdate(__instance);
 
             Garlic.UpdateAll();
         }
@@ -76,7 +76,7 @@ public static class PlayerControlPatch
     [HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.CmdReportDeadBody))]
     public static bool CmdReportDeadBodyPrefix(PlayerControl __instance, NetworkedPlayerInfo target)
     {
-        Helpers.handleVampireBiteOnBodyReport();
+        Helpers.HandleVampireBiteOnBodyReport();
 
         if (__instance.IsGM())
         {
@@ -108,13 +108,13 @@ public static class PlayerControlPatch
                 }
                 else if (isDetectiveReport)
                 {
-                    if (timeSinceDeath < Detective.reportNameDuration * 1000)
+                    if (timeSinceDeath < Detective.ReportNameDuration * 1000)
                     {
                         msg = string.Format(Tr.Get("detectiveReportName"), deadPlayer.KillerIfExisting.Data.PlayerName);
                     }
-                    else if (timeSinceDeath < Detective.reportColorDuration * 1000)
+                    else if (timeSinceDeath < Detective.ReportColorDuration * 1000)
                     {
-                        var typeOfColor = Helpers.isLighterColor(deadPlayer.KillerIfExisting.Data.DefaultOutfit.ColorId) ?
+                        var typeOfColor = Helpers.IsLighterColor(deadPlayer.KillerIfExisting.Data.DefaultOutfit.ColorId) ?
                             Tr.Get("detectiveColorLight") :
                             Tr.Get("detectiveColorDark");
                         msg = string.Format(Tr.Get("detectiveReportColor"), typeOfColor);
@@ -140,25 +140,25 @@ public static class PlayerControlPatch
         }
     }
 
-    public static bool resetToCrewmate = false;
-    public static bool resetToDead = false;
+    public static bool ResetToCrewmate = false;
+    public static bool ResetToDead = false;
 
     [HarmonyPrefix]
     [HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.MurderPlayer))]
     public static void Prefix(PlayerControl __instance, [HarmonyArgument(0)] PlayerControl target)
     {
         // Allow everyone to murder players
-        resetToCrewmate = !__instance.Data.Role.IsImpostor;
-        resetToDead = __instance.Data.IsDead;
+        ResetToCrewmate = !__instance.Data.Role.IsImpostor;
+        ResetToDead = __instance.Data.IsDead;
         __instance.Data.Role.TeamType = RoleTeamTypes.Impostor;
         __instance.Data.IsDead = false;
 
         if (Morphing.Exists && target.IsRole(RoleType.Morphing))
         {
-            Morphing.resetMorph();
+            Morphing.ResetMorph();
         }
 
-        target.resetMorph();
+        target.ResetMorph();
     }
 
     [HarmonyPostfix]
@@ -171,8 +171,8 @@ public static class PlayerControlPatch
         GameHistory.DeadPlayers.Add(deadPlayer);
 
         // Reset killer to crewmate if resetToCrewmate
-        if (resetToCrewmate) __instance.Data.Role.TeamType = RoleTeamTypes.Crewmate;
-        if (resetToDead) __instance.Data.IsDead = true;
+        if (ResetToCrewmate) __instance.Data.Role.TeamType = RoleTeamTypes.Crewmate;
+        if (ResetToDead) __instance.Data.IsDead = true;
 
         AllPlayers.OnKill(__instance, target, deadPlayer);
 
@@ -199,7 +199,7 @@ public static class PlayerControlPatch
         // impostor promote to last impostor
         if (__instance.IsTeamImpostor() && AmongUsClient.Instance.AmHost)
         {
-            LastImpostor.promoteToLastImpostor();
+            LastImpostor.PromoteToLastImpostor();
         }
     }
 

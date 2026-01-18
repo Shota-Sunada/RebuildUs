@@ -40,20 +40,20 @@ public class Jackal : RoleBase<Jackal>
         var lp = CachedPlayer.LocalPlayer.PlayerControl;
         if (Player == lp)
         {
-            Update.setPlayerNameColor(Player, RoleColor);
+            Update.SetPlayerNameColor(Player, RoleColor);
             if (Sidekick.Exists)
             {
                 var sk = Sidekick.Players.FirstOrDefault();
-                if (sk != null) Update.setPlayerNameColor(sk.Player, RoleColor);
+                if (sk != null) Update.SetPlayerNameColor(sk.Player, RoleColor);
             }
             if (FakeSidekick != null)
             {
-                Update.setPlayerNameColor(FakeSidekick, RoleColor);
+                Update.SetPlayerNameColor(FakeSidekick, RoleColor);
             }
         }
         else if (lp.IsTeamImpostor() && WasTeamRed)
         {
-            Update.setPlayerNameColor(Player, RoleColor);
+            Update.SetPlayerNameColor(Player, RoleColor);
         }
     }
 
@@ -72,7 +72,7 @@ public class Jackal : RoleBase<Jackal>
             }
             foreach (var mini in Mini.Players)
             {
-                if (!Mini.isGrownUp(mini.Player))
+                if (!Mini.IsGrownUp(mini.Player))
                 {
                     untargetablePlayers.Add(mini.Player);
                 }

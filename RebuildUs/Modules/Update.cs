@@ -2,9 +2,9 @@ namespace RebuildUs.Patches;
 
 public static class Update
 {
-    public static void resetNameTagsAndColors()
+    public static void ResetNameTagsAndColors()
     {
-        var playersById = Helpers.allPlayersById();
+        var playersById = Helpers.AllPlayersById();
 
         foreach (PlayerControl player in CachedPlayer.AllPlayers)
         {
@@ -40,7 +40,7 @@ public static class Update
         }
     }
 
-    public static void setPlayerNameColor(PlayerControl p, Color color)
+    public static void SetPlayerNameColor(PlayerControl p, Color color)
     {
         p.cosmetics.nameText.color = color;
         if (MeetingHud.Instance != null)
@@ -55,23 +55,23 @@ public static class Update
         }
     }
 
-    public static void setNameColors()
+    public static void SetNameColors()
     {
         var lp = CachedPlayer.LocalPlayer.PlayerControl;
         if (lp == null) return;
 
-        resetNameTagsAndColors();
+        ResetNameTagsAndColors();
 
         // 1. Set Local Player Color
         var roleInstance = PlayerRole.GetRole(lp);
         if (roleInstance != null)
         {
-            setPlayerNameColor(lp, roleInstance.RoleColor);
+            SetPlayerNameColor(lp, roleInstance.RoleColor);
         }
 
         foreach (var mod in PlayerModifier.GetModifiers(lp))
         {
-            setPlayerNameColor(lp, mod.ModifierColor);
+            SetPlayerNameColor(lp, mod.ModifierColor);
         }
 
         // 2. Process logic-heavy vision (Jackal seeing Sidekick, Spy seeing Impostors, etc.)
@@ -79,12 +79,12 @@ public static class Update
         foreach (var m in PlayerModifier.AllModifiers) m.OnUpdateNameColors();
     }
 
-    public static void setNameTags()
+    public static void SetNameTags()
     {
         var lp = CachedPlayer.LocalPlayer.PlayerControl;
         if (lp == null) return;
 
-        resetNameTagsAndColors();
+        ResetNameTagsAndColors();
 
         // 1. Process Roles and Modifiers NameTags
         foreach (var r in PlayerRole.AllRoles)
@@ -123,7 +123,7 @@ public static class Update
                 // Hacker and Detective Lighter/Darker
                 if (ModMapOptions.ShowLighterDarker && meetingShow)
                 {
-                    voteArea.NameText.text += $" ({(Helpers.isLighterColor(target.Data.DefaultOutfit.ColorId) ? Tr.Get("detectiveLightLabel") : Tr.Get("detectiveDarkLabel"))})";
+                    voteArea.NameText.text += $" ({(Helpers.IsLighterColor(target.Data.DefaultOutfit.ColorId) ? Tr.Get("detectiveLightLabel") : Tr.Get("detectiveDarkLabel"))})";
                 }
             }
         }
@@ -131,9 +131,9 @@ public static class Update
         // 3. Lovers (Special Logic)
         if (lp.IsLovers() && lp.IsAlive())
         {
-            string suffix = Lovers.getIcon(lp);
+            string suffix = Lovers.GetIcon(lp);
             var lover1 = lp;
-            var lover2 = lp.getPartner();
+            var lover2 = lp.GetPartner();
 
             lover1.cosmetics.nameText.text += suffix;
             if (!Helpers.HidePlayerName(lover2))
@@ -151,17 +151,17 @@ public static class Update
 
         if (ModMapOptions.GhostsSeeRoles && lp.IsDead())
         {
-            foreach (var couple in Lovers.couples)
+            foreach (var couple in Lovers.Couples)
             {
-                string suffix = Lovers.getIcon(couple.lover1);
-                couple.lover1.cosmetics.nameText.text += suffix;
-                couple.lover2.cosmetics.nameText.text += suffix;
+                string suffix = Lovers.GetIcon(couple.Lover1);
+                couple.Lover1.cosmetics.nameText.text += suffix;
+                couple.Lover2.cosmetics.nameText.text += suffix;
 
                 if (meetingShow)
                 {
                     foreach (PlayerVoteArea player in MeetingHud.Instance.playerStates)
                     {
-                        if (couple.lover1.PlayerId == player.TargetPlayerId || couple.lover2.PlayerId == player.TargetPlayerId)
+                        if (couple.Lover1.PlayerId == player.TargetPlayerId || couple.Lover2.PlayerId == player.TargetPlayerId)
                         {
                             player.NameText.text += suffix;
                         }
@@ -171,7 +171,7 @@ public static class Update
         }
     }
 
-    public static void updateImpostorKillButton(HudManager __instance)
+    public static void UpdateImpostorKillButton(HudManager __instance)
     {
         if (!CachedPlayer.LocalPlayer.PlayerControl.Data.Role.IsImpostor) return;
         if (MeetingHud.Instance)
@@ -184,7 +184,7 @@ public static class Update
         {
             enabled &= false;
         }
-        else if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Mafioso) && !Mafia.Mafioso.canKill)
+        else if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Mafioso) && !Mafia.Mafioso.CanKill)
         {
             enabled &= false;
         }
@@ -197,22 +197,22 @@ public static class Update
         else __instance.KillButton.Hide();
     }
 
-    public static void updateUseButton(HudManager __instance)
+    public static void UpdateUseButton(HudManager __instance)
     {
         if (MeetingHud.Instance) __instance.UseButton.Hide();
     }
 
-    public static void updateSabotageButton(HudManager __instance)
+    public static void UpdateSabotageButton(HudManager __instance)
     {
         if (MeetingHud.Instance) __instance.SabotageButton.Hide();
     }
 
-    public static void updateVentButton(HudManager __instance)
+    public static void UpdateVentButton(HudManager __instance)
     {
         if (MeetingHud.Instance) __instance.ImpostorVentButton.Hide();
     }
 
-    public static void updateReportButton(HudManager __instance)
+    public static void UpdateReportButton(HudManager __instance)
     {
         if (MeetingHud.Instance) __instance.ReportButton.Hide();
     }
@@ -221,14 +221,14 @@ public static class Update
     {
         if (CustomOptionHolder.StopCooldownOnFixingElecSabotage.GetBool())
         {
-            if (Helpers.isOnElecTask())
+            if (Helpers.IsOnElecTask())
             {
                 __instance.SetKillTimer(__instance.killTimer + Time.fixedDeltaTime);
             }
         }
     }
 
-    public static void impostorSetTarget()
+    public static void ImpostorSetTarget()
     {
         if (!CachedPlayer.LocalPlayer.PlayerControl.Data.Role.IsImpostor || !CachedPlayer.LocalPlayer.PlayerControl.CanMove || CachedPlayer.LocalPlayer.PlayerControl.Data.IsDead)
         {
@@ -272,30 +272,30 @@ public static class Update
         FastDestroyableSingleton<HudManager>.Instance.KillButton.SetTarget(target); // Includes setPlayerOutline(target, Palette.ImpstorRed);
     }
 
-    public static void playerSizeUpdate(PlayerControl p)
+    public static void PlayerSizeUpdate(PlayerControl p)
     {
         // Set default player size
         CircleCollider2D collider = p.GetComponent<CircleCollider2D>();
 
         p.transform.localScale = new Vector3(0.7f, 0.7f, 1f);
-        collider.radius = Mini.defaultColliderRadius;
-        collider.offset = Mini.defaultColliderOffset * Vector2.down;
+        collider.radius = Mini.DefaultColliderRadius;
+        collider.offset = Mini.DefaultColliderOffset * Vector2.down;
 
         // Set adapted player size to Mini and Morphing
-        if (Camouflager.camouflageTimer > 0f) return;
+        if (Camouflager.CamouflageTimer > 0f) return;
 
         foreach (var mini in Mini.Players)
         {
-            float growingProgress = mini.growingProgress();
+            float growingProgress = mini.GrowingProgress();
             float scale = growingProgress * 0.35f + 0.35f;
-            float correctedColliderRadius = Mini.defaultColliderRadius * 0.7f / scale; // scale / 0.7f is the factor by which we decrease the player size, hence we need to increase the collider size by 0.7f / scale
+            float correctedColliderRadius = Mini.DefaultColliderRadius * 0.7f / scale; // scale / 0.7f is the factor by which we decrease the player size, hence we need to increase the collider size by 0.7f / scale
 
             if (p.HasModifier(ModifierType.Mini))
             {
                 p.transform.localScale = new Vector3(scale, scale, 1f);
                 collider.radius = correctedColliderRadius;
             }
-            if (Morphing.Exists && p.IsRole(RoleType.Morphing) && Morphing.morphTarget.HasModifier(ModifierType.Mini) && Morphing.morphTimer > 0f)
+            if (Morphing.Exists && p.IsRole(RoleType.Morphing) && Morphing.MorphTarget.HasModifier(ModifierType.Mini) && Morphing.MorphTimer > 0f)
             {
                 p.transform.localScale = new Vector3(scale, scale, 1f);
                 collider.radius = correctedColliderRadius;
@@ -305,22 +305,22 @@ public static class Update
 
     public static void CamouflageAndMorphActions()
     {
-        float oldCamouflageTimer = Camouflager.camouflageTimer;
-        float oldMorphTimer = Morphing.morphTimer;
+        float oldCamouflageTimer = Camouflager.CamouflageTimer;
+        float oldMorphTimer = Morphing.MorphTimer;
 
-        Camouflager.camouflageTimer -= Time.deltaTime;
-        Morphing.morphTimer -= Time.deltaTime;
+        Camouflager.CamouflageTimer -= Time.deltaTime;
+        Morphing.MorphTimer -= Time.deltaTime;
 
         // Everyone but morphing reset
-        if (oldCamouflageTimer > 0f && Camouflager.camouflageTimer <= 0f)
+        if (oldCamouflageTimer > 0f && Camouflager.CamouflageTimer <= 0f)
         {
-            Camouflager.resetCamouflage();
+            Camouflager.ResetCamouflage();
         }
 
         // Morphing reset
-        if (oldMorphTimer > 0f && Morphing.morphTimer <= 0f)
+        if (oldMorphTimer > 0f && Morphing.MorphTimer <= 0f)
         {
-            Morphing.resetMorph();
+            Morphing.ResetMorph();
         }
     }
 }

@@ -18,16 +18,16 @@ public class Sidekick : RoleBase<Sidekick>
         var lp = CachedPlayer.LocalPlayer.PlayerControl;
         if (Player == lp)
         {
-            Update.setPlayerNameColor(Player, RoleColor);
+            Update.SetPlayerNameColor(Player, RoleColor);
             if (Jackal.Exists)
             {
                 var jk = Jackal.Players.FirstOrDefault();
-                if (jk != null) Update.setPlayerNameColor(jk.Player, RoleColor);
+                if (jk != null) Update.SetPlayerNameColor(jk.Player, RoleColor);
             }
         }
         else if (lp.IsTeamImpostor() && WasTeamRed)
         {
-            Update.setPlayerNameColor(Player, RoleColor);
+            Update.SetPlayerNameColor(Player, RoleColor);
         }
     }
 
@@ -54,7 +54,7 @@ public class Sidekick : RoleBase<Sidekick>
             if (Jackal.Exists) untargetablePlayers.AddRange(Jackal.AllPlayers);
             foreach (var mini in Mini.Players)
             {
-                if (!Mini.isGrownUp(mini.Player))
+                if (!Mini.IsGrownUp(mini.Player))
                 {
                     untargetablePlayers.Add(mini.Player);
                 }

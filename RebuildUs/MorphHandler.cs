@@ -4,12 +4,12 @@ namespace RebuildUs;
 
 public static class MorphHandler
 {
-    public static void morphToPlayer(this PlayerControl pc, PlayerControl target)
+    public static void MorphToPlayer(this PlayerControl pc, PlayerControl target)
     {
-        setOutfit(pc, target.Data.DefaultOutfit, target.Visible);
+        SetOutfit(pc, target.Data.DefaultOutfit, target.Visible);
     }
 
-    public static void setOutfit(this PlayerControl morphing, NetworkedPlayerInfo.PlayerOutfit outfit, bool visible = true)
+    public static void SetOutfit(this PlayerControl morphing, NetworkedPlayerInfo.PlayerOutfit outfit, bool visible = true)
     {
         StackFrame stack1 = new(1);
         StackFrame stack2 = new(2);
@@ -48,9 +48,9 @@ public static class MorphHandler
         morphing.RawSetPet(outfit.PetId, outfit.ColorId);
     }
 
-    public static void resetMorph(this PlayerControl pc)
+    public static void ResetMorph(this PlayerControl pc)
     {
-        morphToPlayer(pc, pc);
+        MorphToPlayer(pc, pc);
         // Munou.reMorph(pc.PlayerId);
         pc.CurrentOutfitType = PlayerOutfitType.Default;
     }

@@ -5,15 +5,15 @@ public class Warlock : RoleBase<Warlock>
 {
     public static Color NameColor = Palette.ImpostorRed;
     public override Color RoleColor => NameColor;
-    public static CustomButton warlockCurseButton;
+    public static CustomButton WarlockCurseButton;
 
     // write configs here
-    public static float cooldown { get { return CustomOptionHolder.warlockCooldown.GetFloat(); } }
-    public static float rootTime { get { return CustomOptionHolder.warlockRootTime.GetFloat(); } }
+    public static float Cooldown { get { return CustomOptionHolder.WarlockCooldown.GetFloat(); } }
+    public static float RootTime { get { return CustomOptionHolder.WarlockRootTime.GetFloat(); } }
 
-    public static PlayerControl currentTarget;
-    public static PlayerControl curseVictim;
-    public static PlayerControl curseVictimTarget;
+    public static PlayerControl CurrentTarget;
+    public static PlayerControl CurseVictim;
+    public static PlayerControl CurseVictimTarget;
 
     public Warlock()
     {
@@ -27,29 +27,29 @@ public class Warlock : RoleBase<Warlock>
     public override void FixedUpdate()
     {
         if (!CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Warlock)) return;
-        if (curseVictim != null && (curseVictim.Data.Disconnected || curseVictim.Data.IsDead))
+        if (CurseVictim != null && (CurseVictim.Data.Disconnected || CurseVictim.Data.IsDead))
         {
             // If the cursed victim is disconnected or dead reset the curse so a new curse can be applied
-            resetCurse();
+            ResetCurse();
         }
-        if (curseVictim == null)
+        if (CurseVictim == null)
         {
-            currentTarget = Helpers.SetTarget();
-            Helpers.SetPlayerOutline(currentTarget, RoleColor);
+            CurrentTarget = Helpers.SetTarget();
+            Helpers.SetPlayerOutline(CurrentTarget, RoleColor);
         }
         else
         {
-            curseVictimTarget = Helpers.SetTarget(targetingPlayer: curseVictim);
-            Helpers.SetPlayerOutline(curseVictimTarget, RoleColor);
+            CurseVictimTarget = Helpers.SetTarget(targetingPlayer: CurseVictim);
+            Helpers.SetPlayerOutline(CurseVictimTarget, RoleColor);
         }
     }
     public override void OnKill(PlayerControl target)
     {
-        if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Warlock) && warlockCurseButton != null)
+        if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Warlock) && WarlockCurseButton != null)
         {
-            if (Player.killTimer > warlockCurseButton.Timer)
+            if (Player.killTimer > WarlockCurseButton.Timer)
             {
-                warlockCurseButton.Timer = Player.killTimer;
+                WarlockCurseButton.Timer = Player.killTimer;
             }
         }
     }
@@ -58,29 +58,29 @@ public class Warlock : RoleBase<Warlock>
     public override void HandleDisconnect(PlayerControl player, DisconnectReasons reason) { }
     public override void MakeButtons(HudManager hm)
     {
-        warlockCurseButton = new CustomButton(
+        WarlockCurseButton = new CustomButton(
                 () =>
                 {
-                    if (curseVictim == null)
+                    if (CurseVictim == null)
                     {
                         // Apply Curse
-                        curseVictim = currentTarget;
-                        warlockCurseButton.Sprite = AssetLoader.CurseKillButton;
-                        warlockCurseButton.Timer = 1f;
-                        warlockCurseButton.ButtonText = Tr.Get("CurseKillText");
+                        CurseVictim = CurrentTarget;
+                        WarlockCurseButton.Sprite = AssetLoader.CurseKillButton;
+                        WarlockCurseButton.Timer = 1f;
+                        WarlockCurseButton.ButtonText = Tr.Get("CurseKillText");
                     }
-                    else if (curseVictim != null && curseVictimTarget != null)
+                    else if (CurseVictim != null && CurseVictimTarget != null)
                     {
-                        MurderAttemptResult murder = Helpers.CheckMurderAttemptAndKill(Player, curseVictimTarget, showAnimation: false);
+                        MurderAttemptResult murder = Helpers.CheckMurderAttemptAndKill(Player, CurseVictimTarget, showAnimation: false);
                         if (murder == MurderAttemptResult.SuppressKill) return;
 
                         // If blanked or killed
-                        warlockCurseButton.ButtonText = Tr.Get("CurseText");
-                        if (rootTime > 0)
+                        WarlockCurseButton.ButtonText = Tr.Get("CurseText");
+                        if (RootTime > 0)
                         {
                             CachedPlayer.LocalPlayer.PlayerControl.moveable = false;
                             CachedPlayer.LocalPlayer.PlayerControl.NetTransform.Halt(); // Stop current movement so the warlock is not just running straight into the next object
-                            FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(rootTime, new Action<float>((p) =>
+                            FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(RootTime, new Action<float>((p) =>
                             { // Delayed action
                                 if (p == 1f)
                                 {
@@ -89,21 +89,21 @@ public class Warlock : RoleBase<Warlock>
                             })));
                         }
 
-                        curseVictim = null;
-                        curseVictimTarget = null;
-                        warlockCurseButton.Sprite = AssetLoader.CurseButton;
-                        Player.killTimer = warlockCurseButton.Timer = warlockCurseButton.MaxTimer;
+                        CurseVictim = null;
+                        CurseVictimTarget = null;
+                        WarlockCurseButton.Sprite = AssetLoader.CurseButton;
+                        Player.killTimer = WarlockCurseButton.Timer = WarlockCurseButton.MaxTimer;
                     }
                 },
                 () => { return CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Warlock) && CachedPlayer.LocalPlayer.PlayerControl.IsAlive(); },
-                () => { return ((curseVictim == null && currentTarget != null) || (curseVictim != null && curseVictimTarget != null)) && CachedPlayer.LocalPlayer.PlayerControl.CanMove; },
+                () => { return ((CurseVictim == null && CurrentTarget != null) || (CurseVictim != null && CurseVictimTarget != null)) && CachedPlayer.LocalPlayer.PlayerControl.CanMove; },
                 () =>
                 {
-                    warlockCurseButton.Timer = warlockCurseButton.MaxTimer;
-                    warlockCurseButton.Sprite = AssetLoader.CurseButton;
-                    warlockCurseButton.ButtonText = Tr.Get("CurseText");
-                    curseVictim = null;
-                    curseVictimTarget = null;
+                    WarlockCurseButton.Timer = WarlockCurseButton.MaxTimer;
+                    WarlockCurseButton.Sprite = AssetLoader.CurseButton;
+                    WarlockCurseButton.ButtonText = Tr.Get("CurseText");
+                    CurseVictim = null;
+                    CurseVictimTarget = null;
                 },
                 AssetLoader.CurseButton,
                 new Vector3(-1.8f, -0.06f, 0),
@@ -117,26 +117,26 @@ public class Warlock : RoleBase<Warlock>
     }
     public override void SetButtonCooldowns()
     {
-        warlockCurseButton.MaxTimer = cooldown;
+        WarlockCurseButton.MaxTimer = Cooldown;
     }
 
     // write functions here
-    public static void resetCurse()
+    public static void ResetCurse()
     {
-        warlockCurseButton.Timer = warlockCurseButton.MaxTimer;
-        warlockCurseButton.Sprite = AssetLoader.CurseButton;
-        warlockCurseButton.ActionButton.cooldownTimerText.color = Palette.EnabledColor;
-        currentTarget = null;
-        curseVictim = null;
-        curseVictimTarget = null;
+        WarlockCurseButton.Timer = WarlockCurseButton.MaxTimer;
+        WarlockCurseButton.Sprite = AssetLoader.CurseButton;
+        WarlockCurseButton.ActionButton.cooldownTimerText.color = Palette.EnabledColor;
+        CurrentTarget = null;
+        CurseVictim = null;
+        CurseVictimTarget = null;
     }
 
     public override void Clear()
     {
         // reset configs here
         Players.Clear();
-        currentTarget = null;
-        curseVictim = null;
-        curseVictimTarget = null;
+        CurrentTarget = null;
+        CurseVictim = null;
+        CurseVictimTarget = null;
     }
 }

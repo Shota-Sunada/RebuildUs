@@ -2,11 +2,11 @@ namespace RebuildUs.Roles.Modifier;
 
 public static class Lovers
 {
-    public static List<Couple> couples = [];
-    public static Color color = new Color32(232, 57, 185, byte.MaxValue);
+    public static List<Couple> Couples = [];
+    public static Color Color = new Color32(232, 57, 185, byte.MaxValue);
 
-    public static Color[] loverIconColors = [
-        color,                  // pink
+    public static Color[] LoverIconColors = [
+        Color,                  // pink
         new Color32(255, 165, 0, 255), // orange
         new Color32(255, 255, 0, 255), // yellow
         new Color32(0, 255, 0, 255),   // green
@@ -15,70 +15,70 @@ public static class Lovers
         new Color32(255, 0, 0, 255),   // red
     ];
 
-    public static bool bothDie { get { return CustomOptionHolder.loversBothDie.GetBool(); } }
-    public static bool separateTeam { get { return CustomOptionHolder.loversSeparateTeam.GetBool(); } }
-    public static bool tasksCount { get { return CustomOptionHolder.loversTasksCount.GetBool(); } }
-    public static bool enableChat { get { return CustomOptionHolder.loversEnableChat.GetBool(); } }
-    public static bool hasTasks { get { return tasksCount; } }
+    public static bool BothDie { get { return CustomOptionHolder.LoversBothDie.GetBool(); } }
+    public static bool SeparateTeam { get { return CustomOptionHolder.LoversSeparateTeam.GetBool(); } }
+    public static bool TasksCount { get { return CustomOptionHolder.LoversTasksCount.GetBool(); } }
+    public static bool EnableChat { get { return CustomOptionHolder.LoversEnableChat.GetBool(); } }
+    public static bool HasTasks { get { return TasksCount; } }
 
-    public static string getIcon(PlayerControl player)
+    public static string GetIcon(PlayerControl player)
     {
-        if (isLovers(player))
+        if (IsLovers(player))
         {
-            var couple = couples.Find(x => x.lover1 == player || x.lover2 == player);
-            return couple.icon;
+            var couple = Couples.Find(x => x.Lover1 == player || x.Lover2 == player);
+            return couple.Icon;
         }
         return "";
     }
 
-    public static void addCouple(PlayerControl player1, PlayerControl player2)
+    public static void AddCouple(PlayerControl player1, PlayerControl player2)
     {
-        var availableColors = new List<Color>(loverIconColors);
-        foreach (var couple in couples)
+        var availableColors = new List<Color>(LoverIconColors);
+        foreach (var couple in Couples)
         {
-            availableColors.RemoveAll(x => x == couple.color);
+            availableColors.RemoveAll(x => x == couple.Color);
         }
-        couples.Add(new Couple(player1, player2, availableColors[0]));
+        Couples.Add(new Couple(player1, player2, availableColors[0]));
     }
 
-    public static void eraseCouple(PlayerControl player)
+    public static void EraseCouple(PlayerControl player)
     {
-        couples.RemoveAll(x => x.lover1 == player || x.lover2 == player);
+        Couples.RemoveAll(x => x.Lover1 == player || x.Lover2 == player);
     }
 
-    public static void swapLovers(PlayerControl player1, PlayerControl player2)
+    public static void SwapLovers(PlayerControl player1, PlayerControl player2)
     {
-        var couple1 = couples.FindIndex(x => x.lover1 == player1 || x.lover2 == player1);
-        var couple2 = couples.FindIndex(x => x.lover1 == player2 || x.lover2 == player2);
+        var couple1 = Couples.FindIndex(x => x.Lover1 == player1 || x.Lover2 == player1);
+        var couple2 = Couples.FindIndex(x => x.Lover1 == player2 || x.Lover2 == player2);
 
         // trying to swap within the same couple, just ignore
         if (couple1 == couple2) return;
 
         if (couple1 >= 0)
         {
-            if (couples[couple1].lover1 == player1) couples[couple1].lover1 = player2;
-            if (couples[couple1].lover2 == player1) couples[couple1].lover2 = player2;
+            if (Couples[couple1].Lover1 == player1) Couples[couple1].Lover1 = player2;
+            if (Couples[couple1].Lover2 == player1) Couples[couple1].Lover2 = player2;
         }
 
         if (couple2 >= 0)
         {
-            if (couples[couple2].lover1 == player2) couples[couple2].lover1 = player1;
-            if (couples[couple2].lover2 == player2) couples[couple2].lover2 = player1;
+            if (Couples[couple2].Lover1 == player2) Couples[couple2].Lover1 = player1;
+            if (Couples[couple2].Lover2 == player2) Couples[couple2].Lover2 = player1;
         }
     }
 
-    public static void killLovers(PlayerControl player, PlayerControl killer = null)
+    public static void KillLovers(PlayerControl player, PlayerControl killer = null)
     {
         if (!player.IsLovers()) return;
 
-        if (separateTeam && tasksCount)
+        if (SeparateTeam && TasksCount)
         {
             player.ClearAllTasks();
         }
 
-        if (!bothDie) return;
+        if (!BothDie) return;
 
-        var partner = getPartner(player);
+        var partner = GetPartner(player);
         if (partner != null)
         {
             if (!partner.Data.IsDead)
@@ -95,77 +95,77 @@ public static class Lovers
                 GameHistory.FinalStatuses[partner.PlayerId] = EFinalStatus.Suicide;
             }
 
-            if (separateTeam && tasksCount)
+            if (SeparateTeam && TasksCount)
             {
                 partner.ClearAllTasks();
             }
         }
     }
 
-    public static PlayerControl getPartner(PlayerControl player)
+    public static PlayerControl GetPartner(PlayerControl player)
     {
-        var couple = getCouple(player);
+        var couple = GetCouple(player);
         if (couple != null)
         {
-            return player?.PlayerId == couple.lover1?.PlayerId ? couple.lover2 : couple.lover1;
+            return player?.PlayerId == couple.Lover1?.PlayerId ? couple.Lover2 : couple.Lover1;
         }
         return null;
     }
 
-    public static bool isLovers(PlayerControl player)
+    public static bool IsLovers(PlayerControl player)
     {
-        return getCouple(player) != null;
+        return GetCouple(player) != null;
     }
 
-    public static Couple getCouple(PlayerControl player)
+    public static Couple GetCouple(PlayerControl player)
     {
-        foreach (var pair in couples)
+        foreach (var pair in Couples)
         {
-            if (pair.lover1?.PlayerId == player?.PlayerId || pair.lover2?.PlayerId == player?.PlayerId) return pair;
+            if (pair.Lover1?.PlayerId == player?.PlayerId || pair.Lover2?.PlayerId == player?.PlayerId) return pair;
         }
         return null;
     }
 
-    public static bool existing(PlayerControl player)
+    public static bool Existing(PlayerControl player)
     {
-        return getCouple(player)?.existing == true;
+        return GetCouple(player)?.Existing == true;
     }
 
-    public static bool anyAlive()
+    public static bool AnyAlive()
     {
-        foreach (var couple in couples)
+        foreach (var couple in Couples)
         {
-            if (couple.alive) return true;
+            if (couple.Alive) return true;
         }
         return false;
     }
 
-    public static bool anyNonKillingCouples()
+    public static bool AnyNonKillingCouples()
     {
-        foreach (var couple in couples)
+        foreach (var couple in Couples)
         {
-            if (!couple.hasAliveKillingLover) return true;
+            if (!couple.HasAliveKillingLover) return true;
         }
         return false;
     }
 
-    public static bool existingAndAlive(PlayerControl player)
+    public static bool ExistingAndAlive(PlayerControl player)
     {
-        return getCouple(player)?.existingAndAlive == true;
+        return GetCouple(player)?.ExistingAndAlive == true;
     }
 
-    public static bool existingWithKiller(PlayerControl player)
+    public static bool ExistingWithKiller(PlayerControl player)
     {
-        return getCouple(player)?.existingWithKiller == true;
+        return GetCouple(player)?.ExistingWithKiller == true;
     }
 
     public static void HandleDisconnect(PlayerControl player, DisconnectReasons reason)
     {
-        eraseCouple(player);
+        EraseCouple(player);
     }
 
     public static void Clear()
     {
-        couples = [];
+        Couples = [];
     }
 }

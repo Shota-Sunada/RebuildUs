@@ -63,7 +63,7 @@ public static class Intro
         AdditionalVents.AddAdditionalVents();
 
         // スペシメンにバイタルを移動する
-        SpecimenVital.moveVital();
+        SpecimenVital.MoveVital();
 
         // アーカイブのアドミンを消す
         if (Helpers.IsAirship && CustomOptionHolder.AirshipOldAdmin.GetBool())
@@ -112,7 +112,7 @@ public static class Intro
         // 最初から一人の場合はLast Impostorになる
         if (AmongUsClient.Instance.AmHost)
         {
-            LastImpostor.promoteToLastImpostor();
+            LastImpostor.PromoteToLastImpostor();
         }
 
         // タスクパネルの表示優先度を上げる

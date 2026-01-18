@@ -4,20 +4,20 @@ namespace RebuildUs.Modules;
 
 public static class SpawnIn
 {
-    private static PassiveButton selected = null;
+    private static PassiveButton Selected = null;
     public static List<SpawnCandidate> SpawnCandidates;
-    public static SynchronizeData synchronizeData = new();
-    public static bool isFirstSpawn = true;
-    public static float initialDoorCooldown { get { return CustomOptionHolder.AirshipInitialDoorCooldown.GetFloat(); } }
-    public static float initialSabotageCooldown { get { return CustomOptionHolder.AirshipInitialSabotageCooldown.GetFloat(); } }
+    public static SynchronizeData SynchronizeData = new();
+    public static bool IsFirstSpawn = true;
+    public static float InitialDoorCooldown { get { return CustomOptionHolder.AirshipInitialDoorCooldown.GetFloat(); } }
+    public static float InitialSabotageCooldown { get { return CustomOptionHolder.AirshipInitialSabotageCooldown.GetFloat(); } }
 
-    public static void reset()
+    public static void Reset()
     {
-        isFirstSpawn = true;
-        resetSpawnCandidates();
+        IsFirstSpawn = true;
+        ResetSpawnCandidates();
     }
 
-    public static void resetSpawnCandidates()
+    public static void ResetSpawnCandidates()
     {
         SpawnCandidates = [];
         if (CustomOptionHolder.AirshipAdditionalSpawn.GetBool())
@@ -37,10 +37,10 @@ public static class SpawnIn
         }
     }
 
-    private static void resetButtons()
+    private static void ResetButtons()
     {
         // MapUtilities.CachedShipStatus.Systems[SystemTypes.Sabotage].Cast<SabotageSystemType>().ForceSabTime(10f);
-        isFirstSpawn = false;
+        IsFirstSpawn = false;
         if (CustomOptionHolder.AirshipSetOriginalCooldown.GetBool())
         {
             CachedPlayer.LocalPlayer.PlayerControl.SetKillTimerUnchecked(Helpers.GetOption(FloatOptionNames.KillCooldown));
@@ -58,7 +58,7 @@ public static class SpawnIn
 
     public static bool BeginPrefix(SpawnInMinigame __instance, PlayerTask task)
     {
-        CustomButton.stopCountdown = true;
+        CustomButton.StopCountdown = true;
         // base.Begin(task);
         __instance.MyTask = task;
         __instance.MyNormTask = task as NormalPlayerTask;
@@ -87,7 +87,7 @@ public static class SpawnIn
         }
 
         SpawnInMinigame.SpawnLocation[] array = [.. list];
-        array.shuffle(0);
+        array.Shuffle(0);
         array = [.. from s in array.Take(__instance.LocationButtons.Length)
                  orderby s.Location.x, s.Location.y descending
                  select s];
@@ -126,7 +126,7 @@ public static class SpawnIn
 
     public static void BeginPostfix(SpawnInMinigame __instance)
     {
-        selected = null;
+        Selected = null;
 
         if (!CustomOptionHolder.AirshipSynchronizedSpawning.GetBool() || CustomOptionHolder.AirshipRandomSpawn.GetBool()) return;
 
@@ -134,8 +134,8 @@ public static class SpawnIn
         {
             button.OnClick.AddListener((UnityEngine.Events.UnityAction)(() =>
             {
-                if (selected == null)
-                    selected = button;
+                if (Selected == null)
+                    Selected = button;
             }
             ));
         }
@@ -146,15 +146,15 @@ public static class SpawnIn
         using var sender = new RPCSender(CachedPlayer.LocalPlayer.PlayerControl.NetId, CustomRPC.Synchronize);
         sender.Write(playerId);
         sender.Write((int)tag);
-        RPCProcedure.synchronize(playerId, (int)tag);
+        RPCProcedure.Synchronize(playerId, (int)tag);
     }
 
     public static void SpawnAt(SpawnInMinigame __instance, Vector3 spawnAt)
     {
         if (!CustomOptionHolder.AirshipSynchronizedSpawning.GetBool() || CustomOptionHolder.AirshipRandomSpawn.GetBool())
         {
-            if (isFirstSpawn) resetButtons();
-            CustomButton.stopCountdown = false;
+            if (IsFirstSpawn) ResetButtons();
+            CustomButton.StopCountdown = false;
             if (__instance.amClosing != Minigame.CloseState.None)
             {
                 return;
@@ -188,7 +188,7 @@ public static class SpawnIn
 
                 foreach (var button in __instance.LocationButtons)
                 {
-                    if (selected == button)
+                    if (Selected == button)
                     {
                         if (time > 0.3f)
                         {
@@ -211,30 +211,30 @@ public static class SpawnIn
 
                     if (__instance.amClosing != Minigame.CloseState.None) return;
 
-                    if (synchronizeData.Align(SynchronizeTag.PreSpawnMinigame, false) || p == 1f)
+                    if (SynchronizeData.Align(SynchronizeTag.PreSpawnMinigame, false) || p == 1f)
                     {
                         CachedPlayer.LocalPlayer.PlayerControl.gameObject.SetActive(true);
                         __instance.StopAllCoroutines();
                         CachedPlayer.LocalPlayer.PlayerControl.NetTransform.RpcSnapTo(spawnAt);
                         FastDestroyableSingleton<HudManager>.Instance.PlayerCam.SnapToTarget();
-                        synchronizeData.Reset(SynchronizeTag.PreSpawnMinigame);
+                        SynchronizeData.Reset(SynchronizeTag.PreSpawnMinigame);
                         __instance.Close();
-                        CustomButton.stopCountdown = false;
+                        CustomButton.StopCountdown = false;
                         // サボタージュのクールダウンをリセット
                         var sabotageSystem = MapUtilities.CachedShipStatus.Systems[SystemTypes.Sabotage].Cast<SabotageSystemType>();
                         sabotageSystem.IsDirty = true;
-                        sabotageSystem.Timer = initialSabotageCooldown;
+                        sabotageSystem.Timer = InitialSabotageCooldown;
                         var doorSystem = MapUtilities.CachedShipStatus.Systems[SystemTypes.Doors].Cast<DoorsSystemType>();
                         doorSystem.IsDirty = true;
-                        doorSystem.timers[SystemTypes.MainHall] = initialDoorCooldown;
-                        doorSystem.timers[SystemTypes.Brig] = initialDoorCooldown;
-                        doorSystem.timers[SystemTypes.Comms] = initialDoorCooldown;
-                        doorSystem.timers[SystemTypes.Medical] = initialDoorCooldown;
-                        doorSystem.timers[SystemTypes.Engine] = initialDoorCooldown;
-                        doorSystem.timers[SystemTypes.Records] = initialDoorCooldown;
-                        doorSystem.timers[SystemTypes.Kitchen] = initialDoorCooldown;
+                        doorSystem.timers[SystemTypes.MainHall] = InitialDoorCooldown;
+                        doorSystem.timers[SystemTypes.Brig] = InitialDoorCooldown;
+                        doorSystem.timers[SystemTypes.Comms] = InitialDoorCooldown;
+                        doorSystem.timers[SystemTypes.Medical] = InitialDoorCooldown;
+                        doorSystem.timers[SystemTypes.Engine] = InitialDoorCooldown;
+                        doorSystem.timers[SystemTypes.Records] = InitialDoorCooldown;
+                        doorSystem.timers[SystemTypes.Kitchen] = InitialDoorCooldown;
 
-                        if (isFirstSpawn) resetButtons();
+                        if (IsFirstSpawn) ResetButtons();
                     }
                 }
             })));
@@ -245,7 +245,7 @@ public static class SpawnIn
     public static void MoveNextPostfix(SpawnInMinigame._RunTimer_d__10 __instance)
     {
         if (!CustomOptionHolder.AirshipSynchronizedSpawning.GetBool() || CustomOptionHolder.AirshipRandomSpawn.GetBool()) return;
-        if (selected != null)
+        if (Selected != null)
         {
             __instance.__4__this.Text.text = Tr.Get("airshipWait");
         }

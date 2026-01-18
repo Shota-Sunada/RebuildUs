@@ -10,7 +10,7 @@ public static class TransportationToolPatches
      * Zipline can also break camo, fix that one too.
      */
 
-    public static bool isUsingTransportation(PlayerControl pc)
+    public static bool IsUsingTransportation(PlayerControl pc)
     {
         return pc.inMovingPlat || pc.onLadder;
     }
@@ -18,14 +18,14 @@ public static class TransportationToolPatches
     // Zipline:
     [HarmonyPrefix]
     [HarmonyPatch(typeof(ZiplineBehaviour), nameof(ZiplineBehaviour.Use), [typeof(PlayerControl), typeof(bool)])]
-    public static void prefix3(ZiplineBehaviour __instance, PlayerControl player, bool fromTop)
+    public static void Prefix3(ZiplineBehaviour __instance, PlayerControl player, bool fromTop)
     {
-        AntiTeleport.position = PlayerControl.LocalPlayer.transform.position;
+        AntiTeleport.Position = PlayerControl.LocalPlayer.transform.position;
     }
 
     [HarmonyPostfix]
     [HarmonyPatch(typeof(ZiplineBehaviour), nameof(ZiplineBehaviour.Use), [typeof(PlayerControl), typeof(bool)])]
-    public static void postfix(ZiplineBehaviour __instance, PlayerControl player, bool fromTop)
+    public static void Postfix(ZiplineBehaviour __instance, PlayerControl player, bool fromTop)
     {
         // Fix camo:
         __instance.StartCoroutine(Effects.Lerp(fromTop ? __instance.downTravelTime : __instance.upTravelTime, new System.Action<float>((p) =>
@@ -34,13 +34,13 @@ public static class TransportationToolPatches
             __instance.playerIdHands.TryGetValue(player.PlayerId, out hand);
             if (hand != null)
             {
-                if (Camouflager.camouflageTimer <= 0 && !Helpers.MushroomSabotageActive())
+                if (Camouflager.CamouflageTimer <= 0 && !Helpers.MushroomSabotageActive())
                 {
-                    if (player.IsRole(RoleType.Morphing) && Morphing.morphTimer > 0)
+                    if (player.IsRole(RoleType.Morphing) && Morphing.MorphTimer > 0)
                     {
-                        hand.SetPlayerColor(Morphing.morphTarget.CurrentOutfit, PlayerMaterial.MaskType.None, 1f);
+                        hand.SetPlayerColor(Morphing.MorphTarget.CurrentOutfit, PlayerMaterial.MaskType.None, 1f);
                         // Also set hat color, cause the line destroys it...
-                        player.RawSetHat(Morphing.morphTarget.Data.DefaultOutfit.HatId, Morphing.morphTarget.Data.DefaultOutfit.ColorId);
+                        player.RawSetHat(Morphing.MorphTarget.Data.DefaultOutfit.HatId, Morphing.MorphTarget.Data.DefaultOutfit.ColorId);
                     }
                     else
                     {
@@ -58,30 +58,30 @@ public static class TransportationToolPatches
     // Save the position of the player prior to starting the climb / gap platform
     [HarmonyPrefix]
     [HarmonyPatch(typeof(PlayerPhysics), nameof(PlayerPhysics.ClimbLadder))]
-    public static void prefix()
+    public static void Prefix()
     {
-        AntiTeleport.position = PlayerControl.LocalPlayer.transform.position;
+        AntiTeleport.Position = PlayerControl.LocalPlayer.transform.position;
     }
 
     [HarmonyPostfix]
     [HarmonyPatch(typeof(PlayerPhysics), nameof(PlayerPhysics.ClimbLadder))]
-    public static void postfix2(PlayerPhysics __instance, Ladder source, byte climbLadderSid)
+    public static void Postfix2(PlayerPhysics __instance, Ladder source, byte climbLadderSid)
     {
         // Fix camo:
         var player = __instance.myPlayer;
         __instance.StartCoroutine(Effects.Lerp(5.0f, new System.Action<float>((p) =>
         {
-            if (Camouflager.camouflageTimer <= 0 && !Helpers.MushroomSabotageActive() && player.IsRole(RoleType.Morphing) && Morphing.morphTimer > 0.1f)
+            if (Camouflager.CamouflageTimer <= 0 && !Helpers.MushroomSabotageActive() && player.IsRole(RoleType.Morphing) && Morphing.MorphTimer > 0.1f)
             {
-                player.RawSetHat(Morphing.morphTarget.Data.DefaultOutfit.HatId, Morphing.morphTarget.Data.DefaultOutfit.ColorId);
+                player.RawSetHat(Morphing.MorphTarget.Data.DefaultOutfit.HatId, Morphing.MorphTarget.Data.DefaultOutfit.ColorId);
             }
         })));
     }
 
     [HarmonyPrefix]
     [HarmonyPatch(typeof(MovingPlatformBehaviour), nameof(MovingPlatformBehaviour.UsePlatform))]
-    public static void prefix2()
+    public static void Prefix2()
     {
-        AntiTeleport.position = PlayerControl.LocalPlayer.transform.position;
+        AntiTeleport.Position = PlayerControl.LocalPlayer.transform.position;
     }
 }

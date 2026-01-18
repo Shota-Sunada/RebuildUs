@@ -9,15 +9,15 @@ public class CreatedMadmate : ModifierBase<CreatedMadmate>
     {
         if (Player == CachedPlayer.LocalPlayer.PlayerControl)
         {
-            Update.setPlayerNameColor(Player, ModifierColor);
+            Update.SetPlayerNameColor(Player, ModifierColor);
 
-            if (Madmate.knowsImpostors(Player))
+            if (Madmate.KnowsImpostors(Player))
             {
                 foreach (var p in PlayerControl.AllPlayerControls.GetFastEnumerator())
                 {
                     if (p.IsTeamImpostor() || p.IsRole(RoleType.Spy) || (p.IsRole(RoleType.Jackal) && Jackal.GetRole(p).WasTeamRed) || (p.IsRole(RoleType.Sidekick) && Sidekick.GetRole(p).WasTeamRed))
                     {
-                        Update.setPlayerNameColor(p, Palette.ImpostorRed);
+                        Update.SetPlayerNameColor(p, Palette.ImpostorRed);
                     }
                 }
             }
@@ -39,18 +39,18 @@ public class CreatedMadmate : ModifierBase<CreatedMadmate>
 
     // write configs here
 
-    public static bool canEnterVents { get { return CustomOptionHolder.createdMadmateCanEnterVents.GetBool(); } }
-    public static bool hasImpostorVision { get { return CustomOptionHolder.createdMadmateHasImpostorVision.GetBool(); } }
-    public static bool canSabotage { get { return CustomOptionHolder.createdMadmateCanSabotage.GetBool(); } }
-    public static bool canFixComm { get { return CustomOptionHolder.createdMadmateCanFixComm.GetBool(); } }
+    public static bool CanEnterVents { get { return CustomOptionHolder.CreatedMadmateCanEnterVents.GetBool(); } }
+    public static bool HasImpostorVision { get { return CustomOptionHolder.CreatedMadmateHasImpostorVision.GetBool(); } }
+    public static bool CanSabotage { get { return CustomOptionHolder.CreatedMadmateCanSabotage.GetBool(); } }
+    public static bool CanFixComm { get { return CustomOptionHolder.CreatedMadmateCanFixComm.GetBool(); } }
 
-    public static CreatedMadmateType madmateType { get { return CreatedMadmateType.Simple; } }
-    public static CreatedMadmateAbility madmateAbility { get { return (CreatedMadmateAbility)CustomOptionHolder.createdMadmateAbility.GetSelection(); } }
+    public static CreatedMadmateType MadmateType { get { return CreatedMadmateType.Simple; } }
+    public static CreatedMadmateAbility MadmateAbility { get { return (CreatedMadmateAbility)CustomOptionHolder.CreatedMadmateAbility.GetSelection(); } }
 
-    public static int numTasks { get { return (int)CustomOptionHolder.createdMadmateNumTasks.GetFloat(); } }
+    public static int NumTasks { get { return (int)CustomOptionHolder.CreatedMadmateNumTasks.GetFloat(); } }
 
-    public static bool hasTasks { get { return madmateAbility == CreatedMadmateAbility.Fanatic; } }
-    public static bool exileCrewmate { get { return CustomOptionHolder.createdMadmateExileCrewmate.GetBool(); } }
+    public static bool HasTasks { get { return MadmateAbility == CreatedMadmateAbility.Fanatic; } }
+    public static bool ExileCrewmate { get { return CustomOptionHolder.CreatedMadmateExileCrewmate.GetBool(); } }
 
     public CreatedMadmate()
     {

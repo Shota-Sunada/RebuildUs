@@ -4,12 +4,12 @@ public static class Airship
 {
     public static void Awake()
     {
-        addWireTasks(Helpers.GetOption(ByteOptionNames.MapId));
-        optimizeMap(Helpers.GetOption(ByteOptionNames.MapId));
-        addLadder(Helpers.GetOption(ByteOptionNames.MapId));
+        AddWireTasks(Helpers.GetOption(ByteOptionNames.MapId));
+        OptimizeMap(Helpers.GetOption(ByteOptionNames.MapId));
+        AddLadder(Helpers.GetOption(ByteOptionNames.MapId));
     }
 
-    private static void optimizeMap(int mapId)
+    private static void OptimizeMap(int mapId)
     {
         if (!CustomOptionHolder.AirshipOptions.GetBool()) return;
 
@@ -34,9 +34,9 @@ public static class Airship
             fence.transform.localPosition = new Vector3(4.2f, 0.15f, 0.5f);
             fence.transform.localScale = new Vector3(1f, 1f, 1f);
             fence.SetActive(true);
-            var Collider = fence.AddComponent<EdgeCollider2D>();
-            Collider.points = new Vector2[] { new(1.5f, -0.2f), new(-1.5f, -0.2f), new(-1.5f, 1.5f) };
-            Collider.enabled = true;
+            var collider = fence.AddComponent<EdgeCollider2D>();
+            collider.points = new Vector2[] { new(1.5f, -0.2f), new(-1.5f, -0.2f), new(-1.5f, 1.5f) };
+            collider.enabled = true;
             renderer = fence.AddComponent<SpriteRenderer>();
             renderer.sprite = AssetLoader.AirshipFence;
 
@@ -56,7 +56,7 @@ public static class Airship
         }
     }
 
-    public static void addLadder(int mapId)
+    public static void AddLadder(int mapId)
     {
         if (mapId == 4)
         {
@@ -112,7 +112,7 @@ public static class Airship
             }
         }
     }
-    public static void addWireTasks(int mapId)
+    public static void AddWireTasks(int mapId)
     {
         if (!CustomOptionHolder.AirshipAdditionalWireTask.GetBool()) return;
 

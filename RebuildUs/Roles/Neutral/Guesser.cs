@@ -2,19 +2,19 @@ namespace RebuildUs.Roles.Neutral;
 
 public static class Guesser
 {
-    public static bool onlyAvailableRoles { get { return CustomOptionHolder.guesserOnlyAvailableRoles.GetBool(); } }
-    public static bool hasMultipleShotsPerMeeting { get { return CustomOptionHolder.guesserHasMultipleShotsPerMeeting.GetBool(); } }
-    public static bool showInfoInGhostChat { get { return CustomOptionHolder.guesserShowInfoInGhostChat.GetBool(); } }
-    public static bool killsThroughShield { get { return CustomOptionHolder.guesserKillsThroughShield.GetBool(); } }
-    public static bool evilCanKillSpy { get { return CustomOptionHolder.guesserEvilCanKillSpy.GetBool(); } }
+    public static bool OnlyAvailableRoles { get { return CustomOptionHolder.GuesserOnlyAvailableRoles.GetBool(); } }
+    public static bool HasMultipleShotsPerMeeting { get { return CustomOptionHolder.GuesserHasMultipleShotsPerMeeting.GetBool(); } }
+    public static bool ShowInfoInGhostChat { get { return CustomOptionHolder.GuesserShowInfoInGhostChat.GetBool(); } }
+    public static bool KillsThroughShield { get { return CustomOptionHolder.GuesserKillsThroughShield.GetBool(); } }
+    public static bool EvilCanKillSpy { get { return CustomOptionHolder.GuesserEvilCanKillSpy.GetBool(); } }
 
-    public static int remainingShotsNiceGuesser = 0;
-    public static int remainingShotsEvilGuesser = 0;
+    public static int RemainingShotsNiceGuesser = 0;
+    public static int RemainingShotsEvilGuesser = 0;
 
     public static void ClearAndReload()
     {
-        remainingShotsNiceGuesser = Mathf.RoundToInt(CustomOptionHolder.guesserNumberOfShots.GetFloat());
-        remainingShotsEvilGuesser = Mathf.RoundToInt(CustomOptionHolder.guesserNumberOfShots.GetFloat());
+        RemainingShotsNiceGuesser = Mathf.RoundToInt(CustomOptionHolder.GuesserNumberOfShots.GetFloat());
+        RemainingShotsEvilGuesser = Mathf.RoundToInt(CustomOptionHolder.GuesserNumberOfShots.GetFloat());
     }
 
     public static bool IsGuesser(byte playerId)
@@ -25,38 +25,38 @@ public static class Guesser
         return player.IsRole(RoleType.EvilGuesser) || player.IsRole(RoleType.NiceGuesser);
     }
 
-    public static int remainingShots(PlayerControl player, bool shoot = false)
+    public static int RemainingShots(PlayerControl player, bool shoot = false)
     {
         int remainingShots = 0;
         if (player.IsRole(RoleType.NiceGuesser))
         {
-            remainingShots = remainingShotsNiceGuesser;
-            if (shoot) remainingShotsNiceGuesser = Mathf.Max(0, remainingShotsNiceGuesser - 1);
+            remainingShots = RemainingShotsNiceGuesser;
+            if (shoot) RemainingShotsNiceGuesser = Mathf.Max(0, RemainingShotsNiceGuesser - 1);
         }
         else if (player.IsRole(RoleType.EvilGuesser))
         {
-            remainingShots = remainingShotsEvilGuesser;
-            if (player.HasModifier(ModifierType.LastImpostor) && LastImpostor.canGuess())
+            remainingShots = RemainingShotsEvilGuesser;
+            if (player.HasModifier(ModifierType.LastImpostor) && LastImpostor.CanGuess())
             {
-                remainingShots += LastImpostor.remainingShots;
+                remainingShots += LastImpostor.RemainingShots;
             }
             if (shoot)
             {
                 // ラストインポスターの弾数を優先的に消費させる
-                if (player.HasModifier(ModifierType.LastImpostor) && LastImpostor.canGuess())
+                if (player.HasModifier(ModifierType.LastImpostor) && LastImpostor.CanGuess())
                 {
-                    LastImpostor.remainingShots = Mathf.Max(0, LastImpostor.remainingShots - 1);
+                    LastImpostor.RemainingShots = Mathf.Max(0, LastImpostor.RemainingShots - 1);
                 }
                 else
                 {
-                    remainingShotsEvilGuesser = Mathf.Max(0, remainingShotsEvilGuesser - 1);
+                    RemainingShotsEvilGuesser = Mathf.Max(0, RemainingShotsEvilGuesser - 1);
                 }
             }
         }
-        else if (player.HasModifier(ModifierType.LastImpostor) && LastImpostor.canGuess())
+        else if (player.HasModifier(ModifierType.LastImpostor) && LastImpostor.CanGuess())
         {
-            remainingShots = LastImpostor.remainingShots;
-            if (shoot) LastImpostor.remainingShots = Mathf.Max(0, LastImpostor.remainingShots - 1);
+            remainingShots = LastImpostor.RemainingShots;
+            if (shoot) LastImpostor.RemainingShots = Mathf.Max(0, LastImpostor.RemainingShots - 1);
         }
 
         return remainingShots;

@@ -4,140 +4,140 @@ namespace RebuildUs;
 
 public class CustomOverlays
 {
-    private static SpriteRenderer meetingUnderlay;
-    private static SpriteRenderer infoUnderlay;
-    private static TMPro.TextMeshPro infoOverlayRules;
-    private static TMPro.TextMeshPro infoOverlayRoles;
-    public static bool overlayShown = false;
-    private static SpriteRenderer roleUnderlay;
-    private static TMPro.TextMeshPro[] roleOverlayList;
-    public static int rolePage = 0;
-    public static int maxRolePage = 0;
-    private static List<string> roleData;
+    private static SpriteRenderer MeetingUnderlay;
+    private static SpriteRenderer InfoUnderlay;
+    private static TMPro.TextMeshPro InfoOverlayRules;
+    private static TMPro.TextMeshPro InfoOverlayRoles;
+    public static bool OverlayShown = false;
+    private static SpriteRenderer RoleUnderlay;
+    private static TMPro.TextMeshPro[] RoleOverlayList;
+    public static int RolePage = 0;
+    public static int MaxRolePage = 0;
+    private static List<string> RoleData;
 
-    public static void resetOverlays()
+    public static void ResetOverlays()
     {
-        hideBlackBG();
-        hideInfoOverlay();
-        hideRoleOverlay();
-        UnityEngine.Object.Destroy(meetingUnderlay);
-        UnityEngine.Object.Destroy(infoUnderlay);
-        UnityEngine.Object.Destroy(infoOverlayRules);
-        UnityEngine.Object.Destroy(infoOverlayRoles);
-        UnityEngine.Object.Destroy(roleUnderlay);
-        if (roleOverlayList != null)
+        HideBlackBG();
+        HideInfoOverlay();
+        HideRoleOverlay();
+        UnityEngine.Object.Destroy(MeetingUnderlay);
+        UnityEngine.Object.Destroy(InfoUnderlay);
+        UnityEngine.Object.Destroy(InfoOverlayRules);
+        UnityEngine.Object.Destroy(InfoOverlayRoles);
+        UnityEngine.Object.Destroy(RoleUnderlay);
+        if (RoleOverlayList != null)
         {
-            foreach (var roleOverlay in roleOverlayList)
+            foreach (var roleOverlay in RoleOverlayList)
             {
                 UnityEngine.Object.Destroy(roleOverlay);
             }
         }
-        meetingUnderlay = infoUnderlay = null;
-        infoOverlayRules = infoOverlayRoles = null;
-        overlayShown = false;
-        roleUnderlay = null;
-        roleOverlayList = null;
-        rolePage = 0;
-        maxRolePage = 0;
-        roleData = null;
+        MeetingUnderlay = InfoUnderlay = null;
+        InfoOverlayRules = InfoOverlayRoles = null;
+        OverlayShown = false;
+        RoleUnderlay = null;
+        RoleOverlayList = null;
+        RolePage = 0;
+        MaxRolePage = 0;
+        RoleData = null;
     }
 
-    public static bool initializeOverlays()
+    public static bool InitializeOverlays()
     {
         HudManager hudManager = FastDestroyableSingleton<HudManager>.Instance;
         if (hudManager == null) return false;
 
-        if (meetingUnderlay == null)
+        if (MeetingUnderlay == null)
         {
-            meetingUnderlay = UnityEngine.Object.Instantiate(hudManager.FullScreen, hudManager.transform);
-            meetingUnderlay.transform.localPosition = new Vector3(0f, 0f, 20f);
-            meetingUnderlay.gameObject.SetActive(true);
-            meetingUnderlay.enabled = false;
+            MeetingUnderlay = UnityEngine.Object.Instantiate(hudManager.FullScreen, hudManager.transform);
+            MeetingUnderlay.transform.localPosition = new Vector3(0f, 0f, 20f);
+            MeetingUnderlay.gameObject.SetActive(true);
+            MeetingUnderlay.enabled = false;
         }
 
-        if (infoUnderlay == null)
+        if (InfoUnderlay == null)
         {
-            infoUnderlay = UnityEngine.Object.Instantiate(meetingUnderlay, hudManager.transform);
-            infoUnderlay.transform.localPosition = new Vector3(0f, 0f, -900f);
-            infoUnderlay.gameObject.SetActive(true);
-            infoUnderlay.enabled = false;
+            InfoUnderlay = UnityEngine.Object.Instantiate(MeetingUnderlay, hudManager.transform);
+            InfoUnderlay.transform.localPosition = new Vector3(0f, 0f, -900f);
+            InfoUnderlay.gameObject.SetActive(true);
+            InfoUnderlay.enabled = false;
         }
 
-        if (infoOverlayRules == null)
+        if (InfoOverlayRules == null)
         {
-            infoOverlayRules = UnityEngine.Object.Instantiate(hudManager.TaskPanel.taskText, hudManager.transform);
-            infoOverlayRules.fontSize = infoOverlayRules.fontSizeMin = infoOverlayRules.fontSizeMax = 1.15f;
-            infoOverlayRules.autoSizeTextContainer = false;
-            infoOverlayRules.enableWordWrapping = false;
-            infoOverlayRules.alignment = TMPro.TextAlignmentOptions.TopLeft;
-            infoOverlayRules.transform.position = Vector3.zero;
-            infoOverlayRules.transform.localPosition = new Vector3(-2.5f, 1.15f, -910f);
-            infoOverlayRules.transform.localScale = Vector3.one;
-            infoOverlayRules.color = Palette.White;
-            infoOverlayRules.enabled = false;
+            InfoOverlayRules = UnityEngine.Object.Instantiate(hudManager.TaskPanel.taskText, hudManager.transform);
+            InfoOverlayRules.fontSize = InfoOverlayRules.fontSizeMin = InfoOverlayRules.fontSizeMax = 1.15f;
+            InfoOverlayRules.autoSizeTextContainer = false;
+            InfoOverlayRules.enableWordWrapping = false;
+            InfoOverlayRules.alignment = TMPro.TextAlignmentOptions.TopLeft;
+            InfoOverlayRules.transform.position = Vector3.zero;
+            InfoOverlayRules.transform.localPosition = new Vector3(-2.5f, 1.15f, -910f);
+            InfoOverlayRules.transform.localScale = Vector3.one;
+            InfoOverlayRules.color = Palette.White;
+            InfoOverlayRules.enabled = false;
         }
 
-        if (infoOverlayRoles == null)
+        if (InfoOverlayRoles == null)
         {
-            infoOverlayRoles = UnityEngine.Object.Instantiate(infoOverlayRules, hudManager.transform);
-            infoOverlayRoles.maxVisibleLines = 28;
-            infoOverlayRoles.fontSize = infoOverlayRoles.fontSizeMin = infoOverlayRoles.fontSizeMax = 1.15f;
-            infoOverlayRoles.outlineWidth += 0.02f;
-            infoOverlayRoles.autoSizeTextContainer = false;
-            infoOverlayRoles.enableWordWrapping = false;
-            infoOverlayRoles.alignment = TMPro.TextAlignmentOptions.TopLeft;
-            infoOverlayRoles.transform.position = Vector3.zero;
-            infoOverlayRoles.transform.localPosition = infoOverlayRules.transform.localPosition + new Vector3(2.5f, 0.0f, 0.0f);
-            infoOverlayRoles.transform.localScale = Vector3.one;
-            infoOverlayRoles.color = Palette.White;
-            infoOverlayRoles.enabled = false;
+            InfoOverlayRoles = UnityEngine.Object.Instantiate(InfoOverlayRules, hudManager.transform);
+            InfoOverlayRoles.maxVisibleLines = 28;
+            InfoOverlayRoles.fontSize = InfoOverlayRoles.fontSizeMin = InfoOverlayRoles.fontSizeMax = 1.15f;
+            InfoOverlayRoles.outlineWidth += 0.02f;
+            InfoOverlayRoles.autoSizeTextContainer = false;
+            InfoOverlayRoles.enableWordWrapping = false;
+            InfoOverlayRoles.alignment = TMPro.TextAlignmentOptions.TopLeft;
+            InfoOverlayRoles.transform.position = Vector3.zero;
+            InfoOverlayRoles.transform.localPosition = InfoOverlayRules.transform.localPosition + new Vector3(2.5f, 0.0f, 0.0f);
+            InfoOverlayRoles.transform.localScale = Vector3.one;
+            InfoOverlayRoles.color = Palette.White;
+            InfoOverlayRoles.enabled = false;
         }
 
-        if (roleUnderlay == null)
+        if (RoleUnderlay == null)
         {
-            roleUnderlay = UnityEngine.Object.Instantiate(meetingUnderlay, hudManager.transform);
-            roleUnderlay.transform.localPosition = new Vector3(0f, 0f, -900f);
-            roleUnderlay.gameObject.SetActive(true);
-            roleUnderlay.enabled = false;
+            RoleUnderlay = UnityEngine.Object.Instantiate(MeetingUnderlay, hudManager.transform);
+            RoleUnderlay.transform.localPosition = new Vector3(0f, 0f, -900f);
+            RoleUnderlay.gameObject.SetActive(true);
+            RoleUnderlay.enabled = false;
         }
 
-        if (roleOverlayList == null)
+        if (RoleOverlayList == null)
         {
-            roleOverlayList = new TMPro.TextMeshPro[3];
+            RoleOverlayList = new TMPro.TextMeshPro[3];
         }
 
-        for (var i = 0; i < roleOverlayList.Length; i++)
+        for (var i = 0; i < RoleOverlayList.Length; i++)
         {
-            if (roleOverlayList[i] == null)
+            if (RoleOverlayList[i] == null)
             {
                 if (i == 0)
                 {
-                    roleOverlayList[i] = UnityEngine.Object.Instantiate(hudManager.TaskPanel.taskText, hudManager.transform);
+                    RoleOverlayList[i] = UnityEngine.Object.Instantiate(hudManager.TaskPanel.taskText, hudManager.transform);
 
-                    initializeRoleOverlay(roleOverlayList[i]);
+                    InitializeRoleOverlay(RoleOverlayList[i]);
 
-                    roleOverlayList[i].transform.localPosition = new Vector3(-3.5f, 1.2f, -910f);
+                    RoleOverlayList[i].transform.localPosition = new Vector3(-3.5f, 1.2f, -910f);
                 }
                 else
                 {
-                    roleOverlayList[i] = UnityEngine.Object.Instantiate(roleOverlayList[i - 1], hudManager.transform);
+                    RoleOverlayList[i] = UnityEngine.Object.Instantiate(RoleOverlayList[i - 1], hudManager.transform);
 
-                    initializeRoleOverlay(roleOverlayList[i]);
+                    InitializeRoleOverlay(RoleOverlayList[i]);
 
-                    roleOverlayList[i].transform.localPosition = roleOverlayList[i - 1].transform.localPosition + new Vector3(3.1f, 0.0f, 0.0f);
+                    RoleOverlayList[i].transform.localPosition = RoleOverlayList[i - 1].transform.localPosition + new Vector3(3.1f, 0.0f, 0.0f);
                 }
             }
         }
 
-        if (roleData == null)
+        if (RoleData == null)
         {
-            roleData = [];
+            RoleData = [];
 
             StringBuilder entry = new();
             List<string> entries =
             [
                 // First add the presets and the role counts
-                CustomOption.optionToString(CustomOptionHolder.PresetSelection),
+                CustomOption.OptionToString(CustomOptionHolder.PresetSelection),
             ];
 
             var optionName = Helpers.Cs(new Color(204f / 255f, 204f / 255f, 0, 1f), Tr.Get("crewmateRoles"));
@@ -186,9 +186,9 @@ public class CustomOverlays
                     }
 
                     entry = new StringBuilder();
-                    entry.AppendLine(CustomOption.optionToString(option));
+                    entry.AppendLine(CustomOption.OptionToString(option));
 
-                    addChildren(option, ref entry);
+                    AddChildren(option, ref entry);
 
                     // 1つのオプションが最大行を越えていた場合、最大行までで分割する
                     int lines = entry.ToString().Trim('\r', '\n').Count(c => c == '\n') + 1;
@@ -223,7 +223,7 @@ public class CustomOverlays
 
                 if (lineCount + lines > maxLines)
                 {
-                    roleData.Add(page);
+                    RoleData.Add(page);
                     page = "";
                     lineCount = 0;
                 }
@@ -235,16 +235,16 @@ public class CustomOverlays
             page = page.Trim('\r', '\n');
             if (page != "")
             {
-                roleData.Add(page);
+                RoleData.Add(page);
             }
 
-            maxRolePage = ((roleData.Count - 1) / 3) + 1;
+            MaxRolePage = ((RoleData.Count - 1) / 3) + 1;
         }
 
         return true;
     }
 
-    private static void initializeRoleOverlay(TMPro.TextMeshPro roleOverlay)
+    private static void InitializeRoleOverlay(TMPro.TextMeshPro roleOverlay)
     {
         roleOverlay.maxVisibleLines = 29;
         roleOverlay.fontSize = roleOverlay.fontSizeMin = roleOverlay.fontSizeMax = 1.15f;
@@ -257,72 +257,72 @@ public class CustomOverlays
         roleOverlay.enabled = false;
     }
 
-    public static void addChildren(CustomOption option, ref StringBuilder entry, bool indent = true)
+    public static void AddChildren(CustomOption option, ref StringBuilder entry, bool indent = true)
     {
         if (!option.Enabled) return;
 
         foreach (var child in option.Children)
         {
-            entry.AppendLine((indent ? "    " : "") + CustomOption.optionToString(child));
-            addChildren(child, ref entry, indent);
+            entry.AppendLine((indent ? "    " : "") + CustomOption.OptionToString(child));
+            AddChildren(child, ref entry, indent);
         }
     }
 
-    public static void showBlackBG()
+    public static void ShowBlackBG()
     {
         if (FastDestroyableSingleton<HudManager>.Instance == null) return;
-        if (!initializeOverlays()) return;
+        if (!InitializeOverlays()) return;
 
-        meetingUnderlay.sprite = AssetLoader.White;
-        meetingUnderlay.enabled = true;
-        meetingUnderlay.transform.localScale = new Vector3(20f, 20f, 1f);
+        MeetingUnderlay.sprite = AssetLoader.White;
+        MeetingUnderlay.enabled = true;
+        MeetingUnderlay.transform.localScale = new Vector3(20f, 20f, 1f);
         var clearBlack = new Color32(0, 0, 0, 0);
 
         FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(0.2f, new Action<float>(t =>
         {
-            meetingUnderlay.color = Color.Lerp(clearBlack, Palette.Black, t);
+            MeetingUnderlay.color = Color.Lerp(clearBlack, Palette.Black, t);
         })));
     }
 
-    public static void hideBlackBG()
+    public static void HideBlackBG()
     {
-        if (meetingUnderlay == null) return;
-        meetingUnderlay.enabled = false;
+        if (MeetingUnderlay == null) return;
+        MeetingUnderlay.enabled = false;
     }
 
-    public static void showInfoOverlay()
+    public static void ShowInfoOverlay()
     {
-        if (overlayShown) return;
+        if (OverlayShown) return;
 
         HudManager hudManager = FastDestroyableSingleton<HudManager>.Instance;
         if (MapUtilities.CachedShipStatus == null || CachedPlayer.LocalPlayer.PlayerControl == null || hudManager == null || FastDestroyableSingleton<HudManager>.Instance.IsIntroDisplayed || (!CachedPlayer.LocalPlayer.PlayerControl.CanMove && MeetingHud.Instance == null))
             return;
 
-        if (!initializeOverlays()) return;
+        if (!InitializeOverlays()) return;
 
-        hideRoleOverlay();
+        HideRoleOverlay();
 
         MapBehaviour.Instance?.Close();
 
         hudManager.SetHudActive(false);
 
-        overlayShown = true;
+        OverlayShown = true;
 
         Transform parent = MeetingHud.Instance != null ? MeetingHud.Instance.transform : hudManager.transform;
-        infoUnderlay.transform.parent = parent;
-        infoOverlayRules.transform.parent = parent;
-        infoOverlayRoles.transform.parent = parent;
+        InfoUnderlay.transform.parent = parent;
+        InfoOverlayRules.transform.parent = parent;
+        InfoOverlayRoles.transform.parent = parent;
 
-        infoUnderlay.sprite = AssetLoader.White;
-        infoUnderlay.color = new Color(0.1f, 0.1f, 0.1f, 0.88f);
-        infoUnderlay.transform.localScale = new Vector3(7.5f, 5f, 1f);
-        infoUnderlay.enabled = true;
+        InfoUnderlay.sprite = AssetLoader.White;
+        InfoUnderlay.color = new Color(0.1f, 0.1f, 0.1f, 0.88f);
+        InfoUnderlay.transform.localScale = new Vector3(7.5f, 5f, 1f);
+        InfoUnderlay.enabled = true;
 
         RebuildUs.OptionsPage = 0;
         var option = GameOptionsManager.Instance.CurrentGameOptions;
         var gameOptions = option.ToString().Split("\n", StringSplitOptions.RemoveEmptyEntries).ToList().GetRange(2, 17);
         // infoOverlayRules.text = string.Join("\n", gameOptions) + "\n\n" + CustomOption.optionsToString(CustomOptionHolder.specialOptions);
-        infoOverlayRules.enabled = true;
+        InfoOverlayRules.enabled = true;
 
         string rolesText = "";
         foreach (var r in RoleInfo.GetRoleInfoForPlayer(CachedPlayer.LocalPlayer.PlayerControl))
@@ -334,66 +334,66 @@ public class CustomOverlays
                 (roleOptions != "" ? $"{roleOptions}\n\n" : "");
         }
 
-        infoOverlayRoles.text = rolesText;
-        infoOverlayRoles.enabled = true;
+        InfoOverlayRoles.text = rolesText;
+        InfoOverlayRoles.enabled = true;
 
         var underlayTransparent = new Color(0.1f, 0.1f, 0.1f, 0.0f);
         var underlayOpaque = new Color(0.1f, 0.1f, 0.1f, 0.88f);
         FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(0.2f, new Action<float>(t =>
         {
-            infoUnderlay.color = Color.Lerp(underlayTransparent, underlayOpaque, t);
-            infoOverlayRules.color = Color.Lerp(Palette.ClearWhite, Palette.White, t);
-            infoOverlayRoles.color = Color.Lerp(Palette.ClearWhite, Palette.White, t);
+            InfoUnderlay.color = Color.Lerp(underlayTransparent, underlayOpaque, t);
+            InfoOverlayRules.color = Color.Lerp(Palette.ClearWhite, Palette.White, t);
+            InfoOverlayRoles.color = Color.Lerp(Palette.ClearWhite, Palette.White, t);
         })));
     }
 
-    public static void hideInfoOverlay()
+    public static void HideInfoOverlay()
     {
-        if (!overlayShown) return;
+        if (!OverlayShown) return;
 
         if (MeetingHud.Instance == null) FastDestroyableSingleton<HudManager>.Instance.SetHudActive(true);
 
-        overlayShown = false;
+        OverlayShown = false;
         var underlayTransparent = new Color(0.1f, 0.1f, 0.1f, 0.0f);
         var underlayOpaque = new Color(0.1f, 0.1f, 0.1f, 0.88f);
 
         FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(0.2f, new Action<float>(t =>
         {
-            if (infoUnderlay != null)
+            if (InfoUnderlay != null)
             {
-                infoUnderlay.color = Color.Lerp(underlayOpaque, underlayTransparent, t);
-                if (t >= 1.0f) infoUnderlay.enabled = false;
+                InfoUnderlay.color = Color.Lerp(underlayOpaque, underlayTransparent, t);
+                if (t >= 1.0f) InfoUnderlay.enabled = false;
             }
 
-            if (infoOverlayRules != null)
+            if (InfoOverlayRules != null)
             {
-                infoOverlayRules.color = Color.Lerp(Palette.White, Palette.ClearWhite, t);
-                if (t >= 1.0f) infoOverlayRules.enabled = false;
+                InfoOverlayRules.color = Color.Lerp(Palette.White, Palette.ClearWhite, t);
+                if (t >= 1.0f) InfoOverlayRules.enabled = false;
             }
 
-            if (infoOverlayRoles != null)
+            if (InfoOverlayRoles != null)
             {
-                infoOverlayRoles.color = Color.Lerp(Palette.White, Palette.ClearWhite, t);
-                if (t >= 1.0f) infoOverlayRoles.enabled = false;
+                InfoOverlayRoles.color = Color.Lerp(Palette.White, Palette.ClearWhite, t);
+                if (t >= 1.0f) InfoOverlayRoles.enabled = false;
             }
         })));
     }
 
-    public static void toggleInfoOverlay()
+    public static void ToggleInfoOverlay()
     {
-        if (overlayShown)
+        if (OverlayShown)
         {
-            hideInfoOverlay();
+            HideInfoOverlay();
         }
         else
         {
-            showInfoOverlay();
+            ShowInfoOverlay();
         }
     }
 
-    public static void showRoleOverlay()
+    public static void ShowRoleOverlay()
     {
-        if (rolePage != 0) return;
+        if (RolePage != 0) return;
 
         HudManager hudManager = FastDestroyableSingleton<HudManager>.Instance;
         if (MapUtilities.CachedShipStatus == null || CachedPlayer.LocalPlayer.PlayerControl == null || hudManager == null || FastDestroyableSingleton<HudManager>.Instance.IsIntroDisplayed || (!CachedPlayer.LocalPlayer.PlayerControl.CanMove && MeetingHud.Instance == null))
@@ -401,31 +401,31 @@ public class CustomOverlays
             return;
         }
 
-        if (!initializeOverlays()) return;
+        if (!InitializeOverlays()) return;
 
-        hideInfoOverlay();
+        HideInfoOverlay();
 
         MapBehaviour.Instance?.Close();
 
         hudManager.SetHudActive(false);
 
-        rolePage = 1;
+        RolePage = 1;
 
         Transform parent = MeetingHud.Instance != null ? MeetingHud.Instance.transform : hudManager.transform;
-        roleUnderlay.transform.parent = parent;
-        foreach (var roleOverlay in roleOverlayList)
+        RoleUnderlay.transform.parent = parent;
+        foreach (var roleOverlay in RoleOverlayList)
         {
             roleOverlay.transform.parent = parent;
         }
 
-        roleUnderlay.sprite = AssetLoader.White;
-        roleUnderlay.color = new Color(0.1f, 0.1f, 0.1f, 0.88f);
-        roleUnderlay.transform.localScale = new Vector3(9.3f, 5.1f, 1f);
-        roleUnderlay.enabled = true;
+        RoleUnderlay.sprite = AssetLoader.White;
+        RoleUnderlay.color = new Color(0.1f, 0.1f, 0.1f, 0.88f);
+        RoleUnderlay.transform.localScale = new Vector3(9.3f, 5.1f, 1f);
+        RoleUnderlay.enabled = true;
 
-        setRoleOverlayText();
+        SetRoleOverlayText();
 
-        foreach (var roleOverlay in roleOverlayList)
+        foreach (var roleOverlay in RoleOverlayList)
         {
             roleOverlay.enabled = true;
         }
@@ -434,47 +434,47 @@ public class CustomOverlays
         var underlayOpaque = new Color(0.1f, 0.1f, 0.1f, 0.88f);
         FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(0.2f, new Action<float>(t =>
         {
-            roleUnderlay.color = Color.Lerp(underlayTransparent, underlayOpaque, t);
-            foreach (var roleOverlay in roleOverlayList)
+            RoleUnderlay.color = Color.Lerp(underlayTransparent, underlayOpaque, t);
+            foreach (var roleOverlay in RoleOverlayList)
             {
                 roleOverlay.color = Color.Lerp(Palette.ClearWhite, Palette.White, t);
             }
         })));
     }
 
-    public static void setRoleOverlayText()
+    public static void SetRoleOverlayText()
     {
-        var i = (rolePage - 1) * 3;
-        var pageText = $" ({rolePage}/{maxRolePage})" + "\n";
-        foreach (var roleOverlay in roleOverlayList)
+        var i = (RolePage - 1) * 3;
+        var pageText = $" ({RolePage}/{MaxRolePage})" + "\n";
+        foreach (var roleOverlay in RoleOverlayList)
         {
-            roleOverlay.text = i < roleData.Count ? pageText + roleData[i].Trim('\r', '\n') : string.Empty;
+            roleOverlay.text = i < RoleData.Count ? pageText + RoleData[i].Trim('\r', '\n') : string.Empty;
             i++;
             pageText = "\n";
         }
     }
 
-    public static void hideRoleOverlay()
+    public static void HideRoleOverlay()
     {
-        if (rolePage == 0) return;
+        if (RolePage == 0) return;
 
         if (MeetingHud.Instance == null) FastDestroyableSingleton<HudManager>.Instance.SetHudActive(true);
 
-        rolePage = 0;
+        RolePage = 0;
         var underlayTransparent = new Color(0.1f, 0.1f, 0.1f, 0.0f);
         var underlayOpaque = new Color(0.1f, 0.1f, 0.1f, 0.88f);
 
         FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(0.2f, new Action<float>(t =>
         {
-            if (roleUnderlay != null)
+            if (RoleUnderlay != null)
             {
-                roleUnderlay.color = Color.Lerp(underlayOpaque, underlayTransparent, t);
-                if (t >= 1.0f) roleUnderlay.enabled = false;
+                RoleUnderlay.color = Color.Lerp(underlayOpaque, underlayTransparent, t);
+                if (t >= 1.0f) RoleUnderlay.enabled = false;
             }
 
-            if (roleOverlayList != null)
+            if (RoleOverlayList != null)
             {
-                foreach (var roleOverlay in roleOverlayList)
+                foreach (var roleOverlay in RoleOverlayList)
                 {
                     if (roleOverlay != null)
                     {
@@ -486,20 +486,20 @@ public class CustomOverlays
         })));
     }
 
-    public static void toggleRoleOverlay()
+    public static void ToggleRoleOverlay()
     {
-        if (rolePage == 0)
+        if (RolePage == 0)
         {
-            showRoleOverlay();
+            ShowRoleOverlay();
         }
-        else if (maxRolePage <= rolePage)
+        else if (MaxRolePage <= RolePage)
         {
-            hideRoleOverlay();
+            HideRoleOverlay();
         }
         else
         {
-            rolePage++;
-            setRoleOverlayText();
+            RolePage++;
+            SetRoleOverlayText();
         }
     }
 
@@ -512,11 +512,11 @@ public class CustomOverlays
             bool isOpen = cc != null && cc.IsOpenOrOpening;
             if (Input.GetKeyDown(KeyCode.H) && AmongUsClient.Instance.GameState == InnerNet.InnerNetClient.GameStates.Started && !isOpen)
             {
-                toggleInfoOverlay();
+                ToggleInfoOverlay();
             }
             else if (Input.GetKeyDown(KeyCode.I) && AmongUsClient.Instance.GameState == InnerNet.InnerNetClient.GameStates.Started && !isOpen)
             {
-                toggleRoleOverlay();
+                ToggleRoleOverlay();
             }
         }
     }

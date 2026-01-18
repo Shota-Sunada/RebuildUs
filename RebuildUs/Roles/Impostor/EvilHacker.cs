@@ -5,33 +5,33 @@ public class EvilHacker : RoleBase<EvilHacker>
 {
     public static Color NameColor = Palette.ImpostorRed;
     public override Color RoleColor => NameColor;
-    public PlayerControl currentTarget;
-    public PlayerControl fakeMadmate;
-    public bool canCreateMadmate = false;
-    private static CustomButton evilHackerButton;
-    private static CustomButton evilHackerCreatesMadmateButton;
+    public PlayerControl CurrentTarget;
+    public PlayerControl FakeMadmate;
+    public bool CanCreateMadmate = false;
+    private static CustomButton EvilHackerButton;
+    private static CustomButton EvilHackerCreatesMadmateButton;
 
     // write configs here
 
-    public static bool canHasBetterAdmin { get { return CustomOptionHolder.evilHackerCanHasBetterAdmin.GetBool(); } }
-    public static bool canMoveEvenIfUsesAdmin { get { return CustomOptionHolder.evilHackerCanMoveEvenIfUsesAdmin.GetBool(); } }
-    public static bool canInheritAbility { get { return CustomOptionHolder.evilHackerCanInheritAbility.GetBool(); } }
-    public static bool canSeeDoorStatus { get { return CustomOptionHolder.evilHackerCanSeeDoorStatus.GetBool(); } }
-    public static bool createdMadmateCanDieToSheriff { get { return CustomOptionHolder.createdMadmateCanDieToSheriff.GetBool(); } }
-    public static bool createdMadmateCanEnterVents { get { return CustomOptionHolder.createdMadmateCanEnterVents.GetBool(); } }
-    public static bool canCreateMadmateFromJackal { get { return CustomOptionHolder.evilHackerCanCreateMadmateFromJackal.GetBool(); } }
-    public static bool createdMadmateHasImpostorVision { get { return CustomOptionHolder.createdMadmateHasImpostorVision.GetBool(); } }
-    public static bool createdMadmateCanSabotage { get { return CustomOptionHolder.createdMadmateCanSabotage.GetBool(); } }
-    public static bool createdMadmateCanFixComm { get { return CustomOptionHolder.createdMadmateCanFixComm.GetBool(); } }
-    public static int createdMadmateAbility { get { return CustomOptionHolder.createdMadmateAbility.GetSelection(); } }
-    public static float createdMadmateNumTasks { get { return CustomOptionHolder.createdMadmateNumTasks.GetFloat(); } }
-    public static bool createdMadmateExileCrewmate { get { return CustomOptionHolder.createdMadmateExileCrewmate.GetBool(); } }
+    public static bool CanHasBetterAdmin { get { return CustomOptionHolder.EvilHackerCanHasBetterAdmin.GetBool(); } }
+    public static bool CanMoveEvenIfUsesAdmin { get { return CustomOptionHolder.EvilHackerCanMoveEvenIfUsesAdmin.GetBool(); } }
+    public static bool CanInheritAbility { get { return CustomOptionHolder.EvilHackerCanInheritAbility.GetBool(); } }
+    public static bool CanSeeDoorStatus { get { return CustomOptionHolder.EvilHackerCanSeeDoorStatus.GetBool(); } }
+    public static bool CreatedMadmateCanDieToSheriff { get { return CustomOptionHolder.CreatedMadmateCanDieToSheriff.GetBool(); } }
+    public static bool CreatedMadmateCanEnterVents { get { return CustomOptionHolder.CreatedMadmateCanEnterVents.GetBool(); } }
+    public static bool CanCreateMadmateFromJackal { get { return CustomOptionHolder.EvilHackerCanCreateMadmateFromJackal.GetBool(); } }
+    public static bool CreatedMadmateHasImpostorVision { get { return CustomOptionHolder.CreatedMadmateHasImpostorVision.GetBool(); } }
+    public static bool CreatedMadmateCanSabotage { get { return CustomOptionHolder.CreatedMadmateCanSabotage.GetBool(); } }
+    public static bool CreatedMadmateCanFixComm { get { return CustomOptionHolder.CreatedMadmateCanFixComm.GetBool(); } }
+    public static int CreatedMadmateAbility { get { return CustomOptionHolder.CreatedMadmateAbility.GetSelection(); } }
+    public static float CreatedMadmateNumTasks { get { return CustomOptionHolder.CreatedMadmateNumTasks.GetFloat(); } }
+    public static bool CreatedMadmateExileCrewmate { get { return CustomOptionHolder.CreatedMadmateExileCrewmate.GetBool(); } }
 
     public EvilHacker()
     {
         // write value init here
         StaticRoleType = CurrentRoleType = RoleType.EvilHacker;
-        canCreateMadmate = CustomOptionHolder.evilHackerCanCreateMadmate.GetBool();
+        CanCreateMadmate = CustomOptionHolder.EvilHackerCanCreateMadmate.GetBool();
     }
 
     public override void OnMeetingStart() { }
@@ -42,8 +42,8 @@ public class EvilHacker : RoleBase<EvilHacker>
 
         if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.EvilHacker))
         {
-            currentTarget = Helpers.SetTarget(true);
-            Helpers.SetPlayerOutline(currentTarget, RoleColor);
+            CurrentTarget = Helpers.SetTarget(true);
+            Helpers.SetPlayerOutline(CurrentTarget, RoleColor);
         }
     }
     public override void OnKill(PlayerControl target) { }
@@ -52,21 +52,21 @@ public class EvilHacker : RoleBase<EvilHacker>
     public override void HandleDisconnect(PlayerControl player, DisconnectReasons reason) { }
     public override void MakeButtons(HudManager hm)
     {
-        evilHackerButton = new CustomButton(
+        EvilHackerButton = new CustomButton(
             () =>
             {
                 CachedPlayer.LocalPlayer.PlayerControl.NetTransform.Halt();
-                Admin.isEvilHackerAdmin = true;
+                Admin.IsEvilHackerAdmin = true;
                 FastDestroyableSingleton<MapBehaviour>.Instance.ShowCountOverlay(true, true, true);
             },
             () =>
             {
                 return ((CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.EvilHacker) && CachedPlayer.LocalPlayer.PlayerControl.IsAlive()) ||
-                        (isInherited() && CachedPlayer.LocalPlayer.PlayerControl.IsTeamImpostor())) && !RebuildUs.BetterSabotageMap.Value;
+                        (IsInherited() && CachedPlayer.LocalPlayer.PlayerControl.IsTeamImpostor())) && !RebuildUs.BetterSabotageMap.Value;
             },
             () => { return CachedPlayer.LocalPlayer.PlayerControl.CanMove; },
             () => { },
-            Hacker.getAdminSprite(),
+            Hacker.GetAdminSprite(),
             new Vector3(0f, 2.0f, 0),
             hm,
             hm.KillButton,
@@ -78,18 +78,18 @@ public class EvilHacker : RoleBase<EvilHacker>
             FastDestroyableSingleton<TranslationController>.Instance.GetString(StringNames.Admin)
         );
 
-        evilHackerCreatesMadmateButton = new CustomButton(
+        EvilHackerCreatesMadmateButton = new CustomButton(
             () =>
             {
                 using var sender = new RPCSender(CachedPlayer.LocalPlayer.PlayerControl.NetId, CustomRPC.EvilHackerCreatesMadmate);
-                sender.Write(currentTarget.PlayerId);
-                RPCProcedure.evilHackerCreatesMadmate(currentTarget.PlayerId, Player.PlayerId);
+                sender.Write(CurrentTarget.PlayerId);
+                RPCProcedure.EvilHackerCreatesMadmate(CurrentTarget.PlayerId, Player.PlayerId);
             },
             () =>
             {
-                return CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.EvilHacker) && canCreateMadmate && CachedPlayer.LocalPlayer.PlayerControl.IsAlive();
+                return CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.EvilHacker) && CanCreateMadmate && CachedPlayer.LocalPlayer.PlayerControl.IsAlive();
             },
-            () => { return currentTarget && CachedPlayer.LocalPlayer.PlayerControl.CanMove; },
+            () => { return CurrentTarget && CachedPlayer.LocalPlayer.PlayerControl.CanMove; },
             () => { },
             AssetLoader.SidekickButton,
             new Vector3(-2.7f, -0.06f, 0),
@@ -103,14 +103,14 @@ public class EvilHacker : RoleBase<EvilHacker>
     }
     public override void SetButtonCooldowns()
     {
-        evilHackerButton.MaxTimer = 0f;
-        evilHackerCreatesMadmateButton.MaxTimer = 0f;
+        EvilHackerButton.MaxTimer = 0f;
+        EvilHackerCreatesMadmateButton.MaxTimer = 0f;
     }
 
     // write functions here
-    public static bool isInherited()
+    public static bool IsInherited()
     {
-        return canInheritAbility && Exists && LivingPlayers.Count == 0 && CachedPlayer.LocalPlayer.PlayerControl.IsTeamImpostor();
+        return CanInheritAbility && Exists && LivingPlayers.Count == 0 && CachedPlayer.LocalPlayer.PlayerControl.IsTeamImpostor();
     }
 
     public override void Clear()

@@ -58,10 +58,10 @@ public static class Mafia
 
         // write configs here
 
-        public static bool canSabotage { get { return canKill || CustomOptionHolder.mafiosoCanSabotage.GetBool(); } }
-        public static bool canRepair { get { return canKill || CustomOptionHolder.mafiosoCanRepair.GetBool(); } }
-        public static bool canVent { get { return canKill || CustomOptionHolder.mafiosoCanVent.GetBool(); } }
-        public static bool canKill { get { return !Godfather.Exists || IsGodfatherDead; } }
+        public static bool CanSabotage { get { return CanKill || CustomOptionHolder.MafiosoCanSabotage.GetBool(); } }
+        public static bool CanRepair { get { return CanKill || CustomOptionHolder.MafiosoCanRepair.GetBool(); } }
+        public static bool CanVent { get { return CanKill || CustomOptionHolder.MafiosoCanVent.GetBool(); } }
+        public static bool CanKill { get { return !Godfather.Exists || IsGodfatherDead; } }
 
         public Mafioso()
         {
@@ -100,11 +100,11 @@ public static class Mafia
         public override Color RoleColor => NameColor;
 
         // write configs here
-        private static CustomButton janitorCleanButton;
-        public static float cooldown { get { return CustomOptionHolder.janitorCooldown.GetFloat(); } }
-        public static bool canSabotage { get { return CustomOptionHolder.janitorCanSabotage.GetBool(); } }
-        public static bool canRepair { get { return CustomOptionHolder.janitorCanRepair.GetBool(); } }
-        public static bool canVent { get { return CustomOptionHolder.janitorCanVent.GetBool(); } }
+        private static CustomButton JanitorCleanButton;
+        public static float Cooldown { get { return CustomOptionHolder.JanitorCooldown.GetFloat(); } }
+        public static bool CanSabotage { get { return CustomOptionHolder.JanitorCanSabotage.GetBool(); } }
+        public static bool CanRepair { get { return CustomOptionHolder.JanitorCanRepair.GetBool(); } }
+        public static bool CanVent { get { return CustomOptionHolder.JanitorCanVent.GetBool(); } }
 
         public Janitor()
         {
@@ -127,7 +127,7 @@ public static class Mafia
         public override void HandleDisconnect(PlayerControl player, DisconnectReasons reason) { }
         public override void MakeButtons(HudManager hm)
         {
-            janitorCleanButton = new CustomButton(
+            JanitorCleanButton = new CustomButton(
                 () =>
                 {
                     foreach (var collider2D in Physics2D.OverlapCircleAll(CachedPlayer.LocalPlayer.PlayerControl.GetTruePosition(), CachedPlayer.LocalPlayer.PlayerControl.MaxReportDistance, Constants.PlayersOnlyMask))
@@ -148,7 +148,7 @@ public static class Mafia
                                         sender.Write(playerInfo.PlayerId);
                                         RPCProcedure.CleanBody(playerInfo.PlayerId);
                                     }
-                                    janitorCleanButton.Timer = janitorCleanButton.MaxTimer;
+                                    JanitorCleanButton.Timer = JanitorCleanButton.MaxTimer;
 
                                     break;
                                 }
@@ -158,7 +158,7 @@ public static class Mafia
                 },
                 () => { return CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Janitor) && CachedPlayer.LocalPlayer.PlayerControl.IsAlive(); },
                 () => { return hm.ReportButton.graphic.color == Palette.EnabledColor && CachedPlayer.LocalPlayer.PlayerControl.CanMove; },
-                () => { janitorCleanButton.Timer = janitorCleanButton.MaxTimer; },
+                () => { JanitorCleanButton.Timer = JanitorCleanButton.MaxTimer; },
                 AssetLoader.CleanButton,
                 new Vector3(-1.8f, -0.06f, 0),
                 hm,
@@ -171,7 +171,7 @@ public static class Mafia
         }
         public override void SetButtonCooldowns()
         {
-            janitorCleanButton.MaxTimer = Janitor.cooldown;
+            JanitorCleanButton.MaxTimer = Janitor.Cooldown;
         }
 
         // write functions here

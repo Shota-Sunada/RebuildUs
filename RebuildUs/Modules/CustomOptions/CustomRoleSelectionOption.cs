@@ -2,12 +2,12 @@ namespace RebuildUs.Modules.CustomOptions;
 
 public class CustomRoleSelectionOption : CustomOption
 {
-    public RoleType[] roleTypes;
+    public RoleType[] RoleTypes;
     public RoleType Role
     {
         get
         {
-            return roleTypes[Selection];
+            return RoleTypes[Selection];
         }
     }
 
@@ -15,7 +15,7 @@ public class CustomRoleSelectionOption : CustomOption
     {
         roleTypes ??= [.. Enum.GetValues(typeof(RoleType)).Cast<RoleType>()];
 
-        this.roleTypes = roleTypes;
+        this.RoleTypes = roleTypes;
         var strings = roleTypes.Select(
             x =>
                 x == RoleType.NoRole ? "optionOff" :

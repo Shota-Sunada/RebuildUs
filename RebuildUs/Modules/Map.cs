@@ -2,70 +2,70 @@ namespace RebuildUs.Modules;
 
 public static class Map
 {
-    public static Dictionary<byte, SpriteRenderer> mapIcons = null;
-    public static Dictionary<byte, SpriteRenderer> corpseIcons = null;
+    public static Dictionary<byte, SpriteRenderer> MapIcons = null;
+    public static Dictionary<byte, SpriteRenderer> CorpseIcons = null;
 
-    public static Dictionary<String, SpriteRenderer> doorMarks;
-    public static Il2CppArrayBase<PlainDoor> plainDoors;
-    private static Vector3 useButtonPos;
+    public static Dictionary<String, SpriteRenderer> DoorMarks;
+    public static Il2CppArrayBase<PlainDoor> PlainDoors;
+    private static Vector3 UseButtonPos;
 
-    public static SpriteRenderer targetHerePoint;
-    public static Dictionary<byte, SpriteRenderer> impostorHerePoint;
+    public static SpriteRenderer TargetHerePoint;
+    public static Dictionary<byte, SpriteRenderer> ImpostorHerePoint;
 
-    public static void reset()
+    public static void Reset()
     {
-        if (mapIcons != null)
+        if (MapIcons != null)
         {
-            foreach (SpriteRenderer r in mapIcons.Values)
+            foreach (SpriteRenderer r in MapIcons.Values)
                 UnityEngine.Object.Destroy(r.gameObject);
-            mapIcons.Clear();
-            mapIcons = null;
+            MapIcons.Clear();
+            MapIcons = null;
         }
 
-        if (corpseIcons != null)
+        if (CorpseIcons != null)
         {
-            foreach (SpriteRenderer r in corpseIcons.Values)
+            foreach (SpriteRenderer r in CorpseIcons.Values)
                 UnityEngine.Object.Destroy(r.gameObject);
-            corpseIcons.Clear();
-            corpseIcons = null;
+            CorpseIcons.Clear();
+            CorpseIcons = null;
         }
 
-        if (targetHerePoint != null)
+        if (TargetHerePoint != null)
         {
-            UnityEngine.Object.Destroy(targetHerePoint.gameObject);
+            UnityEngine.Object.Destroy(TargetHerePoint.gameObject);
         }
 
-        if (impostorHerePoint != null)
+        if (ImpostorHerePoint != null)
         {
-            foreach (SpriteRenderer r in impostorHerePoint.Values)
+            foreach (SpriteRenderer r in ImpostorHerePoint.Values)
             {
                 UnityEngine.Object.Destroy(r.gameObject);
             }
-            impostorHerePoint.Clear();
-            impostorHerePoint = null;
+            ImpostorHerePoint.Clear();
+            ImpostorHerePoint = null;
         }
-        if (doorMarks != null)
+        if (DoorMarks != null)
         {
-            foreach (var mark in doorMarks.Values)
+            foreach (var mark in DoorMarks.Values)
             {
                 UnityEngine.Object.Destroy(mark.gameObject);
             }
-            doorMarks.Clear();
-            doorMarks = null;
+            DoorMarks.Clear();
+            DoorMarks = null;
         }
-        if (plainDoors != null)
+        if (PlainDoors != null)
         {
-            plainDoors = null;
+            PlainDoors = null;
         }
     }
 
-    static void initializeIcons(MapBehaviour __instance, PlayerControl pc = null)
+    static void InitializeIcons(MapBehaviour __instance, PlayerControl pc = null)
     {
         List<PlayerControl> players = [];
         if (pc == null)
         {
-            mapIcons = [];
-            corpseIcons = [];
+            MapIcons = [];
+            CorpseIcons = [];
             foreach (PlayerControl p in CachedPlayer.AllPlayers)
             {
                 players.Add(p);
@@ -81,19 +81,19 @@ public static class Map
             if (p.IsGM()) continue;
 
             byte id = p.PlayerId;
-            mapIcons[id] = UnityEngine.Object.Instantiate(__instance.HerePoint, __instance.HerePoint.transform.parent);
-            p.SetPlayerMaterialColors(mapIcons[id]);
+            MapIcons[id] = UnityEngine.Object.Instantiate(__instance.HerePoint, __instance.HerePoint.transform.parent);
+            p.SetPlayerMaterialColors(MapIcons[id]);
 
-            corpseIcons[id] = UnityEngine.Object.Instantiate(__instance.HerePoint, __instance.HerePoint.transform.parent);
-            corpseIcons[id].sprite = AssetLoader.CorpseIcon;
-            corpseIcons[id].transform.localScale = Vector3.one * 0.20f;
-            p.SetPlayerMaterialColors(corpseIcons[id]);
+            CorpseIcons[id] = UnityEngine.Object.Instantiate(__instance.HerePoint, __instance.HerePoint.transform.parent);
+            CorpseIcons[id].sprite = AssetLoader.CorpseIcon;
+            CorpseIcons[id].transform.localScale = Vector3.one * 0.20f;
+            p.SetPlayerMaterialColors(CorpseIcons[id]);
         }
     }
 
     public static void UpdatePrefix(MapBehaviour __instance)
     {
-        var vector = AntiTeleport.position;
+        var vector = AntiTeleport.Position;
         vector /= MapUtilities.CachedShipStatus.MapScale;
         vector.x *= Mathf.Sign(MapUtilities.CachedShipStatus.transform.localScale.x);
         vector.z = -1f;
@@ -103,14 +103,14 @@ public static class Map
 
     public static void UpdatePostfix(MapBehaviour __instance)
     {
-        if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.EvilTracker) && EvilTracker.canSeeTargetPosition)
+        if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.EvilTracker) && EvilTracker.CanSeeTargetPosition)
         {
-            evilTrackerFixedUpdate(__instance);
+            EvilTrackerFixedUpdate(__instance);
         }
 
-        if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.EvilHacker) || EvilHacker.isInherited())
+        if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.EvilHacker) || EvilHacker.IsInherited())
         {
-            evilHackerFixedUpdate(__instance);
+            EvilHackerFixedUpdate(__instance);
         }
 
         if (CachedPlayer.LocalPlayer.PlayerControl.IsGM())
@@ -120,7 +120,7 @@ public static class Map
                 if (p == null || p.IsGM()) continue;
 
                 byte id = p.PlayerId;
-                if (!mapIcons.ContainsKey(id))
+                if (!MapIcons.ContainsKey(id))
                 {
                     continue;
                 }
@@ -132,14 +132,14 @@ public static class Map
                     vector /= MapUtilities.CachedShipStatus.MapScale;
                     vector.x *= Mathf.Sign(MapUtilities.CachedShipStatus.transform.localScale.x);
                     vector.z = -1f;
-                    mapIcons[id].transform.localPosition = vector;
+                    MapIcons[id].transform.localPosition = vector;
 
                 }
 
-                mapIcons[id].enabled = enabled;
+                MapIcons[id].enabled = enabled;
             }
 
-            foreach (SpriteRenderer r in corpseIcons.Values) { r.enabled = false; }
+            foreach (SpriteRenderer r in CorpseIcons.Values) { r.enabled = false; }
             foreach (DeadBody b in UnityEngine.Object.FindObjectsOfType<DeadBody>())
             {
                 byte id = b.ParentId;
@@ -148,13 +148,13 @@ public static class Map
                 vector.x *= Mathf.Sign(MapUtilities.CachedShipStatus.transform.localScale.x);
                 vector.z = -1f;
 
-                if (!corpseIcons.ContainsKey(id))
+                if (!CorpseIcons.ContainsKey(id))
                 {
                     continue;
                 }
 
-                corpseIcons[id].transform.localPosition = vector;
-                corpseIcons[id].enabled = true;
+                CorpseIcons[id].transform.localPosition = vector;
+                CorpseIcons[id].enabled = true;
             }
         }
     }
@@ -165,9 +165,9 @@ public static class Map
         {
             Vector3 pos = __instance.HerePoint.transform.parent.transform.position;
             __instance.HerePoint.transform.parent.transform.position = new Vector3(pos.x, pos.y, -60f);
-            changeSabotageLayout(__instance);
-            if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.EvilHacker) || EvilHacker.isInherited()) return evilHackerShowMap(__instance);
-            if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.EvilTracker)) return evilTrackerShowMap(__instance);
+            ChangeSabotageLayout(__instance);
+            if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.EvilHacker) || EvilHacker.IsInherited()) return EvilHackerShowMap(__instance);
+            if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.EvilTracker)) return EvilTrackerShowMap(__instance);
         }
         CachedPlayer.LocalPlayer.PlayerControl.SetPlayerMaterialColors(__instance.HerePoint);
         __instance.GenericShow();
@@ -182,35 +182,35 @@ public static class Map
     {
         if (CachedPlayer.LocalPlayer.PlayerControl.IsGM())
         {
-            useButtonPos = FastDestroyableSingleton<HudManager>.Instance.UseButton.transform.localPosition;
+            UseButtonPos = FastDestroyableSingleton<HudManager>.Instance.UseButton.transform.localPosition;
         }
-        CustomOverlays.hideInfoOverlay();
-        CustomOverlays.hideRoleOverlay();
+        CustomOverlays.HideInfoOverlay();
+        CustomOverlays.HideRoleOverlay();
     }
 
     public static void GenericShowPostfix(MapBehaviour __instance)
     {
         if (CachedPlayer.LocalPlayer.PlayerControl.IsGM())
         {
-            if (mapIcons == null || corpseIcons == null)
+            if (MapIcons == null || CorpseIcons == null)
             {
-                initializeIcons(__instance);
+                InitializeIcons(__instance);
             }
 
             __instance.taskOverlay.Hide();
-            foreach (var id in mapIcons.Keys)
+            foreach (var id in MapIcons.Keys)
             {
                 var p = Helpers.PlayerById(id);
-                p.SetPlayerMaterialColors(mapIcons[id]);
-                mapIcons[id].enabled = !p.Data.IsDead;
+                p.SetPlayerMaterialColors(MapIcons[id]);
+                MapIcons[id].enabled = !p.Data.IsDead;
             }
 
             foreach (var b in UnityEngine.Object.FindObjectsOfType<DeadBody>())
             {
                 byte id = b.ParentId;
                 var p = Helpers.PlayerById(id);
-                p.SetPlayerMaterialColors(corpseIcons[id]);
-                corpseIcons[id].enabled = true;
+                p.SetPlayerMaterialColors(CorpseIcons[id]);
+                CorpseIcons[id].enabled = true;
             }
         }
     }
@@ -219,14 +219,14 @@ public static class Map
     {
         if (CachedPlayer.LocalPlayer.PlayerControl.IsGM())
         {
-            FastDestroyableSingleton<HudManager>.Instance.UseButton.transform.localPosition = useButtonPos;
+            FastDestroyableSingleton<HudManager>.Instance.UseButton.transform.localPosition = UseButtonPos;
         }
         FastDestroyableSingleton<HudManager>.Instance.transform.FindChild("TaskDisplay").FindChild("TaskPanel").gameObject.SetActive(true);
     }
 
     public static bool IsOpenStopped(ref bool __result, MapBehaviour __instance)
     {
-        if ((CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.EvilHacker) || EvilHacker.isInherited()) && CustomOptionHolder.evilHackerCanMoveEvenIfUsesAdmin.GetBool())
+        if ((CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.EvilHacker) || EvilHacker.IsInherited()) && CustomOptionHolder.EvilHackerCanMoveEvenIfUsesAdmin.GetBool())
         {
             __result = false;
             return false;
@@ -241,9 +241,9 @@ public static class Map
 
         Vector3 pos = __instance.HerePoint.transform.parent.transform.position;
         __instance.HerePoint.transform.parent.transform.position = new Vector3(pos.x, pos.y, -60f);
-        changeSabotageLayout(__instance);
-        if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.EvilHacker) || EvilHacker.isInherited()) return evilHackerShowMap(__instance);
-        if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.EvilTracker)) return evilTrackerShowMap(__instance);
+        ChangeSabotageLayout(__instance);
+        if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.EvilHacker) || EvilHacker.IsInherited()) return EvilHackerShowMap(__instance);
+        if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.EvilTracker)) return EvilTrackerShowMap(__instance);
         return true;
     }
 
@@ -255,12 +255,12 @@ public static class Map
         }
     }
 
-    private static void showDoorStatus(MapBehaviour __instance)
+    private static void ShowDoorStatus(MapBehaviour __instance)
     {
-        if (!EvilHacker.canSeeDoorStatus) return;
+        if (!EvilHacker.CanSeeDoorStatus) return;
         if (MeetingHud.Instance == null && RebuildUs.ForceNormalSabotageMap.Value)
         {
-            foreach (var mark in doorMarks.Values)
+            foreach (var mark in DoorMarks.Values)
             {
                 mark.gameObject.SetActive(false);
             }
@@ -268,22 +268,22 @@ public static class Map
         }
 
         // if (plainDoors == null) plainDoors = GameObject.FindObjectsOfType<PlainDoor>();
-        if (doorMarks == null) doorMarks = [];
+        if (DoorMarks == null) DoorMarks = [];
 
-        foreach (var door in plainDoors)
+        foreach (var door in PlainDoors)
         {
             Vector3 pos = door.gameObject.transform.position / MapUtilities.CachedShipStatus.MapScale;
             pos.z = -10f;
             String key = $"{pos.x},{pos.y}";
             SpriteRenderer mark;
-            if (doorMarks.ContainsKey(key))
+            if (DoorMarks.ContainsKey(key))
             {
-                mark = doorMarks[key];
+                mark = DoorMarks[key];
             }
             else
             {
                 mark = GameObject.Instantiate<SpriteRenderer>(__instance.HerePoint, __instance.HerePoint.transform.parent);
-                doorMarks.Add(key, mark);
+                DoorMarks.Add(key, mark);
             }
             if (!door.Open)
             {
@@ -300,7 +300,7 @@ public static class Map
         }
     }
 
-    private static void changeSabotageLayout(MapBehaviour __instance)
+    private static void ChangeSabotageLayout(MapBehaviour __instance)
     {
         if (Helpers.IsAirship)
         {
@@ -353,51 +353,51 @@ public static class Map
         }
     }
 
-    private static void evilHackerFixedUpdate(MapBehaviour __instance)
+    private static void EvilHackerFixedUpdate(MapBehaviour __instance)
     {
-        showDoorStatus(__instance);
+        ShowDoorStatus(__instance);
     }
 
-    private static void evilTrackerFixedUpdate(MapBehaviour __instance)
+    private static void EvilTrackerFixedUpdate(MapBehaviour __instance)
     {
         // ターゲットの位置をマップに表示
-        if (EvilTracker.target != null)
+        if (EvilTracker.Target != null)
         {
-            if (targetHerePoint == null)
+            if (TargetHerePoint == null)
             {
-                targetHerePoint = UnityEngine.Object.Instantiate(__instance.HerePoint, __instance.HerePoint.transform.parent);
+                TargetHerePoint = UnityEngine.Object.Instantiate(__instance.HerePoint, __instance.HerePoint.transform.parent);
             }
-            targetHerePoint.gameObject.SetActive(EvilTracker.target.IsAlive());
-            NetworkedPlayerInfo playerById = GameData.Instance.GetPlayerById(EvilTracker.target.PlayerId);
-            PlayerMaterial.SetColors((playerById != null) ? playerById.DefaultOutfit.ColorId : 0, targetHerePoint);
-            var pos = new Vector3(EvilTracker.target.transform.position.x, EvilTracker.target.transform.position.y, EvilTracker.target.transform.position.z);
+            TargetHerePoint.gameObject.SetActive(EvilTracker.Target.IsAlive());
+            NetworkedPlayerInfo playerById = GameData.Instance.GetPlayerById(EvilTracker.Target.PlayerId);
+            PlayerMaterial.SetColors((playerById != null) ? playerById.DefaultOutfit.ColorId : 0, TargetHerePoint);
+            var pos = new Vector3(EvilTracker.Target.transform.position.x, EvilTracker.Target.transform.position.y, EvilTracker.Target.transform.position.z);
             pos /= MapUtilities.CachedShipStatus.MapScale;
             pos.x *= Mathf.Sign(MapUtilities.CachedShipStatus.transform.localScale.x);
             pos.z = -10;
-            targetHerePoint.transform.localPosition = pos;
+            TargetHerePoint.transform.localPosition = pos;
         }
 
         // インポスターの位置をマップに表示
-        if (impostorHerePoint == null) impostorHerePoint = [];
+        if (ImpostorHerePoint == null) ImpostorHerePoint = [];
         foreach (PlayerControl p in CachedPlayer.AllPlayers)
         {
             if (p.IsTeamImpostor() && p != CachedPlayer.LocalPlayer.PlayerControl)
             {
-                if (!impostorHerePoint.ContainsKey(p.PlayerId))
+                if (!ImpostorHerePoint.ContainsKey(p.PlayerId))
                 {
-                    impostorHerePoint[p.PlayerId] = GameObject.Instantiate<SpriteRenderer>(__instance.HerePoint, __instance.HerePoint.transform.parent);
+                    ImpostorHerePoint[p.PlayerId] = GameObject.Instantiate<SpriteRenderer>(__instance.HerePoint, __instance.HerePoint.transform.parent);
                 }
-                impostorHerePoint[p.PlayerId].gameObject.SetActive(p.IsAlive());
-                PlayerMaterial.SetColors(0, impostorHerePoint[p.PlayerId]);
+                ImpostorHerePoint[p.PlayerId].gameObject.SetActive(p.IsAlive());
+                PlayerMaterial.SetColors(0, ImpostorHerePoint[p.PlayerId]);
                 var pos = new Vector3(p.transform.position.x, p.transform.position.y, p.transform.position.z);
                 pos /= MapUtilities.CachedShipStatus.MapScale;
                 pos.x *= Mathf.Sign(MapUtilities.CachedShipStatus.transform.localScale.x);
                 pos.z = -10;
-                impostorHerePoint[p.PlayerId].transform.localPosition = pos;
+                ImpostorHerePoint[p.PlayerId].transform.localPosition = pos;
             }
         }
     }
-    private static bool evilTrackerShowMap(MapBehaviour __instance)
+    private static bool EvilTrackerShowMap(MapBehaviour __instance)
     {
         // if (MeetingHud.Instance) return true;
         if (__instance.IsOpen)
@@ -414,7 +414,7 @@ public static class Map
         __instance.GenericShow();
         __instance.gameObject.SetActive(true);
         __instance.infectedOverlay.gameObject.SetActive(MeetingHud.Instance ? false : true);
-        if (RebuildUs.HideFakeTasks.Value && !(CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.EvilTracker) && EvilTracker.target != null))
+        if (RebuildUs.HideFakeTasks.Value && !(CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.EvilTracker) && EvilTracker.Target != null))
         {
             __instance.taskOverlay.Hide();
         }
@@ -428,7 +428,7 @@ public static class Map
 
         return false;
     }
-    private static bool evilHackerShowMap(MapBehaviour __instance)
+    private static bool EvilHackerShowMap(MapBehaviour __instance)
     {
         // if (MeetingHud.Instance) return true;
         if (__instance.IsOpen)
@@ -441,14 +441,14 @@ public static class Map
         //     return false;
         // }
         __instance.specialInputHandler?.disableVirtualCursor = true;
-        plainDoors = UnityEngine.Object.FindObjectsOfType<PlainDoor>();
+        PlainDoors = UnityEngine.Object.FindObjectsOfType<PlainDoor>();
         CachedPlayer.LocalPlayer.PlayerControl.SetPlayerMaterialColors(__instance.HerePoint);
         __instance.GenericShow();
         __instance.gameObject.SetActive(true);
-        Admin.isEvilHackerAdmin = true;
+        Admin.IsEvilHackerAdmin = true;
         __instance.countOverlay.gameObject.SetActive(true);
         __instance.infectedOverlay.gameObject.SetActive(MeetingHud.Instance ? false : true);
-        if (MeetingHud.Instance != null && CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.EvilTracker) && EvilTracker.canSeeTargetTask)
+        if (MeetingHud.Instance != null && CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.EvilTracker) && EvilTracker.CanSeeTargetTask)
         {
             __instance.taskOverlay.Show();
         }
@@ -467,12 +467,12 @@ public static class Map
         return false;
     }
 
-    public static Dictionary<byte, Il2CppSystem.Collections.Generic.List<Vector2>> realTasks = [];
-    public static void resetRealTasks()
+    public static Dictionary<byte, Il2CppSystem.Collections.Generic.List<Vector2>> RealTasks = [];
+    public static void ResetRealTasks()
     {
-        realTasks.Clear();
+        RealTasks.Clear();
     }
-    public static void shareRealTasks()
+    public static void ShareRealTasks()
     {
         using var sender = new RPCSender(CachedPlayer.LocalPlayer.PlayerControl.NetId, CustomRPC.ShareRealTasks);
         int count = 0;
@@ -505,24 +505,24 @@ public static class Map
     {
         if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.EvilTracker))
         {
-            return evilTrackerShowTask(__instance);
+            return EvilTrackerShowTask(__instance);
         }
         return true;
     }
 
-    private static bool evilTrackerShowTask(MapTaskOverlay __instance)
+    private static bool EvilTrackerShowTask(MapTaskOverlay __instance)
     {
         if (!MeetingHud.Instance) return true;  // Only run in meetings, and then set the Position of the HerePoint to the Position before the Meeting!
-        if (!CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.EvilTracker) || !CustomOptionHolder.evilTrackerCanSeeTargetTask.GetBool()) return true;
-        if (EvilTracker.target == null) return true;
-        if (realTasks[EvilTracker.target.PlayerId] == null) return false;
+        if (!CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.EvilTracker) || !CustomOptionHolder.EvilTrackerCanSeeTargetTask.GetBool()) return true;
+        if (EvilTracker.Target == null) return true;
+        if (RealTasks[EvilTracker.Target.PlayerId] == null) return false;
         __instance.gameObject.SetActive(true);
         __instance.data.Clear();
-        for (int i = 0; i < realTasks[EvilTracker.target.PlayerId].Count; i++)
+        for (int i = 0; i < RealTasks[EvilTracker.Target.PlayerId].Count; i++)
         {
             try
             {
-                Vector2 pos = realTasks[EvilTracker.target.PlayerId][i];
+                Vector2 pos = RealTasks[EvilTracker.Target.PlayerId][i];
 
                 Vector3 localPosition = pos / MapUtilities.CachedShipStatus.MapScale;
                 localPosition.z = -1f;

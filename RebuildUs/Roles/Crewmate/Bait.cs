@@ -7,18 +7,18 @@ public class Bait : RoleBase<Bait>
     public override Color RoleColor => NameColor;
 
     // write configs here
-    public static bool highlightAllVents { get { return CustomOptionHolder.baitHighlightAllVents.GetBool(); } }
-    public static float reportDelay { get { return CustomOptionHolder.baitReportDelay.GetFloat(); } }
-    public static bool showKillFlash { get { return CustomOptionHolder.baitShowKillFlash.GetBool(); } }
+    public static bool HighlightAllVents { get { return CustomOptionHolder.BaitHighlightAllVents.GetBool(); } }
+    public static float ReportDelay { get { return CustomOptionHolder.BaitReportDelay.GetFloat(); } }
+    public static bool ShowKillFlash { get { return CustomOptionHolder.BaitShowKillFlash.GetBool(); } }
 
-    public bool reported = false;
-    public float delay = 1f;
+    public bool Reported = false;
+    public float Delay = 1f;
 
     public Bait()
     {
         // write value init here
         StaticRoleType = CurrentRoleType = RoleType.Bait;
-        delay = reportDelay;
+        Delay = ReportDelay;
     }
 
     public override void OnMeetingStart() { }
@@ -29,13 +29,13 @@ public class Bait : RoleBase<Bait>
         if (!CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Bait)) return;
 
         // Bait report
-        if (Player.Data.IsDead && !reported)
+        if (Player.Data.IsDead && !Reported)
         {
-            delay -= Time.fixedDeltaTime;
+            Delay -= Time.fixedDeltaTime;
             var deadPlayer = GameHistory.DeadPlayers?.Where(x => x.Player.IsRole(RoleType.Bait))?.FirstOrDefault();
-            if (deadPlayer.KillerIfExisting != null && Bait.reportDelay <= 0f)
+            if (deadPlayer.KillerIfExisting != null && Bait.ReportDelay <= 0f)
             {
-                Helpers.handleVampireBiteOnBodyReport(); // Manually call Vampire handling, since the CmdReportDeadBody Prefix won't be called
+                Helpers.HandleVampireBiteOnBodyReport(); // Manually call Vampire handling, since the CmdReportDeadBody Prefix won't be called
 
                 byte reporter = deadPlayer.KillerIfExisting.PlayerId;
                 if (Player.HasModifier(ModifierType.Madmate))
@@ -50,7 +50,7 @@ public class Bait : RoleBase<Bait>
                 writer.Write(Player.PlayerId);
                 AmongUsClient.Instance.FinishRpcImmediately(writer);
                 RPCProcedure.UncheckedCmdReportDeadBody(reporter, Player.PlayerId);
-                reported = true;
+                Reported = true;
             }
         }
 
@@ -72,7 +72,7 @@ public class Bait : RoleBase<Bait>
             foreach (Vent vent in MapUtilities.CachedShipStatus.AllVents)
             {
                 if (vent.myRend == null || vent.myRend.material == null) continue;
-                if (ventsWithPlayers.Contains(vent.Id) || (ventsWithPlayers.Count > 0 && Bait.highlightAllVents))
+                if (ventsWithPlayers.Contains(vent.Id) || (ventsWithPlayers.Count > 0 && Bait.HighlightAllVents))
                 {
                     vent.myRend.material.SetFloat("_Outline", 1f);
                     vent.myRend.material.SetColor("_OutlineColor", Color.yellow);

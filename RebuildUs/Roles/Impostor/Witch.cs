@@ -5,19 +5,19 @@ public class Witch : RoleBase<Witch>
 {
     public static Color NameColor = Palette.ImpostorRed;
     public override Color RoleColor => NameColor;
-    public static CustomButton witchSpellButton;
+    public static CustomButton WitchSpellButton;
 
     // write configs here
-    public static float cooldown { get { return CustomOptionHolder.witchCooldown.GetFloat(); } }
-    public static float additionalCooldown { get { return CustomOptionHolder.witchAdditionalCooldown.GetFloat(); } }
-    public static bool canSpellAnyone { get { return CustomOptionHolder.witchCanSpellAnyone.GetBool(); } }
-    public static float spellCastingDuration { get { return CustomOptionHolder.witchSpellCastingDuration.GetFloat(); } }
-    public static bool triggerBothCooldowns { get { return CustomOptionHolder.witchTriggerBothCooldowns.GetBool(); } }
-    public static bool voteSavesTargets { get { return CustomOptionHolder.witchVoteSavesTargets.GetBool(); } }
+    public static float Cooldown { get { return CustomOptionHolder.WitchCooldown.GetFloat(); } }
+    public static float AdditionalCooldown { get { return CustomOptionHolder.WitchAdditionalCooldown.GetFloat(); } }
+    public static bool CanSpellAnyone { get { return CustomOptionHolder.WitchCanSpellAnyone.GetBool(); } }
+    public static float SpellCastingDuration { get { return CustomOptionHolder.WitchSpellCastingDuration.GetFloat(); } }
+    public static bool TriggerBothCooldowns { get { return CustomOptionHolder.WitchTriggerBothCooldowns.GetBool(); } }
+    public static bool VoteSavesTargets { get { return CustomOptionHolder.WitchVoteSavesTargets.GetBool(); } }
 
-    public static List<PlayerControl> futureSpelled = [];
-    public static PlayerControl currentTarget;
-    public static PlayerControl spellCastingTarget;
+    public static List<PlayerControl> FutureSpelled = [];
+    public static PlayerControl CurrentTarget;
+    public static PlayerControl SpellCastingTarget;
 
     public Witch()
     {
@@ -32,21 +32,21 @@ public class Witch : RoleBase<Witch>
     {
         if (!CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Witch)) return;
         List<PlayerControl> untargetables;
-        if (spellCastingTarget != null)
+        if (SpellCastingTarget != null)
         {
-            untargetables = [.. PlayerControl.AllPlayerControls.GetFastEnumerator().ToArray().Where(x => x.PlayerId != spellCastingTarget.PlayerId)]; // Don't switch the target from the the one you're currently casting a spell on
+            untargetables = [.. PlayerControl.AllPlayerControls.GetFastEnumerator().ToArray().Where(x => x.PlayerId != SpellCastingTarget.PlayerId)]; // Don't switch the target from the the one you're currently casting a spell on
         }
         else
         {
             // Also target players that have already been spelled, to hide spells that were blanks/blocked by shields
             untargetables = [];
-            if (Spy.Exists && !canSpellAnyone)
+            if (Spy.Exists && !CanSpellAnyone)
             {
                 untargetables.AddRange(Spy.AllPlayers);
             }
             foreach (var sidekick in Sidekick.Players)
             {
-                if (sidekick.WasTeamRed && !canSpellAnyone)
+                if (sidekick.WasTeamRed && !CanSpellAnyone)
                 {
                     untargetables.Add(sidekick.Player);
                 }
@@ -54,21 +54,21 @@ public class Witch : RoleBase<Witch>
 
             foreach (var jackal in Jackal.Players)
             {
-                if (jackal.WasTeamRed && !canSpellAnyone)
+                if (jackal.WasTeamRed && !CanSpellAnyone)
                 {
                     untargetables.Add(jackal.Player);
                 }
             }
         }
-        currentTarget = Helpers.SetTarget(onlyCrewmates: !canSpellAnyone, untargetablePlayers: untargetables);
-        Helpers.SetPlayerOutline(currentTarget, RoleColor);
+        CurrentTarget = Helpers.SetTarget(onlyCrewmates: !CanSpellAnyone, untargetablePlayers: untargetables);
+        Helpers.SetPlayerOutline(CurrentTarget, RoleColor);
 
     }
     public override void OnKill(PlayerControl target)
     {
-        if (triggerBothCooldowns && CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Witch) && witchSpellButton != null)
+        if (TriggerBothCooldowns && CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Witch) && WitchSpellButton != null)
         {
-            witchSpellButton.Timer = witchSpellButton.MaxTimer;
+            WitchSpellButton.Timer = WitchSpellButton.MaxTimer;
         }
     }
     public override void OnDeath(PlayerControl killer = null) { }
@@ -76,30 +76,30 @@ public class Witch : RoleBase<Witch>
     public override void HandleDisconnect(PlayerControl player, DisconnectReasons reason) { }
     public override void MakeButtons(HudManager hm)
     {
-        witchSpellButton = new CustomButton(
+        WitchSpellButton = new CustomButton(
                 () =>
                 {
-                    if (currentTarget != null)
+                    if (CurrentTarget != null)
                     {
-                        spellCastingTarget = currentTarget;
+                        SpellCastingTarget = CurrentTarget;
                     }
                 },
                 () => { return CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Witch) && CachedPlayer.LocalPlayer.PlayerControl.IsAlive(); },
                 () =>
                 {
-                    if (witchSpellButton.IsEffectActive && spellCastingTarget != currentTarget)
+                    if (WitchSpellButton.IsEffectActive && SpellCastingTarget != CurrentTarget)
                     {
-                        spellCastingTarget = null;
-                        witchSpellButton.Timer = 0f;
-                        witchSpellButton.IsEffectActive = false;
+                        SpellCastingTarget = null;
+                        WitchSpellButton.Timer = 0f;
+                        WitchSpellButton.IsEffectActive = false;
                     }
-                    return CachedPlayer.LocalPlayer.PlayerControl.CanMove && currentTarget != null;
+                    return CachedPlayer.LocalPlayer.PlayerControl.CanMove && CurrentTarget != null;
                 },
                 () =>
                 {
-                    witchSpellButton.Timer = witchSpellButton.MaxTimer;
-                    witchSpellButton.IsEffectActive = false;
-                    spellCastingTarget = null;
+                    WitchSpellButton.Timer = WitchSpellButton.MaxTimer;
+                    WitchSpellButton.IsEffectActive = false;
+                    SpellCastingTarget = null;
                 },
                 AssetLoader.SpellButton,
                 new Vector3(-1.8f, -0.06f, 0),
@@ -107,32 +107,32 @@ public class Witch : RoleBase<Witch>
                 hm.KillButton,
                 KeyCode.F,
                 true,
-                spellCastingDuration,
+                SpellCastingDuration,
                 () =>
                 {
-                    if (spellCastingTarget == null) return;
-                    MurderAttemptResult attempt = Helpers.CheckMurderAttempt(Player, spellCastingTarget);
+                    if (SpellCastingTarget == null) return;
+                    MurderAttemptResult attempt = Helpers.CheckMurderAttempt(Player, SpellCastingTarget);
                     if (attempt == MurderAttemptResult.PerformKill)
                     {
                         MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.SetFutureSpelled, SendOption.Reliable, -1);
-                        writer.Write(currentTarget.PlayerId);
+                        writer.Write(CurrentTarget.PlayerId);
                         AmongUsClient.Instance.FinishRpcImmediately(writer);
-                        RPCProcedure.setFutureSpelled(currentTarget.PlayerId);
+                        RPCProcedure.SetFutureSpelled(CurrentTarget.PlayerId);
                     }
                     if (attempt is MurderAttemptResult.BlankKill or MurderAttemptResult.PerformKill)
                     {
-                        witchSpellButton.MaxTimer += additionalCooldown;
-                        witchSpellButton.Timer = witchSpellButton.MaxTimer;
-                        if (triggerBothCooldowns)
+                        WitchSpellButton.MaxTimer += AdditionalCooldown;
+                        WitchSpellButton.Timer = WitchSpellButton.MaxTimer;
+                        if (TriggerBothCooldowns)
                         {
                             Player.killTimer = Helpers.GetOption(FloatOptionNames.KillCooldown);
                         }
                     }
                     else
                     {
-                        witchSpellButton.Timer = 0f;
+                        WitchSpellButton.Timer = 0f;
                     }
-                    spellCastingTarget = null;
+                    SpellCastingTarget = null;
                 }
             )
         {
@@ -141,8 +141,8 @@ public class Witch : RoleBase<Witch>
     }
     public override void SetButtonCooldowns()
     {
-        witchSpellButton.MaxTimer = cooldown;
-        witchSpellButton.EffectDuration = spellCastingDuration;
+        WitchSpellButton.MaxTimer = Cooldown;
+        WitchSpellButton.EffectDuration = SpellCastingDuration;
     }
 
     // write functions here
@@ -151,8 +151,8 @@ public class Witch : RoleBase<Witch>
     {
         // reset configs here
         Players.Clear();
-        futureSpelled = [];
-        currentTarget = null;
-        spellCastingTarget = null;
+        FutureSpelled = [];
+        CurrentTarget = null;
+        SpellCastingTarget = null;
     }
 }

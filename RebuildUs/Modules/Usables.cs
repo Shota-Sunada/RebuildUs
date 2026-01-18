@@ -2,7 +2,7 @@ namespace RebuildUs.Modules;
 
 public static class Usables
 {
-    private static Sprite defaultVentSprite = null;
+    private static Sprite DefaultVentSprite = null;
 
     public static void FixedUpdate(PlayerControl __instance)
     {
@@ -41,19 +41,19 @@ public static class Usables
                 CachedPlayer.LocalPlayer.PlayerControl.SetKillTimer(Helpers.GetOption(FloatOptionNames.KillCooldown));
                 if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Cleaner))
                 {
-                    CachedPlayer.LocalPlayer.PlayerControl.killTimer = Cleaner.cleanerCleanButton.Timer = Cleaner.cleanerCleanButton.MaxTimer;
+                    CachedPlayer.LocalPlayer.PlayerControl.killTimer = Cleaner.CleanerCleanButton.Timer = Cleaner.CleanerCleanButton.MaxTimer;
                 }
                 else if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Warlock))
                 {
-                    CachedPlayer.LocalPlayer.PlayerControl.killTimer = Warlock.warlockCurseButton.Timer = Warlock.warlockCurseButton.MaxTimer;
+                    CachedPlayer.LocalPlayer.PlayerControl.killTimer = Warlock.WarlockCurseButton.Timer = Warlock.WarlockCurseButton.MaxTimer;
                 }
                 else if (CachedPlayer.LocalPlayer.PlayerControl.HasModifier(ModifierType.Mini) && CachedPlayer.LocalPlayer.PlayerControl.Data.Role.IsImpostor)
                 {
-                    CachedPlayer.LocalPlayer.PlayerControl.SetKillTimer(Helpers.GetOption(FloatOptionNames.KillCooldown) * (Mini.isGrownUp(CachedPlayer.LocalPlayer.PlayerControl) ? 0.66f : 2f));
+                    CachedPlayer.LocalPlayer.PlayerControl.SetKillTimer(Helpers.GetOption(FloatOptionNames.KillCooldown) * (Mini.IsGrownUp(CachedPlayer.LocalPlayer.PlayerControl) ? 0.66f : 2f));
                 }
                 else if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Witch))
                 {
-                    CachedPlayer.LocalPlayer.PlayerControl.killTimer = Witch.witchSpellButton.Timer = Witch.witchSpellButton.MaxTimer;
+                    CachedPlayer.LocalPlayer.PlayerControl.killTimer = Witch.WitchSpellButton.Timer = Witch.WitchSpellButton.MaxTimer;
                 }
             }
 
@@ -86,9 +86,9 @@ public static class Usables
         // Trickster render special vent button
         if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Trickster))
         {
-            if (defaultVentSprite == null) defaultVentSprite = __instance.graphic.sprite;
+            if (DefaultVentSprite == null) DefaultVentSprite = __instance.graphic.sprite;
             bool isSpecialVent = __instance.currentTarget != null && __instance.currentTarget.gameObject != null && __instance.currentTarget.gameObject.name.StartsWith("JackInTheBoxVent_");
-            __instance.graphic.sprite = isSpecialVent ? AssetLoader.TricksterVentButton : defaultVentSprite;
+            __instance.graphic.sprite = isSpecialVent ? AssetLoader.TricksterVentButton : DefaultVentSprite;
             __instance.buttonLabelText.enabled = !isSpecialVent;
         }
     }
@@ -119,12 +119,12 @@ public static class Usables
             return true;
         }
 
-        if (pc.HasModifier(ModifierType.Madmate) && (isLights || (isComms && !Madmate.canFixComm)))
+        if (pc.HasModifier(ModifierType.Madmate) && (isLights || (isComms && !Madmate.CanFixComm)))
         {
             return true;
         }
 
-        if (pc.HasModifier(ModifierType.CreatedMadmate) && (isLights || (isComms && !CreatedMadmate.canFixComm)))
+        if (pc.HasModifier(ModifierType.CreatedMadmate) && (isLights || (isComms && !CreatedMadmate.CanFixComm)))
         {
             return true;
         }
@@ -134,12 +134,12 @@ public static class Usables
             return true;
         }
 
-        if (pc.IsRole(RoleType.Mafioso) && !Mafia.Mafioso.canRepair && (isLights || isComms))
+        if (pc.IsRole(RoleType.Mafioso) && !Mafia.Mafioso.CanRepair && (isLights || isComms))
         {
             return true;
         }
 
-        if (pc.IsRole(RoleType.Janitor) && !Mafia.Janitor.canRepair && (isLights || isComms))
+        if (pc.IsRole(RoleType.Janitor) && !Mafia.Janitor.CanRepair && (isLights || isComms))
         {
             return true;
         }
@@ -170,7 +170,7 @@ public static class Usables
         bool isVitals = name == "panel_vitals";
         bool isButton = name is "EmergencyButton" or "EmergencyConsole" or "task_emergency";
 
-        if ((isSecurity && !ModMapOptions.canUseCameras) || (isVitals && !ModMapOptions.canUseVitals)) return true;
+        if ((isSecurity && !ModMapOptions.CanUseCameras) || (isVitals && !ModMapOptions.CanUseVitals)) return true;
         return false;
     }
 
@@ -184,7 +184,7 @@ public static class Usables
 
         return (targetConsole != null && IsBlocked(targetConsole, pc)) ||
             (targetSysConsole != null && IsBlocked(targetSysConsole, pc)) ||
-            (targetMapConsole != null && !ModMapOptions.canUseAdmin);
+            (targetMapConsole != null && !ModMapOptions.CanUseAdmin);
     }
 
     public static void EmergencyMinigameUpdate(EmergencyMinigame __instance)
@@ -198,7 +198,7 @@ public static class Usables
             statusText = Tr.Get("jesterMeetingButton");
         }
 
-        if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Swapper) && !Swapper.canCallEmergency)
+        if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Swapper) && !Swapper.CanCallEmergency)
         {
             roleCanCallEmergency = false;
             statusText = Tr.Get("swapperMeetingButton");

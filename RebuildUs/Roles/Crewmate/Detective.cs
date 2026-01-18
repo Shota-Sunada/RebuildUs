@@ -7,12 +7,12 @@ public class Detective : RoleBase<Detective>
     public override Color RoleColor => NameColor;
 
     // write configs here
-    public static bool anonymousFootprints { get { return CustomOptionHolder.detectiveAnonymousFootprints.GetBool(); } }
-    public static float footprintInterval { get { return CustomOptionHolder.detectiveFootprintInterval.GetFloat(); } }
-    public static float footprintDuration { get { return CustomOptionHolder.detectiveFootprintDuration.GetFloat(); } }
-    public static float reportNameDuration { get { return CustomOptionHolder.detectiveReportNameDuration.GetFloat(); } }
-    public static float reportColorDuration { get { return CustomOptionHolder.detectiveReportColorDuration.GetFloat(); } }
-    public float timer = 6.2f;
+    public static bool AnonymousFootprints { get { return CustomOptionHolder.DetectiveAnonymousFootprints.GetBool(); } }
+    public static float FootprintInterval { get { return CustomOptionHolder.DetectiveFootprintInterval.GetFloat(); } }
+    public static float FootprintDuration { get { return CustomOptionHolder.DetectiveFootprintDuration.GetFloat(); } }
+    public static float ReportNameDuration { get { return CustomOptionHolder.DetectiveReportNameDuration.GetFloat(); } }
+    public static float ReportColorDuration { get { return CustomOptionHolder.DetectiveReportColorDuration.GetFloat(); } }
+    public float Timer = 6.2f;
 
     public Detective()
     {
@@ -27,15 +27,15 @@ public class Detective : RoleBase<Detective>
     {
         if (!Exists || !CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Detective)) return;
 
-        timer -= Time.fixedDeltaTime;
-        if (timer <= 0f)
+        Timer -= Time.fixedDeltaTime;
+        if (Timer <= 0f)
         {
-            timer = footprintInterval;
+            Timer = FootprintInterval;
             foreach (var player in CachedPlayer.AllPlayers)
             {
                 if (player.PlayerControl != null && player.PlayerControl != CachedPlayer.LocalPlayer.PlayerControl && !player.Data.IsDead && !player.PlayerControl.inVent && !player.PlayerControl.IsGM())
                 {
-                    new Footprint(footprintDuration, anonymousFootprints, player);
+                    new Footprint(FootprintDuration, AnonymousFootprints, player);
                 }
             }
         }

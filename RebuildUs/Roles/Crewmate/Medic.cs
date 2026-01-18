@@ -7,19 +7,19 @@ public class Medic : RoleBase<Medic>
 {
     public static Color NameColor = new Color32(126, 251, 194, byte.MaxValue);
     public override Color RoleColor => NameColor;
-    public static Color shieldedColor = new Color32(0, 221, 255, byte.MaxValue);
-    private static CustomButton medicShieldButton;
+    public static Color ShieldedColor = new Color32(0, 221, 255, byte.MaxValue);
+    private static CustomButton MedicShieldButton;
 
-    public PlayerControl currentTarget;
-    public static PlayerControl shielded;
-    public static PlayerControl futureShielded;
-    public static bool usedShield = false;
+    public PlayerControl CurrentTarget;
+    public static PlayerControl Shielded;
+    public static PlayerControl FutureShielded;
+    public static bool UsedShield = false;
 
     // write configs here
-    public static int showShielded { get { return CustomOptionHolder.medicShowShielded.GetSelection(); } }
-    public static bool showAttemptToShielded { get { return CustomOptionHolder.medicShowAttemptToShielded.GetBool(); } }
-    public static bool setShieldAfterMeeting { get { return CustomOptionHolder.medicSetShieldAfterMeeting.GetBool(); } }
-    public static bool showAttemptToMedic { get { return CustomOptionHolder.medicShowAttemptToMedic.GetBool(); } }
+    public static int ShowShielded { get { return CustomOptionHolder.MedicShowShielded.GetSelection(); } }
+    public static bool ShowAttemptToShielded { get { return CustomOptionHolder.MedicShowAttemptToShielded.GetBool(); } }
+    public static bool SetShieldAfterMeeting { get { return CustomOptionHolder.MedicSetShieldAfterMeeting.GetBool(); } }
+    public static bool ShowAttemptToMedic { get { return CustomOptionHolder.MedicShowAttemptToMedic.GetBool(); } }
 
     public Medic()
     {
@@ -34,43 +34,43 @@ public class Medic : RoleBase<Medic>
     {
         if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Medic))
         {
-            if (!usedShield)
+            if (!UsedShield)
             {
-                currentTarget = Helpers.SetTarget();
-                Helpers.SetPlayerOutline(currentTarget, shieldedColor);
+                CurrentTarget = Helpers.SetTarget();
+                Helpers.SetPlayerOutline(CurrentTarget, ShieldedColor);
             }
         }
     }
     public override void OnKill(PlayerControl target) { }
     public override void OnDeath(PlayerControl killer = null)
     {
-        shielded = null;
+        Shielded = null;
     }
     public override void OnFinishShipStatusBegin() { }
     public override void HandleDisconnect(PlayerControl player, DisconnectReasons reason) { }
     public override void MakeButtons(HudManager hm)
     {
-        medicShieldButton = new CustomButton(
+        MedicShieldButton = new CustomButton(
             () =>
             {
-                medicShieldButton.Timer = 0f;
+                MedicShieldButton.Timer = 0f;
                 {
-                    if (setShieldAfterMeeting)
+                    if (SetShieldAfterMeeting)
                     {
                         using var sender = new RPCSender(CachedPlayer.LocalPlayer.PlayerControl.NetId, CustomRPC.SetFutureShielded);
-                        sender.Write(Local.currentTarget.PlayerId);
-                        RPCProcedure.setFutureShielded(Local.currentTarget.PlayerId);
+                        sender.Write(Local.CurrentTarget.PlayerId);
+                        RPCProcedure.SetFutureShielded(Local.CurrentTarget.PlayerId);
                     }
                     else
                     {
                         using var sender = new RPCSender(CachedPlayer.LocalPlayer.PlayerControl.NetId, CustomRPC.MedicSetShielded);
-                        sender.Write(Local.currentTarget.PlayerId);
-                        RPCProcedure.medicSetShielded(Local.currentTarget.PlayerId);
+                        sender.Write(Local.CurrentTarget.PlayerId);
+                        RPCProcedure.MedicSetShielded(Local.CurrentTarget.PlayerId);
                     }
                 }
             },
             () => { return CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Medic) && CachedPlayer.LocalPlayer.PlayerControl.IsAlive(); },
-            () => { return !usedShield && Local.currentTarget && CachedPlayer.LocalPlayer.PlayerControl.CanMove; },
+            () => { return !UsedShield && Local.CurrentTarget && CachedPlayer.LocalPlayer.PlayerControl.CanMove; },
             () => { },
             AssetLoader.ShieldButton,
             new Vector3(-1.8f, -0.06f, 0),
@@ -84,7 +84,7 @@ public class Medic : RoleBase<Medic>
     }
     public override void SetButtonCooldowns()
     {
-        medicShieldButton.MaxTimer = 0f;
+        MedicShieldButton.MaxTimer = 0f;
     }
 
     // write functions here
@@ -93,8 +93,8 @@ public class Medic : RoleBase<Medic>
     {
         // reset configs here
         Players.Clear();
-        shielded = null;
-        futureShielded = null;
-        usedShield = false;
+        Shielded = null;
+        FutureShielded = null;
+        UsedShield = false;
     }
 }

@@ -10,10 +10,10 @@ public static class GameStart
     public static float StartingTimer = 0;
     public static bool SendGamemode = true;
 
-    private static TextMeshPro warningText;
-    private static TextMeshPro timerText;
-    private static PassiveButton cancelButton;
-    private static float timer = 600f;
+    private static TextMeshPro WarningText;
+    private static TextMeshPro TimerText;
+    private static PassiveButton CancelButton;
+    private static float Timer = 600f;
 
     public static void OnPlayerJoined()
     {
@@ -31,38 +31,38 @@ public static class GameStart
         // Reset kicking timer
         KickingTimer = 0f;
 
-        warningText = UnityEngine.Object.Instantiate(__instance.GameStartText, __instance.transform);
-        warningText.name = "WarningText";
-        warningText.transform.localPosition = new(0f, 0f - __instance.transform.localPosition.y, -1f);
-        warningText.gameObject.SetActive(false);
+        WarningText = UnityEngine.Object.Instantiate(__instance.GameStartText, __instance.transform);
+        WarningText.name = "WarningText";
+        WarningText.transform.localPosition = new(0f, 0f - __instance.transform.localPosition.y, -1f);
+        WarningText.gameObject.SetActive(false);
 
-        timerText = UnityEngine.Object.Instantiate(__instance.PlayerCounter, __instance.PlayerCounter.transform.parent);
-        timerText.autoSizeTextContainer = true;
-        timerText.fontSize = 3.2f;
-        timerText.name = "Timer";
-        timerText.DestroyChildren();
-        timerText.transform.localPosition += new Vector3(0.3f, -3.4f, 0f);
-        timerText.gameObject.SetActive(AmongUsClient.Instance.NetworkMode == NetworkModes.OnlineGame && AmongUsClient.Instance.AmHost);
+        TimerText = UnityEngine.Object.Instantiate(__instance.PlayerCounter, __instance.PlayerCounter.transform.parent);
+        TimerText.autoSizeTextContainer = true;
+        TimerText.fontSize = 3.2f;
+        TimerText.name = "Timer";
+        TimerText.DestroyChildren();
+        TimerText.transform.localPosition += new Vector3(0.3f, -3.4f, 0f);
+        TimerText.gameObject.SetActive(AmongUsClient.Instance.NetworkMode == NetworkModes.OnlineGame && AmongUsClient.Instance.AmHost);
 
-        cancelButton = UnityEngine.Object.Instantiate(__instance.StartButton, __instance.transform);
-        cancelButton.name = "CancelButton";
-        var cancelLabel = cancelButton.buttonText;
+        CancelButton = UnityEngine.Object.Instantiate(__instance.StartButton, __instance.transform);
+        CancelButton.name = "CancelButton";
+        var cancelLabel = CancelButton.buttonText;
         cancelLabel.GetComponent<TextTranslatorTMP>()?.Destroy();
         cancelLabel.text = "Cancel";
-        cancelButton.transform.localScale = new(0.5f, 0.5f, 1f);
-        var cancelButtonInactiveRenderer = cancelButton.inactiveSprites.GetComponent<SpriteRenderer>();
+        CancelButton.transform.localScale = new(0.5f, 0.5f, 1f);
+        var cancelButtonInactiveRenderer = CancelButton.inactiveSprites.GetComponent<SpriteRenderer>();
         cancelButtonInactiveRenderer.color = new(0.8f, 0f, 0f, 1f);
-        var cancelButtonActiveRenderer = cancelButton.activeSprites.GetComponent<SpriteRenderer>();
+        var cancelButtonActiveRenderer = CancelButton.activeSprites.GetComponent<SpriteRenderer>();
         cancelButtonActiveRenderer.color = Color.red;
-        var cancelButtonInactiveShine = cancelButton.inactiveSprites.transform.Find("Shine");
+        var cancelButtonInactiveShine = CancelButton.inactiveSprites.transform.Find("Shine");
         if (cancelButtonInactiveShine)
         {
             cancelButtonInactiveShine.gameObject.SetActive(false);
         }
-        cancelButton.activeTextColor = cancelButton.inactiveTextColor = Color.white;
-        cancelButton.transform.localPosition = new(2f, 0.13f, 0f);
-        cancelButton.OnClick = new();
-        cancelButton.OnClick.AddListener((Action)(() =>
+        CancelButton.activeTextColor = CancelButton.inactiveTextColor = Color.white;
+        CancelButton.transform.localPosition = new(2f, 0.13f, 0f);
+        CancelButton.OnClick = new();
+        CancelButton.OnClick.AddListener((Action)(() =>
         {
             __instance.ResetStartState();
             SoundManager.Instance.StopSound(GameStartManager.Instance.gameStartSound);
@@ -70,7 +70,7 @@ public static class GameStart
                 using var sender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.StopStart);
             }
         }));
-        cancelButton.gameObject.SetActive(false);
+        CancelButton.gameObject.SetActive(false);
     }
 
     public static void UpdatePostfix(GameStartManager __instance)
@@ -117,12 +117,12 @@ public static class GameStart
         {
             if (versionMismatch)
             {
-                warningText.text = message;
-                warningText.gameObject.SetActive(true);
+                WarningText.text = message;
+                WarningText.gameObject.SetActive(true);
             }
             else
             {
-                warningText.gameObject.SetActive(false);
+                WarningText.gameObject.SetActive(false);
             }
         }
         // Client update with handshake infos
@@ -138,17 +138,17 @@ public static class GameStart
                     SceneChanger.ChangeScene("MainMenu");
                 }
 
-                warningText.text = $"<color=#FF0000FF>The host has no or a different version of RebuildUs\nYou will be kicked in {Math.Round(10 - KickingTimer)}s</color>";
-                warningText.gameObject.SetActive(true);
+                WarningText.text = $"<color=#FF0000FF>The host has no or a different version of RebuildUs\nYou will be kicked in {Math.Round(10 - KickingTimer)}s</color>";
+                WarningText.gameObject.SetActive(true);
             }
             else if (versionMismatch)
             {
-                warningText.text = $"<color=#FF0000FF>Players With Different Versions:\n</color>" + message;
-                warningText.gameObject.SetActive(true);
+                WarningText.text = $"<color=#FF0000FF>Players With Different Versions:\n</color>" + message;
+                WarningText.gameObject.SetActive(true);
             }
             else
             {
-                warningText.gameObject.SetActive(false);
+                WarningText.gameObject.SetActive(false);
             }
         }
         // Start Timer
@@ -157,9 +157,9 @@ public static class GameStart
             StartingTimer -= Time.deltaTime;
         }
 
-        if (AmongUsClient.Instance.AmHost && cancelButton != null)
+        if (AmongUsClient.Instance.AmHost && CancelButton != null)
         {
-            cancelButton.gameObject.SetActive(__instance.startState == GameStartManager.StartingStates.Countdown);
+            CancelButton.gameObject.SetActive(__instance.startState == GameStartManager.StartingStates.Countdown);
         }
 
         // Lobby timer
@@ -171,12 +171,12 @@ public static class GameStart
             return;
         }
 
-        timer = Mathf.Max(0f, timer -= Time.deltaTime);
-        int minutes = (int)timer / 60;
-        int seconds = (int)timer % 60;
+        Timer = Mathf.Max(0f, Timer -= Time.deltaTime);
+        int minutes = (int)Timer / 60;
+        int seconds = (int)Timer % 60;
         string countDown = $"{minutes:00}:{seconds:00}";
-        if (timer <= 60) countDown = Helpers.Cs(Color.red, countDown);
-        timerText.text = countDown;
+        if (Timer <= 60) countDown = Helpers.Cs(Color.red, countDown);
+        TimerText.text = countDown;
 
         if (!GameData.Instance || !__instance.PlayerCounter) return; // No instance
 

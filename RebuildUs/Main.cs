@@ -61,7 +61,7 @@ public class RebuildUs : BasePlugin
     public static ConfigEntry<bool> HideFakeTasks { get; set; }
     public static ConfigEntry<string> Ip { get; set; }
     public static ConfigEntry<ushort> Port { get; set; }
-    public static IRegionInfo[] defaultRegions;
+    public static IRegionInfo[] DefaultRegions;
 
     public System.Random Rnd = new((int)DateTime.Now.Ticks);
 
@@ -85,7 +85,7 @@ public class RebuildUs : BasePlugin
 
         Ip = Config.Bind("Custom", "Custom Server IP", "127.0.0.1");
         Port = Config.Bind("Custom", "Custom Server Port", (ushort)22023);
-        defaultRegions = ServerManager.DefaultRegions;
+        DefaultRegions = ServerManager.DefaultRegions;
 
         AssetLoader.LoadAssets();
 
@@ -124,8 +124,8 @@ public class RebuildUs : BasePlugin
         {
             if (p == 1)
             {
-                Camouflager.resetCamouflage();
-                Morphing.resetMorph();
+                Camouflager.ResetCamouflage();
+                Morphing.ResetMorph();
             }
         })));
     }
@@ -135,9 +135,9 @@ public class RebuildUs : BasePlugin
         PlayerRole.AllRoles.Do(x => x.OnMeetingEnd());
         PlayerModifier.AllModifiers.Do(x => x.OnMeetingEnd());
 
-        CustomOverlays.hideInfoOverlay();
-        CustomOverlays.hideRoleOverlay();
-        CustomOverlays.hideBlackBG();
+        CustomOverlays.HideInfoOverlay();
+        CustomOverlays.HideRoleOverlay();
+        CustomOverlays.HideBlackBG();
     }
 
     public static void OnIntroEnd()

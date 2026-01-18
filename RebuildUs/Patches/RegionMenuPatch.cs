@@ -31,25 +31,25 @@ namespace RebuildUs.Patches;
 [HarmonyPatch(typeof(RegionMenu), nameof(RegionMenu.Open))]
 public static class RegionMenuOpenPatch
 {
-    private static GameObject ipField;
-    private static GameObject portField;
+    private static GameObject IpField;
+    private static GameObject PortField;
 
     public static void Postfix(RegionMenu __instance)
     {
         var template = GameObject.Find("NormalMenu/JoinGameButton/JoinGameMenu/GameIdText");
         if (template == null) return;
 
-        if (ipField == null || ipField.gameObject == null)
+        if (IpField == null || IpField.gameObject == null)
         {
-            ipField = UnityEngine.Object.Instantiate(template.gameObject, __instance.transform);
-            ipField.gameObject.name = "IpTextBox";
-            var arrow = ipField.transform.FindChild("arrowEnter");
+            IpField = UnityEngine.Object.Instantiate(template.gameObject, __instance.transform);
+            IpField.gameObject.name = "IpTextBox";
+            var arrow = IpField.transform.FindChild("arrowEnter");
             if (arrow == null || arrow.gameObject == null) return;
             UnityEngine.Object.DestroyImmediate(arrow.gameObject);
 
-            ipField.transform.localPosition = new Vector3(0, -1f, -100f);
+            IpField.transform.localPosition = new Vector3(0, -1f, -100f);
 
-            var ipTextBox = ipField.GetComponent<TextBoxTMP>();
+            var ipTextBox = IpField.GetComponent<TextBoxTMP>();
             ipTextBox.characterLimit = 30;
             ipTextBox.AllowSymbols = true;
             ipTextBox.ForceUppercase = false;
@@ -63,22 +63,22 @@ public static class RegionMenuOpenPatch
             ipTextBox.ClearOnFocus = false;
             ipTextBox.OnEnter = ipTextBox.OnChange = new Button.ButtonClickedEvent();
             ipTextBox.OnFocusLost = new Button.ButtonClickedEvent();
-            ipTextBox.OnChange.AddListener((UnityAction)onEnterOrIpChange);
-            ipTextBox.OnFocusLost.AddListener((UnityAction)onFocusLost);
+            ipTextBox.OnChange.AddListener((UnityAction)OnEnterOrIpChange);
+            ipTextBox.OnFocusLost.AddListener((UnityAction)OnFocusLost);
 
         }
 
-        if (portField == null || portField.gameObject == null)
+        if (PortField == null || PortField.gameObject == null)
         {
-            portField = UnityEngine.Object.Instantiate(template.gameObject, __instance.transform);
-            portField.gameObject.name = "PortTextBox";
-            var arrow = portField.transform.FindChild("arrowEnter");
+            PortField = UnityEngine.Object.Instantiate(template.gameObject, __instance.transform);
+            PortField.gameObject.name = "PortTextBox";
+            var arrow = PortField.transform.FindChild("arrowEnter");
             if (arrow == null || arrow.gameObject == null) return;
             UnityEngine.Object.DestroyImmediate(arrow.gameObject);
 
-            portField.transform.localPosition = new Vector3(0, -1.75f, -100f);
+            PortField.transform.localPosition = new Vector3(0, -1.75f, -100f);
 
-            var portTextBox = portField.GetComponent<TextBoxTMP>();
+            var portTextBox = PortField.GetComponent<TextBoxTMP>();
             portTextBox.characterLimit = 5;
             portTextBox.SetText(RebuildUs.Port.Value.ToString());
             __instance.StartCoroutine(Effects.Lerp(0.1f, new Action<float>((p) =>
@@ -90,13 +90,13 @@ public static class RegionMenuOpenPatch
             portTextBox.ClearOnFocus = false;
             portTextBox.OnEnter = portTextBox.OnChange = new Button.ButtonClickedEvent();
             portTextBox.OnFocusLost = new Button.ButtonClickedEvent();
-            portTextBox.OnChange.AddListener((UnityAction)onEnterOrPortFieldChange);
-            portTextBox.OnFocusLost.AddListener((UnityAction)onFocusLost);
+            portTextBox.OnChange.AddListener((UnityAction)OnEnterOrPortFieldChange);
+            portTextBox.OnFocusLost.AddListener((UnityAction)OnFocusLost);
         }
 
-        void onEnterOrPortFieldChange()
+        void OnEnterOrPortFieldChange()
         {
-            var portTextBox = portField.GetComponent<TextBoxTMP>();
+            var portTextBox = PortField.GetComponent<TextBoxTMP>();
             if (ushort.TryParse(portTextBox.text, out ushort port))
             {
                 RebuildUs.Port.Value = port;
@@ -108,12 +108,12 @@ public static class RegionMenuOpenPatch
             }
         }
 
-        void onEnterOrIpChange()
+        void OnEnterOrIpChange()
         {
-            RebuildUs.Ip.Value = ipField.GetComponent<TextBoxTMP>().text;
+            RebuildUs.Ip.Value = IpField.GetComponent<TextBoxTMP>().text;
         }
 
-        void onFocusLost()
+        void OnFocusLost()
         {
             RebuildUs.UpdateRegions();
             __instance.ChooseOption(ServerManager.DefaultRegions[ServerManager.DefaultRegions.Length - 1]);

@@ -16,7 +16,7 @@ public static class KillAnimationPatch
         HideNextAnimation = false;
     }
 
-    private static int? colorId = null;
+    private static int? ColorId = null;
     [HarmonyPrefix]
     [HarmonyPatch(typeof(KillAnimation), nameof(KillAnimation.SetMovement))]
     public static void SetMovementPrefix(PlayerControl source, bool canMove)
@@ -25,13 +25,13 @@ public static class KillAnimationPatch
         if (Morphing.Exists && source.IsRole(RoleType.Morphing))
         {
             var index = Palette.PlayerColors.IndexOf(color);
-            if (index != -1) colorId = index;
+            if (index != -1) ColorId = index;
         }
     }
 
     public static void Postfix(PlayerControl source, bool canMove)
     {
-        if (colorId.HasValue) source.RawSetColor(colorId.Value);
-        colorId = null;
+        if (ColorId.HasValue) source.RawSetColor(ColorId.Value);
+        ColorId = null;
     }
 }

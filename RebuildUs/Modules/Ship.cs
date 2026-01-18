@@ -17,24 +17,24 @@ public static class Ship
         }
 
         // If player is Lighter with ability active
-        if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Lighter) && Lighter.isLightActive(CachedPlayer.LocalPlayer.PlayerControl))
+        if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Lighter) && Lighter.IsLightActive(CachedPlayer.LocalPlayer.PlayerControl))
         {
             float unLerp = Mathf.InverseLerp(__instance.MinLightRadius, __instance.MaxLightRadius, GetNeutralLightRadius(__instance, true));
-            __result = Mathf.Lerp(__instance.MaxLightRadius * Lighter.modeLightsOffVision, __instance.MaxLightRadius * Lighter.modeLightsOnVision, unLerp);
+            __result = Mathf.Lerp(__instance.MaxLightRadius * Lighter.ModeLightsOffVision, __instance.MaxLightRadius * Lighter.ModeLightsOnVision, unLerp);
             return false;
         }
 
         // If there is a Trickster with their ability active
-        if (Trickster.Exists && Trickster.lightsOutTimer > 0f)
+        if (Trickster.Exists && Trickster.LightsOutTimer > 0f)
         {
             float lerpValue = 1f;
-            if (Trickster.lightsOutDuration - Trickster.lightsOutTimer < 0.5f)
+            if (Trickster.LightsOutDuration - Trickster.LightsOutTimer < 0.5f)
             {
-                lerpValue = Mathf.Clamp01((Trickster.lightsOutDuration - Trickster.lightsOutTimer) * 2);
+                lerpValue = Mathf.Clamp01((Trickster.LightsOutDuration - Trickster.LightsOutTimer) * 2);
             }
-            else if (Trickster.lightsOutTimer < 0.5)
+            else if (Trickster.LightsOutTimer < 0.5)
             {
-                lerpValue = Mathf.Clamp01(Trickster.lightsOutTimer * 2);
+                lerpValue = Mathf.Clamp01(Trickster.LightsOutTimer * 2);
             }
 
             __result = Mathf.Lerp(__instance.MinLightRadius, __instance.MaxLightRadius, 1 - lerpValue) * Helpers.GetOption(FloatOptionNames.CrewLightMod);
@@ -72,9 +72,9 @@ public static class Ship
         __result = false;
     }
 
-    private static int originalNumCommonTasksOption = 0;
-    private static int originalNumShortTasksOption = 0;
-    private static int originalNumLongTasksOption = 0;
+    private static int OriginalNumCommonTasksOption = 0;
+    private static int OriginalNumShortTasksOption = 0;
+    private static int OriginalNumLongTasksOption = 0;
 
     [HarmonyPrefix]
     [HarmonyPatch(typeof(ShipStatus), nameof(ShipStatus.Begin))]
@@ -84,9 +84,9 @@ public static class Ship
         var normalTaskCount = __instance.ShortTasks.Count;
         var longTaskCount = __instance.LongTasks.Count;
 
-        originalNumCommonTasksOption = Helpers.GetOption(Int32OptionNames.NumCommonTasks);
-        originalNumShortTasksOption = Helpers.GetOption(Int32OptionNames.NumShortTasks);
-        originalNumLongTasksOption = Helpers.GetOption(Int32OptionNames.NumLongTasks);
+        OriginalNumCommonTasksOption = Helpers.GetOption(Int32OptionNames.NumCommonTasks);
+        OriginalNumShortTasksOption = Helpers.GetOption(Int32OptionNames.NumShortTasks);
+        OriginalNumLongTasksOption = Helpers.GetOption(Int32OptionNames.NumLongTasks);
 
         if (Helpers.GetOption(Int32OptionNames.NumCommonTasks) > commonTaskCount) Helpers.SetOption(Int32OptionNames.NumCommonTasks, commonTaskCount);
         if (Helpers.GetOption(Int32OptionNames.NumShortTasks) > normalTaskCount) Helpers.SetOption(Int32OptionNames.NumShortTasks, normalTaskCount);
@@ -100,9 +100,9 @@ public static class Ship
     public static void Postfix3(ShipStatus __instance)
     {
         // Restore original settings after the tasks have been selected
-        Helpers.SetOption(Int32OptionNames.NumCommonTasks, originalNumCommonTasksOption);
-        Helpers.SetOption(Int32OptionNames.NumShortTasks, originalNumShortTasksOption);
-        Helpers.SetOption(Int32OptionNames.NumLongTasks, originalNumLongTasksOption);
+        Helpers.SetOption(Int32OptionNames.NumCommonTasks, OriginalNumCommonTasksOption);
+        Helpers.SetOption(Int32OptionNames.NumShortTasks, OriginalNumShortTasksOption);
+        Helpers.SetOption(Int32OptionNames.NumLongTasks, OriginalNumLongTasksOption);
 
         // 一部役職のタスクを再割り当てする
         {
@@ -138,6 +138,6 @@ public static class Ship
             }
         }
 
-        CustomButton.stopCountdown = false;
+        CustomButton.StopCountdown = false;
     }
 }

@@ -5,34 +5,34 @@ public class SecurityGuard : RoleBase<SecurityGuard>
 {
     public static Color NameColor = new Color32(195, 178, 95, byte.MaxValue);
     public override Color RoleColor => NameColor;
-    public static CustomButton securityGuardButton;
-    public static CustomButton securityGuardCamButton;
-    public static TMP_Text securityGuardButtonScrewsText;
-    public static TMP_Text securityGuardChargesText;
-    public Vent ventTarget = null;
-    public Minigame minigame = null;
+    public static CustomButton SecurityGuardButton;
+    public static CustomButton SecurityGuardCamButton;
+    public static TMP_Text SecurityGuardButtonScrewsText;
+    public static TMP_Text SecurityGuardChargesText;
+    public Vent VentTarget = null;
+    public Minigame Minigame = null;
 
     // write configs here
-    public static float cooldown { get { return CustomOptionHolder.securityGuardCooldown.GetFloat(); } }
-    public static int totalScrews { get { return Mathf.RoundToInt(CustomOptionHolder.securityGuardTotalScrews.GetFloat()); } }
-    public static int camPrice { get { return Mathf.RoundToInt(CustomOptionHolder.securityGuardCamPrice.GetFloat()); } }
-    public static int ventPrice { get { return Mathf.RoundToInt(CustomOptionHolder.securityGuardVentPrice.GetFloat()); } }
-    public static float camDuration { get { return CustomOptionHolder.securityGuardCamDuration.GetFloat(); } }
-    public static int camMaxCharges { get { return Mathf.RoundToInt(CustomOptionHolder.securityGuardCamMaxCharges.GetFloat()); } }
-    public static int camRechargeTasksNumber { get { return Mathf.RoundToInt(CustomOptionHolder.securityGuardCamRechargeTasksNumber.GetFloat()); } }
-    public static bool noMove { get { return CustomOptionHolder.securityGuardNoMove.GetBool(); } }
+    public static float Cooldown { get { return CustomOptionHolder.SecurityGuardCooldown.GetFloat(); } }
+    public static int TotalScrews { get { return Mathf.RoundToInt(CustomOptionHolder.SecurityGuardTotalScrews.GetFloat()); } }
+    public static int CamPrice { get { return Mathf.RoundToInt(CustomOptionHolder.SecurityGuardCamPrice.GetFloat()); } }
+    public static int VentPrice { get { return Mathf.RoundToInt(CustomOptionHolder.SecurityGuardVentPrice.GetFloat()); } }
+    public static float CamDuration { get { return CustomOptionHolder.SecurityGuardCamDuration.GetFloat(); } }
+    public static int CamMaxCharges { get { return Mathf.RoundToInt(CustomOptionHolder.SecurityGuardCamMaxCharges.GetFloat()); } }
+    public static int CamRechargeTasksNumber { get { return Mathf.RoundToInt(CustomOptionHolder.SecurityGuardCamRechargeTasksNumber.GetFloat()); } }
+    public static bool NoMove { get { return CustomOptionHolder.SecurityGuardNoMove.GetBool(); } }
 
-    public int rechargedTasks = 3;
-    public int charges = 1;
-    public int placedCameras = 0;
-    public int remainingScrews = 7;
+    public int RechargedTasks = 3;
+    public int Charges = 1;
+    public int PlacedCameras = 0;
+    public int RemainingScrews = 7;
 
     public SecurityGuard()
     {
         // write value init here
         StaticRoleType = CurrentRoleType = RoleType.SecurityGuard;
-        placedCameras = 0;
-        charges = camMaxCharges;
+        PlacedCameras = 0;
+        Charges = CamMaxCharges;
     }
 
     public override void OnMeetingStart() { }
@@ -56,14 +56,14 @@ public class SecurityGuard : RoleBase<SecurityGuard>
                 target = vent;
             }
         }
-        ventTarget = target;
+        VentTarget = target;
 
         if (Player.Data.IsDead) return;
         var (playerCompleted, _) = TasksHandler.TaskInfo(Player.Data);
-        if (playerCompleted == rechargedTasks)
+        if (playerCompleted == RechargedTasks)
         {
-            rechargedTasks += camRechargeTasksNumber;
-            if (camMaxCharges > charges) charges++;
+            RechargedTasks += CamRechargeTasksNumber;
+            if (CamMaxCharges > Charges) Charges++;
         }
     }
     public override void OnKill(PlayerControl target) { }
@@ -72,19 +72,19 @@ public class SecurityGuard : RoleBase<SecurityGuard>
     public override void HandleDisconnect(PlayerControl player, DisconnectReasons reason) { }
     public override void MakeButtons(HudManager hm)
     {
-        securityGuardButton = new CustomButton(
+        SecurityGuardButton = new CustomButton(
                 () =>
                 {
-                    if (ventTarget != null)
+                    if (VentTarget != null)
                     {
                         // Seal vent
                         using var sender = new RPCSender(CachedPlayer.LocalPlayer.PlayerControl.NetId, CustomRPC.SealVent);
-                        sender.WritePacked(ventTarget.Id);
+                        sender.WritePacked(VentTarget.Id);
                         sender.Write(Player.PlayerId);
-                        RPCProcedure.sealVent(ventTarget.Id, Player.PlayerId);
-                        ventTarget = null;
+                        RPCProcedure.SealVent(VentTarget.Id, Player.PlayerId);
+                        VentTarget = null;
                     }
-                    else if (Helpers.GetOption(ByteOptionNames.MapId) != 1 && ModMapOptions.couldUseCameras && !SubmergedCompatibility.IsSubmerged)
+                    else if (Helpers.GetOption(ByteOptionNames.MapId) != 1 && ModMapOptions.CouldUseCameras && !SubmergedCompatibility.IsSubmerged)
                     {
                         // Place camera if there's no vent and it's not MiraHQ
                         var pos = CachedPlayer.LocalPlayer.PlayerControl.transform.position;
@@ -106,30 +106,30 @@ public class SecurityGuard : RoleBase<SecurityGuard>
                         sender.WriteBytesAndSize(buff);
                         sender.Write(roomId);
                         sender.Write(Player.PlayerId);
-                        RPCProcedure.placeCamera(buff, roomId, Player.PlayerId);
+                        RPCProcedure.PlaceCamera(buff, roomId, Player.PlayerId);
                     }
-                    securityGuardButton.Timer = securityGuardButton.MaxTimer;
+                    SecurityGuardButton.Timer = SecurityGuardButton.MaxTimer;
                 },
-                () => { return CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.SecurityGuard) && CachedPlayer.LocalPlayer.PlayerControl.IsAlive() && Local.remainingScrews >= Mathf.Min(SecurityGuard.ventPrice, SecurityGuard.camPrice); },
+                () => { return CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.SecurityGuard) && CachedPlayer.LocalPlayer.PlayerControl.IsAlive() && Local.RemainingScrews >= Mathf.Min(SecurityGuard.VentPrice, SecurityGuard.CamPrice); },
                 () =>
                 {
-                    if (Local.ventTarget == null && Helpers.GetOption(ByteOptionNames.MapId) != 1 && SubmergedCompatibility.IsSubmerged)
+                    if (Local.VentTarget == null && Helpers.GetOption(ByteOptionNames.MapId) != 1 && SubmergedCompatibility.IsSubmerged)
                     {
-                        securityGuardButton.ButtonText = Tr.Get("PlaceCameraText");
-                        securityGuardButton.Sprite = AssetLoader.PlaceCameraButton;
+                        SecurityGuardButton.ButtonText = Tr.Get("PlaceCameraText");
+                        SecurityGuardButton.Sprite = AssetLoader.PlaceCameraButton;
                     }
                     else
                     {
-                        securityGuardButton.ButtonText = Tr.Get("CloseVentText");
-                        securityGuardButton.Sprite = AssetLoader.CloseVentButton;
+                        SecurityGuardButton.ButtonText = Tr.Get("CloseVentText");
+                        SecurityGuardButton.Sprite = AssetLoader.CloseVentButton;
                     }
-                    securityGuardButtonScrewsText?.text = String.Format(Tr.Get("securityGuardScrews"), Local.remainingScrews);
+                    SecurityGuardButtonScrewsText?.text = String.Format(Tr.Get("securityGuardScrews"), Local.RemainingScrews);
 
-                    return Local.ventTarget != null
-                        ? Local.remainingScrews >= SecurityGuard.ventPrice && CachedPlayer.LocalPlayer.PlayerControl.CanMove
-                        : Helpers.GetOption(ByteOptionNames.MapId) != 1 && SubmergedCompatibility.IsSubmerged && ModMapOptions.couldUseCameras && Local.remainingScrews >= SecurityGuard.camPrice && CachedPlayer.LocalPlayer.PlayerControl.CanMove;
+                    return Local.VentTarget != null
+                        ? Local.RemainingScrews >= SecurityGuard.VentPrice && CachedPlayer.LocalPlayer.PlayerControl.CanMove
+                        : Helpers.GetOption(ByteOptionNames.MapId) != 1 && SubmergedCompatibility.IsSubmerged && ModMapOptions.CouldUseCameras && Local.RemainingScrews >= SecurityGuard.CamPrice && CachedPlayer.LocalPlayer.PlayerControl.CanMove;
                 },
-                () => { securityGuardButton.Timer = securityGuardButton.MaxTimer; },
+                () => { SecurityGuardButton.Timer = SecurityGuardButton.MaxTimer; },
                 AssetLoader.PlaceCameraButton,
                 new Vector3(-1.8f, -0.06f, 0),
                 hm,
@@ -140,62 +140,62 @@ public class SecurityGuard : RoleBase<SecurityGuard>
             ButtonText = Tr.Get("PlaceCameraText")
         };
 
-        securityGuardButtonScrewsText = GameObject.Instantiate(securityGuardButton.ActionButton.cooldownTimerText, securityGuardButton.ActionButton.cooldownTimerText.transform.parent);
-        securityGuardButtonScrewsText.text = "";
-        securityGuardButtonScrewsText.enableWordWrapping = false;
-        securityGuardButtonScrewsText.transform.localScale = Vector3.one * 0.5f;
-        securityGuardButtonScrewsText.transform.localPosition += new Vector3(-0.05f, 0.7f, 0);
+        SecurityGuardButtonScrewsText = GameObject.Instantiate(SecurityGuardButton.ActionButton.cooldownTimerText, SecurityGuardButton.ActionButton.cooldownTimerText.transform.parent);
+        SecurityGuardButtonScrewsText.text = "";
+        SecurityGuardButtonScrewsText.enableWordWrapping = false;
+        SecurityGuardButtonScrewsText.transform.localScale = Vector3.one * 0.5f;
+        SecurityGuardButtonScrewsText.transform.localPosition += new Vector3(-0.05f, 0.7f, 0);
 
-        securityGuardCamButton = new CustomButton(
+        SecurityGuardCamButton = new CustomButton(
             () =>
             {
                 if (Helpers.GetOption(ByteOptionNames.MapId) != 1)
                 {
-                    if (Local.minigame == null)
+                    if (Local.Minigame == null)
                     {
                         byte mapId = GameOptionsManager.Instance.CurrentGameOptions.MapId;
                         var e = UnityEngine.Object.FindObjectsOfType<SystemConsole>().FirstOrDefault(x => x.gameObject.name.Contains("Surv_Panel"));
                         if (mapId is 0 or 3) e = UnityEngine.Object.FindObjectsOfType<SystemConsole>().FirstOrDefault(x => x.gameObject.name.Contains("SurvConsole"));
                         else if (mapId == 4) e = UnityEngine.Object.FindObjectsOfType<SystemConsole>().FirstOrDefault(x => x.gameObject.name.Contains("task_cams"));
                         if (e == null || Camera.main == null) return;
-                        Local.minigame = UnityEngine.Object.Instantiate(e.MinigamePrefab, Camera.main.transform, false);
+                        Local.Minigame = UnityEngine.Object.Instantiate(e.MinigamePrefab, Camera.main.transform, false);
                     }
-                    Local.minigame.transform.SetParent(Camera.main.transform, false);
-                    Local.minigame.transform.localPosition = new Vector3(0.0f, 0.0f, -50f);
-                    Local.minigame.Begin(null);
+                    Local.Minigame.transform.SetParent(Camera.main.transform, false);
+                    Local.Minigame.transform.localPosition = new Vector3(0.0f, 0.0f, -50f);
+                    Local.Minigame.Begin(null);
                 }
                 else
                 {
-                    if (Local.minigame == null)
+                    if (Local.Minigame == null)
                     {
                         var e = UnityEngine.Object.FindObjectsOfType<SystemConsole>().FirstOrDefault(x => x.gameObject.name.Contains("SurvLogConsole"));
                         if (e == null || Camera.main == null) return;
-                        Local.minigame = UnityEngine.Object.Instantiate(e.MinigamePrefab, Camera.main.transform, false);
+                        Local.Minigame = UnityEngine.Object.Instantiate(e.MinigamePrefab, Camera.main.transform, false);
                     }
-                    Local.minigame.transform.SetParent(Camera.main.transform, false);
-                    Local.minigame.transform.localPosition = new Vector3(0.0f, 0.0f, -50f);
-                    Local.minigame.Begin(null);
+                    Local.Minigame.transform.SetParent(Camera.main.transform, false);
+                    Local.Minigame.transform.localPosition = new Vector3(0.0f, 0.0f, -50f);
+                    Local.Minigame.Begin(null);
                 }
-                Local.charges--;
+                Local.Charges--;
 
-                if (noMove) CachedPlayer.LocalPlayer.PlayerControl.moveable = false;
+                if (NoMove) CachedPlayer.LocalPlayer.PlayerControl.moveable = false;
                 CachedPlayer.LocalPlayer.PlayerControl.NetTransform.Halt(); // Stop current movement
             },
-            () => { return CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.SecurityGuard) && !CachedPlayer.LocalPlayer.PlayerControl.Data.IsDead && Local.remainingScrews < Mathf.Min(SecurityGuard.ventPrice, SecurityGuard.camPrice) && SubmergedCompatibility.IsSubmerged; },
+            () => { return CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.SecurityGuard) && !CachedPlayer.LocalPlayer.PlayerControl.Data.IsDead && Local.RemainingScrews < Mathf.Min(SecurityGuard.VentPrice, SecurityGuard.CamPrice) && SubmergedCompatibility.IsSubmerged; },
             () =>
             {
-                securityGuardChargesText?.text = securityGuardChargesText.text = string.Format(Tr.Get("hackerChargesText"), Local.charges, camMaxCharges);
-                securityGuardCamButton.ActionButton.graphic.sprite = Helpers.IsMiraHQ ? FastDestroyableSingleton<HudManager>.Instance.UseButton.fastUseSettings[ImageNames.DoorLogsButton].Image : FastDestroyableSingleton<HudManager>.Instance.UseButton.fastUseSettings[ImageNames.CamsButton].Image;
-                securityGuardCamButton.ActionButton.OverrideText(Helpers.IsMiraHQ ?
+                SecurityGuardChargesText?.text = SecurityGuardChargesText.text = string.Format(Tr.Get("hackerChargesText"), Local.Charges, CamMaxCharges);
+                SecurityGuardCamButton.ActionButton.graphic.sprite = Helpers.IsMiraHQ ? FastDestroyableSingleton<HudManager>.Instance.UseButton.fastUseSettings[ImageNames.DoorLogsButton].Image : FastDestroyableSingleton<HudManager>.Instance.UseButton.fastUseSettings[ImageNames.CamsButton].Image;
+                SecurityGuardCamButton.ActionButton.OverrideText(Helpers.IsMiraHQ ?
                     TranslationController.Instance.GetString(StringNames.SecurityLogsSystem) :
                     TranslationController.Instance.GetString(StringNames.SecurityCamsSystem));
-                return CachedPlayer.LocalPlayer.PlayerControl.CanMove && Local.charges > 0;
+                return CachedPlayer.LocalPlayer.PlayerControl.CanMove && Local.Charges > 0;
             },
             () =>
             {
-                securityGuardCamButton.Timer = securityGuardCamButton.MaxTimer;
-                securityGuardCamButton.IsEffectActive = false;
-                securityGuardCamButton.ActionButton.cooldownTimerText.color = Palette.EnabledColor;
+                SecurityGuardCamButton.Timer = SecurityGuardCamButton.MaxTimer;
+                SecurityGuardCamButton.IsEffectActive = false;
+                SecurityGuardCamButton.ActionButton.cooldownTimerText.color = Palette.EnabledColor;
             },
             FastDestroyableSingleton<HudManager>.Instance.UseButton.fastUseSettings[ImageNames.CamsButton].Image,
             new Vector3(-1.8f, -0.06f, 0),
@@ -206,10 +206,10 @@ public class SecurityGuard : RoleBase<SecurityGuard>
             0f,
             () =>
             {
-                securityGuardCamButton.Timer = securityGuardCamButton.MaxTimer;
+                SecurityGuardCamButton.Timer = SecurityGuardCamButton.MaxTimer;
                 if (Minigame.Instance)
                 {
-                    Local.minigame.ForceClose();
+                    Local.Minigame.ForceClose();
                 }
                 CachedPlayer.LocalPlayer.PlayerControl.moveable = true;
             },
@@ -218,18 +218,18 @@ public class SecurityGuard : RoleBase<SecurityGuard>
         );
 
         // Security Guard cam button charges
-        securityGuardChargesText = GameObject.Instantiate(securityGuardCamButton.ActionButton.cooldownTimerText, securityGuardCamButton.ActionButton.cooldownTimerText.transform.parent);
-        securityGuardChargesText.text = "";
-        securityGuardChargesText.enableWordWrapping = false;
-        securityGuardChargesText.transform.localScale = Vector3.one * 0.5f;
-        securityGuardChargesText.transform.localPosition += new Vector3(-0.05f, 0.7f, 0);
+        SecurityGuardChargesText = GameObject.Instantiate(SecurityGuardCamButton.ActionButton.cooldownTimerText, SecurityGuardCamButton.ActionButton.cooldownTimerText.transform.parent);
+        SecurityGuardChargesText.text = "";
+        SecurityGuardChargesText.enableWordWrapping = false;
+        SecurityGuardChargesText.transform.localScale = Vector3.one * 0.5f;
+        SecurityGuardChargesText.transform.localPosition += new Vector3(-0.05f, 0.7f, 0);
 
     }
     public override void SetButtonCooldowns()
     {
-        securityGuardButton.MaxTimer = SecurityGuard.cooldown;
-        securityGuardCamButton.MaxTimer = SecurityGuard.cooldown;
-        securityGuardCamButton.EffectDuration = SecurityGuard.camDuration;
+        SecurityGuardButton.MaxTimer = SecurityGuard.Cooldown;
+        SecurityGuardCamButton.MaxTimer = SecurityGuard.Cooldown;
+        SecurityGuardCamButton.EffectDuration = SecurityGuard.CamDuration;
     }
 
     // write functions here

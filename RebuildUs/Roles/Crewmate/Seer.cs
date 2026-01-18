@@ -5,12 +5,12 @@ public class Seer : RoleBase<Seer>
 {
     public static Color NameColor = new Color32(97, 178, 108, byte.MaxValue);
     public override Color RoleColor => NameColor;
-    public static List<Vector3> deadBodyPositions = [];
+    public static List<Vector3> DeadBodyPositions = [];
 
     // write configs here
-    public static int mode { get { return CustomOptionHolder.seerMode.GetSelection(); } }
-    public static bool limitSoulDuration { get { return CustomOptionHolder.seerLimitSoulDuration.GetBool(); } }
-    public static float soulDuration { get { return CustomOptionHolder.seerSoulDuration.GetFloat(); } }
+    public static int Mode { get { return CustomOptionHolder.SeerMode.GetSelection(); } }
+    public static bool LimitSoulDuration { get { return CustomOptionHolder.SeerLimitSoulDuration.GetBool(); } }
+    public static float SoulDuration { get { return CustomOptionHolder.SeerSoulDuration.GetFloat(); } }
 
     public Seer()
     {
@@ -21,9 +21,9 @@ public class Seer : RoleBase<Seer>
     public override void OnMeetingStart() { }
     public override void OnMeetingEnd()
     {
-        if (deadBodyPositions != null && CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Seer) && (mode is 0 or 2))
+        if (DeadBodyPositions != null && CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Seer) && (Mode is 0 or 2))
         {
-            foreach (var pos in deadBodyPositions)
+            foreach (var pos in DeadBodyPositions)
             {
                 var soul = new GameObject();
                 // soul.transform.position = pos;
@@ -33,9 +33,9 @@ public class Seer : RoleBase<Seer>
                 soul.AddSubmergedComponent(SubmergedCompatibility.Classes.ElevatorMover);
                 rend.sprite = AssetLoader.Soul;
 
-                if (limitSoulDuration)
+                if (LimitSoulDuration)
                 {
-                    FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(soulDuration, new Action<float>((p) =>
+                    FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(SoulDuration, new Action<float>((p) =>
                     {
                         if (rend != null)
                         {
@@ -47,7 +47,7 @@ public class Seer : RoleBase<Seer>
                     })));
                 }
             }
-            deadBodyPositions = [];
+            DeadBodyPositions = [];
         }
     }
     public override void OnIntroEnd() { }
@@ -65,6 +65,6 @@ public class Seer : RoleBase<Seer>
     {
         // reset configs here
         Players.Clear();
-        deadBodyPositions = [];
+        DeadBodyPositions = [];
     }
 }

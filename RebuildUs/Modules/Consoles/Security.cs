@@ -2,20 +2,20 @@ namespace RebuildUs.Modules.Consoles;
 
 public static class SecurityCamera
 {
-    public static float cameraTimer = 0f;
-    private static int page = 0;
-    private static float timer = 0f;
+    public static float CameraTimer = 0f;
+    private static int Page = 0;
+    private static float Timer = 0f;
 
     public static void ResetData()
     {
-        cameraTimer = 0f;
+        CameraTimer = 0f;
         if (TimeRemaining != null)
         {
             UnityEngine.Object.Destroy(TimeRemaining);
             TimeRemaining = null;
         }
-        page = 0;
-        timer = 0f;
+        Page = 0;
+        Timer = 0f;
     }
 
     static TMPro.TextMeshPro TimeRemaining;
@@ -23,25 +23,25 @@ public static class SecurityCamera
     public static void UseCameraTime()
     {
         // Don't waste network traffic if we're out of time.
-        if (ModMapOptions.restrictDevices > 0 && ModMapOptions.restrictCameras && ModMapOptions.restrictCamerasTime > 0f && CachedPlayer.LocalPlayer.PlayerControl.IsAlive())
+        if (ModMapOptions.RestrictDevices > 0 && ModMapOptions.RestrictCameras && ModMapOptions.RestrictCamerasTime > 0f && CachedPlayer.LocalPlayer.PlayerControl.IsAlive())
         {
             using var sender = new RPCSender(CachedPlayer.LocalPlayer.PlayerControl.NetId, CustomRPC.UseCameraTime);
-            sender.Write(cameraTimer);
-            RPCProcedure.UseCameraTime(cameraTimer);
+            sender.Write(CameraTimer);
+            RPCProcedure.UseCameraTime(CameraTimer);
         }
-        cameraTimer = 0f;
+        CameraTimer = 0f;
     }
 
     public static void BeginCommon()
     {
-        cameraTimer = 0f;
+        CameraTimer = 0f;
     }
 
     public static void BeginPostfix(SurveillanceMinigame __instance)
     {
         // Add securityGuard cameras
-        page = 0;
-        timer = 0;
+        Page = 0;
+        Timer = 0;
         if (MapUtilities.CachedShipStatus.AllCameras.Length > 4 && __instance.FilteredRooms.Length > 0)
         {
             __instance.textures = __instance.textures.ToList().Concat(new RenderTexture[MapUtilities.CachedShipStatus.AllCameras.Length - 4]).ToArray();
@@ -61,11 +61,11 @@ public static class SecurityCamera
 
     public static bool Update(PlanetSurveillanceMinigame __instance)
     {
-        cameraTimer += Time.deltaTime;
-        if (cameraTimer > 0.1f)
+        CameraTimer += Time.deltaTime;
+        if (CameraTimer > 0.1f)
             UseCameraTime();
 
-        if (ModMapOptions.restrictDevices > 0 && ModMapOptions.restrictCameras)
+        if (ModMapOptions.RestrictDevices > 0 && ModMapOptions.RestrictCameras)
         {
             if (TimeRemaining == null)
             {
@@ -77,13 +77,13 @@ public static class SecurityCamera
                 TimeRemaining.color = Palette.White;
             }
 
-            if (ModMapOptions.restrictCamerasTime <= 0f)
+            if (ModMapOptions.RestrictCamerasTime <= 0f)
             {
                 __instance.Close();
                 return false;
             }
 
-            string timeString = TimeSpan.FromSeconds(ModMapOptions.restrictCamerasTime).ToString(@"mm\:ss\.ff");
+            string timeString = TimeSpan.FromSeconds(ModMapOptions.RestrictCamerasTime).ToString(@"mm\:ss\.ff");
             TimeRemaining.text = String.Format(Tr.Get("timeRemaining"), timeString);
             TimeRemaining.gameObject.SetActive(true);
         }
@@ -93,13 +93,13 @@ public static class SecurityCamera
 
     public static bool Update(SurveillanceMinigame __instance)
     {
-        cameraTimer += Time.deltaTime;
-        if (cameraTimer > 0.1f)
+        CameraTimer += Time.deltaTime;
+        if (CameraTimer > 0.1f)
         {
             UseCameraTime();
         }
 
-        if (ModMapOptions.restrictDevices > 0 && ModMapOptions.restrictCameras)
+        if (ModMapOptions.RestrictDevices > 0 && ModMapOptions.RestrictCameras)
         {
             if (TimeRemaining == null)
             {
@@ -111,35 +111,35 @@ public static class SecurityCamera
                 TimeRemaining.color = Palette.White;
             }
 
-            if (ModMapOptions.restrictCamerasTime <= 0f)
+            if (ModMapOptions.RestrictCamerasTime <= 0f)
             {
                 __instance.Close();
                 return false;
             }
 
-            string timeString = TimeSpan.FromSeconds(ModMapOptions.restrictCamerasTime).ToString(@"mm\:ss\.ff");
+            string timeString = TimeSpan.FromSeconds(ModMapOptions.RestrictCamerasTime).ToString(@"mm\:ss\.ff");
             TimeRemaining.text = String.Format(Tr.Get("timeRemaining"), timeString);
             TimeRemaining.gameObject.SetActive(true);
 
         }
 
         // Update normal and securityGuard cameras
-        timer += Time.deltaTime;
+        Timer += Time.deltaTime;
         int numberOfPages = Mathf.CeilToInt(MapUtilities.CachedShipStatus.AllCameras.Length / 4f);
 
         bool update = false;
 
-        if (timer > 3f || Input.GetKeyDown(KeyCode.RightArrow))
+        if (Timer > 3f || Input.GetKeyDown(KeyCode.RightArrow))
         {
             update = true;
-            timer = 0f;
-            page = (page + 1) % numberOfPages;
+            Timer = 0f;
+            Page = (Page + 1) % numberOfPages;
         }
         else if (Input.GetKeyDown(KeyCode.LeftArrow))
         {
-            page = (page + numberOfPages - 1) % numberOfPages;
+            Page = (Page + numberOfPages - 1) % numberOfPages;
             update = true;
-            timer = 0f;
+            Timer = 0f;
         }
 
         if ((__instance.isStatic || update) && !PlayerTask.PlayerHasTaskOfType<IHudOverrideTask>(CachedPlayer.LocalPlayer.PlayerControl))
@@ -149,8 +149,8 @@ public static class SecurityCamera
             {
                 __instance.ViewPorts[i].sharedMaterial = __instance.DefaultMaterial;
                 __instance.SabText[i].gameObject.SetActive(false);
-                if (page * 4 + i < __instance.textures.Length)
-                    __instance.ViewPorts[i].material.SetTexture("_MainTex", __instance.textures[page * 4 + i]);
+                if (Page * 4 + i < __instance.textures.Length)
+                    __instance.ViewPorts[i].material.SetTexture("_MainTex", __instance.textures[Page * 4 + i]);
                 else
                     __instance.ViewPorts[i].sharedMaterial = __instance.StaticMaterial;
             }
@@ -170,11 +170,11 @@ public static class SecurityCamera
 
     public static bool Update(SecurityLogGame __instance)
     {
-        cameraTimer += Time.deltaTime;
-        if (cameraTimer > 0.05f)
+        CameraTimer += Time.deltaTime;
+        if (CameraTimer > 0.05f)
             UseCameraTime();
 
-        if (ModMapOptions.restrictDevices > 0)
+        if (ModMapOptions.RestrictDevices > 0)
         {
             if (TimeRemaining == null)
             {
@@ -186,13 +186,13 @@ public static class SecurityCamera
                 TimeRemaining.color = Palette.White;
             }
 
-            if (ModMapOptions.restrictCamerasTime <= 0f)
+            if (ModMapOptions.RestrictCamerasTime <= 0f)
             {
                 __instance.Close();
                 return false;
             }
 
-            string timeString = TimeSpan.FromSeconds(ModMapOptions.restrictCamerasTime).ToString(@"mm\:ss\.ff");
+            string timeString = TimeSpan.FromSeconds(ModMapOptions.RestrictCamerasTime).ToString(@"mm\:ss\.ff");
             TimeRemaining.text = String.Format(Tr.Get("timeRemaining"), timeString);
             TimeRemaining.gameObject.SetActive(true);
         }

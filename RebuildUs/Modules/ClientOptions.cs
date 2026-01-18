@@ -16,15 +16,15 @@ public static class ClientOptions
         new SelectionBehaviour("hideFakeTasks", () => ModMapOptions.HideFakeTasks = RebuildUs.HideFakeTasks.Value = !RebuildUs.HideFakeTasks.Value, RebuildUs.HideFakeTasks.Value),
     ];
 
-    private static GameObject popUp;
-    private static TextMeshPro titleText;
+    private static GameObject PopUp;
+    private static TextMeshPro TitleText;
 
-    private static ToggleButtonBehaviour moreOptions;
-    private static List<ToggleButtonBehaviour> modButtons = [];
-    private static TextMeshPro titleTextTitle;
+    private static ToggleButtonBehaviour MoreOptions;
+    private static List<ToggleButtonBehaviour> ModButtons = [];
+    private static TextMeshPro TitleTextTitle;
 
-    private static ToggleButtonBehaviour buttonPrefab;
-    private static int page = 1;
+    private static ToggleButtonBehaviour ButtonPrefab;
+    private static int Page = 1;
 
     public static void Start(MainMenuManager __instance)
     {
@@ -34,26 +34,26 @@ public static class ClientOptions
         tmp.fontSize = 4;
         tmp.alignment = TextAlignmentOptions.Center;
         tmp.transform.localPosition += Vector3.left * 0.2f;
-        titleText = UnityEngine.Object.Instantiate(tmp);
-        titleText.gameObject.SetActive(false);
-        UnityEngine.Object.DontDestroyOnLoad(titleText);
+        TitleText = UnityEngine.Object.Instantiate(tmp);
+        TitleText.gameObject.SetActive(false);
+        UnityEngine.Object.DontDestroyOnLoad(TitleText);
     }
 
     public static void Start(OptionsMenuBehaviour __instance)
     {
         if (!__instance.CensorChatButton) return;
 
-        if (!popUp)
+        if (!PopUp)
         {
             CreateCustom(__instance);
         }
 
-        if (!buttonPrefab)
+        if (!ButtonPrefab)
         {
-            buttonPrefab = UnityEngine.Object.Instantiate(__instance.CensorChatButton);
-            UnityEngine.Object.DontDestroyOnLoad(buttonPrefab);
-            buttonPrefab.name = "CensorChatPrefab";
-            buttonPrefab.gameObject.SetActive(false);
+            ButtonPrefab = UnityEngine.Object.Instantiate(__instance.CensorChatButton);
+            UnityEngine.Object.DontDestroyOnLoad(ButtonPrefab);
+            ButtonPrefab.name = "CensorChatPrefab";
+            ButtonPrefab.gameObject.SetActive(false);
         }
 
         SetUpOptions();
@@ -62,15 +62,15 @@ public static class ClientOptions
 
     private static void CreateCustom(OptionsMenuBehaviour prefab)
     {
-        popUp = UnityEngine.Object.Instantiate(prefab.gameObject);
-        UnityEngine.Object.DontDestroyOnLoad(popUp);
-        var transform = popUp.transform;
+        PopUp = UnityEngine.Object.Instantiate(prefab.gameObject);
+        UnityEngine.Object.DontDestroyOnLoad(PopUp);
+        var transform = PopUp.transform;
         var pos = transform.localPosition;
         pos.z = -810f;
         transform.localPosition = pos;
 
-        UnityEngine.Object.Destroy(popUp.GetComponent<OptionsMenuBehaviour>());
-        foreach (var obj in popUp.gameObject.GetAllChildren())
+        UnityEngine.Object.Destroy(PopUp.GetComponent<OptionsMenuBehaviour>());
+        foreach (var obj in PopUp.gameObject.GetAllChildren())
         {
             if (obj.name is not "Background" and not "CloseButton")
             {
@@ -78,32 +78,32 @@ public static class ClientOptions
             }
         }
 
-        popUp.SetActive(false);
+        PopUp.SetActive(false);
     }
 
     private static void InitializeMoreButton(OptionsMenuBehaviour __instance)
     {
         __instance.BackButton.transform.localPosition += Vector3.right * 1.8f;
-        moreOptions = UnityEngine.Object.Instantiate(buttonPrefab, __instance.CensorChatButton.transform.parent);
-        moreOptions.transform.localPosition = __instance.CensorChatButton.transform.localPosition + Vector3.down * 1.0f;
+        MoreOptions = UnityEngine.Object.Instantiate(ButtonPrefab, __instance.CensorChatButton.transform.parent);
+        MoreOptions.transform.localPosition = __instance.CensorChatButton.transform.localPosition + Vector3.down * 1.0f;
 
-        moreOptions.gameObject.SetActive(true);
-        moreOptions.Text.text = Tr.Get("modOptionsText");
-        var moreOptionsButton = moreOptions.GetComponent<PassiveButton>();
+        MoreOptions.gameObject.SetActive(true);
+        MoreOptions.Text.text = Tr.Get("modOptionsText");
+        var moreOptionsButton = MoreOptions.GetComponent<PassiveButton>();
         moreOptionsButton.OnClick = new Button.ButtonClickedEvent();
         moreOptionsButton.OnClick.AddListener((Action)(() =>
         {
-            if (!popUp) return;
+            if (!PopUp) return;
 
             if (__instance.transform.parent && __instance.transform.parent == FastDestroyableSingleton<HudManager>.Instance.transform)
             {
-                popUp.transform.SetParent(FastDestroyableSingleton<HudManager>.Instance.transform);
-                popUp.transform.localPosition = new Vector3(0, 0, -800f);
+                PopUp.transform.SetParent(FastDestroyableSingleton<HudManager>.Instance.transform);
+                PopUp.transform.localPosition = new Vector3(0, 0, -800f);
             }
             else
             {
-                popUp.transform.SetParent(null);
-                UnityEngine.Object.DontDestroyOnLoad(popUp);
+                PopUp.transform.SetParent(null);
+                UnityEngine.Object.DontDestroyOnLoad(PopUp);
             }
 
             CheckSetTitle();
@@ -116,16 +116,16 @@ public static class ClientOptions
 
     private static void RefreshOpen()
     {
-        popUp.gameObject.SetActive(false);
-        popUp.gameObject.SetActive(true);
+        PopUp.gameObject.SetActive(false);
+        PopUp.gameObject.SetActive(true);
         SetUpOptions();
     }
 
     private static void CheckSetTitle()
     {
-        if (!popUp || popUp.GetComponentInChildren<TextMeshPro>() || !titleText) return;
+        if (!PopUp || PopUp.GetComponentInChildren<TextMeshPro>() || !TitleText) return;
 
-        var title = titleTextTitle = UnityEngine.Object.Instantiate(titleText, popUp.transform);
+        var title = TitleTextTitle = UnityEngine.Object.Instantiate(TitleText, PopUp.transform);
         title.GetComponent<RectTransform>().localPosition = Vector3.up * 2.3f;
         title.gameObject.SetActive(true);
         title.text = Tr.Get("moreOptionsText");
@@ -136,19 +136,19 @@ public static class ClientOptions
     {
         // if (popUp.transform.GetComponentInChildren<ToggleButtonBehaviour>()) return;
 
-        foreach (var button in modButtons)
+        foreach (var button in ModButtons)
         {
             if (button != null) UnityEngine.Object.Destroy(button.gameObject);
         }
 
-        modButtons = [];
-        int length = (page * 10) < AllOptions.Length ? page * 10 : AllOptions.Length;
+        ModButtons = [];
+        int length = (Page * 10) < AllOptions.Length ? Page * 10 : AllOptions.Length;
 
-        for (var i = 0; i + ((page - 1) * 10) < length; i++)
+        for (var i = 0; i + ((Page - 1) * 10) < length; i++)
         {
-            var info = AllOptions[i + ((page - 1) * 10)];
+            var info = AllOptions[i + ((Page - 1) * 10)];
 
-            var button = UnityEngine.Object.Instantiate(buttonPrefab, popUp.transform);
+            var button = UnityEngine.Object.Instantiate(ButtonPrefab, PopUp.transform);
             var pos = new Vector3(i % 2 == 0 ? -1.17f : 1.17f, 1.3f - i / 2 * 0.8f, -.5f);
 
             var transform = button.transform;
@@ -159,7 +159,7 @@ public static class ClientOptions
 
             button.Text.text = Tr.Get(info.Title);
             button.Text.fontSizeMin = button.Text.fontSizeMax = 2.2f;
-            button.Text.font = UnityEngine.Object.Instantiate(titleText.font);
+            button.Text.font = UnityEngine.Object.Instantiate(TitleText.font);
             button.Text.GetComponent<RectTransform>().sizeDelta = new Vector2(2, 2);
 
             button.name = info.Title.Replace(" ", "") + "Toggle";
@@ -186,18 +186,18 @@ public static class ClientOptions
             foreach (var spr in button.gameObject.GetComponentsInChildren<SpriteRenderer>())
                 spr.size = new Vector2(2.2f, .7f);
 
-            modButtons.Add(button);
+            ModButtons.Add(button);
         }
         // ページ移動ボタンを追加
-        if (page * 10 < AllOptions.Length)
+        if (Page * 10 < AllOptions.Length)
         {
-            var button = UnityEngine.Object.Instantiate(buttonPrefab, popUp.transform);
+            var button = UnityEngine.Object.Instantiate(ButtonPrefab, PopUp.transform);
             var pos = new Vector3(1.2f, -2.5f, -0.5f);
             var transform = button.transform;
             transform.localPosition = pos;
             button.Text.text = Tr.Get("next");
             button.Text.fontSizeMin = button.Text.fontSizeMax = 2.2f;
-            button.Text.font = UnityEngine.Object.Instantiate(titleText.font);
+            button.Text.font = UnityEngine.Object.Instantiate(TitleText.font);
             button.Text.GetComponent<RectTransform>().sizeDelta = new Vector2(2, 2);
             button.gameObject.SetActive(true);
             var passiveButton = button.GetComponent<PassiveButton>();
@@ -208,20 +208,20 @@ public static class ClientOptions
             passiveButton.OnMouseOver = new UnityEngine.Events.UnityEvent();
             passiveButton.OnClick.AddListener((Action)(() =>
             {
-                page += 1;
+                Page += 1;
                 SetUpOptions();
             }));
-            modButtons.Add(button);
+            ModButtons.Add(button);
         }
-        if (page > 1)
+        if (Page > 1)
         {
-            var button = UnityEngine.Object.Instantiate(buttonPrefab, popUp.transform);
+            var button = UnityEngine.Object.Instantiate(ButtonPrefab, PopUp.transform);
             var pos = new Vector3(-1.2f, -2.5f, -0.5f);
             var transform = button.transform;
             transform.localPosition = pos;
             button.Text.text = Tr.Get("previous");
             button.Text.fontSizeMin = button.Text.fontSizeMax = 2.2f;
-            button.Text.font = UnityEngine.Object.Instantiate(titleText.font);
+            button.Text.font = UnityEngine.Object.Instantiate(TitleText.font);
             button.Text.GetComponent<RectTransform>().sizeDelta = new Vector2(2, 2);
             button.gameObject.SetActive(true);
             var passiveButton = button.GetComponent<PassiveButton>();
@@ -232,18 +232,18 @@ public static class ClientOptions
             passiveButton.OnMouseOver = new UnityEngine.Events.UnityEvent();
             passiveButton.OnClick.AddListener((Action)(() =>
             {
-                page -= 1;
+                Page -= 1;
                 SetUpOptions();
             }));
-            modButtons.Add(button);
+            ModButtons.Add(button);
         }
     }
 
-    private static IEnumerable<GameObject> GetAllChildren(this GameObject Go)
+    private static IEnumerable<GameObject> GetAllChildren(this GameObject go)
     {
-        for (var i = 0; i < Go.transform.childCount; i++)
+        for (var i = 0; i < go.transform.childCount; i++)
         {
-            yield return Go.transform.GetChild(i).gameObject;
+            yield return go.transform.GetChild(i).gameObject;
         }
     }
 

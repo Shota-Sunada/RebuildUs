@@ -7,11 +7,11 @@ public class Snitch : RoleBase<Snitch>
     public override Color RoleColor => Snitch.NameColor;
 
     // write configs here
-    public static List<Arrow> localArrows = [];
+    public static List<Arrow> LocalArrows = [];
 
-    public static int leftTasksForReveal { get { return Mathf.RoundToInt(CustomOptionHolder.snitchLeftTasksForReveal.GetFloat()); } }
-    public static bool includeTeamJackal { get { return CustomOptionHolder.snitchIncludeTeamJackal.GetBool(); } }
-    public static bool teamJackalUseDifferentArrowColor { get { return CustomOptionHolder.snitchTeamJackalUseDifferentArrowColor.GetBool(); } }
+    public static int LeftTasksForReveal { get { return Mathf.RoundToInt(CustomOptionHolder.SnitchLeftTasksForReveal.GetFloat()); } }
+    public static bool IncludeTeamJackal { get { return CustomOptionHolder.SnitchIncludeTeamJackal.GetBool(); } }
+    public static bool TeamJackalUseDifferentArrowColor { get { return CustomOptionHolder.SnitchTeamJackalUseDifferentArrowColor.GetBool(); } }
 
     public Snitch()
     {
@@ -24,23 +24,23 @@ public class Snitch : RoleBase<Snitch>
     public override void OnIntroEnd() { }
     public override void FixedUpdate()
     {
-        if (localArrows == null) return;
+        if (LocalArrows == null) return;
 
-        foreach (var arrow in localArrows) arrow.ArrowObject.SetActive(false);
+        foreach (var arrow in LocalArrows) arrow.ArrowObject.SetActive(false);
 
         if (Player.Data.IsDead) return;
 
         var (playerCompleted, playerTotal) = TasksHandler.TaskInfo(Player.Data);
         int numberOfTasks = playerTotal - playerCompleted;
 
-        if (numberOfTasks <= leftTasksForReveal && (CachedPlayer.LocalPlayer.PlayerControl.Data.Role.IsImpostor || (includeTeamJackal && (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Jackal) || CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Sidekick)))))
+        if (numberOfTasks <= LeftTasksForReveal && (CachedPlayer.LocalPlayer.PlayerControl.Data.Role.IsImpostor || (IncludeTeamJackal && (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Jackal) || CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Sidekick)))))
         {
-            if (localArrows.Count == 0) localArrows.Add(new Arrow(Color.blue));
-            if (localArrows.Count != 0 && localArrows[0] != null)
+            if (LocalArrows.Count == 0) LocalArrows.Add(new Arrow(Color.blue));
+            if (LocalArrows.Count != 0 && LocalArrows[0] != null)
             {
-                localArrows[0].ArrowObject.SetActive(true);
-                localArrows[0].Image.color = Color.blue;
-                localArrows[0].Update(Player.transform.position);
+                LocalArrows[0].ArrowObject.SetActive(true);
+                LocalArrows[0].Image.color = Color.blue;
+                LocalArrows[0].Update(Player.transform.position);
             }
         }
         else if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Snitch) && numberOfTasks == 0)
@@ -49,7 +49,7 @@ public class Snitch : RoleBase<Snitch>
             foreach (PlayerControl p in CachedPlayer.AllPlayers)
             {
                 bool arrowForImp = p.Data.Role.IsImpostor;
-                bool arrowForTeamJackal = includeTeamJackal && (p.IsRole(RoleType.Jackal) || p.IsRole(RoleType.Sidekick));
+                bool arrowForTeamJackal = IncludeTeamJackal && (p.IsRole(RoleType.Jackal) || p.IsRole(RoleType.Sidekick));
 
                 // Update the arrows' color every time bc things go weird when you add a sidekick or someone dies
                 Color c = Palette.ImpostorRed;
@@ -59,15 +59,15 @@ public class Snitch : RoleBase<Snitch>
                 }
                 if (!p.Data.IsDead && (arrowForImp || arrowForTeamJackal))
                 {
-                    if (arrowIndex >= localArrows.Count)
+                    if (arrowIndex >= LocalArrows.Count)
                     {
-                        localArrows.Add(new Arrow(c));
+                        LocalArrows.Add(new Arrow(c));
                     }
-                    if (arrowIndex < localArrows.Count && localArrows[arrowIndex] != null)
+                    if (arrowIndex < LocalArrows.Count && LocalArrows[arrowIndex] != null)
                     {
-                        localArrows[arrowIndex].Image.color = c;
-                        localArrows[arrowIndex].ArrowObject.SetActive(true);
-                        localArrows[arrowIndex].Update(p.transform.position, c);
+                        LocalArrows[arrowIndex].Image.color = c;
+                        LocalArrows[arrowIndex].ArrowObject.SetActive(true);
+                        LocalArrows[arrowIndex].Update(p.transform.position, c);
                     }
                     arrowIndex++;
                 }
@@ -88,9 +88,9 @@ public class Snitch : RoleBase<Snitch>
         // reset configs here
         Players.Clear();
 
-        if (localArrows != null)
+        if (LocalArrows != null)
         {
-            foreach (var arrow in localArrows)
+            foreach (var arrow in LocalArrows)
             {
                 if (arrow?.ArrowObject != null)
                 {

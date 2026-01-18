@@ -13,20 +13,20 @@ public static class AllPlayers
         // Seer show flash and add dead player position
         if (Seer.Exists)
         {
-            if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Seer) && !CachedPlayer.LocalPlayer.PlayerControl.Data.IsDead && !target.IsRole(RoleType.Seer) && Seer.mode <= 1)
+            if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Seer) && !CachedPlayer.LocalPlayer.PlayerControl.Data.IsDead && !target.IsRole(RoleType.Seer) && Seer.Mode <= 1)
             {
-                Helpers.showFlash(new Color(42f / 255f, 187f / 255f, 245f / 255f));
+                Helpers.ShowFlash(new Color(42f / 255f, 187f / 255f, 245f / 255f));
             }
-            Seer.deadBodyPositions?.Add(target.transform.position);
+            Seer.DeadBodyPositions?.Add(target.transform.position);
         }
 
         // // Tracker store body positions
-        Tracker.deadBodyPositions?.Add(target.transform.position);
+        Tracker.DeadBodyPositions?.Add(target.transform.position);
 
         // Medium add body
-        if (Medium.deadBodies != null)
+        if (Medium.DeadBodies != null)
         {
-            Medium.featureDeadBodies.Add(new(deadPlayer, target.transform.position));
+            Medium.FeatureDeadBodies.Add(new(deadPlayer, target.transform.position));
         }
 
         // // Mini set adapted kill cooldown
@@ -37,15 +37,15 @@ public static class AllPlayers
         // }
 
         // Show flash on bait kill to the killer if enabled
-        if (target.IsRole(RoleType.Bait) && Bait.showKillFlash && !__instance.IsRole(RoleType.Bait) && __instance == CachedPlayer.LocalPlayer.PlayerControl)
+        if (target.IsRole(RoleType.Bait) && Bait.ShowKillFlash && !__instance.IsRole(RoleType.Bait) && __instance == CachedPlayer.LocalPlayer.PlayerControl)
         {
-            Helpers.showFlash(new Color(42f / 255f, 187f / 255f, 245f / 255f));
+            Helpers.ShowFlash(new Color(42f / 255f, 187f / 255f, 245f / 255f));
         }
 
         // // impostor promote to last impostor
         if (target.IsTeamImpostor() && AmongUsClient.Instance.AmHost)
         {
-            LastImpostor.promoteToLastImpostor();
+            LastImpostor.PromoteToLastImpostor();
         }
     }
 }

@@ -5,10 +5,10 @@ public class Cleaner : RoleBase<Cleaner>
 {
     public static Color NameColor = Palette.ImpostorRed;
     public override Color RoleColor => NameColor;
-    public static CustomButton cleanerCleanButton;
+    public static CustomButton CleanerCleanButton;
 
     // write configs here
-    public static float cooldown { get { return CustomOptionHolder.cleanerCooldown.GetFloat(); } }
+    public static float Cooldown { get { return CustomOptionHolder.CleanerCooldown.GetFloat(); } }
 
     public Cleaner()
     {
@@ -22,9 +22,9 @@ public class Cleaner : RoleBase<Cleaner>
     public override void FixedUpdate() { }
     public override void OnKill(PlayerControl target)
     {
-        if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Cleaner) && cleanerCleanButton != null)
+        if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Cleaner) && CleanerCleanButton != null)
         {
-            cleanerCleanButton.Timer = Player.killTimer;
+            CleanerCleanButton.Timer = Player.killTimer;
         }
     }
     public override void OnDeath(PlayerControl killer = null) { }
@@ -32,7 +32,7 @@ public class Cleaner : RoleBase<Cleaner>
     public override void HandleDisconnect(PlayerControl player, DisconnectReasons reason) { }
     public override void MakeButtons(HudManager hm)
     {
-        cleanerCleanButton = new CustomButton(
+        CleanerCleanButton = new CustomButton(
                 () =>
                 {
                     foreach (Collider2D collider2D in Physics2D.OverlapCircleAll(CachedPlayer.LocalPlayer.PlayerControl.GetTruePosition(), CachedPlayer.LocalPlayer.PlayerControl.MaxReportDistance, Constants.PlayersOnlyMask))
@@ -53,7 +53,7 @@ public class Cleaner : RoleBase<Cleaner>
                                     AmongUsClient.Instance.FinishRpcImmediately(writer);
                                     RPCProcedure.CleanBody(playerInfo.PlayerId);
 
-                                    Player.killTimer = cleanerCleanButton.Timer = cleanerCleanButton.MaxTimer;
+                                    Player.killTimer = CleanerCleanButton.Timer = CleanerCleanButton.MaxTimer;
                                     break;
                                 }
                             }
@@ -62,7 +62,7 @@ public class Cleaner : RoleBase<Cleaner>
                 },
                 () => { return CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Cleaner) && CachedPlayer.LocalPlayer.PlayerControl.IsAlive(); },
                 () => { return hm.ReportButton.graphic.color == Palette.EnabledColor && CachedPlayer.LocalPlayer.PlayerControl.CanMove; },
-                () => { cleanerCleanButton.Timer = cleanerCleanButton.MaxTimer; },
+                () => { CleanerCleanButton.Timer = CleanerCleanButton.MaxTimer; },
                 AssetLoader.CleanButton,
                 new Vector3(-1.8f, -0.06f, 0),
                 hm,
@@ -75,7 +75,7 @@ public class Cleaner : RoleBase<Cleaner>
     }
     public override void SetButtonCooldowns()
     {
-        cleanerCleanButton.MaxTimer = cooldown;
+        CleanerCleanButton.MaxTimer = Cooldown;
     }
 
     // write functions here

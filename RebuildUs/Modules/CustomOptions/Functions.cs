@@ -670,23 +670,23 @@ public partial class CustomOption
         return true;
     }
 
-    public static string optionToString(CustomOption option)
+    public static string OptionToString(CustomOption option)
     {
         if (option == null) return "";
         return $"{option.GetName()}: {option.GetString()}";
     }
 
-    public static string optionsToString(CustomOption option, bool skipFirst = false)
+    public static string OptionsToString(CustomOption option, bool skipFirst = false)
     {
         if (option == null) return "";
 
         List<string> options = [];
-        if (!skipFirst) options.Add(optionToString(option));
+        if (!skipFirst) options.Add(OptionToString(option));
         if (option.Enabled)
         {
             foreach (CustomOption op in option.Children)
             {
-                string str = optionsToString(op);
+                string str = OptionsToString(op);
                 if (str != "") options.Add(str);
             }
         }

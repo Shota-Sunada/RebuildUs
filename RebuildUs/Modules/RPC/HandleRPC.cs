@@ -121,31 +121,31 @@ public static partial class RPCProcedure
                 ErasePlayerRoles(reader.ReadByte());
                 break;
             case CustomRPC.MedicSetShielded:
-                medicSetShielded(reader.ReadByte());
+                MedicSetShielded(reader.ReadByte());
                 break;
             case CustomRPC.ShieldedMurderAttempt:
-                shieldedMurderAttempt();
+                ShieldedMurderAttempt();
                 break;
             case CustomRPC.SetFutureShielded:
-                setFutureShielded(reader.ReadByte());
+                SetFutureShielded(reader.ReadByte());
                 break;
             case CustomRPC.TimeMasterRewindTime:
-                timeMasterRewindTime();
+                TimeMasterRewindTime();
                 break;
             case CustomRPC.TimeMasterShield:
-                timeMasterShield();
+                TimeMasterShield();
                 break;
             case CustomRPC.GuesserShoot:
-                guesserShoot(reader.ReadByte(), reader.ReadByte(), reader.ReadByte(), reader.ReadByte());
+                GuesserShoot(reader.ReadByte(), reader.ReadByte(), reader.ReadByte(), reader.ReadByte());
                 break;
             case CustomRPC.PlaceJackInTheBox:
-                placeJackInTheBox(reader.ReadBytesAndSize());
+                PlaceJackInTheBox(reader.ReadBytesAndSize());
                 break;
             case CustomRPC.LightsOut:
-                lightsOut();
+                LightsOut();
                 break;
             case CustomRPC.EvilHackerCreatesMadmate:
-                evilHackerCreatesMadmate(reader.ReadByte(), reader.ReadByte());
+                EvilHackerCreatesMadmate(reader.ReadByte(), reader.ReadByte());
                 break;
             case CustomRPC.UseAdminTime:
                 UseAdminTime(reader.ReadSingle());
@@ -157,61 +157,61 @@ public static partial class RPCProcedure
                 UseVitalsTime(reader.ReadSingle());
                 break;
             case CustomRPC.TrackerUsedTracker:
-                trackerUsedTracker(reader.ReadByte(), reader.ReadByte());
+                TrackerUsedTracker(reader.ReadByte(), reader.ReadByte());
                 break;
             case CustomRPC.SetFutureErased:
-                setFutureErased(reader.ReadByte());
+                SetFutureErased(reader.ReadByte());
                 break;
             case CustomRPC.VampireSetBitten:
-                vampireSetBitten(reader.ReadByte(), reader.ReadByte());
+                VampireSetBitten(reader.ReadByte(), reader.ReadByte());
                 break;
             case CustomRPC.ShareRealTasks:
-                shareRealTasks(reader);
+                ShareRealTasks(reader);
                 break;
             case CustomRPC.PolusRandomSpawn:
                 PolusRandomSpawn(reader.ReadByte(), reader.ReadByte());
                 break;
             case CustomRPC.Synchronize:
-                synchronize(reader.ReadByte(), reader.ReadInt32());
+                Synchronize(reader.ReadByte(), reader.ReadInt32());
                 break;
             case CustomRPC.PlaceCamera:
-                placeCamera(reader.ReadBytesAndSize(), reader.ReadByte(), reader.ReadByte());
+                PlaceCamera(reader.ReadBytesAndSize(), reader.ReadByte(), reader.ReadByte());
                 break;
             case CustomRPC.SealVent:
-                sealVent(reader.ReadPackedInt32(), reader.ReadByte());
+                SealVent(reader.ReadPackedInt32(), reader.ReadByte());
                 break;
             case CustomRPC.MorphingMorph:
-                morphingMorph(reader.ReadByte(), reader.ReadByte());
+                MorphingMorph(reader.ReadByte(), reader.ReadByte());
                 break;
             case CustomRPC.CamouflagerCamouflage:
-                camouflagerCamouflage();
+                CamouflagerCamouflage();
                 break;
             case CustomRPC.SwapperSwap:
-                swapperSwap(reader.ReadByte(), reader.ReadByte());
+                SwapperSwap(reader.ReadByte(), reader.ReadByte());
                 break;
             case CustomRPC.SwapperAnimate:
-                swapperAnimate();
+                SwapperAnimate();
                 break;
             case CustomRPC.SetFutureSpelled:
-                setFutureSpelled(reader.ReadByte());
+                SetFutureSpelled(reader.ReadByte());
                 break;
             case CustomRPC.WitchSpellCast:
-                witchSpellCast(reader.ReadByte());
+                WitchSpellCast(reader.ReadByte());
                 break;
             case CustomRPC.ImpostorPromotesToLastImpostor:
-                impostorPromotesToLastImpostor(reader.ReadByte());
+                ImpostorPromotesToLastImpostor(reader.ReadByte());
                 break;
             case CustomRPC.ShifterShift:
-                shifterShift(reader.ReadByte());
+                ShifterShift(reader.ReadByte());
                 break;
             case CustomRPC.SetFutureShifted:
-                setFutureShifted(reader.ReadByte());
+                SetFutureShifted(reader.ReadByte());
                 break;
             case CustomRPC.SetShifterType:
-                setShifterType(reader.ReadBoolean());
+                SetShifterType(reader.ReadBoolean());
                 break;
             case CustomRPC.FortuneTellerUsedDivine:
-                fortuneTellerUsedDivine(reader.ReadByte(), reader.ReadByte());
+                FortuneTellerUsedDivine(reader.ReadByte(), reader.ReadByte());
                 break;
             default:
                 break;

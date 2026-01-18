@@ -10,19 +10,19 @@ namespace RebuildUs
         public static bool AllowParallelMedBayScans = false;
         public static bool HideOutOfSightNametags = false;
 
-        public static int restrictDevices = 0;
-        public static bool restrictAdmin = true;
-        public static float restrictAdminTime = 600f;
-        public static float restrictAdminTimeMax = 600f;
-        public static bool restrictAdminText = true;
-        public static bool restrictCameras = true;
-        public static float restrictCamerasTime = 600f;
-        public static float restrictCamerasTimeMax = 600f;
-        public static bool restrictCamerasText = true;
-        public static bool restrictVitals = true;
-        public static float restrictVitalsTime = 600f;
-        public static float restrictVitalsTimeMax = 600f;
-        public static bool restrictVitalsText = true;
+        public static int RestrictDevices = 0;
+        public static bool RestrictAdmin = true;
+        public static float RestrictAdminTime = 600f;
+        public static float RestrictAdminTimeMax = 600f;
+        public static bool RestrictAdminText = true;
+        public static bool RestrictCameras = true;
+        public static float RestrictCamerasTime = 600f;
+        public static float RestrictCamerasTimeMax = 600f;
+        public static bool RestrictCamerasText = true;
+        public static bool RestrictVitals = true;
+        public static float RestrictVitalsTime = 600f;
+        public static float RestrictVitalsTimeMax = 600f;
+        public static bool RestrictVitalsText = true;
 
         public static bool GhostsSeeRoles = true;
         public static bool GhostsSeeModifier = true;
@@ -63,16 +63,16 @@ namespace RebuildUs
             AllowParallelMedBayScans = CustomOptionHolder.AllowParallelMedBayScans.GetBool();
             HideOutOfSightNametags = CustomOptionHolder.HideOutOfSightNametags.GetBool();
 
-            restrictDevices = CustomOptionHolder.RestrictDevices.GetSelection();
-            restrictAdmin = CustomOptionHolder.RestrictAdmin.GetBool();
-            restrictAdminTime = restrictAdminTimeMax = CustomOptionHolder.RestrictAdminTime.GetFloat();
-            restrictAdminText = CustomOptionHolder.RestrictAdminText.GetBool();
-            restrictCameras = CustomOptionHolder.RestrictCameras.GetBool();
-            restrictCamerasTime = restrictCamerasTimeMax = CustomOptionHolder.RestrictCamerasTime.GetFloat();
-            restrictCamerasText = CustomOptionHolder.RestrictCamerasText.GetBool();
-            restrictVitalsText = CustomOptionHolder.RestrictVitalsText.GetBool();
-            restrictVitals = CustomOptionHolder.RestrictVitals.GetBool();
-            restrictVitalsTime = restrictVitalsTimeMax = CustomOptionHolder.RestrictVitalsTime.GetFloat();
+            RestrictDevices = CustomOptionHolder.RestrictDevices.GetSelection();
+            RestrictAdmin = CustomOptionHolder.RestrictAdmin.GetBool();
+            RestrictAdminTime = RestrictAdminTimeMax = CustomOptionHolder.RestrictAdminTime.GetFloat();
+            RestrictAdminText = CustomOptionHolder.RestrictAdminText.GetBool();
+            RestrictCameras = CustomOptionHolder.RestrictCameras.GetBool();
+            RestrictCamerasTime = RestrictCamerasTimeMax = CustomOptionHolder.RestrictCamerasTime.GetFloat();
+            RestrictCamerasText = CustomOptionHolder.RestrictCamerasText.GetBool();
+            RestrictVitalsText = CustomOptionHolder.RestrictVitalsText.GetBool();
+            RestrictVitals = CustomOptionHolder.RestrictVitals.GetBool();
+            RestrictVitalsTime = RestrictVitalsTimeMax = CustomOptionHolder.RestrictVitalsTime.GetFloat();
 
             ClearTimerText();
             UpdateTimerText();
@@ -87,58 +87,58 @@ namespace RebuildUs
             ShowChatNotifications = RebuildUs.ShowChatNotifications.Value;
         }
 
-        public static void resetDeviceTimes()
+        public static void ResetDeviceTimes()
         {
-            restrictAdminTime = restrictAdminTimeMax;
-            restrictCamerasTime = restrictCamerasTimeMax;
-            restrictVitalsTime = restrictVitalsTimeMax;
+            RestrictAdminTime = RestrictAdminTimeMax;
+            RestrictCamerasTime = RestrictCamerasTimeMax;
+            RestrictVitalsTime = RestrictVitalsTimeMax;
         }
 
-        public static bool canUseAdmin
+        public static bool CanUseAdmin
         {
             get
             {
-                return restrictDevices == 0 || restrictAdminTime > 0f;
+                return RestrictDevices == 0 || RestrictAdminTime > 0f;
             }
         }
 
-        public static bool couldUseAdmin
+        public static bool CouldUseAdmin
         {
             get
             {
-                return restrictDevices == 0 || !restrictAdmin || restrictAdminTimeMax > 0f;
+                return RestrictDevices == 0 || !RestrictAdmin || RestrictAdminTimeMax > 0f;
             }
         }
 
-        public static bool canUseCameras
+        public static bool CanUseCameras
         {
             get
             {
-                return restrictDevices == 0 || !restrictCameras || restrictCamerasTime > 0f;
+                return RestrictDevices == 0 || !RestrictCameras || RestrictCamerasTime > 0f;
             }
         }
 
-        public static bool couldUseCameras
+        public static bool CouldUseCameras
         {
             get
             {
-                return restrictDevices == 0 || !restrictCameras || restrictCamerasTimeMax > 0f;
+                return RestrictDevices == 0 || !RestrictCameras || RestrictCamerasTimeMax > 0f;
             }
         }
 
-        public static bool canUseVitals
+        public static bool CanUseVitals
         {
             get
             {
-                return restrictDevices == 0 || !restrictVitals || restrictVitalsTime > 0f;
+                return RestrictDevices == 0 || !RestrictVitals || RestrictVitalsTime > 0f;
             }
         }
 
-        public static bool couldUseVitals
+        public static bool CouldUseVitals
         {
             get
             {
-                return restrictDevices == 0 || !restrictVitals || restrictVitalsTimeMax > 0f;
+                return RestrictDevices == 0 || !RestrictVitals || RestrictVitalsTimeMax > 0f;
             }
         }
         public static void MeetingEndedUpdate()
@@ -149,50 +149,50 @@ namespace RebuildUs
 
         public static void UpdateTimerText()
         {
-            if (restrictDevices == 0 || (!restrictAdminText && !restrictCamerasText && !restrictVitalsText))
+            if (RestrictDevices == 0 || (!RestrictAdminText && !RestrictCamerasText && !RestrictVitalsText))
                 return;
             if (FastDestroyableSingleton<HudManager>.Instance == null)
                 return;
 
             // Admin
-            if (restrictAdminText)
+            if (RestrictAdminText)
             {
                 AdminTimerText = UnityEngine.Object.Instantiate(FastDestroyableSingleton<TaskPanelBehaviour>.Instance.taskText, FastDestroyableSingleton<HudManager>.Instance.transform);
                 float y = -4.0f;
-                if (restrictCamerasText)
+                if (RestrictCamerasText)
                     y += 0.2f;
-                if (restrictVitalsText)
+                if (RestrictVitalsText)
                     y += 0.2f;
                 AdminTimerText.transform.localPosition = new Vector3(-3.5f, y, 0);
-                if (restrictAdminTime > 0)
-                    AdminTimerText.text = String.Format(Tr.Get("adminText"), restrictAdminTime.ToString("0.00"));
+                if (RestrictAdminTime > 0)
+                    AdminTimerText.text = String.Format(Tr.Get("adminText"), RestrictAdminTime.ToString("0.00"));
                 else
                     AdminTimerText.text = Tr.Get("adminRanOut");
                 AdminTimerText.gameObject.SetActive(true);
             }
 
             // Cameras
-            if (restrictCamerasText)
+            if (RestrictCamerasText)
             {
                 CamerasTimerText = UnityEngine.Object.Instantiate(FastDestroyableSingleton<TaskPanelBehaviour>.Instance.taskText, FastDestroyableSingleton<HudManager>.Instance.transform);
                 float y = -4.0f;
-                if (restrictVitalsText)
+                if (RestrictVitalsText)
                     y += 0.2f;
                 CamerasTimerText.transform.localPosition = new Vector3(-3.5f, y, 0);
-                if (restrictCamerasTime > 0)
-                    CamerasTimerText.text = String.Format(Tr.Get("camerasText"), restrictCamerasTime.ToString("0.00"));
+                if (RestrictCamerasTime > 0)
+                    CamerasTimerText.text = String.Format(Tr.Get("camerasText"), RestrictCamerasTime.ToString("0.00"));
                 else
                     CamerasTimerText.text = Tr.Get("camerasRanOut");
                 CamerasTimerText.gameObject.SetActive(true);
             }
 
             // Vitals
-            if (restrictVitalsText)
+            if (RestrictVitalsText)
             {
                 VitalsTimerText = UnityEngine.Object.Instantiate(FastDestroyableSingleton<TaskPanelBehaviour>.Instance.taskText, FastDestroyableSingleton<HudManager>.Instance.transform);
                 VitalsTimerText.transform.localPosition = new Vector3(-3.5f, -4.0f, 0);
-                if (restrictVitalsTime > 0)
-                    VitalsTimerText.text = String.Format(Tr.Get("vitalsText"), restrictVitalsTime.ToString("0.00"));
+                if (RestrictVitalsTime > 0)
+                    VitalsTimerText.text = String.Format(Tr.Get("vitalsText"), RestrictVitalsTime.ToString("0.00"));
                 else
                     VitalsTimerText.text = Tr.Get("vitalsRanOut");
                 VitalsTimerText.gameObject.SetActive(true);

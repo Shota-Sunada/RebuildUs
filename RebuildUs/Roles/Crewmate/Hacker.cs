@@ -5,27 +5,27 @@ public class Hacker : RoleBase<Hacker>
 {
     public static Color NameColor = new Color32(117, 250, 76, byte.MaxValue);
     public override Color RoleColor => NameColor;
-    private static CustomButton hackerButton;
-    public static CustomButton hackerVitalsButton;
-    public static CustomButton hackerAdminTableButton;
-    public static TMP_Text hackerAdminTableChargesText;
-    public static TMP_Text hackerVitalsChargesText;
+    private static CustomButton HackerButton;
+    public static CustomButton HackerVitalsButton;
+    public static CustomButton HackerAdminTableButton;
+    public static TMP_Text HackerAdminTableChargesText;
+    public static TMP_Text HackerVitalsChargesText;
 
-    public Minigame vitals = null;
-    public Minigame doorLog = null;
+    public Minigame Vitals = null;
+    public Minigame DoorLog = null;
 
     // write configs here
-    public static float cooldown { get { return CustomOptionHolder.hackerCooldown.GetFloat(); } }
-    public static float duration { get { return CustomOptionHolder.hackerHackingDuration.GetFloat(); } }
-    public static bool onlyColorType { get { return CustomOptionHolder.hackerOnlyColorType.GetBool(); } }
-    public static float toolsNumber { get { return CustomOptionHolder.hackerToolsNumber.GetFloat(); } }
-    public static int rechargeTasksNumber { get { return Mathf.RoundToInt(CustomOptionHolder.hackerRechargeTasksNumber.GetFloat()); } }
-    public static bool noMove { get { return CustomOptionHolder.hackerNoMove.GetBool(); } }
+    public static float Cooldown { get { return CustomOptionHolder.HackerCooldown.GetFloat(); } }
+    public static float Duration { get { return CustomOptionHolder.HackerHackingDuration.GetFloat(); } }
+    public static bool OnlyColorType { get { return CustomOptionHolder.HackerOnlyColorType.GetBool(); } }
+    public static float ToolsNumber { get { return CustomOptionHolder.HackerToolsNumber.GetFloat(); } }
+    public static int RechargeTasksNumber { get { return Mathf.RoundToInt(CustomOptionHolder.HackerRechargeTasksNumber.GetFloat()); } }
+    public static bool NoMove { get { return CustomOptionHolder.HackerNoMove.GetBool(); } }
 
-    public float hackerTimer = 0f;
-    public int rechargedTasks = 2;
-    public int chargesVitals = 1;
-    public int chargesAdminTable = 1;
+    public float HackerTimer = 0f;
+    public int RechargedTasks = 2;
+    public int ChargesVitals = 1;
+    public int ChargesAdminTable = 1;
 
     public Hacker()
     {
@@ -38,15 +38,15 @@ public class Hacker : RoleBase<Hacker>
     public override void OnIntroEnd() { }
     public override void FixedUpdate()
     {
-        hackerTimer -= Time.deltaTime;
+        HackerTimer -= Time.deltaTime;
         if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Hacker) && CachedPlayer.LocalPlayer.PlayerControl.IsAlive())
         {
             var (playerCompleted, _) = TasksHandler.TaskInfo(Player.Data);
-            if (playerCompleted == rechargedTasks)
+            if (playerCompleted == RechargedTasks)
             {
-                rechargedTasks += rechargeTasksNumber;
-                if (toolsNumber > chargesVitals) chargesVitals++;
-                if (toolsNumber > chargesAdminTable) chargesAdminTable++;
+                RechargedTasks += RechargeTasksNumber;
+                if (ToolsNumber > ChargesVitals) ChargesVitals++;
+                if (ToolsNumber > ChargesAdminTable) ChargesAdminTable++;
             }
         }
     }
@@ -56,18 +56,18 @@ public class Hacker : RoleBase<Hacker>
     public override void HandleDisconnect(PlayerControl player, DisconnectReasons reason) { }
     public override void MakeButtons(HudManager hm)
     {
-        hackerButton = new CustomButton(
+        HackerButton = new CustomButton(
                 () =>
                 {
-                    hackerTimer = duration;
+                    HackerTimer = Duration;
                 },
                 () => { return CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Hacker) && CachedPlayer.LocalPlayer.PlayerControl.IsAlive(); },
                 () => { return true; },
                 () =>
                 {
-                    hackerButton.Timer = hackerButton.MaxTimer;
-                    hackerButton.IsEffectActive = false;
-                    hackerButton.ActionButton.cooldownTimerText.color = Palette.EnabledColor;
+                    HackerButton.Timer = HackerButton.MaxTimer;
+                    HackerButton.IsEffectActive = false;
+                    HackerButton.ActionButton.cooldownTimerText.color = Palette.EnabledColor;
                 },
                 AssetLoader.HackerButton,
                 new Vector3(0f, 1f, 0),
@@ -76,35 +76,35 @@ public class Hacker : RoleBase<Hacker>
                 KeyCode.F,
                 true,
                 0f,
-                () => { hackerButton.Timer = hackerButton.MaxTimer; }
+                () => { HackerButton.Timer = HackerButton.MaxTimer; }
             )
         {
             ButtonText = Tr.Get("HackerText")
         };
 
-        hackerAdminTableButton = new CustomButton(
+        HackerAdminTableButton = new CustomButton(
            () =>
            {
                if (!MapBehaviour.Instance.isActiveAndEnabled)
                {
-                   FastDestroyableSingleton<MapBehaviour>.Instance.ShowCountOverlay(noMove, true, true);
+                   FastDestroyableSingleton<MapBehaviour>.Instance.ShowCountOverlay(NoMove, true, true);
                }
                CachedPlayer.LocalPlayer.PlayerControl.NetTransform.Halt(); // Stop current movement
-               Local.chargesAdminTable--;
+               Local.ChargesAdminTable--;
            },
-           () => { return CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Hacker) && ModMapOptions.couldUseAdmin && CachedPlayer.LocalPlayer.PlayerControl.IsAlive(); },
+           () => { return CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Hacker) && ModMapOptions.CouldUseAdmin && CachedPlayer.LocalPlayer.PlayerControl.IsAlive(); },
            () =>
            {
-               hackerAdminTableChargesText?.text = hackerVitalsChargesText.text = string.Format(Tr.Get("hackerChargesText"), Local.chargesAdminTable, toolsNumber);
-               return Local.chargesAdminTable > 0 && ModMapOptions.canUseAdmin; ;
+               HackerAdminTableChargesText?.text = HackerVitalsChargesText.text = string.Format(Tr.Get("hackerChargesText"), Local.ChargesAdminTable, ToolsNumber);
+               return Local.ChargesAdminTable > 0 && ModMapOptions.CanUseAdmin; ;
            },
            () =>
            {
-               hackerAdminTableButton.Timer = hackerAdminTableButton.MaxTimer;
-               hackerAdminTableButton.IsEffectActive = false;
-               hackerAdminTableButton.ActionButton.cooldownTimerText.color = Palette.EnabledColor;
+               HackerAdminTableButton.Timer = HackerAdminTableButton.MaxTimer;
+               HackerAdminTableButton.IsEffectActive = false;
+               HackerAdminTableButton.ActionButton.cooldownTimerText.color = Palette.EnabledColor;
            },
-           Hacker.getAdminSprite(),
+           Hacker.GetAdminSprite(),
            new Vector3(-1.8f, -0.06f, 0),
            hm,
            hm.UseButton,
@@ -113,8 +113,8 @@ public class Hacker : RoleBase<Hacker>
            0f,
            () =>
            {
-               hackerAdminTableButton.Timer = hackerAdminTableButton.MaxTimer;
-               if (!hackerVitalsButton.IsEffectActive) CachedPlayer.LocalPlayer.PlayerControl.moveable = true;
+               HackerAdminTableButton.Timer = HackerAdminTableButton.MaxTimer;
+               if (!HackerVitalsButton.IsEffectActive) CachedPlayer.LocalPlayer.PlayerControl.moveable = true;
                if (MapBehaviour.Instance && MapBehaviour.Instance.isActiveAndEnabled) MapBehaviour.Instance.Close();
            },
            Helpers.GetOption(ByteOptionNames.MapId) == 3,
@@ -122,58 +122,58 @@ public class Hacker : RoleBase<Hacker>
         );
 
         // Hacker Admin Table Charges
-        hackerAdminTableChargesText = UnityEngine.Object.Instantiate(hackerAdminTableButton.ActionButton.cooldownTimerText, hackerAdminTableButton.ActionButton.cooldownTimerText.transform.parent);
-        hackerAdminTableChargesText.text = "";
-        hackerAdminTableChargesText.enableWordWrapping = false;
-        hackerAdminTableChargesText.transform.localScale = Vector3.one * 0.5f;
-        hackerAdminTableChargesText.transform.localPosition += new Vector3(-0.05f, 0.7f, 0);
+        HackerAdminTableChargesText = UnityEngine.Object.Instantiate(HackerAdminTableButton.ActionButton.cooldownTimerText, HackerAdminTableButton.ActionButton.cooldownTimerText.transform.parent);
+        HackerAdminTableChargesText.text = "";
+        HackerAdminTableChargesText.enableWordWrapping = false;
+        HackerAdminTableChargesText.transform.localScale = Vector3.one * 0.5f;
+        HackerAdminTableChargesText.transform.localPosition += new Vector3(-0.05f, 0.7f, 0);
 
-        hackerVitalsButton = new CustomButton(
+        HackerVitalsButton = new CustomButton(
            () =>
            {
                if (Helpers.GetOption(ByteOptionNames.MapId) != 1)
                {
-                   if (Local.vitals == null)
+                   if (Local.Vitals == null)
                    {
                        var e = UnityEngine.Object.FindObjectsOfType<SystemConsole>().FirstOrDefault(x => x.gameObject.name.Contains("panel_vitals"));
                        if (e == null || Camera.main == null) return;
-                       Local.vitals = UnityEngine.Object.Instantiate(e.MinigamePrefab, Camera.main.transform, false);
+                       Local.Vitals = UnityEngine.Object.Instantiate(e.MinigamePrefab, Camera.main.transform, false);
                    }
-                   Local.vitals.transform.SetParent(Camera.main.transform, false);
-                   Local.vitals.transform.localPosition = new Vector3(0.0f, 0.0f, -50f);
-                   Local.vitals.Begin(null);
+                   Local.Vitals.transform.SetParent(Camera.main.transform, false);
+                   Local.Vitals.transform.localPosition = new Vector3(0.0f, 0.0f, -50f);
+                   Local.Vitals.Begin(null);
                }
                else
                {
-                   if (Local.doorLog == null)
+                   if (Local.DoorLog == null)
                    {
                        var e = UnityEngine.Object.FindObjectsOfType<SystemConsole>().FirstOrDefault(x => x.gameObject.name.Contains("SurvLogConsole"));
                        if (e == null || Camera.main == null) return;
-                       Local.doorLog = UnityEngine.Object.Instantiate(e.MinigamePrefab, Camera.main.transform, false);
+                       Local.DoorLog = UnityEngine.Object.Instantiate(e.MinigamePrefab, Camera.main.transform, false);
                    }
-                   Local.doorLog.transform.SetParent(Camera.main.transform, false);
-                   Local.doorLog.transform.localPosition = new Vector3(0.0f, 0.0f, -50f);
-                   Local.doorLog.Begin(null);
+                   Local.DoorLog.transform.SetParent(Camera.main.transform, false);
+                   Local.DoorLog.transform.localPosition = new Vector3(0.0f, 0.0f, -50f);
+                   Local.DoorLog.Begin(null);
                }
 
-               if (noMove) CachedPlayer.LocalPlayer.PlayerControl.moveable = false;
+               if (NoMove) CachedPlayer.LocalPlayer.PlayerControl.moveable = false;
                CachedPlayer.LocalPlayer.PlayerControl.NetTransform.Halt(); // Stop current movement
 
-               Local.chargesVitals--;
+               Local.ChargesVitals--;
            },
-           () => { return CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Hacker) && ModMapOptions.couldUseVitals && CachedPlayer.LocalPlayer.PlayerControl.IsAlive() && Helpers.GetOption(ByteOptionNames.MapId) != 0 && Helpers.GetOption(ByteOptionNames.MapId) != 3; },
+           () => { return CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Hacker) && ModMapOptions.CouldUseVitals && CachedPlayer.LocalPlayer.PlayerControl.IsAlive() && Helpers.GetOption(ByteOptionNames.MapId) != 0 && Helpers.GetOption(ByteOptionNames.MapId) != 3; },
            () =>
            {
-               hackerVitalsChargesText?.text = string.Format(Tr.Get("hackerChargesText"), Local.chargesVitals, toolsNumber);
-               hackerVitalsButton.ActionButton.graphic.sprite = Helpers.IsMiraHQ ? FastDestroyableSingleton<HudManager>.Instance.UseButton.fastUseSettings[ImageNames.DoorLogsButton].Image : FastDestroyableSingleton<HudManager>.Instance.UseButton.fastUseSettings[ImageNames.VitalsButton].Image;
-               hackerVitalsButton.ActionButton.OverrideText(Helpers.IsMiraHQ ? TranslationController.Instance.GetString(StringNames.DoorlogLabel) : TranslationController.Instance.GetString(StringNames.VitalsLabel));
-               return Local.chargesVitals > 0 && ModMapOptions.canUseVitals;
+               HackerVitalsChargesText?.text = string.Format(Tr.Get("hackerChargesText"), Local.ChargesVitals, ToolsNumber);
+               HackerVitalsButton.ActionButton.graphic.sprite = Helpers.IsMiraHQ ? FastDestroyableSingleton<HudManager>.Instance.UseButton.fastUseSettings[ImageNames.DoorLogsButton].Image : FastDestroyableSingleton<HudManager>.Instance.UseButton.fastUseSettings[ImageNames.VitalsButton].Image;
+               HackerVitalsButton.ActionButton.OverrideText(Helpers.IsMiraHQ ? TranslationController.Instance.GetString(StringNames.DoorlogLabel) : TranslationController.Instance.GetString(StringNames.VitalsLabel));
+               return Local.ChargesVitals > 0 && ModMapOptions.CanUseVitals;
            },
            () =>
            {
-               hackerVitalsButton.Timer = hackerVitalsButton.MaxTimer;
-               hackerVitalsButton.IsEffectActive = false;
-               hackerVitalsButton.ActionButton.cooldownTimerText.color = Palette.EnabledColor;
+               HackerVitalsButton.Timer = HackerVitalsButton.MaxTimer;
+               HackerVitalsButton.IsEffectActive = false;
+               HackerVitalsButton.ActionButton.cooldownTimerText.color = Palette.EnabledColor;
            },
            FastDestroyableSingleton<HudManager>.Instance.UseButton.fastUseSettings[ImageNames.VitalsButton].Image,
            new Vector3(-2.7f, -0.06f, 0),
@@ -184,12 +184,12 @@ public class Hacker : RoleBase<Hacker>
            0f,
            () =>
            {
-               hackerVitalsButton.Timer = hackerVitalsButton.MaxTimer;
-               if (!hackerAdminTableButton.IsEffectActive) CachedPlayer.LocalPlayer.PlayerControl.moveable = true;
+               HackerVitalsButton.Timer = HackerVitalsButton.MaxTimer;
+               if (!HackerAdminTableButton.IsEffectActive) CachedPlayer.LocalPlayer.PlayerControl.moveable = true;
                if (Minigame.Instance)
                {
-                   if (Helpers.IsMiraHQ) Local.doorLog.ForceClose();
-                   else Local.vitals.ForceClose();
+                   if (Helpers.IsMiraHQ) Local.DoorLog.ForceClose();
+                   else Local.Vitals.ForceClose();
                }
            },
            false,
@@ -197,24 +197,24 @@ public class Hacker : RoleBase<Hacker>
         );
 
         // Hacker Vitals Charges
-        hackerVitalsChargesText = GameObject.Instantiate(hackerVitalsButton.ActionButton.cooldownTimerText, hackerVitalsButton.ActionButton.cooldownTimerText.transform.parent);
-        hackerVitalsChargesText.text = "";
-        hackerVitalsChargesText.enableWordWrapping = false;
-        hackerVitalsChargesText.transform.localScale = Vector3.one * 0.5f;
-        hackerVitalsChargesText.transform.localPosition += new Vector3(-0.05f, 0.7f, 0);
+        HackerVitalsChargesText = GameObject.Instantiate(HackerVitalsButton.ActionButton.cooldownTimerText, HackerVitalsButton.ActionButton.cooldownTimerText.transform.parent);
+        HackerVitalsChargesText.text = "";
+        HackerVitalsChargesText.enableWordWrapping = false;
+        HackerVitalsChargesText.transform.localScale = Vector3.one * 0.5f;
+        HackerVitalsChargesText.transform.localPosition += new Vector3(-0.05f, 0.7f, 0);
 
     }
     public override void SetButtonCooldowns()
     {
-        hackerButton.MaxTimer = Hacker.cooldown;
-        hackerVitalsButton.MaxTimer = Hacker.cooldown;
-        hackerAdminTableButton.MaxTimer = Hacker.cooldown;
-        hackerButton.EffectDuration = Hacker.duration;
-        hackerVitalsButton.EffectDuration = Hacker.duration;
-        hackerAdminTableButton.EffectDuration = Hacker.duration;
+        HackerButton.MaxTimer = Hacker.Cooldown;
+        HackerVitalsButton.MaxTimer = Hacker.Cooldown;
+        HackerAdminTableButton.MaxTimer = Hacker.Cooldown;
+        HackerButton.EffectDuration = Hacker.Duration;
+        HackerVitalsButton.EffectDuration = Hacker.Duration;
+        HackerAdminTableButton.EffectDuration = Hacker.Duration;
     }
 
-    public static Sprite getAdminSprite()
+    public static Sprite GetAdminSprite()
     {
         byte mapId = GameOptionsManager.Instance.CurrentGameOptions.MapId;
         var button = FastDestroyableSingleton<HudManager>.Instance.UseButton.fastUseSettings[ImageNames.PolusAdminButton]; // Polus

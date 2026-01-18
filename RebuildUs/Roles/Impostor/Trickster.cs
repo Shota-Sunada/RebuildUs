@@ -5,14 +5,14 @@ public class Trickster : RoleBase<Trickster>
 {
     public static Color NameColor = Palette.ImpostorRed;
     public override Color RoleColor => NameColor;
-    private static CustomButton placeJackInTheBoxButton;
-    private static CustomButton lightsOutButton;
+    private static CustomButton PlaceJackInTheBoxButton;
+    private static CustomButton LightsOutButton;
 
     // write configs here
-    public static float placeBoxCooldown { get { return CustomOptionHolder.tricksterPlaceBoxCooldown.GetFloat(); } }
-    public static float lightsOutCooldown { get { return CustomOptionHolder.tricksterLightsOutCooldown.GetFloat(); } }
-    public static float lightsOutDuration { get { return CustomOptionHolder.tricksterLightsOutDuration.GetFloat(); } }
-    public static float lightsOutTimer = 0f;
+    public static float PlaceBoxCooldown { get { return CustomOptionHolder.TricksterPlaceBoxCooldown.GetFloat(); } }
+    public static float LightsOutCooldown { get { return CustomOptionHolder.TricksterLightsOutCooldown.GetFloat(); } }
+    public static float LightsOutDuration { get { return CustomOptionHolder.TricksterLightsOutDuration.GetFloat(); } }
+    public static float LightsOutTimer = 0f;
 
     public Trickster()
     {
@@ -26,7 +26,7 @@ public class Trickster : RoleBase<Trickster>
     public override void FixedUpdate()
     {
 
-        lightsOutTimer -= Time.deltaTime;
+        LightsOutTimer -= Time.deltaTime;
     }
     public override void OnKill(PlayerControl target) { }
     public override void OnDeath(PlayerControl killer = null) { }
@@ -35,10 +35,10 @@ public class Trickster : RoleBase<Trickster>
 
     public override void MakeButtons(HudManager hm)
     {
-        placeJackInTheBoxButton = new CustomButton(
+        PlaceJackInTheBoxButton = new CustomButton(
             () =>
             {
-                placeJackInTheBoxButton.Timer = placeJackInTheBoxButton.MaxTimer;
+                PlaceJackInTheBoxButton.Timer = PlaceJackInTheBoxButton.MaxTimer;
 
                 var pos = CachedPlayer.LocalPlayer.PlayerControl.transform.position;
                 byte[] buff = new byte[sizeof(float) * 2];
@@ -47,11 +47,11 @@ public class Trickster : RoleBase<Trickster>
 
                 using var sender = new RPCSender(CachedPlayer.LocalPlayer.PlayerControl.NetId, CustomRPC.PlaceJackInTheBox);
                 sender.WriteBytesAndSize(buff);
-                RPCProcedure.placeJackInTheBox(buff);
+                RPCProcedure.PlaceJackInTheBox(buff);
             },
             () => { return CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Trickster) && CachedPlayer.LocalPlayer.PlayerControl.IsAlive() && !JackInTheBox.HasJackInTheBoxLimitReached(); },
             () => { return CachedPlayer.LocalPlayer.PlayerControl.CanMove && !JackInTheBox.HasJackInTheBoxLimitReached(); },
-            () => { placeJackInTheBoxButton.Timer = placeJackInTheBoxButton.MaxTimer; },
+            () => { PlaceJackInTheBoxButton.Timer = PlaceJackInTheBoxButton.MaxTimer; },
             AssetLoader.PlaceJackInTheBoxButton,
             new Vector3(-1.8f, -0.06f, 0),
             hm,
@@ -62,19 +62,19 @@ public class Trickster : RoleBase<Trickster>
             ButtonText = Tr.Get("PlaceJackInTheBoxText")
         };
 
-        lightsOutButton = new CustomButton(
+        LightsOutButton = new CustomButton(
             () =>
             {
                 using var sender = new RPCSender(CachedPlayer.LocalPlayer.PlayerControl.NetId, CustomRPC.LightsOut);
-                RPCProcedure.lightsOut();
+                RPCProcedure.LightsOut();
             },
             () => { return CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Trickster) && CachedPlayer.LocalPlayer.PlayerControl.IsAlive() && JackInTheBox.HasJackInTheBoxLimitReached() && JackInTheBox.BoxesConvertedToVents; },
             () => { return CachedPlayer.LocalPlayer.PlayerControl.CanMove && JackInTheBox.HasJackInTheBoxLimitReached() && JackInTheBox.BoxesConvertedToVents; },
             () =>
             {
-                lightsOutButton.Timer = lightsOutButton.MaxTimer;
-                lightsOutButton.IsEffectActive = false;
-                lightsOutButton.ActionButton.graphic.color = Palette.EnabledColor;
+                LightsOutButton.Timer = LightsOutButton.MaxTimer;
+                LightsOutButton.IsEffectActive = false;
+                LightsOutButton.ActionButton.graphic.color = Palette.EnabledColor;
             },
             AssetLoader.LightsOutButton,
             new Vector3(-1.8f, -0.06f, 0),
@@ -82,8 +82,8 @@ public class Trickster : RoleBase<Trickster>
             hm.KillButton,
             KeyCode.F,
             true,
-            lightsOutDuration,
-            () => { lightsOutButton.Timer = lightsOutButton.MaxTimer; }
+            LightsOutDuration,
+            () => { LightsOutButton.Timer = LightsOutButton.MaxTimer; }
         )
         {
             ButtonText = Tr.Get("LightsOutText")
@@ -91,9 +91,9 @@ public class Trickster : RoleBase<Trickster>
     }
     public override void SetButtonCooldowns()
     {
-        placeJackInTheBoxButton.MaxTimer = placeBoxCooldown;
-        lightsOutButton.MaxTimer = lightsOutCooldown;
-        lightsOutButton.EffectDuration = lightsOutDuration;
+        PlaceJackInTheBoxButton.MaxTimer = PlaceBoxCooldown;
+        LightsOutButton.MaxTimer = LightsOutCooldown;
+        LightsOutButton.EffectDuration = LightsOutDuration;
     }
 
     // write functions here
@@ -101,7 +101,7 @@ public class Trickster : RoleBase<Trickster>
     public override void Clear()
     {
         // reset configs here
-        lightsOutTimer = 0f;
+        LightsOutTimer = 0f;
         Players.Clear();
     }
 }

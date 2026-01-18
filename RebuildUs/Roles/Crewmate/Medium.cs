@@ -5,19 +5,19 @@ public class Medium : RoleBase<Medium>
 {
     public static Color NameColor = new Color32(98, 120, 115, byte.MaxValue);
     public override Color RoleColor => NameColor;
-    public static CustomButton mediumButton;
-    public static List<(DeadPlayer deadPlayer, Vector3 pos)> deadBodies = [];
-    public static List<(DeadPlayer deadPlayer, Vector3 pos)> featureDeadBodies = [];
-    public static List<SpriteRenderer> souls = [];
+    public static CustomButton MediumButton;
+    public static List<(DeadPlayer deadPlayer, Vector3 pos)> DeadBodies = [];
+    public static List<(DeadPlayer deadPlayer, Vector3 pos)> FeatureDeadBodies = [];
+    public static List<SpriteRenderer> Souls = [];
 
     // write configs here
-    public static float cooldown { get { return CustomOptionHolder.mediumCooldown.GetFloat(); } }
-    public static float duration { get { return CustomOptionHolder.mediumDuration.GetFloat(); } }
-    public static bool oneTimeUse { get { return CustomOptionHolder.mediumOneTimeUse.GetBool(); } }
+    public static float Cooldown { get { return CustomOptionHolder.MediumCooldown.GetFloat(); } }
+    public static float Duration { get { return CustomOptionHolder.MediumDuration.GetFloat(); } }
+    public static bool OneTimeUse { get { return CustomOptionHolder.MediumOneTimeUse.GetBool(); } }
 
-    public DeadPlayer target;
-    public DeadPlayer soulTarget;
-    public static DateTime meetingStartTime = DateTime.UtcNow;
+    public DeadPlayer Target;
+    public DeadPlayer SoulTarget;
+    public static DateTime MeetingStartTime = DateTime.UtcNow;
 
     public Medium()
     {
@@ -27,24 +27,24 @@ public class Medium : RoleBase<Medium>
 
     public override void OnMeetingStart()
     {
-        meetingStartTime = DateTime.UtcNow;
+        MeetingStartTime = DateTime.UtcNow;
     }
     public override void OnMeetingEnd()
     {
         if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Medium))
         {
-            if (souls != null)
+            if (Souls != null)
             {
-                foreach (var sr in souls)
+                foreach (var sr in Souls)
                 {
                     UnityEngine.Object.Destroy(sr.gameObject);
                 }
-                souls = [];
+                Souls = [];
             }
 
-            if (featureDeadBodies != null)
+            if (FeatureDeadBodies != null)
             {
-                foreach ((DeadPlayer db, Vector3 ps) in featureDeadBodies)
+                foreach ((DeadPlayer db, Vector3 ps) in FeatureDeadBodies)
                 {
                     var s = new GameObject();
                     // s.transform.position = ps;
@@ -53,23 +53,23 @@ public class Medium : RoleBase<Medium>
                     var rend = s.AddComponent<SpriteRenderer>();
                     s.AddSubmergedComponent(SubmergedCompatibility.Classes.ElevatorMover);
                     rend.sprite = AssetLoader.Soul;
-                    souls.Add(rend);
+                    Souls.Add(rend);
                 }
-                deadBodies = featureDeadBodies;
-                featureDeadBodies = [];
+                DeadBodies = FeatureDeadBodies;
+                FeatureDeadBodies = [];
             }
         }
     }
     public override void OnIntroEnd() { }
     public override void FixedUpdate()
     {
-        if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Medium) || CachedPlayer.LocalPlayer.PlayerControl.Data.IsDead || deadBodies != null || MapUtilities.CachedShipStatus?.AllVents != null)
+        if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Medium) || CachedPlayer.LocalPlayer.PlayerControl.Data.IsDead || DeadBodies != null || MapUtilities.CachedShipStatus?.AllVents != null)
         {
             DeadPlayer target = null;
             Vector2 truePosition = CachedPlayer.LocalPlayer.PlayerControl.GetTruePosition();
             float closestDistance = float.MaxValue;
             float usableDistance = MapUtilities.CachedShipStatus.AllVents.FirstOrDefault().UsableDistance;
-            foreach ((DeadPlayer dp, Vector3 ps) in Medium.deadBodies)
+            foreach ((DeadPlayer dp, Vector3 ps) in Medium.DeadBodies)
             {
                 float distance = Vector2.Distance(ps, truePosition);
                 if (distance <= usableDistance && distance < closestDistance)
@@ -78,7 +78,7 @@ public class Medium : RoleBase<Medium>
                     target = dp;
                 }
             }
-            Local.target = target;
+            Local.Target = target;
         }
     }
     public override void OnKill(PlayerControl target) { }
@@ -87,31 +87,31 @@ public class Medium : RoleBase<Medium>
     public override void HandleDisconnect(PlayerControl player, DisconnectReasons reason) { }
     public override void MakeButtons(HudManager hm)
     {
-        mediumButton = new CustomButton(
+        MediumButton = new CustomButton(
             () =>
             {
-                if (Local.target != null)
+                if (Local.Target != null)
                 {
-                    Local.soulTarget = Local.target;
-                    mediumButton.HasEffect = true;
+                    Local.SoulTarget = Local.Target;
+                    MediumButton.HasEffect = true;
                 }
             },
             () => { return CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Medium) && CachedPlayer.LocalPlayer.PlayerControl.IsAlive(); },
             () =>
             {
-                if (mediumButton.IsEffectActive && Local.target != Local.soulTarget)
+                if (MediumButton.IsEffectActive && Local.Target != Local.SoulTarget)
                 {
-                    Local.soulTarget = null;
-                    mediumButton.Timer = 0f;
-                    mediumButton.IsEffectActive = false;
+                    Local.SoulTarget = null;
+                    MediumButton.Timer = 0f;
+                    MediumButton.IsEffectActive = false;
                 }
-                return Local.target != null && CachedPlayer.LocalPlayer.PlayerControl.CanMove;
+                return Local.Target != null && CachedPlayer.LocalPlayer.PlayerControl.CanMove;
             },
             () =>
             {
-                mediumButton.Timer = mediumButton.MaxTimer;
-                mediumButton.IsEffectActive = false;
-                Local.soulTarget = null;
+                MediumButton.Timer = MediumButton.MaxTimer;
+                MediumButton.IsEffectActive = false;
+                Local.SoulTarget = null;
             },
             AssetLoader.MediumButton,
             new Vector3(-1.8f, -0.06f, 0),
@@ -119,55 +119,55 @@ public class Medium : RoleBase<Medium>
             hm.UseButton,
             KeyCode.F,
             true,
-            duration,
+            Duration,
             () =>
             {
-                mediumButton.Timer = mediumButton.MaxTimer;
-                if (Local.target == null || Local.target.Player == null) return;
+                MediumButton.Timer = MediumButton.MaxTimer;
+                if (Local.Target == null || Local.Target.Player == null) return;
                 string msg = "";
 
                 int randomNumber = RebuildUs.Instance.Rnd.Next(4);
-                if (Local.target.KillerIfExisting != null)
+                if (Local.Target.KillerIfExisting != null)
                 {
-                    if (Helpers.PlayerById(Local.target.KillerIfExisting.PlayerId).HasModifier(ModifierType.Mini))
+                    if (Helpers.PlayerById(Local.Target.KillerIfExisting.PlayerId).HasModifier(ModifierType.Mini))
                     {
                         randomNumber = RebuildUs.Instance.Rnd.Next(3);
                     }
                 }
-                string typeOfColor = Helpers.isLighterColor(Local.target.KillerIfExisting.Data.DefaultOutfit.ColorId) ? Tr.Get("detectiveColorLight") : Tr.Get("detectiveColorDark");
-                float timeSinceDeath = (float)(meetingStartTime - Local.target.TimeOfDeath).TotalMilliseconds;
-                string name = " (" + Local.target.Player.Data.PlayerName + ")";
+                string typeOfColor = Helpers.IsLighterColor(Local.Target.KillerIfExisting.Data.DefaultOutfit.ColorId) ? Tr.Get("detectiveColorLight") : Tr.Get("detectiveColorDark");
+                float timeSinceDeath = (float)(MeetingStartTime - Local.Target.TimeOfDeath).TotalMilliseconds;
+                string name = " (" + Local.Target.Player.Data.PlayerName + ")";
 
                 msg = randomNumber == 0
-                    ? string.Format(Tr.Get("mediumQuestion1"), RoleInfo.GetRolesString(Local.target.Player, false, includeHidden: true)) + name
+                    ? string.Format(Tr.Get("mediumQuestion1"), RoleInfo.GetRolesString(Local.Target.Player, false, includeHidden: true)) + name
                     : randomNumber == 1
                         ? string.Format(Tr.Get("mediumQuestion2"), typeOfColor) + name
                         : randomNumber == 2
                         ? string.Format(Tr.Get("mediumQuestion3"), Math.Round(timeSinceDeath / 1000)) + name
-                        : string.Format(Tr.Get("mediumQuestion4"), RoleInfo.GetRolesString(Local.target.KillerIfExisting, false, includeHidden: true)) + name;
+                        : string.Format(Tr.Get("mediumQuestion4"), RoleInfo.GetRolesString(Local.Target.KillerIfExisting, false, includeHidden: true)) + name;
 
                 // Excludes mini
 
-                bool CensorChat = AmongUs.Data.DataManager.Settings.Multiplayer.CensorChat;
-                if (CensorChat) AmongUs.Data.DataManager.Settings.Multiplayer.CensorChat = false;
+                bool censorChat = AmongUs.Data.DataManager.Settings.Multiplayer.CensorChat;
+                if (censorChat) AmongUs.Data.DataManager.Settings.Multiplayer.CensorChat = false;
                 FastDestroyableSingleton<HudManager>.Instance.Chat.AddChat(CachedPlayer.LocalPlayer.PlayerControl, $"{msg}");
-                AmongUs.Data.DataManager.Settings.Multiplayer.CensorChat = CensorChat;
+                AmongUs.Data.DataManager.Settings.Multiplayer.CensorChat = censorChat;
 
                 // Remove soul
-                if (oneTimeUse)
+                if (OneTimeUse)
                 {
                     float closestDistance = float.MaxValue;
                     SpriteRenderer target = null;
 
-                    foreach ((DeadPlayer db, Vector3 ps) in deadBodies)
+                    foreach ((DeadPlayer db, Vector3 ps) in DeadBodies)
                     {
-                        if (db == Local.target)
+                        if (db == Local.Target)
                         {
-                            deadBodies.Remove((db, ps));
+                            DeadBodies.Remove((db, ps));
                             break;
                         }
                     }
-                    foreach (var rend in souls)
+                    foreach (var rend in Souls)
                     {
                         float distance = Vector2.Distance(rend.transform.position, CachedPlayer.LocalPlayer.PlayerControl.GetTruePosition());
                         if (distance < closestDistance)
@@ -188,7 +188,7 @@ public class Medium : RoleBase<Medium>
                         if (p == 1f && target != null && target.gameObject != null) UnityEngine.Object.Destroy(target.gameObject);
                     })));
 
-                    souls.Remove(target);
+                    Souls.Remove(target);
                 }
             }
         )
@@ -198,8 +198,8 @@ public class Medium : RoleBase<Medium>
     }
     public override void SetButtonCooldowns()
     {
-        mediumButton.MaxTimer = cooldown;
-        mediumButton.EffectDuration = duration;
+        MediumButton.MaxTimer = Cooldown;
+        MediumButton.EffectDuration = Duration;
     }
 
     // write functions here
@@ -207,9 +207,9 @@ public class Medium : RoleBase<Medium>
     public override void Clear()
     {
         // reset configs here
-        deadBodies = [];
-        featureDeadBodies = [];
-        souls = [];
+        DeadBodies = [];
+        FeatureDeadBodies = [];
+        Souls = [];
         Players.Clear();
     }
 }

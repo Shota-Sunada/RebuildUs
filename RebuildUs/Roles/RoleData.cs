@@ -20,9 +20,9 @@ public static class RoleData
         new(RoleType.Jackal, typeof(RoleBase<Jackal>), () => Jackal.NameColor, () => CustomOptionHolder.JackalSpawnRate),
         new(RoleType.Sidekick, typeof(RoleBase<Sidekick>), () => Jackal.NameColor, () => CustomOptionHolder.JackalSpawnRate),
         new(RoleType.Spy, typeof(RoleBase<Spy>), () => Spy.NameColor, () => CustomOptionHolder.SpySpawnRate),
-        new(RoleType.Godfather, typeof(RoleBase<Mafia.Godfather>), () => Mafia.NameColor, () => CustomOptionHolder.mafiaSpawnRate),
-        new(RoleType.Mafioso, typeof(RoleBase<Mafia.Mafioso>), () => Mafia.NameColor, () => CustomOptionHolder.mafiaSpawnRate),
-        new(RoleType.Janitor, typeof(RoleBase<Mafia.Janitor>), () => Mafia.NameColor, () => CustomOptionHolder.mafiaSpawnRate),
+        new(RoleType.Godfather, typeof(RoleBase<Mafia.Godfather>), () => Mafia.NameColor, () => CustomOptionHolder.MafiaSpawnRate),
+        new(RoleType.Mafioso, typeof(RoleBase<Mafia.Mafioso>), () => Mafia.NameColor, () => CustomOptionHolder.MafiaSpawnRate),
+        new(RoleType.Janitor, typeof(RoleBase<Mafia.Janitor>), () => Mafia.NameColor, () => CustomOptionHolder.MafiaSpawnRate),
     ];
 
     public static (RoleType RoleType, Type Type)[] AllRoleTypes => [.. Roles.Select(r => (r.roleType, r.classType))];

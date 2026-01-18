@@ -12,7 +12,7 @@ public partial class RoleInfo(string nameKey, Color color, CustomOption baseOpti
     // public virtual string ShortDescription { get { return Tr.Get(("ShortDesc", NameKey)); } }
     public virtual string FullDescription { get { return "FullDesc" + NameKey; } }
     // public virtual string FullDescription { get { return Tr.Get(("FullDesc", NameKey)); } }
-    public virtual string RoleOptions { get { return CustomOption.optionsToString(BaseOption); } }
+    public virtual string RoleOptions { get { return CustomOption.OptionsToString(BaseOption); } }
     public bool Enabled { get { return Helpers.RolesEnabled && (BaseOption == null /*|| BaseOption.Enabled*/); } }
 
     public string NameKey = nameKey;
@@ -64,11 +64,11 @@ public partial class RoleInfo(string nameKey, Color color, CustomOption baseOpti
             // Madmate only
             if (roleInfo.Contains(Crewmate))
             {
-                roleName = useColors ? Helpers.Cs(Madmate.NameColor, Madmate.fullName) : Madmate.fullName;
+                roleName = useColors ? Helpers.Cs(Madmate.NameColor, Madmate.FullName) : Madmate.FullName;
             }
             else
             {
-                string prefix = useColors ? Helpers.Cs(Madmate.NameColor, Madmate.prefix) : Madmate.prefix;
+                string prefix = useColors ? Helpers.Cs(Madmate.NameColor, Madmate.Prefix) : Madmate.Prefix;
                 roleName = string.Join(joinSeparator, [.. roleInfo.Select(x => useColors ? Helpers.Cs(Madmate.NameColor, x.Name) : x.Name)]);
                 roleName = prefix + roleName;
             }
@@ -78,11 +78,11 @@ public partial class RoleInfo(string nameKey, Color color, CustomOption baseOpti
         {
             if (roleInfo.Contains(Impostor))
             {
-                roleName = useColors ? Helpers.Cs(LastImpostor.NameColor, LastImpostor.fullName) : LastImpostor.fullName;
+                roleName = useColors ? Helpers.Cs(LastImpostor.NameColor, LastImpostor.FullName) : LastImpostor.FullName;
             }
             else
             {
-                string postfix = useColors ? Helpers.Cs(LastImpostor.NameColor, LastImpostor.postfix) : LastImpostor.postfix;
+                string postfix = useColors ? Helpers.Cs(LastImpostor.NameColor, LastImpostor.Postfix) : LastImpostor.Postfix;
                 roleName = string.Join(joinSeparator, [.. roleInfo.Select(x => useColors ? Helpers.Cs(x.Color, x.Name) : x.Name)]);
                 roleName += postfix;
             }
@@ -101,7 +101,7 @@ public partial class RoleInfo(string nameKey, Color color, CustomOption baseOpti
 
         if (p.HasModifier(ModifierType.AntiTeleport))
         {
-            string postfix = useColors ? Helpers.Cs(AntiTeleport.NameColor, AntiTeleport.postfix) : AntiTeleport.postfix;
+            string postfix = useColors ? Helpers.Cs(AntiTeleport.NameColor, AntiTeleport.Postfix) : AntiTeleport.Postfix;
             roleName += postfix;
         }
 

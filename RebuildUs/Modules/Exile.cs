@@ -2,27 +2,27 @@ namespace RebuildUs.Modules;
 
 public static class Exile
 {
-    public static NetworkedPlayerInfo lastExiled;
+    public static NetworkedPlayerInfo LastExiled;
     public static void BeginForGameplay(ExileController __instance, NetworkedPlayerInfo player, bool voteTie)
     {
-        lastExiled = player;
+        LastExiled = player;
 
         // Medic shield
-        if (Medic.Exists && AmongUsClient.Instance.AmHost && Medic.futureShielded != null && Medic.LivingPlayers.Count != 0)
+        if (Medic.Exists && AmongUsClient.Instance.AmHost && Medic.FutureShielded != null && Medic.LivingPlayers.Count != 0)
         {
             // We need to send the RPC from the host here, to make sure that the order of shifting and setting the shield is correct(for that reason the futureShifted and futureShielded are being synced)
             using var sender = new RPCSender(CachedPlayer.LocalPlayer.PlayerControl.NetId, CustomRPC.MedicSetShielded);
-            sender.Write(Medic.futureShielded.PlayerId);
-            RPCProcedure.medicSetShielded(Medic.futureShielded.PlayerId);
+            sender.Write(Medic.FutureShielded.PlayerId);
+            RPCProcedure.MedicSetShielded(Medic.FutureShielded.PlayerId);
         }
 
         // Madmate exiled
-        if (AmongUsClient.Instance.AmHost && player != null && ((CreatedMadmate.exileCrewmate && player.Object.HasModifier(ModifierType.CreatedMadmate))
-            || (Madmate.exileCrewmate && player.Object.HasModifier(ModifierType.Madmate)))
+        if (AmongUsClient.Instance.AmHost && player != null && ((CreatedMadmate.ExileCrewmate && player.Object.HasModifier(ModifierType.CreatedMadmate))
+            || (Madmate.ExileCrewmate && player.Object.HasModifier(ModifierType.Madmate)))
         )
         {
             // pick random crewmate
-            var target = pickRandomCrewmate(player.PlayerId);
+            var target = PickRandomCrewmate(player.PlayerId);
             if (target != null)
             {
                 // exile the picked crewmate
@@ -33,21 +33,21 @@ public static class Exile
         }
 
         // Shifter shift
-        if (Shifter.Exists && AmongUsClient.Instance.AmHost && Shifter.futureShift != null)
+        if (Shifter.Exists && AmongUsClient.Instance.AmHost && Shifter.FutureShift != null)
         {
             // We need to send the RPC from the host here, to make sure that the order of shifting and erasing is correct (for that reason the futureShifted and futureErased are being synced)
             using (var sender = new RPCSender(CachedPlayer.LocalPlayer.PlayerControl.NetId, CustomRPC.ShifterShift))
             {
-                sender.Write(Shifter.futureShift.PlayerId);
+                sender.Write(Shifter.FutureShift.PlayerId);
             }
-            RPCProcedure.shifterShift(Shifter.futureShift.PlayerId);
+            RPCProcedure.ShifterShift(Shifter.FutureShift.PlayerId);
         }
-        Shifter.futureShift = null;
+        Shifter.FutureShift = null;
 
         // Eraser erase
-        if (Eraser.Exists && AmongUsClient.Instance.AmHost && Eraser.futureErased != null)
+        if (Eraser.Exists && AmongUsClient.Instance.AmHost && Eraser.FutureErased != null)
         {  // We need to send the RPC from the host here, to make sure that the order of shifting and erasing is correct (for that reason the futureShifted and futureErased are being synced)
-            foreach (PlayerControl target in Eraser.futureErased)
+            foreach (PlayerControl target in Eraser.FutureErased)
             {
                 if (target != null && target.CanBeErased())
                 {
@@ -57,7 +57,7 @@ public static class Exile
                 }
             }
         }
-        Eraser.futureErased = [];
+        Eraser.FutureErased = [];
 
         // Trickster boxes
         if (Trickster.Exists && JackInTheBox.HasJackInTheBoxLimitReached())
@@ -66,23 +66,23 @@ public static class Exile
         }
 
         // Witch execute casted spells
-        if (Witch.Exists && Witch.futureSpelled != null && AmongUsClient.Instance.AmHost)
+        if (Witch.Exists && Witch.FutureSpelled != null && AmongUsClient.Instance.AmHost)
         {
             bool exiledIsWitch = player != null && player.Object.IsRole(RoleType.Witch);
-            bool witchDiesWithExiledLover = player != null && Lovers.bothDie && player.Object.IsLovers() && player.Object.getPartner().IsRole(RoleType.Witch);
+            bool witchDiesWithExiledLover = player != null && Lovers.BothDie && player.Object.IsLovers() && player.Object.GetPartner().IsRole(RoleType.Witch);
 
-            if ((witchDiesWithExiledLover || exiledIsWitch) && Witch.voteSavesTargets) Witch.futureSpelled = [];
-            foreach (var target in Witch.futureSpelled)
+            if ((witchDiesWithExiledLover || exiledIsWitch) && Witch.VoteSavesTargets) Witch.FutureSpelled = [];
+            foreach (var target in Witch.FutureSpelled)
             {
                 if (target != null && !target.Data.IsDead && Helpers.CheckMurderAttempt(player.Object, target, true) == MurderAttemptResult.PerformKill)
                 {
                     using var sender = new RPCSender(CachedPlayer.LocalPlayer.PlayerControl.NetId, CustomRPC.WitchSpellCast);
                     sender.Write(target.PlayerId);
-                    RPCProcedure.witchSpellCast(target.PlayerId);
+                    RPCProcedure.WitchSpellCast(target.PlayerId);
                 }
             }
         }
-        Witch.futureSpelled = [];
+        Witch.FutureSpelled = [];
 
         // SecurityGuard vents and cameras
         var allCameras = MapUtilities.CachedShipStatus.AllCameras.ToList();
@@ -116,13 +116,13 @@ public static class Exile
         ModMapOptions.VentsToSeal = [];
 
         // 1 = reset per turn
-        if (ModMapOptions.restrictDevices == 1)
+        if (ModMapOptions.RestrictDevices == 1)
         {
-            ModMapOptions.resetDeviceTimes();
+            ModMapOptions.ResetDeviceTimes();
         }
     }
 
-    private static PlayerControl pickRandomCrewmate(int exiledPlayerId)
+    private static PlayerControl PickRandomCrewmate(int exiledPlayerId)
     {
         int numAliveCrewmates = 0;
         // count alive crewmates
@@ -162,9 +162,9 @@ public static class Exile
         if (exiled != null)
         {
             var p = Helpers.PlayerById(exiled.PlayerId);
-            if (p.HasModifier(ModifierType.Mini) && !Mini.isGrownUp(p) && !p.Data.Role.IsImpostor && !p.IsNeutral())
+            if (p.HasModifier(ModifierType.Mini) && !Mini.IsGrownUp(p) && !p.Data.Role.IsImpostor && !p.IsNeutral())
             {
-                Mini.triggerMiniLose = true;
+                Mini.TriggerMiniLose = true;
             }
 
             if (exiled.IsRole(RoleType.Jester))
@@ -189,7 +189,7 @@ public static class Exile
         // Mini set adapted cooldown
         if (CachedPlayer.LocalPlayer.PlayerControl.HasModifier(ModifierType.Mini) && CachedPlayer.LocalPlayer.PlayerControl.Data.Role.IsImpostor)
         {
-            var multiplier = Mini.isGrownUp(CachedPlayer.LocalPlayer.PlayerControl) ? 0.66f : 2f;
+            var multiplier = Mini.IsGrownUp(CachedPlayer.LocalPlayer.PlayerControl) ? 0.66f : 2f;
             CachedPlayer.LocalPlayer.PlayerControl.SetKillTimer(Helpers.GetOption(FloatOptionNames.KillCooldown) * multiplier);
         }
 
@@ -265,12 +265,12 @@ public static class Exile
 
         if (CachedPlayer.LocalPlayer.PlayerControl.HasModifier(ModifierType.AntiTeleport))
         {
-            if (AntiTeleport.position != new Vector3())
+            if (AntiTeleport.Position != new Vector3())
             {
-                CachedPlayer.LocalPlayer.PlayerControl.transform.position = AntiTeleport.position;
+                CachedPlayer.LocalPlayer.PlayerControl.transform.position = AntiTeleport.Position;
                 if (SubmergedCompatibility.IsSubmerged)
                 {
-                    SubmergedCompatibility.ChangeFloor(AntiTeleport.position.y > -7);
+                    SubmergedCompatibility.ChangeFloor(AntiTeleport.Position.y > -7);
                 }
             }
         }
@@ -287,7 +287,7 @@ public static class Exile
         vs.PlayersInsideVents.Clear();
 
         // イビルトラッカーで他のプレイヤーのタスク情報を表示する
-        Map.resetRealTasks();
+        Map.ResetRealTasks();
 
         int deadPlayers = 0;
         foreach (var p in PlayerControl.AllPlayerControls.GetFastEnumerator())

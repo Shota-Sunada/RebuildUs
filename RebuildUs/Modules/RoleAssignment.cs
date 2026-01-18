@@ -202,7 +202,7 @@ public static class RoleAssignment
 
         BlockLovers = [(byte)RoleType.Bait,];
 
-        if (!Lovers.hasTasks)
+        if (!Lovers.HasTasks)
         {
             BlockLovers.Add((byte)RoleType.Snitch);
         }
@@ -416,7 +416,7 @@ public static class RoleAssignment
         // }
 
         // Assign Mafia
-        if (data.Impostors.Count >= 3 && data.MaxImpostorRoles >= 3 && (RebuildUs.Instance.Rnd.Next(1, 101) <= CustomOptionHolder.mafiaSpawnRate.GetSelection() * 10))
+        if (data.Impostors.Count >= 3 && data.MaxImpostorRoles >= 3 && (RebuildUs.Instance.Rnd.Next(1, 101) <= CustomOptionHolder.MafiaSpawnRate.GetSelection() * 10))
         {
             SetRoleToRandomPlayer((byte)RoleType.Godfather, data.Impostors);
             SetRoleToRandomPlayer((byte)RoleType.Janitor, data.Impostors);
@@ -444,10 +444,10 @@ public static class RoleAssignment
     private static void SelectFactionForFactionIndependentRoles(RoleAssignmentData data)
     {
         // Assign Guesser (chance to be impostor based on setting)
-        bool isEvilGuesser = RebuildUs.Instance.Rnd.Next(1, 101) <= CustomOptionHolder.guesserIsImpGuesserRate.GetSelection() * 10;
-        if (CustomOptionHolder.guesserSpawnBothRate.GetSelection() > 0)
+        bool isEvilGuesser = RebuildUs.Instance.Rnd.Next(1, 101) <= CustomOptionHolder.GuesserIsImpGuesserRate.GetSelection() * 10;
+        if (CustomOptionHolder.GuesserSpawnBothRate.GetSelection() > 0)
         {
-            if (RebuildUs.Instance.Rnd.Next(1, 101) <= CustomOptionHolder.guesserSpawnRate.GetSelection() * 10)
+            if (RebuildUs.Instance.Rnd.Next(1, 101) <= CustomOptionHolder.GuesserSpawnRate.GetSelection() * 10)
             {
                 if (isEvilGuesser)
                 {
@@ -456,7 +456,7 @@ public static class RoleAssignment
                         byte evilGuesser = SetRoleToRandomPlayer((byte)RoleType.EvilGuesser, data.Impostors);
                         data.Impostors.ToList().RemoveAll(x => x.PlayerId == evilGuesser);
                         data.MaxImpostorRoles--;
-                        data.CrewSettings.Add((byte)RoleType.NiceGuesser, (CustomOptionHolder.guesserSpawnBothRate.GetSelection(), 1));
+                        data.CrewSettings.Add((byte)RoleType.NiceGuesser, (CustomOptionHolder.GuesserSpawnBothRate.GetSelection(), 1));
                     }
                 }
                 else if (data.Crewmates.Count > 0 && data.MaxCrewmateRoles > 0)
@@ -464,14 +464,14 @@ public static class RoleAssignment
                     byte niceGuesser = SetRoleToRandomPlayer((byte)RoleType.NiceGuesser, data.Crewmates);
                     data.Crewmates.ToList().RemoveAll(x => x.PlayerId == niceGuesser);
                     data.MaxCrewmateRoles--;
-                    data.ImpSettings.Add((byte)RoleType.EvilGuesser, (CustomOptionHolder.guesserSpawnBothRate.GetSelection(), 1));
+                    data.ImpSettings.Add((byte)RoleType.EvilGuesser, (CustomOptionHolder.GuesserSpawnBothRate.GetSelection(), 1));
                 }
             }
         }
         else
         {
-            if (isEvilGuesser) data.ImpSettings.Add((byte)RoleType.EvilGuesser, (CustomOptionHolder.guesserSpawnRate.GetSelection(), 1));
-            else data.CrewSettings.Add((byte)RoleType.NiceGuesser, (CustomOptionHolder.guesserSpawnRate.GetSelection(), 1));
+            if (isEvilGuesser) data.ImpSettings.Add((byte)RoleType.EvilGuesser, (CustomOptionHolder.GuesserSpawnRate.GetSelection(), 1));
+            else data.CrewSettings.Add((byte)RoleType.NiceGuesser, (CustomOptionHolder.GuesserSpawnRate.GetSelection(), 1));
         }
 
         // // Assign Swapper (chance to be impostor based on setting)

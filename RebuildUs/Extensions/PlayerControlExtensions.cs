@@ -39,7 +39,7 @@ public static class PlayerControlHelpers
                 player.IsRole(RoleType.Opportunist) ||
                 player.IsRole(RoleType.PlagueDoctor) ||
                 player.IsRole(RoleType.Vulture) ||
-                (player.IsRole(RoleType.Shifter) && Shifter.isNeutral));
+                (player.IsRole(RoleType.Shifter) && Shifter.IsNeutral));
     }
 
     public static bool IsTeamCrewmate(this PlayerControl player)
@@ -55,9 +55,9 @@ public static class PlayerControlHelpers
     public static bool HasFakeTasks(this PlayerControl player)
     {
         return (player.IsNeutral() && !player.NeutralHasTasks())
-            || (player.HasModifier(ModifierType.CreatedMadmate) && !CreatedMadmate.hasTasks)
-            || (player.HasModifier(ModifierType.Madmate) && !Madmate.hasTasks)
-            || (player.IsLovers() && Lovers.separateTeam && !Lovers.tasksCount);
+            || (player.HasModifier(ModifierType.CreatedMadmate) && !CreatedMadmate.HasTasks)
+            || (player.HasModifier(ModifierType.Madmate) && !Madmate.HasTasks)
+            || (player.IsLovers() && Lovers.SeparateTeam && !Lovers.TasksCount);
     }
 
     public static bool NeutralHasTasks(this PlayerControl player)
@@ -73,12 +73,12 @@ public static class PlayerControlHelpers
 
     public static bool IsLovers(this PlayerControl player)
     {
-        return player != null && Lovers.isLovers(player);
+        return player != null && Lovers.IsLovers(player);
     }
 
-    public static PlayerControl getPartner(this PlayerControl player)
+    public static PlayerControl GetPartner(this PlayerControl player)
     {
-        return Lovers.getPartner(player);
+        return Lovers.GetPartner(player);
     }
 
     public static bool CanBeErased(this PlayerControl player)
@@ -121,11 +121,11 @@ public static class PlayerControlHelpers
         {
             roleCouldUse = true;
         }
-        else if (Madmate.canEnterVents && player.HasModifier(ModifierType.Madmate))
+        else if (Madmate.CanEnterVents && player.HasModifier(ModifierType.Madmate))
         {
             roleCouldUse = true;
         }
-        else if (CreatedMadmate.canEnterVents && player.HasModifier(ModifierType.CreatedMadmate))
+        else if (CreatedMadmate.CanEnterVents && player.HasModifier(ModifierType.CreatedMadmate))
         {
             roleCouldUse = true;
         }
@@ -135,11 +135,11 @@ public static class PlayerControlHelpers
         }
         else if (player.Data?.Role != null && player.Data.Role.CanVent)
         {
-            if (!Mafia.Janitor.canVent && player.IsRole(RoleType.Janitor))
+            if (!Mafia.Janitor.CanVent && player.IsRole(RoleType.Janitor))
             {
                 roleCouldUse = false;
             }
-            else if (!Mafia.Mafioso.canVent && player.IsRole(RoleType.Mafioso))
+            else if (!Mafia.Mafioso.CanVent && player.IsRole(RoleType.Mafioso))
             {
                 roleCouldUse = false;
             }
@@ -154,11 +154,11 @@ public static class PlayerControlHelpers
     public static bool CanSabotage(this PlayerControl player)
     {
         bool roleCouldUse = false;
-        if (Madmate.canSabotage && player.HasModifier(ModifierType.Madmate))
+        if (Madmate.CanSabotage && player.HasModifier(ModifierType.Madmate))
         {
             roleCouldUse = true;
         }
-        else if (CreatedMadmate.canSabotage && player.HasModifier(ModifierType.CreatedMadmate))
+        else if (CreatedMadmate.CanSabotage && player.HasModifier(ModifierType.CreatedMadmate))
         {
             roleCouldUse = true;
         }
@@ -166,11 +166,11 @@ public static class PlayerControlHelpers
         {
             roleCouldUse = true;
         }
-        else if (!Mafia.Mafioso.canSabotage && player.IsRole(RoleType.Mafioso))
+        else if (!Mafia.Mafioso.CanSabotage && player.IsRole(RoleType.Mafioso))
         {
             roleCouldUse = false;
         }
-        else if (!Mafia.Janitor.canSabotage && player.IsRole(RoleType.Janitor))
+        else if (!Mafia.Janitor.CanSabotage && player.IsRole(RoleType.Janitor))
         {
             roleCouldUse = false;
         }

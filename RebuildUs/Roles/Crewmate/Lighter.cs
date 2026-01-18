@@ -5,21 +5,21 @@ public class Lighter : RoleBase<Lighter>
 {
     public static Color NameColor = new Color32(238, 229, 190, byte.MaxValue);
     public override Color RoleColor => NameColor;
-    private static CustomButton lighterButton;
-    private bool lightActive = false;
+    private static CustomButton LighterButton;
+    private bool LightActive = false;
 
     // write configs here
-    public static float modeLightsOnVision { get { return CustomOptionHolder.lighterModeLightsOnVision.GetFloat(); } }
-    public static float modeLightsOffVision { get { return CustomOptionHolder.lighterModeLightsOffVision.GetFloat(); } }
-    public static float cooldown { get { return CustomOptionHolder.lighterCooldown.GetFloat(); } }
-    public static float duration { get { return CustomOptionHolder.lighterDuration.GetFloat(); } }
+    public static float ModeLightsOnVision { get { return CustomOptionHolder.LighterModeLightsOnVision.GetFloat(); } }
+    public static float ModeLightsOffVision { get { return CustomOptionHolder.LighterModeLightsOffVision.GetFloat(); } }
+    public static float Cooldown { get { return CustomOptionHolder.LighterCooldown.GetFloat(); } }
+    public static float Duration { get { return CustomOptionHolder.LighterDuration.GetFloat(); } }
 
-    public static bool isLightActive(PlayerControl player)
+    public static bool IsLightActive(PlayerControl player)
     {
         if (IsRole(player) && player.IsAlive())
         {
             var r = GetRole(player);
-            return r.lightActive;
+            return r.LightActive;
         }
         return false;
     }
@@ -41,19 +41,19 @@ public class Lighter : RoleBase<Lighter>
     public override void MakeButtons(HudManager hm)
     {
         // Lighter light
-        lighterButton = new CustomButton(
+        LighterButton = new CustomButton(
             () =>
             {
-                Local.lightActive = true;
+                Local.LightActive = true;
             },
             () => { return CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Lighter) && !CachedPlayer.LocalPlayer.PlayerControl.Data.IsDead; },
             () => { return CachedPlayer.LocalPlayer.PlayerControl.CanMove; },
             () =>
             {
-                Local?.lightActive = false;
-                lighterButton.Timer = lighterButton.MaxTimer;
-                lighterButton.IsEffectActive = false;
-                lighterButton.ActionButton.graphic.color = Palette.EnabledColor;
+                Local?.LightActive = false;
+                LighterButton.Timer = LighterButton.MaxTimer;
+                LighterButton.IsEffectActive = false;
+                LighterButton.ActionButton.graphic.color = Palette.EnabledColor;
             },
             AssetLoader.LighterButton,
             new Vector3(-1.8f, -0.06f, 0),
@@ -61,11 +61,11 @@ public class Lighter : RoleBase<Lighter>
             hm.UseButton,
             KeyCode.F,
             true,
-            duration,
+            Duration,
             () =>
             {
-                Local.lightActive = false;
-                lighterButton.Timer = lighterButton.MaxTimer;
+                Local.LightActive = false;
+                LighterButton.Timer = LighterButton.MaxTimer;
             }
         )
         {
@@ -74,8 +74,8 @@ public class Lighter : RoleBase<Lighter>
     }
     public override void SetButtonCooldowns()
     {
-        lighterButton.MaxTimer = cooldown;
-        lighterButton.EffectDuration = duration;
+        LighterButton.MaxTimer = Cooldown;
+        LighterButton.EffectDuration = Duration;
     }
 
     // write functions here

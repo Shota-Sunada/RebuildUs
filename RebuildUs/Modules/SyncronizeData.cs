@@ -7,25 +7,25 @@ public enum SynchronizeTag
 
 public class SynchronizeData
 {
-    private readonly Dictionary<SynchronizeTag, ulong> dic;
+    private readonly Dictionary<SynchronizeTag, ulong> Dic;
 
     public SynchronizeData()
     {
-        dic = new Dictionary<SynchronizeTag, ulong>();
+        Dic = new Dictionary<SynchronizeTag, ulong>();
     }
 
     public void Synchronize(SynchronizeTag tag, byte playerId)
     {
-        if (!dic.ContainsKey(tag)) dic[tag] = 0;
+        if (!Dic.ContainsKey(tag)) Dic[tag] = 0;
 
-        dic[tag] |= (ulong)1 << playerId;
+        Dic[tag] |= (ulong)1 << playerId;
     }
 
     public bool Align(SynchronizeTag tag, bool withGhost, bool withSurvivor = true)
     {
         bool result = true;
 
-        dic.TryGetValue(tag, out ulong value);
+        Dic.TryGetValue(tag, out ulong value);
 
         foreach (PlayerControl pc in CachedPlayer.AllPlayers)
         {
@@ -38,11 +38,11 @@ public class SynchronizeData
 
     public void Reset(SynchronizeTag tag)
     {
-        dic[tag] = 0;
+        Dic[tag] = 0;
     }
 
     public void Initialize()
     {
-        dic.Clear();
+        Dic.Clear();
     }
 }
