@@ -304,7 +304,7 @@ public static class Map
 
     private static void changeSabotageLayout(MapBehaviour __instance)
     {
-        if (Helpers.GetOption(ByteOptionNames.MapId) == 4)
+        if (Helpers.IsAirship)
         {
             // サボタージュアイコンのレイアウトを変更
             var halfScale = new Vector3(0.75f, 0.75f, 0.75f);

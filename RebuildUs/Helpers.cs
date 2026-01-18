@@ -25,6 +25,12 @@ public static class Helpers
     public static bool RolesEnabled { get { return CustomOptionHolder.ActivateRoles.GetBool(); } }
     public static bool RefundVotes { get { return CustomOptionHolder.RefundVotesOnDeath.GetBool(); } }
 
+    public static bool IsSkeld { get { return GetOption(ByteOptionNames.MapId) == 0; } }
+    public static bool IsMiraHQ { get { return GetOption(ByteOptionNames.MapId) == 1; } }
+    public static bool IsPolus { get { return GetOption(ByteOptionNames.MapId) == 2; } }
+    public static bool IsAirship { get { return GetOption(ByteOptionNames.MapId) == 4; } }
+    public static bool IsFungle { get { return GetOption(ByteOptionNames.MapId) == 5; } }
+
     public static void destroyList<T>(Il2CppSystem.Collections.Generic.List<T> items) where T : UnityEngine.Object
     {
         if (items == null) return;
@@ -740,7 +746,7 @@ public static class Helpers
                         reactorActive = true;
                     }
                 }
-                if (!reactorActive && Helpers.GetOption(ByteOptionNames.MapId) == 4) renderer.color = Color.black;
+                if (!reactorActive && IsAirship) renderer.color = Color.black;
                 renderer.gameObject.SetActive(false);
             }
         })));

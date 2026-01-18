@@ -55,4 +55,6 @@ public enum CustomRPC : byte
     ShareRealTasks,
     PolusRandomSpawn,
     Synchronize,
+    PlaceCamera,
+    SealVent,
 }

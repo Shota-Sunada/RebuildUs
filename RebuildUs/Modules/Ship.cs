@@ -9,7 +9,7 @@ public static class Ship
     [HarmonyPatch(typeof(ShipStatus), nameof(ShipStatus.CalculateLightRadius))]
     public static bool CalculateLightRadiusPrefix(ref float __result, ShipStatus __instance, NetworkedPlayerInfo player)
     {
-        if ((!__instance.Systems.ContainsKey(SystemTypes.Electrical) && !Helpers.isFungle()) || Helpers.IsHideNSeekMode) return true;
+        if ((!__instance.Systems.ContainsKey(SystemTypes.Electrical) && !Helpers.IsFungle) || Helpers.IsHideNSeekMode) return true;
 
         // If player is a role which has Impostor vision
         if (Helpers.HasImpostorVision(player.Object))
@@ -128,7 +128,7 @@ public static class Ship
     public static void Postfix(ShipStatus __instance, PlayerControl player, int numPlayers, bool initialSpawn)
     {
         // Polusの湧き位置をランダムにする 無駄に人数分シャッフルが走るのをそのうち直す
-        if (Helpers.GetOption(ByteOptionNames.MapId) == 2 && CustomOptionHolder.PolusRandomSpawn.GetBool())
+        if (Helpers.IsPolus && CustomOptionHolder.PolusRandomSpawn.GetBool())
         {
             if (AmongUsClient.Instance.AmHost)
             {

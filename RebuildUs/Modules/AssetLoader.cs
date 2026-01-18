@@ -62,6 +62,8 @@ public static class AssetLoader
     public static Sprite CleanButton;
     public static Sprite PlaceJackInTheBoxButton;
     public static Sprite LightsOutButton;
+    public static Sprite PlaceCameraButton;
+    public static Sprite CloseVentButton;
 
     private static void LoadButtonAssets()
     {
@@ -84,6 +86,8 @@ public static class AssetLoader
         CleanButton = ab.LoadAsset<Sprite>("CleanButton.png").DontUnload();
         PlaceJackInTheBoxButton = ab.LoadAsset<Sprite>("PlaceJackInTheBoxButton.png").DontUnload();
         LightsOutButton = ab.LoadAsset<Sprite>("LightsOutButton.png").DontUnload();
+        PlaceCameraButton = ab.LoadAsset<Sprite>("PlaceCameraButton.png").DontUnload();
+        CloseVentButton = ab.LoadAsset<Sprite>("CloseVentButton.png").DontUnload();
     }
     #endregion
 
@@ -101,6 +105,11 @@ public static class AssetLoader
     public static Sprite AdminRecords;
     public static Sprite Footprint;
     public static Sprite Soul;
+    public static Sprite AnimatedVentSealed;
+    public static Sprite StaticVentSealed;
+    public static Sprite FungleVentSealed;
+    public static Sprite CentralUpperBlocked;
+    public static Sprite CentralLowerBlocked;
 
     private static void LoadSpriteAssets()
     {
@@ -120,6 +129,11 @@ public static class AssetLoader
         AdminRecords = ab.LoadAsset<Sprite>("AdminRecords.png").DontUnload();
         Footprint = ab.LoadAsset<Sprite>("Footprint.png").DontUnload();
         Soul = ab.LoadAsset<Sprite>("Soul.png").DontUnload();
+        AnimatedVentSealed = ab.LoadAsset<Sprite>("AnimatedVentSealed.png").DontUnload();
+        StaticVentSealed = ab.LoadAsset<Sprite>("StaticVentSealed.png").DontUnload();
+        FungleVentSealed = ab.LoadAsset<Sprite>("FungleVentSealed.png").DontUnload();
+        CentralUpperBlocked = ab.LoadAsset<Sprite>("CentralUpperBlocked.png").DontUnload();
+        CentralLowerBlocked = ab.LoadAsset<Sprite>("CentralLowerBlocked.png").DontUnload();
     }
     #endregion
 

@@ -205,7 +205,7 @@ public static class RoleAssignment
 
         if (!Lovers.hasTasks)
         {
-            blockLovers.Add((byte)ERoleType.Snitch);
+            blockLovers.Add((byte)RoleType.Snitch);
         }
 
         if (!CustomOptionHolder.ArsonistCanBeLovers.GetBool())

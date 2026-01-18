@@ -176,6 +176,12 @@ public static partial class RPCProcedure
             case CustomRPC.Synchronize:
                 synchronize(reader.ReadByte(), reader.ReadInt32());
                 break;
+            case CustomRPC.PlaceCamera:
+                placeCamera(reader.ReadBytesAndSize(), reader.ReadByte(), reader.ReadByte());
+                break;
+            case CustomRPC.SealVent:
+                sealVent(reader.ReadPackedInt32(), reader.ReadByte());
+                break;
             default:
                 break;
         }

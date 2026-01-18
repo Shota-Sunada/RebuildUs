@@ -243,7 +243,7 @@ public static class Admin
         if (room == null) return;
 
         // アドミンの画像を差し替える
-        if (!CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.EvilHacker) && !EvilHacker.isInherited() && Helpers.GetOption(ByteOptionNames.MapId) == 4 && CustomOptionHolder.AirshipRestrictedAdmin.GetBool() && (room.name is "Cockpit" or "Records"))
+        if (!CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.EvilHacker) && !EvilHacker.isInherited() && Helpers.IsAirship && CustomOptionHolder.AirshipRestrictedAdmin.GetBool() && (room.name is "Cockpit" or "Records"))
         {
             if (!map)
             {

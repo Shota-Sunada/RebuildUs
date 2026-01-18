@@ -138,7 +138,7 @@ public static class Update
         }
         else if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.SecurityGuard))
         {
-            setPlayerNameColor(CachedPlayer.LocalPlayer.PlayerControl, SecurityGuard.color);
+            setPlayerNameColor(CachedPlayer.LocalPlayer.PlayerControl, SecurityGuard.RoleColor);
         }
         else if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Arsonist))
         {
@@ -199,7 +199,7 @@ public static class Update
 
         else if (CachedPlayer.LocalPlayer.PlayerControl.HasModifier(ModifierType.CreatedMadmate))
         {
-            setPlayerNameColor(CachedPlayer.LocalPlayer.PlayerControl, Madmate.color);
+            setPlayerNameColor(CachedPlayer.LocalPlayer.PlayerControl, Madmate.ModifierColor);
 
             if (CreatedMadmate.knowsImpostors(CachedPlayer.LocalPlayer.PlayerControl))
             {
@@ -213,17 +213,17 @@ public static class Update
             }
         }
 
-        else if (CachedPlayer.LocalPlayer.PlayerControl.hasModifier(ModifierType.LastImpostor))
+        else if (CachedPlayer.LocalPlayer.PlayerControl.HasModifier(ModifierType.LastImpostor))
         {
             setPlayerNameColor(CachedPlayer.LocalPlayer.PlayerControl, LastImpostor.color);
         }
 
-        else if (CachedPlayer.LocalPlayer.PlayerControl.hasModifier(ModifierType.Munou) && CachedPlayer.LocalPlayer.PlayerControl.Data.IsDead)
+        else if (CachedPlayer.LocalPlayer.PlayerControl.HasModifier(ModifierType.Munou) && CachedPlayer.LocalPlayer.PlayerControl.Data.IsDead)
         {
             setPlayerNameColor(CachedPlayer.LocalPlayer.PlayerControl, Munou.color);
         }
 
-        else if (CachedPlayer.LocalPlayer.PlayerControl.hasModifier(ModifierType.AntiTeleport) && CachedPlayer.LocalPlayer.PlayerControl.Data.IsDead)
+        else if (CachedPlayer.LocalPlayer.PlayerControl.HasModifier(ModifierType.AntiTeleport) && CachedPlayer.LocalPlayer.PlayerControl.Data.IsDead)
         {
             setPlayerNameColor(CachedPlayer.LocalPlayer.PlayerControl, AntiTeleport.color);
         }

@@ -175,6 +175,16 @@ public static partial class CustomOptionHolder
     public static CustomOption lighterCooldown;
     public static CustomOption lighterDuration;
     public static CustomOption lighterCanSeeNinja;
+
+    public static CustomRoleOption securityGuardSpawnRate;
+    public static CustomOption securityGuardCooldown;
+    public static CustomOption securityGuardTotalScrews;
+    public static CustomOption securityGuardCamPrice;
+    public static CustomOption securityGuardVentPrice;
+    public static CustomOption securityGuardCamDuration;
+    public static CustomOption securityGuardCamMaxCharges;
+    public static CustomOption securityGuardCamRechargeTasksNumber;
+    public static CustomOption securityGuardNoMove;
     #endregion
 
     #region ROLES IMPOSTOR
@@ -447,13 +457,22 @@ public static partial class CustomOptionHolder
         snitchIncludeTeamJackal = CustomOption.Normal(1102, CustomOptionType.Crewmate, "snitchIncludeTeamJackal", false, snitchSpawnRate);
         snitchTeamJackalUseDifferentArrowColor = CustomOption.Normal(1103, CustomOptionType.Crewmate, "snitchTeamJackalUseDifferentArrowColor", true, snitchIncludeTeamJackal);
 
-        lighterSpawnRate = new (1110, CustomOptionType.Crewmate, RoleType.Lighter, Lighter.RoleColor, 15);
+        lighterSpawnRate = new(1110, CustomOptionType.Crewmate, RoleType.Lighter, Lighter.RoleColor, 15);
         lighterModeLightsOnVision = CustomOption.Normal(1111, CustomOptionType.Crewmate, "lighterModeLightsOnVision", 2f, 0.25f, 5f, 0.25f, lighterSpawnRate);
         lighterModeLightsOffVision = CustomOption.Normal(1112, CustomOptionType.Crewmate, "lighterModeLightsOffVision", 0.75f, 0.25f, 5f, 0.25f, lighterSpawnRate);
         lighterCooldown = CustomOption.Normal(1113, CustomOptionType.Crewmate, "lighterCooldown", 30f, 5f, 120f, 5f, lighterSpawnRate);
         lighterDuration = CustomOption.Normal(1114, CustomOptionType.Crewmate, "lighterDuration", 5f, 2.5f, 60f, 2.5f, lighterSpawnRate);
         // lighterCanSeeNinja = CustomOption.Normal(1115, CustomOptionType.Crewmate, "lighterCanSeeNinja", true, lighterSpawnRate);
 
+        securityGuardSpawnRate = new(1120, CustomOptionType.Crewmate, RoleType.SecurityGuard, SecurityGuard.RoleColor, 1);
+        securityGuardCooldown = CustomOption.Normal(1121, CustomOptionType.Crewmate, "securityGuardCooldown", 30f, 2.5f, 60f, 2.5f, securityGuardSpawnRate);
+        securityGuardTotalScrews = CustomOption.Normal(1122, CustomOptionType.Crewmate, "securityGuardTotalScrews", 7f, 1f, 15f, 1f, securityGuardSpawnRate);
+        securityGuardCamPrice = CustomOption.Normal(1123, CustomOptionType.Crewmate, "securityGuardCamPrice", 2f, 1f, 15f, 1f, securityGuardSpawnRate);
+        securityGuardVentPrice = CustomOption.Normal(1124, CustomOptionType.Crewmate, "securityGuardVentPrice", 1f, 1f, 15f, 1f, securityGuardSpawnRate);
+        securityGuardCamDuration = CustomOption.Normal(1125, CustomOptionType.Crewmate, "securityGuardCamDuration", 10f, 2.5f, 60f, 2.5f, securityGuardSpawnRate);
+        securityGuardCamMaxCharges = CustomOption.Normal(1126, CustomOptionType.Crewmate, "securityGuardCamMaxCharges", 5f, 1f, 30f, 1f, securityGuardSpawnRate);
+        securityGuardCamRechargeTasksNumber = CustomOption.Normal(1127, CustomOptionType.Crewmate, "securityGuardCamRechargeTasksNumber", 3f, 1f, 10f, 1f, securityGuardSpawnRate);
+        securityGuardNoMove = CustomOption.Normal(1128, CustomOptionType.Crewmate, "securityGuardNoMove", true, securityGuardSpawnRate);
         #endregion
 
         #region ROLES IMPOSTOR

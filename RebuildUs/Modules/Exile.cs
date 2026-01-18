@@ -104,25 +104,25 @@ public static class Exile
         MapUtilities.CachedShipStatus.AllCameras = allCameras.ToArray();
         ModMapOptions.CamerasToAdd = [];
 
-        // foreach (var vent in MapOptions.VentsToSeal)
-        // {
-        //     var animator = vent.GetComponent<PowerTools.SpriteAnim>();
-        //     vent.EnterVentAnim = vent.ExitVentAnim = null;
-        //     var newSprite = animator == null ? SecurityGuard.getStaticVentSealedSprite() : SecurityGuard.getAnimatedVentSealedSprite();
-        //     if (Helpers.IsFungle())
-        //     {
-        //         newSprite = SecurityGuard.getFungleVentSealedSprite();
-        //         vent.myRend = vent.transform.GetChild(3).GetComponent<SpriteRenderer>();
-        //         animator = vent.transform.GetChild(3).GetComponent<PowerTools.SpriteAnim>();
-        //     }
-        //     animator?.Stop();
-        //     vent.EnterVentAnim = vent.ExitVentAnim = null;
-        //     if (SubmergedCompatibility.IsSubmerged && vent.Id == 0) vent.myRend.sprite = SecurityGuard.getSubmergedCentralUpperSealedSprite();
-        //     if (SubmergedCompatibility.IsSubmerged && vent.Id == 14) vent.myRend.sprite = SecurityGuard.getSubmergedCentralLowerSealedSprite();
-        //     vent.myRend.color = Color.white;
-        //     vent.name = "SealedVent_" + vent.name;
-        // }
-        // MapOptions.VentsToSeal = [];
+        foreach (var vent in ModMapOptions.VentsToSeal)
+        {
+            var animator = vent.GetComponent<PowerTools.SpriteAnim>();
+            vent.EnterVentAnim = vent.ExitVentAnim = null;
+            var newSprite = animator == null ? AssetLoader.StaticVentSealed : AssetLoader.AnimatedVentSealed;
+            if (Helpers.IsFungle)
+            {
+                newSprite = AssetLoader.FungleVentSealed;
+                vent.myRend = vent.transform.GetChild(3).GetComponent<SpriteRenderer>();
+                animator = vent.transform.GetChild(3).GetComponent<PowerTools.SpriteAnim>();
+            }
+            animator?.Stop();
+            vent.EnterVentAnim = vent.ExitVentAnim = null;
+            if (SubmergedCompatibility.IsSubmerged && vent.Id == 0) vent.myRend.sprite = AssetLoader.CentralUpperBlocked;
+            if (SubmergedCompatibility.IsSubmerged && vent.Id == 14) vent.myRend.sprite = AssetLoader.CentralLowerBlocked;
+            vent.myRend.color = Color.white;
+            vent.name = "SealedVent_" + vent.name;
+        }
+        ModMapOptions.VentsToSeal = [];
 
         // 1 = reset per turn
         if (ModMapOptions.restrictDevices == 1)

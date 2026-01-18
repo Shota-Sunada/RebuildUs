@@ -657,4 +657,112 @@ public static partial class RPCProcedure
     {
         SpawnIn.synchronizeData.Synchronize((SynchronizeTag)tag, playerId);
     }
+
+    public static void placeCamera(byte[] buff, byte roomId, byte sgId)
+    {
+        var player = Helpers.PlayerById(sgId);
+        var sg = SecurityGuard.GetRole(player);
+
+        var referenceCamera = UnityEngine.Object.FindObjectOfType<SurvCamera>();
+        if (referenceCamera == null) return; // Mira HQ
+
+        sg.remainingScrews -= SecurityGuard.camPrice;
+        sg.placedCameras++;
+
+        Vector3 position = Vector3.zero;
+        position.x = BitConverter.ToSingle(buff, 0 * sizeof(float));
+        position.y = BitConverter.ToSingle(buff, 1 * sizeof(float));
+
+        SystemTypes roomType = (SystemTypes)roomId;
+
+        var camera = UnityEngine.Object.Instantiate<SurvCamera>(referenceCamera);
+        camera.transform.position = new Vector3(position.x, position.y, referenceCamera.transform.position.z - 1f);
+        camera.CamName = $"Security Camera {sg.placedCameras}";
+        camera.Offset = new Vector3(0f, 0f, camera.Offset.z);
+
+        camera.NewName = roomType switch
+        {
+            SystemTypes.Hallway => StringNames.Hallway,
+            SystemTypes.Storage => StringNames.Storage,
+            SystemTypes.Cafeteria => StringNames.Cafeteria,
+            SystemTypes.Reactor => StringNames.Reactor,
+            SystemTypes.UpperEngine => StringNames.UpperEngine,
+            SystemTypes.Nav => StringNames.Nav,
+            SystemTypes.Admin => StringNames.Admin,
+            SystemTypes.Electrical => StringNames.Electrical,
+            SystemTypes.LifeSupp => StringNames.LifeSupp,
+            SystemTypes.Shields => StringNames.Shields,
+            SystemTypes.MedBay => StringNames.MedBay,
+            SystemTypes.Security => StringNames.Security,
+            SystemTypes.Weapons => StringNames.Weapons,
+            SystemTypes.LowerEngine => StringNames.LowerEngine,
+            SystemTypes.Comms => StringNames.Comms,
+            SystemTypes.Decontamination => StringNames.Decontamination,
+            SystemTypes.Launchpad => StringNames.Launchpad,
+            SystemTypes.LockerRoom => StringNames.LockerRoom,
+            SystemTypes.Laboratory => StringNames.Laboratory,
+            SystemTypes.Balcony => StringNames.Balcony,
+            SystemTypes.Office => StringNames.Office,
+            SystemTypes.Greenhouse => StringNames.Greenhouse,
+            SystemTypes.Dropship => StringNames.Dropship,
+            SystemTypes.Decontamination2 => StringNames.Decontamination2,
+            SystemTypes.Outside => StringNames.Outside,
+            SystemTypes.Specimens => StringNames.Specimens,
+            SystemTypes.BoilerRoom => StringNames.BoilerRoom,
+            SystemTypes.VaultRoom => StringNames.VaultRoom,
+            SystemTypes.Cockpit => StringNames.Cockpit,
+            SystemTypes.Armory => StringNames.Armory,
+            SystemTypes.Kitchen => StringNames.Kitchen,
+            SystemTypes.ViewingDeck => StringNames.ViewingDeck,
+            SystemTypes.HallOfPortraits => StringNames.HallOfPortraits,
+            SystemTypes.CargoBay => StringNames.CargoBay,
+            SystemTypes.Ventilation => StringNames.Ventilation,
+            SystemTypes.Showers => StringNames.Showers,
+            SystemTypes.Engine => StringNames.Engine,
+            SystemTypes.Brig => StringNames.Brig,
+            SystemTypes.MeetingRoom => StringNames.MeetingRoom,
+            SystemTypes.Records => StringNames.Records,
+            SystemTypes.Lounge => StringNames.Lounge,
+            SystemTypes.GapRoom => StringNames.GapRoom,
+            SystemTypes.MainHall => StringNames.MainHall,
+            SystemTypes.Medical => StringNames.Medical,
+            _ => StringNames.ExitButton,
+        };
+        if (Helpers.GetOption(ByteOptionNames.MapId) is 2 or 4) camera.transform.localRotation = new Quaternion(0, 0, 1, 1); // Polus and Airship
+
+        if (CachedPlayer.LocalPlayer.PlayerControl.PlayerId == sgId)
+        {
+            camera.gameObject.SetActive(true);
+            camera.gameObject.GetComponent<SpriteRenderer>().color = new Color(1f, 1f, 1f, 0.5f);
+        }
+        else
+        {
+            camera.gameObject.SetActive(false);
+        }
+        ModMapOptions.CamerasToAdd.Add(camera);
+    }
+
+    public static void sealVent(int ventId, byte sgId)
+    {
+        var player = Helpers.PlayerById(sgId);
+        var sg = SecurityGuard.GetRole(player);
+
+        Vent vent = MapUtilities.CachedShipStatus.AllVents.FirstOrDefault((x) => x != null && x.Id == ventId);
+        if (vent == null) return;
+
+        sg.remainingScrews -= SecurityGuard.ventPrice;
+        if (CachedPlayer.LocalPlayer.PlayerControl.PlayerId == sgId)
+        {
+            PowerTools.SpriteAnim animator = vent.GetComponent<PowerTools.SpriteAnim>();
+            animator?.Stop();
+            vent.EnterVentAnim = vent.ExitVentAnim = null;
+            vent.myRend.sprite = animator == null ? SecurityGuard.getStaticVentSealedSprite() : SecurityGuard.getAnimatedVentSealedSprite();
+            if (SubmergedCompatibility.IsSubmerged && vent.Id == 0) vent.myRend.sprite = SecurityGuard.getSubmergedCentralUpperSealedSprite();
+            if (SubmergedCompatibility.IsSubmerged && vent.Id == 14) vent.myRend.sprite = SecurityGuard.getSubmergedCentralLowerSealedSprite();
+            vent.myRend.color = new Color(1f, 1f, 1f, 0.5f);
+            vent.name = "FutureSealedVent_" + vent.name;
+        }
+
+        ModMapOptions.VentsToSeal.Add(vent);
+    }
 }

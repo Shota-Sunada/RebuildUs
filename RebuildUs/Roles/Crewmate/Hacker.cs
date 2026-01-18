@@ -166,8 +166,8 @@ public class Hacker : RoleBase<Hacker>
            () =>
            {
                hackerVitalsChargesText?.text = string.Format(Tr.Get("hackerChargesText"), Local.chargesVitals, toolsNumber);
-               hackerVitalsButton.ActionButton.graphic.sprite = Helpers.GetOption(ByteOptionNames.MapId) == 1 ? FastDestroyableSingleton<HudManager>.Instance.UseButton.fastUseSettings[ImageNames.DoorLogsButton].Image : FastDestroyableSingleton<HudManager>.Instance.UseButton.fastUseSettings[ImageNames.VitalsButton].Image;
-               hackerVitalsButton.ActionButton.OverrideText(Helpers.GetOption(ByteOptionNames.MapId) == 1 ? TranslationController.Instance.GetString(StringNames.DoorlogLabel) : TranslationController.Instance.GetString(StringNames.VitalsLabel));
+               hackerVitalsButton.ActionButton.graphic.sprite = Helpers.IsMiraHQ ? FastDestroyableSingleton<HudManager>.Instance.UseButton.fastUseSettings[ImageNames.DoorLogsButton].Image : FastDestroyableSingleton<HudManager>.Instance.UseButton.fastUseSettings[ImageNames.VitalsButton].Image;
+               hackerVitalsButton.ActionButton.OverrideText(Helpers.IsMiraHQ ? TranslationController.Instance.GetString(StringNames.DoorlogLabel) : TranslationController.Instance.GetString(StringNames.VitalsLabel));
                return Local.chargesVitals > 0 && ModMapOptions.canUseVitals;
            },
            () =>
@@ -189,12 +189,12 @@ public class Hacker : RoleBase<Hacker>
                if (!hackerAdminTableButton.IsEffectActive) CachedPlayer.LocalPlayer.PlayerControl.moveable = true;
                if (Minigame.Instance)
                {
-                   if (Helpers.GetOption(ByteOptionNames.MapId) == 1) Local.doorLog.ForceClose();
+                   if (Helpers.IsMiraHQ) Local.doorLog.ForceClose();
                    else Local.vitals.ForceClose();
                }
            },
            false,
-           Helpers.GetOption(ByteOptionNames.MapId) == 1 ? TranslationController.Instance.GetString(StringNames.DoorlogLabel) : TranslationController.Instance.GetString(StringNames.VitalsLabel)
+           Helpers.IsMiraHQ ? TranslationController.Instance.GetString(StringNames.DoorlogLabel) : TranslationController.Instance.GetString(StringNames.VitalsLabel)
         );
 
         // Hacker Vitals Charges
