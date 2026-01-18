@@ -180,7 +180,7 @@ public static class Helpers
         {
             var task = new GameObject("RoleTask").AddComponent<ImportantTextTask>();
             task.transform.SetParent(player.transform, false);
-            task.Text = Cs(Madmate.ModifierColor, $"{Madmate.fullName}: " + Tr.Get("madmateShortDesc"));
+            task.Text = Cs(Madmate.NameColor, $"{Madmate.fullName}: " + Tr.Get("madmateShortDesc"));
             player.myTasks.Insert(0, task);
         }
     }

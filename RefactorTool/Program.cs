@@ -8,6 +8,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.MSBuild;
 using Microsoft.CodeAnalysis.Rename;
 using Microsoft.CodeAnalysis.FindSymbols;
+using Microsoft.CodeAnalysis.Formatting;
 
 namespace RefactorTool
 {
@@ -117,6 +118,22 @@ namespace RefactorTool
                 }
             }
 
+            Console.WriteLine("Cleaning up and formatting documents...");
+            foreach (var projectId in newSolution.ProjectIds)
+            {
+                var project = newSolution.GetProject(projectId);
+                if (project == null || project.Name == "RefactorTool") continue;
+
+                foreach (var documentId in project.DocumentIds)
+                {
+                    var document = newSolution.GetDocument(documentId);
+                    if (document == null) continue;
+
+                    document = await CleanupDocumentAsync(document);
+                    newSolution = document.Project.Solution;
+                }
+            }
+
             if (workspace.TryApplyChanges(newSolution))
             {
                 Console.WriteLine("Changes applied successfully.");
@@ -162,6 +179,36 @@ namespace RefactorTool
             if (symbol.IsImplicitlyDeclared) return false;
 
             return true;
+        }
+
+        static async Task<Document> CleanupDocumentAsync(Document document)
+        {
+            var root = await document.GetSyntaxRootAsync();
+            var model = await document.GetSemanticModelAsync();
+            if (root != null && model != null)
+            {
+                // Remove unused usings (IDE0005)
+                var diagnostics = model.GetDiagnostics();
+                var unusedUsings = diagnostics
+                    .Where(d => d.Id == "IDE0005" || d.Descriptor.CustomTags.Contains(WellKnownDiagnosticTags.Unnecessary))
+                    .Select(d => root.FindNode(d.Location.SourceSpan))
+                    .OfType<UsingDirectiveSyntax>()
+                    .Distinct()
+                    .ToList();
+
+                if (unusedUsings.Any())
+                {
+                    root = root.RemoveNodes(unusedUsings, SyntaxRemoveOptions.KeepNoTrivia);
+                    if (root != null)
+                    {
+                        document = document.WithSyntaxRoot(root);
+                    }
+                }
+            }
+
+            // Format (Respects .editorconfig for {} blank lines and consecutive empty lines)
+            document = await Formatter.FormatAsync(document);
+            return document;
         }
     }
 }

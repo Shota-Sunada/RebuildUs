@@ -71,8 +71,14 @@ csharp_style_prefer_tuple_swap = true:warning
 csharp_style_prefer_utf8_string_literals = true:warning
 # readonlyの追加
 dotnet_style_readonly_field = true:warning
+# 不要なusingを削除
+dotnet_diagnostic.IDE0005.severity = warning
 # 空行の連続を許可
 dotnet_style_allow_multiple_blank_lines_experimental = false:warning
+# 中かっこの開始後の空行を禁止
+csharp_style_allow_blank_line_after_lbrace_experimental = false:warning
+# 中かっこの終了前の空行を禁止
+csharp_style_allow_blank_line_before_rbrace_experimental = false:warning
 # 中かっこ間の空行の連続を許可
 csharp_style_allow_blank_lines_between_consecutive_braces_experimental = false:warning
 # 明示的な型宣言を行うか
