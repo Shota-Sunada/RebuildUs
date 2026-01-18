@@ -44,7 +44,7 @@ public static class AllPlayers
         }
 
         // // Tracker store body positions
-        // if (Tracker.deadBodyPositions != null) Tracker.deadBodyPositions.Add(target.transform.position);
+        Tracker.deadBodyPositions?.Add(target.transform.position);
 
         // Medium add body
         if (Medium.deadBodies != null)

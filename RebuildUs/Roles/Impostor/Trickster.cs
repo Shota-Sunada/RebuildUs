@@ -20,13 +20,7 @@ public class Trickster : RoleBase<Trickster>
     }
 
     public override void OnMeetingStart() { }
-    public override void OnMeetingEnd()
-    {
-        if (Exists && JackInTheBox.HasJackInTheBoxLimitReached())
-        {
-            JackInTheBox.ConvertToVents();
-        }
-    }
+    public override void OnMeetingEnd() { }
     public override void OnIntroEnd() { }
     public override void FixedUpdate()
     {
@@ -50,7 +44,7 @@ public class Trickster : RoleBase<Trickster>
                 Buffer.BlockCopy(BitConverter.GetBytes(pos.x), 0, buff, 0 * sizeof(float), sizeof(float));
                 Buffer.BlockCopy(BitConverter.GetBytes(pos.y), 0, buff, 1 * sizeof(float), sizeof(float));
 
-                MessageWriter writer = AmongUsClient.Instance.StartRpc(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.PlaceJackInTheBox, Hazel.SendOption.Reliable);
+                MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.PlaceJackInTheBox, Hazel.SendOption.Reliable);
                 writer.WriteBytesAndSize(buff);
                 writer.EndMessage();
                 RPCProcedure.placeJackInTheBox(buff);
@@ -58,7 +52,7 @@ public class Trickster : RoleBase<Trickster>
             () => { return CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Trickster) && CachedPlayer.LocalPlayer.PlayerControl.IsAlive() && !JackInTheBox.HasJackInTheBoxLimitReached(); },
             () => { return CachedPlayer.LocalPlayer.PlayerControl.CanMove && !JackInTheBox.HasJackInTheBoxLimitReached(); },
             () => { placeJackInTheBoxButton.Timer = placeJackInTheBoxButton.MaxTimer; },
-            Trickster.getPlaceBoxButtonSprite(),
+            AssetLoader.PlaceJackInTheBoxButton,
             new Vector3(-1.8f, -0.06f, 0),
             hm,
             hm.KillButton,
@@ -83,7 +77,7 @@ public class Trickster : RoleBase<Trickster>
                 lightsOutButton.IsEffectActive = false;
                 lightsOutButton.ActionButton.graphic.color = Palette.EnabledColor;
             },
-            Trickster.getLightsOutButtonSprite(),
+            AssetLoader.LightsOutButton,
             new Vector3(-1.8f, -0.06f, 0),
             hm,
             hm.KillButton,

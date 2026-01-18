@@ -103,7 +103,7 @@ public class TimeMaster : RoleBase<TimeMaster>
                 timeMasterShieldButton.IsEffectActive = false;
                 timeMasterShieldButton.ActionButton.cooldownTimerText.color = Palette.EnabledColor;
             },
-            TimeMaster.getButtonSprite(),
+            AssetLoader.TimeShieldButton,
             new Vector3(-1.8f, -0.06f, 0),
             hm,
             hm.UseButton,

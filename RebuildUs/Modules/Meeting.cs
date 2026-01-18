@@ -4,6 +4,7 @@ using Assets.CoreScripts;
 using BepInEx.Unity.IL2CPP.Utils;
 using BepInEx.Unity.IL2CPP.Utils.Collections;
 using RebuildUs.Roles.Crewmate;
+using RebuildUs.Roles.Impostor;
 using RebuildUs.Roles.Neutral;
 
 namespace RebuildUs.Modules;
@@ -443,7 +444,7 @@ public static class Meeting
         {
             RoleType guesserRole = CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.NiceGuesser)
                 ? RoleType.NiceGuesser
-                : CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.EvilGuesser) || CachedPlayer.LocalPlayer.PlayerControl.hasModifier(ModifierType.LastImpostor)
+                : CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.EvilGuesser) || CachedPlayer.LocalPlayer.PlayerControl.HasModifier(ModifierType.LastImpostor)
                     ? RoleType.EvilGuesser
                     : RoleType.NiceGuesser;
 
@@ -488,20 +489,16 @@ public static class Meeting
 
                     if (!Guesser.killsThroughShield)
                     {
-                        foreach (var medic in Medic.Players)
+                        if (Medic.shielded == focusedTarget)
                         {
-                            if (medic.shielded == focusedTarget)
-                            {
-                                // Depending on the options, shooting the shielded player will not allow the guess, notify everyone about the kill attempt and close the window
-                                __instance.playerStates.ToList().ForEach(x => x.gameObject.SetActive(true));
-                                UnityEngine.Object.Destroy(container.gameObject);
+                            // Depending on the options, shooting the shielded player will not allow the guess, notify everyone about the kill attempt and close the window
+                            __instance.playerStates.ToList().ForEach(x => x.gameObject.SetActive(true));
+                            UnityEngine.Object.Destroy(container.gameObject);
 
-                                MessageWriter murderAttemptWriter = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.ShieldedMurderAttempt, Hazel.SendOption.Reliable, -1);
-                                murderAttemptWriter.Write(medic.Player.PlayerId);
-                                AmongUsClient.Instance.FinishRpcImmediately(murderAttemptWriter);
-                                RPCProcedure.shieldedMurderAttempt(medic.Player.PlayerId);
-                                return;
-                            }
+                            MessageWriter murderAttemptWriter = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.ShieldedMurderAttempt, Hazel.SendOption.Reliable, -1);
+                            AmongUsClient.Instance.FinishRpcImmediately(murderAttemptWriter);
+                            RPCProcedure.shieldedMurderAttempt();
+                            return;
                         }
                     }
 
@@ -631,7 +628,6 @@ public static class Meeting
             })));
         }
 
-
         // Add overlay for spelled players
         if (Witch.witch != null && Witch.futureSpelled != null)
         {
@@ -649,26 +645,74 @@ public static class Meeting
             }
         }
 
+        // トラックボタン
+        bool isTrackerButton = EvilTracker.canSetTargetOnMeeting && EvilTracker.target == null && CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.EvilTracker) && CachedPlayer.LocalPlayer.PlayerControl.isAlive();
+        if (isTrackerButton)
+        {
+            for (int i = 0; i < __instance.playerStates.Length; i++)
+            {
+                PlayerVoteArea playerVoteArea = __instance.playerStates[i];
+                if (playerVoteArea.AmDead || playerVoteArea.TargetPlayerId == CachedPlayer.LocalPlayer.PlayerControl.PlayerId) continue;
+                GameObject template = playerVoteArea.Buttons.transform.Find("CancelButton").gameObject;
+                GameObject targetBox = UnityEngine.Object.Instantiate(template, playerVoteArea.transform);
+                targetBox.name = "EvilTrackerButton";
+                targetBox.transform.localPosition = new Vector3(-0.95f, 0.03f, -1.3f);
+                SpriteRenderer renderer = targetBox.GetComponent<SpriteRenderer>();
+                renderer.sprite = EvilTracker.GetArrowSprite();
+                renderer.color = Palette.CrewmateBlue;
+                PassiveButton button = targetBox.GetComponent<PassiveButton>();
+                button.OnClick.RemoveAllListeners();
+                int copiedIndex = i;
+                button.OnClick.AddListener((System.Action)(() =>
+                {
+                    PlayerControl focusedTarget = Helpers.PlayerById((byte)__instance.playerStates[copiedIndex].TargetPlayerId);
+                    EvilTracker.target = focusedTarget;
+                    // Reset the GUI
+                    __instance.playerStates.ToList().ForEach(x => { if (x.transform.FindChild("EvilTrackerButton") != null) UnityEngine.Object.Destroy(x.transform.FindChild("EvilTrackerButton").gameObject); });
+                    GameObject targetMark = UnityEngine.Object.Instantiate(template, playerVoteArea.transform);
+                    targetMark.name = "EvilTrackerMark";
+                    PassiveButton button = targetMark.GetComponent<PassiveButton>();
+                    targetMark.transform.localPosition = new Vector3(1.1f, 0.03f, -20f);
+                    GameObject.Destroy(button);
+                    SpriteRenderer renderer = targetMark.GetComponent<SpriteRenderer>();
+                    renderer.sprite = EvilTracker.getArrowSprite();
+                    renderer.color = Palette.CrewmateBlue;
+
+                    bool isGuesserButton = Guesser.IsGuesser(CachedPlayer.LocalPlayer.PlayerControl.PlayerId) && CachedPlayer.LocalPlayer.PlayerControl.IsAlive() && Guesser.remainingShots(CachedPlayer.LocalPlayer.PlayerControl) > 0;
+                    bool isLastImpostorButton = CachedPlayer.LocalPlayer.PlayerControl.HasModifier(ModifierType.LastImpostor) && CachedPlayer.LocalPlayer.PlayerControl.IsAlive() && LastImpostor.canGuess();
+                    if (isGuesserButton || isLastImpostorButton)
+                    {
+                        createGuesserButton(__instance);
+                    }
+                }));
+            }
+        }
+
         // Add Guesser Buttons
         bool isGuesser = Guesser.IsGuesser(PlayerControl.LocalPlayer.PlayerId) && PlayerControl.LocalPlayer.IsAlive() && Guesser.remainingShots(PlayerControl.LocalPlayer) > 0;
         if (isGuesser)
         {
-            for (int i = 0; i < __instance.playerStates.Length; i++)
-            {
-                var playerVoteArea = __instance.playerStates[i];
-                if (playerVoteArea.AmDead || playerVoteArea.TargetPlayerId == PlayerControl.LocalPlayer.PlayerId) continue;
+            createGuesserButton(__instance);
+        }
+    }
 
-                var template = playerVoteArea.Buttons.transform.Find("CancelButton").gameObject;
-                var targetBox = UnityEngine.Object.Instantiate(template, playerVoteArea.transform);
-                targetBox.name = "ShootButton";
-                targetBox.transform.localPosition = new Vector3(-0.95f, 0.03f, -1.3f);
-                var renderer = targetBox.GetComponent<SpriteRenderer>();
-                renderer.sprite = Guesser.getTargetSprite();
-                var button = targetBox.GetComponent<PassiveButton>();
-                button.OnClick.RemoveAllListeners();
-                int copiedIndex = i;
-                button.OnClick.AddListener((Action)(() => guesserOnClick(copiedIndex, __instance)));
-            }
+    public static void createGuesserButton(MeetingHud __instance)
+    {
+        for (int i = 0; i < __instance.playerStates.Length; i++)
+        {
+            var playerVoteArea = __instance.playerStates[i];
+            if (playerVoteArea.AmDead || playerVoteArea.TargetPlayerId == PlayerControl.LocalPlayer.PlayerId) continue;
+
+            var template = playerVoteArea.Buttons.transform.Find("CancelButton").gameObject;
+            var targetBox = UnityEngine.Object.Instantiate(template, playerVoteArea.transform);
+            targetBox.name = "ShootButton";
+            targetBox.transform.localPosition = new Vector3(-0.95f, 0.03f, -1.3f);
+            var renderer = targetBox.GetComponent<SpriteRenderer>();
+            renderer.sprite = Guesser.getTargetSprite();
+            var button = targetBox.GetComponent<PassiveButton>();
+            button.OnClick.RemoveAllListeners();
+            int copiedIndex = i;
+            button.OnClick.AddListener((Action)(() => guesserOnClick(copiedIndex, __instance)));
         }
     }
 
@@ -759,7 +803,7 @@ public static class Meeting
             Bait.active = new Dictionary<DeadPlayer, float>();
             // Save AntiTeleport position, if the player is able to move (i.e. not on a ladder or a gap thingy)
             if (PlayerControl.LocalPlayer.MyPhysics.enabled && (PlayerControl.LocalPlayer.moveable || PlayerControl.LocalPlayer.inVent
-                || HudManagerStartPatch.hackerVitalsButton.isEffectActive || HudManagerStartPatch.hackerAdminTableButton.isEffectActive || HudManagerStartPatch.securityGuardCamButton.isEffectActive
+                || Hacker.hackerVitalsButton.IsEffectActive || Hacker.hackerAdminTableButton.IsEffectActive || HudManagerStartPatch.securityGuardCamButton.isEffectActive
                 || Portal.isTeleporting && Portal.teleportedPlayers.Last().playerId == PlayerControl.LocalPlayer.PlayerId))
             {
                 if (!PlayerControl.LocalPlayer.inMovingPlat)
@@ -790,7 +834,7 @@ public static class Meeting
                     trap.trappedPlayer = trap.trappedPlayer.OrderBy(x => rnd.Next()).ToList();
                     foreach (byte playerId in trap.trappedPlayer)
                     {
-                        PlayerControl p = Helpers.playerById(playerId);
+                        PlayerControl p = Helpers.PlayerById(playerId);
                         if (Trapper.infoType == 0) message += RoleInfo.GetRolesString(p, false, false, true) + "\n";
                         else if (Trapper.infoType == 1)
                         {
@@ -843,9 +887,6 @@ public static class Meeting
 
             Trapper.playersOnMap = new();
             Snitch.playerRoomMap = new Dictionary<byte, byte>();
-
-            // Close In-Game Settings Display if open
-            HudManagerUpdate.CloseSettings();
         }
 
         {

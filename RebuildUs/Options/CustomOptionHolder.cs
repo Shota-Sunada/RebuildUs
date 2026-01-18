@@ -156,6 +156,25 @@ public static partial class CustomOptionHolder
     public static CustomOption hackerToolsNumber;
     public static CustomOption hackerRechargeTasksNumber;
     public static CustomOption hackerNoMove;
+
+    public static CustomRoleOption trackerSpawnRate;
+    public static CustomOption trackerUpdateInterval;
+    public static CustomOption trackerResetTargetAfterMeeting;
+    public static CustomOption trackerCanTrackCorpses;
+    public static CustomOption trackerCorpsesTrackingCooldown;
+    public static CustomOption trackerCorpsesTrackingDuration;
+
+    public static CustomRoleOption snitchSpawnRate;
+    public static CustomOption snitchLeftTasksForReveal;
+    public static CustomOption snitchIncludeTeamJackal;
+    public static CustomOption snitchTeamJackalUseDifferentArrowColor;
+
+    public static CustomRoleOption lighterSpawnRate;
+    public static CustomOption lighterModeLightsOnVision;
+    public static CustomOption lighterModeLightsOffVision;
+    public static CustomOption lighterCooldown;
+    public static CustomOption lighterDuration;
+    public static CustomOption lighterCanSeeNinja;
     #endregion
 
     #region ROLES IMPOSTOR
@@ -195,6 +214,19 @@ public static partial class CustomOptionHolder
     public static CustomOption createdMadmateAbility;
     public static CustomOption createdMadmateNumTasks;
     public static CustomOption createdMadmateExileCrewmate;
+
+    public static CustomRoleOption evilTrackerSpawnRate;
+    public static CustomOption evilTrackerCooldown;
+    public static CustomOption evilTrackerResetTargetAfterMeeting;
+    public static CustomOption evilTrackerCanSeeDeathFlash;
+    public static CustomOption evilTrackerCanSeeTargetTask;
+    public static CustomOption evilTrackerCanSeeTargetPosition;
+    public static CustomOption evilTrackerCanSetTargetOnMeeting;
+
+    public static CustomRoleOption eraserSpawnRate;
+    public static CustomOption eraserCooldown;
+    public static CustomOption eraserCooldownIncrease;
+    public static CustomOption eraserCanEraseAnyone;
     #endregion
 
     #region ROLES NEUTRAL
@@ -402,6 +434,26 @@ public static partial class CustomOptionHolder
         hackerToolsNumber = CustomOption.Normal(1084, CustomOptionType.Crewmate, "hackerToolsNumber", 5f, 1f, 30f, 1f, hackerSpawnRate);
         hackerRechargeTasksNumber = CustomOption.Normal(1085, CustomOptionType.Crewmate, "hackerRechargeTasksNumber", 2f, 1f, 5f, 1f, hackerSpawnRate);
         hackerNoMove = CustomOption.Normal(1086, CustomOptionType.Crewmate, "hackerNoMove", true, hackerSpawnRate);
+
+        trackerSpawnRate = new(1090, CustomOptionType.Crewmate, RoleType.Tracker, Tracker.RoleColor, 1);
+        trackerUpdateInterval = CustomOption.Normal(1091, CustomOptionType.Crewmate, "trackerUpdateInterval", 5f, 1f, 30f, 1f, trackerSpawnRate);
+        trackerResetTargetAfterMeeting = CustomOption.Normal(1092, CustomOptionType.Crewmate, "trackerResetTargetAfterMeeting", false, trackerSpawnRate);
+        trackerCanTrackCorpses = CustomOption.Normal(1093, CustomOptionType.Crewmate, "trackerTrackCorpses", true, trackerSpawnRate);
+        trackerCorpsesTrackingCooldown = CustomOption.Normal(1094, CustomOptionType.Crewmate, "trackerCorpseCooldown", 30f, 0f, 120f, 5f, trackerCanTrackCorpses);
+        trackerCorpsesTrackingDuration = CustomOption.Normal(1095, CustomOptionType.Crewmate, "trackerCorpseDuration", 5f, 2.5f, 30f, 2.5f, trackerCanTrackCorpses);
+
+        snitchSpawnRate = new(1100, CustomOptionType.Crewmate, RoleType.Snitch, Snitch.RoleColor, 1);
+        snitchLeftTasksForReveal = CustomOption.Normal(1101, CustomOptionType.Crewmate, "snitchLeftTasksForReveal", 1f, 0f, 5f, 1f, snitchSpawnRate);
+        snitchIncludeTeamJackal = CustomOption.Normal(1102, CustomOptionType.Crewmate, "snitchIncludeTeamJackal", false, snitchSpawnRate);
+        snitchTeamJackalUseDifferentArrowColor = CustomOption.Normal(1103, CustomOptionType.Crewmate, "snitchTeamJackalUseDifferentArrowColor", true, snitchIncludeTeamJackal);
+
+        lighterSpawnRate = new (1110, CustomOptionType.Crewmate, RoleType.Lighter, Lighter.RoleColor, 15);
+        lighterModeLightsOnVision = CustomOption.Normal(1111, CustomOptionType.Crewmate, "lighterModeLightsOnVision", 2f, 0.25f, 5f, 0.25f, lighterSpawnRate);
+        lighterModeLightsOffVision = CustomOption.Normal(1112, CustomOptionType.Crewmate, "lighterModeLightsOffVision", 0.75f, 0.25f, 5f, 0.25f, lighterSpawnRate);
+        lighterCooldown = CustomOption.Normal(1113, CustomOptionType.Crewmate, "lighterCooldown", 30f, 5f, 120f, 5f, lighterSpawnRate);
+        lighterDuration = CustomOption.Normal(1114, CustomOptionType.Crewmate, "lighterDuration", 5f, 2.5f, 60f, 2.5f, lighterSpawnRate);
+        // lighterCanSeeNinja = CustomOption.Normal(1115, CustomOptionType.Crewmate, "lighterCanSeeNinja", true, lighterSpawnRate);
+
         #endregion
 
         #region ROLES IMPOSTOR
@@ -441,6 +493,19 @@ public static partial class CustomOptionHolder
         createdMadmateAbility = CustomOption.Normal(2042, CustomOptionType.Impostor, "madmateAbility", ["madmateNone", "madmateFanatic"], evilHackerCanCreateMadmate);
         createdMadmateNumTasks = CustomOption.Normal(2043, CustomOptionType.Impostor, "createdMadmateNumTasks", 4f, 1f, 20f, 1f, createdMadmateAbility);
         createdMadmateExileCrewmate = CustomOption.Normal(2044, CustomOptionType.Impostor, "createdMadmateExileCrewmate", false, evilHackerCanCreateMadmate);
+
+        evilTrackerSpawnRate = new(2050, CustomOptionType.Impostor, RoleType.EvilTracker, EvilTracker.RoleColor, 3);
+        evilTrackerCooldown = CustomOption.Normal(2051, CustomOptionType.Impostor, "evilTrackerCooldown", 10f, 0f, 60f, 1f, evilTrackerSpawnRate);
+        evilTrackerResetTargetAfterMeeting = CustomOption.Normal(2052, CustomOptionType.Impostor, "evilTrackerResetTargetAfterMeeting", true, evilTrackerSpawnRate);
+        evilTrackerCanSeeDeathFlash = CustomOption.Normal(2053, CustomOptionType.Impostor, "evilTrackerCanSeeDeathFlash", true, evilTrackerSpawnRate);
+        evilTrackerCanSeeTargetTask = CustomOption.Normal(2054, CustomOptionType.Impostor, "evilTrackerCanSeeTargetTask", true, evilTrackerSpawnRate);
+        evilTrackerCanSeeTargetPosition = CustomOption.Normal(2055, CustomOptionType.Impostor, "evilTrackerCanSeeTargetPosition", true, evilTrackerSpawnRate);
+        evilTrackerCanSetTargetOnMeeting = CustomOption.Normal(2056, CustomOptionType.Impostor, "evilTrackerCanSetTargetOnMeeting", true, evilTrackerSpawnRate);
+
+        eraserSpawnRate = new(2060, CustomOptionType.Impostor, RoleType.Eraser, Eraser.RoleColor, 1);
+        eraserCooldown = CustomOption.Normal(2061, CustomOptionType.Impostor, "eraserCooldown", 30f, 5f, 120f, 5f, eraserSpawnRate, format: "unitSeconds");
+        eraserCooldownIncrease = CustomOption.Normal(2062, CustomOptionType.Impostor, "eraserCooldownIncrease", 10f, 0f, 120f, 2.5f, eraserSpawnRate, format: "unitSeconds");
+        eraserCanEraseAnyone = CustomOption.Normal(2063, CustomOptionType.Impostor, "eraserCanEraseAnyone", false, eraserSpawnRate);
         #endregion
 
         #region ROLES NEUTRAL

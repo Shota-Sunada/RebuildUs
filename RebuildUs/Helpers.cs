@@ -315,15 +315,12 @@ public static class Helpers
         // Block impostor shielded kill
         if (Medic.Exists)
         {
-            foreach (var medic in Medic.Players)
+            if (!ignoreMedic && Medic.shielded != null && Medic.shielded == target)
             {
-                if (!ignoreMedic && medic.shielded != null && medic.shielded == target)
-                {
-                    MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(killer.NetId, (byte)CustomRPC.ShieldedMurderAttempt, Hazel.SendOption.Reliable, -1);
-                    AmongUsClient.Instance.FinishRpcImmediately(writer);
-                    RPCProcedure.shieldedMurderAttempt(medic.Player.PlayerId);
-                    return MurderAttemptResult.SuppressKill;
-                }
+                MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(killer.NetId, (byte)CustomRPC.ShieldedMurderAttempt, Hazel.SendOption.Reliable, -1);
+                AmongUsClient.Instance.FinishRpcImmediately(writer);
+                RPCProcedure.shieldedMurderAttempt();
+                return MurderAttemptResult.SuppressKill;
             }
         }
 

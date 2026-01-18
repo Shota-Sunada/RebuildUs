@@ -95,7 +95,7 @@ public static class Map
 
     public static void UpdatePrefix(MapBehaviour __instance)
     {
-        Vector3 vector = AntiTeleport.position != null ? AntiTeleport.position : CachedPlayer.LocalPlayer.PlayerControl.transform.position;
+        Vector3 vector = AntiTeleport.position ?? CachedPlayer.LocalPlayer.PlayerControl.transform.position;
         vector /= MapUtilities.CachedShipStatus.MapScale;
         vector.x *= Mathf.Sign(MapUtilities.CachedShipStatus.transform.localScale.x);
         vector.z = -1f;
@@ -307,17 +307,17 @@ public static class Map
         if (Helpers.GetOption(ByteOptionNames.MapId) == 4)
         {
             // サボタージュアイコンのレイアウトを変更
-            Vector3 halfScale = new Vector3(0.75f, 0.75f, 0.75f);
-            Vector3 originalScale = new Vector3(1f, 1f, 1f);
-            Vector3 scale = RebuildUs.BetterSabotageMap.Value ? halfScale : originalScale;
-            Transform comms = __instance.infectedOverlay.transform.FindChild("Comms");
-            Transform electrical = __instance.infectedOverlay.transform.FindChild("Electrical");
-            Transform mainHall = __instance.infectedOverlay.transform.FindChild("MainHall");
-            Transform gapRoom = __instance.infectedOverlay.transform.FindChild("Gap Room");
-            Transform records = __instance.infectedOverlay.transform.FindChild("Records");
-            Transform brig = __instance.infectedOverlay.transform.FindChild("Brig");
-            Transform kitchen = __instance.infectedOverlay.transform.FindChild("Kitchen");
-            Transform medbay = __instance.infectedOverlay.transform.FindChild("Medbay");
+            var halfScale = new Vector3(0.75f, 0.75f, 0.75f);
+            var originalScale = new Vector3(1f, 1f, 1f);
+            var scale = RebuildUs.BetterSabotageMap.Value ? halfScale : originalScale;
+            var comms = __instance.infectedOverlay.transform.FindChild("Comms");
+            var electrical = __instance.infectedOverlay.transform.FindChild("Electrical");
+            var mainHall = __instance.infectedOverlay.transform.FindChild("MainHall");
+            var gapRoom = __instance.infectedOverlay.transform.FindChild("Gap Room");
+            var records = __instance.infectedOverlay.transform.FindChild("Records");
+            var brig = __instance.infectedOverlay.transform.FindChild("Brig");
+            var kitchen = __instance.infectedOverlay.transform.FindChild("Kitchen");
+            var medbay = __instance.infectedOverlay.transform.FindChild("Medbay");
 
             comms.localScale = scale;
             electrical.localScale = scale;
@@ -367,12 +367,12 @@ public static class Map
         {
             if (targetHerePoint == null)
             {
-                targetHerePoint = GameObject.Instantiate<SpriteRenderer>(__instance.HerePoint, __instance.HerePoint.transform.parent);
+                targetHerePoint = UnityEngine.Object.Instantiate(__instance.HerePoint, __instance.HerePoint.transform.parent);
             }
-            targetHerePoint.gameObject.SetActive(EvilTracker.target.isAlive());
+            targetHerePoint.gameObject.SetActive(EvilTracker.target.IsAlive());
             NetworkedPlayerInfo playerById = GameData.Instance.GetPlayerById(EvilTracker.target.PlayerId);
             PlayerMaterial.SetColors((playerById != null) ? playerById.DefaultOutfit.ColorId : 0, targetHerePoint);
-            Vector3 pos = new Vector3(EvilTracker.target.transform.position.x, EvilTracker.target.transform.position.y, EvilTracker.target.transform.position.z);
+            var pos = new Vector3(EvilTracker.target.transform.position.x, EvilTracker.target.transform.position.y, EvilTracker.target.transform.position.z);
             pos /= MapUtilities.CachedShipStatus.MapScale;
             pos.x *= Mathf.Sign(MapUtilities.CachedShipStatus.transform.localScale.x);
             pos.z = -10;
@@ -412,10 +412,7 @@ public static class Map
         // {
         //     return false;
         // }
-        if (__instance.specialInputHandler != null)
-        {
-            __instance.specialInputHandler.disableVirtualCursor = true;
-        }
+        __instance.specialInputHandler?.disableVirtualCursor = true;
         CachedPlayer.LocalPlayer.PlayerControl.SetPlayerMaterialColors(__instance.HerePoint);
         __instance.GenericShow();
         __instance.gameObject.SetActive(true);
@@ -446,11 +443,8 @@ public static class Map
         // {
         //     return false;
         // }
-        if (__instance.specialInputHandler != null)
-        {
-            __instance.specialInputHandler.disableVirtualCursor = true;
-        }
-        plainDoors = GameObject.FindObjectsOfType<PlainDoor>();
+        __instance.specialInputHandler?.disableVirtualCursor = true;
+        plainDoors = UnityEngine.Object.FindObjectsOfType<PlainDoor>();
         CachedPlayer.LocalPlayer.PlayerControl.SetPlayerMaterialColors(__instance.HerePoint);
         __instance.GenericShow();
         __instance.gameObject.SetActive(true);
@@ -523,7 +517,7 @@ public static class Map
     private static bool evilTrackerShowTask(MapTaskOverlay __instance)
     {
         if (!MeetingHud.Instance) return true;  // Only run in meetings, and then set the Position of the HerePoint to the Position before the Meeting!
-        if (!CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.EvilTracker) || !CustomOptionHolder.evilTrackerCanSeeTargetTask.getBool()) return true;
+        if (!CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.EvilTracker) || !CustomOptionHolder.evilTrackerCanSeeTargetTask.GetBool()) return true;
         if (EvilTracker.target == null) return true;
         if (realTasks[EvilTracker.target.PlayerId] == null) return false;
         __instance.gameObject.SetActive(true);

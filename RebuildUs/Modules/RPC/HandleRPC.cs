@@ -123,13 +123,13 @@ public static partial class RPCProcedure
                 ErasePlayerRoles(reader.ReadByte());
                 break;
             case CustomRPC.MedicSetShielded:
-                medicSetShielded(reader.ReadByte(), reader.ReadByte());
+                medicSetShielded(reader.ReadByte());
                 break;
             case CustomRPC.ShieldedMurderAttempt:
-                shieldedMurderAttempt(reader.ReadByte());
+                shieldedMurderAttempt();
                 break;
             case CustomRPC.SetFutureShielded:
-                setFutureShielded(reader.ReadByte(), reader.ReadByte());
+                setFutureShielded(reader.ReadByte());
                 break;
             case CustomRPC.TimeMasterRewindTime:
                 timeMasterRewindTime();
@@ -157,6 +157,12 @@ public static partial class RPCProcedure
                 break;
             case CustomRPC.UseVitalsTime:
                 UseVitalsTime(reader.ReadSingle());
+                break;
+            case CustomRPC.TrackerUsedTracker:
+                trackerUsedTracker(reader.ReadByte(), reader.ReadByte());
+                break;
+            case CustomRPC.SetFutureErased:
+                setFutureErased(reader.ReadByte());
                 break;
             default:
                 break;

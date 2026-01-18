@@ -30,7 +30,7 @@ public class Seer : RoleBase<Seer>
                 soul.layer = 5;
                 var rend = soul.AddComponent<SpriteRenderer>();
                 soul.AddSubmergedComponent(SubmergedCompatibility.Classes.ElevatorMover);
-                rend.sprite = Seer.getSoulSprite();
+                rend.sprite = AssetLoader.Soul;
 
                 if (limitSoulDuration)
                 {

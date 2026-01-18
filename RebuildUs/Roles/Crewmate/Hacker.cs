@@ -7,8 +7,8 @@ public class Hacker : RoleBase<Hacker>
 {
     public static Color RoleColor = new Color32(117, 250, 76, byte.MaxValue);
     private static CustomButton hackerButton;
-    private static CustomButton hackerVitalsButton;
-    private static CustomButton hackerAdminTableButton;
+    public static CustomButton hackerVitalsButton;
+    public static CustomButton hackerAdminTableButton;
     public static TMP_Text hackerAdminTableChargesText;
     public static TMP_Text hackerVitalsChargesText;
 
@@ -70,7 +70,7 @@ public class Hacker : RoleBase<Hacker>
                     hackerButton.IsEffectActive = false;
                     hackerButton.ActionButton.cooldownTimerText.color = Palette.EnabledColor;
                 },
-                Hacker.getButtonSprite(),
+                AssetLoader.HackerButton,
                 new Vector3(0f, 1f, 0),
                 hm,
                 hm.UseButton,
@@ -162,11 +162,11 @@ public class Hacker : RoleBase<Hacker>
 
                Local.chargesVitals--;
            },
-           () => { return CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Hacker) && ModMapOptions.couldUseVitals && CachedPlayer.LocalPlayer.PlayerControl.IsAlive() && PlayerControl.GameOptions.MapId != 0 && PlayerControl.GameOptions.MapId != 3; },
+           () => { return CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Hacker) && ModMapOptions.couldUseVitals && CachedPlayer.LocalPlayer.PlayerControl.IsAlive() && Helpers.GetOption(ByteOptionNames.MapId) != 0 && Helpers.GetOption(ByteOptionNames.MapId) != 3; },
            () =>
            {
                hackerVitalsChargesText?.text = string.Format(Tr.Get("hackerChargesText"), Local.chargesVitals, toolsNumber);
-               hackerVitalsButton.ActionButton.graphic.sprite = Helpers.GetOption(ByteOptionNames.MapId) == 1 ? Hacker.getLogSprite() : Hacker.getVitalsSprite();
+               hackerVitalsButton.ActionButton.graphic.sprite = Helpers.GetOption(ByteOptionNames.MapId) == 1 ? FastDestroyableSingleton<HudManager>.Instance.UseButton.fastUseSettings[ImageNames.DoorLogsButton].Image : FastDestroyableSingleton<HudManager>.Instance.UseButton.fastUseSettings[ImageNames.VitalsButton].Image;
                hackerVitalsButton.ActionButton.OverrideText(Helpers.GetOption(ByteOptionNames.MapId) == 1 ? TranslationController.Instance.GetString(StringNames.DoorlogLabel) : TranslationController.Instance.GetString(StringNames.VitalsLabel));
                return Local.chargesVitals > 0 && ModMapOptions.canUseVitals;
            },
@@ -176,7 +176,7 @@ public class Hacker : RoleBase<Hacker>
                hackerVitalsButton.IsEffectActive = false;
                hackerVitalsButton.ActionButton.cooldownTimerText.color = Palette.EnabledColor;
            },
-           Hacker.getVitalsSprite(),
+           FastDestroyableSingleton<HudManager>.Instance.UseButton.fastUseSettings[ImageNames.VitalsButton].Image,
            new Vector3(-2.7f, -0.06f, 0),
            hm,
            hm.UseButton,
@@ -213,6 +213,17 @@ public class Hacker : RoleBase<Hacker>
         hackerButton.EffectDuration = Hacker.duration;
         hackerVitalsButton.EffectDuration = Hacker.duration;
         hackerAdminTableButton.EffectDuration = Hacker.duration;
+    }
+
+    public static Sprite getAdminSprite()
+    {
+        byte mapId = GameOptionsManager.Instance.CurrentGameOptions.MapId;
+        var button = FastDestroyableSingleton<HudManager>.Instance.UseButton.fastUseSettings[ImageNames.PolusAdminButton]; // Polus
+        if (mapId is 0 or 3) button = FastDestroyableSingleton<HudManager>.Instance.UseButton.fastUseSettings[ImageNames.AdminMapButton]; // Skeld || Dleks
+        else if (mapId == 1) button = FastDestroyableSingleton<HudManager>.Instance.UseButton.fastUseSettings[ImageNames.MIRAAdminButton]; // Mira HQ
+        else if (mapId == 4) button = FastDestroyableSingleton<HudManager>.Instance.UseButton.fastUseSettings[ImageNames.AirshipAdminButton]; // Airship
+
+        return button.Image;
     }
 
     // write functions here

@@ -10,9 +10,9 @@ public class Medic : RoleBase<Medic>
     private static CustomButton medicShieldButton;
 
     public PlayerControl currentTarget;
-    public PlayerControl shielded;
-    public PlayerControl futureShielded;
-    public bool usedShield = false;
+    public static PlayerControl shielded;
+    public static PlayerControl futureShielded;
+    public static bool usedShield = false;
 
     // write configs here
     public static int showShielded { get { return CustomOptionHolder.medicShowShielded.GetSelection(); } }
@@ -27,18 +27,7 @@ public class Medic : RoleBase<Medic>
     }
 
     public override void OnMeetingStart() { }
-    public override void OnMeetingEnd()
-    {
-        // Medic shield
-        if (AmongUsClient.Instance.AmHost && futureShielded != null && !Player.Data.IsDead)
-        {
-            // We need to send the RPC from the host here, to make sure that the order of shifting and setting the shield is correct(for that reason the futureShifted and futureShielded are being synced)
-            MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.MedicSetShielded, Hazel.SendOption.Reliable, -1);
-            writer.Write(futureShielded.PlayerId);
-            AmongUsClient.Instance.FinishRpcImmediately(writer);
-            RPCProcedure.medicSetShielded(Player.PlayerId, futureShielded.PlayerId);
-        }
-    }
+    public override void OnMeetingEnd() { }
     public override void OnIntroEnd() { }
     public override void FixedUpdate()
     {
@@ -69,17 +58,17 @@ public class Medic : RoleBase<Medic>
                 AmongUsClient.Instance.FinishRpcImmediately(writer);
                 if (Medic.setShieldAfterMeeting)
                 {
-                    RPCProcedure.setFutureShielded(Local.Player.PlayerId, Local.currentTarget.PlayerId);
+                    RPCProcedure.setFutureShielded(Local.currentTarget.PlayerId);
                 }
                 else
                 {
-                    RPCProcedure.medicSetShielded(Local.Player.PlayerId, Local.currentTarget.PlayerId);
+                    RPCProcedure.medicSetShielded(Local.currentTarget.PlayerId);
                 }
             },
             () => { return CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Medic) && CachedPlayer.LocalPlayer.PlayerControl.IsAlive(); },
-            () => { return !Local.usedShield && Local.currentTarget && CachedPlayer.LocalPlayer.PlayerControl.CanMove; },
+            () => { return !usedShield && Local.currentTarget && CachedPlayer.LocalPlayer.PlayerControl.CanMove; },
             () => { },
-            Medic.getButtonSprite(),
+            AssetLoader.ShieldButton,
             new Vector3(-1.8f, -0.06f, 0),
             hm,
             hm.UseButton,
@@ -100,5 +89,8 @@ public class Medic : RoleBase<Medic>
     {
         // reset configs here
         Players.Clear();
+        shielded = null;
+        futureShielded = null;
+        usedShield = false;
     }
 }

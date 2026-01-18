@@ -146,7 +146,7 @@ public static class Mafia
                 () => { return CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Janitor) && CachedPlayer.LocalPlayer.PlayerControl.IsAlive(); },
                 () => { return hm.ReportButton.graphic.color == Palette.EnabledColor && CachedPlayer.LocalPlayer.PlayerControl.CanMove; },
                 () => { janitorCleanButton.Timer = janitorCleanButton.MaxTimer; },
-                Janitor.getButtonSprite(),
+                AssetLoader.CleanButton,
                 new Vector3(-1.8f, -0.06f, 0),
                 hm,
                 hm.KillButton,

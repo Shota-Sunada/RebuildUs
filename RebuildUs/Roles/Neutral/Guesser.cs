@@ -36,14 +36,14 @@ public static class Guesser
         else if (player.IsRole(RoleType.EvilGuesser))
         {
             remainingShots = remainingShotsEvilGuesser;
-            if (player.hasModifier(ModifierType.LastImpostor) && LastImpostor.canGuess())
+            if (player.HasModifier(ModifierType.LastImpostor) && LastImpostor.canGuess())
             {
                 remainingShots += LastImpostor.remainingShots;
             }
             if (shoot)
             {
                 // ラストインポスターの弾数を優先的に消費させる
-                if (player.hasModifier(ModifierType.LastImpostor) && LastImpostor.canGuess())
+                if (player.HasModifier(ModifierType.LastImpostor) && LastImpostor.canGuess())
                 {
                     LastImpostor.remainingShots = Mathf.Max(0, LastImpostor.remainingShots - 1);
                 }
@@ -53,7 +53,7 @@ public static class Guesser
                 }
             }
         }
-        else if (player.hasModifier(ModifierType.LastImpostor) && LastImpostor.canGuess())
+        else if (player.HasModifier(ModifierType.LastImpostor) && LastImpostor.canGuess())
         {
             remainingShots = LastImpostor.remainingShots;
             if (shoot) LastImpostor.remainingShots = Mathf.Max(0, LastImpostor.remainingShots - 1);

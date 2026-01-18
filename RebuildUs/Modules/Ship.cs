@@ -1,3 +1,4 @@
+using RebuildUs.Roles.Crewmate;
 using RebuildUs.Roles.Impostor;
 
 namespace RebuildUs.Modules;
@@ -21,8 +22,8 @@ public static class Ship
         // If player is Lighter with ability active
         if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Lighter) && Lighter.isLightActive(CachedPlayer.LocalPlayer.PlayerControl))
         {
-            float unlerped = Mathf.InverseLerp(__instance.MinLightRadius, __instance.MaxLightRadius, GetNeutralLightRadius(__instance, true));
-            __result = Mathf.Lerp(__instance.MaxLightRadius * Lighter.lighterModeLightsOffVision, __instance.MaxLightRadius * Lighter.lighterModeLightsOnVision, unlerped);
+            float unLerp = Mathf.InverseLerp(__instance.MinLightRadius, __instance.MaxLightRadius, GetNeutralLightRadius(__instance, true));
+            __result = Mathf.Lerp(__instance.MaxLightRadius * Lighter.modeLightsOffVision, __instance.MaxLightRadius * Lighter.modeLightsOnVision, unLerp);
             return false;
         }
 

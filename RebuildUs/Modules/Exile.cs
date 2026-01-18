@@ -1,3 +1,5 @@
+using RebuildUs.Roles.Crewmate;
+using RebuildUs.Roles.Impostor;
 using RebuildUs.Roles.Neutral;
 
 namespace RebuildUs.Modules;
@@ -10,13 +12,14 @@ public static class Exile
         lastExiled = player;
 
         // Medic shield
-        // if (Medic.medic != null && AmongUsClient.Instance.AmHost && Medic.futureShielded != null && !Medic.medic.Data.IsDead)
-        // { // We need to send the RPC from the host here, to make sure that the order of shifting and setting the shield is correct(for that reason the futureShifted and futureShielded are being synced)
-        //     MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.MedicSetShielded, Hazel.SendOption.Reliable, -1);
-        //     writer.Write(Medic.futureShielded.PlayerId);
-        //     AmongUsClient.Instance.FinishRpcImmediately(writer);
-        //     RPCProcedure.medicSetShielded(Medic.futureShielded.PlayerId);
-        // }
+        if (Medic.Exists && AmongUsClient.Instance.AmHost && Medic.futureShielded != null && !Medic.medic.Data.IsDead)
+        {
+            // We need to send the RPC from the host here, to make sure that the order of shifting and setting the shield is correct(for that reason the futureShifted and futureShielded are being synced)
+            MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.MedicSetShielded, Hazel.SendOption.Reliable, -1);
+            writer.Write(Medic.futureShielded.PlayerId);
+            AmongUsClient.Instance.FinishRpcImmediately(writer);
+            RPCProcedure.medicSetShielded(Medic.futureShielded.PlayerId);
+        }
 
         // Madmate exiled
         // if (AmongUsClient.Instance.AmHost
@@ -51,26 +54,26 @@ public static class Exile
         // Shifter.futureShift = null;
 
         // Eraser erase
-        // if (Eraser.eraser != null && AmongUsClient.Instance.AmHost && Eraser.futureErased != null)
-        // {  // We need to send the RPC from the host here, to make sure that the order of shifting and erasing is correct (for that reason the futureShifted and futureErased are being synced)
-        //     foreach (PlayerControl target in Eraser.futureErased)
-        //     {
-        //         if (target != null && target.canBeErased())
-        //         {
-        //             MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.ErasePlayerRoles, Hazel.SendOption.Reliable, -1);
-        //             writer.Write(target.PlayerId);
-        //             AmongUsClient.Instance.FinishRpcImmediately(writer);
-        //             RPCProcedure.erasePlayerRoles(target.PlayerId);
-        //         }
-        //     }
-        // }
-        // Eraser.futureErased = new List<PlayerControl>();
+        if (Eraser.Exists && AmongUsClient.Instance.AmHost && Eraser.futureErased != null)
+        {  // We need to send the RPC from the host here, to make sure that the order of shifting and erasing is correct (for that reason the futureShifted and futureErased are being synced)
+            foreach (PlayerControl target in Eraser.futureErased)
+            {
+                if (target != null && target.CanBeErased())
+                {
+                    MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.ErasePlayerRoles, Hazel.SendOption.Reliable, -1);
+                    writer.Write(target.PlayerId);
+                    AmongUsClient.Instance.FinishRpcImmediately(writer);
+                    RPCProcedure.ErasePlayerRoles(target.PlayerId);
+                }
+            }
+        }
+        Eraser.futureErased = [];
 
         // Trickster boxes
-        // if (Trickster.trickster != null && JackInTheBox.hasJackInTheBoxLimitReached())
-        // {
-        //     JackInTheBox.convertToVents();
-        // }
+        if (Trickster.Exists && JackInTheBox.HasJackInTheBoxLimitReached())
+        {
+            JackInTheBox.ConvertToVents();
+        }
 
         // Witch execute casted spells
         // if (Witch.witch != null && Witch.futureSpelled != null && AmongUsClient.Instance.AmHost)

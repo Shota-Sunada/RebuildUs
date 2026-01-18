@@ -6,6 +6,7 @@ using RebuildUs.Objects;
 using Epic.OnlineServices;
 using UnityEngine.UIElements;
 using RebuildUs.Roles.Impostor;
+using RebuildUs.Roles.Modifier;
 
 namespace RebuildUs.Modules.RPC;
 
@@ -381,27 +382,22 @@ public static partial class RPCProcedure
         newJackal.WasTeamRed = wasTeamRed;
         newJackal.WasImpostor = wasImpostor;
         newJackal.WasSpy = wasSpy;
-        Sidekick.Clear();
+        sidekick.Clear();
         return;
     }
 
-    public static void medicSetShielded(byte medicId, byte shieldedId)
+    public static void medicSetShielded(byte shieldedId)
     {
-        var medicPlayer = Helpers.PlayerById(medicId);
-        var medic = Medic.GetRole(medicPlayer);
-        medic.usedShield = true;
-        medic.shielded = Helpers.PlayerById(shieldedId);
-        medic.futureShielded = null;
+        Medic.usedShield = true;
+        Medic.shielded = Helpers.PlayerById(shieldedId);
+        Medic.futureShielded = null;
     }
 
-    public static void shieldedMurderAttempt(byte medicId)
+    public static void shieldedMurderAttempt()
     {
-        var medicPlayer = Helpers.PlayerById(medicId);
-        var medic = Medic.GetRole(medicPlayer);
+        if (!Medic.Exists || Medic.shielded == null) return;
 
-        if (!Medic.Exists || medic.shielded == null) return;
-
-        bool isShieldedAndShow = medic.shielded == CachedPlayer.LocalPlayer.PlayerControl && Medic.showAttemptToShielded;
+        bool isShieldedAndShow = Medic.shielded == CachedPlayer.LocalPlayer.PlayerControl && Medic.showAttemptToShielded;
         bool isMedicAndShow = CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Medic) && Medic.showAttemptToMedic;
 
         if ((isShieldedAndShow || isMedicAndShow) && FastDestroyableSingleton<HudManager>.Instance?.FullScreen != null)
@@ -411,13 +407,10 @@ public static partial class RPCProcedure
         }
     }
 
-    public static void setFutureShielded(byte medicId, byte playerId)
+    public static void setFutureShielded(byte playerId)
     {
-        var medicPlayer = Helpers.PlayerById(medicId);
-        var medic = Medic.GetRole(medicPlayer);
-
-        medic.futureShielded = Helpers.PlayerById(playerId);
-        medic.usedShield = true;
+        Medic.futureShielded = Helpers.PlayerById(playerId);
+        Medic.usedShield = true;
     }
 
     public static void timeMasterRewindTime()
@@ -542,13 +535,13 @@ public static partial class RPCProcedure
                 }
             }
 
-            targetPlayer.RemoveInfected();
+            FastDestroyableSingleton<RoleManager>.Instance.SetRole(targetPlayer, RoleTypes.Crewmate);
             ErasePlayerRoles(targetPlayer.PlayerId, true, false);
 
             // Jackalバグ対応
             Jackal.FormerJackals = tmpFormerJackals;
 
-            targetPlayer.addModifier(ModifierType.CreatedMadmate);
+            targetPlayer.AddModifier(ModifierType.CreatedMadmate);
         }
         evilHacker.canCreateMadmate = false;
         return;
@@ -567,5 +560,29 @@ public static partial class RPCProcedure
     public static void UseVitalsTime(float time)
     {
         ModMapOptions.restrictVitalsTime -= time;
+    }
+
+    public static void trackerUsedTracker(byte targetId, byte trackerId)
+    {
+        var trackerPlayer = Helpers.PlayerById(trackerId);
+        var tracker = Tracker.GetRole(trackerPlayer);
+        tracker.usedTracker = true;
+        foreach (var player in CachedPlayer.AllPlayers)
+        {
+            if (player.PlayerId == targetId)
+            {
+                tracker.tracked = player;
+            }
+        }
+    }
+
+    public static void setFutureErased(byte playerId)
+    {
+        var player = Helpers.PlayerById(playerId);
+        Eraser.futureErased ??= [];
+        if (player != null)
+        {
+            Eraser.futureErased.Add(player);
+        }
     }
 }

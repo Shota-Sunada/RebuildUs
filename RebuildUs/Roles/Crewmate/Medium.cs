@@ -51,7 +51,7 @@ public class Medium : RoleBase<Medium>
                     s.layer = 5;
                     var rend = s.AddComponent<SpriteRenderer>();
                     s.AddSubmergedComponent(SubmergedCompatibility.Classes.ElevatorMover);
-                    rend.sprite = Medium.getSoulSprite();
+                    rend.sprite = AssetLoader.Soul;
                     souls.Add(rend);
                 }
                 deadBodies = featureDeadBodies;
@@ -112,7 +112,7 @@ public class Medium : RoleBase<Medium>
                 mediumButton.IsEffectActive = false;
                 Local.soulTarget = null;
             },
-            Medium.getQuestionSprite(),
+            AssetLoader.MediumButton,
             new Vector3(-1.8f, -0.06f, 0),
             hm,
             hm.UseButton,
@@ -128,7 +128,7 @@ public class Medium : RoleBase<Medium>
                 int randomNumber = RebuildUs.Instance.Rnd.Next(4);
                 if (Local.target.KillerIfExisting != null)
                 {
-                    if (Helpers.PlayerById(Local.target.KillerIfExisting.PlayerId).hasModifier(ModifierType.Mini))
+                    if (Helpers.PlayerById(Local.target.KillerIfExisting.PlayerId).HasModifier(ModifierType.Mini))
                     {
                         randomNumber = RebuildUs.Instance.Rnd.Next(3);
                     }

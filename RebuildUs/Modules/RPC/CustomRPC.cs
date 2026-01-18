@@ -49,4 +49,6 @@ public enum CustomRPC : byte
     UseAdminTime,
     UseCameraTime,
     UseVitalsTime,
+    TrackerUsedTracker,
+    SetFutureErased,
 }

@@ -1,3 +1,5 @@
+using RebuildUs.Roles.Crewmate;
+
 namespace RebuildUs.Roles.Impostor;
 
 [HarmonyPatch]
@@ -65,7 +67,7 @@ public class EvilHacker : RoleBase<EvilHacker>
             },
             () => { return CachedPlayer.LocalPlayer.PlayerControl.CanMove; },
             () => { },
-            EvilHacker.getButtonSprite(),
+            Hacker.getAdminSprite(),
             new Vector3(0f, 2.0f, 0),
             hm,
             hm.KillButton,
@@ -91,7 +93,7 @@ public class EvilHacker : RoleBase<EvilHacker>
             },
             () => { return currentTarget && CachedPlayer.LocalPlayer.PlayerControl.CanMove; },
             () => { },
-            EvilHacker.getMadmateButtonSprite(),
+            AssetLoader.SidekickButton,
             new Vector3(-2.7f, -0.06f, 0),
             hm,
             hm.KillButton,
