@@ -63,4 +63,6 @@ public enum CustomRPC : byte
     SwapperAnimate,
     SetFutureSpelled,
     WitchSpellCast,
+    PlaceGarlic,
+    ImpostorPromotesToLastImpostor,
 }

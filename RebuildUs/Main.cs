@@ -28,8 +28,11 @@ global using RebuildUs.Options;
 global using RebuildUs.Patches;
 global using RebuildUs.Players;
 global using RebuildUs.Roles;
+global using RebuildUs.Roles.Crewmate;
+global using RebuildUs.Roles.Impostor;
+global using RebuildUs.Roles.Neutral;
+global using RebuildUs.Roles.Modifier;
 global using RebuildUs.Utilities;
-using RebuildUs.Roles.Impostor;
 
 namespace RebuildUs;
 
@@ -154,7 +157,7 @@ public class RebuildUs : BasePlugin
             PlayerRole.AllRoles.Do(x => x.HandleDisconnect(player, reason));
             PlayerModifier.AllModifiers.Do(x => x.HandleDisconnect(player, reason));
 
-            // Lovers.HandleDisconnect(player, reason);
+            Lovers.HandleDisconnect(player, reason);
             // Shifter.HandleDisconnect(player, reason);
 
             GameHistory.FinalStatuses[player.PlayerId] = EFinalStatus.Disconnected;

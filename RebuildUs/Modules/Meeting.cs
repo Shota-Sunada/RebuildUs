@@ -5,6 +5,7 @@ using BepInEx.Unity.IL2CPP.Utils;
 using BepInEx.Unity.IL2CPP.Utils.Collections;
 using RebuildUs.Roles.Crewmate;
 using RebuildUs.Roles.Impostor;
+using RebuildUs.Roles.Modifier;
 using RebuildUs.Roles.Neutral;
 
 namespace RebuildUs.Modules;
@@ -647,7 +648,7 @@ public static class Meeting
         }
 
         // トラックボタン
-        bool isTrackerButton = EvilTracker.canSetTargetOnMeeting && EvilTracker.target == null && CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.EvilTracker) && CachedPlayer.LocalPlayer.PlayerControl.isAlive();
+        bool isTrackerButton = EvilTracker.canSetTargetOnMeeting && EvilTracker.target == null && CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.EvilTracker) && CachedPlayer.LocalPlayer.PlayerControl.IsAlive();
         if (isTrackerButton)
         {
             for (int i = 0; i < __instance.playerStates.Length; i++)
@@ -691,7 +692,8 @@ public static class Meeting
 
         // Add Guesser Buttons
         bool isGuesser = Guesser.IsGuesser(PlayerControl.LocalPlayer.PlayerId) && PlayerControl.LocalPlayer.IsAlive() && Guesser.remainingShots(PlayerControl.LocalPlayer) > 0;
-        if (isGuesser)
+        bool isLastImpostorButton = !isTrackerButton && CachedPlayer.LocalPlayer.PlayerControl.HasModifier(ModifierType.LastImpostor) && CachedPlayer.LocalPlayer.PlayerControl.IsAlive() && LastImpostor.canGuess();
+        if (isGuesser || isLastImpostorButton)
         {
             createGuesserButton(__instance);
         }
@@ -797,11 +799,13 @@ public static class Meeting
             Bait.active = new Dictionary<DeadPlayer, float>();
             // Save AntiTeleport position, if the player is able to move (i.e. not on a ladder or a gap thingy)
             if (PlayerControl.LocalPlayer.MyPhysics.enabled && (PlayerControl.LocalPlayer.moveable || PlayerControl.LocalPlayer.inVent
-                || Hacker.hackerVitalsButton.IsEffectActive || Hacker.hackerAdminTableButton.IsEffectActive || HudManagerStartPatch.securityGuardCamButton.isEffectActive
+                || Hacker.hackerVitalsButton.IsEffectActive || Hacker.hackerAdminTableButton.IsEffectActive || SecurityGuard.securityGuardCamButton.IsEffectActive
                 || Portal.isTeleporting && Portal.teleportedPlayers.Last().playerId == PlayerControl.LocalPlayer.PlayerId))
             {
                 if (!PlayerControl.LocalPlayer.inMovingPlat)
+                {
                     AntiTeleport.position = PlayerControl.LocalPlayer.transform.position;
+                }
             }
 
             // Mini
@@ -814,36 +818,9 @@ public static class Meeting
             // Save the meeting target
             target = meetingTarget;
 
-            // Add trapped Info into Trapper chat
-            if (Trapper.trapper != null && (PlayerControl.LocalPlayer == Trapper.trapper || Helpers.shouldShowGhostInfo()) && !Trapper.trapper.Data.IsDead)
-            {
-                if (Trap.traps.Any(x => x.revealed))
-                    FastDestroyableSingleton<HudManager>.Instance.Chat.AddChat(Trapper.trapper, "Trap Logs:");
-                foreach (Trap trap in Trap.traps)
-                {
-                    if (!trap.revealed) continue;
-                    string message = $"Trap {trap.instanceId}: \n";
-                    trap.trappedPlayer = trap.trappedPlayer.OrderBy(x => rnd.Next()).ToList();
-                    foreach (byte playerId in trap.trappedPlayer)
-                    {
-                        PlayerControl p = Helpers.PlayerById(playerId);
-                        if (Trapper.infoType == 0) message += RoleInfo.GetRolesString(p, false, false, true) + "\n";
-                        else if (Trapper.infoType == 1)
-                        {
-                            if (Helpers.isNeutral(p) || p.Data.Role.IsImpostor) message += "Evil Role \n";
-                            else message += "Good Role \n";
-                        }
-                        else message += p.Data.PlayerName + "\n";
-                    }
-                    FastDestroyableSingleton<HudManager>.Instance.Chat.AddChat(Trapper.trapper, $"{message}");
-                }
-            }
-
             startMeetingClear();
 
             if (PlayerControl.LocalPlayer.Data.IsDead && output != "") FastDestroyableSingleton<HudManager>.Instance.Chat.AddChat(PlayerControl.LocalPlayer, $"{output}");
-
-            Trapper.playersOnMap = new();
         }
 
         {

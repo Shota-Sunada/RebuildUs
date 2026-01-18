@@ -9,8 +9,8 @@ public class BountyHunter : RoleBase<BountyHunter>
 {
     public static Color RoleColor = Palette.ImpostorRed;
     public Arrow Arrow;
-    public PlayerControl Bounty;
-    public TextMeshPro CooldownText;
+    public static PlayerControl Bounty;
+    public static TextMeshPro CooldownText;
     public float ArrowUpdateTimer = 0f;
     public float BountyUpdateTimer = 0f;
 

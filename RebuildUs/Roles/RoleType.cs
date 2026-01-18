@@ -52,7 +52,6 @@ public enum RoleType
     Vulture,
     PlagueDoctor,
     Watcher,
-    Trapper,
     EvilTracker,
     EvilHacker,
 

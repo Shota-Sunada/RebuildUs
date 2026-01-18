@@ -676,28 +676,28 @@ public partial class CustomOption
         return true;
     }
 
-    // public static string optionToString(CustomOption option)
-    // {
-    //     if (option == null) return "";
-    //     return $"{option.GetName()}: {option.GetString()}";
-    // }
+    public static string optionToString(CustomOption option)
+    {
+        if (option == null) return "";
+        return $"{option.GetName()}: {option.GetString()}";
+    }
 
-    // public static string optionsToString(CustomOption option, bool skipFirst = false)
-    // {
-    //     if (option == null) return "";
+    public static string optionsToString(CustomOption option, bool skipFirst = false)
+    {
+        if (option == null) return "";
 
-    //     List<string> options = new();
-    //     if (!skipFirst) options.Add(optionToString(option));
-    //     if (option.enabled)
-    //     {
-    //         foreach (CustomOption op in option.children)
-    //         {
-    //             string str = optionsToString(op);
-    //             if (str != "") options.Add(str);
-    //         }
-    //     }
-    //     return string.Join("\n", options);
-    // }
+        List<string> options = [];
+        if (!skipFirst) options.Add(optionToString(option));
+        if (option.Enabled)
+        {
+            foreach (CustomOption op in option.Children)
+            {
+                string str = optionsToString(op);
+                if (str != "") options.Add(str);
+            }
+        }
+        return string.Join("\n", options);
+    }
 
     public static void KeyboardUpdate(KeyboardJoystick __instance)
     {

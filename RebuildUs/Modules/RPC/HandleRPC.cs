@@ -200,6 +200,9 @@ public static partial class RPCProcedure
             case CustomRPC.WitchSpellCast:
                 witchSpellCast(reader.ReadByte());
                 break;
+            case CustomRPC.ImpostorPromotesToLastImpostor:
+                impostorPromotesToLastImpostor(reader.ReadByte());
+                break;
             default:
                 break;
         }

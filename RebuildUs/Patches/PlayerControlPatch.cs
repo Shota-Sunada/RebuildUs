@@ -2,6 +2,7 @@ using RebuildUs.Modules;
 using RebuildUs.Modules.RPC;
 using RebuildUs.Roles.Crewmate;
 using RebuildUs.Roles.Impostor;
+using RebuildUs.Roles.Modifier;
 
 namespace RebuildUs.Patches;
 
@@ -59,6 +60,8 @@ public static class PlayerControlPatch
             Helpers.UpdatePlayerInfo();
             Helpers.SetPetVisibility();
             Update.impostorSetTarget();
+
+            Garlic.UpdateAll();
         }
 
         RebuildUs.FixedUpdate(__instance);

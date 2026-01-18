@@ -72,6 +72,8 @@ public static class AssetLoader
     public static Sprite SpellButtonMeeting;
     public static Sprite CamouflageButton;
     public static Sprite SwapperCheck;
+    public static Sprite GarlicButton;
+    public static Sprite VampireButton;
 
     private static void LoadButtonAssets()
     {
@@ -104,6 +106,8 @@ public static class AssetLoader
         SpellButtonMeeting = ab.LoadAsset<Sprite>("SpellButtonMeeting.png").DontUnload();
         CamouflageButton = ab.LoadAsset<Sprite>("CamouflageButton.png").DontUnload();
         SwapperCheck = ab.LoadAsset<Sprite>("SwapperCheck.png").DontUnload();
+        GarlicButton = ab.LoadAsset<Sprite>("GarlicButton.png").DontUnload();
+        VampireButton = ab.LoadAsset<Sprite>("VampireButton.png").DontUnload();
     }
     #endregion
 

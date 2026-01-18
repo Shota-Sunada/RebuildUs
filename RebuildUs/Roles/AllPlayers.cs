@@ -1,4 +1,5 @@
 using RebuildUs.Roles.Crewmate;
+using RebuildUs.Roles.Modifier;
 
 namespace RebuildUs.Roles;
 
@@ -11,27 +12,6 @@ public static class AllPlayers
         {
             target.ClearAllTasks();
         }
-
-        // // Cleaner Button Sync
-        // if (Cleaner.cleaner != null && CachedPlayer.LocalPlayer.PlayerControl == Cleaner.cleaner && __instance == Cleaner.cleaner && HudManagerStartPatch.cleanerCleanButton != null)
-        //     HudManagerStartPatch.cleanerCleanButton.Timer = Cleaner.cleaner.killTimer;
-
-        // // Witch Button Sync
-        // if (Witch.triggerBothCooldowns && Witch.witch != null && CachedPlayer.LocalPlayer.PlayerControl == Witch.witch && __instance == Witch.witch && HudManagerStartPatch.witchSpellButton != null)
-        //     HudManagerStartPatch.witchSpellButton.Timer = HudManagerStartPatch.witchSpellButton.MaxTimer;
-
-        // // Warlock Button Sync
-        // if (Warlock.warlock != null && CachedPlayer.LocalPlayer.PlayerControl == Warlock.warlock && __instance == Warlock.warlock && HudManagerStartPatch.warlockCurseButton != null)
-        // {
-        //     if (Warlock.warlock.killTimer > HudManagerStartPatch.warlockCurseButton.Timer)
-        //     {
-        //         HudManagerStartPatch.warlockCurseButton.Timer = Warlock.warlock.killTimer;
-        //     }
-        // }
-
-        // // Assassin Button Sync
-        // if (Assassin.assassin != null && CachedPlayer.LocalPlayer.PlayerControl == Assassin.assassin && __instance == Assassin.assassin && HudManagerStartPatch.assassinButton != null)
-        //     HudManagerStartPatch.assassinButton.Timer = HudManagerStartPatch.assassinButton.MaxTimer;
 
         // Seer show flash and add dead player position
         if (Seer.Exists)
@@ -59,16 +39,16 @@ public static class AllPlayers
         //     CachedPlayer.LocalPlayer.PlayerControl.SetKillTimer(PlayerControl.GameOptions.KillCooldown * multiplier);
         // }
 
-        // // Show flash on bait kill to the killer if enabled
-        // if (Bait.bait != null && target == Bait.bait && Bait.showKillFlash && __instance != Bait.bait && __instance == CachedPlayer.LocalPlayer.PlayerControl)
-        // {
-        //     Helpers.showFlash(new Color(42f / 255f, 187f / 255f, 245f / 255f));
-        // }
+        // Show flash on bait kill to the killer if enabled
+        if (target.IsRole(RoleType.Bait) && Bait.showKillFlash && !__instance.IsRole(RoleType.Bait) && __instance == CachedPlayer.LocalPlayer.PlayerControl)
+        {
+            Helpers.showFlash(new Color(42f / 255f, 187f / 255f, 245f / 255f));
+        }
 
         // // impostor promote to last impostor
-        // if (target.IsTeamImpostor() && AmongUsClient.Instance.AmHost)
-        // {
-        //     LastImpostor.promoteToLastImpostor();
-        // }
+        if (target.IsTeamImpostor() && AmongUsClient.Instance.AmHost)
+        {
+            LastImpostor.promoteToLastImpostor();
+        }
     }
 }

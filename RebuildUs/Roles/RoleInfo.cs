@@ -1,3 +1,5 @@
+using RebuildUs.Roles.Modifier;
+
 namespace RebuildUs.Roles;
 
 public partial class RoleInfo(string nameKey, Color color, CustomOption baseOption, RoleType roleType)
@@ -12,7 +14,7 @@ public partial class RoleInfo(string nameKey, Color color, CustomOption baseOpti
     // public virtual string ShortDescription { get { return Tr.Get(("ShortDesc", NameKey)); } }
     public virtual string FullDescription { get { return "FullDesc" + NameKey; } }
     // public virtual string FullDescription { get { return Tr.Get(("FullDesc", NameKey)); } }
-    // public virtual string RoleOptions { get { return CustomOption.}}
+    public virtual string RoleOptions { get { return CustomOption.optionsToString(BaseOption); } }
     public bool Enabled { get { return Helpers.RolesEnabled && (BaseOption == null /*|| BaseOption.Enabled*/); } }
 
     public string NameKey = nameKey;
@@ -58,54 +60,77 @@ public partial class RoleInfo(string nameKey, Color color, CustomOption baseOpti
 
         var roleInfo = GetRoleInfoForPlayer(p, showModifier, excludeRoles);
         var roleName = string.Join(joinSeparator, [.. roleInfo.Select(x => useColors ? Helpers.Cs(x.Color, x.Name) : x.Name)]);
-        // if (Lawyer.target != null && p?.PlayerId == Lawyer.target.PlayerId && CachedPlayer.LocalPlayer.PlayerControl != Lawyer.target) roleName += useColors ? Helpers.cs(Pursuer.color, " §") : " §";
 
-        // if (p.HasModifier(EModifierType.Madmate) || p.HasModifier(EModifierType.CreatedMadmate))
-        // {
-        //     // Madmate only
-        //     if (roleInfo.Contains(crewmate))
-        //     {
-        //         roleName = useColors ? Helpers.cs(Madmate.color, Madmate.fullName) : Madmate.fullName;
-        //     }
-        //     else
-        //     {
-        //         string prefix = useColors ? Helpers.cs(Madmate.color, Madmate.prefix) : Madmate.prefix;
-        //         roleName = String.Join(joinSeparator, roleInfo.Select(x => useColors ? Helpers.cs(Madmate.color, x.name) : x.name).ToArray());
-        //         roleName = prefix + roleName;
-        //     }
-        // }
+        if (p.HasModifier(ModifierType.Madmate) || p.HasModifier(ModifierType.CreatedMadmate))
+        {
+            // Madmate only
+            if (roleInfo.Contains(Crewmate))
+            {
+                roleName = useColors ? Helpers.Cs(Madmate.ModifierColor, Madmate.fullName) : Madmate.fullName;
+            }
+            else
+            {
+                string prefix = useColors ? Helpers.Cs(Madmate.ModifierColor, Madmate.prefix) : Madmate.prefix;
+                roleName = string.Join(joinSeparator, [.. roleInfo.Select(x => useColors ? Helpers.Cs(Madmate.ModifierColor, x.Name) : x.Name)]);
+                roleName = prefix + roleName;
+            }
+        }
 
-        // if (p.hasModifier(ModifierType.LastImpostor))
-        // {
-        //     if (roleInfo.Contains(impostor))
-        //     {
-        //         roleName = useColors ? Helpers.cs(LastImpostor.color, LastImpostor.fullName) : LastImpostor.fullName;
-        //     }
-        //     else
-        //     {
-        //         string postfix = useColors ? Helpers.cs(LastImpostor.color, LastImpostor.postfix) : LastImpostor.postfix;
-        //         roleName = String.Join(joinSeparator, roleInfo.Select(x => useColors ? Helpers.cs(x.color, x.name) : x.name).ToArray());
-        //         roleName += postfix;
-        //     }
-        // }
+        if (p.HasModifier(ModifierType.LastImpostor))
+        {
+            if (roleInfo.Contains(Impostor))
+            {
+                roleName = useColors ? Helpers.Cs(LastImpostor.ModifierColor, LastImpostor.fullName) : LastImpostor.fullName;
+            }
+            else
+            {
+                string postfix = useColors ? Helpers.Cs(LastImpostor.ModifierColor, LastImpostor.postfix) : LastImpostor.postfix;
+                roleName = string.Join(joinSeparator, [.. roleInfo.Select(x => useColors ? Helpers.Cs(x.Color, x.Name) : x.Name)]);
+                roleName += postfix;
+            }
+        }
 
-        // if (p.hasModifier(ModifierType.Munou))
-        // {
-        //     if (CachedPlayer.LocalPlayer.PlayerControl.Data.IsDead || Munou.endGameFlag)
-        //     {
-        //         string postfix = useColors ? Helpers.cs(Munou.color, Munou.postfix) : Munou.postfix;
-        //         // roleName = String.Join(joinSeparator, roleInfo.Select(x => useColors? Helpers.cs(x.color, x.name)  : x.name).ToArray());
-        //         roleName += postfix;
-        //     }
-        // }
+        if (p.HasModifier(ModifierType.Munou))
+        {
+            if (CachedPlayer.LocalPlayer.PlayerControl.Data.IsDead || Munou.endGameFlag)
+            {
+                string postfix = useColors ? Helpers.cs(Munou.color, Munou.postfix) : Munou.postfix;
+                // roleName = String.Join(joinSeparator, roleInfo.Select(x => useColors? Helpers.cs(x.color, x.name)  : x.name).ToArray());
+                roleName += postfix;
+            }
+        }
 
-        // if (p.hasModifier(ModifierType.AntiTeleport))
-        // {
-        //     string postfix = useColors ? Helpers.cs(AntiTeleport.color, AntiTeleport.postfix) : AntiTeleport.postfix;
-        //     // roleName = String.Join(joinSeparator, roleInfo.Select(x => useColors? Helpers.cs(x.color, x.name)  : x.name).ToArray());
-        //     roleName += postfix;
-        // }
+        if (p.HasModifier(ModifierType.AntiTeleport))
+        {
+            string postfix = useColors ? Helpers.cs(AntiTeleport.color, AntiTeleport.postfix) : AntiTeleport.postfix;
+            // roleName = String.Join(joinSeparator, roleInfo.Select(x => useColors? Helpers.cs(x.color, x.name)  : x.name).ToArray());
+            roleName += postfix;
+        }
 
         return roleName;
+    }
+
+    private static readonly Dictionary<RoleType, RoleInfo> RoleDict = [];
+
+    public static RoleInfo Get(RoleType type) => RoleDict.GetValueOrDefault(type);
+
+    public static RoleInfo Jackal => Get(RoleType.Jackal);
+    public static RoleInfo Crewmate => Get(RoleType.Crewmate);
+    public static RoleInfo Impostor => Get(RoleType.Impostor);
+
+    public static void Load()
+    {
+        RoleDict.Clear();
+        AllRoleInfos.Clear();
+
+        foreach (var reg in RoleData.Roles)
+        {
+            var info = new RoleInfo(Enum.GetName(reg.roleType), reg.getColor(), reg.getOption(), reg.roleType);
+            RoleDict[reg.roleType] = info;
+            AllRoleInfos.Add(info);
+        }
+
+        RoleDict[RoleType.Crewmate] = new(Enum.GetName(RoleType.Crewmate), Palette.CrewmateBlue, null, RoleType.Crewmate);
+        RoleDict[RoleType.Impostor] = new(Enum.GetName(RoleType.Impostor), Palette.ImpostorRed, null, RoleType.Impostor);
     }
 }

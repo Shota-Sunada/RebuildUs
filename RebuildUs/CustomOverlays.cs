@@ -142,7 +142,7 @@ public class CustomOverlays
             List<string> entries =
             [
                 // First add the presets and the role counts
-                CustomOption.OptionToString(CustomOptionHolder.PresetSelection),
+                CustomOption.optionToString(CustomOptionHolder.PresetSelection),
             ];
 
             var optionName = Helpers.Cs(new Color(204f / 255f, 204f / 255f, 0, 1f), Tr.Get("crewmateRoles"));
@@ -191,7 +191,7 @@ public class CustomOverlays
                     }
 
                     entry = new StringBuilder();
-                    entry.AppendLine(GameOptionsDataPatch.optionToString(option));
+                    entry.AppendLine(CustomOption.optionToString(option));
 
                     addChildren(option, ref entry);
 
@@ -268,7 +268,7 @@ public class CustomOverlays
 
         foreach (var child in option.Children)
         {
-            entry.AppendLine((indent ? "    " : "") + GameOptionsDataPatch.optionToString(child));
+            entry.AppendLine((indent ? "    " : "") + CustomOption.optionToString(child));
             addChildren(child, ref entry, indent);
         }
     }
@@ -326,7 +326,7 @@ public class CustomOverlays
         RebuildUs.OptionsPage = 0;
         var option = GameOptionsManager.Instance.CurrentGameOptions;
         var gameOptions = option.ToString().Split("\n", StringSplitOptions.RemoveEmptyEntries).ToList().GetRange(2, 17);
-        infoOverlayRules.text = string.Join("\n", gameOptions) + "\n\n" + GameOptionsDataPatch.optionsToString(CustomOptionHolder.specialOptions);
+        // infoOverlayRules.text = string.Join("\n", gameOptions) + "\n\n" + CustomOption.optionsToString(CustomOptionHolder.specialOptions);
         infoOverlayRules.enabled = true;
 
         string rolesText = "";

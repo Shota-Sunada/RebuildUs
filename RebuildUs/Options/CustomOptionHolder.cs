@@ -191,6 +191,11 @@ public static partial class CustomOptionHolder
     public static CustomOption swapperCanCallEmergency;
     public static CustomOption swapperCanOnlySwapOthers;
     public static CustomOption swapperNumSwaps;
+
+    public static CustomRoleOption baitSpawnRate;
+    public static CustomOption baitHighlightAllVents;
+    public static CustomOption baitReportDelay;
+    public static CustomOption baitShowKillFlash;
     #endregion
 
     #region ROLES IMPOSTOR
@@ -267,6 +272,11 @@ public static partial class CustomOptionHolder
     public static CustomOption witchSpellCastingDuration;
     public static CustomOption witchTriggerBothCooldowns;
     public static CustomOption witchVoteSavesTargets;
+
+    public static CustomRoleOption vampireSpawnRate;
+    public static CustomOption vampireKillDelay;
+    public static CustomOption vampireCooldown;
+    public static CustomOption vampireCanKillNearGarlics;
     #endregion
 
     #region ROLES NEUTRAL
@@ -324,6 +334,21 @@ public static partial class CustomOptionHolder
     public static CustomOption madmateAbility;
     public static CustomTasksOption madmateTasks;
     public static CustomOption madmateExilePlayer;
+
+    public static CustomOption lastImpostorEnable;
+    public static CustomOption lastImpostorNumKills;
+    public static CustomOption lastImpostorFunctions;
+    public static CustomOption lastImpostorResults;
+    public static CustomOption lastImpostorNumShots;
+
+    public static CustomRoleOption loversSpawnRate;
+    public static CustomOption loversNumCouples;
+    public static CustomOption loversImpLoverRate;
+    public static CustomOption loversBothDie;
+    public static CustomOption loversCanHaveAnotherRole;
+    public static CustomOption loversSeparateTeam;
+    public static CustomOption loversTasksCount;
+    public static CustomOption loversEnableChat;
     #endregion
 
     internal static Dictionary<byte, byte[]> BlockedRolePairings = [];
@@ -509,6 +534,11 @@ public static partial class CustomOptionHolder
         swapperNumSwaps = CustomOption.Normal(1132, CustomOptionType.Neutral, "swapperNumSwaps", 2f, 1f, 15f, 1f, swapperSpawnRate);
         swapperCanCallEmergency = CustomOption.Normal(1133, CustomOptionType.Neutral, "swapperCanCallEmergency", false, swapperSpawnRate);
         swapperCanOnlySwapOthers = CustomOption.Normal(1134, CustomOptionType.Neutral, "swapperCanOnlySwapOthers", false, swapperSpawnRate);
+
+        baitSpawnRate = new(1140, CustomOptionType.Crewmate, RoleType.Bait, Bait.RoleColor, 1);
+        baitHighlightAllVents = CustomOption.Normal(1141, CustomOptionType.Crewmate, "baitHighlightAllVents", false, baitSpawnRate);
+        baitReportDelay = CustomOption.Normal(1142, CustomOptionType.Crewmate, "baitReportDelay", 0f, 0f, 10f, 1f, baitSpawnRate, format: "unitSeconds");
+        baitShowKillFlash = CustomOption.Normal(1143, CustomOptionType.Crewmate, "baitShowKillFlash", true, baitSpawnRate);
         #endregion
 
         #region ROLES IMPOSTOR
@@ -585,6 +615,11 @@ public static partial class CustomOptionHolder
         witchSpellCastingDuration = CustomOption.Normal(2114, CustomOptionType.Impostor, "witchSpellDuration", 1f, 0f, 10f, 1f, witchSpawnRate, format: "unitSeconds");
         witchTriggerBothCooldowns = CustomOption.Normal(2115, CustomOptionType.Impostor, "witchTriggerBoth", true, witchSpawnRate);
         witchVoteSavesTargets = CustomOption.Normal(2116, CustomOptionType.Impostor, "witchSaveTargets", true, witchSpawnRate);
+
+        vampireSpawnRate = new(2120, CustomOptionType.Impostor, RoleType.Vampire, Vampire.RoleColor, 1);
+        vampireKillDelay = CustomOption.Normal(2121, CustomOptionType.Impostor, "vampireKillDelay", 10f, 1f, 20f, 1f, vampireSpawnRate, format: "unitSeconds");
+        vampireCooldown = CustomOption.Normal(2122, CustomOptionType.Impostor, "vampireCooldown", 30f, 2.5f, 60f, 2.5f, vampireSpawnRate, format: "unitSeconds");
+        vampireCanKillNearGarlics = CustomOption.Normal(2123, CustomOptionType.Impostor, "vampireCanKillNearGarlics", true, vampireSpawnRate);
         #endregion
 
         #region ROLES NEUTRAL
@@ -642,6 +677,21 @@ public static partial class CustomOptionHolder
         madmateCanSabotage = CustomOption.Normal(4010, CustomOptionType.Modifier, "madmateCanSabotage", false, madmateSpawnRate);
         madmateCanFixComm = CustomOption.Normal(4011, CustomOptionType.Modifier, "madmateCanFixComm", true, madmateSpawnRate);
         madmateExilePlayer = CustomOption.Normal(4012, CustomOptionType.Modifier, "madmateExileCrewmate", false, madmateSpawnRate);
+
+        lastImpostorEnable = CustomOption.Header(4010, CustomOptionType.Modifier, "lastImpostorEnable", true, nameof(LastImpostor));
+        lastImpostorFunctions = CustomOption.Normal(4011, CustomOptionType.Modifier, "lastImpostorFunctions", ["lastImpostorDivine", "lastImpostorGuesser"], lastImpostorEnable);
+        lastImpostorNumKills = CustomOption.Normal(4012, CustomOptionType.Modifier, "lastImpostorNumKills", 3f, 0f, 10f, 1f, lastImpostorEnable);
+        lastImpostorResults = CustomOption.Normal(4013, CustomOptionType.Modifier, "fortuneTellerResults ", ["fortuneTellerResultCrew", "fortuneTellerResultTeam", "fortuneTellerResultRole"], lastImpostorEnable);
+        lastImpostorNumShots = CustomOption.Normal(4014, CustomOptionType.Modifier, "lastImpostorNumShots", 1f, 1f, 15f, 1f, lastImpostorEnable);
+
+        loversSpawnRate = new(4020, CustomOptionType.Modifier, RoleType.Lovers, Lovers.color, 1);
+        loversImpLoverRate = CustomOption.Normal(4021, CustomOptionType.Modifier, "loversImpLoverRate", RATES, loversSpawnRate);
+        loversNumCouples = CustomOption.Normal(4022, CustomOptionType.Modifier, "loversNumCouples", 1f, 1f, 7f, 1f, loversSpawnRate, format: "unitCouples");
+        loversBothDie = CustomOption.Normal(4023, CustomOptionType.Modifier, "loversBothDie", true, loversSpawnRate);
+        loversCanHaveAnotherRole = CustomOption.Normal(4024, CustomOptionType.Modifier, "loversCanHaveAnotherRole", true, loversSpawnRate);
+        loversSeparateTeam = CustomOption.Normal(4025, CustomOptionType.Modifier, "loversSeparateTeam", true, loversSpawnRate);
+        loversTasksCount = CustomOption.Normal(4026, CustomOptionType.Modifier, "loversTasksCount", false, loversSpawnRate);
+        loversEnableChat = CustomOption.Normal(4027, CustomOptionType.Modifier, "loversEnableChat", true, loversSpawnRate);
         #endregion
 
         BlockedRolePairings.Add((byte)RoleType.Vulture, [(byte)RoleType.Cleaner]);

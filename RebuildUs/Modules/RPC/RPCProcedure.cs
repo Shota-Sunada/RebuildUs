@@ -28,11 +28,8 @@ public static partial class RPCProcedure
         CustomOverlays.resetOverlays();
         SpecimenVital.clearAndReload();
         AdditionalVents.clearAndReload();
-        // Trap.clearAllTraps();
-        // AssassinTrace.clearTraces();
         SpawnIn.reset();
         Map.resetRealTasks();
-        // CustomNormalPlayerTask.reset();
 
         KillAnimationPatch.HideNextAnimation = false;
 
@@ -594,7 +591,7 @@ public static partial class RPCProcedure
             return;
         }
 
-        if (Vampire.vampire == null) return;
+        if (!Vampire.Exists) return;
         foreach (PlayerControl player in CachedPlayer.AllPlayers)
         {
             if (player.PlayerId == targetId && !player.Data.IsDead)
@@ -807,5 +804,19 @@ public static partial class RPCProcedure
     {
         UncheckedExilePlayer(playerId);
         GameHistory.FinalStatuses[playerId] = EFinalStatus.Spelled;
+    }
+
+    public static void placeGarlic(byte[] buff)
+    {
+        Vector3 position = Vector3.zero;
+        position.x = BitConverter.ToSingle(buff, 0 * sizeof(float));
+        position.y = BitConverter.ToSingle(buff, 1 * sizeof(float));
+        _ = new Garlic(position);
+    }
+
+    public static void impostorPromotesToLastImpostor(byte targetId)
+    {
+        var player = Helpers.PlayerById(targetId);
+        player.AddModifier(ModifierType.LastImpostor);
     }
 }

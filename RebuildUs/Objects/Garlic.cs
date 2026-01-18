@@ -1,6 +1,3 @@
-using System.Collections.Generic;
-using UnityEngine;
-
 namespace RebuildUs.Objects;
 
 public class Garlic
@@ -9,22 +6,6 @@ public class Garlic
 
     public GameObject GarlicObject;
     private readonly GameObject Background;
-
-    private static Sprite GarlicSprite;
-    public static Sprite GetGarlicSprite()
-    {
-        if (GarlicSprite) return GarlicSprite;
-        GarlicSprite = AssetLoader.Garlic;
-        return GarlicSprite;
-    }
-
-    private static Sprite BackgroundSprite;
-    public static Sprite GetBackgroundSprite()
-    {
-        if (BackgroundSprite) return BackgroundSprite;
-        BackgroundSprite = AssetLoader.GarlicBackground;
-        return BackgroundSprite;
-    }
 
     public Garlic(Vector2 p)
     {
@@ -37,9 +18,9 @@ public class Garlic
         Background.transform.localPosition = new Vector3(0, 0, -1f); // before player
 
         var garlicRenderer = GarlicObject.AddComponent<SpriteRenderer>();
-        garlicRenderer.sprite = GetGarlicSprite();
+        garlicRenderer.sprite = AssetLoader.Garlic;
         var backgroundRenderer = Background.AddComponent<SpriteRenderer>();
-        backgroundRenderer.sprite = GetBackgroundSprite();
+        backgroundRenderer.sprite = AssetLoader.GarlicBackground;
 
         GarlicObject.SetActive(true);
         Garlics.Add(this);

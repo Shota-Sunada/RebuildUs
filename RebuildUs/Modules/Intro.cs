@@ -5,6 +5,7 @@ using RebuildUs.Players;
 using RebuildUs.Roles;
 using RebuildUs.Roles.Crewmate;
 using RebuildUs.Roles.Impostor;
+using RebuildUs.Roles.Modifier;
 using RebuildUs.Utilities;
 using System.Collections;
 
@@ -116,11 +117,11 @@ public static class Intro
             objects.Find(x => x.name == "DivertRecieve" && x.Room == SystemTypes.MainHall).checkWalls = true;
         }
 
-        // // 最初から一人の場合はLast Impostorになる
-        // if (AmongUsClient.Instance.AmHost)
-        // {
-        //     LastImpostor.promoteToLastImpostor();
-        // }
+        // 最初から一人の場合はLast Impostorになる
+        if (AmongUsClient.Instance.AmHost)
+        {
+            LastImpostor.promoteToLastImpostor();
+        }
 
         // タスクパネルの表示優先度を上げる
         var taskPanel = FastDestroyableSingleton<HudManager>.Instance.TaskStuff;
