@@ -44,10 +44,11 @@ public class Morphing : RoleBase<Morphing>
                 {
                     if (SampledTarget != null)
                     {
-                        MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.MorphingMorph, Hazel.SendOption.Reliable, -1);
-                        writer.Write(SampledTarget.PlayerId);
-                        writer.Write(Player.PlayerId);
-                        AmongUsClient.Instance.FinishRpcImmediately(writer);
+                        {
+                            using var sender = new RPCSender(CachedPlayer.LocalPlayer.PlayerControl.NetId, CustomRPC.MorphingMorph);
+                            sender.Write(SampledTarget.PlayerId);
+                            sender.Write(Player.PlayerId);
+                        }
                         RPCProcedure.MorphingMorph(SampledTarget.PlayerId, Player.PlayerId);
                         SampledTarget = null;
                         MorphingButton.EffectDuration = Duration;

@@ -54,9 +54,10 @@ public class Shifter : RoleBase<Shifter>
         ShifterShiftButton = new CustomButton(
                 () =>
                 {
-                    MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.SetFutureShifted, Hazel.SendOption.Reliable, -1);
-                    writer.Write(Shifter.CurrentTarget.PlayerId);
-                    AmongUsClient.Instance.FinishRpcImmediately(writer);
+                    {
+                        using var sender = new RPCSender(CachedPlayer.LocalPlayer.PlayerControl.NetId, CustomRPC.SetFutureShifted);
+                        sender.Write(Shifter.CurrentTarget.PlayerId);
+                    }
                     RPCProcedure.SetFutureShifted(Shifter.CurrentTarget.PlayerId);
                 },
                 () => { return CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Shifter) && CachedPlayer.LocalPlayer.PlayerControl.IsAlive(); },

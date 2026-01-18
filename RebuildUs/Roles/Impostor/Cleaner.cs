@@ -48,9 +48,10 @@ public class Cleaner : RoleBase<Cleaner>
                                 {
                                     var playerInfo = GameData.Instance.GetPlayerById(component.ParentId);
 
-                                    MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.CleanBody, Hazel.SendOption.Reliable, -1);
-                                    writer.Write(playerInfo.PlayerId);
-                                    AmongUsClient.Instance.FinishRpcImmediately(writer);
+                                    {
+                                        using var sender = new RPCSender(CachedPlayer.LocalPlayer.PlayerControl.NetId, CustomRPC.CleanBody);
+                                        sender.Write(playerInfo.PlayerId);
+                                    }
                                     RPCProcedure.CleanBody(playerInfo.PlayerId);
 
                                     Player.killTimer = CleanerCleanButton.Timer = CleanerCleanButton.MaxTimer;

@@ -344,10 +344,12 @@ public static class Helpers
 
     public static void MurderPlayer(PlayerControl killer, PlayerControl target, bool showAnimation)
     {
-        using var sender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.UncheckedMurderPlayer);
-        sender.Write(killer.PlayerId);
-        sender.Write(target.PlayerId);
-        sender.Write(showAnimation ? byte.MaxValue : 0);
+        {
+            using var sender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.UncheckedMurderPlayer);
+            sender.Write(killer.PlayerId);
+            sender.Write(target.PlayerId);
+            sender.Write(showAnimation ? byte.MaxValue : 0);
+        }
         RPCProcedure.UncheckedMurderPlayer(killer.PlayerId, target.PlayerId, showAnimation ? byte.MaxValue : (byte)0);
     }
 
@@ -589,13 +591,15 @@ public static class Helpers
 
     public static void ShareGameVersion(byte hostId)
     {
-        using var sender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.VersionHandshake, hostId);
-        sender.Write((byte)RebuildUs.Instance.Version.Major);
-        sender.Write((byte)RebuildUs.Instance.Version.Minor);
-        sender.Write((byte)RebuildUs.Instance.Version.Build);
-        sender.WritePacked(AmongUsClient.Instance.ClientId);
-        sender.Write((byte)(RebuildUs.Instance.Version.Revision < 0 ? 0xFF : RebuildUs.Instance.Version.Revision));
-        sender.Write(Assembly.GetExecutingAssembly().ManifestModule.ModuleVersionId.ToByteArray());
+        {
+            using var sender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.VersionHandshake, hostId);
+            sender.Write((byte)RebuildUs.Instance.Version.Major);
+            sender.Write((byte)RebuildUs.Instance.Version.Minor);
+            sender.Write((byte)RebuildUs.Instance.Version.Build);
+            sender.WritePacked(AmongUsClient.Instance.ClientId);
+            sender.Write((byte)(RebuildUs.Instance.Version.Revision < 0 ? 0xFF : RebuildUs.Instance.Version.Revision));
+            sender.Write(Assembly.GetExecutingAssembly().ManifestModule.ModuleVersionId.ToByteArray());
+        }
         RPCProcedure.VersionHandshake(RebuildUs.Instance.Version.Major, RebuildUs.Instance.Version.Minor, RebuildUs.Instance.Version.Build, RebuildUs.Instance.Version.Revision, AmongUsClient.Instance.ClientId);
     }
 

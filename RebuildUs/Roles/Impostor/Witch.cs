@@ -114,9 +114,10 @@ public class Witch : RoleBase<Witch>
                     MurderAttemptResult attempt = Helpers.CheckMurderAttempt(Player, SpellCastingTarget);
                     if (attempt == MurderAttemptResult.PerformKill)
                     {
-                        MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.SetFutureSpelled, SendOption.Reliable, -1);
-                        writer.Write(CurrentTarget.PlayerId);
-                        AmongUsClient.Instance.FinishRpcImmediately(writer);
+                        {
+                            using var sender = new RPCSender(CachedPlayer.LocalPlayer.PlayerControl.NetId, CustomRPC.SetFutureSpelled);
+                            sender.Write(CurrentTarget.PlayerId);
+                        }
                         RPCProcedure.SetFutureSpelled(CurrentTarget.PlayerId);
                     }
                     if (attempt is MurderAttemptResult.BlankKill or MurderAttemptResult.PerformKill)

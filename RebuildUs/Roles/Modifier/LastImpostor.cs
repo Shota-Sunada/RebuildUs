@@ -228,9 +228,10 @@ public class LastImpostor : ModifierBase<LastImpostor>
         }
         if (impList.Count == 1)
         {
-            MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.ImpostorPromotesToLastImpostor, Hazel.SendOption.Reliable, -1);
-            writer.Write(impList[0].PlayerId);
-            AmongUsClient.Instance.FinishRpcImmediately(writer);
+            {
+                using var sender = new RPCSender(CachedPlayer.LocalPlayer.PlayerControl.NetId, CustomRPC.ImpostorPromotesToLastImpostor);
+                sender.Write(impList[0].PlayerId);
+            }
             RPCProcedure.ImpostorPromotesToLastImpostor(impList[0].PlayerId);
         }
     }
@@ -290,10 +291,11 @@ public class LastImpostor : ModifierBase<LastImpostor>
         if (Constants.ShouldPlaySfx()) SoundManager.Instance.PlaySound(FastDestroyableSingleton<HudManager>.Instance.TaskCompleteSound, false, 0.8f);
 
         // 占いを実行したことで発火される処理を他クライアントに通知
-        MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.FortuneTellerUsedDivine, Hazel.SendOption.Reliable, -1);
-        writer.Write(CachedPlayer.LocalPlayer.PlayerControl.PlayerId);
-        writer.Write(p.PlayerId);
-        AmongUsClient.Instance.FinishRpcImmediately(writer);
+        {
+            using var sender = new RPCSender(CachedPlayer.LocalPlayer.PlayerControl.NetId, CustomRPC.FortuneTellerUsedDivine);
+            sender.Write(CachedPlayer.LocalPlayer.PlayerControl.PlayerId);
+            sender.Write(p.PlayerId);
+        }
         RPCProcedure.FortuneTellerUsedDivine(CachedPlayer.LocalPlayer.PlayerControl.PlayerId, p.PlayerId);
     }
 

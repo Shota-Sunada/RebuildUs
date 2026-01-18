@@ -88,11 +88,12 @@ public class Sheriff : RoleBase<Sheriff>
                     {
                         misfire = true;
                     }
-                    MessageWriter killWriter = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.SheriffKill, Hazel.SendOption.Reliable, -1);
-                    killWriter.Write(CachedPlayer.LocalPlayer.PlayerControl.Data.PlayerId);
-                    killWriter.Write(targetId);
-                    killWriter.Write(misfire);
-                    AmongUsClient.Instance.FinishRpcImmediately(killWriter);
+                    {
+                        using var killSender = new RPCSender(CachedPlayer.LocalPlayer.PlayerControl.NetId, CustomRPC.SheriffKill);
+                        killSender.Write(CachedPlayer.LocalPlayer.PlayerControl.Data.PlayerId);
+                        killSender.Write(targetId);
+                        killSender.Write(misfire);
+                    }
                     RPCProcedure.sheriffKill(CachedPlayer.LocalPlayer.PlayerControl.Data.PlayerId, targetId, misfire);
                 }
 

@@ -45,10 +45,11 @@ public class Bait : RoleBase<Bait>
                     reporter = candidates.Count > 0 ? candidates[i].PlayerId : deadPlayer.KillerIfExisting.PlayerId;
                 }
 
-                MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.UncheckedCmdReportDeadBody, Hazel.SendOption.Reliable, -1);
-                writer.Write(reporter);
-                writer.Write(Player.PlayerId);
-                AmongUsClient.Instance.FinishRpcImmediately(writer);
+                {
+                    using var sender = new RPCSender(CachedPlayer.LocalPlayer.PlayerControl.NetId, CustomRPC.UncheckedCmdReportDeadBody);
+                    sender.Write(reporter);
+                    sender.Write(Player.PlayerId);
+                }
                 RPCProcedure.UncheckedCmdReportDeadBody(reporter, Player.PlayerId);
                 Reported = true;
             }

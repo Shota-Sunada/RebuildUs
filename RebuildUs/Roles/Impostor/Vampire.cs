@@ -43,11 +43,12 @@ public class Vampire : RoleBase<Vampire>
                     {
                         if (Vampire.TargetNearGarlic)
                         {
-                            MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.UncheckedMurderPlayer, Hazel.SendOption.Reliable, -1);
-                            writer.Write(Player.PlayerId);
-                            writer.Write(Vampire.CurrentTarget.PlayerId);
-                            writer.Write(Byte.MaxValue);
-                            AmongUsClient.Instance.FinishRpcImmediately(writer);
+                            {
+                                using var sender = new RPCSender(CachedPlayer.LocalPlayer.PlayerControl.NetId, CustomRPC.UncheckedMurderPlayer);
+                                sender.Write(Player.PlayerId);
+                                sender.Write(Vampire.CurrentTarget.PlayerId);
+                                sender.Write(Byte.MaxValue);
+                            }
                             RPCProcedure.UncheckedMurderPlayer(Player.PlayerId, Vampire.CurrentTarget.PlayerId, Byte.MaxValue);
 
                             VampireKillButton.HasEffect = false; // Block effect on this click
@@ -57,10 +58,11 @@ public class Vampire : RoleBase<Vampire>
                         {
                             Vampire.Bitten = Vampire.CurrentTarget;
                             // Notify players about bitten
-                            MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.VampireSetBitten, Hazel.SendOption.Reliable, -1);
-                            writer.Write(Vampire.Bitten.PlayerId);
-                            writer.Write((byte)0);
-                            AmongUsClient.Instance.FinishRpcImmediately(writer);
+                            {
+                                using var sender = new RPCSender(CachedPlayer.LocalPlayer.PlayerControl.NetId, CustomRPC.VampireSetBitten);
+                                sender.Write(Vampire.Bitten.PlayerId);
+                                sender.Write((byte)0);
+                            }
                             RPCProcedure.VampireSetBitten(Vampire.Bitten.PlayerId, 0);
 
                             FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(Vampire.Delay, new Action<float>((p) =>
@@ -69,10 +71,11 @@ public class Vampire : RoleBase<Vampire>
                                 {
                                     // Perform kill if possible and reset bitten (regardless whether the kill was successful or not)
                                     Helpers.CheckMurderAttemptAndKill(Player, Vampire.Bitten, showAnimation: false);
-                                    MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.VampireSetBitten, Hazel.SendOption.Reliable, -1);
-                                    writer.Write(byte.MaxValue);
-                                    writer.Write(byte.MaxValue);
-                                    AmongUsClient.Instance.FinishRpcImmediately(writer);
+                                    {
+                                        using var sender = new RPCSender(CachedPlayer.LocalPlayer.PlayerControl.NetId, CustomRPC.VampireSetBitten);
+                                        sender.Write(byte.MaxValue);
+                                        sender.Write(byte.MaxValue);
+                                    }
                                     RPCProcedure.VampireSetBitten(byte.MaxValue, byte.MaxValue);
                                 }
                             })));
@@ -132,9 +135,10 @@ public class Vampire : RoleBase<Vampire>
                 Buffer.BlockCopy(BitConverter.GetBytes(pos.x), 0, buff, 0 * sizeof(float), sizeof(float));
                 Buffer.BlockCopy(BitConverter.GetBytes(pos.y), 0, buff, 1 * sizeof(float), sizeof(float));
 
-                MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.PlaceGarlic, Hazel.SendOption.Reliable);
-                writer.WriteBytesAndSize(buff);
-                writer.EndMessage();
+                {
+                    using var sender = new RPCSender(CachedPlayer.LocalPlayer.PlayerControl.NetId, CustomRPC.PlaceGarlic);
+                    sender.WriteBytesAndSize(buff);
+                }
                 RPCProcedure.PlaceGarlic(buff);
             },
             () => { return !Vampire.LocalPlacedGarlic && CachedPlayer.LocalPlayer.PlayerControl.IsAlive() && Vampire.GarlicsActive && !CachedPlayer.LocalPlayer.PlayerControl.IsGM(); },

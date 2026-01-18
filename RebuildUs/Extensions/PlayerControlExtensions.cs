@@ -9,9 +9,11 @@ public static class PlayerControlHelpers
         if (player == null) return;
 
         var taskTypeIds = Helpers.GenerateTasks(numCommon, numShort, numLong);
-        using var sender = new RPCSender(CachedPlayer.LocalPlayer.PlayerControl.NetId, CustomRPC.UncheckedSetTasks);
-        sender.Write(player.PlayerId);
-        sender.WriteBytesAndSize(taskTypeIds.ToArray());
+        {
+            using var sender = new RPCSender(CachedPlayer.LocalPlayer.PlayerControl.NetId, CustomRPC.UncheckedSetTasks);
+            sender.Write(player.PlayerId);
+            sender.WriteBytesAndSize(taskTypeIds.ToArray());
+        }
         RPCProcedure.UncheckedSetTasks(player.PlayerId, [.. taskTypeIds]);
     }
 

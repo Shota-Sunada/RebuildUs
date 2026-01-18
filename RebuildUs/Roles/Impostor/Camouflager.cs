@@ -48,8 +48,9 @@ public class Camouflager : RoleBase<Camouflager>
         CamouflagerButton = new CustomButton(
                 () =>
                 {
-                    MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.CamouflagerCamouflage, Hazel.SendOption.Reliable, -1);
-                    AmongUsClient.Instance.FinishRpcImmediately(writer);
+                    {
+                        using var sender = new RPCSender(CachedPlayer.LocalPlayer.PlayerControl.NetId, CustomRPC.CamouflagerCamouflage);
+                    }
                     RPCProcedure.CamouflagerCamouflage();
                 },
                 () => { return CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Camouflager) && CachedPlayer.LocalPlayer.PlayerControl.IsAlive(); },
