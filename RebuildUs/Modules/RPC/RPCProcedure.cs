@@ -369,7 +369,7 @@ public static partial class RPCProcedure
         newJackal.WasTeamRed = wasTeamRed;
         newJackal.WasImpostor = wasImpostor;
         newJackal.WasSpy = wasSpy;
-        sidekick.Clear();
+        Sidekick.Clear();
         return;
     }
 
@@ -819,7 +819,7 @@ public static partial class RPCProcedure
         Shifter.FutureShift = null;
         if (!Shifter.IsNeutral)
         {
-            oldShifter.Clear();
+            Shifter.Clear();
         }
 
         // if (player == GM.gm)
