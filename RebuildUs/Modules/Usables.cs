@@ -1,3 +1,4 @@
+using RebuildUs.Roles.Crewmate;
 using RebuildUs.Roles.Impostor;
 using RebuildUs.Roles.Modifier;
 using RebuildUs.Roles.Neutral;
@@ -33,7 +34,7 @@ public static class Usables
 
     public static bool KillButtonDoClick(KillButton __instance)
     {
-        if (__instance.isActiveAndEnabled && __instance.currentTarget && !__instance.isCoolingDown && CachedPlayer.LocalPlayer.PlayerControl.isAlive() && CachedPlayer.LocalPlayer.PlayerControl.CanMove)
+        if (__instance.isActiveAndEnabled && __instance.currentTarget && !__instance.isCoolingDown && CachedPlayer.LocalPlayer.PlayerControl.IsAlive() && CachedPlayer.LocalPlayer.PlayerControl.CanMove)
         {
             bool showAnimation = true;
 
@@ -42,17 +43,23 @@ public static class Usables
             // Handle blank kill
             if (res == MurderAttemptResult.BlankKill)
             {
-                CachedPlayer.LocalPlayer.PlayerControl.killTimer = Helpers.GetOption(FloatOptionNames.KillCooldown);
-                if (CachedPlayer.LocalPlayer.PlayerControl == Cleaner.cleaner)
-                    Cleaner.cleaner.killTimer = HudManagerStartPatch.cleanerCleanButton.Timer = HudManagerStartPatch.cleanerCleanButton.MaxTimer;
-                else if (CachedPlayer.LocalPlayer.PlayerControl == Warlock.warlock)
-                    Warlock.warlock.killTimer = HudManagerStartPatch.warlockCurseButton.Timer = HudManagerStartPatch.warlockCurseButton.MaxTimer;
-                else if (CachedPlayer.LocalPlayer.PlayerControl.hasModifier(ModifierType.Mini) && CachedPlayer.LocalPlayer.PlayerControl.Data.Role.IsImpostor)
-                    CachedPlayer.LocalPlayer.PlayerControl.SetKillTimer(PlayerControl.GameOptions.KillCooldown * (Mini.isGrownUp(CachedPlayer.LocalPlayer.PlayerControl) ? 0.66f : 2f));
-                else if (CachedPlayer.LocalPlayer.PlayerControl == Witch.witch)
-                    Witch.witch.killTimer = HudManagerStartPatch.witchSpellButton.Timer = HudManagerStartPatch.witchSpellButton.MaxTimer;
-                else if (CachedPlayer.LocalPlayer.PlayerControl == Assassin.assassin)
-                    Assassin.assassin.killTimer = HudManagerStartPatch.assassinButton.Timer = HudManagerStartPatch.assassinButton.MaxTimer;
+                CachedPlayer.LocalPlayer.PlayerControl.SetKillTimer(Helpers.GetOption(FloatOptionNames.KillCooldown));
+                if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Cleaner))
+                {
+                    CachedPlayer.LocalPlayer.PlayerControl.killTimer = Cleaner.cleanerCleanButton.Timer = Cleaner.cleanerCleanButton.MaxTimer;
+                }
+                else if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Warlock))
+                {
+                    CachedPlayer.LocalPlayer.PlayerControl.killTimer = Warlock.warlockCurseButton.Timer = Warlock.warlockCurseButton.MaxTimer;
+                }
+                else if (CachedPlayer.LocalPlayer.PlayerControl.HasModifier(ModifierType.Mini) && CachedPlayer.LocalPlayer.PlayerControl.Data.Role.IsImpostor)
+                {
+                    CachedPlayer.LocalPlayer.PlayerControl.SetKillTimer(Helpers.GetOption(FloatOptionNames.KillCooldown) * (Mini.isGrownUp(CachedPlayer.LocalPlayer.PlayerControl) ? 0.66f : 2f));
+                }
+                else if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Witch))
+                {
+                    CachedPlayer.LocalPlayer.PlayerControl.killTimer = Witch.witchSpellButton.Timer = Witch.witchSpellButton.MaxTimer;
+                }
             }
 
             __instance.SetTarget(null);
@@ -194,6 +201,12 @@ public static class Usables
         {
             roleCanCallEmergency = false;
             statusText = Tr.Get("jesterMeetingButton");
+        }
+
+        if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Swapper) && !Swapper.canCallEmergency)
+        {
+            roleCanCallEmergency = false;
+            statusText = Tr.Get("swapperMeetingButton");
         }
 
         if (!roleCanCallEmergency)

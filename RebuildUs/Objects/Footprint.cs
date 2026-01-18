@@ -1,3 +1,5 @@
+using RebuildUs.Roles.Impostor;
+
 namespace RebuildUs.Objects;
 
 public class Footprint
@@ -35,9 +37,12 @@ public class Footprint
             var c = color;
             if (!anonymousFootprints && owner != null)
             {
-                if (owner == Morphling.morphling && Morphling.morphTimer > 0 && Morphling.morphTarget?.Data != null)
+                if (owner.IsRole(RoleType.Morphing))
                 {
-                    c = Palette.ShadowColors[Morphling.morphTarget.Data.DefaultOutfit.ColorId];
+                    if (Morphing.morphTimer > 0 && Morphing.morphTarget?.Data != null)
+                    {
+                        c = Palette.ShadowColors[Morphing.morphTarget.Data.DefaultOutfit.ColorId];
+                    }
                 }
                 else if (Camouflager.camouflageTimer > 0)
                 {

@@ -182,6 +182,24 @@ public static partial class RPCProcedure
             case CustomRPC.SealVent:
                 sealVent(reader.ReadPackedInt32(), reader.ReadByte());
                 break;
+            case CustomRPC.MorphingMorph:
+                morphingMorph(reader.ReadByte(), reader.ReadByte());
+                break;
+            case CustomRPC.CamouflagerCamouflage:
+                camouflagerCamouflage();
+                break;
+            case CustomRPC.SwapperSwap:
+                swapperSwap(reader.ReadByte(), reader.ReadByte());
+                break;
+            case CustomRPC.SwapperAnimate:
+                swapperAnimate();
+                break;
+            case CustomRPC.SetFutureSpelled:
+                setFutureSpelled(reader.ReadByte());
+                break;
+            case CustomRPC.WitchSpellCast:
+                witchSpellCast(reader.ReadByte());
+                break;
             default:
                 break;
         }

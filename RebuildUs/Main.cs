@@ -125,8 +125,8 @@ public class RebuildUs : BasePlugin
         {
             if (p == 1)
             {
-                // Camouflager.resetCamouflage();
-                // Morphling.resetMorph();
+                Camouflager.resetCamouflage();
+                Morphing.resetMorph();
             }
         })));
     }
@@ -171,5 +171,35 @@ public class RebuildUs : BasePlugin
     {
         PlayerRole.AllRoles.Do(x => x.SetButtonCooldowns());
         PlayerModifier.AllModifiers.Do(x => x.SetButtonCooldowns());
+    }
+
+    public static void UpdateRegions()
+    {
+        var serverManager = FastDestroyableSingleton<ServerManager>.Instance;
+        IRegionInfo[] regions = [new DnsRegionInfo(Ip.Value, "Custom", StringNames.NoTranslation, Ip.Value, Port.Value, false).CastFast<IRegionInfo>()];
+#nullable enable
+        IRegionInfo? currentRegion = serverManager.CurrentRegion;
+#nullable disable
+        foreach (IRegionInfo region in regions)
+        {
+            if (region == null)
+            {
+                Logger.LogError("Could not add region");
+            }
+            else
+            {
+                if (currentRegion != null && region.Name.Equals(currentRegion.Name, StringComparison.OrdinalIgnoreCase))
+                {
+                    currentRegion = region;
+                }
+                serverManager.AddOrUpdateRegion(region);
+            }
+        }
+
+        if (currentRegion != null)
+        {
+            Logger.LogDebug("Resetting previous region");
+            serverManager.SetRegion(currentRegion);
+        }
     }
 }

@@ -57,4 +57,10 @@ public enum CustomRPC : byte
     Synchronize,
     PlaceCamera,
     SealVent,
+    MorphingMorph,
+    CamouflagerCamouflage,
+    SwapperSwap,
+    SwapperAnimate,
+    SetFutureSpelled,
+    WitchSpellCast,
 }

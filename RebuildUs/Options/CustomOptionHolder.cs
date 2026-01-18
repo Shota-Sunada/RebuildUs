@@ -185,6 +185,12 @@ public static partial class CustomOptionHolder
     public static CustomOption securityGuardCamMaxCharges;
     public static CustomOption securityGuardCamRechargeTasksNumber;
     public static CustomOption securityGuardNoMove;
+
+    public static CustomRoleOption swapperSpawnRate;
+    public static CustomOption swapperIsImpRate;
+    public static CustomOption swapperCanCallEmergency;
+    public static CustomOption swapperCanOnlySwapOthers;
+    public static CustomOption swapperNumSwaps;
     #endregion
 
     #region ROLES IMPOSTOR
@@ -237,6 +243,30 @@ public static partial class CustomOptionHolder
     public static CustomOption eraserCooldown;
     public static CustomOption eraserCooldownIncrease;
     public static CustomOption eraserCanEraseAnyone;
+
+    public static CustomRoleOption morphingSpawnRate;
+    public static CustomOption morphingCooldown;
+    public static CustomOption morphingDuration;
+
+    public static CustomRoleOption camouflagerSpawnRate;
+    public static CustomOption camouflagerCooldown;
+    public static CustomOption camouflagerDuration;
+    public static CustomOption camouflagerRandomColors;
+
+    public static CustomRoleOption cleanerSpawnRate;
+    public static CustomOption cleanerCooldown;
+
+    public static CustomRoleOption warlockSpawnRate;
+    public static CustomOption warlockCooldown;
+    public static CustomOption warlockRootTime;
+
+    public static CustomRoleOption witchSpawnRate;
+    public static CustomOption witchCooldown;
+    public static CustomOption witchAdditionalCooldown;
+    public static CustomOption witchCanSpellAnyone;
+    public static CustomOption witchSpellCastingDuration;
+    public static CustomOption witchTriggerBothCooldowns;
+    public static CustomOption witchVoteSavesTargets;
     #endregion
 
     #region ROLES NEUTRAL
@@ -473,6 +503,12 @@ public static partial class CustomOptionHolder
         securityGuardCamMaxCharges = CustomOption.Normal(1126, CustomOptionType.Crewmate, "securityGuardCamMaxCharges", 5f, 1f, 30f, 1f, securityGuardSpawnRate);
         securityGuardCamRechargeTasksNumber = CustomOption.Normal(1127, CustomOptionType.Crewmate, "securityGuardCamRechargeTasksNumber", 3f, 1f, 10f, 1f, securityGuardSpawnRate);
         securityGuardNoMove = CustomOption.Normal(1128, CustomOptionType.Crewmate, "securityGuardNoMove", true, securityGuardSpawnRate);
+
+        swapperSpawnRate = new(1130, CustomOptionType.Neutral, RoleType.Swapper, Swapper.RoleColor, 1);
+        swapperIsImpRate = CustomOption.Normal(1131, CustomOptionType.Neutral, "swapperIsImpRate", RATES, swapperSpawnRate);
+        swapperNumSwaps = CustomOption.Normal(1132, CustomOptionType.Neutral, "swapperNumSwaps", 2f, 1f, 15f, 1f, swapperSpawnRate);
+        swapperCanCallEmergency = CustomOption.Normal(1133, CustomOptionType.Neutral, "swapperCanCallEmergency", false, swapperSpawnRate);
+        swapperCanOnlySwapOthers = CustomOption.Normal(1134, CustomOptionType.Neutral, "swapperCanOnlySwapOthers", false, swapperSpawnRate);
         #endregion
 
         #region ROLES IMPOSTOR
@@ -525,6 +561,30 @@ public static partial class CustomOptionHolder
         eraserCooldown = CustomOption.Normal(2061, CustomOptionType.Impostor, "eraserCooldown", 30f, 5f, 120f, 5f, eraserSpawnRate, format: "unitSeconds");
         eraserCooldownIncrease = CustomOption.Normal(2062, CustomOptionType.Impostor, "eraserCooldownIncrease", 10f, 0f, 120f, 2.5f, eraserSpawnRate, format: "unitSeconds");
         eraserCanEraseAnyone = CustomOption.Normal(2063, CustomOptionType.Impostor, "eraserCanEraseAnyone", false, eraserSpawnRate);
+
+        morphingSpawnRate = new(2070, CustomOptionType.Impostor, RoleType.Morphing, Morphing.RoleColor, 1);
+        morphingCooldown = CustomOption.Normal(2071, CustomOptionType.Impostor, "morphingCooldown", 30f, 2.5f, 60f, 2.5f, morphingSpawnRate, format: "unitSeconds");
+        morphingDuration = CustomOption.Normal(2072, CustomOptionType.Impostor, "morphingDuration", 10f, 1f, 20f, 0.5f, morphingSpawnRate, format: "unitSeconds");
+
+        camouflagerSpawnRate = new(2080, CustomOptionType.Impostor, RoleType.Camouflager, Camouflager.RoleColor, 1);
+        camouflagerCooldown = CustomOption.Normal(2081, CustomOptionType.Impostor, "camouflagerCooldown", 30f, 2.5f, 60f, 2.5f, camouflagerSpawnRate, format: "unitSeconds");
+        camouflagerDuration = CustomOption.Normal(2082, CustomOptionType.Impostor, "camouflagerDuration", 10f, 1f, 20f, 0.5f, camouflagerSpawnRate, format: "unitSeconds");
+        camouflagerRandomColors = CustomOption.Normal(2083, CustomOptionType.Impostor, "camouflagerRandomColors", false, camouflagerSpawnRate);
+
+        cleanerSpawnRate = new(2090, CustomOptionType.Impostor, RoleType.Cleaner, Cleaner.RoleColor, 1);
+        cleanerCooldown = CustomOption.Normal(2091, CustomOptionType.Impostor, "cleanerCooldown", 30f, 2.5f, 60f, 2.5f, cleanerSpawnRate, format: "unitSeconds");
+
+        warlockSpawnRate = new(2100, CustomOptionType.Impostor, RoleType.Warlock, Warlock.RoleColor, 1);
+        warlockCooldown = CustomOption.Normal(2101, CustomOptionType.Impostor, "warlockCooldown", 30f, 2.5f, 60f, 2.5f, warlockSpawnRate, format: "unitSeconds");
+        warlockRootTime = CustomOption.Normal(2102, CustomOptionType.Impostor, "warlockRootTime", 5f, 0f, 15f, 1f, warlockSpawnRate, format: "unitSeconds");
+
+        witchSpawnRate = new(2110, CustomOptionType.Impostor, RoleType.Witch, Witch.RoleColor, 1);
+        witchCooldown = CustomOption.Normal(2111, CustomOptionType.Impostor, "witchSpellCooldown", 30f, 2.5f, 120f, 2.5f, witchSpawnRate, format: "unitSeconds");
+        witchAdditionalCooldown = CustomOption.Normal(2112, CustomOptionType.Impostor, "witchAdditionalCooldown", 10f, 0f, 60f, 5f, witchSpawnRate, format: "unitSeconds");
+        witchCanSpellAnyone = CustomOption.Normal(2113, CustomOptionType.Impostor, "witchCanSpellAnyone", false, witchSpawnRate);
+        witchSpellCastingDuration = CustomOption.Normal(2114, CustomOptionType.Impostor, "witchSpellDuration", 1f, 0f, 10f, 1f, witchSpawnRate, format: "unitSeconds");
+        witchTriggerBothCooldowns = CustomOption.Normal(2115, CustomOptionType.Impostor, "witchTriggerBoth", true, witchSpawnRate);
+        witchVoteSavesTargets = CustomOption.Normal(2116, CustomOptionType.Impostor, "witchSaveTargets", true, witchSpawnRate);
         #endregion
 
         #region ROLES NEUTRAL

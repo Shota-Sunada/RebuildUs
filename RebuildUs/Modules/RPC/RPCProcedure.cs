@@ -756,13 +756,56 @@ public static partial class RPCProcedure
             PowerTools.SpriteAnim animator = vent.GetComponent<PowerTools.SpriteAnim>();
             animator?.Stop();
             vent.EnterVentAnim = vent.ExitVentAnim = null;
-            vent.myRend.sprite = animator == null ? SecurityGuard.getStaticVentSealedSprite() : SecurityGuard.getAnimatedVentSealedSprite();
-            if (SubmergedCompatibility.IsSubmerged && vent.Id == 0) vent.myRend.sprite = SecurityGuard.getSubmergedCentralUpperSealedSprite();
-            if (SubmergedCompatibility.IsSubmerged && vent.Id == 14) vent.myRend.sprite = SecurityGuard.getSubmergedCentralLowerSealedSprite();
+            vent.myRend.sprite = animator == null ? AssetLoader.StaticVentSealed : AssetLoader.AnimatedVentSealed;
+            if (SubmergedCompatibility.IsSubmerged && vent.Id == 0) vent.myRend.sprite = AssetLoader.CentralUpperBlocked;
+            if (SubmergedCompatibility.IsSubmerged && vent.Id == 14) vent.myRend.sprite = AssetLoader.CentralLowerBlocked;
             vent.myRend.color = new Color(1f, 1f, 1f, 0.5f);
             vent.name = "FutureSealedVent_" + vent.name;
         }
 
         ModMapOptions.VentsToSeal.Add(vent);
+    }
+
+    public static void morphingMorph(byte playerId, byte morphId)
+    {
+        var morphPlayer = Helpers.PlayerById(morphId);
+        var target = Helpers.PlayerById(playerId);
+        if (morphPlayer == null || target == null) return;
+        Morphing.GetRole(morphPlayer).startMorph(target);
+    }
+
+    public static void camouflagerCamouflage()
+    {
+        if (!Camouflager.Exists) return;
+        Camouflager.startCamouflage();
+    }
+    public static void swapperSwap(byte playerId1, byte playerId2)
+    {
+        if (MeetingHud.Instance)
+        {
+            Swapper.playerId1 = playerId1;
+            Swapper.playerId2 = playerId2;
+        }
+    }
+
+    public static void swapperAnimate()
+    {
+        Meeting.animateSwap = true;
+    }
+
+    public static void setFutureSpelled(byte playerId)
+    {
+        var player = Helpers.PlayerById(playerId);
+        Witch.futureSpelled ??= [];
+        if (player != null)
+        {
+            Witch.futureSpelled.Add(player);
+        }
+    }
+
+    public static void witchSpellCast(byte playerId)
+    {
+        UncheckedExilePlayer(playerId);
+        GameHistory.FinalStatuses[playerId] = EFinalStatus.Spelled;
     }
 }

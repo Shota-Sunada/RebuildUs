@@ -80,7 +80,7 @@ public static class Update
         }
         else if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Lighter))
         {
-            setPlayerNameColor(CachedPlayer.LocalPlayer.PlayerControl, Lighter.color);
+            setPlayerNameColor(CachedPlayer.LocalPlayer.PlayerControl, Lighter.RoleColor);
         }
         else if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Detective))
         {
@@ -112,11 +112,11 @@ public static class Update
         }
         else if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Tracker))
         {
-            setPlayerNameColor(CachedPlayer.LocalPlayer.PlayerControl, Tracker.color);
+            setPlayerNameColor(CachedPlayer.LocalPlayer.PlayerControl, Tracker.RoleColor);
         }
         else if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Snitch))
         {
-            setPlayerNameColor(CachedPlayer.LocalPlayer.PlayerControl, Snitch.color);
+            setPlayerNameColor(CachedPlayer.LocalPlayer.PlayerControl, Snitch.RoleColor);
         }
         else if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Jackal))
         {
@@ -175,10 +175,6 @@ public static class Update
         else if (CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.FortuneTeller) && (FortuneTeller.isCompletedNumTasks(CachedPlayer.LocalPlayer.PlayerControl) || CachedPlayer.LocalPlayer.PlayerControl.Data.IsDead))
         {
             setPlayerNameColor(CachedPlayer.LocalPlayer.PlayerControl, FortuneTeller.color);
-        }
-        else if (PlayerControl.LocalPlayer.IsRole(RoleType.Sherlock))
-        {
-            setPlayerNameColor(PlayerControl.LocalPlayer, Sherlock.color);
         }
 
         if (CachedPlayer.LocalPlayer.PlayerControl.HasModifier(ModifierType.Madmate))
@@ -259,7 +255,7 @@ public static class Update
         }
 
         // Crewmate roles with no changes: Mini
-        // Impostor roles with no changes: Morphling, Camouflager, Vampire, Godfather, Eraser, Janitor, Cleaner, Warlock, BountyHunter,  Witch and Mafioso
+        // Impostor roles with no changes: Morphing, Camouflager, Vampire, Godfather, Eraser, Janitor, Cleaner, Warlock, BountyHunter,  Witch and Mafioso
     }
 
     public static void setNameTags()
@@ -409,192 +405,6 @@ public static class Update
         if (MeetingHud.Instance) __instance.ReportButton.Hide();
     }
 
-    public static PlayerControl setTarget(bool onlyCrewmates = false, bool targetPlayersInVents = false, List<PlayerControl> untargetablePlayers = null, PlayerControl targetingPlayer = null, int killDistance = 3)
-    {
-        PlayerControl result = null;
-        int kd = killDistance == 3 ? Helpers.GetOption(Int32OptionNames.KillDistance) : killDistance;
-        float num = NormalGameOptionsV10.KillDistances[Mathf.Clamp(kd, 0, 2)];
-        if (!MapUtilities.CachedShipStatus) return result;
-        if (targetingPlayer == null) targetingPlayer = PlayerControl.LocalPlayer;
-        if (targetingPlayer.Data.IsDead || targetingPlayer.inVent) return result;
-        if (targetingPlayer.IsGM()) return result;
-
-        untargetablePlayers ??= [];
-
-        // GM is untargetable by anything
-        if (GM.gm != null)
-        {
-            untargetablePlayers.Add(GM.gm);
-        }
-
-        Vector2 truePosition = targetingPlayer.GetTruePosition();
-        foreach (var playerInfo in GameData.Instance.AllPlayers)
-        {
-            if (!playerInfo.Disconnected && playerInfo.PlayerId != targetingPlayer.PlayerId && !playerInfo.IsDead && (!onlyCrewmates || !playerInfo.Role.IsImpostor))
-            {
-                PlayerControl @object = playerInfo.Object;
-                if (untargetablePlayers.Any(x => x == @object))
-                {
-                    // if that player is not targetable: skip check
-                    continue;
-                }
-
-                if (@object && (!@object.inVent || targetPlayersInVents))
-                {
-                    Vector2 vector = @object.GetTruePosition() - truePosition;
-                    float magnitude = vector.magnitude;
-                    if (magnitude <= num && !PhysicsHelpers.AnyNonTriggersBetween(truePosition, vector.normalized, magnitude, Constants.ShipAndObjectsMask))
-                    {
-                        result = @object;
-                        num = magnitude;
-                    }
-                }
-            }
-        }
-        return result;
-    }
-
-    public static void setPlayerOutline(PlayerControl target, Color color)
-    {
-        if (target == null || target.cosmetics?.currentBodySprite?.BodySprite == null) return;
-
-        target.cosmetics?.currentBodySprite?.BodySprite.material.SetFloat("_Outline", 1f);
-        target.cosmetics?.currentBodySprite?.BodySprite.material.SetColor("_OutlineColor", color);
-    }
-
-    public static void setBasePlayerOutlines()
-    {
-        foreach (PlayerControl target in CachedPlayer.AllPlayers)
-        {
-            if (target == null || target.cosmetics?.currentBodySprite?.BodySprite == null) continue;
-
-            bool isMorphedMorphling = target == Morphling.morphling && Morphling.morphTarget != null && Morphling.morphTimer > 0f;
-            bool hasVisibleShield = false;
-            foreach (var medic in Medic.Players)
-            {
-                if (Camouflager.camouflageTimer <= 0f && medic.shielded != null && ((target == medic.shielded && !isMorphedMorphling) || (isMorphedMorphling && Morphling.morphTarget == medic.shielded)))
-                {
-                    hasVisibleShield = Medic.showShielded == 0 // Everyone
-                    || (Medic.showShielded == 1 && (CachedPlayer.LocalPlayer.PlayerControl == medic.shielded || CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Medic))) // Shielded + Medic
-                    || (Medic.showShielded == 2 && CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Medic)); // Medic only
-                }
-            }
-
-            if (hasVisibleShield)
-            {
-                target.cosmetics?.currentBodySprite?.BodySprite.material.SetFloat("_Outline", 1f);
-                target.cosmetics?.currentBodySprite?.BodySprite.material.SetColor("_OutlineColor", Medic.shieldedColor);
-            }
-            else
-            {
-                target.cosmetics?.currentBodySprite?.BodySprite.material.SetFloat("_Outline", 0f);
-            }
-        }
-    }
-
-    public static void updatePlayerInfo()
-    {
-        bool commsActive = false;
-        foreach (PlayerTask t in CachedPlayer.LocalPlayer.PlayerControl.myTasks)
-        {
-            if (t.TaskType == TaskTypes.FixComms)
-            {
-                commsActive = true;
-                break;
-            }
-        }
-
-        var canSeeEverything = CachedPlayer.LocalPlayer.PlayerControl.IsDead() || CachedPlayer.LocalPlayer.PlayerControl.IsGM();
-        foreach (PlayerControl p in CachedPlayer.AllPlayers)
-        {
-            if (p == null) continue;
-
-            bool isAkujo = Akujo.isPartner(CachedPlayer.LocalPlayer.PlayerControl, p);
-
-            var canSeeInfo =
-                canSeeEverything || isAkujo ||
-                p == CachedPlayer.LocalPlayer.PlayerControl || p.IsGM() ||
-                (Lawyer.lawyerKnowsRole && CachedPlayer.LocalPlayer.PlayerControl == Lawyer.lawyer && p == Lawyer.target);
-
-            if (canSeeInfo)
-            {
-                Transform playerInfoTransform = p.cosmetics.nameText.transform.parent.FindChild("Info");
-                TMPro.TextMeshPro playerInfo = playerInfoTransform != null ? playerInfoTransform.GetComponent<TMPro.TextMeshPro>() : null;
-                if (playerInfo == null)
-                {
-                    playerInfo = UnityEngine.Object.Instantiate(p.cosmetics.nameText, p.cosmetics.nameText.transform.parent);
-                    playerInfo.fontSize *= 0.75f;
-                    playerInfo.gameObject.name = "Info";
-                }
-
-                // Set the position every time bc it sometimes ends up in the wrong place due to camoflauge
-                playerInfo.transform.localPosition = p.cosmetics.nameText.transform.localPosition + Vector3.up * 0.5f;
-
-                PlayerVoteArea playerVoteArea = MeetingHud.Instance?.playerStates?.FirstOrDefault(x => x.TargetPlayerId == p.PlayerId);
-                Transform meetingInfoTransform = playerVoteArea != null ? playerVoteArea.NameText.transform.parent.FindChild("Info") : null;
-                TMPro.TextMeshPro meetingInfo = meetingInfoTransform != null ? meetingInfoTransform.GetComponent<TMPro.TextMeshPro>() : null;
-                if (meetingInfo == null && playerVoteArea != null)
-                {
-                    meetingInfo = UnityEngine.Object.Instantiate(playerVoteArea.NameText, playerVoteArea.NameText.transform.parent);
-                    meetingInfo.transform.localPosition += Vector3.down * 0.10f;
-                    meetingInfo.fontSize *= 0.60f;
-                    meetingInfo.gameObject.name = "Info";
-                }
-
-                // Set player name higher to align in middle
-                if (meetingInfo != null && playerVoteArea != null)
-                {
-                    var playerName = playerVoteArea.NameText;
-                    playerName.transform.localPosition = new Vector3(0.3384f, 0.0311f + 0.0683f, -0.1f);
-                }
-
-                var (tasksCompleted, tasksTotal) = TasksHandler.TaskInfo(p.Data);
-                string roleNames = RoleInfo.GetRolesString(p, true, new RoleType[] { RoleType.Lovers });
-                string roleNamesFull = RoleInfo.GetRolesString(p, true, new RoleType[] { RoleType.Lovers }, true);
-
-                var completedStr = commsActive ? "?" : tasksCompleted.ToString();
-                string taskInfo = tasksTotal > 0 ? $"<color=#FAD934FF>({completedStr}/{tasksTotal})</color>" : "";
-
-                string playerInfoText = "";
-                string meetingInfoText = "";
-                if (p == CachedPlayer.LocalPlayer.PlayerControl)
-                {
-                    playerInfoText = $"{roleNames}";
-                    if (DestroyableSingleton<TaskPanelBehaviour>.InstanceExists)
-                    {
-                        TMPro.TextMeshPro tabText = FastDestroyableSingleton<TaskPanelBehaviour>.Instance.tab.transform.FindChild("TabText_TMP").GetComponent<TMPro.TextMeshPro>();
-                        tabText.SetText($"{TranslationController.Instance.GetString(StringNames.Tasks)} {taskInfo}");
-                    }
-                    meetingInfoText = $"{roleNames} {taskInfo}".Trim();
-                }
-                else if (ModMapOptions.GhostsSeeRoles && ModMapOptions.GhostsSeeInformation)
-                {
-                    playerInfoText = $"{roleNames} {taskInfo}".Trim();
-                    meetingInfoText = playerInfoText;
-                }
-                else if (ModMapOptions.GhostsSeeInformation)
-                {
-                    playerInfoText = $"{taskInfo}".Trim();
-                    meetingInfoText = playerInfoText;
-                }
-                else if (ModMapOptions.GhostsSeeRoles)
-                {
-                    playerInfoText = $"{roleNames}";
-                    meetingInfoText = playerInfoText;
-                }
-                else if (p.IsGM() || CachedPlayer.LocalPlayer.PlayerControl.IsGM())
-                {
-                    playerInfoText = $"{roleNames} {taskInfo}".Trim();
-                    meetingInfoText = playerInfoText;
-                }
-
-                playerInfo.text = playerInfoText;
-                playerInfo.gameObject.SetActive(p.Visible && !Helpers.HidePlayerName(p));
-                meetingInfo?.text = MeetingHud.Instance.state == MeetingHud.VoteStates.Results ? "" : meetingInfoText;
-            }
-        }
-    }
-
     public static void StopCooldown(PlayerControl __instance)
     {
         if (CustomOptionHolder.StopCooldownOnFixingElecSabotage.GetBool())
@@ -619,7 +429,7 @@ public static class Update
         {
             if (Spy.ImpostorsCanKillAnyone)
             {
-                target = setTarget(false, true);
+                target = Helpers.SetTarget(false, true);
             }
             else
             {
@@ -629,24 +439,35 @@ public static class Update
                     };
                 if (Sidekick.wasTeamRed) listP.Add(Sidekick.sidekick);
                 if (Jackal.wasTeamRed) listP.Add(Jackal.jackal);
-                target = setTarget(true, true, listP);
+                target = Helpers.SetTarget(true, true, listP);
             }
         }
         else
         {
-            target = setTarget(true, true);
+            target = Helpers.SetTarget(true, true);
         }
 
         FastDestroyableSingleton<HudManager>.Instance.KillButton.SetTarget(target); // Includes setPlayerOutline(target, Palette.ImpstorRed);
     }
 
-    public static void setPetVisibility()
+    public static void CamouflageAndMorphActions()
     {
-        bool localAlive = PlayerControl.LocalPlayer.Data.IsDead;
-        foreach (var player in PlayerControl.AllPlayerControls)
+        float oldCamouflageTimer = Camouflager.camouflageTimer;
+        float oldMorphTimer = Morphing.morphTimer;
+
+        Camouflager.camouflageTimer -= Time.deltaTime;
+        Morphing.morphTimer -= Time.deltaTime;
+
+        // Everyone but morphing reset
+        if (oldCamouflageTimer > 0f && Camouflager.camouflageTimer <= 0f)
         {
-            bool playerAlive = !player.Data.IsDead;
-            player.cosmetics.SetPetVisible((localAlive && playerAlive) || !localAlive);
+            Camouflager.resetCamouflage();
+        }
+
+        // Morphing reset
+        if (oldMorphTimer > 0f && Morphing.morphTimer <= 0f)
+        {
+            Morphing.resetMorph();
         }
     }
 }

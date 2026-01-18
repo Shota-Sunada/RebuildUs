@@ -74,24 +74,23 @@ public static class Exile
         }
 
         // Witch execute casted spells
-        // if (Witch.witch != null && Witch.futureSpelled != null && AmongUsClient.Instance.AmHost)
-        // {
-        //     bool exiledIsWitch = exiled != null && exiled.PlayerId == Witch.witch.PlayerId;
-        //     bool witchDiesWithExiledLover = exiled != null && Lovers.bothDie && exiled.Object.isLovers() && exiled.Object.getPartner() == Witch.witch;
+        if (Witch.Exists && Witch.futureSpelled != null && AmongUsClient.Instance.AmHost)
+        {
+            bool exiledIsWitch = player != null && player.Object.IsRole(RoleType.Witch);
+            bool witchDiesWithExiledLover = player != null && Lovers.bothDie && player.Object.IsLovers() && player.Object.getPartner().IsRole(RoleType.Witch);
 
-        //     if ((witchDiesWithExiledLover || exiledIsWitch) && Witch.witchVoteSavesTargets) Witch.futureSpelled = new List<PlayerControl>();
-        //     foreach (PlayerControl target in Witch.futureSpelled)
-        //     {
-        //         if (target != null && !target.Data.IsDead && Helpers.checkMuderAttempt(Witch.witch, target, true) == MurderAttemptResult.PerformKill)
-        //         {
-        //             writer = AmongUsClient.Instance.StartRpcImmediately(CachedPlayer.LocalPlayer.PlayerControl.NetId, (byte)CustomRPC.WitchSpellCast, Hazel.SendOption.Reliable, -1);
-        //             writer.Write(target.PlayerId);
-        //             AmongUsClient.Instance.FinishRpcImmediately(writer);
-        //             RPCProcedure.witchSpellCast(target.PlayerId);
-        //         }
-        //     }
-        // }
-        // Witch.futureSpelled = new List<PlayerControl>();
+            if ((witchDiesWithExiledLover || exiledIsWitch) && Witch.voteSavesTargets) Witch.futureSpelled = [];
+            foreach (var target in Witch.futureSpelled)
+            {
+                if (target != null && !target.Data.IsDead && Helpers.CheckMurderAttempt(player.Object, target, true) == MurderAttemptResult.PerformKill)
+                {
+                    using var sender = new RPCSender(CachedPlayer.LocalPlayer.PlayerControl.NetId, CustomRPC.WitchSpellCast);
+                    sender.Write(target.PlayerId);
+                    RPCProcedure.witchSpellCast(target.PlayerId);
+                }
+            }
+        }
+        Witch.futureSpelled = [];
 
         // SecurityGuard vents and cameras
         var allCameras = MapUtilities.CachedShipStatus.AllCameras.ToList();

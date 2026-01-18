@@ -2,6 +2,7 @@ using System.Text;
 using RebuildUs.Modules.EndGame;
 using RebuildUs.Players;
 using RebuildUs.Roles;
+using RebuildUs.Roles.Impostor;
 using RebuildUs.Roles.Neutral;
 
 namespace RebuildUs.Modules;
@@ -20,8 +21,8 @@ public static class EndGameMain
 
     public static void OnGameEndPrefix(ref EndGameResult endGameResult)
     {
-        // Camouflager.resetCamouflage();
-        // Morphling.resetMorph();
+        Camouflager.resetCamouflage();
+        Morphing.resetMorph();
 
         AdditionalTempData.GameOverReason = endGameResult.GameOverReason;
         if ((int)endGameResult.GameOverReason >= 10) endGameResult.GameOverReason = GameOverReason.ImpostorsByKill;

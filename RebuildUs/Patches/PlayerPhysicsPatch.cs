@@ -1,3 +1,5 @@
+using RebuildUs.Roles.Impostor;
+
 namespace RebuildUs.Patches;
 
 [HarmonyPatch]
@@ -16,8 +18,8 @@ public static class PlayerPhysicsPatch
     [HarmonyPatch(typeof(PlayerPhysics), nameof(PlayerPhysics.WalkPlayerTo))]
     public static void WalkPlayerToPrefix(PlayerPhysics __instance)
     {
-        bool correctOffset = Camouflager.camouflageTimer <= 0f && !Helpers.MushroomSabotageActive() && (__instance.myPlayer.hasModifier(ModifierType.Mini) || (Morphling.morphling != null && __instance.myPlayer == Morphling.morphling && Morphling.morphTarget.hasModifier(ModifierType.Mini) && Morphling.morphTimer > 0f));
-        correctOffset = correctOffset && !(Mini.mini == Morphling.morphling && Morphling.morphTimer > 0f);
+        bool correctOffset = Camouflager.camouflageTimer <= 0f && !Helpers.MushroomSabotageActive() && (__instance.myPlayer.HasModifier(ModifierType.Mini) || (Morphing.Exists && __instance.myPlayer.IsRole(RoleType.Morphing) && Morphing.morphTarget.HasModifier(ModifierType.Mini) && Morphing.morphTimer > 0f));
+        correctOffset = correctOffset && !(Mini.mini == Morphling.morphling && Morphing.morphTimer > 0f);
         if (correctOffset)
         {
             float currentScaling = (Mini.growingProgress() + 1) * 0.5f;

@@ -64,6 +64,14 @@ public static class AssetLoader
     public static Sprite LightsOutButton;
     public static Sprite PlaceCameraButton;
     public static Sprite CloseVentButton;
+    public static Sprite CurseButton;
+    public static Sprite CurseKillButton;
+    public static Sprite MorphButton;
+    public static Sprite SampleButton;
+    public static Sprite SpellButton;
+    public static Sprite SpellButtonMeeting;
+    public static Sprite CamouflageButton;
+    public static Sprite SwapperCheck;
 
     private static void LoadButtonAssets()
     {
@@ -88,6 +96,14 @@ public static class AssetLoader
         LightsOutButton = ab.LoadAsset<Sprite>("LightsOutButton.png").DontUnload();
         PlaceCameraButton = ab.LoadAsset<Sprite>("PlaceCameraButton.png").DontUnload();
         CloseVentButton = ab.LoadAsset<Sprite>("CloseVentButton.png").DontUnload();
+        CurseButton = ab.LoadAsset<Sprite>("CurseButton.png").DontUnload();
+        CurseKillButton = ab.LoadAsset<Sprite>("CurseKillButton.png").DontUnload();
+        MorphButton = ab.LoadAsset<Sprite>("MorphButton.png").DontUnload();
+        SampleButton = ab.LoadAsset<Sprite>("SampleButton.png").DontUnload();
+        SpellButton = ab.LoadAsset<Sprite>("SpellButton.png").DontUnload();
+        SpellButtonMeeting = ab.LoadAsset<Sprite>("SpellButtonMeeting.png").DontUnload();
+        CamouflageButton = ab.LoadAsset<Sprite>("CamouflageButton.png").DontUnload();
+        SwapperCheck = ab.LoadAsset<Sprite>("SwapperCheck.png").DontUnload();
     }
     #endregion
 
@@ -110,6 +126,8 @@ public static class AssetLoader
     public static Sprite FungleVentSealed;
     public static Sprite CentralUpperBlocked;
     public static Sprite CentralLowerBlocked;
+    public static Sprite TargetIcon;
+    public static Sprite White;
 
     private static void LoadSpriteAssets()
     {
@@ -134,6 +152,8 @@ public static class AssetLoader
         FungleVentSealed = ab.LoadAsset<Sprite>("FungleVentSealed.png").DontUnload();
         CentralUpperBlocked = ab.LoadAsset<Sprite>("CentralUpperBlocked.png").DontUnload();
         CentralLowerBlocked = ab.LoadAsset<Sprite>("CentralLowerBlocked.png").DontUnload();
+        TargetIcon = ab.LoadAsset<Sprite>("TargetIcon.png").DontUnload();
+        White = ab.LoadAsset<Sprite>("White.png").DontUnload();
     }
     #endregion
 

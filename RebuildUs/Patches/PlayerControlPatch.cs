@@ -58,18 +58,6 @@ public static class PlayerControlPatch
             Helpers.RefreshRoleDescription(__instance);
             Helpers.UpdatePlayerInfo();
             Helpers.SetPetVisibility();
-
-            // Update player outlines
-            Update.setBasePlayerOutlines();
-
-            Update.setPetVisibility();
-
-            // Update Role Description
-            Helpers.RefreshRoleDescription(__instance);
-
-            // Update Player Info
-            Update.updatePlayerInfo();
-
             Update.impostorSetTarget();
         }
 
@@ -167,9 +155,9 @@ public static class PlayerControlPatch
         __instance.Data.Role.TeamType = RoleTeamTypes.Impostor;
         __instance.Data.IsDead = false;
 
-        if (Morphling.morphling != null && target == Morphling.morphling)
+        if (Morphing.Exists && target.IsRole(RoleType.Morphing))
         {
-            Morphling.resetMorph();
+            Morphing.resetMorph();
         }
 
         target.resetMorph();
@@ -229,36 +217,5 @@ public static class PlayerControlPatch
             !ExileController.Instance &&
             !IntroCutscene.Instance;
         return false;
-    }
-
-    [HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.IsFlashlightEnabled))]
-    public static class IsFlashlightEnabledPatch
-    {
-        public static bool Prefix(ref bool __result)
-        {
-            if (Helpers.IsHideNSeekMode) return true;
-            __result = false;
-            if (!PlayerControl.LocalPlayer.Data.IsDead && Lighter.lighter != null && Lighter.lighter.PlayerId == PlayerControl.LocalPlayer.PlayerId)
-            {
-                __result = true;
-            }
-
-            return false;
-        }
-    }
-
-    [HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.AdjustLighting))]
-    public static class AdjustLight
-    {
-        public static bool Prefix(PlayerControl __instance)
-        {
-            if (__instance == null || PlayerControl.LocalPlayer == null || Lighter.lighter == null) return true;
-
-            bool hasFlashlight = !PlayerControl.LocalPlayer.Data.IsDead && Lighter.lighter.PlayerId == PlayerControl.LocalPlayer.PlayerId;
-            __instance.SetFlashlightInputMethod();
-            __instance.lightSource.SetupLightingForGameplay(hasFlashlight, Lighter.flashlightWidth, __instance.TargetFlashlight.transform);
-
-            return false;
-        }
     }
 }

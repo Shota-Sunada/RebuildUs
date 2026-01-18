@@ -6,6 +6,7 @@ using RebuildUs.Roles.Crewmate;
 using System.Text;
 using System.Text.RegularExpressions;
 using RebuildUs.Roles.Modifier;
+using RebuildUs.Roles.Impostor;
 
 namespace RebuildUs;
 
@@ -60,30 +61,6 @@ public static class Helpers
             sender.WriteBytesAndSize(taskTypeIds.ToArray());
             RPCProcedure.UncheckedSetTasks(player.PlayerId, [.. taskTypeIds]);
         }
-    }
-
-    public static void setSkinWithAnim(PlayerPhysics playerPhysics, string SkinId)
-    {
-        // SkinData nextSkin = FastDestroyableSingleton<HatManager>.Instance.GetSkinById(SkinId);
-        // AnimationClip clip = null;
-        // var spriteAnim = playerPhysics.myPlayer.cosmetics.skin.animator;
-        // var anim = spriteAnim.m_animator;
-        // var skinLayer = playerPhysics.myPlayer.cosmetics.skin;
-
-        // var currentPhysicsAnim = playerPhysics.Animator.GetCurrentAnimation();
-        // if (currentPhysicsAnim == playerPhysics.CurrentAnimationGroup.RunAnim) clip = nextSkin.viewData.viewData.RunAnim;
-        // else if (currentPhysicsAnim == playerPhysics.CurrentAnimationGroup.SpawnAnim) clip = nextSkin.viewData.viewData.SpawnAnim;
-        // else if (currentPhysicsAnim == playerPhysics.CurrentAnimationGroup.EnterVentAnim) clip = nextSkin.viewData.viewData.EnterVentAnim;
-        // else if (currentPhysicsAnim == playerPhysics.CurrentAnimationGroup.ExitVentAnim) clip = nextSkin.viewData.viewData.ExitVentAnim;
-        // else if (currentPhysicsAnim == playerPhysics.CurrentAnimationGroup.IdleAnim) clip = nextSkin.viewData.viewData.IdleAnim;
-        // else clip = nextSkin.viewData.viewData.IdleAnim;
-
-        // float progress = playerPhysics.Animator.m_animator.GetCurrentAnimatorStateInfo(0).normalizedTime;
-        // skinLayer.skin = nextSkin.viewData.viewData;
-
-        // spriteAnim.Play(clip, 1f);
-        // anim.Play("a", 0, progress % 1);
-        // anim.Update(0f);
     }
 
     public static object TryCast(this Il2CppObjectBase self, Type type)
@@ -494,21 +471,21 @@ public static class Helpers
         {
             if (target == null || target.cosmetics?.currentBodySprite?.BodySprite == null) continue;
 
-            // bool isMorphedMorphling = target == Morphling.morphling && Morphling.morphTarget != null && Morphling.morphTimer > 0f;
-            // bool hasVisibleShield = false;
-            // if (Camouflager.camouflageTimer <= 0f && Medic.shielded != null && ((target == Medic.shielded && !isMorphedMorphling) || (isMorphedMorphling && Morphling.morphTarget == Medic.shielded)))
-            // {
-            //     hasVisibleShield = Medic.showShielded == 0 // Everyone
-            //         || (Medic.showShielded == 1 && (CachedPlayer.LocalPlayer.PlayerControl == Medic.shielded || CachedPlayer.LocalPlayer.PlayerControl == Medic.medic)) // Shielded + Medic
-            //         || (Medic.showShielded == 2 && CachedPlayer.LocalPlayer.PlayerControl == Medic.medic); // Medic only
-            // }
+            bool isMorphedMorphing = target.IsRole(RoleType.Morphing) && Morphing.morphTarget != null && Morphing.morphTimer > 0f;
+            bool hasVisibleShield = false;
+            if (Camouflager.camouflageTimer <= 0f && Medic.shielded != null && ((target == Medic.shielded && !isMorphedMorphing) || (isMorphedMorphing && Morphing.morphTarget == Medic.shielded)))
+            {
+                hasVisibleShield = Medic.showShielded == 0 // Everyone
+                || (Medic.showShielded == 1 && (CachedPlayer.LocalPlayer.PlayerControl == Medic.shielded || CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Medic))) // Shielded + Medic
+                || (Medic.showShielded == 2 && CachedPlayer.LocalPlayer.PlayerControl.IsRole(RoleType.Medic)); // Medic only
+            }
 
-            // if (hasVisibleShield)
-            // {
-            //     target.cosmetics?.currentBodySprite?.BodySprite.material.SetFloat("_Outline", 1f);
-            //     target.cosmetics?.currentBodySprite?.BodySprite.material.SetColor("_OutlineColor", Medic.shieldedColor);
-            // }
-            // else
+            if (hasVisibleShield)
+            {
+                target.cosmetics?.currentBodySprite?.BodySprite.material.SetFloat("_Outline", 1f);
+                target.cosmetics?.currentBodySprite?.BodySprite.material.SetColor("_OutlineColor", Medic.shieldedColor);
+            }
+            else
             {
                 target.cosmetics?.currentBodySprite?.BodySprite.material.SetFloat("_Outline", 0f);
             }
@@ -565,6 +542,7 @@ public static class Helpers
         return Cs(roleInfo.Color, $"{roleInfo.Name}: {roleInfo.ShortDescription}");
     }
 
+    // TODO: 更新
     public static void UpdatePlayerInfo()
     {
         var colorBlindTextMeetingInitialLocalPos = new Vector3(0.3384f, -0.16666f, -0.01f);

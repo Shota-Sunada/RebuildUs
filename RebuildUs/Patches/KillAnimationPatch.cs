@@ -1,3 +1,5 @@
+using RebuildUs.Roles.Impostor;
+
 namespace RebuildUs.Patches;
 
 [HarmonyPatch]
@@ -22,7 +24,7 @@ public static class KillAnimationPatch
     public static void SetMovementPrefix(PlayerControl source, bool canMove)
     {
         var color = source.cosmetics.currentBodySprite.BodySprite.material.GetColor("_BodyColor");
-        if (Morphling.morphling != null && source.Data.PlayerId == Morphling.morphling.PlayerId)
+        if (Morphing.Exists && source.IsRole(RoleType.Morphing))
         {
             var index = Palette.PlayerColors.IndexOf(color);
             if (index != -1) colorId = index;

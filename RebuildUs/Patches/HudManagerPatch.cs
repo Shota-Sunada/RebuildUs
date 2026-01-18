@@ -20,18 +20,12 @@ public static class HudManagerPatch
         Update.resetNameTagsAndColors();
         Update.setNameColors();
         Update.setNameTags();
-
+        Update.CamouflageAndMorphActions();
         Update.updateImpostorKillButton(__instance);
         Update.updateSabotageButton(__instance);
         Update.updateUseButton(__instance);
         Update.updateReportButton(__instance);
         Update.updateVentButton(__instance);
-    }
-
-    [HarmonyPrefix]
-    [HarmonyPatch(typeof(HudManager), nameof(HudManager.CoShowIntro))]
-    public static void CoShowIntroPrefix()
-    {
     }
 
     [HarmonyPostfix]

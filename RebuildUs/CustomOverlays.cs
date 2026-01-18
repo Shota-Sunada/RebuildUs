@@ -9,8 +9,6 @@ namespace RebuildUs;
 
 public class CustomOverlays
 {
-    public static Sprite helpButton;
-    private static Sprite colorBG;
     private static SpriteRenderer meetingUnderlay;
     private static SpriteRenderer infoUnderlay;
     private static TMPro.TextMeshPro infoOverlayRules;
@@ -54,16 +52,6 @@ public class CustomOverlays
         HudManager hudManager = FastDestroyableSingleton<HudManager>.Instance;
         if (hudManager == null) return false;
 
-        if (helpButton == null)
-        {
-            helpButton = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.HelpButton.png", 115f);
-        }
-
-        if (colorBG == null)
-        {
-            colorBG = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.White.png", 100f);
-        }
-
         if (meetingUnderlay == null)
         {
             meetingUnderlay = UnityEngine.Object.Instantiate(hudManager.FullScreen, hudManager.transform);
@@ -82,7 +70,7 @@ public class CustomOverlays
 
         if (infoOverlayRules == null)
         {
-            infoOverlayRules = UnityEngine.Object.Instantiate(hudManager.TaskText, hudManager.transform);
+            infoOverlayRules = UnityEngine.Object.Instantiate(hudManager.TaskPanel.taskText, hudManager.transform);
             infoOverlayRules.fontSize = infoOverlayRules.fontSizeMin = infoOverlayRules.fontSizeMax = 1.15f;
             infoOverlayRules.autoSizeTextContainer = false;
             infoOverlayRules.enableWordWrapping = false;
@@ -129,7 +117,7 @@ public class CustomOverlays
             {
                 if (i == 0)
                 {
-                    roleOverlayList[i] = UnityEngine.Object.Instantiate(hudManager.TaskText, hudManager.transform);
+                    roleOverlayList[i] = UnityEngine.Object.Instantiate(hudManager.TaskPanel.taskText, hudManager.transform);
 
                     initializeRoleOverlay(roleOverlayList[i]);
 
@@ -290,7 +278,7 @@ public class CustomOverlays
         if (FastDestroyableSingleton<HudManager>.Instance == null) return;
         if (!initializeOverlays()) return;
 
-        meetingUnderlay.sprite = colorBG;
+        meetingUnderlay.sprite = AssetLoader.White;
         meetingUnderlay.enabled = true;
         meetingUnderlay.transform.localScale = new Vector3(20f, 20f, 1f);
         var clearBlack = new Color32(0, 0, 0, 0);
@@ -330,7 +318,7 @@ public class CustomOverlays
         infoOverlayRules.transform.parent = parent;
         infoOverlayRoles.transform.parent = parent;
 
-        infoUnderlay.sprite = colorBG;
+        infoUnderlay.sprite = AssetLoader.White;
         infoUnderlay.color = new Color(0.1f, 0.1f, 0.1f, 0.88f);
         infoUnderlay.transform.localScale = new Vector3(7.5f, 5f, 1f);
         infoUnderlay.enabled = true;
@@ -435,7 +423,7 @@ public class CustomOverlays
             roleOverlay.transform.parent = parent;
         }
 
-        roleUnderlay.sprite = colorBG;
+        roleUnderlay.sprite = AssetLoader.White;
         roleUnderlay.color = new Color(0.1f, 0.1f, 0.1f, 0.88f);
         roleUnderlay.transform.localScale = new Vector3(9.3f, 5.1f, 1f);
         roleUnderlay.enabled = true;
