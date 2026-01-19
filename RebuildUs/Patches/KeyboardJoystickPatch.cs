@@ -7,6 +7,7 @@ public static class KeyboardJoystickPatch
     [HarmonyPatch(typeof(KeyboardJoystick), nameof(KeyboardJoystick.Update))]
     public static void Update(KeyboardJoystick __instance)
     {
+        Tr.Update();
         CustomOption.KeyboardUpdate(__instance);
     }
 }

@@ -68,23 +68,23 @@ public partial class CustomOption
                     break;
                 case OptionPage.GeneralSettings:
                     GeneralTab.gameObject.SetActive(true);
-                    __instance.MenuDescriptionText.text = "This is general settings of RebuildUs.";
+                    __instance.MenuDescriptionText.text = Tr.Get("OptionPage.GeneralSettings");
                     break;
                 case OptionPage.ImpostorSettings:
                     ImpostorTab.gameObject.SetActive(true);
-                    __instance.MenuDescriptionText.text = "This is impostor roles settings of RebuildUs.";
+                    __instance.MenuDescriptionText.text = Tr.Get("OptionPage.ImpostorSettings");
                     break;
                 case OptionPage.CrewmateSettings:
                     CrewmateTab.gameObject.SetActive(true);
-                    __instance.MenuDescriptionText.text = "This is crewmate roles settings of RebuildUs.";
+                    __instance.MenuDescriptionText.text = Tr.Get("OptionPage.CrewmateSettings");
                     break;
                 case OptionPage.NeutralSettings:
                     NeutralTab.gameObject.SetActive(true);
-                    __instance.MenuDescriptionText.text = "This is neutral roles settings of RebuildUs.";
+                    __instance.MenuDescriptionText.text = Tr.Get("OptionPage.NeutralSettings");
                     break;
                 case OptionPage.ModifierSettings:
                     ModifierTab.gameObject.SetActive(true);
-                    __instance.MenuDescriptionText.text = "This is modifier settings of RebuildUs.";
+                    __instance.MenuDescriptionText.text = Tr.Get("OptionPage.ModifierSettings");
                     break;
                 default:
                     Logger.LogWarn($"Invalid Option Page ID in ChangeTabPrefix: {tabNum}");
@@ -198,15 +198,15 @@ public partial class CustomOption
         gameSettingsButton.SelectButton(false);
 
         // Mod General Settings
-        GeneralButton = CreateSettingButton(__instance, "RUGeneralSettingsButton", "RebuildUs Settings", OptionPage.GeneralSettings);
+        GeneralButton = CreateSettingButton(__instance, "RUGeneralSettingsButton", Tr.Get("OptionPage.GeneralSettingsButton"), OptionPage.GeneralSettings);
         GeneralTab = CreateSettingTab(__instance, "RUGeneralSettingsTab", CustomOptionType.General);
-        ImpostorButton = CreateSettingButton(__instance, "RUImpostorSettingsButton", "Impostor Roles", OptionPage.ImpostorSettings);
+        ImpostorButton = CreateSettingButton(__instance, "RUImpostorSettingsButton", Tr.Get("OptionPage.ImpostorSettingsButton"), OptionPage.ImpostorSettings);
         ImpostorTab = CreateSettingTab(__instance, "RUGeneralImpostorTab", CustomOptionType.Impostor);
-        CrewmateButton = CreateSettingButton(__instance, "RUCrewmateSettingsButton", "Crewmate Roles", OptionPage.CrewmateSettings);
+        CrewmateButton = CreateSettingButton(__instance, "RUCrewmateSettingsButton", Tr.Get("OptionPage.CrewmateSettingsButton"), OptionPage.CrewmateSettings);
         CrewmateTab = CreateSettingTab(__instance, "RUCrewmateSettingsTab", CustomOptionType.Crewmate);
-        NeutralButton = CreateSettingButton(__instance, "RUNeutralSettingsButton", "Neutral Roles", OptionPage.NeutralSettings);
+        NeutralButton = CreateSettingButton(__instance, "RUNeutralSettingsButton", Tr.Get("OptionPage.NeutralSettingsButton"), OptionPage.NeutralSettings);
         NeutralTab = CreateSettingTab(__instance, "RUNeutralSettingsTab", CustomOptionType.Neutral);
-        ModifierButton = CreateSettingButton(__instance, "RUModifierSettingsButton", "Modifier Settings", OptionPage.ModifierSettings);
+        ModifierButton = CreateSettingButton(__instance, "RUModifierSettingsButton", Tr.Get("OptionPage.ModifierSettingsButton"), OptionPage.ModifierSettings);
         ModifierTab = CreateSettingTab(__instance, "RUModifierSettingsTab", CustomOptionType.Modifier);
 
         __instance.GameSettingsButton.SelectButton(true);
@@ -263,9 +263,9 @@ public partial class CustomOption
             {
                 var categoryHeaderMasked = UnityEngine.Object.Instantiate(menu.categoryHeaderOrigin, Vector3.zero, Quaternion.identity, menu.settingsContainer);
                 categoryHeaderMasked.SetHeader(StringNames.ImpostorsCategory, 20);
-                categoryHeaderMasked.Title.text = option.HeaderText != "" ? Tr.Get(option.HeaderText) : Tr.Get(option.NameKey);
+                categoryHeaderMasked.Title.text = option.HeaderText != "" ? option.HeaderText : Helpers.Cs(option.Color, Tr.Get(option.NameKey));
                 categoryHeaderMasked.Title.outlineColor = Color.white;
-                categoryHeaderMasked.Title.outlineWidth = 0.2f;
+                categoryHeaderMasked.Title.outlineWidth = 0.01f;
                 categoryHeaderMasked.transform.localScale = Vector3.one * 0.63f;
                 categoryHeaderMasked.transform.localPosition = new Vector3(-0.903f, num, -2f);
                 num -= 0.63f;
@@ -304,13 +304,12 @@ public partial class CustomOption
 
             var so = ob;
             so.OnValueChanged = new Action<OptionBehaviour>((o) => { });
-            so.TitleText.text = Tr.Get(option.NameKey);
+            so.TitleText.text = Helpers.Cs(option.Color, Tr.Get(option.NameKey));
             if (option.IsHeader
-                && option.HeaderText == ""
                 && (option.Type is CustomOptionType.Neutral or CustomOptionType.Crewmate or CustomOptionType.Impostor or CustomOptionType.Modifier)
             )
             {
-                so.TitleText.text = "Spawn Chance";
+                so.TitleText.text = Tr.Get("Options.SpawnChance");
             }
 
             if (so.TitleText.text.Length > 25)
@@ -378,7 +377,7 @@ public partial class CustomOption
     {
         var option = AllOptions.FirstOrDefault(option => option.OptionBehavior == __instance);
         if (option == null) return true;
-        option.UpdateSelection(option.Selection + 1);
+        option.UpdateSelection(option.Selection + 1, option.GetOptionIcon());
         if (CustomOptionHolderHelpers.IsMapSelectionOption(option))
         {
             IGameOptions currentGameOptions = GameOptionsManager.Instance.CurrentGameOptions;
@@ -393,7 +392,7 @@ public partial class CustomOption
     {
         var option = AllOptions.FirstOrDefault(option => option.OptionBehavior == __instance);
         if (option == null) return true;
-        option.UpdateSelection(option.Selection - 1);
+        option.UpdateSelection(option.Selection - 1, option.GetOptionIcon());
         if (CustomOptionHolderHelpers.IsMapSelectionOption(option))
         {
             IGameOptions currentGameOptions = GameOptionsManager.Instance.CurrentGameOptions;
@@ -484,7 +483,7 @@ public partial class CustomOption
         {
             if (option.Parent == null)
             {
-                string line = $"{Tr.Get(option.NameKey)}: {option.Selections[option.Selection]}";
+                string line = $"{Helpers.Cs(option.Color, Tr.Get(option.NameKey))}: {option.Selections[option.Selection]}";
                 if (type == CustomOptionType.Modifier) line += BuildModifierExtras(option);
                 sb.AppendLine(line);
             }
@@ -511,13 +510,13 @@ public partial class CustomOption
 
                 Color c = isIrrelevant ? Color.grey : Color.white;  // No use for now
                 if (isIrrelevant) continue;
-                sb.AppendLine(Helpers.Cs(c, $"{Tr.Get(option.NameKey)}: {option.Selections[option.Selection]}"));
+                sb.AppendLine(Helpers.Cs(c, $"{Helpers.Cs(option.Color, Tr.Get(option.NameKey))}: {option.Selections[option.Selection]}"));
             }
             else
             {
                 if (option == CustomOptionHolder.CrewmateRolesCountMin)
                 {
-                    var optionName = CustomOptionHolderHelpers.Cs(new Color(204f / 255f, 204f / 255f, 0, 1f), "Crewmate Roles");
+                    var optionName = CustomOptionHolderHelpers.Cs(new Color(204f / 255f, 204f / 255f, 0, 1f), Tr.Get("OptionPage.CrewmateRoles"));
                     var min = CustomOptionHolder.CrewmateRolesCountMin.GetSelection();
                     var max = CustomOptionHolder.CrewmateRolesCountMax.GetSelection();
                     string optionValue = "";
@@ -527,7 +526,7 @@ public partial class CustomOption
                 }
                 else if (option == CustomOptionHolder.NeutralRolesCountMin)
                 {
-                    var optionName = CustomOptionHolderHelpers.Cs(new Color(204f / 255f, 204f / 255f, 0, 1f), "Neutral Roles");
+                    var optionName = CustomOptionHolderHelpers.Cs(new Color(204f / 255f, 204f / 255f, 0, 1f), Tr.Get("OptionPage.NeutralRoles"));
                     var min = CustomOptionHolder.NeutralRolesCountMin.GetSelection();
                     var max = CustomOptionHolder.NeutralRolesCountMax.GetSelection();
                     if (min > max) min = max;
@@ -536,7 +535,7 @@ public partial class CustomOption
                 }
                 else if (option == CustomOptionHolder.ImpostorRolesCountMin)
                 {
-                    var optionName = CustomOptionHolderHelpers.Cs(new Color(204f / 255f, 204f / 255f, 0, 1f), "Impostor Roles");
+                    var optionName = CustomOptionHolderHelpers.Cs(new Color(204f / 255f, 204f / 255f, 0, 1f), Tr.Get("OptionPage.ImpostorRoles"));
                     var min = CustomOptionHolder.ImpostorRolesCountMin.GetSelection();
                     var max = CustomOptionHolder.ImpostorRolesCountMax.GetSelection();
                     if (max > Helpers.GetOption(Int32OptionNames.NumImpostors)) max = Helpers.GetOption(Int32OptionNames.NumImpostors);
@@ -546,7 +545,7 @@ public partial class CustomOption
                 }
                 else if (option == CustomOptionHolder.ModifiersCountMin)
                 {
-                    var optionName = CustomOptionHolderHelpers.Cs(new Color(204f / 255f, 204f / 255f, 0, 1f), "Modifiers");
+                    var optionName = CustomOptionHolderHelpers.Cs(new Color(204f / 255f, 204f / 255f, 0, 1f), Tr.Get("OptionPage.Modifiers"));
                     var min = CustomOptionHolder.ModifiersCountMin.GetSelection();
                     var max = CustomOptionHolder.ModifiersCountMax.GetSelection();
                     if (min > max) min = max;
@@ -559,7 +558,7 @@ public partial class CustomOption
                 }
                 else
                 {
-                    sb.AppendLine($"\n{Tr.Get(option.NameKey)}: {option.Selections[option.Selection].ToString()}");
+                    sb.AppendLine($"\n{Helpers.Cs(option.Color, Tr.Get(option.NameKey))}: {option.Selections[option.Selection].ToString()}");
                 }
             }
         }
@@ -574,31 +573,31 @@ public partial class CustomOption
         int counter = RebuildUs.OptionsPage;
         string hudString = counter != 0 && !hideExtras ? Helpers.Cs(DateTime.Now.Second % 2 == 0 ? Color.white : Color.red, "(Use scroll wheel if necessary)\n\n") : "";
 
-        if (ModMapOptions.GameMode == CustomGamemodes.HideNSeek)
-        {
-            if (RebuildUs.OptionsPage > 1) RebuildUs.OptionsPage = 0;
-            MaxPage = 2;
-            switch (counter)
-            {
-                case 0:
-                    hudString += "Page 1: Hide N Seek Settings \n\n" + BuildOptionsOfType(CustomOptionType.HideNSeekMain, false);
-                    break;
-                case 1:
-                    hudString += "Page 2: Hide N Seek Role Settings \n\n" + BuildOptionsOfType(CustomOptionType.HideNSeekRoles, false);
-                    break;
-            }
-        }
-        else if (ModMapOptions.GameMode == CustomGamemodes.PropHunt)
-        {
-            MaxPage = 1;
-            switch (counter)
-            {
-                case 0:
-                    hudString += "Page 1: Prop Hunt Settings \n\n" + BuildOptionsOfType(CustomOptionType.PropHunt, false);
-                    break;
-            }
-        }
-        else
+        // if (ModMapOptions.GameMode == CustomGamemodes.HideNSeek)
+        // {
+        //     if (RebuildUs.OptionsPage > 1) RebuildUs.OptionsPage = 0;
+        //     MaxPage = 2;
+        //     switch (counter)
+        //     {
+        //         case 0:
+        //             hudString += "Page 1: Hide N Seek Settings \n\n" + BuildOptionsOfType(CustomOptionType.HideNSeekMain, false);
+        //             break;
+        //         case 1:
+        //             hudString += "Page 2: Hide N Seek Role Settings \n\n" + BuildOptionsOfType(CustomOptionType.HideNSeekRoles, false);
+        //             break;
+        //     }
+        // }
+        // else if (ModMapOptions.GameMode == CustomGamemodes.PropHunt)
+        // {
+        //     MaxPage = 1;
+        //     switch (counter)
+        //     {
+        //         case 0:
+        //             hudString += "Page 1: Prop Hunt Settings \n\n" + BuildOptionsOfType(CustomOptionType.PropHunt, false);
+        //             break;
+        //     }
+        // }
+        // else
         {
             MaxPage = 7;
             switch (counter)
@@ -638,7 +637,7 @@ public partial class CustomOption
     }
     public static bool LGOAreInvalid(LegacyGameOptions __instance, ref int maxExpectedPlayers)
     {
-        //making the killdistances bound check higher since extra short is added
+        //making the kill distances bound check higher since extra short is added
         return __instance.MaxPlayers > maxExpectedPlayers || __instance.NumImpostors < 1
                 || __instance.NumImpostors > 3 || __instance.KillDistance < 0
                 || __instance.KillDistance >= LegacyGameOptions.KillDistances.Count

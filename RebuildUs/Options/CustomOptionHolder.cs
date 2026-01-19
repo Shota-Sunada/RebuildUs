@@ -418,41 +418,41 @@ public static partial class CustomOptionHolder
         #endregion
 
         #region POLUS OPTIONS
-        PolusOptions = CustomOption.Header(70, CustomOptionType.General, "Map.PolusOptions", false, "Map.PolusOptions");
-        PolusAdditionalVents = CustomOption.Normal(71, CustomOptionType.General, "Map.PolusAdditionalVents", true, PolusOptions);
-        PolusSpecimenVital = CustomOption.Normal(72, CustomOptionType.General, "Map.PolusSpecimenVital", true, PolusOptions);
-        PolusRandomSpawn = CustomOption.Normal(73, CustomOptionType.General, "Map.PolusRandomSpawn", true, PolusOptions);
+        PolusOptions = CustomOption.Header(70, CustomOptionType.General, "Option.PolusOptions", false, "Option.PolusOptions");
+        PolusAdditionalVents = CustomOption.Normal(71, CustomOptionType.General, "Option.PolusAdditionalVents", true, PolusOptions);
+        PolusSpecimenVital = CustomOption.Normal(72, CustomOptionType.General, "Option.PolusSpecimenVital", true, PolusOptions);
+        PolusRandomSpawn = CustomOption.Normal(73, CustomOptionType.General, "Option.PolusRandomSpawn", true, PolusOptions);
         #endregion
 
         #region AIRSHIP OPTIONS
-        AirshipOptions = CustomOption.Header(80, CustomOptionType.General, "Map.AirshipOptions", false, "Map.AirshipOptions");
-        AirshipEnableWallCheck = CustomOption.Normal(81, CustomOptionType.General, "Map.AirshipEnableWallCheck", true, AirshipOptions);
-        AirshipReactorDuration = CustomOption.Normal(82, CustomOptionType.General, "Map.AirshipReactorDuration", 60f, 0f, 600f, 1f, AirshipOptions);
-        AirshipRandomSpawn = CustomOption.Normal(83, CustomOptionType.General, "Map.AirshipRandomSpawn", false, AirshipOptions);
-        AirshipAdditionalSpawn = CustomOption.Normal(84, CustomOptionType.General, "Map.AirshipAdditionalSpawn", true, AirshipOptions);
-        AirshipSynchronizedSpawning = CustomOption.Normal(85, CustomOptionType.General, "Map.AirshipSynchronizedSpawning", true, AirshipOptions);
-        AirshipSetOriginalCooldown = CustomOption.Normal(86, CustomOptionType.General, "Map.AirshipSetOriginalCooldown", false, AirshipOptions);
-        AirshipInitialDoorCooldown = CustomOption.Normal(87, CustomOptionType.General, "Map.AirshipInitialDoorCooldown", 0f, 0f, 60f, 1f, AirshipOptions);
-        AirshipInitialSabotageCooldown = CustomOption.Normal(88, CustomOptionType.General, "Map.AirshipInitialSabotageCooldown", 15f, 0f, 60f, 1f, AirshipOptions);
-        AirshipOldAdmin = CustomOption.Normal(89, CustomOptionType.General, "Map.AirshipOldAdmin", false, AirshipOptions);
-        AirshipRestrictedAdmin = CustomOption.Normal(90, CustomOptionType.General, "Map.AirshipRestrictedAdmin", false, AirshipOptions);
-        AirshipDisableGapSwitchBoard = CustomOption.Normal(91, CustomOptionType.General, "Map.AirshipDisableGapSwitchBoard", false, AirshipOptions);
-        AirshipDisableMovingPlatform = CustomOption.Normal(92, CustomOptionType.General, "Map.AirshipDisableMovingPlatform", false, AirshipOptions);
-        AirshipAdditionalLadder = CustomOption.Normal(93, CustomOptionType.General, "Map.AirshipAdditionalLadder", false, AirshipOptions);
-        AirshipOneWayLadder = CustomOption.Normal(94, CustomOptionType.General, "Map.AirshipOneWayLadder", false, AirshipOptions);
-        AirshipReplaceSafeTask = CustomOption.Normal(95, CustomOptionType.General, "Map.AirshipReplaceSafeTask", false, AirshipOptions);
-        AirshipAdditionalWireTask = CustomOption.Normal(96, CustomOptionType.General, "Map.AirshipAdditionalWireTask", false, AirshipOptions);
+        AirshipOptions = CustomOption.Header(80, CustomOptionType.General, "Option.AirshipOptions", false, "Option.AirshipOptions");
+        AirshipEnableWallCheck = CustomOption.Normal(81, CustomOptionType.General, "Option.AirshipEnableWallCheck", true, AirshipOptions);
+        AirshipReactorDuration = CustomOption.Normal(82, CustomOptionType.General, "Option.AirshipReactorDuration", 60f, 0f, 600f, 1f, AirshipOptions);
+        AirshipRandomSpawn = CustomOption.Normal(83, CustomOptionType.General, "Option.AirshipRandomSpawn", false, AirshipOptions);
+        AirshipAdditionalSpawn = CustomOption.Normal(84, CustomOptionType.General, "Option.AirshipAdditionalSpawn", true, AirshipOptions);
+        AirshipSynchronizedSpawning = CustomOption.Normal(85, CustomOptionType.General, "Option.AirshipSynchronizedSpawning", true, AirshipOptions);
+        AirshipSetOriginalCooldown = CustomOption.Normal(86, CustomOptionType.General, "Option.AirshipSetOriginalCooldown", false, AirshipOptions);
+        AirshipInitialDoorCooldown = CustomOption.Normal(87, CustomOptionType.General, "Option.AirshipInitialDoorCooldown", 0f, 0f, 60f, 1f, AirshipOptions);
+        AirshipInitialSabotageCooldown = CustomOption.Normal(88, CustomOptionType.General, "Option.AirshipInitialSabotageCooldown", 15f, 0f, 60f, 1f, AirshipOptions);
+        AirshipOldAdmin = CustomOption.Normal(89, CustomOptionType.General, "Option.AirshipOldAdmin", false, AirshipOptions);
+        AirshipRestrictedAdmin = CustomOption.Normal(90, CustomOptionType.General, "Option.AirshipRestrictedAdmin", false, AirshipOptions);
+        AirshipDisableGapSwitchBoard = CustomOption.Normal(91, CustomOptionType.General, "Option.AirshipDisableGapSwitchBoard", false, AirshipOptions);
+        AirshipDisableMovingPlatform = CustomOption.Normal(92, CustomOptionType.General, "Option.AirshipDisableMovingPlatform", false, AirshipOptions);
+        AirshipAdditionalLadder = CustomOption.Normal(93, CustomOptionType.General, "Option.AirshipAdditionalLadder", false, AirshipOptions);
+        AirshipOneWayLadder = CustomOption.Normal(94, CustomOptionType.General, "Option.AirshipOneWayLadder", false, AirshipOptions);
+        AirshipReplaceSafeTask = CustomOption.Normal(95, CustomOptionType.General, "Option.AirshipReplaceSafeTask", false, AirshipOptions);
+        AirshipAdditionalWireTask = CustomOption.Normal(96, CustomOptionType.General, "Option.AirshipAdditionalWireTask", false, AirshipOptions);
         #endregion
 
         #region MAP OPTIONS
-        RandomMap = CustomOption.Header(100, CustomOptionType.General, "Map.RandomMap", false, "Map.RandomMap");
-        RandomMapEnableSkeld = CustomOption.Normal(101, CustomOptionType.General, "Map.RandomMapEnableSkeld", true, RandomMap);
-        RandomMapEnableMiraHQ = CustomOption.Normal(102, CustomOptionType.General, "Map.RandomMapEnableMiraHQ", true, RandomMap);
-        RandomMapEnablePolus = CustomOption.Normal(103, CustomOptionType.General, "Map.RandomMapEnablePolus", true, RandomMap);
-        RandomMapEnableDleks = CustomOption.Normal(104, CustomOptionType.General, "Map.RandomMapEnableDleks", true, RandomMap);
-        RandomMapEnableAirShip = CustomOption.Normal(105, CustomOptionType.General, "Map.RandomMapEnableAirShip", true, RandomMap);
-        RandomMapEnableFungle = CustomOption.Normal(106, CustomOptionType.General, "Map.RandomMapEnableFungle", true, RandomMap);
-        RandomMapEnableSubmerged = CustomOption.Normal(107, CustomOptionType.General, "Map.RandomMapEnableSubmerged", true, RandomMap);
+        RandomMap = CustomOption.Header(100, CustomOptionType.General, "Option.RandomMap", false, "Option.RandomMap");
+        RandomMapEnableSkeld = CustomOption.Normal(101, CustomOptionType.General, "Option.RandomMapEnableSkeld", true, RandomMap);
+        RandomMapEnableMiraHQ = CustomOption.Normal(102, CustomOptionType.General, "Option.RandomMapEnableMiraHQ", true, RandomMap);
+        RandomMapEnablePolus = CustomOption.Normal(103, CustomOptionType.General, "Option.RandomMapEnablePolus", true, RandomMap);
+        RandomMapEnableDleks = CustomOption.Normal(104, CustomOptionType.General, "Option.RandomMapEnableDleks", true, RandomMap);
+        RandomMapEnableAirShip = CustomOption.Normal(105, CustomOptionType.General, "Option.RandomMapEnableAirShip", true, RandomMap);
+        RandomMapEnableFungle = CustomOption.Normal(106, CustomOptionType.General, "Option.RandomMapEnableFungle", true, RandomMap);
+        RandomMapEnableSubmerged = CustomOption.Normal(107, CustomOptionType.General, "Option.RandomMapEnableSubmerged", true, RandomMap);
         #endregion
 
         #region ROLES CREWMATE

@@ -818,4 +818,17 @@ public static class Helpers
         }
         return null;
     }
+
+    public static RoleTypes GetOptionIcon(this CustomOption option)
+    {
+        return option.Type switch
+        {
+            CustomOptionType.General => RoleTypes.Crewmate,
+            CustomOptionType.Crewmate => RoleTypes.Scientist,
+            CustomOptionType.Impostor => RoleTypes.Shapeshifter,
+            CustomOptionType.Neutral => RoleTypes.Noisemaker,
+            CustomOptionType.Modifier => RoleTypes.GuardianAngel,
+            _ => RoleTypes.Crewmate
+        };
+    }
 }

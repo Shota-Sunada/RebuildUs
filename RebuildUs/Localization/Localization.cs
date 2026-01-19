@@ -6,7 +6,10 @@ namespace RebuildUs.Localization;
 
 public static class Tr
 {
+    private const string BLANK = "[BLANK]";
+
     private static readonly Dictionary<SupportedLangs, Dictionary<string, string>> Translations = [];
+    private static readonly HashSet<string> MissingKeys = [];
 
     public static void Initialize()
     {
@@ -49,12 +52,24 @@ public static class Tr
 
     public static string Get(string key, params object[] args)
     {
-        if (string.IsNullOrEmpty(key)) return "";
+        if (string.IsNullOrEmpty(key) || key is BLANK) return "";
 
         // Strip out color tags and leading dashes
         string keyClean = Regex.Replace(key, "<.*?>", "");
         keyClean = Regex.Replace(keyClean, "^-\\s*", "");
         keyClean = keyClean.Trim();
+
+        int dotCount = 0;
+        foreach (char c in keyClean) if (c == '.') dotCount++;
+
+        if (dotCount != 1)
+        {
+            if (MissingKeys.Add(keyClean))
+            {
+                Logger.LogError($"Invalid translation key: {keyClean}");
+            }
+            return "[ERROR]";
+        }
 
         var lang = TranslationController.InstanceExists ? FastDestroyableSingleton<TranslationController>.Instance.currentLanguage.languageID : SupportedLangs.English;
 
@@ -70,6 +85,10 @@ public static class Tr
 
         if (result == null)
         {
+            if (MissingKeys.Add(keyClean))
+            {
+                Logger.LogWarn($"Translation key not found: {keyClean}");
+            }
             return args.Length > 0 ? string.Format(key, args) : key;
         }
 
@@ -83,6 +102,35 @@ public static class Tr
         {
             Logger.LogError($"Failed to format string for key {key}: {ex.Message}");
             return finalStr;
+        }
+    }
+
+    public static void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.L) && (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift)))
+        {
+            DumpMissingKeys();
+        }
+    }
+
+    private static void DumpMissingKeys()
+    {
+        if (MissingKeys.Count == 0)
+        {
+            Logger.LogInfo("No missing translation keys found.");
+            return;
+        }
+
+        try
+        {
+            var path = Path.Combine(Directory.GetCurrentDirectory(), "MissingKeys.json");
+            var json = JsonSerializer.Serialize(MissingKeys, new JsonSerializerOptions { WriteIndented = true });
+            File.WriteAllText(path, json);
+            Logger.LogInfo($"Missing translation keys dumped to {path}");
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError($"Failed to dump missing keys: {ex.Message}");
         }
     }
 }

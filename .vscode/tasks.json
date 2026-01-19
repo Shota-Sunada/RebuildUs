@@ -97,6 +97,14 @@
       }
     },
     {
+      "label": "Format Translation Json",
+      "command": "powershell -ExecutionPolicy Bypass .\\format-translations.ps1",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      }
+    },
+    {
       "label": "Run Refactor Tool",
       "command": "dotnet run --project RefactorTool/RefactorTool.csproj -- RebuildUs.sln",
       "group": {

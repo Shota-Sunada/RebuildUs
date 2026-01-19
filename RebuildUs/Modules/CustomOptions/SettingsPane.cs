@@ -123,9 +123,9 @@ public partial class CustomOption
 
                 var categoryHeaderMasked = UnityEngine.Object.Instantiate(__instance.categoryHeaderOrigin);
                 categoryHeaderMasked.SetHeader(StringNames.ImpostorsCategory, 61);
-                categoryHeaderMasked.Title.text = option.HeaderText != "" ? Tr.Get(option.HeaderText) : Tr.Get(option.NameKey);
+                categoryHeaderMasked.Title.text = option.HeaderText != "" ? option.HeaderText : Helpers.Cs(option.Color, Tr.Get(option.NameKey));
                 categoryHeaderMasked.Title.outlineColor = Color.white;
-                categoryHeaderMasked.Title.outlineWidth = 0.2f;
+                categoryHeaderMasked.Title.outlineWidth = 0.01f;
                 categoryHeaderMasked.transform.SetParent(__instance.settingsContainer);
                 categoryHeaderMasked.transform.localScale = Vector3.one;
                 categoryHeaderMasked.transform.localPosition = new Vector3(-9.77f, num, -2f);
@@ -172,11 +172,10 @@ public partial class CustomOption
             viewSettingsInfoPanel.titleText.text = Tr.Get(viewName);
 
             if (option.IsHeader &&
-                option.HeaderText == "" &&
                 (option.Type is CustomOptionType.Neutral or CustomOptionType.Crewmate or CustomOptionType.Impostor or CustomOptionType.Modifier)
             )
             {
-                viewSettingsInfoPanel.titleText.text = "Spawn Chance";
+                viewSettingsInfoPanel.titleText.text = Tr.Get("Options.SpawnChance");
             }
 
             __instance.settingsInfo.Add(viewSettingsInfoPanel.gameObject);
@@ -224,14 +223,14 @@ public partial class CustomOption
                 categoryHeaderMasked.SetHeader(StringNames.ImpostorsCategory, 61);
                 categoryHeaderMasked.Title.text = currentType switch
                 {
-                    CustomOptionType.Impostor => "Impostors",
-                    CustomOptionType.Neutral => "Neutrals",
-                    CustomOptionType.Crewmate => "Crewmates",
-                    CustomOptionType.Modifier => "Modifiers",
-                    _ => "Others"
+                    CustomOptionType.Impostor => Tr.Get("OptionPage.ImpostorRoles"),
+                    CustomOptionType.Neutral => Tr.Get("OptionPage.NeutralRoles"),
+                    CustomOptionType.Crewmate => Tr.Get("OptionPage.CrewmateRoles"),
+                    CustomOptionType.Modifier => Tr.Get("OptionPage.Modifiers"),
+                    _ => Tr.Get("OptionPage.Others")
                 };
                 categoryHeaderMasked.Title.outlineColor = Color.white;
-                categoryHeaderMasked.Title.outlineWidth = 0.1f;
+                categoryHeaderMasked.Title.outlineWidth = 0.01f;
                 categoryHeaderMasked.transform.SetParent(__instance.settingsContainer);
                 categoryHeaderMasked.transform.localScale = Vector3.one;
                 categoryHeaderMasked.transform.localPosition = new Vector3(-9.77f, num, -2f);
@@ -279,21 +278,21 @@ public partial class CustomOption
     public static void SettingsPaneAwake(LobbyViewSettingsPane __instance)
     {
         __instance.rolesTabButton.gameObject.SetActive(false);
-        __instance.gameModeText.text = "RebuildUs Settings";
+        __instance.gameModeText.text = Tr.Get("OptionPage.GameModeText");
 
         var overview = __instance.taskTabButton.gameObject;
-        __instance.taskTabButton.buttonText.SetText("Among Us");
+        __instance.StartCoroutine(Effects.Lerp(2f, new Action<float>(p => { __instance.taskTabButton.gameObject.transform.FindChild("FontPlacer").GetComponentInChildren<TextMeshPro>().text = "Among Us"; })));
         overview.transform.localScale = new Vector3(0.5f * overview.transform.localScale.x, overview.transform.localScale.y, overview.transform.localScale.z);
         overview.transform.localPosition += new Vector3(-1.2f, 0f, 0f);
         overview.transform.FindChild("FontPlacer").transform.localScale = new Vector3(1.35f, 1f, 1f);
         overview.transform.FindChild("FontPlacer").transform.localPosition = new Vector3(-0.6f, -0.1f, 0f);
 
-        GeneralPaneButton = CreateCustomButton(__instance, PanePage.General, "RUSettings", "Mod General", CustomOptionType.General);
-        OverviewPaneButton = CreateCustomButton(__instance, PanePage.Overview, "RoleOverview", "Roles Overview", (CustomOptionType)99);
-        ImpostorPaneButton = CreateCustomButton(__instance, PanePage.Impostor, "ImpostorSettings", "Impostor", CustomOptionType.Impostor);
-        CrewmatePaneButton = CreateCustomButton(__instance, PanePage.Crewmate, "CrewmateSettings", "Crewmate", CustomOptionType.Crewmate);
-        NeutralPaneButton = CreateCustomButton(__instance, PanePage.Neutral, "NeutralSettings", "Neutral", CustomOptionType.Neutral);
-        ModifierPaneButton = CreateCustomButton(__instance, PanePage.Modifier, "ModifierSettings", "Modifiers", CustomOptionType.Modifier);
+        GeneralPaneButton = CreateCustomButton(__instance, PanePage.General, "RUSettings", Tr.Get("OptionPage.TabGeneral"), CustomOptionType.General);
+        OverviewPaneButton = CreateCustomButton(__instance, PanePage.Overview, "RoleOverview", Tr.Get("OptionPage.TabRolesOverview"), (CustomOptionType)99);
+        ImpostorPaneButton = CreateCustomButton(__instance, PanePage.Impostor, "ImpostorSettings", Tr.Get("OptionPage.TabImpostor"), CustomOptionType.Impostor);
+        CrewmatePaneButton = CreateCustomButton(__instance, PanePage.Crewmate, "CrewmateSettings", Tr.Get("OptionPage.TabCrewmate"), CustomOptionType.Crewmate);
+        NeutralPaneButton = CreateCustomButton(__instance, PanePage.Neutral, "NeutralSettings", Tr.Get("OptionPage.TabNeutral"), CustomOptionType.Neutral);
+        ModifierPaneButton = CreateCustomButton(__instance, PanePage.Modifier, "ModifierSettings", Tr.Get("OptionPage.TabModifiers"), CustomOptionType.Modifier);
     }
 
     public static GameObject CreateCustomButton(LobbyViewSettingsPane __instance, PanePage id, string buttonName, string buttonText, CustomOptionType optionType)
@@ -323,7 +322,7 @@ public partial class CustomOption
         if (option == CustomOptionHolder.CrewmateRolesCountMin)
         {
             val = "";
-            name = "Crewmate Roles";
+            name = "OptionPage.CrewmateRoles";
             var min = CustomOptionHolder.CrewmateRolesCountMin.GetSelection();
             var max = CustomOptionHolder.CrewmateRolesCountMax.GetSelection();
             if (min > max) min = max;
@@ -331,7 +330,7 @@ public partial class CustomOption
         }
         if (option == CustomOptionHolder.NeutralRolesCountMin)
         {
-            name = "Neutral Roles";
+            name = "OptionPage.NeutralRoles";
             var min = CustomOptionHolder.NeutralRolesCountMin.GetSelection();
             var max = CustomOptionHolder.NeutralRolesCountMax.GetSelection();
             if (min > max) min = max;
@@ -339,7 +338,7 @@ public partial class CustomOption
         }
         if (option == CustomOptionHolder.ImpostorRolesCountMin)
         {
-            name = "Impostor Roles";
+            name = "OptionPage.ImpostorRoles";
             var min = CustomOptionHolder.ImpostorRolesCountMin.GetSelection();
             var max = CustomOptionHolder.ImpostorRolesCountMax.GetSelection();
             if (max > Helpers.GetOption(Int32OptionNames.NumImpostors)) max = Helpers.GetOption(Int32OptionNames.NumImpostors);
@@ -348,7 +347,7 @@ public partial class CustomOption
         }
         if (option == CustomOptionHolder.ModifiersCountMin)
         {
-            name = "Modifiers";
+            name = "OptionPage.Modifiers";
             var min = CustomOptionHolder.ModifiersCountMin.GetSelection();
             var max = CustomOptionHolder.ModifiersCountMax.GetSelection();
             if (min > max) min = max;

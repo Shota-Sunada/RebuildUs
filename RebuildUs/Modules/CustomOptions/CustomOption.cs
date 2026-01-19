@@ -31,6 +31,7 @@ public partial class CustomOption
     public int Id;
     public string NameKey;
     public string Format;
+    public Color Color;
     public object[] Selections;
 
     public int DefaultSelection;
@@ -56,15 +57,15 @@ public partial class CustomOption
     public CustomOption() { }
 
     // Option creation
-    public CustomOption(int id, CustomOptionType type, string nameKey, object[] selections, object defaultValue, CustomOption parent, bool isHeader, bool hideIfParentEnabled, string format, Action onChange = null)
+    public CustomOption(int id, CustomOptionType type, string nameKey, object[] selections, object defaultValue, CustomOption parent, bool hideIfParentEnabled, string format, Color color, Action onChange = null)
     {
         Id = id;
         NameKey = nameKey;
+        Color = color;
         Selections = selections;
         var index = Array.IndexOf(selections, defaultValue);
         DefaultSelection = index >= 0 ? index : 0;
         Parent = parent;
-        IsHeader = isHeader;
         Type = type;
         OnChange = onChange;
         HideIfParentEnabled = hideIfParentEnabled;
@@ -90,12 +91,16 @@ public partial class CustomOption
         string nameKey,
         string[] selections,
         CustomOption parent = null,
+        byte r = byte.MaxValue,
+        byte g = byte.MaxValue,
+        byte b = byte.MaxValue,
+        byte a = byte.MaxValue,
         Action onChange = null,
         bool hideIfParentEnabled = false,
         string format = ""
         )
     {
-        return new CustomOption(id, type, nameKey, selections, "", parent, false, hideIfParentEnabled, format, onChange);
+        return new CustomOption(id, type, nameKey, selections, "", parent, hideIfParentEnabled, format, new Color32(r, g, b, a), onChange);
     }
 
     public static CustomOption Header(
@@ -104,11 +109,15 @@ public partial class CustomOption
         string nameKey,
         string[] selections,
         string headerText,
+        byte r = byte.MaxValue,
+        byte g = byte.MaxValue,
+        byte b = byte.MaxValue,
+        byte a = byte.MaxValue,
         Action onChange = null,
         string format = ""
         )
     {
-        var opt = new CustomOption(id, type, nameKey, selections, "", null, false, false, format, onChange);
+        var opt = new CustomOption(id, type, nameKey, selections, "", null, false, format, new Color32(r, g, b, a), onChange);
         opt.SetHeader(headerText);
         return opt;
     }
@@ -122,6 +131,10 @@ public partial class CustomOption
         float max,
         float step,
         CustomOption parent = null,
+        byte r = byte.MaxValue,
+        byte g = byte.MaxValue,
+        byte b = byte.MaxValue,
+        byte a = byte.MaxValue,
         Action onChange = null,
         bool hideIfParentEnabled = false,
         string format = ""
@@ -132,7 +145,7 @@ public partial class CustomOption
         {
             selections.Add(s);
         }
-        return new CustomOption(id, type, nameKey, [.. selections], defaultValue, parent, false, hideIfParentEnabled, format, onChange);
+        return new CustomOption(id, type, nameKey, [.. selections], defaultValue, parent, hideIfParentEnabled, format, new Color32(r, g, b, a), onChange);
     }
 
     public static CustomOption Header(
@@ -144,6 +157,10 @@ public partial class CustomOption
         float max,
         float step,
         string headerText,
+        byte r = byte.MaxValue,
+        byte g = byte.MaxValue,
+        byte b = byte.MaxValue,
+        byte a = byte.MaxValue,
         Action onChange = null,
         string format = ""
         )
@@ -154,7 +171,7 @@ public partial class CustomOption
             selections.Add(s);
         }
 
-        var opt = new CustomOption(id, type, nameKey, [.. selections], defaultValue, null, false, false, format, onChange);
+        var opt = new CustomOption(id, type, nameKey, [.. selections], defaultValue, null, false, format, new Color32(r, g, b, a), onChange);
         opt.SetHeader(headerText);
         return opt;
     }
@@ -165,12 +182,16 @@ public partial class CustomOption
         string nameKey,
         bool defaultValue,
         CustomOption parent = null,
+        byte r = byte.MaxValue,
+        byte g = byte.MaxValue,
+        byte b = byte.MaxValue,
+        byte a = byte.MaxValue,
         Action onChange = null,
         bool hideIfParentEnabled = false,
         string format = ""
     )
     {
-        return new CustomOption(id, type, nameKey, ["Off", "On"], defaultValue ? "On" : "Off", parent, false, hideIfParentEnabled, format, onChange);
+        return new CustomOption(id, type, nameKey, ["Off", "On"], defaultValue ? "On" : "Off", parent, hideIfParentEnabled, format, new Color32(r, g, b, a), onChange);
     }
 
     public static CustomOption Header(
@@ -179,11 +200,15 @@ public partial class CustomOption
         string nameKey,
         bool defaultValue,
         string headerText,
+        byte r = byte.MaxValue,
+        byte g = byte.MaxValue,
+        byte b = byte.MaxValue,
+        byte a = byte.MaxValue,
         Action onChange = null,
         string format = ""
     )
     {
-        var opt = new CustomOption(id, type, nameKey, ["Off", "On"], defaultValue ? "On" : "Off", null, false, false, format, onChange);
+        var opt = new CustomOption(id, type, nameKey, ["Off", "On"], defaultValue ? "On" : "Off", null, false, format, new Color32(r, g, b, a), onChange);
         opt.SetHeader(headerText);
         return opt;
     }
@@ -290,15 +315,15 @@ public partial class CustomOption
 
     public string GetName()
     {
-        return Tr.Get(NameKey);
+        return Helpers.Cs(Color, Tr.Get(NameKey));
     }
 
-    public void UpdateSelection(int newSelection, bool notifyUsers = true)
+    public void UpdateSelection(int newSelection, RoleTypes icon, bool notifyUsers = true)
     {
         newSelection = Mathf.Clamp((newSelection + Selections.Length) % Selections.Length, 0, Selections.Length - 1);
         if (AmongUsClient.Instance?.AmClient == true && notifyUsers && Selection != newSelection)
         {
-            DestroyableSingleton<HudManager>.Instance.Notifier.AddSettingsChangeMessage((StringNames)(Id + CUSTOM_OPTION_PRE_ID), Selections[newSelection].ToString(), false);
+            DestroyableSingleton<HudManager>.Instance.Notifier.AddSettingsChangeMessage((StringNames)(Id + CUSTOM_OPTION_PRE_ID), Selections[newSelection].ToString(), false, icon);
             try
             {
                 Selection = newSelection;

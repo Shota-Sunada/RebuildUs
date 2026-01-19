@@ -36,7 +36,7 @@ public static partial class RPCProcedure
             uint id = reader.ReadPackedUInt32();
             uint selection = reader.ReadPackedUInt32();
             var option = CustomOption.AllOptions.FirstOrDefault(x => x.Id == (int)id);
-            option?.UpdateSelection((int)selection);
+            option?.UpdateSelection((int)selection, option.GetOptionIcon());
         }
     }
 
