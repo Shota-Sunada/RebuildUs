@@ -42,7 +42,7 @@ namespace CosmeticsDownloader
         {
             this.Args = args;
             this.Text = "Rebuild-Us Cosmetics Downloader";
-            this.Size = new System.Drawing.Size(700, 450);
+            this.Size = new Size(700, 450);
             this.StartPosition = FormStartPosition.CenterScreen;
             this.MaximizeBox = false;
             this.MinimizeBox = false;

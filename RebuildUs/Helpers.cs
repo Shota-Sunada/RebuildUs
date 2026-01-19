@@ -510,7 +510,7 @@ public static class Helpers
             if (p == PlayerControl.LocalPlayer || PlayerControl.LocalPlayer.Data.IsDead)
             {
                 var playerInfoTransform = p.cosmetics.nameText.transform.parent.FindChild("Info");
-                var playerInfo = playerInfoTransform?.GetComponent<TMPro.TextMeshPro>();
+                var playerInfo = playerInfoTransform?.GetComponent<TextMeshPro>();
                 if (playerInfo == null)
                 {
                     playerInfo = UnityEngine.Object.Instantiate(p.cosmetics.nameText, p.cosmetics.nameText.transform.parent);
@@ -521,7 +521,7 @@ public static class Helpers
                 }
 
                 var meetingInfoTransform = playerVoteArea?.NameText.transform.parent.FindChild("Info");
-                var meetingInfo = meetingInfoTransform?.GetComponent<TMPro.TextMeshPro>();
+                var meetingInfo = meetingInfoTransform?.GetComponent<TextMeshPro>();
                 if (meetingInfo == null && playerVoteArea != null)
                 {
                     meetingInfo = UnityEngine.Object.Instantiate(playerVoteArea.NameText, playerVoteArea.NameText.transform.parent);

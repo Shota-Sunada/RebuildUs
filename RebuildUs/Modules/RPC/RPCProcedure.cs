@@ -662,7 +662,7 @@ public static partial class RPCProcedure
 
         SystemTypes roomType = (SystemTypes)roomId;
 
-        var camera = UnityEngine.Object.Instantiate<SurvCamera>(referenceCamera);
+        var camera = UnityEngine.Object.Instantiate(referenceCamera);
         camera.transform.position = new Vector3(position.x, position.y, referenceCamera.transform.position.z - 1f);
         camera.CamName = $"Security Camera {sg.PlacedCameras}";
         camera.Offset = new Vector3(0f, 0f, camera.Offset.z);

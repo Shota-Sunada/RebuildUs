@@ -5,8 +5,8 @@ namespace RebuildUs.Players;
 
 public class CachedPlayer
 {
-    public static readonly Dictionary<IntPtr, CachedPlayer> PlayerPtrs = new();
-    public static readonly List<CachedPlayer> AllPlayers = new();
+    public static readonly Dictionary<IntPtr, CachedPlayer> PlayerPtrs = [];
+    public static readonly List<CachedPlayer> AllPlayers = [];
     public static CachedPlayer LocalPlayer;
 
     public Transform Transform;

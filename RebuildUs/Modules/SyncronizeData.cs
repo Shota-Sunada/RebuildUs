@@ -11,7 +11,7 @@ public class SynchronizeData
 
     public SynchronizeData()
     {
-        Dic = new Dictionary<SynchronizeTag, ulong>();
+        Dic = [];
     }
 
     public void Synchronize(SynchronizeTag tag, byte playerId)

@@ -112,7 +112,7 @@ public static class SpawnIn
         PlayerControl.LocalPlayer.NetTransform.RpcSnapTo(new Vector2(-25f, 40f));
         if (CustomOptionHolder.AirshipRandomSpawn.GetBool())
         {
-            __instance.LocationButtons.Random<PassiveButton>().ReceiveClickUp();
+            __instance.LocationButtons.Random().ReceiveClickUp();
         }
         else
         {

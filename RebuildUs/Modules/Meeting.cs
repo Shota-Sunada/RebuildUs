@@ -11,15 +11,15 @@ public static class Meeting
     static SpriteRenderer[] Renderers;
     private static NetworkedPlayerInfo Target = null;
     private const float Scale = 0.65f;
-    private static TMPro.TextMeshPro MeetingExtraButtonText;
+    private static TextMeshPro MeetingExtraButtonText;
     private static PassiveButton[] SwapperButtonList;
-    private static TMPro.TextMeshPro MeetingExtraButtonLabel;
+    private static TextMeshPro MeetingExtraButtonLabel;
     private static PlayerVoteArea Swapped1 = null;
     private static PlayerVoteArea Swapped2 = null;
 
     // GMH
     public static bool AnimateSwap = false;
-    static TMPro.TextMeshPro MeetingInfoText;
+    static TextMeshPro MeetingInfoText;
 
     public static void Update(MeetingHud __instance)
     {
@@ -385,7 +385,7 @@ public static class Meeting
             Swapper.RemainSwaps++;
             int copyI = i;
             SwapperButtonList[i].OnClick.RemoveAllListeners();
-            SwapperButtonList[i].OnClick.AddListener((System.Action)(() => SwapperOnClick(copyI, __instance)));
+            SwapperButtonList[i].OnClick.AddListener((Action)(() => SwapperOnClick(copyI, __instance)));
         }
         MeetingExtraButtonText.text = $"Swaps: {Swapper.RemainSwaps}";
         MeetingExtraButtonLabel.text = Helpers.Cs(Color.red, "Confirm Swap");
@@ -422,7 +422,7 @@ public static class Meeting
         exitButtonParent.transform.SetAsFirstSibling();
         GuesserUIExitButton = exitButton.GetComponent<PassiveButton>();
         GuesserUIExitButton.OnClick.RemoveAllListeners();
-        GuesserUIExitButton.OnClick.AddListener((System.Action)(() =>
+        GuesserUIExitButton.OnClick.AddListener((Action)(() =>
         {
             __instance.playerStates.ToList().ForEach(x =>
             {
@@ -573,7 +573,7 @@ public static class Meeting
                 SwapperButtonList[i] = button;
                 button.OnClick.RemoveAllListeners();
                 int copiedIndex = i;
-                button.OnClick.AddListener((System.Action)(() => SwapperOnClick(copiedIndex, __instance)));
+                button.OnClick.AddListener((Action)(() => SwapperOnClick(copiedIndex, __instance)));
 
                 Selections[i] = false;
                 Renderers[i] = renderer;
@@ -589,7 +589,7 @@ public static class Meeting
             Transform meetingExtraButton = UnityEngine.Object.Instantiate(buttonTemplate, meetingExtraButtonParent);
 
             Transform infoTransform = __instance.playerStates[0].NameText.transform.parent.FindChild("Info");
-            TMPro.TextMeshPro meetingInfo = infoTransform?.GetComponent<TMPro.TextMeshPro>();
+            TextMeshPro meetingInfo = infoTransform?.GetComponent<TextMeshPro>();
             MeetingExtraButtonText = UnityEngine.Object.Instantiate(__instance.playerStates[0].NameText, meetingExtraButtonParent);
             MeetingExtraButtonText.text = addSwapperButtons ? $"Swaps: {Swapper.RemainSwaps}" : "";
             MeetingExtraButtonText.enableWordWrapping = false;
@@ -659,7 +659,7 @@ public static class Meeting
                 PassiveButton button = targetBox.GetComponent<PassiveButton>();
                 button.OnClick.RemoveAllListeners();
                 int copiedIndex = i;
-                button.OnClick.AddListener((System.Action)(() =>
+                button.OnClick.AddListener((Action)(() =>
                 {
                     PlayerControl focusedTarget = Helpers.PlayerById((byte)__instance.playerStates[copiedIndex].TargetPlayerId);
                     EvilTracker.Target = focusedTarget;

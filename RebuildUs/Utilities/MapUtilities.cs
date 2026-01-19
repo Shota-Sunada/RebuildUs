@@ -10,7 +10,7 @@ public static class MapUtilities
         _systems.Clear();
     }
 
-    private static readonly Dictionary<SystemTypes, UnityEngine.Object> _systems = new();
+    private static readonly Dictionary<SystemTypes, UnityEngine.Object> _systems = [];
     public static Dictionary<SystemTypes, UnityEngine.Object> Systems
     {
         get

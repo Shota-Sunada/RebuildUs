@@ -1,10 +1,5 @@
-using System;
-using System.IO;
-using System.Linq;
-using HarmonyLib;
 using PowerTools;
 using RebuildUs.Modules.Cosmetics.Extensions;
-using UnityEngine;
 
 namespace RebuildUs.Modules.Cosmetics.Patches;
 

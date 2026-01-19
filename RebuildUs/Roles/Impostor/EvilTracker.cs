@@ -141,7 +141,7 @@ public class EvilTracker : RoleBase<EvilTracker>
                         gameObject.transform.SetParent(FastDestroyableSingleton<HudManager>.Instance.transform);
                         gameObject.transform.localPosition = new Vector3(0, -2.0f + 0.25f * count, gameObject.transform.localPosition.z);
                         gameObject.transform.localScale = Vector3.one * 1.0f;
-                        TMPro.TMP_Text positionText = gameObject.GetComponent<TMPro.TMP_Text>();
+                        TMP_Text positionText = gameObject.GetComponent<TMP_Text>();
                         positionText.alpha = 1.0f;
                         ImpostorPositionText.Add(p.name, positionText);
                     }
@@ -174,7 +174,7 @@ public class EvilTracker : RoleBase<EvilTracker>
                     gameObject.transform.SetParent(FastDestroyableSingleton<HudManager>.Instance.transform);
                     gameObject.transform.localPosition = new Vector3(0, -2.0f, gameObject.transform.localPosition.z);
                     gameObject.transform.localScale = Vector3.one * 1.0f;
-                    TargetPositionText = gameObject.GetComponent<TMPro.TMP_Text>();
+                    TargetPositionText = gameObject.GetComponent<TMP_Text>();
                     TargetPositionText.alpha = 1.0f;
                 }
                 PlainShipRoom room = Helpers.GetPlainShipRoom(Target);

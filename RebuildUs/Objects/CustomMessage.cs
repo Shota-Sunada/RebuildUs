@@ -14,7 +14,7 @@ public class CustomMessage
 
             gameObject.transform.SetParent(FastDestroyableSingleton<HudManager>.Instance.transform);
             UnityEngine.Object.DestroyImmediate(gameObject.GetComponent<RoomTracker>());
-            Text = gameObject.GetComponent<TMPro.TMP_Text>();
+            Text = gameObject.GetComponent<TMP_Text>();
             Text.text = Tr.Get(message);
 
             // Use local position to place it in the player's view instead of the world location

@@ -1,5 +1,3 @@
-using UnityEngine;
-
 namespace RebuildUs.Modules.Cosmetics;
 
 public class HatExtension

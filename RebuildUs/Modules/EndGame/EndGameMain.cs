@@ -245,7 +245,7 @@ public static class EndGameMain
         var bonusTextObject = UnityEngine.Object.Instantiate(__instance.WinText.gameObject);
         bonusTextObject.transform.position = new Vector3(__instance.WinText.transform.position.x, __instance.WinText.transform.position.y - 0.8f, __instance.WinText.transform.position.z);
         bonusTextObject.transform.localScale = new Vector3(0.7f, 0.7f, 1f);
-        TextRenderer = bonusTextObject.GetComponent<TMPro.TMP_Text>();
+        TextRenderer = bonusTextObject.GetComponent<TMP_Text>();
         TextRenderer.text = "";
 
         if (AdditionalTempData.IsGM)

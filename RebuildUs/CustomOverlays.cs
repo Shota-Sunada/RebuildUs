@@ -6,11 +6,11 @@ public class CustomOverlays
 {
     private static SpriteRenderer MeetingUnderlay;
     private static SpriteRenderer InfoUnderlay;
-    private static TMPro.TextMeshPro InfoOverlayRules;
-    private static TMPro.TextMeshPro InfoOverlayRoles;
+    private static TextMeshPro InfoOverlayRules;
+    private static TextMeshPro InfoOverlayRoles;
     public static bool OverlayShown = false;
     private static SpriteRenderer RoleUnderlay;
-    private static TMPro.TextMeshPro[] RoleOverlayList;
+    private static TextMeshPro[] RoleOverlayList;
     public static int RolePage = 0;
     public static int MaxRolePage = 0;
     private static List<string> RoleData;
@@ -103,7 +103,7 @@ public class CustomOverlays
 
         if (RoleOverlayList == null)
         {
-            RoleOverlayList = new TMPro.TextMeshPro[3];
+            RoleOverlayList = new TextMeshPro[3];
         }
 
         for (var i = 0; i < RoleOverlayList.Length; i++)
@@ -244,7 +244,7 @@ public class CustomOverlays
         return true;
     }
 
-    private static void InitializeRoleOverlay(TMPro.TextMeshPro roleOverlay)
+    private static void InitializeRoleOverlay(TextMeshPro roleOverlay)
     {
         roleOverlay.maxVisibleLines = 29;
         roleOverlay.fontSize = roleOverlay.fontSizeMin = roleOverlay.fontSizeMax = 1.15f;

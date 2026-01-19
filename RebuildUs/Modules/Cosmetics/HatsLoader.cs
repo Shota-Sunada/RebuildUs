@@ -1,10 +1,6 @@
-using System;
 using System.Collections;
-using System.IO;
 using System.Text.Json;
 using BepInEx.Unity.IL2CPP.Utils;
-using RebuildUs.Utilities;
-using UnityEngine;
 using Il2CppInterop.Runtime.Attributes;
 using static RebuildUs.Modules.Cosmetics.CustomHatManager;
 

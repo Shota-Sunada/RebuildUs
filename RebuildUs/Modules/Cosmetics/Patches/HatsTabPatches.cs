@@ -1,11 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using AmongUs.Data;
 using RebuildUs.Modules.Cosmetics.Extensions;
-using HarmonyLib;
-using TMPro;
-using UnityEngine;
 using Object = UnityEngine.Object;
 
 namespace RebuildUs.Modules.Cosmetics.Patches;
@@ -35,7 +29,7 @@ internal static class HatsTabPatches
             {
                 if (!packages.ContainsKey(ext.Package))
                 {
-                    packages[ext.Package] = new List<Tuple<HatData, HatExtension>>();
+                    packages[ext.Package] = [];
                 }
                 packages[ext.Package].Add(new Tuple<HatData, HatExtension>(hatBehaviour, ext));
             }
@@ -43,7 +37,7 @@ internal static class HatsTabPatches
             {
                 if (!packages.ContainsKey(CustomHatManager.InnerslothPackageName))
                 {
-                    packages[CustomHatManager.InnerslothPackageName] = new List<Tuple<HatData, HatExtension>>();
+                    packages[CustomHatManager.InnerslothPackageName] = [];
                 }
                 packages[CustomHatManager.InnerslothPackageName].Add(new Tuple<HatData, HatExtension>(hatBehaviour, null));
             }

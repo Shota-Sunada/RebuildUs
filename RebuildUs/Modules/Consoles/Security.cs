@@ -18,7 +18,7 @@ public static class SecurityCamera
         Timer = 0f;
     }
 
-    static TMPro.TextMeshPro TimeRemaining;
+    static TextMeshPro TimeRemaining;
 
     public static void UseCameraTime()
     {
@@ -48,7 +48,7 @@ public static class SecurityCamera
             for (int i = 4; i < MapUtilities.CachedShipStatus.AllCameras.Length; i++)
             {
                 SurvCamera surv = MapUtilities.CachedShipStatus.AllCameras[i];
-                Camera camera = UnityEngine.Object.Instantiate<Camera>(__instance.CameraPrefab);
+                Camera camera = UnityEngine.Object.Instantiate(__instance.CameraPrefab);
                 camera.transform.SetParent(__instance.transform);
                 camera.transform.position = new Vector3(surv.transform.position.x, surv.transform.position.y, 8f);
                 camera.orthographicSize = 2.35f;

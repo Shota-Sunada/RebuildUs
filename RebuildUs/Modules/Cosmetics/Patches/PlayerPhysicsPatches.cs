@@ -1,5 +1,4 @@
 using RebuildUs.Modules.Cosmetics.Extensions;
-using HarmonyLib;
 
 namespace RebuildUs.Modules.Cosmetics.Patches;
 

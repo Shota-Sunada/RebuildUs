@@ -3,13 +3,13 @@ namespace RebuildUs.Objects;
 public class AdditionalVents
 {
     public Vent Vent;
-    public static System.Collections.Generic.List<AdditionalVents> AllVents = new();
+    public static List<AdditionalVents> AllVents = [];
     public static bool Flag = false;
     public AdditionalVents(Vector3 p)
     {
         // Create the vent
         var referenceVent = UnityEngine.Object.FindObjectOfType<Vent>();
-        Vent = UnityEngine.Object.Instantiate<Vent>(referenceVent);
+        Vent = UnityEngine.Object.Instantiate(referenceVent);
         Vent.transform.position = p;
         Vent.Left = null;
         Vent.Right = null;
@@ -59,6 +59,6 @@ public class AdditionalVents
     {
         Logger.LogMessage("additionalVentsClearAndReload");
         Flag = false;
-        AllVents = new List<AdditionalVents>();
+        AllVents = [];
     }
 }

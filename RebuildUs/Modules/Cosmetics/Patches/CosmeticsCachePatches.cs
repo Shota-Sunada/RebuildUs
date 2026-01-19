@@ -1,5 +1,3 @@
-using HarmonyLib;
-
 namespace RebuildUs.Modules.Cosmetics.Patches;
 
 [HarmonyPatch(typeof(CosmeticsCache))]

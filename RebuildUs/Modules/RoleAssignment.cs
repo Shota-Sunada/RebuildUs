@@ -1,8 +1,6 @@
 using System.Collections;
 using BepInEx.Unity.IL2CPP.Utils.Collections;
 using UnityEngine.ResourceManagement.AsyncOperations;
-using RebuildUs.Roles;
-using RebuildUs.Modules.CustomOptions;
 
 namespace RebuildUs.Modules;
 
