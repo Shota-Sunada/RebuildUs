@@ -799,4 +799,23 @@ public static class Helpers
     {
         GameOptionsManager.Instance.CurrentGameOptions.SetByte(opt, value);
     }
+
+    public static Texture2D LoadTextureFromDisk(string path)
+    {
+        try
+        {
+            if (File.Exists(path))
+            {
+                Texture2D texture = new(2, 2, TextureFormat.ARGB32, true);
+                var byteTexture = Il2CppSystem.IO.File.ReadAllBytes(path);
+                ImageConversion.LoadImage(texture, byteTexture, false);
+                return texture;
+            }
+        }
+        catch
+        {
+            Logger.LogError("Error loading texture from disk: " + path);
+        }
+        return null;
+    }
 }

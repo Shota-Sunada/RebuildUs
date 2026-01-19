@@ -32,7 +32,7 @@ public class AdditionalVents
         if (AdditionalVents.Flag) return;
         AdditionalVents.Flag = true;
         if (AmongUsClient.Instance.GameState != InnerNet.InnerNetClient.GameStates.Started) return;
-        System.Console.WriteLine("AddAdditionalVents");
+        Logger.LogMessage("AddAdditionalVents");
 
         // Polusにベントを追加する
         if (Helpers.IsPolus && CustomOptionHolder.PolusAdditionalVents.GetBool())
@@ -57,7 +57,7 @@ public class AdditionalVents
 
     public static void ClearAndReload()
     {
-        System.Console.WriteLine("additionalVentsClearAndReload");
+        Logger.LogMessage("additionalVentsClearAndReload");
         Flag = false;
         AllVents = new List<AdditionalVents>();
     }
