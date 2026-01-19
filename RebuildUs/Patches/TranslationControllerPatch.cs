@@ -17,7 +17,7 @@ public static class TranslationControllerPatch
         // For now only do this in custom options.
         int idInt = (int)id - CustomOption.CUSTOM_OPTION_PRE_ID;
         var opt = CustomOption.AllOptions.FirstOrDefault(x => x.Id == idInt);
-        ourString = opt?.NameKey;
+        ourString = Tr.Get(opt?.NameKey);
 
         __result = ourString;
         return false;

@@ -123,7 +123,7 @@ public partial class CustomOption
 
                 var categoryHeaderMasked = UnityEngine.Object.Instantiate(__instance.categoryHeaderOrigin);
                 categoryHeaderMasked.SetHeader(StringNames.ImpostorsCategory, 61);
-                categoryHeaderMasked.Title.text = option.HeaderText != "" ? option.HeaderText : option.NameKey;
+                categoryHeaderMasked.Title.text = option.HeaderText != "" ? Tr.Get(option.HeaderText) : Tr.Get(option.NameKey);
                 categoryHeaderMasked.Title.outlineColor = Color.white;
                 categoryHeaderMasked.Title.outlineWidth = 0.2f;
                 categoryHeaderMasked.transform.SetParent(__instance.settingsContainer);

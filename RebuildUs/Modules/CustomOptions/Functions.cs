@@ -263,7 +263,7 @@ public partial class CustomOption
             {
                 var categoryHeaderMasked = UnityEngine.Object.Instantiate(menu.categoryHeaderOrigin, Vector3.zero, Quaternion.identity, menu.settingsContainer);
                 categoryHeaderMasked.SetHeader(StringNames.ImpostorsCategory, 20);
-                categoryHeaderMasked.Title.text = option.HeaderText != "" ? option.HeaderText : option.NameKey;
+                categoryHeaderMasked.Title.text = option.HeaderText != "" ? Tr.Get(option.HeaderText) : Tr.Get(option.NameKey);
                 categoryHeaderMasked.Title.outlineColor = Color.white;
                 categoryHeaderMasked.Title.outlineWidth = 0.2f;
                 categoryHeaderMasked.transform.localScale = Vector3.one * 0.63f;
@@ -304,7 +304,7 @@ public partial class CustomOption
 
             var so = ob;
             so.OnValueChanged = new Action<OptionBehaviour>((o) => { });
-            so.TitleText.text = option.NameKey;
+            so.TitleText.text = Tr.Get(option.NameKey);
             if (option.IsHeader
                 && option.HeaderText == ""
                 && (option.Type is CustomOptionType.Neutral or CustomOptionType.Crewmate or CustomOptionType.Impostor or CustomOptionType.Modifier)
@@ -484,7 +484,7 @@ public partial class CustomOption
         {
             if (option.Parent == null)
             {
-                string line = $"{option.NameKey}: {option.Selections[option.Selection]}";
+                string line = $"{Tr.Get(option.NameKey)}: {option.Selections[option.Selection]}";
                 if (type == CustomOptionType.Modifier) line += BuildModifierExtras(option);
                 sb.AppendLine(line);
             }
@@ -511,7 +511,7 @@ public partial class CustomOption
 
                 Color c = isIrrelevant ? Color.grey : Color.white;  // No use for now
                 if (isIrrelevant) continue;
-                sb.AppendLine(Helpers.Cs(c, $"{option.NameKey}: {option.Selections[option.Selection]}"));
+                sb.AppendLine(Helpers.Cs(c, $"{Tr.Get(option.NameKey)}: {option.Selections[option.Selection]}"));
             }
             else
             {
@@ -559,7 +559,7 @@ public partial class CustomOption
                 }
                 else
                 {
-                    sb.AppendLine($"\n{option.NameKey}: {option.Selections[option.Selection].ToString()}");
+                    sb.AppendLine($"\n{Tr.Get(option.NameKey)}: {option.Selections[option.Selection].ToString()}");
                 }
             }
         }

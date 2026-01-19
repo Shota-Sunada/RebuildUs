@@ -14,7 +14,7 @@ public class CustomRoleOption : CustomOption
     base(baseId, type, Helpers.Cs(color, "Role." + Enum.GetName(roleType)), CustomOptionHolder.RATES, 0, null, true, false, "")
     {
         IsRoleEnabled = roleEnabled;
-        HeaderText = NameKey;
+        HeaderText = Tr.Get(NameKey);
 
         if (max <= 0 || !roleEnabled)
         {
@@ -31,7 +31,7 @@ public class CustomRoleOption : CustomOption
     base(baseId, type, Helpers.Cs(color, "Role." + name), CustomOptionHolder.RATES, 0, null, true, false, "")
     {
         IsRoleEnabled = roleEnabled;
-        HeaderText = NameKey;
+        HeaderText = Tr.Get(NameKey);
         {
             IsRoleEnabled = roleEnabled;
 
