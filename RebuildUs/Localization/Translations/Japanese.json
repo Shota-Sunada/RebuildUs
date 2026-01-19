@@ -1,8 +1,8 @@
 {
   "Color": {
     "Blurple": "ブラープル",
-    "Fuchsia": "",
-    "Hot Pink": "ホットピンク",
+    "Fuchsia": "フクシア",
+    "HotPink": "ホットピンク",
     "Ice": "アイス",
     "Lavender": "ラベンダー",
     "Lemon": "レモン",
@@ -11,9 +11,9 @@
     "Olive": "オリーブ",
     "Peach": "ピーチ",
     "Petrol": "ペトロールブルー",
-    "Royal Green": "",
-    "Signal Orange": "シグナルオレンジ",
-    "Tamarind": "",
+    "RoyalGreen": "ロイヤルグリーン",
+    "SignalOrange": "シグナルオレンジ",
+    "Tamarind": "タマリンド",
     "Teal": "ティール",
     "Turquoise": "ターコイズ",
     "Wasabi": "ワサビ"

@@ -169,7 +169,7 @@ public partial class CustomOption
             int value = option.GetSelection();
             var (viewName, viewValue) = HandleSpecialOptionsView(option, option.NameKey, option.Selections[value].ToString());
             viewSettingsInfoPanel.SetInfo(StringNames.ImpostorsCategory, viewValue, 61);
-            viewSettingsInfoPanel.titleText.text = viewName;
+            viewSettingsInfoPanel.titleText.text = Tr.Get(viewName);
 
             if (option.IsHeader &&
                 option.HeaderText == "" &&
@@ -261,7 +261,7 @@ public partial class CustomOption
             int value = option.GetSelection();
             var (optName, optValue) = HandleSpecialOptionsView(option, option.NameKey, option.Selections[value].ToString());
             viewSettingsInfoPanel.SetInfo(StringNames.ImpostorsCategory, optValue, 61);
-            viewSettingsInfoPanel.titleText.text = optName;
+            viewSettingsInfoPanel.titleText.text = Tr.Get(optName);
             viewSettingsInfoPanel.titleText.outlineColor = Color.white;
             viewSettingsInfoPanel.titleText.outlineWidth = 0.2f;
             if (option.Type == CustomOptionType.Modifier)
