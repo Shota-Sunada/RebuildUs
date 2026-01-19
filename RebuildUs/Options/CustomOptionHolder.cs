@@ -60,7 +60,7 @@ public static partial class CustomOptionHolder
     #region POLUS OPTIONS
     public static CustomOption PolusOptions;
     public static CustomOption PolusAdditionalVents;
-    public static CustomOption PolisSpecimenVital;
+    public static CustomOption PolusSpecimenVital;
     public static CustomOption PolusRandomSpawn;
     #endregion
 
@@ -420,7 +420,7 @@ public static partial class CustomOptionHolder
         #region POLUS OPTIONS
         PolusOptions = CustomOption.Header(70, CustomOptionType.General, "Map.PolusOptions", false, "Map.PolusOptions");
         PolusAdditionalVents = CustomOption.Normal(71, CustomOptionType.General, "Map.PolusAdditionalVents", true, PolusOptions);
-        PolisSpecimenVital = CustomOption.Normal(72, CustomOptionType.General, "Map.PolisSpecimenVital", true, PolusOptions);
+        PolusSpecimenVital = CustomOption.Normal(72, CustomOptionType.General, "Map.PolusSpecimenVital", true, PolusOptions);
         PolusRandomSpawn = CustomOption.Normal(73, CustomOptionType.General, "Map.PolusRandomSpawn", true, PolusOptions);
         #endregion
 

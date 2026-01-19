@@ -12,7 +12,7 @@ public class SpecimenVital
     public static void MoveVital()
     {
         if (Flag) return;
-        if (Helpers.IsPolus && CustomOptionHolder.PolisSpecimenVital.GetBool())
+        if (Helpers.IsPolus && CustomOptionHolder.PolusSpecimenVital.GetBool())
         {
             var panel = GameObject.Find("panel_vitals");
             if (panel != null)
