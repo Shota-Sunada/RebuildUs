@@ -29,6 +29,7 @@ global using RebuildUs.Roles.Impostor;
 global using RebuildUs.Roles.Neutral;
 global using RebuildUs.Roles.Modifier;
 global using RebuildUs.Utilities;
+using RebuildUs.Modules.Cosmetics;
 
 namespace RebuildUs;
 
@@ -92,6 +93,7 @@ public class RebuildUs : BasePlugin
         Tr.Initialize();
         CustomOptionHolder.Load();
         RoleInfo.Load();
+        CustomHatManager.LoadHats();
         CustomColors.Load();
         SubmergedCompatibility.Initialize();
         Submerged.Patch();

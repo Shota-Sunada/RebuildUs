@@ -1,6 +1,5 @@
 using System.Security.Cryptography;
 using UnityEngine.AddressableAssets;
-using System.Reflection;
 
 namespace RebuildUs.Modules.Cosmetics;
 
@@ -261,48 +260,5 @@ public static class CustomHatManager
         }
 
         return toDownload;
-    }
-
-    public static List<CustomHat> LoadHorseHats()
-    {
-        List<CustomHat> hatdatas = [];
-        Assembly assembly = Assembly.GetExecutingAssembly();
-        string[] resourceNames = assembly.GetManifestResourceNames();
-        List<string> hatFiles = [];
-        Dictionary<string, List<string>> hatFilesSorted = [];
-        foreach (string resourceName in resourceNames)
-        {
-            if (resourceName.Contains("RebuildUs.Resources.HorseHats.") && resourceName.Contains(".png"))
-            {
-                hatFiles.Add(resourceName);
-            }
-        }
-
-        foreach (string s in hatFiles)
-        {
-            string value = s.Substring(0, s.LastIndexOf("HorseSpecialHat") + 17);
-            if (value.Contains(".")) value.Remove(value.LastIndexOf("."));
-            if (!hatFilesSorted.ContainsKey(value)) hatFilesSorted.Add(value, []);
-            hatFilesSorted[value].Add(s);
-        }
-        int i = 0;
-        foreach (var item in hatFilesSorted)
-        {
-            CustomHat info = new()
-            {
-                Name = $"April Hat {i++:D2}",
-                Author = "A Fool",
-                Resource = item.Value.FirstOrDefault(x => !x.Contains("back")),
-                BackResource = item.Value.FirstOrDefault(x => x.Contains("back"))
-            };
-            info.Adaptive = info.Resource != null && info.Resource.Contains("adaptive");
-            info.FlipResource = item.Value.FirstOrDefault(x => x.Contains("flip"));
-            info.ClimbResource = item.Value.FirstOrDefault(x => x.Contains("climb"));
-            info.Package = "April Fools Hats";
-            if (info.Resource == null || info.Name == null) // required
-                continue;
-            hatdatas.Add(info);
-        }
-        return hatdatas;
     }
 }
