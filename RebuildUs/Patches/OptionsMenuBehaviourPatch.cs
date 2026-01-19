@@ -1,5 +1,6 @@
 namespace RebuildUs.Patches;
 
+[HarmonyPatch]
 public static class OptionsMenuBehaviourPatch
 {
     [HarmonyPostfix]
