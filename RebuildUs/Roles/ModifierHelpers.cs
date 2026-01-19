@@ -10,7 +10,9 @@ public static class ModifierHelpers
         {
             if (modType == type.ModifierType)
             {
-                return (bool)type.Type.GetMethod("HasModifier", BindingFlags.Public | BindingFlags.Static)?.Invoke(null, [player]);
+                return type.Type != null
+                    && (bool)(type.Type.GetProperty("Exists", BindingFlags.Public | BindingFlags.Static)?.GetValue(null) ?? false)
+                    && (bool)(type.Type.GetMethod("HasModifier", BindingFlags.Public | BindingFlags.Static)?.Invoke(null, [player]) ?? false);
             }
         }
 
@@ -26,8 +28,9 @@ public static class ModifierHelpers
         {
             if (modType == type.ModifierType)
             {
+                if (type.Type == null) return false;
                 var method = type.Type.GetMethod("AddModifier", BindingFlags.Public | BindingFlags.Static)
-                          ?? type.Type.GetMethod("SetRole", BindingFlags.Public | BindingFlags.Static);
+                            ?? type.Type.GetMethod("SetRole", BindingFlags.Public | BindingFlags.Static);
                 if (method != null)
                 {
                     method.Invoke(null, [player]);
@@ -49,6 +52,7 @@ public static class ModifierHelpers
             {
                 if (modType == type.ModifierType)
                 {
+                    if (type.Type == null) return;
                     type.Type.GetMethod("EraseModifier", BindingFlags.Public | BindingFlags.Static)?.Invoke(null, [player]);
                     return;
                 }
@@ -62,6 +66,7 @@ public static class ModifierHelpers
     {
         foreach (var type in ModifierData.AllModifierTypes)
         {
+            if (type.Type == null) continue;
             type.Type.GetMethod("EraseModifier", BindingFlags.Public | BindingFlags.Static)?.Invoke(null, [player]);
         }
 
@@ -72,7 +77,7 @@ public static class ModifierHelpers
     {
         foreach (var type in ModifierData.AllModifierTypes)
         {
-            if (player.HasModifier(type.ModifierType))
+            if (type.Type != null && player.HasModifier(type.ModifierType))
             {
                 type.Type.GetMethod("SwapModifier", BindingFlags.Public | BindingFlags.Static)?.Invoke(null, [player, target]);
             }

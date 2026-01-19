@@ -10,7 +10,9 @@ public static class RoleHelpers
         {
             if (roleType == type.RoleType)
             {
-                return (bool)type.Type.GetMethod("IsRole", BindingFlags.Public | BindingFlags.Static)?.Invoke(null, [player]);
+                return type.Type != null
+                    && (bool)(type.Type.GetProperty("Exists", BindingFlags.Public | BindingFlags.Static)?.GetValue(null) ?? false)
+                    && (bool)(type.Type.GetMethod("IsRole", BindingFlags.Public | BindingFlags.Static)?.Invoke(null, [player]) ?? false);
             }
         }
 
@@ -26,6 +28,7 @@ public static class RoleHelpers
         {
             if (roleType == type.RoleType)
             {
+                if (type.Type == null) return false;
                 var method = type.Type.GetMethod("SetRole", BindingFlags.Public | BindingFlags.Static);
                 if (method != null)
                 {
@@ -48,6 +51,7 @@ public static class RoleHelpers
             {
                 if (roleType == type.RoleType)
                 {
+                    if (type.Type == null) return;
                     type.Type.GetMethod("EraseRole", BindingFlags.Public | BindingFlags.Static)?.Invoke(null, [player]);
                     return;
                 }
@@ -61,6 +65,7 @@ public static class RoleHelpers
     {
         foreach (var type in RoleData.AllRoleTypes)
         {
+            if (type.Type == null) continue;
             type.Type.GetMethod("EraseRole", BindingFlags.Public | BindingFlags.Static)?.Invoke(null, [player]);
         }
     }
@@ -69,7 +74,7 @@ public static class RoleHelpers
     {
         foreach (var type in RoleData.AllRoleTypes)
         {
-            if (player.IsRole(type.RoleType))
+            if (type.Type != null && player.IsRole(type.RoleType))
             {
                 type.Type.GetMethod("SwapRole", BindingFlags.Public | BindingFlags.Static)?.Invoke(null, [player, target]);
             }
