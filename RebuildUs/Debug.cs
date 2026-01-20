@@ -142,13 +142,12 @@ public static class Debug
 #endif
     }
 
-    public static void CreateDebugManager()
+    public static void CreateDebugManager(HudManager hudManager)
     {
 #if DEBUG
-        if (DebugManager.Instance == null)
+        if (DebugManager.Instance == null && hudManager != null)
         {
-            var hudManager = FastDestroyableSingleton<HudManager>.Instance;
-            hudManager?.gameObject.AddComponent<DebugManager>();
+            hudManager.gameObject.AddComponent<DebugManager>();
         }
 #endif
     }

@@ -39,7 +39,7 @@ public static class HudManagerPatch
     [HarmonyPatch(typeof(HudManager), nameof(HudManager.Start))]
     public static void StartPostfix(HudManager __instance)
     {
-        Debug.CreateDebugManager();
+        Debug.CreateDebugManager(__instance);
         RebuildUs.MakeButtons(__instance);
         RebuildUs.SetButtonCooldowns();
     }

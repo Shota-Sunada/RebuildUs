@@ -78,6 +78,7 @@ Development conventions
 - Use StringBuilder for string concatenation instead of '+'. Prefer it over $"{}" interpolation.
 - Avoid LINQ (Language Integrated Query) in performance-critical sections (e.g., inside Update loops or frequently called patches) to reduce GC allocations.
 - Cache frequently used Unity components (e.g., Transform, Renderer) and results of expensive property lookups.
+- When creating a RebuildUs plugin for Impostor, which allows setting up custom Among Us servers, please refer to the following content: https://raw.githubusercontent.com/Impostor/Impostor/refs/heads/master/docs/Writing-a-plugin.md
 
 Runtime integration notes
 - Target the game’s architecture and version the mod is intended for.
