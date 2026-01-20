@@ -73,6 +73,7 @@ Development conventions
   - Translations can be shared if the translated result is the same.
   - Translation keys may be provided as variables or other dynamic forms.
 - Tests: prefer light unit tests for pure logic. Mock heavy game interactions.
+- Query as little as possible, write concise, lightweight code.
 
 Runtime integration notes
 - Target the game’s architecture and version the mod is intended for.
