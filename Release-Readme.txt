@@ -15,25 +15,38 @@
 4. Launch `Among Us.exe`.
    - The first launch may take some time as BepInEx initializes.
 
-### Updating
-- Run `BepInExUpdater.exe` in the game folder to check for and install updates.
+### Custom Room Codes
+RebuildUs supports custom room codes using word lists. To use this feature:
+1. Create a folder named `RebuildUs.Codes` in the server directory.
+2. Place text files containing 4 or 6 character words (one per line) in this folder.
+3. Codes can include comments starting with `--`.
+4. Restart the server to load the codes.
+
+Example word list file:
+```
+APPLE
+BANANA
+CHERRY
+-- This is a comment
+DOG
+```
 
 ---
 
 ## 日本語
 
-### 前提条件
-- Among Us の正規版（Steam版）。
-- クリーンな状態（他の MOD が入っていない状態）のゲームへの導入を推奨します。
+### カスタムルームコード
+RebuildUs はワードリストを使用したカスタムルームコードをサポートします。この機能を使用するには：
+1. サーバーディレクトリに `RebuildUs.Codes` という名前のフォルダを作成します。
+2. このフォルダに、4文字または6文字の単語を1行に1つずつ含むテキストファイルを配置します。
+3. コードには `--` で始まるコメントを含めることができます。
+4. サーバーを再起動してコードを読み込みます。
 
-### 導入手順
-1. 最新の `RebuildUs-vX.X.X.zip` をダウンロードします。
-2. Among Us のインストールフォルダを開きます。
-   - (Steam: Among Us を右クリック -> 管理 -> ローカルファイルを閲覧)
-3. zip ファイルの**すべての内容**を、Among Us のルートフォルダ（Among Us.exe がある場所）に直接展開します。
-   - `BepInEx` フォルダや `Among Us.exe`、`BepInExUpdater.exe` などが同じ場所に並ぶ状態になれば正解です。
-4. `Among Us.exe` を起動します。
-   - 初回起動時は BepInEx の初期化のため、起動に時間がかかる場合があります。
-
-### アップデート方法
-- ゲームフォルダ内の `BepInExUpdater.exe` を実行することで、最新バージョンへの更新を確認・適用できます。
+ワードリストファイルの例：
+```
+APPLE
+BANANA
+CHERRY
+-- これはコメントです
+DOG
+```
