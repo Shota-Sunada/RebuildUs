@@ -125,7 +125,7 @@ public partial class CustomOption
                 categoryHeaderMasked.SetHeader(StringNames.ImpostorsCategory, 61);
                 categoryHeaderMasked.Title.text = option.HeaderText != "" ? option.HeaderText : Helpers.Cs(option.Color, Tr.Get(option.NameKey));
                 categoryHeaderMasked.Title.outlineColor = Color.white;
-                categoryHeaderMasked.Title.outlineWidth = 0.01f;
+                categoryHeaderMasked.Title.outlineWidth = 0.1f;
                 categoryHeaderMasked.transform.SetParent(__instance.settingsContainer);
                 categoryHeaderMasked.transform.localScale = Vector3.one;
                 categoryHeaderMasked.transform.localPosition = new Vector3(-9.77f, num, -2f);
@@ -189,13 +189,15 @@ public partial class CustomOption
     private static void DrawOverviewTab(LobbyViewSettingsPane __instance)
     {
         var options = new List<CustomOption>();
-        foreach (var option in AllOptions)
+        var targetTypes = new[] { CustomOptionType.Impostor, CustomOptionType.Crewmate, CustomOptionType.Neutral, CustomOptionType.Modifier };
+        foreach (var type in targetTypes)
         {
-            if (option.IsHeader &&
-                (option.Type is CustomOptionType.Impostor or CustomOptionType.Neutral or CustomOptionType.Crewmate or CustomOptionType.Modifier)
-            )
+            foreach (var option in AllOptions)
             {
-                options.Add(option);
+                if (option.IsHeader && option.Type == type)
+                {
+                    options.Add(option);
+                }
             }
         }
 
@@ -204,7 +206,7 @@ public partial class CustomOption
         int singles = 1;
         int headers = 0;
         int lines = 0;
-        var currentType = CustomOptionType.Modifier;
+        var currentType = (CustomOptionType)(-1);
         int numBonus = 0;
 
         foreach (var option in options)
@@ -230,7 +232,7 @@ public partial class CustomOption
                     _ => Tr.Get("OptionPage.Others")
                 };
                 categoryHeaderMasked.Title.outlineColor = Color.white;
-                categoryHeaderMasked.Title.outlineWidth = 0.01f;
+                categoryHeaderMasked.Title.outlineWidth = 0.1f;
                 categoryHeaderMasked.transform.SetParent(__instance.settingsContainer);
                 categoryHeaderMasked.transform.localScale = Vector3.one;
                 categoryHeaderMasked.transform.localPosition = new Vector3(-9.77f, num, -2f);
@@ -260,9 +262,9 @@ public partial class CustomOption
             int value = option.GetSelection();
             var (optName, optValue) = HandleSpecialOptionsView(option, option.NameKey, option.Selections[value].ToString());
             viewSettingsInfoPanel.SetInfo(StringNames.ImpostorsCategory, optValue, 61);
-            viewSettingsInfoPanel.titleText.text = Tr.Get(optName);
+            viewSettingsInfoPanel.titleText.text = Helpers.Cs(option.Color, Tr.Get(optName));
             viewSettingsInfoPanel.titleText.outlineColor = Color.white;
-            viewSettingsInfoPanel.titleText.outlineWidth = 0.2f;
+            viewSettingsInfoPanel.titleText.outlineWidth = 0.1f;
             if (option.Type == CustomOptionType.Modifier)
             {
                 viewSettingsInfoPanel.settingText.text = viewSettingsInfoPanel.settingText.text + BuildModifierExtras(option);

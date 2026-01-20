@@ -550,7 +550,7 @@ public static partial class CustomOptionHolder
         BaitReportDelay = CustomOption.Normal(1142, CustomOptionType.Crewmate, "Option.BaitReportDelay", 0f, 0f, 10f, 1f, BaitSpawnRate, format: "unitSeconds");
         BaitShowKillFlash = CustomOption.Normal(1143, CustomOptionType.Crewmate, "Option.BaitShowKillFlash", true, BaitSpawnRate);
 
-        ShifterSpawnRate = new(1150, CustomOptionType.Neutral, "Shifter", Shifter.NameColor, 1);
+        ShifterSpawnRate = new(1150, CustomOptionType.Neutral, RoleType.Shifter, Shifter.NameColor, 1);
         ShifterIsNeutralRate = CustomOption.Normal(1151, CustomOptionType.Neutral, "Option.ShifterIsNeutralRate", RATES, ShifterSpawnRate);
         ShifterShiftsModifiers = CustomOption.Normal(1152, CustomOptionType.Neutral, "Option.ShifterShiftsModifiers", false, ShifterSpawnRate);
         ShifterPastShifters = CustomOption.Normal(1153, CustomOptionType.Neutral, "Option.ShifterPastShifters", false, ShifterSpawnRate);
@@ -676,7 +676,7 @@ public static partial class CustomOptionHolder
         JackalPromotedFromSidekickCanCreateSidekick = CustomOption.Normal(3042, CustomOptionType.Neutral, "Option.JackalPromotedFromSidekickCanCreateSidekick", false, SidekickPromotesToJackal);
         JackalCanCreateSidekickFromImpostor = CustomOption.Normal(3043, CustomOptionType.Neutral, "Option.JackalCanCreateSidekickFromImpostor", false, JackalCanCreateSidekick);
 
-        GuesserSpawnRate = new(3050, CustomOptionType.Neutral, nameof(Guesser), Guesser.NiceGuesser.NameColor, 1);
+        GuesserSpawnRate = new(3050, CustomOptionType.Neutral, $"Role.{nameof(Guesser)}", Guesser.NiceGuesser.NameColor, 1);
         GuesserIsImpGuesserRate = CustomOption.Normal(3051, CustomOptionType.Neutral, "Option.GuesserIsImpGuesserRate", RATES, GuesserSpawnRate);
         GuesserSpawnBothRate = CustomOption.Normal(3052, CustomOptionType.Neutral, "Option.GuesserSpawnBothRate", RATES, GuesserSpawnRate);
         GuesserNumberOfShots = CustomOption.Normal(3053, CustomOptionType.Neutral, "Option.GuesserNumberOfShots", 2f, 1f, 15f, 1f, GuesserSpawnRate);

@@ -29,11 +29,11 @@ public class CustomRoleOption : CustomOption
     }
 
     public CustomRoleOption(int baseId, CustomOptionType type, string name, Color color, int max = 15, bool roleEnabled = true) :
-    base(baseId, type, $"Role.{name}", CustomOptionHolder.RATES, 0, null, false, "", color)
+    base(baseId, type, name, CustomOptionHolder.RATES, 0, null, false, "", color)
     {
         IsRoleEnabled = roleEnabled;
         IsHeader = true;
-        HeaderText = Helpers.Cs(color, Tr.Get($"Role.{name}"));
+        HeaderText = Helpers.Cs(color, Tr.Get(name));
 
         if (max <= 0 || !roleEnabled)
         {

@@ -265,7 +265,7 @@ public partial class CustomOption
                 categoryHeaderMasked.SetHeader(StringNames.ImpostorsCategory, 20);
                 categoryHeaderMasked.Title.text = option.HeaderText != "" ? option.HeaderText : Helpers.Cs(option.Color, Tr.Get(option.NameKey));
                 categoryHeaderMasked.Title.outlineColor = Color.white;
-                categoryHeaderMasked.Title.outlineWidth = 0.01f;
+                categoryHeaderMasked.Title.outlineWidth = 0.1f;
                 categoryHeaderMasked.transform.localScale = Vector3.one * 0.63f;
                 categoryHeaderMasked.transform.localPosition = new Vector3(-0.903f, num, -2f);
                 num -= 0.63f;
