@@ -199,7 +199,7 @@ public static class Meeting
 
                 if (playerById == null)
                 {
-                    Debug.LogError(string.Format("Couldn't find player info for voter: {0}", voterState.VoterId));
+                    Logger.LogError(string.Format("Couldn't find player info for voter: {0}", voterState.VoterId));
                 }
                 else if (i == 0 && voterState.SkippedVote && !playerById.IsDead)
                 {
@@ -928,7 +928,7 @@ public static class Meeting
                 }
                 else
                 {
-                    Debug.LogError("Encountered a null Dead Body while destroying.");
+                    Logger.LogError("Encountered a null Dead Body while destroying.");
                 }
             }
             var array2 = UnityEngine.Object.FindObjectsOfType<ShapeshifterEvidence>();
@@ -940,7 +940,7 @@ public static class Meeting
                 }
                 else
                 {
-                    Debug.LogError("Encountered a null Evidence while destroying.");
+                    Logger.LogError("Encountered a null Evidence while destroying.");
                 }
             }
             MeetingHud.Instance.StartCoroutine(MeetingHud.Instance.CoIntro(reporter.Data, target, deadBodies));

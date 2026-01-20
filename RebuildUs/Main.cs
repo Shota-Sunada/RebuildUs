@@ -71,6 +71,8 @@ public class RebuildUs : BasePlugin
         Logger.Initialize(Log);
         Instance = this;
 
+        Debug.Initialize();
+
         GhostsSeeInformation = Config.Bind("Custom", "Ghosts See Remaining Tasks", true);
         GhostsSeeRoles = Config.Bind("Custom", "Ghosts See Roles", true);
         GhostsSeeModifier = Config.Bind("Custom", "Ghosts See Modifier", true);

@@ -74,6 +74,10 @@ Development conventions
   - Translation keys may be provided as variables or other dynamic forms.
 - Tests: prefer light unit tests for pure logic. Mock heavy game interactions.
 - Query as little as possible, write concise, lightweight code.
+- Minimize memory usage and ensure the mod runs smoothly on low-spec machines.
+- Use StringBuilder for string concatenation instead of '+'. Prefer it over $"{}" interpolation.
+- Avoid LINQ (Language Integrated Query) in performance-critical sections (e.g., inside Update loops or frequently called patches) to reduce GC allocations.
+- Cache frequently used Unity components (e.g., Transform, Renderer) and results of expensive property lookups.
 
 Runtime integration notes
 - Target the game’s architecture and version the mod is intended for.

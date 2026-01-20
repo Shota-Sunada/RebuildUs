@@ -219,7 +219,7 @@ public static class Admin
                 }
                 else
                 {
-                    Debug.LogWarning("Couldn't find counter for:" + counterArea.RoomType);
+                    Logger.LogWarn("Couldn't find counter for:" + counterArea.RoomType);
                 }
             }
             else

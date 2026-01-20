@@ -586,7 +586,7 @@ public static class Map
                 }
                 else
                 {
-                    Debug.LogWarning("Couldn't find counter for:" + counterArea.RoomType.ToString());
+                    Logger.LogWarn("Couldn't find counter for:" + counterArea.RoomType.ToString());
                 }
             }
             return false;
