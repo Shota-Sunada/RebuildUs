@@ -3,5 +3,6 @@
 **/publish/
 **/Release/
 debugenv.txt
+serverenv.txt
 Assembly-CSharp*/
 memo.txt
