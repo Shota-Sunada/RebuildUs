@@ -1,5 +1,6 @@
 using Impostor.Api.Games;
 using RebuildUs.Impostor.Handlers;
+using RebuildUs.Impostor.Services;
 using Impostor.Api.Events.Managers;
 using Microsoft.Extensions.Logging;
 using System.Security.Cryptography;
@@ -27,7 +28,7 @@ public class GameCodeManager : IGameCodeManager
 
     public int FourCharCodes { get; }
 
-    public GameCodeManager(ILogger<GameCodeManager> logger, IGameCodeFactory codeFactory, IEventManager eventManager)
+    public GameCodeManager(ILogger<GameCodeManager> logger, IGameCodeFactory codeFactory, IEventManager eventManager, IDiscordService discordService, IPlayerMappingService mappingService, ILogger<GameEventListener> listenerLogger)
     {
         _logger = logger;
         _codeFactory = codeFactory;
@@ -47,7 +48,7 @@ public class GameCodeManager : IGameCodeManager
 
         _codes = validCodes;
 
-        eventManager.RegisterListener(new GameEventListener(this));
+        eventManager.RegisterListener(new GameEventListener(this, discordService, mappingService, listenerLogger));
     }
 
     private IEnumerable<GameCode> Read()

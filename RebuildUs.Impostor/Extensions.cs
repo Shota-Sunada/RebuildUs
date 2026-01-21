@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Security.Cryptography;
 
 namespace RebuildUs.Impostor;

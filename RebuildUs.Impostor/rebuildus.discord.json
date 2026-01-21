@@ -1,0 +1,11 @@
+{
+  "Discord": {
+    "Token": "MAIN_BOT_TOKEN_HERE",
+    "WorkerTokens": [
+      "WORKER_BOT_1_TOKEN_HERE",
+      "WORKER_BOT_2_TOKEN_HERE"
+    ],
+    "GuildId": 0,
+    "VoiceChannelId": 0
+  }
+}
