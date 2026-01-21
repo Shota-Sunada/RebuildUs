@@ -2,7 +2,6 @@ using Discord;
 using Discord.WebSocket;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace RebuildUs.Impostor.Services;
 
@@ -12,8 +11,9 @@ public interface IDiscordService
     Task StopAsync();
     Task SetMuteAsync(ulong discordId, bool mute);
     Task SetMuteAllAsync(IEnumerable<ulong> discordIds, bool mute);
-    Task CallGameAsync(string roomCode);
-    Task CallEndAsync();
+    Task SendMessageToDiscordAsync(string message);
+    Task SetActiveRoomCodeAsync(string roomCode);
+    Task ClearActiveRoomCodeAsync();
 }
 
 public class DiscordService : IDiscordService
@@ -22,6 +22,7 @@ public class DiscordService : IDiscordService
     private readonly Models.DiscordConfig _config;
     private readonly ILogger<DiscordService> _logger;
     private readonly IServiceProvider _serviceProvider;
+    private string? _activeRoomCode;
 
     public DiscordService(ILogger<DiscordService> logger, IOptions<Models.DiscordConfig> config, IServiceProvider serviceProvider)
     {
@@ -54,57 +55,39 @@ public class DiscordService : IDiscordService
     {
         if (client != _clients[0]) return;
 
-        client.SlashCommandExecuted += SlashCommandExecutedAsync;
-
-        var gameCommand = new SlashCommandBuilder()
-            .WithName("game")
-            .WithDescription("Start a game room")
-            .AddOption("code", ApplicationCommandOptionType.String, "The room code", isRequired: true);
-
-        var endCommand = new SlashCommandBuilder()
-            .WithName("end")
-            .WithDescription("End the game room");
-
-        try
-        {
-            await client.CreateGlobalApplicationCommandAsync(gameCommand.Build());
-            await client.CreateGlobalApplicationCommandAsync(endCommand.Build());
-            _logger.LogInformation("Discord slash commands registered.");
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Failed to register slash commands.");
-        }
+        // Slash commands removed as per request
     }
 
-    private async Task SlashCommandExecutedAsync(SocketSlashCommand command)
-    {
-        var gameCodeManager = _serviceProvider.GetRequiredService<IGameCodeManager>();
+    // private async Task SlashCommandExecutedAsync(SocketSlashCommand command)
+    // {
+    //     var gameCodeManager = _serviceProvider.GetRequiredService<IGameCodeManager>();
 
-        if (command.Data.Name == "game")
-        {
-            var code = command.Data.Options.First().Value.ToString() ?? string.Empty;
-            if (gameCodeManager.IsInUse(code))
-            {
-                await command.RespondAsync($"Room {code} status: Active");
-            }
-            else
-            {
-                await command.RespondAsync($"Room {code} does not exist on the server.");
-            }
-        }
-        else if (command.Data.Name == "end")
-        {
-            if (gameCodeManager.AnyInUse())
-            {
-                await command.RespondAsync("Room status: Ended");
-            }
-            else
-            {
-                await command.RespondAsync("No active rooms found on the server.");
-            }
-        }
-    }
+    //     if (command.Data.Name == "game")
+    //     {
+    //         var code = command.Data.Options.First().Value.ToString() ?? string.Empty;
+    //         if (gameCodeManager.IsInUse(code))
+    //         {
+    //             await SetActiveRoomCodeAsync(code);
+    //             await command.RespondAsync($"Room {code} status: Active - Chat sync enabled");
+    //         }
+    //         else
+    //         {
+    //             await command.RespondAsync($"Room {code} does not exist on the server.");
+    //         }
+    //     }
+    //     else if (command.Data.Name == "end")
+    //     {
+    //         if (gameCodeManager.AnyInUse())
+    //         {
+    //             await ClearActiveRoomCodeAsync();
+    //             await command.RespondAsync("Room status: Ended - Chat sync disabled");
+    //         }
+    //         else
+    //         {
+    //             await command.RespondAsync("No active rooms found on the server.");
+    //         }
+    //     }
+    // }
 
     private Task LogAsync(LogMessage msg)
     {
@@ -164,7 +147,7 @@ public class DiscordService : IDiscordService
         await Task.WhenAll(tasks);
     }
 
-    public async Task CallGameAsync(string roomCode)
+    public async Task SendMessageToDiscordAsync(string message)
     {
         if (_config.TextChannelId == 0) return;
         var client = _clients[0];
@@ -173,21 +156,22 @@ public class DiscordService : IDiscordService
         var channel = await client.GetChannelAsync(_config.TextChannelId) as ITextChannel;
         if (channel != null)
         {
-            await channel.SendMessageAsync($"/game {roomCode}");
+            await channel.SendMessageAsync(message);
         }
     }
 
-    public async Task CallEndAsync()
+    public Task SetActiveRoomCodeAsync(string roomCode)
     {
-        if (_config.TextChannelId == 0) return;
-        var client = _clients[0];
-        if (client.ConnectionState != ConnectionState.Connected) return;
+        _activeRoomCode = roomCode;
+        _logger.LogInformation("Chat sync enabled for room {RoomCode}", roomCode);
+        return Task.CompletedTask;
+    }
 
-        var channel = await client.GetChannelAsync(_config.TextChannelId) as ITextChannel;
-        if (channel != null)
-        {
-            await channel.SendMessageAsync("/end");
-        }
+    public Task ClearActiveRoomCodeAsync()
+    {
+        _activeRoomCode = null;
+        _logger.LogInformation("Chat sync disabled");
+        return Task.CompletedTask;
     }
 
     private async Task InternalSetMuteAsync(DiscordSocketClient client, ulong discordId, bool mute)

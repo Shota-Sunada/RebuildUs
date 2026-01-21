@@ -9,33 +9,59 @@ using Impostor.Api.Net.Inner.Objects;
 
 namespace RebuildUs.Impostor.Handlers;
 
-public class GameEventListener(IGameCodeManager gameCodeManager, IDiscordService discordService, IPlayerMappingService mappingService, ILogger<GameEventListener> logger) : IEventListener
+public class GameEventListener : IEventListener
 {
-    // NOTE: if you want to override the results of RebuildUs.Codes, register an event at a lower priority
+    private readonly IGameCodeManager gameCodeManager;
+    private readonly IDiscordService discordService;
+    private readonly IPlayerMappingService mappingService;
+    private readonly ILogger<GameEventListener> logger;
+    private IGame? _currentGame;
+    private bool _isChatSyncActive;
+
+    public GameEventListener(IGameCodeManager gameCodeManager, IDiscordService discordService, IPlayerMappingService mappingService, ILogger<GameEventListener> logger)
+    {
+        this.gameCodeManager = gameCodeManager;
+        this.discordService = discordService;
+        this.mappingService = mappingService;
+        this.logger = logger;
+    }
 
     [EventListener(EventPriority.Highest)]
     public async ValueTask OnGameCreated(IGameCreationEvent e)
     {
         e.GameCode = gameCodeManager.Get();
-        await discordService.CallGameAsync(e.GameCode);
+        await discordService.SetActiveRoomCodeAsync(e.GameCode);
+        _isChatSyncActive = true;
+        await discordService.SendMessageToDiscordAsync("# 新しい部屋が建てられました。ルームコード");
+        await discordService.SendMessageToDiscordAsync($"# {e.GameCode}");
     }
 
     [EventListener(EventPriority.Highest)]
     public async ValueTask OnGameDestroyed(IGameDestroyedEvent e)
     {
         gameCodeManager.Release(e.Game.Code);
-        await discordService.CallEndAsync();
+        await discordService.ClearActiveRoomCodeAsync();
+        _isChatSyncActive = false;
+        _currentGame = null;
+        await discordService.SendMessageToDiscordAsync($"ルーム『{e.Game.Code}』は閉じられました");
     }
 
     [EventListener]
     public async ValueTask OnGameStarting(IGameStartingEvent e)
     {
+        _currentGame = e.Game;
+        await discordService.SendMessageToDiscordAsync("ゲームが開始しました。チャット同期を停止します。");
+        await discordService.ClearActiveRoomCodeAsync();
+        _isChatSyncActive = false;
         await MuteAllAsync(e.Game, true);
     }
 
     [EventListener]
     public async ValueTask OnGameEnded(IGameEndedEvent e)
     {
+        await discordService.SetActiveRoomCodeAsync(e.Game.Code);
+        _isChatSyncActive = true;
+        await discordService.SendMessageToDiscordAsync("ゲームが終了しました。チャット同期を再開します。");
         await MuteAllAsync(e.Game, false);
     }
 
@@ -83,6 +109,13 @@ public class GameEventListener(IGameCodeManager gameCodeManager, IDiscordService
             {
                 await e.PlayerControl.SendChatAsync("Usage: /link <DiscordId>");
             }
+        }
+
+        // Send game chat to Discord if sync is active
+        if (_isChatSyncActive)
+        {
+            var playerName = GetFriendCode(e.PlayerControl);
+            await discordService.SendMessageToDiscordAsync($"[{playerName}] {e.Message}");
         }
     }
 
