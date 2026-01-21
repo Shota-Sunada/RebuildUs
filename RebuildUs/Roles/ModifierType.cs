@@ -7,7 +7,7 @@ public enum ModifierType
     LastImpostor,
     AntiTeleport,
     Mini,
-    Munou,
+    // Munou,
 
     NoModifier = byte.MaxValue
 }

@@ -172,6 +172,11 @@
     "Watcher": "Watcher",
     "Witch": "Witch"
   },
+  "Modifier": {
+    "Madmate": "Madmate",
+    "Mini": "Mini",
+    "AntiTeleport": "Anti Teleport"
+  },
   "Options": {
     "SpawnChance": "Spawn Chance"
   },

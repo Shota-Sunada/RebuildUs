@@ -84,16 +84,16 @@ public partial class RoleInfo(string nameKey, Color color, CustomOption baseOpti
             }
         }
 
-        if (p.HasModifier(ModifierType.Munou))
-        {
-            /* TODO: Munou is not implemented
-            if (PlayerControl.LocalPlayer.Data.IsDead || Munou.endGameFlag)
-            {
-                string postfix = useColors ? Helpers.Cs(Munou.color, Munou.postfix) : Munou.postfix;
-                roleName += postfix;
-            }
-            */
-        }
+        // if (p.HasModifier(ModifierType.Munou))
+        // {
+        //     /* TODO: Munou is not implemented
+        //     if (PlayerControl.LocalPlayer.Data.IsDead || Munou.endGameFlag)
+        //     {
+        //         string postfix = useColors ? Helpers.Cs(Munou.color, Munou.postfix) : Munou.postfix;
+        //         roleName += postfix;
+        //     }
+        //     */
+        // }
 
         if (p.HasModifier(ModifierType.AntiTeleport))
         {

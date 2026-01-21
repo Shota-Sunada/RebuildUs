@@ -103,7 +103,8 @@ public class Madmate : ModifierBase<Madmate>
             foreach (var player in PlayerControl.AllPlayerControls.GetFastEnumerator().ToArray().Where(x => x.IsTeamCrewmate() && !HasModifier(x)).ToList())
             {
                 var info = RoleInfo.GetRoleInfoForPlayer(player);
-                if (info.Contains(RoleInfo.Crewmate) && !player.HasModifier(ModifierType.Munou) && !player.IsRole(RoleType.FortuneTeller))
+                // if (info.Contains(RoleInfo.Crewmate) && !player.HasModifier(ModifierType.Munou) && !player.IsRole(RoleType.FortuneTeller))
+                if (info.Contains(RoleInfo.Crewmate) && !player.IsRole(RoleType.FortuneTeller))
                 {
                     crewNoRole.Add(player);
                     validCrewmates.Add(player);

@@ -407,13 +407,13 @@ public static partial class CustomOptionHolder
 
         RestrictDevices = CustomOption.Normal(60, CustomOptionType.General, "Option.RestrictDevices", ["Option.Off", "Option.RestrictPerTurn", "Option.RestrictPerGame"]);
         RestrictAdmin = CustomOption.Normal(61, CustomOptionType.General, "Option.RestrictAdmin", true, RestrictDevices);
-        RestrictAdminTime = CustomOption.Normal(62, CustomOptionType.General, "Option.RestrictAdminTime", true, RestrictAdmin);
+        RestrictAdminTime = CustomOption.Normal(62, CustomOptionType.General, "Option.RestrictAdminTime", 30f, 0f, 600f, 1f, RestrictAdmin);
         RestrictAdminText = CustomOption.Normal(63, CustomOptionType.General, "Option.RestrictAdminText", true, RestrictAdmin);
         RestrictCameras = CustomOption.Normal(64, CustomOptionType.General, "Option.RestrictCameras", true, RestrictDevices);
-        RestrictCamerasTime = CustomOption.Normal(65, CustomOptionType.General, "Option.RestrictCamerasTime", true, RestrictCameras);
+        RestrictCamerasTime = CustomOption.Normal(65, CustomOptionType.General, "Option.RestrictCamerasTime", 30f, 0f, 600f, 1f, RestrictCameras);
         RestrictCamerasText = CustomOption.Normal(66, CustomOptionType.General, "Option.RestrictCamerasText", true, RestrictCameras);
         RestrictVitals = CustomOption.Normal(67, CustomOptionType.General, "Option.RestrictVitals", true, RestrictDevices);
-        RestrictVitalsTime = CustomOption.Normal(68, CustomOptionType.General, "Option.RestrictVitalsTime", true, RestrictVitals);
+        RestrictVitalsTime = CustomOption.Normal(68, CustomOptionType.General, "Option.RestrictVitalsTime", 30f, 0f, 600f, 1f, RestrictVitals);
         RestrictVitalsText = CustomOption.Normal(69, CustomOptionType.General, "Option.RestrictVitalsText", true, RestrictVitals);
         #endregion
 
