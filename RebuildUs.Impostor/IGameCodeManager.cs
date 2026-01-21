@@ -9,4 +9,6 @@ public interface IGameCodeManager
     public string Path { get; }
     public GameCode Get();
     public void Release(GameCode code);
+    public bool IsInUse(string code);
+    public bool AnyInUse();
 }

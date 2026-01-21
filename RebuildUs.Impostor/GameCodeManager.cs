@@ -157,4 +157,20 @@ public class GameCodeManager : IGameCodeManager
             _codes.Add(code);
         }
     }
+
+    public bool IsInUse(string code)
+    {
+        lock (_sync)
+        {
+            return _inUse.Any(c => c.Code == code);
+        }
+    }
+
+    public bool AnyInUse()
+    {
+        lock (_sync)
+        {
+            return _inUse.Count > 0;
+        }
+    }
 }

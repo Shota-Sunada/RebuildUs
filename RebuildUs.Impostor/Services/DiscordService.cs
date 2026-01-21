@@ -2,6 +2,7 @@ using Discord;
 using Discord.WebSocket;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace RebuildUs.Impostor.Services;
 
@@ -20,11 +21,13 @@ public class DiscordService : IDiscordService
     private readonly List<DiscordSocketClient> _clients = [];
     private readonly Models.DiscordConfig _config;
     private readonly ILogger<DiscordService> _logger;
+    private readonly IServiceProvider _serviceProvider;
 
-    public DiscordService(ILogger<DiscordService> logger, IOptions<Models.DiscordConfig> config)
+    public DiscordService(ILogger<DiscordService> logger, IOptions<Models.DiscordConfig> config, IServiceProvider serviceProvider)
     {
         _logger = logger;
         _config = config.Value;
+        _serviceProvider = serviceProvider;
 
         // Add main client
         _clients.Add(CreateClient());
@@ -44,13 +47,14 @@ public class DiscordService : IDiscordService
         });
         client.Log += LogAsync;
         client.Ready += () => ReadyAsync(client);
-        client.SlashCommandExecuted += SlashCommandExecutedAsync;
         return client;
     }
 
     private async Task ReadyAsync(DiscordSocketClient client)
     {
         if (client != _clients[0]) return;
+
+        client.SlashCommandExecuted += SlashCommandExecutedAsync;
 
         var gameCommand = new SlashCommandBuilder()
             .WithName("game")
@@ -75,14 +79,30 @@ public class DiscordService : IDiscordService
 
     private async Task SlashCommandExecutedAsync(SocketSlashCommand command)
     {
+        var gameCodeManager = _serviceProvider.GetRequiredService<IGameCodeManager>();
+
         if (command.Data.Name == "game")
         {
-            var code = command.Data.Options.First().Value.ToString();
-            await command.RespondAsync($"Room {code} status: Active");
+            var code = command.Data.Options.First().Value.ToString() ?? string.Empty;
+            if (gameCodeManager.IsInUse(code))
+            {
+                await command.RespondAsync($"Room {code} status: Active");
+            }
+            else
+            {
+                await command.RespondAsync($"Room {code} does not exist on the server.");
+            }
         }
         else if (command.Data.Name == "end")
         {
-            await command.RespondAsync("Room status: Ended");
+            if (gameCodeManager.AnyInUse())
+            {
+                await command.RespondAsync("Room status: Ended");
+            }
+            else
+            {
+                await command.RespondAsync("No active rooms found on the server.");
+            }
         }
     }
 
