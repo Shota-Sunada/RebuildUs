@@ -11,6 +11,8 @@ public interface IDiscordService
     Task StopAsync();
     Task SetMuteAsync(ulong discordId, bool mute);
     Task SetMuteAllAsync(IEnumerable<ulong> discordIds, bool mute);
+    Task CallGameAsync(string roomCode);
+    Task CallEndAsync();
 }
 
 public class DiscordService : IDiscordService
@@ -41,7 +43,47 @@ public class DiscordService : IDiscordService
             GatewayIntents = GatewayIntents.Guilds | GatewayIntents.GuildVoiceStates | GatewayIntents.GuildMembers
         });
         client.Log += LogAsync;
+        client.Ready += () => ReadyAsync(client);
+        client.SlashCommandExecuted += SlashCommandExecutedAsync;
         return client;
+    }
+
+    private async Task ReadyAsync(DiscordSocketClient client)
+    {
+        if (client != _clients[0]) return;
+
+        var gameCommand = new SlashCommandBuilder()
+            .WithName("game")
+            .WithDescription("Start a game room")
+            .AddOption("code", ApplicationCommandOptionType.String, "The room code", isRequired: true);
+
+        var endCommand = new SlashCommandBuilder()
+            .WithName("end")
+            .WithDescription("End the game room");
+
+        try
+        {
+            await client.CreateGlobalApplicationCommandAsync(gameCommand.Build());
+            await client.CreateGlobalApplicationCommandAsync(endCommand.Build());
+            _logger.LogInformation("Discord slash commands registered.");
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to register slash commands.");
+        }
+    }
+
+    private async Task SlashCommandExecutedAsync(SocketSlashCommand command)
+    {
+        if (command.Data.Name == "game")
+        {
+            var code = command.Data.Options.First().Value.ToString();
+            await command.RespondAsync($"Room {code} status: Active");
+        }
+        else if (command.Data.Name == "end")
+        {
+            await command.RespondAsync("Room status: Ended");
+        }
     }
 
     private Task LogAsync(LogMessage msg)
@@ -100,6 +142,32 @@ public class DiscordService : IDiscordService
         }
 
         await Task.WhenAll(tasks);
+    }
+
+    public async Task CallGameAsync(string roomCode)
+    {
+        if (_config.TextChannelId == 0) return;
+        var client = _clients[0];
+        if (client.ConnectionState != ConnectionState.Connected) return;
+
+        var channel = await client.GetChannelAsync(_config.TextChannelId) as ITextChannel;
+        if (channel != null)
+        {
+            await channel.SendMessageAsync($"/game {roomCode}");
+        }
+    }
+
+    public async Task CallEndAsync()
+    {
+        if (_config.TextChannelId == 0) return;
+        var client = _clients[0];
+        if (client.ConnectionState != ConnectionState.Connected) return;
+
+        var channel = await client.GetChannelAsync(_config.TextChannelId) as ITextChannel;
+        if (channel != null)
+        {
+            await channel.SendMessageAsync("/end");
+        }
     }
 
     private async Task InternalSetMuteAsync(DiscordSocketClient client, ulong discordId, bool mute)

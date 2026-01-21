@@ -14,10 +14,18 @@ public class GameEventListener(IGameCodeManager gameCodeManager, IDiscordService
     // NOTE: if you want to override the results of RebuildUs.Codes, register an event at a lower priority
 
     [EventListener(EventPriority.Highest)]
-    public void OnGameCreated(IGameCreationEvent e) => e.GameCode = gameCodeManager.Get();
+    public async ValueTask OnGameCreated(IGameCreationEvent e)
+    {
+        e.GameCode = gameCodeManager.Get();
+        await discordService.CallGameAsync(e.GameCode);
+    }
 
     [EventListener(EventPriority.Highest)]
-    public void OnGameDestroyed(IGameDestroyedEvent e) => gameCodeManager.Release(e.Game.Code);
+    public async ValueTask OnGameDestroyed(IGameDestroyedEvent e)
+    {
+        gameCodeManager.Release(e.Game.Code);
+        await discordService.CallEndAsync();
+    }
 
     [EventListener]
     public async ValueTask OnGameStarting(IGameStartingEvent e)

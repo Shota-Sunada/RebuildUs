@@ -6,6 +6,7 @@
       "WORKER_BOT_2_TOKEN_HERE"
     ],
     "GuildId": 0,
-    "VoiceChannelId": 0
+    "VoiceChannelId": 0,
+    "TextChannelId": 0
   }
 }
