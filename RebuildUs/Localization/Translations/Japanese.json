@@ -1,6 +1,9 @@
 {
   "Color": {
+    "Army": "アーミー",
     "Blurple": "ブラープル",
+    "Fuchsia": "フチシア",
+    "HotPink": "ホットピンク",
     "Ice": "アイス",
     "Lavender": "ラベンダー",
     "Lemon": "レモン",
@@ -9,9 +12,18 @@
     "Olive": "オリーブ",
     "Peach": "ピーチ",
     "Petrol": "ペトロールブルー",
+    "RoyalGreen": "ロイヤルグリーン",
+    "SignalOrange": "シグナルオレンジ",
+    "Slime": "スライム",
+    "Tamarind": "タマリンド",
     "Teal": "ティール",
     "Turquoise": "ターコイズ",
-    "Wasabi": "ワサビ"
+    "Wasabi": "ワサビ",
+    "Sunrise": "サンライズ",
+    "Navy": "ネイビー",
+    "Darkness": "ダークネス",
+    "Ocean": "オーシャン",
+    "Sundown": "サンダウン"
   },
   "IntroDesc": {
     "Arsonist": "燃やせ",
@@ -58,6 +70,7 @@
     "Vampire": "クルーを噛んで全滅させよう",
     "Vulture": "死骸を喰らおう",
     "Warlock": "みんなを呪い殺そう",
+    "Watcher": "みんなの票を観察しよう",
     "Witch": "敵に魔術をかけよう"
   },
   "ShortDesc": {
@@ -105,6 +118,7 @@
     "Vampire": "クルーを噛んで全滅させよう",
     "Vulture": "死骸を喰らおう",
     "Warlock": "みんなを呪い殺そう",
+    "Watcher": "みんなの票を観察しよう",
     "Witch": "敵に魔術をかけよう"
   },
   "Role": {
@@ -122,6 +136,7 @@
     "FortuneTeller": "占い師",
     "GM": "GM",
     "Godfather": "ゴッドファーザー",
+    "Guesser": "ゲッサー",
     "Hacker": "ハッカー",
     "Jackal": "ジャッカル",
     "Janitor": "ジャニター",
@@ -135,6 +150,7 @@
     "Medic": "メディック",
     "Medium": "ミディアム",
     "Mini": "ミニ",
+    "Morphing": "モーフィング",
     "NiceGuesser": "ナイスゲッサー",
     "Opportunist": "オポチュニスト",
     "PlagueDoctor": "ペスト医師",
@@ -157,7 +173,30 @@
     "Witch": "魔女"
   },
   "Options": {
+    "SpawnChance": "スポーン確率"
   },
   "OptionPage": {
+    "GeneralSettings": "RebuildUsの総合設定です。",
+    "ImpostorSettings": "RebuildUsのインポスター役職の設定です。",
+    "CrewmateSettings": "RebuildUsのクルー役職の設定です。",
+    "NeutralSettings": "RebuildUsの第三陣営役職の設定です。",
+    "ModifierSettings": "RebuildUsの属性の設定です。",
+    "GeneralSettingsButton": "RebuildUs設定",
+    "ImpostorSettingsButton": "インポスター役職",
+    "CrewmateSettingsButton": "クルーメイト役職",
+    "NeutralSettingsButton": "第三陣営役職",
+    "ModifierSettingsButton": "属性",
+    "CrewmateRoles": "クルーメイト役職",
+    "NeutralRoles": "第三陣営役職",
+    "ImpostorRoles": "インポスター役職",
+    "Modifiers": "属性",
+    "Others": "その他",
+    "GameModeText": "RebuildUs設定",
+    "TabGeneral": "Mod総合",
+    "TabRolesOverview": "役職一覧",
+    "TabImpostor": "インポスター",
+    "TabCrewmate": "クルーメイト",
+    "TabNeutral": "第三陣営",
+    "TabModifiers": "属性"
   }
 }
