@@ -227,6 +227,9 @@ public class RebuildUs : BasePlugin
     public static void UpdateRegions()
     {
         var serverManager = FastDestroyableSingleton<ServerManager>.Instance;
+
+        serverManager.AvailableRegions = ServerManager.DefaultRegions;
+
         IRegionInfo[] regions = [new DnsRegionInfo(Ip.Value, "Custom", StringNames.NoTranslation, Ip.Value, Port.Value, false).CastFast<IRegionInfo>()];
 #nullable enable
         IRegionInfo? currentRegion = serverManager.CurrentRegion;
