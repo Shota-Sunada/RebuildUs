@@ -1,22 +1,22 @@
-namespace RebuildUs.Patches;
+namespace RebuildUs.Modules;
 
 public static class Credits
 {
     public static void UpdatePingText(PingTracker __instance)
     {
-        __instance.text.alignment = TextAlignmentOptions.Top;
+        __instance.text.alignment = TextAlignmentOptions.Right;
         var position = __instance.GetComponent<AspectPosition>();
         position.Alignment = AspectPosition.EdgeAlignments.Top;
 
         if (AmongUsClient.Instance.GameState == InnerNet.InnerNetClient.GameStates.Started)
         {
-            __instance.text.text = $"{RebuildUs.MOD_NAME} v{RebuildUs.MOD_VERSION}\n{__instance.text.text}";
+            __instance.text.text = $"<color=#1684B0>{RebuildUs.MOD_NAME}</color> v{RebuildUs.MOD_VERSION}\n{__instance.text.text}";
             position.DistanceFromEdge = MeetingHud.Instance ? new(1.25f, 0.15f, 0) : new(1.55f, 0.15f, 0);
         }
         else
         {
-            __instance.text.text = $"{RebuildUs.MOD_NAME} v{RebuildUs.MOD_VERSION}\n<size=50%>By {RebuildUs.MOD_DEVELOPER}</size>\n{__instance.text.text}";
-            position.DistanceFromEdge = new(0f, 0.1f, 0);
+            __instance.text.text = $"<color=#1684B0>{RebuildUs.MOD_NAME}</color> v{RebuildUs.MOD_VERSION}\n<size=70%>By {RebuildUs.MOD_DEVELOPER}</size>\n{__instance.text.text}";
+            position.DistanceFromEdge = new(0f, 0f, 0);
         }
 
         position.AdjustPosition();
@@ -30,9 +30,9 @@ public static class Credits
 
         var credits = new GameObject("RUModCredits");
         var text = credits.AddComponent<TextMeshPro>();
-        text.SetText($"{RebuildUs.MOD_NAME} v{RebuildUs.MOD_VERSION}\n<size=50%>By {RebuildUs.MOD_DEVELOPER}</size>");
+        text.SetText($"<color=#1684B0>{RebuildUs.MOD_NAME}</color> v{RebuildUs.MOD_VERSION}\n<size=70%>By {RebuildUs.MOD_DEVELOPER}</size>");
         text.alignment = TextAlignmentOptions.Center;
-        text.fontSize *= 0.05f;
+        text.fontSize *= 0.07f;
 
         text.transform.SetParent(ruLogo.transform);
         text.transform.localPosition = Vector3.down * 1.25f;
