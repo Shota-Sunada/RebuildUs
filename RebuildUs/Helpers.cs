@@ -485,7 +485,6 @@ public static class Helpers
         }
     }
 
-    // TODO: 更新
     public static void UpdatePlayerInfo()
     {
         var localPlayer = PlayerControl.LocalPlayer;
@@ -495,9 +494,11 @@ public static class Helpers
         Dictionary<byte, PlayerVoteArea> playerStatesCache = null;
         if (meeting != null && meeting.playerStates != null)
         {
-            playerStatesCache = new Dictionary<byte, PlayerVoteArea>();
+            playerStatesCache = [];
             foreach (var state in meeting.playerStates)
+            {
                 if (state != null) playerStatesCache[state.TargetPlayerId] = state;
+            }
         }
 
         var colorBlindTextMeetingInitialLocalPos = new Vector3(0.3384f, -0.16666f, -0.01f);

@@ -192,7 +192,7 @@ public partial class CustomOption
         // Game Settings
         gameSettingsButton.transform.localPosition = new(gameSettingsButton.transform.localPosition.x - 0.2f, gameSettingsButton.transform.localPosition.y + 1.65f, gameSettingsButton.transform.localPosition.z);
         gameSettingsButton.transform.localScale *= Vector2.one * 0.75f;
-        __instance.StartCoroutine(Effects.Lerp(2f, new Action<float>(p => { gameSettingsButton.transform.FindChild("FontPlacer").GetComponentInChildren<TextMeshPro>().text = "AmongUs Settings"; })));
+        __instance.StartCoroutine(Effects.Lerp(2f, new Action<float>(p => { gameSettingsButton.transform.FindChild("FontPlacer").GetComponentInChildren<TextMeshPro>().text = Tr.Get("Option.AmongUsSettings"); })));
         gameSettingsButton.OnMouseOut.RemoveAllListeners();
         gameSettingsButton.OnMouseOver.RemoveAllListeners();
         gameSettingsButton.SelectButton(false);

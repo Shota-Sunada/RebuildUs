@@ -43,7 +43,6 @@ public partial class CustomOption
     public bool IsHeader;
     public string HeaderText;
     public CustomOptionType Type;
-    public Action OnChange = null;
     public bool HideIfParentEnabled;
 
     public virtual bool Enabled
@@ -57,7 +56,7 @@ public partial class CustomOption
     public CustomOption() { }
 
     // Option creation
-    public CustomOption(int id, CustomOptionType type, string nameKey, object[] selections, object defaultValue, CustomOption parent, bool hideIfParentEnabled, string format, Color color, Action onChange = null)
+    public CustomOption(int id, CustomOptionType type, string nameKey, object[] selections, object defaultValue, CustomOption parent, bool hideIfParentEnabled, string format, Color color)
     {
         Id = id;
         NameKey = nameKey;
@@ -69,7 +68,6 @@ public partial class CustomOption
         Type = type;
         Children = [];
         parent?.Children.Add(this);
-        OnChange = onChange;
         HideIfParentEnabled = hideIfParentEnabled;
         Selection = 0;
         if (id != 0)
@@ -97,12 +95,11 @@ public partial class CustomOption
         byte g = byte.MaxValue,
         byte b = byte.MaxValue,
         byte a = byte.MaxValue,
-        Action onChange = null,
         bool hideIfParentEnabled = false,
         string format = ""
         )
     {
-        return new CustomOption(id, type, nameKey, selections, "", parent, hideIfParentEnabled, format, new Color32(r, g, b, a), onChange);
+        return new CustomOption(id, type, nameKey, selections, "", parent, hideIfParentEnabled, format, new Color32(r, g, b, a));
     }
 
     public static CustomOption Header(
@@ -115,11 +112,10 @@ public partial class CustomOption
         byte g = byte.MaxValue,
         byte b = byte.MaxValue,
         byte a = byte.MaxValue,
-        Action onChange = null,
         string format = ""
         )
     {
-        var opt = new CustomOption(id, type, nameKey, selections, "", null, false, format, new Color32(r, g, b, a), onChange);
+        var opt = new CustomOption(id, type, nameKey, selections, "", null, false, format, new Color32(r, g, b, a));
         opt.SetHeader(headerText);
         return opt;
     }
@@ -137,7 +133,6 @@ public partial class CustomOption
         byte g = byte.MaxValue,
         byte b = byte.MaxValue,
         byte a = byte.MaxValue,
-        Action onChange = null,
         bool hideIfParentEnabled = false,
         string format = ""
         )
@@ -147,7 +142,7 @@ public partial class CustomOption
         {
             selections.Add(s);
         }
-        return new CustomOption(id, type, nameKey, [.. selections], defaultValue, parent, hideIfParentEnabled, format, new Color32(r, g, b, a), onChange);
+        return new CustomOption(id, type, nameKey, [.. selections], defaultValue, parent, hideIfParentEnabled, format, new Color32(r, g, b, a));
     }
 
     public static CustomOption Header(
@@ -163,7 +158,6 @@ public partial class CustomOption
         byte g = byte.MaxValue,
         byte b = byte.MaxValue,
         byte a = byte.MaxValue,
-        Action onChange = null,
         string format = ""
         )
     {
@@ -173,7 +167,7 @@ public partial class CustomOption
             selections.Add(s);
         }
 
-        var opt = new CustomOption(id, type, nameKey, [.. selections], defaultValue, null, false, format, new Color32(r, g, b, a), onChange);
+        var opt = new CustomOption(id, type, nameKey, [.. selections], defaultValue, null, false, format, new Color32(r, g, b, a));
         opt.SetHeader(headerText);
         return opt;
     }
@@ -188,12 +182,11 @@ public partial class CustomOption
         byte g = byte.MaxValue,
         byte b = byte.MaxValue,
         byte a = byte.MaxValue,
-        Action onChange = null,
         bool hideIfParentEnabled = false,
         string format = ""
     )
     {
-        return new CustomOption(id, type, nameKey, ["Off", "On"], defaultValue ? "On" : "Off", parent, hideIfParentEnabled, format, new Color32(r, g, b, a), onChange);
+        return new CustomOption(id, type, nameKey, ["Off", "On"], defaultValue ? "On" : "Off", parent, hideIfParentEnabled, format, new Color32(r, g, b, a));
     }
 
     public static CustomOption Header(
@@ -206,11 +199,10 @@ public partial class CustomOption
         byte g = byte.MaxValue,
         byte b = byte.MaxValue,
         byte a = byte.MaxValue,
-        Action onChange = null,
         string format = ""
     )
     {
-        var opt = new CustomOption(id, type, nameKey, ["Off", "On"], defaultValue ? "On" : "Off", null, false, format, new Color32(r, g, b, a), onChange);
+        var opt = new CustomOption(id, type, nameKey, ["Off", "On"], defaultValue ? "On" : "Off", null, false, format, new Color32(r, g, b, a));
         opt.SetHeader(headerText);
         return opt;
     }
@@ -337,12 +329,6 @@ public partial class CustomOption
             catch { }
         }
         Selection = newSelection;
-
-        try
-        {
-            OnChange?.Invoke();
-        }
-        catch { }
 
         if (OptionBehavior != null && OptionBehavior is StringOption stringOption)
         {

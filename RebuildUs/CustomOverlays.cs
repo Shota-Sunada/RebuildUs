@@ -321,10 +321,7 @@ public class CustomOverlays
         RebuildUs.OptionsPage = 0;
         var option = GameOptionsManager.Instance.CurrentGameOptions;
         // var gameOptions = option.ToString().Split("\n", StringSplitOptions.RemoveEmptyEntries).ToList().GetRange(2, 17);
-        InfoOverlayRules.text = string.Join("\n", option) + "\n\n" + CustomOption.OptionsToString(CustomOptionHolder.ModOptions);
-        InfoOverlayRules.text = string.Join("\n", option) + "\n\n" + CustomOption.OptionsToString(CustomOptionHolder.PolusOptions);
-        InfoOverlayRules.text = string.Join("\n", option) + "\n\n" + CustomOption.OptionsToString(CustomOptionHolder.AirshipOptions);
-        InfoOverlayRules.text = string.Join("\n", option) + "\n\n" + CustomOption.OptionsToString(CustomOptionHolder.RandomMap);
+        InfoOverlayRules.text = string.Join("\n", option) + "\n\n" + CustomOption.OptionsToString(CustomOptionHolder.PolusOptions) + "\n\n" + CustomOption.OptionsToString(CustomOptionHolder.AirshipOptions) + "\n\n" + CustomOption.OptionsToString(CustomOptionHolder.RandomMap);
         InfoOverlayRules.enabled = true;
 
         string rolesText = "";

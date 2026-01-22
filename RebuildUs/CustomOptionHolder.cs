@@ -3,7 +3,7 @@ namespace RebuildUs;
 public static class CustomOptionHolder
 {
     public static readonly string[] RATES = ["0%", "10%", "20%", "30%", "40%", "50%", "60%", "70%", "80%", "90%", "100%"];
-    public static readonly string[] PRESETS = ["Option.Preset1", "Option.Preset2", "Option.Preset3", "Option.Preset4", "Option.Preset5"];
+    public static readonly string[] PRESETS = [Tr.Get("Option.Preset1"), Tr.Get("Option.Preset2"), Tr.Get("Option.Preset3"), Tr.Get("Option.Preset4"), Tr.Get("Option.Preset5")];
 
     #region MOD OPTIONS
     public static CustomOption PresetSelection;
@@ -22,7 +22,6 @@ public static class CustomOptionHolder
     #endregion
 
     #region GAME OPTIONS
-    public static CustomOptionBlank ModOptions;
     public static CustomOption MaxNumberOfMeetings;
     public static CustomOption BlockSkippingInEmergencyMeetings;
     public static CustomOption NoVoteIsSelfVote;
@@ -367,12 +366,12 @@ public static class CustomOptionHolder
     public static void Load()
     {
         #region MOD OPTIONS
-        PresetSelection = CustomOption.Header(0, CustomOptionType.General, "Option.Preset", PRESETS, "Option.Preset");
+        PresetSelection = CustomOption.Header(0, CustomOptionType.General, "Option.Preset", PRESETS, Tr.Get("Option.Preset"));
         ActivateRoles = CustomOption.Normal(1, CustomOptionType.General, "Option.ActivateRoles", true, null);
         #endregion
 
         #region GENERAL OPTIONS
-        CrewmateRolesCountMin = CustomOption.Header(10, CustomOptionType.General, "Option.CrewmateRolesCountMin", 0f, 0f, 15f, 1f, "Option.RolesGeneral");
+        CrewmateRolesCountMin = CustomOption.Header(10, CustomOptionType.General, "Option.CrewmateRolesCountMin", 0f, 0f, 15f, 1f, Tr.Get("Option.RolesGeneral"));
         CrewmateRolesCountMax = CustomOption.Normal(11, CustomOptionType.General, "Option.CrewmateRolesCountMax", 0f, 0f, 15f, 1f);
         ImpostorRolesCountMin = CustomOption.Normal(12, CustomOptionType.General, "Option.ImpostorRolesCountMin", 0f, 0f, 15f, 1f);
         ImpostorRolesCountMax = CustomOption.Normal(13, CustomOptionType.General, "Option.ImpostorRolesCountMax", 0f, 0f, 15f, 1f);
@@ -383,31 +382,30 @@ public static class CustomOptionHolder
         #endregion
 
         #region GAME OPTIONS
-        ModOptions = new CustomOptionBlank(null);
-        MaxNumberOfMeetings = CustomOption.Header(20, CustomOptionType.General, "Option.MaxNumberOfMeetings", 10, 0, 15, 1, "Option.GameOptions");
-        BlockSkippingInEmergencyMeetings = CustomOption.Normal(21, CustomOptionType.General, "Option.BlockSkippingInEmergencyMeetings", false, ModOptions);
-        NoVoteIsSelfVote = CustomOption.Normal(22, CustomOptionType.General, "Option.NoVoteIsSelfVote", false, ModOptions);
-        HidePlayerNames = CustomOption.Normal(23, CustomOptionType.General, "Option.HidePlayerNames", false, ModOptions);
-        AllowParallelMedBayScans = CustomOption.Normal(24, CustomOptionType.General, "Option.AllowParallelMedBayScans", false, ModOptions);
-        HideOutOfSightNametags = CustomOption.Normal(25, CustomOptionType.General, "Option.HideOutOfSightNametags", true, ModOptions);
-        RefundVotesOnDeath = CustomOption.Normal(26, CustomOptionType.General, "Option.RefundVotesOnDeath", true, ModOptions);
-        DelayBeforeMeeting = CustomOption.Normal(27, CustomOptionType.General, "Option.DelayBeforeMeeting", 0f, 0f, 10f, 0.25f, ModOptions);
-        DisableVentAnimation = CustomOption.Normal(28, CustomOptionType.General, "Option.DisableVentAnimation", false, ModOptions);
-        StopCooldownOnFixingElecSabotage = CustomOption.Normal(29, CustomOptionType.General, "Option.StopCooldownOnFixingElecSabotage", true, ModOptions);
-        EnableHawkMode = CustomOption.Normal(30, CustomOptionType.General, "Option.EnableHawkMode", true, ModOptions);
-        CanWinByTaskWithoutLivingPlayer = CustomOption.Normal(31, CustomOptionType.General, "Option.CanWinByTaskLivingPlayer", true, ModOptions);
-        // DeadPlayerCanSeeCooldown = CustomOption.Normal(32, CustomOptionType.General, "DeadPlayerCanSeeCooldown", true, ModOptions);
-        ImpostorCanIgnoreCommSabotage = CustomOption.Normal(33, CustomOptionType.General, "Option.ImpostorCanIgnoreCommSabotage", false, ModOptions);
-        // BlockSabotageFromDeadImpostors = CustomOption.Normal(34, CustomOptionType.General, "BlockSabotageFromDeadImpostors", false, ModOptions);
+        MaxNumberOfMeetings = CustomOption.Header(20, CustomOptionType.General, "Option.MaxNumberOfMeetings", 10, 0, 15, 1, Tr.Get("Option.GameOptions"));
+        BlockSkippingInEmergencyMeetings = CustomOption.Normal(21, CustomOptionType.General, "Option.BlockSkippingInEmergencyMeetings", false);
+        NoVoteIsSelfVote = CustomOption.Normal(22, CustomOptionType.General, "Option.NoVoteIsSelfVote", false);
+        HidePlayerNames = CustomOption.Normal(23, CustomOptionType.General, "Option.HidePlayerNames", false);
+        AllowParallelMedBayScans = CustomOption.Normal(24, CustomOptionType.General, "Option.AllowParallelMedBayScans", false);
+        HideOutOfSightNametags = CustomOption.Normal(25, CustomOptionType.General, "Option.HideOutOfSightNametags", true);
+        RefundVotesOnDeath = CustomOption.Normal(26, CustomOptionType.General, "Option.RefundVotesOnDeath", true);
+        DelayBeforeMeeting = CustomOption.Normal(27, CustomOptionType.General, "Option.DelayBeforeMeeting", 0f, 0f, 10f, 0.25f);
+        DisableVentAnimation = CustomOption.Normal(28, CustomOptionType.General, "Option.DisableVentAnimation", false);
+        StopCooldownOnFixingElecSabotage = CustomOption.Normal(29, CustomOptionType.General, "Option.StopCooldownOnFixingElecSabotage", true);
+        EnableHawkMode = CustomOption.Normal(30, CustomOptionType.General, "Option.EnableHawkMode", true);
+        CanWinByTaskWithoutLivingPlayer = CustomOption.Normal(31, CustomOptionType.General, "Option.CanWinByTaskLivingPlayer", true);
+        // DeadPlayerCanSeeCooldown = CustomOption.Normal(32, CustomOptionType.General, "DeadPlayerCanSeeCooldown", true);
+        ImpostorCanIgnoreCommSabotage = CustomOption.Normal(33, CustomOptionType.General, "Option.ImpostorCanIgnoreCommSabotage", false);
+        // BlockSabotageFromDeadImpostors = CustomOption.Normal(34, CustomOptionType.General, "BlockSabotageFromDeadImpostors", false);
         // ShieldFirstKill = CustomOption.Normal(35, CustomOptionType.General, "ShieldFirstKill", false);
 
-        RandomWireTask = CustomOption.Normal(50, CustomOptionType.General, "Option.RandomWireTask", false, ModOptions);
+        RandomWireTask = CustomOption.Normal(50, CustomOptionType.General, "Option.RandomWireTask", false);
         NumWireTask = CustomOption.Normal(51, CustomOptionType.General, "Option.NumWireTask", 3f, 1f, 10f, 1f, RandomWireTask);
 
-        AdditionalEmergencyCooldown = CustomOption.Normal(55, CustomOptionType.General, "Option.AdditionalEmergencyCooldown", 0f, 0f, 15f, 1f, ModOptions);
+        AdditionalEmergencyCooldown = CustomOption.Normal(55, CustomOptionType.General, "Option.AdditionalEmergencyCooldown", 0f, 0f, 15f, 1f);
         AdditionalEmergencyCooldownTime = CustomOption.Normal(56, CustomOptionType.General, "Option.AdditionalEmergencyCooldownTime", 10f, 0f, 60f, 1f, AdditionalEmergencyCooldown);
 
-        RestrictDevices = CustomOption.Normal(60, CustomOptionType.General, "Option.RestrictDevices", ["Option.Off", "Option.RestrictPerTurn", "Option.RestrictPerGame"], ModOptions);
+        RestrictDevices = CustomOption.Normal(60, CustomOptionType.General, "Option.RestrictDevices", ["Option.Off", "Option.RestrictPerTurn", "Option.RestrictPerGame"]);
         RestrictAdmin = CustomOption.Normal(61, CustomOptionType.General, "Option.RestrictAdmin", true, RestrictDevices);
         RestrictAdminTime = CustomOption.Normal(62, CustomOptionType.General, "Option.RestrictAdminTime", 30f, 0f, 600f, 1f, RestrictAdmin);
         RestrictAdminText = CustomOption.Normal(63, CustomOptionType.General, "Option.RestrictAdminText", true, RestrictAdmin);
@@ -420,14 +418,14 @@ public static class CustomOptionHolder
         #endregion
 
         #region POLUS OPTIONS
-        PolusOptions = CustomOption.Header(70, CustomOptionType.General, "Option.PolusOptions", false, "Option.PolusOptions");
+        PolusOptions = CustomOption.Header(70, CustomOptionType.General, "Option.PolusOptions", false, Tr.Get("Option.PolusOptions"));
         PolusAdditionalVents = CustomOption.Normal(71, CustomOptionType.General, "Option.PolusAdditionalVents", true, PolusOptions);
         PolusSpecimenVital = CustomOption.Normal(72, CustomOptionType.General, "Option.PolusSpecimenVital", true, PolusOptions);
         PolusRandomSpawn = CustomOption.Normal(73, CustomOptionType.General, "Option.PolusRandomSpawn", true, PolusOptions);
         #endregion
 
         #region AIRSHIP OPTIONS
-        AirshipOptions = CustomOption.Header(80, CustomOptionType.General, "Option.AirshipOptions", false, "Option.AirshipOptions");
+        AirshipOptions = CustomOption.Header(80, CustomOptionType.General, "Option.AirshipOptions", false, Tr.Get("Option.AirshipOptions"));
         AirshipEnableWallCheck = CustomOption.Normal(81, CustomOptionType.General, "Option.AirshipEnableWallCheck", true, AirshipOptions);
         AirshipReactorDuration = CustomOption.Normal(82, CustomOptionType.General, "Option.AirshipReactorDuration", 60f, 0f, 600f, 1f, AirshipOptions);
         AirshipRandomSpawn = CustomOption.Normal(83, CustomOptionType.General, "Option.AirshipRandomSpawn", false, AirshipOptions);
@@ -447,7 +445,7 @@ public static class CustomOptionHolder
         #endregion
 
         #region MAP OPTIONS
-        RandomMap = CustomOption.Header(100, CustomOptionType.General, "Option.RandomMap", false, "Option.RandomMap");
+        RandomMap = CustomOption.Header(100, CustomOptionType.General, "Option.RandomMap", false, Tr.Get("Option.RandomMap"));
         RandomMapEnableSkeld = CustomOption.Normal(101, CustomOptionType.General, "Option.RandomMapEnableSkeld", true, RandomMap);
         RandomMapEnableMiraHQ = CustomOption.Normal(102, CustomOptionType.General, "Option.RandomMapEnableMiraHQ", true, RandomMap);
         RandomMapEnablePolus = CustomOption.Normal(103, CustomOptionType.General, "Option.RandomMapEnablePolus", true, RandomMap);
@@ -573,7 +571,7 @@ public static class CustomOptionHolder
         BountyHunterShowArrow = CustomOption.Normal(2004, CustomOptionType.Impostor, "Option.BountyHunterShowArrow", true, BountyHunterSpawnRate);
         BountyHunterArrowUpdateInterval = CustomOption.Normal(2005, CustomOptionType.Impostor, "Option.BountyHunterArrowUpdateInterval", 15f, 2.5f, 60f, 2.5f, BountyHunterShowArrow);
 
-        MafiaSpawnRate = new(2010, CustomOptionType.Impostor, RoleType.Godfather, Mafia.NameColor, 1);
+        MafiaSpawnRate = new(2010, CustomOptionType.Impostor, $"Role.{nameof(Mafia)}", Mafia.NameColor, 1);
         MafiosoCanSabotage = CustomOption.Normal(2011, CustomOptionType.Impostor, "Option.MafiosoCanSabotage", false, MafiaSpawnRate);
         MafiosoCanRepair = CustomOption.Normal(2012, CustomOptionType.Impostor, "Option.MafiosoCanRepair", false, MafiaSpawnRate);
         MafiosoCanVent = CustomOption.Normal(2013, CustomOptionType.Impostor, "Option.MafiosoCanVent", false, MafiaSpawnRate);
@@ -702,7 +700,7 @@ public static class CustomOptionHolder
         MadmateCanFixComm = CustomOption.Normal(4011, CustomOptionType.Modifier, "Option.MadmateCanFixComm", true, MadmateSpawnRate);
         MadmateExilePlayer = CustomOption.Normal(4012, CustomOptionType.Modifier, "Option.MadmateExileCrewmate", false, MadmateSpawnRate);
 
-        LastImpostorEnable = CustomOption.Header(4010, CustomOptionType.Modifier, "Option.LastImpostorEnable", true, "Option.LastImpostor");
+        LastImpostorEnable = CustomOption.Header(4010, CustomOptionType.Modifier, "Option.LastImpostorEnable", true, Helpers.Cs(LastImpostor.NameColor, Tr.Get("Modifier.LastImpostor")));
         LastImpostorFunctions = CustomOption.Normal(4011, CustomOptionType.Modifier, "Option.LastImpostorFunctions", ["Option.LastImpostorDivine", "Option.LastImpostorGuesser"], LastImpostorEnable);
         LastImpostorNumKills = CustomOption.Normal(4012, CustomOptionType.Modifier, "Option.LastImpostorNumKills", 3f, 0f, 10f, 1f, LastImpostorEnable);
         LastImpostorResults = CustomOption.Normal(4013, CustomOptionType.Modifier, "Option.FortuneTellerResults", ["Option.FortuneTellerResultCrew", "Option.FortuneTellerResultTeam", "Option.FortuneTellerResultRole"], LastImpostorEnable);
