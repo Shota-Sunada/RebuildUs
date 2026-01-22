@@ -19,9 +19,7 @@ public static class ClientOptions
     private static GameObject PopUp;
     private static TextMeshPro TitleText;
 
-    private static ToggleButtonBehaviour MoreOptions;
     private static List<ToggleButtonBehaviour> ModButtons = [];
-    private static TextMeshPro TitleTextTitle;
 
     private static ToggleButtonBehaviour ButtonPrefab;
     private static int Page = 1;
@@ -83,22 +81,22 @@ public static class ClientOptions
 
     private static void InitializeMoreButton(OptionsMenuBehaviour __instance)
     {
-        __instance.BackButton.transform.localPosition += Vector3.right * 1.8f;
-        MoreOptions = UnityEngine.Object.Instantiate(ButtonPrefab, __instance.CensorChatButton.transform.parent);
-        MoreOptions.transform.localPosition = __instance.CensorChatButton.transform.localPosition + Vector3.down * 1.0f;
-
-        MoreOptions.gameObject.SetActive(true);
-        MoreOptions.Text.text = Tr.Get("Hud.ModOptionsText");
-        var moreOptionsButton = MoreOptions.GetComponent<PassiveButton>();
+        var moreOptions = UnityEngine.Object.Instantiate(ButtonPrefab, __instance.CensorChatButton.transform.parent);
+        moreOptions.transform.localPosition = __instance.CensorChatButton.transform.localPosition + Vector3.down * 1.0f;
+        moreOptions.gameObject.SetActive(true);
+        moreOptions.Text.text = Tr.Get("Hud.ModOptionsText");
+        var moreOptionsButton = moreOptions.GetComponent<PassiveButton>();
         moreOptionsButton.OnClick = new Button.ButtonClickedEvent();
         moreOptionsButton.OnClick.AddListener((Action)(() =>
         {
+            bool closeUnderlying = false;
             if (!PopUp) return;
 
             if (__instance.transform.parent && __instance.transform.parent == FastDestroyableSingleton<HudManager>.Instance.transform)
             {
                 PopUp.transform.SetParent(FastDestroyableSingleton<HudManager>.Instance.transform);
                 PopUp.transform.localPosition = new Vector3(0, 0, -800f);
+                closeUnderlying = true;
             }
             else
             {
@@ -108,10 +106,19 @@ public static class ClientOptions
 
             CheckSetTitle();
             RefreshOpen();
+
+            if (closeUnderlying) __instance.Close();
         }));
 
+        var returnToGameButton = GameObject.Find("ReturnToGameButton");
         var leaveGameButton = GameObject.Find("LeaveGameButton");
-        leaveGameButton?.transform.localPosition += Vector3.right * 1.3f;
+
+        if (returnToGameButton && leaveGameButton)
+        {
+            returnToGameButton.transform.localPosition += Vector3.left * 1.3f;
+            leaveGameButton.transform.localPosition += Vector3.right * 1.3f;
+            leaveGameButton.transform.localPosition = new(leaveGameButton.transform.localPosition.x, returnToGameButton.transform.localPosition.y, leaveGameButton.transform.localPosition.z);
+        }
     }
 
     private static void RefreshOpen()
@@ -125,7 +132,7 @@ public static class ClientOptions
     {
         if (!PopUp || PopUp.GetComponentInChildren<TextMeshPro>() || !TitleText) return;
 
-        var title = TitleTextTitle = UnityEngine.Object.Instantiate(TitleText, PopUp.transform);
+        var title = UnityEngine.Object.Instantiate(TitleText, PopUp.transform);
         title.GetComponent<RectTransform>().localPosition = Vector3.up * 2.3f;
         title.gameObject.SetActive(true);
         title.text = Tr.Get("Hud.MoreOptionsText");
@@ -134,7 +141,7 @@ public static class ClientOptions
 
     private static void SetUpOptions()
     {
-        // if (popUp.transform.GetComponentInChildren<ToggleButtonBehaviour>()) return;
+        if (PopUp.transform.GetComponentInChildren<ToggleButtonBehaviour>()) return;
 
         foreach (var button in ModButtons)
         {
