@@ -405,7 +405,7 @@ public static class CustomOptionHolder
         AdditionalEmergencyCooldown = CustomOption.Normal(55, CustomOptionType.General, "Option.AdditionalEmergencyCooldown", 0f, 0f, 15f, 1f);
         AdditionalEmergencyCooldownTime = CustomOption.Normal(56, CustomOptionType.General, "Option.AdditionalEmergencyCooldownTime", 10f, 0f, 60f, 1f, AdditionalEmergencyCooldown);
 
-        RestrictDevices = CustomOption.Normal(60, CustomOptionType.General, "Option.RestrictDevices", ["Option.Off", "Option.RestrictPerTurn", "Option.RestrictPerGame"]);
+        RestrictDevices = CustomOption.Normal(60, CustomOptionType.General, "Option.RestrictDevices", [Tr.Get("Option.Off"), Tr.Get("Option.RestrictPerTurn"), Tr.Get("Option.RestrictPerGame")]);
         RestrictAdmin = CustomOption.Normal(61, CustomOptionType.General, "Option.RestrictAdmin", true, RestrictDevices);
         RestrictAdminTime = CustomOption.Normal(62, CustomOptionType.General, "Option.RestrictAdminTime", 30f, 0f, 600f, 1f, RestrictAdmin);
         RestrictAdminText = CustomOption.Normal(63, CustomOptionType.General, "Option.RestrictAdminText", true, RestrictAdmin);
@@ -475,13 +475,13 @@ public static class CustomOptionHolder
         SpyHasImpostorVision = CustomOption.Normal(1024, CustomOptionType.Crewmate, "Option.SpyHasImpostorVision", false, SpySpawnRate);
 
         MedicSpawnRate = new(1030, CustomOptionType.Crewmate, RoleType.Medic, Medic.NameColor, 1);
-        MedicShowShielded = CustomOption.Normal(1031, CustomOptionType.Crewmate, "Option.MedicShowShielded", ["Option.MedicShowShieldedAll", "Option.MedicShowShieldedBoth", "Option.MedicShowShieldedMedic"], MedicSpawnRate);
+        MedicShowShielded = CustomOption.Normal(1031, CustomOptionType.Crewmate, "Option.MedicShowShielded", [Tr.Get("Option.MedicShowShieldedAll"), Tr.Get("Option.MedicShowShieldedBoth"), Tr.Get("Option.MedicShowShieldedMedic")], MedicSpawnRate);
         MedicShowAttemptToShielded = CustomOption.Normal(1032, CustomOptionType.Crewmate, "Option.MedicShowAttemptToShielded", false, MedicSpawnRate);
         MedicSetShieldAfterMeeting = CustomOption.Normal(1033, CustomOptionType.Crewmate, "Option.MedicSetShieldAfterMeeting", false, MedicSpawnRate);
         MedicShowAttemptToMedic = CustomOption.Normal(1034, CustomOptionType.Crewmate, "Option.MedicSeesMurderAttempt", false, MedicSpawnRate);
 
         SeerSpawnRate = new(1040, CustomOptionType.Crewmate, RoleType.Seer, Seer.NameColor, 1);
-        SeerMode = CustomOption.Normal(1041, CustomOptionType.Crewmate, "Option.SeerMode", ["Option.SeerModeBoth", "Option.SeerModeFlash", "Option.SeerModeSouls"], SeerSpawnRate);
+        SeerMode = CustomOption.Normal(1041, CustomOptionType.Crewmate, "Option.SeerMode", [Tr.Get("Option.SeerModeBoth"), Tr.Get("Option.SeerModeFlash"), Tr.Get("Option.SeerModeSouls")], SeerSpawnRate);
         SeerLimitSoulDuration = CustomOption.Normal(1042, CustomOptionType.Crewmate, "Option.SeerLimitSoulDuration", false, SeerSpawnRate);
         SeerSoulDuration = CustomOption.Normal(1043, CustomOptionType.Crewmate, "Option.SeerSoulDuration", 15f, 0f, 120f, 5f, SeerLimitSoulDuration);
 
@@ -597,7 +597,7 @@ public static class CustomOptionHolder
         CreatedMadmateHasImpostorVision = CustomOption.Normal(2039, CustomOptionType.Impostor, "Option.CreatedMadmateHasImpostorVision", false, EvilHackerCanCreateMadmate);
         CreatedMadmateCanSabotage = CustomOption.Normal(2040, CustomOptionType.Impostor, "Option.CreatedMadmateCanSabotage", false, EvilHackerCanCreateMadmate);
         CreatedMadmateCanFixComm = CustomOption.Normal(2041, CustomOptionType.Impostor, "Option.CreatedMadmateCanFixComm", true, EvilHackerCanCreateMadmate);
-        CreatedMadmateAbility = CustomOption.Normal(2042, CustomOptionType.Impostor, "Option.MadmateAbility", ["Option.MadmateNone", "Option.MadmateFanatic"], EvilHackerCanCreateMadmate);
+        CreatedMadmateAbility = CustomOption.Normal(2042, CustomOptionType.Impostor, "Option.MadmateAbility", [Tr.Get("Option.MadmateNone"), Tr.Get("Option.MadmateFanatic")], EvilHackerCanCreateMadmate);
         CreatedMadmateNumTasks = CustomOption.Normal(2043, CustomOptionType.Impostor, "Option.CreatedMadmateNumTasks", 4f, 1f, 20f, 1f, CreatedMadmateAbility);
         CreatedMadmateExileCrewmate = CustomOption.Normal(2044, CustomOptionType.Impostor, "Option.CreatedMadmateExileCrewmate", false, EvilHackerCanCreateMadmate);
 
@@ -689,9 +689,9 @@ public static class CustomOptionHolder
 
         #region MODIFIERS
         MadmateSpawnRate = new(4000, CustomOptionType.Modifier, ModifierType.Madmate, Madmate.NameColor);
-        MadmateType = CustomOption.Normal(4001, CustomOptionType.Modifier, "Option.MadmateType", ["Option.MadmateDefault", "Option.MadmateWithRole", "Option.MadmateRandom"], MadmateSpawnRate);
+        MadmateType = CustomOption.Normal(4001, CustomOptionType.Modifier, "Option.MadmateType", [Tr.Get("Option.MadmateDefault"), Tr.Get("Option.MadmateWithRole"), Tr.Get("Option.MadmateRandom")], MadmateSpawnRate);
         MadmateFixedRole = new CustomRoleSelectionOption(4002, CustomOptionType.Modifier, "Option.MadmateFixedRole", Madmate.ValidRoles, MadmateType);
-        MadmateAbility = CustomOption.Normal(4003, CustomOptionType.Modifier, "Option.MadmateAbility", ["Option.MadmateNone", "Option.MadmateFanatic"], MadmateSpawnRate);
+        MadmateAbility = CustomOption.Normal(4003, CustomOptionType.Modifier, "Option.MadmateAbility", [Tr.Get("Option.MadmateNone"), Tr.Get("Option.MadmateFanatic")], MadmateSpawnRate);
         MadmateTasks = new((4004, 4005, 4006), CustomOptionType.Modifier, (1, 1, 3), MadmateAbility);
         MadmateCanDieToSheriff = CustomOption.Normal(4007, CustomOptionType.Modifier, "Option.MadmateCanDieToSheriff", false, MadmateSpawnRate);
         MadmateCanEnterVents = CustomOption.Normal(4008, CustomOptionType.Modifier, "Option.MadmateCanEnterVents", false, MadmateSpawnRate);
@@ -701,9 +701,9 @@ public static class CustomOptionHolder
         MadmateExilePlayer = CustomOption.Normal(4012, CustomOptionType.Modifier, "Option.MadmateExileCrewmate", false, MadmateSpawnRate);
 
         LastImpostorEnable = CustomOption.Header(4010, CustomOptionType.Modifier, "Option.LastImpostorEnable", true, Helpers.Cs(LastImpostor.NameColor, Tr.Get("Modifier.LastImpostor")));
-        LastImpostorFunctions = CustomOption.Normal(4011, CustomOptionType.Modifier, "Option.LastImpostorFunctions", ["Option.LastImpostorDivine", "Option.LastImpostorGuesser"], LastImpostorEnable);
+        LastImpostorFunctions = CustomOption.Normal(4011, CustomOptionType.Modifier, "Option.LastImpostorFunctions", [Tr.Get("Option.LastImpostorDivine"), Tr.Get("Option.LastImpostorGuesser")], LastImpostorEnable);
         LastImpostorNumKills = CustomOption.Normal(4012, CustomOptionType.Modifier, "Option.LastImpostorNumKills", 3f, 0f, 10f, 1f, LastImpostorEnable);
-        LastImpostorResults = CustomOption.Normal(4013, CustomOptionType.Modifier, "Option.FortuneTellerResults", ["Option.FortuneTellerResultCrew", "Option.FortuneTellerResultTeam", "Option.FortuneTellerResultRole"], LastImpostorEnable);
+        LastImpostorResults = CustomOption.Normal(4013, CustomOptionType.Modifier, "Option.FortuneTellerResults", [Tr.Get("Option.FortuneTellerResultCrew"), Tr.Get("Option.FortuneTellerResultTeam"), Tr.Get("Option.FortuneTellerResultRole")], LastImpostorEnable);
         LastImpostorNumShots = CustomOption.Normal(4014, CustomOptionType.Modifier, "Option.LastImpostorNumShots", 1f, 1f, 15f, 1f, LastImpostorEnable);
 
         LoversSpawnRate = new(4020, CustomOptionType.Modifier, RoleType.Lovers, Lovers.Color, 1);
