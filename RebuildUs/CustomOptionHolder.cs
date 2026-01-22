@@ -1,9 +1,9 @@
-namespace RebuildUs.Options;
+namespace RebuildUs;
 
-public static partial class CustomOptionHolder
+public static class CustomOptionHolder
 {
     public static readonly string[] RATES = ["0%", "10%", "20%", "30%", "40%", "50%", "60%", "70%", "80%", "90%", "100%"];
-    public static readonly string[] PRESETS = ["Preset 1", "Preset 2", "Preset 3", "Preset 4", "Preset 5"];
+    public static readonly string[] PRESETS = ["Option.Preset1", "Option.Preset2", "Option.Preset3", "Option.Preset4", "Option.Preset5"];
 
     #region MOD OPTIONS
     public static CustomOption PresetSelection;
@@ -22,6 +22,7 @@ public static partial class CustomOptionHolder
     #endregion
 
     #region GAME OPTIONS
+    public static CustomOptionBlank ModOptions;
     public static CustomOption MaxNumberOfMeetings;
     public static CustomOption BlockSkippingInEmergencyMeetings;
     public static CustomOption NoVoteIsSelfVote;
@@ -382,30 +383,31 @@ public static partial class CustomOptionHolder
         #endregion
 
         #region GAME OPTIONS
+        ModOptions = new CustomOptionBlank(null);
         MaxNumberOfMeetings = CustomOption.Header(20, CustomOptionType.General, "Option.MaxNumberOfMeetings", 10, 0, 15, 1, "Option.GameOptions");
-        BlockSkippingInEmergencyMeetings = CustomOption.Normal(21, CustomOptionType.General, "Option.BlockSkippingInEmergencyMeetings", false);
-        NoVoteIsSelfVote = CustomOption.Normal(22, CustomOptionType.General, "Option.NoVoteIsSelfVote", false);
-        HidePlayerNames = CustomOption.Normal(23, CustomOptionType.General, "Option.HidePlayerNames", false);
-        AllowParallelMedBayScans = CustomOption.Normal(24, CustomOptionType.General, "Option.AllowParallelMedBayScans", false);
-        HideOutOfSightNametags = CustomOption.Normal(25, CustomOptionType.General, "Option.HideOutOfSightNametags", true);
-        RefundVotesOnDeath = CustomOption.Normal(26, CustomOptionType.General, "Option.RefundVotesOnDeath", true);
-        DelayBeforeMeeting = CustomOption.Normal(27, CustomOptionType.General, "Option.DelayBeforeMeeting", 0f, 0f, 10f, 0.25f);
-        DisableVentAnimation = CustomOption.Normal(28, CustomOptionType.General, "Option.DisableVentAnimation", false);
-        StopCooldownOnFixingElecSabotage = CustomOption.Normal(29, CustomOptionType.General, "Option.StopCooldownOnFixingElecSabotage", true);
-        EnableHawkMode = CustomOption.Normal(30, CustomOptionType.General, "Option.EnableHawkMode", true);
-        CanWinByTaskWithoutLivingPlayer = CustomOption.Normal(31, CustomOptionType.General, "Option.CanWinByTaskLivingPlayer", true);
-        // DeadPlayerCanSeeCooldown = CustomOption.Normal(32, CustomOptionType.General, "DeadPlayerCanSeeCooldown", true);
-        ImpostorCanIgnoreCommSabotage = CustomOption.Normal(33, CustomOptionType.General, "Option.ImpostorCanIgnoreCommSabotage", false);
-        // BlockSabotageFromDeadImpostors = CustomOption.Normal(34, CustomOptionType.General, "BlockSabotageFromDeadImpostors", false);
+        BlockSkippingInEmergencyMeetings = CustomOption.Normal(21, CustomOptionType.General, "Option.BlockSkippingInEmergencyMeetings", false, ModOptions);
+        NoVoteIsSelfVote = CustomOption.Normal(22, CustomOptionType.General, "Option.NoVoteIsSelfVote", false, ModOptions);
+        HidePlayerNames = CustomOption.Normal(23, CustomOptionType.General, "Option.HidePlayerNames", false, ModOptions);
+        AllowParallelMedBayScans = CustomOption.Normal(24, CustomOptionType.General, "Option.AllowParallelMedBayScans", false, ModOptions);
+        HideOutOfSightNametags = CustomOption.Normal(25, CustomOptionType.General, "Option.HideOutOfSightNametags", true, ModOptions);
+        RefundVotesOnDeath = CustomOption.Normal(26, CustomOptionType.General, "Option.RefundVotesOnDeath", true, ModOptions);
+        DelayBeforeMeeting = CustomOption.Normal(27, CustomOptionType.General, "Option.DelayBeforeMeeting", 0f, 0f, 10f, 0.25f, ModOptions);
+        DisableVentAnimation = CustomOption.Normal(28, CustomOptionType.General, "Option.DisableVentAnimation", false, ModOptions);
+        StopCooldownOnFixingElecSabotage = CustomOption.Normal(29, CustomOptionType.General, "Option.StopCooldownOnFixingElecSabotage", true, ModOptions);
+        EnableHawkMode = CustomOption.Normal(30, CustomOptionType.General, "Option.EnableHawkMode", true, ModOptions);
+        CanWinByTaskWithoutLivingPlayer = CustomOption.Normal(31, CustomOptionType.General, "Option.CanWinByTaskLivingPlayer", true, ModOptions);
+        // DeadPlayerCanSeeCooldown = CustomOption.Normal(32, CustomOptionType.General, "DeadPlayerCanSeeCooldown", true, ModOptions);
+        ImpostorCanIgnoreCommSabotage = CustomOption.Normal(33, CustomOptionType.General, "Option.ImpostorCanIgnoreCommSabotage", false, ModOptions);
+        // BlockSabotageFromDeadImpostors = CustomOption.Normal(34, CustomOptionType.General, "BlockSabotageFromDeadImpostors", false, ModOptions);
         // ShieldFirstKill = CustomOption.Normal(35, CustomOptionType.General, "ShieldFirstKill", false);
 
-        RandomWireTask = CustomOption.Normal(50, CustomOptionType.General, "Option.RandomWireTask", false);
+        RandomWireTask = CustomOption.Normal(50, CustomOptionType.General, "Option.RandomWireTask", false, ModOptions);
         NumWireTask = CustomOption.Normal(51, CustomOptionType.General, "Option.NumWireTask", 3f, 1f, 10f, 1f, RandomWireTask);
 
-        AdditionalEmergencyCooldown = CustomOption.Normal(55, CustomOptionType.General, "Option.AdditionalEmergencyCooldown", 0f, 0f, 15f, 1f);
+        AdditionalEmergencyCooldown = CustomOption.Normal(55, CustomOptionType.General, "Option.AdditionalEmergencyCooldown", 0f, 0f, 15f, 1f, ModOptions);
         AdditionalEmergencyCooldownTime = CustomOption.Normal(56, CustomOptionType.General, "Option.AdditionalEmergencyCooldownTime", 10f, 0f, 60f, 1f, AdditionalEmergencyCooldown);
 
-        RestrictDevices = CustomOption.Normal(60, CustomOptionType.General, "Option.RestrictDevices", ["Option.Off", "Option.RestrictPerTurn", "Option.RestrictPerGame"]);
+        RestrictDevices = CustomOption.Normal(60, CustomOptionType.General, "Option.RestrictDevices", ["Option.Off", "Option.RestrictPerTurn", "Option.RestrictPerGame"], ModOptions);
         RestrictAdmin = CustomOption.Normal(61, CustomOptionType.General, "Option.RestrictAdmin", true, RestrictDevices);
         RestrictAdminTime = CustomOption.Normal(62, CustomOptionType.General, "Option.RestrictAdminTime", 30f, 0f, 600f, 1f, RestrictAdmin);
         RestrictAdminText = CustomOption.Normal(63, CustomOptionType.General, "Option.RestrictAdminText", true, RestrictAdmin);

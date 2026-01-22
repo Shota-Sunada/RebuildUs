@@ -48,10 +48,10 @@ public enum RoleType
     Arsonist,
     Jackal,
     Sidekick,
-    Opportunist,
+    // Opportunist,
     Vulture,
-    PlagueDoctor,
-    Watcher,
+    // PlagueDoctor,
+    // Watcher,
     EvilTracker,
     EvilHacker,
 

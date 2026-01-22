@@ -77,6 +77,7 @@ public static class Helpers
     {
         return text.Count(c => c == '\n');
     }
+    private static readonly StringBuilder InfoStringBuilder = new();
     public static string PreviousEndGameSummary = "";
 
     public static bool HasFakeTasks(this PlayerControl player)
@@ -487,96 +488,153 @@ public static class Helpers
     // TODO: 更新
     public static void UpdatePlayerInfo()
     {
+        var localPlayer = PlayerControl.LocalPlayer;
+        if (localPlayer == null || localPlayer.Data == null) return;
+
+        var meeting = MeetingHud.Instance;
+        Dictionary<byte, PlayerVoteArea> playerStatesCache = null;
+        if (meeting != null && meeting.playerStates != null)
+        {
+            playerStatesCache = new Dictionary<byte, PlayerVoteArea>();
+            foreach (var state in meeting.playerStates)
+                if (state != null) playerStatesCache[state.TargetPlayerId] = state;
+        }
+
         var colorBlindTextMeetingInitialLocalPos = new Vector3(0.3384f, -0.16666f, -0.01f);
         var colorBlindTextMeetingInitialLocalScale = new Vector3(0.9f, 1f, 1f);
+
+        InfoStringBuilder.Clear();
+
         foreach (var p in PlayerControl.AllPlayerControls)
         {
+            if (p == null || p.Data == null || p.cosmetics == null) continue;
+
             // Colorblind Text in Meeting
-            var playerVoteArea = MeetingHud.Instance?.playerStates?.FirstOrDefault(x => x.TargetPlayerId == p.PlayerId);
-            if (playerVoteArea != null && playerVoteArea.ColorBlindName.gameObject.active)
+            PlayerVoteArea playerVoteArea = null;
+            playerStatesCache?.TryGetValue(p.PlayerId, out playerVoteArea);
+
+            if (playerVoteArea != null && playerVoteArea.ColorBlindName != null && playerVoteArea.ColorBlindName.gameObject != null && playerVoteArea.ColorBlindName.gameObject.active)
             {
                 playerVoteArea.ColorBlindName.transform.localPosition = colorBlindTextMeetingInitialLocalPos + new Vector3(0f, 0.4f, 0f);
                 playerVoteArea.ColorBlindName.transform.localScale = colorBlindTextMeetingInitialLocalScale * 0.8f;
             }
 
             // Colorblind Text During the round
-            if (p.cosmetics.colorBlindText != null && p.cosmetics.showColorBlindText && p.cosmetics.colorBlindText.gameObject.active)
+            if (p.cosmetics.colorBlindText != null && p.cosmetics.showColorBlindText && p.cosmetics.colorBlindText.gameObject != null && p.cosmetics.colorBlindText.gameObject.active)
             {
-                p.cosmetics.colorBlindText.transform.localPosition = new Vector3(0, -1f, 0f);
+                p.cosmetics.colorBlindText.transform.localPosition = new Vector3(0, -0.25f, 0f);
             }
 
-            p.cosmetics.nameText.transform.parent.SetLocalZ(-0.0001f);  // This moves both the name AND the colorblind text behind objects (if the player is behind the object), like the rock on polus
-
-            if (p == PlayerControl.LocalPlayer || PlayerControl.LocalPlayer.Data.IsDead)
+            if (p.cosmetics.nameText != null && p.cosmetics.nameText.transform.parent != null)
             {
-                var playerInfoTransform = p.cosmetics.nameText.transform.parent.FindChild("Info");
-                var playerInfo = playerInfoTransform?.GetComponent<TextMeshPro>();
-                if (playerInfo == null)
-                {
-                    playerInfo = UnityEngine.Object.Instantiate(p.cosmetics.nameText, p.cosmetics.nameText.transform.parent);
-                    playerInfo.transform.localPosition += Vector3.up * 0.225f;
-                    playerInfo.fontSize *= 0.75f;
-                    playerInfo.gameObject.name = "Info";
-                    playerInfo.color = playerInfo.color.SetAlpha(1f);
-                }
+                p.cosmetics.nameText.transform.parent.SetLocalZ(-0.0001f);
+            }
 
-                var meetingInfoTransform = playerVoteArea?.NameText.transform.parent.FindChild("Info");
-                var meetingInfo = meetingInfoTransform?.GetComponent<TextMeshPro>();
-                if (meetingInfo == null && playerVoteArea != null)
-                {
-                    meetingInfo = UnityEngine.Object.Instantiate(playerVoteArea.NameText, playerVoteArea.NameText.transform.parent);
-                    meetingInfo.transform.localPosition += Vector3.down * 0.2f;
-                    meetingInfo.fontSize *= 0.60f;
-                    meetingInfo.gameObject.name = "Info";
-                }
+            if (p == localPlayer || localPlayer.Data.IsDead)
+            {
+                var playerInfoLabel = GetOrCreateLabel(p.cosmetics.nameText, "Info", 0.225f, 0.75f);
+                if (playerInfoLabel == null) continue;
 
-                // Set player name higher to align in middle
-                if (meetingInfo != null && playerVoteArea != null)
+                TextMeshPro meetingInfoLabel = null;
+                if (playerVoteArea != null)
                 {
-                    var playerName = playerVoteArea.NameText;
-                    playerName.transform.localPosition = new Vector3(0.3384f, 0.0311f, -0.1f);
+                    meetingInfoLabel = GetOrCreateLabel(playerVoteArea.NameText, "Info", -0.2f, 0.60f);
+                    if (meetingInfoLabel != null && playerVoteArea.NameText != null)
+                    {
+                        var playerName = playerVoteArea.NameText;
+                        playerName.transform.localPosition = new Vector3(0.3384f, 0.0311f, -0.1f);
+                    }
                 }
 
                 var (tasksCompleted, tasksTotal) = TasksHandler.TaskInfo(p.Data);
                 string roleNames = RoleInfo.GetRolesString(p, true, false);
                 string roleText = RoleInfo.GetRolesString(p, true, ModMapOptions.GhostsSeeModifier);
-                string taskInfo = tasksTotal > 0 ? $"<color=#FAD934FF>({tasksCompleted}/{tasksTotal})</color>" : "";
+
+                string taskInfo = "";
+                if (tasksTotal > 0)
+                {
+                    InfoStringBuilder.Append("<color=#FAD934FF>(").Append(tasksCompleted).Append('/').Append(tasksTotal).Append(")</color>");
+                    taskInfo = InfoStringBuilder.ToString();
+                    InfoStringBuilder.Clear();
+                }
 
                 string playerInfoText = "";
                 string meetingInfoText = "";
-                if (p == PlayerControl.LocalPlayer)
+                if (p == localPlayer)
                 {
                     if (p.Data.IsDead) roleNames = roleText;
-                    playerInfoText = $"{roleNames}";
-                    // if (p == Swapper.swapper) playerInfoText = $"{roleNames}" + Helpers.cs(Swapper.color, $" ({Swapper.charges})");
-                    if (HudManager.Instance.TaskPanel != null)
+
+                    if (p.IsRole(RoleType.Swapper))
                     {
-                        var tabText = HudManager.Instance.TaskPanel.tab.transform.FindChild("TabText_TMP").GetComponent<TextMeshPro>();
-                        tabText.SetText($"Tasks {taskInfo}");
+                        InfoStringBuilder.Append(roleNames).Append(Cs(Swapper.NameColor, " (")).Append(Swapper.RemainSwaps).Append(")");
+                        playerInfoText = InfoStringBuilder.ToString();
+                        InfoStringBuilder.Clear();
                     }
-                    meetingInfoText = $"{roleNames} {taskInfo}".Trim();
+                    else
+                    {
+                        playerInfoText = roleNames;
+                    }
+
+                    if (HudManager.Instance != null && HudManager.Instance.TaskPanel != null && HudManager.Instance.TaskPanel.tab != null)
+                    {
+                        var tabTextTransform = HudManager.Instance.TaskPanel.tab.transform.Find("TabText_TMP");
+                        if (tabTextTransform != null)
+                        {
+                            var tabText = tabTextTransform.GetComponent<TextMeshPro>();
+                            if (tabText != null)
+                            {
+                                InfoStringBuilder.Append("Tasks ").Append(taskInfo);
+                                tabText.SetText(InfoStringBuilder.ToString());
+                                InfoStringBuilder.Clear();
+                            }
+                        }
+                    }
+                    InfoStringBuilder.Append(roleNames).Append(" ").Append(taskInfo);
+                    meetingInfoText = InfoStringBuilder.ToString().Trim();
+                    InfoStringBuilder.Clear();
                 }
                 else if (ModMapOptions.GhostsSeeRoles && ModMapOptions.GhostsSeeInformation)
                 {
-                    playerInfoText = $"{roleText} {taskInfo}".Trim();
+                    InfoStringBuilder.Append(roleText).Append(" ").Append(taskInfo);
+                    playerInfoText = InfoStringBuilder.ToString().Trim();
                     meetingInfoText = playerInfoText;
+                    InfoStringBuilder.Clear();
                 }
                 else if (ModMapOptions.GhostsSeeInformation)
                 {
-                    playerInfoText = $"{taskInfo}".Trim();
+                    playerInfoText = taskInfo.Trim();
                     meetingInfoText = playerInfoText;
                 }
                 else if (ModMapOptions.GhostsSeeRoles)
                 {
-                    playerInfoText = $"{roleText}";
+                    playerInfoText = roleText;
                     meetingInfoText = playerInfoText;
                 }
 
-                playerInfo.text = playerInfoText;
-                playerInfo.gameObject.SetActive(p.Visible);
-                meetingInfo?.text = MeetingHud.Instance.state == MeetingHud.VoteStates.Results ? "" : meetingInfoText;
+                playerInfoLabel.text = playerInfoText;
+                playerInfoLabel.gameObject.SetActive(p.Visible);
+                meetingInfoLabel?.text = meeting != null && meeting.state == MeetingHud.VoteStates.Results ? "" : meetingInfoText;
             }
         }
+    }
+
+    private static TextMeshPro GetOrCreateLabel(TextMeshPro source, string name, float yOffset, float fontScale)
+    {
+        if (source == null || source.transform == null || source.transform.parent == null) return null;
+
+        var labelTransform = source.transform.parent.Find(name);
+        TextMeshPro label = labelTransform?.GetComponent<TextMeshPro>();
+
+        if (label == null)
+        {
+            label = UnityEngine.Object.Instantiate(source, source.transform.parent);
+            if (label == null) return null;
+            label.transform.localPosition += Vector3.up * yOffset;
+            label.fontSize *= fontScale;
+            label.gameObject.name = name;
+            label.color = label.color.SetAlpha(1f);
+        }
+        return label;
     }
 
     public static void SetPetVisibility()

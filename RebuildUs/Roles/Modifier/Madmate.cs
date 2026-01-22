@@ -16,7 +16,7 @@ public enum MadmateAbility
 [HarmonyPatch]
 public class Madmate : ModifierBase<Madmate>
 {
-    public static Color NameColor = Palette.CrewmateBlue;
+    public static Color NameColor = Palette.ImpostorRed;
     public override Color ModifierColor => NameColor;
 
     public override void OnUpdateNameColors()
@@ -59,7 +59,7 @@ public class Madmate : ModifierBase<Madmate>
     {
         get
         {
-            return Tr.Get("Option.MadmatePrefix");
+            return Tr.Get("Hud.MadmatePrefix");
         }
     }
 
@@ -67,7 +67,7 @@ public class Madmate : ModifierBase<Madmate>
     {
         get
         {
-            return Tr.Get("Role.Madmate");
+            return Tr.Get("Modifier.Madmate");
         }
     }
 
@@ -89,7 +89,7 @@ public class Madmate : ModifierBase<Madmate>
         RoleType.Bait,
         RoleType.Medium,
         RoleType.NiceGuesser,
-        RoleType.Watcher,
+        // RoleType.Watcher,
     ];
 
     public static List<PlayerControl> Candidates

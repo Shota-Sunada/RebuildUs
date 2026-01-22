@@ -7,6 +7,10 @@ namespace RebuildUs.Localization;
 public static class Tr
 {
     private const string BLANK = "[BLANK]";
+    private const string NO_KEY = "[NO KEY]";
+    private const string NOTFOUND = "[NOTFOUND]";
+    private const string NO_VALUE = "[NO VALUE]";
+    private const string ERROR = "[ERROR]";
 
     private static readonly Dictionary<SupportedLangs, Dictionary<string, string>> Translations = [];
     private static readonly HashSet<string> MissingKeys = [];
@@ -52,7 +56,8 @@ public static class Tr
 
     public static string Get(string key, params object[] args)
     {
-        if (string.IsNullOrEmpty(key) || key is BLANK) return "";
+        if (string.IsNullOrEmpty(key)) return NO_KEY;
+        if (key is BLANK) return string.Empty;
 
         // Strip out color tags and leading dashes
         string keyClean = Regex.Replace(key, "<.*?>", "");
@@ -68,7 +73,7 @@ public static class Tr
             {
                 Logger.LogError($"Invalid translation key: {keyClean}");
             }
-            return "[ERROR]";
+            return ERROR;
         }
 
         var lang = TranslationController.InstanceExists ? FastDestroyableSingleton<TranslationController>.Instance.currentLanguage.languageID : SupportedLangs.English;
@@ -89,7 +94,12 @@ public static class Tr
             {
                 Logger.LogWarn($"Translation key not found: {keyClean}");
             }
-            return args.Length > 0 ? string.Format(key, args) : key;
+            return NOTFOUND;
+        }
+        else if (string.IsNullOrEmpty(result))
+        {
+            Logger.LogWarn($"Translation value is null or empty: {keyClean}");
+            return NO_VALUE;
         }
 
         string finalStr = key.Replace(keyClean, result);

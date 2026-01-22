@@ -134,7 +134,7 @@ public class Medium : RoleBase<Medium>
                         randomNumber = RebuildUs.Instance.Rnd.Next(3);
                     }
                 }
-                string typeOfColor = Helpers.IsLighterColor(Local.Target.KillerIfExisting.Data.DefaultOutfit.ColorId) ? Tr.Get("Color.DetectiveColorLight") : Tr.Get("Color.DetectiveColorDark");
+                string typeOfColor = Helpers.IsLighterColor(Local.Target.KillerIfExisting.Data.DefaultOutfit.ColorId) ? Tr.Get("Hud.DetectiveColorLight") : Tr.Get("Hud.DetectiveColorDark");
                 float timeSinceDeath = (float)(MeetingStartTime - Local.Target.TimeOfDeath).TotalMilliseconds;
                 string name = " (" + Local.Target.Player.Data.PlayerName + ")";
 

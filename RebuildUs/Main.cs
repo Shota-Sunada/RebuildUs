@@ -20,7 +20,6 @@ global using RebuildUs.Modules.CustomOptions;
 global using RebuildUs.Modules.EndGame;
 global using RebuildUs.Modules.RPC;
 global using RebuildUs.Objects;
-global using RebuildUs.Options;
 global using RebuildUs.Patches;
 global using RebuildUs.Players;
 global using RebuildUs.Roles;

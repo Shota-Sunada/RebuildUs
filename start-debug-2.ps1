@@ -42,7 +42,7 @@ if (Test-Path $exePath) {
     Write-Host "Starting Among Us 2 times..."
     for ($i = 1; $i -le 2; $i++) {
         Start-Process -FilePath $exePath
-        Start-Sleep -Milliseconds 1000
+        Start-Sleep -Milliseconds 2000
     }
 }
 else {

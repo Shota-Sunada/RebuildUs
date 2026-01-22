@@ -9,6 +9,6 @@ public static class UnityEngineExtensions
 
     public static Transform FindEx(this Transform transform, string name)
     {
-        return transform.Find(name) ?? throw new Exception($"{name} was not found");
+        return transform.Find(name) ?? throw new Exception($"The Transform {name} was not found");
     }
 }

@@ -38,8 +38,8 @@ public static class PlayerControlHelpers
                 Jackal.FormerJackals.Contains(player) ||
                 player.IsRole(RoleType.Arsonist) ||
                 player.IsRole(RoleType.Jester) ||
-                player.IsRole(RoleType.Opportunist) ||
-                player.IsRole(RoleType.PlagueDoctor) ||
+                // player.IsRole(RoleType.Opportunist) ||
+                // player.IsRole(RoleType.PlagueDoctor) ||
                 player.IsRole(RoleType.Vulture) ||
                 (player.IsRole(RoleType.Shifter) && Shifter.IsNeutral));
     }

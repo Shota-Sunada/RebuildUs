@@ -140,21 +140,21 @@ public class CustomOverlays
                 CustomOption.OptionToString(CustomOptionHolder.PresetSelection),
             ];
 
-            var optionName = Helpers.Cs(new Color(204f / 255f, 204f / 255f, 0, 1f), Tr.Get("Hud.CrewmateRoles"));
+            var optionName = Helpers.Cs(new Color(204f / 255f, 204f / 255f, 0, 1f), Tr.Get("OptionPage.CrewmateRoles"));
             var min = CustomOptionHolder.CrewmateRolesCountMin.GetSelection();
             var max = CustomOptionHolder.CrewmateRolesCountMax.GetSelection();
             if (min > max) min = max;
             var optionValue = (min == max) ? $"{max}" : $"{min} - {max}";
             entry.AppendLine($"{optionName}: {optionValue}");
 
-            optionName = Helpers.Cs(new Color(204f / 255f, 204f / 255f, 0, 1f), Tr.Get("Hud.NeutralRoles"));
+            optionName = Helpers.Cs(new Color(204f / 255f, 204f / 255f, 0, 1f), Tr.Get("OptionPage.NeutralRoles"));
             min = CustomOptionHolder.NeutralRolesCountMin.GetSelection();
             max = CustomOptionHolder.NeutralRolesCountMax.GetSelection();
             if (min > max) min = max;
             optionValue = (min == max) ? $"{max}" : $"{min} - {max}";
             entry.AppendLine($"{optionName}: {optionValue}");
 
-            optionName = Helpers.Cs(new Color(204f / 255f, 204f / 255f, 0, 1f), Tr.Get("Hud.ImpostorRoles"));
+            optionName = Helpers.Cs(new Color(204f / 255f, 204f / 255f, 0, 1f), Tr.Get("OptionPage.ImpostorRoles"));
             min = CustomOptionHolder.ImpostorRolesCountMin.GetSelection();
             max = CustomOptionHolder.ImpostorRolesCountMax.GetSelection();
             if (min > max) min = max;
@@ -309,9 +309,9 @@ public class CustomOverlays
         OverlayShown = true;
 
         Transform parent = MeetingHud.Instance != null ? MeetingHud.Instance.transform : hudManager.transform;
-        InfoUnderlay.transform.parent = parent;
-        InfoOverlayRules.transform.parent = parent;
-        InfoOverlayRoles.transform.parent = parent;
+        InfoUnderlay.transform.SetParent(parent);
+        InfoOverlayRules.transform.SetParent(parent);
+        InfoOverlayRoles.transform.SetParent(parent);
 
         InfoUnderlay.sprite = AssetLoader.White;
         InfoUnderlay.color = new Color(0.1f, 0.1f, 0.1f, 0.88f);
@@ -320,8 +320,11 @@ public class CustomOverlays
 
         RebuildUs.OptionsPage = 0;
         var option = GameOptionsManager.Instance.CurrentGameOptions;
-        var gameOptions = option.ToString().Split("\n", StringSplitOptions.RemoveEmptyEntries).ToList().GetRange(2, 17);
-        // infoOverlayRules.text = string.Join("\n", gameOptions) + "\n\n" + CustomOption.optionsToString(CustomOptionHolder.specialOptions);
+        // var gameOptions = option.ToString().Split("\n", StringSplitOptions.RemoveEmptyEntries).ToList().GetRange(2, 17);
+        InfoOverlayRules.text = string.Join("\n", option) + "\n\n" + CustomOption.OptionsToString(CustomOptionHolder.ModOptions);
+        InfoOverlayRules.text = string.Join("\n", option) + "\n\n" + CustomOption.OptionsToString(CustomOptionHolder.PolusOptions);
+        InfoOverlayRules.text = string.Join("\n", option) + "\n\n" + CustomOption.OptionsToString(CustomOptionHolder.AirshipOptions);
+        InfoOverlayRules.text = string.Join("\n", option) + "\n\n" + CustomOption.OptionsToString(CustomOptionHolder.RandomMap);
         InfoOverlayRules.enabled = true;
 
         string rolesText = "";

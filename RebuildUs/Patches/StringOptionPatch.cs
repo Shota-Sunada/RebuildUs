@@ -37,11 +37,4 @@ public static class StringOptionPatch
     {
         return CustomOption.StringOptionDecrease(__instance);
     }
-
-    [HarmonyPostfix]
-    [HarmonyPatch(typeof(StringOption), nameof(StringOption.FixedUpdate))]
-    public static void FixedUpdatePostfix(StringOption __instance)
-    {
-        CustomOption.StringOptionFixedUpdate(__instance);
-    }
 }

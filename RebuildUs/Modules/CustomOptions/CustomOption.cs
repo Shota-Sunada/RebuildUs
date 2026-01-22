@@ -67,6 +67,8 @@ public partial class CustomOption
         DefaultSelection = index >= 0 ? index : 0;
         Parent = parent;
         Type = type;
+        Children = [];
+        parent?.Children.Add(this);
         OnChange = onChange;
         HideIfParentEnabled = hideIfParentEnabled;
         Selection = 0;
@@ -277,17 +279,17 @@ public partial class CustomOption
     }
 
     // Getter
-    public int GetSelection()
+    public virtual int GetSelection()
     {
         return Selection;
     }
 
-    public bool GetBool()
+    public virtual bool GetBool()
     {
         return Selection > 0;
     }
 
-    public float GetFloat()
+    public virtual float GetFloat()
     {
         return (float)Selections[Selection];
     }
@@ -297,17 +299,17 @@ public partial class CustomOption
         return Selection + 1;
     }
 
-    public string GetString()
+    public virtual string GetString()
     {
         var sel = Selections[Selection].ToString();
 
         if (sel == "On")
         {
-            return "<color=#FFFF00FF>" + Tr.Get("Hud.On") + "</color>";
+            return "<color=#FFFF00FF>" + Tr.Get("Option.On") + "</color>";
         }
         else if (sel == "Off")
         {
-            return "<color=#CCCCCCFF>" + Tr.Get("Hud.Off") + "</color>";
+            return "<color=#CCCCCCFF>" + Tr.Get("Option.Off") + "</color>";
         }
 
         return Tr.Get(sel);
@@ -318,7 +320,7 @@ public partial class CustomOption
         return Helpers.Cs(Color, Tr.Get(NameKey));
     }
 
-    public void UpdateSelection(int newSelection, RoleTypes icon, bool notifyUsers = true)
+    public virtual void UpdateSelection(int newSelection, RoleTypes icon, bool notifyUsers = true)
     {
         newSelection = Mathf.Clamp((newSelection + Selections.Length) % Selections.Length, 0, Selections.Length - 1);
         if (AmongUsClient.Instance?.AmClient == true && notifyUsers && Selection != newSelection)

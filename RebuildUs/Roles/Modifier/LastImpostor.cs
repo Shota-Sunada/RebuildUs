@@ -24,14 +24,14 @@ public class LastImpostor : ModifierBase<LastImpostor>
     {
         get
         {
-            return Tr.Get("Option.LastImpostorPostfix");
+            return Tr.Get("Hud.LastImpostorPostfix");
         }
     }
     public static string FullName
     {
         get
         {
-            return Tr.Get("Option.LastImpostor");
+            return Tr.Get("Modifier.LastImpostor");
         }
     }
 

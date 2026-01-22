@@ -67,9 +67,9 @@ public static class PlayerControlPatch
 
     [HarmonyPrefix]
     [HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.StartMeeting))]
-    public static void StartMeeting(PlayerControl __instance, NetworkedPlayerInfo target)
+    public static bool StartMeeting(PlayerControl __instance, NetworkedPlayerInfo target)
     {
-        Meeting.StartMeetingPrefix(__instance, target);
+        return Meeting.StartMeetingPrefix(__instance, target);
     }
 
     [HarmonyPrefix]
@@ -89,7 +89,7 @@ public static class PlayerControlPatch
     [HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.CmdReportDeadBody))]
     public static void CmdReportDeadBodyPostfix(PlayerControl __instance, [HarmonyArgument(0)] NetworkedPlayerInfo target)
     {
-        Logger.LogInfo($"{__instance.GetNameWithRole()} => {target.Object?.GetNameWithRole() ?? "null"}", "ReportDeadBody");
+        Logger.LogInfo($"{__instance.GetNameWithRole()} => {target?.Object?.GetNameWithRole() ?? "null"}", "ReportDeadBody");
         // Medic or Detective report
         bool isMedicReport = PlayerControl.LocalPlayer.IsRole(RoleType.Medic) && __instance.PlayerId == PlayerControl.LocalPlayer.PlayerId;
         bool isDetectiveReport = Detective.Exists && PlayerControl.LocalPlayer.IsRole(RoleType.Detective) && __instance.PlayerId == PlayerControl.LocalPlayer.PlayerId;
@@ -115,8 +115,8 @@ public static class PlayerControlPatch
                     else if (timeSinceDeath < Detective.ReportColorDuration * 1000)
                     {
                         var typeOfColor = Helpers.IsLighterColor(deadPlayer.KillerIfExisting.Data.DefaultOutfit.ColorId) ?
-                            Tr.Get("Color.DetectiveColorLight") :
-                            Tr.Get("Color.DetectiveColorDark");
+                            Tr.Get("Hud.DetectiveColorLight") :
+                            Tr.Get("Hud.DetectiveColorDark");
                         msg = string.Format(Tr.Get("Hud.DetectiveReportColor"), typeOfColor);
                     }
                     else

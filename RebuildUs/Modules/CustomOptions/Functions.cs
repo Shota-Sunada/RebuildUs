@@ -378,13 +378,6 @@ public partial class CustomOption
         var option = AllOptions.FirstOrDefault(option => option.OptionBehavior == __instance);
         if (option == null) return true;
         option.UpdateSelection(option.Selection + 1, option.GetOptionIcon());
-        if (CustomOptionHolderHelpers.IsMapSelectionOption(option))
-        {
-            IGameOptions currentGameOptions = GameOptionsManager.Instance.CurrentGameOptions;
-            currentGameOptions.SetByte(ByteOptionNames.MapId, (byte)option.Selection);
-            GameOptionsManager.Instance.GameHostOptions = GameOptionsManager.Instance.CurrentGameOptions;
-            GameManager.Instance.LogicOptions.SyncOptions();
-        }
         return false;
     }
 
@@ -393,33 +386,7 @@ public partial class CustomOption
         var option = AllOptions.FirstOrDefault(option => option.OptionBehavior == __instance);
         if (option == null) return true;
         option.UpdateSelection(option.Selection - 1, option.GetOptionIcon());
-        if (CustomOptionHolderHelpers.IsMapSelectionOption(option))
-        {
-            IGameOptions currentGameOptions = GameOptionsManager.Instance.CurrentGameOptions;
-            currentGameOptions.SetByte(ByteOptionNames.MapId, (byte)option.Selection);
-            GameOptionsManager.Instance.GameHostOptions = GameOptionsManager.Instance.CurrentGameOptions;
-            GameManager.Instance.LogicOptions.SyncOptions();
-        }
         return false;
-    }
-
-    public static void StringOptionFixedUpdate(StringOption __instance)
-    {
-        if (!IL2CPPChainloader.Instance.Plugins.TryGetValue("com.DigiWorm.LevelImposter", out PluginInfo _)) return;
-        CustomOption option = AllOptions.FirstOrDefault(option => option.OptionBehavior == __instance);
-        if (option == null || !CustomOptionHolderHelpers.IsMapSelectionOption(option)) return;
-        if (GameOptionsManager.Instance.CurrentGameOptions.MapId == 6)
-        {
-            if (option.OptionBehavior != null && option.OptionBehavior is StringOption stringOption)
-            {
-                stringOption.ValueText.text = option.Selections[option.Selection].ToString();
-            }
-            else if (option.OptionBehavior != null && option.OptionBehavior is StringOption stringOptionToo)
-            {
-                stringOptionToo.oldValue = stringOptionToo.Value = option.Selection;
-                stringOptionToo.ValueText.text = option.Selections[option.Selection].ToString();
-            }
-        }
     }
 
     public static void CoSpawnSyncSettings()
@@ -516,7 +483,7 @@ public partial class CustomOption
             {
                 if (option == CustomOptionHolder.CrewmateRolesCountMin)
                 {
-                    var optionName = CustomOptionHolderHelpers.Cs(new Color(204f / 255f, 204f / 255f, 0, 1f), Tr.Get("OptionPage.CrewmateRoles"));
+                    var optionName = Helpers.Cs(new Color(204f / 255f, 204f / 255f, 0, 1f), Tr.Get("OptionPage.CrewmateRoles"));
                     var min = CustomOptionHolder.CrewmateRolesCountMin.GetSelection();
                     var max = CustomOptionHolder.CrewmateRolesCountMax.GetSelection();
                     string optionValue = "";
@@ -526,7 +493,7 @@ public partial class CustomOption
                 }
                 else if (option == CustomOptionHolder.NeutralRolesCountMin)
                 {
-                    var optionName = CustomOptionHolderHelpers.Cs(new Color(204f / 255f, 204f / 255f, 0, 1f), Tr.Get("OptionPage.NeutralRoles"));
+                    var optionName = Helpers.Cs(new Color(204f / 255f, 204f / 255f, 0, 1f), Tr.Get("OptionPage.NeutralRoles"));
                     var min = CustomOptionHolder.NeutralRolesCountMin.GetSelection();
                     var max = CustomOptionHolder.NeutralRolesCountMax.GetSelection();
                     if (min > max) min = max;
@@ -535,7 +502,7 @@ public partial class CustomOption
                 }
                 else if (option == CustomOptionHolder.ImpostorRolesCountMin)
                 {
-                    var optionName = CustomOptionHolderHelpers.Cs(new Color(204f / 255f, 204f / 255f, 0, 1f), Tr.Get("OptionPage.ImpostorRoles"));
+                    var optionName = Helpers.Cs(new Color(204f / 255f, 204f / 255f, 0, 1f), Tr.Get("OptionPage.ImpostorRoles"));
                     var min = CustomOptionHolder.ImpostorRolesCountMin.GetSelection();
                     var max = CustomOptionHolder.ImpostorRolesCountMax.GetSelection();
                     if (max > Helpers.GetOption(Int32OptionNames.NumImpostors)) max = Helpers.GetOption(Int32OptionNames.NumImpostors);
@@ -545,7 +512,7 @@ public partial class CustomOption
                 }
                 else if (option == CustomOptionHolder.ModifiersCountMin)
                 {
-                    var optionName = CustomOptionHolderHelpers.Cs(new Color(204f / 255f, 204f / 255f, 0, 1f), Tr.Get("OptionPage.Modifiers"));
+                    var optionName = Helpers.Cs(new Color(204f / 255f, 204f / 255f, 0, 1f), Tr.Get("OptionPage.Modifiers"));
                     var min = CustomOptionHolder.ModifiersCountMin.GetSelection();
                     var max = CustomOptionHolder.ModifiersCountMax.GetSelection();
                     if (min > max) min = max;
