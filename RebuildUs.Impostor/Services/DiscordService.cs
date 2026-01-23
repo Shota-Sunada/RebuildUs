@@ -124,8 +124,6 @@ public class DiscordService : IDiscordService
             return;
         }
 
-        if (message.Channel.Id != (OverrideTextChannelId ?? _config.TextChannelId)) return;
-
         if (content == "!rebuild notify off")
         {
             IsMessageDisabled = true;

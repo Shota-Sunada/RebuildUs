@@ -187,7 +187,20 @@ public class GameEventListener : IEventListener
         int linkedCount = 0;
         foreach (var p in game.Players)
         {
-            var playerName = p.Character?.PlayerInfo?.PlayerName ?? "Unknown";
+            var playerName = p.Character?.PlayerInfo?.PlayerName;
+
+            // Try to get name from FriendCode logic if character is null
+            if (string.IsNullOrEmpty(playerName))
+            {
+                playerName = GetFriendCode(p);
+            }
+
+            // Still empty? Use a fallback
+            if (string.IsNullOrEmpty(playerName))
+            {
+                playerName = "Unknown Player";
+            }
+
             var fc = GetFriendCode(p);
             var discordId = !string.IsNullOrEmpty(fc) ? mappingService.GetDiscordId(fc) : null;
 
@@ -202,7 +215,7 @@ public class GameEventListener : IEventListener
             }
         }
 
-        if (playerCount == 0) sb.Append("プレイヤーはいません");
+        if (playerCount == 0) sb.AppendLine("プレイヤーはいません");
 
         var summaryStatus = $"{linkedCount} / {playerCount} 人が連携済み\n\n{sb}";
 
