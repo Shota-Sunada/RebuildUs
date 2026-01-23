@@ -22,6 +22,7 @@ public static class CustomOptionHolder
     #endregion
 
     #region GAME OPTIONS
+    public static CustomOption GameOptions;
     public static CustomOption MaxNumberOfMeetings;
     public static CustomOption BlockSkippingInEmergencyMeetings;
     public static CustomOption NoVoteIsSelfVote;
@@ -382,7 +383,8 @@ public static class CustomOptionHolder
         #endregion
 
         #region GAME OPTIONS
-        MaxNumberOfMeetings = CustomOption.Header(20, CustomOptionType.General, "Option.MaxNumberOfMeetings", 10, 0, 15, 1, Tr.Get("Option.GameOptions"));
+        GameOptions = CustomOption.Header(19, CustomOptionType.General, "Option.GameOptions", true, Tr.Get("Option.GameOptions"));
+        MaxNumberOfMeetings = CustomOption.Normal(20, CustomOptionType.General, "Option.MaxNumberOfMeetings", 10, 0, 15, 1);
         BlockSkippingInEmergencyMeetings = CustomOption.Normal(21, CustomOptionType.General, "Option.BlockSkippingInEmergencyMeetings", false);
         NoVoteIsSelfVote = CustomOption.Normal(22, CustomOptionType.General, "Option.NoVoteIsSelfVote", false);
         HidePlayerNames = CustomOption.Normal(23, CustomOptionType.General, "Option.HidePlayerNames", false);

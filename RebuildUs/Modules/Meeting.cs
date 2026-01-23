@@ -771,7 +771,6 @@ public static class Meeting
         AnimateSwap = false;
         CustomOverlays.ShowBlackBG();
         CustomOverlays.HideInfoOverlay();
-        CustomOverlays.HideRoleOverlay();
         RebuildUs.OnMeetingStart();
         Map.ShareRealTasks();
     }

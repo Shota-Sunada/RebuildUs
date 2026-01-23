@@ -32,13 +32,13 @@ public class DebugManager : MonoBehaviour
         if (hudManager != null)
         {
             _text = Instantiate(hudManager.TaskPanel.taskText, hudManager.transform);
-            _text.transform.localPosition = new Vector3(-5.2f, 3.2f, -100f);
             _text.fontSize = 1.5f;
             _text.alignment = TextAlignmentOptions.TopLeft;
             _text.color = UnityEngine.Color.white;
             _text.outlineWidth = 0.1f;
             _text.outlineColor = UnityEngine.Color.black;
             _text.gameObject.SetActive(true);
+            UpdateLayout();
         }
     }
 
@@ -50,6 +50,7 @@ public class DebugManager : MonoBehaviour
             _timer = 0f;
             CalculateCpuUsage();
             UpdateText();
+            UpdateLayout();
         }
 
         // Toggle debug display with Shift+D
@@ -63,6 +64,15 @@ public class DebugManager : MonoBehaviour
         {
             CheckRandomBias();
         }
+    }
+
+    private void UpdateLayout()
+    {
+        if (_text == null || Camera.main == null) return;
+        float aspect = Camera.main.aspect;
+        float height = Camera.main.orthographicSize * 2f;
+        float width = height * aspect;
+        _text.transform.localPosition = new Vector3(-width / 2f + 0.2f, height / 2f - 0.2f, -100f);
     }
 
     private void CalculateCpuUsage()

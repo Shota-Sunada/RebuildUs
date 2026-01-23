@@ -1,19 +1,11 @@
 namespace RebuildUs;
 
-public class DeadPlayer
+public class DeadPlayer(PlayerControl player, DateTime timeOfDeath, DeathReason deathReason, PlayerControl killerIfExisting)
 {
-    public PlayerControl Player;
-    public DateTime TimeOfDeath;
-    public DeathReason DeathReason;
-    public PlayerControl KillerIfExisting;
-
-    public DeadPlayer(PlayerControl player, DateTime timeOfDeath, DeathReason deathReason, PlayerControl killerIfExisting)
-    {
-        this.Player = player;
-        this.TimeOfDeath = timeOfDeath;
-        this.DeathReason = deathReason;
-        this.KillerIfExisting = killerIfExisting;
-    }
+    public PlayerControl Player = player;
+    public DateTime TimeOfDeath = timeOfDeath;
+    public DeathReason DeathReason = deathReason;
+    public PlayerControl KillerIfExisting = killerIfExisting;
 }
 
 static class GameHistory
@@ -24,8 +16,8 @@ static class GameHistory
 
     public static void ClearGameHistory()
     {
-        LocalPlayerPositions = [];
-        DeadPlayers = [];
-        FinalStatuses = [];
+        LocalPlayerPositions.Clear();
+        DeadPlayers.Clear();
+        FinalStatuses.Clear();
     }
 }

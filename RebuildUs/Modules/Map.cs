@@ -185,7 +185,6 @@ public static class Map
             UseButtonPos = FastDestroyableSingleton<HudManager>.Instance.UseButton.transform.localPosition;
         }
         CustomOverlays.HideInfoOverlay();
-        CustomOverlays.HideRoleOverlay();
     }
 
     public static void GenericShowPostfix(MapBehaviour __instance)

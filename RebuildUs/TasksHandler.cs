@@ -3,24 +3,19 @@ namespace RebuildUs
     [HarmonyPatch]
     public static class TasksHandler
     {
-
-        public static Tuple<int, int> TaskInfo(NetworkedPlayerInfo playerInfo)
+        public static Tuple<int, int> TaskInfo(NetworkedPlayerInfo pInfo)
         {
-            int totalTasks = 0;
-            int completedTasks = 0;
-            if (playerInfo != null && !playerInfo.Disconnected && playerInfo.Tasks != null &&
-                playerInfo.Object &&
-                playerInfo.Role && playerInfo.Role.TasksCountTowardProgress &&
-                !playerInfo.Object.HasFakeTasks() && !playerInfo.Role.IsImpostor
-                )
+            if (pInfo == null || pInfo.Disconnected || pInfo.Tasks == null || pInfo.Object == null || pInfo.Role == null || !pInfo.Role.TasksCountTowardProgress || pInfo.Object.HasFakeTasks() || pInfo.Role.IsImpostor)
+                return Tuple.Create(0, 0);
+
+            int total = 0;
+            int completed = 0;
+            foreach (var t in pInfo.Tasks.GetFastEnumerator())
             {
-                foreach (var playerInfoTask in playerInfo.Tasks.GetFastEnumerator())
-                {
-                    if (playerInfoTask.Complete) completedTasks++;
-                    totalTasks++;
-                }
+                if (t.Complete) completed++;
+                total++;
             }
-            return Tuple.Create(completedTasks, totalTasks);
+            return Tuple.Create(completed, total);
         }
 
         [HarmonyPatch(typeof(GameData), nameof(GameData.RecomputeTaskCounts))]
@@ -28,26 +23,23 @@ namespace RebuildUs
         {
             private static bool Prefix(GameData __instance)
             {
+                int total = 0;
+                int completed = 0;
 
-                var totalTasks = 0;
-                var completedTasks = 0;
-
-                foreach (var playerInfo in GameData.Instance.AllPlayers.GetFastEnumerator())
+                foreach (var pInfo in GameData.Instance.AllPlayers.GetFastEnumerator())
                 {
-                    // if (playerInfo.Object
-                    //     && playerInfo.Object.hasAliveKillingLover() // Tasks do not count if a Crewmate has an alive killing Lover
-                    //     || playerInfo.PlayerId == Lawyer.lawyer?.PlayerId // Tasks of the Lawyer do not count
-                    //     || (playerInfo.PlayerId == Pursuer.pursuer?.PlayerId && Pursuer.pursuer.Data.IsDead) // Tasks of the Pursuer only count, if he's alive
-                    //     || playerInfo.PlayerId == Thief.thief?.PlayerId // Thief's tasks only count after joining crew team as sheriff (and then the thief is not the thief anymore)
-                    //    )
-                    //     continue;
-                    var (playerCompleted, playerTotal) = TaskInfo(playerInfo);
-                    totalTasks += playerTotal;
-                    completedTasks += playerCompleted;
+                    if (pInfo == null || pInfo.Disconnected || pInfo.Tasks == null || pInfo.Object == null || pInfo.Role == null || !pInfo.Role.TasksCountTowardProgress || pInfo.Object.HasFakeTasks() || pInfo.Role.IsImpostor)
+                        continue;
+
+                    foreach (var t in pInfo.Tasks.GetFastEnumerator())
+                    {
+                        if (t.Complete) completed++;
+                        total++;
+                    }
                 }
 
-                __instance.TotalTasks = totalTasks;
-                __instance.CompletedTasks = completedTasks;
+                __instance.TotalTasks = total;
+                __instance.CompletedTasks = completed;
                 return false;
             }
         }

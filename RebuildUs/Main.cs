@@ -187,7 +187,6 @@ public class RebuildUs : BasePlugin
         PlayerModifier.AllModifiers.Do(x => x.OnMeetingEnd());
 
         CustomOverlays.HideInfoOverlay();
-        CustomOverlays.HideRoleOverlay();
         CustomOverlays.HideBlackBG();
     }
 

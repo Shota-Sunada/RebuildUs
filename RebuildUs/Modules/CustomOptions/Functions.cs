@@ -532,76 +532,6 @@ public partial class CustomOption
         return sb.ToString();
     }
 
-    public static int MaxPage = 7;
-    public static string BuildAllOptions(string vanillaSettings = "", bool hideExtras = false)
-    {
-        if (vanillaSettings == "")
-            vanillaSettings = GameOptionsManager.Instance.CurrentGameOptions.ToHudString(PlayerControl.AllPlayerControls.Count);
-        int counter = RebuildUs.OptionsPage;
-        string hudString = counter != 0 && !hideExtras ? Helpers.Cs(DateTime.Now.Second % 2 == 0 ? Color.white : Color.red, "(Use scroll wheel if necessary)\n\n") : "";
-
-        // if (ModMapOptions.GameMode == CustomGamemodes.HideNSeek)
-        // {
-        //     if (RebuildUs.OptionsPage > 1) RebuildUs.OptionsPage = 0;
-        //     MaxPage = 2;
-        //     switch (counter)
-        //     {
-        //         case 0:
-        //             hudString += "Page 1: Hide N Seek Settings \n\n" + BuildOptionsOfType(CustomOptionType.HideNSeekMain, false);
-        //             break;
-        //         case 1:
-        //             hudString += "Page 2: Hide N Seek Role Settings \n\n" + BuildOptionsOfType(CustomOptionType.HideNSeekRoles, false);
-        //             break;
-        //     }
-        // }
-        // else if (ModMapOptions.GameMode == CustomGamemodes.PropHunt)
-        // {
-        //     MaxPage = 1;
-        //     switch (counter)
-        //     {
-        //         case 0:
-        //             hudString += "Page 1: Prop Hunt Settings \n\n" + BuildOptionsOfType(CustomOptionType.PropHunt, false);
-        //             break;
-        //     }
-        // }
-        // else
-        {
-            MaxPage = 7;
-            switch (counter)
-            {
-                case 0:
-                    hudString += (!hideExtras ? "" : "Page 1: Vanilla Settings \n\n") + vanillaSettings;
-                    break;
-                case 1:
-                    hudString += "Page 2: RebuildUs Settings \n" + BuildOptionsOfType(CustomOptionType.General, false);
-                    break;
-                case 2:
-                    hudString += "Page 3: Role and Modifier Rates \n" + BuildRoleOptions();
-                    break;
-                case 3:
-                    hudString += "Page 4: Impostor Role Settings \n" + BuildOptionsOfType(CustomOptionType.Impostor, false);
-                    break;
-                case 4:
-                    hudString += "Page 5: Neutral Role Settings \n" + BuildOptionsOfType(CustomOptionType.Neutral, false);
-                    break;
-                case 5:
-                    hudString += "Page 6: Crewmate Role Settings \n" + BuildOptionsOfType(CustomOptionType.Crewmate, false);
-                    break;
-                case 6:
-                    hudString += "Page 7: Modifier Settings \n" + BuildOptionsOfType(CustomOptionType.Modifier, false);
-                    break;
-            }
-        }
-
-        if (!hideExtras || counter != 0) hudString += $"\n Press TAB or Page Number for more... ({counter + 1}/{MaxPage})";
-        return hudString;
-    }
-
-    public static void ToHudString(ref string __result)
-    {
-        if (Helpers.IsHideNSeekMode) return; // Allow Vanilla Hide N Seek
-        __result = BuildAllOptions(__result);
-    }
     public static bool LGOAreInvalid(LegacyGameOptions __instance, ref int maxExpectedPlayers)
     {
         //making the kill distances bound check higher since extra short is added
@@ -657,42 +587,5 @@ public partial class CustomOption
             }
         }
         return string.Join("\n", options);
-    }
-
-    public static void KeyboardUpdate(KeyboardJoystick __instance)
-    {
-        if (Input.GetKeyDown(KeyCode.Tab))
-        {
-            RebuildUs.OptionsPage = (RebuildUs.OptionsPage + 1) % 7;
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha1) || Input.GetKeyDown(KeyCode.Keypad1))
-        {
-            RebuildUs.OptionsPage = 0;
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha2) || Input.GetKeyDown(KeyCode.Keypad2))
-        {
-            RebuildUs.OptionsPage = 1;
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha3) || Input.GetKeyDown(KeyCode.Keypad3))
-        {
-            RebuildUs.OptionsPage = 2;
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha4) || Input.GetKeyDown(KeyCode.Keypad4))
-        {
-            RebuildUs.OptionsPage = 3;
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha5) || Input.GetKeyDown(KeyCode.Keypad5))
-        {
-            RebuildUs.OptionsPage = 4;
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha6) || Input.GetKeyDown(KeyCode.Keypad6))
-        {
-            RebuildUs.OptionsPage = 5;
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha7) || Input.GetKeyDown(KeyCode.Keypad7))
-        {
-            RebuildUs.OptionsPage = 6;
-        }
-        if (RebuildUs.OptionsPage >= MaxPage) RebuildUs.OptionsPage = 0;
     }
 }
