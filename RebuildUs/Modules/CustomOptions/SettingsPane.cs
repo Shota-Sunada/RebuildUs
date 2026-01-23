@@ -175,7 +175,7 @@ public partial class CustomOption
                 (option.Type is CustomOptionType.Neutral or CustomOptionType.Crewmate or CustomOptionType.Impostor or CustomOptionType.Modifier)
             )
             {
-                viewSettingsInfoPanel.titleText.text = Tr.Get("Options.SpawnChance");
+                viewSettingsInfoPanel.titleText.text = Tr.Get("Option.SpawnChance");
             }
 
             __instance.settingsInfo.Add(viewSettingsInfoPanel.gameObject);

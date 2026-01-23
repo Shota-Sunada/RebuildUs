@@ -73,7 +73,8 @@
     "Vulture": "Eat corpses to win",
     "Warlock": "Curse other players and kill everyone",
     "Watcher": "Watch everyone votes",
-    "Witch": "Cast a spell upon your foes"
+    "Witch": "Cast a spell upon your foes",
+    "LoversFlavor": "♥ You fell in love with {0}. ♥"
   },
   "ShortDesc": {
     "Arsonist": "Let them burn",
@@ -209,6 +210,7 @@
     "GameOptions": "Game Options",
     "AmongUsSettings": "AmongUs Settings",
     "ChangePage": "Use \"<\" and \">\" to switch pages",
+    "CurrentPage": "Current Page",
     "NoRole": "No Role",
     "Preset": "Preset",
     "SpawnChance": "Spawn Chance",
@@ -579,5 +581,39 @@
     "SidekickText": "[BLANK]",
     "VultureCorpses": "Remaining: {0}",
     "VultureText": "[BLANK]"
+  },
+  "FinalStatus": {
+    "Alive": "Alive",
+    "Torched": "Torched",
+    "Spelled": "Spelled",
+    "Sabotage": "Sabotage",
+    "Exiled": "Exiled",
+    "Dead": "Dead",
+    "Suicide": "Suicide",
+    "Misfire": "Misfire",
+    "Disconnected": "Disconnected"
+  },
+  "EndGame": {
+    "JesterWin": "Jester Win",
+    "JesterWinExtra": "Jester & {0} Win",
+    "ArsonistWin": "Arsonist Win",
+    "ArsonistWinExtra": "Arsonist & {0} Win",
+    "VultureWin": "Vulture Win",
+    "VultureWinExtra": "Vulture & {0} Win",
+    "CrewmateWin": "Crewmate Win",
+    "CrewmateWinExtra": "Crewmate & {0} Win",
+    "LoversWin": "Lovers Win",
+    "LoversWinExtra": "Lovers & {0} Win",
+    "JackalWin": "Jackal Win",
+    "JackalWinExtra": "Jackal & {0} Win",
+    "EveryoneDied": "Everyone Died",
+    "EveryoneDiedExtra": "Everyone Died",
+    "ForceEnd": "Force End",
+    "ForceEndExtra": "Force End",
+    "MiniDied": "Mini Died",
+    "MiniDiedExtra": "Mini Died",
+    "ImpostorWin": "Impostor Win",
+    "ImpostorWinExtra": "Impostor & {0} Win",
+    "LoversExtra": "<color=#e839b9ff>Lovers</color>"
   }
 }

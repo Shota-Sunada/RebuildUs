@@ -290,87 +290,84 @@ public static class EndGameMain
 
         if (AdditionalTempData.WinCondition == EWinCondition.JesterWin)
         {
-            bonusText = "jesterWin";
+            bonusText = "EndGame.JesterWin";
             TextRenderer.color = Jester.NameColor;
             __instance.BackgroundBar.material.SetColor("_Color", Jester.NameColor);
         }
         else if (AdditionalTempData.WinCondition == EWinCondition.ArsonistWin)
         {
-            bonusText = "arsonistWin";
+            bonusText = "EndGame.ArsonistWin";
             TextRenderer.color = Arsonist.NameColor;
             __instance.BackgroundBar.material.SetColor("_Color", Arsonist.NameColor);
         }
         else if (AdditionalTempData.WinCondition == EWinCondition.VultureWin)
         {
-            bonusText = "vultureWin";
+            bonusText = "EndGame.VultureWin";
             TextRenderer.color = Vulture.NameColor;
             __instance.BackgroundBar.material.SetColor("_Color", Vulture.NameColor);
         }
         else if (AdditionalTempData.WinCondition == EWinCondition.LoversTeamWin)
         {
-            bonusText = "crewWin";
+            bonusText = "EndGame.CrewmateWin";
             TextRenderer.color = Lovers.Color;
             __instance.BackgroundBar.material.SetColor("_Color", Lovers.Color);
         }
         else if (AdditionalTempData.WinCondition == EWinCondition.LoversSoloWin)
         {
-            bonusText = "loversWin";
+            bonusText = "EndGame.LoversWin";
             TextRenderer.color = Lovers.Color;
             __instance.BackgroundBar.material.SetColor("_Color", Lovers.Color);
         }
         else if (AdditionalTempData.WinCondition == EWinCondition.JackalWin)
         {
-            bonusText = "jackalWin";
+            bonusText = "EndGame.JackalWin";
             TextRenderer.color = Jackal.NameColor;
             __instance.BackgroundBar.material.SetColor("_Color", Jackal.NameColor);
         }
         // else if (AdditionalTempData.WinCondition == EWinCondition.EveryoneDied)
         if (AdditionalTempData.WinCondition == EWinCondition.EveryoneDied)
         {
-            bonusText = "everyoneDied";
+            bonusText = "EndGame.EveryoneDied";
             TextRenderer.color = Palette.DisabledGrey;
             __instance.BackgroundBar.material.SetColor("_Color", Palette.DisabledGrey);
         }
         else if (AdditionalTempData.WinCondition == EWinCondition.ForceEnd)
         {
-            bonusText = "forceEnd";
+            bonusText = "EndGame.ForceEnd";
             TextRenderer.color = Palette.DisabledGrey;
             __instance.BackgroundBar.material.SetColor("_Color", Palette.DisabledGrey);
         }
         else if (AdditionalTempData.WinCondition == EWinCondition.MiniLose)
         {
-            bonusText = "miniDied";
+            bonusText = "EndGame.MiniDied";
             TextRenderer.color = Mini.NameColor;
             __instance.BackgroundBar.material.SetColor("_Color", Palette.DisabledGrey);
         }
         else if (AdditionalTempData.GameOverReason is GameOverReason.CrewmatesByTask or GameOverReason.CrewmatesByVote)
         {
-            bonusText = "crewWin";
+            bonusText = "EndGame.CrewmateWin";
             TextRenderer.color = Palette.White;
         }
         else if (AdditionalTempData.GameOverReason is GameOverReason.ImpostorsByKill or GameOverReason.ImpostorsBySabotage or GameOverReason.ImpostorsByVote)
         {
-            bonusText = "impostorWin";
+            bonusText = "EndGame.ImpostorWin";
             TextRenderer.color = Palette.ImpostorRed;
         }
 
         string extraText = "";
         foreach (var w in AdditionalTempData.AdditionalWinConditions)
         {
-            // switch (w)
-            // {
-            //     case EWinCondition.OpportunistWin:
-            //         extraText += Tr.Get("opportunistExtra");
-            //         break;
-            //     case EWinCondition.LoversTeamWin:
-            //         extraText += Tr.Get("loversExtra");
-            //         break;
-            //     case EWinCondition.AdditionalAlivePursuerWin:
-            //         extraText += Tr.Get("pursuerExtra");
-            //         break;
-            //     default:
-            //         break;
-            // }
+            switch (w)
+            {
+                // case EWinCondition.OpportunistWin:
+                //     extraText += Tr.Get("opportunistExtra");
+                //     break;
+                case EWinCondition.LoversTeamWin:
+                    extraText += Tr.Get("EndGame.LoversExtra");
+                    break;
+                default:
+                    break;
+            }
         }
 
         if (extraText.Length > 0)
@@ -380,19 +377,6 @@ public static class EndGameMain
         else
         {
             TextRenderer.text = Tr.Get(bonusText);
-        }
-
-        foreach (EWinCondition cond in AdditionalTempData.AdditionalWinConditions)
-        {
-            // switch (cond)
-            // {
-            //     case EWinCondition.AdditionalLawyerStolenWin:
-            //         TextRenderer.text += $"\n{Helpers.cs(Lawyer.color, Tr.Get("lawyerExtraStolen"))}";
-            //         break;
-            //     case EWinCondition.AdditionalLawyerBonusWin:
-            //         TextRenderer.text += $"\n{Helpers.cs(Lawyer.color, Tr.Get("lawyerExtraBonus"))}";
-            //         break;
-            // }
         }
 
         if (ModMapOptions.ShowRoleSummary)
@@ -424,7 +408,7 @@ public static class EndGameMain
             {
                 if (data.PlayerName == "") continue;
                 var taskInfo = data.TasksTotal > 0 ? $"<color=#FAD934FF>{data.TasksCompleted}/{data.TasksTotal}</color>" : "";
-                var aliveDead = Tr.Get("RoleSummary", data.Status.ToString());
+                var aliveDead = Tr.Get($"FinalStatus.{data.Status}");
                 var result = $"{data.PlayerName + data.NameSuffix}<pos=18.5%>{taskInfo}<pos=25%>{aliveDead}<pos=34%>{data.RoleNames}";
                 roleSummaryText.AppendLine(result);
                 Logger.LogInfo(result, "Result");
@@ -443,7 +427,7 @@ public static class EndGameMain
             roleSummaryTextMeshRectTransform.anchoredPosition = new Vector2(position.x + 3.5f, position.y - 0.1f);
             roleSummaryTextMesh.text = roleSummaryText.ToString();
 
-            // webhook
+            // // webhook
             // if (AmongUsClient.Instance.AmHost)
             // {
             //     List<Dictionary<string, object>> msg = [];
@@ -454,23 +438,10 @@ public static class EndGameMain
             //         if (data.PlayerName == "") continue;
             //         // var taskInfo = data.TasksTotal > 0 ? $"{data.TasksCompleted}/{data.TasksTotal}" : "タスクなし";
             //         var taskInfo = string.Format("{0:D2}", data.TasksCompleted) + "/" + string.Format("{0:D2}", data.TasksTotal);
-            //         string aliveDead = Tr.Get("roleSummary" + data.Status.ToString(), def: "-");
+            //         string aliveDead = Tr.Get($"FinalStatus.{data.Status}");
             //         string result = "";
             //         result += EndGameResult.CachedWinners.ToArray().Count(x => x.PlayerName == data.PlayerName) != 0 ? ":crown: | " : ":skull: | ";
-            //         result += string.Format("{0,-6} | {1,-2} | {2}", taskInfo, aliveDead, data.RoleString);
-            //         if (plagueExists && !data.Roles.Contains(RoleInfo.plagueDoctor))
-            //         {
-            //             result += " | ";
-            //             if (AdditionalTempData.plagueDoctorInfected.ContainsKey(data.PlayerId))
-            //             {
-            //                 result += Helpers.cs(Color.red, Tr.Get("plagueDoctorInfectedText"));
-            //             }
-            //             else
-            //             {
-            //                 float progress = AdditionalTempData.plagueDoctorProgress.ContainsKey(data.PlayerId) ? AdditionalTempData.plagueDoctorProgress[data.PlayerId] : 0f;
-            //                 result += PlagueDoctor.getProgressString(progress);
-            //             }
-            //         }
+            //         result += string.Format("{0,-6} | {1,-2} | {2}", taskInfo, aliveDead, data.RoleNames);
             //         Dictionary<string, object> item = new()
             //         {
             //             { "name", Webhook.colorIdToEmoji(data.ColorId) + data.PlayerName + data.NameSuffix },

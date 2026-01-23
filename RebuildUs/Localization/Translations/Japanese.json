@@ -73,7 +73,8 @@
     "Vulture": "死骸を喰らおう",
     "Warlock": "みんなを呪い殺そう",
     "Watcher": "みんなの票を観察しよう",
-    "Witch": "敵に魔術をかけよう"
+    "Witch": "敵に魔術をかけよう",
+    "LoversFlavor": "♥ {0}に恋に落ちた ♥"
   },
   "ShortDesc": {
     "Arsonist": "燃やせ",
@@ -209,6 +210,7 @@
     "GameOptions": "ゲーム設定",
     "AmongUsSettings": "AmongUs 設定",
     "ChangePage": "「<」と「>」でページを切り替え",
+    "CurrentPage": "現在のページ",
     "NoRole": "役職なし",
     "Preset": "プリセット",
     "SpawnChance": "スポーン確率",
@@ -579,5 +581,39 @@
     "SidekickText": "サイドキック",
     "VultureCorpses": "残り死体: {0}体",
     "VultureText": "食べる"
+  },
+  "FinalStatus": {
+    "Alive": "生存",
+    "Torched": "放火",
+    "Spelled": "呪殺",
+    "Sabotage": "サボ",
+    "Exiled": "追放",
+    "Dead": "死亡",
+    "Suicide": "自殺",
+    "Misfire": "誤爆",
+    "Disconnected": "切断"
+  },
+  "EndGame": {
+    "JesterWin": "ジェスター 勝利",
+    "JesterWinExtra": "ジェスター & {0}勝利",
+    "ArsonistWin": "アーソニスト 勝利",
+    "ArsonistWinExtra": "アーソニスト & {0}勝利",
+    "VultureWin": "ヴァルチャー 勝利",
+    "VultureWinExtra": "ヴァルチャー & {0}勝利",
+    "CrewmateWin": "クルーメイト 勝利",
+    "CrewmateWinExtra": "クルーメイト & {0}勝利",
+    "LoversWin": "ラバーズ 勝利",
+    "LoversWinExtra": "ラバーズ & {0}勝利",
+    "JackalWin": "ジャッカル 勝利",
+    "JackalWinExtra": "ジャッカル & {0}勝利",
+    "EveryoneDied": "そして誰もいなくなった",
+    "EveryoneDiedExtra": "そして誰もいなくなった",
+    "ForceEnd": "強制終了",
+    "ForceEndExtra": "強制終了",
+    "MiniDied": "ミニ死亡",
+    "MiniDiedExtra": "ミニ死亡",
+    "ImpostorWin": "インポスター 勝利",
+    "ImpostorWinExtra": "インポスター & {0} 勝利",
+    "LoversExtra": "<color=#e839b9ff>ラバーズ</color>"
   }
 }

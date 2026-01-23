@@ -226,34 +226,33 @@ public static class Intro
         }
         Logger.LogInfo("--------------------------------", "Settings");
 
-        // TODO: FIX LATER
         __instance.YouAreText.color = roleInfo.Color;
         __instance.RoleText.text = roleInfo.Name;
         __instance.RoleText.color = roleInfo.Color;
         __instance.RoleBlurbText.text = roleInfo.IntroDescription;
         __instance.RoleBlurbText.color = roleInfo.Color;
 
-        // if (PlayerControl.LocalPlayer.HasModifier(EModifierType.Madmate))
-        // {
-        //     if (roleInfo == RoleInfo.crewmate)
-        //     {
-        //         __instance.RoleText.text = Tr.Get("Role.Madmate");
-        //     }
-        //     else
-        //     {
-        //         __instance.RoleText.text = Tr.Get("Option.MadmatePrefix") + __instance.RoleText.text;
-        //     }
-        //     __instance.YouAreText.color = Madmate.color;
-        //     __instance.RoleText.color = Madmate.color;
-        //     __instance.RoleBlurbText.text = Tr.Get("IntroDesc.Madmate");
-        //     __instance.RoleBlurbText.color = Madmate.color;
-        // }
+        if (PlayerControl.LocalPlayer.HasModifier(ModifierType.Madmate))
+        {
+            if (roleInfo == RoleInfo.Crewmate)
+            {
+                __instance.RoleText.text = Tr.Get("Modifier.Madmate");
+            }
+            else
+            {
+                __instance.RoleText.text = Tr.Get("Hud.MadmatePrefix") + __instance.RoleText.text;
+            }
+            __instance.YouAreText.color = Madmate.NameColor;
+            __instance.RoleText.color = Madmate.NameColor;
+            __instance.RoleBlurbText.text = Tr.Get("IntroDesc.Madmate");
+            __instance.RoleBlurbText.color = Madmate.NameColor;
+        }
 
-        // if (infos.Any(info => info.RoleType == ERoleType.Lovers))
-        // {
-        //     PlayerControl otherLover = PlayerControl.LocalPlayer.GetPartner();
-        //     __instance.RoleBlurbText.text += "\n" + Helpers.cs(Lovers.color, string.Format(Tr.Get("loversFlavor"), otherLover?.Data?.PlayerName ?? ""));
-        // }
+        if (infos.Any(info => info.RoleType == RoleType.Lovers))
+        {
+            PlayerControl otherLover = PlayerControl.LocalPlayer.GetPartner();
+            __instance.RoleBlurbText.text += "\n" + Helpers.Cs(Lovers.Color, string.Format(Tr.Get("IntroDesc.LoversFlavor"), otherLover?.Data?.PlayerName ?? ""));
+        }
 
         // 従来処理
         SoundManager.Instance.PlaySound(PlayerControl.LocalPlayer.Data.Role.IntroSound, false);

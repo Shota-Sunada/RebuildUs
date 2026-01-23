@@ -65,7 +65,7 @@ public class CustomOverlays
 
         int currentPageNumber = (RebuildUs.OptionsPage / 2) + 1;
         int totalPagesNumber = (MaxOptionsPage + 1) / 2;
-        InfoOverlayTitle?.text = new StringBuilder(Tr.Get("Option.GameOptions")).Append(" <size=80%>").Append("現在のページ (").Append(currentPageNumber).Append('/').Append(totalPagesNumber).Append(")\n").Append(Tr.Get("Option.ChangePage")).Append("</size>").ToString();
+        InfoOverlayTitle?.text = new StringBuilder(Tr.Get("Option.GameOptions")).Append(" <size=80%>").Append("Option.CurrentPage").Append(" (").Append(currentPageNumber).Append('/').Append(totalPagesNumber).Append(")\n").Append(Tr.Get("Option.ChangePage")).Append("</size>").ToString();
 
         var sb = new StringBuilder();
         sb.Append(OptionsData[RebuildUs.OptionsPage]);

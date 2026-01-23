@@ -309,7 +309,7 @@ public partial class CustomOption
                 && (option.Type is CustomOptionType.Neutral or CustomOptionType.Crewmate or CustomOptionType.Impostor or CustomOptionType.Modifier)
             )
             {
-                so.TitleText.text = Tr.Get("Options.SpawnChance");
+                so.TitleText.text = Tr.Get("Option.SpawnChance");
             }
 
             if (so.TitleText.text.Length > 25)
@@ -398,14 +398,6 @@ public partial class CustomOption
         }
     }
 
-    private static string BuildRoleOptions()
-    {
-        var impRoles = BuildOptionsOfType(CustomOptionType.Impostor, true) + "\n";
-        var neutralRoles = BuildOptionsOfType(CustomOptionType.Neutral, true) + "\n";
-        var crewRoles = BuildOptionsOfType(CustomOptionType.Crewmate, true) + "\n";
-        var modifiers = BuildOptionsOfType(CustomOptionType.Modifier, true);
-        return impRoles + neutralRoles + crewRoles + modifiers;
-    }
     public static string BuildModifierExtras(CustomOption customOption)
     {
         // find options children with quantity
@@ -418,118 +410,6 @@ public partial class CustomOption
         //     return $" (1 Evil: {CustomOptionHolder.modifierLoverImpLoverRate.getSelection() * 10}%)";
         // }
         return "";
-    }
-
-    private static string BuildOptionsOfType(CustomOptionType type, bool headerOnly)
-    {
-        StringBuilder sb = new("\n");
-        var options = AllOptions.Where(o => o.Type == type);
-        if (ModMapOptions.GameMode == CustomGamemodes.Guesser)
-        {
-            if (type == CustomOptionType.General)
-            {
-                options = AllOptions.Where(o => o.Type == type || o.Type == CustomOptionType.Guesser);
-            }
-            List<int> remove = [308, 310, 311, 312, 313, 314, 315, 316, 317, 318];
-            options = options.Where(x => !remove.Contains(x.Id));
-        }
-        else if (ModMapOptions.GameMode == CustomGamemodes.Classic)
-        {
-            options = options.Where(x => !(x.Type == CustomOptionType.Guesser));
-        }
-        else if (ModMapOptions.GameMode == CustomGamemodes.HideNSeek)
-        {
-            options = options.Where(x => x.Type == CustomOptionType.HideNSeekMain || x.Type == CustomOptionType.HideNSeekRoles);
-        }
-        else if (ModMapOptions.GameMode == CustomGamemodes.PropHunt)
-        {
-            options = options.Where(x => x.Type == CustomOptionType.PropHunt);
-        }
-
-        foreach (var option in options)
-        {
-            if (option.Parent == null)
-            {
-                string line = $"{Helpers.Cs(option.Color, Tr.Get(option.NameKey))}: {option.Selections[option.Selection]}";
-                if (type == CustomOptionType.Modifier) line += BuildModifierExtras(option);
-                sb.AppendLine(line);
-            }
-            else if (option.Parent.GetSelection() > 0 || option.HideIfParentEnabled && option.Parent.GetSelection() == 0)
-            {
-                // if (option.id == 103) //Deputy
-                //     sb.AppendLine($"- {Helpers.cs(Deputy.color, "Deputy")}: {option.selections[option.selection].ToString()}");
-                // else if (option.id == 224) //Sidekick
-                //     sb.AppendLine($"- {Helpers.cs(Sidekick.color, "Sidekick")}: {option.selections[option.selection].ToString()}");
-                // else if (option.id == 358) //Prosecutor
-                //     sb.AppendLine($"- {Helpers.cs(Lawyer.color, "Prosecutor")}: {option.selections[option.selection].ToString()}");
-            }
-        }
-        if (headerOnly) return sb.ToString();
-        else sb = new StringBuilder();
-
-        foreach (CustomOption option in options)
-        {
-            if (ModMapOptions.GameMode == CustomGamemodes.HideNSeek && option.Type != CustomOptionType.HideNSeekMain && option.Type != CustomOptionType.HideNSeekRoles) continue;
-            if (ModMapOptions.GameMode == CustomGamemodes.PropHunt && option.Type != CustomOptionType.PropHunt) continue;
-            if (option.Parent != null)
-            {
-                bool isIrrelevant = (option.Parent.GetSelection() == 0 && !option.HideIfParentEnabled) || (option.Parent.Parent != null && option.Parent.Parent.GetSelection() == 0 && !option.Parent.HideIfParentEnabled);
-
-                Color c = isIrrelevant ? Color.grey : Color.white;  // No use for now
-                if (isIrrelevant) continue;
-                sb.AppendLine(Helpers.Cs(c, $"{Helpers.Cs(option.Color, Tr.Get(option.NameKey))}: {option.Selections[option.Selection]}"));
-            }
-            else
-            {
-                if (option == CustomOptionHolder.CrewmateRolesCountMin)
-                {
-                    var optionName = Helpers.Cs(new Color(204f / 255f, 204f / 255f, 0, 1f), Tr.Get("OptionPage.CrewmateRoles"));
-                    var min = CustomOptionHolder.CrewmateRolesCountMin.GetSelection();
-                    var max = CustomOptionHolder.CrewmateRolesCountMax.GetSelection();
-                    string optionValue = "";
-                    if (min > max) min = max;
-                    optionValue += (min == max) ? $"{max}" : $"{min} - {max}";
-                    sb.AppendLine($"{optionName}: {optionValue}");
-                }
-                else if (option == CustomOptionHolder.NeutralRolesCountMin)
-                {
-                    var optionName = Helpers.Cs(new Color(204f / 255f, 204f / 255f, 0, 1f), Tr.Get("OptionPage.NeutralRoles"));
-                    var min = CustomOptionHolder.NeutralRolesCountMin.GetSelection();
-                    var max = CustomOptionHolder.NeutralRolesCountMax.GetSelection();
-                    if (min > max) min = max;
-                    var optionValue = (min == max) ? $"{max}" : $"{min} - {max}";
-                    sb.AppendLine($"{optionName}: {optionValue}");
-                }
-                else if (option == CustomOptionHolder.ImpostorRolesCountMin)
-                {
-                    var optionName = Helpers.Cs(new Color(204f / 255f, 204f / 255f, 0, 1f), Tr.Get("OptionPage.ImpostorRoles"));
-                    var min = CustomOptionHolder.ImpostorRolesCountMin.GetSelection();
-                    var max = CustomOptionHolder.ImpostorRolesCountMax.GetSelection();
-                    if (max > Helpers.GetOption(Int32OptionNames.NumImpostors)) max = Helpers.GetOption(Int32OptionNames.NumImpostors);
-                    if (min > max) min = max;
-                    var optionValue = (min == max) ? $"{max}" : $"{min} - {max}";
-                    sb.AppendLine($"{optionName}: {optionValue}");
-                }
-                else if (option == CustomOptionHolder.ModifiersCountMin)
-                {
-                    var optionName = Helpers.Cs(new Color(204f / 255f, 204f / 255f, 0, 1f), Tr.Get("OptionPage.Modifiers"));
-                    var min = CustomOptionHolder.ModifiersCountMin.GetSelection();
-                    var max = CustomOptionHolder.ModifiersCountMax.GetSelection();
-                    if (min > max) min = max;
-                    var optionValue = (min == max) ? $"{max}" : $"{min} - {max}";
-                    sb.AppendLine($"{optionName}: {optionValue}");
-                }
-                else if ((option == CustomOptionHolder.CrewmateRolesCountMax) || (option == CustomOptionHolder.NeutralRolesCountMax) || (option == CustomOptionHolder.ImpostorRolesCountMax) || option == CustomOptionHolder.ModifiersCountMax)
-                {
-                    continue;
-                }
-                else
-                {
-                    sb.AppendLine($"\n{Helpers.Cs(option.Color, Tr.Get(option.NameKey))}: {option.Selections[option.Selection].ToString()}");
-                }
-            }
-        }
-        return sb.ToString();
     }
 
     public static bool LGOAreInvalid(LegacyGameOptions __instance, ref int maxExpectedPlayers)
