@@ -23,7 +23,7 @@ public static class CustomHatManager
     internal static readonly Dictionary<string, HatViewData> ViewDataCache = [];
     internal static readonly Dictionary<string, HatExtension> ExtensionCache = [];
 
-    private static readonly HatsLoader Loader;
+    public static readonly HatsLoader Loader;
 
     internal static HatExtension TestExtension { get; private set; }
 

@@ -49,8 +49,6 @@ Write-Host "Microsoft (R) .NET Core SDK Version $(& $env:DOTNET_EXE --version)"
 Write-Host "[Build] In progress..." -ForegroundColor DarkBlue
 Exec { & $env:DOTNET_EXE build $ProjectFile -c Release /nodeReuse:false /p:UseSharedCompilation=false -nologo -clp:NoSummary --verbosity quiet }
 
-Write-Host "[Build] Building CosmeticsDownloader..." -ForegroundColor DarkBlue
-& ".\cosmetics-downloader-publish.ps1"
 Write-Host "[Build] Done!" -ForegroundColor Green
 
 $PluginVersion = (Get-Command $PluginDllFile).FileVersionInfo.FileVersion

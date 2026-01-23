@@ -93,7 +93,7 @@ public class RebuildUs : BasePlugin
         Tr.Initialize();
         CustomOptionHolder.Load();
         RoleInfo.Load();
-        CustomHatManager.LoadHats();
+        // CustomHatManager.LoadHats(); // Removed: Called from MainMenuManagerPatch
         CustomColors.Load();
         SubmergedCompatibility.Initialize();
         Submerged.Patch();
