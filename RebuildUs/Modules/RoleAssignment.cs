@@ -200,7 +200,7 @@ public static class RoleAssignment
         //     }
         // }
 
-        BlockLovers = [(byte)RoleType.Bait,];
+        BlockLovers = [(byte)RoleType.Bait];
 
         if (!Lovers.HasTasks)
         {

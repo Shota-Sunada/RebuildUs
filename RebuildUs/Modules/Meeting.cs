@@ -746,7 +746,7 @@ public static class Meeting
             return;
         }
 
-        if (PlayerControl.LocalPlayer.IsRole(RoleType.Swapper) && Swapper.RemainSwaps > 0 && Swapper.LivingPlayers.Count != 0)
+        if (Swapper.Exists && PlayerControl.LocalPlayer.IsRole(RoleType.Swapper) && Swapper.RemainSwaps > 0 && Swapper.LivingPlayers.Count != 0)
         {
             MeetingInfoText.text = string.Format(Tr.Get("Hud.SwapperSwapsLeft"), Swapper.RemainSwaps);
             MeetingInfoText.gameObject.SetActive(true);
@@ -759,7 +759,7 @@ public static class Meeting
             MeetingInfoText.gameObject.SetActive(true);
         }
 
-        if (PlayerControl.LocalPlayer.IsRole(RoleType.Shifter) && Shifter.FutureShift != null)
+        if (Shifter.Exists && PlayerControl.LocalPlayer.IsRole(RoleType.Shifter) && Shifter.FutureShift != null)
         {
             MeetingInfoText.text = string.Format(Tr.Get("Hud.ShifterTargetInfo"), Shifter.FutureShift.Data.PlayerName);
             MeetingInfoText.gameObject.SetActive(true);
