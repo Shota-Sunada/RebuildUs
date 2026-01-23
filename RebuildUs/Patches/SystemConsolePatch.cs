@@ -9,7 +9,7 @@ public static class SystemConsolePatch
     {
         canUse = couldUse = false;
         __result = float.MaxValue;
-        // if (IsBlocked(__instance, pc.Object)) return false;
+        if (Usables.IsBlocked(__instance, pc.Object)) return false;
 
         return true;
     }

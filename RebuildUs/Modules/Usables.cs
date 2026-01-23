@@ -29,36 +29,35 @@ public static class Usables
 
     public static bool KillButtonDoClick(KillButton __instance)
     {
-        if (__instance.isActiveAndEnabled && __instance.currentTarget && !__instance.isCoolingDown && PlayerControl.LocalPlayer.IsAlive() && PlayerControl.LocalPlayer.CanMove)
+        if (!__instance.isActiveAndEnabled || !__instance.currentTarget || __instance.isCoolingDown || PlayerControl.LocalPlayer.Data.IsDead || !PlayerControl.LocalPlayer.CanMove) return false;
+        bool showAnimation = true;
+
+        // Use an unchecked kill command, to allow shorter kill cooldowns etc. without getting kicked
+        var res = Helpers.CheckMurderAttemptAndKill(PlayerControl.LocalPlayer, __instance.currentTarget, showAnimation: showAnimation);
+        // Handle blank kill
+        if (res == MurderAttemptResult.BlankKill)
         {
-            bool showAnimation = true;
-
-            // Use an unchecked kill command, to allow shorter kill cooldowns etc. without getting kicked
-            var res = Helpers.CheckMurderAttemptAndKill(PlayerControl.LocalPlayer, __instance.currentTarget, showAnimation: showAnimation);
-            // Handle blank kill
-            if (res == MurderAttemptResult.BlankKill)
+            PlayerControl.LocalPlayer.SetKillTimer(Helpers.GetOption(FloatOptionNames.KillCooldown));
+            if (PlayerControl.LocalPlayer.IsRole(RoleType.Cleaner))
             {
-                PlayerControl.LocalPlayer.SetKillTimer(Helpers.GetOption(FloatOptionNames.KillCooldown));
-                if (PlayerControl.LocalPlayer.IsRole(RoleType.Cleaner))
-                {
-                    PlayerControl.LocalPlayer.killTimer = Cleaner.CleanerCleanButton.Timer = Cleaner.CleanerCleanButton.MaxTimer;
-                }
-                else if (PlayerControl.LocalPlayer.IsRole(RoleType.Warlock))
-                {
-                    PlayerControl.LocalPlayer.killTimer = Warlock.WarlockCurseButton.Timer = Warlock.WarlockCurseButton.MaxTimer;
-                }
-                else if (PlayerControl.LocalPlayer.HasModifier(ModifierType.Mini) && PlayerControl.LocalPlayer.Data.Role.IsImpostor)
-                {
-                    PlayerControl.LocalPlayer.SetKillTimer(Helpers.GetOption(FloatOptionNames.KillCooldown) * (Mini.IsGrownUp(PlayerControl.LocalPlayer) ? 0.66f : 2f));
-                }
-                else if (PlayerControl.LocalPlayer.IsRole(RoleType.Witch))
-                {
-                    PlayerControl.LocalPlayer.killTimer = Witch.WitchSpellButton.Timer = Witch.WitchSpellButton.MaxTimer;
-                }
+                PlayerControl.LocalPlayer.killTimer = Cleaner.CleanerCleanButton.Timer = Cleaner.CleanerCleanButton.MaxTimer;
             }
-
-            __instance.SetTarget(null);
+            else if (PlayerControl.LocalPlayer.IsRole(RoleType.Warlock))
+            {
+                PlayerControl.LocalPlayer.killTimer = Warlock.WarlockCurseButton.Timer = Warlock.WarlockCurseButton.MaxTimer;
+            }
+            else if (PlayerControl.LocalPlayer.HasModifier(ModifierType.Mini) && PlayerControl.LocalPlayer.Data.Role.IsImpostor)
+            {
+                PlayerControl.LocalPlayer.SetKillTimer(Helpers.GetOption(FloatOptionNames.KillCooldown) * (Mini.IsGrownUp(PlayerControl.LocalPlayer) ? 0.66f : 2f));
+            }
+            else if (PlayerControl.LocalPlayer.IsRole(RoleType.Witch))
+            {
+                PlayerControl.LocalPlayer.killTimer = Witch.WitchSpellButton.Timer = Witch.WitchSpellButton.MaxTimer;
+            }
         }
+
+        __instance.SetTarget(null);
+
         return false;
     }
 

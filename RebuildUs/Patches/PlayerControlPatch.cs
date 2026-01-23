@@ -33,7 +33,7 @@ public static class PlayerControlPatch
 
         var multiplier = 1f;
         var addition = 0f;
-        // if (Mini.mini != null && PlayerControl.LocalPlayer == Mini.mini) multiplier = Mini.isGrownUp() ? 0.66f : 2f;
+        if (Mini.Exists && PlayerControl.LocalPlayer.HasModifier(ModifierType.Mini)) multiplier = Mini.IsGrownUp(PlayerControl.LocalPlayer) ? 0.66f : 2f;
         if (PlayerControl.LocalPlayer.IsRole(RoleType.BountyHunter)) addition = BountyHunter.PunishmentTime;
 
         __instance.killTimer = Mathf.Clamp(time, 0f, Helpers.GetOption(FloatOptionNames.KillCooldown) * multiplier + addition);

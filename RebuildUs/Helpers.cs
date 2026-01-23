@@ -290,7 +290,6 @@ public static class Helpers
 
     public static MurderAttemptResult CheckMurderAttempt(PlayerControl killer, PlayerControl target, bool blockRewind = false, bool ignoreBlank = false, bool ignoreIfKillerIsDead = false, bool ignoreMedic = false)
     {
-        var targetRole = RoleInfo.GetRoleInfoForPlayer(target, false).FirstOrDefault();
         // Modified vanilla checks
         if (AmongUsClient.Instance.IsGameOver) return MurderAttemptResult.SuppressKill;
         if (killer == null || killer.Data == null || (killer.Data.IsDead && !ignoreIfKillerIsDead) || killer.Data.Disconnected) return MurderAttemptResult.SuppressKill; // Allow non Impostor kills compared to vanilla code
@@ -357,8 +356,10 @@ public static class Helpers
     public static MurderAttemptResult CheckMurderAttemptAndKill(PlayerControl killer, PlayerControl target, bool isMeetingStart = false, bool showAnimation = true, bool ignoreBlank = false, bool ignoreIfKillerIsDead = false)
     {
         // The local player checks for the validity of the kill and performs it afterwards (different to vanilla, where the host performs all the checks)
-        // The kill attempt will be shared using a custom RPC, hence combining modded and unmodded versions is impossible
+        // The kill attempt will be shared using a custom RPC, hence combining modded and un modded versions is impossible
         var murder = CheckMurderAttempt(killer, target, isMeetingStart, ignoreBlank, ignoreIfKillerIsDead);
+
+        Logger.LogMessage(Enum.GetName(murder));
 
         if (murder == MurderAttemptResult.PerformKill)
         {

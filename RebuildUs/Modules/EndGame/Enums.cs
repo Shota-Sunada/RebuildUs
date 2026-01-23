@@ -6,6 +6,8 @@ public enum ECustomGameOverReason
     ArsonistWin,
     VultureWin,
     TeamJackalWin,
+    MiniLose,
+    LoversWin,
     ForceEnd
 }
 public enum EWinCondition
@@ -15,6 +17,9 @@ public enum EWinCondition
     ArsonistWin,
     VultureWin,
     JackalWin,
+    MiniLose,
+    LoversTeamWin,
+    LoversSoloWin,
     EveryoneDied,
     ForceEnd,
 }
