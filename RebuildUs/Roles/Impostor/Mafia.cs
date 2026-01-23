@@ -133,7 +133,7 @@ public static class Mafia
             JanitorCleanButton = new CustomButton(
                 () =>
                 {
-                    var bodies = Helpers.AllBodies;
+                    var bodies = UnityEngine.Object.FindObjectsOfType<DeadBody>();
                     var local = PlayerControl.LocalPlayer;
                     var truePosition = local.GetTruePosition();
                     var maxDist = local.MaxReportDistance;

@@ -167,10 +167,9 @@ public class Madmate : ModifierBase<Madmate>
     public override void OnMeetingStart() { }
     public override void OnMeetingEnd() { }
     public override void OnIntroEnd() { }
-    publvar tasks = player.Data.Tasks;
-        for (var i = 0; i<tasks.Count; i++)
-        {
-            if (tasks[i]void OnDeath(PlayerControl killer = null)
+    public override void FixedUpdate() { }
+    public override void OnKill(PlayerControl target) { }
+    public override void OnDeath(PlayerControl killer = null)
     {
         Player.ClearAllTasks();
     }
