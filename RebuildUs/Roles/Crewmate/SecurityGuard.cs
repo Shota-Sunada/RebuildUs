@@ -70,6 +70,11 @@ public class SecurityGuard : RoleBase<SecurityGuard>
     public override void OnDeath(PlayerControl killer = null) { }
     public override void OnFinishShipStatusBegin() { }
     public override void HandleDisconnect(PlayerControl player, DisconnectReasons reason) { }
+    private static SystemConsole _survPanelConsole;
+    private static SystemConsole _survConsole;
+    private static SystemConsole _taskCamsConsole;
+    private static SystemConsole _doorLogConsole;
+
     public override void MakeButtons(HudManager hm)
     {
         SecurityGuardButton = new CustomButton(
@@ -123,7 +128,7 @@ public class SecurityGuard : RoleBase<SecurityGuard>
                         SecurityGuardButton.ButtonText = Tr.Get("Hud.CloseVentText");
                         SecurityGuardButton.Sprite = AssetLoader.CloseVentButton;
                     }
-                    SecurityGuardButtonScrewsText?.text = String.Format(Tr.Get("Hud.SecurityGuardScrews"), Local.RemainingScrews);
+                    if (SecurityGuardButtonScrewsText != null) SecurityGuardButtonScrewsText.text = string.Format(Tr.Get("Hud.SecurityGuardScrews"), Local.RemainingScrews);
 
                     return Local.VentTarget != null
                         ? Local.RemainingScrews >= SecurityGuard.VentPrice && PlayerControl.LocalPlayer.CanMove
@@ -154,11 +159,59 @@ public class SecurityGuard : RoleBase<SecurityGuard>
                     if (Local.Minigame == null)
                     {
                         byte mapId = GameOptionsManager.Instance.CurrentGameOptions.MapId;
-                        var e = UnityEngine.Object.FindObjectsOfType<SystemConsole>().FirstOrDefault(x => x.gameObject.name.Contains("Surv_Panel"));
-                        if (mapId is 0 or 3) e = UnityEngine.Object.FindObjectsOfType<SystemConsole>().FirstOrDefault(x => x.gameObject.name.Contains("SurvConsole"));
-                        else if (mapId == 4) e = UnityEngine.Object.FindObjectsOfType<SystemConsole>().FirstOrDefault(x => x.gameObject.name.Contains("task_cams"));
-                        if (e == null || Camera.main == null) return;
-                        Local.Minigame = UnityEngine.Object.Instantiate(e.MinigamePrefab, Camera.main.transform, false);
+                        SystemConsole targetConsole = null;
+
+                        if (mapId is 0 or 3)
+                        {
+                            if (_survConsole == null)
+                            {
+                                var consoles = UnityEngine.Object.FindObjectsOfType<SystemConsole>();
+                                for (int i = 0; i < consoles.Length; i++)
+                                {
+                                    if (consoles[i].gameObject.name.Contains("SurvConsole"))
+                                    {
+                                        _survConsole = consoles[i];
+                                        break;
+                                    }
+                                }
+                            }
+                            targetConsole = _survConsole;
+                        }
+                        else if (mapId == 4)
+                        {
+                            if (_taskCamsConsole == null)
+                            {
+                                var consoles = UnityEngine.Object.FindObjectsOfType<SystemConsole>();
+                                for (int i = 0; i < consoles.Length; i++)
+                                {
+                                    if (consoles[i].gameObject.name.Contains("task_cams"))
+                                    {
+                                        _taskCamsConsole = consoles[i];
+                                        break;
+                                    }
+                                }
+                            }
+                            targetConsole = _taskCamsConsole;
+                        }
+                        else
+                        {
+                            if (_survPanelConsole == null)
+                            {
+                                var consoles = UnityEngine.Object.FindObjectsOfType<SystemConsole>();
+                                for (int i = 0; i < consoles.Length; i++)
+                                {
+                                    if (consoles[i].gameObject.name.Contains("Surv_Panel"))
+                                    {
+                                        _survPanelConsole = consoles[i];
+                                        break;
+                                    }
+                                }
+                            }
+                            targetConsole = _survPanelConsole;
+                        }
+
+                        if (targetConsole == null || Camera.main == null) return;
+                        Local.Minigame = UnityEngine.Object.Instantiate(targetConsole.MinigamePrefab, Camera.main.transform, false);
                     }
                     Local.Minigame.transform.SetParent(Camera.main.transform, false);
                     Local.Minigame.transform.localPosition = new Vector3(0.0f, 0.0f, -50f);
@@ -168,9 +221,20 @@ public class SecurityGuard : RoleBase<SecurityGuard>
                 {
                     if (Local.Minigame == null)
                     {
-                        var e = UnityEngine.Object.FindObjectsOfType<SystemConsole>().FirstOrDefault(x => x.gameObject.name.Contains("SurvLogConsole"));
-                        if (e == null || Camera.main == null) return;
-                        Local.Minigame = UnityEngine.Object.Instantiate(e.MinigamePrefab, Camera.main.transform, false);
+                        if (_doorLogConsole == null)
+                        {
+                            var consoles = UnityEngine.Object.FindObjectsOfType<SystemConsole>();
+                            for (int i = 0; i < consoles.Length; i++)
+                            {
+                                if (consoles[i].gameObject.name.Contains("SurvLogConsole"))
+                                {
+                                    _doorLogConsole = consoles[i];
+                                    break;
+                                }
+                            }
+                        }
+                        if (_doorLogConsole == null || Camera.main == null) return;
+                        Local.Minigame = UnityEngine.Object.Instantiate(_doorLogConsole.MinigamePrefab, Camera.main.transform, false);
                     }
                     Local.Minigame.transform.SetParent(Camera.main.transform, false);
                     Local.Minigame.transform.localPosition = new Vector3(0.0f, 0.0f, -50f);
@@ -184,7 +248,7 @@ public class SecurityGuard : RoleBase<SecurityGuard>
             () => { return PlayerControl.LocalPlayer.IsRole(RoleType.SecurityGuard) && !PlayerControl.LocalPlayer.Data.IsDead && Local.RemainingScrews < Mathf.Min(SecurityGuard.VentPrice, SecurityGuard.CamPrice) && SubmergedCompatibility.IsSubmerged; },
             () =>
             {
-                SecurityGuardChargesText?.text = SecurityGuardChargesText.text = string.Format(Tr.Get("Hud.HackerChargesText"), Local.Charges, CamMaxCharges);
+                SecurityGuardChargesText?.text = string.Format(Tr.Get("Hud.HackerChargesText"), Local.Charges, CamMaxCharges);
                 SecurityGuardCamButton.ActionButton.graphic.sprite = Helpers.IsMiraHQ ? FastDestroyableSingleton<HudManager>.Instance.UseButton.fastUseSettings[ImageNames.DoorLogsButton].Image : FastDestroyableSingleton<HudManager>.Instance.UseButton.fastUseSettings[ImageNames.CamsButton].Image;
                 SecurityGuardCamButton.ActionButton.OverrideText(Helpers.IsMiraHQ ?
                     TranslationController.Instance.GetString(StringNames.SecurityLogsSystem) :

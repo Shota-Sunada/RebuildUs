@@ -25,31 +25,50 @@ public class Engineer : RoleBase<Engineer>
     public override void OnIntroEnd() { }
     public override void FixedUpdate()
     {
-        var jackalHighlight = HighlightForTeamJackal && (PlayerControl.LocalPlayer.IsRole(RoleType.Jackal) || PlayerControl.LocalPlayer.IsRole(RoleType.Sidekick));
-        var impostorHighlight = HighlightForImpostors && PlayerControl.LocalPlayer.IsTeamImpostor();
-        if ((jackalHighlight || impostorHighlight) && MapUtilities.CachedShipStatus?.AllVents != null)
+        var local = PlayerControl.LocalPlayer;
+        if (local == null) return;
+
+        bool jackalHighlight = HighlightForTeamJackal && (local.IsRole(RoleType.Jackal) || local.IsRole(RoleType.Sidekick));
+        bool impostorHighlight = HighlightForImpostors && local.IsTeamImpostor();
+
+        var shipStatus = MapUtilities.CachedShipStatus;
+        if ((jackalHighlight || impostorHighlight) && shipStatus != null && shipStatus.AllVents != null)
         {
-            foreach (var vent in MapUtilities.CachedShipStatus.AllVents)
+            var engineers = AllPlayers;
+            int engineerCount = engineers.Count;
+            var allVents = shipStatus.AllVents;
+
+            for (int i = 0; i < allVents.Length; i++)
             {
-                try
+                var vent = allVents[i];
+                if (vent == null || vent.myRend == null) continue;
+
+                var mat = vent.myRend.material;
+                if (mat == null) continue;
+
+                bool anyEngineerInVent = false;
+                for (int j = 0; j < engineerCount; j++)
                 {
-                    if (vent?.myRend?.material != null)
+                    if (engineers[j].inVent)
                     {
-                        foreach (var engineer in AllPlayers)
-                        {
-                            if (engineer.inVent)
-                            {
-                                vent.myRend.material.SetFloat("_Outline", 1f);
-                                vent.myRend.material.SetColor("_OutlineColor", RoleColor);
-                            }
-                            else if (vent.myRend.material.GetColor("_AddColor").a == 0f)
-                            {
-                                vent.myRend.material.SetFloat("_Outline", 0);
-                            }
-                        }
+                        anyEngineerInVent = true;
+                        break;
                     }
                 }
-                catch { }
+
+                if (anyEngineerInVent)
+                {
+                    mat.SetFloat("_Outline", 1f);
+                    mat.SetColor("_OutlineColor", RoleColor);
+                }
+                else
+                {
+                    // Only remove outline if it's not being set by something else (Check alpha of AddColor as a proxy)
+                    if (mat.HasProperty("_AddColor") && mat.GetColor("_AddColor").a == 0f)
+                    {
+                        mat.SetFloat("_Outline", 0f);
+                    }
+                }
             }
         }
     }
@@ -68,8 +87,9 @@ public class Engineer : RoleBase<Engineer>
                     sender.Write(PlayerControl.LocalPlayer.PlayerId);
                     RPCProcedure.EngineerUsedRepair(PlayerControl.LocalPlayer.PlayerId);
 
-                    foreach (var task in PlayerControl.LocalPlayer.myTasks)
+                    for (int i = 0; i < PlayerControl.LocalPlayer.myTasks.Count; i++)
                     {
+                        var task = PlayerControl.LocalPlayer.myTasks[i];
                         if (task.TaskType == TaskTypes.FixLights)
                         {
                             using var sender2 = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.EngineerFixLights);
@@ -109,12 +129,14 @@ public class Engineer : RoleBase<Engineer>
                 () =>
                 {
                     bool sabotageActive = false;
-                    foreach (PlayerTask task in PlayerControl.LocalPlayer.myTasks)
+                    for (int i = 0; i < PlayerControl.LocalPlayer.myTasks.Count; i++)
                     {
+                        var task = PlayerControl.LocalPlayer.myTasks[i];
                         if (task.TaskType is TaskTypes.FixLights or TaskTypes.RestoreOxy or TaskTypes.ResetReactor or TaskTypes.ResetSeismic or TaskTypes.FixComms or TaskTypes.StopCharles
                         || (SubmergedCompatibility.IsSubmerged && task.TaskType == SubmergedCompatibility.RetrieveOxygenMask))
                         {
                             sabotageActive = true;
+                            break;
                         }
                     }
 

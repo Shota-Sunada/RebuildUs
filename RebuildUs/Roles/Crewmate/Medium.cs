@@ -35,20 +35,23 @@ public class Medium : RoleBase<Medium>
         {
             if (Souls != null)
             {
-                foreach (var sr in Souls)
+                for (int i = 0; i < Souls.Count; i++)
                 {
-                    UnityEngine.Object.Destroy(sr.gameObject);
+                    if (Souls[i] != null && Souls[i].gameObject != null)
+                    {
+                        UnityEngine.Object.Destroy(Souls[i].gameObject);
+                    }
                 }
-                Souls = [];
+                Souls.Clear();
             }
 
             if (FeatureDeadBodies != null)
             {
-                foreach ((DeadPlayer db, Vector3 ps) in FeatureDeadBodies)
+                for (int i = 0; i < FeatureDeadBodies.Count; i++)
                 {
-                    var s = new GameObject();
-                    // s.transform.position = ps;
-                    s.transform.position = new Vector3(ps.x, ps.y, ps.y / 1000 - 1f);
+                    var (db, ps) = FeatureDeadBodies[i];
+                    var s = new GameObject("Soul");
+                    s.transform.position = new Vector3(ps.x, ps.y, ps.y / 1000f - 1f);
                     s.layer = 5;
                     var rend = s.AddComponent<SpriteRenderer>();
                     s.AddSubmergedComponent(SubmergedCompatibility.Classes.ElevatorMover);
@@ -63,14 +66,17 @@ public class Medium : RoleBase<Medium>
     public override void OnIntroEnd() { }
     public override void FixedUpdate()
     {
-        if (PlayerControl.LocalPlayer.IsRole(RoleType.Medium) || PlayerControl.LocalPlayer.Data.IsDead || DeadBodies != null || MapUtilities.CachedShipStatus?.AllVents != null)
+        if (!PlayerControl.LocalPlayer.IsRole(RoleType.Medium)) return;
+
+        if (DeadBodies != null && MapUtilities.CachedShipStatus?.AllVents != null && MapUtilities.CachedShipStatus.AllVents.Length > 0)
         {
             DeadPlayer target = null;
             Vector2 truePosition = PlayerControl.LocalPlayer.GetTruePosition();
             float closestDistance = float.MaxValue;
-            float usableDistance = MapUtilities.CachedShipStatus.AllVents.FirstOrDefault().UsableDistance;
-            foreach ((DeadPlayer dp, Vector3 ps) in Medium.DeadBodies)
+            float usableDistance = MapUtilities.CachedShipStatus.AllVents[0].UsableDistance;
+            for (int i = 0; i < DeadBodies.Count; i++)
             {
+                var (dp, ps) = DeadBodies[i];
                 float distance = Vector2.Distance(ps, truePosition);
                 if (distance <= usableDistance && distance < closestDistance)
                 {

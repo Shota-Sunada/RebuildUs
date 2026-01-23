@@ -31,8 +31,10 @@ public class Detective : RoleBase<Detective>
         if (Timer <= 0f)
         {
             Timer = FootprintInterval;
-            foreach (var player in PlayerControl.AllPlayerControls)
+            var players = PlayerControl.AllPlayerControls;
+            for (int i = 0; i < players.Count; i++)
             {
+                var player = players[i];
                 if (player != null && player != PlayerControl.LocalPlayer && !player.Data.IsDead && !player.inVent && !player.IsGM())
                 {
                     new Footprint(FootprintDuration, AnonymousFootprints, player);

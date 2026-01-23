@@ -47,7 +47,7 @@ public class Mayor : RoleBase<Mayor>
             () => { return PlayerControl.LocalPlayer.IsRole(RoleType.Mayor) && !PlayerControl.LocalPlayer.Data.IsDead && MayorHasMeetingButton; },
             () =>
             {
-                MayorMeetingButton.ActionButton.OverrideText("Emergency (" + Local.RemoteMeetingsLeft + ")");
+                MayorMeetingButton.ActionButton.OverrideText(string.Format("Emergency ({0})", Local.RemoteMeetingsLeft));
                 bool sabotageActive = false;
                 foreach (var task in PlayerControl.LocalPlayer.myTasks.GetFastEnumerator())
                 {

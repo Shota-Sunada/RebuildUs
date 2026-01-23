@@ -26,14 +26,15 @@ public class Snitch : RoleBase<Snitch>
     {
         if (LocalArrows == null) return;
 
-        foreach (var arrow in LocalArrows) arrow.ArrowObject.SetActive(false);
+        for (int i = 0; i < LocalArrows.Count; i++) LocalArrows[i]?.ArrowObject.SetActive(false);
 
         if (Player.Data.IsDead) return;
 
         var (playerCompleted, playerTotal) = TasksHandler.TaskInfo(Player.Data);
         int numberOfTasks = playerTotal - playerCompleted;
 
-        if (numberOfTasks <= LeftTasksForReveal && (PlayerControl.LocalPlayer.Data.Role.IsImpostor || (IncludeTeamJackal && (PlayerControl.LocalPlayer.IsRole(RoleType.Jackal) || PlayerControl.LocalPlayer.IsRole(RoleType.Sidekick)))))
+        var localPlayer = PlayerControl.LocalPlayer;
+        if (numberOfTasks <= LeftTasksForReveal && (localPlayer.Data.Role.IsImpostor || (IncludeTeamJackal && (localPlayer.IsRole(RoleType.Jackal) || localPlayer.IsRole(RoleType.Sidekick)))))
         {
             if (LocalArrows.Count == 0) LocalArrows.Add(new Arrow(Color.blue));
             if (LocalArrows.Count != 0 && LocalArrows[0] != null)
@@ -43,31 +44,32 @@ public class Snitch : RoleBase<Snitch>
                 LocalArrows[0].Update(Player.transform.position);
             }
         }
-        else if (PlayerControl.LocalPlayer.IsRole(RoleType.Snitch) && numberOfTasks == 0)
+        else if (localPlayer.IsRole(RoleType.Snitch) && numberOfTasks == 0)
         {
             int arrowIndex = 0;
-            foreach (PlayerControl p in PlayerControl.AllPlayerControls)
+            var players = PlayerControl.AllPlayerControls;
+            for (int i = 0; i < players.Count; i++)
             {
+                var p = players[i];
+                if (p == null || p.Data == null) continue;
+
                 bool arrowForImp = p.Data.Role.IsImpostor;
                 bool arrowForTeamJackal = IncludeTeamJackal && (p.IsRole(RoleType.Jackal) || p.IsRole(RoleType.Sidekick));
 
-                // Update the arrows' color every time bc things go weird when you add a sidekick or someone dies
-                Color c = Palette.ImpostorRed;
-                if (arrowForTeamJackal)
-                {
-                    c = Jackal.NameColor;
-                }
                 if (!p.Data.IsDead && (arrowForImp || arrowForTeamJackal))
                 {
+                    Color c = arrowForTeamJackal ? Jackal.NameColor : Palette.ImpostorRed;
+
                     if (arrowIndex >= LocalArrows.Count)
                     {
                         LocalArrows.Add(new Arrow(c));
                     }
-                    if (arrowIndex < LocalArrows.Count && LocalArrows[arrowIndex] != null)
+                    var arrow = LocalArrows[arrowIndex];
+                    if (arrow != null)
                     {
-                        LocalArrows[arrowIndex].Image.color = c;
-                        LocalArrows[arrowIndex].ArrowObject.SetActive(true);
-                        LocalArrows[arrowIndex].Update(p.transform.position, c);
+                        arrow.Image.color = c;
+                        arrow.ArrowObject.SetActive(true);
+                        arrow.Update(p.transform.position, c);
                     }
                     arrowIndex++;
                 }

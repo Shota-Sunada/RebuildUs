@@ -54,6 +54,9 @@ public class Hacker : RoleBase<Hacker>
     public override void OnDeath(PlayerControl killer = null) { }
     public override void OnFinishShipStatusBegin() { }
     public override void HandleDisconnect(PlayerControl player, DisconnectReasons reason) { }
+    private static SystemConsole _vitalsConsole;
+    private static SystemConsole _doorLogConsole;
+
     public override void MakeButtons(HudManager hm)
     {
         HackerButton = new CustomButton(
@@ -95,7 +98,13 @@ public class Hacker : RoleBase<Hacker>
            () => { return PlayerControl.LocalPlayer.IsRole(RoleType.Hacker) && ModMapOptions.CouldUseAdmin && PlayerControl.LocalPlayer.IsAlive(); },
            () =>
            {
-               HackerAdminTableChargesText?.text = HackerVitalsChargesText.text = string.Format(Tr.Get("Hud.HackerChargesText"), Local.ChargesAdminTable, ToolsNumber);
+               if (HackerAdminTableChargesText != null || HackerVitalsChargesText != null)
+               {
+                   string format = Tr.Get("Hud.HackerChargesText");
+                   string text = string.Format(format, Local.ChargesAdminTable, ToolsNumber);
+                   if (HackerAdminTableChargesText != null) HackerAdminTableChargesText.text = text;
+                   if (HackerVitalsChargesText != null) HackerVitalsChargesText.text = text;
+               }
                return Local.ChargesAdminTable > 0 && ModMapOptions.CanUseAdmin; ;
            },
            () =>
@@ -135,9 +144,20 @@ public class Hacker : RoleBase<Hacker>
                {
                    if (Local.Vitals == null)
                    {
-                       var e = UnityEngine.Object.FindObjectsOfType<SystemConsole>().FirstOrDefault(x => x.gameObject.name.Contains("panel_vitals"));
-                       if (e == null || Camera.main == null) return;
-                       Local.Vitals = UnityEngine.Object.Instantiate(e.MinigamePrefab, Camera.main.transform, false);
+                       if (_vitalsConsole == null)
+                       {
+                           var consoles = UnityEngine.Object.FindObjectsOfType<SystemConsole>();
+                           for (int i = 0; i < consoles.Length; i++)
+                           {
+                               if (consoles[i].gameObject.name.Contains("panel_vitals"))
+                               {
+                                   _vitalsConsole = consoles[i];
+                                   break;
+                               }
+                           }
+                       }
+                       if (_vitalsConsole == null || Camera.main == null) return;
+                       Local.Vitals = UnityEngine.Object.Instantiate(_vitalsConsole.MinigamePrefab, Camera.main.transform, false);
                    }
                    Local.Vitals.transform.SetParent(Camera.main.transform, false);
                    Local.Vitals.transform.localPosition = new Vector3(0.0f, 0.0f, -50f);
@@ -147,9 +167,20 @@ public class Hacker : RoleBase<Hacker>
                {
                    if (Local.DoorLog == null)
                    {
-                       var e = UnityEngine.Object.FindObjectsOfType<SystemConsole>().FirstOrDefault(x => x.gameObject.name.Contains("SurvLogConsole"));
-                       if (e == null || Camera.main == null) return;
-                       Local.DoorLog = UnityEngine.Object.Instantiate(e.MinigamePrefab, Camera.main.transform, false);
+                       if (_doorLogConsole == null)
+                       {
+                           var consoles = UnityEngine.Object.FindObjectsOfType<SystemConsole>();
+                           for (int i = 0; i < consoles.Length; i++)
+                           {
+                               if (consoles[i].gameObject.name.Contains("SurvLogConsole"))
+                               {
+                                   _doorLogConsole = consoles[i];
+                                   break;
+                               }
+                           }
+                       }
+                       if (_doorLogConsole == null || Camera.main == null) return;
+                       Local.DoorLog = UnityEngine.Object.Instantiate(_doorLogConsole.MinigamePrefab, Camera.main.transform, false);
                    }
                    Local.DoorLog.transform.SetParent(Camera.main.transform, false);
                    Local.DoorLog.transform.localPosition = new Vector3(0.0f, 0.0f, -50f);
@@ -164,7 +195,10 @@ public class Hacker : RoleBase<Hacker>
            () => { return PlayerControl.LocalPlayer.IsRole(RoleType.Hacker) && ModMapOptions.CouldUseVitals && PlayerControl.LocalPlayer.IsAlive() && Helpers.GetOption(ByteOptionNames.MapId) != 0 && Helpers.GetOption(ByteOptionNames.MapId) != 3; },
            () =>
            {
-               HackerVitalsChargesText?.text = string.Format(Tr.Get("Hud.HackerChargesText"), Local.ChargesVitals, ToolsNumber);
+               if (HackerVitalsChargesText != null)
+               {
+                   HackerVitalsChargesText.text = string.Format(Tr.Get("Hud.HackerChargesText"), Local.ChargesVitals, ToolsNumber);
+               }
                HackerVitalsButton.ActionButton.graphic.sprite = Helpers.IsMiraHQ ? FastDestroyableSingleton<HudManager>.Instance.UseButton.fastUseSettings[ImageNames.DoorLogsButton].Image : FastDestroyableSingleton<HudManager>.Instance.UseButton.fastUseSettings[ImageNames.VitalsButton].Image;
                HackerVitalsButton.ActionButton.OverrideText(Helpers.IsMiraHQ ? TranslationController.Instance.GetString(StringNames.DoorlogLabel) : TranslationController.Instance.GetString(StringNames.VitalsLabel));
                return Local.ChargesVitals > 0 && ModMapOptions.CanUseVitals;

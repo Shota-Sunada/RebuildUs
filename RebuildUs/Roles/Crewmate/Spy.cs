@@ -19,7 +19,8 @@ public class Spy : RoleBase<Spy>
 
     public override void OnUpdateNameColors()
     {
-        if (PlayerControl.LocalPlayer.IsTeamImpostor())
+        var localPlayer = PlayerControl.LocalPlayer;
+        if (localPlayer != null && localPlayer.IsTeamImpostor())
         {
             Update.SetPlayerNameColor(Player, NameColor);
         }

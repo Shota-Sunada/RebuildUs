@@ -23,11 +23,11 @@ public class Seer : RoleBase<Seer>
     {
         if (DeadBodyPositions != null && PlayerControl.LocalPlayer.IsRole(RoleType.Seer) && (Mode is 0 or 2))
         {
-            foreach (var pos in DeadBodyPositions)
+            for (int i = 0; i < DeadBodyPositions.Count; i++)
             {
-                var soul = new GameObject();
-                // soul.transform.position = pos;
-                soul.transform.position = new Vector3(pos.x, pos.y, pos.y / 1000 - 1f);
+                var pos = DeadBodyPositions[i];
+                var soul = new GameObject("Soul");
+                soul.transform.position = new Vector3(pos.x, pos.y, pos.y / 1000f - 1f);
                 soul.layer = 5;
                 var rend = soul.AddComponent<SpriteRenderer>();
                 soul.AddSubmergedComponent(SubmergedCompatibility.Classes.ElevatorMover);
@@ -47,7 +47,7 @@ public class Seer : RoleBase<Seer>
                     })));
                 }
             }
-            DeadBodyPositions = [];
+            DeadBodyPositions.Clear();
         }
     }
     public override void OnIntroEnd() { }

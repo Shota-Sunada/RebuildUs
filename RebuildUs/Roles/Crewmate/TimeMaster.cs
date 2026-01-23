@@ -37,8 +37,10 @@ public class TimeMaster : RoleBase<TimeMaster>
                     // Exit current vent if necessary
                     if (PlayerControl.LocalPlayer.inVent)
                     {
-                        foreach (Vent vent in MapUtilities.CachedShipStatus.AllVents)
+                        var vents = MapUtilities.CachedShipStatus.AllVents;
+                        for (int i = 0; i < vents.Length; i++)
                         {
+                            var vent = vents[i];
                             vent.CanUse(PlayerControl.LocalPlayer.Data, out bool canUse, out bool couldUse);
                             if (canUse)
                             {

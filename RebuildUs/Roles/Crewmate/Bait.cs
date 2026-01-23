@@ -26,27 +26,55 @@ public class Bait : RoleBase<Bait>
     public override void OnIntroEnd() { }
     public override void FixedUpdate()
     {
-        if (!PlayerControl.LocalPlayer.IsRole(RoleType.Bait)) return;
+        if (Player == null || Player != PlayerControl.LocalPlayer) return;
 
         // Bait report
         if (Player.Data.IsDead && !Reported)
         {
             Delay -= Time.fixedDeltaTime;
-            var deadPlayer = GameHistory.DeadPlayers?.Where(x => x.Player.IsRole(RoleType.Bait))?.FirstOrDefault();
-            if (deadPlayer.KillerIfExisting != null && Bait.ReportDelay <= 0f)
+
+            DeadPlayer baitDeadPlayer = null;
+            var deadPlayers = GameHistory.DeadPlayers;
+            if (deadPlayers != null)
+            {
+                for (int i = 0; i < deadPlayers.Count; i++)
+                {
+                    var dp = deadPlayers[i];
+                    if (dp.Player != null && dp.Player.PlayerId == Player.PlayerId)
+                    {
+                        baitDeadPlayer = dp;
+                        break;
+                    }
+                }
+            }
+
+            if (baitDeadPlayer != null && baitDeadPlayer.KillerIfExisting != null && Delay <= 0f)
             {
                 Helpers.HandleVampireBiteOnBodyReport(); // Manually call Vampire handling, since the CmdReportDeadBody Prefix won't be called
 
-                byte reporter = deadPlayer.KillerIfExisting.PlayerId;
+                byte reporter = baitDeadPlayer.KillerIfExisting.PlayerId;
                 if (Player.HasModifier(ModifierType.Madmate))
                 {
-                    var candidates = PlayerControl.AllPlayerControls.GetFastEnumerator().ToArray().Where(x => x.IsAlive() && !x.IsTeamImpostor() && !x.isDummy).ToList();
-                    int i = RebuildUs.Instance.Rnd.Next(0, candidates.Count);
-                    reporter = candidates.Count > 0 ? candidates[i].PlayerId : deadPlayer.KillerIfExisting.PlayerId;
+                    var candidates = new List<PlayerControl>();
+                    var allPlayers = PlayerControl.AllPlayerControls;
+                    for (int i = 0; i < allPlayers.Count; i++)
+                    {
+                        var p = allPlayers[i];
+                        if (p != null && p.IsAlive() && !p.IsTeamImpostor() && !p.isDummy)
+                        {
+                            candidates.Add(p);
+                        }
+                    }
+
+                    if (candidates.Count > 0)
+                    {
+                        int i = RebuildUs.Instance.Rnd.Next(0, candidates.Count);
+                        reporter = candidates[i].PlayerId;
+                    }
                 }
 
                 {
-                    using var sender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.UncheckedCmdReportDeadBody);
+                    using var sender = new RPCSender(Player.NetId, CustomRPC.UncheckedCmdReportDeadBody);
                     sender.Write(reporter);
                     sender.Write(Player.PlayerId);
                 }
@@ -56,24 +84,44 @@ public class Bait : RoleBase<Bait>
         }
 
         // Bait Vents
-        if (MapUtilities.CachedShipStatus?.AllVents != null)
+        var shipStatus = MapUtilities.CachedShipStatus;
+        if (shipStatus != null && shipStatus.AllVents != null)
         {
-            var ventsWithPlayers = new List<int>();
-            foreach (PlayerControl player in PlayerControl.AllPlayerControls)
+            var ventsWithPlayers = new HashSet<int>();
+            var allPlayers = PlayerControl.AllPlayerControls;
+            for (int i = 0; i < allPlayers.Count; i++)
             {
-                if (player == null) continue;
+                PlayerControl player = allPlayers[i];
+                if (player == null || !player.inVent) continue;
 
-                if (player.inVent)
+                var playerPos = player.GetTruePosition();
+                Vent closestVent = null;
+                float minDistance = float.MaxValue;
+                var allVents = shipStatus.AllVents;
+
+                for (int j = 0; j < allVents.Length; j++)
                 {
-                    Vent target = MapUtilities.CachedShipStatus.AllVents.OrderBy(x => Vector2.Distance(x.transform.position, player.GetTruePosition())).FirstOrDefault();
-                    if (target != null) ventsWithPlayers.Add(target.Id);
+                    var v = allVents[j];
+                    if (v == null) continue;
+                    float dist = Vector2.Distance(v.transform.position, playerPos);
+                    if (dist < minDistance)
+                    {
+                        minDistance = dist;
+                        closestVent = v;
+                    }
                 }
+
+                if (closestVent != null) ventsWithPlayers.Add(closestVent.Id);
             }
 
-            foreach (Vent vent in MapUtilities.CachedShipStatus.AllVents)
+            var allVentsForHighlight = shipStatus.AllVents;
+            bool highlightAll = Bait.HighlightAllVents && ventsWithPlayers.Count > 0;
+            for (int i = 0; i < allVentsForHighlight.Length; i++)
             {
-                if (vent.myRend == null || vent.myRend.material == null) continue;
-                if (ventsWithPlayers.Contains(vent.Id) || (ventsWithPlayers.Count > 0 && Bait.HighlightAllVents))
+                Vent vent = allVentsForHighlight[i];
+                if (vent == null || vent.myRend == null) continue;
+
+                if (highlightAll || ventsWithPlayers.Contains(vent.Id))
                 {
                     vent.myRend.material.SetFloat("_Outline", 1f);
                     vent.myRend.material.SetColor("_OutlineColor", Color.yellow);

@@ -32,7 +32,8 @@ public class Medic : RoleBase<Medic>
     public override void OnIntroEnd() { }
     public override void FixedUpdate()
     {
-        if (PlayerControl.LocalPlayer.IsRole(RoleType.Medic))
+        var local = Local;
+        if (local != null)
         {
             if (!UsedShield)
             {
@@ -53,24 +54,30 @@ public class Medic : RoleBase<Medic>
         MedicShieldButton = new CustomButton(
             () =>
             {
+                var local = Local;
+                if (local == null) return;
                 MedicShieldButton.Timer = 0f;
                 {
                     if (SetShieldAfterMeeting)
                     {
                         using var sender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.SetFutureShielded);
-                        sender.Write(Local.CurrentTarget.PlayerId);
-                        RPCProcedure.SetFutureShielded(Local.CurrentTarget.PlayerId);
+                        sender.Write(local.CurrentTarget.PlayerId);
+                        RPCProcedure.SetFutureShielded(local.CurrentTarget.PlayerId);
                     }
                     else
                     {
                         using var sender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.MedicSetShielded);
-                        sender.Write(Local.CurrentTarget.PlayerId);
-                        RPCProcedure.MedicSetShielded(Local.CurrentTarget.PlayerId);
+                        sender.Write(local.CurrentTarget.PlayerId);
+                        RPCProcedure.MedicSetShielded(local.CurrentTarget.PlayerId);
                     }
                 }
             },
-            () => { return PlayerControl.LocalPlayer.IsRole(RoleType.Medic) && PlayerControl.LocalPlayer.IsAlive(); },
-            () => { return !UsedShield && Local.CurrentTarget && PlayerControl.LocalPlayer.CanMove; },
+            () => { return Local != null && PlayerControl.LocalPlayer.IsAlive(); },
+            () =>
+            {
+                var local = Local;
+                return !UsedShield && local != null && local.CurrentTarget && PlayerControl.LocalPlayer.CanMove;
+            },
             () => { },
             AssetLoader.ShieldButton,
             new Vector3(-1.8f, -0.06f, 0),

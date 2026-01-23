@@ -44,13 +44,15 @@ public class Lighter : RoleBase<Lighter>
         LighterButton = new CustomButton(
             () =>
             {
-                Local.LightActive = true;
+                var local = Local;
+                if (local != null) local.LightActive = true;
             },
-            () => { return PlayerControl.LocalPlayer.IsRole(RoleType.Lighter) && !PlayerControl.LocalPlayer.Data.IsDead; },
+            () => { return Local != null && !PlayerControl.LocalPlayer.Data.IsDead; },
             () => { return PlayerControl.LocalPlayer.CanMove; },
             () =>
             {
-                Local?.LightActive = false;
+                var local = Local;
+                if (local != null) local.LightActive = false;
                 LighterButton.Timer = LighterButton.MaxTimer;
                 LighterButton.IsEffectActive = false;
                 LighterButton.ActionButton.graphic.color = Palette.EnabledColor;
@@ -64,7 +66,8 @@ public class Lighter : RoleBase<Lighter>
             Duration,
             () =>
             {
-                Local.LightActive = false;
+                var local = Local;
+                if (local != null) local.LightActive = false;
                 LighterButton.Timer = LighterButton.MaxTimer;
             }
         )

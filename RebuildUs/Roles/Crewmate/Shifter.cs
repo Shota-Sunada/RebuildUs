@@ -33,9 +33,10 @@ public class Shifter : RoleBase<Shifter>
         if (Shifter.IsNeutral && !Shifter.ShiftPastShifters)
         {
             blockShift = [];
-            foreach (var playerId in Shifter.PastShifters)
+            for (int i = 0; i < Shifter.PastShifters.Count; i++)
             {
-                blockShift.Add(Helpers.PlayerById((byte)playerId));
+                var p = Helpers.PlayerById((byte)Shifter.PastShifters[i]);
+                if (p != null) blockShift.Add(p);
             }
         }
 

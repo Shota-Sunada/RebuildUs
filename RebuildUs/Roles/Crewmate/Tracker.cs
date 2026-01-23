@@ -37,7 +37,7 @@ public class Tracker : RoleBase<Tracker>
     public override void OnIntroEnd() { }
     public override void FixedUpdate()
     {
-        if (PlayerControl.LocalPlayer.IsRole(RoleType.Tracker)) return;
+        if (Player != PlayerControl.LocalPlayer) return;
 
         CurrentTarget = Helpers.SetTarget();
         if (!UsedTracker) Helpers.SetPlayerOutline(CurrentTarget, RoleColor);
@@ -55,11 +55,15 @@ public class Tracker : RoleBase<Tracker>
                     if (!trackedOnMap)
                     {
                         // Check for dead body
-                        DeadBody body = UnityEngine.Object.FindObjectsOfType<DeadBody>().FirstOrDefault(b => b.ParentId == Tracked.PlayerId);
-                        if (body != null)
+                        var bodies = UnityEngine.Object.FindObjectsOfType<DeadBody>();
+                        for (int i = 0; i < bodies.Length; i++)
                         {
-                            trackedOnMap = true;
-                            position = body.transform.position;
+                            if (bodies[i].ParentId == Tracked.PlayerId)
+                            {
+                                trackedOnMap = true;
+                                position = bodies[i].transform.position;
+                                break;
+                            }
                         }
                     }
 
@@ -77,35 +81,46 @@ public class Tracker : RoleBase<Tracker>
         // Handle corpses tracking
         if (CorpsesTrackingTimer >= 0f && !Player.Data.IsDead)
         {
-            bool arrowsCountChanged = LocalArrows.Count != DeadBodyPositions.Count();
+            bool arrowsCountChanged = LocalArrows.Count != DeadBodyPositions.Count;
             int index = 0;
 
             if (arrowsCountChanged)
             {
-                foreach (var arrow in LocalArrows)
+                for (int i = 0; i < LocalArrows.Count; i++)
                 {
-                    UnityEngine.Object.Destroy(arrow.ArrowObject);
+                    if (LocalArrows[i]?.ArrowObject != null)
+                    {
+                        UnityEngine.Object.Destroy(LocalArrows[i].ArrowObject);
+                    }
                 }
-                LocalArrows = [];
+                LocalArrows.Clear();
             }
-            foreach (Vector3 position in DeadBodyPositions)
+            for (int i = 0; i < DeadBodyPositions.Count; i++)
             {
+                Vector3 position = DeadBodyPositions[i];
                 if (arrowsCountChanged)
                 {
-                    LocalArrows.Add(new Arrow(RoleColor));
-                    LocalArrows[index].ArrowObject.SetActive(true);
+                    var a = new Arrow(RoleColor);
+                    a.ArrowObject.SetActive(true);
+                    LocalArrows.Add(a);
                 }
-                LocalArrows[index]?.Update(position);
+                if (index < LocalArrows.Count)
+                {
+                    LocalArrows[index]?.Update(position);
+                }
                 index++;
             }
         }
         else if (LocalArrows.Count > 0)
         {
-            foreach (var arrow in LocalArrows)
+            for (int i = 0; i < LocalArrows.Count; i++)
             {
-                UnityEngine.Object.Destroy(arrow.ArrowObject);
+                if (LocalArrows[i]?.ArrowObject != null)
+                {
+                    UnityEngine.Object.Destroy(LocalArrows[i].ArrowObject);
+                }
             }
-            LocalArrows = [];
+            LocalArrows.Clear();
         }
     }
     public override void OnKill(PlayerControl target) { }

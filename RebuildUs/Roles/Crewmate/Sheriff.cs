@@ -34,7 +34,16 @@ public class Sheriff : RoleBase<Sheriff>
     public override void OnMeetingStart() { }
     public override void OnMeetingEnd()
     {
-        canKill = sheriffCanKillNoDeadBody || PlayerControl.AllPlayerControls.GetFastEnumerator().ToArray().Any(p => p.Data.IsDead);
+        bool anyoneDead = false;
+        foreach (var p in PlayerControl.AllPlayerControls)
+        {
+            if (p.Data.IsDead)
+            {
+                anyoneDead = true;
+                break;
+            }
+        }
+        canKill = sheriffCanKillNoDeadBody || anyoneDead;
     }
     public override void OnIntroEnd() { }
     public override void FixedUpdate()
