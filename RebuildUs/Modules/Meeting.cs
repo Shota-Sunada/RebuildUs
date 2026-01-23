@@ -10,7 +10,6 @@ public static class Meeting
     static bool[] Selections;
     static SpriteRenderer[] Renderers;
     private static NetworkedPlayerInfo Target = null;
-    private const float Scale = 0.65f;
     private static TextMeshPro MeetingExtraButtonText;
     private static PassiveButton[] SwapperButtonList;
     private static TextMeshPro MeetingExtraButtonLabel;
@@ -97,36 +96,34 @@ public static class Meeting
 
     public static bool CheckForEndVoting(MeetingHud __instance)
     {
-        if (__instance.playerStates.All(ps => ps.AmDead || ps.DidVote))
+        if (!__instance.playerStates.All(ps => ps.AmDead || ps.DidVote)) return false;
+
+        if (Target == null && ModMapOptions.BlockSkippingInEmergencyMeetings && ModMapOptions.NoVoteIsSelfVote)
         {
-            if (Target == null && ModMapOptions.BlockSkippingInEmergencyMeetings && ModMapOptions.NoVoteIsSelfVote)
+            foreach (var playerVoteArea in __instance.playerStates)
             {
-                foreach (var playerVoteArea in __instance.playerStates)
+                if (playerVoteArea.VotedFor == byte.MaxValue - 1)
                 {
-                    if (playerVoteArea.VotedFor == byte.MaxValue - 1)
-                    {
-                        playerVoteArea.VotedFor = playerVoteArea.TargetPlayerId;
-                    }
+                    playerVoteArea.VotedFor = playerVoteArea.TargetPlayerId;
                 }
             }
-
-            var self = CalculateVotes(__instance);
-            var max = self.MaxPair(out bool tie);
-            var exiled = GameData.Instance.AllPlayers.ToArray().FirstOrDefault(v => !tie && v.PlayerId == max.Key && !v.IsDead);
-
-            var array = new MeetingHud.VoterState[__instance.playerStates.Length];
-            for (int i = 0; i < __instance.playerStates.Length; i++)
-            {
-                var playerVoteArea = __instance.playerStates[i];
-                array[i] = new MeetingHud.VoterState
-                {
-                    VoterId = playerVoteArea.TargetPlayerId,
-                    VotedForId = playerVoteArea.VotedFor
-                };
-            }
-
-            __instance.RpcVotingComplete(array, exiled, tie);
         }
+
+        var self = CalculateVotes(__instance);
+        var max = self.MaxPair(out bool tie);
+        var exiled = GameData.Instance.AllPlayers.ToArray().FirstOrDefault(v => !tie && v.PlayerId == max.Key && !v.IsDead);
+        var states = new MeetingHud.VoterState[__instance.playerStates.Length];
+        for (int i = 0; i < __instance.playerStates.Length; i++)
+        {
+            var playerVoteArea = __instance.playerStates[i];
+            states[i] = new MeetingHud.VoterState
+            {
+                VoterId = playerVoteArea.TargetPlayerId,
+                VotedForId = playerVoteArea.VotedFor
+            };
+        }
+
+        __instance.RpcVotingComplete(states, exiled, tie);
 
         return false;
     }
@@ -160,7 +157,7 @@ public static class Meeting
         return false;
     }
 
-    public static bool PopulateVotes(MeetingHud __instance, Il2CppStructArray<MeetingHud.VoterState> states)
+    public static bool PopulateResults(MeetingHud __instance, Il2CppStructArray<MeetingHud.VoterState> states)
     {
         // Swapper swap
         Swapped1 = null;
@@ -192,21 +189,21 @@ public static class Meeting
             Dictionary<int, int> votesApplied = [];
             for (int j = 0; j < states.Length; j++)
             {
-                var voterState = states[j];
-                var playerById = GameData.Instance.GetPlayerById(voterState.VoterId);
-                var voter = Helpers.PlayerById(voterState.VoterId);
+                var state = states[j];
+                var playerById = GameData.Instance.GetPlayerById(state.VoterId);
+                var voter = Helpers.PlayerById(state.VoterId);
                 if (voter == null) continue;
 
                 if (playerById == null)
                 {
-                    Logger.LogError(string.Format("Couldn't find player info for voter: {0}", voterState.VoterId));
+                    Logger.LogError(string.Format("Couldn't find player info for voter: {0}", state.VoterId));
                 }
-                else if (i == 0 && voterState.SkippedVote && !playerById.IsDead)
+                else if (i == 0 && state.SkippedVote && !playerById.IsDead)
                 {
                     __instance.BloopAVoteIcon(playerById, num, __instance.SkippedVoting.transform);
                     num++;
                 }
-                else if (voterState.VotedForId == targetPlayerId && !playerById.IsDead)
+                else if (state.VotedForId == targetPlayerId && !playerById.IsDead)
                 {
                     __instance.BloopAVoteIcon(playerById, num2, playerVoteArea.transform);
                     num2++;

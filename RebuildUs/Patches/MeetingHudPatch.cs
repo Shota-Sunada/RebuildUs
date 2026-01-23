@@ -21,7 +21,7 @@ public static class MeetingHudPatch
     [HarmonyPatch(typeof(MeetingHud), nameof(MeetingHud.PopulateResults))]
     public static bool PopulateResultsPrefix(MeetingHud __instance, Il2CppStructArray<MeetingHud.VoterState> states)
     {
-        return Meeting.PopulateVotes(__instance, states);
+        return Meeting.PopulateResults(__instance, states);
     }
 
     [HarmonyPostfix]
