@@ -6,6 +6,8 @@ public static class ModifierHelpers
 {
     public static bool HasModifier(this PlayerControl player, ModifierType modType)
     {
+        if (player == null) return false;
+
         foreach (var type in ModifierData.AllModifierTypes)
         {
             if (modType == type.ModifierType)
@@ -23,6 +25,8 @@ public static class ModifierHelpers
 
     public static bool AddModifier(this PlayerControl player, ModifierType modType)
     {
+        if (player == null) return false;
+
         Logger.LogInfo($"{player?.Data?.PlayerName}({player?.PlayerId}): {Enum.GetName(typeof(ModifierType), modType)}");
         foreach (var type in ModifierData.AllModifierTypes)
         {
@@ -46,6 +50,8 @@ public static class ModifierHelpers
 
     public static void EraseModifier(this PlayerControl player, ModifierType modType)
     {
+        if (player == null) return;
+
         if (HasModifier(player, modType))
         {
             foreach (var type in ModifierData.AllModifierTypes)

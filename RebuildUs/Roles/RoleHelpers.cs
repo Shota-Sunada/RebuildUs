@@ -6,13 +6,20 @@ public static class RoleHelpers
 {
     public static bool IsRole(this PlayerControl player, RoleType roleType)
     {
-        foreach (var type in RoleData.AllRoleTypes)
+        if (player == null) return false;
+
+        if (roleType == RoleType.Crewmate) return player.IsTeamCrewmate();
+        if (roleType == RoleType.Impostor) return player.IsTeamImpostor();
+        if (roleType == RoleType.Lovers) return player.IsLovers();
+        if (roleType == RoleType.GM) return player.IsGM();
+
+        foreach (var type in RoleData.Roles)
         {
-            if (roleType == type.RoleType)
+            if (roleType == type.roleType)
             {
-                return type.Type != null
-                    && (bool)(type.Type.GetProperty("Exists", BindingFlags.Public | BindingFlags.Static)?.GetValue(null) ?? false)
-                    && (bool)(type.Type.GetMethod("IsRole", BindingFlags.Public | BindingFlags.Static)?.Invoke(null, [player]) ?? false);
+                return type.classType != null
+                    && (bool)(type.classType.GetProperty("Exists", BindingFlags.Public | BindingFlags.Static)?.GetValue(null) ?? false)
+                    && (bool)(type.classType.GetMethod("IsRole", BindingFlags.Public | BindingFlags.Static)?.Invoke(null, [player]) ?? false);
             }
         }
 
@@ -23,13 +30,36 @@ public static class RoleHelpers
 
     public static bool SetRole(this PlayerControl player, RoleType roleType)
     {
+        if (player == null) return false;
+
         Logger.LogInfo($"{player?.Data?.PlayerName}({player?.PlayerId}): {Enum.GetName(typeof(RoleType), roleType)}");
-        foreach (var type in RoleData.AllRoleTypes)
+
+        // SetRole usually implies setting a primary role, so we should clear existing primary roles.
+        // But for Lovers, it might be additive. However, Lovers uses its own SetRole usually.
+        if (roleType != RoleType.Lovers)
+            player.EraseAllRoles();
+
+        if (roleType == RoleType.Crewmate || roleType == RoleType.Impostor)
         {
-            if (roleType == type.RoleType)
+            // vanilla roles are already set by the game, or handled via other means.
+            // EraseAllRoles above already removed any custom roles.
+            return true;
+        }
+
+        if (roleType == RoleType.Lovers)
+        {
+            // Lovers doesn't follow the RoleBase pattern. It's managed via Couples.
+            // If we just want to mark someone as Lovers, we need a partner.
+            // In RebuildUs, Lovers assignment is usually handled via separate RPC setLovers.
+            return true;
+        }
+
+        foreach (var type in RoleData.Roles)
+        {
+            if (roleType == type.roleType)
             {
-                if (type.Type == null) return false;
-                var method = type.Type.GetMethod("SetRole", BindingFlags.Public | BindingFlags.Static);
+                if (type.classType == null) return false;
+                var method = type.classType.GetMethod("SetRole", BindingFlags.Public | BindingFlags.Static);
                 if (method != null)
                 {
                     method.Invoke(null, [player]);
@@ -45,14 +75,22 @@ public static class RoleHelpers
 
     public static void EraseRole(this PlayerControl player, RoleType roleType)
     {
+        if (player == null) return;
+
+        if (roleType == RoleType.Lovers)
+        {
+            Lovers.EraseCouple(player);
+            return;
+        }
+
         if (IsRole(player, roleType))
         {
-            foreach (var type in RoleData.AllRoleTypes)
+            foreach (var type in RoleData.Roles)
             {
-                if (roleType == type.RoleType)
+                if (roleType == type.roleType)
                 {
-                    if (type.Type == null) return;
-                    type.Type.GetMethod("EraseRole", BindingFlags.Public | BindingFlags.Static)?.Invoke(null, [player]);
+                    if (type.classType == null) return;
+                    type.classType.GetMethod("EraseRole", BindingFlags.Public | BindingFlags.Static)?.Invoke(null, [player]);
                     return;
                 }
             }
@@ -63,20 +101,20 @@ public static class RoleHelpers
 
     public static void EraseAllRoles(this PlayerControl player)
     {
-        foreach (var type in RoleData.AllRoleTypes)
+        foreach (var type in RoleData.Roles)
         {
-            if (type.Type == null) continue;
-            type.Type.GetMethod("EraseRole", BindingFlags.Public | BindingFlags.Static)?.Invoke(null, [player]);
+            if (type.classType == null) continue;
+            type.classType.GetMethod("EraseRole", BindingFlags.Public | BindingFlags.Static)?.Invoke(null, [player]);
         }
     }
 
     public static void SwapRoles(this PlayerControl player, PlayerControl target)
     {
-        foreach (var type in RoleData.AllRoleTypes)
+        foreach (var type in RoleData.Roles)
         {
-            if (type.Type != null && player.IsRole(type.RoleType))
+            if (type.classType != null && player.IsRole(type.roleType))
             {
-                type.Type.GetMethod("SwapRole", BindingFlags.Public | BindingFlags.Static)?.Invoke(null, [player, target]);
+                type.classType.GetMethod("SwapRole", BindingFlags.Public | BindingFlags.Static)?.Invoke(null, [player, target]);
             }
         }
     }

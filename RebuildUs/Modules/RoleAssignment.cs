@@ -257,6 +257,7 @@ public static class RoleAssignment
         Dictionary<byte, (int rate, int count)> neutralSettings = [];
         Dictionary<byte, (int rate, int count)> crewSettings = [];
 
+        Logger.LogMessage("Initializing Role Data");
         foreach (var role in RoleData.Roles)
         {
             if (role.getOption != null && role.getOption() is CustomRoleOption roleOption)
