@@ -43,8 +43,12 @@ public class Jackal : RoleBase<Jackal>
             Update.SetPlayerNameColor(Player, RoleColor);
             if (Sidekick.Exists)
             {
-                var sk = Sidekick.Players.FirstOrDefault();
-                if (sk != null) Update.SetPlayerNameColor(sk.Player, RoleColor);
+                var skPlayers = Sidekick.Players;
+                if (skPlayers.Count > 0)
+                {
+                    var sk = skPlayers[0];
+                    if (sk != null) Update.SetPlayerNameColor(sk.Player, RoleColor);
+                }
             }
             if (FakeSidekick != null)
             {
@@ -62,16 +66,26 @@ public class Jackal : RoleBase<Jackal>
     public override void OnIntroEnd() { }
     public override void FixedUpdate()
     {
-        if (PlayerControl.LocalPlayer.IsRole(RoleType.Jackal))
+        var local = Local;
+        if (local != null)
         {
             var untargetablePlayers = new List<PlayerControl>();
             if (CanCreateSidekickFromImpostor)
             {
                 // Only exclude sidekick from being targeted if the jackal can create sidekicks from impostors
-                if (Sidekick.Exists) untargetablePlayers.AddRange(Sidekick.AllPlayers);
+                if (Sidekick.Exists)
+                {
+                    var skPlayers = Sidekick.AllPlayers;
+                    for (var i = 0; i < skPlayers.Count; i++)
+                    {
+                        untargetablePlayers.Add(skPlayers[i]);
+                    }
+                }
             }
-            foreach (var mini in Mini.Players)
+            var miniPlayers = Mini.Players;
+            for (var i = 0; i < miniPlayers.Count; i++)
             {
+                var mini = miniPlayers[i];
                 if (!Mini.IsGrownUp(mini.Player))
                 {
                     untargetablePlayers.Add(mini.Player);
@@ -157,7 +171,17 @@ public class Jackal : RoleBase<Jackal>
     // write functions here
     public static void RemoveCurrentJackal()
     {
-        if (!FormerJackals.Any(x => x.PlayerId == Local.Player.PlayerId)) FormerJackals.Add(Local.Player);
+        bool alreadyFormer = false;
+        var localPlayer = Local.Player;
+        for (var i = 0; i < FormerJackals.Count; i++)
+        {
+            if (FormerJackals[i].PlayerId == localPlayer.PlayerId)
+            {
+                alreadyFormer = true;
+                break;
+            }
+        }
+        if (!alreadyFormer) FormerJackals.Add(localPlayer);
     }
 
     public static void Clear()

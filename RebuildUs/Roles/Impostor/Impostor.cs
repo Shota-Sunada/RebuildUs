@@ -6,7 +6,8 @@ public static class Impostor
 
     public static void ImpostorSetTarget()
     {
-        if (!PlayerControl.LocalPlayer.IsTeamImpostor() || !PlayerControl.LocalPlayer.CanMove || PlayerControl.LocalPlayer.Data.IsDead)
+        var local = PlayerControl.LocalPlayer;
+        if (!local.IsTeamImpostor() || !local.CanMove || local.Data.IsDead)
         {
             FastDestroyableSingleton<HudManager>.Instance.KillButton.SetTarget(null);
             return;
@@ -18,9 +19,10 @@ public static class Impostor
         bool containsWasSpy = Spy.Exists;
         if (!containsWasSpy)
         {
-            foreach (var s in Sidekick.Players)
+            var sidekickPlayers = Sidekick.Players;
+            for (var i = 0; i < sidekickPlayers.Count; i++)
             {
-                if (s.WasSpy)
+                if (sidekickPlayers[i].WasSpy)
                 {
                     containsWasSpy = true;
                     break;
@@ -28,9 +30,10 @@ public static class Impostor
             }
             if (!containsWasSpy)
             {
-                foreach (var j in Jackal.Players)
+                var jackalPlayers = Jackal.Players;
+                for (var i = 0; i < jackalPlayers.Count; i++)
                 {
-                    if (j.WasSpy)
+                    if (jackalPlayers[i].WasSpy)
                     {
                         containsWasSpy = true;
                         break;
@@ -48,14 +51,25 @@ public static class Impostor
             }
             else
             {
-                if (Spy.Exists) _untargetableCache.AddRange(Spy.AllPlayers);
-
-                foreach (var s in Sidekick.Players)
+                if (Spy.Exists)
                 {
+                    var spyPlayers = Spy.AllPlayers;
+                    for (var i = 0; i < spyPlayers.Count; i++)
+                    {
+                        _untargetableCache.Add(spyPlayers[i]);
+                    }
+                }
+
+                var sidekickPlayers = Sidekick.Players;
+                for (var i = 0; i < sidekickPlayers.Count; i++)
+                {
+                    var s = sidekickPlayers[i];
                     if (s.WasTeamRed) _untargetableCache.Add(s.Player);
                 }
-                foreach (var j in Jackal.Players)
+                var jackalPlayers = Jackal.Players;
+                for (var i = 0; i < jackalPlayers.Count; i++)
                 {
+                    var j = jackalPlayers[i];
                     if (j.WasTeamRed) _untargetableCache.Add(j.Player);
                 }
                 target = Helpers.SetTarget(true, true, _untargetableCache);
@@ -63,12 +77,16 @@ public static class Impostor
         }
         else
         {
-            foreach (var s in Sidekick.Players)
+            var sidekickPlayers = Sidekick.Players;
+            for (var i = 0; i < sidekickPlayers.Count; i++)
             {
+                var s = sidekickPlayers[i];
                 if (s.WasImpostor) _untargetableCache.Add(s.Player);
             }
-            foreach (var j in Jackal.Players)
+            var jackalPlayers = Jackal.Players;
+            for (var i = 0; i < jackalPlayers.Count; i++)
             {
+                var j = jackalPlayers[i];
                 if (j.WasImpostor) _untargetableCache.Add(j.Player);
             }
             target = Helpers.SetTarget(true, true, _untargetableCache);

@@ -38,9 +38,25 @@ public partial class RoleInfo(string nameKey, Color color, CustomOption baseOpti
             if (player.IsRole(info.RoleType)) infos.Add(info);
         }
 
-        if (player.IsRole(RoleType.Jackal) || (Neutral.Jackal.FormerJackals != null && Neutral.Jackal.FormerJackals.Any(x => x.PlayerId == player.PlayerId)))
+        if (player.IsRole(RoleType.Jackal) || (Neutral.Jackal.FormerJackals != null))
         {
-            infos.Add(Jackal);
+            bool isJackalOrFormer = player.IsRole(RoleType.Jackal);
+            if (!isJackalOrFormer)
+            {
+                var formerJackals = Neutral.Jackal.FormerJackals;
+                for (var i = 0; i < formerJackals.Count; i++)
+                {
+                    if (formerJackals[i].PlayerId == player.PlayerId)
+                    {
+                        isJackalOrFormer = true;
+                        break;
+                    }
+                }
+            }
+            if (isJackalOrFormer)
+            {
+                infos.Add(Jackal);
+            }
         }
 
         if (infos.Count == 0 && player.Data != null && player.Data.Role != null)
@@ -81,13 +97,12 @@ public partial class RoleInfo(string nameKey, Color color, CustomOption baseOpti
 
         void AppendNames(bool useMadmateColor = false)
         {
-            bool first = true;
-            foreach (var info in roleInfo)
+            for (var i = 0; i < roleInfo.Count; i++)
             {
-                if (!first) sb.Append(joinSeparator);
+                if (i > 0) sb.Append(joinSeparator);
+                var info = roleInfo[i];
                 Color c = useMadmateColor ? Madmate.NameColor : info.Color;
                 sb.Append(useColors ? Helpers.Cs(c, info.Name) : info.Name);
-                first = false;
             }
         }
 

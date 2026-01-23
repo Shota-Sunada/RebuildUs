@@ -20,7 +20,24 @@ public class Arsonist : RoleBase<Arsonist>
 
     public bool DousedEveryoneAlive()
     {
-        return PlayerControl.AllPlayerControls.GetFastEnumerator().ToArray().All(x => { return x.IsRole(RoleType.Arsonist) || x.Data.IsDead || x.Data.Disconnected || x.IsGM() || DousedPlayers.Any(y => y.PlayerId == x.PlayerId); });
+        var allPlayers = PlayerControl.AllPlayerControls;
+        for (var i = 0; i < allPlayers.Count; i++)
+        {
+            var p = allPlayers[i];
+            if (p.IsRole(RoleType.Arsonist) || p.Data.IsDead || p.Data.Disconnected || p.IsGM()) continue;
+
+            bool isDoused = false;
+            for (var j = 0; j < DousedPlayers.Count; j++)
+            {
+                if (DousedPlayers[j].PlayerId == p.PlayerId)
+                {
+                    isDoused = true;
+                    break;
+                }
+            }
+            if (!isDoused) return false;
+        }
+        return true;
     }
 
     public Arsonist()
@@ -44,12 +61,22 @@ public class Arsonist : RoleBase<Arsonist>
     }
     public override void FixedUpdate()
     {
-        if (PlayerControl.LocalPlayer.IsRole(RoleType.Arsonist))
+        var local = Local;
+        if (local != null)
         {
             List<PlayerControl> untargetables;
             if (DouseTarget != null)
             {
-                untargetables = [.. PlayerControl.AllPlayerControls.GetFastEnumerator().ToArray().Where(x => x.PlayerId != DouseTarget.PlayerId)];
+                untargetables = [];
+                var allPlayers = PlayerControl.AllPlayerControls;
+                for (var i = 0; i < allPlayers.Count; i++)
+                {
+                    var p = allPlayers[i];
+                    if (p.PlayerId != DouseTarget.PlayerId)
+                    {
+                        untargetables.Add(p);
+                    }
+                }
             }
             else
             {
@@ -154,19 +181,16 @@ public class Arsonist : RoleBase<Arsonist>
     }
     public override void SetButtonCooldowns()
     {
-        ArsonistButton.MaxTimer = Cooldown;
-        ArsonistButton.EffectDuration = Duration;
-        ArsonistIgniteButton.MaxTimer = 0f;
-        ArsonistIgniteButton.Timer = 0f;
-
+        if (ArsonistButton != null) ArsonistButton.MaxTimer = Cooldown;
+        if (Local != null)
+        {
+            UpdateStatus();
+        }
     }
 
     public void UpdateStatus()
     {
-        if (PlayerControl.LocalPlayer.IsRole(RoleType.Arsonist))
-        {
-            DousedEveryone = DousedEveryoneAlive();
-        }
+        DousedEveryone = DousedEveryoneAlive();
     }
 
     public void UpdateIcons()
@@ -176,15 +200,17 @@ public class Arsonist : RoleBase<Arsonist>
             pp.gameObject.SetActive(false);
         }
 
-        if (PlayerControl.LocalPlayer.IsRole(RoleType.Arsonist))
+        if (Local != null)
         {
             var visibleCounter = 0;
             var bottomLeft = FastDestroyableSingleton<HudManager>.Instance.UseButton.transform.localPosition;
             bottomLeft.x *= -1;
             bottomLeft += new Vector3(-0.25f, -0.25f, 0);
 
-            foreach (var p in PlayerControl.AllPlayerControls)
+            var allPlayers = PlayerControl.AllPlayerControls;
+            for (var i = 0; i < allPlayers.Count; i++)
             {
+                var p = allPlayers[i];
                 if (p.PlayerId == PlayerControl.LocalPlayer.PlayerId) continue;
                 if (!ModMapOptions.PlayerIcons.ContainsKey(p.PlayerId)) continue;
 
@@ -198,9 +224,18 @@ public class Arsonist : RoleBase<Arsonist>
                     ModMapOptions.PlayerIcons[p.PlayerId].transform.localScale = Vector3.one * 0.25f;
                     ModMapOptions.PlayerIcons[p.PlayerId].transform.localPosition = bottomLeft + Vector3.right * visibleCounter * 0.45f;
                     visibleCounter++;
+
+                    bool isDoused = false;
+                    for (var j = 0; j < DousedPlayers.Count; j++)
+                    {
+                        if (DousedPlayers[j].PlayerId == p.PlayerId)
+                        {
+                            isDoused = true;
+                            break;
+                        }
+                    }
+                    ModMapOptions.PlayerIcons[p.PlayerId].SetSemiTransparent(!isDoused);
                 }
-                var isDoused = DousedPlayers.Any(x => x.PlayerId == p.PlayerId);
-                ModMapOptions.PlayerIcons[p.PlayerId].SetSemiTransparent(!isDoused);
             }
         }
     }

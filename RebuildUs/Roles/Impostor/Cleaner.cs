@@ -35,33 +35,35 @@ public class Cleaner : RoleBase<Cleaner>
         CleanerCleanButton = new CustomButton(
                 () =>
                 {
-                    foreach (Collider2D collider2D in Physics2D.OverlapCircleAll(PlayerControl.LocalPlayer.GetTruePosition(), PlayerControl.LocalPlayer.MaxReportDistance, Constants.PlayersOnlyMask))
+                    var truePosition = PlayerControl.LocalPlayer.GetTruePosition();
+                    var maxDist = PlayerControl.LocalPlayer.MaxReportDistance;
+                    var bodies = UnityEngine.Object.FindObjectsOfType<DeadBody>();
+
+                    for (int i = 0; i < bodies.Length; i++)
                     {
-                        if (collider2D.tag == "DeadBody")
+                        var body = bodies[i];
+                        if (body == null || body.Reported) continue;
+
+                        var bodyPosition = body.TruePosition;
+                        var dist = Vector2.Distance(truePosition, bodyPosition);
+
+                        if (dist <= maxDist && PlayerControl.LocalPlayer.CanMove && !PhysicsHelpers.AnythingBetween(truePosition, bodyPosition, Constants.ShipAndObjectsMask, false))
                         {
-                            DeadBody component = collider2D.GetComponent<DeadBody>();
-                            if (component && !component.Reported)
+                            var playerInfo = GameData.Instance.GetPlayerById(body.ParentId);
+                            if (playerInfo == null) continue;
+
                             {
-                                Vector2 truePosition = PlayerControl.LocalPlayer.GetTruePosition();
-                                Vector2 truePosition2 = component.TruePosition;
-                                if (Vector2.Distance(truePosition2, truePosition) <= PlayerControl.LocalPlayer.MaxReportDistance && PlayerControl.LocalPlayer.CanMove && !PhysicsHelpers.AnythingBetween(truePosition, truePosition2, Constants.ShipAndObjectsMask, false))
-                                {
-                                    var playerInfo = GameData.Instance.GetPlayerById(component.ParentId);
-
-                                    {
-                                        using var sender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.CleanBody);
-                                        sender.Write(playerInfo.PlayerId);
-                                    }
-                                    RPCProcedure.CleanBody(playerInfo.PlayerId);
-
-                                    Player.killTimer = CleanerCleanButton.Timer = CleanerCleanButton.MaxTimer;
-                                    break;
-                                }
+                                using var sender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.CleanBody);
+                                sender.Write(playerInfo.PlayerId);
                             }
+                            RPCProcedure.CleanBody(playerInfo.PlayerId);
+
+                            Player.killTimer = CleanerCleanButton.Timer = CleanerCleanButton.MaxTimer;
+                            break;
                         }
                     }
                 },
-                () => { return PlayerControl.LocalPlayer.IsRole(RoleType.Cleaner) && PlayerControl.LocalPlayer.IsAlive(); },
+                () => { return Local != null && PlayerControl.LocalPlayer.IsAlive(); },
                 () => { return hm.ReportButton.graphic.color == Palette.EnabledColor && PlayerControl.LocalPlayer.CanMove; },
                 () => { CleanerCleanButton.Timer = CleanerCleanButton.MaxTimer; },
                 AssetLoader.CleanButton,

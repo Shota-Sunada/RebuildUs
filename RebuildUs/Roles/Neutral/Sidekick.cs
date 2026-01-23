@@ -21,8 +21,12 @@ public class Sidekick : RoleBase<Sidekick>
             Update.SetPlayerNameColor(Player, RoleColor);
             if (Jackal.Exists)
             {
-                var jk = Jackal.Players.FirstOrDefault();
-                if (jk != null) Update.SetPlayerNameColor(jk.Player, RoleColor);
+                var jkPlayers = Jackal.Players;
+                if (jkPlayers.Count > 0)
+                {
+                    var jk = jkPlayers[0];
+                    if (jk != null) Update.SetPlayerNameColor(jk.Player, RoleColor);
+                }
             }
         }
         else if (lp.IsTeamImpostor() && WasTeamRed)
@@ -48,12 +52,22 @@ public class Sidekick : RoleBase<Sidekick>
     public override void OnIntroEnd() { }
     public override void FixedUpdate()
     {
-        if (PlayerControl.LocalPlayer.IsRole(RoleType.Sidekick))
+        var local = Local;
+        if (local != null)
         {
             var untargetablePlayers = new List<PlayerControl>();
-            if (Jackal.Exists) untargetablePlayers.AddRange(Jackal.AllPlayers);
-            foreach (var mini in Mini.Players)
+            if (Jackal.Exists)
             {
+                var jkPlayers = Jackal.AllPlayers;
+                for (var i = 0; i < jkPlayers.Count; i++)
+                {
+                    untargetablePlayers.Add(jkPlayers[i]);
+                }
+            }
+            var miniPlayers = Mini.Players;
+            for (var i = 0; i < miniPlayers.Count; i++)
+            {
+                var mini = miniPlayers[i];
                 if (!Mini.IsGrownUp(mini.Player))
                 {
                     untargetablePlayers.Add(mini.Player);

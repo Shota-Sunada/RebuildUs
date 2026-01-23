@@ -33,40 +33,40 @@ public class Vulture : RoleBase<Vulture>
     {
         if (LocalArrows == null || !ShowArrows) return;
 
-        if (PlayerControl.LocalPlayer.IsRole(RoleType.Vulture))
+        var local = Local;
+        if (local != null)
         {
             if (Player.IsDead())
             {
-                foreach (var arrow in LocalArrows)
+                for (var i = 0; i < LocalArrows.Count; i++)
                 {
-                    UnityEngine.Object.Destroy(arrow.ArrowObject);
+                    UnityEngine.Object.Destroy(LocalArrows[i].ArrowObject);
                 }
-                LocalArrows = [];
+                LocalArrows.Clear();
                 return;
             }
 
             DeadBody[] deadBodies = UnityEngine.Object.FindObjectsOfType<DeadBody>();
             var arrowUpdate = LocalArrows.Count != deadBodies.Length;
-            int index = 0;
 
             if (arrowUpdate)
             {
-                foreach (var arrow in LocalArrows)
+                for (var i = 0; i < LocalArrows.Count; i++)
                 {
-                    UnityEngine.Object.Destroy(arrow.ArrowObject);
+                    UnityEngine.Object.Destroy(LocalArrows[i].ArrowObject);
                 }
-                LocalArrows = [];
+                LocalArrows.Clear();
             }
 
-            foreach (var db in deadBodies)
+            for (var i = 0; i < deadBodies.Length; i++)
             {
+                var db = deadBodies[i];
                 if (arrowUpdate)
                 {
                     LocalArrows.Add(new(Color.blue));
-                    LocalArrows[index].ArrowObject.SetActive(true);
+                    LocalArrows[i].ArrowObject.SetActive(true);
                 }
-                LocalArrows[index]?.Update(db.transform.position);
-                index++;
+                LocalArrows[i]?.Update(db.transform.position);
             }
         }
     }
@@ -79,30 +79,33 @@ public class Vulture : RoleBase<Vulture>
         VultureEatButton = new CustomButton(
                 () =>
                 {
-                    foreach (var collider2D in Physics2D.OverlapCircleAll(PlayerControl.LocalPlayer.GetTruePosition(), PlayerControl.LocalPlayer.MaxReportDistance, Constants.PlayersOnlyMask))
+                    var bodies = UnityEngine.Object.FindObjectsOfType<DeadBody>();
+                    var local = PlayerControl.LocalPlayer;
+                    var truePosition = local.GetTruePosition();
+                    var maxDist = local.MaxReportDistance;
+
+                    for (var i = 0; i < bodies.Length; i++)
                     {
-                        if (collider2D.tag == "DeadBody")
+                        var body = bodies[i];
+                        if (body == null || body.Reported) continue;
+
+                        var bodyPos = body.TruePosition;
+                        if (Vector2.Distance(bodyPos, truePosition) <= maxDist && local.CanMove && !PhysicsHelpers.AnythingBetween(truePosition, bodyPos, Constants.ShipAndObjectsMask, false))
                         {
-                            var component = collider2D.GetComponent<DeadBody>();
-                            if (component && !component.Reported)
+                            var playerInfo = GameData.Instance.GetPlayerById(body.ParentId);
+                            if (playerInfo != null)
                             {
-                                var truePosition = PlayerControl.LocalPlayer.GetTruePosition();
-                                var truePosition2 = component.TruePosition;
-                                if (Vector2.Distance(truePosition2, truePosition) <= PlayerControl.LocalPlayer.MaxReportDistance && PlayerControl.LocalPlayer.CanMove && !PhysicsHelpers.AnythingBetween(truePosition, truePosition2, Constants.ShipAndObjectsMask, false))
-                                {
-                                    var playerInfo = GameData.Instance.GetPlayerById(component.ParentId);
+                                using var sender = new RPCSender(local.NetId, CustomRPC.VultureEat);
+                                sender.Write(playerInfo.PlayerId);
+                                sender.Write(local.PlayerId);
+                                RPCProcedure.VultureEat(playerInfo.PlayerId, local.PlayerId);
 
-                                    using var sender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.VultureEat);
-                                    sender.Write(playerInfo.PlayerId);
-                                    sender.Write(PlayerControl.LocalPlayer.PlayerId);
-                                    RPCProcedure.VultureEat(playerInfo.PlayerId, PlayerControl.LocalPlayer.PlayerId);
-
-                                    VultureEatButton.Timer = VultureEatButton.MaxTimer;
-                                    break;
-                                }
+                                VultureEatButton.Timer = VultureEatButton.MaxTimer;
+                                break;
                             }
                         }
                     }
+
                     if (Local.EatenBodies >= NumberToWin)
                     {
                         using var sender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.VultureWin);
@@ -140,19 +143,21 @@ public class Vulture : RoleBase<Vulture>
 
     public static void Clear()
     {
-        // reset configs here
         TriggerVultureWin = false;
-        foreach (var p in Players)
+        for (var i = 0; i < Players.Count; i++)
         {
+            var p = Players[i];
             if (p.LocalArrows != null)
             {
-                foreach (var arrow in p.LocalArrows)
+                for (var j = 0; j < p.LocalArrows.Count; j++)
                 {
+                    var arrow = p.LocalArrows[j];
                     if (arrow?.ArrowObject != null)
                     {
                         UnityEngine.Object.Destroy(arrow.ArrowObject);
                     }
                 }
+                p.LocalArrows.Clear();
             }
         }
         Players.Clear();

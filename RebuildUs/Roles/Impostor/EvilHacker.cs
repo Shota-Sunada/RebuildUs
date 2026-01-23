@@ -39,8 +39,8 @@ public class EvilHacker : RoleBase<EvilHacker>
     public override void OnIntroEnd() { }
     public override void FixedUpdate()
     {
-
-        if (PlayerControl.LocalPlayer.IsRole(RoleType.EvilHacker))
+        var local = Local;
+        if (local != null)
         {
             CurrentTarget = Helpers.SetTarget(true);
             Helpers.SetPlayerOutline(CurrentTarget, RoleColor);

@@ -11,9 +11,10 @@ public class AntiTeleport : ModifierBase<AntiTeleport>
         get
         {
             List<PlayerControl> validPlayers = [];
-
-            foreach (var player in PlayerControl.AllPlayerControls.GetFastEnumerator())
+            var allPlayers = PlayerControl.AllPlayerControls;
+            for (var i = 0; i < allPlayers.Count; i++)
             {
+                var player = allPlayers[i];
                 if (!player.HasModifier(ModifierType.AntiTeleport))
                 {
                     validPlayers.Add(player);

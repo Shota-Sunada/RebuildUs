@@ -29,7 +29,8 @@ public class Morphing : RoleBase<Morphing>
     }
     public override void FixedUpdate()
     {
-        if (!PlayerControl.LocalPlayer.IsRole(RoleType.Morphing)) return;
+        var local = Local;
+        if (local == null) return;
         CurrentTarget = Helpers.SetTarget();
         Helpers.SetPlayerOutline(CurrentTarget, RoleColor);
     }
@@ -127,9 +128,9 @@ public class Morphing : RoleBase<Morphing>
     {
         MorphTarget = null;
         MorphTimer = 0f;
-        foreach (var morph in Players)
+        for (var i = 0; i < Players.Count; i++)
         {
-            morph.HandleMorphing();
+            Players[i].HandleMorphing();
         }
     }
 

@@ -11,9 +11,10 @@ public class Mini : ModifierBase<Mini>
         get
         {
             List<PlayerControl> validPlayers = [];
-
-            foreach (var player in PlayerControl.AllPlayerControls.GetFastEnumerator())
+            var allPlayers = PlayerControl.AllPlayerControls;
+            for (var i = 0; i < allPlayers.Count; i++)
             {
+                var player = allPlayers[i];
                 if (!player.HasModifier(ModifierType.Mini))
                 {
                     validPlayers.Add(player);
@@ -39,9 +40,15 @@ public class Mini : ModifierBase<Mini>
 
     public static bool IsGrownUp(PlayerControl player)
     {
-        Mini mini = Players.First(x => x.Player == player);
-        if (mini == null) return true;
-        return mini.GrowingProgress() == 1f;
+        for (var i = 0; i < Players.Count; i++)
+        {
+            var mini = Players[i];
+            if (mini.Player == player)
+            {
+                return mini.GrowingProgress() == 1f;
+            }
+        }
+        return true;
     }
     public static string Postfix
     {

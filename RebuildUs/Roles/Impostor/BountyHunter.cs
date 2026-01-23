@@ -50,18 +50,22 @@ public class BountyHunter : RoleBase<BountyHunter>
             }
         }
     }
+    private static int _lastSecond = -1;
+
     public override void FixedUpdate()
     {
-        if (PlayerControl.LocalPlayer.IsRole(RoleType.BountyHunter))
+        var local = Local;
+        if (local != null)
         {
             if (Player.IsDead())
             {
-                if (Arrow != null || Arrow.ArrowObject != null) UnityEngine.Object.Destroy(Arrow.ArrowObject);
+                if (Arrow != null && Arrow.ArrowObject != null) UnityEngine.Object.Destroy(Arrow.ArrowObject);
                 Arrow = null;
                 if (CooldownText != null && CooldownText.gameObject != null) UnityEngine.Object.Destroy(CooldownText.gameObject);
                 CooldownText = null;
                 Bounty = null;
-                foreach (PoolablePlayer p in ModMapOptions.PlayerIcons.Values)
+                _lastSecond = -1;
+                foreach (var p in ModMapOptions.PlayerIcons.Values)
                 {
                     if (p != null && p.gameObject != null) p.gameObject.SetActive(false);
                 }
@@ -78,20 +82,31 @@ public class BountyHunter : RoleBase<BountyHunter>
                 ArrowUpdateTimer = 0f; // Force arrow to update
                 BountyUpdateTimer = BountyDuration;
                 var possibleTargets = new List<PlayerControl>();
-                foreach (var p in PlayerControl.AllPlayerControls)
+                var players = PlayerControl.AllPlayerControls;
+                var partner = Player.GetPartner();
+
+                for (int i = 0; i < players.Count; i++)
                 {
+                    var p = players[i];
+                    if (p == null || p.Data == null) continue;
+
                     if (!p.Data.IsDead && !p.Data.Disconnected && !p.Data.Role.IsImpostor && !p.IsRole(RoleType.Spy)
                     && (!p.IsRole(RoleType.Sidekick) || !Sidekick.GetRole(p).WasTeamRed)
                     && (!p.IsRole(RoleType.Jackal) || !Jackal.GetRole(p).WasTeamRed)
                     && !(p.HasModifier(ModifierType.Mini) && !Mini.IsGrownUp(p))
                     && !p.IsGM()
-                    && Player.GetPartner() != p
+                    && partner != p
                     )
                     {
                         possibleTargets.Add(p);
                     }
                 }
-                Bounty = possibleTargets[RebuildUs.Instance.Rnd.Next(0, possibleTargets.Count)];
+
+                if (possibleTargets.Count > 0)
+                {
+                    Bounty = possibleTargets[RebuildUs.Instance.Rnd.Next(0, possibleTargets.Count)];
+                }
+
                 if (Bounty == null) return;
 
                 // Show poolable player
@@ -99,23 +114,31 @@ public class BountyHunter : RoleBase<BountyHunter>
                 {
                     foreach (var pp in ModMapOptions.PlayerIcons.Values)
                     {
-                        pp.gameObject.SetActive(false);
+                        if (pp != null && pp.gameObject != null) pp.gameObject.SetActive(false);
                     }
-                    if (ModMapOptions.PlayerIcons.ContainsKey(Bounty.PlayerId) && ModMapOptions.PlayerIcons[Bounty.PlayerId].gameObject != null)
+                    if (ModMapOptions.PlayerIcons.TryGetValue(Bounty.PlayerId, out var icon) && icon != null && icon.gameObject != null)
                     {
-                        ModMapOptions.PlayerIcons[Bounty.PlayerId].gameObject.SetActive(true);
+                        icon.gameObject.SetActive(true);
                     }
                 }
             }
 
             // Hide in meeting
-            if (MeetingHud.Instance && ModMapOptions.PlayerIcons.ContainsKey(Bounty.PlayerId) && ModMapOptions.PlayerIcons[Bounty.PlayerId].gameObject != null)
+            if (MeetingHud.Instance && ModMapOptions.PlayerIcons.TryGetValue(Bounty.PlayerId, out var mIcon) && mIcon != null && mIcon.gameObject != null)
             {
-                ModMapOptions.PlayerIcons[Bounty.PlayerId].gameObject.SetActive(false);
+                mIcon.gameObject.SetActive(false);
             }
 
             // Update Cooldown Text
-            CooldownText?.text = Mathf.CeilToInt(Mathf.Clamp(BountyUpdateTimer, 0, BountyDuration)).ToString();
+            if (CooldownText != null)
+            {
+                int currentSecond = Mathf.CeilToInt(Mathf.Clamp(BountyUpdateTimer, 0, BountyDuration));
+                if (currentSecond != _lastSecond)
+                {
+                    _lastSecond = currentSecond;
+                    CooldownText.text = currentSecond.ToString();
+                }
+            }
 
             // Update Arrow
             if (ShowArrow && Bounty != null)

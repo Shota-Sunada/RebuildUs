@@ -25,8 +25,14 @@ public static class Lovers
     {
         if (IsLovers(player))
         {
-            var couple = Couples.Find(x => x.Lover1 == player || x.Lover2 == player);
-            return couple.Icon;
+            for (var i = 0; i < Couples.Count; i++)
+            {
+                var couple = Couples[i];
+                if (couple.Lover1 == player || couple.Lover2 == player)
+                {
+                    return couple.Icon;
+                }
+            }
         }
         return "";
     }
@@ -34,11 +40,22 @@ public static class Lovers
     public static void AddCouple(PlayerControl player1, PlayerControl player2)
     {
         var availableColors = new List<Color>(LoverIconColors);
-        foreach (var couple in Couples)
+        for (var i = 0; i < Couples.Count; i++)
         {
-            availableColors.RemoveAll(x => x == couple.Color);
+            var color = Couples[i].Color;
+            for (var j = availableColors.Count - 1; j >= 0; j--)
+            {
+                if (availableColors[j] == color)
+                {
+                    availableColors.RemoveAt(j);
+                    break;
+                }
+            }
         }
-        Couples.Add(new Couple(player1, player2, availableColors[0]));
+        if (availableColors.Count > 0)
+        {
+            Couples.Add(new Couple(player1, player2, availableColors[0]));
+        }
     }
 
     public static void EraseCouple(PlayerControl player)
@@ -123,9 +140,11 @@ public static class Lovers
 
     public static Couple GetCouple(PlayerControl player)
     {
-        foreach (var pair in Couples)
+        if (player == null) return null;
+        for (var i = 0; i < Couples.Count; i++)
         {
-            if (pair.Lover1?.PlayerId == player?.PlayerId || pair.Lover2?.PlayerId == player?.PlayerId) return pair;
+            var pair = Couples[i];
+            if (pair.Lover1?.PlayerId == player.PlayerId || pair.Lover2?.PlayerId == player.PlayerId) return pair;
         }
         return null;
     }
@@ -137,18 +156,18 @@ public static class Lovers
 
     public static bool AnyAlive()
     {
-        foreach (var couple in Couples)
+        for (var i = 0; i < Couples.Count; i++)
         {
-            if (couple.Alive) return true;
+            if (Couples[i].Alive) return true;
         }
         return false;
     }
 
     public static bool AnyNonKillingCouples()
     {
-        foreach (var couple in Couples)
+        for (var i = 0; i < Couples.Count; i++)
         {
-            if (!couple.HasAliveKillingLover) return true;
+            if (!Couples[i].HasAliveKillingLover) return true;
         }
         return false;
     }

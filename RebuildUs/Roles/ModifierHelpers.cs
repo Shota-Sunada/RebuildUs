@@ -12,8 +12,10 @@ public static class ModifierHelpers
     {
         if (MethodCache.TryGetValue(modType, out var cached)) return cached;
 
-        foreach (var reg in ModifierData.Modifiers)
+        var modifiers = ModifierData.Modifiers;
+        for (var i = 0; i < modifiers.Length; i++)
         {
+            var reg = modifiers[i];
             if (reg.modType == modType)
             {
                 var type = reg.classType;
@@ -97,8 +99,10 @@ public static class ModifierHelpers
     {
         if (player == null) return;
 
-        foreach (var reg in ModifierData.Modifiers)
+        var modifiers = ModifierData.Modifiers;
+        for (var i = 0; i < modifiers.Length; i++)
         {
+            var reg = modifiers[i];
             if (reg.classType == null) continue;
             var methods = GetMethods(reg.modType);
             methods.eraseModifier?.Invoke(null, [player]);
@@ -109,8 +113,10 @@ public static class ModifierHelpers
     {
         if (player == null || target == null) return;
 
-        foreach (var reg in ModifierData.Modifiers)
+        var modifiers = ModifierData.Modifiers;
+        for (var i = 0; i < modifiers.Length; i++)
         {
+            var reg = modifiers[i];
             if (reg.classType != null && player.HasModifier(reg.modType))
             {
                 var methods = GetMethods(reg.modType);

@@ -222,8 +222,10 @@ public class LastImpostor : ModifierBase<LastImpostor>
         if (!IsEnable) return;
 
         var impList = new List<PlayerControl>();
-        foreach (var p in PlayerControl.AllPlayerControls.GetFastEnumerator())
+        var allPlayers = PlayerControl.AllPlayerControls;
+        for (var i = 0; i < allPlayers.Count; i++)
         {
+            var p = allPlayers[i];
             if (p.IsTeamImpostor() && p.IsAlive()) impList.Add(p);
         }
         if (impList.Count == 1)
@@ -279,7 +281,15 @@ public class LastImpostor : ModifierBase<LastImpostor>
         else if (DivineResult == DivineResults.Role)
         {
             msgBase = "Option.DivineMessageRole";
-            msgInfo = string.Join(" ", [.. RoleInfo.GetRoleInfoForPlayer(p).Select(x => Helpers.Cs(x.Color, x.Name))]);
+            var roleInfos = RoleInfo.GetRoleInfoForPlayer(p);
+            var sb = new System.Text.StringBuilder();
+            for (var i = 0; i < roleInfos.Count; i++)
+            {
+                if (i > 0) sb.Append(" ");
+                var info = roleInfos[i];
+                sb.Append(Helpers.Cs(info.Color, info.Name));
+            }
+            msgInfo = sb.ToString();
         }
 
         string msg = string.Format(Tr.Get(msgBase), p.name, msgInfo);
@@ -303,8 +313,10 @@ public class LastImpostor : ModifierBase<LastImpostor>
     {
         if (PlayerControl.LocalPlayer != null && FastDestroyableSingleton<HudManager>.Instance != null)
         {
-            foreach (PlayerControl p in PlayerControl.AllPlayerControls)
+            var allPlayers = PlayerControl.AllPlayerControls;
+            for (var i = 0; i < allPlayers.Count; i++)
             {
+                var p = allPlayers[i];
                 var player = UnityEngine.Object.Instantiate(__instance.PlayerPrefab, FastDestroyableSingleton<HudManager>.Instance.transform);
                 player.UpdateFromPlayerOutfit(p.Data.DefaultOutfit, PlayerMaterial.MaskType.ComplexUI, p.Data.IsDead, true);
                 player.SetFlipX(true);

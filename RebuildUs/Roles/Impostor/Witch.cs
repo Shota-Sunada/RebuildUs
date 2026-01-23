@@ -30,30 +30,45 @@ public class Witch : RoleBase<Witch>
     public override void OnIntroEnd() { }
     public override void FixedUpdate()
     {
-        if (!PlayerControl.LocalPlayer.IsRole(RoleType.Witch)) return;
-        List<PlayerControl> untargetables;
+        var local = Local;
+        if (local == null) return;
+        List<PlayerControl> untargetables = [];
         if (SpellCastingTarget != null)
         {
-            untargetables = [.. PlayerControl.AllPlayerControls.GetFastEnumerator().ToArray().Where(x => x.PlayerId != SpellCastingTarget.PlayerId)]; // Don't switch the target from the the one you're currently casting a spell on
+            var allPlayers = PlayerControl.AllPlayerControls;
+            for (var i = 0; i < allPlayers.Count; i++)
+            {
+                var p = allPlayers[i];
+                if (p.PlayerId != SpellCastingTarget.PlayerId)
+                {
+                    untargetables.Add(p);
+                }
+            }
         }
         else
         {
             // Also target players that have already been spelled, to hide spells that were blanks/blocked by shields
-            untargetables = [];
             if (Spy.Exists && !CanSpellAnyone)
             {
-                untargetables.AddRange(Spy.AllPlayers);
+                var spyPlayers = Spy.AllPlayers;
+                for (var i = 0; i < spyPlayers.Count; i++)
+                {
+                    untargetables.Add(spyPlayers[i]);
+                }
             }
-            foreach (var sidekick in Sidekick.Players)
+            var sidekickPlayers = Sidekick.Players;
+            for (var i = 0; i < sidekickPlayers.Count; i++)
             {
+                var sidekick = sidekickPlayers[i];
                 if (sidekick.WasTeamRed && !CanSpellAnyone)
                 {
                     untargetables.Add(sidekick.Player);
                 }
             }
-
-            foreach (var jackal in Jackal.Players)
+            var jackalPlayers = Jackal.Players;
+            for (var i = 0; i < jackalPlayers.Count; i++)
             {
+                var jackal = jackalPlayers[i];
                 if (jackal.WasTeamRed && !CanSpellAnyone)
                 {
                     untargetables.Add(jackal.Player);
@@ -62,7 +77,6 @@ public class Witch : RoleBase<Witch>
         }
         CurrentTarget = Helpers.SetTarget(onlyCrewmates: !CanSpellAnyone, untargetablePlayers: untargetables);
         Helpers.SetPlayerOutline(CurrentTarget, RoleColor);
-
     }
     public override void OnKill(PlayerControl target)
     {

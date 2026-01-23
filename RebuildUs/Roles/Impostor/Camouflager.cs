@@ -85,10 +85,12 @@ public class Camouflager : RoleBase<Camouflager>
     {
         CamouflageTimer = Duration;
 
-        Data.ColorId = RandomColors ? (byte)RebuildUs.Instance.Rnd.Next(0, Palette.PlayerColors.Length) : 6;
+        Data.ColorId = RandomColors ? (byte)RebuildUs.Instance.Rnd.Next(0, Palette.PlayerColors.Length) : (byte)6;
 
-        foreach (PlayerControl p in PlayerControl.AllPlayerControls)
+        var players = PlayerControl.AllPlayerControls;
+        for (int i = 0; i < players.Count; i++)
         {
+            var p = players[i];
             if (p == null) continue;
             p.SetOutfit(Data, visible: false);
         }
@@ -97,14 +99,17 @@ public class Camouflager : RoleBase<Camouflager>
     public static void ResetCamouflage()
     {
         CamouflageTimer = 0f;
-        foreach (var p in PlayerControl.AllPlayerControls)
+        var players = PlayerControl.AllPlayerControls;
+        for (int i = 0; i < players.Count; i++)
         {
+            var p = players[i];
             if (p == null) continue;
 
             // special case for morphing
             if (p.IsRole(RoleType.Morphing))
             {
-                Morphing.GetRole(p).HandleMorphing();
+                var morphRole = Morphing.GetRole(p);
+                if (morphRole != null) morphRole.HandleMorphing();
             }
             else
             {

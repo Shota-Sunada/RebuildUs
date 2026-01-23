@@ -26,7 +26,8 @@ public class Warlock : RoleBase<Warlock>
     public override void OnIntroEnd() { }
     public override void FixedUpdate()
     {
-        if (!PlayerControl.LocalPlayer.IsRole(RoleType.Warlock)) return;
+        var local = Local;
+        if (local == null) return;
         if (CurseVictim != null && (CurseVictim.Data.Disconnected || CurseVictim.Data.IsDead))
         {
             // If the cursed victim is disconnected or dead reset the curse so a new curse can be applied

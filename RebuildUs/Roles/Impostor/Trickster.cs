@@ -25,8 +25,11 @@ public class Trickster : RoleBase<Trickster>
     public override void OnIntroEnd() { }
     public override void FixedUpdate()
     {
-
-        LightsOutTimer -= Time.deltaTime;
+        var local = Local;
+        if (local != null)
+        {
+            LightsOutTimer -= Time.deltaTime;
+        }
     }
     public override void OnKill(PlayerControl target) { }
     public override void OnDeath(PlayerControl killer = null) { }

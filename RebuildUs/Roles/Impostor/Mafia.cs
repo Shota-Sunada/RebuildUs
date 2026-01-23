@@ -133,28 +133,28 @@ public static class Mafia
             JanitorCleanButton = new CustomButton(
                 () =>
                 {
-                    foreach (var collider2D in Physics2D.OverlapCircleAll(PlayerControl.LocalPlayer.GetTruePosition(), PlayerControl.LocalPlayer.MaxReportDistance, Constants.PlayersOnlyMask))
+                    var bodies = Helpers.AllBodies;
+                    var local = PlayerControl.LocalPlayer;
+                    var truePosition = local.GetTruePosition();
+                    var maxDist = local.MaxReportDistance;
+
+                    for (var i = 0; i < bodies.Count; i++)
                     {
-                        if (collider2D.tag == "DeadBody")
+                        var body = bodies[i];
+                        if (body == null || body.Reported) continue;
+
+                        var bodyPos = body.TruePosition;
+                        if (Vector2.Distance(bodyPos, truePosition) <= maxDist && local.CanMove && !PhysicsHelpers.AnythingBetween(truePosition, bodyPos, Constants.ShipAndObjectsMask, false))
                         {
-                            DeadBody component = collider2D.GetComponent<DeadBody>();
-                            if (component && !component.Reported)
+                            var playerInfo = GameData.Instance.GetPlayerById(body.ParentId);
+                            if (playerInfo != null)
                             {
-                                Vector2 truePosition = PlayerControl.LocalPlayer.GetTruePosition();
-                                Vector2 truePosition2 = component.TruePosition;
-                                if (Vector2.Distance(truePosition2, truePosition) <= PlayerControl.LocalPlayer.MaxReportDistance && PlayerControl.LocalPlayer.CanMove && !PhysicsHelpers.AnythingBetween(truePosition, truePosition2, Constants.ShipAndObjectsMask, false))
-                                {
-                                    var playerInfo = GameData.Instance.GetPlayerById(component.ParentId);
+                                using var sender = new RPCSender(local.NetId, CustomRPC.CleanBody);
+                                sender.Write(playerInfo.PlayerId);
+                                RPCProcedure.CleanBody(playerInfo.PlayerId);
 
-                                    {
-                                        using var sender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.CleanBody);
-                                        sender.Write(playerInfo.PlayerId);
-                                        RPCProcedure.CleanBody(playerInfo.PlayerId);
-                                    }
-                                    JanitorCleanButton.Timer = JanitorCleanButton.MaxTimer;
-
-                                    break;
-                                }
+                                JanitorCleanButton.Timer = JanitorCleanButton.MaxTimer;
+                                break;
                             }
                         }
                     }

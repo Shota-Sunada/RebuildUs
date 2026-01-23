@@ -27,8 +27,10 @@ public class Madmate : ModifierBase<Madmate>
 
             if (KnowsImpostors(Player))
             {
-                foreach (var p in PlayerControl.AllPlayerControls.GetFastEnumerator())
+                var allPlayers = PlayerControl.AllPlayerControls;
+                for (var i = 0; i < allPlayers.Count; i++)
                 {
+                    var p = allPlayers[i];
                     if (p.IsTeamImpostor() || p.IsRole(RoleType.Spy) || (p.IsRole(RoleType.Jackal) && Jackal.GetRole(p).WasTeamRed) || (p.IsRole(RoleType.Sidekick) && Sidekick.GetRole(p).WasTeamRed))
                     {
                         Update.SetPlayerNameColor(p, Palette.ImpostorRed);
@@ -100,23 +102,52 @@ public class Madmate : ModifierBase<Madmate>
             List<PlayerControl> crewNoRole = [];
             List<PlayerControl> validCrewmates = [];
 
-            foreach (var player in PlayerControl.AllPlayerControls.GetFastEnumerator().ToArray().Where(x => x.IsTeamCrewmate() && !HasModifier(x)).ToList())
+            var allPlayers = PlayerControl.AllPlayerControls;
+            for (var i = 0; i < allPlayers.Count; i++)
             {
-                var info = RoleInfo.GetRoleInfoForPlayer(player);
-                // if (info.Contains(RoleInfo.Crewmate) && !player.HasModifier(ModifierType.Munou) && !player.IsRole(RoleType.FortuneTeller))
-                if (info.Contains(RoleInfo.Crewmate) && !player.IsRole(RoleType.FortuneTeller))
+                var player = allPlayers[i];
+                if (player.IsTeamCrewmate() && !HasModifier(player))
                 {
-                    crewNoRole.Add(player);
-                    validCrewmates.Add(player);
-                }
-                else if (info.Any(x => ValidRoles.Contains(x.RoleType)))
-                {
-                    if (FixedRole == RoleType.NoRole || info.Any(x => x.RoleType == FixedRole))
+                    var info = RoleInfo.GetRoleInfoForPlayer(player);
+                    // if (info.Contains(RoleInfo.Crewmate) && !player.HasModifier(ModifierType.Munou) && !player.IsRole(RoleType.FortuneTeller))
+
+                    bool isCrewmateOnly = false;
+                    bool isFortuneTeller = false;
+                    bool hasValidRole = false;
+                    bool hasFixedRole = false;
+
+                    for (var j = 0; j < info.Count; j++)
                     {
-                        crewHasRole.Add(player);
+                        var ri = info[j];
+                        if (ri.RoleType == RoleType.Crewmate) isCrewmateOnly = true;
+                        if (ri.RoleType == RoleType.FortuneTeller) isFortuneTeller = true;
+
+                        for (var k = 0; k < ValidRoles.Length; k++)
+                        {
+                            if (ri.RoleType == ValidRoles[k])
+                            {
+                                hasValidRole = true;
+                                break;
+                            }
+                        }
+
+                        if (ri.RoleType == FixedRole) hasFixedRole = true;
                     }
 
-                    validCrewmates.Add(player);
+                    if (isCrewmateOnly && !isFortuneTeller)
+                    {
+                        crewNoRole.Add(player);
+                        validCrewmates.Add(player);
+                    }
+                    else if (hasValidRole)
+                    {
+                        if (FixedRole == RoleType.NoRole || hasFixedRole)
+                        {
+                            crewHasRole.Add(player);
+                        }
+
+                        validCrewmates.Add(player);
+                    }
                 }
             }
 
@@ -136,9 +167,10 @@ public class Madmate : ModifierBase<Madmate>
     public override void OnMeetingStart() { }
     public override void OnMeetingEnd() { }
     public override void OnIntroEnd() { }
-    public override void FixedUpdate() { }
-    public override void OnKill(PlayerControl target) { }
-    public override void OnDeath(PlayerControl killer = null)
+    publvar tasks = player.Data.Tasks;
+        for (var i = 0; i<tasks.Count; i++)
+        {
+            if (tasks[i]void OnDeath(PlayerControl killer = null)
     {
         Player.ClearAllTasks();
     }

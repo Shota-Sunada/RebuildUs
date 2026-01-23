@@ -25,14 +25,24 @@ public class Eraser : RoleBase<Eraser>
     public override void OnIntroEnd() { }
     public override void FixedUpdate()
     {
-        if (PlayerControl.LocalPlayer.IsRole(RoleType.Eraser))
+        var local = Local;
+        if (local != null)
         {
             List<PlayerControl> untargetables = [];
-            if (Spy.Exists) untargetables.AddRange(Spy.AllPlayers);
+            if (Spy.Exists)
+            {
+                var spyPlayers = Spy.AllPlayers;
+                for (var i = 0; i < spyPlayers.Count; i++)
+                {
+                    untargetables.Add(spyPlayers[i]);
+                }
+            }
             if (Sidekick.Exists)
             {
-                foreach (var sidekick in Sidekick.Players)
+                var sidekickPlayers = Sidekick.Players;
+                for (var i = 0; i < sidekickPlayers.Count; i++)
                 {
+                    var sidekick = sidekickPlayers[i];
                     if (sidekick.WasTeamRed)
                     {
                         untargetables.Add(sidekick.Player);
@@ -41,8 +51,10 @@ public class Eraser : RoleBase<Eraser>
             }
             if (Jackal.Exists)
             {
-                foreach (var jackal in Jackal.Players)
+                var jackalPlayers = Jackal.Players;
+                for (var i = 0; i < jackalPlayers.Count; i++)
                 {
+                    var jackal = jackalPlayers[i];
                     if (jackal.WasTeamRed)
                     {
                         untargetables.Add(jackal.Player);

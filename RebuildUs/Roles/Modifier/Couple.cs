@@ -15,8 +15,8 @@ public class Couple(PlayerControl lover1, PlayerControl lover2, Color color)
         get
         {
             return Existing
-                && (Lover1.IsRole(RoleType.Jackal) || Lover2.IsRole(RoleType.Jackal))
-                && (Lover1.IsRole(RoleType.Sidekick) || Lover2.IsRole(RoleType.Sidekick))
+                && (RoleHelpers.IsRole(Lover1, RoleType.Jackal) || RoleHelpers.IsRole(Lover2, RoleType.Jackal))
+                && (RoleHelpers.IsRole(Lover1, RoleType.Sidekick) || RoleHelpers.IsRole(Lover2, RoleType.Sidekick))
                 && (Lover1.IsTeamImpostor() || Lover2.IsTeamImpostor()
             );
         }

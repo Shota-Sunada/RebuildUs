@@ -36,12 +36,11 @@ public class EvilTracker : RoleBase<EvilTracker>
     public override void OnIntroEnd() { }
     public override void FixedUpdate()
     {
-        if (PlayerControl.LocalPlayer.IsRole(RoleType.EvilTracker))
+        var local = Local;
+        if (local != null)
         {
             ArrowUpdate();
-        }
-        if (Player.IsAlive())
-        {
+
             CurrentTarget = Helpers.SetTarget();
             Helpers.SetPlayerOutline(CurrentTarget, Palette.ImpostorRed);
         }
@@ -98,10 +97,10 @@ public class EvilTracker : RoleBase<EvilTracker>
         // 1秒経過したらArrowを更新
         if (UpdateTimer <= 0.0f)
         {
-
             // 前回のArrowをすべて破棄する
-            foreach (Arrow arrow in Arrows)
+            for (var i = 0; i < Arrows.Count; i++)
             {
+                var arrow = Arrows[i];
                 if (arrow != null && arrow.ArrowObject != null)
                 {
                     arrow.ArrowObject.SetActive(false);
@@ -110,29 +109,31 @@ public class EvilTracker : RoleBase<EvilTracker>
             }
 
             // Arrows一覧
-            Arrows = [];
+            Arrows.Clear();
 
             // インポスターの位置を示すArrowsを描画
             int count = 0;
-            foreach (PlayerControl p in PlayerControl.AllPlayerControls)
+            var allPlayers = PlayerControl.AllPlayerControls;
+            var sb = new System.Text.StringBuilder();
+            for (var i = 0; i < allPlayers.Count; i++)
             {
+                var p = allPlayers[i];
                 if (p.Data.IsDead)
                 {
-                    if (p.IsTeamImpostor() && ImpostorPositionText.ContainsKey(p.name))
+                    if (p.IsTeamImpostor() && ImpostorPositionText.TryGetValue(p.name, out var txt))
                     {
-                        ImpostorPositionText[p.name].text = "";
+                        txt.text = "";
                     }
                     continue;
                 }
-                Arrow arrow;
-                if (p.IsTeamImpostor() && p != PlayerControl.LocalPlayer)
+                if (p.IsTeamImpostor() && p.PlayerId != PlayerControl.LocalPlayer.PlayerId)
                 {
-                    arrow = new Arrow(Palette.ImpostorRed);
+                    var arrow = new Arrow(Palette.ImpostorRed);
                     arrow.ArrowObject.SetActive(true);
                     arrow.Update(p.transform.position);
                     Arrows.Add(arrow);
                     count += 1;
-                    if (!ImpostorPositionText.ContainsKey(p.name))
+                    if (!ImpostorPositionText.TryGetValue(p.name, out var positionText))
                     {
                         RoomTracker roomTracker = FastDestroyableSingleton<HudManager>.Instance?.roomTracker;
                         if (roomTracker == null) return;
@@ -141,19 +142,25 @@ public class EvilTracker : RoleBase<EvilTracker>
                         gameObject.transform.SetParent(FastDestroyableSingleton<HudManager>.Instance.transform);
                         gameObject.transform.localPosition = new Vector3(0, -2.0f + 0.25f * count, gameObject.transform.localPosition.z);
                         gameObject.transform.localScale = Vector3.one * 1.0f;
-                        TMP_Text positionText = gameObject.GetComponent<TMP_Text>();
+                        positionText = gameObject.GetComponent<TMP_Text>();
                         positionText.alpha = 1.0f;
                         ImpostorPositionText.Add(p.name, positionText);
                     }
                     PlainShipRoom room = Helpers.GetPlainShipRoom(p);
-                    ImpostorPositionText[p.name].gameObject.SetActive(true);
+                    positionText.gameObject.SetActive(true);
                     if (room != null)
                     {
-                        ImpostorPositionText[p.name].text = "<color=#FF1919FF>" + $"{p.name}(" + FastDestroyableSingleton<TranslationController>.Instance.GetString(room.RoomId) + ")</color>";
+                        sb.Clear();
+                        sb.Append("<color=#FF1919FF>");
+                        sb.Append(p.name);
+                        sb.Append("(");
+                        sb.Append(FastDestroyableSingleton<TranslationController>.Instance.GetString(room.RoomId));
+                        sb.Append(")</color>");
+                        positionText.text = sb.ToString();
                     }
                     else
                     {
-                        ImpostorPositionText[p.name].text = "";
+                        positionText.text = "";
                     }
                 }
             }
@@ -181,7 +188,13 @@ public class EvilTracker : RoleBase<EvilTracker>
                 TargetPositionText.gameObject.SetActive(true);
                 if (room != null)
                 {
-                    TargetPositionText.text = "<color=#8CFFFFFF>" + $"{Target.name}(" + FastDestroyableSingleton<TranslationController>.Instance.GetString(room.RoomId) + ")</color>";
+                    sb.Clear();
+                    sb.Append("<color=#8CFFFFFF>");
+                    sb.Append(Target.name);
+                    sb.Append("(");
+                    sb.Append(FastDestroyableSingleton<TranslationController>.Instance.GetString(room.RoomId));
+                    sb.Append(")</color>");
+                    TargetPositionText.text = sb.ToString();
                 }
                 else
                 {
@@ -190,7 +203,7 @@ public class EvilTracker : RoleBase<EvilTracker>
             }
             else
             {
-                TargetPositionText?.text = "";
+                if (TargetPositionText != null) TargetPositionText.text = "";
             }
 
             // タイマーに時間をセット
