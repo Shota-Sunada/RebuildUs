@@ -9,8 +9,8 @@ public interface IDiscordService
 {
     Task StartAsync();
     Task StopAsync();
-    Task SetMuteAsync(ulong discordId, bool mute);
-    Task SetMuteAllAsync(IEnumerable<ulong> discordIds, bool mute);
+    Task SetMuteAsync(ulong discordId, bool mute, bool deaf);
+    Task SetMuteAllAsync(IEnumerable<ulong> discordIds, bool mute, bool deaf);
     Task SendMessageToDiscordAsync(string message);
     Task SetActiveRoomCodeAsync(string roomCode);
     Task ClearActiveRoomCodeAsync();
@@ -135,15 +135,15 @@ public class DiscordService : IDiscordService
         }
     }
 
-    public async Task SetMuteAsync(ulong discordId, bool mute)
+    public async Task SetMuteAsync(ulong discordId, bool mute, bool deaf)
     {
         if (_config.DisableDiscord || _clients.Count == 0) return;
 
         // For single mute, just use the first available client
-        await InternalSetMuteAsync(_clients[0], discordId, mute);
+        await InternalSetMuteAsync(_clients[0], discordId, mute, deaf);
     }
 
-    public async Task SetMuteAllAsync(IEnumerable<ulong> discordIds, bool mute)
+    public async Task SetMuteAllAsync(IEnumerable<ulong> discordIds, bool mute, bool deaf)
     {
         if (_config.DisableDiscord || _clients.Count == 0) return;
 
@@ -155,7 +155,7 @@ public class DiscordService : IDiscordService
         for (int i = 0; i < idList.Count; i++)
         {
             var client = _clients[i % _clients.Count];
-            tasks.Add(InternalSetMuteAsync(client, idList[i], mute));
+            tasks.Add(InternalSetMuteAsync(client, idList[i], mute, deaf));
         }
 
         await Task.WhenAll(tasks);
@@ -193,7 +193,7 @@ public class DiscordService : IDiscordService
         return Task.CompletedTask;
     }
 
-    private async Task InternalSetMuteAsync(DiscordSocketClient client, ulong discordId, bool mute)
+    private async Task InternalSetMuteAsync(DiscordSocketClient client, ulong discordId, bool mute, bool deaf)
     {
         if (client.ConnectionState != ConnectionState.Connected) return;
 
@@ -205,12 +205,16 @@ public class DiscordService : IDiscordService
 
         try
         {
-            if (user.IsMuted == mute) return; // Already in desired state
-            await user.ModifyAsync(x => x.Mute = mute);
+            if (user.IsMuted == mute && user.IsDeafened == deaf) return; // Already in desired state
+            await user.ModifyAsync(x =>
+            {
+                x.Mute = mute;
+                x.Deaf = deaf;
+            });
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Failed to set mute for user {DiscordId} using client {BotUser}", discordId, client.CurrentUser?.Username);
+            _logger.LogError(ex, "Failed to set mute/deaf for user {DiscordId} using client {BotUser}", discordId, client.CurrentUser?.Username);
         }
     }
 }

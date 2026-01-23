@@ -53,7 +53,7 @@ public class GameEventListener : IEventListener
         await discordService.SendMessageToDiscordAsync("ゲームが開始しました。チャット同期を停止します。");
         await discordService.ClearActiveRoomCodeAsync();
         _isChatSyncActive = false;
-        await MuteAllAsync(e.Game, true);
+        await MuteAllAsync(e.Game, true, true);
     }
 
     [EventListener]
@@ -62,7 +62,7 @@ public class GameEventListener : IEventListener
         await discordService.SetActiveRoomCodeAsync(e.Game.Code);
         _isChatSyncActive = true;
         await discordService.SendMessageToDiscordAsync("ゲームが終了しました。チャット同期を再開します。");
-        await MuteAllAsync(e.Game, false);
+        await MuteAllAsync(e.Game, false, false);
     }
 
     [EventListener]
@@ -76,7 +76,9 @@ public class GameEventListener : IEventListener
             var discordId = mappingService.GetDiscordId(friendCode);
             if (discordId.HasValue)
             {
-                await discordService.SetMuteAsync(discordId.Value, player.Character?.PlayerInfo?.IsDead ?? false);
+                bool isDead = player.Character?.PlayerInfo?.IsDead ?? false;
+                // 生存者: ミュート解除・デフン解除 | 死亡者: ミュート・デフン解除
+                await discordService.SetMuteAsync(discordId.Value, isDead, false);
             }
         }
     }
@@ -84,7 +86,32 @@ public class GameEventListener : IEventListener
     [EventListener]
     public async ValueTask OnMeetingEnded(IMeetingEndedEvent e)
     {
-        await MuteAllAsync(e.Game, true);
+        var aliveUsers = new List<ulong>();
+        var deadUsers = new List<ulong>();
+
+        foreach (var player in e.Game.Players)
+        {
+            var friendCode = GetFriendCode(player);
+            if (string.IsNullOrEmpty(friendCode)) continue;
+
+            var discordId = mappingService.GetDiscordId(friendCode);
+            if (!discordId.HasValue) continue;
+
+            if (player.Character?.PlayerInfo?.IsDead ?? false)
+            {
+                deadUsers.Add(discordId.Value);
+            }
+            else
+            {
+                aliveUsers.Add(discordId.Value);
+            }
+        }
+
+        // 生存者をミュート・デフン
+        await discordService.SetMuteAllAsync(aliveUsers, true, true);
+
+        // その後に死亡者のミュート・デフンを解除
+        await discordService.SetMuteAllAsync(deadUsers, false, false);
     }
 
     [EventListener]
@@ -130,8 +157,9 @@ public class GameEventListener : IEventListener
         return string.Empty;
     }
 
-    private async Task MuteAllAsync(IGame game, bool mute)
+    private async Task MuteAllAsync(IGame game, bool mute, bool deaf)
     {
+        var discordIds = new List<ulong>();
         foreach (var player in game.Players)
         {
             var friendCode = GetFriendCode(player);
@@ -140,9 +168,14 @@ public class GameEventListener : IEventListener
                 var discordId = mappingService.GetDiscordId(friendCode);
                 if (discordId.HasValue)
                 {
-                    await discordService.SetMuteAsync(discordId.Value, mute);
+                    discordIds.Add(discordId.Value);
                 }
             }
+        }
+
+        if (discordIds.Count > 0)
+        {
+            await discordService.SetMuteAllAsync(discordIds, mute, deaf);
         }
     }
 }
