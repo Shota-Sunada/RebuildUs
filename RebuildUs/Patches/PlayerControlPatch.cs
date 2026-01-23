@@ -50,7 +50,7 @@ public static class PlayerControlPatch
 
         float maxCooldown = baseCooldown * multiplier + addition;
         __instance.killTimer = Mathf.Clamp(time, 0f, maxCooldown);
-        if (FastDestroyableSingleton<HudManager>.InstanceExists)
+        if (FastDestroyableSingleton<HudManager>.Instance)
         {
             FastDestroyableSingleton<HudManager>.Instance.KillButton.SetCoolDown(__instance.killTimer, maxCooldown);
         }

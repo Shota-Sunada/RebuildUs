@@ -35,7 +35,7 @@ public static class PlayerPhysicsPatch
 
         if (correctOffset)
         {
-            Mini mini = Mini.GetRole(__instance.myPlayer);
+            Mini mini = Mini.GetModifier(__instance.myPlayer);
             if (mini == null) return;
             float currentScaling = (mini.GrowingProgress() + 1) * 0.5f;
             __instance.myPlayer.Collider.offset = currentScaling * Mini.DefaultColliderOffset * Vector2.down;

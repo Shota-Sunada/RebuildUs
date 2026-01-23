@@ -3,7 +3,7 @@ namespace RebuildUs.Roles;
 public abstract class PlayerModifier
 {
     public static List<PlayerModifier> AllModifiers = [];
-    private static readonly List<PlayerModifier>[] PlayerModifierCache = new List<PlayerModifier>[256];
+    public static readonly List<PlayerModifier>[] PlayerModifierCache = new List<PlayerModifier>[256];
     public PlayerControl Player;
     public ModifierType CurrentModifierType;
     public virtual Color ModifierColor => Color.white;

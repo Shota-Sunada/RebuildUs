@@ -216,7 +216,7 @@ public static class CustomHatManager
         return response.Hats;
     }
 
-    private static string SanitizeFileName(string path)
+    public static string SanitizeFileName(string path)
     {
         if (path == null) return null;
         if (!path.EndsWith(".png", StringComparison.OrdinalIgnoreCase)) return null;
