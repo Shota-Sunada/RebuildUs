@@ -45,7 +45,7 @@ public static class LoadScreen
         TitleTMPro = titleObj.AddComponent<TextMeshPro>();
         TitleTMPro.alignment = TextAlignmentOptions.Center;
         TitleTMPro.fontSize = 5f;
-        TitleTMPro.text = "<color=#1684B0>REBUILD US</color>";
+        TitleTMPro.text = "<size=70%>LOADING</size>\n<color=#1684B0>REBUILD US</color>";
         TitleTMPro.fontStyle = FontStyles.Bold | FontStyles.Italic;
         titleObj.transform.localPosition = new Vector3(0, 1.5f, 5f);
 
