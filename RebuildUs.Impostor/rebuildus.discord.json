@@ -1,5 +1,6 @@
 {
   "Discord": {
+    "AutoMute": true,
     "Token": "MAIN_BOT_TOKEN_HERE",
     "WorkerTokens": [
       "WORKER_BOT_1_TOKEN_HERE",

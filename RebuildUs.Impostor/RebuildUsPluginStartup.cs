@@ -32,6 +32,11 @@ public class RebuildUsPluginStartup : IPluginStartup
                 {
                     settings.DisableDiscord = disableDiscord;
                 }
+
+                if (bool.TryParse(configuration["Discord:AutoMute"], out var autoMute))
+                {
+                    settings.AutoMute = autoMute;
+                }
             });
     }
 }

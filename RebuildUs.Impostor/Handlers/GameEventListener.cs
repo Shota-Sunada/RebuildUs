@@ -7,6 +7,8 @@ using Microsoft.Extensions.Logging;
 using Impostor.Api.Net;
 using Impostor.Api.Net.Inner.Objects;
 using System.Text;
+using Microsoft.Extensions.Options;
+using RebuildUs.Impostor.Models;
 
 namespace RebuildUs.Impostor.Handlers;
 
@@ -16,16 +18,18 @@ public class GameEventListener : IEventListener
     private readonly IDiscordService discordService;
     private readonly IPlayerMappingService mappingService;
     private readonly ILogger<GameEventListener> logger;
+    private readonly DiscordConfig _config;
     private IGame? _currentGame;
     private bool _isChatSyncActive;
     private string _gameState = "待機中";
 
-    public GameEventListener(IGameCodeManager gameCodeManager, IDiscordService discordService, IPlayerMappingService mappingService, ILogger<GameEventListener> logger)
+    public GameEventListener(IGameCodeManager gameCodeManager, IDiscordService discordService, IPlayerMappingService mappingService, ILogger<GameEventListener> logger, IOptions<DiscordConfig> config)
     {
         this.gameCodeManager = gameCodeManager;
         this.discordService = discordService;
         this.mappingService = mappingService;
         this.logger = logger;
+        this._config = config.Value;
     }
 
     [EventListener(EventPriority.Highest)]
@@ -92,6 +96,8 @@ public class GameEventListener : IEventListener
     {
         _gameState = "会議中";
         await UpdateDiscordStatusAsync(e.Game, _gameState);
+        if (!_config.AutoMute) return;
+
         foreach (var player in e.Game.Players)
         {
             var friendCode = GetFriendCode(player);
@@ -112,6 +118,8 @@ public class GameEventListener : IEventListener
     {
         _gameState = "ゲーム中";
         await UpdateDiscordStatusAsync(e.Game, _gameState);
+
+        if (!_config.AutoMute) return;
 
         await Task.Delay(TimeSpan.FromSeconds(7));
 
@@ -235,6 +243,8 @@ public class GameEventListener : IEventListener
 
     private async Task MuteAllAsync(IGame game, bool mute, bool deaf)
     {
+        if (!_config.AutoMute) return;
+
         var discordIds = new List<ulong>();
         foreach (var player in game.Players)
         {
