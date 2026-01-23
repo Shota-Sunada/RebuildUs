@@ -59,7 +59,7 @@ public class Bait : RoleBase<Bait>
         if (MapUtilities.CachedShipStatus?.AllVents != null)
         {
             var ventsWithPlayers = new List<int>();
-            foreach (PlayerControl player in CachedPlayer.AllPlayers)
+            foreach (PlayerControl player in PlayerControl.AllPlayerControls)
             {
                 if (player == null) continue;
 

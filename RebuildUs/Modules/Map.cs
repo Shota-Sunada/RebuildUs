@@ -66,7 +66,7 @@ public static class Map
         {
             MapIcons = [];
             CorpseIcons = [];
-            foreach (PlayerControl p in CachedPlayer.AllPlayers)
+            foreach (PlayerControl p in PlayerControl.AllPlayerControls)
             {
                 players.Add(p);
             }
@@ -115,7 +115,7 @@ public static class Map
 
         if (PlayerControl.LocalPlayer.IsGM())
         {
-            foreach (PlayerControl p in CachedPlayer.AllPlayers)
+            foreach (PlayerControl p in PlayerControl.AllPlayerControls)
             {
                 if (p == null || p.IsGM()) continue;
 
@@ -379,7 +379,7 @@ public static class Map
 
         // インポスターの位置をマップに表示
         if (ImpostorHerePoint == null) ImpostorHerePoint = [];
-        foreach (PlayerControl p in CachedPlayer.AllPlayers)
+        foreach (PlayerControl p in PlayerControl.AllPlayerControls)
         {
             if (p.IsTeamImpostor() && p != PlayerControl.LocalPlayer)
             {

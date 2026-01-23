@@ -126,7 +126,7 @@ public static class Exile
     {
         int numAliveCrewmates = 0;
         // count alive crewmates
-        foreach (PlayerControl player in CachedPlayer.AllPlayers)
+        foreach (PlayerControl player in PlayerControl.AllPlayerControls)
         {
             if (player.Data.Role.IsImpostor)
                 continue;
@@ -140,7 +140,7 @@ public static class Exile
         int targetPlayerIndex = RebuildUs.Instance.Rnd.Next(0, numAliveCrewmates);
         int currentPlayerIndex = 0;
         // return the player
-        foreach (PlayerControl player in CachedPlayer.AllPlayers)
+        foreach (PlayerControl player in PlayerControl.AllPlayerControls)
         {
             if (player.Data.Role.IsImpostor)
                 continue;

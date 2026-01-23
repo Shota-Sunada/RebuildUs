@@ -30,6 +30,12 @@ public class DiscordService : IDiscordService
         _config = config.Value;
         _serviceProvider = serviceProvider;
 
+        if (_config.DisableDiscord)
+        {
+            _logger.LogInformation("Discord service is disabled via configuration.");
+            return;
+        }
+
         // Add main client
         _clients.Add(CreateClient());
 
@@ -97,6 +103,8 @@ public class DiscordService : IDiscordService
 
     public async Task StartAsync()
     {
+        if (_config.DisableDiscord) return;
+
         if (string.IsNullOrEmpty(_config.Token))
         {
             _logger.LogWarning("Discord token is not set. Discord features will be disabled.");
@@ -119,6 +127,8 @@ public class DiscordService : IDiscordService
 
     public async Task StopAsync()
     {
+        if (_config.DisableDiscord) return;
+
         foreach (var client in _clients)
         {
             await client.StopAsync();
@@ -127,12 +137,16 @@ public class DiscordService : IDiscordService
 
     public async Task SetMuteAsync(ulong discordId, bool mute)
     {
+        if (_config.DisableDiscord || _clients.Count == 0) return;
+
         // For single mute, just use the first available client
         await InternalSetMuteAsync(_clients[0], discordId, mute);
     }
 
     public async Task SetMuteAllAsync(IEnumerable<ulong> discordIds, bool mute)
     {
+        if (_config.DisableDiscord || _clients.Count == 0) return;
+
         var idList = discordIds.ToList();
         if (idList.Count == 0) return;
 
@@ -149,6 +163,7 @@ public class DiscordService : IDiscordService
 
     public async Task SendMessageToDiscordAsync(string message)
     {
+        if (_config.DisableDiscord || _clients.Count == 0) return;
         if (_config.TextChannelId == 0) return;
         var client = _clients[0];
         if (client.ConnectionState != ConnectionState.Connected) return;
@@ -162,6 +177,8 @@ public class DiscordService : IDiscordService
 
     public Task SetActiveRoomCodeAsync(string roomCode)
     {
+        if (_config.DisableDiscord) return Task.CompletedTask;
+
         _activeRoomCode = roomCode;
         _logger.LogInformation("Chat sync enabled for room {RoomCode}", roomCode);
         return Task.CompletedTask;
@@ -169,6 +186,8 @@ public class DiscordService : IDiscordService
 
     public Task ClearActiveRoomCodeAsync()
     {
+        if (_config.DisableDiscord) return Task.CompletedTask;
+
         _activeRoomCode = null;
         _logger.LogInformation("Chat sync disabled");
         return Task.CompletedTask;

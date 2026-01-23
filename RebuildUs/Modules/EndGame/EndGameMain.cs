@@ -31,9 +31,9 @@ public static class EndGameMain
         AdditionalTempData.Clear();
 
         RoleType[] excludeRoles = [];
-        foreach (var player in CachedPlayer.AllPlayers)
+        foreach (var player in PlayerControl.AllPlayerControls.GetFastEnumerator())
         {
-            var roles = RoleInfo.GetRoleInfoForPlayer(player.PlayerControl);
+            var roles = RoleInfo.GetRoleInfoForPlayer(player);
             var (tasksCompleted, tasksTotal) = TasksHandler.TaskInfo(player.Data);
             var finalStatus = GameHistory.FinalStatuses[player.PlayerId] =
                 player.Data.Disconnected == true ? EFinalStatus.Disconnected :
@@ -42,16 +42,16 @@ public static class EndGameMain
                 gameOverReason == GameOverReason.ImpostorsBySabotage && !player.Data.Role.IsImpostor ? EFinalStatus.Sabotage :
                 EFinalStatus.Alive;
 
-            if (gameOverReason == GameOverReason.CrewmatesByTask && player.Data.Object.IsTeamCrewmate()) tasksCompleted = tasksTotal;
+            if (gameOverReason == GameOverReason.CrewmatesByTask && player.IsTeamCrewmate()) tasksCompleted = tasksTotal;
 
             AdditionalTempData.PlayerRoles.Add(new PlayerRoleInfo()
             {
                 PlayerName = player.Data.PlayerName,
                 PlayerId = player.PlayerId,
                 ColorId = player.Data.DefaultOutfit.ColorId,
-                NameSuffix = Lovers.GetIcon(player.Data.Object),
+                NameSuffix = Lovers.GetIcon(player),
                 Roles = roles,
-                RoleNames = RoleInfo.GetRolesString(player.Data.Object, true, true, excludeRoles, true),
+                RoleNames = RoleInfo.GetRolesString(player, true, true, excludeRoles, true),
                 TasksTotal = tasksTotal,
                 TasksCompleted = tasksCompleted,
                 Status = finalStatus,
@@ -82,6 +82,8 @@ public static class EndGameMain
 
         var everyoneDead = AdditionalTempData.PlayerRoles.All(x => x.Status != EFinalStatus.Alive);
         var forceEnd = gameOverReason == (GameOverReason)ECustomGameOverReason.ForceEnd;
+
+//
 
         if (impostorWin)
         {

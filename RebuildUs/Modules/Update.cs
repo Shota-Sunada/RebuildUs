@@ -6,7 +6,7 @@ public static class Update
     {
         var playersById = Helpers.AllPlayersById();
 
-        foreach (PlayerControl player in CachedPlayer.AllPlayers)
+        foreach (PlayerControl player in PlayerControl.AllPlayerControls)
         {
             player.cosmetics.nameText.text = Helpers.HidePlayerName(PlayerControl.LocalPlayer, player) ? "" : player.CurrentOutfit.PlayerName;
             if (PlayerControl.LocalPlayer.IsTeamImpostor() && player.IsTeamImpostor())

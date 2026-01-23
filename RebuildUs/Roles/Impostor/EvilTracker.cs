@@ -114,7 +114,7 @@ public class EvilTracker : RoleBase<EvilTracker>
 
             // インポスターの位置を示すArrowsを描画
             int count = 0;
-            foreach (PlayerControl p in CachedPlayer.AllPlayers)
+            foreach (PlayerControl p in PlayerControl.AllPlayerControls)
             {
                 if (p.Data.IsDead)
                 {

@@ -303,7 +303,7 @@ public class LastImpostor : ModifierBase<LastImpostor>
     {
         if (PlayerControl.LocalPlayer != null && FastDestroyableSingleton<HudManager>.Instance != null)
         {
-            foreach (PlayerControl p in CachedPlayer.AllPlayers)
+            foreach (PlayerControl p in PlayerControl.AllPlayerControls)
             {
                 var player = UnityEngine.Object.Instantiate(__instance.PlayerPrefab, FastDestroyableSingleton<HudManager>.Instance.transform);
                 player.UpdateFromPlayerOutfit(p.Data.DefaultOutfit, PlayerMaterial.MaskType.ComplexUI, p.Data.IsDead, true);

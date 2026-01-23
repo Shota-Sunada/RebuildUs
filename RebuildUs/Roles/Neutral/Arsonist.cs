@@ -183,7 +183,7 @@ public class Arsonist : RoleBase<Arsonist>
             bottomLeft.x *= -1;
             bottomLeft += new Vector3(-0.25f, -0.25f, 0);
 
-            foreach (var p in CachedPlayer.AllPlayers)
+            foreach (var p in PlayerControl.AllPlayerControls)
             {
                 if (p.PlayerId == PlayerControl.LocalPlayer.PlayerId) continue;
                 if (!ModMapOptions.PlayerIcons.ContainsKey(p.PlayerId)) continue;

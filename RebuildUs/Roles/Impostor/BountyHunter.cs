@@ -78,14 +78,14 @@ public class BountyHunter : RoleBase<BountyHunter>
                 ArrowUpdateTimer = 0f; // Force arrow to update
                 BountyUpdateTimer = BountyDuration;
                 var possibleTargets = new List<PlayerControl>();
-                foreach (var p in CachedPlayer.AllPlayers)
+                foreach (var p in PlayerControl.AllPlayerControls)
                 {
-                    if (!p.Data.IsDead && !p.Data.Disconnected && !p.Data.Role.IsImpostor && !p.PlayerControl.IsRole(RoleType.Spy)
-                    && (!p.PlayerControl.IsRole(RoleType.Sidekick) || !Sidekick.GetRole(p).WasTeamRed)
-                    && (!p.PlayerControl.IsRole(RoleType.Jackal) || !Jackal.GetRole(p).WasTeamRed)
-                    // && !(p.hasModifier(ModifierType.Mini) && !Mini.isGrownUp(p))
-                    && !p.PlayerControl.IsGM()
-                    // && Player.GetPartner() != p
+                    if (!p.Data.IsDead && !p.Data.Disconnected && !p.Data.Role.IsImpostor && !p.IsRole(RoleType.Spy)
+                    && (!p.IsRole(RoleType.Sidekick) || !Sidekick.GetRole(p).WasTeamRed)
+                    && (!p.IsRole(RoleType.Jackal) || !Jackal.GetRole(p).WasTeamRed)
+                    && !(p.HasModifier(ModifierType.Mini) && !Mini.IsGrownUp(p))
+                    && !p.IsGM()
+                    && Player.GetPartner() != p
                     )
                     {
                         possibleTargets.Add(p);

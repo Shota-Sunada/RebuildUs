@@ -46,7 +46,7 @@ public class Snitch : RoleBase<Snitch>
         else if (PlayerControl.LocalPlayer.IsRole(RoleType.Snitch) && numberOfTasks == 0)
         {
             int arrowIndex = 0;
-            foreach (PlayerControl p in CachedPlayer.AllPlayers)
+            foreach (PlayerControl p in PlayerControl.AllPlayerControls)
             {
                 bool arrowForImp = p.Data.Role.IsImpostor;
                 bool arrowForTeamJackal = IncludeTeamJackal && (p.IsRole(RoleType.Jackal) || p.IsRole(RoleType.Sidekick));

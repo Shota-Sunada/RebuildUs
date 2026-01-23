@@ -3,7 +3,7 @@ namespace RebuildUs.Roles.Crewmate;
 [HarmonyPatch]
 public class Swapper : RoleBase<Swapper>
 {
-    public static Color NameColor => (CachedPlayer.LocalPlayer?.PlayerControl?.Data.Role.IsImpostor ?? false) ? Palette.ImpostorRed : new Color32(134, 55, 86, byte.MaxValue);
+    public static Color NameColor => (PlayerControl.LocalPlayer?.Data.Role.IsImpostor ?? false) ? Palette.ImpostorRed : new Color32(134, 55, 86, byte.MaxValue);
     public override Color RoleColor => NameColor;
 
     // write configs here

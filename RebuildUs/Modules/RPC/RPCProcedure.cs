@@ -554,7 +554,7 @@ public static partial class RPCProcedure
         var trackerPlayer = Helpers.PlayerById(trackerId);
         var tracker = Tracker.GetRole(trackerPlayer);
         tracker.UsedTracker = true;
-        foreach (var player in CachedPlayer.AllPlayers)
+        foreach (var player in PlayerControl.AllPlayerControls)
         {
             if (player.PlayerId == targetId)
             {
@@ -582,7 +582,7 @@ public static partial class RPCProcedure
         }
 
         if (!Vampire.Exists) return;
-        foreach (PlayerControl player in CachedPlayer.AllPlayers)
+        foreach (PlayerControl player in PlayerControl.AllPlayerControls)
         {
             if (player.PlayerId == targetId && !player.Data.IsDead)
             {
@@ -629,11 +629,11 @@ public static partial class RPCProcedure
                     5 => laboratorySpawn,
                     _ => initialSpawnCenter,
                 };
-                foreach (var player in CachedPlayer.AllPlayers)
+                foreach (var player in PlayerControl.AllPlayerControls)
                 {
                     if (player.Data.PlayerId == playerId)
                     {
-                        player.PlayerControl.transform.position = loc;
+                        player.transform.position = loc;
                         break;
                     }
                 }

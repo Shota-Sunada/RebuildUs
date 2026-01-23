@@ -27,7 +27,7 @@ public class SynchronizeData
 
         Dic.TryGetValue(tag, out ulong value);
 
-        foreach (PlayerControl pc in CachedPlayer.AllPlayers)
+        foreach (PlayerControl pc in PlayerControl.AllPlayerControls)
         {
             if (pc.Data.IsDead ? withGhost : withSurvivor)
                 result &= (value & ((ulong)1 << pc.PlayerId)) != 0;

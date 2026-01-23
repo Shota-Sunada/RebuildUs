@@ -27,6 +27,11 @@ public class RebuildUsPluginStartup : IPluginStartup
             .Configure<IConfiguration>((settings, configuration) =>
             {
                 configuration.GetSection("Discord").Bind(settings);
+
+                if (bool.TryParse(configuration["disableDiscord"], out var disableDiscord))
+                {
+                    settings.DisableDiscord = disableDiscord;
+                }
             });
     }
 }

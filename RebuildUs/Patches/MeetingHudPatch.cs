@@ -75,7 +75,7 @@ public static class MeetingHudPatch
         {
             if (AmongUsClient.Instance.AmHost)
             {
-                foreach (PlayerControl player in CachedPlayer.AllPlayers)
+                foreach (PlayerControl player in PlayerControl.AllPlayerControls)
                 {
                     System.Random rand = new();
                     int randVal = rand.Next(0, 6);

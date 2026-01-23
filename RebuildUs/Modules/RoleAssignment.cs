@@ -651,7 +651,7 @@ public static class RoleAssignment
         // if (Lawyer.lawyer != null)
         // {
         //     var possibleTargets = new List<PlayerControl>();
-        //     foreach (PlayerControl p in CachedPlayer.AllPlayers)
+        //     foreach (PlayerControl p in PlayerControl.AllPlayerControls)
         //     {
         //         if (!p.Data.IsDead && !p.Data.Disconnected && !p.isLovers() && (p.Data.Role.IsImpostor || p == Jackal.jackal))
         //             possibleTargets.Add(p);

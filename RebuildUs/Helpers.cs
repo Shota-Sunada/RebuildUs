@@ -93,7 +93,7 @@ public static class Helpers
 
     public static PlayerControl PlayerById(byte id)
     {
-        foreach (var player in CachedPlayer.AllPlayers)
+        foreach (var player in PlayerControl.AllPlayerControls)
         {
             if (player.PlayerId == id)
             {
@@ -106,7 +106,7 @@ public static class Helpers
     public static Dictionary<byte, PlayerControl> AllPlayersById()
     {
         Dictionary<byte, PlayerControl> res = [];
-        foreach (PlayerControl player in CachedPlayer.AllPlayers)
+        foreach (PlayerControl player in PlayerControl.AllPlayerControls)
         {
             res.Add(player.PlayerId, player);
         }
@@ -461,7 +461,7 @@ public static class Helpers
 
     public static void SetBasePlayerOutlines()
     {
-        foreach (PlayerControl target in CachedPlayer.AllPlayers)
+        foreach (PlayerControl target in PlayerControl.AllPlayerControls)
         {
             if (target == null || target.cosmetics?.currentBodySprite?.BodySprite == null) continue;
 
