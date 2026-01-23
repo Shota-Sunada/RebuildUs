@@ -7,6 +7,7 @@ public class CustomOverlays
     private static SpriteRenderer MeetingUnderlay;
     private static SpriteRenderer InfoUnderlay;
     private static TextMeshPro InfoOverlayRules;
+    private static TextMeshPro InfoOverlayRulesRight;
     public static bool OverlayShown = false;
     public static int RolePage = 0;
     public static int MaxRolePage = 0;
@@ -59,9 +60,18 @@ public class CustomOverlays
         if (OptionsData == null || RebuildUs.OptionsPage < 0 || RebuildUs.OptionsPage >= OptionsData.Count) return;
 
         var sb = new StringBuilder();
-        sb.Append("<size=150%>ゲーム設定</size> <size=100%>現在のページ (").Append(RebuildUs.OptionsPage + 1).Append('/').Append(MaxOptionsPage).Append(")</size>\n");
+        // sb.Append("<size=150%>ゲーム設定</size> <size=100%>現在のページ (").Append((RebuildUs.OptionsPage / 2) + 1).Append('/').Append((MaxOptionsPage + 1) / 2).Append(")</size>\n");
         sb.Append(OptionsData[RebuildUs.OptionsPage]);
         InfoOverlayRules.text = sb.ToString();
+
+        if (RebuildUs.OptionsPage + 1 < OptionsData.Count)
+        {
+            InfoOverlayRulesRight.text = OptionsData[RebuildUs.OptionsPage + 1];
+        }
+        else
+        {
+            InfoOverlayRulesRight.text = "";
+        }
     }
 
     private static void AppendRoleCount(StringBuilder sb, string key, CustomOption minOpt, CustomOption maxOpt)
@@ -83,8 +93,10 @@ public class CustomOverlays
         if (MeetingUnderlay != null) UnityEngine.Object.Destroy(MeetingUnderlay);
         if (InfoUnderlay != null) UnityEngine.Object.Destroy(InfoUnderlay);
         if (InfoOverlayRules != null) UnityEngine.Object.Destroy(InfoOverlayRules);
+        if (InfoOverlayRulesRight != null) UnityEngine.Object.Destroy(InfoOverlayRulesRight);
         MeetingUnderlay = InfoUnderlay = null;
         InfoOverlayRules = null;
+        InfoOverlayRulesRight = null;
         OverlayShown = false;
         RolePage = 0;
         MaxRolePage = 0;
@@ -129,6 +141,13 @@ public class CustomOverlays
             transform.localScale = Vector3.one;
             InfoOverlayRules.color = Palette.White;
             InfoOverlayRules.enabled = false;
+        }
+
+        if (InfoOverlayRulesRight == null)
+        {
+            InfoOverlayRulesRight = UnityEngine.Object.Instantiate(InfoOverlayRules, hudManager.transform);
+            InfoOverlayRulesRight.transform.localPosition = new Vector3(1.2f, 1.15f, -910f);
+            InfoOverlayRulesRight.enabled = false;
         }
 
         if (RoleData == null)
@@ -266,6 +285,7 @@ public class CustomOverlays
         var parent = meetingHud != null ? meetingHud.transform : hudManager.transform;
         InfoUnderlay.transform.SetParent(parent);
         InfoOverlayRules.transform.SetParent(parent);
+        InfoOverlayRulesRight.transform.SetParent(parent);
 
         InfoUnderlay.sprite = AssetLoader.White;
         InfoUnderlay.color = new Color(0.1f, 0.1f, 0.1f, 0.88f);
@@ -317,6 +337,7 @@ public class CustomOverlays
         RebuildUs.OptionsPage = 0;
         SetInfoOverlayText();
         InfoOverlayRules.enabled = true;
+        InfoOverlayRulesRight.enabled = true;
 
         var underlayTransparent = new Color(0.1f, 0.1f, 0.1f, 0.0f);
         var underlayOpaque = new Color(0.1f, 0.1f, 0.1f, 0.88f);
@@ -324,6 +345,7 @@ public class CustomOverlays
         {
             InfoUnderlay.color = Color.Lerp(underlayTransparent, underlayOpaque, t);
             InfoOverlayRules.color = Color.Lerp(Palette.ClearWhite, Palette.White, t);
+            InfoOverlayRulesRight.color = Color.Lerp(Palette.ClearWhite, Palette.White, t);
         })));
     }
 
@@ -351,6 +373,12 @@ public class CustomOverlays
             {
                 InfoOverlayRules.color = Color.Lerp(Palette.White, Palette.ClearWhite, t);
                 if (t >= 1.0f) InfoOverlayRules.enabled = false;
+            }
+
+            if (InfoOverlayRulesRight != null)
+            {
+                InfoOverlayRulesRight.color = Color.Lerp(Palette.White, Palette.ClearWhite, t);
+                if (t >= 1.0f) InfoOverlayRulesRight.enabled = false;
             }
         })));
     }
@@ -405,13 +433,13 @@ public class CustomOverlays
             {
                 if (Input.GetKeyDown(KeyCode.Comma))
                 {
-                    RebuildUs.OptionsPage--;
-                    if (RebuildUs.OptionsPage < 0) RebuildUs.OptionsPage = MaxOptionsPage - 1;
+                    RebuildUs.OptionsPage -= 2;
+                    if (RebuildUs.OptionsPage < 0) RebuildUs.OptionsPage = (MaxOptionsPage - 1) / 2 * 2;
                     SetInfoOverlayText();
                 }
                 else if (Input.GetKeyDown(KeyCode.Period))
                 {
-                    RebuildUs.OptionsPage++;
+                    RebuildUs.OptionsPage += 2;
                     if (RebuildUs.OptionsPage >= MaxOptionsPage) RebuildUs.OptionsPage = 0;
                     SetInfoOverlayText();
                 }
