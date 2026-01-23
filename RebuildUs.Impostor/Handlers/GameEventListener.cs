@@ -204,7 +204,7 @@ public class GameEventListener : IEventListener
 
         if (playerCount == 0) sb.Append("プレイヤーはいません");
 
-        var summaryStatus = $"{linkedCount} / {playerCount} 人が連携済み\n\n{sb.ToString()}";
+        var summaryStatus = $"{linkedCount} / {playerCount} 人が連携済み\n\n{sb}";
 
         await discordService.UpdateStatusAsync(roomCode, playerCount, maxPlayers, mapName, state, summaryStatus);
     }
