@@ -8,6 +8,7 @@ public static class Exile
     public static void BeginForGameplay(ExileController __instance, NetworkedPlayerInfo player, bool voteTie)
     {
         LastExiled = player;
+        if (player != null) DiscordModManager.OnExile(player.PlayerName);
 
         // Medic shield
         if (Medic.Exists && AmongUsClient.Instance.AmHost && Medic.FutureShielded != null && Medic.LivingPlayers.Count != 0)

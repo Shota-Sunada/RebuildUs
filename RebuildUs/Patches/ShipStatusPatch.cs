@@ -1,3 +1,5 @@
+using RebuildUs.Modules.Discord;
+
 namespace RebuildUs.Patches;
 
 [HarmonyPatch]
@@ -8,5 +10,12 @@ public static class ShipStatusPatch
     public static void AwakePostfix(ShipStatus __instance)
     {
         Airship.Awake();
+    }
+
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(ShipStatus), nameof(ShipStatus.OnEnable))]
+    public static void OnEnablePostfix()
+    {
+        DiscordModManager.OnGameStart();
     }
 }

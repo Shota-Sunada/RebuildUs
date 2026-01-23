@@ -18,6 +18,7 @@ global using RebuildUs.Localization;
 global using RebuildUs.Modules;
 global using RebuildUs.Modules.Consoles;
 global using RebuildUs.Modules.CustomOptions;
+global using RebuildUs.Modules.Discord;
 global using RebuildUs.Modules.EndGame;
 global using RebuildUs.Modules.RPC;
 global using RebuildUs.Objects;
@@ -28,7 +29,6 @@ global using RebuildUs.Roles.Impostor;
 global using RebuildUs.Roles.Neutral;
 global using RebuildUs.Roles.Modifier;
 global using RebuildUs.Utilities;
-using RebuildUs.Modules.Cosmetics;
 
 namespace RebuildUs;
 
@@ -59,6 +59,15 @@ public class RebuildUs : BasePlugin
     public static ConfigEntry<bool> BetterSabotageMap { get; set; }
     public static ConfigEntry<bool> TransparentMap { get; set; }
     public static ConfigEntry<bool> HideFakeTasks { get; set; }
+
+    public static ConfigEntry<bool> EnableAutoMute { get; set; }
+    public static ConfigEntry<string> DiscordBotToken { get; set; }
+    public static ConfigEntry<string> DiscordBotToken2 { get; set; }
+    public static ConfigEntry<string> DiscordBotToken3 { get; set; }
+    public static ConfigEntry<string> DiscordGuildId { get; set; }
+    public static ConfigEntry<string> DiscordVCId { get; set; }
+    public static ConfigEntry<string> StatusChannelId { get; set; }
+
     public static ConfigEntry<string> Ip { get; set; }
     public static ConfigEntry<ushort> Port { get; set; }
     public static IRegionInfo[] DefaultRegions;
@@ -85,6 +94,14 @@ public class RebuildUs : BasePlugin
         TransparentMap = Config.Bind("Custom", "Transparent Map", false);
         HideFakeTasks = Config.Bind("Custom", "Hide Fake Tasks", false);
 
+        EnableAutoMute = Config.Bind("Discord", "Enable Auto Mute", false);
+        DiscordBotToken = Config.Bind("Discord", "Bot Token", "");
+        DiscordBotToken2 = Config.Bind("Discord", "Bot Token 2", "");
+        DiscordBotToken3 = Config.Bind("Discord", "Bot Token 3", "");
+        DiscordGuildId = Config.Bind("Discord", "Guild ID", "");
+        DiscordVCId = Config.Bind("Discord", "Voice Channel ID", "");
+        StatusChannelId = Config.Bind("Discord", "Status Channel ID", "");
+
         Ip = Config.Bind("Custom", "Custom Server IP", "127.0.0.1");
         Port = Config.Bind("Custom", "Custom Server Port", (ushort)22023);
         DefaultRegions = ServerManager.DefaultRegions;
@@ -99,6 +116,8 @@ public class RebuildUs : BasePlugin
         SubmergedCompatibility.Initialize();
         Submerged.Patch();
         UpdateRegions();
+
+        DiscordModManager.Initialize();
 
         Harmony.PatchAll();
 

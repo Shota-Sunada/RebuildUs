@@ -1,11 +1,19 @@
 using BepInEx.Unity.IL2CPP.Utils.Collections;
 using InnerNet;
+using RebuildUs.Modules.Discord;
 
 namespace RebuildUs.Patches;
 
 [HarmonyPatch]
 public static class AmongUsClientPatch
 {
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(AmongUsClient), nameof(AmongUsClient.OnGameJoined))]
+    public static void OnGameJoinedPostfix()
+    {
+        DiscordModManager.UpdateStatus();
+    }
+
     [HarmonyPrefix]
     [HarmonyPatch(typeof(AmongUsClient), nameof(AmongUsClient.OnGameEnd))]
     public static void OnGameEndPrefix(AmongUsClient __instance, [HarmonyArgument(0)] ref EndGameResult endGameResult)
@@ -13,7 +21,7 @@ public static class AmongUsClientPatch
         EndGameMain.OnGameEndPrefix(ref endGameResult);
     }
 
-[   HarmonyPostfix]
+    [HarmonyPostfix]
     [HarmonyPatch(typeof(AmongUsClient), nameof(AmongUsClient.OnGameEnd))]
     public static void OnGameEndPostfix(AmongUsClient __instance, [HarmonyArgument(0)] ref EndGameResult endGameResult)
     {
@@ -33,5 +41,13 @@ public static class AmongUsClientPatch
     public static void OnPlayerJoinedPostfix(AmongUsClient __instance, ClientData data)
     {
         GameStart.OnPlayerJoined();
+        DiscordModManager.UpdateStatus();
+    }
+
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(AmongUsClient), nameof(AmongUsClient.OnPlayerLeft))]
+    public static void OnPlayerLeftPostfix()
+    {
+        DiscordModManager.UpdateStatus();
     }
 }

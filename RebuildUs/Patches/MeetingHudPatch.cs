@@ -1,3 +1,6 @@
+using InnerNet;
+using RebuildUs.Modules.Discord;
+
 namespace RebuildUs.Patches;
 
 [HarmonyPatch]
@@ -65,6 +68,14 @@ public static class MeetingHudPatch
     public static void StartPostfix(MeetingHud __instance)
     {
         ShowHost.Setup(__instance);
+        DiscordModManager.OnMeetingStart();
+    }
+
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(MeetingHud), nameof(MeetingHud.OnDestroy))]
+    public static void OnDestroyPostfix()
+    {
+        DiscordModManager.OnMeetingEnd();
     }
 
     [HarmonyPostfix]

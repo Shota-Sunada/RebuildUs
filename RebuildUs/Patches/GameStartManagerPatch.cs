@@ -1,3 +1,5 @@
+using RebuildUs.Modules.Discord;
+
 namespace RebuildUs.Patches;
 
 [HarmonyPatch]
@@ -8,6 +10,7 @@ public static class GameStartManagerPatch
     public static void StartPostfix(GameStartManager __instance)
     {
         GameStart.Start(__instance);
+        DiscordModManager.UpdateStatus();
     }
 
     [HarmonyPrefix]
