@@ -126,7 +126,7 @@ public static class DiscordModManager
         UpdateStatus();
     }
 
-    public static void adOnMeetingEnd()
+    public static void OnMeetingEnd()
     {
         if (!AmongUsClient.Instance.AmHost) return;
         foreach (var p in PlayerControl.AllPlayerControls)

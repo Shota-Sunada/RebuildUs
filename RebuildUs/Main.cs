@@ -38,7 +38,7 @@ public class RebuildUs : BasePlugin
 {
     public const string MOD_ID = "com.shota-sunada.rebuild-us";
     public const string MOD_NAME = "Rebuild Us";
-    public const string MOD_VERSION = "1.0.0.0";
+    public const string MOD_VERSION = "1.0.0";
     public const string MOD_DEVELOPER = "Shota Sunada";
 
     public static RebuildUs Instance;
