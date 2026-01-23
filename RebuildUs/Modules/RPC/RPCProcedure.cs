@@ -35,8 +35,10 @@ public static partial class RPCProcedure
         {
             uint id = reader.ReadPackedUInt32();
             uint selection = reader.ReadPackedUInt32();
-            var option = CustomOption.AllOptions.FirstOrDefault(x => x.Id == (int)id);
-            option?.UpdateSelection((int)selection, option.GetOptionIcon());
+            if (CustomOption.AllOptionsById.TryGetValue((int)id, out var option))
+            {
+                option.UpdateSelection((int)selection, option.GetOptionIcon());
+            }
         }
     }
 
@@ -59,11 +61,10 @@ public static partial class RPCProcedure
 
     public static void SetRole(byte roleId, byte playerId)
     {
-        Logger.LogInfo($"{GameData.Instance.GetPlayerById(playerId).PlayerName}({playerId}): {Enum.GetName(typeof(RoleType), roleId)}", "setRole");
-        PlayerControl.AllPlayerControls.GetFastEnumerator().ToArray().DoIf(
-            x => x.PlayerId == playerId,
-            x => x.SetRole((RoleType)roleId)
-        );
+        var player = Helpers.PlayerById(playerId);
+        if (player == null) return;
+        Logger.LogInfo($"{player.Data.PlayerName}({playerId}): {Enum.GetName(typeof(RoleType), roleId)}", "setRole");
+        player.SetRole((RoleType)roleId);
     }
 
     public static void AddModifier(byte modId, byte playerId)
@@ -271,13 +272,14 @@ public static partial class RPCProcedure
 
     public static void ArsonistWin(byte arsonistId)
     {
-        var arsonist = Helpers.PlayerById(arsonistId);
         Arsonist.TriggerArsonistWin = true;
-        var livingPlayers = PlayerControl.AllPlayerControls.GetFastEnumerator().ToArray().Where(p => !p.IsRole(RoleType.Arsonist) && p.IsAlive());
-        foreach (var p in livingPlayers)
+        foreach (var p in PlayerControl.AllPlayerControls.GetFastEnumerator())
         {
-            p.Exiled();
-            GameHistory.FinalStatuses[p.PlayerId] = EFinalStatus.Torched;
+            if (p != null && p.IsAlive() && !p.IsRole(RoleType.Arsonist))
+            {
+                p.Exiled();
+                GameHistory.FinalStatuses[p.PlayerId] = EFinalStatus.Torched;
+            }
         }
     }
 
@@ -467,15 +469,26 @@ public static partial class RPCProcedure
         var guessedTarget = Helpers.PlayerById(guessedTargetId);
         if (Guesser.ShowInfoInGhostChat && PlayerControl.LocalPlayer.Data.IsDead && guessedTarget != null)
         {
-            var roleInfo = RoleInfo.AllRoleInfos.FirstOrDefault(x => (byte)x.RoleType == guessedRoleType);
-            string msg = string.Format(Tr.Get("Hud.GuesserGuessChat"), roleInfo.Name, guessedTarget.Data.PlayerName);
-            if (AmongUsClient.Instance.AmClient && FastDestroyableSingleton<HudManager>.Instance)
+            RoleInfo roleInfo = null;
+            foreach (var r in RoleInfo.AllRoleInfos)
             {
-                FastDestroyableSingleton<HudManager>.Instance.Chat.AddChat(guesser, msg);
+                if ((byte)r.RoleType == guessedRoleType)
+                {
+                    roleInfo = r;
+                    break;
+                }
             }
-            if (msg.Contains("who", StringComparison.OrdinalIgnoreCase))
+            if (roleInfo != null)
             {
-                FastDestroyableSingleton<Assets.CoreScripts.UnityTelemetry>.Instance.SendWho();
+                string msg = string.Format(Tr.Get("Hud.GuesserGuessChat"), roleInfo.Name, guessedTarget.Data.PlayerName);
+                if (AmongUsClient.Instance.AmClient && FastDestroyableSingleton<HudManager>.Instance)
+                {
+                    FastDestroyableSingleton<HudManager>.Instance.Chat.AddChat(guesser, msg);
+                }
+                if (msg.Contains("who", StringComparison.OrdinalIgnoreCase))
+                {
+                    FastDestroyableSingleton<Assets.CoreScripts.UnityTelemetry>.Instance.SendWho();
+                }
             }
         }
     }
@@ -582,28 +595,29 @@ public static partial class RPCProcedure
         }
 
         if (!Vampire.Exists) return;
-        foreach (PlayerControl player in PlayerControl.AllPlayerControls)
+        var player = Helpers.PlayerById(targetId);
+        if (player != null && !player.Data.IsDead)
         {
-            if (player.PlayerId == targetId && !player.Data.IsDead)
-            {
-                Vampire.Bitten = player;
-            }
+            Vampire.Bitten = player;
         }
     }
 
     public static void ShareRealTasks(MessageReader reader)
     {
-        var count = reader.ReadByte();
+        byte count = reader.ReadByte();
         for (int i = 0; i < count; i++)
         {
-            var playerId = reader.ReadByte();
-            var taskTmp = reader.ReadBytes(4);
-            var x = System.BitConverter.ToSingle(taskTmp, 0);
-            taskTmp = reader.ReadBytes(4);
-            var y = System.BitConverter.ToSingle(taskTmp, 0);
-            var pos = new Vector2(x, y);
-            if (!Map.RealTasks.ContainsKey(playerId)) Map.RealTasks[playerId] = new Il2CppSystem.Collections.Generic.List<Vector2>();
-            Map.RealTasks[playerId].Add(pos);
+            byte playerId = reader.ReadByte();
+            var x = reader.ReadSingle();
+            var y = reader.ReadSingle();
+            Vector2 pos = new(x, y);
+
+            if (!Map.RealTasks.TryGetValue(playerId, out var list))
+            {
+                list = new Il2CppSystem.Collections.Generic.List<Vector2>();
+                Map.RealTasks[playerId] = list;
+            }
+            list.Add(pos);
         }
     }
     public static void PolusRandomSpawn(byte playerId, byte locId)
@@ -619,7 +633,7 @@ public static partial class RPCProcedure
                 Vector2 o2Spawn = new(3.28f, -21.67f);
                 Vector2 specimenSpawn = new(36.54f, -20.84f);
                 Vector2 laboratorySpawn = new(34.91f, -6.50f);
-                var loc = locId switch
+                Vector2 loc = locId switch
                 {
                     0 => initialSpawnCenter,
                     1 => meetingSpawnCenter,
@@ -629,14 +643,8 @@ public static partial class RPCProcedure
                     5 => laboratorySpawn,
                     _ => initialSpawnCenter,
                 };
-                foreach (var player in PlayerControl.AllPlayerControls)
-                {
-                    if (player.Data.PlayerId == playerId)
-                    {
-                        player.transform.position = loc;
-                        break;
-                    }
-                }
+                var player = Helpers.PlayerById(playerId);
+                player?.transform.position = loc;
             }
         })));
     }
@@ -645,7 +653,7 @@ public static partial class RPCProcedure
         SpawnIn.SynchronizeData.Synchronize((SynchronizeTag)tag, playerId);
     }
 
-    public static void PlaceCamera(byte[] buff, byte roomId, byte sgId)
+    public static void PlaceCamera(float x, float y, byte roomId, byte sgId)
     {
         var player = Helpers.PlayerById(sgId);
         var sg = SecurityGuard.GetRole(player);
@@ -656,9 +664,7 @@ public static partial class RPCProcedure
         sg.RemainingScrews -= SecurityGuard.CamPrice;
         sg.PlacedCameras++;
 
-        Vector3 position = Vector3.zero;
-        position.x = BitConverter.ToSingle(buff, 0 * sizeof(float));
-        position.y = BitConverter.ToSingle(buff, 1 * sizeof(float));
+        Vector3 position = new(x, y);
 
         SystemTypes roomType = (SystemTypes)roomId;
 
@@ -734,7 +740,17 @@ public static partial class RPCProcedure
         var player = Helpers.PlayerById(sgId);
         var sg = SecurityGuard.GetRole(player);
 
-        Vent vent = MapUtilities.CachedShipStatus.AllVents.FirstOrDefault((x) => x != null && x.Id == ventId);
+        Vent vent = null;
+        var allVents = MapUtilities.CachedShipStatus.AllVents;
+        for (int i = 0; i < allVents.Count; i++)
+        {
+            var v = allVents[i];
+            if (v != null && v.Id == ventId)
+            {
+                vent = v;
+                break;
+            }
+        }
         if (vent == null) return;
 
         sg.RemainingScrews -= SecurityGuard.VentPrice;
@@ -796,12 +812,9 @@ public static partial class RPCProcedure
         GameHistory.FinalStatuses[playerId] = EFinalStatus.Spelled;
     }
 
-    public static void PlaceGarlic(byte[] buff)
+    public static void PlaceGarlic(float x, float y)
     {
-        Vector3 position = Vector3.zero;
-        position.x = BitConverter.ToSingle(buff, 0 * sizeof(float));
-        position.y = BitConverter.ToSingle(buff, 1 * sizeof(float));
-        _ = new Garlic(position);
+        _ = new Garlic(new Vector3(x, y));
     }
 
     public static void ImpostorPromotesToLastImpostor(byte targetId)
@@ -812,7 +825,8 @@ public static partial class RPCProcedure
 
     public static void ShifterShift(byte targetId)
     {
-        var oldShifter = Shifter.Players.FirstOrDefault();
+        if (Shifter.Players.Count == 0) return;
+        var oldShifter = Shifter.Players[0];
         PlayerControl player = Helpers.PlayerById(targetId);
         if (player == null || oldShifter == null) return;
 

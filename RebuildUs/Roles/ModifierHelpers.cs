@@ -45,20 +45,11 @@ public static class ModifierHelpers
     {
         if (player == null || modType == ModifierType.NoModifier) return false;
 
-        var methods = GetMethods(modType);
-        if (methods.exists != null && methods.hasModifier != null)
+        var mods = PlayerModifier.GetModifiers(player);
+        for (int i = 0; i < mods.Count; i++)
         {
-            try
-            {
-                return (bool)methods.exists.Invoke(null, null) && (bool)methods.hasModifier.Invoke(null, [player]);
-            }
-            catch (Exception e)
-            {
-                Logger.LogError($"Error invoking HasModifier for {modType}: {e}", "HasModifier");
-                return false;
-            }
+            if (mods[i].CurrentModifierType == modType) return true;
         }
-
         return false;
     }
 

@@ -68,8 +68,9 @@ public static class ClientOptions
         transform.localPosition = pos;
 
         UnityEngine.Object.Destroy(PopUp.GetComponent<OptionsMenuBehaviour>());
-        foreach (var obj in PopUp.gameObject.GetAllChildren())
+        for (int i = transform.childCount - 1; i >= 0; i--)
         {
+            var obj = transform.GetChild(i).gameObject;
             if (obj.name is not "Background" and not "CloseButton")
             {
                 UnityEngine.Object.Destroy(obj);
@@ -243,14 +244,6 @@ public static class ClientOptions
                 SetUpOptions();
             }));
             ModButtons.Add(button);
-        }
-    }
-
-    private static IEnumerable<GameObject> GetAllChildren(this GameObject go)
-    {
-        for (var i = 0; i < go.transform.childCount; i++)
-        {
-            yield return go.transform.GetChild(i).gameObject;
         }
     }
 

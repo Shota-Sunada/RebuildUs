@@ -167,15 +167,13 @@ public class Vampire : RoleBase<Vampire>
 
                 local.LocalPlacedGarlic = true;
                 var pos = PlayerControl.LocalPlayer.transform.position;
-                byte[] buff = new byte[sizeof(float) * 2];
-                Buffer.BlockCopy(BitConverter.GetBytes(pos.x), 0, buff, 0 * sizeof(float), sizeof(float));
-                Buffer.BlockCopy(BitConverter.GetBytes(pos.y), 0, buff, 1 * sizeof(float), sizeof(float));
 
+                using (var sender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.PlaceGarlic))
                 {
-                    using var sender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.PlaceGarlic);
-                    sender.WriteBytesAndSize(buff);
+                    sender.Write(pos.x);
+                    sender.Write(pos.y);
                 }
-                RPCProcedure.PlaceGarlic(buff);
+                RPCProcedure.PlaceGarlic(pos.x, pos.y);
             },
             () =>
             {

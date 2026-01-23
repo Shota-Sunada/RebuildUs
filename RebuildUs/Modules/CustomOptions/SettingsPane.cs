@@ -93,14 +93,7 @@ public partial class CustomOption
 
     private static void DrawTab(LobbyViewSettingsPane __instance, CustomOptionType type)
     {
-        var options = new List<CustomOption>();
-        foreach (var option in AllOptions)
-        {
-            if (option.Type == type)
-            {
-                options.Add(option);
-            }
-        }
+        if (!OptionsByType.TryGetValue(type, out var options)) return;
 
         float num = 1.44f;
         int i = 0;
@@ -109,8 +102,9 @@ public partial class CustomOption
         int lines = 0;
         int numBonus = 0;
 
-        foreach (var option in options)
+        for (int j = 0; j < options.Count; j++)
         {
+            var option = options[j];
             if (option.IsHeader)
             {
                 if (i != 0)

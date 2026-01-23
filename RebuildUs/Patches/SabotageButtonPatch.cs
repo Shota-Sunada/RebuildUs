@@ -7,13 +7,7 @@ public static class SabotageButtonPatch
     [HarmonyPatch(typeof(SabotageButton), nameof(SabotageButton.Refresh))]
     public static void RefreshPostfix()
     {
-        // Mafia disable sabotage button for Janitor and sometimes for Mafioso
-        bool blockSabotageJanitor = PlayerControl.LocalPlayer.IsRole(RoleType.Janitor);
-        bool blockSabotageMafioso = PlayerControl.LocalPlayer.IsRole(RoleType.Mafioso) && !Mafia.IsGodfatherDead;
-        if (blockSabotageJanitor || blockSabotageMafioso)
-        {
-            FastDestroyableSingleton<HudManager>.Instance.SabotageButton.SetDisabled();
-        }
+        Usables.SabotageButtonRefresh();
     }
 
     [HarmonyPrefix]

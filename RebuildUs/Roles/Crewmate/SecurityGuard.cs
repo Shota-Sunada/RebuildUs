@@ -93,9 +93,6 @@ public class SecurityGuard : RoleBase<SecurityGuard>
                     {
                         // Place camera if there's no vent and it's not MiraHQ
                         var pos = PlayerControl.LocalPlayer.transform.position;
-                        byte[] buff = new byte[sizeof(float) * 2];
-                        Buffer.BlockCopy(BitConverter.GetBytes(pos.x), 0, buff, 0 * sizeof(float), sizeof(float));
-                        Buffer.BlockCopy(BitConverter.GetBytes(pos.y), 0, buff, 1 * sizeof(float), sizeof(float));
 
                         byte roomId;
                         try
@@ -107,11 +104,14 @@ public class SecurityGuard : RoleBase<SecurityGuard>
                             roomId = 255;
                         }
 
-                        using var sender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.PlaceCamera);
-                        sender.WriteBytesAndSize(buff);
-                        sender.Write(roomId);
-                        sender.Write(Player.PlayerId);
-                        RPCProcedure.PlaceCamera(buff, roomId, Player.PlayerId);
+                        using (var sender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.PlaceCamera))
+                        {
+                            sender.Write(pos.x);
+                            sender.Write(pos.y);
+                            sender.Write(roomId);
+                            sender.Write(Player.PlayerId);
+                        }
+                        RPCProcedure.PlaceCamera(pos.x, pos.y, roomId, Player.PlayerId);
                     }
                     SecurityGuardButton.Timer = SecurityGuardButton.MaxTimer;
                 },

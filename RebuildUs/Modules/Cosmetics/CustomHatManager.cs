@@ -20,8 +20,9 @@ public static class CustomHatManager
     internal static string HatsDirectory => CustomSkinsDirectory;
 
     internal static List<CustomHat> UnregisteredHats = [];
-    internal static readonly Dictionary<string, HatViewData> ViewDataCache = [];
-    internal static readonly Dictionary<string, HatExtension> ExtensionCache = [];
+    internal static readonly Dictionary<HatData, HatViewData> ViewDataCache = [];
+    internal static readonly Dictionary<string, HatViewData> ViewDataCacheByName = [];
+    internal static readonly Dictionary<HatData, HatExtension> ExtensionCache = [];
 
     public static readonly HatsLoader Loader;
 
@@ -29,39 +30,40 @@ public static class CustomHatManager
 
     static CustomHatManager()
     {
-        Loader = RebuildUs.Instance.AddComponent<HatsLoader>();
+        Loader = RebuildUs.Instance?.AddComponent<HatsLoader>();
     }
 
     internal static void LoadHats()
     {
-        Loader.FetchHats();
+        Loader?.FetchHats();
     }
 
     internal static bool TryGetCached(this HatParent hatParent, out HatViewData asset)
     {
-        if (hatParent && hatParent.Hat) return hatParent.Hat.TryGetCached(out asset);
+        if (hatParent != null && hatParent.Hat != null) return ViewDataCache.TryGetValue(hatParent.Hat, out asset);
         asset = null;
         return false;
     }
 
     internal static bool TryGetCached(this HatData hat, out HatViewData asset)
     {
-        return ViewDataCache.TryGetValue(hat.name, out asset);
+        if (hat == null) { asset = null; return false; }
+        return ViewDataCache.TryGetValue(hat, out asset);
     }
 
     internal static bool IsCached(this HatData hat)
     {
-        return ViewDataCache.ContainsKey(hat.name);
+        return hat != null && ViewDataCache.ContainsKey(hat);
     }
 
     internal static bool IsCached(this HatParent hatParent)
     {
-        return hatParent.Hat.IsCached();
+        return hatParent != null && hatParent.Hat != null && IsCached(hatParent.Hat);
     }
 
     internal static HatData CreateHatBehaviour(CustomHat ch, bool testOnly = false)
     {
-        var viewData = ViewDataCache[ch.Name] = ScriptableObject.CreateInstance<HatViewData>();
+        var viewData = ScriptableObject.CreateInstance<HatViewData>();
         var hat = ScriptableObject.CreateInstance<HatData>();
 
         viewData.MainImage = CreateHatSprite(ch.Resource) ?? throw new FileNotFoundException("File not downloaded yet");
@@ -111,10 +113,12 @@ public static class CustomHatManager
         }
         else
         {
-            ExtensionCache[hat.name] = extend;
+            ExtensionCache[hat] = extend;
+            ViewDataCache[hat] = viewData;
+            ViewDataCacheByName[hat.name] = viewData;
         }
 
-        hat.ViewDataRef = new AssetReference(ViewDataCache[hat.name].Pointer);
+        hat.ViewDataRef = new AssetReference(viewData.Pointer);
         hat.CreateAddressableAsset();
         return hat;
     }
@@ -214,11 +218,31 @@ public static class CustomHatManager
 
     private static string SanitizeFileName(string path)
     {
-        if (path == null || !path.EndsWith(".png")) return null;
-        return path.Replace("\\", "")
-            .Replace("/", "")
-            .Replace("*", "")
-            .Replace("..", "");
+        if (path == null) return null;
+        if (!path.EndsWith(".png", StringComparison.OrdinalIgnoreCase)) return null;
+
+        int len = path.Length;
+        char[] result = new char[len];
+        int writeIdx = 0;
+        for (int i = 0; i < len; i++)
+        {
+            char c = path[i];
+            if (c == '\\' || c == '/' || c == '*' || c == '.')
+            {
+                // Skip these characters or handle '..'
+                if (c == '.' && i + 1 < len && path[i + 1] == '.')
+                {
+                    i++; // skip second dot
+                }
+                continue;
+            }
+            result[writeIdx++] = c;
+        }
+
+        // Add back .png if it was sanitized out (unlikely but safe)
+        var s = new string(result, 0, writeIdx);
+        if (!s.EndsWith(".png", StringComparison.OrdinalIgnoreCase)) s += ".png";
+        return s;
     }
 
     private static bool ResourceRequireDownload(string resFile, string resHash, HashAlgorithm algorithm)
@@ -237,26 +261,18 @@ public static class CustomHatManager
 
     internal static List<string> GenerateDownloadList(List<CustomHat> hats)
     {
-        var algorithm = MD5.Create();
+        using var algorithm = MD5.Create();
         var toDownload = new List<string>();
 
-        foreach (var hat in hats)
+        for (int i = 0; i < hats.Count; i++)
         {
-            var files = new List<Tuple<string, string>>
-            {
-                new(hat.Resource, hat.ResHashA),
-                new(hat.BackResource, hat.ResHashB),
-                new(hat.ClimbResource, hat.ResHashC),
-                new(hat.FlipResource, hat.ResHashF),
-                new(hat.BackFlipResource, hat.ResHashBf)
-            };
-            foreach (var (fileName, fileHash) in files)
-            {
-                if (fileName != null && ResourceRequireDownload(fileName, fileHash, algorithm))
-                {
-                    toDownload.Add(fileName);
-                }
-            }
+            var hat = hats[i];
+
+            if (hat.Resource != null && ResourceRequireDownload(hat.Resource, hat.ResHashA, algorithm)) toDownload.Add(hat.Resource);
+            if (hat.BackResource != null && ResourceRequireDownload(hat.BackResource, hat.ResHashB, algorithm)) toDownload.Add(hat.BackResource);
+            if (hat.ClimbResource != null && ResourceRequireDownload(hat.ClimbResource, hat.ResHashC, algorithm)) toDownload.Add(hat.ClimbResource);
+            if (hat.FlipResource != null && ResourceRequireDownload(hat.FlipResource, hat.ResHashF, algorithm)) toDownload.Add(hat.FlipResource);
+            if (hat.BackFlipResource != null && ResourceRequireDownload(hat.BackFlipResource, hat.ResHashBf, algorithm)) toDownload.Add(hat.BackFlipResource);
         }
 
         return toDownload;

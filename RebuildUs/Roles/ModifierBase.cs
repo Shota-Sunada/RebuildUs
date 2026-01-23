@@ -3,6 +3,7 @@ namespace RebuildUs.Roles;
 public abstract class PlayerModifier
 {
     public static List<PlayerModifier> AllModifiers = [];
+    private static readonly List<PlayerModifier>[] PlayerModifierCache = new List<PlayerModifier>[256];
     public PlayerControl Player;
     public ModifierType CurrentModifierType;
     public virtual Color ModifierColor => Color.white;
@@ -30,16 +31,18 @@ public abstract class PlayerModifier
 
     public static void ClearAll()
     {
-        AllModifiers = [];
+        AllModifiers.Clear();
+        for (int i = 0; i < 256; i++) PlayerModifierCache[i]?.Clear();
     }
 
     public static PlayerModifier GetModifier(PlayerControl player, ModifierType type)
     {
         if (player == null) return null;
-        var allModifiers = AllModifiers;
-        for (int i = 0; i < allModifiers.Count; i++)
+        var list = PlayerModifierCache[player.PlayerId];
+        if (list == null) return null;
+        for (int i = 0; i < list.Count; i++)
         {
-            if (allModifiers[i].Player == player && allModifiers[i].CurrentModifierType == type) return allModifiers[i];
+            if (list[i].CurrentModifierType == type) return list[i];
         }
         return null;
     }
@@ -47,13 +50,7 @@ public abstract class PlayerModifier
     public static List<PlayerModifier> GetModifiers(PlayerControl player)
     {
         if (player == null) return [];
-        var list = new List<PlayerModifier>();
-        var allModifiers = AllModifiers;
-        for (int i = 0; i < allModifiers.Count; i++)
-        {
-            if (allModifiers[i].Player == player) list.Add(allModifiers[i]);
-        }
-        return list;
+        return PlayerModifierCache[player.PlayerId] ?? [];
     }
 }
 
@@ -68,6 +65,10 @@ public abstract class ModifierBase<T> : PlayerModifier where T : ModifierBase<T>
         Player = player;
         Players.Add((T)this);
         AllModifiers.Add(this);
+
+        if (PlayerModifierCache[player.PlayerId] == null)
+            PlayerModifierCache[player.PlayerId] = [];
+        PlayerModifierCache[player.PlayerId].Add(this);
     }
 
     public static T Local

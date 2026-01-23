@@ -48,6 +48,8 @@ public static class Vitals
         }
     }
 
+    private static readonly StringBuilder VitalsStringBuilder = new();
+
     public static bool UpdatePrefix(VitalsMinigame __instance)
     {
         VitalsTimer += Time.deltaTime;
@@ -72,8 +74,17 @@ public static class Vitals
                 return false;
             }
 
-            string timeString = TimeSpan.FromSeconds(ModMapOptions.RestrictVitalsTime).ToString(@"mm\:ss\.ff");
-            TimeRemaining.text = String.Format(Tr.Get("Hud.TimeRemaining"), timeString);
+            VitalsStringBuilder.Clear();
+            var ts = TimeSpan.FromSeconds(ModMapOptions.RestrictVitalsTime);
+            if (ts.TotalHours >= 1) VitalsStringBuilder.Append((int)ts.TotalHours).Append(":");
+            VitalsStringBuilder.Append(ts.Minutes.ToString("D2")).Append(":")
+                               .Append(ts.Seconds.ToString("D2")).Append(".")
+                               .Append((ts.Milliseconds / 10).ToString("D2"));
+
+            string timeString = VitalsStringBuilder.ToString();
+            VitalsStringBuilder.Clear();
+            VitalsStringBuilder.Append(string.Format(Tr.Get("Hud.TimeRemaining"), timeString));
+            TimeRemaining.text = VitalsStringBuilder.ToString();
             TimeRemaining.gameObject.SetActive(true);
         }
 
@@ -93,12 +104,14 @@ public static class Vitals
                 // Hacker update
                 if (vitalsPanel.IsDead)
                 {
-                    var deadPlayer = GameHistory.DeadPlayers?.Where(x => x.Player?.PlayerId == player?.PlayerId)?.FirstOrDefault();
+                    var deadPlayer = GameHistory.GetDeadPlayer(player.PlayerId);
                     if (deadPlayer != null && k < HackerTexts.Count && HackerTexts[k] != null)
                     {
                         float timeSinceDeath = (float)(DateTime.UtcNow - deadPlayer.TimeOfDeath).TotalMilliseconds;
                         HackerTexts[k].gameObject.SetActive(true);
-                        HackerTexts[k].text = Math.Round(timeSinceDeath / 1000) + "s";
+                        VitalsStringBuilder.Clear();
+                        VitalsStringBuilder.Append(Math.Round(timeSinceDeath / 1000)).Append("s");
+                        HackerTexts[k].text = VitalsStringBuilder.ToString();
                     }
                 }
             }

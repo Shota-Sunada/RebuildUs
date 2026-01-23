@@ -12,6 +12,16 @@ public class Submerged
     public static Type SpawnInStateType;
     public static MethodInfo GetFloorHandlerMethod;
     public static MethodInfo RpcRequestChangeFloorMethod;
+
+    private static FieldInfo _currentStateField;
+    private static FieldInfo _timerField;
+    private static FieldInfo _playersField;
+    private static PropertyInfo _isDirtyProp;
+    private static PropertyInfo _playerFloorSystemInstanceProp;
+    private static MethodInfo _changePlayerFloorStateMethod;
+    private static MethodInfo _getTotalPlayerAmountMethod;
+    private static MethodInfo _getReadyPlayerAmountMethod;
+
     public static void Patch()
     {
         var loaded = IL2CPPChainloader.Instance.Plugins.TryGetValue(SubmergedCompatibility.SUBMERGED_GUID, out PluginInfo pluginInfo);
@@ -20,22 +30,37 @@ public class Submerged
         var version = pluginInfo.Metadata.Version;
         var assembly = plugin!.GetType().Assembly;
         var types = AccessTools.GetTypesFromAssembly(assembly);
-        SubmarineElevatorType = types.First(t => t.Name == "SubmarineElevator");
-        SubmarinePlayerFloorSystemType = types.First(t => t.Name == "SubmarinePlayerFloorSystem");
-        SpawnInStateType = types.First(t => t.Name == "SpawnInState");
-        FloorHandlerType = types.First(t => t.Name == "FloorHandler");
+
+        foreach (var t in types)
+        {
+            if (t.Name == "SubmarineElevator") SubmarineElevatorType = t;
+            else if (t.Name == "SubmarinePlayerFloorSystem") SubmarinePlayerFloorSystemType = t;
+            else if (t.Name == "SpawnInState") SpawnInStateType = t;
+            else if (t.Name == "FloorHandler") FloorHandlerType = t;
+            else if (t.Name == "SubmarineSpawnInSystem") SubmarineSpawnInSystemType = t;
+        }
+
         GetFloorHandlerMethod = AccessTools.Method(FloorHandlerType, "GetFloorHandler", [typeof(PlayerControl)]);
         RpcRequestChangeFloorMethod = AccessTools.Method(FloorHandlerType, "RpcRequestChangeFloor");
 
+        _currentStateField = SubmarineSpawnInSystemType.GetField("CurrentState", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
+        _timerField = SubmarineSpawnInSystemType.GetField("Timer", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
+        _playersField = SubmarineSpawnInSystemType.GetField("Players", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
+        _isDirtyProp = SubmarineSpawnInSystemType.GetProperty("IsDirty", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
+        _playerFloorSystemInstanceProp = SubmarinePlayerFloorSystemType.GetProperty("Instance", BindingFlags.Static | BindingFlags.Public);
+        _changePlayerFloorStateMethod = SubmarinePlayerFloorSystemType.GetMethod("ChangePlayerFloorState");
+        _getTotalPlayerAmountMethod = SubmarineSpawnInSystemType.GetMethod("GetTotalPlayerAmount");
+        _getReadyPlayerAmountMethod = SubmarineSpawnInSystemType.GetMethod("GetReadyPlayerAmount");
+
         // OnDestroyパッチ
-        var submarineSelectSpawnType = types.First(t => t.Name == "SubmarineSelectSpawn");
+        Type submarineSelectSpawnType = null;
+        foreach (var t in types) if (t.Name == "SubmarineSelectSpawn") { submarineSelectSpawnType = t; break; }
         var submarineSelectSpawnOnDestroyOriginal = AccessTools.Method(submarineSelectSpawnType, "OnDestroy");
         var submarineSelectSpawnOnDestroyPostfix = SymbolExtensions.GetMethodInfo(() => SubmarineSelectSpawnOnDestroyPatch.Postfix());
         var submarineSelectSpawnOnDestroyPrefix = SymbolExtensions.GetMethodInfo(() => SubmarineSelectSpawnOnDestroyPatch.Prefix());
 
         // GetTotalPlayerAmountパッチ
         var aInt = 0;
-        SubmarineSpawnInSystemType = types.First(t => t.Name == "SubmarineSpawnInSystem");
         var getTotalPlayerAmountOriginal = AccessTools.Method(SubmarineSpawnInSystemType, "GetTotalPlayerAmount");
         var getTotalPlayerAmountPostfix = SymbolExtensions.GetMethodInfo(() => SubmarineSpawnInSystemGetTotalPlayerAmountPatch.Postfix());
         var getTotalPlayerAmountPrefix = SymbolExtensions.GetMethodInfo(() => SubmarineSpawnInSystemGetTotalPlayerAmountPatch.Prefix(ref aInt));
@@ -55,10 +80,9 @@ public class Submerged
 
     public static void ChangePlayerFloorState(byte playerId, bool toUpper)
     {
-        var subMarinePlayerFloorSystemProperties = SubmarinePlayerFloorSystemType.GetProperties(BindingFlags.Static | BindingFlags.Public);
-        var instance = subMarinePlayerFloorSystemProperties.First(f => f.Name == "Instance").GetValue(null);
-        var changePlayerFloorStateMethod = SubmarinePlayerFloorSystemType.GetMethod("ChangePlayerFloorState");
-        changePlayerFloorStateMethod.Invoke(instance, [playerId, toUpper]);
+        if (_playerFloorSystemInstanceProp == null || _changePlayerFloorStateMethod == null) return;
+        var instance = _playerFloorSystemInstanceProp.GetValue(null);
+        _changePlayerFloorStateMethod.Invoke(instance, [playerId, toUpper]);
     }
 
     public class SubmarineSelectSpawnOnDestroyPatch
@@ -75,18 +99,21 @@ public class Submerged
     {
         public static bool Prefix(ref int __result)
         {
-            __result = Enumerable.Count(GameData.Instance.AllPlayers.ToSystemList(), delegate (NetworkedPlayerInfo p)
+            int count = 0;
+            var players = GameData.Instance.AllPlayers;
+            for (int i = 0; i < players.Count; i++)
             {
+                var p = players[i];
                 if (p != null && !p.IsDead && !p.Disconnected)
                 {
                     PlayerControl @object = p.Object;
-                    if (@object != null)
+                    if (@object != null && !@object.isDummy)
                     {
-                        return !@object.isDummy;
+                        count++;
                     }
                 }
-                return false;
-            });
+            }
+            __result = count;
             return false;
         }
         public static void Postfix() { }
@@ -96,38 +123,33 @@ public class Submerged
         public static void Postfix() { }
         public static bool Prefix(object __instance, float deltaTime)
         {
-            var getTotalPlayerAmount = AccessTools.Method(SubmarineSpawnInSystemType, "GetTotalPlayerAmount");
-            var totalPlayerAmount = (getTotalPlayerAmount.Invoke(__instance, []) as int?).Value;
-            var getReadyPlayerAmount = AccessTools.Method(SubmarineSpawnInSystemType, "GetReadyPlayerAmount");
-            var readyPlayerAmount = (getReadyPlayerAmount.Invoke(__instance, []) as int?).Value;
-            var submarineSpawnInSystemFields = SubmarineSpawnInSystemType.GetFields(BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic);
-            var currentState = submarineSpawnInSystemFields.First(f => f.Name == "CurrentState");
-            currentState = SubmarineSpawnInSystemType.GetField("CurrentState");
-            object currentState2 = currentState.GetValue(__instance);
-            Type enumUnderlyingType = System.Enum.GetUnderlyingType(SpawnInStateType);
-            object state = System.Convert.ChangeType(currentState2, enumUnderlyingType);
+            if (_getTotalPlayerAmountMethod == null || _getReadyPlayerAmountMethod == null || _currentStateField == null || _timerField == null) return true;
 
-            var timer = submarineSpawnInSystemFields.First(f => f.Name == "Timer");
-            if ((byte)state == 1)
+            var totalPlayerAmount = (int)_getTotalPlayerAmountMethod.Invoke(__instance, null);
+            var readyPlayerAmount = (int)_getReadyPlayerAmountMethod.Invoke(__instance, null);
+
+            object currentStateValue = _currentStateField.GetValue(__instance);
+            Type enumUnderlyingType = Enum.GetUnderlyingType(SpawnInStateType);
+            byte state = (byte)Convert.ChangeType(currentStateValue, enumUnderlyingType);
+
+            if (state == 1)
             {
-                var timer2 = MathF.Max(0f, (timer.GetValue(__instance) as float?).Value - deltaTime);
-                timer.SetValue(__instance, timer2);
+                var timerVal = (float)_timerField.GetValue(__instance);
+                _timerField.SetValue(__instance, MathF.Max(0f, timerVal - deltaTime));
             }
 
             if (totalPlayerAmount == readyPlayerAmount)
             {
-                var players = submarineSpawnInSystemFields.First(f => f.Name == "Players");
-                var submarineSpawnInSystemProperties = SubmarineSpawnInSystemType.GetProperties(BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic);
-                var isDirty = submarineSpawnInSystemProperties.First(f => f.Name == "IsDirty");
-                currentState.SetValueDirect(__makeref(__instance), (byte)state + 1);
-                //CurrentState.SetValue(__instance, Done);
-                players.SetValue(__instance, new HashSet<byte>());
-                timer.SetValue(__instance, 10f);
-                isDirty.SetValue(__instance, true);
+                if (_playersField != null && _isDirtyProp != null)
+                {
+                    _currentStateField.SetValue(__instance, state + 1);
+                    _playersField.SetValue(__instance, new HashSet<byte>());
+                    _timerField.SetValue(__instance, 10f);
+                    _isDirtyProp.SetValue(__instance, true);
+                }
             }
 
             return false;
-
         }
     }
 }

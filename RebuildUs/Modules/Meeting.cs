@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Text;
 using AmongUs.Data;
 using Assets.CoreScripts;
 using BepInEx.Unity.IL2CPP.Utils.Collections;
@@ -58,16 +59,17 @@ public static class Meeting
     private static Dictionary<byte, int> CalculateVotes(MeetingHud __instance)
     {
         var dictionary = new Dictionary<byte, int>();
+        var playersById = Helpers.AllPlayersById();
         for (int i = 0; i < __instance.playerStates.Length; i++)
         {
             var playerVoteArea = __instance.playerStates[i];
 
             if (playerVoteArea.VotedFor is not 252 and not 255 and not 254)
             {
-                var player = Helpers.PlayerById(playerVoteArea.TargetPlayerId);
+                var player = playersById.ContainsKey(playerVoteArea.TargetPlayerId) ? playersById[playerVoteArea.TargetPlayerId] : null;
                 if (player == null || player.Data == null || player.Data.IsDead || player.Data.Disconnected) continue;
 
-                var additionalVotes = (Mayor.Exists && Helpers.PlayerById(playerVoteArea.TargetPlayerId).IsRole(RoleType.Mayor)) ? Mayor.NumVotes : 1; // Mayor vote
+                var additionalVotes = (Mayor.Exists && player.IsRole(RoleType.Mayor)) ? Mayor.NumVotes : 1; // Mayor vote
                 dictionary[playerVoteArea.VotedFor] = dictionary.TryGetValue(playerVoteArea.VotedFor, out int currentVotes) ? currentVotes + additionalVotes : additionalVotes;
             }
         }
@@ -96,7 +98,10 @@ public static class Meeting
 
     public static bool CheckForEndVoting(MeetingHud __instance)
     {
-        if (!__instance.playerStates.All(ps => ps.AmDead || ps.DidVote)) return false;
+        foreach (var ps in __instance.playerStates)
+        {
+            if (!ps.AmDead && !ps.DidVote) return false;
+        }
 
         if (Target == null && ModMapOptions.BlockSkippingInEmergencyMeetings && ModMapOptions.NoVoteIsSelfVote)
         {
@@ -111,7 +116,19 @@ public static class Meeting
 
         var self = CalculateVotes(__instance);
         var max = self.MaxPair(out bool tie);
-        var exiled = GameData.Instance.AllPlayers.ToArray().FirstOrDefault(v => !tie && v.PlayerId == max.Key && !v.IsDead);
+        PlayerControl exiledPlayer = null;
+        if (!tie)
+        {
+            foreach (var p in PlayerControl.AllPlayerControls)
+            {
+                if (p.PlayerId == max.Key && !p.Data.IsDead)
+                {
+                    exiledPlayer = p;
+                    break;
+                }
+            }
+        }
+        var exiled = exiledPlayer?.Data;
         var states = new MeetingHud.VoterState[__instance.playerStates.Length];
         for (int i = 0; i < __instance.playerStates.Length; i++)
         {
@@ -175,6 +192,8 @@ public static class Meeting
         }
 
         __instance.TitleText.text = FastDestroyableSingleton<TranslationController>.Instance.GetString(StringNames.MeetingVotingResults, new Il2CppReferenceArray<Il2CppSystem.Object>(0));
+
+        var playersById = Helpers.AllPlayersById();
         var num = 0;
         for (int i = 0; i < __instance.playerStates.Length; i++)
         {
@@ -191,12 +210,12 @@ public static class Meeting
             {
                 var state = states[j];
                 var playerById = GameData.Instance.GetPlayerById(state.VoterId);
-                var voter = Helpers.PlayerById(state.VoterId);
+                var voter = playersById.ContainsKey(state.VoterId) ? playersById[state.VoterId] : null;
                 if (voter == null) continue;
 
                 if (playerById == null)
                 {
-                    Logger.LogError(string.Format("Couldn't find player info for voter: {0}", state.VoterId));
+                    Logger.LogError(new StringBuilder("Couldn't find player info for voter: ").Append(state.VoterId).ToString());
                 }
                 else if (i == 0 && state.SkippedVote && !playerById.IsDead)
                 {
@@ -265,13 +284,24 @@ public static class Meeting
         return true;
     }
 
+    private static int GetSelectedCount()
+    {
+        if (Selections == null) return 0;
+        int count = 0;
+        for (int i = 0; i < Selections.Length; i++)
+        {
+            if (Selections[i]) count++;
+        }
+        return count;
+    }
+
     static void SwapperOnClick(int i, MeetingHud __instance)
     {
         if (Swapper.NumSwaps <= 0) return;
         if (__instance.state == MeetingHud.VoteStates.Results) return;
         if (__instance.playerStates[i].AmDead) return;
 
-        int selectedCount = Selections.Count(b => b);
+        int selectedCount = GetSelectedCount();
         var renderer = Renderers[i];
 
         if (selectedCount == 0)
@@ -308,7 +338,7 @@ public static class Meeting
     {
         __instance.playerStates[0].Cancel();  // This will stop the underlying buttons of the template from showing up
         if (__instance.state == MeetingHud.VoteStates.Results) return;
-        if (Selections.Count(b => b) != 2) return;
+        if (GetSelectedCount() != 2) return;
         if (Swapper.NumSwaps <= 0 || Swapper.PlayerId1 != byte.MaxValue) return;
 
         PlayerVoteArea firstPlayer = null;
@@ -724,6 +754,8 @@ public static class Meeting
         return !(PlayerControl.LocalPlayer != null && Guesser.IsGuesser(PlayerControl.LocalPlayer.PlayerId) && GuesserUI != null);
     }
 
+    private static readonly StringBuilder InfoStringBuilder = new();
+
     public static void UpdateMeetingText(MeetingHud __instance)
     {
         // Uses remaining text for guesser/swapper
@@ -738,32 +770,37 @@ public static class Meeting
             MeetingInfoText.gameObject.SetActive(false);
         }
 
-        MeetingInfoText.text = "";
-        MeetingInfoText.gameObject.SetActive(false);
+        InfoStringBuilder.Clear();
 
-        if (MeetingHud.Instance.state is not MeetingHud.VoteStates.Voted and not MeetingHud.VoteStates.NotVoted and not MeetingHud.VoteStates.Discussion)
+        if (MeetingHud.Instance.state is MeetingHud.VoteStates.Voted or MeetingHud.VoteStates.NotVoted or MeetingHud.VoteStates.Discussion)
         {
-            return;
+            var lp = PlayerControl.LocalPlayer;
+            if (lp != null)
+            {
+                if (Swapper.Exists && lp.IsRole(RoleType.Swapper) && Swapper.RemainSwaps > 0 && Swapper.LivingPlayers.Count != 0)
+                {
+                    InfoStringBuilder.AppendFormat(Tr.Get("Hud.SwapperSwapsLeft"), Swapper.RemainSwaps);
+                    InfoStringBuilder.AppendLine();
+                }
+
+                int numGuesses = Guesser.RemainingShots(lp);
+                if ((Guesser.IsGuesser(lp.PlayerId) || lp.HasModifier(ModifierType.LastImpostor)) && lp.IsAlive() && numGuesses > 0)
+                {
+                    InfoStringBuilder.AppendFormat(Tr.Get("Hud.GuesserGuessesLeft"), numGuesses);
+                    InfoStringBuilder.AppendLine();
+                }
+
+                if (Shifter.Exists && lp.IsRole(RoleType.Shifter) && Shifter.FutureShift != null)
+                {
+                    InfoStringBuilder.AppendFormat(Tr.Get("Hud.ShifterTargetInfo"), Shifter.FutureShift.Data.PlayerName);
+                    InfoStringBuilder.AppendLine();
+                }
+            }
         }
 
-        if (Swapper.Exists && PlayerControl.LocalPlayer.IsRole(RoleType.Swapper) && Swapper.RemainSwaps > 0 && Swapper.LivingPlayers.Count != 0)
-        {
-            MeetingInfoText.text = string.Format(Tr.Get("Hud.SwapperSwapsLeft"), Swapper.RemainSwaps);
-            MeetingInfoText.gameObject.SetActive(true);
-        }
-
-        int numGuesses = Guesser.RemainingShots(PlayerControl.LocalPlayer);
-        if ((Guesser.IsGuesser(PlayerControl.LocalPlayer.PlayerId) || PlayerControl.LocalPlayer.HasModifier(ModifierType.LastImpostor)) && PlayerControl.LocalPlayer.IsAlive() && numGuesses > 0)
-        {
-            MeetingInfoText.text = string.Format(Tr.Get("Hud.GuesserGuessesLeft"), numGuesses);
-            MeetingInfoText.gameObject.SetActive(true);
-        }
-
-        if (Shifter.Exists && PlayerControl.LocalPlayer.IsRole(RoleType.Shifter) && Shifter.FutureShift != null)
-        {
-            MeetingInfoText.text = string.Format(Tr.Get("Hud.ShifterTargetInfo"), Shifter.FutureShift.Data.PlayerName);
-            MeetingInfoText.gameObject.SetActive(true);
-        }
+        string text = InfoStringBuilder.ToString().Trim();
+        MeetingInfoText.text = text;
+        MeetingInfoText.gameObject.SetActive(text.Length > 0);
     }
 
     public static void StartMeetingClear()
@@ -974,5 +1011,62 @@ public static class Meeting
             ControllerManager.Instance.AddSelectableUiElement(playerVoteArea2.PlayerButton, false);
         }
         __instance.SortButtons();
+    }
+
+    public static void HandleReportDeadBody(PlayerControl reporter, NetworkedPlayerInfo target)
+    {
+        var localPlayer = PlayerControl.LocalPlayer;
+        if (localPlayer == null) return;
+
+        bool isLocalReporter = reporter.PlayerId == localPlayer.PlayerId;
+        bool isMedicReport = localPlayer.IsRole(RoleType.Medic) && isLocalReporter;
+        bool isDetectiveReport = Detective.Exists && localPlayer.IsRole(RoleType.Detective) && isLocalReporter;
+
+        if (isMedicReport || isDetectiveReport)
+        {
+            var deadPlayer = GameHistory.GetDeadPlayer(target.PlayerId);
+
+            if (deadPlayer != null && deadPlayer.KillerIfExisting != null)
+            {
+                float timeSinceDeath = (float)(DateTime.UtcNow - deadPlayer.TimeOfDeath).TotalMilliseconds;
+
+                var sb = new StringBuilder();
+                if (isMedicReport)
+                {
+                    sb.AppendFormat(Tr.Get("Hud.MedicReport"), (int)Math.Round(timeSinceDeath / 1000));
+                }
+                else if (isDetectiveReport)
+                {
+                    if (timeSinceDeath < Detective.ReportNameDuration * 1000)
+                    {
+                        sb.AppendFormat(Tr.Get("Hud.DetectiveReportName"), deadPlayer.KillerIfExisting.Data.PlayerName);
+                    }
+                    else if (timeSinceDeath < Detective.ReportColorDuration * 1000)
+                    {
+                        var typeOfColor = Helpers.IsLighterColor(deadPlayer.KillerIfExisting.Data.DefaultOutfit.ColorId) ?
+                            Tr.Get("Hud.DetectiveColorLight") :
+                            Tr.Get("Hud.DetectiveColorDark");
+                        sb.AppendFormat(Tr.Get("Hud.DetectiveReportColor"), typeOfColor);
+                    }
+                    else
+                    {
+                        sb.Append(Tr.Get("Hud.DetectiveReportNone"));
+                    }
+                }
+
+                string msg = sb.ToString();
+                if (msg.Length > 0)
+                {
+                    if (AmongUsClient.Instance.AmClient && FastDestroyableSingleton<HudManager>.Instance)
+                    {
+                        FastDestroyableSingleton<HudManager>.Instance.Chat.AddChat(localPlayer, msg);
+                    }
+                    if (msg.Contains("who", StringComparison.OrdinalIgnoreCase))
+                    {
+                        FastDestroyableSingleton<Assets.CoreScripts.UnityTelemetry>.Instance.SendWho();
+                    }
+                }
+            }
+        }
     }
 }

@@ -23,17 +23,20 @@ public class SynchronizeData
 
     public bool Align(SynchronizeTag tag, bool withGhost, bool withSurvivor = true)
     {
-        bool result = true;
-
-        Dic.TryGetValue(tag, out ulong value);
+        if (!Dic.TryGetValue(tag, out ulong value)) return false;
 
         foreach (PlayerControl pc in PlayerControl.AllPlayerControls)
         {
-            if (pc.Data.IsDead ? withGhost : withSurvivor)
-                result &= (value & ((ulong)1 << pc.PlayerId)) != 0;
+            if (pc == null || pc.Data == null || pc.Data.Disconnected) continue;
+
+            bool shouldCheck = pc.Data.IsDead ? withGhost : withSurvivor;
+            if (shouldCheck)
+            {
+                if ((value & ((ulong)1 << pc.PlayerId)) == 0) return false;
+            }
         }
 
-        return result;
+        return true;
     }
 
     public void Reset(SynchronizeTag tag)

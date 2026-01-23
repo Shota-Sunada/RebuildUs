@@ -26,6 +26,9 @@ public partial class CustomOption
     public const int CUSTOM_OPTION_PRE_ID = 6000;
 
     public static List<CustomOption> AllOptions = [];
+    public static Dictionary<int, CustomOption> AllOptionsById = [];
+    public static Dictionary<CustomOptionType, List<CustomOption>> OptionsByType = [];
+    public static Dictionary<OptionBehaviour, CustomOption> OptionsByBehaviour = [];
     public static int Preset = 0;
 
     public int Id;
@@ -76,12 +79,21 @@ public partial class CustomOption
             Selection = Mathf.Clamp(Entry.Value, 0, selections.Length - 1);
 
 #if DEBUG
-            if (AllOptions.Any(x => x.Id == id))
+            if (AllOptionsById.ContainsKey(id))
             {
                 Logger.LogDebug($"CustomOption id {id} is used in multiple places.");
             }
 #endif
+            AllOptionsById[id] = this;
         }
+
+        if (!OptionsByType.TryGetValue(type, out var list))
+        {
+            list = [];
+            OptionsByType[type] = list;
+        }
+        list.Add(this);
+
         AllOptions.Add(this);
     }
 
@@ -243,8 +255,7 @@ public partial class CustomOption
 
     public static void ShareOptionChange(uint optionId)
     {
-        var option = AllOptions.FirstOrDefault(x => x.Id == optionId);
-        if (option == null) return;
+        if (!AllOptionsById.TryGetValue((int)optionId, out var option)) return;
         using var sender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.ShareOptions);
         sender.Write((byte)1);
         sender.WritePacked((uint)option.Id);
@@ -254,16 +265,18 @@ public partial class CustomOption
     public static void ShareOptionSelections()
     {
         if (PlayerControl.AllPlayerControls.Count <= 1 || AmongUsClient.Instance!.AmHost == false && PlayerControl.LocalPlayer == null) return;
-        var optionsList = new List<CustomOption>(AllOptions);
-        while (optionsList.Any())
+
+        int totalOptions = AllOptions.Count;
+        int currentIndex = 0;
+
+        while (currentIndex < totalOptions)
         {
-            byte amount = (byte)Math.Min(optionsList.Count, 200); // takes less than 3 bytes per option on average
+            byte amount = (byte)Math.Min(totalOptions - currentIndex, 200);
             using var sender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.ShareOptions);
             sender.Write(amount);
             for (int i = 0; i < amount; i++)
             {
-                var option = optionsList[0];
-                optionsList.RemoveAt(0);
+                var option = AllOptions[currentIndex++];
                 sender.WritePacked((uint)option.Id);
                 sender.WritePacked(Convert.ToUInt32(option.Selection));
             }

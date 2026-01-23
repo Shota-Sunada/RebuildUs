@@ -33,9 +33,9 @@ public class Garlic
 
     public static void UpdateAll()
     {
-        foreach (Garlic garlic in Garlics)
+        for (int i = 0; i < Garlics.Count; i++)
         {
-            garlic?.Update();
+            Garlics[i]?.Update();
         }
     }
 

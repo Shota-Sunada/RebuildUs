@@ -3,6 +3,7 @@ namespace RebuildUs.Roles;
 public abstract class PlayerRole
 {
     public static List<PlayerRole> AllRoles = [];
+    private static readonly Dictionary<byte, PlayerRole> PlayerRoleCache = [];
     public PlayerControl Player;
     public RoleType CurrentRoleType;
     public virtual Color RoleColor => Color.white;
@@ -29,16 +30,22 @@ public abstract class PlayerRole
 
     public static void ClearAll()
     {
-        AllRoles = [];
+        AllRoles.Clear();
+        PlayerRoleCache.Clear();
     }
 
     public static PlayerRole GetRole(PlayerControl player)
     {
         if (player == null) return null;
-        var allRoles = AllRoles;
-        for (int i = 0; i < allRoles.Count; i++)
+        if (PlayerRoleCache.TryGetValue(player.PlayerId, out var role)) return role;
+
+        for (int i = 0; i < AllRoles.Count; i++)
         {
-            if (allRoles[i].Player == player) return allRoles[i];
+            if (AllRoles[i].Player == player)
+            {
+                PlayerRoleCache[player.PlayerId] = AllRoles[i];
+                return AllRoles[i];
+            }
         }
         return null;
     }

@@ -17,7 +17,7 @@ public class MapData
         // Skeld
         if (!SkeldShip)
         {
-            assetReference = __instance.ShipPrefabs.ToArray()[0];
+            assetReference = __instance.ShipPrefabs[0];
             asset = assetReference.LoadAsset<GameObject>();
             asset.WaitForCompletion();
             SkeldShip = assetReference.Asset.Cast<GameObject>().GetComponent<ShipStatus>();
@@ -26,7 +26,7 @@ public class MapData
         // Mira
         if (!MiraHQ)
         {
-            assetReference = __instance.ShipPrefabs.ToArray()[1];
+            assetReference = __instance.ShipPrefabs[1];
             asset = assetReference.LoadAsset<GameObject>();
             asset.WaitForCompletion();
             MiraHQ = assetReference.Asset.Cast<GameObject>().GetComponent<ShipStatus>();
@@ -35,7 +35,7 @@ public class MapData
         // Polus
         if (!PolusShip)
         {
-            assetReference = __instance.ShipPrefabs.ToArray()[2];
+            assetReference = __instance.ShipPrefabs[2];
             asset = assetReference.LoadAsset<GameObject>();
             asset.WaitForCompletion();
             PolusShip = assetReference.Asset.Cast<GameObject>().GetComponent<ShipStatus>();
@@ -44,7 +44,7 @@ public class MapData
         // AirShip
         if (!AirShip)
         {
-            assetReference = __instance.ShipPrefabs.ToArray()[4];
+            assetReference = __instance.ShipPrefabs[4];
             asset = assetReference.LoadAsset<GameObject>();
             asset.WaitForCompletion();
             AirShip = assetReference.Asset.Cast<GameObject>().GetComponent<ShipStatus>();

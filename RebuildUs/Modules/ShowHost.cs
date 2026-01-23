@@ -2,7 +2,8 @@ namespace RebuildUs.Modules;
 
 public static class ShowHost
 {
-    private static TextMeshPro Text = null;
+    private static TextMeshPro _text = null;
+    private static readonly StringBuilder _sb = new();
 
     public static void Setup(MeetingHud __instance)
     {
@@ -13,17 +14,26 @@ public static class ShowHost
         __instance.ProceedButton.GetComponent<PassiveButton>().enabled = false;
         __instance.HostIcon.gameObject.SetActive(true);
         __instance.ProceedButton.gameObject.SetActive(true);
+        _text = __instance.ProceedButton.gameObject.GetComponentInChildren<TextMeshPro>();
     }
 
     public static void Update(MeetingHud __instance)
     {
         var host = GameData.Instance.GetHost();
 
-        if (host != null)
+        if (host != null && _text != null)
         {
             PlayerMaterial.SetColors(host.DefaultOutfit.ColorId, __instance.HostIcon);
-            if (Text == null) Text = __instance.ProceedButton.gameObject.GetComponentInChildren<TextMeshPro>();
-            Text.text = $"host: {host.PlayerName}";
+
+            _sb.Clear();
+            _sb.Append("host: ");
+            _sb.Append(host.PlayerName);
+
+            string newText = _sb.ToString();
+            if (_text.text != newText)
+            {
+                _text.text = newText;
+            }
         }
     }
 }

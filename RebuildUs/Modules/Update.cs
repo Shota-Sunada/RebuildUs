@@ -2,39 +2,67 @@ namespace RebuildUs.Patches;
 
 public static class Update
 {
+    public static void SetChatBubbleColor(ChatBubble bubble, string playerName)
+    {
+        if (bubble == null) return;
+        var lp = PlayerControl.LocalPlayer;
+        if (lp == null || !lp.IsTeamImpostor()) return;
+
+        foreach (var sourcePlayer in PlayerControl.AllPlayerControls)
+        {
+            if (sourcePlayer.Data != null && sourcePlayer.Data.PlayerName.Equals(playerName))
+            {
+                if (sourcePlayer.IsRole(RoleType.Spy))
+                {
+                    bubble.NameText.color = Palette.ImpostorRed;
+                }
+                else if (sourcePlayer.IsRole(RoleType.Sidekick) && Sidekick.GetRole(sourcePlayer)?.WasTeamRed == true)
+                {
+                    bubble.NameText.color = Palette.ImpostorRed;
+                }
+                else if (sourcePlayer.IsRole(RoleType.Jackal) && Jackal.GetRole(sourcePlayer)?.WasTeamRed == true)
+                {
+                    bubble.NameText.color = Palette.ImpostorRed;
+                }
+                break;
+            }
+        }
+    }
+
     public static void ResetNameTagsAndColors()
     {
+        var localPlayer = PlayerControl.LocalPlayer;
+        if (localPlayer == null) return;
+
         var playersById = Helpers.AllPlayersById();
+        bool isLocalImpostor = localPlayer.IsTeamImpostor();
 
         foreach (PlayerControl player in PlayerControl.AllPlayerControls)
         {
-            player.cosmetics.nameText.text = Helpers.HidePlayerName(PlayerControl.LocalPlayer, player) ? "" : player.CurrentOutfit.PlayerName;
-            if (PlayerControl.LocalPlayer.IsTeamImpostor() && player.IsTeamImpostor())
-            {
-                player.cosmetics.nameText.color = Palette.ImpostorRed;
-            }
-            else
-            {
-                player.cosmetics.nameText.color = Color.white;
-            }
+            if (player == null || player.cosmetics == null || player.cosmetics.nameText == null) continue;
+
+            string expectedText = Helpers.HidePlayerName(localPlayer, player) ? "" : player.CurrentOutfit.PlayerName;
+            Color expectedColor = (isLocalImpostor && player.IsTeamImpostor()) ? Palette.ImpostorRed : Color.white;
+
+            var nameText = player.cosmetics.nameText;
+            if (nameText.text != expectedText) nameText.text = expectedText;
+            if (nameText.color != expectedColor) nameText.color = expectedColor;
         }
 
-        if (MeetingHud.Instance != null)
+        var meetingHud = MeetingHud.Instance;
+        if (meetingHud != null)
         {
-            foreach (PlayerVoteArea player in MeetingHud.Instance.playerStates)
+            foreach (PlayerVoteArea pva in meetingHud.playerStates)
             {
-                PlayerControl playerControl = playersById.ContainsKey((byte)player.TargetPlayerId) ? playersById[(byte)player.TargetPlayerId] : null;
-                if (playerControl != null)
+                if (pva == null || pva.NameText == null) continue;
+
+                if (playersById.TryGetValue((byte)pva.TargetPlayerId, out var playerControl))
                 {
-                    player.NameText.text = playerControl.Data.PlayerName;
-                    if (PlayerControl.LocalPlayer.Data.Role.IsImpostor && playerControl.Data.Role.IsImpostor)
-                    {
-                        player.NameText.color = Palette.ImpostorRed;
-                    }
-                    else
-                    {
-                        player.NameText.color = Color.white;
-                    }
+                    string expectedText = playerControl.Data.PlayerName;
+                    Color expectedColor = (isLocalImpostor && playerControl.Data.Role.IsImpostor) ? Palette.ImpostorRed : Color.white;
+
+                    if (pva.NameText.text != expectedText) pva.NameText.text = expectedText;
+                    if (pva.NameText.color != expectedColor) pva.NameText.color = expectedColor;
                 }
             }
         }
@@ -60,8 +88,6 @@ public static class Update
         var lp = PlayerControl.LocalPlayer;
         if (lp == null) return;
 
-        ResetNameTagsAndColors();
-
         // 1. Set Local Player Color
         var roleInstance = PlayerRole.GetRole(lp);
         if (roleInstance != null)
@@ -79,27 +105,41 @@ public static class Update
         foreach (var m in PlayerModifier.AllModifiers) m.OnUpdateNameColors();
     }
 
+    private static readonly StringBuilder TagStringBuilder = new();
+
     public static void SetNameTags()
     {
         var lp = PlayerControl.LocalPlayer;
         if (lp == null) return;
 
-        ResetNameTagsAndColors();
-
         // 1. Process Roles and Modifiers NameTags
         foreach (var r in PlayerRole.AllRoles)
         {
+            if (r.Player == null || r.Player.cosmetics == null || r.Player.cosmetics.nameText == null) continue;
             if (string.IsNullOrEmpty(r.Player.cosmetics.nameText.text)) continue;
+
             var tag = r.NameTag;
-            if (!string.IsNullOrEmpty(tag)) r.Player.cosmetics.nameText.text += tag;
+            if (!string.IsNullOrEmpty(tag))
+            {
+                TagStringBuilder.Clear();
+                TagStringBuilder.Append(r.Player.cosmetics.nameText.text).Append(tag);
+                r.Player.cosmetics.nameText.text = TagStringBuilder.ToString();
+            }
             r.OnUpdateNameTags();
         }
 
         foreach (var m in PlayerModifier.AllModifiers)
         {
+            if (m.Player == null || m.Player.cosmetics == null || m.Player.cosmetics.nameText == null) continue;
             if (string.IsNullOrEmpty(m.Player.cosmetics.nameText.text)) continue;
+
             var tag = m.NameTag;
-            if (!string.IsNullOrEmpty(tag)) m.Player.cosmetics.nameText.text += tag;
+            if (!string.IsNullOrEmpty(tag))
+            {
+                TagStringBuilder.Clear();
+                TagStringBuilder.Append(m.Player.cosmetics.nameText.text).Append(tag);
+                m.Player.cosmetics.nameText.text = TagStringBuilder.ToString();
+            }
             m.OnUpdateNameTags();
         }
 
@@ -108,22 +148,35 @@ public static class Update
         // 2. Voting Area NameTags
         if (MeetingHud.Instance != null)
         {
+            var playersById = Helpers.AllPlayersById();
             foreach (var voteArea in MeetingHud.Instance.playerStates)
             {
-                var target = Helpers.PlayerById(voteArea.TargetPlayerId);
+                if (voteArea == null || voteArea.NameText == null) continue;
+
+                var target = playersById.ContainsKey(voteArea.TargetPlayerId) ? playersById[voteArea.TargetPlayerId] : null;
                 if (target == null) continue;
 
                 var targetRole = PlayerRole.GetRole(target);
                 if (targetRole != null)
                 {
                     var tag = targetRole.NameTag;
-                    if (!string.IsNullOrEmpty(tag)) voteArea.NameText.text += tag;
+                    if (!string.IsNullOrEmpty(tag))
+                    {
+                        TagStringBuilder.Clear();
+                        TagStringBuilder.Append(voteArea.NameText.text).Append(tag);
+                        voteArea.NameText.text = TagStringBuilder.ToString();
+                    }
                 }
 
                 // Hacker and Detective Lighter/Darker
                 if (ModMapOptions.ShowLighterDarker && meetingShow)
                 {
-                    voteArea.NameText.text += $" ({(Helpers.IsLighterColor(target.Data.DefaultOutfit.ColorId) ? Tr.Get("Hud.DetectiveLightLabel") : Tr.Get("Hud.DetectiveDarkLabel"))})";
+                    TagStringBuilder.Clear();
+                    TagStringBuilder.Append(voteArea.NameText.text)
+                        .Append(" (")
+                        .Append(Helpers.IsLighterColor(target.Data.DefaultOutfit.ColorId) ? Tr.Get("Hud.DetectiveLightLabel") : Tr.Get("Hud.DetectiveDarkLabel"))
+                        .Append(')');
+                    voteArea.NameText.text = TagStringBuilder.ToString();
                 }
             }
         }
@@ -135,16 +188,31 @@ public static class Update
             var lover1 = lp;
             var lover2 = lp.GetPartner();
 
-            lover1.cosmetics.nameText.text += suffix;
-            if (!Helpers.HidePlayerName(lover2))
-                lover2.cosmetics.nameText.text += suffix;
+            if (lover1.cosmetics?.nameText != null)
+            {
+                TagStringBuilder.Clear();
+                TagStringBuilder.Append(lover1.cosmetics.nameText.text).Append(suffix);
+                lover1.cosmetics.nameText.text = TagStringBuilder.ToString();
+            }
+
+            if (lover2 != null && lover2.cosmetics?.nameText != null && !Helpers.HidePlayerName(lover2))
+            {
+                TagStringBuilder.Clear();
+                TagStringBuilder.Append(lover2.cosmetics.nameText.text).Append(suffix);
+                lover2.cosmetics.nameText.text = TagStringBuilder.ToString();
+            }
 
             if (meetingShow)
             {
                 foreach (PlayerVoteArea player in MeetingHud.Instance.playerStates)
                 {
-                    if (lover1.PlayerId == player.TargetPlayerId || lover2.PlayerId == player.TargetPlayerId)
-                        player.NameText.text += suffix;
+                    if (player == null || player.NameText == null) continue;
+                    if (lover1.PlayerId == player.TargetPlayerId || (lover2 != null && lover2.PlayerId == player.TargetPlayerId))
+                    {
+                        TagStringBuilder.Clear();
+                        TagStringBuilder.Append(player.NameText.text).Append(suffix);
+                        player.NameText.text = TagStringBuilder.ToString();
+                    }
                 }
             }
         }
@@ -154,16 +222,31 @@ public static class Update
             foreach (var couple in Lovers.Couples)
             {
                 string suffix = Lovers.GetIcon(couple.Lover1);
-                couple.Lover1.cosmetics.nameText.text += suffix;
-                couple.Lover2.cosmetics.nameText.text += suffix;
+
+                if (couple.Lover1.cosmetics?.nameText != null)
+                {
+                    TagStringBuilder.Clear();
+                    TagStringBuilder.Append(couple.Lover1.cosmetics.nameText.text).Append(suffix);
+                    couple.Lover1.cosmetics.nameText.text = TagStringBuilder.ToString();
+                }
+
+                if (couple.Lover2.cosmetics?.nameText != null)
+                {
+                    TagStringBuilder.Clear();
+                    TagStringBuilder.Append(couple.Lover2.cosmetics.nameText.text).Append(suffix);
+                    couple.Lover2.cosmetics.nameText.text = TagStringBuilder.ToString();
+                }
 
                 if (meetingShow)
                 {
                     foreach (PlayerVoteArea player in MeetingHud.Instance.playerStates)
                     {
+                        if (player == null || player.NameText == null) continue;
                         if (couple.Lover1.PlayerId == player.TargetPlayerId || couple.Lover2.PlayerId == player.TargetPlayerId)
                         {
-                            player.NameText.text += suffix;
+                            TagStringBuilder.Clear();
+                            TagStringBuilder.Append(player.NameText.text).Append(suffix);
+                            player.NameText.text = TagStringBuilder.ToString();
                         }
                     }
                 }
@@ -230,15 +313,46 @@ public static class Update
 
     public static void ImpostorSetTarget()
     {
-        if (!PlayerControl.LocalPlayer.Data.Role.IsImpostor || !PlayerControl.LocalPlayer.CanMove || PlayerControl.LocalPlayer.Data.IsDead)
+        var localPlayer = PlayerControl.LocalPlayer;
+        if (localPlayer == null || !localPlayer.Data.Role.IsImpostor || !localPlayer.CanMove || localPlayer.Data.IsDead)
         {
-            // !isImpostor || !canMove || isDead
-            FastDestroyableSingleton<HudManager>.Instance.KillButton.SetTarget(null);
+            if (FastDestroyableSingleton<HudManager>.Instance)
+            {
+                FastDestroyableSingleton<HudManager>.Instance.KillButton.SetTarget(null);
+            }
             return;
         }
 
         PlayerControl target = null;
-        if (Spy.Exists || Sidekick.Players.Any(x => x.WasTeamRed) || Jackal.Players.Any(x => x.WasTeamRed))
+        bool specialTeamRedExists = false;
+        if (Spy.Exists)
+        {
+            specialTeamRedExists = true;
+        }
+        else
+        {
+            foreach (var sk in Sidekick.Players)
+            {
+                if (sk.WasTeamRed)
+                {
+                    specialTeamRedExists = true;
+                    break;
+                }
+            }
+            if (!specialTeamRedExists)
+            {
+                foreach (var jk in Jackal.Players)
+                {
+                    if (jk.WasTeamRed)
+                    {
+                        specialTeamRedExists = true;
+                        break;
+                    }
+                }
+            }
+        }
+
+        if (specialTeamRedExists)
         {
             if (Spy.ImpostorsCanKillAnyone)
             {
@@ -269,13 +383,15 @@ public static class Update
             target = Helpers.SetTarget(true, true);
         }
 
-        FastDestroyableSingleton<HudManager>.Instance.KillButton.SetTarget(target); // Includes setPlayerOutline(target, Palette.ImpstorRed);
+        FastDestroyableSingleton<HudManager>.Instance.KillButton.SetTarget(target);
     }
 
     public static void PlayerSizeUpdate(PlayerControl p)
     {
-        // Set default player size
+        if (p == null) return;
+
         CircleCollider2D collider = p.GetComponent<CircleCollider2D>();
+        if (collider == null) return;
 
         p.transform.localScale = new Vector3(0.7f, 0.7f, 1f);
         collider.radius = Mini.DefaultColliderRadius;
@@ -284,22 +400,24 @@ public static class Update
         // Set adapted player size to Mini and Morphing
         if (Camouflager.CamouflageTimer > 0f) return;
 
-        foreach (var mini in Mini.Players)
+        Mini miniRole = null;
+        if (p.HasModifier(ModifierType.Mini))
         {
-            float growingProgress = mini.GrowingProgress();
-            float scale = growingProgress * 0.35f + 0.35f;
-            float correctedColliderRadius = Mini.DefaultColliderRadius * 0.7f / scale; // scale / 0.7f is the factor by which we decrease the player size, hence we need to increase the collider size by 0.7f / scale
+            miniRole = Mini.GetModifier(p);
+        }
+        else if (Morphing.Exists && p.IsRole(RoleType.Morphing) && Morphing.MorphTimer > 0f && Morphing.MorphTarget != null && Morphing.MorphTarget.HasModifier(ModifierType.Mini))
+        {
+            miniRole = Mini.GetModifier(Morphing.MorphTarget);
+        }
 
-            if (p.HasModifier(ModifierType.Mini))
-            {
-                p.transform.localScale = new Vector3(scale, scale, 1f);
-                collider.radius = correctedColliderRadius;
-            }
-            if (Morphing.Exists && p.IsRole(RoleType.Morphing) && Morphing.MorphTarget.HasModifier(ModifierType.Mini) && Morphing.MorphTimer > 0f)
-            {
-                p.transform.localScale = new Vector3(scale, scale, 1f);
-                collider.radius = correctedColliderRadius;
-            }
+        if (miniRole != null)
+        {
+            float growingProgress = miniRole.GrowingProgress();
+            float scale = growingProgress * 0.35f + 0.35f;
+            float correctedColliderRadius = Mini.DefaultColliderRadius * 0.7f / scale;
+
+            p.transform.localScale = new Vector3(scale, scale, 1f);
+            collider.radius = correctedColliderRadius;
         }
     }
 

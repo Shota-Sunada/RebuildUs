@@ -1,3 +1,4 @@
+using System.Text;
 namespace RebuildUs.Patches;
 
 [HarmonyPatch]
@@ -28,16 +29,31 @@ public static class PlayerControlPatch
     [HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.SetKillTimer))]
     public static bool SetKillTimerPrefix(PlayerControl __instance, [HarmonyArgument(0)] float time)
     {
-        if (Helpers.GetOption(FloatOptionNames.KillCooldown) <= 0f) return false;
+        float baseCooldown = Helpers.GetOption(FloatOptionNames.KillCooldown);
+        if (baseCooldown <= 0f) return false;
         if (Helpers.IsHideNSeekMode) return true;
 
         var multiplier = 1f;
         var addition = 0f;
-        if (Mini.Exists && PlayerControl.LocalPlayer.HasModifier(ModifierType.Mini)) multiplier = Mini.IsGrownUp(PlayerControl.LocalPlayer) ? 0.66f : 2f;
-        if (PlayerControl.LocalPlayer.IsRole(RoleType.BountyHunter)) addition = BountyHunter.PunishmentTime;
+        var localPlayer = PlayerControl.LocalPlayer;
+        if (localPlayer != null)
+        {
+            if (Mini.Exists && localPlayer.HasModifier(ModifierType.Mini))
+            {
+                multiplier = Mini.IsGrownUp(localPlayer) ? 0.66f : 2f;
+            }
+            if (localPlayer.IsRole(RoleType.BountyHunter))
+            {
+                addition = BountyHunter.PunishmentTime;
+            }
+        }
 
-        __instance.killTimer = Mathf.Clamp(time, 0f, Helpers.GetOption(FloatOptionNames.KillCooldown) * multiplier + addition);
-        FastDestroyableSingleton<HudManager>.Instance.KillButton.SetCoolDown(__instance.killTimer, Helpers.GetOption(FloatOptionNames.KillCooldown) * multiplier + addition);
+        float maxCooldown = baseCooldown * multiplier + addition;
+        __instance.killTimer = Mathf.Clamp(time, 0f, maxCooldown);
+        if (FastDestroyableSingleton<HudManager>.InstanceExists)
+        {
+            FastDestroyableSingleton<HudManager>.Instance.KillButton.SetCoolDown(__instance.killTimer, maxCooldown);
+        }
         return false;
     }
 
@@ -89,118 +105,34 @@ public static class PlayerControlPatch
     [HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.CmdReportDeadBody))]
     public static void CmdReportDeadBodyPostfix(PlayerControl __instance, [HarmonyArgument(0)] NetworkedPlayerInfo target)
     {
-        Logger.LogInfo($"{__instance.GetNameWithRole()} => {target?.Object?.GetNameWithRole() ?? "null"}", "ReportDeadBody");
-        // Medic or Detective report
-        bool isMedicReport = PlayerControl.LocalPlayer.IsRole(RoleType.Medic) && __instance.PlayerId == PlayerControl.LocalPlayer.PlayerId;
-        bool isDetectiveReport = Detective.Exists && PlayerControl.LocalPlayer.IsRole(RoleType.Detective) && __instance.PlayerId == PlayerControl.LocalPlayer.PlayerId;
-        if (isMedicReport || isDetectiveReport)
-        {
-            var deadPlayer = GameHistory.DeadPlayers?.Where(x => x.Player?.PlayerId == target?.PlayerId)?.FirstOrDefault();
+        var sb = new StringBuilder();
+        sb.Append(__instance.GetNameWithRole());
+        sb.Append(" => ");
+        sb.Append(target?.Object?.GetNameWithRole() ?? "null");
+        Logger.LogInfo(sb.ToString(), "ReportDeadBody");
 
-            if (deadPlayer != null && deadPlayer.KillerIfExisting != null)
-            {
-                float timeSinceDeath = (float)(DateTime.UtcNow - deadPlayer.TimeOfDeath).TotalMilliseconds;
-                string msg = "";
-
-                if (isMedicReport)
-                {
-                    msg = string.Format(Tr.Get("Hud.MedicReport"), Math.Round(timeSinceDeath / 1000));
-                }
-                else if (isDetectiveReport)
-                {
-                    if (timeSinceDeath < Detective.ReportNameDuration * 1000)
-                    {
-                        msg = string.Format(Tr.Get("Hud.DetectiveReportName"), deadPlayer.KillerIfExisting.Data.PlayerName);
-                    }
-                    else if (timeSinceDeath < Detective.ReportColorDuration * 1000)
-                    {
-                        var typeOfColor = Helpers.IsLighterColor(deadPlayer.KillerIfExisting.Data.DefaultOutfit.ColorId) ?
-                            Tr.Get("Hud.DetectiveColorLight") :
-                            Tr.Get("Hud.DetectiveColorDark");
-                        msg = string.Format(Tr.Get("Hud.DetectiveReportColor"), typeOfColor);
-                    }
-                    else
-                    {
-                        msg = Tr.Get("Hud.DetectiveReportNone");
-                    }
-                }
-
-                if (!string.IsNullOrWhiteSpace(msg))
-                {
-                    if (AmongUsClient.Instance.AmClient && FastDestroyableSingleton<HudManager>.Instance)
-                    {
-                        FastDestroyableSingleton<HudManager>.Instance.Chat.AddChat(PlayerControl.LocalPlayer, msg);
-                    }
-                    if (msg.IndexOf("who", StringComparison.OrdinalIgnoreCase) >= 0)
-                    {
-                        FastDestroyableSingleton<Assets.CoreScripts.UnityTelemetry>.Instance.SendWho();
-                    }
-                }
-            }
-        }
+        Meeting.HandleReportDeadBody(__instance, target);
     }
-
-    public static bool ResetToCrewmate = false;
-    public static bool ResetToDead = false;
 
     [HarmonyPrefix]
     [HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.MurderPlayer))]
     public static void Prefix(PlayerControl __instance, [HarmonyArgument(0)] PlayerControl target)
     {
-        // Allow everyone to murder players
-        ResetToCrewmate = !__instance.Data.Role.IsImpostor;
-        ResetToDead = __instance.Data.IsDead;
-        __instance.Data.Role.TeamType = RoleTeamTypes.Impostor;
-        __instance.Data.IsDead = false;
-
-        if (Morphing.Exists && target.IsRole(RoleType.Morphing))
-        {
-            Morphing.ResetMorph();
-        }
-
-        target.ResetMorph();
+        GameHistory.OnMurderPlayerPrefix(__instance, target);
     }
 
     [HarmonyPostfix]
     [HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.MurderPlayer))]
     public static void Postfix(PlayerControl __instance, [HarmonyArgument(0)] PlayerControl target)
     {
-        Logger.LogInfo($"{__instance.GetNameWithRole()} => {target.GetNameWithRole()}", "MurderPlayer");
-        // Collect dead player info
-        var deadPlayer = new DeadPlayer(target, DateTime.UtcNow, DeathReason.Kill, __instance);
-        GameHistory.DeadPlayers.Add(deadPlayer);
-
-        // Reset killer to crewmate if resetToCrewmate
-        if (ResetToCrewmate) __instance.Data.Role.TeamType = RoleTeamTypes.Crewmate;
-        if (ResetToDead) __instance.Data.IsDead = true;
-
-        AllPlayers.OnKill(__instance, target, deadPlayer);
-
-        __instance.OnKill(target);
-        target.OnDeath(__instance);
+        GameHistory.OnMurderPlayerPostfix(__instance, target);
     }
 
     [HarmonyPostfix]
     [HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.Exiled))]
     public static void ExiledPostfix(PlayerControl __instance)
     {
-        // Collect dead player info
-        var deadPlayer = new DeadPlayer(__instance, DateTime.UtcNow, DeathReason.Exile, null);
-        GameHistory.DeadPlayers.Add(deadPlayer);
-
-        // Remove fake tasks when player dies
-        if (__instance.HasFakeTasks())
-        {
-            __instance.ClearAllTasks();
-        }
-
-        __instance.OnDeath(killer: null);
-
-        // impostor promote to last impostor
-        if (__instance.IsTeamImpostor() && AmongUsClient.Instance.AmHost)
-        {
-            LastImpostor.PromoteToLastImpostor();
-        }
+        GameHistory.OnExiled(__instance);
     }
 
     [HarmonyPrefix]

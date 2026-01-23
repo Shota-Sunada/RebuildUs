@@ -16,7 +16,15 @@ public static class TranslationControllerPatch
 
         // For now only do this in custom options.
         int idInt = (int)id - CustomOption.CUSTOM_OPTION_PRE_ID;
-        var opt = CustomOption.AllOptions.FirstOrDefault(x => x.Id == idInt);
+        CustomOption opt = null;
+        foreach (var o in CustomOption.AllOptions)
+        {
+            if (o.Id == idInt)
+            {
+                opt = o;
+                break;
+            }
+        }
         ourString = Helpers.Cs(opt?.Color ?? Color.white, Tr.Get(opt?.NameKey));
 
         __result = ourString;

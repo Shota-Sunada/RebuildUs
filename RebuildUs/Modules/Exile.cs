@@ -3,6 +3,8 @@ namespace RebuildUs.Modules;
 public static class Exile
 {
     public static NetworkedPlayerInfo LastExiled;
+    private static readonly StringBuilder ExileStringBuilder = new();
+
     public static void BeginForGameplay(ExileController __instance, NetworkedPlayerInfo player, bool voteTie)
     {
         LastExiled = player;
@@ -85,15 +87,26 @@ public static class Exile
         Witch.FutureSpelled = [];
 
         // SecurityGuard vents and cameras
-        var allCameras = MapUtilities.CachedShipStatus.AllCameras.ToList();
-        ModMapOptions.CamerasToAdd.ForEach(camera =>
+        var ship = MapUtilities.CachedShipStatus;
+        if (ship != null)
         {
-            camera.gameObject.SetActive(true);
-            camera.gameObject.GetComponent<SpriteRenderer>().color = Color.white;
-            allCameras.Add(camera);
-        });
-        MapUtilities.CachedShipStatus.AllCameras = allCameras.ToArray();
-        ModMapOptions.CamerasToAdd = [];
+            int oldLen = ship.AllCameras.Length;
+            int addLen = ModMapOptions.CamerasToAdd.Count;
+            if (addLen > 0)
+            {
+                var newCameras = new SurvCamera[oldLen + addLen];
+                for (int i = 0; i < oldLen; i++) newCameras[i] = ship.AllCameras[i];
+                for (int i = 0; i < addLen; i++)
+                {
+                    var camera = ModMapOptions.CamerasToAdd[i];
+                    camera.gameObject.SetActive(true);
+                    camera.gameObject.GetComponent<SpriteRenderer>().color = Color.white;
+                    newCameras[oldLen + i] = camera;
+                }
+                ship.AllCameras = newCameras;
+                ModMapOptions.CamerasToAdd.Clear();
+            }
+        }
 
         foreach (var vent in ModMapOptions.VentsToSeal)
         {
@@ -306,22 +319,33 @@ public static class Exile
         {
             if (ExileController.Instance != null && ExileController.Instance.initData != null)
             {
-                PlayerControl player = ExileController.Instance.initData.networkedPlayer.Object;
+                var netPlayer = ExileController.Instance.initData.networkedPlayer;
+                if (netPlayer == null) return;
+                PlayerControl player = netPlayer.Object;
                 if (player == null) return;
+
                 // Exile role text
                 if (id == StringNames.ExileTextPN || id == StringNames.ExileTextSN || id == StringNames.ExileTextPP || id == StringNames.ExileTextSP)
                 {
-                    __result = player.Data.PlayerName + " was The " + string.Join(" ", [.. RoleInfo.GetRoleInfoForPlayer(player, false).Select(x => x.Name)]);
+                    ExileStringBuilder.Clear();
+                    ExileStringBuilder.Append(player.Data.PlayerName).Append(" was The ");
+                    var roleInfos = RoleInfo.GetRoleInfoForPlayer(player, false);
+                    for (int i = 0; i < roleInfos.Count; i++)
+                    {
+                        if (i > 0) ExileStringBuilder.Append(" ");
+                        ExileStringBuilder.Append(roleInfos[i].Name);
+                    }
+                    __result = ExileStringBuilder.ToString();
                 }
                 if (id == StringNames.ImpostorsRemainP || id == StringNames.ImpostorsRemainS)
                 {
-                    if (player.IsRole(RoleType.Jester)) __result = "";
+                    if (player.IsRole(RoleType.Jester)) __result = string.Empty;
                 }
             }
         }
-        catch
+        catch (Exception ex)
         {
-            // pass - Hopefully prevent leaving while exiling to soft lock game
+            Logger.LogError(ex, "ExileMessage");
         }
     }
 }

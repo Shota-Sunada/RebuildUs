@@ -15,6 +15,10 @@ public static class GameStart
     private static PassiveButton CancelButton;
     private static float Timer = 600f;
 
+    private static readonly StringBuilder InfoStringBuilder = new();
+    private static string _lastCountDown = "";
+    private static string _lastWarningMessage = "";
+
     public static void OnPlayerJoined()
     {
         if (PlayerControl.LocalPlayer != null)
@@ -83,52 +87,68 @@ public static class GameStart
 
         // // Check version handshake infos
         bool versionMismatch = false;
-        string message = "";
-        foreach (var client in AmongUsClient.Instance.allClients.ToArray())
+        InfoStringBuilder.Clear();
+        foreach (var client in AmongUsClient.Instance.allClients.GetFastEnumerator())
         {
             if (client.Character == null)
             {
                 continue;
             }
-            else if (!PlayerVersions.ContainsKey(client.Id))
+            else if (!PlayerVersions.TryGetValue(client.Id, out var pV))
             {
                 versionMismatch = true;
-                message += $"<color=#FF0000FF>{client.Character.Data.PlayerName} has a different or no version of RebuildUs\n</color>";
+                InfoStringBuilder.Append("<color=#FF0000FF>");
+                InfoStringBuilder.Append(client.Character.Data.PlayerName);
+                InfoStringBuilder.Append(" has a different or no version of RebuildUs\n</color>");
             }
             else
             {
-                Version pV = PlayerVersions[client.Id];
                 int diff = RebuildUs.Instance.Version.CompareTo(pV);
                 if (diff > 0)
                 {
-                    message += $"<color=#FF0000FF>{client.Character.Data.PlayerName} has an older version of RebuildUs (v{PlayerVersions[client.Id]})\n</color>";
+                    InfoStringBuilder.Append("<color=#FF0000FF>");
+                    InfoStringBuilder.Append(client.Character.Data.PlayerName);
+                    InfoStringBuilder.Append(" has an older version of RebuildUs (v");
+                    InfoStringBuilder.Append(pV);
+                    InfoStringBuilder.Append(")\n</color>");
                     versionMismatch = true;
                 }
                 else if (diff < 0)
                 {
-                    message += $"<color=#FF0000FF>{client.Character.Data.PlayerName} has a newer version of RebuildUs (v{PlayerVersions[client.Id]})\n</color>";
+                    InfoStringBuilder.Append("<color=#FF0000FF>");
+                    InfoStringBuilder.Append(client.Character.Data.PlayerName);
+                    InfoStringBuilder.Append(" has a newer version of RebuildUs (v");
+                    InfoStringBuilder.Append(pV);
+                    InfoStringBuilder.Append(")\n</color>");
                     versionMismatch = true;
                 }
             }
         }
+
+        string message = InfoStringBuilder.ToString();
 
         // Display message to the host
         if (AmongUsClient.Instance.AmHost)
         {
             if (versionMismatch)
             {
-                WarningText.text = message;
+                if (_lastWarningMessage != message)
+                {
+                    WarningText.text = message;
+                    _lastWarningMessage = message;
+                }
                 WarningText.gameObject.SetActive(true);
             }
             else
             {
                 WarningText.gameObject.SetActive(false);
+                _lastWarningMessage = "";
             }
         }
         // Client update with handshake infos
         else
         {
-            if (!PlayerVersions.ContainsKey(AmongUsClient.Instance.HostId) || RebuildUs.Instance.Version.CompareTo(PlayerVersions[AmongUsClient.Instance.HostId]) != 0)
+            if (!PlayerVersions.TryGetValue(AmongUsClient.Instance.HostId, out var hostVersion) || RebuildUs.Instance.Version.CompareTo(hostVersion) != 0)
             {
                 KickingTimer += Time.deltaTime;
                 if (KickingTimer > 10)
@@ -138,17 +158,35 @@ public static class GameStart
                     SceneChanger.ChangeScene("MainMenu");
                 }
 
-                WarningText.text = $"<color=#FF0000FF>The host has no or a different version of RebuildUs\nYou will be kicked in {Math.Round(10 - KickingTimer)}s</color>";
+                InfoStringBuilder.Clear();
+                InfoStringBuilder.Append("<color=#FF0000FF>The host has no or a different version of RebuildUs\nYou will be kicked in ");
+                InfoStringBuilder.Append(Math.Max(0, (int)Math.Round(10 - KickingTimer)));
+                InfoStringBuilder.Append("s</color>");
+                string warning = InfoStringBuilder.ToString();
+                if (_lastWarningMessage != warning)
+                {
+                    WarningText.text = warning;
+                    _lastWarningMessage = warning;
+                }
                 WarningText.gameObject.SetActive(true);
             }
             else if (versionMismatch)
             {
-                WarningText.text = $"<color=#FF0000FF>Players With Different Versions:\n</color>" + message;
+                InfoStringBuilder.Clear();
+                InfoStringBuilder.Append("<color=#FF0000FF>Players With Different Versions:\n</color>");
+                InfoStringBuilder.Append(message);
+                string warning = InfoStringBuilder.ToString();
+                if (_lastWarningMessage != warning)
+                {
+                    WarningText.text = warning;
+                    _lastWarningMessage = warning;
+                }
                 WarningText.gameObject.SetActive(true);
             }
             else
             {
                 WarningText.gameObject.SetActive(false);
+                _lastWarningMessage = "";
             }
         }
         // Start Timer
@@ -171,12 +209,26 @@ public static class GameStart
             return;
         }
 
-        Timer = Mathf.Max(0f, Timer -= Time.deltaTime);
-        int minutes = (int)Timer / 60;
-        int seconds = (int)Timer % 60;
-        string countDown = $"{minutes:00}:{seconds:00}";
+        Timer = Mathf.Max(0f, Timer - Time.deltaTime);
+        int totalSeconds = (int)Timer;
+        int minutes = totalSeconds / 60;
+        int seconds = totalSeconds % 60;
+
+        InfoStringBuilder.Clear();
+        if (minutes < 10) InfoStringBuilder.Append('0');
+        InfoStringBuilder.Append(minutes);
+        InfoStringBuilder.Append(':');
+        if (seconds < 10) InfoStringBuilder.Append('0');
+        InfoStringBuilder.Append(seconds);
+
+        string countDown = InfoStringBuilder.ToString();
         if (Timer <= 60) countDown = Helpers.Cs(Color.red, countDown);
-        TimerText.text = countDown;
+
+        if (_lastCountDown != countDown)
+        {
+            TimerText.text = countDown;
+            _lastCountDown = countDown;
+        }
 
         if (!GameData.Instance || !__instance.PlayerCounter) return; // No instance
 
@@ -249,17 +301,29 @@ public static class GameStart
                 ];
 
                 // if any map is at 100%, remove all maps that are not!
-                if (probabilities.Contains(1.0f))
+                bool hasEnsured = false;
+                for (int i = 0; i < probabilities.Length; i++)
                 {
-                    for (int i = 0; i < probabilities.Length; i++)
+                    if (probabilities[i] >= 1.0f)
                     {
-                        if (probabilities[i] != 1.0) probabilities[i] = 0;
+                        hasEnsured = true;
+                        break;
                     }
                 }
 
-                float sum = probabilities.Sum();
+                if (hasEnsured)
+                {
+                    for (int i = 0; i < probabilities.Length; i++)
+                    {
+                        if (probabilities[i] < 1.0f) probabilities[i] = 0;
+                    }
+                }
+
+                float sum = 0;
+                for (int i = 0; i < probabilities.Length; i++) sum += probabilities[i];
+
                 // All maps set to 0, why are you doing this???
-                if (sum == 0) return continueStart;
+                if (sum <= 0) return continueStart;
                 for (int i = 0; i < probabilities.Length; i++)
                 {
                     // Normalize to [0,1]
@@ -267,7 +331,7 @@ public static class GameStart
                 }
                 float selection = (float)RebuildUs.Instance.Rnd.NextDouble();
                 float cumSum = 0;
-                for (byte i = 0; i < probabilities.Length; i++)
+                for (byte i = 0; i < (byte)probabilities.Length; i++)
                 {
                     cumSum += probabilities[i];
                     if (cumSum > selection)

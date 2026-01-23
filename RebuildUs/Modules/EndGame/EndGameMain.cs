@@ -1,5 +1,3 @@
-using System.Text;
-
 namespace RebuildUs.Modules;
 
 public static class EndGameMain
@@ -80,15 +78,22 @@ public static class EndGameMain
         var miniLose = Mini.Exists && gameOverReason == (GameOverReason)ECustomGameOverReason.MiniLose;
         var loversWin = Lovers.AnyAlive() && !(Lovers.SeparateTeam && gameOverReason == GameOverReason.CrewmatesByTask);
 
-        var everyoneDead = AdditionalTempData.PlayerRoles.All(x => x.Status != EFinalStatus.Alive);
+        var everyoneDead = true;
+        var playerRoles = AdditionalTempData.PlayerRoles;
+        for (int i = 0; i < playerRoles.Count; i++)
+        {
+            if (playerRoles[i].Status == EFinalStatus.Alive)
+            {
+                everyoneDead = false;
+                break;
+            }
+        }
         var forceEnd = gameOverReason == (GameOverReason)ECustomGameOverReason.ForceEnd;
-
-//
 
         if (impostorWin)
         {
             EndGameResult.CachedWinners = new Il2CppSystem.Collections.Generic.List<CachedPlayerData>();
-            foreach (var p in PlayerControl.AllPlayerControls)
+            foreach (var p in PlayerControl.AllPlayerControls.GetFastEnumerator())
             {
                 if (p.IsTeamImpostor() || p.HasModifier(ModifierType.Madmate) || p.HasModifier(ModifierType.CreatedMadmate))
                 {
@@ -100,7 +105,7 @@ public static class EndGameMain
         else if (crewmateWin)
         {
             EndGameResult.CachedWinners = new Il2CppSystem.Collections.Generic.List<CachedPlayerData>();
-            foreach (var p in PlayerControl.AllPlayerControls)
+            foreach (var p in PlayerControl.AllPlayerControls.GetFastEnumerator())
             {
                 if (p.IsTeamCrewmate() && !p.HasModifier(ModifierType.Madmate) && !p.HasModifier(ModifierType.CreatedMadmate))
                 {
@@ -111,17 +116,19 @@ public static class EndGameMain
         }
 
         // 勝利画面から不要なキャラを追放する
-        var winnersToRemove = new List<CachedPlayerData>();
-        foreach (var winner in EndGameResult.CachedWinners)
+        var notWinnerNames = new HashSet<string>();
+        for (int i = 0; i < notWinners.Count; i++)
         {
-            if (notWinners.Any(x => x.Data.PlayerName == winner.PlayerName))
-            {
-                winnersToRemove.Add(winner);
-            }
+            notWinnerNames.Add(notWinners[i].Data.PlayerName);
         }
-        foreach (var winner in winnersToRemove)
+
+        var cachedWinners = EndGameResult.CachedWinners;
+        for (int i = cachedWinners.Count - 1; i >= 0; i--)
         {
-            EndGameResult.CachedWinners.Remove(winner);
+            if (notWinnerNames.Contains(cachedWinners[i].PlayerName))
+            {
+                cachedWinners.RemoveAt(i);
+            }
         }
 
         if (jesterWin)
@@ -214,7 +221,20 @@ public static class EndGameMain
 
         foreach (var wpd in EndGameResult.CachedWinners)
         {
-            wpd.IsDead = wpd.IsDead || AdditionalTempData.PlayerRoles.Any(x => x.PlayerName == wpd.PlayerName && x.Status != EFinalStatus.Alive);
+            var isDead = wpd.IsDead;
+            if (!isDead)
+            {
+                for (int i = 0; i < playerRoles.Count; i++)
+                {
+                    var pr = playerRoles[i];
+                    if (pr.PlayerName == wpd.PlayerName && pr.Status != EFinalStatus.Alive)
+                    {
+                        isDead = true;
+                        break;
+                    }
+                }
+            }
+            wpd.IsDead = isDead;
         }
 
         RPCProcedure.ResetVariables();
@@ -230,10 +250,22 @@ public static class EndGameMain
             UnityEngine.Object.Destroy(pb.gameObject);
         }
         int num = Mathf.CeilToInt(7.5f);
-        var list = EndGameResult.CachedWinners.ToArray().ToList().OrderBy(delegate (CachedPlayerData b)
+
+        var list = new List<CachedPlayerData>();
+        var cachedWinners = EndGameResult.CachedWinners;
+        for (int i = 0; i < cachedWinners.Count; i++)
         {
-            return !b.IsYou ? 0 : -1;
-        }).ToList();
+            list.Add(cachedWinners[i]);
+        }
+        list.Sort((a, b) => (a.IsYou ? -1 : 0).CompareTo(b.IsYou ? -1 : 0));
+
+        var playerRolesDict = new Dictionary<string, PlayerRoleInfo>();
+        var playerRoles = AdditionalTempData.PlayerRoles;
+        for (int i = 0; i < playerRoles.Count; i++)
+        {
+            var pr = playerRoles[i];
+            if (pr != null) playerRolesDict[pr.PlayerName] = pr;
+        }
 
         for (int i = 0; i < list.Count; i++)
         {
@@ -264,12 +296,14 @@ public static class EndGameMain
             poolablePlayer.cosmetics.nameText.lineSpacing *= 0.7f;
             poolablePlayer.cosmetics.nameText.transform.localScale = new Vector3(1f / vector.x, 1f / vector.y, 1f / vector.z);
             poolablePlayer.cosmetics.nameText.transform.localPosition = new Vector3(poolablePlayer.cosmetics.nameText.transform.localPosition.x, poolablePlayer.cosmetics.nameText.transform.localPosition.y, -15f);
-            poolablePlayer.cosmetics.nameText.text = cachedPlayerData2.PlayerName;
 
-            foreach (var data in AdditionalTempData.PlayerRoles)
+            if (playerRolesDict.TryGetValue(cachedPlayerData2.PlayerName, out var data))
             {
-                if (data.PlayerName != cachedPlayerData2.PlayerName) continue;
-                poolablePlayer.cosmetics.nameText.text += data.NameSuffix + $"\n<size=80%>{data.RoleNames}</size>";
+                poolablePlayer.cosmetics.nameText.text = cachedPlayerData2.PlayerName + data.NameSuffix + $"\n<size=80%>{data.RoleNames}</size>";
+            }
+            else
+            {
+                poolablePlayer.cosmetics.nameText.text = cachedPlayerData2.PlayerName;
             }
         }
 
@@ -390,8 +424,8 @@ public static class EndGameMain
             roleSummaryText.AppendLine(Tr.Get("Hud.RoleSummaryText"));
             AdditionalTempData.PlayerRoles.Sort((x, y) =>
             {
-                var roleX = x.Roles.FirstOrDefault();
-                var roleY = y.Roles.FirstOrDefault();
+                var roleX = x.Roles.Count > 0 ? x.Roles[0] : null;
+                var roleY = y.Roles.Count > 0 ? y.Roles[0] : null;
                 var idX = roleX == null ? RoleType.NoRole : roleX.RoleType;
                 var idY = roleY == null ? RoleType.NoRole : roleY.RoleType;
 
@@ -502,8 +536,8 @@ public static class EndGameMain
     public static bool CheckAndEndGameForSabotageWin()
     {
         if (ShipStatus.Instance.Systems == null) return false;
-        var systemType = ShipStatus.Instance.Systems.ContainsKey(SystemTypes.LifeSupp) ? ShipStatus.Instance.Systems[SystemTypes.LifeSupp] : null;
-        if (systemType != null)
+        var systems = ShipStatus.Instance.Systems;
+        if (systems.TryGetValue(SystemTypes.LifeSupp, out var systemType) && systemType != null)
         {
             var lifeSuppSystemType = systemType.TryCast<LifeSuppSystemType>();
             if (lifeSuppSystemType != null && lifeSuppSystemType.Countdown < 0f)
@@ -513,11 +547,9 @@ public static class EndGameMain
                 return true;
             }
         }
-        var systemType2 = ShipStatus.Instance.Systems.ContainsKey(SystemTypes.Reactor) ? ShipStatus.Instance.Systems[SystemTypes.Reactor] : null;
-        systemType2 ??= ShipStatus.Instance.Systems.ContainsKey(SystemTypes.Laboratory) ? ShipStatus.Instance.Systems[SystemTypes.Laboratory] : null;
-        if (systemType2 != null)
+        if ((systems.TryGetValue(SystemTypes.Reactor, out var reactor) || systems.TryGetValue(SystemTypes.Laboratory, out reactor)) && reactor != null)
         {
-            var criticalSystem = systemType2.TryCast<ICriticalSabotage>();
+            var criticalSystem = reactor.TryCast<ICriticalSabotage>();
             if (criticalSystem != null && criticalSystem.Countdown < 0f)
             {
                 EndGameForSabotage();

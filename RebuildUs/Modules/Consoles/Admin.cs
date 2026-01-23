@@ -18,16 +18,26 @@ public static class Admin
     private static bool FilterAdmin(SystemTypes type)
     {
         // イビルハッカーのアドミンは今まで通り
-        if (PlayerControl.LocalPlayer.IsRole(RoleType.EvilHacker) || EvilHacker.IsInherited()) return true;
+        var lp = PlayerControl.LocalPlayer;
+        if (lp.IsRole(RoleType.EvilHacker) || EvilHacker.IsInherited()) return true;
 
         if (CustomOptionHolder.AirshipRestrictedAdmin.GetBool())
         {
-            if (Room.name == "Cockpit" && !FilterCockpitAdmin.Contains(type))
+            string roomName = Room.name;
+            if (roomName == "Cockpit")
             {
+                for (int i = 0; i < FilterCockpitAdmin.Length; i++)
+                {
+                    if (FilterCockpitAdmin[i] == type) return true;
+                }
                 return false;
             }
-            if (Room.name == "Records" && !FilterRecordsAdmin.Contains(type))
+            if (roomName == "Records")
             {
+                for (int i = 0; i < FilterRecordsAdmin.Length; i++)
+                {
+                    if (FilterRecordsAdmin[i] == type) return true;
+                }
                 return false;
             }
         }
@@ -39,13 +49,13 @@ public static class Admin
         AdminTimer = 0f;
         if (TimeRemaining != null)
         {
-            UnityEngine.Object.Destroy(TimeRemaining);
+            UnityEngine.Object.Destroy(TimeRemaining.gameObject);
             TimeRemaining = null;
         }
 
         if (OutOfTime != null)
         {
-            UnityEngine.Object.Destroy(OutOfTime);
+            UnityEngine.Object.Destroy(OutOfTime.gameObject);
             OutOfTime = null;
         }
     }

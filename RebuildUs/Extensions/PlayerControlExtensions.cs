@@ -19,10 +19,16 @@ public static class PlayerControlHelpers
 
     public static bool IsDead(this PlayerControl player)
     {
-        return player == null
-            || player?.Data?.IsDead == true
-            || player?.Data?.Disconnected == true
-            || (GameHistory.FinalStatuses != null && GameHistory.FinalStatuses.ContainsKey(player.PlayerId) && GameHistory.FinalStatuses[player.PlayerId] != EFinalStatus.Alive);
+        if (player == null) return true;
+        var data = player.Data;
+        if (data == null || data.IsDead || data.Disconnected) return true;
+
+        if (GameHistory.FinalStatuses != null && GameHistory.FinalStatuses.TryGetValue(player.PlayerId, out var status))
+        {
+            return status != EFinalStatus.Alive;
+        }
+
+        return false;
     }
 
     public static bool IsAlive(this PlayerControl player)
@@ -39,7 +45,6 @@ public static class PlayerControlHelpers
                 player.IsRole(RoleType.Arsonist) ||
                 player.IsRole(RoleType.Jester) ||
                 // player.IsRole(RoleType.Opportunist) ||
-                // player.IsRole(RoleType.PlagueDoctor) ||
                 player.IsRole(RoleType.Vulture) ||
                 (player.IsRole(RoleType.Shifter) && Shifter.IsNeutral));
     }
@@ -186,16 +191,35 @@ public static class PlayerControlHelpers
 
     public static ClientData GetClient(this PlayerControl player)
     {
-        return AmongUsClient.Instance.allClients.ToArray().FirstOrDefault(cd => cd.Character.PlayerId == player.PlayerId);
+        if (player == null) return null;
+        var allClients = AmongUsClient.Instance.allClients;
+        for (int i = 0; i < allClients.Count; i++)
+        {
+            var cd = allClients[i];
+            if (cd?.Character != null && cd.Character.PlayerId == player.PlayerId) return cd;
+        }
+        return null;
     }
 
     public static string GetPlatform(this PlayerControl player)
     {
-        return player.GetClient().PlatformData.Platform.ToString();
+        var client = player.GetClient();
+        return client != null ? client.PlatformData.Platform.ToString() : "Unknown";
     }
 
+    private static readonly StringBuilder RoleStringBuilder = new();
     public static string GetRoleName(this PlayerControl player) => RoleInfo.GetRolesString(player, false, joinSeparator: " + ");
-    public static string GetNameWithRole(this PlayerControl player) => $"{player.Data.PlayerName} ({player.GetRoleName()})";
+
+    public static string GetNameWithRole(this PlayerControl player)
+    {
+        if (player == null || player.Data == null) return "";
+        RoleStringBuilder.Clear();
+        RoleStringBuilder.Append(player.Data.PlayerName)
+            .Append(" (")
+            .Append(player.GetRoleName())
+            .Append(')');
+        return RoleStringBuilder.ToString();
+    }
 
     public static void MurderPlayer(this PlayerControl player, PlayerControl target)
     {

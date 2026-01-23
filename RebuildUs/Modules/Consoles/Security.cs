@@ -6,12 +6,14 @@ public static class SecurityCamera
     private static int Page = 0;
     private static float Timer = 0f;
 
+    private static readonly StringBuilder SecurityStringBuilder = new();
+
     public static void ResetData()
     {
         CameraTimer = 0f;
         if (TimeRemaining != null)
         {
-            UnityEngine.Object.Destroy(TimeRemaining);
+            UnityEngine.Object.Destroy(TimeRemaining.gameObject);
             TimeRemaining = null;
         }
         Page = 0;
@@ -23,9 +25,10 @@ public static class SecurityCamera
     public static void UseCameraTime()
     {
         // Don't waste network traffic if we're out of time.
-        if (ModMapOptions.RestrictDevices > 0 && ModMapOptions.RestrictCameras && ModMapOptions.RestrictCamerasTime > 0f && PlayerControl.LocalPlayer.IsAlive())
+        var lp = PlayerControl.LocalPlayer;
+        if (ModMapOptions.RestrictDevices > 0 && ModMapOptions.RestrictCameras && ModMapOptions.RestrictCamerasTime > 0f && lp != null && lp.IsAlive())
         {
-            using var sender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.UseCameraTime);
+            using var sender = new RPCSender(lp.NetId, CustomRPC.UseCameraTime);
             sender.Write(CameraTimer);
             RPCProcedure.UseCameraTime(CameraTimer);
         }
@@ -42,12 +45,18 @@ public static class SecurityCamera
         // Add securityGuard cameras
         Page = 0;
         Timer = 0;
-        if (MapUtilities.CachedShipStatus.AllCameras.Length > 4 && __instance.FilteredRooms.Length > 0)
+        var ship = MapUtilities.CachedShipStatus;
+        if (ship != null && ship.AllCameras.Length > 4 && __instance.FilteredRooms.Length > 0)
         {
-            __instance.textures = __instance.textures.ToList().Concat(new RenderTexture[MapUtilities.CachedShipStatus.AllCameras.Length - 4]).ToArray();
-            for (int i = 4; i < MapUtilities.CachedShipStatus.AllCameras.Length; i++)
+            int oldLen = __instance.textures.Length;
+            int newLen = ship.AllCameras.Length;
+            var newTextures = new RenderTexture[newLen];
+            for (int i = 0; i < oldLen; i++) newTextures[i] = __instance.textures[i];
+            __instance.textures = newTextures;
+
+            for (int i = 4; i < ship.AllCameras.Length; i++)
             {
-                SurvCamera surv = MapUtilities.CachedShipStatus.AllCameras[i];
+                SurvCamera surv = ship.AllCameras[i];
                 Camera camera = UnityEngine.Object.Instantiate(__instance.CameraPrefab);
                 camera.transform.SetParent(__instance.transform);
                 camera.transform.position = new Vector3(surv.transform.position.x, surv.transform.position.y, 8f);
@@ -83,8 +92,17 @@ public static class SecurityCamera
                 return false;
             }
 
-            string timeString = TimeSpan.FromSeconds(ModMapOptions.RestrictCamerasTime).ToString(@"mm\:ss\.ff");
-            TimeRemaining.text = String.Format(Tr.Get("Hud.TimeRemaining"), timeString);
+            SecurityStringBuilder.Clear();
+            var ts = TimeSpan.FromSeconds(ModMapOptions.RestrictCamerasTime);
+            if (ts.TotalHours >= 1) SecurityStringBuilder.Append((int)ts.TotalHours).Append(":");
+            SecurityStringBuilder.Append(ts.Minutes.ToString("D2")).Append(":")
+                                 .Append(ts.Seconds.ToString("D2")).Append(".")
+                                 .Append((ts.Milliseconds / 10).ToString("D2"));
+
+            string timeString = SecurityStringBuilder.ToString();
+            SecurityStringBuilder.Clear();
+            SecurityStringBuilder.Append(string.Format(Tr.Get("Hud.TimeRemaining"), timeString));
+            TimeRemaining.text = SecurityStringBuilder.ToString();
             TimeRemaining.gameObject.SetActive(true);
         }
 
@@ -117,10 +135,18 @@ public static class SecurityCamera
                 return false;
             }
 
-            string timeString = TimeSpan.FromSeconds(ModMapOptions.RestrictCamerasTime).ToString(@"mm\:ss\.ff");
-            TimeRemaining.text = String.Format(Tr.Get("Hud.TimeRemaining"), timeString);
-            TimeRemaining.gameObject.SetActive(true);
+            SecurityStringBuilder.Clear();
+            var ts = TimeSpan.FromSeconds(ModMapOptions.RestrictCamerasTime);
+            if (ts.TotalHours >= 1) SecurityStringBuilder.Append((int)ts.TotalHours).Append(":");
+            SecurityStringBuilder.Append(ts.Minutes.ToString("D2")).Append(":")
+                                 .Append(ts.Seconds.ToString("D2")).Append(".")
+                                 .Append((ts.Milliseconds / 10).ToString("D2"));
 
+            string timeString = SecurityStringBuilder.ToString();
+            SecurityStringBuilder.Clear();
+            SecurityStringBuilder.Append(string.Format(Tr.Get("Hud.TimeRemaining"), timeString));
+            TimeRemaining.text = SecurityStringBuilder.ToString();
+            TimeRemaining.gameObject.SetActive(true);
         }
 
         // Update normal and securityGuard cameras

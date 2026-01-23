@@ -175,7 +175,7 @@ public static partial class RPCProcedure
                 Synchronize(reader.ReadByte(), reader.ReadInt32());
                 break;
             case CustomRPC.PlaceCamera:
-                PlaceCamera(reader.ReadBytesAndSize(), reader.ReadByte(), reader.ReadByte());
+                PlaceCamera(reader.ReadSingle(), reader.ReadSingle(), reader.ReadByte(), reader.ReadByte());
                 break;
             case CustomRPC.SealVent:
                 SealVent(reader.ReadPackedInt32(), reader.ReadByte());
@@ -197,6 +197,9 @@ public static partial class RPCProcedure
                 break;
             case CustomRPC.WitchSpellCast:
                 WitchSpellCast(reader.ReadByte());
+                break;
+            case CustomRPC.PlaceGarlic:
+                PlaceGarlic(reader.ReadSingle(), reader.ReadSingle());
                 break;
             case CustomRPC.ImpostorPromotesToLastImpostor:
                 ImpostorPromotesToLastImpostor(reader.ReadByte());

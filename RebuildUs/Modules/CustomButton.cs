@@ -138,26 +138,35 @@ public class CustomButton
 
     public static void HudUpdate()
     {
-        Buttons.RemoveAll(item => item.ActionButton == null);
-
-        for (int i = 0; i < Buttons.Count; i++)
+        for (int i = Buttons.Count - 1; i >= 0; i--)
         {
+            if (Buttons[i].ActionButton == null)
+            {
+                Buttons.RemoveAt(i);
+                continue;
+            }
+
             try
             {
                 Buttons[i].Update();
             }
             catch (NullReferenceException)
             {
-                Logger.LogWarn("[WARNING] NullReferenceException from HudUpdate().HasButton(), if theres only one warning its fine");
+                Logger.LogWarn("[WARNING] NullReferenceException from HudUpdate().HasButton()");
             }
         }
     }
 
     public static void MeetingEndedUpdate()
     {
-        Buttons.RemoveAll(item => item.ActionButton == null);
-        for (int i = 0; i < Buttons.Count; i++)
+        for (int i = Buttons.Count - 1; i >= 0; i--)
         {
+            if (Buttons[i].ActionButton == null)
+            {
+                Buttons.RemoveAt(i);
+                continue;
+            }
+
             try
             {
                 Buttons[i].OnMeetingEnds();
@@ -165,7 +174,7 @@ public class CustomButton
             }
             catch (NullReferenceException)
             {
-                Logger.LogWarn("[WARNING] NullReferenceException from MeetingEndedUpdate().HasButton(), if theres only one warning its fine");
+                Logger.LogWarn("[WARNING] NullReferenceException from MeetingEndedUpdate().HasButton()");
             }
         }
     }
@@ -186,19 +195,19 @@ public class CustomButton
         }
     }
 
+    private bool lastIsActive = false;
     public void SetActive(bool isActive)
     {
-        if (isActive)
+        if (lastIsActive == isActive) return;
+        lastIsActive = isActive;
+        if (ActionButton != null && ActionButton.gameObject != null)
         {
-            ActionButton.gameObject.SetActive(true);
-            ActionButton.graphic.enabled = true;
-        }
-        else
-        {
-            ActionButton.gameObject.SetActive(false);
-            ActionButton.graphic.enabled = false;
+            ActionButton.gameObject.SetActive(isActive);
+            ActionButton.graphic.enabled = isActive;
         }
     }
+
+    private string lastButtonText = "";
 
     public void Update()
     {
@@ -209,16 +218,18 @@ public class CustomButton
         }
         SetActive(HudManager.UseButton.isActiveAndEnabled || HudManager.PetButton.isActiveAndEnabled);
 
-        ActionButton.graphic.sprite = Sprite;
-        if (ShowButtonText && ButtonText != "")
+        if (ActionButton.graphic.sprite != Sprite) ActionButton.graphic.sprite = Sprite;
+        if (ShowButtonText && ButtonText != "" && lastButtonText != ButtonText)
         {
             ActionButton.OverrideText(ButtonText);
+            lastButtonText = ButtonText;
         }
         ActionButton.buttonLabelText.enabled = ShowButtonText; // Only show the text if it's a kill button
 
         if (HudManager.UseButton != null)
         {
-            Vector3 pos = HudManager.UseButton.transform.localPosition;
+            Transform useTransform = HudManager.UseButton.transform;
+            Vector3 pos = useTransform.localPosition;
             if (Mirror)
             {
                 float aspect = Camera.main.aspect;
@@ -229,15 +240,18 @@ public class CustomButton
             ActionButton.transform.localPosition = pos + PositionOffset;
             ActionButton.transform.localScale = LocalScale;
         }
-        if (CouldUse())
+
+        bool couldUse = CouldUse();
+        Color targetColor = couldUse ? Palette.EnabledColor : Palette.DisabledClear;
+        float targetDesat = couldUse ? 0f : 1f;
+
+        if (ActionButton.graphic.color != targetColor)
         {
-            ActionButton.graphic.color = ActionButton.buttonLabelText.color = Palette.EnabledColor;
-            ActionButton.graphic.material.SetFloat("_Desat", 0f);
+            ActionButton.graphic.color = ActionButton.buttonLabelText.color = targetColor;
         }
-        else
+        if (ActionButton.graphic.material.GetFloat("_Desat") != targetDesat)
         {
-            ActionButton.graphic.color = ActionButton.buttonLabelText.color = Palette.DisabledClear;
-            ActionButton.graphic.material.SetFloat("_Desat", 1f);
+            ActionButton.graphic.material.SetFloat("_Desat", targetDesat);
         }
 
         if (Timer >= 0 && !StopCountdown)

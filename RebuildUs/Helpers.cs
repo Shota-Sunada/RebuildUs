@@ -95,11 +95,15 @@ public static class Helpers
         return null;
     }
 
+    private static readonly Dictionary<byte, PlayerControl> PlayerByIdCache = [];
     public static Dictionary<byte, PlayerControl> AllPlayersById()
     {
-        Dictionary<byte, PlayerControl> res = [];
-        foreach (var p in PlayerControl.AllPlayerControls) res[p.PlayerId] = p;
-        return res;
+        PlayerByIdCache.Clear();
+        foreach (var p in PlayerControl.AllPlayerControls)
+        {
+            if (p != null) PlayerByIdCache[p.PlayerId] = p;
+        }
+        return PlayerByIdCache;
     }
 
     public static void HandleVampireBiteOnBodyReport()
@@ -671,6 +675,32 @@ public static class Helpers
         if ((source.IsRole(RoleType.Jackal) || source.IsRole(RoleType.Sidekick)) && (target.IsRole(RoleType.Jackal) || target.IsRole(RoleType.Sidekick) || target == Jackal.GetRole(target).FakeSidekick)) return false;
 
         return true;
+    }
+
+    public static void OnObjectDestroy(GameObject obj)
+    {
+        if (obj == null) return;
+        string name = obj.name;
+        if (name == null) return;
+
+        // night vision
+        if (name.Contains("FungleSecurity"))
+        {
+            // SurveillanceMinigamePatch.resetNightVision();
+            return;
+        }
+
+        // submerged
+        if (!SubmergedCompatibility.IsSubmerged) return;
+
+        if (name.Contains("ExileCutscene"))
+        {
+            var controller = obj.GetComponent<ExileController>();
+            if (controller != null && controller.initData != null)
+            {
+                Exile.WrapUpPostfix(controller.initData.networkedPlayer?.Object);
+            }
+        }
     }
 
     public static void ShowFlash(Color color, float duration = 1f)

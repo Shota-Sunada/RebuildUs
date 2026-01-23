@@ -5,6 +5,8 @@ public class CustomMessage
     private readonly TMP_Text Text;
     private static readonly List<CustomMessage> CustomMessages = [];
 
+    private static readonly Color YellowColor = new(0.988f, 0.729f, 0.012f, 1f);
+
     public CustomMessage(string message, float duration)
     {
         RoomTracker roomTracker = FastDestroyableSingleton<HudManager>.Instance?.roomTracker;
@@ -23,11 +25,11 @@ public class CustomMessage
 
             FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(duration, new Action<float>((p) =>
             {
+                if (Text == null || Text.gameObject == null) return;
                 bool even = ((int)(p * duration / 0.25f)) % 2 == 0; // Bool flips every 0.25 seconds
-                string prefix = even ? "<color=#FCBA03FF>" : "<color=#FF0000FF>";
-                Text.text = prefix + message + "</color>";
-                Text?.color = even ? Color.yellow : Color.red;
-                if (p == 1f && Text != null && Text.gameObject != null)
+                Text.color = even ? YellowColor : Color.red;
+
+                if (p == 1f)
                 {
                     UnityEngine.Object.Destroy(Text.gameObject);
                     CustomMessages.Remove(this);

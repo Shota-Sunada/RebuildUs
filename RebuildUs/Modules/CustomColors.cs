@@ -19,9 +19,14 @@ public class CustomColors
 
     public static void Load()
     {
-        List<StringNames> longList = Enumerable.ToList(Palette.ColorNames);
-        List<Color32> colorList = Enumerable.ToList(Palette.PlayerColors);
-        List<Color32> shadowList = Enumerable.ToList(Palette.ShadowColors);
+        var longList = new List<StringNames>();
+        foreach (var name in Palette.ColorNames) longList.Add(name);
+
+        var colorList = new List<Color32>();
+        foreach (var color in Palette.PlayerColors) colorList.Add(color);
+
+        var shadowList = new List<Color32>();
+        foreach (var shadow in Palette.ShadowColors) shadowList.Add(shadow);
 
         List<CustomColor> colors =
         [
@@ -243,6 +248,8 @@ public class CustomColors
         return true;
     }
 
+    private static readonly StringBuilder ColorStringBuilder = new();
+
     public static bool ChatNotificationSetup(ChatNotification __instance, PlayerControl sender, string text)
     {
         if (ShipStatus.Instance && !ModMapOptions.ShowChatNotifications)
@@ -267,7 +274,14 @@ public class CustomColors
             color = c.r + c.g + c.b > 180 ? Palette.Black : Palette.White;
         }
         __instance.playerColorText.text = __instance.player.ColorBlindName;
-        __instance.playerNameText.text = "<color=#" + str + ">" + (string.IsNullOrEmpty(sender.Data.PlayerName) ? "..." : sender.Data.PlayerName);
+
+        ColorStringBuilder.Clear();
+        ColorStringBuilder.Append("<color=#").Append(str).Append('>');
+        if (string.IsNullOrEmpty(sender.Data.PlayerName)) ColorStringBuilder.Append("...");
+        else ColorStringBuilder.Append(sender.Data.PlayerName);
+
+        var playerName = ColorStringBuilder.ToString();
+        if (__instance.playerNameText.text != playerName) __instance.playerNameText.text = playerName;
         __instance.playerNameText.outlineColor = color;
         __instance.chatText.text = text;
         return false;
@@ -275,20 +289,20 @@ public class CustomColors
 
     public static void EnablePlayerTab(PlayerTab __instance)
     { // Replace instead
-        Il2CppArrayBase<ColorChip> chips = __instance.ColorChips.ToArray();
+        var chips = __instance.ColorChips;
 
         int cols = 7; // TODO: Design an algorithm to dynamically position chips to optimally fill space
         for (int i = 0; i < ORDER.Length; i++)
         {
             int pos = ORDER[i];
-            if (pos < 0 || pos > chips.Length)
+            if (pos < 0 || pos >= chips.Count)
                 continue;
             ColorChip chip = chips[pos];
             int row = i / cols, col = i % cols; // Dynamically do the positioning
             chip.transform.localPosition = new Vector3(-0.975f + (col * 0.5f), 1.475f - (row * 0.5f), chip.transform.localPosition.z);
             chip.transform.localScale *= 0.76f;
         }
-        for (int j = ORDER.Length; j < chips.Length; j++)
+        for (int j = ORDER.Length; j < chips.Count; j++)
         { // If number isn't in order, hide it
             ColorChip chip = chips[j];
             chip.transform.localScale *= 0f;

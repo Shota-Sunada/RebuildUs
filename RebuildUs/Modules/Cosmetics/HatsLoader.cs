@@ -85,11 +85,12 @@ public class HatsLoader : MonoBehaviour
         IsRunning = false;
     }
 
+    private static readonly JsonSerializerOptions JsonOptions = new() { AllowTrailingCommas = true };
+
     private string SanitizeAndPrefix(string path, string prefix)
     {
         if (string.IsNullOrEmpty(path) || !path.EndsWith(".png")) return null;
-        var sanitized = path.Replace("\\", "").Replace("/", "").Replace("*", "").Replace("..", "");
-        return System.IO.Path.Combine(prefix, sanitized);
+        return Path.Combine(prefix, CustomHatManager.SanitizeFileName(path));
     }
 
     [HideFromIl2Cpp]
@@ -124,30 +125,16 @@ public class HatsLoader : MonoBehaviour
                     if (manifestData == null) return;
                     await File.WriteAllBytesAsync(manifestPath, manifestData);
 
-                    var config = JsonSerializer.Deserialize<SkinsConfigFile>(manifestData, new JsonSerializerOptions { AllowTrailingCommas = true });
+                    var config = JsonSerializer.Deserialize<SkinsConfigFile>(manifestData, JsonOptions);
                     if (config == null || config.Hats == null) return;
 
                     foreach (var hat in config.Hats)
                     {
-                        var files = new[] { hat.Resource, hat.BackResource, hat.ClimbResource, hat.FlipResource, hat.BackFlipResource };
-                        var hashes = new[] { hat.ResHashA, hat.ResHashB, hat.ResHashC, hat.ResHashF, hat.ResHashBf };
-
-                        for (int fIdx = 0; fIdx < files.Length; fIdx++)
-                        {
-                            var fileName = files[fIdx];
-                            var expectedHash = hashes[fIdx];
-                            if (string.IsNullOrEmpty(fileName)) continue;
-
-                            var safeName = SanitizeFileName(fileName);
-                            if (string.IsNullOrEmpty(safeName)) continue;
-
-                            var localPath = Path.Combine(repoDir, safeName);
-                            if (NeedsDownload(localPath, expectedHash))
-                            {
-                                var fileURL = $"{repoUrl}/hats/{safeName.Replace(" ", "%20")}";
-                                toDownload.Add((fileURL, localPath, expectedHash, safeName));
-                            }
-                        }
+                        ProcessHatFile(repoUrl, repoDir, hat.Resource, hat.ResHashA, toDownload);
+                        ProcessHatFile(repoUrl, repoDir, hat.BackResource, hat.ResHashB, toDownload);
+                        ProcessHatFile(repoUrl, repoDir, hat.ClimbResource, hat.ResHashC, toDownload);
+                        ProcessHatFile(repoUrl, repoDir, hat.FlipResource, hat.ResHashF, toDownload);
+                        ProcessHatFile(repoUrl, repoDir, hat.BackFlipResource, hat.ResHashBf, toDownload);
                     }
                 }
                 catch (Exception ex)
@@ -202,10 +189,25 @@ public class HatsLoader : MonoBehaviour
         }
     }
 
+    private void ProcessHatFile(string repoUrl, string repoDir, string fileName, string expectedHash, ConcurrentBag<(string url, string localPath, string expectedHash, string fileName)> toDownload)
+    {
+        if (string.IsNullOrEmpty(fileName)) return;
+
+        var safeName = CustomHatManager.SanitizeFileName(fileName);
+        if (string.IsNullOrEmpty(safeName)) return;
+
+        var localPath = Path.Combine(repoDir, safeName);
+        if (NeedsDownload(localPath, expectedHash))
+        {
+            var fileURL = $"{repoUrl}/hats/{safeName.Replace(" ", "%20")}";
+            toDownload.Add((fileURL, localPath, expectedHash, safeName));
+        }
+    }
+
     private string SanitizeFileName(string path)
     {
         if (string.IsNullOrEmpty(path) || !path.ToLower().EndsWith(".png")) return "";
-        return path.Replace("\\", "").Replace("/", "").Replace("*", "").Replace("..", "");
+        return CustomHatManager.SanitizeFileName(path);
     }
 
     private string GetRepoFolderName(string url)

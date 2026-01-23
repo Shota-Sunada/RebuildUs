@@ -2,16 +2,27 @@ namespace RebuildUs.Modules;
 
 public static class Ship
 {
-    [HarmonyPrefix]
-    [HarmonyPatch(typeof(ShipStatus), nameof(ShipStatus.CalculateLightRadius))]
-    public static bool CalculateLightRadiusPrefix(ref float __result, ShipStatus __instance, NetworkedPlayerInfo player)
+    private static SwitchSystem _cachedSwitchSystem;
+    private static ShipStatus _lastShipStatus;
+
+    public static void UpdateCachedSystems(ShipStatus instance)
+    {
+        if (_lastShipStatus == instance && _cachedSwitchSystem != null) return;
+        _lastShipStatus = instance;
+        _cachedSwitchSystem = null;
+        if (instance != null && instance.Systems != null && instance.Systems.TryGetValue(SystemTypes.Electrical, out var system))
+        {
+            _cachedSwitchSystem = system.CastFast<SwitchSystem>();
+        }
+    }
+
+    public static bool CalculateLightRadius(ref float __result, ShipStatus __instance, NetworkedPlayerInfo player)
     {
         if ((!__instance.Systems.ContainsKey(SystemTypes.Electrical) && !Helpers.IsFungle) || Helpers.IsHideNSeekMode) return true;
 
         // If player is a role which has Impostor vision
         if (Helpers.HasImpostorVision(player.Object))
         {
-            // __result = __instance.MaxLightRadius * PlayerControl.GameOptions.ImpostorLightMod;
             __result = GetNeutralLightRadius(__instance, true);
             return false;
         }
@@ -54,20 +65,18 @@ public static class Ship
         }
 
         if (isImpostor) return shipStatus.MaxLightRadius * GameOptionsManager.Instance.currentNormalGameOptions.ImpostorLightMod;
+
         float lerpValue = 1.0f;
-        try
+        UpdateCachedSystems(shipStatus);
+        if (_cachedSwitchSystem != null)
         {
-            SwitchSystem switchSystem = MapUtilities.Systems[SystemTypes.Electrical].CastFast<SwitchSystem>();
-            lerpValue = switchSystem.Value / 255f;
+            lerpValue = _cachedSwitchSystem.Value / 255f;
         }
-        catch { }
 
         return Mathf.Lerp(shipStatus.MinLightRadius, shipStatus.MaxLightRadius, lerpValue) * GameOptionsManager.Instance.currentNormalGameOptions.CrewLightMod;
     }
 
-    [HarmonyPostfix]
-    [HarmonyPatch(typeof(LogicGameFlowNormal), nameof(LogicGameFlowNormal.IsGameOverDueToDeath))]
-    public static void Postfix2(ShipStatus __instance, ref bool __result)
+    public static void IsGameOverDueToDeath(ref bool __result)
     {
         __result = false;
     }
@@ -76,9 +85,7 @@ public static class Ship
     private static int OriginalNumShortTasksOption = 0;
     private static int OriginalNumLongTasksOption = 0;
 
-    [HarmonyPrefix]
-    [HarmonyPatch(typeof(ShipStatus), nameof(ShipStatus.Begin))]
-    public static bool Prefix(ShipStatus __instance)
+    public static bool BeginPrefix(ShipStatus __instance)
     {
         var commonTaskCount = __instance.CommonTasks.Count;
         var normalTaskCount = __instance.ShortTasks.Count;
@@ -95,9 +102,7 @@ public static class Ship
         return true;
     }
 
-    [HarmonyPostfix]
-    [HarmonyPatch(typeof(ShipStatus), nameof(ShipStatus.Begin))]
-    public static void Postfix3(ShipStatus __instance)
+    public static void BeginPostfix(ShipStatus __instance)
     {
         // Restore original settings after the tasks have been selected
         Helpers.SetOption(Int32OptionNames.NumCommonTasks, OriginalNumCommonTasksOption);
@@ -111,30 +116,23 @@ public static class Ship
         }
     }
 
-    [HarmonyPatch(typeof(ShipStatus), nameof(ShipStatus.Start))]
-    class ShipStatusStartPatch
+    public static void StartPostfix()
     {
-        public static void Postfix()
-        {
-            Logger.LogInfo("Game Started", "Phase");
-        }
+        Logger.LogInfo("Game Started", "Phase");
     }
 
-    [HarmonyPostfix]
-    [HarmonyPatch(typeof(ShipStatus), nameof(ShipStatus.SpawnPlayer))]
-    public static void Postfix(ShipStatus __instance, PlayerControl player, int numPlayers, bool initialSpawn)
+    public static void SpawnPlayer(ShipStatus __instance, PlayerControl player, int numPlayers, bool initialSpawn)
     {
-        // Polusの湧き位置をランダムにする 無駄に人数分シャッフルが走るのをそのうち直す
+        // Polusの湧き位置をランダムにする
         if (Helpers.IsPolus && CustomOptionHolder.PolusRandomSpawn.GetBool())
         {
-            if (AmongUsClient.Instance.AmHost)
+            if (AmongUsClient.Instance.AmHost && player.Data != null)
             {
-                System.Random rand = new();
-                byte randVal = (byte)rand.Next(0, 6);
+                byte randVal = (byte)RebuildUs.Instance.Rnd.Next(0, 6);
                 using var sender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.PolusRandomSpawn);
                 sender.Write(player.Data.PlayerId);
                 sender.Write(randVal);
-                RPCProcedure.PolusRandomSpawn((byte)player.Data.PlayerId, (byte)randVal);
+                RPCProcedure.PolusRandomSpawn(player.Data.PlayerId, randVal);
             }
         }
 

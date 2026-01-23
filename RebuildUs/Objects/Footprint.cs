@@ -32,23 +32,27 @@ public class Footprint
 
         FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(footprintDuration, new Action<float>((p) =>
         {
+            if (SpriteRenderer == null) return;
+
             var c = Color;
             if (!anonymousFootprints && Owner != null)
             {
-                if (Owner.IsRole(RoleType.Morphing))
+                if (Morphing.MorphTimer > 0 && Owner.IsRole(RoleType.Morphing))
                 {
-                    if (Morphing.MorphTimer > 0 && Morphing.MorphTarget?.Data != null)
+                    var target = Morphing.MorphTarget;
+                    if (target?.Data != null)
                     {
-                        c = Palette.ShadowColors[Morphing.MorphTarget.Data.DefaultOutfit.ColorId];
+                        c = Palette.ShadowColors[target.Data.DefaultOutfit.ColorId];
                     }
                 }
                 else if (Camouflager.CamouflageTimer > 0)
                 {
-                    c = Palette.PlayerColors[6];
+                    c = (Color)Palette.PlayerColors[6];
                 }
             }
 
-            if (SpriteRenderer) SpriteRenderer.color = new Color(c.r, c.g, c.b, Mathf.Clamp01(1 - p));
+            c.a = Mathf.Clamp01(1f - p);
+            SpriteRenderer.color = c;
 
             if (p == 1f && FootprintObj != null)
             {

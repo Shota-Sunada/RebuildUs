@@ -1,7 +1,5 @@
 // TODO: 設定画面開いたときに説明文章が更新されない問題があります
 
-using System.Text;
-
 namespace RebuildUs.Modules.CustomOptions;
 
 public enum OptionPage : int
@@ -150,11 +148,25 @@ public partial class CustomOption
         if (__instance.gameObject.name == "GAME SETTINGS TAB")
         {
             // Adapt task count for main options
-            var commonTasksOption = __instance.Children.ToArray().FirstOrDefault(x => x.TryCast<NumberOption>()?.intOptionName == Int32OptionNames.NumCommonTasks).Cast<NumberOption>();
+            NumberOption commonTasksOption = null;
+            NumberOption shortTasksOption = null;
+            NumberOption longTasksOption = null;
+
+            foreach (var child in __instance.Children)
+            {
+                var numOpt = child.TryCast<NumberOption>();
+                if (numOpt == null) continue;
+
+                if (numOpt.intOptionName == Int32OptionNames.NumCommonTasks)
+                    commonTasksOption = numOpt;
+                else if (numOpt.intOptionName == Int32OptionNames.NumShortTasks)
+                    shortTasksOption = numOpt;
+                else if (numOpt.intOptionName == Int32OptionNames.NumLongTasks)
+                    longTasksOption = numOpt;
+            }
+
             commonTasksOption?.ValidRange = new FloatRange(0f, 4f);
-            var shortTasksOption = __instance.Children.ToArray().FirstOrDefault(x => x.TryCast<NumberOption>()?.intOptionName == Int32OptionNames.NumShortTasks).TryCast<NumberOption>();
             shortTasksOption?.ValidRange = new FloatRange(0f, 23f);
-            var longTasksOption = __instance.Children.ToArray().FirstOrDefault(x => x.TryCast<NumberOption>()?.intOptionName == Int32OptionNames.NumLongTasks).TryCast<NumberOption>();
             longTasksOption?.ValidRange = new FloatRange(0f, 15f);
         }
     }
@@ -247,8 +259,11 @@ public partial class CustomOption
         }
         gameOptionsMenu.scrollBar.transform.FindChild("SliderInner").DestroyChildren();
         gameOptionsMenu.Children.Clear();
-        var relevantOptions = AllOptions.Where(x => x.Type == optionType).ToList();
-        CreateSettingsNew(gameOptionsMenu, relevantOptions);
+
+        if (OptionsByType.TryGetValue(optionType, out var relevantOptions))
+        {
+            CreateSettingsNew(gameOptionsMenu, relevantOptions);
+        }
 
         tabObj.SetActive(false);
         return tabObj;
@@ -257,8 +272,9 @@ public partial class CustomOption
     private static void CreateSettingsNew(GameOptionsMenu menu, List<CustomOption> options)
     {
         var num = 1.5f;
-        foreach (var option in options)
+        for (int i = 0; i < options.Count; i++)
         {
+            var option = options[i];
             if (option.IsHeader)
             {
                 var categoryHeaderMasked = UnityEngine.Object.Instantiate(menu.categoryHeaderOrigin, Vector3.zero, Quaternion.identity, menu.settingsContainer);
@@ -292,9 +308,9 @@ public partial class CustomOption
 
             // "SetUpFromData"
             var renderer = ob.GetComponentsInChildren<SpriteRenderer>(true);
-            for (int i = 0; i < renderer.Length; i++)
+            for (int j = 0; j < renderer.Length; j++)
             {
-                renderer[i].material.SetInt(PlayerMaterial.MaskLayer, 20);
+                renderer[j].material.SetInt(PlayerMaterial.MaskLayer, 20);
             }
             foreach (var tmp in ob.GetComponentsInChildren<TextMeshPro>(true))
             {
@@ -325,6 +341,7 @@ public partial class CustomOption
             so.Value = so.oldValue = option.Selection;
             so.ValueText.text = option.Selections[option.Selection].ToString();
             option.OptionBehavior = so;
+            OptionsByBehaviour[so] = option;
 
             menu.Children.Add(ob);
             num -= 0.45f;
@@ -343,26 +360,31 @@ public partial class CustomOption
 
     public static void UpdateGameOptionsMenu(CustomOptionType optionType, GameOptionsMenu menu)
     {
-        foreach (var child in menu.Children)
+        var children = menu.Children;
+        for (int i = 0; i < children.Count; i++)
         {
-            child.Destroy();
+            children[i].Destroy();
         }
         menu.scrollBar.transform.FindChild("SliderInner").DestroyChildren();
-        menu.Children.Clear();
-        var options = new List<CustomOption>();
-        foreach (var option in AllOptions)
+        children.Clear();
+
+        if (OptionsByType.TryGetValue(optionType, out var options))
         {
-            if (option.Type == optionType)
-            {
-                options.Add(option);
-            }
+            CreateSettingsNew(menu, options);
         }
-        CreateSettingsNew(menu, options);
     }
 
     public static bool StringOptionInitialize(StringOption __instance)
     {
-        var option = AllOptions.FirstOrDefault(option => option.OptionBehavior == __instance);
+        CustomOption option = null;
+        for (int i = 0; i < AllOptions.Count; i++)
+        {
+            if (AllOptions[i].OptionBehavior == __instance)
+            {
+                option = AllOptions[i];
+                break;
+            }
+        }
         if (option == null) return true;
 
         __instance.OnValueChanged = new Action<OptionBehaviour>((o) => { });
@@ -375,16 +397,14 @@ public partial class CustomOption
 
     public static bool StringOptionIncrease(StringOption __instance)
     {
-        var option = AllOptions.FirstOrDefault(option => option.OptionBehavior == __instance);
-        if (option == null) return true;
+        if (!OptionsByBehaviour.TryGetValue(__instance, out var option)) return true;
         option.UpdateSelection(option.Selection + 1, option.GetOptionIcon());
         return false;
     }
 
     public static bool StringOptionDecrease(StringOption __instance)
     {
-        var option = AllOptions.FirstOrDefault(option => option.OptionBehavior == __instance);
-        if (option == null) return true;
+        if (!OptionsByBehaviour.TryGetValue(__instance, out var option)) return true;
         option.UpdateSelection(option.Selection - 1, option.GetOptionIcon());
         return false;
     }
@@ -401,14 +421,20 @@ public partial class CustomOption
     public static string BuildModifierExtras(CustomOption customOption)
     {
         // find options children with quantity
-        var children = AllOptions.Where(o => o.Parent == customOption);
-        var quantity = children.Where(o => o.NameKey.Contains("Quantity")).ToList();
+        CustomOption quantityOption = null;
+        var children = customOption.Children;
+        for (int i = 0; i < children.Count; i++)
+        {
+            var o = children[i];
+            if (o.NameKey != null && o.NameKey.Contains("Quantity"))
+            {
+                quantityOption = o;
+                break;
+            }
+        }
+
         if (customOption.GetSelection() == 0) return "";
-        if (quantity.Count == 1) return $" ({quantity[0].GetQuantity()})";
-        // if (customOption == CustomOptionHolder.modifierLover)
-        // {
-        //     return $" (1 Evil: {CustomOptionHolder.modifierLoverImpLoverRate.getSelection() * 10}%)";
-        // }
+        if (quantityOption != null) return $" ({quantityOption.GetQuantity()})";
         return "";
     }
 

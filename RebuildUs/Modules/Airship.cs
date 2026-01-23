@@ -62,53 +62,107 @@ public static class Airship
         {
             var meetingRoom = ShipStatus.Instance.FastRooms[SystemTypes.MeetingRoom].gameObject;
             var gapRoom = ShipStatus.Instance.FastRooms[SystemTypes.GapRoom].gameObject;
+
+            var meetingRenderers = meetingRoom.GetComponentsInChildren<SpriteRenderer>();
+            GameObject ladder = null;
+            foreach (var renderer in meetingRenderers)
+            {
+                if (renderer.name == "ladder_meeting")
+                {
+                    ladder = renderer.gameObject;
+                    break;
+                }
+            }
+
             if (CustomOptionHolder.AirshipAdditionalLadder.GetBool())
             {
                 // 梯子追加
-                var ladder = meetingRoom.GetComponentsInChildren<SpriteRenderer>().FirstOrDefault(x => x.name == "ladder_meeting").gameObject;
-                var newLadder = UnityEngine.Object.Instantiate(ladder, ladder.transform.parent);
-                var ladders = newLadder.GetComponentsInChildren<Ladder>();
-                int id = 100;
-                foreach (var l in ladders)
+                if (ladder != null)
                 {
-                    if (l.name == "LadderBottom") l.gameObject.SetActive(false);
-                    l.Id = (byte)id;
-                    FastDestroyableSingleton<AirshipStatus>.Instance.Ladders.AddItem(l);
-                    id++;
+                    var newLadder = UnityEngine.Object.Instantiate(ladder, ladder.transform.parent);
+                    var ladders = newLadder.GetComponentsInChildren<Ladder>();
+                    int id = 100;
+                    foreach (var l in ladders)
+                    {
+                        if (l.name == "LadderBottom") l.gameObject.SetActive(false);
+                        l.Id = (byte)id;
+                        FastDestroyableSingleton<AirshipStatus>.Instance.Ladders.AddItem(l);
+                        id++;
+                    }
+                    newLadder.transform.position = new Vector3(15.442f, 12.18f, 0.1f);
+                    newLadder.GetComponentInChildren<SpriteRenderer>().sprite = AssetLoader.Ladder;
                 }
-                newLadder.transform.position = new Vector3(15.442f, 12.18f, 0.1f);
-                newLadder.GetComponentInChildren<SpriteRenderer>().sprite = AssetLoader.Ladder;
 
                 // 梯子の周りの影を消す
-                UnityEngine.Object.Destroy(gapRoom.GetComponentsInChildren<EdgeCollider2D>().FirstOrDefault(x => Math.Abs(x.points[0].x + 6.2984f) < 0.1));
-                var collider = meetingRoom.GetComponentsInChildren<EdgeCollider2D>().FirstOrDefault(x => x.pointCount == 46);
-                Il2CppSystem.Collections.Generic.List<Vector2> points = new();
-                var newCollider = collider.gameObject.AddComponent<EdgeCollider2D>();
-                var newCollider2 = collider.gameObject.AddComponent<EdgeCollider2D>();
-                points.Add(collider.points[45]);
-                points.Add(collider.points[44]);
-                points.Add(collider.points[43]);
-                points.Add(collider.points[42]);
-                points.Add(collider.points[41]);
-                newCollider.SetPoints(points);
-                points.Clear();
-                foreach (int i in Enumerable.Range(0, 41))
+                foreach (var x in gapRoom.GetComponentsInChildren<EdgeCollider2D>())
                 {
-                    points.Add(collider.points[i]);
+                    if (Math.Abs(x.points[0].x + 6.2984f) < 0.1)
+                    {
+                        UnityEngine.Object.Destroy(x);
+                        break;
+                    }
                 }
-                newCollider2.SetPoints(points);
-                UnityEngine.Object.DestroyObject(collider);
+
+                EdgeCollider2D collider = null;
+                foreach (var x in meetingRoom.GetComponentsInChildren<EdgeCollider2D>())
+                {
+                    if (x.pointCount == 46)
+                    {
+                        collider = x;
+                        break;
+                    }
+                }
+
+                if (collider != null)
+                {
+                    Il2CppSystem.Collections.Generic.List<Vector2> points = new();
+                    var newCollider = collider.gameObject.AddComponent<EdgeCollider2D>();
+                    var newCollider2 = collider.gameObject.AddComponent<EdgeCollider2D>();
+                    points.Add(collider.points[45]);
+                    points.Add(collider.points[44]);
+                    points.Add(collider.points[43]);
+                    points.Add(collider.points[42]);
+                    points.Add(collider.points[41]);
+                    newCollider.SetPoints(points);
+                    points.Clear();
+                    for (int i = 0; i < 41; i++)
+                    {
+                        points.Add(collider.points[i]);
+                    }
+                    newCollider2.SetPoints(points);
+                    UnityEngine.Object.DestroyObject(collider);
+                }
 
                 // 梯子の背景を変更
-                SpriteRenderer side = meetingRoom.GetComponentsInChildren<SpriteRenderer>().FirstOrDefault(x => x.name == "meeting_side");
-                SpriteRenderer bg = UnityEngine.Object.Instantiate(side, side.transform.parent);
-                bg.sprite = AssetLoader.LadderBackground;
-                bg.transform.localPosition = new Vector3(9.57f, -3.355f, 4.9f);
+                SpriteRenderer side = null;
+                foreach (var r in meetingRenderers)
+                {
+                    if (r.name == "meeting_side")
+                    {
+                        side = r;
+                        break;
+                    }
+                }
+                if (side != null)
+                {
+                    SpriteRenderer bg = UnityEngine.Object.Instantiate(side, side.transform.parent);
+                    bg.sprite = AssetLoader.LadderBackground;
+                    bg.transform.localPosition = new Vector3(9.57f, -3.355f, 4.9f);
+                }
             }
             if (CustomOptionHolder.AirshipOneWayLadder.GetBool())
             {
-                GameObject ladder = meetingRoom.GetComponentsInChildren<SpriteRenderer>().FirstOrDefault(x => x.name == "ladder_meeting").gameObject;
-                ladder.GetComponentsInChildren<Ladder>().FirstOrDefault(x => x.name == "LadderTop").gameObject.SetActive(false);
+                if (ladder != null)
+                {
+                    foreach (var l in ladder.GetComponentsInChildren<Ladder>())
+                    {
+                        if (l.name == "LadderTop")
+                        {
+                            l.gameObject.SetActive(false);
+                            break;
+                        }
+                    }
+                }
             }
         }
     }
@@ -140,11 +194,22 @@ public static class Airship
             return null;
         }
 
-        if (!console.TaskTypes.Contains(TaskTypes.FixWiring))
+        bool hasWiringText = false;
+        foreach (var taskType in console.TaskTypes)
         {
-            var list = console.TaskTypes.ToList();
-            list.Add(TaskTypes.FixWiring);
-            console.TaskTypes = list.ToArray();
+            if (taskType == TaskTypes.FixWiring)
+            {
+                hasWiringText = true;
+                break;
+            }
+        }
+
+        if (!hasWiringText)
+        {
+            var newTasks = new TaskTypes[console.TaskTypes.Length + 1];
+            for (int i = 0; i < console.TaskTypes.Length; i++) newTasks[i] = console.TaskTypes[i];
+            newTasks[console.TaskTypes.Length] = TaskTypes.FixWiring;
+            console.TaskTypes = newTasks;
         }
         console.ConsoleId = consoleId;
         return console;
@@ -169,9 +234,12 @@ public static class Airship
             console.usableDistance = 0.7f;
             console.TaskTypes = new TaskTypes[0];
             console.ValidTasks = new Il2CppReferenceArray<TaskSet>(0);
-            var list = ShipStatus.Instance.AllConsoles.ToList();
-            list.Add(console);
-            ShipStatus.Instance.AllConsoles = new Il2CppReferenceArray<Console>([.. list]);
+
+            var oldConsoles = ShipStatus.Instance.AllConsoles;
+            var newConsoles = new Il2CppReferenceArray<Console>(oldConsoles.Length + 1);
+            for (int i = 0; i < oldConsoles.Length; i++) newConsoles[i] = oldConsoles[i];
+            newConsoles[oldConsoles.Length] = console;
+            ShipStatus.Instance.AllConsoles = newConsoles;
         }
         if (console.Image == null)
         {

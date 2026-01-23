@@ -11,6 +11,7 @@ global using BepInEx.Configuration;
 global using BepInEx.Unity.IL2CPP;
 global using UnityEngine;
 global using TMPro;
+global using System.Text;
 global using AmongUs.GameOptions;
 global using RebuildUs.Extensions;
 global using RebuildUs.Localization;

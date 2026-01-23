@@ -4,7 +4,7 @@ public static class UnityEngineExtensions
 {
     public static void Destroy(this UnityEngine.Object obj)
     {
-        UnityEngine.Object.Destroy(obj);
+        if (obj != null) UnityEngine.Object.Destroy(obj);
     }
 
     public static Transform FindEx(this Transform transform, string name)

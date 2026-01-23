@@ -39,16 +39,32 @@ public class PlayerStatistics
         int impLovers = 0;
         int jackalLovers = 0;
 
-        foreach (var playerInfo in GameData.Instance.AllPlayers)
+        var loversId = new System.Collections.Generic.HashSet<byte>();
+        var couples = Lovers.Couples;
+        for (int i = 0; i < couples.Count; i++)
         {
+            var couple = couples[i];
+            if (couple == null) continue;
+            loversId.Add(couple.Lover1.PlayerId);
+            loversId.Add(couple.Lover2.PlayerId);
+            if (couple.Alive) numCouplesAlive++;
+        }
+
+        var allPlayers = GameData.Instance.AllPlayers;
+        for (int i = 0; i < allPlayers.Count; i++)
+        {
+            var playerInfo = allPlayers[i];
+            if (playerInfo == null) continue;
+            var obj = playerInfo.Object;
+
             if (!playerInfo.Disconnected)
             {
-                if (playerInfo.Object.IsTeamCrewmate()) numCrewmate++;
-                if (!playerInfo.IsDead && !playerInfo.Object.IsGM())
+                if (obj != null && obj.IsTeamCrewmate()) numCrewmate++;
+                if (!playerInfo.IsDead && (obj == null || !obj.IsGM()))
                 {
                     numTotalAlive++;
 
-                    bool lover = IsLover(playerInfo);
+                    bool lover = loversId.Contains(playerInfo.PlayerId);
                     if (lover) numLoversAlive++;
 
                     if (playerInfo.Role.IsImpostor)
@@ -56,25 +72,23 @@ public class PlayerStatistics
                         numImpostorsAlive++;
                         if (lover) impLovers++;
                     }
-                    if (Jackal.Exists && playerInfo.Object.IsRole(RoleType.Jackal))
+                    if (obj != null)
                     {
-                        numJackalAlive++;
-                        if (lover) jackalLovers++;
-                    }
-                    if (Sidekick.Exists && playerInfo.Object.IsRole(RoleType.Sidekick))
-                    {
-                        numJackalAlive++;
-                        if (lover) jackalLovers++;
-                    }
+                        if (Jackal.Exists && obj.IsRole(RoleType.Jackal))
+                        {
+                            numJackalAlive++;
+                            if (lover) jackalLovers++;
+                        }
+                        else if (Sidekick.Exists && obj.IsRole(RoleType.Sidekick))
+                        {
+                            numJackalAlive++;
+                            if (lover) jackalLovers++;
+                        }
 
-                    if (playerInfo.Object.IsNeutral()) numNeutralAlive++;
+                        if (obj.IsNeutral()) numNeutralAlive++;
+                    }
                 }
             }
-        }
-
-        foreach (var couple in Lovers.Couples)
-        {
-            if (couple.Alive) numCouplesAlive++;
         }
 
         // In the special case of Mafia being enabled, but only the janitor's left alive,

@@ -18,10 +18,20 @@ public class AdditionalVents
         Vent.EnterVentAnim = tmp.EnterVentAnim;
         Vent.ExitVentAnim = tmp.ExitVentAnim;
         Vent.Offset = new Vector3(0f, 0.25f, 0f);
-        Vent.Id = MapUtilities.CachedShipStatus.AllVents.Select(x => x.Id).Max() + 1; // Make sure we have a unique id
-        var allVentsList = MapUtilities.CachedShipStatus.AllVents.ToList();
-        allVentsList.Add(Vent);
-        MapUtilities.CachedShipStatus.AllVents = allVentsList.ToArray();
+
+        int maxId = -1;
+        var allVents = MapUtilities.CachedShipStatus.AllVents;
+        for (int i = 0; i < allVents.Length; i++)
+        {
+            if (allVents[i].Id > maxId) maxId = allVents[i].Id;
+        }
+        Vent.Id = maxId + 1; // Make sure we have a unique id
+
+        var newVents = new Vent[allVents.Length + 1];
+        for (int i = 0; i < allVents.Length; i++) newVents[i] = allVents[i];
+        newVents[newVents.Length - 1] = Vent;
+        MapUtilities.CachedShipStatus.AllVents = newVents;
+
         Vent.gameObject.SetActive(true);
         Vent.name = "AdditionalVent_" + Vent.Id;
         AllVents.Add(this);

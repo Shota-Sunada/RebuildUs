@@ -64,7 +64,10 @@ public static class LoadScreen
     [HideFromIl2Cpp]
     public static void Update()
     {
-        StatusTMPro?.text = StatusText;
+        if (StatusTMPro != null && StatusTMPro.text != StatusText)
+        {
+            StatusTMPro.text = StatusText;
+        }
     }
 
     [HideFromIl2Cpp]

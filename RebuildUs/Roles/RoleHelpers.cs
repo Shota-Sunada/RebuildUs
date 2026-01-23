@@ -43,24 +43,13 @@ public static class RoleHelpers
     {
         if (player == null || roleType == RoleType.NoRole) return false;
 
+        var role = PlayerRole.GetRole(player);
+        if (role != null && role.CurrentRoleType == roleType) return true;
+
         if (roleType == RoleType.Crewmate) return player.IsTeamCrewmate();
         if (roleType == RoleType.Impostor) return player.IsTeamImpostor();
         if (roleType == RoleType.Lovers) return player.IsLovers();
         if (roleType == RoleType.GM) return player.IsGM();
-
-        var methods = GetMethods(roleType);
-        if (methods.exists != null && methods.isRole != null)
-        {
-            try
-            {
-                return (bool)methods.exists.Invoke(null, null) && (bool)methods.isRole.Invoke(null, [player]);
-            }
-            catch (Exception e)
-            {
-                Logger.LogError($"Error invoking IsRole for {roleType}: {e}", "IsRole");
-                return false;
-            }
-        }
 
         return false;
     }

@@ -69,7 +69,14 @@ public static class Intro
         if (Helpers.IsAirship && CustomOptionHolder.AirshipOldAdmin.GetBool())
         {
             GameObject records = ShipStatus.Instance.FastRooms[SystemTypes.Records].gameObject;
-            records.GetComponentsInChildren<MapConsole>().FirstOrDefault(x => x.name == "records_admin_map")?.gameObject.SetActive(false);
+            foreach (var console in records.GetComponentsInChildren<MapConsole>())
+            {
+                if (console.name == "records_admin_map")
+                {
+                    console.gameObject.SetActive(false);
+                    break;
+                }
+            }
         }
 
         if (ShipStatus.Instance.FastRooms.ContainsKey(SystemTypes.GapRoom))
@@ -78,9 +85,27 @@ public static class Intro
             // GapRoomの配電盤を消す
             if (Helpers.IsAirship && CustomOptionHolder.AirshipDisableGapSwitchBoard.GetBool())
             {
-                var sabotage = gapRoom.GetComponentsInChildren<Console>().FirstOrDefault(x => x.name == "task_lightssabotage (gap)")?.gameObject;
-                sabotage.SetActive(false);
-                MapUtilities.CachedShipStatus.AllConsoles = MapUtilities.CachedShipStatus.AllConsoles.Where(x => x != sabotage.GetComponent<Console>()).ToArray();
+                GameObject sabotage = null;
+                foreach (var console in gapRoom.GetComponentsInChildren<Console>())
+                {
+                    if (console.name == "task_lightssabotage (gap)")
+                    {
+                        sabotage = console.gameObject;
+                        break;
+                    }
+                }
+
+                if (sabotage != null)
+                {
+                    sabotage.SetActive(false);
+                    var sabotageConsole = sabotage.GetComponent<Console>();
+                    var newConsoles = new List<Console>();
+                    foreach (var c in MapUtilities.CachedShipStatus.AllConsoles)
+                    {
+                        if (c != sabotageConsole) newConsoles.Add(c);
+                    }
+                    MapUtilities.CachedShipStatus.AllConsoles = newConsoles.ToArray();
+                }
             }
 
             // ぬ～んを消す
@@ -97,16 +122,17 @@ public static class Intro
         //タスクバグ修正
         if (Helpers.IsAirship && CustomOptionHolder.AirshipEnableWallCheck.GetBool())
         {
-            var objects = UnityEngine.GameObject.FindObjectsOfType<Console>().ToList();
-            objects.Find(x => x.name == "task_garbage1").checkWalls = true;
-            objects.Find(x => x.name == "task_garbage2").checkWalls = true;
-            objects.Find(x => x.name == "task_garbage3").checkWalls = true;
-            objects.Find(x => x.name == "task_garbage4").checkWalls = true;
-            objects.Find(x => x.name == "task_garbage5").checkWalls = true;
-            objects.Find(x => x.name == "task_shower").checkWalls = true;
-            objects.Find(x => x.name == "task_developphotos").checkWalls = true;
-            objects.Find(x => x.name == "DivertRecieve" && x.Room == SystemTypes.Armory).checkWalls = true;
-            objects.Find(x => x.name == "DivertRecieve" && x.Room == SystemTypes.MainHall).checkWalls = true;
+            foreach (var x in UnityEngine.GameObject.FindObjectsOfType<Console>())
+            {
+                if (x.name == "task_garbage1") x.checkWalls = true;
+                else if (x.name == "task_garbage2") x.checkWalls = true;
+                else if (x.name == "task_garbage3") x.checkWalls = true;
+                else if (x.name == "task_garbage4") x.checkWalls = true;
+                else if (x.name == "task_garbage5") x.checkWalls = true;
+                else if (x.name == "task_shower") x.checkWalls = true;
+                else if (x.name == "task_developphotos") x.checkWalls = true;
+                else if (x.name == "DivertRecieve" && (x.Room == SystemTypes.Armory || x.Room == SystemTypes.MainHall)) x.checkWalls = true;
+            }
         }
 
         // 最初から一人の場合はLast Impostorになる
@@ -140,9 +166,13 @@ public static class Intro
         // Add the Spy to the Impostor team (for the Impostors)
         if (Spy.Exists && PlayerControl.LocalPlayer.Data.Role.IsImpostor)
         {
-            var players = PlayerControl.AllPlayerControls.ToArray().ToList().OrderBy(x => Guid.NewGuid()).ToList();
+            var players = new List<PlayerControl>();
+            foreach (var p in PlayerControl.AllPlayerControls) players.Add(p);
+            players.Shuffle();
+
             var fakeImpostorTeam = new Il2CppSystem.Collections.Generic.List<PlayerControl>(); // The local player always has to be the first one in the list (to be displayed in the center)
             fakeImpostorTeam.Add(PlayerControl.LocalPlayer);
+
             foreach (var p in players)
             {
                 if (PlayerControl.LocalPlayer != p && (p.IsRole(RoleType.Spy) || p.Data.Role.IsImpostor))

@@ -5,7 +5,7 @@ public static class Map
     public static Dictionary<byte, SpriteRenderer> MapIcons = null;
     public static Dictionary<byte, SpriteRenderer> CorpseIcons = null;
 
-    public static Dictionary<String, SpriteRenderer> DoorMarks;
+    public static Dictionary<PlainDoor, SpriteRenderer> DoorMarks;
     public static Il2CppArrayBase<PlainDoor> PlainDoors;
     private static Vector3 UseButtonPos;
 
@@ -17,7 +17,7 @@ public static class Map
         if (MapIcons != null)
         {
             foreach (SpriteRenderer r in MapIcons.Values)
-                UnityEngine.Object.Destroy(r.gameObject);
+                if (r != null && r.gameObject != null) UnityEngine.Object.Destroy(r.gameObject);
             MapIcons.Clear();
             MapIcons = null;
         }
@@ -25,7 +25,7 @@ public static class Map
         if (CorpseIcons != null)
         {
             foreach (SpriteRenderer r in CorpseIcons.Values)
-                UnityEngine.Object.Destroy(r.gameObject);
+                if (r != null && r.gameObject != null) UnityEngine.Object.Destroy(r.gameObject);
             CorpseIcons.Clear();
             CorpseIcons = null;
         }
@@ -39,7 +39,7 @@ public static class Map
         {
             foreach (SpriteRenderer r in ImpostorHerePoint.Values)
             {
-                UnityEngine.Object.Destroy(r.gameObject);
+                if (r != null && r.gameObject != null) UnityEngine.Object.Destroy(r.gameObject);
             }
             ImpostorHerePoint.Clear();
             ImpostorHerePoint = null;
@@ -48,7 +48,7 @@ public static class Map
         {
             foreach (var mark in DoorMarks.Values)
             {
-                UnityEngine.Object.Destroy(mark.gameObject);
+                if (mark != null && mark.gameObject != null) UnityEngine.Object.Destroy(mark.gameObject);
             }
             DoorMarks.Clear();
             DoorMarks = null;
@@ -103,24 +103,25 @@ public static class Map
 
     public static void UpdatePostfix(MapBehaviour __instance)
     {
-        if (PlayerControl.LocalPlayer.IsRole(RoleType.EvilTracker) && EvilTracker.CanSeeTargetPosition)
+        var localPlayer = PlayerControl.LocalPlayer;
+        if (localPlayer.IsRole(RoleType.EvilTracker) && EvilTracker.CanSeeTargetPosition)
         {
             EvilTrackerFixedUpdate(__instance);
         }
 
-        if (PlayerControl.LocalPlayer.IsRole(RoleType.EvilHacker) || EvilHacker.IsInherited())
+        if (localPlayer.IsRole(RoleType.EvilHacker) || EvilHacker.IsInherited())
         {
             EvilHackerFixedUpdate(__instance);
         }
 
-        if (PlayerControl.LocalPlayer.IsGM())
+        if (localPlayer.IsGM())
         {
-            foreach (PlayerControl p in PlayerControl.AllPlayerControls)
+            foreach (var p in PlayerControl.AllPlayerControls.GetFastEnumerator())
             {
                 if (p == null || p.IsGM()) continue;
 
                 byte id = p.PlayerId;
-                if (!MapIcons.ContainsKey(id))
+                if (MapIcons == null || !MapIcons.TryGetValue(id, out var icon))
                 {
                     continue;
                 }
@@ -132,29 +133,32 @@ public static class Map
                     vector /= MapUtilities.CachedShipStatus.MapScale;
                     vector.x *= Mathf.Sign(MapUtilities.CachedShipStatus.transform.localScale.x);
                     vector.z = -1f;
-                    MapIcons[id].transform.localPosition = vector;
-
+                    icon.transform.localPosition = vector;
                 }
 
-                MapIcons[id].enabled = enabled;
+                if (icon.enabled != enabled) icon.enabled = enabled;
             }
 
-            foreach (SpriteRenderer r in CorpseIcons.Values) { r.enabled = false; }
-            foreach (DeadBody b in UnityEngine.Object.FindObjectsOfType<DeadBody>())
+            if (CorpseIcons != null)
+            {
+                foreach (var r in CorpseIcons.Values) { r.enabled = false; }
+            }
+
+            foreach (var b in UnityEngine.Object.FindObjectsOfType<DeadBody>())
             {
                 byte id = b.ParentId;
+                if (CorpseIcons == null || !CorpseIcons.TryGetValue(id, out var corpseIcon))
+                {
+                    continue;
+                }
+
                 Vector3 vector = b.transform.position;
                 vector /= MapUtilities.CachedShipStatus.MapScale;
                 vector.x *= Mathf.Sign(MapUtilities.CachedShipStatus.transform.localScale.x);
                 vector.z = -1f;
 
-                if (!CorpseIcons.ContainsKey(id))
-                {
-                    continue;
-                }
-
-                CorpseIcons[id].transform.localPosition = vector;
-                CorpseIcons[id].enabled = true;
+                corpseIcon.transform.localPosition = vector;
+                if (!corpseIcon.enabled) corpseIcon.enabled = true;
             }
         }
     }
@@ -259,42 +263,41 @@ public static class Map
         if (!EvilHacker.CanSeeDoorStatus) return;
         if (MeetingHud.Instance == null && RebuildUs.ForceNormalSabotageMap.Value)
         {
-            foreach (var mark in DoorMarks.Values)
+            if (DoorMarks != null)
             {
-                mark.gameObject.SetActive(false);
+                foreach (var mark in DoorMarks.Values)
+                {
+                    if (mark.gameObject.activeSelf) mark.gameObject.SetActive(false);
+                }
             }
             return;
         }
 
-        // if (plainDoors == null) plainDoors = GameObject.FindObjectsOfType<PlainDoor>();
         if (DoorMarks == null) DoorMarks = [];
+        if (PlainDoors == null) return;
 
         foreach (var door in PlainDoors)
         {
-            Vector3 pos = door.gameObject.transform.position / MapUtilities.CachedShipStatus.MapScale;
-            pos.z = -10f;
-            String key = $"{pos.x},{pos.y}";
-            SpriteRenderer mark;
-            if (DoorMarks.ContainsKey(key))
-            {
-                mark = DoorMarks[key];
-            }
-            else
+            if (door == null) continue;
+            if (!DoorMarks.TryGetValue(door, out var mark))
             {
                 mark = GameObject.Instantiate<SpriteRenderer>(__instance.HerePoint, __instance.HerePoint.transform.parent);
-                DoorMarks.Add(key, mark);
+                DoorMarks.Add(door, mark);
             }
+
             if (!door.Open)
             {
-                mark.gameObject.SetActive(true);
+                if (!mark.gameObject.activeSelf) mark.gameObject.SetActive(true);
                 mark.sprite = AssetLoader.Cross;
                 PlayerMaterial.SetColors(0, mark);
+                var pos = door.gameObject.transform.position / MapUtilities.CachedShipStatus.MapScale;
+                pos.x *= Mathf.Sign(MapUtilities.CachedShipStatus.transform.localScale.x);
+                pos.z = -10f;
                 mark.transform.localPosition = pos;
-                mark.gameObject.SetActive(true);
             }
             else
             {
-                mark.gameObject.SetActive(false);
+                if (mark.gameObject.activeSelf) mark.gameObject.SetActive(false);
             }
         }
     }
@@ -366,10 +369,11 @@ public static class Map
             {
                 TargetHerePoint = UnityEngine.Object.Instantiate(__instance.HerePoint, __instance.HerePoint.transform.parent);
             }
-            TargetHerePoint.gameObject.SetActive(EvilTracker.Target.IsAlive());
+            bool isAlive = EvilTracker.Target.IsAlive();
+            if (TargetHerePoint.gameObject.activeSelf != isAlive) TargetHerePoint.gameObject.SetActive(isAlive);
             NetworkedPlayerInfo playerById = GameData.Instance.GetPlayerById(EvilTracker.Target.PlayerId);
             PlayerMaterial.SetColors((playerById != null) ? playerById.DefaultOutfit.ColorId : 0, TargetHerePoint);
-            var pos = new Vector3(EvilTracker.Target.transform.position.x, EvilTracker.Target.transform.position.y, EvilTracker.Target.transform.position.z);
+            var pos = EvilTracker.Target.transform.position;
             pos /= MapUtilities.CachedShipStatus.MapScale;
             pos.x *= Mathf.Sign(MapUtilities.CachedShipStatus.transform.localScale.x);
             pos.z = -10;
@@ -378,21 +382,24 @@ public static class Map
 
         // インポスターの位置をマップに表示
         if (ImpostorHerePoint == null) ImpostorHerePoint = [];
-        foreach (PlayerControl p in PlayerControl.AllPlayerControls)
+        var localPlayer = PlayerControl.LocalPlayer;
+        foreach (var p in PlayerControl.AllPlayerControls.GetFastEnumerator())
         {
-            if (p.IsTeamImpostor() && p != PlayerControl.LocalPlayer)
+            if (p.IsTeamImpostor() && p != localPlayer)
             {
-                if (!ImpostorHerePoint.ContainsKey(p.PlayerId))
+                if (!ImpostorHerePoint.TryGetValue(p.PlayerId, out var icon))
                 {
-                    ImpostorHerePoint[p.PlayerId] = GameObject.Instantiate<SpriteRenderer>(__instance.HerePoint, __instance.HerePoint.transform.parent);
+                    icon = GameObject.Instantiate<SpriteRenderer>(__instance.HerePoint, __instance.HerePoint.transform.parent);
+                    ImpostorHerePoint[p.PlayerId] = icon;
                 }
-                ImpostorHerePoint[p.PlayerId].gameObject.SetActive(p.IsAlive());
-                PlayerMaterial.SetColors(0, ImpostorHerePoint[p.PlayerId]);
-                var pos = new Vector3(p.transform.position.x, p.transform.position.y, p.transform.position.z);
+                bool isAlive = p.IsAlive();
+                if (icon.gameObject.activeSelf != isAlive) icon.gameObject.SetActive(isAlive);
+                PlayerMaterial.SetColors(0, icon);
+                var pos = p.transform.position;
                 pos /= MapUtilities.CachedShipStatus.MapScale;
                 pos.x *= Mathf.Sign(MapUtilities.CachedShipStatus.transform.localScale.x);
                 pos.z = -10;
-                ImpostorHerePoint[p.PlayerId].transform.localPosition = pos;
+                icon.transform.localPosition = pos;
             }
         }
     }
