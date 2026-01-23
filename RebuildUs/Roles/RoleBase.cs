@@ -34,7 +34,13 @@ public abstract class PlayerRole
 
     public static PlayerRole GetRole(PlayerControl player)
     {
-        return AllRoles.FirstOrDefault(x => x.Player == player);
+        if (player == null) return null;
+        var allRoles = AllRoles;
+        for (int i = 0; i < allRoles.Count; i++)
+        {
+            if (allRoles[i].Player == player) return allRoles[i];
+        }
+        return null;
     }
 }
 
@@ -55,7 +61,13 @@ public abstract class RoleBase<T> : PlayerRole where T : RoleBase<T>, new()
     {
         get
         {
-            return Players.FirstOrDefault(x => x.Player == PlayerControl.LocalPlayer);
+            var local = PlayerControl.LocalPlayer;
+            if (local == null) return null;
+            for (int i = 0; i < Players.Count; i++)
+            {
+                if (Players[i].Player == local) return Players[i];
+            }
+            return null;
         }
     }
 
@@ -63,7 +75,9 @@ public abstract class RoleBase<T> : PlayerRole where T : RoleBase<T>, new()
     {
         get
         {
-            return [.. Players.Select(x => x.Player)];
+            var list = new List<PlayerControl>(Players.Count);
+            for (int i = 0; i < Players.Count; i++) list.Add(Players[i].Player);
+            return list;
         }
     }
 
@@ -71,7 +85,13 @@ public abstract class RoleBase<T> : PlayerRole where T : RoleBase<T>, new()
     {
         get
         {
-            return [.. Players.Select(x => x.Player).Where(x => x.IsAlive())];
+            var list = new List<PlayerControl>(Players.Count);
+            for (int i = 0; i < Players.Count; i++)
+            {
+                var p = Players[i].Player;
+                if (p.IsAlive()) list.Add(p);
+            }
+            return list;
         }
     }
 
@@ -79,7 +99,13 @@ public abstract class RoleBase<T> : PlayerRole where T : RoleBase<T>, new()
     {
         get
         {
-            return [.. Players.Select(x => x.Player).Where(x => !x.IsAlive())];
+            var list = new List<PlayerControl>(Players.Count);
+            for (int i = 0; i < Players.Count; i++)
+            {
+                var p = Players[i].Player;
+                if (!p.IsAlive()) list.Add(p);
+            }
+            return list;
         }
     }
 
@@ -91,17 +117,27 @@ public abstract class RoleBase<T> : PlayerRole where T : RoleBase<T>, new()
     public static new T GetRole(PlayerControl player = null)
     {
         player ??= PlayerControl.LocalPlayer;
-        return Players.FirstOrDefault(x => x.Player == player);
+        if (player == null) return null;
+        for (int i = 0; i < Players.Count; i++)
+        {
+            if (Players[i].Player == player) return Players[i];
+        }
+        return null;
     }
 
     public static bool IsRole(PlayerControl player)
     {
-        return Players.Any(x => x.Player == player);
+        if (player == null) return false;
+        for (int i = 0; i < Players.Count; i++)
+        {
+            if (Players[i].Player == player) return true;
+        }
+        return false;
     }
 
     public static void SetRole(PlayerControl player)
     {
-        if (!IsRole(player))
+        if (player != null && !IsRole(player))
         {
             T role = new();
             role.Init(player);
@@ -110,17 +146,36 @@ public abstract class RoleBase<T> : PlayerRole where T : RoleBase<T>, new()
 
     public static void EraseRole(PlayerControl player)
     {
-        Players.DoIf(x => x.Player == player, x => x.ResetRole());
-        Players.RemoveAll(x => x.Player == player && x.CurrentRoleType == StaticRoleType);
-        AllRoles.RemoveAll(x => x.Player == player && x.CurrentRoleType == StaticRoleType);
+        if (player == null) return;
+        for (int i = Players.Count - 1; i >= 0; i--)
+        {
+            var x = Players[i];
+            if (x.Player == player && x.CurrentRoleType == StaticRoleType)
+            {
+                x.ResetRole();
+                Players.RemoveAt(i);
+            }
+        }
+        for (int i = AllRoles.Count - 1; i >= 0; i--)
+        {
+            var x = AllRoles[i];
+            if (x.Player == player && x.CurrentRoleType == StaticRoleType)
+            {
+                AllRoles.RemoveAt(i);
+            }
+        }
     }
 
     public static void SwapRole(PlayerControl p1, PlayerControl p2)
     {
-        var index = Players.FindIndex(x => x.Player == p1);
-        if (index >= 0)
+        if (p1 == null || p2 == null) return;
+        for (int i = 0; i < Players.Count; i++)
         {
-            Players[index].Player = p2;
+            if (Players[i].Player == p1)
+            {
+                Players[i].Player = p2;
+                break;
+            }
         }
     }
 }

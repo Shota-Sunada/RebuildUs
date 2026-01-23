@@ -1,67 +1,92 @@
+using System;
 using System.Reflection;
+using System.Collections.Generic;
 
 namespace RebuildUs.Roles;
 
 public static class ModifierHelpers
 {
-    public static bool HasModifier(this PlayerControl player, ModifierType modType)
-    {
-        if (player == null) return false;
+    private static readonly Dictionary<ModifierType, (MethodInfo exists, MethodInfo hasModifier, MethodInfo addModifier, MethodInfo eraseModifier, MethodInfo swapModifier)> MethodCache = [];
 
-        foreach (var type in ModifierData.AllModifierTypes)
+    private static (MethodInfo exists, MethodInfo hasModifier, MethodInfo addModifier, MethodInfo eraseModifier, MethodInfo swapModifier) GetMethods(ModifierType modType)
+    {
+        if (MethodCache.TryGetValue(modType, out var cached)) return cached;
+
+        foreach (var reg in ModifierData.Modifiers)
         {
-            if (modType == type.ModifierType)
+            if (reg.modType == modType)
             {
-                return type.Type != null
-                    && (bool)(type.Type.GetProperty("Exists", BindingFlags.Public | BindingFlags.Static)?.GetValue(null) ?? false)
-                    && (bool)(type.Type.GetMethod("HasModifier", BindingFlags.Public | BindingFlags.Static)?.Invoke(null, [player]) ?? false);
+                var type = reg.classType;
+                if (type == null) break;
+
+                var methods = (
+                    type.GetProperty("Exists", BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy)?.GetMethod,
+                    type.GetMethod("HasModifier", BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy),
+                    type.GetMethod("AddModifier", BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy) ?? type.GetMethod("SetRole", BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy),
+                    type.GetMethod("EraseModifier", BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy),
+                    type.GetMethod("SwapModifier", BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy)
+                );
+                MethodCache[modType] = methods;
+                return methods;
             }
         }
 
-        Logger.LogWarn($"There is no modifier type: {modType}", "HasModifier");
+        if (modType != ModifierType.NoModifier)
+            Logger.LogWarn($"There is no modifier type registration for: {modType}", "GetMethods");
+
+        var nullMethods = ((MethodInfo)null, (MethodInfo)null, (MethodInfo)null, (MethodInfo)null, (MethodInfo)null);
+        MethodCache[modType] = nullMethods;
+        return nullMethods;
+    }
+
+    public static bool HasModifier(this PlayerControl player, ModifierType modType)
+    {
+        if (player == null || modType == ModifierType.NoModifier) return false;
+
+        var methods = GetMethods(modType);
+        if (methods.exists != null && methods.hasModifier != null)
+        {
+            try
+            {
+                return (bool)methods.exists.Invoke(null, null) && (bool)methods.hasModifier.Invoke(null, [player]);
+            }
+            catch (Exception e)
+            {
+                Logger.LogError($"Error invoking HasModifier for {modType}: {e}", "HasModifier");
+                return false;
+            }
+        }
 
         return false;
     }
 
     public static bool AddModifier(this PlayerControl player, ModifierType modType)
     {
-        if (player == null) return false;
+        if (player == null || modType == ModifierType.NoModifier) return false;
 
-        Logger.LogInfo($"{player?.Data?.PlayerName}({player?.PlayerId}): {Enum.GetName(typeof(ModifierType), modType)}");
-        foreach (var type in ModifierData.AllModifierTypes)
+        Logger.LogInfo($"{player.Data?.PlayerName}({player.PlayerId}): {Enum.GetName(typeof(ModifierType), modType)}");
+        var methods = GetMethods(modType);
+        if (methods.addModifier != null)
         {
-            if (modType == type.ModifierType)
-            {
-                if (type.Type == null) return false;
-                var method = type.Type.GetMethod("AddModifier", BindingFlags.Public | BindingFlags.Static)
-                            ?? type.Type.GetMethod("SetRole", BindingFlags.Public | BindingFlags.Static);
-                if (method != null)
-                {
-                    method.Invoke(null, [player]);
-                    return true;
-                }
-            }
+            methods.addModifier.Invoke(null, [player]);
+            return true;
         }
 
         Logger.LogWarn($"There is no modifier type: {modType}", "AddModifier");
-
         return false;
     }
 
     public static void EraseModifier(this PlayerControl player, ModifierType modType)
     {
-        if (player == null) return;
+        if (player == null || modType == ModifierType.NoModifier) return;
 
         if (HasModifier(player, modType))
         {
-            foreach (var type in ModifierData.AllModifierTypes)
+            var methods = GetMethods(modType);
+            if (methods.eraseModifier != null)
             {
-                if (modType == type.ModifierType)
-                {
-                    if (type.Type == null) return;
-                    type.Type.GetMethod("EraseModifier", BindingFlags.Public | BindingFlags.Static)?.Invoke(null, [player]);
-                    return;
-                }
+                methods.eraseModifier.Invoke(null, [player]);
+                return;
             }
 
             Logger.LogWarn($"There is no modifier type: {modType}", "EraseModifier");
@@ -70,22 +95,26 @@ public static class ModifierHelpers
 
     public static void EraseAllModifiers(this PlayerControl player)
     {
-        foreach (var type in ModifierData.AllModifierTypes)
-        {
-            if (type.Type == null) continue;
-            type.Type.GetMethod("EraseModifier", BindingFlags.Public | BindingFlags.Static)?.Invoke(null, [player]);
-        }
+        if (player == null) return;
 
-        // if (player.IsRole(RoleType.Mayor)) Mayor.clearAndReload();
+        foreach (var reg in ModifierData.Modifiers)
+        {
+            if (reg.classType == null) continue;
+            var methods = GetMethods(reg.modType);
+            methods.eraseModifier?.Invoke(null, [player]);
+        }
     }
 
     public static void SwapModifiers(this PlayerControl player, PlayerControl target)
     {
-        foreach (var type in ModifierData.AllModifierTypes)
+        if (player == null || target == null) return;
+
+        foreach (var reg in ModifierData.Modifiers)
         {
-            if (type.Type != null && player.HasModifier(type.ModifierType))
+            if (reg.classType != null && player.HasModifier(reg.modType))
             {
-                type.Type.GetMethod("SwapModifier", BindingFlags.Public | BindingFlags.Static)?.Invoke(null, [player, target]);
+                var methods = GetMethods(reg.modType);
+                methods.swapModifier?.Invoke(null, [player, target]);
             }
         }
     }

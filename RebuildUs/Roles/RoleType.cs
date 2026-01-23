@@ -1,6 +1,6 @@
 namespace RebuildUs.Roles;
 
-public enum RoleType
+public enum RoleType : byte
 {
     // Crewmate
     Crewmate = 0,
@@ -59,5 +59,5 @@ public enum RoleType
     GM = 200,
 
     // don't put anything below this
-    NoRole = int.MaxValue
+    NoRole = byte.MaxValue
 }

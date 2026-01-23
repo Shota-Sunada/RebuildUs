@@ -1,3 +1,7 @@
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
 namespace RebuildUs.Roles;
 
 public partial class RoleInfo(string nameKey, Color color, CustomOption baseOption, RoleType roleType)
@@ -26,23 +30,41 @@ public partial class RoleInfo(string nameKey, Color color, CustomOption baseOpti
             // TODO: Write modifiers here
         }
 
-        foreach (var info in AllRoleInfos)
+        var allRoleInfos = AllRoleInfos;
+        for (int i = 0; i < allRoleInfos.Count; i++)
         {
-            if (info.RoleType == RoleType.Jackal) continue; // Jackalは後で特殊判定を行う
+            var info = allRoleInfos[i];
+            if (info.RoleType == RoleType.Jackal) continue;
             if (player.IsRole(info.RoleType)) infos.Add(info);
         }
 
-        if (player.IsRole(RoleType.Jackal) || (Neutral.Jackal.FormerJackals != null && Neutral.Jackal.FormerJackals.Any(x => x.PlayerId == player.PlayerId))) infos.Add(Jackal);
+        if (player.IsRole(RoleType.Jackal) || (Neutral.Jackal.FormerJackals != null && Neutral.Jackal.FormerJackals.Any(x => x.PlayerId == player.PlayerId)))
+        {
+            infos.Add(Jackal);
+        }
 
-        if (infos.Count == 0 && player.Data.Role != null)
+        if (infos.Count == 0 && player.Data != null && player.Data.Role != null)
         {
             if (player.IsTeamImpostor()) infos.Add(Impostor);
             else infos.Add(Crewmate);
         }
 
-        if (excludeRoles != null)
+        if (excludeRoles != null && excludeRoles.Length > 0)
         {
-            infos.RemoveAll(x => excludeRoles.Contains(x.RoleType));
+            for (int i = infos.Count - 1; i >= 0; i--)
+            {
+                var roleType = infos[i].RoleType;
+                bool shouldRemove = false;
+                for (int j = 0; j < excludeRoles.Length; j++)
+                {
+                    if (roleType == excludeRoles[j])
+                    {
+                        shouldRemove = true;
+                        break;
+                    }
+                }
+                if (shouldRemove) infos.RemoveAt(i);
+            }
         }
 
         return infos;
@@ -50,58 +72,71 @@ public partial class RoleInfo(string nameKey, Color color, CustomOption baseOpti
 
     public static string GetRolesString(PlayerControl p, bool useColors, bool showModifier = true, RoleType[] excludeRoles = null, bool includeHidden = false, string joinSeparator = " ")
     {
-        if (p?.Data?.Disconnected != false) return "";
+        if (p == null || p.Data == null || p.Data.Disconnected) return string.Empty;
 
         var roleInfo = GetRoleInfoForPlayer(p, showModifier, excludeRoles);
-        var roleName = string.Join(joinSeparator, [.. roleInfo.Select(x => useColors ? Helpers.Cs(x.Color, x.Name) : x.Name)]);
+        if (roleInfo.Count == 0) return string.Empty;
+
+        var sb = new StringBuilder();
+
+        void AppendNames(bool useMadmateColor = false)
+        {
+            bool first = true;
+            foreach (var info in roleInfo)
+            {
+                if (!first) sb.Append(joinSeparator);
+                Color c = useMadmateColor ? Madmate.NameColor : info.Color;
+                sb.Append(useColors ? Helpers.Cs(c, info.Name) : info.Name);
+                first = false;
+            }
+        }
 
         if (p.HasModifier(ModifierType.Madmate) || p.HasModifier(ModifierType.CreatedMadmate))
         {
-            // Madmate only
-            if (roleInfo.Contains(Crewmate))
+            bool hasCrewmate = false;
+            for (int i = 0; i < roleInfo.Count; i++) if (roleInfo[i].RoleType == RoleType.Crewmate) { hasCrewmate = true; break; }
+
+            if (hasCrewmate)
             {
-                roleName = useColors ? Helpers.Cs(Madmate.NameColor, Madmate.FullName) : Madmate.FullName;
+                return useColors ? Helpers.Cs(Madmate.NameColor, Madmate.FullName) : Madmate.FullName;
             }
             else
             {
                 string prefix = useColors ? Helpers.Cs(Madmate.NameColor, Madmate.Prefix) : Madmate.Prefix;
-                roleName = string.Join(joinSeparator, [.. roleInfo.Select(x => useColors ? Helpers.Cs(Madmate.NameColor, x.Name) : x.Name)]);
-                roleName = prefix + roleName;
+                sb.Append(prefix);
+                AppendNames(true);
+                return sb.ToString();
             }
         }
 
         if (p.HasModifier(ModifierType.LastImpostor))
         {
-            if (roleInfo.Contains(Impostor))
+            bool hasImpostor = false;
+            for (int i = 0; i < roleInfo.Count; i++) if (roleInfo[i].RoleType == RoleType.Impostor) { hasImpostor = true; break; }
+
+            if (hasImpostor)
             {
-                roleName = useColors ? Helpers.Cs(LastImpostor.NameColor, LastImpostor.FullName) : LastImpostor.FullName;
+                return useColors ? Helpers.Cs(LastImpostor.NameColor, LastImpostor.FullName) : LastImpostor.FullName;
             }
             else
             {
                 string postfix = useColors ? Helpers.Cs(LastImpostor.NameColor, LastImpostor.Postfix) : LastImpostor.Postfix;
-                roleName = string.Join(joinSeparator, [.. roleInfo.Select(x => useColors ? Helpers.Cs(x.Color, x.Name) : x.Name)]);
-                roleName += postfix;
+                AppendNames();
+                sb.Append(postfix);
+                return sb.ToString();
             }
         }
-
-        // if (p.HasModifier(ModifierType.Munou))
-        // {
-        //     /* TODO: Munou is not implemented
-        //     if (PlayerControl.LocalPlayer.Data.IsDead || Munou.endGameFlag)
-        //     {
-        //         string postfix = useColors ? Helpers.Cs(Munou.color, Munou.postfix) : Munou.postfix;
-        //         roleName += postfix;
-        //     }
-        //     */
-        // }
 
         if (p.HasModifier(ModifierType.AntiTeleport))
         {
             string postfix = useColors ? Helpers.Cs(AntiTeleport.NameColor, AntiTeleport.Postfix) : AntiTeleport.Postfix;
-            roleName += postfix;
+            AppendNames();
+            sb.Append(postfix);
+            return sb.ToString();
         }
 
-        return roleName;
+        AppendNames();
+        return sb.ToString();
     }
 
     private static readonly Dictionary<RoleType, RoleInfo> RoleDict = [];

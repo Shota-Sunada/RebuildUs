@@ -35,12 +35,25 @@ public abstract class PlayerModifier
 
     public static PlayerModifier GetModifier(PlayerControl player, ModifierType type)
     {
-        return AllModifiers.FirstOrDefault(x => x.Player == player && x.CurrentModifierType == type);
+        if (player == null) return null;
+        var allModifiers = AllModifiers;
+        for (int i = 0; i < allModifiers.Count; i++)
+        {
+            if (allModifiers[i].Player == player && allModifiers[i].CurrentModifierType == type) return allModifiers[i];
+        }
+        return null;
     }
 
     public static List<PlayerModifier> GetModifiers(PlayerControl player)
     {
-        return [.. AllModifiers.Where(x => x.Player == player)];
+        if (player == null) return [];
+        var list = new List<PlayerModifier>();
+        var allModifiers = AllModifiers;
+        for (int i = 0; i < allModifiers.Count; i++)
+        {
+            if (allModifiers[i].Player == player) list.Add(allModifiers[i]);
+        }
+        return list;
     }
 }
 
@@ -61,7 +74,13 @@ public abstract class ModifierBase<T> : PlayerModifier where T : ModifierBase<T>
     {
         get
         {
-            return Players.FirstOrDefault(x => x.Player == PlayerControl.LocalPlayer);
+            var local = PlayerControl.LocalPlayer;
+            if (local == null) return null;
+            for (int i = 0; i < Players.Count; i++)
+            {
+                if (Players[i].Player == local) return Players[i];
+            }
+            return null;
         }
     }
 
@@ -69,7 +88,9 @@ public abstract class ModifierBase<T> : PlayerModifier where T : ModifierBase<T>
     {
         get
         {
-            return [.. Players.Select(x => x.Player)];
+            var list = new List<PlayerControl>(Players.Count);
+            for (int i = 0; i < Players.Count; i++) list.Add(Players[i].Player);
+            return list;
         }
     }
 
@@ -77,7 +98,13 @@ public abstract class ModifierBase<T> : PlayerModifier where T : ModifierBase<T>
     {
         get
         {
-            return [.. Players.Select(x => x.Player).Where(x => x.IsAlive())];
+            var list = new List<PlayerControl>(Players.Count);
+            for (int i = 0; i < Players.Count; i++)
+            {
+                var p = Players[i].Player;
+                if (p.IsAlive()) list.Add(p);
+            }
+            return list;
         }
     }
 
@@ -85,7 +112,13 @@ public abstract class ModifierBase<T> : PlayerModifier where T : ModifierBase<T>
     {
         get
         {
-            return [.. Players.Select(x => x.Player).Where(x => !x.IsAlive())];
+            var list = new List<PlayerControl>(Players.Count);
+            for (int i = 0; i < Players.Count; i++)
+            {
+                var p = Players[i].Player;
+                if (!p.IsAlive()) list.Add(p);
+            }
+            return list;
         }
     }
 
@@ -97,16 +130,27 @@ public abstract class ModifierBase<T> : PlayerModifier where T : ModifierBase<T>
     public static T GetModifier(PlayerControl player = null)
     {
         player ??= PlayerControl.LocalPlayer;
-        return Players.FirstOrDefault(x => x.Player == player);
+        if (player == null) return null;
+        for (int i = 0; i < Players.Count; i++)
+        {
+            if (Players[i].Player == player) return Players[i];
+        }
+        return null;
     }
 
     public static bool HasModifier(PlayerControl player)
     {
-        return Players.Any(x => x.Player == player);
+        if (player == null) return false;
+        for (int i = 0; i < Players.Count; i++)
+        {
+            if (Players[i].Player == player) return true;
+        }
+        return false;
     }
 
     public static T AddModifier(PlayerControl player)
     {
+        if (player == null) return null;
         T mod = new();
         mod.Init(player);
         return mod;
@@ -114,25 +158,36 @@ public abstract class ModifierBase<T> : PlayerModifier where T : ModifierBase<T>
 
     public static void EraseModifier(PlayerControl player)
     {
-        var toRemove = new List<T>();
-
-        foreach (var p in Players)
+        if (player == null) return;
+        for (int i = Players.Count - 1; i >= 0; i--)
         {
-            if (p.Player == player && p.CurrentModifierType == StaticModifierType)
+            var x = Players[i];
+            if (x.Player == player && x.CurrentModifierType == StaticModifierType)
             {
-                toRemove.Add(p);
+                x.ResetRole(); // Assuming ResetRole exists from PlayerModifier
+                Players.RemoveAt(i);
             }
         }
-        Players.RemoveAll(x => toRemove.Contains(x));
-        AllModifiers.RemoveAll(x => toRemove.Contains(x));
+        for (int i = AllModifiers.Count - 1; i >= 0; i--)
+        {
+            var x = AllModifiers[i];
+            if (x.Player == player && x.CurrentModifierType == StaticModifierType)
+            {
+                AllModifiers.RemoveAt(i);
+            }
+        }
     }
 
     public static void SwapModifier(PlayerControl p1, PlayerControl p2)
     {
-        var index = Players.FindIndex(x => x.Player == p1);
-        if (index >= 0)
+        if (p1 == null || p2 == null) return;
+        for (int i = 0; i < Players.Count; i++)
         {
-            Players[index].Player = p2;
+            if (Players[i].Player == p1)
+            {
+                Players[i].Player = p2;
+                break;
+            }
         }
     }
 }
