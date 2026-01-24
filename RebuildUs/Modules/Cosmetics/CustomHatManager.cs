@@ -1,3 +1,4 @@
+using System.Text;
 using System.Security.Cryptography;
 using UnityEngine.AddressableAssets;
 
@@ -221,28 +222,26 @@ public static class CustomHatManager
         if (path == null) return null;
         if (!path.EndsWith(".png", StringComparison.OrdinalIgnoreCase)) return null;
 
-        int len = path.Length;
-        char[] result = new char[len];
-        int writeIdx = 0;
-        for (int i = 0; i < len; i++)
+        var sb = new StringBuilder();
+        // We only want to sanitize the part before the .png extension
+        int nameLen = path.Length - 4;
+        for (int i = 0; i < nameLen; i++)
         {
             char c = path[i];
             if (c == '\\' || c == '/' || c == '*' || c == '.')
             {
                 // Skip these characters or handle '..'
-                if (c == '.' && i + 1 < len && path[i + 1] == '.')
+                if (c == '.' && i + 1 < nameLen && path[i + 1] == '.')
                 {
                     i++; // skip second dot
                 }
                 continue;
             }
-            result[writeIdx++] = c;
+            sb.Append(c);
         }
 
-        // Add back .png if it was sanitized out (unlikely but safe)
-        var s = new string(result, 0, writeIdx);
-        if (!s.EndsWith(".png", StringComparison.OrdinalIgnoreCase)) s += ".png";
-        return s;
+        sb.Append(".png");
+        return sb.ToString();
     }
 
     private static bool ResourceRequireDownload(string resFile, string resHash, HashAlgorithm algorithm)
