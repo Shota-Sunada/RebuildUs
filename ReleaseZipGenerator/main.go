@@ -268,17 +268,6 @@ func generateZip(version, buildNumber, commitHash, arch, platformLabel, markerFi
 		fmt.Println("Warning: BepInExUpdater.exe not found.")
 	}
 
-	// 6. Add CosmeticsDownloader.exe
-	fmt.Println("Adding CosmeticsDownloader.exe...")
-	cosmeticsDownloaderPath := findFile("RebuildUs/bin/Release/net6.0/CosmeticsDownloader.exe")
-	if cosmeticsDownloaderPath != "" {
-		if err := addFileToZip(zipWriter, cosmeticsDownloaderPath, "BepInEx/plugins/CosmeticsDownloader.exe"); err != nil {
-			fmt.Printf("Failed to add CosmeticsDownloader.exe: %v\n", err)
-		}
-	} else {
-		fmt.Println("Warning: CosmeticsDownloader.exe not found.")
-	}
-
 	// 6. Add Submerged.dll if provided
 	if submergedDllPath != "" {
 		fmt.Println("Adding Submerged.dll...")

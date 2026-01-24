@@ -60,6 +60,7 @@ internal static class HatsTabPatches
         }
 
         __instance.scroller.ContentYBounds.max = -(yOffset + 4.1f);
+        __instance.SelectHat(DestroyableSingleton<HatManager>.Instance.GetHatById(DataManager.Player.Customization.Hat));
         return false;
     }
 
@@ -129,7 +130,7 @@ internal static class HatsTabPatches
             colorChip.Inner.SetHat(hat, hatsTab.HasLocalPlayer() ? PlayerControl.LocalPlayer.Data.DefaultOutfit.ColorId : DataManager.Player.Customization.Color);
             colorChip.Inner.transform.localPosition = hat.ChipOffset;
             colorChip.Tag = hat;
-            colorChip.SelectionHighlight.gameObject.SetActive(false);
+            colorChip.SelectionHighlight.gameObject.SetActive(hat == DestroyableSingleton<HatManager>.Instance.GetHatById(DataManager.Player.Customization.Hat));
             hatsTab.ColorChips.Add(colorChip);
         }
 

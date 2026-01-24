@@ -20,9 +20,9 @@ public static class CustomHatManager
     internal static string HatsDirectory => CustomSkinsDirectory;
 
     internal static List<CustomHat> UnregisteredHats = [];
-    internal static readonly Dictionary<HatData, HatViewData> ViewDataCache = [];
+    internal static readonly Dictionary<string, HatViewData> ViewDataCache = [];
     internal static readonly Dictionary<string, HatViewData> ViewDataCacheByName = [];
-    internal static readonly Dictionary<HatData, HatExtension> ExtensionCache = [];
+    internal static readonly Dictionary<string, HatExtension> ExtensionCache = [];
 
     public static readonly HatsLoader Loader;
 
@@ -40,7 +40,7 @@ public static class CustomHatManager
 
     internal static bool TryGetCached(this HatParent hatParent, out HatViewData asset)
     {
-        if (hatParent != null && hatParent.Hat != null) return ViewDataCache.TryGetValue(hatParent.Hat, out asset);
+        if (hatParent != null && hatParent.Hat != null) return ViewDataCache.TryGetValue(hatParent.Hat.name, out asset);
         asset = null;
         return false;
     }
@@ -48,12 +48,12 @@ public static class CustomHatManager
     internal static bool TryGetCached(this HatData hat, out HatViewData asset)
     {
         if (hat == null) { asset = null; return false; }
-        return ViewDataCache.TryGetValue(hat, out asset);
+        return ViewDataCache.TryGetValue(hat.name, out asset);
     }
 
     internal static bool IsCached(this HatData hat)
     {
-        return hat != null && ViewDataCache.ContainsKey(hat);
+        return hat != null && ViewDataCache.ContainsKey(hat.name);
     }
 
     internal static bool IsCached(this HatParent hatParent)
@@ -113,8 +113,8 @@ public static class CustomHatManager
         }
         else
         {
-            ExtensionCache[hat] = extend;
-            ViewDataCache[hat] = viewData;
+            ExtensionCache[hat.name] = extend;
+            ViewDataCache[hat.name] = viewData;
             ViewDataCacheByName[hat.name] = viewData;
         }
 

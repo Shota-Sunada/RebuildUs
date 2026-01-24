@@ -13,6 +13,11 @@ public class HatsLoader : MonoBehaviour
     public bool IsRunning { get; private set; }
     private static readonly HttpClient Client = new();
 
+    static HatsLoader()
+    {
+        Client.DefaultRequestHeaders.TryAddWithoutValidation("User-Agent", "RebuildUs-Mod");
+    }
+
     public void FetchHats()
     {
         if (IsRunning) return;
@@ -121,8 +126,13 @@ public class HatsLoader : MonoBehaviour
                 try
                 {
                     Logger.LogMessage($"Downloading manifest: {manifestURL}");
-                    var manifestData = await Client.GetByteArrayAsync(manifestURL);
-                    if (manifestData == null) return;
+                    var response = await Client.GetAsync(manifestURL);
+                    if (!response.IsSuccessStatusCode)
+                    {
+                        Logger.LogWarn($"Failed to download manifest from {manifestURL}: {response.StatusCode}");
+                        return;
+                    }
+                    var manifestData = await response.Content.ReadAsByteArrayAsync();
                     await File.WriteAllBytesAsync(manifestPath, manifestData);
 
                     var config = JsonSerializer.Deserialize<SkinsConfigFile>(manifestData, JsonOptions);
@@ -157,10 +167,15 @@ public class HatsLoader : MonoBehaviour
                     try
                     {
                         LoadScreen.StatusText = $"Downloading {item.fileName}";
-                        var fileData = await Client.GetByteArrayAsync(item.url);
-                        if (fileData != null)
+                        var response = await Client.GetAsync(item.url);
+                        if (response.IsSuccessStatusCode)
                         {
+                            var fileData = await response.Content.ReadAsByteArrayAsync();
                             await File.WriteAllBytesAsync(item.localPath, fileData);
+                        }
+                        else
+                        {
+                            Logger.LogWarn($"Failed to download {item.url}: {response.StatusCode}");
                         }
                     }
                     catch (Exception ex)
@@ -199,7 +214,7 @@ public class HatsLoader : MonoBehaviour
         var localPath = Path.Combine(repoDir, safeName);
         if (NeedsDownload(localPath, expectedHash))
         {
-            var fileURL = $"{repoUrl}/hats/{safeName.Replace(" ", "%20")}";
+            var fileURL = $"{repoUrl}/hats/{fileName.Replace(" ", "%20")}";
             toDownload.Add((fileURL, localPath, expectedHash, safeName));
         }
     }

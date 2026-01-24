@@ -10,6 +10,6 @@ internal static class HatDataExtensions
             return CustomHatManager.TestExtension;
         }
 
-        return CustomHatManager.ExtensionCache.TryGetValue(hat, out var extension) ? extension : null;
+        return CustomHatManager.ExtensionCache.TryGetValue(hat.name, out var extension) ? extension : null;
     }
 }
