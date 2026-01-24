@@ -298,7 +298,7 @@ public class CustomOverlays
 
         MeetingUnderlay.sprite = AssetLoader.White;
         MeetingUnderlay.enabled = true;
-        MeetingUnderlay.transform.localScale = new Vector3(20f, 20f, 1f);
+        MeetingUnderlay.transform.localScale = new Vector3(13f, 5f, 1f);
         var clearBlack = new Color32(0, 0, 0, 0);
 
         hudManager.StartCoroutine(Effects.Lerp(0.2f, new Action<float>(t =>

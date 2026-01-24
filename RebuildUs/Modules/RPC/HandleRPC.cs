@@ -4,6 +4,8 @@ public static partial class RPCProcedure
 {
     public static void Handle(CustomRPC callId, MessageReader reader)
     {
+        if (callId < CustomRPC.ResetVariables) return;
+
         switch (callId)
         {
             case CustomRPC.ResetVariables:

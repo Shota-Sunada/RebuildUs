@@ -8,5 +8,7 @@ public static class KeyboardJoystickPatch
     public static void Update(KeyboardJoystick __instance)
     {
         Tr.Update();
+        ShortcutCommands.HostCommands();
+        ShortcutCommands.OpenAirshipToilet();
     }
 }

@@ -94,7 +94,7 @@ public static class Vitals
     public static void UpdatePostfix(VitalsMinigame __instance)
     {
         // Hacker show time since death
-        if (PlayerControl.LocalPlayer.IsRole(RoleType.Hacker) && Hacker.GetRole().HackerTimer > 0)
+        if (PlayerControl.LocalPlayer.IsRole(RoleType.Hacker) && Hacker.HackerTimer > 0)
         {
             for (int k = 0; k < __instance.vitals.Length; k++)
             {

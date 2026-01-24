@@ -22,7 +22,7 @@ public class Hacker : RoleBase<Hacker>
     public static int RechargeTasksNumber { get { return Mathf.RoundToInt(CustomOptionHolder.HackerRechargeTasksNumber.GetFloat()); } }
     public static bool NoMove { get { return CustomOptionHolder.HackerNoMove.GetBool(); } }
 
-    public float HackerTimer = 0f;
+    public static float HackerTimer = 0f;
     public int RechargedTasks = 2;
     public int ChargesVitals = 1;
     public int ChargesAdminTable = 1;
@@ -38,7 +38,6 @@ public class Hacker : RoleBase<Hacker>
     public override void OnIntroEnd() { }
     public override void FixedUpdate()
     {
-        HackerTimer -= Time.deltaTime;
         if (PlayerControl.LocalPlayer.IsRole(RoleType.Hacker) && PlayerControl.LocalPlayer.IsAlive())
         {
             var (playerCompleted, _) = TasksHandler.TaskInfo(Player.Data);
@@ -62,7 +61,7 @@ public class Hacker : RoleBase<Hacker>
         HackerButton = new CustomButton(
             () =>
             {
-                Local.HackerTimer = Duration;
+                HackerTimer = Duration;
             },
             () => { return PlayerControl.LocalPlayer.IsRole(RoleType.Hacker) && PlayerControl.LocalPlayer.IsAlive(); },
             () => { return true; },
@@ -261,6 +260,7 @@ public class Hacker : RoleBase<Hacker>
     public static void Clear()
     {
         // reset configs here
+        HackerTimer = 0f;
         Players.Clear();
     }
 }

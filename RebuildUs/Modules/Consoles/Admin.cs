@@ -285,7 +285,7 @@ public static class Admin
     public static void UpdateCount(CounterArea __instance)
     {
         // Hacker display saved colors on the admin panel
-        bool showHackerInfo = PlayerControl.LocalPlayer.IsRole(RoleType.Hacker) && Hacker.GetRole().HackerTimer > 0;
+        bool showHackerInfo = PlayerControl.LocalPlayer.IsRole(RoleType.Hacker) && Hacker.HackerTimer > 0;
         if (PlayerColors.ContainsKey(__instance.RoomType))
         {
             List<Color> colors = PlayerColors[__instance.RoomType];

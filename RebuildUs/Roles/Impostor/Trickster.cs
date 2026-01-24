@@ -23,14 +23,7 @@ public class Trickster : RoleBase<Trickster>
     public override void OnMeetingStart() { }
     public override void OnMeetingEnd() { }
     public override void OnIntroEnd() { }
-    public override void FixedUpdate()
-    {
-        var local = Local;
-        if (local != null)
-        {
-            LightsOutTimer -= Time.deltaTime;
-        }
-    }
+    public override void FixedUpdate() { }
     public override void OnKill(PlayerControl target) { }
     public override void OnDeath(PlayerControl killer = null) { }
     public override void OnFinishShipStatusBegin() { }

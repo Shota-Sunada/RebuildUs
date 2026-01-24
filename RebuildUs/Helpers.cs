@@ -774,6 +774,8 @@ public static class Helpers
     public static bool IsHideNSeekMode => GameOptionsManager.Instance.CurrentGameOptions.GameMode == GameModes.HideNSeek;
     public static bool IsNormalMode => GameOptionsManager.Instance.CurrentGameOptions.GameMode == GameModes.Normal;
 
+    public static bool IsCountdown => GameStartManager.InstanceExists && GameStartManager.Instance.startState is GameStartManager.StartingStates.Countdown;
+
     public static int GetOption(Int32OptionNames opt) => GameOptionsManager.Instance.CurrentGameOptions.GetInt(opt);
     public static int[] GetOption(Int32ArrayOptionNames opt) => GameOptionsManager.Instance.CurrentGameOptions.GetIntArray(opt);
     public static float GetOption(FloatOptionNames opt) => GameOptionsManager.Instance.CurrentGameOptions.GetFloat(opt);

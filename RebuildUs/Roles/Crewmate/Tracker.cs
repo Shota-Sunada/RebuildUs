@@ -9,7 +9,7 @@ public class Tracker : RoleBase<Tracker>
     private static CustomButton TrackerTrackCorpsesButton;
     public static List<Vector3> DeadBodyPositions = [];
     public List<Arrow> LocalArrows = [];
-    public float CorpsesTrackingTimer = 0f;
+    public static float CorpsesTrackingTimer = 0f;
     // write configs here
     public static float UpdateInterval { get { return CustomOptionHolder.TrackerUpdateInterval.GetFloat(); } }
     public static bool ResetTargetAfterMeeting { get { return CustomOptionHolder.TrackerResetTargetAfterMeeting.GetBool(); } }
@@ -150,7 +150,7 @@ public class Tracker : RoleBase<Tracker>
         };
 
         TrackerTrackCorpsesButton = new CustomButton(
-            () => { Local.CorpsesTrackingTimer = CorpsesTrackingDuration; },
+            () => { CorpsesTrackingTimer = CorpsesTrackingDuration; },
             () => { return PlayerControl.LocalPlayer.IsRole(RoleType.Tracker) && PlayerControl.LocalPlayer.IsAlive() && CanTrackCorpses; },
             () => { return PlayerControl.LocalPlayer.CanMove; },
             () =>
@@ -210,6 +210,7 @@ public class Tracker : RoleBase<Tracker>
                 }
             }
         }
+        CorpsesTrackingTimer = 0f;
         Players.Clear();
     }
 }

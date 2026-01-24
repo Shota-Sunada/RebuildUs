@@ -19,6 +19,10 @@ public static class HudManagerPatch
         Update.UpdateUseButton(__instance);
         Update.UpdateReportButton(__instance);
         Update.UpdateVentButton(__instance);
+
+        Hacker.HackerTimer -= Time.deltaTime;
+        Trickster.LightsOutTimer -= Time.deltaTime;
+        Tracker.CorpsesTrackingTimer -= Time.deltaTime;
     }
 
     [HarmonyPostfix]
