@@ -24,24 +24,24 @@ public static class AssetLoader
         var resource = Assembly.GetExecutingAssembly().GetManifestResourceStream("RebuildUs.Resources.tricksteranimation");
         var ab = AssetBundle.LoadFromMemory(resource.ReadFully());
 
-        TricksterAnimations.Add(ab.LoadAsset<Sprite>("trickster_box_0001.png").DontUnload());
-        TricksterAnimations.Add(ab.LoadAsset<Sprite>("trickster_box_0002.png").DontUnload());
-        TricksterAnimations.Add(ab.LoadAsset<Sprite>("trickster_box_0003.png").DontUnload());
-        TricksterAnimations.Add(ab.LoadAsset<Sprite>("trickster_box_0004.png").DontUnload());
-        TricksterAnimations.Add(ab.LoadAsset<Sprite>("trickster_box_0005.png").DontUnload());
-        TricksterAnimations.Add(ab.LoadAsset<Sprite>("trickster_box_0006.png").DontUnload());
-        TricksterAnimations.Add(ab.LoadAsset<Sprite>("trickster_box_0007.png").DontUnload());
-        TricksterAnimations.Add(ab.LoadAsset<Sprite>("trickster_box_0008.png").DontUnload());
-        TricksterAnimations.Add(ab.LoadAsset<Sprite>("trickster_box_0009.png").DontUnload());
-        TricksterAnimations.Add(ab.LoadAsset<Sprite>("trickster_box_0010.png").DontUnload());
-        TricksterAnimations.Add(ab.LoadAsset<Sprite>("trickster_box_0011.png").DontUnload());
-        TricksterAnimations.Add(ab.LoadAsset<Sprite>("trickster_box_0012.png").DontUnload());
-        TricksterAnimations.Add(ab.LoadAsset<Sprite>("trickster_box_0013.png").DontUnload());
-        TricksterAnimations.Add(ab.LoadAsset<Sprite>("trickster_box_0014.png").DontUnload());
-        TricksterAnimations.Add(ab.LoadAsset<Sprite>("trickster_box_0015.png").DontUnload());
-        TricksterAnimations.Add(ab.LoadAsset<Sprite>("trickster_box_0016.png").DontUnload());
-        TricksterAnimations.Add(ab.LoadAsset<Sprite>("trickster_box_0017.png").DontUnload());
-        TricksterAnimations.Add(ab.LoadAsset<Sprite>("trickster_box_0018.png").DontUnload());
+        TricksterAnimations.Add(ab.LoadAsset<Sprite>("trickster_box_0001.png").Resize(175f));
+        TricksterAnimations.Add(ab.LoadAsset<Sprite>("trickster_box_0002.png").Resize(175f));
+        TricksterAnimations.Add(ab.LoadAsset<Sprite>("trickster_box_0003.png").Resize(175f));
+        TricksterAnimations.Add(ab.LoadAsset<Sprite>("trickster_box_0004.png").Resize(175f));
+        TricksterAnimations.Add(ab.LoadAsset<Sprite>("trickster_box_0005.png").Resize(175f));
+        TricksterAnimations.Add(ab.LoadAsset<Sprite>("trickster_box_0006.png").Resize(175f));
+        TricksterAnimations.Add(ab.LoadAsset<Sprite>("trickster_box_0007.png").Resize(175f));
+        TricksterAnimations.Add(ab.LoadAsset<Sprite>("trickster_box_0008.png").Resize(175f));
+        TricksterAnimations.Add(ab.LoadAsset<Sprite>("trickster_box_0009.png").Resize(175f));
+        TricksterAnimations.Add(ab.LoadAsset<Sprite>("trickster_box_0010.png").Resize(175f));
+        TricksterAnimations.Add(ab.LoadAsset<Sprite>("trickster_box_0011.png").Resize(175f));
+        TricksterAnimations.Add(ab.LoadAsset<Sprite>("trickster_box_0012.png").Resize(175f));
+        TricksterAnimations.Add(ab.LoadAsset<Sprite>("trickster_box_0013.png").Resize(175f));
+        TricksterAnimations.Add(ab.LoadAsset<Sprite>("trickster_box_0014.png").Resize(175f));
+        TricksterAnimations.Add(ab.LoadAsset<Sprite>("trickster_box_0015.png").Resize(175f));
+        TricksterAnimations.Add(ab.LoadAsset<Sprite>("trickster_box_0016.png").Resize(175f));
+        TricksterAnimations.Add(ab.LoadAsset<Sprite>("trickster_box_0017.png").Resize(175f));
+        TricksterAnimations.Add(ab.LoadAsset<Sprite>("trickster_box_0018.png").Resize(175f));
     }
     #endregion
 
@@ -76,42 +76,44 @@ public static class AssetLoader
     public static Sprite VampireButton;
     public static Sprite ShiftButton;
     public static Sprite TricksterVentButton;
+    public static Sprite RepairButton;
 
     private static void LoadButtonAssets()
     {
         var resource = Assembly.GetExecutingAssembly().GetManifestResourceStream("RebuildUs.Resources.buttons");
         var ab = AssetBundle.LoadFromMemory(resource.ReadFully());
 
-        DouseButton = ab.LoadAsset<Sprite>("DouseButton.png").DontUnload();
-        EmergencyButton = ab.LoadAsset<Sprite>("EmergencyButton.png").DontUnload();
-        VultureButton = ab.LoadAsset<Sprite>("VultureButton.png").DontUnload();
-        SidekickButton = ab.LoadAsset<Sprite>("SidekickButton.png").DontUnload();
-        IgniteButton = ab.LoadAsset<Sprite>("IgniteButton.png").DontUnload();
-        HackerButton = ab.LoadAsset<Sprite>("HackerButton.png").DontUnload();
-        LighterButton = ab.LoadAsset<Sprite>("LighterButton.png").DontUnload();
-        ShieldButton = ab.LoadAsset<Sprite>("ShieldButton.png").DontUnload();
-        MediumButton = ab.LoadAsset<Sprite>("MediumButton.png").DontUnload();
-        TimeShieldButton = ab.LoadAsset<Sprite>("MediumButton.png").DontUnload();
-        TrackerButton = ab.LoadAsset<Sprite>("TrackerButton.png").DontUnload();
-        PathfindButton = ab.LoadAsset<Sprite>("PathfindButton.png").DontUnload();
-        EraserButton = ab.LoadAsset<Sprite>("EraserButton.png").DontUnload();
-        CleanButton = ab.LoadAsset<Sprite>("CleanButton.png").DontUnload();
-        PlaceJackInTheBoxButton = ab.LoadAsset<Sprite>("PlaceJackInTheBoxButton.png").DontUnload();
-        LightsOutButton = ab.LoadAsset<Sprite>("LightsOutButton.png").DontUnload();
-        PlaceCameraButton = ab.LoadAsset<Sprite>("PlaceCameraButton.png").DontUnload();
-        CloseVentButton = ab.LoadAsset<Sprite>("CloseVentButton.png").DontUnload();
-        CurseButton = ab.LoadAsset<Sprite>("CurseButton.png").DontUnload();
-        CurseKillButton = ab.LoadAsset<Sprite>("CurseKillButton.png").DontUnload();
-        MorphButton = ab.LoadAsset<Sprite>("MorphButton.png").DontUnload();
-        SampleButton = ab.LoadAsset<Sprite>("SampleButton.png").DontUnload();
-        SpellButton = ab.LoadAsset<Sprite>("SpellButton.png").DontUnload();
-        SpellButtonMeeting = ab.LoadAsset<Sprite>("SpellButtonMeeting.png").DontUnload();
-        CamouflageButton = ab.LoadAsset<Sprite>("CamouflageButton.png").DontUnload();
-        SwapperCheck = ab.LoadAsset<Sprite>("SwapperCheck.png").DontUnload();
-        GarlicButton = ab.LoadAsset<Sprite>("GarlicButton.png").DontUnload();
-        VampireButton = ab.LoadAsset<Sprite>("VampireButton.png").DontUnload();
-        ShiftButton = ab.LoadAsset<Sprite>("ShiftButton.png").DontUnload();
-        TricksterVentButton = ab.LoadAsset<Sprite>("TricksterVentButton.png").DontUnload();
+        DouseButton = ab.LoadAsset<Sprite>("DouseButton.png").Resize(115f);
+        EmergencyButton = ab.LoadAsset<Sprite>("EmergencyButton.png").Resize(550f);
+        VultureButton = ab.LoadAsset<Sprite>("VultureButton.png").Resize(115f);
+        SidekickButton = ab.LoadAsset<Sprite>("SidekickButton.png").Resize(115f);
+        IgniteButton = ab.LoadAsset<Sprite>("IgniteButton.png").Resize(115f);
+        HackerButton = ab.LoadAsset<Sprite>("HackerButton.png").Resize(115f);
+        LighterButton = ab.LoadAsset<Sprite>("LighterButton.png").Resize(115f);
+        ShieldButton = ab.LoadAsset<Sprite>("ShieldButton.png").Resize(115f);
+        MediumButton = ab.LoadAsset<Sprite>("MediumButton.png").Resize(115f);
+        TimeShieldButton = ab.LoadAsset<Sprite>("MediumButton.png").Resize(115f);
+        TrackerButton = ab.LoadAsset<Sprite>("TrackerButton.png").Resize(115f);
+        PathfindButton = ab.LoadAsset<Sprite>("PathfindButton.png").Resize(115f);
+        EraserButton = ab.LoadAsset<Sprite>("EraserButton.png").Resize(115f);
+        CleanButton = ab.LoadAsset<Sprite>("CleanButton.png").Resize(115f);
+        PlaceJackInTheBoxButton = ab.LoadAsset<Sprite>("PlaceJackInTheBoxButton.png").Resize(115f);
+        LightsOutButton = ab.LoadAsset<Sprite>("LightsOutButton.png").Resize(115f);
+        PlaceCameraButton = ab.LoadAsset<Sprite>("PlaceCameraButton.png").Resize(115f);
+        CloseVentButton = ab.LoadAsset<Sprite>("CloseVentButton.png").Resize(115f);
+        CurseButton = ab.LoadAsset<Sprite>("CurseButton.png").Resize(115f);
+        CurseKillButton = ab.LoadAsset<Sprite>("CurseKillButton.png").Resize(115f);
+        MorphButton = ab.LoadAsset<Sprite>("MorphButton.png").Resize(115f);
+        SampleButton = ab.LoadAsset<Sprite>("SampleButton.png").Resize(115f);
+        SpellButton = ab.LoadAsset<Sprite>("SpellButton.png").Resize(115f);
+        SpellButtonMeeting = ab.LoadAsset<Sprite>("SpellButtonMeeting.png").Resize(225f);
+        CamouflageButton = ab.LoadAsset<Sprite>("CamouflageButton.png").Resize(115f);
+        SwapperCheck = ab.LoadAsset<Sprite>("SwapperCheck.png").Resize(150f);
+        GarlicButton = ab.LoadAsset<Sprite>("GarlicButton.png").Resize(115f);
+        VampireButton = ab.LoadAsset<Sprite>("VampireButton.png").Resize(115f);
+        ShiftButton = ab.LoadAsset<Sprite>("ShiftButton.png").Resize(115f);
+        TricksterVentButton = ab.LoadAsset<Sprite>("TricksterVentButton.png").Resize(115f);
+        RepairButton = ab.LoadAsset<Sprite>("RepairButton.png").Resize(115f);
     }
     #endregion
 
@@ -130,6 +132,7 @@ public static class AssetLoader
     public static Sprite Footprint;
     public static Sprite Soul;
     public static Sprite AnimatedVentSealed;
+    public static Sprite AnimatedVentSealedSubmerged;
     public static Sprite StaticVentSealed;
     public static Sprite FungleVentSealed;
     public static Sprite CentralUpperBlocked;
@@ -142,26 +145,27 @@ public static class AssetLoader
         var resource = Assembly.GetExecutingAssembly().GetManifestResourceStream("RebuildUs.Resources.sprites");
         var ab = AssetBundle.LoadFromMemory(resource.ReadFully());
 
-        Arrow = ab.LoadAsset<Sprite>("Arrow.png").DontUnload();
-        Garlic = ab.LoadAsset<Sprite>("Garlic.png").DontUnload();
-        GarlicBackground = ab.LoadAsset<Sprite>("GarlicBackground.png").DontUnload();
-        Ladder = ab.LoadAsset<Sprite>("Ladder.png").DontUnload();
-        LadderBackground = ab.LoadAsset<Sprite>("LadderBackground.png").DontUnload();
-        AirshipFence = ab.LoadAsset<Sprite>("AirshipFence.png").DontUnload();
-        AirshipDownloadG = ab.LoadAsset<Sprite>("AirshipDownloadG.png").DontUnload();
-        CorpseIcon = ab.LoadAsset<Sprite>("CorpseIcon.png").DontUnload();
-        Cross = ab.LoadAsset<Sprite>("Cross.png").DontUnload();
-        AdminCockpit = ab.LoadAsset<Sprite>("AdminCockpit.png").DontUnload();
-        AdminRecords = ab.LoadAsset<Sprite>("AdminRecords.png").DontUnload();
-        Footprint = ab.LoadAsset<Sprite>("Footprint.png").DontUnload();
-        Soul = ab.LoadAsset<Sprite>("Soul.png").DontUnload();
-        AnimatedVentSealed = ab.LoadAsset<Sprite>("AnimatedVentSealed.png").DontUnload();
-        StaticVentSealed = ab.LoadAsset<Sprite>("StaticVentSealed.png").DontUnload();
-        FungleVentSealed = ab.LoadAsset<Sprite>("FungleVentSealed.png").DontUnload();
-        CentralUpperBlocked = ab.LoadAsset<Sprite>("CentralUpperBlocked.png").DontUnload();
-        CentralLowerBlocked = ab.LoadAsset<Sprite>("CentralLowerBlocked.png").DontUnload();
-        TargetIcon = ab.LoadAsset<Sprite>("TargetIcon.png").DontUnload();
-        White = ab.LoadAsset<Sprite>("White.png").DontUnload();
+        Arrow = ab.LoadAsset<Sprite>("Arrow.png").Resize(200f);
+        Garlic = ab.LoadAsset<Sprite>("Garlic.png").Resize(300f);
+        GarlicBackground = ab.LoadAsset<Sprite>("GarlicBackground.png").Resize(60f);
+        Ladder = ab.LoadAsset<Sprite>("Ladder.png").Resize(100f);
+        LadderBackground = ab.LoadAsset<Sprite>("LadderBackground.png").Resize(100f);
+        AirshipFence = ab.LoadAsset<Sprite>("AirshipFence.png").Resize(100f);
+        AirshipDownloadG = ab.LoadAsset<Sprite>("AirshipDownloadG.png").Resize(100f);
+        CorpseIcon = ab.LoadAsset<Sprite>("CorpseIcon.png").Resize(115f);
+        Cross = ab.LoadAsset<Sprite>("Cross.png").Resize(500f);
+        AdminCockpit = ab.LoadAsset<Sprite>("AdminCockpit.png").Resize(100f);
+        AdminRecords = ab.LoadAsset<Sprite>("AdminRecords.png").Resize(100f);
+        Footprint = ab.LoadAsset<Sprite>("Footprint.png").Resize(600f);
+        Soul = ab.LoadAsset<Sprite>("Soul.png").Resize(500f);
+        AnimatedVentSealed = ab.LoadAsset<Sprite>("AnimatedVentSealed.png").Resize(185f);
+        AnimatedVentSealedSubmerged = ab.LoadAsset<Sprite>("AnimatedVentSealed.png").Resize(120f);
+        StaticVentSealed = ab.LoadAsset<Sprite>("StaticVentSealed.png").Resize(160f);
+        FungleVentSealed = ab.LoadAsset<Sprite>("FungleVentSealed.png").Resize(160f);
+        CentralUpperBlocked = ab.LoadAsset<Sprite>("CentralUpperBlocked.png").Resize(145f);
+        CentralLowerBlocked = ab.LoadAsset<Sprite>("CentralLowerBlocked.png").Resize(145f);
+        TargetIcon = ab.LoadAsset<Sprite>("TargetIcon.png").Resize(150f);
+        White = ab.LoadAsset<Sprite>("White.png").Resize(100f);
     }
     #endregion
 
@@ -184,18 +188,18 @@ public static class AssetLoader
         var resource = Assembly.GetExecutingAssembly().GetManifestResourceStream("RebuildUs.Resources.locations");
         var ab = AssetBundle.LoadFromMemory(resource.ReadFully());
 
-        ArmoryButton = ab.LoadAsset<Sprite>("ArmoryButton.png").DontUnload();
-        CockpitButton = ab.LoadAsset<Sprite>("CockpitButton.png").DontUnload();
-        CommunicationsButton = ab.LoadAsset<Sprite>("CommunicationsButton.png").DontUnload();
-        ElectricalButton = ab.LoadAsset<Sprite>("ElectricalButton.png").DontUnload();
-        GapButton = ab.LoadAsset<Sprite>("GapButton.png").DontUnload();
-        LoungeButton = ab.LoadAsset<Sprite>("LoungeButton.png").DontUnload();
-        MedicalButton = ab.LoadAsset<Sprite>("MedicalButton.png").DontUnload();
-        MeetingButton = ab.LoadAsset<Sprite>("MeetingButton.png").DontUnload();
-        SecurityButton = ab.LoadAsset<Sprite>("SecurityButton.png").DontUnload();
-        ShowersButton = ab.LoadAsset<Sprite>("ShowersButton.png").DontUnload();
-        VaultButton = ab.LoadAsset<Sprite>("VaultButton.png").DontUnload();
-        ViewingButton = ab.LoadAsset<Sprite>("ViewingButton.png").DontUnload();
+        ArmoryButton = ab.LoadAsset<Sprite>("ArmoryButton.png").Resize(100f);
+        CockpitButton = ab.LoadAsset<Sprite>("CockpitButton.png").Resize(100f);
+        CommunicationsButton = ab.LoadAsset<Sprite>("CommunicationsButton.png").Resize(100f);
+        ElectricalButton = ab.LoadAsset<Sprite>("ElectricalButton.png").Resize(100f);
+        GapButton = ab.LoadAsset<Sprite>("GapButton.png").Resize(100f);
+        LoungeButton = ab.LoadAsset<Sprite>("LoungeButton.png").Resize(100f);
+        MedicalButton = ab.LoadAsset<Sprite>("MedicalButton.png").Resize(100f);
+        MeetingButton = ab.LoadAsset<Sprite>("MeetingButton.png").Resize(100f);
+        SecurityButton = ab.LoadAsset<Sprite>("SecurityButton.png").Resize(100f);
+        ShowersButton = ab.LoadAsset<Sprite>("ShowersButton.png").Resize(100f);
+        VaultButton = ab.LoadAsset<Sprite>("VaultButton.png").Resize(100f);
+        ViewingButton = ab.LoadAsset<Sprite>("ViewingButton.png").Resize(100f);
     }
     #endregion
 
@@ -212,6 +216,23 @@ public static class AssetLoader
         return assetBundle.LoadAsset(name, Il2CppType.Of<T>())?.Cast<T>() ?? throw new Exception($"The asset was not found: {name}");
     }
 #nullable disable
+
+    private static Sprite Resize(this Sprite sprite, float pixelsPerUnit)
+    {
+        if (pixelsPerUnit == 100f) return sprite.DontUnload();
+
+        return sprite == null
+            ? null
+            : Sprite.Create(
+            sprite.texture,
+            sprite.rect,
+            new Vector2(sprite.pivot.x / sprite.rect.width, sprite.pivot.y / sprite.rect.height),
+            pixelsPerUnit,
+            0,
+            SpriteMeshType.FullRect,
+            sprite.border
+        ).DontUnload();
+    }
 
     private static T DontUnload<T>(this T obj) where T : UnityEngine.Object
     {

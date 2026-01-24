@@ -8,14 +8,6 @@ public class Arrow
     private Vector3 OldTarget;
     private readonly ArrowBehaviour ArrowBehaviour;
 
-    private static Sprite Sprite;
-    public static Sprite GetSprite()
-    {
-        if (Sprite) return Sprite;
-        Sprite = AssetLoader.Arrow;
-        return Sprite;
-    }
-
     public Arrow(Color color)
     {
         ArrowObject = new GameObject("Arrow")
@@ -23,7 +15,7 @@ public class Arrow
             layer = 5
         };
         Image = ArrowObject.AddComponent<SpriteRenderer>();
-        Image.sprite = GetSprite();
+        Image.sprite = AssetLoader.Arrow;
         Image.color = color;
         ArrowBehaviour = ArrowObject.AddComponent<ArrowBehaviour>();
         ArrowBehaviour.image = Image;

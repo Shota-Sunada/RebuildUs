@@ -5,7 +5,7 @@ public class BountyHunter : RoleBase<BountyHunter>
 {
     public static Color NameColor = Palette.ImpostorRed;
     public override Color RoleColor => NameColor;
-    public Arrow Arrow;
+    public static Arrow Arrow;
     public static PlayerControl Bounty;
     public static TextMeshPro CooldownText;
     public float ArrowUpdateTimer = 0f;
@@ -21,7 +21,6 @@ public class BountyHunter : RoleBase<BountyHunter>
     public BountyHunter()
     {
         // write value init here
-        Arrow = new Arrow(RoleColor);
         ArrowUpdateTimer = 0f;
         BountyUpdateTimer = 0f;
         StaticRoleType = CurrentRoleType = RoleType.BountyHunter;
@@ -42,10 +41,10 @@ public class BountyHunter : RoleBase<BountyHunter>
             BountyUpdateTimer = 0f;
             if (FastDestroyableSingleton<HudManager>.Instance != null)
             {
-                var bottomLeft = new Vector3(-FastDestroyableSingleton<HudManager>.Instance.UseButton.transform.localPosition.x, FastDestroyableSingleton<HudManager>.Instance.UseButton.transform.localPosition.y, FastDestroyableSingleton<HudManager>.Instance.UseButton.transform.localPosition.z) + new Vector3(-0.25f, 1f, 0);
                 CooldownText = UnityEngine.Object.Instantiate(FastDestroyableSingleton<HudManager>.Instance.KillButton.cooldownTimerText, FastDestroyableSingleton<HudManager>.Instance.transform);
                 CooldownText.alignment = TextAlignmentOptions.Center;
-                CooldownText.transform.localPosition = bottomLeft + new Vector3(0f, -1f, -1f);
+                CooldownText.transform.localPosition = Intro.BottomLeft + new Vector3(0f, -0.35f, -62f);
+                CooldownText.transform.localScale = Vector3.one * 0.4f;
                 CooldownText.gameObject.SetActive(true);
             }
         }
@@ -54,8 +53,9 @@ public class BountyHunter : RoleBase<BountyHunter>
 
     public override void FixedUpdate()
     {
-        var local = Local;
-        if (local != null)
+        if (!PlayerControl.LocalPlayer.IsRole(RoleType.BountyHunter)) return;
+
+        if (Local != null)
         {
             if (Player.IsDead())
             {
@@ -181,5 +181,15 @@ public class BountyHunter : RoleBase<BountyHunter>
     {
         // reset configs here
         Players.Clear();
+
+        Bounty = null;
+        if (Arrow != null && Arrow.ArrowObject != null) UnityEngine.Object.Destroy(Arrow.ArrowObject);
+        Arrow = null;
+        if (CooldownText != null && CooldownText.gameObject != null) UnityEngine.Object.Destroy(CooldownText.gameObject);
+        CooldownText = null;
+        foreach (var p in ModMapOptions.PlayerIcons.Values)
+        {
+            if (p != null && p.gameObject != null) p.gameObject.SetActive(false);
+        }
     }
 }

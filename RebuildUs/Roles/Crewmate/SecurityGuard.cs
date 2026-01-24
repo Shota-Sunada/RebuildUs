@@ -296,6 +296,12 @@ public class SecurityGuard : RoleBase<SecurityGuard>
         SecurityGuardCamButton.EffectDuration = SecurityGuard.CamDuration;
     }
 
+    public static Sprite getAnimatedVentSealedSprite()
+    {
+        if (SubmergedCompatibility.IsSubmerged) return AssetLoader.AnimatedVentSealedSubmerged;
+        return AssetLoader.AnimatedVentSealed;
+    }
+
     // write functions here
 
     public static void Clear()

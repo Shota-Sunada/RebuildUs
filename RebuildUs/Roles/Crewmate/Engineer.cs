@@ -143,7 +143,7 @@ public class Engineer : RoleBase<Engineer>
                     return sabotageActive && Local.RemainingFixes > 0 && PlayerControl.LocalPlayer.CanMove;
                 },
                 () => { },
-                AssetLoader.EmergencyButton,
+                AssetLoader.RepairButton,
                 new Vector3(-1.8f, -0.06f, 0),
                 hm,
                 hm.UseButton,
