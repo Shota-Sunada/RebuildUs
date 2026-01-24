@@ -87,12 +87,9 @@ public class Hacker : RoleBase<Hacker>
         HackerAdminTableButton = new CustomButton(
             () =>
             {
-                if (!MapBehaviour.Instance.isActiveAndEnabled)
-                {
-                    FastDestroyableSingleton<MapBehaviour>.Instance.ShowCountOverlay(NoMove, true, true);
-                }
                 PlayerControl.LocalPlayer.NetTransform.Halt(); // Stop current movement
                 Local.ChargesAdminTable--;
+                HudManager.Instance.ToggleMapVisible(new() { Mode = MapOptions.Modes.CountOverlay });
             },
             () => { return PlayerControl.LocalPlayer.IsRole(RoleType.Hacker) && ModMapOptions.CouldUseAdmin && PlayerControl.LocalPlayer.IsAlive(); },
             () =>

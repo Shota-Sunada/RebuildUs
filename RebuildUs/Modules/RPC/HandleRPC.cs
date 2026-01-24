@@ -4,9 +4,9 @@ public static partial class RPCProcedure
 {
     public static void Handle(CustomRPC callId, MessageReader reader)
     {
-        // if (callId < CustomRPC.ResetVariables) return;
+        if (callId < CustomRPC.ResetVariables) return;
 
-        Logger.LogInfo($"RPC Called: {(byte)callId}. {Enum.GetName(callId)}");
+        // Logger.LogInfo($"RPC Called: {(byte)callId}. {Enum.GetName(callId)}");
 
         switch (callId)
         {

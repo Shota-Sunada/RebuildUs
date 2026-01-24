@@ -5,19 +5,18 @@ public static class ShortcutCommands
     public static void HostCommands()
     {
         if (!AmongUsClient.Instance.AmHost) return;
-        if (AmongUsClient.Instance.GameState is not InnerNet.InnerNetClient.GameStates.Started) return;
 
-        if (Input.GetKeyDown(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.F5))
+        if (Helpers.GetKeysDown(KeyCode.LeftControl, KeyCode.F5) || Helpers.GetKeysDown(KeyCode.RightControl, KeyCode.F5))
         {
             GameManager.Instance.RpcEndGame((GameOverReason)ECustomGameOverReason.ForceEnd, false);
         }
 
-        if (Input.GetKeyDown(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.F6) && MeetingHud.Instance)
+        if ((Helpers.GetKeysDown(KeyCode.LeftControl, KeyCode.F6) || Helpers.GetKeysDown(KeyCode.RightControl, KeyCode.F6)) && MeetingHud.Instance)
         {
             MeetingHud.Instance.RpcClose();
         }
 
-        if (Input.GetKeyDown(KeyCode.LeftShift) && Helpers.IsCountdown)
+        if ((Input.GetKeyDown(KeyCode.LeftShift) || Input.GetKeyDown(KeyCode.RightShift)) && Helpers.IsCountdown)
         {
             GameStartManager.Instance.countDownTimer = 0;
         }

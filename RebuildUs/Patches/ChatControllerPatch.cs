@@ -21,11 +21,11 @@ public static class ChatControllerPatch
     {
         if (!__instance.freeChatField.textArea.hasFocus) return;
 
-        if ((Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl)) && Input.GetKeyDown(KeyCode.C))
+        if (Helpers.GetKeysDown(KeyCode.LeftControl, KeyCode.C) || Helpers.GetKeysDown(KeyCode.RightControl, KeyCode.C))
         {
             ClipboardHelper.PutClipboardString(__instance.freeChatField.textArea.text);
         }
-        if ((Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl)) && Input.GetKeyDown(KeyCode.V))
+        if (Helpers.GetKeysDown(KeyCode.LeftControl, KeyCode.V) || Helpers.GetKeysDown(KeyCode.RightControl, KeyCode.V))
         {
             __instance.freeChatField.textArea.SetText(new StringBuilder(__instance.freeChatField.textArea.text).Append(GUIUtility.systemCopyBuffer).ToString());
         }

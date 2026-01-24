@@ -153,7 +153,7 @@ public static class AssetLoader
         AirshipFence = ab.LoadAsset<Sprite>("AirshipFence.png").Resize(100f);
         AirshipDownloadG = ab.LoadAsset<Sprite>("AirshipDownloadG.png").Resize(100f);
         CorpseIcon = ab.LoadAsset<Sprite>("CorpseIcon.png").Resize(115f);
-        Cross = ab.LoadAsset<Sprite>("Cross.png").Resize(500f);
+        Cross = ab.LoadAsset<Sprite>("Cross.png").Resize(300f);
         AdminCockpit = ab.LoadAsset<Sprite>("AdminCockpit.png").Resize(100f);
         AdminRecords = ab.LoadAsset<Sprite>("AdminRecords.png").Resize(100f);
         Footprint = ab.LoadAsset<Sprite>("Footprint.png").Resize(600f);

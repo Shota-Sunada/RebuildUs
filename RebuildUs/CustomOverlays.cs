@@ -199,8 +199,10 @@ public class CustomOverlays
               .Append(tr.GetString(StringNames.GameLongTasks)).Append(": ").Append(Helpers.GetOption(Int32OptionNames.NumLongTasks)).Append('\n')
               .Append(tr.GetString(StringNames.GameShortTasks)).Append(": ").Append(Helpers.GetOption(Int32OptionNames.NumShortTasks)).Append("\n\n")
               .Append('\f');
+            OptionsData.AddRange(SplitToPages(sb.ToString(), MaxLines - 1));
 
             // Part 2: Role Info for Player
+            sb.Clear();
             foreach (var r in RoleInfo.GetRoleInfoForPlayer(player))
             {
                 sb.Append("<size=150%>").Append(r.NameColored).Append("</size>");

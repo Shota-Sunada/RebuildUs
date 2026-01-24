@@ -57,7 +57,7 @@ public class EvilHacker : RoleBase<EvilHacker>
             {
                 PlayerControl.LocalPlayer.NetTransform.Halt();
                 Admin.IsEvilHackerAdmin = true;
-                FastDestroyableSingleton<MapBehaviour>.Instance.ShowCountOverlay(true, true, true);
+                HudManager.Instance.ToggleMapVisible(new() { Mode = MapOptions.Modes.CountOverlay });
             },
             () =>
             {

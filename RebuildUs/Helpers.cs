@@ -1,5 +1,6 @@
 using System.Reflection;
 using System.Text.RegularExpressions;
+using UnityEngine;
 
 namespace RebuildUs;
 
@@ -72,6 +73,26 @@ public static class Helpers
     private static byte ToByte(float f) => (byte)(Mathf.Clamp01(f) * 255);
 
     public static int LineCount(string text) => text.Count(c => c == '\n');
+
+    public static bool GetKeysDown(params KeyCode[] keys)
+    {
+        if (keys.Length == 0) return false;
+        bool allHeld = true;
+        bool anyJustPressed = false;
+        foreach (var key in keys)
+        {
+            if (!Input.GetKey(key))
+            {
+                allHeld = false;
+                break;
+            }
+            if (Input.GetKeyDown(key))
+            {
+                anyJustPressed = true;
+            }
+        }
+        return allHeld && anyJustPressed;
+    }
 
     private static readonly StringBuilder InfoStringBuilder = new();
 
