@@ -39,6 +39,9 @@ namespace RebuildUs
         public static bool ShowChatNotifications = true;
         public static CustomGamemodes GameMode = CustomGamemodes.Classic;
 
+        public static bool EnableDiscordAutoMute = true;
+        public static bool EnableSendFinalStatusToDiscord = true;
+
         // Updating values
         public static int MeetingsCount = 0;
         public static List<SurvCamera> CamerasToAdd = [];
@@ -85,6 +88,9 @@ namespace RebuildUs
             ShowLighterDarker = RebuildUs.ShowLighterDarker.Value;
             ShowVentsOnMap = RebuildUs.ShowVentsOnMap.Value;
             ShowChatNotifications = RebuildUs.ShowChatNotifications.Value;
+
+            EnableDiscordAutoMute = CustomOptionHolder.EnableDiscordAutoMute.GetBool();
+            EnableSendFinalStatusToDiscord = CustomOptionHolder.EnableSendFinalStatusToDiscord.GetBool();
         }
 
         public static void ResetDeviceTimes()

@@ -61,6 +61,7 @@ public class RebuildUs : BasePlugin
     public static ConfigEntry<bool> HideFakeTasks { get; set; }
 
     public static ConfigEntry<bool> EnableAutoMute { get; set; }
+    public static ConfigEntry<bool> EnableSendFinalStatusToDiscord { get; set; }
     public static ConfigEntry<string> DiscordBotToken { get; set; }
     public static ConfigEntry<string> DiscordBotToken2 { get; set; }
     public static ConfigEntry<string> DiscordBotToken3 { get; set; }
@@ -95,6 +96,7 @@ public class RebuildUs : BasePlugin
         HideFakeTasks = Config.Bind("Custom", "Hide Fake Tasks", false);
 
         EnableAutoMute = Config.Bind("Discord", "Enable Auto Mute", false);
+        EnableSendFinalStatusToDiscord = Config.Bind("Discord", "Enable Send Final Status To Discord", true);
         DiscordBotToken = Config.Bind("Discord", "Bot Token", "");
         DiscordBotToken2 = Config.Bind("Discord", "Bot Token 2", "");
         DiscordBotToken3 = Config.Bind("Discord", "Bot Token 3", "");
@@ -116,6 +118,10 @@ public class RebuildUs : BasePlugin
         SubmergedCompatibility.Initialize();
         Submerged.Patch();
         UpdateRegions();
+
+        // Update Discord config from custom options
+        EnableAutoMute.Value = ModMapOptions.EnableDiscordAutoMute;
+        EnableSendFinalStatusToDiscord.Value = ModMapOptions.EnableSendFinalStatusToDiscord;
 
         DiscordModManager.Initialize();
 

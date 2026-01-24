@@ -22,7 +22,7 @@ public static class DiscordModManager
 
     public static void Initialize()
     {
-        if (!RebuildUs.EnableAutoMute.Value) return;
+        if (!ModMapOptions.EnableDiscordAutoMute) return;
 
         _tokens = [.. new[] {
             RebuildUs.DiscordBotToken.Value,
@@ -86,7 +86,7 @@ public static class DiscordModManager
 
     public static async void SetMute(ulong discordId, bool mute, bool deaf)
     {
-        if (!RebuildUs.EnableAutoMute.Value) return;
+        if (!ModMapOptions.EnableDiscordAutoMute) return;
         var guildId = RebuildUs.DiscordGuildId.Value;
         if (string.IsNullOrEmpty(guildId)) return;
         await SendRequest("PATCH", $"https://discord.com/api/v10/guilds/{guildId}/members/{discordId}", new { mute, deaf });
@@ -160,7 +160,7 @@ public static class DiscordModManager
 
     public static async void UpdateStatus()
     {
-        if (!AmongUsClient.Instance.AmHost || string.IsNullOrEmpty(RebuildUs.StatusChannelId.Value)) return;
+        if (!ModMapOptions.EnableSendFinalStatusToDiscord || !AmongUsClient.Instance.AmHost || string.IsNullOrEmpty(RebuildUs.StatusChannelId.Value)) return;
 
         var mapName = Helpers.GetOption(ByteOptionNames.MapId) switch
         {
