@@ -1,6 +1,3 @@
-using InnerNet;
-using RebuildUs.Modules.Discord;
-
 namespace RebuildUs.Patches;
 
 [HarmonyPatch]

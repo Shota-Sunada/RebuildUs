@@ -1,5 +1,3 @@
-using System.Text;
-
 namespace RebuildUs.Modules;
 
 public static class Credits

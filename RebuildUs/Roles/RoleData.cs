@@ -22,7 +22,7 @@ public static class RoleData
         // Crewmate
         new(RoleType.Mayor, RoleTeam.Crewmate, typeof(RoleBase<Mayor>), () => Mayor.NameColor, () => CustomOptionHolder.MayorSpawnRate),
         new(RoleType.Engineer, RoleTeam.Crewmate, typeof(RoleBase<Engineer>), () => Engineer.NameColor, () => CustomOptionHolder.EngineerSpawnRate),
-        new(RoleType.Sheriff, RoleTeam.Crewmate, typeof(RoleBase<Sheriff>), () => Sheriff.NameColor, () => CustomOptionHolder.sheriffSpawnRate),
+        new(RoleType.Sheriff, RoleTeam.Crewmate, typeof(RoleBase<Sheriff>), () => Sheriff.NameColor, () => CustomOptionHolder.SheriffSpawnRate),
         new(RoleType.Lighter, RoleTeam.Crewmate, typeof(RoleBase<Lighter>), () => Lighter.NameColor, () => CustomOptionHolder.LighterSpawnRate),
         new(RoleType.Detective, RoleTeam.Crewmate, typeof(RoleBase<Detective>), () => Detective.NameColor, () => CustomOptionHolder.DetectiveSpawnRate),
         new(RoleType.TimeMaster, RoleTeam.Crewmate, typeof(RoleBase<TimeMaster>), () => TimeMaster.NameColor, () => CustomOptionHolder.TimeMasterSpawnRate),

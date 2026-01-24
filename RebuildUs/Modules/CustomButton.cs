@@ -195,11 +195,11 @@ public class CustomButton
         }
     }
 
-    private bool lastIsActive = false;
+    private bool LastIsActive = false;
     public void SetActive(bool isActive)
     {
-        if (lastIsActive == isActive) return;
-        lastIsActive = isActive;
+        if (LastIsActive == isActive) return;
+        LastIsActive = isActive;
         if (ActionButton != null && ActionButton.gameObject != null)
         {
             ActionButton.gameObject.SetActive(isActive);
@@ -207,7 +207,7 @@ public class CustomButton
         }
     }
 
-    private string lastButtonText = "";
+    private string LastButtonText = "";
 
     public void Update()
     {
@@ -219,10 +219,10 @@ public class CustomButton
         SetActive(HudManager.UseButton.isActiveAndEnabled || HudManager.PetButton.isActiveAndEnabled);
 
         if (ActionButton.graphic.sprite != Sprite) ActionButton.graphic.sprite = Sprite;
-        if (ShowButtonText && ButtonText != "" && lastButtonText != ButtonText)
+        if (ShowButtonText && ButtonText != "" && LastButtonText != ButtonText)
         {
             ActionButton.OverrideText(ButtonText);
-            lastButtonText = ButtonText;
+            LastButtonText = ButtonText;
         }
         ActionButton.buttonLabelText.enabled = ShowButtonText; // Only show the text if it's a kill button
 

@@ -204,10 +204,7 @@ public class Vampire : RoleBase<Vampire>
             VampireKillButton.MaxTimer = Cooldown;
             VampireKillButton.EffectDuration = Delay;
         }
-        if (GarlicButton != null)
-        {
-            GarlicButton.MaxTimer = 0f;
-        }
+        GarlicButton?.MaxTimer = 0f;
     }
 
     // write functions here

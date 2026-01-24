@@ -904,7 +904,7 @@ public static partial class RPCProcedure
         LastImpostor.NumUsed += 1;
     }
 
-    public static void sheriffKill(byte sheriffId, byte targetId, bool misfire)
+    public static void SheriffKill(byte sheriffId, byte targetId, bool misfire)
     {
         PlayerControl sheriff = Helpers.PlayerById(sheriffId);
         PlayerControl target = Helpers.PlayerById(targetId);
@@ -913,7 +913,7 @@ public static partial class RPCProcedure
         Sheriff role = Sheriff.GetRole(sheriff);
         if (role != null)
         {
-            role.numShots--;
+            role.NumShots--;
         }
 
         if (misfire)
@@ -921,7 +921,7 @@ public static partial class RPCProcedure
             sheriff.MurderPlayer(sheriff);
             GameHistory.FinalStatuses[sheriffId] = EFinalStatus.Misfire;
 
-            if (!Sheriff.misfireKillsTarget) return;
+            if (!Sheriff.MisfireKillsTarget) return;
             GameHistory.FinalStatuses[targetId] = EFinalStatus.Misfire;
         }
 

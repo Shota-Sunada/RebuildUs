@@ -128,7 +128,7 @@ public class SecurityGuard : RoleBase<SecurityGuard>
                         SecurityGuardButton.ButtonText = Tr.Get("Hud.CloseVentText");
                         SecurityGuardButton.Sprite = AssetLoader.CloseVentButton;
                     }
-                    if (SecurityGuardButtonScrewsText != null) SecurityGuardButtonScrewsText.text = string.Format(Tr.Get("Hud.SecurityGuardScrews"), Local.RemainingScrews);
+                    SecurityGuardButtonScrewsText?.text = string.Format(Tr.Get("Hud.SecurityGuardScrews"), Local.RemainingScrews);
 
                     return Local.VentTarget != null
                         ? Local.RemainingScrews >= SecurityGuard.VentPrice && PlayerControl.LocalPlayer.CanMove

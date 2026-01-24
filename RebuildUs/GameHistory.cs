@@ -1,6 +1,3 @@
-using System.Text;
-using RebuildUs.Roles;
-
 namespace RebuildUs;
 
 public class DeadPlayer(PlayerControl player, DateTime timeOfDeath, DeathReason deathReason, PlayerControl killerIfExisting)

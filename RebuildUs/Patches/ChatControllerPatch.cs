@@ -1,4 +1,3 @@
-using System.Text;
 using AmongUs.Data;
 
 namespace RebuildUs.Patches;

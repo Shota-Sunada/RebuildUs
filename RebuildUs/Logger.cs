@@ -1,5 +1,3 @@
-using System.Text;
-
 namespace RebuildUs;
 
 public static class Logger

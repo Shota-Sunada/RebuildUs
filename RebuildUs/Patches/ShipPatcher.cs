@@ -1,6 +1,3 @@
-using HarmonyLib;
-using RebuildUs.Modules;
-
 namespace RebuildUs.Patches;
 
 [HarmonyPatch]

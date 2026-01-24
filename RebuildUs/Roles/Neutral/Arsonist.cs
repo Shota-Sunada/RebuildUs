@@ -181,7 +181,7 @@ public class Arsonist : RoleBase<Arsonist>
     }
     public override void SetButtonCooldowns()
     {
-        if (ArsonistButton != null) ArsonistButton.MaxTimer = Cooldown;
+        ArsonistButton?.MaxTimer = Cooldown;
         if (Local != null)
         {
             UpdateStatus();

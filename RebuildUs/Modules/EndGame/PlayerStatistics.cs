@@ -39,7 +39,7 @@ public class PlayerStatistics
         int impLovers = 0;
         int jackalLovers = 0;
 
-        var loversId = new System.Collections.Generic.HashSet<byte>();
+        var loversId = new HashSet<byte>();
         var couples = Lovers.Couples;
         for (int i = 0; i < couples.Count; i++)
         {

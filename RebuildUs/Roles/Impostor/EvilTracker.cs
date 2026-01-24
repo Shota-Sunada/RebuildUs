@@ -114,7 +114,7 @@ public class EvilTracker : RoleBase<EvilTracker>
             // インポスターの位置を示すArrowsを描画
             int count = 0;
             var allPlayers = PlayerControl.AllPlayerControls;
-            var sb = new System.Text.StringBuilder();
+            var sb = new StringBuilder();
             for (var i = 0; i < allPlayers.Count; i++)
             {
                 var p = allPlayers[i];
@@ -203,7 +203,7 @@ public class EvilTracker : RoleBase<EvilTracker>
             }
             else
             {
-                if (TargetPositionText != null) TargetPositionText.text = "";
+                TargetPositionText?.text = "";
             }
 
             // タイマーに時間をセット

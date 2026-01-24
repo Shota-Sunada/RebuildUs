@@ -217,7 +217,7 @@ public static partial class RPCProcedure
                 FortuneTellerUsedDivine(reader.ReadByte(), reader.ReadByte());
                 break;
             case CustomRPC.SheriffKill:
-                sheriffKill(reader.ReadByte(), reader.ReadByte(), reader.ReadBoolean());
+                SheriffKill(reader.ReadByte(), reader.ReadByte(), reader.ReadBoolean());
                 break;
             default:
                 break;

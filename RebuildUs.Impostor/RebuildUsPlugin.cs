@@ -1,4 +1,4 @@
-﻿using Impostor.Api.Plugins;
+using Impostor.Api.Plugins;
 using Microsoft.Extensions.Logging;
 using RebuildUs.Impostor.Services;
 

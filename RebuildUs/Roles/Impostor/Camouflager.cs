@@ -109,7 +109,7 @@ public class Camouflager : RoleBase<Camouflager>
             if (p.IsRole(RoleType.Morphing))
             {
                 var morphRole = Morphing.GetRole(p);
-                if (morphRole != null) morphRole.HandleMorphing();
+                morphRole?.HandleMorphing();
             }
             else
             {

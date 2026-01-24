@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Text;
 using AmongUs.Data;
 using Assets.CoreScripts;
 using BepInEx.Unity.IL2CPP.Utils.Collections;
@@ -1063,7 +1062,7 @@ public static class Meeting
                     }
                     if (msg.Contains("who", StringComparison.OrdinalIgnoreCase))
                     {
-                        FastDestroyableSingleton<Assets.CoreScripts.UnityTelemetry>.Instance.SendWho();
+                        FastDestroyableSingleton<UnityTelemetry>.Instance.SendWho();
                     }
                 }
             }

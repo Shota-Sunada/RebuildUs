@@ -1,7 +1,5 @@
 using System.Collections;
 using BepInEx.Unity.IL2CPP.Utils.Collections;
-using UnityEngine;
-using HarmonyLib;
 using RebuildUs.Modules.Cosmetics;
 
 namespace RebuildUs.Patches;

@@ -1,7 +1,3 @@
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
 namespace RebuildUs.Roles;
 
 public partial class RoleInfo(string nameKey, Color color, CustomOption baseOption, RoleType roleType)

@@ -282,7 +282,7 @@ public class LastImpostor : ModifierBase<LastImpostor>
         {
             msgBase = "Option.DivineMessageRole";
             var roleInfos = RoleInfo.GetRoleInfoForPlayer(p);
-            var sb = new System.Text.StringBuilder();
+            var sb = new StringBuilder();
             for (var i = 0; i < roleInfos.Count; i++)
             {
                 if (i > 0) sb.Append(" ");

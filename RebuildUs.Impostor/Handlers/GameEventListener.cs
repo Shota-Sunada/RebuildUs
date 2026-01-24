@@ -14,10 +14,10 @@ namespace RebuildUs.Impostor.Handlers;
 
 public class GameEventListener : IEventListener
 {
-    private readonly IGameCodeManager gameCodeManager;
-    private readonly IDiscordService discordService;
-    private readonly IPlayerMappingService mappingService;
-    private readonly ILogger<GameEventListener> logger;
+    private readonly IGameCodeManager GameCodeManager;
+    private readonly IDiscordService DiscordService;
+    private readonly IPlayerMappingService MappingService;
+    private readonly ILogger<GameEventListener> Logger;
     private readonly DiscordConfig _config;
     private IGame? _currentGame;
     private bool _isChatSyncActive;
@@ -25,34 +25,34 @@ public class GameEventListener : IEventListener
 
     public GameEventListener(IGameCodeManager gameCodeManager, IDiscordService discordService, IPlayerMappingService mappingService, ILogger<GameEventListener> logger, IOptions<DiscordConfig> config)
     {
-        this.gameCodeManager = gameCodeManager;
-        this.discordService = discordService;
-        this.mappingService = mappingService;
-        this.logger = logger;
+        this.GameCodeManager = gameCodeManager;
+        this.DiscordService = discordService;
+        this.MappingService = mappingService;
+        this.Logger = logger;
         this._config = config.Value;
     }
 
     [EventListener(EventPriority.Highest)]
     public async ValueTask OnGameCreated(IGameCreationEvent e)
     {
-        e.GameCode = gameCodeManager.Get();
-        await discordService.SetActiveRoomCodeAsync(e.GameCode);
+        e.GameCode = GameCodeManager.Get();
+        await DiscordService.SetActiveRoomCodeAsync(e.GameCode);
         _isChatSyncActive = true;
         _gameState = "待機中";
-        await discordService.SendMessageToDiscordAsync("# 新しい部屋が建てられました。ルームコード");
-        await discordService.SendMessageToDiscordAsync($"# {e.GameCode}");
+        await DiscordService.SendMessageToDiscordAsync("# 新しい部屋が建てられました。ルームコード");
+        await DiscordService.SendMessageToDiscordAsync($"# {e.GameCode}");
     }
 
     [EventListener(EventPriority.Highest)]
     public async ValueTask OnGameDestroyed(IGameDestroyedEvent e)
     {
-        gameCodeManager.Release(e.Game.Code);
-        await discordService.ClearActiveRoomCodeAsync();
+        GameCodeManager.Release(e.Game.Code);
+        await DiscordService.ClearActiveRoomCodeAsync();
         _isChatSyncActive = false;
         _currentGame = null;
         _gameState = "終了";
-        await discordService.SendMessageToDiscordAsync($"ルーム『{e.Game.Code}』は閉じられました");
-        await discordService.UpdateStatusAsync(e.Game.Code, 0, e.Game.Options.MaxPlayers, e.Game.Options.Map.ToString(), "終了", "0 / 0 人が連携済み");
+        await DiscordService.SendMessageToDiscordAsync($"ルーム『{e.Game.Code}』は閉じられました");
+        await DiscordService.UpdateStatusAsync(e.Game.Code, 0, e.Game.Options.MaxPlayers, e.Game.Options.Map.ToString(), "終了", "0 / 0 人が連携済み");
     }
 
     [EventListener]
@@ -60,8 +60,8 @@ public class GameEventListener : IEventListener
     {
         _currentGame = e.Game;
         _gameState = "ゲーム中";
-        await discordService.SendMessageToDiscordAsync("ゲームが開始しました。チャット同期を停止します。");
-        await discordService.ClearActiveRoomCodeAsync();
+        await DiscordService.SendMessageToDiscordAsync("ゲームが開始しました。チャット同期を停止します。");
+        await DiscordService.ClearActiveRoomCodeAsync();
         _isChatSyncActive = false;
         await MuteAllAsync(e.Game, true, true);
         await UpdateDiscordStatusAsync(e.Game, _gameState);
@@ -72,9 +72,9 @@ public class GameEventListener : IEventListener
     {
         if (_isChatSyncActive) return;
         _gameState = "待機中";
-        await discordService.SetActiveRoomCodeAsync(e.Game.Code);
+        await DiscordService.SetActiveRoomCodeAsync(e.Game.Code);
         _isChatSyncActive = true;
-        await discordService.SendMessageToDiscordAsync("ゲームが終了しました。チャット同期を再開します。");
+        await DiscordService.SendMessageToDiscordAsync("ゲームが終了しました。チャット同期を再開します。");
         await MuteAllAsync(e.Game, false, false);
         await UpdateDiscordStatusAsync(e.Game, _gameState);
     }
@@ -103,12 +103,12 @@ public class GameEventListener : IEventListener
             var friendCode = GetFriendCode(player);
             if (string.IsNullOrEmpty(friendCode)) continue;
 
-            var discordId = mappingService.GetDiscordId(friendCode);
+            var discordId = MappingService.GetDiscordId(friendCode);
             if (discordId.HasValue)
             {
                 bool isDead = player.Character?.PlayerInfo?.IsDead ?? false;
                 // 生存者: ミュート解除・デフン解除 | 死亡者: ミュート・デフン解除
-                await discordService.SetMuteAsync(discordId.Value, isDead, false);
+                await DiscordService.SetMuteAsync(discordId.Value, isDead, false);
             }
         }
     }
@@ -131,7 +131,7 @@ public class GameEventListener : IEventListener
             var friendCode = GetFriendCode(player);
             if (string.IsNullOrEmpty(friendCode)) continue;
 
-            var discordId = mappingService.GetDiscordId(friendCode);
+            var discordId = MappingService.GetDiscordId(friendCode);
             if (!discordId.HasValue) continue;
 
             if (player.Character?.PlayerInfo?.IsDead ?? false)
@@ -145,10 +145,10 @@ public class GameEventListener : IEventListener
         }
 
         // 生存者をミュート・デフン
-        await discordService.SetMuteAllAsync(aliveUsers, true, true);
+        await DiscordService.SetMuteAllAsync(aliveUsers, true, true);
 
         // その後に死亡者のミュート・デフンを解除
-        await discordService.SetMuteAllAsync(deadUsers, false, false);
+        await DiscordService.SetMuteAllAsync(deadUsers, false, false);
     }
 
     [EventListener]
@@ -165,9 +165,9 @@ public class GameEventListener : IEventListener
                     await e.PlayerControl.SendChatAsync("Could not retrieve your Friend Code.");
                     return;
                 }
-                mappingService.Map(friendCode, discordId);
+                MappingService.Map(friendCode, discordId);
                 await e.PlayerControl.SendChatAsync($"Discord ID {discordId} has been linked to your Friend Code.");
-                logger.LogInformation("Linked FriendCode {FriendCode} to Discord ID {DiscordId}", friendCode, discordId);
+                Logger.LogInformation("Linked FriendCode {FriendCode} to Discord ID {DiscordId}", friendCode, discordId);
                 await UpdateDiscordStatusAsync(e.Game, _gameState);
             }
             else
@@ -180,7 +180,7 @@ public class GameEventListener : IEventListener
         if (_isChatSyncActive)
         {
             var playerName = GetFriendCode(e.PlayerControl);
-            await discordService.SendMessageToDiscordAsync($"[{playerName}] {e.Message}");
+            await DiscordService.SendMessageToDiscordAsync($"[{playerName}] {e.Message}");
         }
     }
 
@@ -210,7 +210,7 @@ public class GameEventListener : IEventListener
             }
 
             var fc = GetFriendCode(p);
-            var discordId = !string.IsNullOrEmpty(fc) ? mappingService.GetDiscordId(fc) : null;
+            var discordId = !string.IsNullOrEmpty(fc) ? MappingService.GetDiscordId(fc) : null;
 
             if (discordId.HasValue)
             {
@@ -227,7 +227,7 @@ public class GameEventListener : IEventListener
 
         var summaryStatus = $"{linkedCount} / {playerCount} 人が連携済み\n\n{sb}";
 
-        await discordService.UpdateStatusAsync(roomCode, playerCount, maxPlayers, mapName, state, summaryStatus);
+        await DiscordService.UpdateStatusAsync(roomCode, playerCount, maxPlayers, mapName, state, summaryStatus);
     }
 
     private string GetFriendCode(object player)
@@ -251,7 +251,7 @@ public class GameEventListener : IEventListener
             var friendCode = GetFriendCode(player);
             if (!string.IsNullOrEmpty(friendCode))
             {
-                var discordId = mappingService.GetDiscordId(friendCode);
+                var discordId = MappingService.GetDiscordId(friendCode);
                 if (discordId.HasValue)
                 {
                     discordIds.Add(discordId.Value);
@@ -261,7 +261,7 @@ public class GameEventListener : IEventListener
 
         if (discordIds.Count > 0)
         {
-            await discordService.SetMuteAllAsync(discordIds, mute, deaf);
+            await DiscordService.SetMuteAllAsync(discordIds, mute, deaf);
         }
     }
 }

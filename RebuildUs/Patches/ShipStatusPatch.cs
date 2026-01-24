@@ -1,5 +1,3 @@
-using RebuildUs.Modules.Discord;
-
 namespace RebuildUs.Patches;
 
 [HarmonyPatch]
