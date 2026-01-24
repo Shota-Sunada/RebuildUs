@@ -36,7 +36,7 @@ public class Trickster : RoleBase<Trickster>
     public override void OnFinishShipStatusBegin() { }
     public override void HandleDisconnect(PlayerControl player, DisconnectReasons reason) { }
 
-    public override void MakeButtons(HudManager hm)
+    public static void MakeButtons(HudManager hm)
     {
         PlaceJackInTheBoxButton = new CustomButton(
             () =>
@@ -56,7 +56,7 @@ public class Trickster : RoleBase<Trickster>
             () => { return PlayerControl.LocalPlayer.CanMove && !JackInTheBox.HasJackInTheBoxLimitReached(); },
             () => { PlaceJackInTheBoxButton.Timer = PlaceJackInTheBoxButton.MaxTimer; },
             AssetLoader.PlaceJackInTheBoxButton,
-            new Vector3(-1.8f, -0.06f, 0),
+            ButtonPosition.Layout,
             hm,
             hm.KillButton,
             KeyCode.F
@@ -80,7 +80,7 @@ public class Trickster : RoleBase<Trickster>
                 LightsOutButton.ActionButton.graphic.color = Palette.EnabledColor;
             },
             AssetLoader.LightsOutButton,
-            new Vector3(-1.8f, -0.06f, 0),
+            ButtonPosition.Layout,
             hm,
             hm.KillButton,
             KeyCode.F,
@@ -92,7 +92,7 @@ public class Trickster : RoleBase<Trickster>
             ButtonText = Tr.Get("Hud.LightsOutText")
         };
     }
-    public override void SetButtonCooldowns()
+    public static void SetButtonCooldowns()
     {
         PlaceJackInTheBoxButton.MaxTimer = PlaceBoxCooldown;
         LightsOutButton.MaxTimer = LightsOutCooldown;

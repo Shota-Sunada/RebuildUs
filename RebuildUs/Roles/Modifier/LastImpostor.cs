@@ -55,7 +55,7 @@ public class LastImpostor : ModifierBase<LastImpostor>
     public override void OnDeath(PlayerControl killer = null) { }
     public override void OnFinishShipStatusBegin() { }
     public override void HandleDisconnect(PlayerControl player, DisconnectReasons reason) { }
-    public override void MakeButtons(HudManager hm)
+    public static void MakeButtons(HudManager hm)
     {
         LastImpostorButtons = [];
 
@@ -192,7 +192,6 @@ public class LastImpostor : ModifierBase<LastImpostor>
             LastImpostorButtons.Add(lastImpostorButton);
         }
     }
-    public override void SetButtonCooldowns() { }
 
     // write functions here
 

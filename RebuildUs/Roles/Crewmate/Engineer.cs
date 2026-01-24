@@ -76,84 +76,84 @@ public class Engineer : RoleBase<Engineer>
     public override void OnDeath(PlayerControl killer = null) { }
     public override void OnFinishShipStatusBegin() { }
     public override void HandleDisconnect(PlayerControl player, DisconnectReasons reason) { }
-    public override void MakeButtons(HudManager hm)
+    public static void MakeButtons(HudManager hm)
     {
         EngineerRepairButton = new CustomButton(
-                () =>
+            () =>
+            {
+                EngineerRepairButton.Timer = 0f;
+
+                using var sender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.EngineerUsedRepair);
+                sender.Write(PlayerControl.LocalPlayer.PlayerId);
+                RPCProcedure.EngineerUsedRepair(PlayerControl.LocalPlayer.PlayerId);
+
+                for (int i = 0; i < PlayerControl.LocalPlayer.myTasks.Count; i++)
                 {
-                    EngineerRepairButton.Timer = 0f;
-
-                    using var sender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.EngineerUsedRepair);
-                    sender.Write(PlayerControl.LocalPlayer.PlayerId);
-                    RPCProcedure.EngineerUsedRepair(PlayerControl.LocalPlayer.PlayerId);
-
-                    for (int i = 0; i < PlayerControl.LocalPlayer.myTasks.Count; i++)
+                    var task = PlayerControl.LocalPlayer.myTasks[i];
+                    if (task.TaskType == TaskTypes.FixLights)
                     {
-                        var task = PlayerControl.LocalPlayer.myTasks[i];
-                        if (task.TaskType == TaskTypes.FixLights)
-                        {
-                            using var sender2 = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.EngineerFixLights);
-                            RPCProcedure.EngineerFixLights();
-                        }
-                        else if (task.TaskType is TaskTypes.RestoreOxy)
-                        {
-                            MapUtilities.CachedShipStatus.RpcUpdateSystem(SystemTypes.LifeSupp, 0 | 64);
-                            MapUtilities.CachedShipStatus.RpcUpdateSystem(SystemTypes.LifeSupp, 1 | 64);
-                        }
-                        else if (task.TaskType is TaskTypes.ResetReactor)
-                        {
-                            MapUtilities.CachedShipStatus.RpcUpdateSystem(SystemTypes.Reactor, 16);
-                        }
-                        else if (task.TaskType is TaskTypes.ResetSeismic)
-                        {
-                            MapUtilities.CachedShipStatus.RpcUpdateSystem(SystemTypes.Laboratory, 16);
-                        }
-                        else if (task.TaskType is TaskTypes.FixComms)
-                        {
-                            MapUtilities.CachedShipStatus.RpcUpdateSystem(SystemTypes.Comms, 16 | 0);
-                            MapUtilities.CachedShipStatus.RpcUpdateSystem(SystemTypes.Comms, 16 | 1);
-                        }
-                        else if (task.TaskType is TaskTypes.StopCharles)
-                        {
-                            MapUtilities.CachedShipStatus.RpcUpdateSystem(SystemTypes.Reactor, 0 | 16);
-                            MapUtilities.CachedShipStatus.RpcUpdateSystem(SystemTypes.Reactor, 1 | 16);
-                        }
-                        else if (SubmergedCompatibility.IsSubmerged && task.TaskType == SubmergedCompatibility.RetrieveOxygenMask)
-                        {
-                            using var sender3 = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.EngineerFixSubmergedOxygen);
-                            RPCProcedure.EngineerFixSubmergedOxygen();
-                        }
+                        using var sender2 = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.EngineerFixLights);
+                        RPCProcedure.EngineerFixLights();
                     }
-                },
-                () => { return PlayerControl.LocalPlayer.IsRole(RoleType.Engineer) && Local.RemainingFixes > 0 && PlayerControl.LocalPlayer.IsAlive(); },
-                () =>
+                    else if (task.TaskType is TaskTypes.RestoreOxy)
+                    {
+                        MapUtilities.CachedShipStatus.RpcUpdateSystem(SystemTypes.LifeSupp, 0 | 64);
+                        MapUtilities.CachedShipStatus.RpcUpdateSystem(SystemTypes.LifeSupp, 1 | 64);
+                    }
+                    else if (task.TaskType is TaskTypes.ResetReactor)
+                    {
+                        MapUtilities.CachedShipStatus.RpcUpdateSystem(SystemTypes.Reactor, 16);
+                    }
+                    else if (task.TaskType is TaskTypes.ResetSeismic)
+                    {
+                        MapUtilities.CachedShipStatus.RpcUpdateSystem(SystemTypes.Laboratory, 16);
+                    }
+                    else if (task.TaskType is TaskTypes.FixComms)
+                    {
+                        MapUtilities.CachedShipStatus.RpcUpdateSystem(SystemTypes.Comms, 16 | 0);
+                        MapUtilities.CachedShipStatus.RpcUpdateSystem(SystemTypes.Comms, 16 | 1);
+                    }
+                    else if (task.TaskType is TaskTypes.StopCharles)
+                    {
+                        MapUtilities.CachedShipStatus.RpcUpdateSystem(SystemTypes.Reactor, 0 | 16);
+                        MapUtilities.CachedShipStatus.RpcUpdateSystem(SystemTypes.Reactor, 1 | 16);
+                    }
+                    else if (SubmergedCompatibility.IsSubmerged && task.TaskType == SubmergedCompatibility.RetrieveOxygenMask)
+                    {
+                        using var sender3 = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.EngineerFixSubmergedOxygen);
+                        RPCProcedure.EngineerFixSubmergedOxygen();
+                    }
+                }
+            },
+            () => { return PlayerControl.LocalPlayer.IsRole(RoleType.Engineer) && Local.RemainingFixes > 0 && PlayerControl.LocalPlayer.IsAlive(); },
+            () =>
+            {
+                bool sabotageActive = false;
+                for (int i = 0; i < PlayerControl.LocalPlayer.myTasks.Count; i++)
                 {
-                    bool sabotageActive = false;
-                    for (int i = 0; i < PlayerControl.LocalPlayer.myTasks.Count; i++)
+                    var task = PlayerControl.LocalPlayer.myTasks[i];
+                    if (task.TaskType is TaskTypes.FixLights or TaskTypes.RestoreOxy or TaskTypes.ResetReactor or TaskTypes.ResetSeismic or TaskTypes.FixComms or TaskTypes.StopCharles
+                    || (SubmergedCompatibility.IsSubmerged && task.TaskType == SubmergedCompatibility.RetrieveOxygenMask))
                     {
-                        var task = PlayerControl.LocalPlayer.myTasks[i];
-                        if (task.TaskType is TaskTypes.FixLights or TaskTypes.RestoreOxy or TaskTypes.ResetReactor or TaskTypes.ResetSeismic or TaskTypes.FixComms or TaskTypes.StopCharles
-                        || (SubmergedCompatibility.IsSubmerged && task.TaskType == SubmergedCompatibility.RetrieveOxygenMask))
-                        {
-                            sabotageActive = true;
-                            break;
-                        }
+                        sabotageActive = true;
+                        break;
                     }
+                }
 
-                    return sabotageActive && Local.RemainingFixes > 0 && PlayerControl.LocalPlayer.CanMove;
-                },
-                () => { },
-                AssetLoader.RepairButton,
-                new Vector3(-1.8f, -0.06f, 0),
-                hm,
-                hm.UseButton,
-                KeyCode.F
-            )
+                return sabotageActive && Local.RemainingFixes > 0 && PlayerControl.LocalPlayer.CanMove;
+            },
+            () => { },
+            AssetLoader.RepairButton,
+            ButtonPosition.Layout,
+            hm,
+            hm.UseButton,
+            KeyCode.F
+        )
         {
             ButtonText = Tr.Get("Hud.RepairText")
         };
     }
-    public override void SetButtonCooldowns()
+    public static void SetButtonCooldowns()
     {
         EngineerRepairButton.MaxTimer = 0f;
     }

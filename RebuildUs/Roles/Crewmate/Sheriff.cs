@@ -58,30 +58,30 @@ public class Sheriff : RoleBase<Sheriff>
     public override void OnDeath(PlayerControl killer = null) { }
     public override void OnFinishShipStatusBegin() { }
     public override void HandleDisconnect(PlayerControl player, DisconnectReasons reason) { }
-    public override void MakeButtons(HudManager hm)
+    public static void MakeButtons(HudManager hm)
     {
         // Sheriff Kill
         SheriffKillButton = new CustomButton(
             () =>
             {
-                if (NumShots <= 0)
+                if (Local.NumShots <= 0)
                 {
                     return;
                 }
 
-                MurderAttemptResult murderAttemptResult = Helpers.CheckMurderAttempt(PlayerControl.LocalPlayer, CurrentTarget);
+                MurderAttemptResult murderAttemptResult = Helpers.CheckMurderAttempt(PlayerControl.LocalPlayer, Local.CurrentTarget);
                 if (murderAttemptResult == MurderAttemptResult.SuppressKill) return;
 
                 if (murderAttemptResult == MurderAttemptResult.PerformKill)
                 {
                     bool misfire = false;
-                    byte targetId = CurrentTarget.PlayerId; ;
-                    if ((CurrentTarget.Data.Role.IsImpostor && (!CurrentTarget.HasModifier(ModifierType.Mini) || Mini.IsGrownUp(CurrentTarget))) ||
-                        (SpyCanDieToSheriff && CurrentTarget.IsRole(RoleType.Spy)) ||
-                        (MadmateCanDieToSheriff && CurrentTarget.HasModifier(ModifierType.Madmate)) ||
-                        (CreatedMadmateCanDieToSheriff && CurrentTarget.HasModifier(ModifierType.CreatedMadmate)) ||
-                        (CanKillNeutrals && CurrentTarget.IsNeutral()) ||
-                        CurrentTarget.IsRole(RoleType.Jackal) || CurrentTarget.IsRole(RoleType.Sidekick))
+                    byte targetId = Local.CurrentTarget.PlayerId; ;
+                    if ((Local.CurrentTarget.Data.Role.IsImpostor && (!Local.CurrentTarget.HasModifier(ModifierType.Mini) || Mini.IsGrownUp(Local.CurrentTarget))) ||
+                        (SpyCanDieToSheriff && Local.CurrentTarget.IsRole(RoleType.Spy)) ||
+                        (MadmateCanDieToSheriff && Local.CurrentTarget.HasModifier(ModifierType.Madmate)) ||
+                        (CreatedMadmateCanDieToSheriff && Local.CurrentTarget.HasModifier(ModifierType.CreatedMadmate)) ||
+                        (CanKillNeutrals && Local.CurrentTarget.IsNeutral()) ||
+                        Local.CurrentTarget.IsRole(RoleType.Jackal) || Local.CurrentTarget.IsRole(RoleType.Sidekick))
                     {
                         //targetId = Sheriff.currentTarget.PlayerId;
                         misfire = false;
@@ -93,7 +93,7 @@ public class Sheriff : RoleBase<Sheriff>
                     }
 
                     // Mad sheriff always misfires.
-                    if (Player.HasModifier(ModifierType.Madmate))
+                    if (Local.Player.HasModifier(ModifierType.Madmate))
                     {
                         misfire = true;
                     }
@@ -107,17 +107,17 @@ public class Sheriff : RoleBase<Sheriff>
                 }
 
                 SheriffKillButton.Timer = SheriffKillButton.MaxTimer;
-                CurrentTarget = null;
+                Local.CurrentTarget = null;
             },
-            () => { return PlayerControl.LocalPlayer.IsRole(RoleType.Sheriff) && NumShots > 0 && !PlayerControl.LocalPlayer.Data.IsDead && CanKill; },
+            () => { return PlayerControl.LocalPlayer.IsRole(RoleType.Sheriff) && Local.NumShots > 0 && !PlayerControl.LocalPlayer.Data.IsDead && Local.CanKill; },
             () =>
             {
-                SheriffNumShotsText?.text = NumShots > 0 ? string.Format(Tr.Get("Hud.SheriffShots"), NumShots) : "";
-                return CurrentTarget && PlayerControl.LocalPlayer.CanMove;
+                SheriffNumShotsText?.text = Local.NumShots > 0 ? string.Format(Tr.Get("Hud.SheriffShots"), Local.NumShots) : "";
+                return Local.CurrentTarget && PlayerControl.LocalPlayer.CanMove;
             },
             () => { SheriffKillButton.Timer = SheriffKillButton.MaxTimer; },
             hm.KillButton.graphic.sprite,
-            new Vector3(0f, 1f, 0),
+            ButtonPosition.Layout,
             hm,
             hm.KillButton,
             KeyCode.Q
@@ -129,7 +129,7 @@ public class Sheriff : RoleBase<Sheriff>
         SheriffNumShotsText.transform.localScale = Vector3.one * 0.5f;
         SheriffNumShotsText.transform.localPosition += new Vector3(-0.05f, 0.7f, 0);
     }
-    public override void SetButtonCooldowns()
+    public static void SetButtonCooldowns()
     {
         SheriffKillButton.MaxTimer = Cooldown;
     }

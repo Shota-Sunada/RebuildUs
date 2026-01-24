@@ -1,4 +1,5 @@
 using BepInEx.Unity.IL2CPP.Utils.Collections;
+using PowerTools;
 using System.Collections;
 
 namespace RebuildUs.Modules;
@@ -53,7 +54,7 @@ public static class Intro
         RebuildUs.OnIntroEnd();
 
         // インポスター視界の場合に昇降機右の影を無効化
-        if (Helpers.IsAirship && CustomOptionHolder.AirshipOptions.GetBool() && Helpers.HasImpostorVision(PlayerControl.LocalPlayer))
+        if (Helpers.IsAirship && CustomOptionHolder.AirshipOptimize.GetBool() && Helpers.HasImpostorVision(PlayerControl.LocalPlayer))
         {
             var obj = ShipStatus.Instance.FastRooms[SystemTypes.GapRoom].gameObject;
             var oneWayShadow = obj.transform.FindChild("Shadow").FindChild("LedgeShadow").GetComponent<OneWayShadows>();
@@ -203,7 +204,166 @@ public static class Intro
     public static IEnumerator CoBegin(IntroCutscene __instance)
     {
         yield return WaitRoleAssign().WrapToIl2Cpp();
-        yield return __instance.CoBegin();
+        // yield return __instance.CoBegin();
+
+        Logger.LogInfo("IntroCutscene :: CoBegin() :: Starting intro cutscene");
+        SoundManager.Instance.PlaySound(__instance.IntroStinger, false);
+
+        if (GameManager.Instance.IsNormal())
+        {
+            Logger.LogInfo("IntroCutscene :: CoBegin() :: Game Mode: Normal");
+            __instance.LogPlayerRoleData();
+            __instance.HideAndSeekPanels.SetActive(false);
+            __instance.CrewmateRules.SetActive(false);
+            __instance.ImpostorRules.SetActive(false);
+            __instance.ImpostorName.gameObject.SetActive(false);
+            __instance.ImpostorTitle.gameObject.SetActive(false);
+            var show = IntroCutscene.SelectTeamToShow((Func<NetworkedPlayerInfo, bool>)(pcd => !PlayerControl.LocalPlayer.Data.Role.IsImpostor || pcd.Role.TeamType == PlayerControl.LocalPlayer.Data.Role.TeamType));
+            if (show == null || show.Count < 1)
+            {
+                Logger.LogError("IntroCutscene :: CoBegin() :: teamToShow is EMPTY or NULL");
+            }
+            if (PlayerControl.LocalPlayer.Data.Role.IsImpostor)
+            {
+                __instance.ImpostorText.gameObject.SetActive(false);
+            }
+            else
+            {
+                int adjustedNumImpostors = GameManager.Instance.LogicOptions.GetAdjustedNumImpostors(GameData.Instance.PlayerCount);
+                __instance.ImpostorText.text = adjustedNumImpostors == 1
+                    ? DestroyableSingleton<TranslationController>.Instance.GetString(StringNames.NumImpostorsS)
+                    : DestroyableSingleton<TranslationController>.Instance.GetString(StringNames.NumImpostorsP, adjustedNumImpostors);
+                __instance.ImpostorText.text = __instance.ImpostorText.text.Replace("[FF1919FF]", "<color=#FF1919FF>");
+                __instance.ImpostorText.text = __instance.ImpostorText.text.Replace("[]", "</color>");
+            }
+            yield return __instance.ShowTeam(show, 3f);
+            // 独自処理挿入
+            yield return SetupRole(__instance);
+        }
+        else
+        {
+            Logger.LogInfo("IntroCutscene :: CoBegin() :: Game Mode: Hide and Seek");
+            __instance.LogPlayerRoleData();
+            __instance.HideAndSeekPanels.SetActive(true);
+            if (PlayerControl.LocalPlayer.Data.Role.IsImpostor)
+            {
+                __instance.CrewmateRules.SetActive(false);
+                __instance.ImpostorRules.SetActive(true);
+            }
+            else
+            {
+                __instance.CrewmateRules.SetActive(true);
+                __instance.ImpostorRules.SetActive(false);
+            }
+            var show = IntroCutscene.SelectTeamToShow((Func<NetworkedPlayerInfo, bool>)(pcd => PlayerControl.LocalPlayer.Data.Role.IsImpostor != pcd.Role.IsImpostor));
+            if (show == null || show.Count < 1)
+            {
+                Logger.LogError("IntroCutscene :: CoBegin() :: teamToShow is EMPTY or NULL");
+            }
+            PlayerControl impostor = PlayerControl.AllPlayerControls.Find((Il2CppSystem.Predicate<PlayerControl>)(pc => pc.Data.Role.IsImpostor));
+            if (impostor == null)
+            {
+                Logger.LogError("IntroCutscene :: CoBegin() :: impostor is NULL");
+            }
+            GameManager.Instance.SetSpecialCosmetics(impostor);
+            __instance.ImpostorName.gameObject.SetActive(true);
+            __instance.ImpostorTitle.gameObject.SetActive(true);
+            __instance.BackgroundBar.enabled = false;
+            __instance.TeamTitle.gameObject.SetActive(false);
+            __instance.ImpostorName.text = impostor == null ? impostor.Data.PlayerName : "???";
+            yield return new WaitForSecondsRealtime(0.1f);
+            PoolablePlayer playerSlot = null;
+            if (impostor == null)
+            {
+                playerSlot = __instance.CreatePlayer(1, 1, impostor.Data, false);
+                playerSlot.SetBodyType(PlayerBodyTypes.Normal);
+                playerSlot.SetFlipX(false);
+                playerSlot.transform.localPosition = __instance.impostorPos;
+                playerSlot.transform.localScale = Vector3.one * __instance.impostorScale;
+            }
+            yield return ShipStatus.Instance.CosmeticsCache.PopulateFromPlayers();
+            yield return new WaitForSecondsRealtime(6f);
+            if (playerSlot == null)
+            {
+                playerSlot.gameObject.SetActive(false);
+            }
+            __instance.HideAndSeekPanels.SetActive(false);
+            __instance.CrewmateRules.SetActive(false);
+            __instance.ImpostorRules.SetActive(false);
+            LogicOptionsHnS logicOptions = GameManager.Instance.LogicOptions as LogicOptionsHnS;
+            if (GameManager.Instance.GetLogicComponent<LogicHnSMusic>() is LogicHnSMusic logicComponent)
+                logicComponent.StartMusicWithIntro();
+            if (PlayerControl.LocalPlayer.Data.Role.IsImpostor)
+            {
+                float crewmateLeadTime = logicOptions.GetCrewmateLeadTime();
+                __instance.HideAndSeekTimerText.gameObject.SetActive(true);
+                PoolablePlayer poolablePlayer;
+                AnimationClip anim;
+                if (AprilFoolsMode.ShouldHorseAround())
+                {
+                    poolablePlayer = __instance.HorseWrangleVisualSuit;
+                    poolablePlayer.gameObject.SetActive(true);
+                    poolablePlayer.SetBodyType(PlayerBodyTypes.Seeker);
+                    anim = __instance.HnSSeekerSpawnHorseAnim;
+                    __instance.HorseWrangleVisualPlayer.SetBodyType(PlayerBodyTypes.Normal);
+                    __instance.HorseWrangleVisualPlayer.UpdateFromPlayerData(PlayerControl.LocalPlayer.Data, PlayerControl.LocalPlayer.CurrentOutfitType, PlayerMaterial.MaskType.None, false);
+                }
+                else if (AprilFoolsMode.ShouldLongAround())
+                {
+                    poolablePlayer = __instance.HideAndSeekPlayerVisual;
+                    poolablePlayer.gameObject.SetActive(true);
+                    poolablePlayer.SetBodyType(PlayerBodyTypes.LongSeeker);
+                    anim = __instance.HnSSeekerSpawnLongAnim;
+                }
+                else
+                {
+                    poolablePlayer = __instance.HideAndSeekPlayerVisual;
+                    poolablePlayer.gameObject.SetActive(true);
+                    poolablePlayer.SetBodyType(PlayerBodyTypes.Seeker);
+                    anim = __instance.HnSSeekerSpawnAnim;
+                }
+                poolablePlayer.SetBodyCosmeticsVisible(false);
+                poolablePlayer.UpdateFromPlayerData(PlayerControl.LocalPlayer.Data, PlayerControl.LocalPlayer.CurrentOutfitType, PlayerMaterial.MaskType.None, false);
+                var component = poolablePlayer.GetComponent<SpriteAnim>();
+                poolablePlayer.gameObject.SetActive(true);
+                poolablePlayer.ToggleName(false);
+                component.Play(anim);
+                while ((double)crewmateLeadTime > 0.0)
+                {
+                    __instance.HideAndSeekTimerText.text = Mathf.RoundToInt(crewmateLeadTime).ToString();
+                    crewmateLeadTime -= Time.deltaTime;
+                    yield return null;
+                }
+            }
+            else
+            {
+                ShipStatus.Instance.HideCountdown = logicOptions.GetCrewmateLeadTime();
+                if (AprilFoolsMode.ShouldHorseAround())
+                {
+                    if (impostor == null)
+                    {
+                        impostor.AnimateCustom(__instance.HnSSeekerSpawnHorseInGameAnim);
+                    }
+                }
+                else if (AprilFoolsMode.ShouldLongAround())
+                {
+                    if (impostor == null)
+                    {
+                        impostor.AnimateCustom(__instance.HnSSeekerSpawnLongInGameAnim);
+                    }
+                }
+                else if (impostor == null)
+                {
+                    impostor.AnimateCustom(__instance.HnSSeekerSpawnAnim);
+                    impostor.cosmetics.SetBodyCosmeticsVisible(false);
+                }
+            }
+            impostor = null;
+            playerSlot = null;
+        }
+        ShipStatus.Instance.StartSFX();
+        __instance.gameObject.Destroy();
+
         yield break;
     }
 
@@ -216,13 +376,6 @@ public static class Intro
             yield return null;
         }
         yield break;
-    }
-
-    public static bool ShowRole(IntroCutscene __instance, ref Il2CppSystem.Collections.IEnumerator __result)
-    {
-        if (!CustomOptionHolder.ActivateRoles.GetBool()) return true; // Don't override the intro of the vanilla roles
-        __result = SetupRole(__instance).WrapToIl2Cpp();
-        return false;
     }
 
     private static IEnumerator SetupRole(IntroCutscene __instance)

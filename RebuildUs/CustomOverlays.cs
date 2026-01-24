@@ -214,8 +214,7 @@ public class CustomOverlays
             // Part 3: Custom Options Groups
             sb.Clear();
             sb.Append(CustomOption.OptionsToString(CustomOptionHolder.GameOptions)).Append("\n\n")
-              .Append(CustomOption.OptionsToString(CustomOptionHolder.PolusOptions)).Append("\n\n")
-              .Append(CustomOption.OptionsToString(CustomOptionHolder.AirshipOptions)).Append("\n\n")
+              .Append(CustomOption.OptionsToString(CustomOptionHolder.AirshipOptimize)).Append("\n\n")
               .Append(CustomOption.OptionsToString(CustomOptionHolder.RandomMap)).Append('\f');
             OptionsData.AddRange(SplitToPages(sb.ToString(), MaxLines - 1));
 

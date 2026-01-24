@@ -26,9 +26,6 @@ public class Jester : RoleBase<Jester>
     public override void OnFinishShipStatusBegin() { }
     public override void HandleDisconnect(PlayerControl player, DisconnectReasons reason) { }
 
-    public override void MakeButtons(HudManager hm) { }
-    public override void SetButtonCooldowns() { }
-
     // write functions here
 
     public static void Clear()

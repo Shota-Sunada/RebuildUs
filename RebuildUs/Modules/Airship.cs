@@ -11,7 +11,7 @@ public static class Airship
 
     private static void OptimizeMap(int mapId)
     {
-        if (!CustomOptionHolder.AirshipOptions.GetBool()) return;
+        if (!CustomOptionHolder.AirshipOptimize.GetBool()) return;
 
         if (mapId == 4)
         {

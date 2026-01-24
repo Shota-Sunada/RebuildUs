@@ -49,7 +49,7 @@ public class Medic : RoleBase<Medic>
     }
     public override void OnFinishShipStatusBegin() { }
     public override void HandleDisconnect(PlayerControl player, DisconnectReasons reason) { }
-    public override void MakeButtons(HudManager hm)
+    public static void MakeButtons(HudManager hm)
     {
         MedicShieldButton = new CustomButton(
             () =>
@@ -80,7 +80,7 @@ public class Medic : RoleBase<Medic>
             },
             () => { },
             AssetLoader.ShieldButton,
-            new Vector3(-1.8f, -0.06f, 0),
+            ButtonPosition.Layout,
             hm,
             hm.UseButton,
             KeyCode.F
@@ -89,7 +89,7 @@ public class Medic : RoleBase<Medic>
             ButtonText = Tr.Get("Hud.ShieldText")
         };
     }
-    public override void SetButtonCooldowns()
+    public static void SetButtonCooldowns()
     {
         MedicShieldButton.MaxTimer = 0f;
     }

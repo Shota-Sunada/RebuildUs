@@ -75,72 +75,72 @@ public class SecurityGuard : RoleBase<SecurityGuard>
     private static SystemConsole _taskCamsConsole;
     private static SystemConsole _doorLogConsole;
 
-    public override void MakeButtons(HudManager hm)
+    public static void MakeButtons(HudManager hm)
     {
         SecurityGuardButton = new CustomButton(
-                () =>
+            () =>
+            {
+                if (Local.VentTarget != null)
                 {
-                    if (VentTarget != null)
-                    {
-                        // Seal vent
-                        using var sender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.SealVent);
-                        sender.WritePacked(VentTarget.Id);
-                        sender.Write(Player.PlayerId);
-                        RPCProcedure.SealVent(VentTarget.Id, Player.PlayerId);
-                        VentTarget = null;
-                    }
-                    else if (Helpers.GetOption(ByteOptionNames.MapId) != 1 && ModMapOptions.CouldUseCameras && !SubmergedCompatibility.IsSubmerged)
-                    {
-                        // Place camera if there's no vent and it's not MiraHQ
-                        var pos = PlayerControl.LocalPlayer.transform.position;
-
-                        byte roomId;
-                        try
-                        {
-                            roomId = (byte)FastDestroyableSingleton<HudManager>.Instance.roomTracker.LastRoom.RoomId;
-                        }
-                        catch
-                        {
-                            roomId = 255;
-                        }
-
-                        using (var sender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.PlaceCamera))
-                        {
-                            sender.Write(pos.x);
-                            sender.Write(pos.y);
-                            sender.Write(roomId);
-                            sender.Write(Player.PlayerId);
-                        }
-                        RPCProcedure.PlaceCamera(pos.x, pos.y, roomId, Player.PlayerId);
-                    }
-                    SecurityGuardButton.Timer = SecurityGuardButton.MaxTimer;
-                },
-                () => { return PlayerControl.LocalPlayer.IsRole(RoleType.SecurityGuard) && PlayerControl.LocalPlayer.IsAlive() && Local.RemainingScrews >= Mathf.Min(SecurityGuard.VentPrice, SecurityGuard.CamPrice); },
-                () =>
+                    // Seal vent
+                    using var sender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.SealVent);
+                    sender.WritePacked(Local.VentTarget.Id);
+                    sender.Write(Local.Player.PlayerId);
+                    RPCProcedure.SealVent(Local.VentTarget.Id, Local.Player.PlayerId);
+                    Local.VentTarget = null;
+                }
+                else if (Helpers.GetOption(ByteOptionNames.MapId) != 1 && ModMapOptions.CouldUseCameras && !SubmergedCompatibility.IsSubmerged)
                 {
-                    if (Local.VentTarget == null && Helpers.GetOption(ByteOptionNames.MapId) != 1 && SubmergedCompatibility.IsSubmerged)
-                    {
-                        SecurityGuardButton.ButtonText = Tr.Get("Hud.PlaceCameraText");
-                        SecurityGuardButton.Sprite = AssetLoader.PlaceCameraButton;
-                    }
-                    else
-                    {
-                        SecurityGuardButton.ButtonText = Tr.Get("Hud.CloseVentText");
-                        SecurityGuardButton.Sprite = AssetLoader.CloseVentButton;
-                    }
-                    SecurityGuardButtonScrewsText?.text = string.Format(Tr.Get("Hud.SecurityGuardScrews"), Local.RemainingScrews);
+                    // Place camera if there's no vent and it's not MiraHQ
+                    var pos = PlayerControl.LocalPlayer.transform.position;
 
-                    return Local.VentTarget != null
-                        ? Local.RemainingScrews >= SecurityGuard.VentPrice && PlayerControl.LocalPlayer.CanMove
-                        : Helpers.GetOption(ByteOptionNames.MapId) != 1 && SubmergedCompatibility.IsSubmerged && ModMapOptions.CouldUseCameras && Local.RemainingScrews >= SecurityGuard.CamPrice && PlayerControl.LocalPlayer.CanMove;
-                },
-                () => { SecurityGuardButton.Timer = SecurityGuardButton.MaxTimer; },
-                AssetLoader.PlaceCameraButton,
-                new Vector3(-1.8f, -0.06f, 0),
-                hm,
-                hm.UseButton,
-                KeyCode.F
-            )
+                    byte roomId;
+                    try
+                    {
+                        roomId = (byte)FastDestroyableSingleton<HudManager>.Instance.roomTracker.LastRoom.RoomId;
+                    }
+                    catch
+                    {
+                        roomId = 255;
+                    }
+
+                    using (var sender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.PlaceCamera))
+                    {
+                        sender.Write(pos.x);
+                        sender.Write(pos.y);
+                        sender.Write(roomId);
+                        sender.Write(Local.Player.PlayerId);
+                    }
+                    RPCProcedure.PlaceCamera(pos.x, pos.y, roomId, Local.Player.PlayerId);
+                }
+                SecurityGuardButton.Timer = SecurityGuardButton.MaxTimer;
+            },
+            () => { return PlayerControl.LocalPlayer.IsRole(RoleType.SecurityGuard) && PlayerControl.LocalPlayer.IsAlive() && Local.RemainingScrews >= Mathf.Min(SecurityGuard.VentPrice, SecurityGuard.CamPrice); },
+            () =>
+            {
+                if (Local.VentTarget == null && Helpers.GetOption(ByteOptionNames.MapId) != 1 && SubmergedCompatibility.IsSubmerged)
+                {
+                    SecurityGuardButton.ButtonText = Tr.Get("Hud.PlaceCameraText");
+                    SecurityGuardButton.Sprite = AssetLoader.PlaceCameraButton;
+                }
+                else
+                {
+                    SecurityGuardButton.ButtonText = Tr.Get("Hud.CloseVentText");
+                    SecurityGuardButton.Sprite = AssetLoader.CloseVentButton;
+                }
+                SecurityGuardButtonScrewsText?.text = string.Format(Tr.Get("Hud.SecurityGuardScrews"), Local.RemainingScrews);
+
+                return Local.VentTarget != null
+                    ? Local.RemainingScrews >= SecurityGuard.VentPrice && PlayerControl.LocalPlayer.CanMove
+                    : Helpers.GetOption(ByteOptionNames.MapId) != 1 && SubmergedCompatibility.IsSubmerged && ModMapOptions.CouldUseCameras && Local.RemainingScrews >= SecurityGuard.CamPrice && PlayerControl.LocalPlayer.CanMove;
+            },
+            () => { SecurityGuardButton.Timer = SecurityGuardButton.MaxTimer; },
+            AssetLoader.PlaceCameraButton,
+            ButtonPosition.Layout,
+            hm,
+            hm.UseButton,
+            KeyCode.F
+        )
         {
             ButtonText = Tr.Get("Hud.PlaceCameraText")
         };
@@ -262,7 +262,7 @@ public class SecurityGuard : RoleBase<SecurityGuard>
                 SecurityGuardCamButton.ActionButton.cooldownTimerText.color = Palette.EnabledColor;
             },
             FastDestroyableSingleton<HudManager>.Instance.UseButton.fastUseSettings[ImageNames.CamsButton].Image,
-            new Vector3(-1.8f, -0.06f, 0),
+            ButtonPosition.Layout,
             hm,
             hm.UseButton,
             KeyCode.Q,
@@ -289,7 +289,7 @@ public class SecurityGuard : RoleBase<SecurityGuard>
         SecurityGuardChargesText.transform.localPosition += new Vector3(-0.05f, 0.7f, 0);
 
     }
-    public override void SetButtonCooldowns()
+    public static void SetButtonCooldowns()
     {
         SecurityGuardButton.MaxTimer = SecurityGuard.Cooldown;
         SecurityGuardCamButton.MaxTimer = SecurityGuard.Cooldown;

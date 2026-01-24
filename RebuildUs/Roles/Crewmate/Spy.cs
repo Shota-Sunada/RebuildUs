@@ -34,8 +34,6 @@ public class Spy : RoleBase<Spy>
     public override void OnDeath(PlayerControl killer = null) { }
     public override void OnFinishShipStatusBegin() { }
     public override void HandleDisconnect(PlayerControl player, DisconnectReasons reason) { }
-    public override void MakeButtons(HudManager hm) { }
-    public override void SetButtonCooldowns() { }
 
     // write functions here
 

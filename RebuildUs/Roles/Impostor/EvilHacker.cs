@@ -50,7 +50,7 @@ public class EvilHacker : RoleBase<EvilHacker>
     public override void OnDeath(PlayerControl killer = null) { }
     public override void OnFinishShipStatusBegin() { }
     public override void HandleDisconnect(PlayerControl player, DisconnectReasons reason) { }
-    public override void MakeButtons(HudManager hm)
+    public static void MakeButtons(HudManager hm)
     {
         EvilHackerButton = new CustomButton(
             () =>
@@ -67,7 +67,7 @@ public class EvilHacker : RoleBase<EvilHacker>
             () => { return PlayerControl.LocalPlayer.CanMove; },
             () => { },
             Hacker.GetAdminSprite(),
-            new Vector3(0f, 2.0f, 0),
+            ButtonPosition.Layout,
             hm,
             hm.KillButton,
             KeyCode.F,
@@ -82,17 +82,17 @@ public class EvilHacker : RoleBase<EvilHacker>
             () =>
             {
                 using var sender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.EvilHackerCreatesMadmate);
-                sender.Write(CurrentTarget.PlayerId);
-                RPCProcedure.EvilHackerCreatesMadmate(CurrentTarget.PlayerId, Player.PlayerId);
+                sender.Write(Local.CurrentTarget.PlayerId);
+                RPCProcedure.EvilHackerCreatesMadmate(Local.CurrentTarget.PlayerId, Local.Player.PlayerId);
             },
             () =>
             {
-                return PlayerControl.LocalPlayer.IsRole(RoleType.EvilHacker) && CanCreateMadmate && PlayerControl.LocalPlayer.IsAlive();
+                return PlayerControl.LocalPlayer.IsRole(RoleType.EvilHacker) && Local.CanCreateMadmate && PlayerControl.LocalPlayer.IsAlive();
             },
-            () => { return CurrentTarget && PlayerControl.LocalPlayer.CanMove; },
+            () => { return Local.CurrentTarget && PlayerControl.LocalPlayer.CanMove; },
             () => { },
             AssetLoader.SidekickButton,
-            new Vector3(-2.7f, -0.06f, 0),
+            ButtonPosition.Layout,
             hm,
             hm.KillButton,
             null
@@ -101,7 +101,7 @@ public class EvilHacker : RoleBase<EvilHacker>
             ButtonText = Tr.Get("Role.Madmate")
         };
     }
-    public override void SetButtonCooldowns()
+    public static void SetButtonCooldowns()
     {
         EvilHackerButton.MaxTimer = 0f;
         EvilHackerCreatesMadmateButton.MaxTimer = 0f;

@@ -206,6 +206,7 @@
     "Preset3": "プリセット3",
     "Preset4": "プリセット4",
     "Preset5": "プリセット5",
+    "AirshipOptimize": "Airshipを最適化",
     "DiscordOptions": "Discord設定",
     "EnableDiscordAutoMute": "自動ミュートを有効 (アカウント連携・設定が必要)",
     "EnableSendFinalStatusToDiscord": "最終結果をサーバーに送信 (設定が必要)",

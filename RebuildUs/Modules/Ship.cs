@@ -20,6 +20,8 @@ public static class Ship
     {
         if ((!__instance.Systems.ContainsKey(SystemTypes.Electrical) && !Helpers.IsFungle) || Helpers.IsHideNSeekMode) return true;
 
+        Logger.LogInfo("Hello from CalculateLightRadius");
+
         // If player is a role which has Impostor vision
         if (Helpers.HasImpostorVision(player.Object))
         {
@@ -38,6 +40,7 @@ public static class Ship
         // If there is a Trickster with their ability active
         if (Trickster.Exists && Trickster.LightsOutTimer > 0f)
         {
+            Logger.LogMessage("Trickster Light Out is enabled!");
             float lerpValue = 1f;
             if (Trickster.LightsOutDuration - Trickster.LightsOutTimer < 0.5f)
             {

@@ -2,6 +2,21 @@ using UnityEngine.UI;
 
 namespace RebuildUs;
 
+public struct ButtonPosition
+{
+    public Vector3 Offset;
+    public bool UseLayout;
+
+    public ButtonPosition(Vector3 offset)
+    {
+        Offset = offset;
+        UseLayout = false;
+    }
+
+    public static ButtonPosition Layout => new() { UseLayout = true };
+    public static implicit operator ButtonPosition(Vector3 offset) => new(offset);
+}
+
 public class CustomButton
 {
     public static List<CustomButton> Buttons = [];
@@ -25,20 +40,9 @@ public class CustomButton
     public HudManager HudManager;
     public bool Mirror;
     public KeyCode? Hotkey;
+    public bool UseLayout = false;
 
     public static bool StopCountdown = true;
-
-    public static class ButtonPositions
-    {
-        public static readonly Vector3 LowerRowRight = new(-2f, -0.06f, 0);  // Not usable for imps because of new button positions!
-        public static readonly Vector3 LowerRowCenter = new(-3f, -0.06f, 0);
-        public static readonly Vector3 LowerRowLeft = new(-4f, -0.06f, 0);
-        public static readonly Vector3 UpperRowRight = new(0f, 1f, 0f);  // Not usable for imps because of new button positions!
-        public static readonly Vector3 UpperRowCenter = new(-1f, 1f, 0f);  // Not usable for imps because of new button positions!
-        public static readonly Vector3 UpperRowLeft = new(-2f, 1f, 0f);
-        public static readonly Vector3 UpperRowFarLeft = new(-3f, 1f, 0f);
-        public static readonly Vector3 HighRowRight = new(0f, 2.06f, 0f);
-    }
 
     public CustomButton(
         Action onClick,
@@ -46,7 +50,7 @@ public class CustomButton
         Func<bool> couldUse,
         Action onMeetingEnds,
         Sprite sprite,
-        Vector3 positionOffset,
+        ButtonPosition position,
         HudManager hudManager,
         ActionButton textTemplate,
         KeyCode? hotkey,
@@ -61,7 +65,7 @@ public class CustomButton
         this.OnClick = onClick;
         this.HasButton = hasButton;
         this.CouldUse = couldUse;
-        this.PositionOffset = positionOffset;
+        this.PositionOffset = position.Offset;
         this.OnMeetingEnds = onMeetingEnds;
         this.HasEffect = hasEffect;
         this.EffectDuration = effectDuration;
@@ -70,9 +74,11 @@ public class CustomButton
         this.Mirror = mirror;
         this.Hotkey = hotkey;
         this.ButtonText = buttonText;
+        this.UseLayout = position.UseLayout;
         Timer = 16.2f;
         Buttons.Add(this);
         ActionButton = UnityEngine.Object.Instantiate(hudManager.KillButton, hudManager.KillButton.transform.parent);
+        ActionButton.gameObject.name = "CustomButton";
         PassiveButton button = ActionButton.GetComponent<PassiveButton>();
         button.OnClick = new Button.ButtonClickedEvent();
         button.OnClick.AddListener((UnityEngine.Events.UnityAction)OnClickEvent);
@@ -82,6 +88,11 @@ public class CustomButton
         {
             UnityEngine.Object.Destroy(ActionButton.buttonLabelText);
             ActionButton.buttonLabelText = UnityEngine.Object.Instantiate(textTemplate.buttonLabelText, ActionButton.transform);
+        }
+
+        if (UseLayout)
+        {
+            ActionButton.transform.SetParent(hudManager.AbilityButton.transform.parent, false);
         }
 
         SetActive(false);
@@ -94,7 +105,7 @@ public class CustomButton
         Func<bool> couldUse,
         Action onMeetingEnds,
         Sprite sprite,
-        Vector3 positionOffset,
+        ButtonPosition position,
         HudManager hudManager,
         ActionButton? textTemplate,
         KeyCode? hotkey,
@@ -107,7 +118,7 @@ public class CustomButton
         couldUse,
         onMeetingEnds,
         sprite,
-        positionOffset,
+        position,
         hudManager,
         textTemplate,
         hotkey,
@@ -228,17 +239,24 @@ public class CustomButton
 
         if (HudManager.UseButton != null)
         {
-            Transform useTransform = HudManager.UseButton.transform;
-            Vector3 pos = useTransform.localPosition;
-            if (Mirror)
+            if (UseLayout)
             {
-                float aspect = Camera.main.aspect;
-                float safeOrthographicSize = CameraSafeArea.GetSafeOrthographicSize(Camera.main);
-                float xpos = 0.05f - safeOrthographicSize * aspect * 1.70f;
-                pos = new Vector3(xpos, pos.y, pos.z);
+                ActionButton.transform.localScale = LocalScale;
             }
-            ActionButton.transform.localPosition = pos + PositionOffset;
-            ActionButton.transform.localScale = LocalScale;
+            else
+            {
+                Transform useTransform = HudManager.UseButton.transform;
+                Vector3 pos = useTransform.localPosition;
+                if (Mirror)
+                {
+                    float aspect = Camera.main.aspect;
+                    float safeOrthographicSize = CameraSafeArea.GetSafeOrthographicSize(Camera.main);
+                    float xpos = 0.05f - safeOrthographicSize * aspect * 1.70f;
+                    pos = new Vector3(xpos, pos.y, pos.z);
+                }
+                ActionButton.transform.localPosition = pos + PositionOffset;
+                ActionButton.transform.localScale = LocalScale;
+            }
         }
 
         bool couldUse = CouldUse();

@@ -43,38 +43,38 @@ public class Camouflager : RoleBase<Camouflager>
     public override void OnDeath(PlayerControl killer = null) { }
     public override void OnFinishShipStatusBegin() { }
     public override void HandleDisconnect(PlayerControl player, DisconnectReasons reason) { }
-    public override void MakeButtons(HudManager hm)
+    public static void MakeButtons(HudManager hm)
     {
         CamouflagerButton = new CustomButton(
-                () =>
+            () =>
+            {
                 {
-                    {
-                        using var sender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.CamouflagerCamouflage);
-                    }
-                    RPCProcedure.CamouflagerCamouflage();
-                },
-                () => { return PlayerControl.LocalPlayer.IsRole(RoleType.Camouflager) && PlayerControl.LocalPlayer.IsAlive(); },
-                () => { return PlayerControl.LocalPlayer.CanMove; },
-                () =>
-                {
-                    CamouflagerButton.Timer = CamouflagerButton.MaxTimer;
-                    CamouflagerButton.IsEffectActive = false;
-                    CamouflagerButton.ActionButton.cooldownTimerText.color = Palette.EnabledColor;
-                },
-                AssetLoader.CamouflageButton,
-                new Vector3(-1.8f, -0.06f, 0),
-                hm,
-                hm.KillButton,
-                KeyCode.F,
-                true,
-                Camouflager.Duration,
-                () => { CamouflagerButton.Timer = CamouflagerButton.MaxTimer; }
-            )
+                    using var sender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.CamouflagerCamouflage);
+                }
+                RPCProcedure.CamouflagerCamouflage();
+            },
+            () => { return PlayerControl.LocalPlayer.IsRole(RoleType.Camouflager) && PlayerControl.LocalPlayer.IsAlive(); },
+            () => { return PlayerControl.LocalPlayer.CanMove; },
+            () =>
+            {
+                CamouflagerButton.Timer = CamouflagerButton.MaxTimer;
+                CamouflagerButton.IsEffectActive = false;
+                CamouflagerButton.ActionButton.cooldownTimerText.color = Palette.EnabledColor;
+            },
+            AssetLoader.CamouflageButton,
+            ButtonPosition.Layout,
+            hm,
+            hm.KillButton,
+            KeyCode.F,
+            true,
+            Camouflager.Duration,
+            () => { CamouflagerButton.Timer = CamouflagerButton.MaxTimer; }
+        )
         {
             ButtonText = Tr.Get("Hud.CamoText")
         };
     }
-    public override void SetButtonCooldowns()
+    public static void SetButtonCooldowns()
     {
         CamouflagerButton.MaxTimer = Camouflager.Cooldown;
         CamouflagerButton.EffectDuration = Camouflager.Duration;

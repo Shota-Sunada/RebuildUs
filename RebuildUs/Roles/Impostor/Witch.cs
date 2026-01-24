@@ -88,73 +88,73 @@ public class Witch : RoleBase<Witch>
     public override void OnDeath(PlayerControl killer = null) { }
     public override void OnFinishShipStatusBegin() { }
     public override void HandleDisconnect(PlayerControl player, DisconnectReasons reason) { }
-    public override void MakeButtons(HudManager hm)
+    public static void MakeButtons(HudManager hm)
     {
         WitchSpellButton = new CustomButton(
-                () =>
+            () =>
+            {
+                if (CurrentTarget != null)
                 {
-                    if (CurrentTarget != null)
-                    {
-                        SpellCastingTarget = CurrentTarget;
-                    }
-                },
-                () => { return PlayerControl.LocalPlayer.IsRole(RoleType.Witch) && PlayerControl.LocalPlayer.IsAlive(); },
-                () =>
-                {
-                    if (WitchSpellButton.IsEffectActive && SpellCastingTarget != CurrentTarget)
-                    {
-                        SpellCastingTarget = null;
-                        WitchSpellButton.Timer = 0f;
-                        WitchSpellButton.IsEffectActive = false;
-                    }
-                    return PlayerControl.LocalPlayer.CanMove && CurrentTarget != null;
-                },
-                () =>
-                {
-                    WitchSpellButton.Timer = WitchSpellButton.MaxTimer;
-                    WitchSpellButton.IsEffectActive = false;
-                    SpellCastingTarget = null;
-                },
-                AssetLoader.SpellButton,
-                new Vector3(-1.8f, -0.06f, 0),
-                hm,
-                hm.KillButton,
-                KeyCode.F,
-                true,
-                SpellCastingDuration,
-                () =>
-                {
-                    if (SpellCastingTarget == null) return;
-                    MurderAttemptResult attempt = Helpers.CheckMurderAttempt(Player, SpellCastingTarget);
-                    if (attempt == MurderAttemptResult.PerformKill)
-                    {
-                        {
-                            using var sender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.SetFutureSpelled);
-                            sender.Write(CurrentTarget.PlayerId);
-                        }
-                        RPCProcedure.SetFutureSpelled(CurrentTarget.PlayerId);
-                    }
-                    if (attempt is MurderAttemptResult.BlankKill or MurderAttemptResult.PerformKill)
-                    {
-                        WitchSpellButton.MaxTimer += AdditionalCooldown;
-                        WitchSpellButton.Timer = WitchSpellButton.MaxTimer;
-                        if (TriggerBothCooldowns)
-                        {
-                            Player.killTimer = Helpers.GetOption(FloatOptionNames.KillCooldown);
-                        }
-                    }
-                    else
-                    {
-                        WitchSpellButton.Timer = 0f;
-                    }
-                    SpellCastingTarget = null;
+                    SpellCastingTarget = CurrentTarget;
                 }
-            )
+            },
+            () => { return PlayerControl.LocalPlayer.IsRole(RoleType.Witch) && PlayerControl.LocalPlayer.IsAlive(); },
+            () =>
+            {
+                if (WitchSpellButton.IsEffectActive && SpellCastingTarget != CurrentTarget)
+                {
+                    SpellCastingTarget = null;
+                    WitchSpellButton.Timer = 0f;
+                    WitchSpellButton.IsEffectActive = false;
+                }
+                return PlayerControl.LocalPlayer.CanMove && CurrentTarget != null;
+            },
+            () =>
+            {
+                WitchSpellButton.Timer = WitchSpellButton.MaxTimer;
+                WitchSpellButton.IsEffectActive = false;
+                SpellCastingTarget = null;
+            },
+            AssetLoader.SpellButton,
+            ButtonPosition.Layout,
+            hm,
+            hm.KillButton,
+            KeyCode.F,
+            true,
+            SpellCastingDuration,
+            () =>
+            {
+                if (SpellCastingTarget == null) return;
+                MurderAttemptResult attempt = Helpers.CheckMurderAttempt(Local.Player, SpellCastingTarget);
+                if (attempt == MurderAttemptResult.PerformKill)
+                {
+                    {
+                        using var sender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.SetFutureSpelled);
+                        sender.Write(CurrentTarget.PlayerId);
+                    }
+                    RPCProcedure.SetFutureSpelled(CurrentTarget.PlayerId);
+                }
+                if (attempt is MurderAttemptResult.BlankKill or MurderAttemptResult.PerformKill)
+                {
+                    WitchSpellButton.MaxTimer += AdditionalCooldown;
+                    WitchSpellButton.Timer = WitchSpellButton.MaxTimer;
+                    if (TriggerBothCooldowns)
+                    {
+                        Local.Player.killTimer = Helpers.GetOption(FloatOptionNames.KillCooldown);
+                    }
+                }
+                else
+                {
+                    WitchSpellButton.Timer = 0f;
+                }
+                SpellCastingTarget = null;
+            }
+        )
         {
             ButtonText = Tr.Get("Hud.WitchText")
         };
     }
-    public override void SetButtonCooldowns()
+    public static void SetButtonCooldowns()
     {
         WitchSpellButton.MaxTimer = Cooldown;
         WitchSpellButton.EffectDuration = SpellCastingDuration;

@@ -31,7 +31,7 @@ public class Mayor : RoleBase<Mayor>
     public override void OnDeath(PlayerControl killer = null) { }
     public override void OnFinishShipStatusBegin() { }
     public override void HandleDisconnect(PlayerControl player, DisconnectReasons reason) { }
-    public override void MakeButtons(HudManager hm)
+    public static void MakeButtons(HudManager hm)
     {
         MayorMeetingButton = new CustomButton(
             () =>
@@ -62,7 +62,7 @@ public class Mayor : RoleBase<Mayor>
             },
             () => { MayorMeetingButton.Timer = MayorMeetingButton.MaxTimer; },
             AssetLoader.EmergencyButton,
-            CustomButton.ButtonPositions.LowerRowRight,
+            ButtonPosition.Layout,
             hm,
             hm.AbilityButton,
             KeyCode.F,
@@ -73,9 +73,9 @@ public class Mayor : RoleBase<Mayor>
             "Meeting"
         );
     }
-    public override void SetButtonCooldowns()
+    public static void SetButtonCooldowns()
     {
-        MayorMeetingButton.MaxTimer = GameManager.Instance.LogicOptions.GetEmergencyCooldown();
+        MayorMeetingButton.MaxTimer = Helpers.GetOption(Int32OptionNames.EmergencyCooldown);
     }
 
     public static void Clear()

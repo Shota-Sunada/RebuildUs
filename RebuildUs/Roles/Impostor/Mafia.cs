@@ -42,8 +42,6 @@ public static class Mafia
         }
         public override void OnFinishShipStatusBegin() { }
         public override void HandleDisconnect(PlayerControl player, DisconnectReasons reason) { }
-        public override void MakeButtons(HudManager hm) { }
-        public override void SetButtonCooldowns() { }
 
         // write functions here
 
@@ -85,8 +83,6 @@ public static class Mafia
         }
         public override void OnFinishShipStatusBegin() { }
         public override void HandleDisconnect(PlayerControl player, DisconnectReasons reason) { }
-        public override void MakeButtons(HudManager hm) { }
-        public override void SetButtonCooldowns() { }
 
         // write functions here
 
@@ -128,7 +124,7 @@ public static class Mafia
         }
         public override void OnFinishShipStatusBegin() { }
         public override void HandleDisconnect(PlayerControl player, DisconnectReasons reason) { }
-        public override void MakeButtons(HudManager hm)
+        public static void MakeButtons(HudManager hm)
         {
             JanitorCleanButton = new CustomButton(
                 () =>
@@ -163,7 +159,7 @@ public static class Mafia
                 () => { return hm.ReportButton.graphic.color == Palette.EnabledColor && PlayerControl.LocalPlayer.CanMove; },
                 () => { JanitorCleanButton.Timer = JanitorCleanButton.MaxTimer; },
                 AssetLoader.CleanButton,
-                new Vector3(-1.8f, -0.06f, 0),
+                ButtonPosition.Layout,
                 hm,
                 hm.KillButton,
                 KeyCode.F
@@ -172,7 +168,7 @@ public static class Mafia
                 ButtonText = Tr.Get("Hud.CleanText")
             };
         }
-        public override void SetButtonCooldowns()
+        public static void SetButtonCooldowns()
         {
             JanitorCleanButton.MaxTimer = Janitor.Cooldown;
         }

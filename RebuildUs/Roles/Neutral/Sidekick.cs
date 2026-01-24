@@ -81,24 +81,24 @@ public class Sidekick : RoleBase<Sidekick>
     public override void OnDeath(PlayerControl killer = null) { }
     public override void OnFinishShipStatusBegin() { }
     public override void HandleDisconnect(PlayerControl player, DisconnectReasons reason) { }
-    public override void MakeButtons(HudManager hm)
+    public static void MakeButtons(HudManager hm)
     {
         SidekickKillButton = new CustomButton(
-                () =>
-                {
-                    if (Helpers.CheckMurderAttemptAndKill(Local.Player, Local.CurrentTarget) == MurderAttemptResult.SuppressKill) return;
-                    SidekickKillButton.Timer = SidekickKillButton.MaxTimer;
-                    Local.CurrentTarget = null;
-                },
-                () => { return CanKill && PlayerControl.LocalPlayer.IsRole(RoleType.Sidekick) && PlayerControl.LocalPlayer.IsAlive(); },
-                () => { return Local.CurrentTarget && PlayerControl.LocalPlayer.CanMove; },
-                () => { SidekickKillButton.Timer = SidekickKillButton.MaxTimer; },
-                hm.KillButton.graphic.sprite,
-                new Vector3(0, 1f, 0),
-                hm,
-                hm.KillButton,
-                KeyCode.Q
-            );
+            () =>
+            {
+                if (Helpers.CheckMurderAttemptAndKill(Local.Player, Local.CurrentTarget) == MurderAttemptResult.SuppressKill) return;
+                SidekickKillButton.Timer = SidekickKillButton.MaxTimer;
+                Local.CurrentTarget = null;
+            },
+            () => { return CanKill && PlayerControl.LocalPlayer.IsRole(RoleType.Sidekick) && PlayerControl.LocalPlayer.IsAlive(); },
+            () => { return Local.CurrentTarget && PlayerControl.LocalPlayer.CanMove; },
+            () => { SidekickKillButton.Timer = SidekickKillButton.MaxTimer; },
+            hm.KillButton.graphic.sprite,
+            ButtonPosition.Layout,
+            hm,
+            hm.KillButton,
+            KeyCode.Q
+        );
 
         SidekickSabotageLightsButton = new CustomButton(
             () =>
@@ -122,15 +122,14 @@ public class Sidekick : RoleBase<Sidekick>
             {
                 SidekickSabotageLightsButton.Timer = Helpers.SabotageTimer() + 5f;
             },
-            // Trickster.getLightsOutButtonSprite(),
-            null,
-            CustomButton.ButtonPositions.UpperRowCenter,
+            AssetLoader.LightsOutButton,
+            ButtonPosition.Layout,
             hm,
             hm.AbilityButton,
             KeyCode.G
         );
     }
-    public override void SetButtonCooldowns()
+    public static void SetButtonCooldowns()
     {
         SidekickKillButton.MaxTimer = Jackal.KillCooldown;
     }

@@ -7,7 +7,7 @@ public static class HeliSabotageSystemPatch
     [HarmonyPatch(typeof(HeliSabotageSystem), nameof(HeliSabotageSystem.Deteriorate))]
     public static void DeterioratePrefix(HeliSabotageSystem __instance)
     {
-        if (!__instance.IsActive || !CustomOptionHolder.AirshipOptions.GetBool())
+        if (!__instance.IsActive)
         {
             return;
         }

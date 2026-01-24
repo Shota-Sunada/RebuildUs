@@ -93,65 +93,65 @@ public class Arsonist : RoleBase<Arsonist>
     public override void OnDeath(PlayerControl killer = null) { }
     public override void OnFinishShipStatusBegin() { }
     public override void HandleDisconnect(PlayerControl player, DisconnectReasons reason) { }
-    public override void MakeButtons(HudManager hm)
+    public static void MakeButtons(HudManager hm)
     {
         ArsonistButton = new CustomButton(
-                () =>
+            () =>
+            {
+                if (Local.CurrentTarget != null)
                 {
-                    if (Local.CurrentTarget != null)
-                    {
-                        Local.DouseTarget = Local.CurrentTarget;
-                    }
-                },
-                () => { return PlayerControl.LocalPlayer.IsRole(RoleType.Arsonist) && !Local.DousedEveryone && PlayerControl.LocalPlayer.IsAlive(); },
-                () =>
+                    Local.DouseTarget = Local.CurrentTarget;
+                }
+            },
+            () => { return PlayerControl.LocalPlayer.IsRole(RoleType.Arsonist) && !Local.DousedEveryone && PlayerControl.LocalPlayer.IsAlive(); },
+            () =>
+            {
+                if (ArsonistButton.IsEffectActive && Local.DouseTarget != Local.CurrentTarget)
                 {
-                    if (ArsonistButton.IsEffectActive && Local.DouseTarget != Local.CurrentTarget)
-                    {
-                        Local.DouseTarget = null;
-                        ArsonistButton.Timer = 0f;
-                        ArsonistButton.IsEffectActive = false;
-                    }
-
-                    return PlayerControl.LocalPlayer.CanMove && Local.CurrentTarget != null;
-                },
-                () =>
-                {
-                    ArsonistButton.Timer = ArsonistButton.MaxTimer;
+                    Local.DouseTarget = null;
+                    ArsonistButton.Timer = 0f;
                     ArsonistButton.IsEffectActive = false;
-                    Local.DouseTarget = null;
-                    Local.UpdateStatus();
-                },
-                GetDouseSprite(),
-                new Vector3(-1.8f, -0.06f, 0),
-                hm,
-                hm.KillButton,
-                KeyCode.F,
-                true,
-                Duration,
-                () =>
+                }
+
+                return PlayerControl.LocalPlayer.CanMove && Local.CurrentTarget != null;
+            },
+            () =>
+            {
+                ArsonistButton.Timer = ArsonistButton.MaxTimer;
+                ArsonistButton.IsEffectActive = false;
+                Local.DouseTarget = null;
+                Local.UpdateStatus();
+            },
+            GetDouseSprite(),
+            ButtonPosition.Layout,
+            hm,
+            hm.KillButton,
+            KeyCode.F,
+            true,
+            Duration,
+            () =>
+            {
+                if (Local.DouseTarget != null)
                 {
-                    if (Local.DouseTarget != null)
-                    {
-                        using var sender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.ArsonistDouse);
-                        sender.Write(Local.DouseTarget.PlayerId);
-                        sender.Write(PlayerControl.LocalPlayer.PlayerId);
-                        RPCProcedure.ArsonistDouse(Local.DouseTarget.PlayerId, PlayerControl.LocalPlayer.PlayerId);
-                    }
+                    using var sender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.ArsonistDouse);
+                    sender.Write(Local.DouseTarget.PlayerId);
+                    sender.Write(PlayerControl.LocalPlayer.PlayerId);
+                    RPCProcedure.ArsonistDouse(Local.DouseTarget.PlayerId, PlayerControl.LocalPlayer.PlayerId);
+                }
 
-                    Local.DouseTarget = null;
-                    Local.UpdateStatus();
-                    ArsonistButton.Timer = Local.DousedEveryone ? 0 : ArsonistButton.MaxTimer;
+                Local.DouseTarget = null;
+                Local.UpdateStatus();
+                ArsonistButton.Timer = Local.DousedEveryone ? 0 : ArsonistButton.MaxTimer;
 
-                    foreach (var p in Local.DousedPlayers)
+                foreach (var p in Local.DousedPlayers)
+                {
+                    if (ModMapOptions.PlayerIcons.ContainsKey(p.PlayerId))
                     {
-                        if (ModMapOptions.PlayerIcons.ContainsKey(p.PlayerId))
-                        {
-                            ModMapOptions.PlayerIcons[p.PlayerId].SetSemiTransparent(false);
-                        }
+                        ModMapOptions.PlayerIcons[p.PlayerId].SetSemiTransparent(false);
                     }
                 }
-            )
+            }
+        )
         {
             ButtonText = Tr.Get("Hud.DouseText")
         };
@@ -170,7 +170,7 @@ public class Arsonist : RoleBase<Arsonist>
             () => { return PlayerControl.LocalPlayer.CanMove && Local.DousedEveryone; },
             () => { },
             AssetLoader.IgniteButton,
-            new Vector3(-1.8f, -0.06f, 0),
+            ButtonPosition.Layout,
             hm,
             hm.KillButton,
             KeyCode.Q
@@ -179,13 +179,10 @@ public class Arsonist : RoleBase<Arsonist>
             ButtonText = Tr.Get("Hud.IgniteText")
         };
     }
-    public override void SetButtonCooldowns()
+    public static void SetButtonCooldowns()
     {
         ArsonistButton?.MaxTimer = Cooldown;
-        if (Local != null)
-        {
-            UpdateStatus();
-        }
+        Local?.UpdateStatus();
     }
 
     public void UpdateStatus()

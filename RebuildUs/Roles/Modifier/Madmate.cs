@@ -179,8 +179,6 @@ public class Madmate : ModifierBase<Madmate>
         PlayerControlHelpers.GenerateAndAssignTasks(Player, NumCommonTasks, NumShortTasks, NumLongTasks);
     }
     public override void HandleDisconnect(PlayerControl player, DisconnectReasons reason) { }
-    public override void MakeButtons(HudManager hm) { }
-    public override void SetButtonCooldowns() { }
 
     // write functions here
 

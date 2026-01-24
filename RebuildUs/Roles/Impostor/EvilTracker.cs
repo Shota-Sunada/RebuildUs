@@ -49,7 +49,7 @@ public class EvilTracker : RoleBase<EvilTracker>
     public override void OnDeath(PlayerControl killer = null) { }
     public override void OnFinishShipStatusBegin() { }
     public override void HandleDisconnect(PlayerControl player, DisconnectReasons reason) { }
-    public override void MakeButtons(HudManager hm)
+    public static void MakeButtons(HudManager hm)
     {
         TrackerButton = new CustomButton(
             () =>
@@ -60,7 +60,7 @@ public class EvilTracker : RoleBase<EvilTracker>
             () => { return CurrentTarget != null && Target == null && PlayerControl.LocalPlayer.CanMove; },
             () => { TrackerButton.Timer = TrackerButton.MaxTimer; },
             AssetLoader.TrackerButton,
-            new Vector3(-1.8f, -0.06f, 0),
+            ButtonPosition.Layout,
             hm,
             hm.KillButton,
             KeyCode.F
@@ -69,7 +69,7 @@ public class EvilTracker : RoleBase<EvilTracker>
             ButtonText = Tr.Get("Hud.TrackerText")
         };
     }
-    public override void SetButtonCooldowns()
+    public static void SetButtonCooldowns()
     {
         TrackerButton.MaxTimer = Cooldown;
     }

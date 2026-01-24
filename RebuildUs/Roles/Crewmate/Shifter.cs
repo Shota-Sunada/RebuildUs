@@ -50,31 +50,31 @@ public class Shifter : RoleBase<Shifter>
     {
         if (FutureShift == player) FutureShift = null;
     }
-    public override void MakeButtons(HudManager hm)
+    public static void MakeButtons(HudManager hm)
     {
         ShifterShiftButton = new CustomButton(
-                () =>
+            () =>
+            {
                 {
-                    {
-                        using var sender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.SetFutureShifted);
-                        sender.Write(Shifter.CurrentTarget.PlayerId);
-                    }
-                    RPCProcedure.SetFutureShifted(Shifter.CurrentTarget.PlayerId);
-                },
-                () => { return PlayerControl.LocalPlayer.IsRole(RoleType.Shifter) && PlayerControl.LocalPlayer.IsAlive(); },
-                () => { return Shifter.CurrentTarget && Shifter.FutureShift == null && PlayerControl.LocalPlayer.CanMove; },
-                () => { },
-                AssetLoader.ShiftButton,
-                new Vector3(-1.8f, -0.06f, 0),
-                hm,
-                hm.UseButton,
-                KeyCode.F
-            )
+                    using var sender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.SetFutureShifted);
+                    sender.Write(Shifter.CurrentTarget.PlayerId);
+                }
+                RPCProcedure.SetFutureShifted(Shifter.CurrentTarget.PlayerId);
+            },
+            () => { return PlayerControl.LocalPlayer.IsRole(RoleType.Shifter) && PlayerControl.LocalPlayer.IsAlive(); },
+            () => { return Shifter.CurrentTarget && Shifter.FutureShift == null && PlayerControl.LocalPlayer.CanMove; },
+            () => { },
+            AssetLoader.ShiftButton,
+            ButtonPosition.Layout,
+            hm,
+            hm.UseButton,
+            KeyCode.F
+        )
         {
             ButtonText = Tr.Get("Hud.ShiftText")
         };
     }
-    public override void SetButtonCooldowns()
+    public static void SetButtonCooldowns()
     {
         ShifterShiftButton.MaxTimer = 0f;
     }

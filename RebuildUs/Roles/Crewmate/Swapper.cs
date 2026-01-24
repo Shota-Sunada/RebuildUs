@@ -38,11 +38,6 @@ public class Swapper : RoleBase<Swapper>
     public override void OnDeath(PlayerControl killer = null) { }
     public override void OnFinishShipStatusBegin() { }
     public override void HandleDisconnect(PlayerControl player, DisconnectReasons reason) { }
-    public override void MakeButtons(HudManager hm)
-    {
-        // Swapper Button is handled in MeetingHudPatches
-    }
-    public override void SetButtonCooldowns() { }
 
     // write functions here
 

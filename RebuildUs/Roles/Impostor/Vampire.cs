@@ -60,101 +60,100 @@ public class Vampire : RoleBase<Vampire>
     public override void OnDeath(PlayerControl killer = null) { }
     public override void OnFinishShipStatusBegin() { }
     public override void HandleDisconnect(PlayerControl player, DisconnectReasons reason) { }
-    public override void MakeButtons(HudManager hm)
+    public static void MakeButtons(HudManager hm)
     {
         VampireKillButton = new CustomButton(
-                () =>
+            () =>
+            {
+                if (Local == null) return;
+
+                MurderAttemptResult murder = Helpers.CheckMurderAttempt(Local.Player, Local.CurrentTarget);
+                if (murder == MurderAttemptResult.PerformKill)
                 {
-                    var local = Local;
-                    if (local == null) return;
-
-                    MurderAttemptResult murder = Helpers.CheckMurderAttempt(Player, local.CurrentTarget);
-                    if (murder == MurderAttemptResult.PerformKill)
+                    if (Local.TargetNearGarlic)
                     {
-                        if (local.TargetNearGarlic)
                         {
-                            {
-                                using var sender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.UncheckedMurderPlayer);
-                                sender.Write(Player.PlayerId);
-                                sender.Write(local.CurrentTarget.PlayerId);
-                                sender.Write(byte.MaxValue);
-                            }
-                            RPCProcedure.UncheckedMurderPlayer(Player.PlayerId, local.CurrentTarget.PlayerId, byte.MaxValue);
-
-                            VampireKillButton.HasEffect = false; // Block effect on this click
-                            VampireKillButton.Timer = VampireKillButton.MaxTimer;
+                            using var sender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.UncheckedMurderPlayer);
+                            sender.Write(Local.Player.PlayerId);
+                            sender.Write(Local.CurrentTarget.PlayerId);
+                            sender.Write(byte.MaxValue);
                         }
-                        else
-                        {
-                            Bitten = local.CurrentTarget;
-                            // Notify players about bitten
-                            {
-                                using var sender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.VampireSetBitten);
-                                sender.Write(Bitten.PlayerId);
-                                sender.Write((byte)0);
-                            }
-                            RPCProcedure.VampireSetBitten(Bitten.PlayerId, 0);
+                        RPCProcedure.UncheckedMurderPlayer(Local.Player.PlayerId, Local.CurrentTarget.PlayerId, byte.MaxValue);
 
-                            FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(Delay, new Action<float>((p) =>
-                            { // Delayed action
-                                if (p == 1f)
-                                {
-                                    // Perform kill if possible and reset bitten (regardless whether the kill was successful or not)
-                                    Helpers.CheckMurderAttemptAndKill(Player, Bitten, showAnimation: false);
-                                    {
-                                        using var sender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.VampireSetBitten);
-                                        sender.Write(byte.MaxValue);
-                                        sender.Write(byte.MaxValue);
-                                    }
-                                    RPCProcedure.VampireSetBitten(byte.MaxValue, byte.MaxValue);
-                                }
-                            })));
-
-                            VampireKillButton.HasEffect = true; // Trigger effect on this click
-                        }
-                    }
-                    else if (murder == MurderAttemptResult.BlankKill)
-                    {
+                        VampireKillButton.HasEffect = false; // Block effect on this click
                         VampireKillButton.Timer = VampireKillButton.MaxTimer;
-                        VampireKillButton.HasEffect = false;
-                    }
-                },
-                () => { return PlayerControl.LocalPlayer.IsRole(RoleType.Vampire) && PlayerControl.LocalPlayer.IsAlive(); },
-                () =>
-                {
-                    var local = Local;
-                    if (local == null) return false;
-
-                    if (local.TargetNearGarlic && CanKillNearGarlics)
-                    {
-                        VampireKillButton.Sprite = hm.KillButton.graphic.sprite;
-                        VampireKillButton.ButtonText = TranslationController.Instance.GetString(StringNames.KillLabel);
                     }
                     else
                     {
-                        VampireKillButton.Sprite = AssetLoader.VampireButton;
-                        VampireKillButton.ButtonText = Tr.Get("Hud.VampireText");
+                        Bitten = Local.CurrentTarget;
+                        // Notify players about bitten
+                        {
+                            using var sender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.VampireSetBitten);
+                            sender.Write(Bitten.PlayerId);
+                            sender.Write((byte)0);
+                        }
+                        RPCProcedure.VampireSetBitten(Bitten.PlayerId, 0);
+
+                        FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(Delay, new Action<float>((p) =>
+                        { // Delayed action
+                            if (p == 1f)
+                            {
+                                // Perform kill if possible and reset bitten (regardless whether the kill was successful or not)
+                                Helpers.CheckMurderAttemptAndKill(Local.Player, Bitten, showAnimation: false);
+                                {
+                                    using var sender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.VampireSetBitten);
+                                    sender.Write(byte.MaxValue);
+                                    sender.Write(byte.MaxValue);
+                                }
+                                RPCProcedure.VampireSetBitten(byte.MaxValue, byte.MaxValue);
+                            }
+                        })));
+
+                        VampireKillButton.HasEffect = true; // Trigger effect on this click
                     }
-                    return local.CurrentTarget != null && PlayerControl.LocalPlayer.CanMove && (!local.TargetNearGarlic || CanKillNearGarlics);
-                },
-                () =>
-                {
-                    VampireKillButton.Timer = VampireKillButton.MaxTimer;
-                    VampireKillButton.IsEffectActive = false;
-                    VampireKillButton.ActionButton.cooldownTimerText.color = Palette.EnabledColor;
-                },
-                AssetLoader.VampireButton,
-                new Vector3(0, 1f, 0),
-                hm,
-                hm.KillButton,
-                KeyCode.Q,
-                false,
-                0f,
-                () =>
-                {
-                    VampireKillButton.Timer = VampireKillButton.MaxTimer;
                 }
-            )
+                else if (murder == MurderAttemptResult.BlankKill)
+                {
+                    VampireKillButton.Timer = VampireKillButton.MaxTimer;
+                    VampireKillButton.HasEffect = false;
+                }
+            },
+            () => { return PlayerControl.LocalPlayer.IsRole(RoleType.Vampire) && PlayerControl.LocalPlayer.IsAlive(); },
+            () =>
+            {
+                var local = Local;
+                if (local == null) return false;
+
+                if (local.TargetNearGarlic && CanKillNearGarlics)
+                {
+                    VampireKillButton.Sprite = hm.KillButton.graphic.sprite;
+                    VampireKillButton.ButtonText = TranslationController.Instance.GetString(StringNames.KillLabel);
+                }
+                else
+                {
+                    VampireKillButton.Sprite = AssetLoader.VampireButton;
+                    VampireKillButton.ButtonText = Tr.Get("Hud.VampireText");
+                }
+                return local.CurrentTarget != null && PlayerControl.LocalPlayer.CanMove && (!local.TargetNearGarlic || CanKillNearGarlics);
+            },
+            () =>
+            {
+                VampireKillButton.Timer = VampireKillButton.MaxTimer;
+                VampireKillButton.IsEffectActive = false;
+                VampireKillButton.ActionButton.cooldownTimerText.color = Palette.EnabledColor;
+            },
+            AssetLoader.VampireButton,
+            ButtonPosition.Layout,
+            hm,
+            hm.KillButton,
+            KeyCode.Q,
+            false,
+            0f,
+            () =>
+            {
+                VampireKillButton.Timer = VampireKillButton.MaxTimer;
+            }
+        )
         {
             ButtonText = Tr.Get("Hud.VampireText")
         };
@@ -187,7 +186,7 @@ public class Vampire : RoleBase<Vampire>
             },
             () => { },
             AssetLoader.GarlicButton,
-            new Vector3(0, -0.06f, 0),
+            ButtonPosition.Layout,
             hm,
             hm.UseButton,
             null,
@@ -197,7 +196,7 @@ public class Vampire : RoleBase<Vampire>
             ButtonText = Tr.Get("Hud.GarlicText")
         };
     }
-    public override void SetButtonCooldowns()
+    public static void SetButtonCooldowns()
     {
         if (VampireKillButton != null)
         {

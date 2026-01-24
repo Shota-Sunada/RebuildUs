@@ -69,32 +69,32 @@ public class Eraser : RoleBase<Eraser>
     public override void OnDeath(PlayerControl killer = null) { }
     public override void OnFinishShipStatusBegin() { }
     public override void HandleDisconnect(PlayerControl player, DisconnectReasons reason) { }
-    public override void MakeButtons(HudManager hm)
+    public static void MakeButtons(HudManager hm)
     {
         EraserButton = new CustomButton(
-                () =>
-                {
-                    EraserButton.MaxTimer += CooldownIncrease;
-                    EraserButton.Timer = EraserButton.MaxTimer;
+            () =>
+            {
+                EraserButton.MaxTimer += CooldownIncrease;
+                EraserButton.Timer = EraserButton.MaxTimer;
 
-                    using var sender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.SetFutureErased);
-                    sender.Write(CurrentTarget.PlayerId);
-                    RPCProcedure.SetFutureErased(CurrentTarget.PlayerId);
-                },
-                () => { return PlayerControl.LocalPlayer.IsRole(RoleType.Eraser) && PlayerControl.LocalPlayer.IsAlive(); },
-                () => { return PlayerControl.LocalPlayer.CanMove && CurrentTarget != null; },
-                () => { EraserButton.Timer = EraserButton.MaxTimer; },
-                AssetLoader.EraserButton,
-                new Vector3(-1.8f, -0.06f, 0),
-                hm,
-                hm.KillButton,
-                KeyCode.F
-            )
+                using var sender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.SetFutureErased);
+                sender.Write(Local.CurrentTarget.PlayerId);
+                RPCProcedure.SetFutureErased(Local.CurrentTarget.PlayerId);
+            },
+            () => { return PlayerControl.LocalPlayer.IsRole(RoleType.Eraser) && PlayerControl.LocalPlayer.IsAlive(); },
+            () => { return PlayerControl.LocalPlayer.CanMove && Local.CurrentTarget != null; },
+            () => { EraserButton.Timer = EraserButton.MaxTimer; },
+            AssetLoader.EraserButton,
+            ButtonPosition.Layout,
+            hm,
+            hm.KillButton,
+            KeyCode.F
+        )
         {
             ButtonText = Tr.Get("Hud.EraserText")
         };
     }
-    public override void SetButtonCooldowns()
+    public static void SetButtonCooldowns()
     {
         EraserButton.MaxTimer = Cooldown;
     }

@@ -38,63 +38,63 @@ public class Morphing : RoleBase<Morphing>
     public override void OnDeath(PlayerControl killer = null) { }
     public override void OnFinishShipStatusBegin() { }
     public override void HandleDisconnect(PlayerControl player, DisconnectReasons reason) { }
-    public override void MakeButtons(HudManager hm)
+    public static void MakeButtons(HudManager hm)
     {
         MorphingButton = new CustomButton(
-                () =>
+            () =>
+            {
+                if (SampledTarget != null)
                 {
-                    if (SampledTarget != null)
                     {
-                        {
-                            using var sender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.MorphingMorph);
-                            sender.Write(SampledTarget.PlayerId);
-                            sender.Write(Player.PlayerId);
-                        }
-                        RPCProcedure.MorphingMorph(SampledTarget.PlayerId, Player.PlayerId);
-                        SampledTarget = null;
-                        MorphingButton.EffectDuration = Duration;
+                        using var sender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.MorphingMorph);
+                        sender.Write(SampledTarget.PlayerId);
+                        sender.Write(Local.Player.PlayerId);
                     }
-                    else if (CurrentTarget != null)
-                    {
-                        SampledTarget = CurrentTarget;
-                        MorphingButton.Sprite = AssetLoader.MorphButton;
-                        MorphingButton.ButtonText = Tr.Get("Hud.MorphText");
-                        MorphingButton.EffectDuration = 1f;
-                    }
-                },
-                () => { return PlayerControl.LocalPlayer.IsRole(RoleType.Morphing) && PlayerControl.LocalPlayer.IsAlive(); },
-                () => { return (CurrentTarget || SampledTarget) && PlayerControl.LocalPlayer.CanMove; },
-                () =>
+                    RPCProcedure.MorphingMorph(SampledTarget.PlayerId, Local.Player.PlayerId);
+                    SampledTarget = null;
+                    MorphingButton.EffectDuration = Duration;
+                }
+                else if (CurrentTarget != null)
+                {
+                    SampledTarget = CurrentTarget;
+                    MorphingButton.Sprite = AssetLoader.MorphButton;
+                    MorphingButton.ButtonText = Tr.Get("Hud.MorphText");
+                    MorphingButton.EffectDuration = 1f;
+                }
+            },
+            () => { return PlayerControl.LocalPlayer.IsRole(RoleType.Morphing) && PlayerControl.LocalPlayer.IsAlive(); },
+            () => { return (CurrentTarget || SampledTarget) && PlayerControl.LocalPlayer.CanMove; },
+            () =>
+            {
+                MorphingButton.Timer = MorphingButton.MaxTimer;
+                MorphingButton.Sprite = AssetLoader.SampleButton;
+                MorphingButton.ButtonText = Tr.Get("Hud.SampleText");
+                MorphingButton.IsEffectActive = false;
+                MorphingButton.ActionButton.cooldownTimerText.color = Palette.EnabledColor;
+                SampledTarget = null;
+            },
+            AssetLoader.SampleButton,
+            ButtonPosition.Layout,
+            hm,
+            hm.KillButton,
+            KeyCode.F,
+            true,
+            Duration,
+            () =>
+            {
+                if (SampledTarget == null)
                 {
                     MorphingButton.Timer = MorphingButton.MaxTimer;
                     MorphingButton.Sprite = AssetLoader.SampleButton;
                     MorphingButton.ButtonText = Tr.Get("Hud.SampleText");
-                    MorphingButton.IsEffectActive = false;
-                    MorphingButton.ActionButton.cooldownTimerText.color = Palette.EnabledColor;
-                    SampledTarget = null;
-                },
-                AssetLoader.SampleButton,
-                new Vector3(-1.8f, -0.06f, 0),
-                hm,
-                hm.KillButton,
-                KeyCode.F,
-                true,
-                Duration,
-                () =>
-                {
-                    if (SampledTarget == null)
-                    {
-                        MorphingButton.Timer = MorphingButton.MaxTimer;
-                        MorphingButton.Sprite = AssetLoader.SampleButton;
-                        MorphingButton.ButtonText = Tr.Get("Hud.SampleText");
-                    }
                 }
-            )
+            }
+        )
         {
             ButtonText = Tr.Get("Hud.SampleText")
         };
     }
-    public override void SetButtonCooldowns()
+    public static void SetButtonCooldowns()
     {
         MorphingButton.MaxTimer = Cooldown;
         MorphingButton.EffectDuration = Duration;

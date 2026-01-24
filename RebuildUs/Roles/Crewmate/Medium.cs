@@ -91,7 +91,7 @@ public class Medium : RoleBase<Medium>
     public override void OnDeath(PlayerControl killer = null) { }
     public override void OnFinishShipStatusBegin() { }
     public override void HandleDisconnect(PlayerControl player, DisconnectReasons reason) { }
-    public override void MakeButtons(HudManager hm)
+    public static void MakeButtons(HudManager hm)
     {
         MediumButton = new CustomButton(
             () =>
@@ -120,7 +120,7 @@ public class Medium : RoleBase<Medium>
                 Local.SoulTarget = null;
             },
             AssetLoader.MediumButton,
-            new Vector3(-1.8f, -0.06f, 0),
+            ButtonPosition.Layout,
             hm,
             hm.UseButton,
             KeyCode.F,
@@ -202,7 +202,7 @@ public class Medium : RoleBase<Medium>
             ButtonText = Tr.Get("Hud.MediumText")
         };
     }
-    public override void SetButtonCooldowns()
+    public static void SetButtonCooldowns()
     {
         MediumButton.MaxTimer = Cooldown;
         MediumButton.EffectDuration = Duration;

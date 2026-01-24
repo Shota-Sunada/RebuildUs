@@ -127,30 +127,30 @@ public class Tracker : RoleBase<Tracker>
     public override void OnDeath(PlayerControl killer = null) { }
     public override void OnFinishShipStatusBegin() { }
     public override void HandleDisconnect(PlayerControl player, DisconnectReasons reason) { }
-    public override void MakeButtons(HudManager hm)
+    public static void MakeButtons(HudManager hm)
     {
         TrackerTrackPlayerButton = new CustomButton(
-               () =>
-               {
-                   using var sender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.TrackerUsedTracker);
-                   sender.Write(CurrentTarget.PlayerId);
-                   RPCProcedure.TrackerUsedTracker(CurrentTarget.PlayerId, Player.PlayerId);
-               },
-               () => { return PlayerControl.LocalPlayer.IsRole(RoleType.Tracker) && PlayerControl.LocalPlayer.IsAlive(); },
-               () => { return PlayerControl.LocalPlayer.CanMove && CurrentTarget != null && !UsedTracker; },
-               () => { if (ResetTargetAfterMeeting) ResetTracked(); },
-               AssetLoader.TrackerButton,
-               new Vector3(-1.8f, -0.06f, 0),
-               hm,
-               hm.UseButton,
-               KeyCode.F
-           )
+            () =>
+            {
+                using var sender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.TrackerUsedTracker);
+                sender.Write(Local.CurrentTarget.PlayerId);
+                RPCProcedure.TrackerUsedTracker(Local.CurrentTarget.PlayerId, Local.Player.PlayerId);
+            },
+            () => { return PlayerControl.LocalPlayer.IsRole(RoleType.Tracker) && PlayerControl.LocalPlayer.IsAlive(); },
+            () => { return PlayerControl.LocalPlayer.CanMove && Local.CurrentTarget != null && !Local.UsedTracker; },
+            () => { if (ResetTargetAfterMeeting) Local.ResetTracked(); },
+            AssetLoader.TrackerButton,
+            ButtonPosition.Layout,
+            hm,
+            hm.UseButton,
+            KeyCode.F
+        )
         {
             ButtonText = Tr.Get("Hud.TrackerText")
         };
 
         TrackerTrackCorpsesButton = new CustomButton(
-            () => { CorpsesTrackingTimer = CorpsesTrackingDuration; },
+            () => { Local.CorpsesTrackingTimer = CorpsesTrackingDuration; },
             () => { return PlayerControl.LocalPlayer.IsRole(RoleType.Tracker) && PlayerControl.LocalPlayer.IsAlive() && CanTrackCorpses; },
             () => { return PlayerControl.LocalPlayer.CanMove; },
             () =>
@@ -160,7 +160,7 @@ public class Tracker : RoleBase<Tracker>
                 TrackerTrackCorpsesButton.ActionButton.cooldownTimerText.color = Palette.EnabledColor;
             },
             AssetLoader.PathfindButton,
-            new Vector3(-2.7f, -0.06f, 0),
+            ButtonPosition.Layout,
             hm,
             hm.UseButton,
             KeyCode.Q,
@@ -175,7 +175,7 @@ public class Tracker : RoleBase<Tracker>
             ButtonText = Tr.Get("Hud.PathfindText")
         };
     }
-    public override void SetButtonCooldowns()
+    public static void SetButtonCooldowns()
     {
         TrackerTrackPlayerButton.MaxTimer = 0f;
         TrackerTrackCorpsesButton.MaxTimer = CorpsesTrackingCooldown;

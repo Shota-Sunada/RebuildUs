@@ -38,7 +38,7 @@ public class Lighter : RoleBase<Lighter>
     public override void OnDeath(PlayerControl killer = null) { }
     public override void OnFinishShipStatusBegin() { }
     public override void HandleDisconnect(PlayerControl player, DisconnectReasons reason) { }
-    public override void MakeButtons(HudManager hm)
+    public static void MakeButtons(HudManager hm)
     {
         // Lighter light
         LighterButton = new CustomButton(
@@ -58,7 +58,7 @@ public class Lighter : RoleBase<Lighter>
                 LighterButton.ActionButton.graphic.color = Palette.EnabledColor;
             },
             AssetLoader.LighterButton,
-            new Vector3(-1.8f, -0.06f, 0),
+            ButtonPosition.Layout,
             hm,
             hm.UseButton,
             KeyCode.F,
@@ -75,7 +75,7 @@ public class Lighter : RoleBase<Lighter>
             ButtonText = Tr.Get("Hud.LighterText")
         };
     }
-    public override void SetButtonCooldowns()
+    public static void SetButtonCooldowns()
     {
         LighterButton.MaxTimer = Cooldown;
         LighterButton.EffectDuration = Duration;

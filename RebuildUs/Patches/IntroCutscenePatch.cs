@@ -26,13 +26,6 @@ public static class IntroCutscenePatch
     }
 
     [HarmonyPrefix]
-    [HarmonyPatch(typeof(IntroCutscene), nameof(IntroCutscene.ShowRole))]
-    public static bool ShowRolePrefix(IntroCutscene __instance, ref Il2CppSystem.Collections.IEnumerator __result)
-    {
-        return Intro.ShowRole(__instance, ref __result);
-    }
-
-    [HarmonyPrefix]
     [HarmonyPatch(typeof(IntroCutscene), nameof(IntroCutscene.BeginCrewmate))]
     public static void BeginCrewmatePrefix(IntroCutscene __instance, ref Il2CppSystem.Collections.Generic.List<PlayerControl> teamToDisplay)
     {

@@ -23,4 +23,11 @@ public static class LogicGameFlowNormalPatch
         if (EndGameMain.CheckAndEndGameForCrewmateWin(statistics)) return false;
         return false;
     }
+
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(LogicGameFlowNormal), nameof(LogicGameFlowNormal.IsGameOverDueToDeath))]
+    public static void IsGameOverDueToDeathPostfix(ref bool __result)
+    {
+        Ship.IsGameOverDueToDeath(ref __result);
+    }
 }

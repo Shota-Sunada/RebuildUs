@@ -108,8 +108,26 @@ public class Jackal : RoleBase<Jackal>
     }
     public override void OnFinishShipStatusBegin() { }
     public override void HandleDisconnect(PlayerControl player, DisconnectReasons reason) { }
-    public override void MakeButtons(HudManager hm)
+    public static void MakeButtons(HudManager hm)
     {
+        JackalKillButton = new CustomButton(
+            () =>
+            {
+                if (Helpers.CheckMurderAttemptAndKill(Local.Player, Local.CurrentTarget) == MurderAttemptResult.SuppressKill) return;
+
+                JackalKillButton.Timer = JackalKillButton.MaxTimer;
+                Local.CurrentTarget = null;
+            },
+            () => { return PlayerControl.LocalPlayer.IsRole(RoleType.Jackal) && PlayerControl.LocalPlayer.IsAlive(); },
+            () => { return Local.CurrentTarget && PlayerControl.LocalPlayer.CanMove; },
+            () => { JackalKillButton.Timer = JackalKillButton.MaxTimer; },
+            hm.KillButton.graphic.sprite,
+            ButtonPosition.Layout,
+            hm,
+            hm.KillButton,
+            KeyCode.Q
+        );
+
         // Jackal Sidekick Button
         JackalSidekickButton = new CustomButton(
             () =>
@@ -123,7 +141,7 @@ public class Jackal : RoleBase<Jackal>
             () => { return CanCreateSidekick && Local.CurrentTarget != null && PlayerControl.LocalPlayer.CanMove; },
             () => { JackalSidekickButton.Timer = JackalSidekickButton.MaxTimer; },
             AssetLoader.SidekickButton,
-            new Vector3(-1.8f, -0.06f, 0),
+            ButtonPosition.Layout,
             hm,
             hm.KillButton,
             KeyCode.F
@@ -133,36 +151,35 @@ public class Jackal : RoleBase<Jackal>
         };
 
         JackalSabotageLightsButton = new CustomButton(
-                () =>
+            () =>
+            {
+                ShipStatus.Instance.RpcUpdateSystem(SystemTypes.Sabotage, (byte)SystemTypes.Electrical);
+            },
+            () =>
+            {
+                return PlayerControl.LocalPlayer.IsRole(RoleType.Jackal) && CanSabotageLights && PlayerControl.LocalPlayer.IsAlive();
+            },
+            () =>
+            {
+                if (Helpers.SabotageTimer() > JackalSabotageLightsButton.Timer || Helpers.SabotageActive())
                 {
-                    ShipStatus.Instance.RpcUpdateSystem(SystemTypes.Sabotage, (byte)SystemTypes.Electrical);
-                },
-                () =>
-                {
-                    return PlayerControl.LocalPlayer.IsRole(RoleType.Jackal) && CanSabotageLights && PlayerControl.LocalPlayer.IsAlive();
-                },
-                () =>
-                {
-                    if (Helpers.SabotageTimer() > JackalSabotageLightsButton.Timer || Helpers.SabotageActive())
-                    {
-                        // this will give imps time to do another sabotage.
-                        JackalSabotageLightsButton.Timer = Helpers.SabotageTimer() + 5f;
-                    }
-                    return Helpers.CanUseSabotage();
-                },
-                () =>
-                {
+                    // this will give imps time to do another sabotage.
                     JackalSabotageLightsButton.Timer = Helpers.SabotageTimer() + 5f;
-                },
-                // Trickster.getLightsOutButtonSprite(),
-                null,
-                CustomButton.ButtonPositions.UpperRowCenter,
-                hm,
-                hm.AbilityButton,
-                KeyCode.G
-            );
+                }
+                return Helpers.CanUseSabotage();
+            },
+            () =>
+            {
+                JackalSabotageLightsButton.Timer = Helpers.SabotageTimer() + 5f;
+            },
+            AssetLoader.LightsOutButton,
+            ButtonPosition.Layout,
+            hm,
+            hm.AbilityButton,
+            KeyCode.G
+        );
     }
-    public override void SetButtonCooldowns()
+    public static void SetButtonCooldowns()
     {
         JackalKillButton.MaxTimer = KillCooldown;
         JackalSidekickButton.MaxTimer = CreateSidekickCooldown;

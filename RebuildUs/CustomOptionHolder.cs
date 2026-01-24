@@ -65,14 +65,13 @@ public static class CustomOptionHolder
     #endregion
 
     #region POLUS OPTIONS
-    public static CustomOption PolusOptions;
     public static CustomOption PolusAdditionalVents;
     public static CustomOption PolusSpecimenVital;
     public static CustomOption PolusRandomSpawn;
     #endregion
 
     #region AIRSHIP OPTIONS
-    public static CustomOption AirshipOptions;
+    public static CustomOption AirshipOptimize;
     public static CustomOption AirshipEnableWallCheck;
     public static CustomOption AirshipReactorDuration;
     public static CustomOption AirshipRandomSpawn;
@@ -431,30 +430,29 @@ public static class CustomOptionHolder
         #endregion
 
         #region POLUS OPTIONS
-        PolusOptions = CustomOption.Header(70, CustomOptionType.General, "Option.PolusOptions", false, Tr.Get("Option.PolusOptions"));
-        PolusAdditionalVents = CustomOption.Normal(71, CustomOptionType.General, "Option.PolusAdditionalVents", true, PolusOptions);
-        PolusSpecimenVital = CustomOption.Normal(72, CustomOptionType.General, "Option.PolusSpecimenVital", true, PolusOptions);
-        PolusRandomSpawn = CustomOption.Normal(73, CustomOptionType.General, "Option.PolusRandomSpawn", true, PolusOptions);
+        PolusAdditionalVents = CustomOption.Header(70, CustomOptionType.General, "Option.PolusAdditionalVents", true, Tr.Get("Option.PolusOptions"));
+        PolusSpecimenVital = CustomOption.Normal(71, CustomOptionType.General, "Option.PolusSpecimenVital", true);
+        PolusRandomSpawn = CustomOption.Normal(72, CustomOptionType.General, "Option.PolusRandomSpawn", true);
         #endregion
 
         #region AIRSHIP OPTIONS
-        AirshipOptions = CustomOption.Header(80, CustomOptionType.General, "Option.AirshipOptions", false, Tr.Get("Option.AirshipOptions"));
-        AirshipEnableWallCheck = CustomOption.Normal(81, CustomOptionType.General, "Option.AirshipEnableWallCheck", true, AirshipOptions);
-        AirshipReactorDuration = CustomOption.Normal(82, CustomOptionType.General, "Option.AirshipReactorDuration", 60f, 0f, 600f, 1f, AirshipOptions);
-        AirshipRandomSpawn = CustomOption.Normal(83, CustomOptionType.General, "Option.AirshipRandomSpawn", false, AirshipOptions);
-        AirshipAdditionalSpawn = CustomOption.Normal(84, CustomOptionType.General, "Option.AirshipAdditionalSpawn", true, AirshipOptions);
-        AirshipSynchronizedSpawning = CustomOption.Normal(85, CustomOptionType.General, "Option.AirshipSynchronizedSpawning", true, AirshipOptions);
-        AirshipSetOriginalCooldown = CustomOption.Normal(86, CustomOptionType.General, "Option.AirshipSetOriginalCooldown", false, AirshipOptions);
-        AirshipInitialDoorCooldown = CustomOption.Normal(87, CustomOptionType.General, "Option.AirshipInitialDoorCooldown", 0f, 0f, 60f, 1f, AirshipOptions);
-        AirshipInitialSabotageCooldown = CustomOption.Normal(88, CustomOptionType.General, "Option.AirshipInitialSabotageCooldown", 15f, 0f, 60f, 1f, AirshipOptions);
-        AirshipOldAdmin = CustomOption.Normal(89, CustomOptionType.General, "Option.AirshipOldAdmin", false, AirshipOptions);
-        AirshipRestrictedAdmin = CustomOption.Normal(90, CustomOptionType.General, "Option.AirshipRestrictedAdmin", false, AirshipOptions);
-        AirshipDisableGapSwitchBoard = CustomOption.Normal(91, CustomOptionType.General, "Option.AirshipDisableGapSwitchBoard", false, AirshipOptions);
-        AirshipDisableMovingPlatform = CustomOption.Normal(92, CustomOptionType.General, "Option.AirshipDisableMovingPlatform", false, AirshipOptions);
-        AirshipAdditionalLadder = CustomOption.Normal(93, CustomOptionType.General, "Option.AirshipAdditionalLadder", false, AirshipOptions);
-        AirshipOneWayLadder = CustomOption.Normal(94, CustomOptionType.General, "Option.AirshipOneWayLadder", false, AirshipOptions);
-        AirshipReplaceSafeTask = CustomOption.Normal(95, CustomOptionType.General, "Option.AirshipReplaceSafeTask", false, AirshipOptions);
-        AirshipAdditionalWireTask = CustomOption.Normal(96, CustomOptionType.General, "Option.AirshipAdditionalWireTask", false, AirshipOptions);
+        AirshipOptimize = CustomOption.Header(80, CustomOptionType.General, "Option.AirshipOptimize", false, Tr.Get("Option.AirshipOptions"));
+        AirshipEnableWallCheck = CustomOption.Normal(81, CustomOptionType.General, "Option.AirshipEnableWallCheck", true);
+        AirshipReactorDuration = CustomOption.Normal(82, CustomOptionType.General, "Option.AirshipReactorDuration", 60f, 0f, 600f, 1f);
+        AirshipRandomSpawn = CustomOption.Normal(83, CustomOptionType.General, "Option.AirshipRandomSpawn", false);
+        AirshipAdditionalSpawn = CustomOption.Normal(84, CustomOptionType.General, "Option.AirshipAdditionalSpawn", true);
+        AirshipSynchronizedSpawning = CustomOption.Normal(85, CustomOptionType.General, "Option.AirshipSynchronizedSpawning", true);
+        AirshipSetOriginalCooldown = CustomOption.Normal(86, CustomOptionType.General, "Option.AirshipSetOriginalCooldown", false);
+        AirshipInitialDoorCooldown = CustomOption.Normal(87, CustomOptionType.General, "Option.AirshipInitialDoorCooldown", 0f, 0f, 60f, 1f);
+        AirshipInitialSabotageCooldown = CustomOption.Normal(88, CustomOptionType.General, "Option.AirshipInitialSabotageCooldown", 15f, 0f, 60f, 1f);
+        AirshipOldAdmin = CustomOption.Normal(89, CustomOptionType.General, "Option.AirshipOldAdmin", false);
+        AirshipRestrictedAdmin = CustomOption.Normal(90, CustomOptionType.General, "Option.AirshipRestrictedAdmin", false);
+        AirshipDisableGapSwitchBoard = CustomOption.Normal(91, CustomOptionType.General, "Option.AirshipDisableGapSwitchBoard", false);
+        AirshipDisableMovingPlatform = CustomOption.Normal(92, CustomOptionType.General, "Option.AirshipDisableMovingPlatform", false);
+        AirshipAdditionalLadder = CustomOption.Normal(93, CustomOptionType.General, "Option.AirshipAdditionalLadder", false);
+        AirshipOneWayLadder = CustomOption.Normal(94, CustomOptionType.General, "Option.AirshipOneWayLadder", false);
+        AirshipReplaceSafeTask = CustomOption.Normal(95, CustomOptionType.General, "Option.AirshipReplaceSafeTask", false);
+        AirshipAdditionalWireTask = CustomOption.Normal(96, CustomOptionType.General, "Option.AirshipAdditionalWireTask", false);
         #endregion
 
         #region MAP OPTIONS

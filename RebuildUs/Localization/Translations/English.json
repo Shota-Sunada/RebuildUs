@@ -207,6 +207,7 @@
     "Preset4": "Preset 4",
     "Preset5": "Preset 5",
     "DiscordOptions": "Discord Options",
+    "AirshipOptimize": "Optimize Airship",
     "EnableDiscordAutoMute": "Enable Auto Mute (Account Link & Settings Required)",
     "EnableSendFinalStatusToDiscord": "Send Final Status To Discord Guild (Settings Required)",
     "RolesGeneral": "Roles General",

@@ -238,14 +238,75 @@ public class RebuildUs : BasePlugin
 
     public static void MakeButtons(HudManager hm)
     {
-        PlayerRole.AllRoles.Do(x => x.MakeButtons(hm));
-        PlayerModifier.AllModifiers.Do(x => x.MakeButtons(hm));
+        // Crewmate
+        Engineer.MakeButtons(hm);
+        Hacker.MakeButtons(hm);
+        Lighter.MakeButtons(hm);
+        Mayor.MakeButtons(hm);
+        Medic.MakeButtons(hm);
+        Medium.MakeButtons(hm);
+        Sheriff.MakeButtons(hm);
+        Shifter.MakeButtons(hm);
+        TimeMaster.MakeButtons(hm);
+        SecurityGuard.MakeButtons(hm);
+        Tracker.MakeButtons(hm);
+
+        // Impostor
+        Camouflager.MakeButtons(hm);
+        Cleaner.MakeButtons(hm);
+        Eraser.MakeButtons(hm);
+        EvilHacker.MakeButtons(hm);
+        EvilTracker.MakeButtons(hm);
+        Mafia.Janitor.MakeButtons(hm);
+        Morphing.MakeButtons(hm);
+        Trickster.MakeButtons(hm);
+        Vampire.MakeButtons(hm);
+        Warlock.MakeButtons(hm);
+        Witch.MakeButtons(hm);
+
+        // Neutral
+        Arsonist.MakeButtons(hm);
+        Jackal.MakeButtons(hm);
+        Sidekick.MakeButtons(hm);
+        Vulture.MakeButtons(hm);
+
+        // Modifier
+        LastImpostor.MakeButtons(hm);
     }
 
     public static void SetButtonCooldowns()
     {
-        PlayerRole.AllRoles.Do(x => x.SetButtonCooldowns());
-        PlayerModifier.AllModifiers.Do(x => x.SetButtonCooldowns());
+        // Crewmate
+        Engineer.SetButtonCooldowns();
+        Hacker.SetButtonCooldowns();
+        Lighter.SetButtonCooldowns();
+        Mayor.SetButtonCooldowns();
+        Medic.SetButtonCooldowns();
+        Medium.SetButtonCooldowns();
+        Sheriff.SetButtonCooldowns();
+        Shifter.SetButtonCooldowns();
+        TimeMaster.SetButtonCooldowns();
+        SecurityGuard.SetButtonCooldowns();
+        Tracker.SetButtonCooldowns();
+
+        // Impostor
+        Camouflager.SetButtonCooldowns();
+        Cleaner.SetButtonCooldowns();
+        Eraser.SetButtonCooldowns();
+        EvilHacker.SetButtonCooldowns();
+        EvilTracker.SetButtonCooldowns();
+        Mafia.Janitor.SetButtonCooldowns();
+        Morphing.SetButtonCooldowns();
+        Trickster.SetButtonCooldowns();
+        Vampire.SetButtonCooldowns();
+        Warlock.SetButtonCooldowns();
+        Witch.SetButtonCooldowns();
+
+        // Neutral
+        Arsonist.SetButtonCooldowns();
+        Jackal.SetButtonCooldowns();
+        Sidekick.SetButtonCooldowns();
+        Vulture.SetButtonCooldowns();
     }
 
     public static void UpdateRegions()
