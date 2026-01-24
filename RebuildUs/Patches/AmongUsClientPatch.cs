@@ -10,6 +10,7 @@ public static class AmongUsClientPatch
     [HarmonyPatch(typeof(AmongUsClient), nameof(AmongUsClient.OnGameJoined))]
     public static void OnGameJoinedPostfix()
     {
+        GameStart.VersionSent = false;
         DiscordModManager.UpdateStatus();
     }
 
@@ -24,6 +25,7 @@ public static class AmongUsClientPatch
     [HarmonyPatch(typeof(AmongUsClient), nameof(AmongUsClient.OnGameEnd))]
     public static void OnGameEndPostfix(AmongUsClient __instance, [HarmonyArgument(0)] ref EndGameResult endGameResult)
     {
+        GameStart.PlayerVersions.Clear();
         EndGameMain.OnGameEndPostfix(__instance, ref endGameResult);
     }
 
@@ -45,8 +47,9 @@ public static class AmongUsClientPatch
 
     [HarmonyPostfix]
     [HarmonyPatch(typeof(AmongUsClient), nameof(AmongUsClient.OnPlayerLeft))]
-    public static void OnPlayerLeftPostfix()
+    public static void OnPlayerLeftPostfix(AmongUsClient __instance, ClientData data)
     {
+        if (data != null) GameStart.OnPlayerLeft(data.Id);
         DiscordModManager.UpdateStatus();
     }
 }

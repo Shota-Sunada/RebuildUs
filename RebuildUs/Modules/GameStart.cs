@@ -1,8 +1,54 @@
+using System.Reflection;
+
 namespace RebuildUs.Modules;
 
 public static class GameStart
 {
-    public static Dictionary<int, Version> PlayerVersions = [];
+    public struct PlayerVersion
+    {
+        public int Major;
+        public int Minor;
+        public int Build;
+        public int Revision;
+        public Guid Guid;
+
+        public PlayerVersion(int major, int minor, int build, int revision, Guid guid)
+        {
+            Major = major;
+            Minor = minor;
+            Build = build;
+            Revision = revision;
+            Guid = guid;
+        }
+
+        public override string ToString()
+        {
+            var sb = new StringBuilder();
+            sb.Append(Major);
+            sb.Append('.');
+            sb.Append(Minor);
+            sb.Append('.');
+            sb.Append(Build);
+            if (Revision >= 0)
+            {
+                sb.Append('.');
+                sb.Append(Revision);
+            }
+            return sb.ToString();
+        }
+
+        public bool Matches(Version version)
+        {
+            return Major == version.Major && Minor == version.Minor && Build == version.Build;
+        }
+
+        public bool GuidMatches(Guid guid)
+        {
+            return Guid == guid;
+        }
+    }
+
+    public static Dictionary<int, PlayerVersion> PlayerVersions = [];
     public static float KickingTimer = 0f;
     public static bool VersionSent = false;
     public static string LobbyCodeText = "";
@@ -23,14 +69,15 @@ public static class GameStart
     {
         if (PlayerControl.LocalPlayer != null)
         {
-            // Helpers.ShareGameVersion();
+            Helpers.ShareGameVersion();
         }
         SendGamemode = true;
     }
 
     public static void Start(GameStartManager __instance)
     {
-        // Trigger version refresh
+        // Reset dictionaries and flags
+        PlayerVersions.Clear();
         VersionSent = false;
         // Reset kicking timer
         KickingTimer = 0f;
@@ -77,47 +124,62 @@ public static class GameStart
         CancelButton.gameObject.SetActive(false);
     }
 
+    public static void OnPlayerLeft(int clientId)
+    {
+        PlayerVersions.Remove(clientId);
+        if (PlayerVersions.Count == 0) VersionSent = false;
+    }
+
     public static void UpdatePostfix(GameStartManager __instance)
     {
-        if (PlayerControl.LocalPlayer != null && !VersionSent)
+        if (PlayerControl.LocalPlayer != null && !VersionSent && AmongUsClient.Instance.ClientId >= 0)
         {
             VersionSent = true;
-            Helpers.ShareGameVersion((byte)AmongUsClient.Instance.HostId);
+            Helpers.ShareGameVersion();
         }
 
         // // Check version handshake infos
         bool versionMismatch = false;
         InfoStringBuilder.Clear();
-        foreach (var client in AmongUsClient.Instance.allClients.GetFastEnumerator())
+
+        var clients = AmongUsClient.Instance.allClients.ToArray();
+        foreach (var client in clients)
         {
-            if (client.Character == null)
+            if (client == null || client.Character == null || client.Character.Data == null)
             {
                 continue;
             }
-            else if (!PlayerVersions.TryGetValue(client.Id, out var pV))
+
+            // Skip Dummies
+            var dummyComponent = client.Character.GetComponent<DummyBehaviour>();
+            if (dummyComponent != null && dummyComponent.enabled)
+            {
+                continue;
+            }
+
+            if (!PlayerVersions.TryGetValue(client.Id, out var pV))
             {
                 versionMismatch = true;
                 InfoStringBuilder.Append("<color=#FF0000FF>");
                 InfoStringBuilder.Append(client.Character.Data.PlayerName);
-                InfoStringBuilder.Append(" has a different or no version of RebuildUs\n</color>");
+                InfoStringBuilder.Append(" has no version of RebuildUs\n</color>");
             }
             else
             {
-                int diff = RebuildUs.Instance.Version.CompareTo(pV);
-                if (diff > 0)
+                if (!pV.Matches(RebuildUs.Instance.Version))
                 {
                     InfoStringBuilder.Append("<color=#FF0000FF>");
                     InfoStringBuilder.Append(client.Character.Data.PlayerName);
-                    InfoStringBuilder.Append(" has an older version of RebuildUs (v");
+                    InfoStringBuilder.Append(" has a different version of RebuildUs (v");
                     InfoStringBuilder.Append(pV);
                     InfoStringBuilder.Append(")\n</color>");
                     versionMismatch = true;
                 }
-                else if (diff < 0)
+                else if (!pV.GuidMatches(Assembly.GetExecutingAssembly().ManifestModule.ModuleVersionId))
                 {
                     InfoStringBuilder.Append("<color=#FF0000FF>");
                     InfoStringBuilder.Append(client.Character.Data.PlayerName);
-                    InfoStringBuilder.Append(" has a newer version of RebuildUs (v");
+                    InfoStringBuilder.Append(" has a different build of RebuildUs (v");
                     InfoStringBuilder.Append(pV);
                     InfoStringBuilder.Append(")\n</color>");
                     versionMismatch = true;
@@ -148,7 +210,7 @@ public static class GameStart
         // Client update with handshake infos
         else
         {
-            if (!PlayerVersions.TryGetValue(AmongUsClient.Instance.HostId, out var hostVersion) || RebuildUs.Instance.Version.CompareTo(hostVersion) != 0)
+            if (!PlayerVersions.TryGetValue(AmongUsClient.Instance.HostId, out var hostVersion) || !hostVersion.Matches(RebuildUs.Instance.Version))
             {
                 KickingTimer += Time.deltaTime;
                 if (KickingTimer > 10)
@@ -261,15 +323,13 @@ public static class GameStart
                     continue;
                 }
 
-                if (!PlayerVersions.ContainsKey(client.Id))
+                if (!PlayerVersions.TryGetValue(client.Id, out var pV))
                 {
                     continueStart = false;
                     break;
                 }
 
-                Version pV = PlayerVersions[client.Id];
-                int diff = RebuildUs.Instance.Version.CompareTo(pV);
-                if (diff != 0)
+                if (!pV.Matches(RebuildUs.Instance.Version))
                 {
                     continueStart = false;
                     break;

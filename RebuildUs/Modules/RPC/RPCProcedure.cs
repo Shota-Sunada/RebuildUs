@@ -69,16 +69,15 @@ public static partial class RPCProcedure
 
     public static void AddModifier(byte modId, byte playerId)
     {
-        // PlayerControl.AllPlayerControls.GetFastEnumerator().ToArray().DoIf(
-        //     x => x.PlayerId == playerId,
-        //     x => x.addModifier((ModifierType)modId)
-        // );
+        PlayerControl.AllPlayerControls.GetFastEnumerator().ToArray().DoIf(
+            x => x.PlayerId == playerId,
+            x => x.AddModifier((ModifierType)modId)
+        );
     }
 
-    public static void VersionHandshake(int major, int minor, int build, int revision, int clientId)
+    public static void VersionHandshake(int major, int minor, int build, int revision, int clientId, Guid guid)
     {
-        var ver = revision < 0 ? new Version(major, minor, build) : new Version(major, minor, build, revision);
-        GameStart.PlayerVersions[clientId] = ver;
+        GameStart.PlayerVersions[clientId] = new GameStart.PlayerVersion(major, minor, build, revision, guid);
     }
 
     public static void FinishSetRole()

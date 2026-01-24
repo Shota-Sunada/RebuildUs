@@ -25,6 +25,14 @@
       }
     },
     {
+      "label": "Build Launcher",
+      "command": "powershell -ExecutionPolicy Bypass .\\build-launcher.ps1",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      }
+    },
+    {
       "label": "Build Debug",
       "command": "powershell -ExecutionPolicy Bypass .\\build-debug.ps1",
       "group": {

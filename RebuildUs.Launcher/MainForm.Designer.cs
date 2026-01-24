@@ -8,8 +8,12 @@ partial class MainForm
     private System.ComponentModel.IContainer components = null;
 
     private System.Windows.Forms.Label lblStatus;
+    private System.Windows.Forms.Label lblVersion;
+    private System.Windows.Forms.Label lblUrl;
+    private System.Windows.Forms.TextBox txtUrl;
     private System.Windows.Forms.Button btnAction;
     private System.Windows.Forms.NotifyIcon notifyIcon;
+
     private System.Windows.Forms.ContextMenuStrip trayMenu;
     private System.Windows.Forms.ToolStripMenuItem menuShow;
     private System.Windows.Forms.ToolStripMenuItem menuExit;
@@ -37,6 +41,9 @@ partial class MainForm
     {
         this.components = new System.ComponentModel.Container();
         this.lblStatus = new System.Windows.Forms.Label();
+        this.lblVersion = new System.Windows.Forms.Label();
+        this.lblUrl = new System.Windows.Forms.Label();
+        this.txtUrl = new System.Windows.Forms.TextBox();
         this.btnAction = new System.Windows.Forms.Button();
         this.notifyIcon = new System.Windows.Forms.NotifyIcon(this.components);
         this.trayMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
@@ -54,9 +61,34 @@ partial class MainForm
         this.lblStatus.TabIndex = 0;
         this.lblStatus.Text = "Status";
         //
+        // lblVersion
+        //
+        this.lblVersion.AutoSize = true;
+        this.lblVersion.Location = new System.Drawing.Point(12, 45);
+        this.lblVersion.Name = "lblVersion";
+        this.lblVersion.Size = new System.Drawing.Size(51, 15);
+        this.lblVersion.TabIndex = 4;
+        this.lblVersion.Text = "Version: -";
+        //
+        // lblUrl
+        //
+        this.lblUrl.AutoSize = true;
+        this.lblUrl.Location = new System.Drawing.Point(12, 70);
+        this.lblUrl.Name = "lblUrl";
+        this.lblUrl.Size = new System.Drawing.Size(85, 15);
+        this.lblUrl.TabIndex = 2;
+        this.lblUrl.Text = "Mod ZIP URL:";
+        //
+        // txtUrl
+        //
+        this.txtUrl.Location = new System.Drawing.Point(12, 88);
+        this.txtUrl.Name = "txtUrl";
+        this.txtUrl.Size = new System.Drawing.Size(360, 23);
+        this.txtUrl.TabIndex = 3;
+        //
         // btnAction
         //
-        this.btnAction.Location = new System.Drawing.Point(12, 45);
+        this.btnAction.Location = new System.Drawing.Point(12, 117);
         this.btnAction.Name = "btnAction";
         this.btnAction.Size = new System.Drawing.Size(120, 40);
         this.btnAction.TabIndex = 1;
@@ -97,8 +129,11 @@ partial class MainForm
         //
         this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
         this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-        this.ClientSize = new System.Drawing.Size(384, 111);
+        this.ClientSize = new System.Drawing.Size(384, 169);
         this.Controls.Add(this.btnAction);
+        this.Controls.Add(this.lblVersion);
+        this.Controls.Add(this.txtUrl);
+        this.Controls.Add(this.lblUrl);
         this.Controls.Add(this.lblStatus);
         this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
         this.MaximizeBox = false;

@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using System.IO.Compression;
+using System.Net.Http;
 using Microsoft.Win32;
 
 namespace RebuildUs.Launcher;
@@ -7,7 +8,6 @@ namespace RebuildUs.Launcher;
 public partial class MainForm : Form
 {
     private const string ModFolderName = "Among Us - RU";
-    private const string ModZipName = "rebuildus_mod.zip";
     private string? installedModPath;
     private string? detectedOriginalPath;
     private readonly string settingsPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "launcher_settings.txt");
@@ -32,51 +32,86 @@ public partial class MainForm : Form
     {
         if (File.Exists(settingsPath))
         {
-            try { installedModPath = File.ReadAllText(settingsPath).Trim(); } catch { }
+            try
+            {
+                var lines = File.ReadAllLines(settingsPath);
+                if (lines.Length > 0) installedModPath = lines[0].Trim();
+                if (lines.Length > 1) txtUrl.Text = lines[1].Trim();
+            }
+            catch { }
         }
     }
 
-    private void SaveSettings(string? path)
+    private void SaveSettings()
     {
         try
         {
-            if (path != null) File.WriteAllText(settingsPath, path);
-            else if (File.Exists(settingsPath)) File.Delete(settingsPath);
+            File.WriteAllLines(settingsPath, new[] { installedModPath ?? "", txtUrl.Text });
         }
         catch { }
     }
 
     private void RefreshStatus()
     {
+        bool isInstalled = !string.IsNullOrEmpty(installedModPath) && File.Exists(installedModPath);
+
         // 1. 保存されたパスを優先チェック
-        if (!string.IsNullOrEmpty(installedModPath) && File.Exists(installedModPath))
+        if (isInstalled)
         {
             lblStatus.Text = $"RebuildUs is installed at:\n{Path.GetDirectoryName(installedModPath)}";
             btnAction.Text = "Launch";
-            return;
+
+            // バージョン情報の取得
+            lblVersion.Text = "Version: " + GetInstalledModVersion();
+
+            // インストール済みの場合はURL入力を非表示にしても良いが、アップデート用に残す
+            lblUrl.Visible = true;
+            txtUrl.Visible = true;
         }
-
-        // 2. 自動検出を試みる
-        detectedOriginalPath = DetectAmongUs();
-        if (detectedOriginalPath != null)
+        else
         {
-            string parentDir = Path.GetDirectoryName(Path.GetDirectoryName(detectedOriginalPath))!;
-            string modExePath = Path.Combine(parentDir, ModFolderName, "Among Us.exe");
-
-            if (File.Exists(modExePath))
+            // 2. 自動検出を試みる
+            detectedOriginalPath = DetectAmongUs();
+            if (detectedOriginalPath != null)
             {
-                installedModPath = modExePath;
-                SaveSettings(installedModPath);
-                lblStatus.Text = $"RebuildUs is installed at:\n{Path.GetDirectoryName(modExePath)}";
-                btnAction.Text = "Launch";
-                return;
+                string parentDir = Path.GetDirectoryName(Path.GetDirectoryName(detectedOriginalPath))!;
+                string modExePath = Path.Combine(parentDir, ModFolderName, "Among Us.exe");
+
+                if (File.Exists(modExePath))
+                {
+                    installedModPath = modExePath;
+                    SaveSettings();
+                    RefreshStatus();
+                    return;
+                }
+            }
+
+            lblStatus.Text = "RebuildUs is not installed.";
+            lblVersion.Text = "Version: -";
+            btnAction.Text = "Install";
+            installedModPath = null;
+        }
+    }
+
+    private string GetInstalledModVersion()
+    {
+        if (string.IsNullOrEmpty(installedModPath)) return "Unknown";
+
+        try
+        {
+            // BepInExのプラグインフォルダを探す
+            string modRootDir = Path.GetDirectoryName(installedModPath)!;
+            string pluginPath = Path.Combine(modRootDir, "BepInEx", "plugins", "RebuildUs.dll");
+
+            if (File.Exists(pluginPath))
+            {
+                var versionInfo = FileVersionInfo.GetVersionInfo(pluginPath);
+                return versionInfo.ProductVersion ?? versionInfo.FileVersion ?? "Unknown";
             }
         }
+        catch { }
 
-        // 既知の場所に見つからない場合
-        lblStatus.Text = "RebuildUs is not installed.";
-        btnAction.Text = "Install";
-        installedModPath = null;
+        return "Unknown";
     }
 
     private async void btnAction_Click(object sender, EventArgs e)
@@ -93,6 +128,12 @@ public partial class MainForm : Form
 
     private async Task InstallMod()
     {
+        if (string.IsNullOrWhiteSpace(txtUrl.Text))
+        {
+            MessageBox.Show("ModのZIP URLを入力してください。");
+            return;
+        }
+
         string? originalExePath = detectedOriginalPath ?? DetectAmongUs();
 
         if (originalExePath == null || !File.Exists(originalExePath))
@@ -124,24 +165,39 @@ public partial class MainForm : Form
         try
         {
             btnAction.Enabled = false;
-            lblStatus.Text = "インストール中... ファイルをコピーしています。";
+            txtUrl.Enabled = false;
 
+            // 1. ZIPのダウンロード
+            lblStatus.Text = "Modをダウンロード中...";
+            string tempZipPath = Path.Combine(Path.GetTempPath(), "rebuildus_download.zip");
+            using (var client = new HttpClient())
+            {
+                var response = await client.GetAsync(txtUrl.Text);
+                response.EnsureSuccessStatusCode();
+                using (var fs = new FileStream(tempZipPath, FileMode.Create))
+                {
+                    await response.Content.CopyToAsync(fs);
+                }
+            }
+
+            // 2. ファイルコピー
+            lblStatus.Text = "インストール中... ファイルをコピーしています。";
             await Task.Run(() =>
             {
                 if (Directory.Exists(targetDir)) Directory.Delete(targetDir, true);
                 CopyDirectory(originalDir, targetDir);
             });
 
+            // 3. Modの展開
             lblStatus.Text = "インストール中... Modを適用しています。";
+            await Task.Run(() => ZipFile.ExtractToDirectory(tempZipPath, targetDir, true));
 
-            string fullZipPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, ModZipName);
-            if (File.Exists(fullZipPath))
-            {
-                await Task.Run(() => ZipFile.ExtractToDirectory(fullZipPath, targetDir, true));
-            }
+            // 一時ファイルの削除
+            if (File.Exists(tempZipPath)) File.Delete(tempZipPath);
 
             installedModPath = newModExePath;
-            SaveSettings(installedModPath);
+            SaveSettings();
+
             MessageBox.Show("インストールが完了しました。");
             RefreshStatus();
         }
@@ -153,6 +209,7 @@ public partial class MainForm : Form
         finally
         {
             btnAction.Enabled = true;
+            txtUrl.Enabled = true;
         }
     }
 

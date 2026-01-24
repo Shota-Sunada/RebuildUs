@@ -4,7 +4,9 @@ public static partial class RPCProcedure
 {
     public static void Handle(CustomRPC callId, MessageReader reader)
     {
-        if (callId < CustomRPC.ResetVariables) return;
+        // if (callId < CustomRPC.ResetVariables) return;
+
+        Logger.LogInfo($"RPC Called: {(byte)callId}. {Enum.GetName(callId)}");
 
         switch (callId)
         {
@@ -24,30 +26,26 @@ public static partial class RPCProcedure
                 AddModifier(reader.ReadByte(), reader.ReadByte());
                 break;
             case CustomRPC.VersionHandshake:
-                byte major = reader.ReadByte();
-                byte minor = reader.ReadByte();
-                byte patch = reader.ReadByte();
-                int versionOwnerId = reader.ReadPackedInt32();
-                byte revision = 0xFF;
-                Guid guid;
-                if (reader.Length - reader.Position >= 17)
                 {
-                    // enough bytes left to read
-                    revision = reader.ReadByte();
-                    // GUID
-                    byte[] bytes = reader.ReadBytes(16);
-                    guid = new Guid(bytes);
-                }
-                else
-                {
-                    guid = new Guid(new byte[16]);
-                }
-                VersionHandshake(major, minor, patch, revision == 0xFF ? -1 : revision, versionOwnerId);
+                    byte major = reader.ReadByte();
+                    byte minor = reader.ReadByte();
+                    byte patch = reader.ReadByte();
+                    int versionOwnerId = reader.ReadPackedInt32();
+                    byte revRaw = reader.ReadByte();
+                    byte[] guidBytes = reader.ReadBytes(16);
+                    int rev = revRaw == 0xFF ? -1 : revRaw;
 
-                // If I am host, send my version back to the person who sent it
-                if (AmongUsClient.Instance.AmHost && versionOwnerId != AmongUsClient.Instance.ClientId)
-                {
-                    Helpers.ShareGameVersion((byte)versionOwnerId);
+                    bool isNewToMe = !GameStart.PlayerVersions.ContainsKey(versionOwnerId);
+                    VersionHandshake(major, minor, patch, rev, versionOwnerId, new Guid(guidBytes));
+
+                    // If it's a new player to me, or I am host, send my version back
+                    if (versionOwnerId != AmongUsClient.Instance.ClientId)
+                    {
+                        if (isNewToMe || AmongUsClient.Instance.AmHost)
+                        {
+                            Helpers.ShareGameVersion(versionOwnerId);
+                        }
+                    }
                 }
                 break;
             case CustomRPC.UseUncheckedVent:
