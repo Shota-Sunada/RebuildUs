@@ -109,7 +109,7 @@ public static class Lovers
                     partner.Exiled();
                 }
 
-                GameHistory.FinalStatuses[partner.PlayerId] = EFinalStatus.Suicide;
+                GameHistory.FinalStatuses[partner.PlayerId] = FinalStatus.Suicide;
             }
 
             if (SeparateTeam && TasksCount)

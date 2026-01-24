@@ -13,6 +13,7 @@ global using UnityEngine;
 global using TMPro;
 global using System.Text;
 global using AmongUs.GameOptions;
+global using RebuildUs.Enums;
 global using RebuildUs.Extensions;
 global using RebuildUs.Localization;
 global using RebuildUs.Modules;
@@ -20,6 +21,8 @@ global using RebuildUs.Modules.Consoles;
 global using RebuildUs.Modules.CustomOptions;
 global using RebuildUs.Modules.Discord;
 global using RebuildUs.Modules.EndGame;
+global using RebuildUs.Modules.GameEvents;
+global using RebuildUs.Modules.GameEvents.Events;
 global using RebuildUs.Modules.RPC;
 global using RebuildUs.Objects;
 global using RebuildUs.Patches;
@@ -232,7 +235,7 @@ public class RebuildUs : BasePlugin
             Lovers.HandleDisconnect(player, reason);
             // Shifter.HandleDisconnect(player, reason);
 
-            GameHistory.FinalStatuses[player.PlayerId] = EFinalStatus.Disconnected;
+            GameHistory.FinalStatuses[player.PlayerId] = FinalStatus.Disconnected;
         }
     }
 

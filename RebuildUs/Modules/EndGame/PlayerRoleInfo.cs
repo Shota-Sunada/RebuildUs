@@ -9,6 +9,6 @@ public class PlayerRoleInfo
     public int ColorId = 0;
     public int TasksCompleted { get; set; }
     public int TasksTotal { get; set; }
-    public EFinalStatus Status { get; set; }
+    public FinalStatus Status { get; set; }
     public int PlayerId { get; set; }
 }

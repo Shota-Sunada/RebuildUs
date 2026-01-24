@@ -25,7 +25,7 @@ public static class PlayerControlHelpers
 
         if (GameHistory.FinalStatuses != null && GameHistory.FinalStatuses.TryGetValue(player.PlayerId, out var status))
         {
-            return status != EFinalStatus.Alive;
+            return status != FinalStatus.Alive;
         }
 
         return false;

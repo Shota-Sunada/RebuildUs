@@ -2,8 +2,8 @@ namespace RebuildUs.Modules.EndGame;
 
 public class AdditionalTempData
 {
-    public static EWinCondition WinCondition = EWinCondition.Default;
-    public static List<EWinCondition> AdditionalWinConditions = [];
+    public static WinCondition WinCondition = WinCondition.Default;
+    public static List<WinCondition> AdditionalWinConditions = [];
     public static List<PlayerRoleInfo> PlayerRoles = [];
     public static bool IsGM = false;
     public static GameOverReason GameOverReason;
@@ -13,7 +13,7 @@ public class AdditionalTempData
     {
         PlayerRoles.Clear();
         AdditionalWinConditions.Clear();
-        WinCondition = EWinCondition.Default;
+        WinCondition = WinCondition.Default;
         Timer = 0;
     }
 }

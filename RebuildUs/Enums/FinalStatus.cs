@@ -1,6 +1,6 @@
-namespace RebuildUs;
+namespace RebuildUs.Enums;
 
-public enum EFinalStatus
+public enum FinalStatus
 {
     Alive,
     Torched,

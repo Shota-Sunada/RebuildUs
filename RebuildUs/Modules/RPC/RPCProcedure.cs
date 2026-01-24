@@ -277,7 +277,7 @@ public static partial class RPCProcedure
             if (p != null && p.IsAlive() && !p.IsRole(RoleType.Arsonist))
             {
                 p.Exiled();
-                GameHistory.FinalStatuses[p.PlayerId] = EFinalStatus.Torched;
+                GameHistory.FinalStatuses[p.PlayerId] = FinalStatus.Torched;
             }
         }
     }
@@ -808,7 +808,7 @@ public static partial class RPCProcedure
     public static void WitchSpellCast(byte playerId)
     {
         UncheckedExilePlayer(playerId);
-        GameHistory.FinalStatuses[playerId] = EFinalStatus.Spelled;
+        GameHistory.FinalStatuses[playerId] = FinalStatus.Spelled;
     }
 
     public static void PlaceGarlic(float x, float y)
@@ -844,7 +844,7 @@ public static partial class RPCProcedure
         if (!Shifter.IsNeutral && (player.Data.Role.IsImpostor || player.IsNeutral() || player.HasModifier(ModifierType.Madmate) || player.HasModifier(ModifierType.CreatedMadmate)))
         {
             oldShifter.Player.Exiled();
-            GameHistory.FinalStatuses[oldShifter.Player.PlayerId] = EFinalStatus.Suicide;
+            GameHistory.FinalStatuses[oldShifter.Player.PlayerId] = FinalStatus.Suicide;
             return;
         }
 
@@ -918,10 +918,10 @@ public static partial class RPCProcedure
         if (misfire)
         {
             sheriff.MurderPlayer(sheriff);
-            GameHistory.FinalStatuses[sheriffId] = EFinalStatus.Misfire;
+            GameHistory.FinalStatuses[sheriffId] = FinalStatus.Misfire;
 
             if (!Sheriff.MisfireKillsTarget) return;
-            GameHistory.FinalStatuses[targetId] = EFinalStatus.Misfire;
+            GameHistory.FinalStatuses[targetId] = FinalStatus.Misfire;
         }
 
         sheriff.MurderPlayer(target);

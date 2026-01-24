@@ -34,11 +34,11 @@ public static class EndGameMain
             var roles = RoleInfo.GetRoleInfoForPlayer(player);
             var (tasksCompleted, tasksTotal) = TasksHandler.TaskInfo(player.Data);
             var finalStatus = GameHistory.FinalStatuses[player.PlayerId] =
-                player.Data.Disconnected == true ? EFinalStatus.Disconnected :
+                player.Data.Disconnected == true ? FinalStatus.Disconnected :
                 GameHistory.FinalStatuses.ContainsKey(player.PlayerId) ? GameHistory.FinalStatuses[player.PlayerId] :
-                player.Data.IsDead == true ? EFinalStatus.Dead :
-                gameOverReason == GameOverReason.ImpostorsBySabotage && !player.Data.Role.IsImpostor ? EFinalStatus.Sabotage :
-                EFinalStatus.Alive;
+                player.Data.IsDead == true ? FinalStatus.Dead :
+                gameOverReason == GameOverReason.ImpostorsBySabotage && !player.Data.Role.IsImpostor ? FinalStatus.Sabotage :
+                FinalStatus.Alive;
 
             if (gameOverReason == GameOverReason.CrewmatesByTask && player.IsTeamCrewmate()) tasksCompleted = tasksTotal;
 
@@ -71,24 +71,24 @@ public static class EndGameMain
         var crewmateWin = gameOverReason is GameOverReason.CrewmatesByVote or GameOverReason.CrewmatesByTask or GameOverReason.CrewmateDisconnect;
 
         // ADD HERE MORE!
-        var jesterWin = Jester.Exists && gameOverReason == (GameOverReason)ECustomGameOverReason.JesterWin;
-        var arsonistWin = Arsonist.Exists && gameOverReason == (GameOverReason)ECustomGameOverReason.ArsonistWin;
-        var vultureWin = Vulture.Exists && gameOverReason == (GameOverReason)ECustomGameOverReason.VultureWin;
-        var teamJackalWin = gameOverReason == (GameOverReason)ECustomGameOverReason.TeamJackalWin;
-        var miniLose = Mini.Exists && gameOverReason == (GameOverReason)ECustomGameOverReason.MiniLose;
+        var jesterWin = Jester.Exists && gameOverReason == (GameOverReason)CustomGameOverReason.JesterWin;
+        var arsonistWin = Arsonist.Exists && gameOverReason == (GameOverReason)CustomGameOverReason.ArsonistWin;
+        var vultureWin = Vulture.Exists && gameOverReason == (GameOverReason)CustomGameOverReason.VultureWin;
+        var teamJackalWin = gameOverReason == (GameOverReason)CustomGameOverReason.TeamJackalWin;
+        var miniLose = Mini.Exists && gameOverReason == (GameOverReason)CustomGameOverReason.MiniLose;
         var loversWin = Lovers.AnyAlive() && !(Lovers.SeparateTeam && gameOverReason == GameOverReason.CrewmatesByTask);
 
         var everyoneDead = true;
         var playerRoles = AdditionalTempData.PlayerRoles;
         for (int i = 0; i < playerRoles.Count; i++)
         {
-            if (playerRoles[i].Status == EFinalStatus.Alive)
+            if (playerRoles[i].Status == FinalStatus.Alive)
             {
                 everyoneDead = false;
                 break;
             }
         }
-        var forceEnd = gameOverReason == (GameOverReason)ECustomGameOverReason.ForceEnd;
+        var forceEnd = gameOverReason == (GameOverReason)CustomGameOverReason.ForceEnd;
 
         if (impostorWin)
         {
@@ -138,7 +138,7 @@ public static class EndGameMain
             {
                 EndGameResult.CachedWinners.Add(new(jester.Player.Data));
             }
-            AdditionalTempData.WinCondition = EWinCondition.JesterWin;
+            AdditionalTempData.WinCondition = WinCondition.JesterWin;
         }
         else if (arsonistWin)
         {
@@ -147,7 +147,7 @@ public static class EndGameMain
             {
                 EndGameResult.CachedWinners.Add(new(arsonist.Player.Data));
             }
-            AdditionalTempData.WinCondition = EWinCondition.ArsonistWin;
+            AdditionalTempData.WinCondition = WinCondition.ArsonistWin;
         }
         else if (vultureWin)
         {
@@ -156,12 +156,12 @@ public static class EndGameMain
             {
                 EndGameResult.CachedWinners.Add(new(vulture.Player.Data));
             }
-            AdditionalTempData.WinCondition = EWinCondition.VultureWin;
+            AdditionalTempData.WinCondition = WinCondition.VultureWin;
         }
         else if (teamJackalWin)
         {
             // Jackal wins if nobody except jackal is alive
-            AdditionalTempData.WinCondition = EWinCondition.JackalWin;
+            AdditionalTempData.WinCondition = WinCondition.JackalWin;
             EndGameResult.CachedWinners = new Il2CppSystem.Collections.Generic.List<CachedPlayerData>();
             foreach (var jackal in Jackal.AllPlayers)
             {
@@ -183,13 +183,13 @@ public static class EndGameMain
             // Double win for lovers, crewmates also win
             if (GameManager.Instance.DidHumansWin(gameOverReason) && !Lovers.SeparateTeam && Lovers.AnyNonKillingCouples())
             {
-                AdditionalTempData.WinCondition = EWinCondition.LoversTeamWin;
-                AdditionalTempData.AdditionalWinConditions.Add(EWinCondition.LoversTeamWin);
+                AdditionalTempData.WinCondition = WinCondition.LoversTeamWin;
+                AdditionalTempData.AdditionalWinConditions.Add(WinCondition.LoversTeamWin);
             }
             // Lovers solo win
             else
             {
-                AdditionalTempData.WinCondition = EWinCondition.LoversSoloWin;
+                AdditionalTempData.WinCondition = WinCondition.LoversSoloWin;
                 EndGameResult.CachedWinners = new Il2CppSystem.Collections.Generic.List<CachedPlayerData>();
 
                 foreach (var couple in Lovers.Couples)
@@ -205,18 +205,18 @@ public static class EndGameMain
         else if (miniLose)
         {
             EndGameResult.CachedWinners = new Il2CppSystem.Collections.Generic.List<CachedPlayerData>();
-            AdditionalTempData.WinCondition = EWinCondition.MiniLose;
+            AdditionalTempData.WinCondition = WinCondition.MiniLose;
         }
         else if (everyoneDead)
         {
             EndGameResult.CachedWinners = new Il2CppSystem.Collections.Generic.List<CachedPlayerData>();
-            AdditionalTempData.WinCondition = EWinCondition.EveryoneDied;
+            AdditionalTempData.WinCondition = WinCondition.EveryoneDied;
         }
 
         if (forceEnd)
         {
             EndGameResult.CachedWinners = new Il2CppSystem.Collections.Generic.List<CachedPlayerData>();
-            AdditionalTempData.WinCondition = EWinCondition.ForceEnd;
+            AdditionalTempData.WinCondition = WinCondition.ForceEnd;
         }
 
         foreach (var wpd in EndGameResult.CachedWinners)
@@ -227,7 +227,7 @@ public static class EndGameMain
                 for (int i = 0; i < playerRoles.Count; i++)
                 {
                     var pr = playerRoles[i];
-                    if (pr.PlayerName == wpd.PlayerName && pr.Status != EFinalStatus.Alive)
+                    if (pr.PlayerName == wpd.PlayerName && pr.Status != FinalStatus.Alive)
                     {
                         isDead = true;
                         break;
@@ -322,56 +322,56 @@ public static class EndGameMain
 
         string bonusText = "";
 
-        if (AdditionalTempData.WinCondition == EWinCondition.JesterWin)
+        if (AdditionalTempData.WinCondition == WinCondition.JesterWin)
         {
             bonusText = "EndGame.JesterWin";
             TextRenderer.color = Jester.NameColor;
             __instance.BackgroundBar.material.SetColor("_Color", Jester.NameColor);
         }
-        else if (AdditionalTempData.WinCondition == EWinCondition.ArsonistWin)
+        else if (AdditionalTempData.WinCondition == WinCondition.ArsonistWin)
         {
             bonusText = "EndGame.ArsonistWin";
             TextRenderer.color = Arsonist.NameColor;
             __instance.BackgroundBar.material.SetColor("_Color", Arsonist.NameColor);
         }
-        else if (AdditionalTempData.WinCondition == EWinCondition.VultureWin)
+        else if (AdditionalTempData.WinCondition == WinCondition.VultureWin)
         {
             bonusText = "EndGame.VultureWin";
             TextRenderer.color = Vulture.NameColor;
             __instance.BackgroundBar.material.SetColor("_Color", Vulture.NameColor);
         }
-        else if (AdditionalTempData.WinCondition == EWinCondition.LoversTeamWin)
+        else if (AdditionalTempData.WinCondition == WinCondition.LoversTeamWin)
         {
             bonusText = "EndGame.CrewmateWin";
             TextRenderer.color = Lovers.Color;
             __instance.BackgroundBar.material.SetColor("_Color", Lovers.Color);
         }
-        else if (AdditionalTempData.WinCondition == EWinCondition.LoversSoloWin)
+        else if (AdditionalTempData.WinCondition == WinCondition.LoversSoloWin)
         {
             bonusText = "EndGame.LoversWin";
             TextRenderer.color = Lovers.Color;
             __instance.BackgroundBar.material.SetColor("_Color", Lovers.Color);
         }
-        else if (AdditionalTempData.WinCondition == EWinCondition.JackalWin)
+        else if (AdditionalTempData.WinCondition == WinCondition.JackalWin)
         {
             bonusText = "EndGame.JackalWin";
             TextRenderer.color = Jackal.NameColor;
             __instance.BackgroundBar.material.SetColor("_Color", Jackal.NameColor);
         }
         // else if (AdditionalTempData.WinCondition == EWinCondition.EveryoneDied)
-        if (AdditionalTempData.WinCondition == EWinCondition.EveryoneDied)
+        if (AdditionalTempData.WinCondition == WinCondition.EveryoneDied)
         {
             bonusText = "EndGame.EveryoneDied";
             TextRenderer.color = Palette.DisabledGrey;
             __instance.BackgroundBar.material.SetColor("_Color", Palette.DisabledGrey);
         }
-        else if (AdditionalTempData.WinCondition == EWinCondition.ForceEnd)
+        else if (AdditionalTempData.WinCondition == WinCondition.ForceEnd)
         {
             bonusText = "EndGame.ForceEnd";
             TextRenderer.color = Palette.DisabledGrey;
             __instance.BackgroundBar.material.SetColor("_Color", Palette.DisabledGrey);
         }
-        else if (AdditionalTempData.WinCondition == EWinCondition.MiniLose)
+        else if (AdditionalTempData.WinCondition == WinCondition.MiniLose)
         {
             bonusText = "EndGame.MiniDied";
             TextRenderer.color = Mini.NameColor;
@@ -396,7 +396,7 @@ public static class EndGameMain
                 // case EWinCondition.OpportunistWin:
                 //     extraText += Tr.Get("opportunistExtra");
                 //     break;
-                case EWinCondition.LoversTeamWin:
+                case WinCondition.LoversTeamWin:
                     extraText += Tr.Get("EndGame.LoversExtra");
                     break;
                 default:
@@ -507,7 +507,7 @@ public static class EndGameMain
     {
         if (Jester.TriggerJesterWin)
         {
-            UncheckedEndGame(ECustomGameOverReason.JesterWin);
+            UncheckedEndGame(CustomGameOverReason.JesterWin);
             return true;
         }
         return false;
@@ -517,7 +517,7 @@ public static class EndGameMain
     {
         if (Arsonist.TriggerArsonistWin)
         {
-            UncheckedEndGame(ECustomGameOverReason.ArsonistWin);
+            UncheckedEndGame(CustomGameOverReason.ArsonistWin);
             return true;
         }
         return false;
@@ -527,7 +527,7 @@ public static class EndGameMain
     {
         if (Vulture.TriggerVultureWin)
         {
-            UncheckedEndGame(ECustomGameOverReason.VultureWin);
+            UncheckedEndGame(CustomGameOverReason.VultureWin);
             return true;
         }
         return false;
@@ -564,7 +564,7 @@ public static class EndGameMain
     {
         if (statistics.CouplesAlive == 1 && statistics.TotalAlive <= 3)
         {
-            UncheckedEndGame(ECustomGameOverReason.LoversWin);
+            UncheckedEndGame(CustomGameOverReason.LoversWin);
             return true;
         }
         return false;
@@ -577,7 +577,7 @@ public static class EndGameMain
             (statistics.TeamJackalLovers == 0 || statistics.TeamJackalLovers >= statistics.CouplesAlive * 2)
         )
         {
-            UncheckedEndGame(ECustomGameOverReason.TeamJackalWin);
+            UncheckedEndGame(CustomGameOverReason.TeamJackalWin);
             return true;
         }
         return false;
@@ -626,7 +626,7 @@ public static class EndGameMain
         RPCProcedure.UncheckedEndGame((byte)reason);
     }
 
-    public static void UncheckedEndGame(ECustomGameOverReason reason)
+    public static void UncheckedEndGame(CustomGameOverReason reason)
     {
         UncheckedEndGame((GameOverReason)reason);
     }

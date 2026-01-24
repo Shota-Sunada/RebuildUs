@@ -12,7 +12,7 @@ static class GameHistory
 {
     public static List<Tuple<Vector3, bool>> LocalPlayerPositions = [];
     public static List<DeadPlayer> DeadPlayers = [];
-    public static Dictionary<int, EFinalStatus> FinalStatuses = [];
+    public static Dictionary<int, FinalStatus> FinalStatuses = [];
 
     public static DeadPlayer GetDeadPlayer(byte playerId)
     {

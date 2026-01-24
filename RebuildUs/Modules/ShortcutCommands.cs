@@ -8,7 +8,7 @@ public static class ShortcutCommands
 
         if (Helpers.GetKeysDown(KeyCode.LeftControl, KeyCode.F5) || Helpers.GetKeysDown(KeyCode.RightControl, KeyCode.F5))
         {
-            GameManager.Instance.RpcEndGame((GameOverReason)ECustomGameOverReason.ForceEnd, false);
+            GameManager.Instance.RpcEndGame((GameOverReason)CustomGameOverReason.ForceEnd, false);
         }
 
         if ((Helpers.GetKeysDown(KeyCode.LeftControl, KeyCode.F6) || Helpers.GetKeysDown(KeyCode.RightControl, KeyCode.F6)) && MeetingHud.Instance)
