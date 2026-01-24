@@ -317,7 +317,7 @@ public partial class CustomOption
             return "<color=#CCCCCCFF>" + Tr.Get("Option.Off") + "</color>";
         }
 
-        return Tr.Get(sel);
+        return sel;
     }
 
     public string GetName()
