@@ -83,7 +83,7 @@ public class Madmate : ModifierBase<Madmate>
         RoleType.Detective,
         RoleType.TimeMaster,
         RoleType.Medic,
-        RoleType.Swapper,
+        RoleType.NiceSwapper,
         RoleType.Seer,
         RoleType.Hacker,
         RoleType.Tracker,

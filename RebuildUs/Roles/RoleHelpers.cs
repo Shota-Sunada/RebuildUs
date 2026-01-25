@@ -117,7 +117,7 @@ public static class RoleHelpers
 
         foreach (var reg in RoleData.Roles)
         {
-            if (reg.classType != null && player.IsRole(reg.roleType))
+            if (reg.classType != null && (player.IsRole(reg.roleType) || target.IsRole(reg.roleType)))
             {
                 var methods = GetMethods(reg.roleType);
                 methods.swapRole?.Invoke(null, [player, target]);

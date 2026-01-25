@@ -180,6 +180,7 @@ public class Arsonist : RoleBase<Arsonist>
     public static void SetButtonCooldowns()
     {
         ArsonistButton?.MaxTimer = Cooldown;
+        ArsonistIgniteButton.Timer = ArsonistIgniteButton.MaxTimer = 0f;
         Local?.UpdateStatus();
     }
 
@@ -195,13 +196,10 @@ public class Arsonist : RoleBase<Arsonist>
             pp.gameObject.SetActive(false);
         }
 
-        if (Local != null)
+        if (Local != null && FastDestroyableSingleton<HudManager>.Instance != null)
         {
+            var bottomLeft = AspectPosition.ComputePosition(AspectPosition.EdgeAlignments.LeftBottom, new(0.9f, 0.7f, -10f));
             var visibleCounter = 0;
-            var bottomLeft = FastDestroyableSingleton<HudManager>.Instance.UseButton.transform.localPosition;
-            bottomLeft.x *= -1;
-            bottomLeft += new Vector3(-0.25f, -0.25f, 0);
-
             var allPlayers = PlayerControl.AllPlayerControls;
             for (var i = 0; i < allPlayers.Count; i++)
             {
@@ -216,7 +214,7 @@ public class Arsonist : RoleBase<Arsonist>
                 else
                 {
                     ModMapOptions.PlayerIcons[p.PlayerId].gameObject.SetActive(true);
-                    ModMapOptions.PlayerIcons[p.PlayerId].transform.localScale = Vector3.one * 0.25f;
+                    ModMapOptions.PlayerIcons[p.PlayerId].transform.localScale = Vector3.one * 0.3f;
                     ModMapOptions.PlayerIcons[p.PlayerId].transform.localPosition = bottomLeft + Vector3.right * visibleCounter * 0.45f;
                     visibleCounter++;
 

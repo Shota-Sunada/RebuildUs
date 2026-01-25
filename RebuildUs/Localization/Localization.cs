@@ -12,12 +12,13 @@ public static class Tr
     private const string NO_VALUE = "[NO VALUE]";
     private const string ERROR = "[ERROR]";
 
-    private static readonly Dictionary<SupportedLangs, Dictionary<string, string>> Translations = [];
+    private static readonly Dictionary<SupportedLangs, Dictionary<string, string>> InternalTranslations = [];
+    private static readonly Dictionary<SupportedLangs, Dictionary<string, string>> CustomTranslations = [];
     private static readonly HashSet<string> MissingKeys = [];
 
     public static void Initialize()
     {
-        Translations.Clear();
+        InternalTranslations.Clear();
         foreach (SupportedLangs lang in Enum.GetValues(typeof(SupportedLangs)))
         {
             var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream($"RebuildUs.Localization.Translations.{lang}.json");
@@ -29,27 +30,70 @@ public static class Tr
                 if (nestedDict != null)
                 {
                     var flattened = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
-                    foreach (var category in nestedDict)
-                    {
-                        if (category.Value.ValueKind == JsonValueKind.Object)
-                        {
-                            foreach (var property in category.Value.EnumerateObject())
-                            {
-                                var key = category.Key == "General" ? property.Name : $"{category.Key}.{property.Name}";
-                                flattened[key] = property.Value.GetString() ?? "";
-                            }
-                        }
-                        else
-                        {
-                            flattened[category.Key] = category.Value.GetString() ?? "";
-                        }
-                    }
-                    Translations[lang] = flattened;
+                    FlattenTranslations(nestedDict, flattened);
+                    InternalTranslations[lang] = flattened;
                 }
             }
             catch (Exception ex)
             {
-                Logger.LogError($"Failed to load translation for {lang}: {ex.Message}");
+                Logger.LogError($"Failed to load internal translation for {lang}: {ex.Message}");
+            }
+        }
+        LoadCustomTranslations();
+    }
+
+    private static void FlattenTranslations(Dictionary<string, JsonElement> nestedDict, Dictionary<string, string> target)
+    {
+        foreach (var category in nestedDict)
+        {
+            if (category.Value.ValueKind == JsonValueKind.Object)
+            {
+                foreach (var property in category.Value.EnumerateObject())
+                {
+                    var key = category.Key == "General" ? property.Name : $"{category.Key}.{property.Name}";
+                    target[key] = property.Value.GetString() ?? "";
+                }
+            }
+            else
+            {
+                target[category.Key] = category.Value.GetString() ?? "";
+            }
+        }
+    }
+
+    private static void LoadCustomTranslations()
+    {
+        CustomTranslations.Clear();
+        var modDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+        var langDir = Path.Combine(modDir, "Language");
+
+        if (!Directory.Exists(langDir))
+        {
+            try { Directory.CreateDirectory(langDir); } catch { }
+            return;
+        }
+
+        foreach (var file in Directory.GetFiles(langDir, "*.json"))
+        {
+            var fileName = Path.GetFileNameWithoutExtension(file);
+            if (Enum.TryParse<SupportedLangs>(fileName, true, out var lang))
+            {
+                try
+                {
+                    var json = File.ReadAllText(file);
+                    var nestedDict = JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(json);
+                    if (nestedDict != null)
+                    {
+                        var flattened = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+                        FlattenTranslations(nestedDict, flattened);
+                        CustomTranslations[lang] = flattened;
+                        Logger.LogInfo($"Loaded custom translation for {lang} from {file}");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Logger.LogError($"Failed to load custom translation from {file}: {ex.Message}");
+                }
             }
         }
     }
@@ -79,14 +123,10 @@ public static class Tr
         var lang = TranslationController.InstanceExists ? FastDestroyableSingleton<TranslationController>.Instance.currentLanguage.languageID : SupportedLangs.English;
 
         string result = null;
-        if (Translations.TryGetValue(lang, out var langDic) && langDic.TryGetValue(keyClean, out var translated))
-        {
-            result = translated;
-        }
-        else if (lang != SupportedLangs.English && Translations.TryGetValue(SupportedLangs.English, out var enDic) && enDic.TryGetValue(keyClean, out translated))
-        {
-            result = translated;
-        }
+        if (CustomTranslations.TryGetValue(lang, out var customLang) && customLang.TryGetValue(keyClean, out result)) { }
+        else if (lang != SupportedLangs.English && CustomTranslations.TryGetValue(SupportedLangs.English, out var customEn) && customEn.TryGetValue(keyClean, out result)) { }
+        else if (InternalTranslations.TryGetValue(lang, out var internalLang) && internalLang.TryGetValue(keyClean, out result)) { }
+        else if (lang != SupportedLangs.English && InternalTranslations.TryGetValue(SupportedLangs.English, out var internalEn) && internalEn.TryGetValue(keyClean, out result)) { }
 
         if (result == null)
         {
@@ -120,6 +160,11 @@ public static class Tr
         if (Helpers.GetKeysDown(KeyCode.LeftShift, KeyCode.L) || Helpers.GetKeysDown(KeyCode.RightShift, KeyCode.L))
         {
             DumpMissingKeys();
+        }
+        if (Helpers.GetKeysDown(KeyCode.LeftShift, KeyCode.T) || Helpers.GetKeysDown(KeyCode.RightShift, KeyCode.T))
+        {
+            Initialize();
+            Logger.LogInfo("Translations reloaded.");
         }
     }
 

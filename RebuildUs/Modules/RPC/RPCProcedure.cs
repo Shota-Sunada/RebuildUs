@@ -22,6 +22,7 @@ public static partial class RPCProcedure
         Map.ResetRealTasks();
 
         KillAnimationPatch.HideNextAnimation = false;
+        KillAnimationPatch.AvoidNextKillMovement = false;
 
         using var sender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.FinishResetVariables);
         sender.Write(PlayerControl.LocalPlayer.PlayerId);
@@ -176,11 +177,16 @@ public static partial class RPCProcedure
 
     public static void StopStart()
     {
-        SoundManager.Instance.StopSound(GameStartManager.Instance.gameStartSound);
+        StopStartSound();
         if (AmongUsClient.Instance.AmHost)
         {
             GameStartManager.Instance.ResetStartState();
         }
+    }
+
+    public static void StopStartSound()
+    {
+        SoundManager.Instance.StopSound(GameStartManager.Instance.gameStartSound);
     }
 
     public static void FinishResetVariables(byte playerId)
@@ -259,14 +265,26 @@ public static partial class RPCProcedure
 
     public static void EngineerUsedRepair(byte engineerId)
     {
-        var engineer = Helpers.PlayerById(engineerId);
-        Engineer.GetRole(engineer).RemainingFixes--;
+        var engineerPlayer = Helpers.PlayerById(engineerId);
+        if (engineerPlayer == null) return;
+        var engineer = Engineer.GetRole(engineerPlayer);
+        if (engineer != null)
+        {
+            engineer.RemainingFixes--;
+        }
     }
 
     public static void ArsonistDouse(byte playerId, byte arsonistId)
     {
-        var arsonist = Helpers.PlayerById(arsonistId);
-        Arsonist.GetRole(arsonist).DousedPlayers.Add(Helpers.PlayerById(playerId));
+        var arsonistPlayer = Helpers.PlayerById(arsonistId);
+        if (arsonistPlayer == null) return;
+        var arsonist = Arsonist.GetRole(arsonistPlayer);
+        if (arsonist == null) return;
+        var target = Helpers.PlayerById(playerId);
+        if (target != null)
+        {
+            arsonist.DousedPlayers.Add(target);
+        }
     }
 
     public static void ArsonistWin(byte arsonistId)
@@ -287,7 +305,8 @@ public static partial class RPCProcedure
         DeadBody[] array = UnityEngine.Object.FindObjectsOfType<DeadBody>();
         for (int i = 0; i < array.Length; i++)
         {
-            if (GameData.Instance.GetPlayerById(array[i].ParentId).PlayerId == playerId)
+            var info = GameData.Instance.GetPlayerById(array[i].ParentId);
+            if (info != null && info.PlayerId == playerId)
             {
                 UnityEngine.Object.Destroy(array[i].gameObject);
             }
@@ -297,8 +316,13 @@ public static partial class RPCProcedure
     public static void VultureEat(byte playerId, byte vultureId)
     {
         CleanBody(playerId);
-        var vulture = Helpers.PlayerById(vultureId);
-        Vulture.GetRole(vulture).EatenBodies++;
+        var vulturePlayer = Helpers.PlayerById(vultureId);
+        if (vulturePlayer == null) return;
+        var vulture = Vulture.GetRole(vulturePlayer);
+        if (vulture != null)
+        {
+            vulture.EatenBodies++;
+        }
     }
 
     public static void VultureWin()
@@ -336,7 +360,7 @@ public static partial class RPCProcedure
 
         if (!Jackal.CanCreateSidekickFromImpostor && target.Data.Role.IsImpostor)
         {
-            jackal.FakeSidekick = target;
+            if (jackal != null) jackal.FakeSidekick = target;
         }
         else
         {
@@ -344,34 +368,51 @@ public static partial class RPCProcedure
             var wasImpostor = target.IsTeamImpostor(); // This can only be reached if impostors can be sidekicked.
             FastDestroyableSingleton<RoleManager>.Instance.SetRole(target, RoleTypes.Crewmate);
             ErasePlayerRoles(target.PlayerId, true);
-            target.SetRole(RoleType.Sidekick);
+            if (target.SetRole(RoleType.Sidekick))
+            {
+                var sidekick = Sidekick.GetRole(target);
+                if (sidekick != null)
+                {
+                    if (wasSpy || wasImpostor) sidekick.WasTeamRed = true;
+                    sidekick.WasSpy = wasSpy;
+                    sidekick.WasImpostor = wasImpostor;
+                }
+            }
             if (target.PlayerId == PlayerControl.LocalPlayer.PlayerId) PlayerControl.LocalPlayer.moveable = true;
-            if (wasSpy || wasImpostor) Sidekick.GetRole(target).WasTeamRed = true;
-            Sidekick.GetRole(target).WasSpy = wasSpy;
-            Sidekick.GetRole(target).WasImpostor = wasImpostor;
         }
-        jackal.CanSidekick = false;
-        jackal.MySidekick = target;
+
+        if (jackal != null)
+        {
+            jackal.CanSidekick = false;
+            jackal.MySidekick = target;
+        }
     }
 
     public static void SidekickPromotes(byte sidekickId)
     {
         var sidekickPlayer = Helpers.PlayerById(sidekickId);
+        if (sidekickPlayer == null) return;
         var sidekick = Sidekick.GetRole(sidekickPlayer);
+        if (sidekick == null) return;
+
         var wasTeamRed = sidekick.WasTeamRed;
         var wasImpostor = sidekick.WasImpostor;
         var wasSpy = sidekick.WasSpy;
         Jackal.RemoveCurrentJackal();
         FastDestroyableSingleton<RoleManager>.Instance.SetRole(sidekickPlayer, RoleTypes.Crewmate);
         ErasePlayerRoles(sidekickPlayer.PlayerId, true);
-        sidekickPlayer.SetRole(RoleType.Jackal);
-        var newJackal = Jackal.GetRole(sidekickPlayer);
-        newJackal.CanSidekick = Jackal.JackalPromotedFromSidekickCanCreateSidekick;
-        newJackal.WasTeamRed = wasTeamRed;
-        newJackal.WasImpostor = wasImpostor;
-        newJackal.WasSpy = wasSpy;
+        if (sidekickPlayer.SetRole(RoleType.Jackal))
+        {
+            var newJackal = Jackal.GetRole(sidekickPlayer);
+            if (newJackal != null)
+            {
+                newJackal.CanSidekick = Jackal.JackalPromotedFromSidekickCanCreateSidekick;
+                newJackal.WasTeamRed = wasTeamRed;
+                newJackal.WasImpostor = wasImpostor;
+                newJackal.WasSpy = wasSpy;
+            }
+        }
         Sidekick.Clear();
-        return;
     }
 
     public static void MedicSetShielded(byte shieldedId)
@@ -408,11 +449,13 @@ public static partial class RPCProcedure
         {
             TimeMaster.ResetTimeMasterButton();
         }
-        FastDestroyableSingleton<HudManager>.Instance.FullScreen.color = new Color(0f, 0.5f, 0.8f, 0.3f);
-        FastDestroyableSingleton<HudManager>.Instance.FullScreen.enabled = true;
-        FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(TimeMaster.RewindTime / 2, new Action<float>((p) =>
+        var hm = FastDestroyableSingleton<HudManager>.Instance;
+        hm.FullScreen.color = new Color(0f, 0.5f, 0.8f, 0.3f);
+        hm.FullScreen.enabled = true;
+        hm.FullScreen.gameObject.SetActive(true);
+        hm.StartCoroutine(Effects.Lerp(TimeMaster.RewindTime / 2, new Action<float>((p) =>
         {
-            if (p == 1f) FastDestroyableSingleton<HudManager>.Instance.FullScreen.enabled = false;
+            if (p == 1f) hm.FullScreen.enabled = false;
         })));
 
         if (!TimeMaster.Exists || PlayerControl.LocalPlayer.IsRole(RoleType.TimeMaster)) return; // Time Master himself does not rewind
@@ -448,16 +491,15 @@ public static partial class RPCProcedure
         dyingTarget.Exiled();
         var dyingLoverPartner = Lovers.BothDie ? dyingTarget.GetPartner() : null; // Lover check
 
-        Guesser.RemainingShots(killer, true);
+        if (killer != null) Guesser.RemainingShots(killer, true);
 
         if (Constants.ShouldPlaySfx()) SoundManager.Instance.PlaySound(dyingTarget.KillSfx, false, 0.8f);
 
-        PlayerControl guesser = Helpers.PlayerById(killerId);
-        if (FastDestroyableSingleton<HudManager>.Instance != null && guesser != null)
+        if (FastDestroyableSingleton<HudManager>.Instance != null && killer != null)
         {
             if (PlayerControl.LocalPlayer == dyingTarget)
             {
-                FastDestroyableSingleton<HudManager>.Instance.KillOverlay.ShowKillAnimation(guesser.Data, dyingTarget.Data);
+                FastDestroyableSingleton<HudManager>.Instance.KillOverlay.ShowKillAnimation(killer.Data, dyingTarget.Data);
             }
             else if (dyingLoverPartner != null && PlayerControl.LocalPlayer == dyingLoverPartner)
             {
@@ -482,7 +524,7 @@ public static partial class RPCProcedure
                 string msg = string.Format(Tr.Get("Hud.GuesserGuessChat"), roleInfo.Name, guessedTarget.Data.PlayerName);
                 if (AmongUsClient.Instance.AmClient && FastDestroyableSingleton<HudManager>.Instance)
                 {
-                    FastDestroyableSingleton<HudManager>.Instance.Chat.AddChat(guesser, msg);
+                    FastDestroyableSingleton<HudManager>.Instance.Chat.AddChat(killer, msg);
                 }
                 if (msg.Contains("who", StringComparison.OrdinalIgnoreCase))
                 {
@@ -506,7 +548,7 @@ public static partial class RPCProcedure
         // If the local player is impostor indicate lights out
         if (Helpers.HasImpostorVision(PlayerControl.LocalPlayer))
         {
-            new CustomMessage(Tr.Get("Hud.TricksterLightsOutText"), Trickster.LightsOutDuration);
+            new CustomMessage("Hud.TricksterLightsOutText", Trickster.LightsOutDuration);
         }
     }
 
@@ -514,7 +556,9 @@ public static partial class RPCProcedure
     {
         var targetPlayer = Helpers.PlayerById(targetId);
         var evilHackerPlayer = Helpers.PlayerById(evilHackerId);
+        if (targetPlayer == null || evilHackerPlayer == null) return;
         var evilHacker = EvilHacker.GetRole(evilHackerPlayer);
+        if (evilHacker == null) return;
         if (!EvilHacker.CanCreateMadmateFromJackal && targetPlayer.IsRole(RoleType.Jackal))
         {
             evilHacker.FakeMadmate = targetPlayer;
@@ -564,15 +608,12 @@ public static partial class RPCProcedure
     public static void TrackerUsedTracker(byte targetId, byte trackerId)
     {
         var trackerPlayer = Helpers.PlayerById(trackerId);
+        if (trackerPlayer == null) return;
         var tracker = Tracker.GetRole(trackerPlayer);
+        if (tracker == null) return;
+
         tracker.UsedTracker = true;
-        foreach (var player in PlayerControl.AllPlayerControls)
-        {
-            if (player.PlayerId == targetId)
-            {
-                tracker.Tracked = player;
-            }
-        }
+        tracker.Tracked = Helpers.PlayerById(targetId);
     }
 
     public static void SetFutureErased(byte playerId)
@@ -829,22 +870,14 @@ public static partial class RPCProcedure
         PlayerControl player = Helpers.PlayerById(targetId);
         if (player == null || oldShifter == null) return;
 
+        var oldShifterPlayer = oldShifter.Player;
         Shifter.FutureShift = null;
-        if (!Shifter.IsNeutral)
-        {
-            Shifter.Clear();
-        }
-
-        // if (player == GM.gm)
-        // {
-        //     return;
-        // }
 
         // Suicide (exile) when impostor or impostor variants
         if (!Shifter.IsNeutral && (player.Data.Role.IsImpostor || player.IsNeutral() || player.HasModifier(ModifierType.Madmate) || player.HasModifier(ModifierType.CreatedMadmate)))
         {
-            oldShifter.Player.Exiled();
-            GameHistory.FinalStatuses[oldShifter.Player.PlayerId] = FinalStatus.Suicide;
+            oldShifterPlayer.Exiled();
+            GameHistory.FinalStatuses[oldShifterPlayer.PlayerId] = FinalStatus.Suicide;
             return;
         }
 
@@ -853,34 +886,38 @@ public static partial class RPCProcedure
             // Switch shield
             if (Medic.Shielded != null && Medic.Shielded == player)
             {
-                Medic.Shielded = oldShifter.Player;
+                Medic.Shielded = oldShifterPlayer;
             }
-            else if (Medic.Shielded != null && Medic.Shielded == oldShifter.Player)
+            else if (Medic.Shielded != null && Medic.Shielded == oldShifterPlayer)
             {
                 Medic.Shielded = player;
             }
 
-            player.SwapModifiers(oldShifter.Player);
-            Lovers.SwapLovers(oldShifter.Player, player);
+            player.SwapModifiers(oldShifterPlayer);
+            Lovers.SwapLovers(oldShifterPlayer, player);
         }
 
-        // Shift role
-        player.SwapRoles(oldShifter.Player);
+        // Shift roles (now a true swap)
+        player.SwapRoles(oldShifterPlayer);
 
         if (Shifter.IsNeutral)
         {
-            player.SetRole(RoleType.Shifter);
-            Shifter.PastShifters.Add(oldShifter.Player.PlayerId);
+            Shifter.PastShifters.Add(oldShifterPlayer.PlayerId);
 
             if (player.Data.Role.IsImpostor)
             {
                 FastDestroyableSingleton<RoleManager>.Instance.SetRole(player, RoleTypes.Crewmate);
-                FastDestroyableSingleton<RoleManager>.Instance.SetRole(oldShifter.Player, RoleTypes.Impostor);
+                FastDestroyableSingleton<RoleManager>.Instance.SetRole(oldShifterPlayer, RoleTypes.Impostor);
             }
+        }
+        else
+        {
+            // For Crewmate Shifter, the original target (who now has the Shifter role due to the swap) should lose it and become a plain Crewmate.
+            player.EraseRole(RoleType.Shifter);
         }
 
         // Set cooldowns to max for both players
-        if (PlayerControl.LocalPlayer == oldShifter.Player || PlayerControl.LocalPlayer == player)
+        if (PlayerControl.LocalPlayer == oldShifterPlayer || PlayerControl.LocalPlayer == player)
         {
             CustomButton.ResetAllCooldowns();
         }

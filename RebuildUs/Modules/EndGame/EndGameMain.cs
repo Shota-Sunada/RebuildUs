@@ -136,6 +136,7 @@ public static class EndGameMain
             EndGameResult.CachedWinners = new Il2CppSystem.Collections.Generic.List<CachedPlayerData>();
             foreach (var jester in Jester.Players)
             {
+                jester.Player.Data.IsDead = true;
                 EndGameResult.CachedWinners.Add(new(jester.Player.Data));
             }
             AdditionalTempData.WinCondition = WinCondition.JesterWin;
@@ -216,6 +217,11 @@ public static class EndGameMain
         if (forceEnd)
         {
             EndGameResult.CachedWinners = new Il2CppSystem.Collections.Generic.List<CachedPlayerData>();
+            foreach (var player in PlayerControl.AllPlayerControls)
+            {
+                player.Data.IsDead = false;
+                EndGameResult.CachedWinners.Add(new(player.Data));
+            }
             AdditionalTempData.WinCondition = WinCondition.ForceEnd;
         }
 
@@ -295,7 +301,7 @@ public static class EndGameMain
             poolablePlayer.cosmetics.nameText.color = Color.white;
             poolablePlayer.cosmetics.nameText.lineSpacing *= 0.7f;
             poolablePlayer.cosmetics.nameText.transform.localScale = new Vector3(1f / vector.x, 1f / vector.y, 1f / vector.z);
-            poolablePlayer.cosmetics.nameText.transform.localPosition = new Vector3(poolablePlayer.cosmetics.nameText.transform.localPosition.x, poolablePlayer.cosmetics.nameText.transform.localPosition.y, -15f);
+            poolablePlayer.cosmetics.nameText.transform.localPosition = new Vector3(poolablePlayer.cosmetics.nameText.transform.localPosition.x, poolablePlayer.cosmetics.nameText.transform.localPosition.y - 0.7f, -15f);
 
             if (playerRolesDict.TryGetValue(cachedPlayerData2.PlayerName, out var data))
             {
@@ -380,7 +386,7 @@ public static class EndGameMain
         else if (AdditionalTempData.GameOverReason is GameOverReason.CrewmatesByTask or GameOverReason.CrewmatesByVote)
         {
             bonusText = "EndGame.CrewmateWin";
-            TextRenderer.color = Palette.White;
+            TextRenderer.color = Palette.CrewmateBlue;
         }
         else if (AdditionalTempData.GameOverReason is GameOverReason.ImpostorsByKill or GameOverReason.ImpostorsBySabotage or GameOverReason.ImpostorsByVote)
         {

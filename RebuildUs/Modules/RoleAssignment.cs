@@ -283,9 +283,11 @@ public static class RoleAssignment
             if (role.getOption != null && role.getOption() is CustomRoleOption roleOption)
             {
                 // ここで例外的な役職を個別に弾く
-                if (role.roleType is RoleType.Godfather or RoleType.Mafioso or RoleType.Janitor or
+                if (role.roleType is
+                    RoleType.Godfather or RoleType.Mafioso or RoleType.Janitor or
                     RoleType.NiceGuesser or RoleType.EvilGuesser or
-                    RoleType.Swapper or RoleType.Shifter or
+                    RoleType.NiceSwapper or RoleType.EvilSwapper or
+                    RoleType.Shifter or
                     RoleType.Lovers or RoleType.Sidekick) continue;
 
                 // Spyはインポスターが1人以下の時は出現しない
@@ -418,22 +420,6 @@ public static class RoleAssignment
             SetRoleToRandomPlayer((byte)RoleType.Mafioso, data.Impostors);
             data.MaxImpostorRoles -= 3;
         }
-
-        // // Assign Bomber
-        // if (data.impostors.Count >= 2 && data.maxImpostorRoles >= 2 && (rnd.Next(1, 101) <= CustomOptionHolder.bomberSpawnRate.getSelection() * 10))
-        // {
-        //     setRoleToRandomPlayer((byte)ERoleType.BomberA, data.impostors);
-        //     setRoleToRandomPlayer((byte)ERoleType.BomberB, data.impostors);
-        //     data.maxImpostorRoles -= 2;
-        // }
-
-        // // Assign Mimic
-        // if (data.impostors.Count >= 2 && data.maxImpostorRoles >= 2 && (rnd.Next(1, 101) <= CustomOptionHolder.mimicSpawnRate.getSelection() * 10))
-        // {
-        //     setRoleToRandomPlayer((byte)ERoleType.MimicK, data.impostors);
-        //     setRoleToRandomPlayer((byte)ERoleType.MimicA, data.impostors);
-        //     data.maxImpostorRoles -= 2;
-        // }
     }
 
     private static void SelectFactionForFactionIndependentRoles(RoleAssignmentData data)
@@ -468,6 +454,35 @@ public static class RoleAssignment
             if (isEvilGuesser) data.ImpSettings.Add((byte)RoleType.EvilGuesser, (CustomOptionHolder.GuesserSpawnRate.GetSelection(), 1));
             else data.CrewSettings.Add((byte)RoleType.NiceGuesser, (CustomOptionHolder.GuesserSpawnRate.GetSelection(), 1));
         }
+
+        // Assign Swapper (chance to be impostor based on setting)
+        if (data.Impostors.Count > 0 && data.MaxImpostorRoles > 0 && RebuildUs.Instance.Rnd.Next(1, 101) <= CustomOptionHolder.SwapperIsImpRate.GetSelection() * 10)
+        {
+            data.ImpSettings.Add((byte)RoleType.EvilSwapper, (CustomOptionHolder.SwapperSpawnRate.GetSelection(), 1));
+        }
+        else if (data.Crewmates.Count > 0 && data.MaxCrewmateRoles > 0)
+        {
+            data.CrewSettings.Add((byte)RoleType.NiceSwapper, (CustomOptionHolder.SwapperSpawnRate.GetSelection(), 1));
+        }
+
+        // Assign Shifter (chance to be neutral based on setting)
+        bool shifterIsNeutral = false;
+        if (data.Crewmates.Count > 0 && data.MaxNeutralRoles > 0 && RebuildUs.Instance.Rnd.Next(1, 101) <= CustomOptionHolder.ShifterIsNeutralRate.GetSelection() * 10)
+        {
+            data.NeutralSettings.Add((byte)RoleType.Shifter, (CustomOptionHolder.ShifterSpawnRate.GetSelection(), 1));
+            shifterIsNeutral = true;
+        }
+        else if (data.Crewmates.Count > 0 && data.MaxCrewmateRoles > 0)
+        {
+            data.CrewSettings.Add((byte)RoleType.Shifter, (CustomOptionHolder.ShifterSpawnRate.GetSelection(), 1));
+            shifterIsNeutral = false;
+        }
+
+        using (var sender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.SetShifterType))
+        {
+            sender.Write(shifterIsNeutral);
+        }
+        RPCProcedure.SetShifterType(shifterIsNeutral);
     }
 
     private static void AssignEnsuredRoles(RoleAssignmentData data)
@@ -691,33 +706,7 @@ public static class RoleAssignment
         return playerId;
     }
 
-    private static void AssignRoleTargets(RoleAssignmentData data)
-    {
-        // // Set Lawyer Target
-        // if (Lawyer.lawyer != null)
-        // {
-        //     var possibleTargets = new List<PlayerControl>();
-        //     foreach (PlayerControl p in PlayerControl.AllPlayerControls)
-        //     {
-        //         if (!p.Data.IsDead && !p.Data.Disconnected && !p.isLovers() && (p.Data.Role.IsImpostor || p == Jackal.jackal))
-        //             possibleTargets.Add(p);
-        //     }
-        //     if (possibleTargets.Count == 0)
-        //     {
-        //         w = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.LawyerPromotesToPursuer, Hazel.SendOption.Reliable, -1);
-        //         AmongUsClient.Instance.FinishRpcImmediately(w);
-        //         RPCProcedure.lawyerPromotesToPursuer();
-        //     }
-        //     else
-        //     {
-        //         var target = possibleTargets[TheOtherRoles.rnd.Next(0, possibleTargets.Count)];
-        //         writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.LawyerSetTarget, Hazel.SendOption.Reliable, -1);
-        //         writer.Write(target.PlayerId);
-        //         AmongUsClient.Instance.FinishRpcImmediately(writer);
-        //         RPCProcedure.lawyerSetTarget(target.PlayerId);
-        //     }
-        // }
-    }
+    private static void AssignRoleTargets(RoleAssignmentData data) { }
 
     private static void AssignRoleModifiers(RoleAssignmentData data)
     {
@@ -799,12 +788,12 @@ public static class RoleAssignment
     {
         var index = RebuildUs.Instance.Rnd.Next(0, playerList.Count);
         byte playerId = playerList[index].PlayerId;
-        // if (RoleInfo.lovers.enabled &&
-        //     Helpers.PlayerById(playerId)?.IsLovers() == true &&
-        //     blockLovers.Contains(roleId))
-        // {
-        //     return byte.MaxValue;
-        // }
+        if (Helpers.RolesEnabled && (CustomOptionHolder.LoversSpawnRate == null || CustomOptionHolder.LoversSpawnRate.Enabled) &&
+            Helpers.PlayerById(playerId)?.IsLovers() == true &&
+            BlockLovers.Contains(roleId))
+        {
+            return byte.MaxValue;
+        }
 
         if (removePlayer) playerList.RemoveAt(index);
         PlayerRoleMap.Add(new Tuple<byte, byte>(playerId, roleId));

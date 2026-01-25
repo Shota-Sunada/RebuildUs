@@ -746,16 +746,20 @@ public static class Map
                 if (ShipStatus.Instance.FastRooms.TryGetValue(counterArea.RoomType, out plainShipRoom) && plainShipRoom.roomArea)
                 {
                     int num = plainShipRoom.roomArea.OverlapCollider(__instance.filter, __instance.buffer);
-                    int num2 = num;
+                    HashSet<byte> countedPlayers = [];
+                    int num2 = 0;
                     for (int j = 0; j < num; j++)
                     {
                         Collider2D collider2D = __instance.buffer[j];
                         if (!(collider2D.tag == "DeadBody"))
                         {
                             PlayerControl component = collider2D.GetComponent<PlayerControl>();
-                            if (!component || component.Data == null || component.Data.Disconnected || component.Data.IsDead)
+                            if (component && component.Data != null && !component.Data.Disconnected && !component.Data.IsDead)
                             {
-                                num2--;
+                                if (countedPlayers.Add(component.PlayerId))
+                                {
+                                    num2++;
+                                }
                             }
                         }
                     }

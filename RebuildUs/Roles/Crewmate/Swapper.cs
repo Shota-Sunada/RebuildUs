@@ -26,7 +26,7 @@ public class Swapper : RoleBase<Swapper>
     public Swapper()
     {
         // write value init here
-        StaticRoleType = CurrentRoleType = RoleType.Swapper;
+        StaticRoleType = CurrentRoleType = RoleType.NiceSwapper;
         RemainSwaps = NumSwaps;
     }
 

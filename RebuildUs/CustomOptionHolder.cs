@@ -505,7 +505,7 @@ public static class CustomOptionHolder
         DetectiveAnonymousFootprints = CustomOption.Normal(1061, CustomOptionType.Crewmate, "Option.DetectiveAnonymousFootprints", false, DetectiveSpawnRate);
         DetectiveFootprintInterval = CustomOption.Normal(1062, CustomOptionType.Crewmate, "Option.DetectiveFootprintInterval", 0.5f, 0.25f, 10f, 0.25f, DetectiveSpawnRate);
         DetectiveFootprintDuration = CustomOption.Normal(1063, CustomOptionType.Crewmate, "Option.DetectiveFootprintDuration", 5f, 0.25f, 10f, 0.25f, DetectiveSpawnRate);
-        DetectiveReportNameDuration = CustomOption.Normal(1064, CustomOptionType.Crewmate, "Option.DetectiveReportNameDuration", 0, 0, 60, 2.5f, DetectiveSpawnRate);
+        DetectiveReportNameDuration = CustomOption.Normal(1064, CustomOptionType.Crewmate, "Option.DetectiveReportNameDuration", 10f, 0, 60, 2.5f, DetectiveSpawnRate);
         DetectiveReportColorDuration = CustomOption.Normal(1065, CustomOptionType.Crewmate, "Option.DetectiveReportColorDuration", 20, 0, 120, 2.5f, DetectiveSpawnRate);
 
         MediumSpawnRate = new(1070, CustomOptionType.Crewmate, RoleType.Medium, Medium.NameColor, 1);
@@ -550,7 +550,7 @@ public static class CustomOptionHolder
         SecurityGuardCamRechargeTasksNumber = CustomOption.Normal(1127, CustomOptionType.Crewmate, "Option.SecurityGuardCamRechargeTasksNumber", 3f, 1f, 10f, 1f, SecurityGuardSpawnRate);
         SecurityGuardNoMove = CustomOption.Normal(1128, CustomOptionType.Crewmate, "Option.SecurityGuardNoMove", true, SecurityGuardSpawnRate);
 
-        SwapperSpawnRate = new(1130, CustomOptionType.Neutral, RoleType.Swapper, Swapper.NameColor, 1);
+        SwapperSpawnRate = new(1130, CustomOptionType.Neutral, RoleType.NiceSwapper, Swapper.NameColor, 1);
         SwapperIsImpRate = CustomOption.Normal(1131, CustomOptionType.Neutral, "Option.SwapperIsImpRate", RATES, SwapperSpawnRate);
         SwapperNumSwaps = CustomOption.Normal(1132, CustomOptionType.Neutral, "Option.SwapperNumSwaps", 2f, 1f, 15f, 1f, SwapperSpawnRate);
         SwapperCanCallEmergency = CustomOption.Normal(1133, CustomOptionType.Neutral, "Option.SwapperCanCallEmergency", false, SwapperSpawnRate);

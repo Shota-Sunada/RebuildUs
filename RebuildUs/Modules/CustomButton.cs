@@ -83,12 +83,19 @@ public class CustomButton
         button.OnClick = new Button.ButtonClickedEvent();
         button.OnClick.AddListener((UnityEngine.Events.UnityAction)OnClickEvent);
 
+        if (ActionButton.GetComponent<TextTranslatorTMP>()) ActionButton.GetComponent<TextTranslatorTMP>().Destroy();
+
         LocalScale = ActionButton.transform.localScale;
         if (textTemplate)
         {
             UnityEngine.Object.Destroy(ActionButton.buttonLabelText);
             ActionButton.buttonLabelText = UnityEngine.Object.Instantiate(textTemplate.buttonLabelText, ActionButton.transform);
         }
+
+        if (ActionButton.buttonLabelText.GetComponent<TextTranslatorTMP>()) ActionButton.buttonLabelText.GetComponent<TextTranslatorTMP>().Destroy();
+
+        ActionButton.OverrideText(ButtonText);
+        LastButtonText = ButtonText;
 
         if (UseLayout)
         {
@@ -230,7 +237,7 @@ public class CustomButton
         SetActive(HudManager.UseButton.isActiveAndEnabled || HudManager.PetButton.isActiveAndEnabled);
 
         if (ActionButton.graphic.sprite != Sprite) ActionButton.graphic.sprite = Sprite;
-        if (ShowButtonText && ButtonText != "" && LastButtonText != ButtonText)
+        if (ShowButtonText && LastButtonText != ButtonText)
         {
             ActionButton.OverrideText(ButtonText);
             LastButtonText = ButtonText;

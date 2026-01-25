@@ -57,7 +57,13 @@ public class EvilHacker : RoleBase<EvilHacker>
             {
                 PlayerControl.LocalPlayer.NetTransform.Halt();
                 Admin.IsEvilHackerAdmin = true;
-                HudManager.Instance.ToggleMapVisible(new() { Mode = MapOptions.Modes.CountOverlay });
+                HudManager.Instance.ToggleMapVisible(new()
+                {
+                    Mode = MapOptions.Modes.CountOverlay,
+                    AllowMovementWhileMapOpen = CanMoveEvenIfUsesAdmin,
+                    ShowLivePlayerPosition = true,
+                    IncludeDeadBodies = true
+                });
             },
             () =>
             {

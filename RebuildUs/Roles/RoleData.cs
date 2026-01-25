@@ -27,7 +27,6 @@ public static class RoleData
         new(RoleType.Detective, RoleTeam.Crewmate, typeof(RoleBase<Detective>), () => Detective.NameColor, () => CustomOptionHolder.DetectiveSpawnRate),
         new(RoleType.TimeMaster, RoleTeam.Crewmate, typeof(RoleBase<TimeMaster>), () => TimeMaster.NameColor, () => CustomOptionHolder.TimeMasterSpawnRate),
         new(RoleType.Medic, RoleTeam.Crewmate, typeof(RoleBase<Medic>), () => Medic.NameColor, () => CustomOptionHolder.MedicSpawnRate),
-        new(RoleType.Swapper, RoleTeam.Crewmate, typeof(RoleBase<Swapper>), () => Swapper.NameColor, () => CustomOptionHolder.SwapperSpawnRate),
         new(RoleType.Seer, RoleTeam.Crewmate, typeof(RoleBase<Seer>), () => Seer.NameColor, () => CustomOptionHolder.SeerSpawnRate),
         new(RoleType.Hacker, RoleTeam.Crewmate, typeof(RoleBase<Hacker>), () => Hacker.NameColor, () => CustomOptionHolder.HackerSpawnRate),
         new(RoleType.Tracker, RoleTeam.Crewmate, typeof(RoleBase<Tracker>), () => Tracker.NameColor, () => CustomOptionHolder.TrackerSpawnRate),
@@ -60,8 +59,11 @@ public static class RoleData
         new(RoleType.Vulture, RoleTeam.Neutral, typeof(RoleBase<Vulture>), () => Vulture.NameColor, () => CustomOptionHolder.VultureSpawnRate),
         new(RoleType.Jackal, RoleTeam.Neutral, typeof(RoleBase<Jackal>), () => Jackal.NameColor, () => CustomOptionHolder.JackalSpawnRate),
         new(RoleType.Sidekick, RoleTeam.Neutral, typeof(RoleBase<Sidekick>), () => Jackal.NameColor, () => CustomOptionHolder.JackalSpawnRate),
-        new(RoleType.NiceGuesser, RoleTeam.Neutral, typeof(RoleBase<Guesser.NiceGuesser>), () => Guesser.NiceGuesser.NameColor, () => CustomOptionHolder.GuesserSpawnRate),
-        new(RoleType.EvilGuesser, RoleTeam.Neutral, typeof(RoleBase<Guesser.EvilGuesser>), () => Guesser.EvilGuesser.NameColor, () => CustomOptionHolder.GuesserSpawnRate),
         new(RoleType.Lovers, RoleTeam.Neutral, null, () => Lovers.Color, () => CustomOptionHolder.LoversSpawnRate),
+
+        new(RoleType.NiceGuesser, RoleTeam.Crewmate, typeof(RoleBase<Guesser.NiceGuesser>), () => Guesser.NiceGuesser.NameColor, () => CustomOptionHolder.GuesserSpawnRate),
+        new(RoleType.EvilGuesser, RoleTeam.Impostor, typeof(RoleBase<Guesser.EvilGuesser>), () => Guesser.EvilGuesser.NameColor, () => CustomOptionHolder.GuesserSpawnRate),
+        new(RoleType.NiceSwapper, RoleTeam.Crewmate, typeof(RoleBase<Swapper>), () => Swapper.NameColor, () => CustomOptionHolder.SwapperSpawnRate),
+        new(RoleType.EvilSwapper, RoleTeam.Impostor, typeof(RoleBase<Swapper>), () => Palette.ImpostorRed, () => CustomOptionHolder.SwapperSpawnRate),
     ];
 }

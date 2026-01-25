@@ -188,7 +188,10 @@ public abstract class RoleBase<T> : PlayerRole where T : RoleBase<T>, new()
             if (Players[i].Player == p1)
             {
                 Players[i].Player = p2;
-                break;
+            }
+            else if (Players[i].Player == p2)
+            {
+                Players[i].Player = p1;
             }
         }
     }

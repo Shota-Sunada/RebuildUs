@@ -37,7 +37,7 @@ public class Detective : RoleBase<Detective>
                 var player = players[i];
                 if (player != null && player != PlayerControl.LocalPlayer && !player.Data.IsDead && !player.inVent && !player.IsGM())
                 {
-                    new Footprint(FootprintDuration, AnonymousFootprints, player);
+                    FootprintHolder.Instance.MakeFootprint(player);
                 }
             }
         }

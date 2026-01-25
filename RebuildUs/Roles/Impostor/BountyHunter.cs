@@ -43,9 +43,11 @@ public class BountyHunter : RoleBase<BountyHunter>
             {
                 CooldownText = UnityEngine.Object.Instantiate(FastDestroyableSingleton<HudManager>.Instance.KillButton.cooldownTimerText, FastDestroyableSingleton<HudManager>.Instance.transform);
                 CooldownText.alignment = TextAlignmentOptions.Center;
-                CooldownText.transform.localPosition = Intro.BottomLeft + new Vector3(0f, -0.35f, -62f);
+                var bottomLeft = AspectPosition.ComputePosition(AspectPosition.EdgeAlignments.LeftBottom, new(0.9f, 0.7f, -10f));
+                CooldownText.transform.localPosition = bottomLeft + new Vector3(0f, -0.35f, -0.1f);
                 CooldownText.transform.localScale = Vector3.one * 0.4f;
                 CooldownText.gameObject.SetActive(true);
+                CooldownText.gameObject.layer = 5;
             }
         }
     }
@@ -110,7 +112,7 @@ public class BountyHunter : RoleBase<BountyHunter>
                 if (Bounty == null) return;
 
                 // Show poolable player
-                if (FastDestroyableSingleton<HudManager>.Instance != null && FastDestroyableSingleton<HudManager>.Instance.UseButton != null)
+                if (FastDestroyableSingleton<HudManager>.Instance != null)
                 {
                     foreach (var pp in ModMapOptions.PlayerIcons.Values)
                     {
@@ -118,6 +120,9 @@ public class BountyHunter : RoleBase<BountyHunter>
                     }
                     if (ModMapOptions.PlayerIcons.TryGetValue(Bounty.PlayerId, out var icon) && icon != null && icon.gameObject != null)
                     {
+                        var bottomLeft = AspectPosition.ComputePosition(AspectPosition.EdgeAlignments.LeftBottom, new(0.9f, 0.7f, -10f));
+                        icon.transform.localPosition = bottomLeft;
+                        icon.transform.localScale = Vector3.one * 0.3f;
                         icon.gameObject.SetActive(true);
                     }
                 }

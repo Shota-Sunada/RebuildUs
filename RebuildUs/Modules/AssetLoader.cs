@@ -92,7 +92,7 @@ public static class AssetLoader
         LighterButton = ab.LoadAsset<Sprite>("LighterButton.png").Resize(115f);
         ShieldButton = ab.LoadAsset<Sprite>("ShieldButton.png").Resize(115f);
         MediumButton = ab.LoadAsset<Sprite>("MediumButton.png").Resize(115f);
-        TimeShieldButton = ab.LoadAsset<Sprite>("MediumButton.png").Resize(115f);
+        TimeShieldButton = ab.LoadAsset<Sprite>("TimeShieldButton.png").Resize(115f);
         TrackerButton = ab.LoadAsset<Sprite>("TrackerButton.png").Resize(115f);
         PathfindButton = ab.LoadAsset<Sprite>("PathfindButton.png").Resize(115f);
         EraserButton = ab.LoadAsset<Sprite>("EraserButton.png").Resize(115f);

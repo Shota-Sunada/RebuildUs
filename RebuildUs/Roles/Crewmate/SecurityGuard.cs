@@ -32,6 +32,7 @@ public class SecurityGuard : RoleBase<SecurityGuard>
         // write value init here
         StaticRoleType = CurrentRoleType = RoleType.SecurityGuard;
         PlacedCameras = 0;
+        RemainingScrews = TotalScrews;
         Charges = CamMaxCharges;
     }
 
@@ -115,10 +116,10 @@ public class SecurityGuard : RoleBase<SecurityGuard>
                 }
                 SecurityGuardButton.Timer = SecurityGuardButton.MaxTimer;
             },
-            () => { return PlayerControl.LocalPlayer.IsRole(RoleType.SecurityGuard) && PlayerControl.LocalPlayer.IsAlive() && Local.RemainingScrews >= Mathf.Min(SecurityGuard.VentPrice, SecurityGuard.CamPrice); },
+            () => { return PlayerControl.LocalPlayer.IsRole(RoleType.SecurityGuard) && PlayerControl.LocalPlayer.IsAlive() && Local.RemainingScrews >= Mathf.Min(VentPrice, CamPrice); },
             () =>
             {
-                if (Local.VentTarget == null && Helpers.GetOption(ByteOptionNames.MapId) != 1 && SubmergedCompatibility.IsSubmerged)
+                if (Local.VentTarget == null && Helpers.GetOption(ByteOptionNames.MapId) != 1 && !SubmergedCompatibility.IsSubmerged)
                 {
                     SecurityGuardButton.ButtonText = Tr.Get("Hud.PlaceCameraText");
                     SecurityGuardButton.Sprite = AssetLoader.PlaceCameraButton;
@@ -131,8 +132,8 @@ public class SecurityGuard : RoleBase<SecurityGuard>
                 SecurityGuardButtonScrewsText?.text = string.Format(Tr.Get("Hud.SecurityGuardScrews"), Local.RemainingScrews);
 
                 return Local.VentTarget != null
-                    ? Local.RemainingScrews >= SecurityGuard.VentPrice && PlayerControl.LocalPlayer.CanMove
-                    : Helpers.GetOption(ByteOptionNames.MapId) != 1 && SubmergedCompatibility.IsSubmerged && ModMapOptions.CouldUseCameras && Local.RemainingScrews >= SecurityGuard.CamPrice && PlayerControl.LocalPlayer.CanMove;
+                    ? Local.RemainingScrews >= VentPrice && PlayerControl.LocalPlayer.CanMove
+                    : Helpers.GetOption(ByteOptionNames.MapId) != 1 && !SubmergedCompatibility.IsSubmerged && ModMapOptions.CouldUseCameras && Local.RemainingScrews >= CamPrice && PlayerControl.LocalPlayer.CanMove;
             },
             () => { SecurityGuardButton.Timer = SecurityGuardButton.MaxTimer; },
             AssetLoader.PlaceCameraButton,
@@ -244,7 +245,7 @@ public class SecurityGuard : RoleBase<SecurityGuard>
                 if (NoMove) PlayerControl.LocalPlayer.moveable = false;
                 PlayerControl.LocalPlayer.NetTransform.Halt(); // Stop current movement
             },
-            () => { return PlayerControl.LocalPlayer.IsRole(RoleType.SecurityGuard) && PlayerControl.LocalPlayer?.Data?.IsDead == false && Local.RemainingScrews < Mathf.Min(SecurityGuard.VentPrice, SecurityGuard.CamPrice) && SubmergedCompatibility.IsSubmerged; },
+            () => { return PlayerControl.LocalPlayer.IsRole(RoleType.SecurityGuard) && PlayerControl.LocalPlayer?.Data?.IsDead == false && Local.RemainingScrews < Mathf.Min(SecurityGuard.VentPrice, SecurityGuard.CamPrice) && !SubmergedCompatibility.IsSubmerged; },
             () =>
             {
                 SecurityGuardChargesText?.text = string.Format(Tr.Get("Hud.HackerChargesText"), Local.Charges, CamMaxCharges);

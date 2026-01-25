@@ -329,7 +329,10 @@ public class CustomOverlays
 
         if (!InitializeOverlays()) return;
 
-        MapBehaviour.Instance?.Close();
+        if (MapBehaviour.Instance && MapBehaviour.Instance.IsOpen)
+        {
+            MapBehaviour.Instance.Close();
+        }
         hudManager.SetHudActive(false);
 
         OverlayShown = true;

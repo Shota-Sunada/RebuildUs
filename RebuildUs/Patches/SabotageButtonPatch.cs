@@ -17,8 +17,7 @@ public static class SabotageButtonPatch
         // The sabotage button behaves just fine if it's a regular impostor
         if (PlayerControl.LocalPlayer?.Data?.Role?.TeamType == RoleTeamTypes.Impostor) return true;
 
-        // FastDestroyableSingleton<HudManager>.Instance.ToggleMapVisible((Il2CppSystem.Action<MapBehaviour>)((m) => { m.ShowSabotageMap(); }));
-        FastDestroyableSingleton<MapBehaviour>.Instance.ShowSabotageMap();
+        FastDestroyableSingleton<HudManager>.Instance.ToggleMapVisible(new() { Mode = MapOptions.Modes.Sabotage });
         return false;
     }
 }

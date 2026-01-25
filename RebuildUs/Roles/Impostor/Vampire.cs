@@ -12,6 +12,7 @@ public class Vampire : RoleBase<Vampire>
     public static float Delay => CustomOptionHolder.VampireKillDelay.GetFloat();
     public static float Cooldown => CustomOptionHolder.VampireCooldown.GetFloat();
     public static bool CanKillNearGarlics => CustomOptionHolder.VampireCanKillNearGarlics.GetBool();
+    public static bool GarlicsActive => CustomOptionHolder.VampireSpawnRate.GetSelection() > 0;
 
     public PlayerControl CurrentTarget;
     public bool TargetNearGarlic = false;
@@ -19,7 +20,6 @@ public class Vampire : RoleBase<Vampire>
 
     // States
     public static PlayerControl Bitten;
-    public static bool GarlicsActive = true;
 
     public Vampire()
     {
@@ -205,7 +205,6 @@ public class Vampire : RoleBase<Vampire>
     {
         // reset configs here
         Bitten = null;
-        GarlicsActive = true;
         Players.Clear();
     }
 }

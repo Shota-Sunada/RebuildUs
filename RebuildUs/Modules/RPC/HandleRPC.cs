@@ -69,6 +69,9 @@ public static partial class RPCProcedure
             case CustomRPC.StopStart:
                 StopStart();
                 break;
+            case CustomRPC.StopStartSound:
+                StopStartSound();
+                break;
             case CustomRPC.ShareGamemode:
                 ShareGamemode(reader.ReadByte());
                 break;
@@ -119,6 +122,12 @@ public static partial class RPCProcedure
                 break;
             case CustomRPC.ErasePlayerRoles:
                 ErasePlayerRoles(reader.ReadByte());
+                break;
+            case CustomRPC.JackalCreatesSidekick:
+                JackalCreatesSidekick(reader.ReadByte(), reader.ReadByte());
+                break;
+            case CustomRPC.SidekickPromotes:
+                SidekickPromotes(reader.ReadByte());
                 break;
             case CustomRPC.MedicSetShielded:
                 MedicSetShielded(reader.ReadByte());

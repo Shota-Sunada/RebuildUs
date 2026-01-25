@@ -13,6 +13,7 @@ public class Bait : RoleBase<Bait>
 
     public bool Reported = false;
     public float Delay = 1f;
+    public CustomMessage WarningMessage;
 
     public Bait()
     {
@@ -31,6 +32,8 @@ public class Bait : RoleBase<Bait>
         // Bait report
         if (Player.Data.IsDead && !Reported)
         {
+            WarningMessage ??= new("Hud.BaitWarning", Delay);
+
             Delay -= Time.fixedDeltaTime;
 
             DeadPlayer baitDeadPlayer = null;
@@ -80,56 +83,7 @@ public class Bait : RoleBase<Bait>
                 }
                 RPCProcedure.UncheckedCmdReportDeadBody(reporter, Player.PlayerId);
                 Reported = true;
-            }
-        }
-
-        // Bait Vents
-        var shipStatus = MapUtilities.CachedShipStatus;
-        if (shipStatus != null && shipStatus.AllVents != null)
-        {
-            var ventsWithPlayers = new HashSet<int>();
-            var allPlayers = PlayerControl.AllPlayerControls;
-            for (int i = 0; i < allPlayers.Count; i++)
-            {
-                PlayerControl player = allPlayers[i];
-                if (player == null || !player.inVent) continue;
-
-                var playerPos = player.GetTruePosition();
-                Vent closestVent = null;
-                float minDistance = float.MaxValue;
-                var allVents = shipStatus.AllVents;
-
-                for (int j = 0; j < allVents.Length; j++)
-                {
-                    var v = allVents[j];
-                    if (v == null) continue;
-                    float dist = Vector2.Distance(v.transform.position, playerPos);
-                    if (dist < minDistance)
-                    {
-                        minDistance = dist;
-                        closestVent = v;
-                    }
-                }
-
-                if (closestVent != null) ventsWithPlayers.Add(closestVent.Id);
-            }
-
-            var allVentsForHighlight = shipStatus.AllVents;
-            bool highlightAll = Bait.HighlightAllVents && ventsWithPlayers.Count > 0;
-            for (int i = 0; i < allVentsForHighlight.Length; i++)
-            {
-                Vent vent = allVentsForHighlight[i];
-                if (vent == null || vent.myRend == null) continue;
-
-                if (highlightAll || ventsWithPlayers.Contains(vent.Id))
-                {
-                    vent.myRend.material.SetFloat("_Outline", 1f);
-                    vent.myRend.material.SetColor("_OutlineColor", Color.yellow);
-                }
-                else
-                {
-                    vent.myRend.material.SetFloat("_Outline", 0);
-                }
+                WarningMessage = null;
             }
         }
     }

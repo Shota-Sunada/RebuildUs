@@ -170,18 +170,21 @@ public static class Admin
                 if (plainShipRoom != null && plainShipRoom.roomArea)
                 {
                     int num = plainShipRoom.roomArea.OverlapCollider(__instance.filter, __instance.buffer);
-                    int num2 = num;
+                    HashSet<byte> countedPlayers = [];
+                    HashSet<int> countedDeadBodies = [];
+                    int num2 = 0;
 
                     // ロミジュリと絵画の部屋をアドミンの対象から外す
+                    bool forceZero = false;
                     if (CustomOptionHolder.AirshipOldAdmin.GetBool() && (counterArea.RoomType is SystemTypes.Ventilation or SystemTypes.HallOfPortraits))
                     {
-                        num2 = 0;
+                        forceZero = true;
                     }
 
                     // アドミン毎に表示する範囲を制限する
                     if (!FilterAdmin(counterArea.RoomType))
                     {
-                        num2 = 0;
+                        forceZero = true;
                     }
 
                     for (int j = 0; j < num; j++)
@@ -190,26 +193,29 @@ public static class Admin
                         if (!(collider2D.tag == "DeadBody"))
                         {
                             PlayerControl component = collider2D.GetComponent<PlayerControl>();
-                            if (!component || component.Data == null || component.Data.Disconnected || component.Data.IsDead)
+                            if (component && component.Data != null && !component.Data.Disconnected && !component.Data.IsDead)
                             {
-                                num2--;
-                            }
-                            else if (component?.cosmetics?.currentBodySprite?.BodySprite.material != null)
-                            {
-                                // Color color = component.myRend.material.GetColor("_BodyColor");
-                                Color color = Palette.PlayerColors[component.Data.DefaultOutfit.ColorId];
-                                if (Hacker.OnlyColorType)
+                                if (countedPlayers.Add(component.PlayerId))
                                 {
-                                    var id = Mathf.Max(0, Palette.PlayerColors.IndexOf(color));
-                                    color = Helpers.IsLighterColor((byte)id) ? Palette.PlayerColors[7] : Palette.PlayerColors[6];
+                                    num2++;
+                                    if (component?.cosmetics?.currentBodySprite?.BodySprite.material != null)
+                                    {
+                                        // Color color = component.myRend.material.GetColor("_BodyColor");
+                                        Color color = Palette.PlayerColors[component.Data.DefaultOutfit.ColorId];
+                                        if (Hacker.OnlyColorType)
+                                        {
+                                            var id = Mathf.Max(0, Palette.PlayerColors.IndexOf(color));
+                                            color = Helpers.IsLighterColor((byte)id) ? Palette.PlayerColors[7] : Palette.PlayerColors[6];
+                                        }
+                                        roomColors.Add(color);
+                                    }
                                 }
-                                roomColors.Add(color);
                             }
                         }
                         else
                         {
                             DeadBody component = collider2D.GetComponent<DeadBody>();
-                            if (component)
+                            if (component && countedDeadBodies.Add(component.GetInstanceID()))
                             {
                                 NetworkedPlayerInfo playerInfo = GameData.Instance.GetPlayerById(component.ParentId);
                                 if (playerInfo != null)
@@ -224,6 +230,7 @@ public static class Admin
                             }
                         }
                     }
+                    if (forceZero) num2 = 0;
                     if (num2 < 0) num2 = 0;
                     counterArea.UpdateCount(num2);
                 }

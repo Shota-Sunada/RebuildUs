@@ -88,7 +88,13 @@ public class Hacker : RoleBase<Hacker>
             {
                 PlayerControl.LocalPlayer.NetTransform.Halt(); // Stop current movement
                 Local.ChargesAdminTable--;
-                HudManager.Instance.ToggleMapVisible(new() { Mode = MapOptions.Modes.CountOverlay });
+                HudManager.Instance.ToggleMapVisible(new()
+                {
+                    Mode = MapOptions.Modes.CountOverlay,
+                    AllowMovementWhileMapOpen = !NoMove,
+                    ShowLivePlayerPosition = true,
+                    IncludeDeadBodies = true
+                });
             },
             () => { return PlayerControl.LocalPlayer.IsRole(RoleType.Hacker) && ModMapOptions.CouldUseAdmin && PlayerControl.LocalPlayer.IsAlive(); },
             () =>

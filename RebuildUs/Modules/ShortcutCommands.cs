@@ -19,6 +19,10 @@ public static class ShortcutCommands
         if ((Input.GetKeyDown(KeyCode.LeftShift) || Input.GetKeyDown(KeyCode.RightShift)) && Helpers.IsCountdown)
         {
             GameStartManager.Instance.countDownTimer = 0;
+            SoundManager.Instance.StopSound(GameStartManager.Instance.gameStartSound);
+            {
+                using var sender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.StopStart);
+            }
         }
     }
 

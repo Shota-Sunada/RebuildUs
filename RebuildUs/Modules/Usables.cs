@@ -160,11 +160,18 @@ public static class Usables
             hudManager.ImpostorVentButton.Hide();
             hudManager.SabotageButton.Hide();
 
-            if (__instance.CanUseVents())
+            if (Helpers.ShowButtons)
             {
-                hudManager.ImpostorVentButton.Show();
-                hudManager.SabotageButton.Show();
-                hudManager.SabotageButton.gameObject.SetActive(true);
+                if (__instance.CanUseVents())
+                {
+                    hudManager.ImpostorVentButton.Show();
+                }
+
+                if (__instance.CanSabotage())
+                {
+                    hudManager.SabotageButton.Show();
+                    hudManager.SabotageButton.gameObject.SetActive(true);
+                }
             }
         }
     }
@@ -256,7 +263,7 @@ public static class Usables
         canUse = couldUse = false;
         __result = float.MaxValue;
 
-        //if (IsBlocked(__instance, pc.Object)) return false;
+        if (IsBlocked(__instance, pc.Object)) return false;
         if (__instance.AllowImpostor) return true;
         if (!pc.Object.HasFakeTasks()) return true;
 
@@ -273,7 +280,7 @@ public static class Usables
         bool isReactor = taskType is TaskTypes.StopCharles or TaskTypes.ResetSeismic or TaskTypes.ResetReactor;
         bool isO2 = taskType == TaskTypes.RestoreOxy;
 
-        if (pc.IsRole(RoleType.Swapper) && (isLights || isComms))
+        if (pc.IsRole(RoleType.NiceSwapper) && (isLights || isComms))
         {
             return true;
         }
@@ -362,7 +369,7 @@ public static class Usables
             statusTextKey = "Hud.JesterMeetingButton";
         }
 
-        if (lp.IsRole(RoleType.Swapper) && !Swapper.CanCallEmergency)
+        if (lp.IsRole(RoleType.NiceSwapper) && !Swapper.CanCallEmergency)
         {
             roleCanCallEmergency = false;
             statusTextKey = "Hud.SwapperMeetingButton";

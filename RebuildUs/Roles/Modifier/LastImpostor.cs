@@ -129,10 +129,10 @@ public class LastImpostor : ModifierBase<LastImpostor>
 
         void SetBountyIconPos(Vector3 offset)
         {
-            Vector3 bottomLeft = new(-FastDestroyableSingleton<HudManager>.Instance.UseButton.transform.localPosition.x, FastDestroyableSingleton<HudManager>.Instance.UseButton.transform.localPosition.y, FastDestroyableSingleton<HudManager>.Instance.UseButton.transform.localPosition.z);
+            Vector3 bottomLeft = AspectPosition.ComputePosition(AspectPosition.EdgeAlignments.LeftBottom, new(0.9f, 0.7f, -10f));
             PoolablePlayer icon = ModMapOptions.PlayerIcons[BountyHunter.Bounty.PlayerId];
             icon.transform.localPosition = bottomLeft + new Vector3(-0.25f, 0f, 0) + offset;
-            BountyHunter.CooldownText.transform.localPosition = bottomLeft + new Vector3(-0.25f, 0f, -1f) + offset;
+            BountyHunter.CooldownText.transform.localPosition = bottomLeft + new Vector3(-0.25f, 0f, -0.1f) + offset;
         }
 
         Func<bool> LastImpostorCouldUse(byte index)

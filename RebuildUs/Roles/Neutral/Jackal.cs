@@ -137,8 +137,8 @@ public class Jackal : RoleBase<Jackal>
                 sender.Write(PlayerControl.LocalPlayer.PlayerId);
                 RPCProcedure.JackalCreatesSidekick(Local.CurrentTarget.PlayerId, PlayerControl.LocalPlayer.PlayerId);
             },
-            () => { return CanCreateSidekick && PlayerControl.LocalPlayer.IsRole(RoleType.Jackal) && PlayerControl.LocalPlayer.IsAlive(); },
-            () => { return CanCreateSidekick && Local.CurrentTarget != null && PlayerControl.LocalPlayer.CanMove; },
+            () => { return Local.CanSidekick && PlayerControl.LocalPlayer.IsRole(RoleType.Jackal) && PlayerControl.LocalPlayer.IsAlive(); },
+            () => { return Local.CanSidekick && Local.CurrentTarget != null && PlayerControl.LocalPlayer.CanMove; },
             () => { JackalSidekickButton.Timer = JackalSidekickButton.MaxTimer; },
             AssetLoader.SidekickButton,
             ButtonPosition.Layout,
@@ -187,17 +187,21 @@ public class Jackal : RoleBase<Jackal>
     // write functions here
     public static void RemoveCurrentJackal()
     {
-        bool alreadyFormer = false;
-        var localPlayer = Local.Player;
-        for (var i = 0; i < FormerJackals.Count; i++)
+        for (int i = Players.Count - 1; i >= 0; i--)
         {
-            if (FormerJackals[i].PlayerId == localPlayer.PlayerId)
+            var p = Players[i].Player;
+            bool alreadyFormer = false;
+            for (int j = 0; j < FormerJackals.Count; j++)
             {
-                alreadyFormer = true;
-                break;
+                if (FormerJackals[j].PlayerId == p.PlayerId)
+                {
+                    alreadyFormer = true;
+                    break;
+                }
             }
+            if (!alreadyFormer) FormerJackals.Add(p);
+            p.EraseRole(RoleType.Jackal);
         }
-        if (!alreadyFormer) FormerJackals.Add(localPlayer);
     }
 
     public static void Clear()

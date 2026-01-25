@@ -16,11 +16,9 @@ public static class MapCountOverlayPatch
     [HarmonyPatch(typeof(MapCountOverlay), nameof(MapCountOverlay.Update))]
     public static bool UpdatePrefix(MapCountOverlay __instance)
     {
-        var result = true;
-        if (!Admin.Update(__instance)) result = false;
-        if (!Map.OverlayOnEnablePostfix(__instance)) result = false;
+        Admin.Update(__instance);
 
-        return result;
+        return false;
     }
 
     [HarmonyPrefix]

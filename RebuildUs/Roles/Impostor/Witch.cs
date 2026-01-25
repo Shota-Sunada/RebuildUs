@@ -125,6 +125,9 @@ public class Witch : RoleBase<Witch>
             () =>
             {
                 if (SpellCastingTarget == null) return;
+
+                KillAnimationPatch.AvoidNextKillMovement = true;
+
                 MurderAttemptResult attempt = Helpers.CheckMurderAttempt(Local.Player, SpellCastingTarget);
                 if (attempt == MurderAttemptResult.PerformKill)
                 {

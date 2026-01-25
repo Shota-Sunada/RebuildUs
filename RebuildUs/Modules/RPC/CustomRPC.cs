@@ -16,6 +16,7 @@ public enum CustomRPC : byte
     DynamicMapOption,
     SetGameStarting,
     StopStart,
+    StopStartSound,
     ShareGamemode,
     FinishResetVariables,
     FinishSetRole,

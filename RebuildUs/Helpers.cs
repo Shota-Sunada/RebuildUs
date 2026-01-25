@@ -580,10 +580,10 @@ public static class Helpers
                 if (p == localPlayer)
                 {
                     var roles = (p.Data.IsDead ? roleGhost : roleBase) + statusText;
-                    if (p.IsRole(RoleType.Swapper))
+                    if (p.IsRole(RoleType.NiceSwapper))
                     {
                         InfoStringBuilder.Clear();
-                        InfoStringBuilder.Append(roles).Append(Cs(Swapper.NameColor, " (")).Append(Swapper.RemainSwaps).Append(')');
+                        InfoStringBuilder.Append(roles).Append("<color=#FAD934FF> (").Append(Swapper.RemainSwaps).Append(")</color>");
                         pInfo = InfoStringBuilder.ToString();
                     }
                     else

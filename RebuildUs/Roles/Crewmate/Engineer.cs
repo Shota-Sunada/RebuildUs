@@ -23,55 +23,7 @@ public class Engineer : RoleBase<Engineer>
     public override void OnMeetingStart() { }
     public override void OnMeetingEnd() { }
     public override void OnIntroEnd() { }
-    public override void FixedUpdate()
-    {
-        var local = PlayerControl.LocalPlayer;
-        if (local == null) return;
-
-        bool jackalHighlight = HighlightForTeamJackal && (local.IsRole(RoleType.Jackal) || local.IsRole(RoleType.Sidekick));
-        bool impostorHighlight = HighlightForImpostors && local.IsTeamImpostor();
-
-        var shipStatus = MapUtilities.CachedShipStatus;
-        if ((jackalHighlight || impostorHighlight) && shipStatus != null && shipStatus.AllVents != null)
-        {
-            var engineers = AllPlayers;
-            int engineerCount = engineers.Count;
-            var allVents = shipStatus.AllVents;
-
-            for (int i = 0; i < allVents.Length; i++)
-            {
-                var vent = allVents[i];
-                if (vent == null || vent.myRend == null) continue;
-
-                var mat = vent.myRend.material;
-                if (mat == null) continue;
-
-                bool anyEngineerInVent = false;
-                for (int j = 0; j < engineerCount; j++)
-                {
-                    if (engineers[j].inVent)
-                    {
-                        anyEngineerInVent = true;
-                        break;
-                    }
-                }
-
-                if (anyEngineerInVent)
-                {
-                    mat.SetFloat("_Outline", 1f);
-                    mat.SetColor("_OutlineColor", RoleColor);
-                }
-                else
-                {
-                    // Only remove outline if it's not being set by something else (Check alpha of AddColor as a proxy)
-                    if (mat.HasProperty("_AddColor") && mat.GetColor("_AddColor").a == 0f)
-                    {
-                        mat.SetFloat("_Outline", 0f);
-                    }
-                }
-            }
-        }
-    }
+    public override void FixedUpdate() { }
     public override void OnKill(PlayerControl target) { }
     public override void OnDeath(PlayerControl killer = null) { }
     public override void OnFinishShipStatusBegin() { }

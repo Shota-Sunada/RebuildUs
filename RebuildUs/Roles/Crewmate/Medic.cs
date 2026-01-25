@@ -32,14 +32,10 @@ public class Medic : RoleBase<Medic>
     public override void OnIntroEnd() { }
     public override void FixedUpdate()
     {
-        var local = Local;
-        if (local != null)
+        if (!UsedShield)
         {
-            if (!UsedShield)
-            {
-                CurrentTarget = Helpers.SetTarget();
-                Helpers.SetPlayerOutline(CurrentTarget, ShieldedColor);
-            }
+            CurrentTarget = Helpers.SetTarget();
+            Helpers.SetPlayerOutline(CurrentTarget, ShieldedColor);
         }
     }
     public override void OnKill(PlayerControl target) { }
@@ -72,7 +68,7 @@ public class Medic : RoleBase<Medic>
                     }
                 }
             },
-            () => { return Local != null && PlayerControl.LocalPlayer.IsAlive(); },
+            () => { return Local != null && !UsedShield && PlayerControl.LocalPlayer.IsAlive(); },
             () =>
             {
                 var local = Local;

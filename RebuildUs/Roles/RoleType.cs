@@ -12,7 +12,7 @@ public enum RoleType : byte
     Detective,
     TimeMaster,
     Medic,
-    Swapper,
+    NiceSwapper,
     Seer,
     Hacker,
     Tracker,
@@ -38,7 +38,7 @@ public enum RoleType : byte
     BountyHunter,
     Witch,
     Madmate,
-    SerialKiller,
+    EvilSwapper,
 
     // Neutral
     Lovers = 150,

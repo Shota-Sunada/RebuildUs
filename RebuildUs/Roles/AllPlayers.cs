@@ -48,4 +48,112 @@ public static class AllPlayers
             LastImpostor.PromoteToLastImpostor();
         }
     }
+
+    public static void Update(PlayerControl __instance)
+    {
+        if (__instance == null || __instance != PlayerControl.LocalPlayer) return;
+
+        bool jackalHighlight = Engineer.HighlightForTeamJackal && (__instance.IsRole(RoleType.Jackal) || __instance.IsRole(RoleType.Sidekick));
+        bool impostorHighlight = Engineer.HighlightForImpostors && __instance.IsTeamImpostor();
+        bool isBait = __instance.IsRole(RoleType.Bait) && __instance.IsAlive();
+
+        var shipStatus = MapUtilities.CachedShipStatus;
+        if (shipStatus != null && shipStatus.AllVents != null)
+        {
+            var allVents = shipStatus.AllVents;
+
+            // Engineer check
+            bool anyEngineerInVent = false;
+            if (jackalHighlight || impostorHighlight)
+            {
+                var engineers = Engineer.AllPlayers;
+                for (int j = 0; j < engineers.Count; j++)
+                {
+                    if (engineers[j].inVent)
+                    {
+                        anyEngineerInVent = true;
+                        break;
+                    }
+                }
+            }
+
+            // Bait check
+            HashSet<int> ventsWithPlayers = [];
+            bool anyPlayerInVent = false;
+            if (isBait)
+            {
+                var allPlayers = PlayerControl.AllPlayerControls;
+                for (int i = 0; i < allPlayers.Count; i++)
+                {
+                    PlayerControl player = allPlayers[i];
+                    if (player == null || !player.inVent) continue;
+
+                    anyPlayerInVent = true;
+                    var playerPos = player.GetTruePosition();
+                    Vent closestVent = null;
+                    float minDistance = float.MaxValue;
+                    for (int j = 0; j < allVents.Length; j++)
+                    {
+                        var v = allVents[j];
+                        if (v == null) continue;
+                        float dist = Vector2.Distance(v.transform.position, playerPos);
+                        if (dist < minDistance)
+                        {
+                            minDistance = dist;
+                            closestVent = v;
+                        }
+                    }
+                    if (closestVent != null) ventsWithPlayers.Add(closestVent.Id);
+                }
+            }
+
+            for (int i = 0; i < allVents.Length; i++)
+            {
+                var vent = allVents[i];
+                if (vent == null || vent.myRend == null) continue;
+
+                var mat = vent.myRend.material;
+                if (mat == null) continue;
+
+                bool highlight = false;
+                Color highlightColor = Color.white;
+
+                if ((jackalHighlight || impostorHighlight) && anyEngineerInVent)
+                {
+                    highlight = true;
+                    highlightColor = Engineer.NameColor;
+                }
+                else if (isBait)
+                {
+                    if (Bait.HighlightAllVents)
+                    {
+                        if (anyPlayerInVent)
+                        {
+                            highlight = true;
+                            highlightColor = Bait.NameColor;
+                        }
+                    }
+                    else if (ventsWithPlayers.Contains(vent.Id))
+                    {
+                        highlight = true;
+                        highlightColor = Bait.NameColor;
+                    }
+                }
+
+                if (highlight)
+                {
+                    mat.SetFloat("_Outline", 1f);
+                    mat.SetColor("_OutlineColor", highlightColor);
+                }
+                else
+                {
+                    // Only remove outline if it's not being set by something else (Check alpha of AddColor as a proxy)
+                    if (mat.HasProperty("_AddColor") && mat.GetColor("_AddColor").a == 0f)
+                    {
+                        mat.SetFloat("_Outline", 0f);
+                    }
+                }
+            }
+        }
+    }
 }

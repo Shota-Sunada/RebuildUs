@@ -1,3 +1,7 @@
+using AmongUs.Data;
+using Assets.CoreScripts;
+using BepInEx.Unity.IL2CPP.Utils.Collections;
+
 namespace RebuildUs.Patches;
 
 [HarmonyPatch]
@@ -76,6 +80,8 @@ public static class PlayerControlPatch
 
         RebuildUs.FixedUpdate(__instance);
 
+        AllPlayers.Update(__instance);
+
         Usables.FixedUpdate(__instance);
         Update.StopCooldown(__instance);
     }
@@ -88,9 +94,11 @@ public static class PlayerControlPatch
     }
 
     [HarmonyPrefix]
-    [HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.CmdReportDeadBody))]
-    public static bool CmdReportDeadBodyPrefix(PlayerControl __instance, NetworkedPlayerInfo target)
+    [HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.ReportDeadBody))]
+    public static bool ReportDeadBodyPrefix(PlayerControl __instance, NetworkedPlayerInfo target)
     {
+        Logger.LogInfo("ReportDeadBody Prefix");
+
         Helpers.HandleVampireBiteOnBodyReport();
 
         if (__instance.IsGM())
@@ -101,30 +109,93 @@ public static class PlayerControlPatch
     }
 
     [HarmonyPostfix]
-    [HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.CmdReportDeadBody))]
-    public static void CmdReportDeadBodyPostfix(PlayerControl __instance, [HarmonyArgument(0)] NetworkedPlayerInfo target)
+    [HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.ReportDeadBody))]
+    public static void ReportDeadBodyPostfix(PlayerControl __instance, NetworkedPlayerInfo target)
     {
+        Logger.LogInfo("ReportDeadBody Postfix");
+
         var sb = new StringBuilder();
         sb.Append(__instance.GetNameWithRole());
         sb.Append(" => ");
         sb.Append(target?.Object?.GetNameWithRole() ?? "null");
         Logger.LogInfo(sb.ToString(), "ReportDeadBody");
-
-        Meeting.HandleReportDeadBody(__instance, target);
     }
 
     [HarmonyPrefix]
     [HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.MurderPlayer))]
-    public static void Prefix(PlayerControl __instance, [HarmonyArgument(0)] PlayerControl target)
+    public static bool MurderPlayerPrefix(PlayerControl __instance, PlayerControl target, MurderResultFlags resultFlags)
     {
         GameHistory.OnMurderPlayerPrefix(__instance, target);
-    }
 
-    [HarmonyPostfix]
-    [HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.MurderPlayer))]
-    public static void Postfix(PlayerControl __instance, [HarmonyArgument(0)] PlayerControl target)
-    {
+        // ORIGINAL MURDER_PLAYER
+        __instance.isKilling = false;
+        __instance.logger.Debug($"{__instance.PlayerId} trying to murder {target.PlayerId}");
+        NetworkedPlayerInfo data = target.Data;
+        if (resultFlags.HasFlag(MurderResultFlags.FailedError)) return false;
+        if (resultFlags.HasFlag(MurderResultFlags.FailedProtected) || resultFlags.HasFlag(MurderResultFlags.DecisionByHost) && target.protectedByGuardianId > -1)
+        {
+            target.protectedByGuardianThisRound = true;
+            bool flag = PlayerControl.LocalPlayer.Data.Role.Role == RoleTypes.GuardianAngel;
+            if (flag && PlayerControl.LocalPlayer.Data.PlayerId == target.protectedByGuardianId)
+            {
+                DataManager.Player.Stats.IncrementStat(StatID.Role_GuardianAngel_CrewmatesProtected);
+                DestroyableSingleton<AchievementManager>.Instance.OnProtectACrewmate();
+            }
+            if (__instance.AmOwner | flag)
+            {
+                target.ShowFailedMurder();
+                __instance.SetKillTimer(GameOptionsManager.Instance.CurrentGameOptions.GetFloat(FloatOptionNames.KillCooldown) / 2f);
+            }
+            else
+                target.RemoveProtection();
+            __instance.logger.Debug($"{__instance.PlayerId} failed to murder {target.PlayerId} due to guardian angel protection");
+        }
+        else
+        {
+            if (!resultFlags.HasFlag(MurderResultFlags.Succeeded) && !resultFlags.HasFlag(MurderResultFlags.DecisionByHost)) return false;
+            DestroyableSingleton<DebugAnalytics>.Instance.Analytics.Kill(target.Data, __instance.Data);
+            if (__instance.AmOwner)
+            {
+                if (GameManager.Instance.IsHideAndSeek())
+                    DataManager.Player.Stats.IncrementStat(StatID.HideAndSeek_ImpostorKills);
+                else
+                    DataManager.Player.Stats.IncrementStat(StatID.ImpostorKills);
+                if (__instance.CurrentOutfitType == PlayerOutfitType.Shapeshifted)
+                    DataManager.Player.Stats.IncrementStat(StatID.Role_Shapeshifter_ShiftedKills);
+                if (Constants.ShouldPlaySfx())
+                    SoundManager.Instance.PlaySound(__instance.KillSfx, false, 0.8f);
+                __instance.SetKillTimer(GameOptionsManager.Instance.CurrentGameOptions.GetFloat(FloatOptionNames.KillCooldown));
+            }
+            DestroyableSingleton<UnityTelemetry>.Instance.WriteMurder();
+            target.gameObject.layer = LayerMask.NameToLayer("Ghost");
+            if (target.AmOwner)
+            {
+                DataManager.Player.Stats.IncrementStat(StatID.TimesMurdered);
+                if (Minigame.Instance)
+                {
+                    try
+                    {
+                        Minigame.Instance.Close();
+                        Minigame.Instance.Close();
+                    }
+                    catch
+                    {
+                    }
+                }
+                DestroyableSingleton<HudManager>.Instance.KillOverlay.ShowKillAnimation(__instance.Data, data);
+                target.cosmetics.SetNameMask(false);
+                target.RpcSetScanner(false);
+            }
+            DestroyableSingleton<AchievementManager>.Instance.OnMurder(__instance.AmOwner, target.AmOwner, __instance.CurrentOutfitType == PlayerOutfitType.Shapeshifted, __instance.shapeshiftTargetPlayerId, target.PlayerId);
+            // DISABLE ORIGINAL CO_PERFORM_KILL
+            // __instance.MyPhysics.StartCoroutine(__instance.KillAnimations.Random().CoPerformKill(__instance, target));
+            __instance.MyPhysics.StartCoroutine(KillAnimationPatch.CoPerformKill(__instance.KillAnimations.Random(), __instance, target).WrapToIl2Cpp());
+            __instance.logger.Debug($"{__instance.PlayerId} succeeded in murdering {target.PlayerId}");
+        }
+        // ORIGINAL MURDER_PLAYER
+
         GameHistory.OnMurderPlayerPostfix(__instance, target);
+        return false;
     }
 
     [HarmonyPostfix]

@@ -201,7 +201,10 @@ public abstract class ModifierBase<T> : PlayerModifier where T : ModifierBase<T>
             if (Players[i].Player == p1)
             {
                 Players[i].Player = p2;
-                break;
+            }
+            else if (Players[i].Player == p2)
+            {
+                Players[i].Player = p1;
             }
         }
     }

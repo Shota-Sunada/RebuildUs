@@ -106,7 +106,7 @@ public static class ModifierHelpers
         for (var i = 0; i < modifiers.Length; i++)
         {
             var reg = modifiers[i];
-            if (reg.classType != null && player.HasModifier(reg.modType))
+            if (reg.classType != null && (player.HasModifier(reg.modType) || target.HasModifier(reg.modType)))
             {
                 var methods = GetMethods(reg.modType);
                 methods.swapModifier?.Invoke(null, [player, target]);

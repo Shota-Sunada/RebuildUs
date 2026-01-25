@@ -21,7 +21,7 @@ public class Tracker : RoleBase<Tracker>
     public PlayerControl Tracked;
     public bool UsedTracker = false;
     public float TimeUntilUpdate = 0f;
-    public Arrow Arrow = new(Color.blue);
+    public Arrow Arrow;
 
     public Tracker()
     {
@@ -42,9 +42,10 @@ public class Tracker : RoleBase<Tracker>
         CurrentTarget = Helpers.SetTarget();
         if (!UsedTracker) Helpers.SetPlayerOutline(CurrentTarget, RoleColor);
 
-        if (Arrow?.ArrowObject != null)
+        if (UsedTracker && Tracked != null && !Player.Data.IsDead)
         {
-            if (Tracked != null && !Player.Data.IsDead)
+            Arrow ??= new Arrow(RoleColor);
+            if (Arrow.ArrowObject != null)
             {
                 TimeUntilUpdate -= Time.fixedDeltaTime;
 
@@ -75,6 +76,14 @@ public class Tracker : RoleBase<Tracker>
                 {
                     Arrow.Update();
                 }
+            }
+        }
+        else
+        {
+            if (Arrow?.ArrowObject != null)
+            {
+                UnityEngine.Object.Destroy(Arrow.ArrowObject);
+                Arrow = null;
             }
         }
 
@@ -186,8 +195,7 @@ public class Tracker : RoleBase<Tracker>
         CurrentTarget = Tracked = null;
         UsedTracker = false;
         if (Arrow?.ArrowObject != null) UnityEngine.Object.Destroy(Arrow.ArrowObject);
-        Arrow = new Arrow(Color.blue);
-        Arrow.ArrowObject?.SetActive(false);
+        Arrow = null;
     }
 
     public static void Clear()

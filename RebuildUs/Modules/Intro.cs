@@ -11,14 +11,9 @@ public static class Intro
 
     public static void GenerateMiniCrewIcons(IntroCutscene __instance)
     {
-        int playerCounter = 0;
         if (PlayerControl.LocalPlayer != null && FastDestroyableSingleton<HudManager>.Instance != null && __instance.PlayerPrefab != null)
         {
-            float aspect = Camera.main.aspect;
-            float safeOrthographicSize = CameraSafeArea.GetSafeOrthographicSize(Camera.main);
-            float xpos = 1.75f - safeOrthographicSize * aspect * 1.70f;
-            float ypos = 0.15f - safeOrthographicSize * 1.7f;
-            BottomLeft = new Vector3(xpos / 2, ypos / 2, -61f);
+            BottomLeft = AspectPosition.ComputePosition(AspectPosition.EdgeAlignments.LeftBottom, new(0.9f, 0.7f, -10f));
 
             foreach (var p in PlayerControl.AllPlayerControls)
             {
@@ -28,24 +23,21 @@ public static class Intro
                 PlayerPrefab = __instance.PlayerPrefab;
                 player.UpdateFromPlayerData(data, p.CurrentOutfitType, PlayerMaterial.MaskType.None, false);
                 player.cosmetics.nameText.text = data.PlayerName;
+                player.cosmetics.nameText.transform.localPosition = new(0f, -0.7f, -0.1f);
                 player.SetFlipX(true);
                 ModMapOptions.PlayerIcons[p.PlayerId] = player;
                 player.gameObject.SetActive(false);
 
-                if (Arsonist.Exists && PlayerControl.LocalPlayer.IsRole(RoleType.Arsonist))
+                // UIレイヤーに設定
+                player.gameObject.layer = 5;
+                foreach (var child in player.GetComponentsInChildren<Transform>(true))
                 {
-                    player.transform.localPosition = BottomLeft + new Vector3(-0.25f, -0.25f, 0) + Vector3.right * playerCounter++ * 0.35f;
-                    player.transform.localScale = Vector3.one * 0.2f;
-                    player.SetSemiTransparent(true);
-                    player.gameObject.SetActive(true);
+                    child.gameObject.layer = 5;
                 }
-                else
-                {
-                    //  This can be done for all players not just for the bounty hunter as it was before. Allows the thief to have the correct position and scaling
-                    player.transform.localPosition = BottomLeft;
-                    player.transform.localScale = Vector3.one * 0.4f;
-                    player.gameObject.SetActive(false);
-                }
+
+                //  Allows the roles to have the correct position and scaling via their own UpdateIcons
+                player.transform.localPosition = BottomLeft;
+                player.transform.localScale = Vector3.one * 0.3f;
             }
         }
 
@@ -409,10 +401,15 @@ public static class Intro
         Logger.LogInfo("--------------------------------", "Settings");
 
         __instance.YouAreText.color = roleInfo.Color;
+        Logger.LogInfo(roleInfo.Color);
         __instance.RoleText.text = roleInfo.Name;
+        Logger.LogInfo(roleInfo.Name);
         __instance.RoleText.color = roleInfo.Color;
+        Logger.LogInfo(roleInfo.Color);
         __instance.RoleBlurbText.text = roleInfo.IntroDescription;
+        Logger.LogInfo(roleInfo.IntroDescription);
         __instance.RoleBlurbText.color = roleInfo.Color;
+        Logger.LogInfo(roleInfo.Color);
 
         if (PlayerControl.LocalPlayer.HasModifier(ModifierType.Madmate))
         {
