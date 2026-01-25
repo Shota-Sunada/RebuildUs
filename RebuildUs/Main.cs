@@ -113,13 +113,12 @@ public class RebuildUs : BasePlugin
         AssetLoader.LoadAssets();
 
         Tr.Initialize();
-        CustomOptionHolder.Load();
         RoleInfo.Load();
-        // CustomHatManager.LoadHats(); // Removed: Called from MainMenuManagerPatch
         CustomColors.Load();
         SubmergedCompatibility.Initialize();
         Submerged.Patch();
         UpdateRegions();
+        CustomOptionHolder.Load();
 
         // Update Discord config from custom options
         EnableAutoMute.Value = ModMapOptions.EnableDiscordAutoMute;

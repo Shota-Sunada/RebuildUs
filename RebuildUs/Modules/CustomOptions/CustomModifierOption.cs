@@ -7,7 +7,7 @@ public class CustomModifierOption : CustomRoleOption
     {
         IsRoleEnabled = roleEnabled;
         IsHeader = true;
-        HeaderText = Helpers.Cs(color, Tr.Get($"Modifier.{Enum.GetName(modType)}"));
+        HeaderText = $"Modifier.{Enum.GetName(modType)}";
 
         if (max <= 0 || !roleEnabled)
         {

@@ -15,7 +15,7 @@ public class CustomRoleOption : CustomOption
     {
         IsRoleEnabled = roleEnabled;
         IsHeader = true;
-        HeaderText = Helpers.Cs(color, Tr.Get($"Role.{Enum.GetName(roleType)}"));
+        HeaderText = $"Role.{Enum.GetName(roleType)}";
 
         if (max <= 0 || !roleEnabled)
         {
@@ -33,7 +33,7 @@ public class CustomRoleOption : CustomOption
     {
         IsRoleEnabled = roleEnabled;
         IsHeader = true;
-        HeaderText = Helpers.Cs(color, Tr.Get(name));
+        HeaderText = name;
 
         if (max <= 0 || !roleEnabled)
         {

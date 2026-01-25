@@ -550,7 +550,7 @@ public static class CustomOptionHolder
         SecurityGuardCamRechargeTasksNumber = CustomOption.Normal(1127, CustomOptionType.Crewmate, "Option.SecurityGuardCamRechargeTasksNumber", 3f, 1f, 10f, 1f, SecurityGuardSpawnRate);
         SecurityGuardNoMove = CustomOption.Normal(1128, CustomOptionType.Crewmate, "Option.SecurityGuardNoMove", true, SecurityGuardSpawnRate);
 
-        SwapperSpawnRate = new(1130, CustomOptionType.Neutral, RoleType.NiceSwapper, Swapper.NameColor, 1);
+        SwapperSpawnRate = new(1130, CustomOptionType.Neutral, $"Role.{nameof(Swapper)}", Swapper.NameColor, 1);
         SwapperIsImpRate = CustomOption.Normal(1131, CustomOptionType.Neutral, "Option.SwapperIsImpRate", RATES, SwapperSpawnRate);
         SwapperNumSwaps = CustomOption.Normal(1132, CustomOptionType.Neutral, "Option.SwapperNumSwaps", 2f, 1f, 15f, 1f, SwapperSpawnRate);
         SwapperCanCallEmergency = CustomOption.Normal(1133, CustomOptionType.Neutral, "Option.SwapperCanCallEmergency", false, SwapperSpawnRate);

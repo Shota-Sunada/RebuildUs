@@ -279,7 +279,7 @@ public partial class CustomOption
             {
                 var categoryHeaderMasked = UnityEngine.Object.Instantiate(menu.categoryHeaderOrigin, Vector3.zero, Quaternion.identity, menu.settingsContainer);
                 categoryHeaderMasked.SetHeader(StringNames.ImpostorsCategory, 20);
-                categoryHeaderMasked.Title.text = option.HeaderText != "" ? option.HeaderText : Helpers.Cs(option.Color, Tr.Get(option.NameKey));
+                categoryHeaderMasked.Title.text = Helpers.Cs(option.Color, Tr.Get(option.HeaderText != "" ? option.HeaderText : option.NameKey));
                 categoryHeaderMasked.Title.outlineColor = Color.white;
                 categoryHeaderMasked.Title.outlineWidth = 0.1f;
                 categoryHeaderMasked.transform.localScale = Vector3.one * 0.63f;
