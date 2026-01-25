@@ -15,7 +15,7 @@ public class Vampire : RoleBase<Vampire>
 
     public PlayerControl CurrentTarget;
     public bool TargetNearGarlic = false;
-    public bool LocalPlacedGarlic = false;
+    public static bool PlayerPlacedGarlic = false;
 
     // States
     public static PlayerControl Bitten;
@@ -95,7 +95,8 @@ public class Vampire : RoleBase<Vampire>
                         RPCProcedure.VampireSetBitten(Bitten.PlayerId, 0);
 
                         FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(Delay, new Action<float>((p) =>
-                        { // Delayed action
+                        {
+                            // Delayed action
                             if (p == 1f)
                             {
                                 // Perform kill if possible and reset bitten (regardless whether the kill was successful or not)
@@ -152,19 +153,15 @@ public class Vampire : RoleBase<Vampire>
             () =>
             {
                 VampireKillButton.Timer = VampireKillButton.MaxTimer;
-            }
-        )
-        {
-            ButtonText = Tr.Get("Hud.VampireText")
-        };
+            },
+            false,
+            Tr.Get("Hud.VampireText")
+        );
 
         GarlicButton = new CustomButton(
             () =>
             {
-                var local = Local;
-                if (local == null) return;
-
-                local.LocalPlacedGarlic = true;
+                PlayerPlacedGarlic = true;
                 var pos = PlayerControl.LocalPlayer.transform.position;
 
                 using (var sender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.PlaceGarlic))
@@ -176,13 +173,11 @@ public class Vampire : RoleBase<Vampire>
             },
             () =>
             {
-                var local = Local;
-                return local != null && !local.LocalPlacedGarlic && PlayerControl.LocalPlayer.IsAlive() && GarlicsActive && !PlayerControl.LocalPlayer.IsGM();
+                return !PlayerPlacedGarlic && PlayerControl.LocalPlayer.IsAlive() && GarlicsActive && !PlayerControl.LocalPlayer.IsGM();
             },
             () =>
             {
-                var local = Local;
-                return PlayerControl.LocalPlayer.CanMove && local != null && !local.LocalPlacedGarlic;
+                return PlayerControl.LocalPlayer.CanMove && !PlayerPlacedGarlic;
             },
             () => { },
             AssetLoader.GarlicButton,
@@ -190,11 +185,9 @@ public class Vampire : RoleBase<Vampire>
             hm,
             hm.UseButton,
             null,
-            true
-        )
-        {
-            ButtonText = Tr.Get("Hud.GarlicText")
-        };
+            true,
+            Tr.Get("Hud.GarlicText")
+        );
     }
     public static void SetButtonCooldowns()
     {

@@ -144,11 +144,10 @@ public class Jackal : RoleBase<Jackal>
             ButtonPosition.Layout,
             hm,
             hm.KillButton,
-            KeyCode.F
-        )
-        {
-            ButtonText = Tr.Get("Hud.SidekickText")
-        };
+            KeyCode.F,
+            false,
+            Tr.Get("Hud.SidekickText")
+        );
 
         JackalSabotageLightsButton = new CustomButton(
             () =>

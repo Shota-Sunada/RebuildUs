@@ -88,11 +88,10 @@ public class Eraser : RoleBase<Eraser>
             ButtonPosition.Layout,
             hm,
             hm.KillButton,
-            KeyCode.F
-        )
-        {
-            ButtonText = Tr.Get("Hud.EraserText")
-        };
+            KeyCode.F,
+            false,
+            Tr.Get("Hud.EraserText")
+        );
     }
     public static void SetButtonCooldowns()
     {
@@ -105,5 +104,6 @@ public class Eraser : RoleBase<Eraser>
     {
         // reset configs here
         Players.Clear();
+        FutureErased = [];
     }
 }

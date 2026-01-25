@@ -63,11 +63,10 @@ public class EvilTracker : RoleBase<EvilTracker>
             ButtonPosition.Layout,
             hm,
             hm.KillButton,
-            KeyCode.F
-        )
-        {
-            ButtonText = Tr.Get("Hud.TrackerText")
-        };
+            KeyCode.F,
+            false,
+            Tr.Get("Hud.TrackerText")
+        );
     }
     public static void SetButtonCooldowns()
     {
@@ -153,7 +152,7 @@ public class EvilTracker : RoleBase<EvilTracker>
                         sb.Clear();
                         sb.Append("<color=#FF1919FF>");
                         sb.Append(p.name);
-                        sb.Append("(");
+                        sb.Append('(');
                         sb.Append(FastDestroyableSingleton<TranslationController>.Instance.GetString(room.RoomId));
                         sb.Append(")</color>");
                         positionText.text = sb.ToString();
@@ -191,7 +190,7 @@ public class EvilTracker : RoleBase<EvilTracker>
                     sb.Clear();
                     sb.Append("<color=#8CFFFFFF>");
                     sb.Append(Target.name);
-                    sb.Append("(");
+                    sb.Append('(');
                     sb.Append(FastDestroyableSingleton<TranslationController>.Instance.GetString(room.RoomId));
                     sb.Append(")</color>");
                     TargetPositionText.text = sb.ToString();

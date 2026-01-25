@@ -88,11 +88,10 @@ public class Morphing : RoleBase<Morphing>
                     MorphingButton.Sprite = AssetLoader.SampleButton;
                     MorphingButton.ButtonText = Tr.Get("Hud.SampleText");
                 }
-            }
-        )
-        {
-            ButtonText = Tr.Get("Hud.SampleText")
-        };
+            },
+            false,
+            Tr.Get("Hud.SampleText")
+        );
     }
     public static void SetButtonCooldowns()
     {

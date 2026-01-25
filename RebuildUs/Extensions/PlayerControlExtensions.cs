@@ -56,7 +56,7 @@ public static class PlayerControlHelpers
 
     public static bool IsTeamImpostor(this PlayerControl player)
     {
-        return player != null && player.Data.Role.IsImpostor;
+        return player?.Data?.Role != null && player.Data.Role.IsImpostor;
     }
 
     public static bool HasFakeTasks(this PlayerControl player)
@@ -214,7 +214,17 @@ public static class PlayerControlHelpers
     {
         if (player == null || player.Data == null) return "";
         RoleStringBuilder.Clear();
-        RoleStringBuilder.Append(player.Data.PlayerName)
+        string name = player.Data.PlayerName;
+        if (Camouflager.CamouflageTimer > 0f)
+        {
+            if (string.IsNullOrEmpty(name))
+                name = player.Data.DefaultOutfit.PlayerName;
+        }
+        else if (player.CurrentOutfitType == PlayerOutfitType.Shapeshifted)
+        {
+            name = $"{player.CurrentOutfit.PlayerName} ({player.Data.DefaultOutfit.PlayerName})";
+        }
+        RoleStringBuilder.Append(name)
             .Append(" (")
             .Append(player.GetRoleName())
             .Append(')');

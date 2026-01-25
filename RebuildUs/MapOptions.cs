@@ -156,51 +156,56 @@ namespace RebuildUs
         public static void UpdateTimerText()
         {
             if (RestrictDevices == 0 || (!RestrictAdminText && !RestrictCamerasText && !RestrictVitalsText))
+            {
                 return;
+            }
             if (FastDestroyableSingleton<HudManager>.Instance == null)
+            {
                 return;
+            }
 
             // Admin
             if (RestrictAdminText)
             {
-                AdminTimerText = UnityEngine.Object.Instantiate(FastDestroyableSingleton<TaskPanelBehaviour>.Instance.taskText, FastDestroyableSingleton<HudManager>.Instance.transform);
+                AdminTimerText = UnityEngine.Object.Instantiate(FastDestroyableSingleton<HudManager>.Instance.TaskPanel.taskText, FastDestroyableSingleton<HudManager>.Instance.transform);
                 float y = -4.0f;
                 if (RestrictCamerasText)
+                {
                     y += 0.2f;
+                }
                 if (RestrictVitalsText)
+                {
                     y += 0.2f;
+                }
                 AdminTimerText.transform.localPosition = new Vector3(-3.5f, y, 0);
-                if (RestrictAdminTime > 0)
-                    AdminTimerText.text = String.Format(Tr.Get("Hud.AdminText"), RestrictAdminTime.ToString("0.00"));
-                else
-                    AdminTimerText.text = Tr.Get("Hud.AdminRanOut");
+                AdminTimerText.text = RestrictAdminTime > 0 ? string.Format(Tr.Get("Hud.AdminText"), RestrictAdminTime.ToString("0.00")) : Tr.Get("Hud.AdminRanOut");
                 AdminTimerText.gameObject.SetActive(true);
             }
 
             // Cameras
             if (RestrictCamerasText)
             {
-                CamerasTimerText = UnityEngine.Object.Instantiate(FastDestroyableSingleton<TaskPanelBehaviour>.Instance.taskText, FastDestroyableSingleton<HudManager>.Instance.transform);
+                CamerasTimerText = UnityEngine.Object.Instantiate(FastDestroyableSingleton<HudManager>.Instance.TaskPanel.taskText, FastDestroyableSingleton<HudManager>.Instance.transform);
                 float y = -4.0f;
                 if (RestrictVitalsText)
+                {
                     y += 0.2f;
+                }
                 CamerasTimerText.transform.localPosition = new Vector3(-3.5f, y, 0);
-                if (RestrictCamerasTime > 0)
-                    CamerasTimerText.text = String.Format(Tr.Get("Hud.CamerasText"), RestrictCamerasTime.ToString("0.00"));
-                else
-                    CamerasTimerText.text = Tr.Get("Hud.CamerasRanOut");
+                CamerasTimerText.text = RestrictCamerasTime > 0
+                    ? string.Format(Tr.Get("Hud.CamerasText"), RestrictCamerasTime.ToString("0.00"))
+                    : Tr.Get("Hud.CamerasRanOut");
                 CamerasTimerText.gameObject.SetActive(true);
             }
 
             // Vitals
             if (RestrictVitalsText)
             {
-                VitalsTimerText = UnityEngine.Object.Instantiate(FastDestroyableSingleton<TaskPanelBehaviour>.Instance.taskText, FastDestroyableSingleton<HudManager>.Instance.transform);
+                VitalsTimerText = UnityEngine.Object.Instantiate(FastDestroyableSingleton<HudManager>.Instance.TaskPanel.taskText, FastDestroyableSingleton<HudManager>.Instance.transform);
                 VitalsTimerText.transform.localPosition = new Vector3(-3.5f, -4.0f, 0);
-                if (RestrictVitalsTime > 0)
-                    VitalsTimerText.text = String.Format(Tr.Get("Hud.VitalsText"), RestrictVitalsTime.ToString("0.00"));
-                else
-                    VitalsTimerText.text = Tr.Get("Hud.VitalsRanOut");
+                VitalsTimerText.text = RestrictVitalsTime > 0
+                    ? string.Format(Tr.Get("Hud.VitalsText"), RestrictVitalsTime.ToString("0.00"))
+                    : Tr.Get("Hud.VitalsRanOut");
                 VitalsTimerText.gameObject.SetActive(true);
             }
         }
@@ -208,15 +213,20 @@ namespace RebuildUs
         private static void ClearTimerText()
         {
             if (AdminTimerText != null)
+            {
                 UnityEngine.Object.Destroy(AdminTimerText);
+            }
             AdminTimerText = null;
             if (CamerasTimerText != null)
+            {
                 UnityEngine.Object.Destroy(CamerasTimerText);
+            }
             CamerasTimerText = null;
             if (VitalsTimerText != null)
+            {
                 UnityEngine.Object.Destroy(VitalsTimerText);
+            }
             VitalsTimerText = null;
-
         }
     }
 }

@@ -101,7 +101,7 @@ public static class Admin
 
             if (TimeRemaining == null)
             {
-                TimeRemaining = UnityEngine.Object.Instantiate(FastDestroyableSingleton<TaskPanelBehaviour>.Instance.taskText, __instance.transform);
+                TimeRemaining = UnityEngine.Object.Instantiate(FastDestroyableSingleton<HudManager>.Instance.TaskPanel.taskText, __instance.transform);
                 TimeRemaining.alignment = TMPro.TextAlignmentOptions.BottomRight;
                 TimeRemaining.transform.position = Vector3.zero;
                 TimeRemaining.transform.localPosition = new Vector3(3.25f, 5.25f);
@@ -125,7 +125,7 @@ public static class Admin
             ClearedIcons = false;
             OutOfTime.gameObject.SetActive(false);
             string timeString = TimeSpan.FromSeconds(ModMapOptions.RestrictAdminTime).ToString(@"mm\:ss\.ff");
-            TimeRemaining.text = String.Format(Tr.Get("Hud.TimeRemaining"), timeString);
+            TimeRemaining.text = string.Format(Tr.Get("Hud.TimeRemaining"), timeString);
             //TimeRemaining.color = MapOptions.restrictAdminTime > 10f ? Palette.AcceptedGreen : Palette.ImpostorRed;
             TimeRemaining.gameObject.SetActive(true);
         }

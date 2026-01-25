@@ -147,11 +147,10 @@ public class Engineer : RoleBase<Engineer>
             ButtonPosition.Layout,
             hm,
             hm.UseButton,
-            KeyCode.F
-        )
-        {
-            ButtonText = Tr.Get("Hud.RepairText")
-        };
+            KeyCode.F,
+            false,
+            Tr.Get("Hud.RepairText")
+        );
     }
     public static void SetButtonCooldowns()
     {

@@ -13,7 +13,7 @@ public static class AllPlayers
         // Seer show flash and add dead player position
         if (Seer.Exists)
         {
-            if (PlayerControl.LocalPlayer.IsRole(RoleType.Seer) && !PlayerControl.LocalPlayer.Data.IsDead && !target.IsRole(RoleType.Seer) && Seer.Mode <= 1)
+            if (PlayerControl.LocalPlayer.IsRole(RoleType.Seer) && PlayerControl.LocalPlayer.IsAlive() && !target.IsRole(RoleType.Seer) && Seer.Mode <= 1)
             {
                 Helpers.ShowFlash(new Color(42f / 255f, 187f / 255f, 245f / 255f));
             }

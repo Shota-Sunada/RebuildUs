@@ -32,6 +32,11 @@ public abstract class PlayerRole
         PlayerRoleCache.Clear();
     }
 
+    public static void RemoveFromCache(byte playerId)
+    {
+        PlayerRoleCache.Remove(playerId);
+    }
+
     public static PlayerRole GetRole(PlayerControl player)
     {
         if (player == null) return null;
@@ -60,6 +65,7 @@ public abstract class RoleBase<T> : PlayerRole where T : RoleBase<T>, new()
         Player = player;
         Players.Add((T)this);
         AllRoles.Add(this);
+        PlayerRole.RemoveFromCache(player.PlayerId);
     }
 
     public static T Local
@@ -152,6 +158,7 @@ public abstract class RoleBase<T> : PlayerRole where T : RoleBase<T>, new()
     public static void EraseRole(PlayerControl player)
     {
         if (player == null) return;
+        PlayerRole.RemoveFromCache(player.PlayerId);
         for (int i = Players.Count - 1; i >= 0; i--)
         {
             var x = Players[i];
@@ -174,6 +181,8 @@ public abstract class RoleBase<T> : PlayerRole where T : RoleBase<T>, new()
     public static void SwapRole(PlayerControl p1, PlayerControl p2)
     {
         if (p1 == null || p2 == null) return;
+        PlayerRole.RemoveFromCache(p1.PlayerId);
+        PlayerRole.RemoveFromCache(p2.PlayerId);
         for (int i = 0; i < Players.Count; i++)
         {
             if (Players[i].Player == p1)

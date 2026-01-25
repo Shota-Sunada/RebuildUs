@@ -11,7 +11,7 @@ public class Mayor : RoleBase<Mayor>
 
     // write configs here
     public int RemoteMeetingsLeft = 1;
-    public static int NumVotes { get { return CustomOptionHolder.MayorNumVotes.GetSelection(); } }
+    public static int NumVotes { get { return (int)CustomOptionHolder.MayorNumVotes.GetFloat(); } }
     public static bool MayorCanSeeVoteColors { get { return CustomOptionHolder.MayorCanSeeVoteColors.GetBool(); } }
     public static int MayorTasksNeededToSeeVoteColors { get { return (int)CustomOptionHolder.MayorTasksNeededToSeeVoteColors.GetFloat(); } }
     public static bool MayorHasMeetingButton { get { return CustomOptionHolder.MayorMeetingButton.GetBool(); } }
@@ -20,7 +20,7 @@ public class Mayor : RoleBase<Mayor>
     public Mayor()
     {
         StaticRoleType = CurrentRoleType = RoleType.Mayor;
-        Local.RemoteMeetingsLeft = MayorMaxRemoteMeetings;
+        RemoteMeetingsLeft = MayorMaxRemoteMeetings;
     }
 
     public override void OnMeetingStart() { }
@@ -44,10 +44,10 @@ public class Mayor : RoleBase<Mayor>
                 RPCProcedure.UncheckedCmdReportDeadBody(PlayerControl.LocalPlayer.PlayerId, byte.MaxValue);
                 MayorMeetingButton.Timer = 1f;
             },
-            () => { return PlayerControl.LocalPlayer.IsRole(RoleType.Mayor) && !PlayerControl.LocalPlayer.Data.IsDead && MayorHasMeetingButton; },
+            () => { return PlayerControl.LocalPlayer.IsRole(RoleType.Mayor) && PlayerControl.LocalPlayer?.Data?.IsDead == false && MayorHasMeetingButton; },
             () =>
             {
-                MayorMeetingButton.ActionButton.OverrideText(string.Format("Emergency ({0})", Local.RemoteMeetingsLeft));
+                MayorMeetingButton.ActionButton.OverrideText(string.Format(Tr.Get("Hud.Emergency"), Local.RemoteMeetingsLeft));
                 bool sabotageActive = false;
                 foreach (var task in PlayerControl.LocalPlayer.myTasks.GetFastEnumerator())
                 {
@@ -70,7 +70,7 @@ public class Mayor : RoleBase<Mayor>
             0f,
             () => { },
             false,
-            "Meeting"
+            Tr.Get("Hud.Meeting")
         );
     }
     public static void SetButtonCooldowns()

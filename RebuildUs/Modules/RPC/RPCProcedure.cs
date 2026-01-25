@@ -318,13 +318,13 @@ public static partial class RPCProcedure
         }
 
         player.EraseAllRoles();
-        // player.EraseAllModifiers();
+        player.EraseAllModifiers();
 
-        // if (!ignoreLovers && player.IsLovers())
-        // {
-        //     // The whole Lover couple is being erased
-        //     Lovers.eraseCouple(player);
-        // }
+        if (!ignoreLovers && player.IsLovers())
+        {
+            // The whole Lover couple is being erased
+            Lovers.EraseCouple(player);
+        }
     }
 
     public static void JackalCreatesSidekick(byte targetId, byte jackalId)

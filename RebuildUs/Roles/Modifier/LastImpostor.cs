@@ -284,7 +284,7 @@ public class LastImpostor : ModifierBase<LastImpostor>
             var sb = new StringBuilder();
             for (var i = 0; i < roleInfos.Count; i++)
             {
-                if (i > 0) sb.Append(" ");
+                if (i > 0) sb.Append(' ');
                 var info = roleInfos[i];
                 sb.Append(Helpers.Cs(info.Color, info.Name));
             }

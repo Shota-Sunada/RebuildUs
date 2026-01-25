@@ -41,7 +41,7 @@ public class TimeMaster : RoleBase<TimeMaster>
                         for (int i = 0; i < vents.Length; i++)
                         {
                             var vent = vents[i];
-                            vent.CanUse(PlayerControl.LocalPlayer.Data, out bool canUse, out bool couldUse);
+                            vent.CanUse(PlayerControl.LocalPlayer?.Data, out bool canUse, out bool couldUse);
                             if (canUse)
                             {
                                 PlayerControl.LocalPlayer.MyPhysics.RpcExitVent(vent.Id);
@@ -112,11 +112,10 @@ public class TimeMaster : RoleBase<TimeMaster>
             KeyCode.F,
             true,
             ShieldDuration,
-            () => { TimeMasterShieldButton.Timer = TimeMasterShieldButton.MaxTimer; }
-        )
-        {
-            ButtonText = Tr.Get("Hud.TimeShieldText")
-        };
+            () => { TimeMasterShieldButton.Timer = TimeMasterShieldButton.MaxTimer; },
+            false,
+            Tr.Get("Hud.TimeShieldText")
+        );
     }
     public static void SetButtonCooldowns()
     {

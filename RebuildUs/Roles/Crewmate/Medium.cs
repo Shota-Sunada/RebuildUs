@@ -196,11 +196,10 @@ public class Medium : RoleBase<Medium>
 
                     Souls.Remove(target);
                 }
-            }
-        )
-        {
-            ButtonText = Tr.Get("Hud.MediumText")
-        };
+            },
+            false,
+            Tr.Get("Hud.MediumText")
+        );
     }
     public static void SetButtonCooldowns()
     {

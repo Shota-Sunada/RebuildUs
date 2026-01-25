@@ -60,7 +60,7 @@ public static class Vitals
         {
             if (TimeRemaining == null)
             {
-                TimeRemaining = UnityEngine.Object.Instantiate(FastDestroyableSingleton<TaskPanelBehaviour>.Instance.taskText, __instance.transform);
+                TimeRemaining = UnityEngine.Object.Instantiate(FastDestroyableSingleton<HudManager>.Instance.TaskPanel.taskText, __instance.transform);
                 TimeRemaining.alignment = TMPro.TextAlignmentOptions.BottomRight;
                 TimeRemaining.transform.position = Vector3.zero;
                 TimeRemaining.transform.localPosition = new Vector3(1.7f, 4.45f);
@@ -76,9 +76,9 @@ public static class Vitals
 
             VitalsStringBuilder.Clear();
             var ts = TimeSpan.FromSeconds(ModMapOptions.RestrictVitalsTime);
-            if (ts.TotalHours >= 1) VitalsStringBuilder.Append((int)ts.TotalHours).Append(":");
-            VitalsStringBuilder.Append(ts.Minutes.ToString("D2")).Append(":")
-                               .Append(ts.Seconds.ToString("D2")).Append(".")
+            if (ts.TotalHours >= 1) VitalsStringBuilder.Append((int)ts.TotalHours).Append(':');
+            VitalsStringBuilder.Append(ts.Minutes.ToString("D2")).Append(':')
+                               .Append(ts.Seconds.ToString("D2")).Append('.')
                                .Append((ts.Milliseconds / 10).ToString("D2"));
 
             string timeString = VitalsStringBuilder.ToString();
@@ -110,7 +110,7 @@ public static class Vitals
                         float timeSinceDeath = (float)(DateTime.UtcNow - deadPlayer.TimeOfDeath).TotalMilliseconds;
                         HackerTexts[k].gameObject.SetActive(true);
                         VitalsStringBuilder.Clear();
-                        VitalsStringBuilder.Append(Math.Round(timeSinceDeath / 1000)).Append("s");
+                        VitalsStringBuilder.Append(Math.Round(timeSinceDeath / 1000)).Append('s');
                         HackerTexts[k].text = VitalsStringBuilder.ToString();
                     }
                 }

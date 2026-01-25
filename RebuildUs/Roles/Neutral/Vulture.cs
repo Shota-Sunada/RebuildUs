@@ -124,11 +124,10 @@ public class Vulture : RoleBase<Vulture>
             ButtonPosition.Layout,
             hm,
             hm.KillButton,
-            KeyCode.F
-        )
-        {
-            ButtonText = Tr.Get("Hud.VultureText")
-        };
+            KeyCode.F,
+            false,
+            Tr.Get("Hud.VultureText")
+        );
 
         VultureNumCorpsesText = UnityEngine.Object.Instantiate(VultureEatButton.ActionButton.cooldownTimerText, VultureEatButton.ActionButton.cooldownTimerText.transform.parent);
         VultureNumCorpsesText.text = "";

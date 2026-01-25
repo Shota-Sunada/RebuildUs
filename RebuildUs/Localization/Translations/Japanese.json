@@ -370,6 +370,7 @@
     "MayorCanSeeVoteColors": "投票先を開示",
     "MayorMeetingButton": "遠隔でミーティングを開始できる",
     "MayorMaxRemoteMeetings": "遠隔ミーティング回数",
+    "MayorTasksNeededToSeeVoteColors": "投票先を見るために必要な票の数",
     "SpyCanDieToSheriff": "シェリフに殺される",
     "SpyImpostorsCanKillAnyone": "スパイがいれば、インポスターは誰でも殺せる",
     "SpyCanEnterVents": "ベントに入れる",
@@ -584,7 +585,8 @@
     "IgniteText": "放火",
     "SidekickText": "サイドキック",
     "VultureCorpses": "残り死体: {0}体",
-    "VultureText": "食べる"
+    "VultureText": "食べる",
+    "Meeting": "緊急会議: {0}回"
   },
   "FinalStatus": {
     "Alive": "生存",

@@ -222,7 +222,7 @@ public class CustomButton
 
     public void Update()
     {
-        if (PlayerControl.LocalPlayer.Data == null || MeetingHud.Instance || ExileController.Instance || !HasButton())
+        if (PlayerControl.LocalPlayer?.Data == null || MeetingHud.Instance || ExileController.Instance || !HasButton())
         {
             SetActive(false);
             return;

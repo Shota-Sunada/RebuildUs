@@ -148,11 +148,10 @@ public class Witch : RoleBase<Witch>
                     WitchSpellButton.Timer = 0f;
                 }
                 SpellCastingTarget = null;
-            }
-        )
-        {
-            ButtonText = Tr.Get("Hud.WitchText")
-        };
+            },
+            false,
+            Tr.Get("Hud.WitchText")
+        );
     }
     public static void SetButtonCooldowns()
     {

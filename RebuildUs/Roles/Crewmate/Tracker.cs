@@ -143,11 +143,10 @@ public class Tracker : RoleBase<Tracker>
             ButtonPosition.Layout,
             hm,
             hm.UseButton,
-            KeyCode.F
-        )
-        {
-            ButtonText = Tr.Get("Hud.TrackerText")
-        };
+            KeyCode.F,
+            false,
+            Tr.Get("Hud.TrackerText")
+        );
 
         TrackerTrackCorpsesButton = new CustomButton(
             () => { CorpsesTrackingTimer = CorpsesTrackingDuration; },
@@ -169,11 +168,10 @@ public class Tracker : RoleBase<Tracker>
             () =>
             {
                 TrackerTrackCorpsesButton.Timer = TrackerTrackCorpsesButton.MaxTimer;
-            }
-        )
-        {
-            ButtonText = Tr.Get("Hud.PathfindText")
-        };
+            },
+            false,
+            Tr.Get("Hud.PathfindText")
+        );
     }
     public static void SetButtonCooldowns()
     {

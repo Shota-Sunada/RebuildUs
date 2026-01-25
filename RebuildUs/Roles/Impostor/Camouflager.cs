@@ -68,11 +68,10 @@ public class Camouflager : RoleBase<Camouflager>
             KeyCode.F,
             true,
             Camouflager.Duration,
-            () => { CamouflagerButton.Timer = CamouflagerButton.MaxTimer; }
-        )
-        {
-            ButtonText = Tr.Get("Hud.CamoText")
-        };
+            () => { CamouflagerButton.Timer = CamouflagerButton.MaxTimer; },
+            false,
+            Tr.Get("Hud.CamoText")
+        );
     }
     public static void SetButtonCooldowns()
     {

@@ -78,7 +78,7 @@ public static class SecurityCamera
         {
             if (TimeRemaining == null)
             {
-                TimeRemaining = UnityEngine.Object.Instantiate(FastDestroyableSingleton<TaskPanelBehaviour>.Instance.taskText, __instance.transform);
+                TimeRemaining = UnityEngine.Object.Instantiate(FastDestroyableSingleton<HudManager>.Instance.TaskPanel.taskText, __instance.transform);
                 TimeRemaining.alignment = TMPro.TextAlignmentOptions.BottomRight;
                 TimeRemaining.transform.position = Vector3.zero;
                 TimeRemaining.transform.localPosition = new Vector3(0.95f, 4.45f);
@@ -94,9 +94,9 @@ public static class SecurityCamera
 
             SecurityStringBuilder.Clear();
             var ts = TimeSpan.FromSeconds(ModMapOptions.RestrictCamerasTime);
-            if (ts.TotalHours >= 1) SecurityStringBuilder.Append((int)ts.TotalHours).Append(":");
-            SecurityStringBuilder.Append(ts.Minutes.ToString("D2")).Append(":")
-                                 .Append(ts.Seconds.ToString("D2")).Append(".")
+            if (ts.TotalHours >= 1) SecurityStringBuilder.Append((int)ts.TotalHours).Append(':');
+            SecurityStringBuilder.Append(ts.Minutes.ToString("D2")).Append(':')
+                                 .Append(ts.Seconds.ToString("D2")).Append('.')
                                  .Append((ts.Milliseconds / 10).ToString("D2"));
 
             string timeString = SecurityStringBuilder.ToString();
@@ -121,7 +121,7 @@ public static class SecurityCamera
         {
             if (TimeRemaining == null)
             {
-                TimeRemaining = UnityEngine.Object.Instantiate(FastDestroyableSingleton<TaskPanelBehaviour>.Instance.taskText, __instance.transform);
+                TimeRemaining = UnityEngine.Object.Instantiate(FastDestroyableSingleton<HudManager>.Instance.TaskPanel.taskText, __instance.transform);
                 TimeRemaining.alignment = TMPro.TextAlignmentOptions.Center;
                 TimeRemaining.transform.position = Vector3.zero;
                 TimeRemaining.transform.localPosition = new Vector3(0.0f, -1.7f);
@@ -137,9 +137,9 @@ public static class SecurityCamera
 
             SecurityStringBuilder.Clear();
             var ts = TimeSpan.FromSeconds(ModMapOptions.RestrictCamerasTime);
-            if (ts.TotalHours >= 1) SecurityStringBuilder.Append((int)ts.TotalHours).Append(":");
-            SecurityStringBuilder.Append(ts.Minutes.ToString("D2")).Append(":")
-                                 .Append(ts.Seconds.ToString("D2")).Append(".")
+            if (ts.TotalHours >= 1) SecurityStringBuilder.Append((int)ts.TotalHours).Append(':');
+            SecurityStringBuilder.Append(ts.Minutes.ToString("D2")).Append(':')
+                                 .Append(ts.Seconds.ToString("D2")).Append('.')
                                  .Append((ts.Milliseconds / 10).ToString("D2"));
 
             string timeString = SecurityStringBuilder.ToString();
@@ -204,7 +204,7 @@ public static class SecurityCamera
         {
             if (TimeRemaining == null)
             {
-                TimeRemaining = UnityEngine.Object.Instantiate(FastDestroyableSingleton<TaskPanelBehaviour>.Instance.taskText, __instance.transform);
+                TimeRemaining = UnityEngine.Object.Instantiate(FastDestroyableSingleton<HudManager>.Instance.TaskPanel.taskText, __instance.transform);
                 TimeRemaining.alignment = TMPro.TextAlignmentOptions.BottomRight;
                 TimeRemaining.transform.position = Vector3.zero;
                 TimeRemaining.transform.localPosition = new Vector3(1.0f, 4.25f);
@@ -219,7 +219,7 @@ public static class SecurityCamera
             }
 
             string timeString = TimeSpan.FromSeconds(ModMapOptions.RestrictCamerasTime).ToString(@"mm\:ss\.ff");
-            TimeRemaining.text = String.Format(Tr.Get("Hud.TimeRemaining"), timeString);
+            TimeRemaining.text = string.Format(Tr.Get("Hud.TimeRemaining"), timeString);
             TimeRemaining.gameObject.SetActive(true);
         }
 

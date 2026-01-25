@@ -370,6 +370,7 @@
     "MayorCanSeeVoteColors": "Can See Vote Colors",
     "MayorMeetingButton": "Has Remote Meeting Button",
     "MayorMaxRemoteMeetings": "Max Number Of Remote Meeting",
+    "MayorTasksNeededToSeeVoteColors": "Number Of Tasks To See Vote Colors",
     "SpyCanDieToSheriff": "Can Die To Sheriff",
     "SpyImpostorsCanKillAnyone": "Impostors Can Kill Anyone If There Is A Spy",
     "SpyCanEnterVents": "Can Enter Vents",
@@ -584,7 +585,8 @@
     "IgniteText": "[BLANK]",
     "SidekickText": "[BLANK]",
     "VultureCorpses": "Remaining: {0}",
-    "VultureText": "[BLANK]"
+    "VultureText": "[BLANK]",
+    "Meeting": "Meeting: {0}x"
   },
   "FinalStatus": {
     "Alive": "Alive",

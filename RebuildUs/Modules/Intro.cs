@@ -26,15 +26,11 @@ public static class Intro
                 var data = p.Data;
                 var player = UnityEngine.Object.Instantiate(__instance.PlayerPrefab, FastDestroyableSingleton<HudManager>.Instance.transform);
                 PlayerPrefab = __instance.PlayerPrefab;
-                p.SetPlayerMaterialColors(player.cosmetics.currentBodySprite.BodySprite);
-                player.SetSkin(data.DefaultOutfit.SkinId, data.DefaultOutfit.ColorId);
-                player.cosmetics.SetHat(data.DefaultOutfit.HatId, data.DefaultOutfit.ColorId);
-                // PlayerControl.SetPetImage(data.DefaultOutfit.PetId, data.DefaultOutfit.ColorId, player.PetSlot);
+                player.UpdateFromPlayerData(data, p.CurrentOutfitType, PlayerMaterial.MaskType.None, false);
                 player.cosmetics.nameText.text = data.PlayerName;
                 player.SetFlipX(true);
                 ModMapOptions.PlayerIcons[p.PlayerId] = player;
                 player.gameObject.SetActive(false);
-                ModMapOptions.PlayerIcons[p.PlayerId] = player;
 
                 if (Arsonist.Exists && PlayerControl.LocalPlayer.IsRole(RoleType.Arsonist))
                 {
@@ -43,18 +39,20 @@ public static class Intro
                     player.SetSemiTransparent(true);
                     player.gameObject.SetActive(true);
                 }
-
-                //  This can be done for all players not just for the bounty hunter as it was before. Allows the thief to have the correct position and scaling
-                player.transform.localPosition = BottomLeft;
-                player.transform.localScale = Vector3.one * 0.4f;
-                player.gameObject.SetActive(false);
+                else
+                {
+                    //  This can be done for all players not just for the bounty hunter as it was before. Allows the thief to have the correct position and scaling
+                    player.transform.localPosition = BottomLeft;
+                    player.transform.localScale = Vector3.one * 0.4f;
+                    player.gameObject.SetActive(false);
+                }
             }
         }
 
         RebuildUs.OnIntroEnd();
 
         // インポスター視界の場合に昇降機右の影を無効化
-        if (Helpers.IsAirship && CustomOptionHolder.AirshipOptimize.GetBool() && Helpers.HasImpostorVision(PlayerControl.LocalPlayer))
+        if (Helpers.IsAirship && CustomOptionHolder.AirshipOptimize.GetBool() && Helpers.HasImpostorVision(PlayerControl.LocalPlayer) && ShipStatus.Instance.FastRooms.ContainsKey(SystemTypes.GapRoom))
         {
             var obj = ShipStatus.Instance.FastRooms[SystemTypes.GapRoom].gameObject;
             var oneWayShadow = obj.transform.FindChild("Shadow").FindChild("LedgeShadow").GetComponent<OneWayShadows>();
@@ -124,7 +122,7 @@ public static class Intro
         //タスクバグ修正
         if (Helpers.IsAirship && CustomOptionHolder.AirshipEnableWallCheck.GetBool())
         {
-            foreach (var x in UnityEngine.GameObject.FindObjectsOfType<Console>())
+            foreach (var x in UnityEngine.Object.FindObjectsOfType<Console>())
             {
                 if (x.name == "task_garbage1") x.checkWalls = true;
                 else if (x.name == "task_garbage2") x.checkWalls = true;
@@ -166,7 +164,7 @@ public static class Intro
         }
 
         // Add the Spy to the Impostor team (for the Impostors)
-        if (Spy.Exists && PlayerControl.LocalPlayer.Data.Role.IsImpostor)
+        if (Spy.Exists && PlayerControl.LocalPlayer.IsTeamImpostor())
         {
             var players = new List<PlayerControl>();
             foreach (var p in PlayerControl.AllPlayerControls) players.Add(p);
@@ -209,7 +207,7 @@ public static class Intro
         Logger.LogInfo("IntroCutscene :: CoBegin() :: Starting intro cutscene");
         SoundManager.Instance.PlaySound(__instance.IntroStinger, false);
 
-        if (GameManager.Instance.IsNormal())
+        if (Helpers.IsNormal)
         {
             Logger.LogInfo("IntroCutscene :: CoBegin() :: Game Mode: Normal");
             __instance.LogPlayerRoleData();
@@ -218,12 +216,12 @@ public static class Intro
             __instance.ImpostorRules.SetActive(false);
             __instance.ImpostorName.gameObject.SetActive(false);
             __instance.ImpostorTitle.gameObject.SetActive(false);
-            var show = IntroCutscene.SelectTeamToShow((Func<NetworkedPlayerInfo, bool>)(pcd => !PlayerControl.LocalPlayer.Data.Role.IsImpostor || pcd.Role.TeamType == PlayerControl.LocalPlayer.Data.Role.TeamType));
+            var show = IntroCutscene.SelectTeamToShow((Func<NetworkedPlayerInfo, bool>)(pcd => !PlayerControl.LocalPlayer.IsTeamImpostor() || pcd.Role.TeamType == PlayerControl.LocalPlayer.Data.Role.TeamType));
             if (show == null || show.Count < 1)
             {
                 Logger.LogError("IntroCutscene :: CoBegin() :: teamToShow is EMPTY or NULL");
             }
-            if (PlayerControl.LocalPlayer.Data.Role.IsImpostor)
+            if (PlayerControl.LocalPlayer.IsTeamImpostor())
             {
                 __instance.ImpostorText.gameObject.SetActive(false);
             }
@@ -245,7 +243,7 @@ public static class Intro
             Logger.LogInfo("IntroCutscene :: CoBegin() :: Game Mode: Hide and Seek");
             __instance.LogPlayerRoleData();
             __instance.HideAndSeekPanels.SetActive(true);
-            if (PlayerControl.LocalPlayer.Data.Role.IsImpostor)
+            if (PlayerControl.LocalPlayer.IsTeamImpostor())
             {
                 __instance.CrewmateRules.SetActive(false);
                 __instance.ImpostorRules.SetActive(true);
@@ -255,7 +253,7 @@ public static class Intro
                 __instance.CrewmateRules.SetActive(true);
                 __instance.ImpostorRules.SetActive(false);
             }
-            var show = IntroCutscene.SelectTeamToShow((Func<NetworkedPlayerInfo, bool>)(pcd => PlayerControl.LocalPlayer.Data.Role.IsImpostor != pcd.Role.IsImpostor));
+            var show = IntroCutscene.SelectTeamToShow((Func<NetworkedPlayerInfo, bool>)(pcd => PlayerControl.LocalPlayer.IsTeamImpostor() != pcd.Role.IsImpostor));
             if (show == null || show.Count < 1)
             {
                 Logger.LogError("IntroCutscene :: CoBegin() :: teamToShow is EMPTY or NULL");
@@ -293,7 +291,7 @@ public static class Intro
             LogicOptionsHnS logicOptions = GameManager.Instance.LogicOptions as LogicOptionsHnS;
             if (GameManager.Instance.GetLogicComponent<LogicHnSMusic>() is LogicHnSMusic logicComponent)
                 logicComponent.StartMusicWithIntro();
-            if (PlayerControl.LocalPlayer.Data.Role.IsImpostor)
+            if (PlayerControl.LocalPlayer.IsTeamImpostor())
             {
                 float crewmateLeadTime = logicOptions.GetCrewmateLeadTime();
                 __instance.HideAndSeekTimerText.gameObject.SetActive(true);
@@ -439,7 +437,7 @@ public static class Intro
         }
 
         // 従来処理
-        SoundManager.Instance.PlaySound(PlayerControl.LocalPlayer.Data.Role.IntroSound, false);
+        SoundManager.Instance.PlaySound(PlayerControl.LocalPlayer?.Data?.Role?.IntroSound, false);
         __instance.YouAreText.gameObject.SetActive(true);
         __instance.RoleText.gameObject.SetActive(true);
         __instance.RoleBlurbText.gameObject.SetActive(true);

@@ -14,7 +14,7 @@ public static class IGameOptionsExtensionsPatch
     [HarmonyPatch(typeof(IGameOptionsExtensions), nameof(IGameOptionsExtensions.GetAdjustedNumImpostors))]
     public static void GetAdjustedNumImpostorsPostfix(ref int __result)
     {
-        if (Helpers.IsNormalMode)
+        if (Helpers.IsNormal)
         {
             // Ignore Vanilla impostor limits in RebuildUs Games.
             __result = Mathf.Clamp(Helpers.GetOption(Int32OptionNames.NumImpostors), 1, 3);

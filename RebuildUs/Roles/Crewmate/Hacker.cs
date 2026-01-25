@@ -78,11 +78,10 @@ public class Hacker : RoleBase<Hacker>
             KeyCode.F,
             true,
             0f,
-            () => { HackerButton.Timer = HackerButton.MaxTimer; }
-        )
-        {
-            ButtonText = Tr.Get("Hud.HackerText")
-        };
+            () => { HackerButton.Timer = HackerButton.MaxTimer; },
+            false,
+            Tr.Get("Hud.HackerText")
+        );
 
         HackerAdminTableButton = new CustomButton(
             () =>
@@ -109,7 +108,7 @@ public class Hacker : RoleBase<Hacker>
                 HackerAdminTableButton.IsEffectActive = false;
                 HackerAdminTableButton.ActionButton.cooldownTimerText.color = Palette.EnabledColor;
             },
-            Hacker.GetAdminSprite(),
+            GetAdminSprite(),
             ButtonPosition.Layout,
             hm,
             hm.UseButton,
@@ -224,7 +223,7 @@ public class Hacker : RoleBase<Hacker>
         );
 
         // Hacker Vitals Charges
-        HackerVitalsChargesText = GameObject.Instantiate(HackerVitalsButton.ActionButton.cooldownTimerText, HackerVitalsButton.ActionButton.cooldownTimerText.transform.parent);
+        HackerVitalsChargesText = UnityEngine.Object.Instantiate(HackerVitalsButton.ActionButton.cooldownTimerText, HackerVitalsButton.ActionButton.cooldownTimerText.transform.parent);
         HackerVitalsChargesText.text = "";
         HackerVitalsChargesText.enableWordWrapping = false;
         HackerVitalsChargesText.transform.localScale = Vector3.one * 0.5f;
@@ -233,12 +232,12 @@ public class Hacker : RoleBase<Hacker>
     }
     public static void SetButtonCooldowns()
     {
-        HackerButton.MaxTimer = Hacker.Cooldown;
-        HackerVitalsButton.MaxTimer = Hacker.Cooldown;
-        HackerAdminTableButton.MaxTimer = Hacker.Cooldown;
-        HackerButton.EffectDuration = Hacker.Duration;
-        HackerVitalsButton.EffectDuration = Hacker.Duration;
-        HackerAdminTableButton.EffectDuration = Hacker.Duration;
+        HackerButton.MaxTimer = Cooldown;
+        HackerVitalsButton.MaxTimer = Cooldown;
+        HackerAdminTableButton.MaxTimer = Cooldown;
+        HackerButton.EffectDuration = Duration;
+        HackerVitalsButton.EffectDuration = Duration;
+        HackerAdminTableButton.EffectDuration = Duration;
     }
 
     public static Sprite GetAdminSprite()

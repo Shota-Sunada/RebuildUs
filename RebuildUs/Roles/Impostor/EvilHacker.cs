@@ -95,11 +95,10 @@ public class EvilHacker : RoleBase<EvilHacker>
             ButtonPosition.Layout,
             hm,
             hm.KillButton,
-            null
-        )
-        {
-            ButtonText = Tr.Get("Role.Madmate")
-        };
+            null,
+            false,
+            Tr.Get("Role.Madmate")
+        );
     }
     public static void SetButtonCooldowns()
     {

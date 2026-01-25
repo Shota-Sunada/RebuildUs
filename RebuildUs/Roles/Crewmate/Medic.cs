@@ -83,11 +83,10 @@ public class Medic : RoleBase<Medic>
             ButtonPosition.Layout,
             hm,
             hm.UseButton,
-            KeyCode.F
-        )
-        {
-            ButtonText = Tr.Get("Hud.ShieldText")
-        };
+            KeyCode.F,
+            false,
+            Tr.Get("Hud.ShieldText")
+        );
     }
     public static void SetButtonCooldowns()
     {

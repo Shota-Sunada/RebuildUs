@@ -139,11 +139,10 @@ public class SecurityGuard : RoleBase<SecurityGuard>
             ButtonPosition.Layout,
             hm,
             hm.UseButton,
-            KeyCode.F
-        )
-        {
-            ButtonText = Tr.Get("Hud.PlaceCameraText")
-        };
+            KeyCode.F,
+            false,
+            Tr.Get("Hud.PlaceCameraText")
+        );
 
         SecurityGuardButtonScrewsText = GameObject.Instantiate(SecurityGuardButton.ActionButton.cooldownTimerText, SecurityGuardButton.ActionButton.cooldownTimerText.transform.parent);
         SecurityGuardButtonScrewsText.text = "";
@@ -245,7 +244,7 @@ public class SecurityGuard : RoleBase<SecurityGuard>
                 if (NoMove) PlayerControl.LocalPlayer.moveable = false;
                 PlayerControl.LocalPlayer.NetTransform.Halt(); // Stop current movement
             },
-            () => { return PlayerControl.LocalPlayer.IsRole(RoleType.SecurityGuard) && !PlayerControl.LocalPlayer.Data.IsDead && Local.RemainingScrews < Mathf.Min(SecurityGuard.VentPrice, SecurityGuard.CamPrice) && SubmergedCompatibility.IsSubmerged; },
+            () => { return PlayerControl.LocalPlayer.IsRole(RoleType.SecurityGuard) && PlayerControl.LocalPlayer?.Data?.IsDead == false && Local.RemainingScrews < Mathf.Min(SecurityGuard.VentPrice, SecurityGuard.CamPrice) && SubmergedCompatibility.IsSubmerged; },
             () =>
             {
                 SecurityGuardChargesText?.text = string.Format(Tr.Get("Hud.HackerChargesText"), Local.Charges, CamMaxCharges);
@@ -282,7 +281,7 @@ public class SecurityGuard : RoleBase<SecurityGuard>
         );
 
         // Security Guard cam button charges
-        SecurityGuardChargesText = GameObject.Instantiate(SecurityGuardCamButton.ActionButton.cooldownTimerText, SecurityGuardCamButton.ActionButton.cooldownTimerText.transform.parent);
+        SecurityGuardChargesText = UnityEngine.Object.Instantiate(SecurityGuardCamButton.ActionButton.cooldownTimerText, SecurityGuardCamButton.ActionButton.cooldownTimerText.transform.parent);
         SecurityGuardChargesText.text = "";
         SecurityGuardChargesText.enableWordWrapping = false;
         SecurityGuardChargesText.transform.localScale = Vector3.one * 0.5f;

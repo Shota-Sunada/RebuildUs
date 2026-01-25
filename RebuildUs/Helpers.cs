@@ -552,6 +552,21 @@ public static class Helpers
                 string roleBase = RoleInfo.GetRolesString(p, true, false);
                 string roleGhost = RoleInfo.GetRolesString(p, true, ModMapOptions.GhostsSeeModifier);
 
+                string statusText = "";
+                if (p == localPlayer || (localPlayer.Data.IsDead && ModMapOptions.GhostsSeeInformation))
+                {
+                    if (p.IsRole(RoleType.Arsonist))
+                    {
+                        var role = Arsonist.GetRole(p);
+                        if (role != null) statusText = Cs(Arsonist.NameColor, $" ({role.DousedPlayers.Count})");
+                    }
+                    else if (p.IsRole(RoleType.Vulture))
+                    {
+                        var role = Vulture.GetRole(p);
+                        if (role != null) statusText = Cs(Vulture.NameColor, $" ({role.EatenBodies})");
+                    }
+                }
+
                 string taskText = "";
                 if (total > 0)
                 {
@@ -564,14 +579,26 @@ public static class Helpers
                 string mInfo = "";
                 if (p == localPlayer)
                 {
-                    var roles = p.Data.IsDead ? roleGhost : roleBase;
+                    var roles = (p.Data.IsDead ? roleGhost : roleBase) + statusText;
                     if (p.IsRole(RoleType.Swapper))
                     {
                         InfoStringBuilder.Clear();
-                        InfoStringBuilder.Append(roles).Append(Cs(Swapper.NameColor, " (")).Append(Swapper.RemainSwaps).Append(")");
+                        InfoStringBuilder.Append(roles).Append(Cs(Swapper.NameColor, " (")).Append(Swapper.RemainSwaps).Append(')');
                         pInfo = InfoStringBuilder.ToString();
                     }
-                    else pInfo = roles;
+                    else
+                    {
+                        if (p.IsTeamCrewmate() || p.IsRole(RoleType.Arsonist) || p.IsRole(RoleType.Vulture))
+                        {
+                            InfoStringBuilder.Clear();
+                            InfoStringBuilder.Append(roles).Append(' ').Append(taskText);
+                            pInfo = InfoStringBuilder.ToString();
+                        }
+                        else
+                        {
+                            pInfo = roles;
+                        }
+                    }
 
                     if (HudManager.Instance?.TaskPanel?.tab != null)
                     {
@@ -582,7 +609,7 @@ public static class Helpers
                             if (tabText != null)
                             {
                                 InfoStringBuilder.Clear();
-                                InfoStringBuilder.Append("Tasks ").Append(taskText);
+                                InfoStringBuilder.Append(TranslationController.Instance.GetString(StringNames.Tasks)).Append(' ').Append(taskText);
                                 tabText.SetText(InfoStringBuilder.ToString());
                             }
                         }
@@ -594,13 +621,15 @@ public static class Helpers
                 else if (ModMapOptions.GhostsSeeRoles && ModMapOptions.GhostsSeeInformation)
                 {
                     InfoStringBuilder.Clear();
-                    InfoStringBuilder.Append(roleGhost).Append(' ').Append(taskText);
+                    InfoStringBuilder.Append(roleGhost).Append(statusText).Append(' ').Append(taskText);
                     pInfo = InfoStringBuilder.ToString().Trim();
                     mInfo = pInfo;
                 }
                 else if (ModMapOptions.GhostsSeeInformation)
                 {
-                    pInfo = taskText.Trim();
+                    InfoStringBuilder.Clear();
+                    InfoStringBuilder.Append(taskText).Append(statusText);
+                    pInfo = InfoStringBuilder.ToString().Trim();
                     mInfo = pInfo;
                 }
                 else if (ModMapOptions.GhostsSeeRoles)
@@ -796,8 +825,8 @@ public static class Helpers
 
     public static bool IsOnElecTask() => Camera.main.gameObject.GetComponentInChildren<SwitchMinigame>() != null;
 
-    public static bool IsHideNSeekMode => GameOptionsManager.Instance.CurrentGameOptions.GameMode == GameModes.HideNSeek;
-    public static bool IsNormalMode => GameOptionsManager.Instance.CurrentGameOptions.GameMode == GameModes.Normal;
+    public static bool IsHideNSeekMode => GameManager.Instance.IsHideAndSeek();
+    public static bool IsNormal => GameManager.Instance.IsNormal();
 
     public static bool IsCountdown => GameStartManager.InstanceExists && GameStartManager.Instance.startState is GameStartManager.StartingStates.Countdown;
 

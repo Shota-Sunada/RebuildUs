@@ -30,14 +30,18 @@ public abstract class PlayerModifier
     public static void ClearAll()
     {
         AllModifiers.Clear();
-        for (int i = 0; i < 256; i++) PlayerModifierCache[i]?.Clear();
+        for (int i = 0; i < 256; i++) PlayerModifierCache[i] = null;
+    }
+
+    public static void RemoveFromCache(byte playerId)
+    {
+        PlayerModifierCache[playerId] = null;
     }
 
     public static PlayerModifier GetModifier(PlayerControl player, ModifierType type)
     {
         if (player == null) return null;
-        var list = PlayerModifierCache[player.PlayerId];
-        if (list == null) return null;
+        var list = GetModifiers(player);
         for (int i = 0; i < list.Count; i++)
         {
             if (list[i].CurrentModifierType == type) return list[i];
@@ -48,7 +52,18 @@ public abstract class PlayerModifier
     public static List<PlayerModifier> GetModifiers(PlayerControl player)
     {
         if (player == null) return [];
-        return PlayerModifierCache[player.PlayerId] ?? [];
+        if (PlayerModifierCache[player.PlayerId] != null) return PlayerModifierCache[player.PlayerId];
+
+        var list = new List<PlayerModifier>();
+        for (int i = 0; i < AllModifiers.Count; i++)
+        {
+            if (AllModifiers[i].Player == player)
+            {
+                list.Add(AllModifiers[i]);
+            }
+        }
+        PlayerModifierCache[player.PlayerId] = list;
+        return list;
     }
 }
 
@@ -63,10 +78,7 @@ public abstract class ModifierBase<T> : PlayerModifier where T : ModifierBase<T>
         Player = player;
         Players.Add((T)this);
         AllModifiers.Add(this);
-
-        if (PlayerModifierCache[player.PlayerId] == null)
-            PlayerModifierCache[player.PlayerId] = [];
-        PlayerModifierCache[player.PlayerId].Add(this);
+        PlayerModifier.RemoveFromCache(player.PlayerId);
     }
 
     public static T Local
@@ -158,6 +170,8 @@ public abstract class ModifierBase<T> : PlayerModifier where T : ModifierBase<T>
     public static void EraseModifier(PlayerControl player)
     {
         if (player == null) return;
+        PlayerModifier.RemoveFromCache(player.PlayerId);
+
         for (int i = Players.Count - 1; i >= 0; i--)
         {
             var x = Players[i];
@@ -180,6 +194,8 @@ public abstract class ModifierBase<T> : PlayerModifier where T : ModifierBase<T>
     public static void SwapModifier(PlayerControl p1, PlayerControl p2)
     {
         if (p1 == null || p2 == null) return;
+        PlayerModifier.RemoveFromCache(p1.PlayerId);
+        PlayerModifier.RemoveFromCache(p2.PlayerId);
         for (int i = 0; i < Players.Count; i++)
         {
             if (Players[i].Player == p1)

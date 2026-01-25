@@ -42,6 +42,18 @@ public static class Update
             if (player == null || player.cosmetics == null || player.cosmetics.nameText == null) continue;
 
             string expectedText = Helpers.HidePlayerName(localPlayer, player) ? "" : player.CurrentOutfit.PlayerName;
+            if (!Helpers.HidePlayerName(localPlayer, player) && localPlayer.IsDead())
+            {
+                if (expectedText == "" && Camouflager.CamouflageTimer > 0f)
+                {
+                    expectedText = player.Data.DefaultOutfit.PlayerName;
+                }
+                else if (player.CurrentOutfitType == PlayerOutfitType.Shapeshifted)
+                {
+                    expectedText = $"{player.CurrentOutfit.PlayerName} ({player.Data.DefaultOutfit.PlayerName})";
+                }
+            }
+
             Color expectedColor = (isLocalImpostor && player.IsTeamImpostor()) ? Palette.ImpostorRed : Color.white;
 
             var nameText = player.cosmetics.nameText;
@@ -59,6 +71,18 @@ public static class Update
                 if (playersById.TryGetValue((byte)pva.TargetPlayerId, out var playerControl))
                 {
                     string expectedText = playerControl.Data.PlayerName;
+                    if (localPlayer.IsDead())
+                    {
+                        if (string.IsNullOrEmpty(expectedText) && Camouflager.CamouflageTimer > 0f)
+                        {
+                            expectedText = playerControl.Data.DefaultOutfit.PlayerName;
+                        }
+                        else if (playerControl.CurrentOutfitType == PlayerOutfitType.Shapeshifted)
+                        {
+                            expectedText = $"{playerControl.CurrentOutfit.PlayerName} ({playerControl.Data.DefaultOutfit.PlayerName})";
+                        }
+                    }
+
                     Color expectedColor = (isLocalImpostor && playerControl.Data.Role.IsImpostor) ? Palette.ImpostorRed : Color.white;
 
                     if (pva.NameText.text != expectedText) pva.NameText.text = expectedText;
@@ -256,7 +280,7 @@ public static class Update
 
     public static void UpdateImpostorKillButton(HudManager __instance)
     {
-        if (!PlayerControl.LocalPlayer.Data.Role.IsImpostor) return;
+        if (PlayerControl.LocalPlayer?.Data?.Role?.IsImpostor != true) return;
         if (MeetingHud.Instance)
         {
             __instance.KillButton.Hide();

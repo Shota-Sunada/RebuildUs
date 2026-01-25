@@ -52,11 +52,10 @@ public class Trickster : RoleBase<Trickster>
             ButtonPosition.Layout,
             hm,
             hm.KillButton,
-            KeyCode.F
-        )
-        {
-            ButtonText = Tr.Get("Hud.PlaceJackInTheBoxText")
-        };
+            KeyCode.F,
+            false,
+            Tr.Get("Hud.PlaceJackInTheBoxText")
+        );
 
         LightsOutButton = new CustomButton(
             () =>
@@ -79,11 +78,10 @@ public class Trickster : RoleBase<Trickster>
             KeyCode.F,
             true,
             LightsOutDuration,
-            () => { LightsOutButton.Timer = LightsOutButton.MaxTimer; }
-        )
-        {
-            ButtonText = Tr.Get("Hud.LightsOutText")
-        };
+            () => { LightsOutButton.Timer = LightsOutButton.MaxTimer; },
+            false,
+            Tr.Get("Hud.LightsOutText")
+        );
     }
     public static void SetButtonCooldowns()
     {

@@ -58,14 +58,13 @@ public static class Meeting
     private static Dictionary<byte, int> CalculateVotes(MeetingHud __instance)
     {
         var dictionary = new Dictionary<byte, int>();
-        var playersById = Helpers.AllPlayersById();
         for (int i = 0; i < __instance.playerStates.Length; i++)
         {
             var playerVoteArea = __instance.playerStates[i];
 
             if (playerVoteArea.VotedFor is not 252 and not 255 and not 254)
             {
-                var player = playersById.ContainsKey(playerVoteArea.TargetPlayerId) ? playersById[playerVoteArea.TargetPlayerId] : null;
+                var player = Helpers.PlayerById((byte)playerVoteArea.TargetPlayerId);
                 if (player == null || player.Data == null || player.Data.IsDead || player.Data.Disconnected) continue;
 
                 var additionalVotes = (Mayor.Exists && player.IsRole(RoleType.Mayor)) ? Mayor.NumVotes : 1; // Mayor vote
@@ -148,7 +147,7 @@ public static class Meeting
     {
         var spriteRenderer = UnityEngine.Object.Instantiate(__instance.PlayerVotePrefab);
         var showVoteColors = !GameManager.Instance.LogicOptions.GetAnonymousVotes() ||
-                            (PlayerControl.LocalPlayer.Data.IsDead && ModMapOptions.GhostsSeeVotes) ||
+                            (PlayerControl.LocalPlayer.IsDead() && ModMapOptions.GhostsSeeVotes) ||
                             (PlayerControl.LocalPlayer.IsRole(RoleType.Mayor) && Mayor.MayorCanSeeVoteColors && TasksHandler.TaskInfo(PlayerControl.LocalPlayer.Data).Item1 >= Mayor.MayorTasksNeededToSeeVoteColors);
         if (showVoteColors)
         {
@@ -453,7 +452,7 @@ public static class Meeting
             __instance.playerStates.ToList().ForEach(x =>
             {
                 x.gameObject.SetActive(true);
-                if (PlayerControl.LocalPlayer.Data.IsDead && x.transform.FindChild("ShootButton") != null) UnityEngine.Object.Destroy(x.transform.FindChild("ShootButton").gameObject);
+                if (PlayerControl.LocalPlayer.IsDead() && x.transform.FindChild("ShootButton") != null) UnityEngine.Object.Destroy(x.transform.FindChild("ShootButton").gameObject);
             });
             UnityEngine.Object.Destroy(container.gameObject);
         }));
@@ -635,7 +634,7 @@ public static class Meeting
 
             PassiveButton passiveButton = meetingExtraButton.GetComponent<PassiveButton>();
             passiveButton.OnClick.RemoveAllListeners();
-            if (!PlayerControl.LocalPlayer.Data.IsDead)
+            if (PlayerControl.LocalPlayer.IsAlive())
             {
                 passiveButton.OnClick.AddListener((Action)(() => SwapperConfirm(__instance)));
             }
@@ -760,7 +759,7 @@ public static class Meeting
         // Uses remaining text for guesser/swapper
         if (MeetingInfoText == null)
         {
-            MeetingInfoText = UnityEngine.Object.Instantiate(FastDestroyableSingleton<TaskPanelBehaviour>.Instance.taskText, __instance.transform);
+            MeetingInfoText = UnityEngine.Object.Instantiate(FastDestroyableSingleton<HudManager>.Instance.TaskPanel.taskText, __instance.transform);
             MeetingInfoText.alignment = TextAlignmentOptions.BottomLeft;
             MeetingInfoText.transform.position = Vector3.zero;
             MeetingInfoText.transform.localPosition = new Vector3(-3.07f, 3.33f, -20f);

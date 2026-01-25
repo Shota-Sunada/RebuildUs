@@ -70,11 +70,10 @@ public class Cleaner : RoleBase<Cleaner>
             ButtonPosition.Layout,
             hm,
             hm.KillButton,
-            KeyCode.F
-        )
-        {
-            ButtonText = Tr.Get("Hud.CleanText")
-        };
+            KeyCode.F,
+            false,
+            Tr.Get("Hud.CleanText")
+        );
     }
     public static void SetButtonCooldowns()
     {

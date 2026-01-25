@@ -20,7 +20,7 @@ public static class Exile
         }
 
         // Madmate exiled
-        if (AmongUsClient.Instance.AmHost && player != null && ((CreatedMadmate.ExileCrewmate && player.Object.HasModifier(ModifierType.CreatedMadmate))
+        if (AmongUsClient.Instance.AmHost && player?.Object != null && ((CreatedMadmate.ExileCrewmate && player.Object.HasModifier(ModifierType.CreatedMadmate))
             || (Madmate.ExileCrewmate && player.Object.HasModifier(ModifierType.Madmate)))
         )
         {
@@ -71,17 +71,35 @@ public static class Exile
         // Witch execute casted spells
         if (Witch.Exists && Witch.FutureSpelled != null && AmongUsClient.Instance.AmHost)
         {
-            bool exiledIsWitch = player != null && player.Object.IsRole(RoleType.Witch);
-            bool witchDiesWithExiledLover = player != null && Lovers.BothDie && player.Object.IsLovers() && player.Object.GetPartner().IsRole(RoleType.Witch);
+            PlayerControl exiledPlayer = player?.Object;
+            bool exiledIsWitch = exiledPlayer != null && exiledPlayer.IsRole(RoleType.Witch);
+            bool witchDiesWithExiledLover = exiledPlayer != null && Lovers.BothDie && exiledPlayer.IsLovers() && exiledPlayer.GetPartner()?.IsRole(RoleType.Witch) == true;
 
             if ((witchDiesWithExiledLover || exiledIsWitch) && Witch.VoteSavesTargets) Witch.FutureSpelled = [];
             foreach (var target in Witch.FutureSpelled)
             {
-                if (target != null && !target.Data.IsDead && Helpers.CheckMurderAttempt(player.Object, target, true) == MurderAttemptResult.PerformKill)
+                if (target != null && !target.Data.IsDead)
                 {
-                    using var sender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.WitchSpellCast);
-                    sender.Write(target.PlayerId);
-                    RPCProcedure.WitchSpellCast(target.PlayerId);
+                    PlayerControl witchKiller = exiledIsWitch ? exiledPlayer : null;
+                    if (witchKiller == null)
+                    {
+                        foreach (var w in Witch.Players)
+                        {
+                            if (w.Player != null && !w.Player.Data.IsDead)
+                            {
+                                witchKiller = w.Player;
+                                break;
+                            }
+                        }
+                    }
+                    if (witchKiller == null) witchKiller = PlayerControl.LocalPlayer; // Fallback to host for shield check
+
+                    if (Helpers.CheckMurderAttempt(witchKiller, target, true) == MurderAttemptResult.PerformKill)
+                    {
+                        using var sender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.WitchSpellCast);
+                        sender.Write(target.PlayerId);
+                        RPCProcedure.WitchSpellCast(target.PlayerId);
+                    }
                 }
             }
         }
@@ -142,23 +160,24 @@ public static class Exile
         // count alive crewmates
         foreach (PlayerControl player in PlayerControl.AllPlayerControls)
         {
-            if (player.Data.Role.IsImpostor)
+            if (player.IsTeamImpostor())
                 continue;
-            if (player.Data.IsDead)
+            if (player.IsDead())
                 continue;
             if (player.PlayerId == exiledPlayerId)
                 continue;
             numAliveCrewmates++;
         }
+        if (numAliveCrewmates == 0) return null;
         // get random number range 0, num of alive crewmates
         int targetPlayerIndex = RebuildUs.Instance.Rnd.Next(0, numAliveCrewmates);
         int currentPlayerIndex = 0;
         // return the player
         foreach (PlayerControl player in PlayerControl.AllPlayerControls)
         {
-            if (player.Data.Role.IsImpostor)
+            if (player.IsTeamImpostor())
                 continue;
-            if (player.Data.IsDead)
+            if (player.IsDead())
                 continue;
             if (player.PlayerId == exiledPlayerId)
                 continue;
@@ -175,8 +194,7 @@ public static class Exile
 
         if (exiled != null)
         {
-            var p = Helpers.PlayerById(exiled.PlayerId);
-            if (p.HasModifier(ModifierType.Mini) && !Mini.IsGrownUp(p) && !p.Data.Role.IsImpostor && !p.IsNeutral())
+            if (exiled.HasModifier(ModifierType.Mini) && !Mini.IsGrownUp(exiled) && !exiled.IsTeamImpostor() && !exiled.IsNeutral())
             {
                 Mini.TriggerMiniLose = true;
             }
@@ -201,7 +219,7 @@ public static class Exile
         RebuildUs.OnMeetingEnd();
 
         // Mini set adapted cooldown
-        if (PlayerControl.LocalPlayer.HasModifier(ModifierType.Mini) && PlayerControl.LocalPlayer.Data.Role.IsImpostor)
+        if (PlayerControl.LocalPlayer.HasModifier(ModifierType.Mini) && PlayerControl.LocalPlayer.IsTeamImpostor())
         {
             var multiplier = Mini.IsGrownUp(PlayerControl.LocalPlayer) ? 0.66f : 2f;
             PlayerControl.LocalPlayer.SetKillTimer(Helpers.GetOption(FloatOptionNames.KillCooldown) * multiplier);
@@ -333,7 +351,7 @@ public static class Exile
                     var roleInfos = RoleInfo.GetRoleInfoForPlayer(player, false);
                     for (int i = 0; i < roleInfos.Count; i++)
                     {
-                        if (i > 0) ExileStringBuilder.Append(" ");
+                        if (i > 0) ExileStringBuilder.Append(' ');
                         ExileStringBuilder.Append(roleInfos[i].Name);
                     }
                     __result = ExileStringBuilder.ToString();

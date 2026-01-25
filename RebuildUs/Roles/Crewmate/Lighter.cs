@@ -47,7 +47,7 @@ public class Lighter : RoleBase<Lighter>
                 var local = Local;
                 local?.LightActive = true;
             },
-            () => { return Local != null && !PlayerControl.LocalPlayer.Data.IsDead; },
+            () => { return Local != null && PlayerControl.LocalPlayer?.Data?.IsDead == false; },
             () => { return PlayerControl.LocalPlayer.CanMove; },
             () =>
             {
@@ -69,11 +69,10 @@ public class Lighter : RoleBase<Lighter>
                 var local = Local;
                 local?.LightActive = false;
                 LighterButton.Timer = LighterButton.MaxTimer;
-            }
-        )
-        {
-            ButtonText = Tr.Get("Hud.LighterText")
-        };
+            },
+            false,
+            Tr.Get("Hud.LighterText")
+        );
     }
     public static void SetButtonCooldowns()
     {

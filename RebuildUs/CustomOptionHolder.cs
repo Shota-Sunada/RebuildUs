@@ -470,7 +470,7 @@ public static class CustomOptionHolder
         MayorSpawnRate = new(1000, CustomOptionType.Crewmate, RoleType.Mayor, Mayor.NameColor);
         MayorNumVotes = CustomOption.Normal(1001, CustomOptionType.Crewmate, "Option.MayorNumVotes", 2f, 2f, 10f, 1f, MayorSpawnRate);
         MayorCanSeeVoteColors = CustomOption.Normal(1002, CustomOptionType.Crewmate, "Option.MayorCanSeeVoteColors", false, MayorSpawnRate);
-        MayorTasksNeededToSeeVoteColors = CustomOption.Normal(1003, CustomOptionType.Crewmate, "Option.MayorTasksNeededToSeeVoteColors", true, MayorCanSeeVoteColors);
+        MayorTasksNeededToSeeVoteColors = CustomOption.Normal(1003, CustomOptionType.Crewmate, "Option.MayorTasksNeededToSeeVoteColors", 3f, 1f, 10f, 1f, MayorCanSeeVoteColors);
         MayorMeetingButton = CustomOption.Normal(1004, CustomOptionType.Crewmate, "Option.MayorMeetingButton", true, MayorSpawnRate);
         MayorMaxRemoteMeetings = CustomOption.Normal(1005, CustomOptionType.Crewmate, "Option.MayorMaxRemoteMeetings", 1f, 0f, 10f, 1f, MayorMeetingButton);
 

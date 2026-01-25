@@ -150,11 +150,10 @@ public class Arsonist : RoleBase<Arsonist>
                         ModMapOptions.PlayerIcons[p.PlayerId].SetSemiTransparent(false);
                     }
                 }
-            }
-        )
-        {
-            ButtonText = Tr.Get("Hud.DouseText")
-        };
+            },
+            false,
+            Tr.Get("Hud.DouseText")
+        );
 
         ArsonistIgniteButton = new CustomButton(
             () =>
@@ -173,11 +172,10 @@ public class Arsonist : RoleBase<Arsonist>
             ButtonPosition.Layout,
             hm,
             hm.KillButton,
-            KeyCode.Q
-        )
-        {
-            ButtonText = Tr.Get("Hud.IgniteText")
-        };
+            KeyCode.Q,
+            false,
+            Tr.Get("Hud.IgniteText")
+        );
     }
     public static void SetButtonCooldowns()
     {

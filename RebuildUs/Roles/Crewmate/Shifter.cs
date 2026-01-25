@@ -68,11 +68,10 @@ public class Shifter : RoleBase<Shifter>
             ButtonPosition.Layout,
             hm,
             hm.UseButton,
-            KeyCode.F
-        )
-        {
-            ButtonText = Tr.Get("Hud.ShiftText")
-        };
+            KeyCode.F,
+            false,
+            Tr.Get("Hud.ShiftText")
+        );
     }
     public static void SetButtonCooldowns()
     {
