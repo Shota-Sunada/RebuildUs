@@ -10,6 +10,7 @@ public partial class MainForm : Form
     private const string ModFolderName = "Among Us - RU";
     private string? installedModPath;
     private string? detectedOriginalPath;
+    private string? lastInstalledUrl;
     private readonly string settingsPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "launcher_settings.txt");
 
     public MainForm()
@@ -37,6 +38,7 @@ public partial class MainForm : Form
                 var lines = File.ReadAllLines(settingsPath);
                 if (lines.Length > 0) installedModPath = lines[0].Trim();
                 if (lines.Length > 1) txtUrl.Text = lines[1].Trim();
+                if (lines.Length > 2) lastInstalledUrl = lines[2].Trim();
             }
             catch { }
         }
@@ -46,7 +48,7 @@ public partial class MainForm : Form
     {
         try
         {
-            File.WriteAllLines(settingsPath, new[] { installedModPath ?? "", txtUrl.Text });
+            File.WriteAllLines(settingsPath, new[] { installedModPath ?? "", txtUrl.Text, lastInstalledUrl ?? "" });
         }
         catch { }
     }
@@ -59,7 +61,17 @@ public partial class MainForm : Form
         if (isInstalled)
         {
             lblStatus.Text = $"RebuildUs is installed at:\n{Path.GetDirectoryName(installedModPath)}";
-            btnAction.Text = "Launch";
+
+            if (txtUrl.Text != lastInstalledUrl)
+            {
+                btnAction.Text = "Update";
+            }
+            else
+            {
+                btnAction.Text = "Launch";
+            }
+
+            btnUninstall.Visible = true;
 
             // バージョン情報の取得
             lblVersion.Text = "Version: " + GetInstalledModVersion();
@@ -89,6 +101,7 @@ public partial class MainForm : Form
             lblStatus.Text = "RebuildUs is not installed.";
             lblVersion.Text = "Version: -";
             btnAction.Text = "Install";
+            btnUninstall.Visible = false;
             installedModPath = null;
         }
     }
@@ -120,10 +133,19 @@ public partial class MainForm : Form
         {
             await InstallMod();
         }
+        else if (btnAction.Text == "Update")
+        {
+            await UpdateMod();
+        }
         else
         {
             await LaunchGame();
         }
+    }
+
+    private void txtUrl_TextChanged(object sender, EventArgs e)
+    {
+        RefreshStatus();
     }
 
     private async Task InstallMod()
@@ -196,6 +218,7 @@ public partial class MainForm : Form
             if (File.Exists(tempZipPath)) File.Delete(tempZipPath);
 
             installedModPath = newModExePath;
+            lastInstalledUrl = txtUrl.Text;
             SaveSettings();
 
             MessageBox.Show("インストールが完了しました。");
@@ -210,6 +233,116 @@ public partial class MainForm : Form
         {
             btnAction.Enabled = true;
             txtUrl.Enabled = true;
+        }
+    }
+
+    private async Task UpdateMod()
+    {
+        if (installedModPath == null || string.IsNullOrWhiteSpace(txtUrl.Text)) return;
+
+        try
+        {
+            btnAction.Enabled = false;
+            txtUrl.Enabled = false;
+
+            string targetDir = Path.GetDirectoryName(installedModPath)!;
+
+            // 1. ZIPのダウンロード
+            lblStatus.Text = "最新のModをダウンロード中...";
+            string tempZipPath = Path.Combine(Path.GetTempPath(), "rebuildus_update.zip");
+            using (var client = new HttpClient())
+            {
+                var response = await client.GetAsync(txtUrl.Text);
+                response.EnsureSuccessStatusCode();
+                using (var fs = new FileStream(tempZipPath, FileMode.Create))
+                {
+                    await response.Content.CopyToAsync(fs);
+                }
+            }
+
+            // 2. Modの展開 (上書き)
+            lblStatus.Text = "アップデート中... ファイルを更新しています。";
+            await Task.Run(() => ZipFile.ExtractToDirectory(tempZipPath, targetDir, true));
+
+            // 一時ファイルの削除
+            if (File.Exists(tempZipPath)) File.Delete(tempZipPath);
+
+            lastInstalledUrl = txtUrl.Text;
+            SaveSettings();
+
+            MessageBox.Show("アップデートが完了しました。");
+            RefreshStatus();
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show($"アップデートの失敗: {ex.Message}");
+            lblStatus.Text = "アップデートに失敗しました。";
+        }
+        finally
+        {
+            btnAction.Enabled = true;
+            txtUrl.Enabled = true;
+        }
+    }
+
+    private async void btnUninstall_Click(object sender, EventArgs e)
+    {
+        await UninstallMod();
+    }
+
+    private async Task UninstallMod()
+    {
+        if (installedModPath == null || !File.Exists(installedModPath))
+        {
+            MessageBox.Show("Modがインストールされていません。");
+            return;
+        }
+
+        var result = MessageBox.Show($"{ModFolderName} をアンインストールしますか？\n(Modフォルダ全体が削除されます)", "確認", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+        if (result == DialogResult.No) return;
+
+        try
+        {
+            string targetDir = Path.GetDirectoryName(installedModPath)!;
+
+            // プロセスが動いているかチェックして終了させるか警告
+            var processes = Process.GetProcessesByName("Among Us");
+            foreach (var p in processes)
+            {
+                try
+                {
+                    if (p.MainModule?.FileName == installedModPath)
+                    {
+                        var stopResult = MessageBox.Show("Among Us が実行中です。終了して続行しますか？", "警告", MessageBoxButtons.YesNo);
+                        if (stopResult == DialogResult.Yes)
+                        {
+                            p.Kill();
+                            await p.WaitForExitAsync();
+                        }
+                        else
+                        {
+                            return;
+                        }
+                    }
+                }
+                catch { } // MainModuleへのアクセス権限がない場合などはスキップ
+            }
+
+            if (Directory.Exists(targetDir))
+            {
+                // 少し待機（プロセスの終了後にファイルロックが解除されるまで）
+                await Task.Delay(1000);
+                Directory.Delete(targetDir, true);
+            }
+
+            installedModPath = null;
+            SaveSettings();
+            MessageBox.Show("アンインストールが完了しました。");
+            RefreshStatus();
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show($"アンインストールの失敗: {ex.Message}");
         }
     }
 

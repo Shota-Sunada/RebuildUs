@@ -12,6 +12,7 @@ partial class MainForm
     private System.Windows.Forms.Label lblUrl;
     private System.Windows.Forms.TextBox txtUrl;
     private System.Windows.Forms.Button btnAction;
+    private System.Windows.Forms.Button btnUninstall;
     private System.Windows.Forms.NotifyIcon notifyIcon;
 
     private System.Windows.Forms.ContextMenuStrip trayMenu;
@@ -45,6 +46,7 @@ partial class MainForm
         this.lblUrl = new System.Windows.Forms.Label();
         this.txtUrl = new System.Windows.Forms.TextBox();
         this.btnAction = new System.Windows.Forms.Button();
+        this.btnUninstall = new System.Windows.Forms.Button();
         this.notifyIcon = new System.Windows.Forms.NotifyIcon(this.components);
         this.trayMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
         this.menuShow = new System.Windows.Forms.ToolStripMenuItem();
@@ -85,6 +87,7 @@ partial class MainForm
         this.txtUrl.Name = "txtUrl";
         this.txtUrl.Size = new System.Drawing.Size(360, 23);
         this.txtUrl.TabIndex = 3;
+        this.txtUrl.TextChanged += new System.EventHandler(this.txtUrl_TextChanged);
         //
         // btnAction
         //
@@ -95,8 +98,17 @@ partial class MainForm
         this.btnAction.Text = "Action";
         this.btnAction.UseVisualStyleBackColor = true;
         this.btnAction.Click += new System.EventHandler(this.btnAction_Click);
+        //        // btnUninstall
         //
-        // notifyIcon
+        this.btnUninstall.Location = new System.Drawing.Point(140, 117);
+        this.btnUninstall.Name = "btnUninstall";
+        this.btnUninstall.Size = new System.Drawing.Size(120, 40);
+        this.btnUninstall.TabIndex = 5;
+        this.btnUninstall.Text = "Uninstall";
+        this.btnUninstall.UseVisualStyleBackColor = true;
+        this.btnUninstall.Visible = false;
+        this.btnUninstall.Click += new System.EventHandler(this.btnUninstall_Click);
+        //         // notifyIcon
         //
         this.notifyIcon.ContextMenuStrip = this.trayMenu;
         this.notifyIcon.Text = "RebuildUs Launcher";
