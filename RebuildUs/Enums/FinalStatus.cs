@@ -6,9 +6,10 @@ public enum FinalStatus
     Torched,
     Spelled,
     Sabotage,
+    LackOfOxygen,
     Exiled,
-    Dead,
     Suicide,
     Misfire,
-    Disconnected
+    Disconnected,
+    Dead
 }

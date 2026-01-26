@@ -644,6 +644,7 @@
     "Dead": "死亡",
     "Suicide": "自殺",
     "Misfire": "誤爆",
+    "LackOfOxygen": "酸欠",
     "Disconnected": "切断"
   },
   "EndGame": {

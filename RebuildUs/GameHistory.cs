@@ -79,6 +79,7 @@ static class GameHistory
         // Collect dead player info
         var deadPlayer = new DeadPlayer(player, DateTime.UtcNow, DeathReason.Exile, null);
         DeadPlayers.Add(deadPlayer);
+        FinalStatuses[player.PlayerId] = FinalStatus.Exiled;
 
         // Remove fake tasks when player dies
         if (player.HasFakeTasks())

@@ -10,6 +10,7 @@ public static partial class RPCProcedure
         ModMapOptions.ClearAndReloadMapOptions();
         RebuildUs.ClearAndReloadRoles();
         GameHistory.ClearGameHistory();
+        EndGameMain.IsO2Win = false;
         RebuildUs.SetButtonCooldowns();
         Admin.ResetData();
         SecurityCamera.ResetData();

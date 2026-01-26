@@ -211,6 +211,7 @@ public static class PlayerControlPatch
     [HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.Exiled))]
     public static void ExiledPostfix(PlayerControl __instance)
     {
+        if (__instance == null) return;
         GameHistory.OnExiled(__instance);
     }
 

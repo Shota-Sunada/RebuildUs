@@ -12,6 +12,8 @@ public static class EndGameMain
         return true;
     }
 
+    public static bool IsO2Win;
+
     public static void OnGameEndPrefix(ref EndGameResult endGameResult)
     {
         Camouflager.ResetCamouflage();
@@ -37,7 +39,7 @@ public static class EndGameMain
                 player.Data.Disconnected == true ? FinalStatus.Disconnected :
                 GameHistory.FinalStatuses.ContainsKey(player.PlayerId) ? GameHistory.FinalStatuses[player.PlayerId] :
                 player.Data.IsDead == true ? FinalStatus.Dead :
-                gameOverReason == GameOverReason.ImpostorsBySabotage && !player.Data.Role.IsImpostor ? FinalStatus.Sabotage :
+                gameOverReason == GameOverReason.ImpostorsBySabotage && !player.Data.Role.IsImpostor ? (IsO2Win ? FinalStatus.LackOfOxygen : FinalStatus.Sabotage) :
                 FinalStatus.Alive;
 
             if (gameOverReason == GameOverReason.CrewmatesByTask && player.IsTeamCrewmate()) tasksCompleted = tasksTotal;
@@ -548,6 +550,7 @@ public static class EndGameMain
             var lifeSuppSystemType = systemType.TryCast<LifeSuppSystemType>();
             if (lifeSuppSystemType != null && lifeSuppSystemType.Countdown < 0f)
             {
+                IsO2Win = true;
                 EndGameForSabotage();
                 lifeSuppSystemType.Countdown = 10000f;
                 return true;

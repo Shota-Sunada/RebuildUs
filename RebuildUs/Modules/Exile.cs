@@ -8,7 +8,11 @@ public static class Exile
     public static void BeginForGameplay(ExileController __instance, NetworkedPlayerInfo player, bool voteTie)
     {
         LastExiled = player;
-        if (player != null) DiscordModManager.OnExile(player.PlayerName);
+        if (player != null)
+        {
+            DiscordModManager.OnExile(player.PlayerName);
+            GameHistory.FinalStatuses[player.PlayerId] = FinalStatus.Exiled;
+        }
 
         // Medic shield
         if (Medic.Exists && AmongUsClient.Instance.AmHost && Medic.FutureShielded != null && Medic.LivingPlayers.Count != 0)
@@ -224,76 +228,6 @@ public static class Exile
             var multiplier = Mini.IsGrownUp(PlayerControl.LocalPlayer) ? 0.66f : 2f;
             PlayerControl.LocalPlayer.SetKillTimer(Helpers.GetOption(FloatOptionNames.KillCooldown) * multiplier);
         }
-
-        // // Seer spawn souls
-        // if (Seer.deadBodyPositions != null && Seer.seer != null && PlayerControl.LocalPlayer == Seer.seer && (Seer.mode == 0 || Seer.mode == 2))
-        // {
-        //     foreach (Vector3 pos in Seer.deadBodyPositions)
-        //     {
-        //         GameObject soul = new();
-        //         // soul.transform.position = pos;
-        //         soul.transform.position = new Vector3(pos.x, pos.y, pos.y / 1000 - 1f);
-        //         soul.layer = 5;
-        //         var rend = soul.AddComponent<SpriteRenderer>();
-        //         soul.AddSubmergedComponent(SubmergedCompatibility.Classes.ElevatorMover);
-        //         rend.sprite = Seer.getSoulSprite();
-
-        //         if (Seer.limitSoulDuration)
-        //         {
-        //             FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(Seer.soulDuration, new Action<float>((p) =>
-        //             {
-        //                 if (rend != null)
-        //                 {
-        //                     var tmp = rend.color;
-        //                     tmp.a = Mathf.Clamp01(1 - p);
-        //                     rend.color = tmp;
-        //                 }
-        //                 if (p == 1f && rend != null && rend.gameObject != null) UnityEngine.Object.Destroy(rend.gameObject);
-        //             })));
-        //         }
-        //     }
-        //     Seer.deadBodyPositions = new List<Vector3>();
-        // }
-
-        // // Tracker reset deadBodyPositions
-        // Tracker.deadBodyPositions = new List<Vector3>();
-
-        // // Arsonist deactivate dead poolable players
-        // Arsonist.updateIcons();
-
-        // // Force Bounty Hunter Bounty Update
-        // if (BountyHunter.bountyHunter != null && BountyHunter.bountyHunter == PlayerControl.LocalPlayer)
-        //     BountyHunter.bountyUpdateTimer = 0f;
-
-        // // Medium spawn souls
-        // if (Medium.medium != null && PlayerControl.LocalPlayer == Medium.medium)
-        // {
-        //     if (Medium.souls != null)
-        //     {
-        //         foreach (SpriteRenderer sr in Medium.souls) UnityEngine.Object.Destroy(sr.gameObject);
-        //         Medium.souls = new List<SpriteRenderer>();
-        //     }
-
-        //     if (Medium.featureDeadBodies != null)
-        //     {
-        //         foreach ((DeadPlayer db, Vector3 ps) in Medium.featureDeadBodies)
-        //         {
-        //             GameObject s = new();
-        //             // s.transform.position = ps;
-        //             s.transform.position = new Vector3(ps.x, ps.y, ps.y / 1000 - 1f);
-        //             s.layer = 5;
-        //             var rend = s.AddComponent<SpriteRenderer>();
-        //             s.AddSubmergedComponent(SubmergedCompatibility.Classes.ElevatorMover);
-        //             rend.sprite = Medium.getSoulSprite();
-        //             Medium.souls.Add(rend);
-        //         }
-        //         Medium.deadBodies = Medium.featureDeadBodies;
-        //         Medium.featureDeadBodies = new List<Tuple<DeadPlayer, Vector3>>();
-        //     }
-        // }
-
-        // if (Lawyer.lawyer != null && PlayerControl.LocalPlayer == Lawyer.lawyer && !Lawyer.lawyer.Data.IsDead)
-        //     Lawyer.meetings++;
 
         if (PlayerControl.LocalPlayer.HasModifier(ModifierType.AntiTeleport))
         {
