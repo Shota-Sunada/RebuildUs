@@ -4,6 +4,8 @@ namespace RebuildUs.Modules;
 
 public class CustomColors
 {
+    public const int COLOR_BASE_ID_NUMBER = 50000;
+
     protected static Dictionary<int, string> ColorStrings = [];
     public static List<int> LighterColors = [3, 4, 5, 7, 10, 11, 13, 14, 17];
     public static uint PickableColors = (uint)Palette.ColorNames.Length;
@@ -208,7 +210,7 @@ public class CustomColors
 
         /** Hidden Colors **/
         /** Add Colors **/
-        int id = 50000;
+        int id = COLOR_BASE_ID_NUMBER;
         foreach (CustomColor cc in colors)
         {
             longList.Add((StringNames)id);
@@ -236,7 +238,7 @@ public class CustomColors
 
     public static bool GetColorName(ref string __result, [HarmonyArgument(0)] StringNames name)
     {
-        if ((int)name >= 50000)
+        if ((int)name >= COLOR_BASE_ID_NUMBER)
         {
             string text = ColorStrings[(int)name];
             if (text != null)
