@@ -23,17 +23,12 @@ if (-not (Test-Path $pluginDir)) {
 if (Test-Path $dllSource) {
     Write-Host "Copying $dllSource to $dllDest..."
     Copy-Item -Path $dllSource -Destination $dllDest -Force
+    Copy-Item -Path "$PSScriptRoot\SDK\Submerged.dll" -Destination $pluginDir -Force
+    Copy-Item -Path "$PSScriptRoot\SDK\Reactor.dll" -Destination $pluginDir -Force
 }
 else {
     Write-Error "Source DLL not found: $dllSource. Please build the project first."
     exit 1
-}
-
-$downloaderSource = "$PSScriptRoot\RebuildUs\bin\Debug\net6.0\CosmeticsDownloader.exe"
-$downloaderDest = Join-Path $pluginDir "CosmeticsDownloader.exe"
-if (Test-Path $downloaderSource) {
-    Write-Host "Copying $downloaderSource to $downloaderDest..."
-    Copy-Item -Path $downloaderSource -Destination $downloaderDest -Force
 }
 
 $exePath = Join-Path $gamePath "Among Us.exe"

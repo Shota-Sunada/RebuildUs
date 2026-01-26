@@ -114,7 +114,6 @@ public class RebuildUs : BasePlugin
         RoleInfo.Load();
         CustomColors.Load();
         SubmergedCompatibility.Initialize();
-        Submerged.Patch();
         UpdateRegions();
         CustomOptionHolder.Load();
 

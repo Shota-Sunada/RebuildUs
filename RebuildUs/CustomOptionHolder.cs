@@ -369,12 +369,12 @@ public static class CustomOptionHolder
     public static void Load()
     {
         #region MOD OPTIONS
-        PresetSelection = CustomOption.Header(0, CustomOptionType.General, "Option.Preset", PRESETS, Tr.Get("Option.Preset"));
+        PresetSelection = CustomOption.Header(0, CustomOptionType.General, "Option.Preset", PRESETS, "Option.Preset");
         ActivateRoles = CustomOption.Normal(1, CustomOptionType.General, "Option.ActivateRoles", true, null);
         #endregion
 
         #region GENERAL OPTIONS
-        CrewmateRolesCountMin = CustomOption.Header(10, CustomOptionType.General, "Option.CrewmateRolesCountMin", 0f, 0f, 15f, 1f, Tr.Get("Option.RolesGeneral"));
+        CrewmateRolesCountMin = CustomOption.Header(10, CustomOptionType.General, "Option.CrewmateRolesCountMin", 0f, 0f, 15f, 1f, "Option.RolesGeneral");
         CrewmateRolesCountMax = CustomOption.Normal(11, CustomOptionType.General, "Option.CrewmateRolesCountMax", 0f, 0f, 15f, 1f);
         ImpostorRolesCountMin = CustomOption.Normal(12, CustomOptionType.General, "Option.ImpostorRolesCountMin", 0f, 0f, 15f, 1f);
         ImpostorRolesCountMax = CustomOption.Normal(13, CustomOptionType.General, "Option.ImpostorRolesCountMax", 0f, 0f, 15f, 1f);
@@ -385,7 +385,7 @@ public static class CustomOptionHolder
         #endregion
 
         #region GAME OPTIONS
-        GameOptions = CustomOption.Header(19, CustomOptionType.General, "Option.GameOptions", true, Tr.Get("Option.GameOptions"));
+        GameOptions = CustomOption.Header(19, CustomOptionType.General, "Option.GameOptions", true, "Option.GameOptions");
         MaxNumberOfMeetings = CustomOption.Normal(20, CustomOptionType.General, "Option.MaxNumberOfMeetings", 10, 0, 15, 1);
         BlockSkippingInEmergencyMeetings = CustomOption.Normal(21, CustomOptionType.General, "Option.BlockSkippingInEmergencyMeetings", false);
         NoVoteIsSelfVote = CustomOption.Normal(22, CustomOptionType.General, "Option.NoVoteIsSelfVote", false);
@@ -419,19 +419,19 @@ public static class CustomOptionHolder
         #endregion
 
         #region DISCORD OPTIONS
-        EnableDiscordAutoMute = CustomOption.Header(110, CustomOptionType.General, "Option.EnableDiscordAutoMute", true, Tr.Get("Option.DiscordOptions"));
+        EnableDiscordAutoMute = CustomOption.Header(110, CustomOptionType.General, "Option.EnableDiscordAutoMute", true, "Option.DiscordOptions");
         EnableDiscordEmbed = CustomOption.Normal(112, CustomOptionType.General, "Option.EnableDiscordEmbed", true);
         EnableSendFinalStatusToDiscord = CustomOption.Normal(111, CustomOptionType.General, "Option.EnableSendFinalStatusToDiscord", true);
         #endregion
 
         #region POLUS OPTIONS
-        PolusAdditionalVents = CustomOption.Header(70, CustomOptionType.General, "Option.PolusAdditionalVents", true, Tr.Get("Option.PolusOptions"));
+        PolusAdditionalVents = CustomOption.Header(70, CustomOptionType.General, "Option.PolusAdditionalVents", true, "Option.PolusOptions");
         PolusSpecimenVital = CustomOption.Normal(71, CustomOptionType.General, "Option.PolusSpecimenVital", true);
         PolusRandomSpawn = CustomOption.Normal(72, CustomOptionType.General, "Option.PolusRandomSpawn", true);
         #endregion
 
         #region AIRSHIP OPTIONS
-        AirshipOptimize = CustomOption.Header(80, CustomOptionType.General, "Option.AirshipOptimize", false, Tr.Get("Option.AirshipOptions"));
+        AirshipOptimize = CustomOption.Header(80, CustomOptionType.General, "Option.AirshipOptimize", false, "Option.AirshipOptions");
         AirshipEnableWallCheck = CustomOption.Normal(81, CustomOptionType.General, "Option.AirshipEnableWallCheck", true);
         AirshipReactorDuration = CustomOption.Normal(82, CustomOptionType.General, "Option.AirshipReactorDuration", 60f, 0f, 600f, 1f);
         AirshipRandomSpawn = CustomOption.Normal(83, CustomOptionType.General, "Option.AirshipRandomSpawn", false);
@@ -451,7 +451,7 @@ public static class CustomOptionHolder
         #endregion
 
         #region MAP OPTIONS
-        RandomMap = CustomOption.Header(100, CustomOptionType.General, "Option.RandomMap", false, Tr.Get("Option.RandomMap"));
+        RandomMap = CustomOption.Header(100, CustomOptionType.General, "Option.RandomMap", false, "Option.RandomMap");
         RandomMapEnableSkeld = CustomOption.Normal(101, CustomOptionType.General, "Option.RandomMapEnableSkeld", true, RandomMap);
         RandomMapEnableMiraHQ = CustomOption.Normal(102, CustomOptionType.General, "Option.RandomMapEnableMiraHQ", true, RandomMap);
         RandomMapEnablePolus = CustomOption.Normal(103, CustomOptionType.General, "Option.RandomMapEnablePolus", true, RandomMap);

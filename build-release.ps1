@@ -58,6 +58,8 @@ if (!(Test-Path $PluginsFolder)) {
     New-Item -ItemType Directory -Path $PluginsFolder -Force | Out-Null
 }
 Copy-Item $PluginDllFile $PluginsFolder
+Copy-Item ".\SDK\Submerged.dll" $PluginsFolder
+Copy-Item ".\SDK\Reactor.dll" $PluginsFolder
 Write-Host "[Copy] Done!" -ForegroundColor Green
 
 Write-Host "Plugin Version is $($PluginVersion)" -ForegroundColor Magenta

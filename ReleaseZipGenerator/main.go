@@ -38,6 +38,8 @@ func main() {
 		version = os.Args[1]
 	}
 
+	var submergedDllPath, reactorDllPath string
+
 	fmt.Println("Fetching BepInEx builds...")
 	builds, err := getBepInExBuilds()
 	if err != nil || len(builds) == 0 {
@@ -109,38 +111,24 @@ func main() {
 		return
 	}
 
-	// Download Submerged.dll
-	fmt.Println("\nFetching Submerged.dll from GitHub...")
-	submergedUrl, err := getGitHubLatestReleaseAsset("SubmergedAmongUs", "Submerged", "Submerged.dll")
-	submergedDllPath := ""
-	if err == nil {
-		fmt.Printf("Downloading Submerged.dll: %s\n", submergedUrl)
-		submergedDllPath = filepath.Join(os.TempDir(), "Submerged.dll")
-		if err := downloadFile(submergedUrl, submergedDllPath); err != nil {
-			fmt.Printf("Warning: Failed to download Submerged.dll: %v\n", err)
-			submergedDllPath = ""
-		} else {
-			defer os.Remove(submergedDllPath)
-		}
+	// Copy Submerged.dll from SDK
+	fmt.Println("\nCopying Submerged.dll from SDK...")
+	submergedDllPath = filepath.Join(os.TempDir(), "Submerged.dll")
+	if err := copyFile("../SDK/Submerged.dll", submergedDllPath); err != nil {
+		fmt.Printf("Warning: Failed to copy Submerged.dll: %v\n", err)
+		submergedDllPath = ""
 	} else {
-		fmt.Printf("Warning: Could not find Submerged.dll release: %v\n", err)
+		defer os.Remove(submergedDllPath)
 	}
 
-	// Download Reactor.dll
-	fmt.Println("\nFetching Reactor.dll from GitHub...")
-	reactorUrl, err := getGitHubLatestReleaseAsset("NuclearPowered", "Reactor", "Reactor.dll")
-	reactorDllPath := ""
-	if err == nil {
-		fmt.Printf("Downloading Reactor.dll: %s\n", reactorUrl)
-		reactorDllPath = filepath.Join(os.TempDir(), "Reactor.dll")
-		if err := downloadFile(reactorUrl, reactorDllPath); err != nil {
-			fmt.Printf("Warning: Failed to download Reactor.dll: %v\n", err)
-			reactorDllPath = ""
-		} else {
-			defer os.Remove(reactorDllPath)
-		}
+	// Copy Reactor.dll from SDK
+	fmt.Println("\nCopying Reactor.dll from SDK...")
+	reactorDllPath = filepath.Join(os.TempDir(), "Reactor.dll")
+	if err := copyFile("../SDK/Reactor.dll", reactorDllPath); err != nil {
+		fmt.Printf("Warning: Failed to copy Reactor.dll: %v\n", err)
+		reactorDllPath = ""
 	} else {
-		fmt.Printf("Warning: Could not find Reactor.dll release: %v\n", err)
+		defer os.Remove(reactorDllPath)
 	}
 
 	if submergedDllPath != "" {
@@ -484,5 +472,22 @@ func addFileToZip(zw *zip.Writer, srcPath, destName string) error {
 	}
 
 	_, err = io.Copy(w, file)
+	return err
+}
+
+func copyFile(src, dst string) error {
+	sourceFile, err := os.Open(src)
+	if err != nil {
+		return err
+	}
+	defer sourceFile.Close()
+
+	destFile, err := os.Create(dst)
+	if err != nil {
+		return err
+	}
+	defer destFile.Close()
+
+	_, err = io.Copy(destFile, sourceFile)
 	return err
 }
