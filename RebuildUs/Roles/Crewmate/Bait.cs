@@ -27,15 +27,11 @@ public class Bait : RoleBase<Bait>
     public override void OnIntroEnd() { }
     public override void FixedUpdate()
     {
-        if (Player == null || Player != PlayerControl.LocalPlayer) return;
+        if (Player == null) return;
 
         // Bait report
         if (Player.Data.IsDead && !Reported)
         {
-            WarningMessage ??= new("Hud.BaitWarning", Delay);
-
-            Delay -= Time.fixedDeltaTime;
-
             DeadPlayer baitDeadPlayer = null;
             var deadPlayers = GameHistory.DeadPlayers;
             if (deadPlayers != null)
@@ -50,6 +46,19 @@ public class Bait : RoleBase<Bait>
                     }
                 }
             }
+
+            if (baitDeadPlayer != null && baitDeadPlayer.KillerIfExisting != null)
+            {
+                // Show warning to the killer
+                if (baitDeadPlayer.KillerIfExisting == PlayerControl.LocalPlayer)
+                {
+                    WarningMessage ??= new("Hud.BaitWarning", Delay);
+                }
+            }
+
+            if (Player != PlayerControl.LocalPlayer) return;
+
+            Delay -= Time.fixedDeltaTime;
 
             if (baitDeadPlayer != null && baitDeadPlayer.KillerIfExisting != null && Delay <= 0f)
             {

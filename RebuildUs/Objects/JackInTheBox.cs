@@ -86,8 +86,10 @@ public class JackInTheBox
         Vent.name = "JackInTheBoxVent_" + Vent.Id;
 
         // Only render the box for the Trickster
-        // var playerIsTrickster = PlayerControl.LocalPlayer == Trickster.trickster;
-        // gameObject.SetActive(playerIsTrickster);
+        if (!BoxesConvertedToVents && !PlayerControl.LocalPlayer.IsRole(RoleType.Trickster))
+        {
+            GameObject.SetActive(false);
+        }
 
         AllJackInTheBoxes.Add(this);
     }
@@ -97,9 +99,9 @@ public class JackInTheBox
         if (BoxesConvertedToVents == true) return;
         for (int i = 0; i < AllJackInTheBoxes.Count; i++)
         {
-            // var box = AllJackInTheBoxes[i];
-            // var playerIsTrickster = PlayerControl.LocalPlayer == Trickster.trickster;
-            // box.gameObject.SetActive(playerIsTrickster);
+            var box = AllJackInTheBoxes[i];
+            var playerIsTrickster = PlayerControl.LocalPlayer.IsRole(RoleType.Trickster);
+            box.GameObject.SetActive(playerIsTrickster);
         }
     }
 

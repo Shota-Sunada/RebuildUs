@@ -68,7 +68,7 @@ public class Shifter : RoleBase<Shifter>
             ButtonPosition.Layout,
             hm,
             hm.UseButton,
-            KeyCode.F,
+            AbilitySlot.CrewmateAbilityPrimary,
             false,
             Tr.Get("Hud.ShiftText")
         );

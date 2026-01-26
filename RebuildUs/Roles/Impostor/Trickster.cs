@@ -52,7 +52,7 @@ public class Trickster : RoleBase<Trickster>
             ButtonPosition.Layout,
             hm,
             hm.KillButton,
-            KeyCode.F,
+            AbilitySlot.ImpostorAbilityPrimary,
             false,
             Tr.Get("Hud.PlaceJackInTheBoxText")
         );
@@ -75,7 +75,7 @@ public class Trickster : RoleBase<Trickster>
             ButtonPosition.Layout,
             hm,
             hm.KillButton,
-            KeyCode.F,
+            AbilitySlot.ImpostorAbilityPrimary,
             true,
             LightsOutDuration,
             () => { LightsOutButton.Timer = LightsOutButton.MaxTimer; },

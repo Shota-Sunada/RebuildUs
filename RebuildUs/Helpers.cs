@@ -283,7 +283,7 @@ public static class Helpers
     {
         foreach (var p in PlayerControl.AllPlayerControls)
         {
-            if (p.IsTeamCrewmate() && !p.HasModifier(ModifierType.Madmate) && p.IsAlive()) return true;
+            if (p.IsTeamCrewmate() && !p.HasModifier(ModifierType.Madmate) && !p.IsRole(RoleType.Madmate) && !p.IsRole(RoleType.Suicider) && p.IsAlive()) return true;
         }
         return false;
     }
@@ -301,6 +301,8 @@ public static class Helpers
         return ((player.IsRole(RoleType.Jackal) || isFormerJackal) && Jackal.HasImpostorVision)
             || (player.IsRole(RoleType.Sidekick) && Sidekick.HasImpostorVision)
             || (player.IsRole(RoleType.Spy) && Spy.HasImpostorVision)
+            || (player.IsRole(RoleType.Madmate) && MadmateRole.HasImpostorVision)
+            || (player.IsRole(RoleType.Suicider) && Suicider.HasImpostorVision)
             || (player.IsRole(RoleType.Jester) && Jester.HasImpostorVision);
     }
 
@@ -572,7 +574,23 @@ public static class Helpers
                 if (total > 0)
                 {
                     InfoStringBuilder.Clear();
-                    InfoStringBuilder.Append("<color=#FAD934FF>(").Append(completed).Append('/').Append(total).Append(")</color>");
+
+                    bool commsActive = false;
+                    if (ShipStatus.Instance != null && ShipStatus.Instance.Systems.TryGetValue(SystemTypes.Comms, out var comms))
+                    {
+                        var activatable = comms.TryCast<IActivatable>();
+                        if (activatable != null) commsActive = activatable.IsActive;
+                    }
+
+                    if (commsActive)
+                    {
+                        InfoStringBuilder.Append("<color=#808080FF>(??/??)</color>");
+                    }
+                    else
+                    {
+                        string color = (completed == total) ? "#00FF00FF" : "#FAD934FF";
+                        InfoStringBuilder.Append("<color=").Append(color).Append(">(").Append(completed).Append('/').Append(total).Append(")</color>");
+                    }
                     taskText = InfoStringBuilder.ToString();
                 }
 

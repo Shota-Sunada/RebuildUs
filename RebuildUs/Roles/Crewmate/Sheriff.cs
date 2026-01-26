@@ -16,6 +16,8 @@ public class Sheriff : RoleBase<Sheriff>
     public static bool MisfireKillsTarget { get { return CustomOptionHolder.SheriffMisfireKillsTarget.GetBool(); } }
     public static bool SpyCanDieToSheriff { get { return CustomOptionHolder.SpyCanDieToSheriff.GetBool(); } }
     public static bool MadmateCanDieToSheriff { get { return CustomOptionHolder.MadmateCanDieToSheriff.GetBool(); } }
+    public static bool MadmateRoleCanDieToSheriff { get { return CustomOptionHolder.MadmateRoleCanDieToSheriff.GetBool(); } }
+    public static bool SuiciderCanDieToSheriff { get { return CustomOptionHolder.SuiciderCanDieToSheriff.GetBool(); } }
     public static bool CreatedMadmateCanDieToSheriff { get { return CustomOptionHolder.CreatedMadmateCanDieToSheriff.GetBool(); } }
     public static bool SheriffCanKillNoDeadBody { get { return CustomOptionHolder.SheriffCanKillNoDeadBody.GetBool(); } }
 
@@ -79,6 +81,8 @@ public class Sheriff : RoleBase<Sheriff>
                     if ((Local.CurrentTarget.Data.Role.IsImpostor && (!Local.CurrentTarget.HasModifier(ModifierType.Mini) || Mini.IsGrownUp(Local.CurrentTarget))) ||
                         (SpyCanDieToSheriff && Local.CurrentTarget.IsRole(RoleType.Spy)) ||
                         (MadmateCanDieToSheriff && Local.CurrentTarget.HasModifier(ModifierType.Madmate)) ||
+                        (MadmateRoleCanDieToSheriff && Local.CurrentTarget.IsRole(RoleType.Madmate)) ||
+                        (SuiciderCanDieToSheriff && Local.CurrentTarget.IsRole(RoleType.Suicider)) ||
                         (CreatedMadmateCanDieToSheriff && Local.CurrentTarget.HasModifier(ModifierType.CreatedMadmate)) ||
                         (CanKillNeutrals && Local.CurrentTarget.IsNeutral()) ||
                         Local.CurrentTarget.IsRole(RoleType.Jackal) || Local.CurrentTarget.IsRole(RoleType.Sidekick))
@@ -120,7 +124,7 @@ public class Sheriff : RoleBase<Sheriff>
             ButtonPosition.Layout,
             hm,
             hm.KillButton,
-            AbilitySlot.Ability1
+            AbilitySlot.CrewmateAbilityPrimary
         );
 
         SheriffNumShotsText = GameObject.Instantiate(SheriffKillButton.ActionButton.cooldownTimerText, SheriffKillButton.ActionButton.cooldownTimerText.transform.parent);

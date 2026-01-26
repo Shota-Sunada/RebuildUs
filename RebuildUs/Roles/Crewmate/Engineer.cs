@@ -99,7 +99,7 @@ public class Engineer : RoleBase<Engineer>
             ButtonPosition.Layout,
             hm,
             hm.UseButton,
-            KeyCode.F,
+            AbilitySlot.CrewmateAbilityPrimary,
             false,
             Tr.Get("Hud.RepairText")
         );

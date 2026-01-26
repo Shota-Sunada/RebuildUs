@@ -80,8 +80,14 @@ public partial class CustomOption
                 Logger.LogDebug($"CustomOption id {id} is used in multiple places.");
             }
 #endif
-            AllOptionsById[id] = this;
         }
+        else
+        {
+            Entry = Instance.Config.Bind("General", "Selected Preset", DefaultSelection);
+            Selection = Mathf.Clamp(Entry.Value, 0, selections.Length - 1);
+            Preset = Selection;
+        }
+        AllOptionsById[id] = this;
 
         if (!OptionsByType.TryGetValue(type, out var list))
         {
@@ -194,7 +200,7 @@ public partial class CustomOption
         string format = ""
     )
     {
-        return new CustomOption(id, type, nameKey, ["Off", "On"], defaultValue ? "On" : "Off", parent, hideIfParentEnabled, format, new Color32(r, g, b, a));
+        return new CustomOption(id, type, nameKey, [Tr.Get("Option.Off"), Tr.Get("Option.On")], defaultValue ? Tr.Get("Option.On") : Tr.Get("Option.Off"), parent, hideIfParentEnabled, format, new Color32(r, g, b, a));
     }
 
     public static CustomOption Header(
@@ -210,7 +216,7 @@ public partial class CustomOption
         string format = ""
     )
     {
-        var opt = new CustomOption(id, type, nameKey, ["Off", "On"], defaultValue ? "On" : "Off", null, false, format, new Color32(r, g, b, a));
+        var opt = new CustomOption(id, type, nameKey, [Tr.Get("Option.Off"), Tr.Get("Option.On")], defaultValue ? Tr.Get("Option.On") : Tr.Get("Option.Off"), null, false, format, new Color32(r, g, b, a));
         opt.SetHeader(headerText);
         return opt;
     }
@@ -343,25 +349,24 @@ public partial class CustomOption
         {
             stringOption.oldValue = stringOption.Value = Selection;
             stringOption.ValueText.text = Selections[Selection].ToString();
-            if (AmongUsClient.Instance?.AmHost == true && PlayerControl.LocalPlayer)
+        }
+
+        if (AmongUsClient.Instance?.AmHost == true && PlayerControl.LocalPlayer)
+        {
+            Entry?.Value = Selection;
+
+            if (Id == 0)
             {
-                if (Id == 0 && Selection != Preset)
+                if (Selection != Preset)
                 {
-                    Entry.Value = Selection; // Save preset selection immediately
-                    SwitchPreset(Selection); // Switch presets
+                    SwitchPreset(Selection);
                     ShareOptionSelections();
                 }
-                else if (Entry != null)
-                {
-                    ShareOptionChange((uint)Id);// Share single selection
-                }
             }
-        }
-        else if (Id == 0 && AmongUsClient.Instance?.AmHost == true && PlayerControl.LocalPlayer)
-        {
-            // Share the preset switch for random maps, even if the menu isn't open!
-            SwitchPreset(Selection);
-            ShareOptionSelections(); // Share all selections
+            else
+            {
+                ShareOptionChange((uint)Id);// Share single selection
+            }
         }
 
         if (AmongUsClient.Instance?.AmHost == true)

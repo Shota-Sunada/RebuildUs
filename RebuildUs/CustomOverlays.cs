@@ -12,6 +12,7 @@ public class CustomOverlays
     public static int MaxOptionsPage = 0;
 
     private const int MaxLines = 26;
+    private const int MaxCharsPerLine = 45;
     private const float LeftColumnX = -2.4f;
     private const float RightColumnX = 1.2f;
     private const float TextY = 0.6f;
@@ -36,17 +37,28 @@ public class CustomOverlays
         var currentPage = new StringBuilder();
         var currentLineCount = 0;
 
-        foreach (var line in lines)
+        foreach (var rawLine in lines)
         {
-            if (line == "\f" || currentLineCount >= maxLines)
+            if (rawLine == "\f")
             {
-                pages.Add(currentPage.ToString().TrimEnd());
+                if (currentPage.Length > 0) pages.Add(currentPage.ToString().TrimEnd());
                 currentPage.Clear();
                 currentLineCount = 0;
-                if (line == "\f") continue;
+                continue;
             }
-            currentPage.Append(line).Append('\n');
-            currentLineCount++;
+
+            var wrappedLines = WrapLine(rawLine, MaxCharsPerLine);
+            foreach (var line in wrappedLines)
+            {
+                if (currentLineCount >= maxLines)
+                {
+                    pages.Add(currentPage.ToString().TrimEnd());
+                    currentPage.Clear();
+                    currentLineCount = 0;
+                }
+                currentPage.Append(line).Append('\n');
+                currentLineCount++;
+            }
         }
 
         if (currentPage.Length > 0)
@@ -57,13 +69,54 @@ public class CustomOverlays
         return pages;
     }
 
+    private static List<string> WrapLine(string line, int maxChars)
+    {
+        var result = new List<string>();
+        if (string.IsNullOrEmpty(line))
+        {
+            result.Add(string.Empty);
+            return result;
+        }
+
+        var sb = new StringBuilder();
+        int visibleWidth = 0;
+        bool inTag = false;
+
+        for (int i = 0; i < line.Length; i++)
+        {
+            char c = line[i];
+            if (c == '<') inTag = true;
+
+            if (!inTag)
+            {
+                // Determine width: 2 for CJK/Full-width, 1 for ASCII/Half-width
+                int charWidth = (c <= '\u007f') ? 1 : 2;
+
+                if (visibleWidth + charWidth > maxChars && visibleWidth > 0)
+                {
+                    result.Add(sb.ToString());
+                    sb.Clear();
+                    visibleWidth = 0;
+                }
+                visibleWidth += charWidth;
+            }
+
+            sb.Append(c);
+
+            if (c == '>') inTag = false;
+        }
+
+        if (sb.Length > 0) result.Add(sb.ToString());
+        return result;
+    }
+
     public static void SetInfoOverlayText()
     {
         if (OptionsData == null || RebuildUs.OptionsPage < 0 || RebuildUs.OptionsPage >= OptionsData.Count) return;
 
         int currentPageNumber = (RebuildUs.OptionsPage / 2) + 1;
         int totalPagesNumber = (MaxOptionsPage + 1) / 2;
-        InfoOverlayTitle?.text = new StringBuilder(Tr.Get("Option.GameOptions")).Append(" <size=80%>").Append("Option.CurrentPage").Append(" (").Append(currentPageNumber).Append('/').Append(totalPagesNumber).Append(")\n").Append(Tr.Get("Option.ChangePage")).Append("</size>").ToString();
+        InfoOverlayTitle?.text = new StringBuilder(Tr.Get("Option.GameOptions")).Append(" <size=80%>").Append(Tr.Get("Option.CurrentPage")).Append(" (").Append(currentPageNumber).Append('/').Append(totalPagesNumber).Append(")\n").Append(Tr.Get("Option.ChangePage")).Append("</size>").ToString();
 
         var sb = new StringBuilder();
         sb.Append(OptionsData[RebuildUs.OptionsPage]);

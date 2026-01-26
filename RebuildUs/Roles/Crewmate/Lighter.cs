@@ -61,7 +61,7 @@ public class Lighter : RoleBase<Lighter>
             ButtonPosition.Layout,
             hm,
             hm.UseButton,
-            KeyCode.F,
+            AbilitySlot.CrewmateAbilityPrimary,
             true,
             Duration,
             () =>

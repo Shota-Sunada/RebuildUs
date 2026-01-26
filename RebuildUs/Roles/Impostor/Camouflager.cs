@@ -65,7 +65,7 @@ public class Camouflager : RoleBase<Camouflager>
             ButtonPosition.Layout,
             hm,
             hm.KillButton,
-            KeyCode.F,
+            AbilitySlot.ImpostorAbilityPrimary,
             true,
             Camouflager.Duration,
             () => { CamouflagerButton.Timer = CamouflagerButton.MaxTimer; },

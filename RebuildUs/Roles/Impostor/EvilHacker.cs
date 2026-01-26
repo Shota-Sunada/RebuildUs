@@ -76,7 +76,7 @@ public class EvilHacker : RoleBase<EvilHacker>
             ButtonPosition.Layout,
             hm,
             hm.KillButton,
-            KeyCode.F,
+            AbilitySlot.ImpostorAbilityPrimary,
             false,
             0f,
             () => { },
@@ -101,7 +101,7 @@ public class EvilHacker : RoleBase<EvilHacker>
             ButtonPosition.Layout,
             hm,
             hm.KillButton,
-            KeyCode.F,
+            AbilitySlot.ImpostorAbilitySecondary,
             false,
             Tr.Get("Role.Madmate")
         );

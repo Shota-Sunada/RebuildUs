@@ -166,7 +166,9 @@
     "Vampire": "The Vampire is an Impostor, that can bite other player. Bitten players die after a configurable amount of time.\nIf the Vampire spawn chance is greater 0 (even if there is no Vampire in the game), all players can place one garlic.\nIf a victim is near a garlic, the \"Bite Button\" turns into the default \"Kill Button\" and the Vampire can only perform a normal kill.",
     "Vulture": "The Vulture does not have any tasks, he has to win the game as a solo.\nThe Vulture is a neutral role that must eat a specified number of corpses (depending on the options) in order to win.\nDepending on the options, when a player dies, the Vulture gets an arrow pointing to the corpse.",
     "Warlock": "The Warlock is an Impostor, that can curse another player (the cursed player doesn't get notified).\nIf the cursed person stands next to another player, the Warlock is able to kill that player (no matter how far away they are).\nPerforming a kill with the help of a cursed player, will lift the curse and it will result in the Warlock being unable to move for a configurable amount of time.\nThe Warlock can still perform normal kills, but the two buttons share the same cooldown.",
-    "Witch": "The Witch is an Impostor who has the ability to cast a spell on other players.\nDuring the next meeting, the spellbound player will be highlighted and they'll die\nright after the meeting."
+    "Witch": "The Witch is an Impostor who has the ability to cast a spell on other players.\nDuring the next meeting, the spellbound player will be highlighted and they'll die\nright after the meeting.",
+    "Madmate": "The Madmate is an Crewmate that can help Impostors.",
+    "Suicider": "The Suicider is an Madmate that can commit suicide."
   },
   "Role": {
     "Arsonist": "Arsonist",
@@ -222,6 +224,7 @@
     "Vulture": "Vulture",
     "Warlock": "Warlock",
     "Watcher": "Watcher",
+    "Suicider": "Suicider",
     "Witch": "Witch",
     "MafiaG": "G",
     "MafiaM": "M",
@@ -253,6 +256,12 @@
     "AirshipOptimize": "Optimize Airship",
     "RolesGeneral": "Roles General",
     "GameOptions": "Game Options",
+    "SuiciderCanDieToSheriff": "Can Die To Sheriff",
+    "SuiciderCanEnterVents": "Can Enter Vents",
+    "SuiciderHasImpostorVision": "Has Impostor Vision",
+    "SuiciderCanFixComm": "Can Fix Communication Sabotage",
+    "MadmateCanKnowImpostorAfterFinishTasks": "Can Know Impostor After Finish Tasks",
+    "SuiciderCanKnowImpostorAfterFinishTasks": "Can Know Impostor After Finish Tasks",
     "DiscordOptions": "Discord Options",
     "EnableDiscordEmbed": "Enable To Send Embed To Guild (Settings Required & Required To Link Account)",
     "EnableDiscordAutoMute": "Enable Auto Mute (Account Link & Settings Required)",
@@ -633,7 +642,17 @@
     "VultureCorpses": "Remaining: {0}",
     "VultureText": "Eat",
     "Meeting": "Meeting: {0}x",
-    "BaitWarning": "You killed a Bait!!"
+    "BaitWarning": "You killed a Bait!!",
+    "PressAnyKey": "< Press Any Key >",
+    "KeyBindings": "Key Bindings",
+    "CrewmateAbilityPrimary": "Crewmate Ability Primary",
+    "CrewmateAbilitySecondary": "Crewmate Ability Secondary",
+    "ImpostorAbilityPrimary": "Impostor Ability Primary",
+    "ImpostorAbilitySecondary": "Impostor Ability Secondary",
+    "NeutralAbilityPrimary": "Neutral Ability Primary",
+    "NeutralAbilitySecondary": "Neutral Ability Secondary",
+    "CommonAbilityPrimary": "Common Ability Primary",
+    "CommonAbilitySecondary": "Common Ability Secondary"
   },
   "FinalStatus": {
     "Alive": "Alive",

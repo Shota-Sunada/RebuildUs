@@ -63,7 +63,7 @@ public class EvilTracker : RoleBase<EvilTracker>
             ButtonPosition.Layout,
             hm,
             hm.KillButton,
-            KeyCode.F,
+            AbilitySlot.ImpostorAbilityPrimary,
             false,
             Tr.Get("Hud.TrackerText")
         );

@@ -147,7 +147,7 @@ public class Vampire : RoleBase<Vampire>
             ButtonPosition.Layout,
             hm,
             hm.KillButton,
-            KeyCode.Q,
+            AbilitySlot.ImpostorAbilityPrimary,
             false,
             0f,
             () =>
@@ -184,7 +184,7 @@ public class Vampire : RoleBase<Vampire>
             ButtonPosition.Layout,
             hm,
             hm.UseButton,
-            KeyCode.F,
+            AbilitySlot.CommonAbilityPrimary,
             true,
             Tr.Get("Hud.GarlicText")
         );

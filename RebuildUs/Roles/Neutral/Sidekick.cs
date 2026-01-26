@@ -97,7 +97,7 @@ public class Sidekick : RoleBase<Sidekick>
             ButtonPosition.Layout,
             hm,
             hm.KillButton,
-            KeyCode.Q
+            AbilitySlot.NeutralAbilityPrimary
         );
 
         SidekickSabotageLightsButton = new CustomButton(
@@ -126,7 +126,7 @@ public class Sidekick : RoleBase<Sidekick>
             ButtonPosition.Layout,
             hm,
             hm.AbilityButton,
-            KeyCode.G
+            AbilitySlot.CommonAbilitySecondary
         );
     }
     public static void SetButtonCooldowns()

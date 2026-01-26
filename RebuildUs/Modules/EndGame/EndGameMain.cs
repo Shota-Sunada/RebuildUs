@@ -103,7 +103,11 @@ public static class EndGameMain
             EndGameResult.CachedWinners = new Il2CppSystem.Collections.Generic.List<CachedPlayerData>();
             foreach (var p in PlayerControl.AllPlayerControls.GetFastEnumerator())
             {
-                if (p.IsTeamImpostor() || p.HasModifier(ModifierType.Madmate) || p.HasModifier(ModifierType.CreatedMadmate))
+                if (p.IsTeamImpostor() ||
+                    p.HasModifier(ModifierType.Madmate) ||
+                    p.IsRole(RoleType.Madmate) ||
+                    p.IsRole(RoleType.Suicider) ||
+                    p.HasModifier(ModifierType.CreatedMadmate))
                 {
                     var wpd = new CachedPlayerData(p.Data);
                     EndGameResult.CachedWinners.Add(wpd);
@@ -115,7 +119,11 @@ public static class EndGameMain
             EndGameResult.CachedWinners = new Il2CppSystem.Collections.Generic.List<CachedPlayerData>();
             foreach (var p in PlayerControl.AllPlayerControls.GetFastEnumerator())
             {
-                if (p.IsTeamCrewmate() && !p.HasModifier(ModifierType.Madmate) && !p.HasModifier(ModifierType.CreatedMadmate))
+                if (p.IsTeamCrewmate() &&
+                    !p.HasModifier(ModifierType.Madmate) &&
+                    !p.IsRole(RoleType.Madmate) &&
+                    !p.IsRole(RoleType.Suicider) &&
+                    !p.HasModifier(ModifierType.CreatedMadmate))
                 {
                     var wpd = new CachedPlayerData(p.Data);
                     EndGameResult.CachedWinners.Add(wpd);

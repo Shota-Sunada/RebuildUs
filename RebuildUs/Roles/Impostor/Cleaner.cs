@@ -70,7 +70,7 @@ public class Cleaner : RoleBase<Cleaner>
             ButtonPosition.Layout,
             hm,
             hm.KillButton,
-            KeyCode.F,
+            AbilitySlot.ImpostorAbilityPrimary,
             false,
             Tr.Get("Hud.CleanText")
         );

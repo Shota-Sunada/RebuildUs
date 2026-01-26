@@ -120,7 +120,7 @@ public static class Usables
         if (lp == null) return false;
 
         __instance.CanUse(lp.Data, out bool canUse, out bool couldUse);
-        bool canMoveInVents = !lp.IsRole(RoleType.Spy) && !lp.HasModifier(ModifierType.Madmate) && !lp.HasModifier(ModifierType.CreatedMadmate);
+        bool canMoveInVents = !lp.IsRole(RoleType.Spy) && !lp.HasModifier(ModifierType.Madmate) && !lp.IsRole(RoleType.Madmate) && !lp.IsRole(RoleType.Suicider) && !lp.HasModifier(ModifierType.CreatedMadmate);
         if (!canUse) return false; // No need to execute the native method as using is disallowed anyways
 
         bool isEnter = !lp.inVent;
@@ -286,6 +286,16 @@ public static class Usables
         }
 
         if (pc.HasModifier(ModifierType.Madmate) && (isLights || (isComms && !Madmate.CanFixComm)))
+        {
+            return true;
+        }
+
+        if (pc.IsRole(RoleType.Madmate) && (isLights || (isComms && !MadmateRole.CanFixComm)))
+        {
+            return true;
+        }
+
+        if (pc.IsRole(RoleType.Suicider) && (isLights || (isComms && !Suicider.CanFixComm)))
         {
             return true;
         }

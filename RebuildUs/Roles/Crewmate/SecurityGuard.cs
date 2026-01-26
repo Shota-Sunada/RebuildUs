@@ -140,7 +140,7 @@ public class SecurityGuard : RoleBase<SecurityGuard>
             ButtonPosition.Layout,
             hm,
             hm.UseButton,
-            KeyCode.F,
+            AbilitySlot.CrewmateAbilityPrimary,
             false,
             Tr.Get("Hud.PlaceCameraText")
         );
@@ -265,7 +265,7 @@ public class SecurityGuard : RoleBase<SecurityGuard>
             ButtonPosition.Layout,
             hm,
             hm.UseButton,
-            KeyCode.Q,
+            AbilitySlot.CrewmateAbilityPrimary,
             true,
             0f,
             () =>

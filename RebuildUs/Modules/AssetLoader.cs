@@ -14,6 +14,7 @@ public static class AssetLoader
         LoadAnimationAssets();
         LoadSpriteAssets();
         LoadLocationAssets();
+        LoadKeyBindAssets();
     }
 
     #region Animations
@@ -200,6 +201,34 @@ public static class AssetLoader
         ShowersButton = ab.LoadAsset<Sprite>("ShowersButton.png").Resize(100f);
         VaultButton = ab.LoadAsset<Sprite>("VaultButton.png").Resize(100f);
         ViewingButton = ab.LoadAsset<Sprite>("ViewingButton.png").Resize(100f);
+    }
+    #endregion
+
+    #region KeyBinds
+    private static readonly Dictionary<string, Sprite> KeyBindSprites = [];
+    public static Sprite KeyBindBackground;
+
+    public static Sprite GetKeyBindTexture(string address)
+    {
+        if (KeyBindSprites.TryGetValue(address, out var sprite)) return sprite;
+        return null;
+    }
+
+    private static void LoadKeyBindAssets()
+    {
+        var resource = Assembly.GetExecutingAssembly().GetManifestResourceStream("RebuildUs.Resources.keybinds");
+        if (resource == null) return;
+        var ab = AssetBundle.LoadFromMemory(resource.ReadFully());
+        if (ab == null) return;
+
+        KeyBindSprites["KeyBindCharacters"] = ab.LoadAsset<Sprite>("KeyBindCharacters.png").DontUnload();
+        KeyBindSprites["KeyBindCharacters0"] = ab.LoadAsset<Sprite>("KeyBindCharacters0.png").DontUnload();
+        KeyBindSprites["KeyBindCharacters1"] = ab.LoadAsset<Sprite>("KeyBindCharacters1.png").DontUnload();
+        KeyBindSprites["KeyBindCharacters2"] = ab.LoadAsset<Sprite>("KeyBindCharacters2.png").DontUnload();
+        KeyBindSprites["KeyBindCharacters3"] = ab.LoadAsset<Sprite>("KeyBindCharacters3.png").DontUnload();
+        KeyBindSprites["KeyBindCharacters4"] = ab.LoadAsset<Sprite>("KeyBindCharacters4.png").DontUnload();
+        KeyBindSprites["KeyBindCharacters5"] = ab.LoadAsset<Sprite>("KeyBindCharacters5.png").DontUnload();
+        KeyBindBackground = ab.LoadAsset<Sprite>("KeyBindBackground.png").DontUnload();
     }
     #endregion
 

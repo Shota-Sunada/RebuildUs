@@ -77,7 +77,7 @@ public class Morphing : RoleBase<Morphing>
             ButtonPosition.Layout,
             hm,
             hm.KillButton,
-            KeyCode.F,
+            AbilitySlot.ImpostorAbilityPrimary,
             true,
             Duration,
             () =>

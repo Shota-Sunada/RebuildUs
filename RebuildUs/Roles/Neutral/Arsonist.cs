@@ -128,7 +128,7 @@ public class Arsonist : RoleBase<Arsonist>
             ButtonPosition.Layout,
             hm,
             hm.KillButton,
-            AbilitySlot.Ability1,
+            AbilitySlot.NeutralAbilityPrimary,
             true,
             Duration,
             () =>
@@ -174,7 +174,7 @@ public class Arsonist : RoleBase<Arsonist>
             ButtonPosition.Layout,
             hm,
             hm.KillButton,
-            AbilitySlot.Ability2,
+            AbilitySlot.NeutralAbilityPrimary,
             false,
             Tr.Get("Hud.IgniteText")
         );

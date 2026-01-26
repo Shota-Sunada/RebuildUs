@@ -1,6 +1,7 @@
 using System.Diagnostics;
 using System.IO.Compression;
-using System.Net.Http;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using Microsoft.Win32;
 
 namespace RebuildUs.Launcher;
@@ -10,8 +11,9 @@ public partial class MainForm : Form
     private const string ModFolderName = "Among Us - RU";
     private string? installedModPath;
     private string? detectedOriginalPath;
-    private string? lastInstalledUrl;
+    private string? lastInstalledVersion;
     private readonly string settingsPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "launcher_settings.txt");
+    private readonly List<GitHubRelease> releases = [];
 
     public MainForm()
     {
@@ -26,7 +28,72 @@ public partial class MainForm : Form
         }
         catch { }
 
+        this.Shown += async (s, e) => await InitializeLauncher();
+    }
+
+    private async Task InitializeLauncher()
+    {
+        await FetchReleases();
         RefreshStatus();
+        CheckForUpdates();
+    }
+
+    private async Task FetchReleases()
+    {
+        try
+        {
+            lblStatus.Text = "リリース情報を取得中...";
+            using var client = new HttpClient();
+            client.DefaultRequestHeaders.Add("User-Agent", "RebuildUs-Launcher");
+            var response = await client.GetStringAsync("https://api.github.com/repos/Shota-Sunada/RebuildUs/releases");
+            var result = JsonSerializer.Deserialize<List<GitHubRelease>>(response);
+
+            if (result != null)
+            {
+                releases.Clear();
+                // プレリリースでなく、かつ期待するZIPファイル（RebuildUs-v...-Steam-Itch-Submerged.zip）が含まれるリリースのみを対象とする
+                foreach (var release in result)
+                {
+                    if (release.Prerelease) continue;
+
+                    string expectedName = $"RebuildUs-v{release.TagName.TrimStart('v')}-Steam-Itch-Submerged.zip";
+                    if (release.Assets.Any(a => a.Name == expectedName))
+                    {
+                        releases.Add(release);
+                    }
+                }
+
+                cmbVersions.Items.Clear();
+                foreach (var release in releases)
+                {
+                    cmbVersions.Items.Add(release.TagName);
+                }
+
+                if (cmbVersions.Items.Count > 0)
+                {
+                    int index = !string.IsNullOrEmpty(lastInstalledVersion) ? cmbVersions.Items.IndexOf(lastInstalledVersion) : -1;
+                    if (index >= 0)
+                    {
+                        cmbVersions.SelectedIndex = index;
+                    }
+                    else
+                    {
+                        cmbVersions.SelectedIndex = 0;
+                    }
+                }
+                else
+                {
+                    lblStatus.Text = "インストール可能なリリースが見つかりませんでした。";
+                    btnAction.Enabled = false;
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            lblStatus.Text = "リリース情報の取得に失敗しました。";
+            btnAction.Enabled = false;
+            MessageBox.Show($"リリースの取得に失敗しました: {ex.Message}");
+        }
     }
 
     private void LoadSettings()
@@ -37,8 +104,8 @@ public partial class MainForm : Form
             {
                 var lines = File.ReadAllLines(settingsPath);
                 if (lines.Length > 0) installedModPath = lines[0].Trim();
-                if (lines.Length > 1) txtUrl.Text = lines[1].Trim();
-                if (lines.Length > 2) lastInstalledUrl = lines[2].Trim();
+                // Previously lines[1] was txtUrl.Text, now we ignore it or use as lastInstalledVersion if it looks like one
+                if (lines.Length > 2) lastInstalledVersion = lines[2].Trim();
             }
             catch { }
         }
@@ -48,7 +115,7 @@ public partial class MainForm : Form
     {
         try
         {
-            File.WriteAllLines(settingsPath, new[] { installedModPath ?? "", txtUrl.Text, lastInstalledUrl ?? "" });
+            File.WriteAllLines(settingsPath, [installedModPath ?? "", cmbVersions.Text, lastInstalledVersion ?? ""]);
         }
         catch { }
     }
@@ -62,7 +129,7 @@ public partial class MainForm : Form
         {
             lblStatus.Text = $"RebuildUs is installed at:\n{Path.GetDirectoryName(installedModPath)}";
 
-            if (txtUrl.Text != lastInstalledUrl)
+            if (cmbVersions.Text != lastInstalledVersion && !string.IsNullOrEmpty(lastInstalledVersion))
             {
                 btnAction.Text = "Update";
             }
@@ -75,10 +142,6 @@ public partial class MainForm : Form
 
             // バージョン情報の取得
             lblVersion.Text = "Version: " + GetInstalledModVersion();
-
-            // インストール済みの場合はURL入力を非表示にしても良いが、アップデート用に残す
-            lblUrl.Visible = true;
-            txtUrl.Visible = true;
         }
         else
         {
@@ -103,6 +166,32 @@ public partial class MainForm : Form
             btnAction.Text = "Install";
             btnUninstall.Visible = false;
             installedModPath = null;
+        }
+
+        ValidateSelectedVersion();
+    }
+
+    private void ValidateSelectedVersion()
+    {
+        if (cmbVersions.Items.Count == 0)
+        {
+            btnAction.Enabled = false;
+            return;
+        }
+
+        btnAction.Enabled = true;
+    }
+
+    private void CheckForUpdates()
+    {
+        if (releases.Count > 0 && !string.IsNullOrEmpty(lastInstalledVersion))
+        {
+            var latest = releases[0].TagName;
+            if (latest != lastInstalledVersion)
+            {
+                notifyIcon.Visible = true;
+                notifyIcon.ShowBalloonTip(5000, "Update Available", $"新しいバージョン {latest} が利用可能です。アップデートを推奨します。", ToolTipIcon.Info);
+            }
         }
     }
 
@@ -143,24 +232,27 @@ public partial class MainForm : Form
         }
     }
 
-    private void txtUrl_TextChanged(object sender, EventArgs e)
+    private void cmbVersions_SelectedIndexChanged(object sender, EventArgs e)
     {
         RefreshStatus();
     }
 
     private async Task InstallMod()
     {
-        if (string.IsNullOrWhiteSpace(txtUrl.Text))
+        string version = cmbVersions.Text;
+        if (string.IsNullOrWhiteSpace(version))
         {
-            MessageBox.Show("ModのZIP URLを入力してください。");
+            MessageBox.Show("バージョンを選択してください。");
             return;
         }
+
+        string downloadUrl = $"https://github.com/Shota-Sunada/RebuildUs/releases/download/{version}/RebuildUs-v{version.TrimStart('v')}-Steam-Itch-Submerged.zip";
 
         string? originalExePath = detectedOriginalPath ?? DetectAmongUs();
 
         if (originalExePath == null || !File.Exists(originalExePath))
         {
-            using (OpenFileDialog ofd = new OpenFileDialog())
+            using (OpenFileDialog ofd = new())
             {
                 ofd.Filter = "Among Us.exe|Among Us.exe";
                 ofd.Title = "Among Us.exe を選択してください";
@@ -187,15 +279,19 @@ public partial class MainForm : Form
         try
         {
             btnAction.Enabled = false;
-            txtUrl.Enabled = false;
+            cmbVersions.Enabled = false;
 
             // 1. ZIPのダウンロード
             lblStatus.Text = "Modをダウンロード中...";
             string tempZipPath = Path.Combine(Path.GetTempPath(), "rebuildus_download.zip");
             using (var client = new HttpClient())
             {
-                var response = await client.GetAsync(txtUrl.Text);
-                response.EnsureSuccessStatusCode();
+                var response = await client.GetAsync(downloadUrl);
+                if (!response.IsSuccessStatusCode)
+                {
+                    MessageBox.Show($"指定されたバージョンのファイルが見つかりません。 (HTTP {response.StatusCode})\nURL: {downloadUrl}");
+                    return;
+                }
                 using (var fs = new FileStream(tempZipPath, FileMode.Create))
                 {
                     await response.Content.CopyToAsync(fs);
@@ -218,7 +314,7 @@ public partial class MainForm : Form
             if (File.Exists(tempZipPath)) File.Delete(tempZipPath);
 
             installedModPath = newModExePath;
-            lastInstalledUrl = txtUrl.Text;
+            lastInstalledVersion = version;
             SaveSettings();
 
             MessageBox.Show("インストールが完了しました。");
@@ -232,18 +328,21 @@ public partial class MainForm : Form
         finally
         {
             btnAction.Enabled = true;
-            txtUrl.Enabled = true;
+            cmbVersions.Enabled = true;
         }
     }
 
     private async Task UpdateMod()
     {
-        if (installedModPath == null || string.IsNullOrWhiteSpace(txtUrl.Text)) return;
+        string version = cmbVersions.Text;
+        if (installedModPath == null || string.IsNullOrWhiteSpace(version)) return;
+
+        string downloadUrl = $"https://github.com/Shota-Sunada/RebuildUs/releases/download/{version}/RebuildUs-v{version.TrimStart('v')}-Steam-Itch-Submerged.zip";
 
         try
         {
             btnAction.Enabled = false;
-            txtUrl.Enabled = false;
+            cmbVersions.Enabled = false;
 
             string targetDir = Path.GetDirectoryName(installedModPath)!;
 
@@ -252,8 +351,12 @@ public partial class MainForm : Form
             string tempZipPath = Path.Combine(Path.GetTempPath(), "rebuildus_update.zip");
             using (var client = new HttpClient())
             {
-                var response = await client.GetAsync(txtUrl.Text);
-                response.EnsureSuccessStatusCode();
+                var response = await client.GetAsync(downloadUrl);
+                if (!response.IsSuccessStatusCode)
+                {
+                    MessageBox.Show($"指定されたバージョンのファイルが見つかりません。 (HTTP {response.StatusCode})\nURL: {downloadUrl}");
+                    return;
+                }
                 using (var fs = new FileStream(tempZipPath, FileMode.Create))
                 {
                     await response.Content.CopyToAsync(fs);
@@ -267,7 +370,7 @@ public partial class MainForm : Form
             // 一時ファイルの削除
             if (File.Exists(tempZipPath)) File.Delete(tempZipPath);
 
-            lastInstalledUrl = txtUrl.Text;
+            lastInstalledVersion = version;
             SaveSettings();
 
             MessageBox.Show("アップデートが完了しました。");
@@ -281,7 +384,7 @@ public partial class MainForm : Form
         finally
         {
             btnAction.Enabled = true;
-            txtUrl.Enabled = true;
+            cmbVersions.Enabled = true;
         }
     }
 
@@ -354,7 +457,7 @@ public partial class MainForm : Form
             return;
         }
 
-        ProcessStartInfo si = new ProcessStartInfo(installedModPath)
+        ProcessStartInfo si = new(installedModPath)
         {
             WorkingDirectory = Path.GetDirectoryName(installedModPath)
         };
@@ -402,13 +505,13 @@ public partial class MainForm : Form
         catch { }
 
         // 2. よくあるパスをチェック
-        string[] commonPaths = new[]
-        {
+        string[] commonPaths =
+        [
             Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86), @"Steam\steamapps\common\Among Us\Among Us.exe"),
             Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), @"Steam\steamapps\common\Among Us\Among Us.exe"),
             @"D:\SteamLibrary\steamapps\common\Among Us\Among Us.exe", // よくあるサブライブラリ
             @"E:\SteamLibrary\steamapps\common\Among Us\Among Us.exe"
-        };
+        ];
 
         foreach (var path in commonPaths)
         {
@@ -457,4 +560,22 @@ public partial class MainForm : Form
         this.Activate();
         notifyIcon.Visible = false;
     }
+}
+
+public class GitHubRelease
+{
+    [JsonPropertyName("tag_name")]
+    public string TagName { get; set; } = string.Empty;
+
+    [JsonPropertyName("prerelease")]
+    public bool Prerelease { get; set; }
+
+    [JsonPropertyName("assets")]
+    public List<GitHubAsset> Assets { get; set; } = [];
+}
+
+public class GitHubAsset
+{
+    [JsonPropertyName("name")]
+    public string Name { get; set; } = string.Empty;
 }

@@ -203,6 +203,23 @@ public static class CustomOptionHolder
     public static CustomOption SheriffCanKillNeutrals;
     public static CustomOption SheriffMisfireKillsTarget;
     public static CustomOption SheriffCanKillNoDeadBody;
+
+    public static CustomRoleOption MadmateRoleSpawnRate;
+    public static CustomOption MadmateRoleCanDieToSheriff;
+    public static CustomOption MadmateRoleCanEnterVents;
+    public static CustomOption MadmateRoleHasImpostorVision;
+    public static CustomOption MadmateRoleCanSabotage;
+    public static CustomOption MadmateRoleCanFixComm;
+    public static CustomOption MadmateRoleCanKnowImpostorAfterFinishTasks;
+    public static CustomTasksOption MadmateRoleTasks;
+
+    public static CustomRoleOption SuiciderSpawnRate;
+    public static CustomOption SuiciderCanDieToSheriff;
+    public static CustomOption SuiciderCanEnterVents;
+    public static CustomOption SuiciderHasImpostorVision;
+    public static CustomOption SuiciderCanFixComm;
+    public static CustomOption SuiciderCanKnowImpostorAfterFinishTasks;
+    public static CustomTasksOption SuiciderTasks;
     #endregion
 
     #region ROLES IMPOSTOR
@@ -565,6 +582,23 @@ public static class CustomOptionHolder
         SheriffMisfireKillsTarget = CustomOption.Normal(1163, CustomOptionType.Crewmate, "Option.SheriffMisfireKillsTarget", false, SheriffSpawnRate);
         SheriffCanKillNoDeadBody = CustomOption.Normal(1164, CustomOptionType.Crewmate, "Option.SheriffCanKillNoDeadBody", true, SheriffSpawnRate);
         SheriffCanKillNeutrals = CustomOption.Normal(1165, CustomOptionType.Crewmate, "Option.SheriffCanKillNeutrals", false, SheriffSpawnRate);
+
+        MadmateRoleSpawnRate = new(1170, CustomOptionType.Crewmate, RoleType.Madmate, MadmateRole.NameColor, 3);
+        MadmateRoleCanDieToSheriff = CustomOption.Normal(1171, CustomOptionType.Crewmate, "Option.MadmateCanDieToSheriff", true, MadmateRoleSpawnRate);
+        MadmateRoleCanEnterVents = CustomOption.Normal(1172, CustomOptionType.Crewmate, "Option.MadmateCanEnterVents", true, MadmateRoleSpawnRate);
+        MadmateRoleHasImpostorVision = CustomOption.Normal(1173, CustomOptionType.Crewmate, "Option.MadmateHasImpostorVision", false, MadmateRoleSpawnRate);
+        MadmateRoleCanSabotage = CustomOption.Normal(1174, CustomOptionType.Crewmate, "Option.MadmateCanSabotage", false, MadmateRoleSpawnRate);
+        MadmateRoleCanFixComm = CustomOption.Normal(1175, CustomOptionType.Crewmate, "Option.MadmateCanFixComm", false, MadmateRoleSpawnRate);
+        MadmateRoleCanKnowImpostorAfterFinishTasks = CustomOption.Normal(1176, CustomOptionType.Crewmate, "Option.MadmateCanKnowImpostorAfterFinishTasks", false, MadmateRoleSpawnRate);
+        MadmateRoleTasks = new((1177, 1178,1179), CustomOptionType.Crewmate, (3, 2, 3), MadmateRoleCanKnowImpostorAfterFinishTasks);
+
+        SuiciderSpawnRate = new(1190, CustomOptionType.Crewmate, RoleType.Suicider, Suicider.NameColor, 3);
+        SuiciderCanDieToSheriff = CustomOption.Normal(1191, CustomOptionType.Crewmate, "Option.SuiciderCanDieToSheriff", true, SuiciderSpawnRate);
+        SuiciderCanEnterVents = CustomOption.Normal(1192, CustomOptionType.Crewmate, "Option.SuiciderCanEnterVents", true, SuiciderSpawnRate);
+        SuiciderHasImpostorVision = CustomOption.Normal(1193, CustomOptionType.Crewmate, "Option.SuiciderHasImpostorVision", false, SuiciderSpawnRate);
+        SuiciderCanFixComm = CustomOption.Normal(1194, CustomOptionType.Crewmate, "Option.SuiciderCanFixComm", false, SuiciderSpawnRate);
+        SuiciderCanKnowImpostorAfterFinishTasks = CustomOption.Normal(1195, CustomOptionType.Crewmate, "Option.SuiciderCanKnowImpostorAfterFinishTasks", false, SuiciderSpawnRate);
+        SuiciderTasks = new((1196, 1197, 1198), CustomOptionType.Crewmate, (3, 2, 3), SuiciderCanKnowImpostorAfterFinishTasks);
         #endregion
 
         #region ROLES IMPOSTOR

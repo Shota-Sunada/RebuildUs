@@ -75,7 +75,7 @@ public class Hacker : RoleBase<Hacker>
             ButtonPosition.Layout,
             hm,
             hm.UseButton,
-            KeyCode.F,
+            AbilitySlot.CrewmateAbilityPrimary,
             true,
             0f,
             () => { HackerButton.Timer = HackerButton.MaxTimer; },
@@ -118,7 +118,7 @@ public class Hacker : RoleBase<Hacker>
             ButtonPosition.Layout,
             hm,
             hm.UseButton,
-            KeyCode.Q,
+            AbilitySlot.CrewmateAbilitySecondary,
             true,
             0f,
             () =>
@@ -211,7 +211,7 @@ public class Hacker : RoleBase<Hacker>
             ButtonPosition.Layout,
             hm,
             hm.UseButton,
-            KeyCode.Q,
+            AbilitySlot.CommonAbilitySecondary,
             true,
             0f,
             () =>

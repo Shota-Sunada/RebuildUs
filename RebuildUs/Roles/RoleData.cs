@@ -36,6 +36,8 @@ public static class RoleData
         new(RoleType.Bait, RoleTeam.Crewmate, typeof(RoleBase<Bait>), () => Bait.NameColor, () => CustomOptionHolder.BaitSpawnRate),
         new(RoleType.Medium, RoleTeam.Crewmate, typeof(RoleBase<Medium>), () => Medium.NameColor, () => CustomOptionHolder.MediumSpawnRate),
         new(RoleType.Shifter, RoleTeam.Crewmate, typeof(RoleBase<Shifter>), () => Shifter.NameColor, () => CustomOptionHolder.ShifterSpawnRate),
+        new(RoleType.Madmate, RoleTeam.Crewmate, typeof(RoleBase<MadmateRole>), () => MadmateRole.NameColor, () => CustomOptionHolder.MadmateRoleSpawnRate),
+        new(RoleType.Suicider, RoleTeam.Crewmate, typeof(RoleBase<Suicider>), () => Suicider.NameColor, () => CustomOptionHolder.SuiciderSpawnRate),
 
         // Impostor
         new(RoleType.BountyHunter, RoleTeam.Impostor, typeof(RoleBase<BountyHunter>), () => BountyHunter.NameColor, () => CustomOptionHolder.BountyHunterSpawnRate),

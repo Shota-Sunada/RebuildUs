@@ -876,7 +876,13 @@ public static partial class RPCProcedure
         Shifter.FutureShift = null;
 
         // Suicide (exile) when impostor or impostor variants
-        if (!Shifter.IsNeutral && (player.Data.Role.IsImpostor || player.IsNeutral() || player.HasModifier(ModifierType.Madmate) || player.HasModifier(ModifierType.CreatedMadmate)))
+        if (!Shifter.IsNeutral &&
+                (player.Data.Role.IsImpostor
+                || player.IsNeutral()
+                || player.HasModifier(ModifierType.Madmate)
+                || player.IsRole(RoleType.Madmate)
+                || player.IsRole(RoleType.Suicider)
+                || player.HasModifier(ModifierType.CreatedMadmate)))
         {
             oldShifterPlayer.Exiled();
             GameHistory.FinalStatuses[oldShifterPlayer.PlayerId] = FinalStatus.Suicide;

@@ -10,7 +10,7 @@ partial class MainForm
     private System.Windows.Forms.Label lblStatus;
     private System.Windows.Forms.Label lblVersion;
     private System.Windows.Forms.Label lblUrl;
-    private System.Windows.Forms.TextBox txtUrl;
+    private System.Windows.Forms.ComboBox cmbVersions;
     private System.Windows.Forms.Button btnAction;
     private System.Windows.Forms.Button btnUninstall;
     private System.Windows.Forms.NotifyIcon notifyIcon;
@@ -44,7 +44,7 @@ partial class MainForm
         this.lblStatus = new System.Windows.Forms.Label();
         this.lblVersion = new System.Windows.Forms.Label();
         this.lblUrl = new System.Windows.Forms.Label();
-        this.txtUrl = new System.Windows.Forms.TextBox();
+        this.cmbVersions = new System.Windows.Forms.ComboBox();
         this.btnAction = new System.Windows.Forms.Button();
         this.btnUninstall = new System.Windows.Forms.Button();
         this.notifyIcon = new System.Windows.Forms.NotifyIcon(this.components);
@@ -77,17 +77,18 @@ partial class MainForm
         this.lblUrl.AutoSize = true;
         this.lblUrl.Location = new System.Drawing.Point(12, 70);
         this.lblUrl.Name = "lblUrl";
-        this.lblUrl.Size = new System.Drawing.Size(85, 15);
+        this.lblUrl.Size = new System.Drawing.Size(48, 15);
         this.lblUrl.TabIndex = 2;
-        this.lblUrl.Text = "Mod ZIP URL:";
+        this.lblUrl.Text = "Version:";
         //
-        // txtUrl
+        // cmbVersions
         //
-        this.txtUrl.Location = new System.Drawing.Point(12, 88);
-        this.txtUrl.Name = "txtUrl";
-        this.txtUrl.Size = new System.Drawing.Size(360, 23);
-        this.txtUrl.TabIndex = 3;
-        this.txtUrl.TextChanged += new System.EventHandler(this.txtUrl_TextChanged);
+        this.cmbVersions.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+        this.cmbVersions.Location = new System.Drawing.Point(12, 88);
+        this.cmbVersions.Name = "cmbVersions";
+        this.cmbVersions.Size = new System.Drawing.Size(360, 23);
+        this.cmbVersions.TabIndex = 3;
+        this.cmbVersions.SelectedIndexChanged += new System.EventHandler(this.cmbVersions_SelectedIndexChanged);
         //
         // btnAction
         //
@@ -144,7 +145,7 @@ partial class MainForm
         this.ClientSize = new System.Drawing.Size(384, 169);
         this.Controls.Add(this.btnAction);
         this.Controls.Add(this.lblVersion);
-        this.Controls.Add(this.txtUrl);
+        this.Controls.Add(this.cmbVersions);
         this.Controls.Add(this.lblUrl);
         this.Controls.Add(this.lblStatus);
         this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;

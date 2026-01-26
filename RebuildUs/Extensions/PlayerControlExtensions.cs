@@ -87,6 +87,8 @@ public static class PlayerControlHelpers
         return (player.IsNeutral() && !player.NeutralHasTasks())
             || (player.HasModifier(ModifierType.CreatedMadmate) && !CreatedMadmate.HasTasks)
             || (player.HasModifier(ModifierType.Madmate) && !Madmate.HasTasks)
+            || (player.IsRole(RoleType.Madmate) && !MadmateRole.CanKnowImpostorAfterFinishTasks)
+            || (player.IsRole(RoleType.Suicider) && !Suicider.CanKnowImpostorAfterFinishTasks)
             || (player.IsLovers() && Lovers.SeparateTeam && !Lovers.TasksCount);
     }
 
@@ -155,6 +157,14 @@ public static class PlayerControlHelpers
         {
             roleCouldUse = true;
         }
+        else if (MadmateRole.CanEnterVents && player.IsRole(RoleType.Madmate))
+        {
+            roleCouldUse = true;
+        }
+        else if (Suicider.CanEnterVents && player.IsRole(RoleType.Suicider))
+        {
+            roleCouldUse = true;
+        }
         else if (CreatedMadmate.CanEnterVents && player.HasModifier(ModifierType.CreatedMadmate))
         {
             roleCouldUse = true;
@@ -185,6 +195,10 @@ public static class PlayerControlHelpers
     {
         bool roleCouldUse = false;
         if (Madmate.CanSabotage && player.HasModifier(ModifierType.Madmate))
+        {
+            roleCouldUse = true;
+        }
+        else if (MadmateRole.CanSabotage && player.IsRole(RoleType.Madmate))
         {
             roleCouldUse = true;
         }

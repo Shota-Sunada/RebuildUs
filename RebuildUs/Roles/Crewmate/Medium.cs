@@ -123,7 +123,7 @@ public class Medium : RoleBase<Medium>
             ButtonPosition.Layout,
             hm,
             hm.UseButton,
-            KeyCode.F,
+            AbilitySlot.CrewmateAbilityPrimary,
             true,
             Duration,
             () =>

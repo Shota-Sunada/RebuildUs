@@ -65,7 +65,7 @@ public class Mayor : RoleBase<Mayor>
             ButtonPosition.Layout,
             hm,
             hm.AbilityButton,
-            KeyCode.F,
+            AbilitySlot.CrewmateAbilityPrimary,
             true,
             0f,
             () => { },

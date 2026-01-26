@@ -351,66 +351,67 @@ public static class RoleAssignment
         //     }
         // }
 
-        // // Assign Lovers
-        // if (CustomOptionHolder.loversSpawnRate.enabled)
-        // {
-        //     for (int i = 0; i < CustomOptionHolder.loversNumCouples.getFloat(); i++)
-        //     {
-        //         var singleCrew = data.crewmates.FindAll(x => !x.isLovers());
-        //         var singleImps = data.impostors.FindAll(x => !x.isLovers());
+        // Assign Lovers
+        if (CustomOptionHolder.LoversSpawnRate.Enabled)
+        {
+            for (int i = 0; i < CustomOptionHolder.LoversNumCouples.GetFloat(); i++)
+            {
+                var singleCrew = data.Crewmates.FindAll(x => !x.IsLovers());
+                var singleImps = data.Impostors.FindAll(x => !x.IsLovers());
 
-        //         bool isOnlyRole = !CustomOptionHolder.loversCanHaveAnotherRole.getBool();
-        //         if (rnd.Next(1, 101) <= CustomOptionHolder.loversSpawnRate.getSelection() * 10)
-        //         {
-        //             int lover1 = -1;
-        //             int lover2 = -1;
-        //             int lover1Index = -1;
-        //             int lover2Index = -1;
-        //             if (singleImps.Count > 0 && singleCrew.Count > 0 && (!isOnlyRole || (data.maxCrewmateRoles > 0 && data.maxImpostorRoles > 0)) && rnd.Next(1, 101) <= CustomOptionHolder.loversImpLoverRate.getSelection() * 10)
-        //             {
-        //                 lover1Index = rnd.Next(0, singleImps.Count);
-        //                 lover1 = singleImps[lover1Index].PlayerId;
+                bool isOnlyRole = !CustomOptionHolder.LoversCanHaveAnotherRole.GetBool();
+                if (RebuildUs.Instance.Rnd.Next(1, 101) <= CustomOptionHolder.LoversSpawnRate.GetSelection() * 10)
+                {
+                    int lover1 = -1;
+                    int lover2 = -1;
+                    int lover1Index = -1;
+                    int lover2Index = -1;
+                    if (singleImps.Count > 0 && singleCrew.Count > 0 && (!isOnlyRole || (data.MaxCrewmateRoles > 0 && data.MaxImpostorRoles > 0)) && RebuildUs.Instance.Rnd.Next(1, 101) <= CustomOptionHolder.LoversImpLoverRate.GetSelection() * 10)
+                    {
+                        lover1Index = RebuildUs.Instance.Rnd.Next(0, singleImps.Count);
+                        lover1 = singleImps[lover1Index].PlayerId;
 
-        //                 lover2Index = rnd.Next(0, singleCrew.Count);
-        //                 lover2 = singleCrew[lover2Index].PlayerId;
+                        lover2Index = RebuildUs.Instance.Rnd.Next(0, singleCrew.Count);
+                        lover2 = singleCrew[lover2Index].PlayerId;
 
-        //                 if (isOnlyRole)
-        //                 {
-        //                     data.maxImpostorRoles--;
-        //                     data.maxCrewmateRoles--;
+                        if (isOnlyRole)
+                        {
+                            data.MaxImpostorRoles--;
+                            data.MaxCrewmateRoles--;
 
-        //                     data.impostors.RemoveAll(x => x.PlayerId == lover1);
-        //                     data.crewmates.RemoveAll(x => x.PlayerId == lover2);
-        //                 }
-        //             }
+                            data.Impostors.RemoveAll(x => x.PlayerId == lover1);
+                            data.Crewmates.RemoveAll(x => x.PlayerId == lover2);
+                        }
+                    }
 
-        //             else if (singleCrew.Count >= 2 && (isOnlyRole || data.maxCrewmateRoles >= 2))
-        //             {
-        //                 lover1Index = rnd.Next(0, singleCrew.Count);
-        //                 while (lover2Index == lover1Index || lover2Index < 0) lover2Index = rnd.Next(0, singleCrew.Count);
+                    else if (singleCrew.Count >= 2 && (isOnlyRole || data.MaxCrewmateRoles >= 2))
+                    {
+                        lover1Index = RebuildUs.Instance.Rnd.Next(0, singleCrew.Count);
+                        while (lover2Index == lover1Index || lover2Index < 0) lover2Index = RebuildUs.Instance.Rnd.Next(0, singleCrew.Count);
 
-        //                 lover1 = singleCrew[lover1Index].PlayerId;
-        //                 lover2 = singleCrew[lover2Index].PlayerId;
+                        lover1 = singleCrew[lover1Index].PlayerId;
+                        lover2 = singleCrew[lover2Index].PlayerId;
 
-        //                 if (isOnlyRole)
-        //                 {
-        //                     data.maxCrewmateRoles -= 2;
-        //                     data.crewmates.RemoveAll(x => x.PlayerId == lover1);
-        //                     data.crewmates.RemoveAll(x => x.PlayerId == lover2);
-        //                 }
-        //             }
+                        if (isOnlyRole)
+                        {
+                            data.MaxCrewmateRoles -= 2;
+                            data.Crewmates.RemoveAll(x => x.PlayerId == lover1);
+                            data.Crewmates.RemoveAll(x => x.PlayerId == lover2);
+                        }
+                    }
 
-        //             if (lover1 >= 0 && lover2 >= 0)
-        //             {
-        //                 writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.SetLovers, Hazel.SendOption.Reliable, -1);
-        //                 writer.Write((byte)lover1);
-        //                 writer.Write((byte)lover2);
-        //                 AmongUsClient.Instance.FinishRpcImmediately(writer);
-        //                 RPCProcedure.setLovers((byte)lover1, (byte)lover2);
-        //             }
-        //         }
-        //     }
-        // }
+                    if (lover1 >= 0 && lover2 >= 0)
+                    {
+                        using (var sender = new RPCSender   (PlayerControl.LocalPlayer.NetId, CustomRPC.SetLovers))
+                        {
+                            sender.Write((byte)lover1);
+                            sender.Write((byte)lover2);
+                        }
+                        RPCProcedure.SetLovers((byte)lover1, (byte)lover2);
+                    }
+                }
+            }
+        }
 
         // Assign Mafia
         if (data.Impostors.Count >= 3 && data.MaxImpostorRoles >= 3 && (RebuildUs.Instance.Rnd.Next(1, 101) <= CustomOptionHolder.MafiaSpawnRate.GetSelection() * 10))

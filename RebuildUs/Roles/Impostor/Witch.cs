@@ -119,7 +119,7 @@ public class Witch : RoleBase<Witch>
             ButtonPosition.Layout,
             hm,
             hm.KillButton,
-            KeyCode.F,
+            AbilitySlot.ImpostorAbilityPrimary,
             true,
             SpellCastingDuration,
             () =>

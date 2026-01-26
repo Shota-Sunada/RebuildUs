@@ -74,7 +74,8 @@
     "Warlock": "みんなを呪い殺そう",
     "Watcher": "みんなの票を観察しよう",
     "Witch": "敵に魔術をかけよう",
-    "LoversFlavor": "♥ {0}に恋に落ちた ♥"
+    "LoversFlavor": "♥ {0}に恋に落ちた ♥",
+    "Suicider": "死ね"
   },
   "ShortDesc": {
     "Arsonist": "燃やせ",
@@ -124,7 +125,8 @@
     "Vulture": "死骸を喰らおう",
     "Warlock": "みんなを呪い殺そう",
     "Watcher": "みんなの票を観察しよう",
-    "Witch": "敵に魔術をかけよう"
+    "Witch": "敵に魔術をかけよう",
+    "Suicider": "死ね"
   },
   "FullDesc": {
     "Arsonist": "アーソニストは、他のクルーメイト全員に油を塗って、放火することで船全体を炎の海と化すことを目的とする第三陣営である。\n油を塗るには一定時間ターゲットに近づく必要がある。\n死亡したプレイヤーは油を塗る対象ではない。",
@@ -166,7 +168,9 @@
     "Vampire": "ヴァンパイアは、他のプレイヤーに噛みついて時間差で殺害するインポスターである。\nヴァンパイアが存在するときは、全員「ニンニク」を一つ配置することができ、ニンニクの中ではヴァンパイアは噛みつくことができない。\n一度噛みつけば、時間が来ていなくても緊急会議が始まればターゲットは死亡する。",
     "Vulture": "ヴァルチャーは、一定数死体を食べることで勝利する第三陣営である。",
     "Warlock": "ウォーロックは、クルーメイトを呪うことができるインポスターである。\n呪ったプレイヤーは誰かに近づいたとき、ウォーロックの判断で呪ったクルーメイトにキルを実行させることができる。",
-    "Witch": "魔女は、クルーメイトを呪うことができるインポスターである。\n呪いがかけられたクルーメイトは、次の会議中に魔女を吊らなければ死亡する。\n会議終了までに魔女が死亡すれば、呪いは解除される。"
+    "Witch": "魔女は、クルーメイトを呪うことができるインポスターである。\n呪いがかけられたクルーメイトは、次の会議中に魔女を吊らなければ死亡する。\n会議終了までに魔女が死亡すれば、呪いは解除される。",
+    "Madmate": "マッドメイトはインポスターを助けるクルーメイトである。\nインポスター陣営とともに勝利する。",
+    "Suicider": "スーサイダーは、自殺をすることができるマッドメイトである。\n原則として自殺以外にすることはない。"
   },
   "Role": {
     "Arsonist": "アーソニスト",
@@ -222,6 +226,7 @@
     "Vulture": "ヴァルチャー",
     "Warlock": "ウォーロック",
     "Watcher": "ウォッチャー",
+    "Suicider": "スーサイダー",
     "Witch": "魔女",
     "MafiaG": "ゴ",
     "MafiaM": "マ",
@@ -254,6 +259,12 @@
     "RolesGeneral": "ロール総合",
     "GameOptions": "ゲーム設定",
     "DiscordOptions": "Discord設定",
+    "SuiciderCanDieToSheriff": "シェリフに殺される",
+    "SuiciderCanEnterVents": "ベントに入れる",
+    "SuiciderHasImpostorVision": "インポスターの視界を持つ",
+    "SuiciderCanFixComm": "通信サボタージュを直せる",
+    "MadmateCanKnowImpostorAfterFinishTasks": "タスク終了後にインポスターが判明する",
+    "SuiciderCanKnowImpostorAfterFinishTasks": "タスク終了後にインポスターが判明する",
     "EnableDiscordEmbed": "サーバーにステータスを送信 (要設定&連携)",
     "EnableDiscordAutoMute": "自動ミュートを有効 (要設定&連携)",
     "AmongUsSettings": "AmongUs 設定",
@@ -633,7 +644,17 @@
     "SidekickText": "サイドキック",
     "VultureCorpses": "残り死体: {0}体",
     "VultureText": "食べる",
-    "Meeting": "緊急会議: {0}回"
+    "Meeting": "緊急会議: {0}回",
+    "PressAnyKey": "< キーを押してください >",
+    "KeyBindings": "キー設定",
+    "CrewmateAbilityPrimary": "クルーメイト第一能力",
+    "CrewmateAbilitySecondary": "クルーメイト第二能力",
+    "ImpostorAbilityPrimary": "インポスター第一能力",
+    "ImpostorAbilitySecondary": "インポスター第二能力",
+    "NeutralAbilityPrimary": "第三陣営第一能力",
+    "NeutralAbilitySecondary": "第三陣営第二能力",
+    "CommonAbilityPrimary": "共通能力など",
+    "CommonAbilitySecondary": "その他能力など"
   },
   "FinalStatus": {
     "Alive": "生存",

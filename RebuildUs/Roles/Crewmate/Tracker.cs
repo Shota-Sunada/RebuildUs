@@ -152,7 +152,7 @@ public class Tracker : RoleBase<Tracker>
             ButtonPosition.Layout,
             hm,
             hm.UseButton,
-            KeyCode.F,
+            AbilitySlot.CrewmateAbilityPrimary,
             false,
             Tr.Get("Hud.TrackerText")
         );
@@ -171,7 +171,7 @@ public class Tracker : RoleBase<Tracker>
             ButtonPosition.Layout,
             hm,
             hm.UseButton,
-            KeyCode.Q,
+            AbilitySlot.CrewmateAbilitySecondary,
             true,
             CorpsesTrackingDuration,
             () =>

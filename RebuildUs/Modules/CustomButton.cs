@@ -43,6 +43,9 @@ public class CustomButton
     public AbilitySlot? Slot;
     public bool UseLayout = false;
 
+    private readonly SpriteRenderer KeyGuide;
+    private readonly SpriteRenderer KeyBackground;
+
     public static bool StopCountdown = true;
 
     public CustomButton(
@@ -181,6 +184,22 @@ public class CustomButton
         Buttons.Add(this);
         ActionButton = UnityEngine.Object.Instantiate(hudManager.KillButton, hudManager.KillButton.transform.parent);
         ActionButton.gameObject.name = "CustomButton";
+
+        // Add Key Bind Guide
+        var baseObj = new GameObject("KeyBindGuide");
+        baseObj.transform.SetParent(ActionButton.transform);
+        baseObj.transform.localScale = Vector3.one;
+        baseObj.transform.localPosition = new Vector3(-0.35f, -0.35f, -1f);
+
+        KeyBackground = baseObj.AddComponent<SpriteRenderer>();
+        KeyBackground.sprite = AssetLoader.KeyBindBackground;
+
+        var guideObj = new GameObject("Guide");
+        guideObj.transform.SetParent(baseObj.transform);
+        guideObj.transform.localScale = Vector3.one;
+        guideObj.transform.localPosition = new Vector3(0f, 0f, -0.1f);
+        KeyGuide = guideObj.AddComponent<SpriteRenderer>();
+
         PassiveButton button = ActionButton.GetComponent<PassiveButton>();
         button.OnClick = new Button.ButtonClickedEvent();
         button.OnClick.AddListener((UnityEngine.Events.UnityAction)OnClickEvent);
@@ -412,6 +431,21 @@ public class CustomButton
         }
 
         ActionButton?.SetCoolDown(Timer, (HasEffect && IsEffectActive) ? EffectDuration : MaxTimer);
+
+        // Update Key Guide
+        KeyCode? activeKey = Hotkey ?? (Slot.HasValue ? KeyBindingManager.GetKey(Slot.Value) : null);
+        if (activeKey.HasValue && activeKey.Value != KeyCode.None)
+        {
+            KeyBackground.gameObject.SetActive(true);
+            KeyGuide.sprite = KeyBindingManager.GetKeySprite(activeKey.Value);
+
+            KeyBackground.color = targetColor;
+            KeyGuide.color = targetColor;
+        }
+        else
+        {
+            KeyBackground?.gameObject.SetActive(false);
+        }
 
         // Trigger OnClickEvent if the hotkey is being pressed down
         if (Hotkey.HasValue && Input.GetKeyDown(Hotkey.Value)) OnClickEvent();

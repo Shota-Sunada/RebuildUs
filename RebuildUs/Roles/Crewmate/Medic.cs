@@ -79,7 +79,7 @@ public class Medic : RoleBase<Medic>
             ButtonPosition.Layout,
             hm,
             hm.UseButton,
-            AbilitySlot.Ability1,
+            AbilitySlot.CrewmateAbilityPrimary,
             false,
             Tr.Get("Hud.ShieldText")
         );

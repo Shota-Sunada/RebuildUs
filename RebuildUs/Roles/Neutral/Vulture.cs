@@ -129,7 +129,7 @@ public class Vulture : RoleBase<Vulture>
             ButtonPosition.Layout,
             hm,
             hm.KillButton,
-            KeyCode.F,
+            AbilitySlot.NeutralAbilityPrimary,
             false,
             Tr.Get("Hud.VultureText")
         );

@@ -109,7 +109,7 @@ public class TimeMaster : RoleBase<TimeMaster>
             ButtonPosition.Layout,
             hm,
             hm.UseButton,
-            KeyCode.F,
+            AbilitySlot.CrewmateAbilityPrimary,
             true,
             ShieldDuration,
             () => { TimeMasterShieldButton.Timer = TimeMasterShieldButton.MaxTimer; },

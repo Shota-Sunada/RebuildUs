@@ -22,6 +22,7 @@ public enum RoleType : byte
     Bait,
     Medium,
     FortuneTeller,
+    Suicider,
 
     // Impostor
     Impostor = 100,
