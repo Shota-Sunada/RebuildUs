@@ -15,6 +15,7 @@ public static class SubmergedCompatibility
     }
 
     public const string SUBMERGED_GUID = "Submerged";
+    public const string SUBMERGED_VERSION = "2025.11.20";
     public const ShipStatus.MapType SUBMERGED_MAP_TYPE = (ShipStatus.MapType)6;
 
     public static SemanticVersioning.Version Version { get; private set; }

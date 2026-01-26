@@ -46,6 +46,11 @@ else {
 }
 
 Write-Host "Microsoft (R) .NET Core SDK Version $(& $env:DOTNET_EXE --version)"
+# Sync version from Main.cs to csproj
+$ModVersion = (Get-Content ".\RebuildUs\Main.cs" | Select-String 'public const string MOD_VERSION = "([^"]+)"').Matches.Groups[1].Value
+$CsprojContent = Get-Content $ProjectFile
+$CsprojContent = $CsprojContent -replace '<Version>[^<]+</Version>', "<Version>$ModVersion</Version>"
+$CsprojContent | Set-Content $ProjectFile
 Write-Host "[Build] In progress..." -ForegroundColor DarkBlue
 Exec { & $env:DOTNET_EXE build $ProjectFile -c Release /nodeReuse:false /p:UseSharedCompilation=false -nologo -clp:NoSummary --verbosity quiet }
 

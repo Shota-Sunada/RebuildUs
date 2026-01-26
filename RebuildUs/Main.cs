@@ -32,17 +32,25 @@ global using RebuildUs.Roles.Neutral;
 global using RebuildUs.Roles.Modifier;
 global using RebuildUs.Utilities;
 
+global using Reactor.Networking;
+global using Reactor.Networking.Attributes;
+
 namespace RebuildUs;
 
 [BepInPlugin(MOD_ID, MOD_NAME, MOD_VERSION)]
-    [BepInDependency(SubmergedCompatibility.SUBMERGED_GUID, BepInDependency.DependencyFlags.HardDependency)]
+[BepInDependency(SubmergedCompatibility.SUBMERGED_GUID, SubmergedCompatibility.SUBMERGED_VERSION)]
+[BepInDependency(REACTOR_GUID, REACTOR_VERSION)]
 [BepInProcess("Among Us.exe")]
+[ReactorModFlags(ModFlags.RequireOnAllClients)]
 public class RebuildUs : BasePlugin
 {
     public const string MOD_ID = "com.shota-sunada.rebuild-us";
     public const string MOD_NAME = "Rebuild Us";
     public const string MOD_VERSION = "1.0.2";
     public const string MOD_DEVELOPER = "Shota Sunada";
+
+    public const string REACTOR_GUID = "gg.reactor-sunada.api";
+    public const string REACTOR_VERSION = "3.3.4";
 
     public static RebuildUs Instance;
     public Harmony Harmony { get; } = new(MOD_ID);

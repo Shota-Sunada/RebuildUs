@@ -706,7 +706,7 @@ public static class CustomOptionHolder
         MadmateCanFixComm = CustomOption.Normal(4011, CustomOptionType.Modifier, "Option.MadmateCanFixComm", true, MadmateSpawnRate);
         MadmateExilePlayer = CustomOption.Normal(4012, CustomOptionType.Modifier, "Option.MadmateExileCrewmate", false, MadmateSpawnRate);
 
-        LastImpostorEnable = CustomOption.Header(4010, CustomOptionType.Modifier, "Option.LastImpostorEnable", true, Helpers.Cs(LastImpostor.NameColor, Tr.Get("Modifier.LastImpostor")));
+        LastImpostorEnable = CustomOption.Header(4010, CustomOptionType.Modifier, "Option.LastImpostorEnable", true, "Modifier.LastImpostor");
         LastImpostorFunctions = CustomOption.Normal(4011, CustomOptionType.Modifier, "Option.LastImpostorFunctions", [Tr.Get("Option.LastImpostorDivine"), Tr.Get("Option.LastImpostorGuesser")], LastImpostorEnable);
         LastImpostorNumKills = CustomOption.Normal(4012, CustomOptionType.Modifier, "Option.LastImpostorNumKills", 3f, 0f, 10f, 1f, LastImpostorEnable);
         LastImpostorResults = CustomOption.Normal(4013, CustomOptionType.Modifier, "Option.FortuneTellerResults", [Tr.Get("Option.FortuneTellerResultCrew"), Tr.Get("Option.FortuneTellerResultTeam"), Tr.Get("Option.FortuneTellerResultRole")], LastImpostorEnable);
