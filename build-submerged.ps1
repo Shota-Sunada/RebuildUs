@@ -4,9 +4,13 @@ param(
     [string]$Configuration = "Debug"
 )
 
+Set-StrictMode -Off
+
 # 基準となるディレクトリを取得
-$ProjectRoot = Get-Variable -Name PSScriptRoot -ValueOnly -ErrorAction SilentlyContinue
-if (-not $ProjectRoot) { $ProjectRoot = Get-Location }
+$ProjectRoot = $PSScriptRoot
+if ([string]::IsNullOrEmpty($ProjectRoot)) {
+    $ProjectRoot = Get-Location
+}
 
 # まずReactorのリリースビルドを実行
 Write-Host "--- Starting Reactor Release Build ---"
