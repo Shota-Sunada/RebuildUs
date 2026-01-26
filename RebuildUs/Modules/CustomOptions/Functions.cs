@@ -413,6 +413,11 @@ public partial class CustomOption
     {
         if (PlayerControl.LocalPlayer != null && AmongUsClient.Instance.AmHost)
         {
+            // Save all custom option selections to config at game start
+            foreach (var option in AllOptions)
+            {
+                option.Entry?.Value = option.Selection;
+            }
             GameManager.Instance.LogicOptions.SyncOptions();
             ShareOptionSelections();
         }

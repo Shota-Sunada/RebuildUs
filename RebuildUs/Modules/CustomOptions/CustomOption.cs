@@ -347,12 +347,12 @@ public partial class CustomOption
             {
                 if (Id == 0 && Selection != Preset)
                 {
+                    Entry.Value = Selection; // Save preset selection immediately
                     SwitchPreset(Selection); // Switch presets
                     ShareOptionSelections();
                 }
                 else if (Entry != null)
                 {
-                    Entry.Value = Selection; // Save selection to config
                     ShareOptionChange((uint)Id);// Share single selection
                 }
             }
