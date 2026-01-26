@@ -46,6 +46,9 @@ else {
 }
 
 Write-Host "Microsoft (R) .NET Core SDK Version $(& $env:DOTNET_EXE --version)"
+Write-Host "Starting Submerged Release Build..." -ForegroundColor Yellow
+& "$PSScriptRoot\build-submerged.ps1" -Configuration "Release"
+Write-Host "Submerged Release Build completed." -ForegroundColor Green
 # Sync version from Main.cs to csproj
 $ModVersion = (Get-Content ".\RebuildUs\Main.cs" | Select-String 'public const string MOD_VERSION = "([^"]+)"').Matches.Groups[1].Value
 $CsprojContent = Get-Content $ProjectFile

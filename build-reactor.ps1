@@ -7,9 +7,10 @@ param(
 Push-Location
 Set-Location -Path ".\Reactor"
 
+Write-Host "Starting Reactor build..." -ForegroundColor Cyan
 dotnet cake build.cake --target=Build --configuration=$Configuration
 
-Write-Host "LASTEXITCODE after dotnet cake: $LASTEXITCODE"
+Write-Host "LASTEXITCODE after dotnet cake: $LASTEXITCODE" -ForegroundColor Magenta
 
 if ($LASTEXITCODE -eq 0) {
     $sourcePath = "Reactor\bin\$Configuration\net6.0\Reactor.dll"

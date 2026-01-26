@@ -6,10 +6,11 @@ if (-not (Test-Path $translationsPath)) {
     return
 }
 
+Write-Host "Starting translation formatting..." -ForegroundColor Cyan
 $jsonFiles = Get-ChildItem -Path $translationsPath -Filter "*.json"
 
 foreach ($file in $jsonFiles) {
-    Write-Host "Formatting $($file.Name)..."
+    Write-Host "Formatting $($file.Name)..." -ForegroundColor Yellow
     try {
         $rawContent = Get-Content -Path $file.FullName -Raw -Encoding UTF8
         if ([string]::IsNullOrWhiteSpace($rawContent)) {
@@ -56,6 +57,7 @@ foreach ($file in $jsonFiles) {
         # Ensure UTF-8 without BOM (Byte Order Mark)
         $utf8NoBom = New-Object System.Text.UTF8Encoding($false)
         [System.IO.File]::WriteAllText($file.FullName, $finalOutput, $utf8NoBom)
+        Write-Host "Formatted $($file.Name) successfully." -ForegroundColor Green
     }
     catch {
         Write-Host "Error formatting $($file.Name): $($_.Exception.Message)" -ForegroundColor Red

@@ -6,6 +6,10 @@ $PluginDllFolder = ".\RebuildUs\bin\Debug\net6.0"
 $PluginDllFile = $PluginDllFolder + "\RebuildUs.dll"
 $ProjectFile = ".\RebuildUs\RebuildUs.csproj"
 
+Write-Host "Starting Submerged Release Build..." -ForegroundColor Yellow
+& "$PSScriptRoot\build-submerged.ps1" -Configuration "Release"
+Write-Host "Submerged Release Build completed." -ForegroundColor Green
+
 Write-Host "PowerShell $($PSVersionTable.PSEdition) Version $($PSVersionTable.PSVersion)" -ForegroundColor Cyan
 Set-StrictMode -Version 2.0; $ErrorActionPreference = "Stop"; $ConfirmPreference = "None"; trap { Write-Error $_ -ErrorAction Continue; exit 1 }
 
