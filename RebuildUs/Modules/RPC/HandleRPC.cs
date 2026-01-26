@@ -88,7 +88,7 @@ public static partial class RPCProcedure
                 OverrideNativeRole(reader.ReadByte(), reader.ReadByte());
                 break;
             case CustomRPC.UncheckedEndGame:
-                UncheckedEndGame(reader.ReadByte());
+                UncheckedEndGame(reader.ReadByte(), reader.ReadBoolean());
                 break;
             case CustomRPC.UncheckedSetTasks:
                 UncheckedSetTasks(reader.ReadByte(), reader.ReadBytesAndSize());

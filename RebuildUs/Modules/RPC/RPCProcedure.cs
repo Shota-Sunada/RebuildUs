@@ -214,8 +214,9 @@ public static partial class RPCProcedure
         FastDestroyableSingleton<RoleManager>.Instance.SetRole(player, (RoleTypes)roleType);
     }
 
-    public static void UncheckedEndGame(byte reason)
+    public static void UncheckedEndGame(byte reason, bool isO2Win = false)
     {
+        EndGameMain.IsO2Win = isO2Win;
         AmongUsClient.Instance.GameState = InnerNet.InnerNetClient.GameStates.Ended;
         var obj2 = AmongUsClient.Instance.allClients;
         lock (obj2)

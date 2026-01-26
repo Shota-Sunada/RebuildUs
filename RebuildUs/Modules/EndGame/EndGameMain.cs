@@ -632,7 +632,8 @@ public static class EndGameMain
         GameManager.Instance.RpcEndGame(reason, false);
         using var sender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.UncheckedEndGame);
         sender.Write((byte)reason);
-        RPCProcedure.UncheckedEndGame((byte)reason);
+        sender.Write(IsO2Win);
+        RPCProcedure.UncheckedEndGame((byte)reason, IsO2Win);
     }
 
     public static void UncheckedEndGame(CustomGameOverReason reason)
