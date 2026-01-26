@@ -184,7 +184,7 @@ public class Vampire : RoleBase<Vampire>
             ButtonPosition.Layout,
             hm,
             hm.UseButton,
-            null,
+            KeyCode.F,
             true,
             Tr.Get("Hud.GarlicText")
         );

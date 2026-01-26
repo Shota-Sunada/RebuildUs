@@ -101,7 +101,7 @@ public class EvilHacker : RoleBase<EvilHacker>
             ButtonPosition.Layout,
             hm,
             hm.KillButton,
-            null,
+            KeyCode.F,
             false,
             Tr.Get("Role.Madmate")
         );

@@ -1,3 +1,6 @@
+using Submerged.Systems.Oxygen;
+using Submerged.KillAnimation.Patches;
+
 namespace RebuildUs.Modules;
 
 public static class EndGameMain
@@ -35,10 +38,13 @@ public static class EndGameMain
         {
             var roles = RoleInfo.GetRoleInfoForPlayer(player);
             var (tasksCompleted, tasksTotal) = TasksHandler.TaskInfo(player.Data);
+
+            var isOxygenDeath = SubmergedCompatibility.Loaded && SubmarineOxygenSystem.Instance != null && (OxygenDeathAnimationPatches.IsOxygenDeath || IsO2Win);
             var finalStatus = GameHistory.FinalStatuses[player.PlayerId] =
                 player.Data.Disconnected == true ? FinalStatus.Disconnected :
                 GameHistory.FinalStatuses.ContainsKey(player.PlayerId) ? GameHistory.FinalStatuses[player.PlayerId] :
                 player.Data.IsDead == true ? FinalStatus.Dead :
+                (isOxygenDeath && !SubmarineOxygenSystem.Instance.playersWithMask.Contains(player.PlayerId)) ? FinalStatus.LackOfOxygen :
                 gameOverReason == GameOverReason.ImpostorsBySabotage && !player.Data.Role.IsImpostor ? (IsO2Win ? FinalStatus.LackOfOxygen : FinalStatus.Sabotage) :
                 FinalStatus.Alive;
 
@@ -133,7 +139,12 @@ public static class EndGameMain
             }
         }
 
-        if (jesterWin)
+        if (everyoneDead)
+        {
+            EndGameResult.CachedWinners = new Il2CppSystem.Collections.Generic.List<CachedPlayerData>();
+            AdditionalTempData.WinCondition = WinCondition.EveryoneDied;
+        }
+        else if (jesterWin)
         {
             EndGameResult.CachedWinners = new Il2CppSystem.Collections.Generic.List<CachedPlayerData>();
             foreach (var jester in Jester.Players)
@@ -204,11 +215,6 @@ public static class EndGameMain
                     }
                 }
             }
-        }
-        else if (miniLose)
-        {
-            EndGameResult.CachedWinners = new Il2CppSystem.Collections.Generic.List<CachedPlayerData>();
-            AdditionalTempData.WinCondition = WinCondition.MiniLose;
         }
         else if (everyoneDead)
         {

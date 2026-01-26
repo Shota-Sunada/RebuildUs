@@ -131,7 +131,7 @@ public class Jackal : RoleBase<Jackal>
             ButtonPosition.Layout,
             hm,
             hm.KillButton,
-            KeyCode.Q
+            AbilitySlot.Ability1
         );
 
         // Jackal Sidekick Button
@@ -161,7 +161,7 @@ public class Jackal : RoleBase<Jackal>
             ButtonPosition.Layout,
             hm,
             hm.KillButton,
-            KeyCode.F,
+            AbilitySlot.Ability2,
             false,
             Tr.Get("Hud.SidekickText")
         );
@@ -193,7 +193,7 @@ public class Jackal : RoleBase<Jackal>
             ButtonPosition.Layout,
             hm,
             hm.AbilityButton,
-            KeyCode.G
+            AbilitySlot.Ability3
         );
     }
     public static void SetButtonCooldowns()

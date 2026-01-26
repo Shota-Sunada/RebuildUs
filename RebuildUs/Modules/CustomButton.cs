@@ -40,6 +40,7 @@ public class CustomButton
     public HudManager HudManager;
     public bool Mirror;
     public KeyCode? Hotkey;
+    public AbilitySlot? Slot;
     public bool UseLayout = false;
 
     public static bool StopCountdown = true;
@@ -59,6 +60,106 @@ public class CustomButton
         Action onEffectEnds,
         bool mirror = false,
         string buttonText = ""
+    ) : this(
+        onClick,
+        hasButton,
+        couldUse,
+        onMeetingEnds,
+        sprite,
+        position,
+        hudManager,
+        textTemplate,
+        hotkey,
+        null,
+        hasEffect,
+        effectDuration,
+        onEffectEnds,
+        mirror,
+        buttonText
+    )
+    { }
+
+    public CustomButton(
+        Action onClick,
+        Func<bool> hasButton,
+        Func<bool> couldUse,
+        Action onMeetingEnds,
+        Sprite sprite,
+        ButtonPosition position,
+        HudManager hudManager,
+        ActionButton textTemplate,
+        AbilitySlot? slot,
+        bool hasEffect,
+        float effectDuration,
+        Action onEffectEnds,
+        bool mirror = false,
+        string buttonText = ""
+    ) : this(
+        onClick,
+        hasButton,
+        couldUse,
+        onMeetingEnds,
+        sprite,
+        position,
+        hudManager,
+        textTemplate,
+        null,
+        slot,
+        hasEffect,
+        effectDuration,
+        onEffectEnds,
+        mirror,
+        buttonText
+    )
+    { }
+
+    public CustomButton(
+        Action onClick,
+        Func<bool> hasButton,
+        Func<bool> couldUse,
+        Action onMeetingEnds,
+        Sprite sprite,
+        ButtonPosition position,
+        HudManager hudManager,
+        ActionButton textTemplate,
+        AbilitySlot? slot,
+        bool mirror = false,
+        string buttonText = ""
+    ) : this(
+        onClick,
+        hasButton,
+        couldUse,
+        onMeetingEnds,
+        sprite,
+        position,
+        hudManager,
+        textTemplate,
+        null,
+        slot,
+        false,
+        0f,
+        () => { },
+        mirror,
+        buttonText
+    )
+    { }
+
+    public CustomButton(
+        Action onClick,
+        Func<bool> hasButton,
+        Func<bool> couldUse,
+        Action onMeetingEnds,
+        Sprite sprite,
+        ButtonPosition position,
+        HudManager hudManager,
+        ActionButton textTemplate,
+        KeyCode? hotkey,
+        AbilitySlot? slot,
+        bool hasEffect,
+        float effectDuration,
+        Action onEffectEnds,
+        bool mirror = false,
+        string buttonText = ""
     )
     {
         this.HudManager = hudManager;
@@ -73,6 +174,7 @@ public class CustomButton
         this.Sprite = sprite;
         this.Mirror = mirror;
         this.Hotkey = hotkey;
+        this.Slot = slot;
         this.ButtonText = buttonText;
         this.UseLayout = position.UseLayout;
         Timer = 16.2f;
@@ -313,5 +415,6 @@ public class CustomButton
 
         // Trigger OnClickEvent if the hotkey is being pressed down
         if (Hotkey.HasValue && Input.GetKeyDown(Hotkey.Value)) OnClickEvent();
+        if (Slot.HasValue && Input.GetKeyDown(KeyBindingManager.GetKey(Slot.Value))) OnClickEvent();
     }
 }

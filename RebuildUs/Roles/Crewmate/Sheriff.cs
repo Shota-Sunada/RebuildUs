@@ -120,7 +120,7 @@ public class Sheriff : RoleBase<Sheriff>
             ButtonPosition.Layout,
             hm,
             hm.KillButton,
-            KeyCode.Q
+            AbilitySlot.Ability1
         );
 
         SheriffNumShotsText = GameObject.Instantiate(SheriffKillButton.ActionButton.cooldownTimerText, SheriffKillButton.ActionButton.cooldownTimerText.transform.parent);

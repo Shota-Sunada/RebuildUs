@@ -118,6 +118,8 @@ public class RebuildUs : BasePlugin
         DiscordVCId = Config.Bind("Discord", "Voice Channel ID", "");
         StatusChannelId = Config.Bind("Discord", "Status Channel ID", "");
 
+        KeyBindingManager.Initialize(Config);
+
         Ip = Config.Bind("Custom", "Custom Server IP", "127.0.0.1");
         Port = Config.Bind("Custom", "Custom Server Port", (ushort)22023);
         DefaultRegions = ServerManager.DefaultRegions;
