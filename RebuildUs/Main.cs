@@ -107,6 +107,9 @@ public class RebuildUs : BasePlugin
         BetterSabotageMap = Config.Bind("Custom", "Better Sabotage Map", false);
         TransparentMap = Config.Bind("Custom", "Transparent Map", false);
         HideFakeTasks = Config.Bind("Custom", "Hide Fake Tasks", false);
+        EnableDiscordEmbed = Config.Bind("Custom", "Enable Discord Embed", false);
+        EnableDiscordAutoMute = Config.Bind("Custom", "Enable Discord Auto Mute", false);
+        EnableSendFinalStatusToDiscord = Config.Bind("Custom", "Enable Send Final Status To Discord", false);
 
         DiscordBotToken = Config.Bind("Discord", "Bot Token", "");
         DiscordBotToken2 = Config.Bind("Discord", "Bot Token 2", "");
