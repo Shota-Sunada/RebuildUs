@@ -2,7 +2,7 @@ namespace RebuildUs;
 
 public class CustomOverlays
 {
-    private static SpriteRenderer MeetingUnderlay;
+    // private static SpriteRenderer MeetingUnderlay;
     private static SpriteRenderer InfoUnderlay;
     private static TextMeshPro InfoOverlayTitle;
     private static TextMeshPro InfoOverlayRules;
@@ -95,12 +95,13 @@ public class CustomOverlays
     {
         HideBlackBG();
         HideInfoOverlay();
-        if (MeetingUnderlay != null) UnityEngine.Object.Destroy(MeetingUnderlay);
+        // if (MeetingUnderlay != null) UnityEngine.Object.Destroy(MeetingUnderlay);
         if (InfoUnderlay != null) UnityEngine.Object.Destroy(InfoUnderlay);
         if (InfoOverlayTitle != null) UnityEngine.Object.Destroy(InfoOverlayTitle);
         if (InfoOverlayRules != null) UnityEngine.Object.Destroy(InfoOverlayRules);
         if (InfoOverlayRulesRight != null) UnityEngine.Object.Destroy(InfoOverlayRulesRight);
-        MeetingUnderlay = InfoUnderlay = null;
+        // MeetingUnderlay = InfoUnderlay = null;
+        InfoUnderlay = null;
         InfoOverlayTitle = null;
         InfoOverlayRules = null;
         InfoOverlayRulesRight = null;
@@ -115,18 +116,18 @@ public class CustomOverlays
         var hudManager = FastDestroyableSingleton<HudManager>.Instance;
         if (hudManager == null) return false;
 
-        if (MeetingUnderlay == null)
-        {
-            MeetingUnderlay = UnityEngine.Object.Instantiate(hudManager.FullScreen, hudManager.transform);
-            MeetingUnderlay.name = "MeetingUnderlay";
-            MeetingUnderlay.transform.localPosition = new Vector3(0f, 0f, 20f);
-            MeetingUnderlay.gameObject.SetActive(true);
-            MeetingUnderlay.enabled = false;
-        }
+        // if (MeetingUnderlay == null)
+        // {
+        //     MeetingUnderlay = UnityEngine.Object.Instantiate(hudManager.FullScreen, hudManager.transform);
+        //     MeetingUnderlay.name = "MeetingUnderlay";
+        //     MeetingUnderlay.transform.localPosition = new Vector3(0f, 0f, 20f);
+        //     MeetingUnderlay.gameObject.SetActive(true);
+        //     MeetingUnderlay.enabled = false;
+        // }
 
         if (InfoUnderlay == null)
         {
-            InfoUnderlay = UnityEngine.Object.Instantiate(MeetingUnderlay, hudManager.transform);
+            InfoUnderlay = UnityEngine.Object.Instantiate(hudManager.FullScreen, hudManager.transform);
             InfoUnderlay.name = "InfoUnderlay";
             InfoUnderlay.transform.localPosition = new Vector3(0f, 0f, UnderlayZ);
             InfoUnderlay.gameObject.SetActive(true);
@@ -298,21 +299,21 @@ public class CustomOverlays
         if (hudManager == null) return;
         if (!InitializeOverlays()) return;
 
-        MeetingUnderlay.sprite = AssetLoader.White;
-        MeetingUnderlay.enabled = true;
-        MeetingUnderlay.transform.localScale = new Vector3(13f, 5f, 1f);
+        // MeetingUnderlay.sprite = AssetLoader.White;
+        // MeetingUnderlay.enabled = true;
+        // MeetingUnderlay.transform.localScale = new Vector3(13f, 5f, 1f);
         var clearBlack = new Color32(0, 0, 0, 0);
 
         hudManager.StartCoroutine(Effects.Lerp(0.2f, new Action<float>(t =>
         {
-            MeetingUnderlay.color = Color.Lerp(clearBlack, Palette.Black, t);
+            // MeetingUnderlay.color = Color.Lerp(clearBlack, Palette.Black, t);
         })));
     }
 
     public static void HideBlackBG()
     {
-        if (MeetingUnderlay == null) return;
-        MeetingUnderlay.enabled = false;
+        // if (MeetingUnderlay == null) return;
+        // MeetingUnderlay.enabled = false;
     }
 
     public static void ShowInfoOverlay()
