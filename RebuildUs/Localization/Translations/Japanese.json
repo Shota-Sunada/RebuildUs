@@ -242,10 +242,7 @@
     "BetterSabotageMap": "改良版サボタージュマップ",
     "ForceNormalSabotageMap": "通常サボタージュマップを強制",
     "TransparentMap": "透過マップ",
-    "HideFakeTasks": "フェイクタスクを隠す",
-    "EnableDiscordEmbed": "サーバーにステータスを送信 (要設定&連携)",
-    "EnableDiscordAutoMute": "自動ミュートを有効 (要設定&連携)",
-    "EnableSendFinalStatusToDiscord": "最終結果をサーバーに送信 (要設定)"
+    "HideFakeTasks": "フェイクタスクを隠す"
   },
   "Option": {
     "Preset1": "プリセット1",
@@ -256,6 +253,9 @@
     "AirshipOptimize": "Airshipを最適化",
     "RolesGeneral": "ロール総合",
     "GameOptions": "ゲーム設定",
+    "DiscordOptions": "Discord設定",
+    "EnableDiscordEmbed": "サーバーにステータスを送信 (要設定&連携)",
+    "EnableDiscordAutoMute": "自動ミュートを有効 (要設定&連携)",
     "AmongUsSettings": "AmongUs 設定",
     "ChangePage": "「<」と「>」でページを切り替え",
     "CurrentPage": "現在のページ",

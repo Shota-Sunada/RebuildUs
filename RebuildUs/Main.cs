@@ -77,9 +77,6 @@ public class RebuildUs : BasePlugin
     public static ConfigEntry<string> DiscordGuildId { get; set; }
     public static ConfigEntry<string> DiscordVCId { get; set; }
     public static ConfigEntry<string> StatusChannelId { get; set; }
-    public static ConfigEntry<bool> EnableDiscordEmbed { get; set; }
-    public static ConfigEntry<bool> EnableDiscordAutoMute { get; set; }
-    public static ConfigEntry<bool> EnableSendFinalStatusToDiscord { get; set; }
 
     public static ConfigEntry<string> Ip { get; set; }
     public static ConfigEntry<ushort> Port { get; set; }
@@ -107,9 +104,6 @@ public class RebuildUs : BasePlugin
         BetterSabotageMap = Config.Bind("Custom", "Better Sabotage Map", false);
         TransparentMap = Config.Bind("Custom", "Transparent Map", false);
         HideFakeTasks = Config.Bind("Custom", "Hide Fake Tasks", false);
-        EnableDiscordEmbed = Config.Bind("Custom", "Enable Discord Embed", false);
-        EnableDiscordAutoMute = Config.Bind("Custom", "Enable Discord Auto Mute", false);
-        EnableSendFinalStatusToDiscord = Config.Bind("Custom", "Enable Send Final Status To Discord", false);
 
         DiscordBotToken = Config.Bind("Discord", "Bot Token", "");
         DiscordBotToken2 = Config.Bind("Discord", "Bot Token 2", "");

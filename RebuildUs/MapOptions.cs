@@ -41,7 +41,6 @@ namespace RebuildUs
 
         public static bool EnableDiscordAutoMute = true;
         public static bool EnableDiscordEmbed = true;
-        public static bool EnableSendFinalStatusToDiscord = true;
 
         // Updating values
         public static int MeetingsCount = 0;
@@ -90,9 +89,8 @@ namespace RebuildUs
             ShowVentsOnMap = RebuildUs.ShowVentsOnMap.Value;
             ShowChatNotifications = RebuildUs.ShowChatNotifications.Value;
 
-            EnableDiscordAutoMute = RebuildUs.EnableDiscordAutoMute.Value;
-            EnableDiscordEmbed = RebuildUs.EnableDiscordEmbed.Value;
-            EnableSendFinalStatusToDiscord = RebuildUs.EnableSendFinalStatusToDiscord.Value;
+            EnableDiscordAutoMute = CustomOptionHolder.EnableDiscordAutoMute.GetBool();
+            EnableDiscordEmbed = CustomOptionHolder.EnableDiscordEmbed.GetBool();
 
             DiscordModManager.Initialize();
         }

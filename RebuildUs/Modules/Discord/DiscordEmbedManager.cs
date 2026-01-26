@@ -10,7 +10,7 @@ public static class DiscordEmbedManager
     public static async void UpdateStatus()
     {
         if (!ModMapOptions.EnableDiscordEmbed || !AmongUsClient.Instance.AmHost || string.IsNullOrEmpty(RebuildUs.StatusChannelId.Value)) return;
-        if (DiscordModManager.CurrentGameState == "ドロップシップ" && !ModMapOptions.EnableSendFinalStatusToDiscord) return;
+        if (DiscordModManager.CurrentGameState == "ドロップシップ") return;
 
         var mapName = Helpers.GetOption(ByteOptionNames.MapId) switch
         {

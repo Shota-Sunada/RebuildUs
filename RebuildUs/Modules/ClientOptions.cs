@@ -14,9 +14,6 @@ public static class ClientOptions
         new SelectionBehaviour("ClientOption.ForceNormalSabotageMap", () => ModMapOptions.ForceNormalSabotageMap = RebuildUs.ForceNormalSabotageMap.Value = !RebuildUs.ForceNormalSabotageMap.Value, RebuildUs.ForceNormalSabotageMap.Value),
         new SelectionBehaviour("ClientOption.TransparentMap", () => ModMapOptions.TransparentMap = RebuildUs.TransparentMap.Value = !RebuildUs.TransparentMap.Value, RebuildUs.TransparentMap.Value),
         new SelectionBehaviour("ClientOption.HideFakeTasks", () => ModMapOptions.HideFakeTasks = RebuildUs.HideFakeTasks.Value = !RebuildUs.HideFakeTasks.Value, RebuildUs.HideFakeTasks.Value),
-        new SelectionBehaviour("ClientOption.EnableDiscordEmbed", () => ModMapOptions.EnableDiscordEmbed = RebuildUs.EnableDiscordEmbed.Value = !RebuildUs.EnableDiscordEmbed.Value, RebuildUs.EnableDiscordEmbed.Value),
-        new SelectionBehaviour("ClientOption.EnableDiscordAutoMute", () => ModMapOptions.EnableDiscordAutoMute = RebuildUs.EnableDiscordAutoMute.Value = !RebuildUs.EnableDiscordAutoMute.Value, RebuildUs.EnableDiscordAutoMute.Value),
-        new SelectionBehaviour("ClientOption.EnableSendFinalStatusToDiscord", () => ModMapOptions.EnableSendFinalStatusToDiscord = RebuildUs.EnableSendFinalStatusToDiscord.Value = !RebuildUs.EnableSendFinalStatusToDiscord.Value, RebuildUs.EnableSendFinalStatusToDiscord.Value),
     ];
 
     private static GameObject PopUp;

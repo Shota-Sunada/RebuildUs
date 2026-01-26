@@ -22,7 +22,7 @@ public static class DiscordModManager
     public static void Initialize()
     {
         if (_gateway != null) return;
-        if (!ModMapOptions.EnableDiscordAutoMute && !ModMapOptions.EnableSendFinalStatusToDiscord && !ModMapOptions.EnableDiscordEmbed) return;
+        if (!ModMapOptions.EnableDiscordAutoMute  && !ModMapOptions.EnableDiscordEmbed) return;
 
         _tokens = [.. new[] {
             RebuildUs.DiscordBotToken.Value,
