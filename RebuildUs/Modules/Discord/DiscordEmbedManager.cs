@@ -1,5 +1,5 @@
-using System.Text;
 using System.Text.Json;
+using InnerNet;
 
 namespace RebuildUs.Modules.Discord;
 

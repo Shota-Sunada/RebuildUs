@@ -1,7 +1,6 @@
 using System.Net.Http.Headers;
 using System.Net.WebSockets;
 using System.Text.Json;
-using InnerNet;
 
 namespace RebuildUs.Modules.Discord;
 
@@ -225,10 +224,10 @@ public static class DiscordModManager
                         var d = doc.RootElement.GetProperty("d");
                         if (d.TryGetProperty("voice_states", out var vs))
                         {
-                            foreach (var s in vs.EnumerateArray())
+                            foreach (var s2 in vs.EnumerateArray())
                             {
-                                var uid = ulong.Parse(s.GetProperty("user_id").GetString()!);
-                                var cid = s.TryGetProperty("channel_id", out var c) && c.ValueKind != JsonValueKind.Null ? c.GetString() : null;
+                                var uid = ulong.Parse(s2.GetProperty("user_id").GetString()!);
+                                var cid = s2.TryGetProperty("channel_id", out var c) && c.ValueKind != JsonValueKind.Null ? c.GetString() : null;
                                 if (cid != null) PlayerVoiceStates[uid] = cid;
                             }
                         }
