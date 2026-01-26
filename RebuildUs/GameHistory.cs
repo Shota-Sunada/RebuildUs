@@ -64,6 +64,11 @@ static class GameHistory
         var deadPlayer = new DeadPlayer(target, DateTime.UtcNow, DeathReason.Kill, killer);
         DeadPlayers.Add(deadPlayer);
 
+        if (killer.PlayerId == target.PlayerId && SubmergedCompatibility.Loaded && Submerged.KillAnimation.Patches.OxygenDeathAnimationPatches.IsOxygenDeath)
+        {
+            FinalStatuses[target.PlayerId] = FinalStatus.LackOfOxygen;
+        }
+
         // Reset killer to crewmate if resetToCrewmate
         if (ResetToCrewmate) killer.Data.Role.TeamType = RoleTeamTypes.Crewmate;
         if (ResetToDead) killer.Data.IsDead = true;
