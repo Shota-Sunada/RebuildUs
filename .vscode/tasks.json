@@ -1,132 +1,156 @@
 {
-  "version": "2.0.0",
-  "type": "shell",
-  "options": {
-    "shell": {
-      "executable": "powershell.exe"
-    }
-  },
-  "presentation": {
-    "echo": false,
-    "reveal": "always",
-    "focus": true,
-    "panel": "shared",
-    "showReuseMessage": true,
-    "clear": true
-  },
-  "problemMatcher": [],
-  "tasks": [
-    {
-      "label": "Build RebuildUs.Impostor",
-      "command": "powershell -ExecutionPolicy Bypass .\\build-impostor.ps1",
-      "group": {
-        "kind": "build",
-        "isDefault": true
-      }
-    },
-    {
-      "label": "Build Launcher",
-      "command": "powershell -ExecutionPolicy Bypass .\\build-launcher.ps1",
-      "group": {
-        "kind": "build",
-        "isDefault": true
-      }
-    },
-    {
-      "label": "Build Debug",
-      "command": "powershell -ExecutionPolicy Bypass .\\build-debug.ps1",
-      "group": {
-        "kind": "build",
-        "isDefault": true
-      }
-    },
-    {
-      "label": "Build Relase",
-      "command": "powershell -ExecutionPolicy Bypass .\\build-release.ps1",
-      "group": {
-        "kind": "build",
-        "isDefault": true
-      }
-    },
-    {
-      "label": "Taskkill",
-      "command": "powershell -ExecutionPolicy Bypass .\\taskkill.ps1",
-      "group": {
-        "kind": "build",
-        "isDefault": true
-      }
-    },
-    {
-      "label": "BepInEx Updater Publish",
-      "command": "powershell -ExecutionPolicy Bypass .\\updater-publish.ps1",
-      "group": {
-        "kind": "build",
-        "isDefault": true
-      }
-    },
-    {
-      "label": "Generate Release Zip",
-      "command": "powershell -ExecutionPolicy Bypass .\\generate-release.ps1",
-      "group": {
-        "kind": "build",
-        "isDefault": true
-      }
-    },
-    {
-      "label": "Start Debug",
-      "command": "powershell -ExecutionPolicy Bypass .\\start-debug.ps1",
-      "group": {
-        "kind": "build",
-        "isDefault": true
-      }
-    },
-    {
-      "label": "Start Debug 2",
-      "command": "powershell -ExecutionPolicy Bypass .\\start-debug-2.ps1",
-      "group": {
-        "kind": "build",
-        "isDefault": true
-      }
-    },
-    {
-      "label": "Start Debug 4",
-      "command": "powershell -ExecutionPolicy Bypass .\\start-debug-4.ps1",
-      "group": {
-        "kind": "build",
-        "isDefault": true
-      }
-    },
-    {
-      "label": "Boot AmongUs",
-      "command": "powershell -ExecutionPolicy Bypass .\\start-debug-boot.ps1",
-      "group": {
-        "kind": "build",
-        "isDefault": true
-      }
-    },
-    {
-      "label": "Format",
-      "command": "dotnet format RebuildUs.sln",
-      "group": {
-        "kind": "build",
-        "isDefault": true
-      }
-    },
-    {
-      "label": "Format Translation Json",
-      "command": "powershell -ExecutionPolicy Bypass .\\format-translations.ps1",
-      "group": {
-        "kind": "build",
-        "isDefault": true
-      }
-    },
-    {
-      "label": "Run Refactor Tool",
-      "command": "dotnet run --project RefactorTool/RefactorTool.csproj -- RebuildUs.sln",
-      "group": {
-        "kind": "build",
-        "isDefault": true
-      }
-    }
-  ]
+	"version": "2.0.0",
+	"type": "shell",
+	"options": {
+		"shell": {
+			"executable": "powershell.exe"
+		}
+	},
+	"presentation": {
+		"echo": false,
+		"reveal": "always",
+		"focus": true,
+		"panel": "shared",
+		"showReuseMessage": true,
+		"clear": true
+	},
+	"problemMatcher": [],
+	"tasks": [
+		{
+			"label": "Build RebuildUs.Impostor",
+			"command": "powershell -ExecutionPolicy Bypass .\\build-impostor.ps1",
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			}
+		},
+		{
+			"label": "Build Launcher",
+			"command": "powershell -ExecutionPolicy Bypass .\\build-launcher.ps1",
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			}
+		},
+		{
+			"label": "Build Debug",
+			"command": "powershell -ExecutionPolicy Bypass .\\build-debug.ps1",
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			}
+		},
+		{
+			"label": "Build Relase",
+			"command": "powershell -ExecutionPolicy Bypass .\\build-release.ps1",
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			}
+		},
+		{
+			"label": "Taskkill",
+			"command": "powershell -ExecutionPolicy Bypass .\\taskkill.ps1",
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			}
+		},
+		{
+			"label": "BepInEx Updater Publish",
+			"command": "powershell -ExecutionPolicy Bypass .\\updater-publish.ps1",
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			}
+		},
+		{
+			"label": "Generate Release Zip",
+			"command": "powershell -ExecutionPolicy Bypass .\\generate-release.ps1",
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			}
+		},
+		{
+			"label": "Start Debug",
+			"command": "powershell -ExecutionPolicy Bypass .\\start-debug.ps1",
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			}
+		},
+		{
+			"label": "Start Debug 2",
+			"command": "powershell -ExecutionPolicy Bypass .\\start-debug-2.ps1",
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			}
+		},
+		{
+			"label": "Start Debug 4",
+			"command": "powershell -ExecutionPolicy Bypass .\\start-debug-4.ps1",
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			}
+		},
+		{
+			"label": "Boot AmongUs",
+			"command": "powershell -ExecutionPolicy Bypass .\\start-debug-boot.ps1",
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			}
+		},
+		{
+			"label": "Format",
+			"command": "dotnet format RebuildUs.sln",
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			}
+		},
+		{
+			"label": "Format Translation Json",
+			"command": "powershell -ExecutionPolicy Bypass .\\format-translations.ps1",
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			}
+		},
+		{
+			"label": "Run Refactor Tool",
+			"command": "dotnet run --project RefactorTool/RefactorTool.csproj -- RebuildUs.sln",
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			}
+		},
+		{
+			"label": "Build Reactor Debug",
+			"type": "shell",
+			"command": "powershell",
+			"args": [
+				"-File",
+				"build-reactor.ps1",
+				"-Configuration",
+				"Debug"
+			],
+			"group": "build"
+		},
+		{
+			"label": "Build Reactor Release",
+			"type": "shell",
+			"command": "powershell",
+			"args": [
+				"-File",
+				"build-reactor.ps1",
+				"-Configuration",
+				"Release"
+			],
+			"group": "build"
+		}
+	]
 }
