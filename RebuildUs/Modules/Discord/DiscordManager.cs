@@ -9,14 +9,14 @@ public static class DiscordModManager
 {
     private static readonly HttpClient _httpClient = new();
     private static readonly string MappingFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "discord_mapping.json");
-    private static Dictionary<string, ulong> _playerMappings = []; // FriendCode -> DiscordId
+    internal static Dictionary<string, ulong> PlayerMappings = []; // FriendCode -> DiscordId
+    internal static Dictionary<ulong, string> PlayerVoiceStates = []; // DiscordId -> ChannelId
 
     private static string[] _tokens = [];
     private static int _currentTokenIndex = 0;
 
-    private static ulong? _statusMessageId = null;
-    private static string _currentGameState = "ドロップシップ";
-    private static string _exiledPlayerName = "";
+    internal static string CurrentGameState = "ドロップシップ";
+    internal static string ExiledPlayerName = "";
 
     private static DiscordGatewayClient _gateway;
 
@@ -46,7 +46,7 @@ public static class DiscordModManager
             try
             {
                 var json = File.ReadAllText(MappingFile);
-                _playerMappings = JsonSerializer.Deserialize<Dictionary<string, ulong>>(json) ?? [];
+                PlayerMappings = JsonSerializer.Deserialize<Dictionary<string, ulong>>(json) ?? [];
             }
             catch (Exception e) { Logger.LogError($"[Discord] LoadMappings: {e.Message}"); }
         }
@@ -56,7 +56,7 @@ public static class DiscordModManager
     {
         try
         {
-            var json = JsonSerializer.Serialize(_playerMappings);
+            var json = JsonSerializer.Serialize(PlayerMappings);
             File.WriteAllText(MappingFile, json);
         }
         catch (Exception e) { Logger.LogError($"[Discord] SaveMappings: {e.Message}"); }
@@ -70,7 +70,7 @@ public static class DiscordModManager
         return tok;
     }
 
-    private static async Task<HttpResponseMessage> SendRequest(string method, string url, object body = null, string overrideToken = null)
+    internal static async Task<HttpResponseMessage> SendRequest(string method, string url, object body = null, string overrideToken = null)
     {
         var token = overrideToken ?? GetNextToken();
         if (string.IsNullOrEmpty(token)) return null;
@@ -84,178 +84,70 @@ public static class DiscordModManager
         catch (Exception e) { Logger.LogError($"[Discord] Request error: {e.Message}"); return null; }
     }
 
-    public static async void SetMute(ulong discordId, bool mute, bool deaf)
-    {
-        if (!ModMapOptions.EnableDiscordAutoMute) return;
-        var guildId = RebuildUs.DiscordGuildId.Value;
-        if (string.IsNullOrEmpty(guildId)) return;
-        await SendRequest("PATCH", $"https://discord.com/api/v10/guilds/{guildId}/members/{discordId}", new { mute, deaf });
-    }
-
-    public static void UnmuteEveryone()
-    {
-        foreach (var mapping in _playerMappings) SetMute(mapping.Value, false, false);
-    }
-
-    public static void MuteEveryone()
-    {
-        foreach (var mapping in _playerMappings) SetMute(mapping.Value, true, true);
-    }
-
     public static void OnGameStart()
     {
         if (!AmongUsClient.Instance.AmHost) return;
-        _currentGameState = "行動中";
-        MuteEveryone();
-        UpdateStatus();
+        CurrentGameState = "行動中";
+        DiscordAutoMuteManager.MuteEveryone();
+        DiscordEmbedManager.UpdateStatus();
     }
 
     public static void OnMeetingStart()
     {
         if (!AmongUsClient.Instance.AmHost) return;
-        _currentGameState = "会議中";
-        foreach (var p in PlayerControl.AllPlayerControls) UpdatePlayerMute(p);
-        UpdateStatus();
+        CurrentGameState = "会議中";
+        foreach (var p in PlayerControl.AllPlayerControls) DiscordAutoMuteManager.UpdatePlayerMute(p);
+        DiscordEmbedManager.UpdateStatus();
     }
 
     public static void OnMeetingEnd()
     {
         if (!AmongUsClient.Instance.AmHost) return;
-        _currentGameState = "行動中";
-        foreach (var p in PlayerControl.AllPlayerControls) UpdatePlayerMute(p);
-        UpdateStatus();
+        CurrentGameState = "行動中";
+        foreach (var p in PlayerControl.AllPlayerControls) DiscordAutoMuteManager.UpdatePlayerMute(p);
+        DiscordEmbedManager.UpdateStatus();
     }
 
     public static void OnExile(string name)
     {
         if (!AmongUsClient.Instance.AmHost) return;
-        _currentGameState = "追放中";
-        _exiledPlayerName = name;
-        foreach (var p in PlayerControl.AllPlayerControls) UpdatePlayerMute(p);
-        UpdateStatus();
+        CurrentGameState = "追放中";
+        ExiledPlayerName = name;
+        foreach (var p in PlayerControl.AllPlayerControls) DiscordAutoMuteManager.UpdatePlayerMute(p);
+        DiscordEmbedManager.UpdateStatus();
     }
 
     public static void OnGameEnd()
     {
         if (!AmongUsClient.Instance.AmHost) return;
-        _currentGameState = "ドロップシップ";
-        UnmuteEveryone();
-        UpdateStatus();
+        CurrentGameState = "ドロップシップ";
+        DiscordAutoMuteManager.UnmuteEveryone();
+        DiscordEmbedManager.UpdateStatus();
     }
 
-    public static void UpdatePlayerMute(PlayerControl p)
+    public static void OnQuitGame()
     {
-        if (!AmongUsClient.Instance.AmHost || p == null || p.Data == null || string.IsNullOrEmpty(p.FriendCode)) return;
-        if (!_playerMappings.TryGetValue(p.FriendCode, out var did)) return;
-
-        bool mute = false;
-        bool deaf = false;
-
-        switch (_currentGameState)
-        {
-            case "行動中":
-            case "追放中":
-                if (!p.Data.IsDead) { mute = true; deaf = true; }
-                else { mute = false; deaf = false; }
-                break;
-            case "会議中":
-                if (!p.Data.IsDead) { mute = false; deaf = false; }
-                else { mute = true; deaf = false; }
-                break;
-            case "ドロップシップ":
-                mute = false;
-                deaf = false;
-                break;
-        }
-
-        SetMute(did, mute, deaf);
+        if (!AmongUsClient.Instance.AmHost) return;
+        DiscordAutoMuteManager.UnmuteEveryone();
     }
 
-    public static async void UpdateStatus()
+    public static void OnPlayerLeft(string friendCode)
     {
-        if (!ModMapOptions.EnableDiscordEmbed || !AmongUsClient.Instance.AmHost || string.IsNullOrEmpty(RebuildUs.StatusChannelId.Value)) return;
-        if (_currentGameState == "ドロップシップ" && !ModMapOptions.EnableSendFinalStatusToDiscord) return;
-
-        var mapName = Helpers.GetOption(ByteOptionNames.MapId) switch
-        {
-            0 or 3 => TranslationController.Instance.GetString(StringNames.MapNameSkeld),
-            1 => TranslationController.Instance.GetString(StringNames.MapNameMira),
-            2 => TranslationController.Instance.GetString(StringNames.MapNamePolus),
-            4 => TranslationController.Instance.GetString(StringNames.MapNameAirship),
-            5 => TranslationController.Instance.GetString(StringNames.MapNameFungle),
-            6 => SubmergedCompatibility.SUBMERGED_GUID,
-            _ => "Unknown"
-        };
-        var roomId = GameCode.IntToGameName(AmongUsClient.Instance.GameId) ?? "---";
-        var count = PlayerControl.AllPlayerControls.Count;
-
-        string desc = _currentGameState switch
-        {
-            "ドロップシップ" => "ゲーム開始を待機中",
-            "行動中" => "各自タスクやキルを行う",
-            "追放中" => string.IsNullOrEmpty(_exiledPlayerName) ? "誰かが追放された" : $"{_exiledPlayerName}が追放された",
-            "会議中" => "話し合いをしている",
-            _ => ""
-        };
-
-        var embed = new
-        {
-            title = "Among Us ルーム情報",
-            color = 3447003,
-            fields = new[] {
-                new { name = "マップ名", value = mapName, inline = true },
-                new { name = "ルームID", value = roomId, inline = true },
-                new { name = "状態", value = _currentGameState, inline = true },
-                new { name = "状態の説明", value = desc, inline = false },
-                new { name = "部屋人数", value = $"{count}/{Helpers.GetOption(Int32OptionNames.MaxPlayers)}", inline = true }
-            },
-            description = GetPlayerListString()
-        };
-
-        var components = new[] {
-            new { type = 1, components = new[] {
-                new { type = 2, style = 1, label = "アカウント連携", custom_id = "start_link" }
-            } }
-        };
-
-        var body = new { embeds = new[] { embed }, components };
-        var url = $"https://discord.com/api/v10/channels/{RebuildUs.StatusChannelId.Value}/messages" + (_statusMessageId == null ? "" : $"/{_statusMessageId}");
-        var resp = await SendRequest(_statusMessageId == null ? "POST" : "PATCH", url, body, RebuildUs.DiscordBotToken.Value);
-        if (_statusMessageId == null && resp != null && resp.IsSuccessStatusCode)
-        {
-            var json = await resp.Content.ReadAsStringAsync().ConfigureAwait(false);
-            using var doc = JsonDocument.Parse(json);
-            if (doc.RootElement.TryGetProperty("id", out var id)) _statusMessageId = ulong.Parse(id.GetString()!);
-        }
-    }
-
-    private static string GetPlayerListString()
-    {
-        var linked = new List<string>();
-        var unlinked = new List<string>();
-        foreach (var p in PlayerControl.AllPlayerControls)
-        {
-            if (p.Data == null) continue;
-            var name = p.Data.PlayerName;
-            if (!string.IsNullOrEmpty(p.FriendCode) && _playerMappings.ContainsKey(p.FriendCode)) linked.Add($":white_check_mark: {name}");
-            else unlinked.Add($":x: {name}");
-        }
-        var sb = new StringBuilder("**プレイヤー名一覧:**\n");
-        foreach (var s in linked) sb.AppendLine(s);
-        foreach (var s in unlinked) sb.AppendLine(s);
-        return sb.ToString();
+        if (!AmongUsClient.Instance.AmHost) return;
+        DiscordAutoMuteManager.OnPlayerLeft(friendCode);
+        DiscordEmbedManager.UpdateStatus();
     }
 
     public static bool TryGetDiscordId(string friendCode, out ulong did)
     {
-        return _playerMappings.TryGetValue(friendCode, out did);
+        return PlayerMappings.TryGetValue(friendCode, out did);
     }
 
     public static void AddMapping(string friendCode, ulong did)
     {
-        _playerMappings[friendCode] = did;
+        PlayerMappings[friendCode] = did;
         SaveMappings();
-        UpdateStatus();
+        DiscordEmbedManager.UpdateStatus();
     }
 
     private class DiscordGatewayClient
@@ -314,12 +206,33 @@ public static class DiscordModManager
                 { // Hello
                     var hb = doc.RootElement.GetProperty("d").GetProperty("heartbeat_interval").GetInt32();
                     _ = Heartbeat(hb);
-                    Send(new { op = 2, d = new { token = _token, intents = 1, properties = new { os = "win", browser = "rb", device = "rb" } } });
+                    Send(new { op = 2, d = new { token = _token, intents = 1 | 128, properties = new { os = "win", browser = "rb", device = "rb" } } });
                 }
                 else if (op == 0)
                 { // Dispatch
                     var t = doc.RootElement.GetProperty("t").GetString();
                     if (t == "INTERACTION_CREATE") HandleInteraction(doc.RootElement.GetProperty("d"));
+                    else if (t == "VOICE_STATE_UPDATE")
+                    {
+                        var d = doc.RootElement.GetProperty("d");
+                        var uid = ulong.Parse(d.GetProperty("user_id").GetString()!);
+                        var cid = d.TryGetProperty("channel_id", out var c) && c.ValueKind != JsonValueKind.Null ? c.GetString() : null;
+                        if (cid != null) PlayerVoiceStates[uid] = cid;
+                        else PlayerVoiceStates.Remove(uid);
+                    }
+                    else if (t == "GUILD_CREATE")
+                    {
+                        var d = doc.RootElement.GetProperty("d");
+                        if (d.TryGetProperty("voice_states", out var vs))
+                        {
+                            foreach (var s in vs.EnumerateArray())
+                            {
+                                var uid = ulong.Parse(s.GetProperty("user_id").GetString()!);
+                                var cid = s.TryGetProperty("channel_id", out var c) && c.ValueKind != JsonValueKind.Null ? c.GetString() : null;
+                                if (cid != null) PlayerVoiceStates[uid] = cid;
+                            }
+                        }
+                    }
                 }
             }
             catch { }

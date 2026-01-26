@@ -1,3 +1,4 @@
+using System.Linq;
 using BepInEx.Unity.IL2CPP.Utils.Collections;
 using InnerNet;
 
@@ -11,7 +12,14 @@ public static class AmongUsClientPatch
     public static void OnGameJoinedPostfix()
     {
         GameStart.VersionSent = false;
-        DiscordModManager.UpdateStatus();
+        DiscordEmbedManager.UpdateStatus();
+    }
+
+    [HarmonyPrefix]
+    [HarmonyPatch(typeof(AmongUsClient), nameof(AmongUsClient.ExitGame))]
+    public static void ExitGamePrefix()
+    {
+        DiscordModManager.OnQuitGame();
     }
 
     [HarmonyPrefix]
@@ -42,14 +50,22 @@ public static class AmongUsClientPatch
     public static void OnPlayerJoinedPostfix(AmongUsClient __instance, ClientData data)
     {
         GameStart.OnPlayerJoined();
-        DiscordModManager.UpdateStatus();
+        DiscordEmbedManager.UpdateStatus();
     }
 
     [HarmonyPostfix]
     [HarmonyPatch(typeof(AmongUsClient), nameof(AmongUsClient.OnPlayerLeft))]
     public static void OnPlayerLeftPostfix(AmongUsClient __instance, ClientData data)
     {
-        if (data != null) GameStart.OnPlayerLeft(data.Id);
-        DiscordModManager.UpdateStatus();
+        if (data != null)
+        {
+            GameStart.OnPlayerLeft(data.Id);
+            var player = PlayerControl.AllPlayerControls.ToArray().FirstOrDefault(p => p.OwnerId == data.Id);
+            if (player != null) DiscordModManager.OnPlayerLeft(player.FriendCode);
+        }
+        else
+        {
+            DiscordEmbedManager.UpdateStatus();
+        }
     }
 }

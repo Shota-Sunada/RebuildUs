@@ -90,11 +90,11 @@ namespace RebuildUs
             ShowVentsOnMap = RebuildUs.ShowVentsOnMap.Value;
             ShowChatNotifications = RebuildUs.ShowChatNotifications.Value;
 
-            EnableDiscordAutoMute = CustomOptionHolder.EnableDiscordAutoMute.GetBool();
-            EnableDiscordEmbed = CustomOptionHolder.EnableDiscordEmbed.GetBool();
-            EnableSendFinalStatusToDiscord = CustomOptionHolder.EnableSendFinalStatusToDiscord.GetBool();
+            EnableDiscordAutoMute = RebuildUs.EnableDiscordAutoMute.Value;
+            EnableDiscordEmbed = RebuildUs.EnableDiscordEmbed.Value;
+            EnableSendFinalStatusToDiscord = RebuildUs.EnableSendFinalStatusToDiscord.Value;
 
-            Modules.Discord.DiscordModManager.Initialize();
+            DiscordModManager.Initialize();
         }
 
         public static void ResetDeviceTimes()

@@ -55,12 +55,6 @@ public static class CustomOptionHolder
     public static CustomOption RestrictVitalsText;
     #endregion
 
-    #region DISCORD OPTIONS
-    public static CustomOption EnableDiscordAutoMute;
-    public static CustomOption EnableDiscordEmbed;
-    public static CustomOption EnableSendFinalStatusToDiscord;
-    #endregion
-
     #region POLUS OPTIONS
     public static CustomOption PolusAdditionalVents;
     public static CustomOption PolusSpecimenVital;
@@ -416,12 +410,6 @@ public static class CustomOptionHolder
         RestrictVitals = CustomOption.Normal(67, CustomOptionType.General, "Option.RestrictVitals", true, RestrictDevices);
         RestrictVitalsTime = CustomOption.Normal(68, CustomOptionType.General, "Option.RestrictVitalsTime", 30f, 0f, 600f, 1f, RestrictVitals);
         RestrictVitalsText = CustomOption.Normal(69, CustomOptionType.General, "Option.RestrictVitalsText", true, RestrictVitals);
-        #endregion
-
-        #region DISCORD OPTIONS
-        EnableDiscordAutoMute = CustomOption.Header(110, CustomOptionType.General, "Option.EnableDiscordAutoMute", true, "Option.DiscordOptions");
-        EnableDiscordEmbed = CustomOption.Normal(112, CustomOptionType.General, "Option.EnableDiscordEmbed", true);
-        EnableSendFinalStatusToDiscord = CustomOption.Normal(111, CustomOptionType.General, "Option.EnableSendFinalStatusToDiscord", true);
         #endregion
 
         #region POLUS OPTIONS

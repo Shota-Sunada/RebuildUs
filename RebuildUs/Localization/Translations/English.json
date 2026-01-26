@@ -242,7 +242,10 @@
     "BetterSabotageMap": "Better Sabotage Map",
     "ForceNormalSabotageMap": "Force Normal Sabotage Map",
     "TransparentMap": "Transparent Map",
-    "HideFakeTasks": "Hide Fake Tasks"
+    "HideFakeTasks": "Hide Fake Tasks",
+    "EnableDiscordEmbed": "Enable To Send Embed To Guild (Settings Required & Required To Link Account)",
+    "EnableDiscordAutoMute": "Enable Auto Mute (Account Link & Settings Required)",
+    "EnableSendFinalStatusToDiscord": "Send Final Status To Discord Guild (Settings Required)"
   },
   "Option": {
     "Preset1": "Preset 1",
@@ -250,11 +253,7 @@
     "Preset3": "Preset 3",
     "Preset4": "Preset 4",
     "Preset5": "Preset 5",
-    "DiscordOptions": "Discord Options",
-    "EnableDiscordEmbed": "Enable To Send Embed To Guild (Settings Required & Required To Link Account)",
     "AirshipOptimize": "Optimize Airship",
-    "EnableDiscordAutoMute": "Enable Auto Mute (Account Link & Settings Required)",
-    "EnableSendFinalStatusToDiscord": "Send Final Status To Discord Guild (Settings Required)",
     "RolesGeneral": "Roles General",
     "GameOptions": "Game Options",
     "AmongUsSettings": "AmongUs Settings",

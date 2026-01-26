@@ -6,7 +6,7 @@ public static class PlayerControlHelpers
 {
     public static void UpdateMute(this PlayerControl player)
     {
-        DiscordModManager.UpdatePlayerMute(player);
+        DiscordAutoMuteManager.UpdatePlayerMute(player);
     }
 
     public static void Mute(this PlayerControl player)
@@ -14,7 +14,7 @@ public static class PlayerControlHelpers
         if (player == null || player.Data == null || string.IsNullOrEmpty(player.FriendCode)) return;
         if (DiscordModManager.TryGetDiscordId(player.FriendCode, out var did))
         {
-            DiscordModManager.SetMute(did, true, true);
+            DiscordAutoMuteManager.SetMute(did, true, true);
         }
     }
 
@@ -23,7 +23,7 @@ public static class PlayerControlHelpers
         if (player == null || player.Data == null || string.IsNullOrEmpty(player.FriendCode)) return;
         if (DiscordModManager.TryGetDiscordId(player.FriendCode, out var did))
         {
-            DiscordModManager.SetMute(did, false, false);
+            DiscordAutoMuteManager.SetMute(did, false, false);
         }
     }
 

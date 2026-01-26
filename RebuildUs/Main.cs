@@ -77,6 +77,9 @@ public class RebuildUs : BasePlugin
     public static ConfigEntry<string> DiscordGuildId { get; set; }
     public static ConfigEntry<string> DiscordVCId { get; set; }
     public static ConfigEntry<string> StatusChannelId { get; set; }
+    public static ConfigEntry<bool> EnableDiscordEmbed { get; set; }
+    public static ConfigEntry<bool> EnableDiscordAutoMute { get; set; }
+    public static ConfigEntry<bool> EnableSendFinalStatusToDiscord { get; set; }
 
     public static ConfigEntry<string> Ip { get; set; }
     public static ConfigEntry<ushort> Port { get; set; }
