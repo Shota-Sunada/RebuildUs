@@ -361,7 +361,7 @@ public static partial class RPCProcedure
 
         if (!Jackal.CanCreateSidekickFromImpostor && target.Data.Role.IsImpostor)
         {
-            if (jackal != null) jackal.FakeSidekick = target;
+            jackal?.FakeSidekick = target;
         }
         else
         {
