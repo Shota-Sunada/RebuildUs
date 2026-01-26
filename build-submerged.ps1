@@ -5,7 +5,7 @@ param(
 )
 
 # 基準となるディレクトリを取得
-$ProjectRoot = $PSScriptRoot
+$ProjectRoot = Get-Variable -Name PSScriptRoot -ValueOnly -ErrorAction SilentlyContinue
 if (-not $ProjectRoot) { $ProjectRoot = Get-Location }
 
 # まずReactorのリリースビルドを実行
@@ -46,4 +46,3 @@ if ($LASTEXITCODE -eq 0) {
 else {
     Write-Host "Submerged build failed."
 }
-

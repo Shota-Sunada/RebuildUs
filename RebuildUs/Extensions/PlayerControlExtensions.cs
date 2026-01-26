@@ -82,16 +82,6 @@ public static class PlayerControlHelpers
         return player?.Data?.Role != null && player.Data.Role.IsImpostor;
     }
 
-    public static bool HasFakeTasks(this PlayerControl player)
-    {
-        return (player.IsNeutral() && !player.NeutralHasTasks())
-            || (player.HasModifier(ModifierType.CreatedMadmate) && !CreatedMadmate.HasTasks)
-            || (player.HasModifier(ModifierType.Madmate) && !Madmate.HasTasks)
-            || (player.IsRole(RoleType.Madmate) && !MadmateRole.CanKnowImpostorAfterFinishTasks)
-            || (player.IsRole(RoleType.Suicider) && !Suicider.CanKnowImpostorAfterFinishTasks)
-            || (player.IsLovers() && Lovers.SeparateTeam && !Lovers.TasksCount);
-    }
-
     public static bool NeutralHasTasks(this PlayerControl player)
     {
         return player.IsNeutral() && player.IsRole(RoleType.Shifter);

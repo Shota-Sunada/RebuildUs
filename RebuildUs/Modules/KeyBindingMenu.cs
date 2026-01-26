@@ -163,7 +163,7 @@ public static class KeyBindingMenu
 
         // Position it symmetrical to the Client Options button (which is at down * 1.0)
         var pos = __instance.CensorChatButton.transform.localPosition;
-        openButton.transform.localPosition = new Vector3(-pos.x - 0.5f, pos.y - 0.5f, pos.z);
+        openButton.transform.localPosition = new Vector3(1.3f, pos.y - 1.0f, pos.z);
 
         // Adjust size to fit in the space
         var collider = openButton.GetComponent<BoxCollider2D>();

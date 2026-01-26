@@ -13,6 +13,9 @@ $content = Get-Content $mainCsPath -Raw
 $content = $content -replace 'public const string MOD_VERSION = ".*?";', "public const string MOD_VERSION = `"$Version`";"
 Set-Content $mainCsPath $content -NoNewline
 
+Write-Host "Closing Among Us..." -ForegroundColor Cyan
+Get-Process "Among Us" -ErrorAction SilentlyContinue | Stop-Process -Force
+
 Write-Host "Running Release build..." -ForegroundColor Cyan
 & "$scriptPath\build-release.ps1"
 if ($LASTEXITCODE -ne 0) {

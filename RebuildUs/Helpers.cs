@@ -97,12 +97,35 @@ public static class Helpers
 
     public static bool HasFakeTasks(this PlayerControl player)
     {
-        return player.IsRole(RoleType.Jester)
-            || player.IsRole(RoleType.Jackal)
-            || player.IsRole(RoleType.Sidekick)
-            || player.IsRole(RoleType.Arsonist)
-            || player.IsRole(RoleType.Vulture)
-            || Jackal.FormerJackals.Any(x => x == player);
+        return (player.IsNeutral() && !player.NeutralHasTasks())
+            || (player.HasModifier(ModifierType.CreatedMadmate) && !CreatedMadmate.HasTasks)
+            || (player.HasModifier(ModifierType.Madmate) && !Madmate.HasTasks)
+            || (player.IsRole(RoleType.Madmate) && !MadmateRole.CanKnowImpostorAfterFinishTasks)
+            || (player.IsRole(RoleType.Suicider) && !Suicider.CanKnowImpostorAfterFinishTasks)
+            || (player.IsLovers() && Lovers.SeparateTeam && !Lovers.TasksCount);
+    }
+
+    public static bool TasksCountTowardProgress(this PlayerControl player)
+    {
+        if (player == null || player.Data == null || player.Data.Disconnected) return false;
+
+        // Use the vanilla TaskCountTowardProgress if available
+        if (player.Data.Role == null || !player.Data.Role.TasksCountTowardProgress) return false;
+
+        // Impostors and Neutrals don't count toward Crewmate progress
+        if (player.IsTeamImpostor() || player.IsNeutral()) return false;
+
+        // Madmate and Suicider are special roles that shouldn't contribute to task bar
+        if (player.IsRole(RoleType.Madmate) || player.IsRole(RoleType.Suicider)) return false;
+        if (player.HasModifier(ModifierType.Madmate) || player.HasModifier(ModifierType.CreatedMadmate)) return false;
+
+        // Lovers check
+        if (player.IsLovers() && Lovers.SeparateTeam && !Lovers.TasksCount) return false;
+
+        // Finally check if they have fake tasks
+        if (player.HasFakeTasks()) return false;
+
+        return true;
     }
 
     public static PlayerControl PlayerById(byte id)

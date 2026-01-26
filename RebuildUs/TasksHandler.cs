@@ -5,7 +5,7 @@ namespace RebuildUs
     {
         public static Tuple<int, int> TaskInfo(NetworkedPlayerInfo pInfo)
         {
-            if (pInfo == null || pInfo.Disconnected || pInfo.Tasks == null || pInfo.Object == null || pInfo.Role == null || !pInfo.Role.TasksCountTowardProgress || pInfo.Object.HasFakeTasks() || pInfo.Role.IsImpostor)
+            if (pInfo == null || pInfo.Object == null || !pInfo.Object.TasksCountTowardProgress())
                 return Tuple.Create(0, 0);
 
             int total = 0;
@@ -28,7 +28,7 @@ namespace RebuildUs
 
                 foreach (var pInfo in GameData.Instance.AllPlayers.GetFastEnumerator())
                 {
-                    if (pInfo == null || pInfo.Disconnected || pInfo.Tasks == null || pInfo.Object == null || pInfo.Role == null || !pInfo.Role.TasksCountTowardProgress || pInfo.Object.HasFakeTasks() || pInfo.Role.IsImpostor)
+                    if (pInfo == null || pInfo.Object == null || !pInfo.Object.TasksCountTowardProgress())
                         continue;
 
                     foreach (var t in pInfo.Tasks.GetFastEnumerator())
