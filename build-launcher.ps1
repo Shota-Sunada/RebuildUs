@@ -16,6 +16,20 @@ dotnet publish $ProjectFile -c Release -o $OutputDirectory --self-contained fals
 
 if ($LASTEXITCODE -eq 0) {
     Write-Host "Build successful! Output: $OutputDirectory" -ForegroundColor Green
+
+    # Look for Inno Setup Compiler
+    $iscc = Get-Command iscc.exe -ErrorAction SilentlyContinue
+    if ($iscc) {
+        Write-Host "Inno Setup Compiler detected. Generating installer..." -ForegroundColor Cyan
+        & $iscc.Source "f:\Repositories\RebuildUs\RebuildUs.Launcher.iss"
+        if ($LASTEXITCODE -eq 0) {
+            Write-Host "Installer created successfully in Release\Installer\" -ForegroundColor Green
+        }
+    }
+    else {
+        Write-Host "Inno Setup Compiler (iscc.exe) not found in PATH. Skip installer generation." -ForegroundColor Yellow
+        Write-Host "Please install Inno Setup and add it to PATH to automate installer creation." -ForegroundColor Gray
+    }
 }
 else {
     Write-Host "Build failed with exit code $LASTEXITCODE" -ForegroundColor Red

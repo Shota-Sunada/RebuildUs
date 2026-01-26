@@ -40,6 +40,7 @@ namespace RebuildUs
         public static CustomGamemodes GameMode = CustomGamemodes.Classic;
 
         public static bool EnableDiscordAutoMute = true;
+        public static bool EnableDiscordEmbed = true;
         public static bool EnableSendFinalStatusToDiscord = true;
 
         // Updating values
@@ -90,7 +91,10 @@ namespace RebuildUs
             ShowChatNotifications = RebuildUs.ShowChatNotifications.Value;
 
             EnableDiscordAutoMute = CustomOptionHolder.EnableDiscordAutoMute.GetBool();
+            EnableDiscordEmbed = CustomOptionHolder.EnableDiscordEmbed.GetBool();
             EnableSendFinalStatusToDiscord = CustomOptionHolder.EnableSendFinalStatusToDiscord.GetBool();
+
+            Modules.Discord.DiscordModManager.Initialize();
         }
 
         public static void ResetDeviceTimes()

@@ -19,10 +19,11 @@ public static class Admin
     {
         // イビルハッカーのアドミンは今まで通り
         var lp = PlayerControl.LocalPlayer;
-        if (lp.IsRole(RoleType.EvilHacker) || EvilHacker.IsInherited()) return true;
+        if (lp != null && (lp.IsRole(RoleType.EvilHacker) || EvilHacker.IsInherited())) return true;
 
         if (CustomOptionHolder.AirshipRestrictedAdmin.GetBool())
         {
+            if (Room == null) return true;
             string roomName = Room.name;
             if (roomName == "Cockpit")
             {

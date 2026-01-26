@@ -143,18 +143,6 @@ func main() {
 		fmt.Printf("Warning: Could not find Reactor.dll release: %v\n", err)
 	}
 
-	// 1. Generate for Steam/Itch (x86) - No Submerged
-	fmt.Println("\n--- Generating for Steam/Itch (x86) ---")
-	if err := generateZip(version, buildNumber, commitHash, "x86", "Steam-Itch", "[32bit] STEAM_ITCH", "", ""); err != nil {
-		fmt.Printf("Failed to generate Steam/Itch zip: %v\n", err)
-	}
-
-	// 2. Generate for Epic/MS Store (x64) - No Submerged
-	fmt.Println("\n--- Generating for Epic/MS Store (x64) ---")
-	if err := generateZip(version, buildNumber, commitHash, "x64", "Epic-MSStore", "[64bit] EPIC_MSSTORE", "", ""); err != nil {
-		fmt.Printf("Failed to generate Epic/MS Store zip: %v\n", err)
-	}
-
 	if submergedDllPath != "" {
 		// 3. Generate for Steam/Itch (x86) - With Submerged
 		fmt.Println("\n--- Generating for Steam/Itch (x86) with Submerged ---")

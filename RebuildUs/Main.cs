@@ -35,12 +35,13 @@ global using RebuildUs.Utilities;
 namespace RebuildUs;
 
 [BepInPlugin(MOD_ID, MOD_NAME, MOD_VERSION)]
+    [BepInDependency(SubmergedCompatibility.SUBMERGED_GUID, BepInDependency.DependencyFlags.HardDependency)]
 [BepInProcess("Among Us.exe")]
 public class RebuildUs : BasePlugin
 {
     public const string MOD_ID = "com.shota-sunada.rebuild-us";
     public const string MOD_NAME = "Rebuild Us";
-    public const string MOD_VERSION = "1.0.0";
+    public const string MOD_VERSION = "1.0.2";
     public const string MOD_DEVELOPER = "Shota Sunada";
 
     public static RebuildUs Instance;
@@ -62,8 +63,6 @@ public class RebuildUs : BasePlugin
     public static ConfigEntry<bool> TransparentMap { get; set; }
     public static ConfigEntry<bool> HideFakeTasks { get; set; }
 
-    public static ConfigEntry<bool> EnableAutoMute { get; set; }
-    public static ConfigEntry<bool> EnableSendFinalStatusToDiscord { get; set; }
     public static ConfigEntry<string> DiscordBotToken { get; set; }
     public static ConfigEntry<string> DiscordBotToken2 { get; set; }
     public static ConfigEntry<string> DiscordBotToken3 { get; set; }
@@ -75,7 +74,8 @@ public class RebuildUs : BasePlugin
     public static ConfigEntry<ushort> Port { get; set; }
     public static IRegionInfo[] DefaultRegions;
 
-    public System.Random Rnd = new((int)DateTime.Now.Ticks);
+    // public System.Random Rnd = new((int)DateTime.Now.Ticks);
+    public System.Random Rnd = new MersenneTwister((int)DateTime.Now.Ticks);
 
     public override void Load()
     {
@@ -97,8 +97,6 @@ public class RebuildUs : BasePlugin
         TransparentMap = Config.Bind("Custom", "Transparent Map", false);
         HideFakeTasks = Config.Bind("Custom", "Hide Fake Tasks", false);
 
-        EnableAutoMute = Config.Bind("Discord", "Enable Auto Mute", false);
-        EnableSendFinalStatusToDiscord = Config.Bind("Discord", "Enable Send Final Status To Discord", true);
         DiscordBotToken = Config.Bind("Discord", "Bot Token", "");
         DiscordBotToken2 = Config.Bind("Discord", "Bot Token 2", "");
         DiscordBotToken3 = Config.Bind("Discord", "Bot Token 3", "");
@@ -119,10 +117,6 @@ public class RebuildUs : BasePlugin
         Submerged.Patch();
         UpdateRegions();
         CustomOptionHolder.Load();
-
-        // Update Discord config from custom options
-        EnableAutoMute.Value = ModMapOptions.EnableDiscordAutoMute;
-        EnableSendFinalStatusToDiscord.Value = ModMapOptions.EnableSendFinalStatusToDiscord;
 
         DiscordModManager.Initialize();
 

@@ -70,20 +70,22 @@ public static class Update
 
                 if (playersById.TryGetValue((byte)pva.TargetPlayerId, out var playerControl))
                 {
+                    if (playerControl?.Data == null) continue;
+
                     string expectedText = playerControl.Data.PlayerName;
                     if (localPlayer.IsDead())
                     {
                         if (string.IsNullOrEmpty(expectedText) && Camouflager.CamouflageTimer > 0f)
                         {
-                            expectedText = playerControl.Data.DefaultOutfit.PlayerName;
+                            expectedText = playerControl.Data.DefaultOutfit?.PlayerName ?? "";
                         }
                         else if (playerControl.CurrentOutfitType == PlayerOutfitType.Shapeshifted)
                         {
-                            expectedText = $"{playerControl.CurrentOutfit.PlayerName} ({playerControl.Data.DefaultOutfit.PlayerName})";
+                            expectedText = $"{playerControl.CurrentOutfit?.PlayerName} ({playerControl.Data.DefaultOutfit?.PlayerName})";
                         }
                     }
 
-                    Color expectedColor = (isLocalImpostor && playerControl.Data.Role.IsImpostor) ? Palette.ImpostorRed : Color.white;
+                    Color expectedColor = (isLocalImpostor && playerControl.Data.Role != null && playerControl.Data.Role.IsImpostor) ? Palette.ImpostorRed : Color.white;
 
                     if (pva.NameText.text != expectedText) pva.NameText.text = expectedText;
                     if (pva.NameText.color != expectedColor) pva.NameText.color = expectedColor;
@@ -280,6 +282,7 @@ public static class Update
 
     public static void UpdateImpostorKillButton(HudManager __instance)
     {
+        if (__instance == null || __instance.KillButton == null) return;
         if (PlayerControl.LocalPlayer?.Data?.Role?.IsImpostor != true) return;
         if (MeetingHud.Instance)
         {
@@ -306,21 +309,25 @@ public static class Update
 
     public static void UpdateUseButton(HudManager __instance)
     {
+        if (__instance?.UseButton == null) return;
         if (MeetingHud.Instance) __instance.UseButton.Hide();
     }
 
     public static void UpdateSabotageButton(HudManager __instance)
     {
+        if (__instance?.SabotageButton == null) return;
         if (MeetingHud.Instance) __instance.SabotageButton.Hide();
     }
 
     public static void UpdateVentButton(HudManager __instance)
     {
+        if (__instance?.ImpostorVentButton == null) return;
         if (MeetingHud.Instance) __instance.ImpostorVentButton.Hide();
     }
 
     public static void UpdateReportButton(HudManager __instance)
     {
+        if (__instance?.ReportButton == null) return;
         if (MeetingHud.Instance) __instance.ReportButton.Hide();
     }
 

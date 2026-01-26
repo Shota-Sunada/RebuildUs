@@ -4,6 +4,29 @@ namespace RebuildUs.Extensions;
 
 public static class PlayerControlHelpers
 {
+    public static void UpdateMute(this PlayerControl player)
+    {
+        DiscordModManager.UpdatePlayerMute(player);
+    }
+
+    public static void Mute(this PlayerControl player)
+    {
+        if (player == null || player.Data == null || string.IsNullOrEmpty(player.FriendCode)) return;
+        if (DiscordModManager.TryGetDiscordId(player.FriendCode, out var did))
+        {
+            DiscordModManager.SetMute(did, true, true);
+        }
+    }
+
+    public static void Unmute(this PlayerControl player)
+    {
+        if (player == null || player.Data == null || string.IsNullOrEmpty(player.FriendCode)) return;
+        if (DiscordModManager.TryGetDiscordId(player.FriendCode, out var did))
+        {
+            DiscordModManager.SetMute(did, false, false);
+        }
+    }
+
     public static void GenerateAndAssignTasks(this PlayerControl player, int numCommon, int numShort, int numLong)
     {
         if (player == null) return;

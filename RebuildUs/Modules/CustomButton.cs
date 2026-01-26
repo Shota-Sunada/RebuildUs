@@ -168,9 +168,9 @@ public class CustomButton
             {
                 Buttons[i].Update();
             }
-            catch (NullReferenceException)
+            catch (Exception ex)
             {
-                Logger.LogWarn("[WARNING] NullReferenceException from HudUpdate().HasButton()");
+                Logger.LogError($"[CustomButton] HudUpdate error: {ex}");
             }
         }
     }
@@ -187,12 +187,15 @@ public class CustomButton
 
             try
             {
-                Buttons[i].OnMeetingEnds();
+                if (Buttons[i].HasButton != null && Buttons[i].HasButton())
+                {
+                    Buttons[i].OnMeetingEnds?.Invoke();
+                }
                 Buttons[i].Update();
             }
-            catch (NullReferenceException)
+            catch (Exception ex)
             {
-                Logger.LogWarn("[WARNING] NullReferenceException from MeetingEndedUpdate().HasButton()");
+                Logger.LogError($"[CustomButton] MeetingEndedUpdate error: {ex}");
             }
         }
     }
@@ -206,9 +209,9 @@ public class CustomButton
                 Buttons[i].Timer = Buttons[i].MaxTimer;
                 Buttons[i].Update();
             }
-            catch (NullReferenceException)
+            catch (Exception ex)
             {
-                Logger.LogWarn("[WARNING] NullReferenceException from MeetingEndedUpdate().HasButton(), if theres only one warning its fine");
+                Logger.LogError($"[CustomButton] ResetAllCooldowns error: {ex}");
             }
         }
     }
@@ -229,22 +232,25 @@ public class CustomButton
 
     public void Update()
     {
-        if (PlayerControl.LocalPlayer?.Data == null || MeetingHud.Instance || ExileController.Instance || !HasButton())
+        if (PlayerControl.LocalPlayer?.Data == null || MeetingHud.Instance || ExileController.Instance || HasButton == null || !HasButton())
         {
             SetActive(false);
             return;
         }
-        SetActive(HudManager.UseButton.isActiveAndEnabled || HudManager.PetButton.isActiveAndEnabled);
 
-        if (ActionButton.graphic.sprite != Sprite) ActionButton.graphic.sprite = Sprite;
-        if (ShowButtonText && LastButtonText != ButtonText)
+        bool useActive = HudManager?.UseButton != null && HudManager.UseButton.isActiveAndEnabled;
+        bool petActive = HudManager?.PetButton != null && HudManager.PetButton.isActiveAndEnabled;
+        SetActive(useActive || petActive);
+
+        if (ActionButton?.graphic != null && ActionButton.graphic.sprite != Sprite) ActionButton.graphic.sprite = Sprite;
+        if (ShowButtonText && LastButtonText != ButtonText && ActionButton != null)
         {
             ActionButton.OverrideText(ButtonText);
             LastButtonText = ButtonText;
         }
-        ActionButton.buttonLabelText.enabled = ShowButtonText; // Only show the text if it's a kill button
+        if (ActionButton?.buttonLabelText != null) ActionButton.buttonLabelText.enabled = ShowButtonText;
 
-        if (HudManager.UseButton != null)
+        if (HudManager?.UseButton != null && ActionButton != null)
         {
             if (UseLayout)
             {
@@ -256,8 +262,8 @@ public class CustomButton
                 Vector3 pos = useTransform.localPosition;
                 if (Mirror)
                 {
-                    float aspect = Camera.main.aspect;
-                    float safeOrthographicSize = CameraSafeArea.GetSafeOrthographicSize(Camera.main);
+                    float aspect = Camera.main != null ? Camera.main.aspect : 1.77f;
+                    float safeOrthographicSize = Camera.main != null ? CameraSafeArea.GetSafeOrthographicSize(Camera.main) : 3f;
                     float xpos = 0.05f - safeOrthographicSize * aspect * 1.70f;
                     pos = new Vector3(xpos, pos.y, pos.z);
                 }
@@ -266,17 +272,21 @@ public class CustomButton
             }
         }
 
-        bool couldUse = CouldUse();
+        bool couldUse = CouldUse != null && CouldUse();
         Color targetColor = couldUse ? Palette.EnabledColor : Palette.DisabledClear;
         float targetDesat = couldUse ? 0f : 1f;
 
-        if (ActionButton.graphic.color != targetColor)
+        if (ActionButton?.graphic != null)
         {
-            ActionButton.graphic.color = ActionButton.buttonLabelText.color = targetColor;
-        }
-        if (ActionButton.graphic.material.GetFloat("_Desat") != targetDesat)
-        {
-            ActionButton.graphic.material.SetFloat("_Desat", targetDesat);
+            if (ActionButton.graphic.color != targetColor)
+            {
+                ActionButton.graphic.color = targetColor;
+                ActionButton.buttonLabelText?.color = targetColor;
+            }
+            if (ActionButton.graphic.material != null && ActionButton.graphic.material.HasProperty("_Desat") && ActionButton.graphic.material.GetFloat("_Desat") != targetDesat)
+            {
+                ActionButton.graphic.material.SetFloat("_Desat", targetDesat);
+            }
         }
 
         if (Timer >= 0 && !StopCountdown)
@@ -286,7 +296,7 @@ public class CustomButton
             {
                 Timer -= Time.deltaTime;
             }
-            else if (!PlayerControl.LocalPlayer.inVent && PlayerControl.LocalPlayer.moveable)
+            else if (PlayerControl.LocalPlayer != null && !PlayerControl.LocalPlayer.inVent && PlayerControl.LocalPlayer.moveable)
             {
                 Timer -= Time.deltaTime;
             }
@@ -295,11 +305,11 @@ public class CustomButton
         if (Timer <= 0 && HasEffect && IsEffectActive)
         {
             IsEffectActive = false;
-            ActionButton.cooldownTimerText.color = Palette.EnabledColor;
-            OnEffectEnds();
+            if (ActionButton?.cooldownTimerText != null) ActionButton.cooldownTimerText.color = Palette.EnabledColor;
+            OnEffectEnds?.Invoke();
         }
 
-        ActionButton.SetCoolDown(Timer, (HasEffect && IsEffectActive) ? EffectDuration : MaxTimer);
+        ActionButton?.SetCoolDown(Timer, (HasEffect && IsEffectActive) ? EffectDuration : MaxTimer);
 
         // Trigger OnClickEvent if the hotkey is being pressed down
         if (Hotkey.HasValue && Input.GetKeyDown(Hotkey.Value)) OnClickEvent();

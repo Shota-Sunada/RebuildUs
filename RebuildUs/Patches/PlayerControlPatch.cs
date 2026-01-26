@@ -69,9 +69,16 @@ public static class PlayerControlPatch
         if (PlayerControl.LocalPlayer == __instance)
         {
             Helpers.SetBasePlayerOutlines();
-            Helpers.RefreshRoleDescription(__instance);
-            Helpers.UpdatePlayerInfo();
-            Helpers.SetPetVisibility();
+
+            _timer += Time.fixedDeltaTime;
+            if (_timer >= 0.1f)
+            {
+                _timer = 0f;
+                Helpers.RefreshRoleDescription(__instance);
+                Helpers.UpdatePlayerInfo();
+                Helpers.SetPetVisibility();
+            }
+
             Update.ImpostorSetTarget();
             Update.PlayerSizeUpdate(__instance);
 
@@ -85,6 +92,8 @@ public static class PlayerControlPatch
         Usables.FixedUpdate(__instance);
         Update.StopCooldown(__instance);
     }
+
+    private static float _timer = 0f;
 
     [HarmonyPrefix]
     [HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.StartMeeting))]

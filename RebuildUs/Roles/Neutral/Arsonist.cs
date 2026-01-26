@@ -10,6 +10,7 @@ public class Arsonist : RoleBase<Arsonist>
     public PlayerControl CurrentTarget;
     public PlayerControl DouseTarget;
     public List<PlayerControl> DousedPlayers = [];
+    private readonly List<PlayerControl> _untargetablesCache = [];
     public static CustomButton ArsonistButton;
     public static CustomButton ArsonistIgniteButton;
 
@@ -67,16 +68,17 @@ public class Arsonist : RoleBase<Arsonist>
             List<PlayerControl> untargetables;
             if (DouseTarget != null)
             {
-                untargetables = [];
+                _untargetablesCache.Clear();
                 var allPlayers = PlayerControl.AllPlayerControls;
                 for (var i = 0; i < allPlayers.Count; i++)
                 {
                     var p = allPlayers[i];
                     if (p.PlayerId != DouseTarget.PlayerId)
                     {
-                        untargetables.Add(p);
+                        _untargetablesCache.Add(p);
                     }
                 }
+                untargetables = _untargetablesCache;
             }
             else
             {

@@ -8,6 +8,7 @@ public class Vulture : RoleBase<Vulture>
     public static bool TriggerVultureWin = false;
     public List<Arrow> LocalArrows = [];
     public int EatenBodies = 0;
+    private float TimeUntilUpdate = 0f;
 
     public static CustomButton VultureEatButton;
     public static TMP_Text VultureNumCorpsesText;
@@ -45,6 +46,10 @@ public class Vulture : RoleBase<Vulture>
                 LocalArrows.Clear();
                 return;
             }
+
+            TimeUntilUpdate -= Time.fixedDeltaTime;
+            if (TimeUntilUpdate > 0f) return;
+            TimeUntilUpdate = 0.25f;
 
             DeadBody[] deadBodies = UnityEngine.Object.FindObjectsOfType<DeadBody>();
             var arrowUpdate = LocalArrows.Count != deadBodies.Length;

@@ -40,9 +40,6 @@ public static class CustomOptionHolder
     // public static CustomOption BlockSabotageFromDeadImpostors;
     // public static CustomOption ShieldFirstKill;
 
-    public static CustomOption RandomWireTask;
-    public static CustomOption NumWireTask;
-
     public static CustomOption AdditionalEmergencyCooldown;
     public static CustomOption AdditionalEmergencyCooldownTime;
 
@@ -59,8 +56,8 @@ public static class CustomOptionHolder
     #endregion
 
     #region DISCORD OPTIONS
-    public static CustomOption EnableDiscordOptions;
     public static CustomOption EnableDiscordAutoMute;
+    public static CustomOption EnableDiscordEmbed;
     public static CustomOption EnableSendFinalStatusToDiscord;
     #endregion
 
@@ -406,9 +403,6 @@ public static class CustomOptionHolder
         // BlockSabotageFromDeadImpostors = CustomOption.Normal(34, CustomOptionType.General, "BlockSabotageFromDeadImpostors", false);
         // ShieldFirstKill = CustomOption.Normal(35, CustomOptionType.General, "ShieldFirstKill", false);
 
-        RandomWireTask = CustomOption.Normal(50, CustomOptionType.General, "Option.RandomWireTask", false);
-        NumWireTask = CustomOption.Normal(51, CustomOptionType.General, "Option.NumWireTask", 3f, 1f, 10f, 1f, RandomWireTask);
-
         AdditionalEmergencyCooldown = CustomOption.Normal(55, CustomOptionType.General, "Option.AdditionalEmergencyCooldown", 0f, 0f, 15f, 1f);
         AdditionalEmergencyCooldownTime = CustomOption.Normal(56, CustomOptionType.General, "Option.AdditionalEmergencyCooldownTime", 10f, 0f, 60f, 1f, AdditionalEmergencyCooldown);
 
@@ -426,6 +420,7 @@ public static class CustomOptionHolder
 
         #region DISCORD OPTIONS
         EnableDiscordAutoMute = CustomOption.Header(110, CustomOptionType.General, "Option.EnableDiscordAutoMute", true, Tr.Get("Option.DiscordOptions"));
+        EnableDiscordEmbed = CustomOption.Normal(112, CustomOptionType.General, "Option.EnableDiscordEmbed", true);
         EnableSendFinalStatusToDiscord = CustomOption.Normal(111, CustomOptionType.General, "Option.EnableSendFinalStatusToDiscord", true);
         #endregion
 

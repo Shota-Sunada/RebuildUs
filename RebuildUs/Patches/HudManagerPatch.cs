@@ -7,22 +7,29 @@ public static class HudManagerPatch
     [HarmonyPatch(typeof(HudManager), nameof(HudManager.Update))]
     public static void UpdatePostfix(HudManager __instance)
     {
-        if (AmongUsClient.Instance.GameState != InnerNet.InnerNetClient.GameStates.Started) return;
+        if (AmongUsClient.Instance?.GameState != InnerNet.InnerNetClient.GameStates.Started) return;
 
-        CustomButton.HudUpdate();
-        Update.ResetNameTagsAndColors();
-        Update.SetNameColors();
-        Update.SetNameTags();
-        Update.CamouflageAndMorphActions();
-        Update.UpdateImpostorKillButton(__instance);
-        Update.UpdateSabotageButton(__instance);
-        Update.UpdateUseButton(__instance);
-        Update.UpdateReportButton(__instance);
-        Update.UpdateVentButton(__instance);
+        try
+        {
+            CustomButton.HudUpdate();
+            Update.ResetNameTagsAndColors();
+            Update.SetNameColors();
+            Update.SetNameTags();
+            Update.CamouflageAndMorphActions();
+            Update.UpdateImpostorKillButton(__instance);
+            Update.UpdateSabotageButton(__instance);
+            Update.UpdateUseButton(__instance);
+            Update.UpdateReportButton(__instance);
+            Update.UpdateVentButton(__instance);
 
-        Hacker.HackerTimer -= Time.deltaTime;
-        Trickster.LightsOutTimer -= Time.deltaTime;
-        Tracker.CorpsesTrackingTimer -= Time.deltaTime;
+            Hacker.HackerTimer -= Time.deltaTime;
+            Trickster.LightsOutTimer -= Time.deltaTime;
+            Tracker.CorpsesTrackingTimer -= Time.deltaTime;
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError($"[HudManagerPatch] UpdatePostfix error: {ex}");
+        }
     }
 
     [HarmonyPostfix]

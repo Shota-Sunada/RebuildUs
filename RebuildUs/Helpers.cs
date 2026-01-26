@@ -498,6 +498,7 @@ public static class Helpers
 
     private static readonly Vector3 ColorBlindMeetingPos = new(0.3384f, 0.23334f, -0.11f);
     private static readonly Vector3 ColorBlindMeetingScale = new(0.72f, 0.8f, 0.8f);
+    private static readonly Dictionary<byte, PlayerVoteArea> _voteAreaStates = [];
 
     public static void UpdatePlayerInfo()
     {
@@ -505,11 +506,11 @@ public static class Helpers
         if (localPlayer?.Data == null) return;
 
         var meeting = MeetingHud.Instance;
-        Dictionary<byte, PlayerVoteArea> states = null;
-        if (meeting?.playerStates != null)
+        bool hasMeeting = meeting?.playerStates != null;
+        if (hasMeeting)
         {
-            states = [];
-            foreach (var s in meeting.playerStates) if (s != null) states[s.TargetPlayerId] = s;
+            _voteAreaStates.Clear();
+            foreach (var s in meeting.playerStates) if (s != null) _voteAreaStates[s.TargetPlayerId] = s;
         }
 
         foreach (var p in PlayerControl.AllPlayerControls)
@@ -517,7 +518,7 @@ public static class Helpers
             if (p?.Data == null || p.cosmetics == null) continue;
 
             PlayerVoteArea pva = null;
-            states?.TryGetValue(p.PlayerId, out pva);
+            if (hasMeeting) _voteAreaStates.TryGetValue(p.PlayerId, out pva);
 
             // Colorblind Text Handling
             if (pva?.ColorBlindName != null && pva.ColorBlindName.gameObject.active)
@@ -786,7 +787,7 @@ public static class Helpers
 
     public static List<T> ToSystemList<T>(this Il2CppSystem.Collections.Generic.List<T> iList) => [.. iList];
 
-    public static T Random<T>(this IList<T> self) => self.Count > 0 ? self[UnityEngine.Random.Range(0, self.Count)] : default;
+    public static T Random<T>(this IList<T> self) => self.Count > 0 ? self[RebuildUs.Instance.Rnd.Next(0, self.Count)] : default;
 
     public static void SetKillTimerUnchecked(this PlayerControl player, float time, float max = float.NegativeInfinity)
     {
@@ -799,7 +800,7 @@ public static class Helpers
     {
         for (int i = startAt; i < self.Count - 1; i++)
         {
-            int index = UnityEngine.Random.Range(i, self.Count);
+            int index = RebuildUs.Instance.Rnd.Next(i, self.Count);
             (self[index], self[i]) = (self[i], self[index]);
         }
     }
