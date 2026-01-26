@@ -121,13 +121,14 @@ public class RebuildUs : BasePlugin
         Tr.Initialize();
         RoleInfo.Load();
         CustomColors.Load();
-        SubmergedCompatibility.Initialize();
         UpdateRegions();
         CustomOptionHolder.Load();
 
         DiscordModManager.Initialize();
 
         Harmony.PatchAll();
+
+        SubmergedCompatibility.Initialize();
 
         Logger.LogMessage("\"Rebuild Us\" was completely loaded! Enjoy the modifications!");
     }
