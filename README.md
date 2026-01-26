@@ -14,3 +14,5 @@ TheOtherRoles GMH - Modのベースシステム・役職・画像\
 TheOtherRoles - 最新版AmongUs対応の参考・Modのベースシステム・役職・画像\
 TheOtherRoles GM - Modのベースシステム・役職・画像\
 TownOfHost - 一部機能の移植\
+Submerged - 新規マップ「サブマージド」対応\
+Reactor - サブマージド動作のためのフォーク作成

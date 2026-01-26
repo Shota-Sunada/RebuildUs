@@ -50,7 +50,7 @@ public class RebuildUs : BasePlugin
     public const string MOD_DEVELOPER = "Shota Sunada";
 
     public const string REACTOR_GUID = "gg.reactor-sunada.api";
-    public const string REACTOR_VERSION = "3.3.4";
+    public const string REACTOR_VERSION = "3.3.4-SND";
 
     public static RebuildUs Instance;
     public Harmony Harmony { get; } = new(MOD_ID);

@@ -155,6 +155,34 @@
         "kind": "build",
         "isDefault": true
       }
+    },
+    {
+      "label": "Build Submerged Debug",
+      "command": "powershell",
+      "args": [
+        "-File",
+        "build-submerged.ps1",
+        "-Configuration",
+        "Debug"
+      ],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      }
+    },
+    {
+      "label": "Build Submerged Release",
+      "command": "powershell",
+      "args": [
+        "-File",
+        "build-submerged.ps1",
+        "-Configuration",
+        "Release"
+      ],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      }
     }
   ]
 }

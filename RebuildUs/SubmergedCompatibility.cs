@@ -1,5 +1,6 @@
 using System.Reflection;
 using Submerged.Enums;
+using Submerged.Extensions;
 using Submerged.Floors;
 using Submerged.Map;
 using Submerged.Systems.Oxygen;
@@ -15,7 +16,7 @@ public static class SubmergedCompatibility
     }
 
     public const string SUBMERGED_GUID = "Submerged";
-    public const string SUBMERGED_VERSION = "2025.11.20";
+    public const string SUBMERGED_VERSION = "2026.01.26";
     public const ShipStatus.MapType SUBMERGED_MAP_TYPE = (ShipStatus.MapType)6;
 
     public static SemanticVersioning.Version Version { get; private set; }
@@ -27,8 +28,6 @@ public static class SubmergedCompatibility
     public static SubmarineStatus SubmarineStatus { get; private set; }
 
     public static bool IsSubmerged { get; private set; }
-
-    public static Dictionary<string, Type> InjectedTypes { get; private set; }
 
     public static void SetupMap(ShipStatus map)
     {
@@ -57,17 +56,14 @@ public static class SubmergedCompatibility
         Version = plugin.Metadata.Version.BaseVersion();
         Assembly = Plugin.GetType().Assembly;
 
-        InjectedTypes = (Dictionary<string, Type>)AccessTools.PropertyGetter(AccessTools.GetTypesFromAssembly(Assembly).FirstOrDefault(t => t.Name == "ComponentExtensions"), "RegisteredTypes").Invoke(null, []);
-
         RetrieveOxygenMask = CustomTaskTypes.RetrieveOxygenMask.taskType;
     }
 
     public static MonoBehaviour AddSubmergedComponent(this GameObject obj, string typeName)
     {
         if (!Loaded) return obj.AddComponent<MissingSubmergedBehaviour>();
-        bool validType = InjectedTypes.TryGetValue(typeName, out Type type);
+        bool validType = ComponentExtensions.RegisteredTypes.TryGetValue(typeName, out Type type);
         return validType ? obj.AddComponent(Il2CppType.From(type)).TryCast<MonoBehaviour>() : obj.AddComponent<MissingSubmergedBehaviour>();
-
     }
 
     public static float GetSubmergedNeutralLightRadius(bool isImpostor)
