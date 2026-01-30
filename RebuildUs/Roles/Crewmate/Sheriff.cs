@@ -31,6 +31,7 @@ public class Sheriff : RoleBase<Sheriff>
         StaticRoleType = CurrentRoleType = RoleType.Sheriff;
         NumShots = MaxShots;
         CanKill = SheriffCanKillNoDeadBody;
+        CurrentTarget = null;
     }
 
     public override void OnMeetingStart() { }
@@ -97,10 +98,10 @@ public class Sheriff : RoleBase<Sheriff>
                     }
 
                     // Mad sheriff always misfires.
-                    if (Local.Player.HasModifier(ModifierType.Madmate))
-                    {
-                        misfire = true;
-                    }
+                    // if (Local.Player.HasModifier(ModifierType.Madmate))
+                    // {
+                    //     misfire = true;
+                    // }
                     {
                         using var killSender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.SheriffKill);
                         killSender.Write(PlayerControl.LocalPlayer.Data.PlayerId);

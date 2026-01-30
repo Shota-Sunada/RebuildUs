@@ -73,7 +73,8 @@ public static class DiscordEmbedManager
         {
             if (p.Data == null) continue;
             var name = p.Data.PlayerName;
-            if (!string.IsNullOrEmpty(p.FriendCode) && DiscordModManager.PlayerMappings.ContainsKey(p.FriendCode)) linked.Add($":white_check_mark: {name}");
+            var id = DiscordModManager.GetIdentifier(p);
+            if (id != null && DiscordModManager.PlayerMappings.ContainsKey(id)) linked.Add($":white_check_mark: {name}");
             else unlinked.Add($":x: {name}");
         }
         var sb = new StringBuilder("**プレイヤー名一覧:**\n");

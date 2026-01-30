@@ -22,7 +22,7 @@ public static class DiscordModManager
     public static void Initialize()
     {
         if (_gateway != null) return;
-        if (!ModMapOptions.EnableDiscordAutoMute  && !ModMapOptions.EnableDiscordEmbed) return;
+        if (!ModMapOptions.EnableDiscordAutoMute && !ModMapOptions.EnableDiscordEmbed) return;
 
         _tokens = [.. new[] {
             RebuildUs.DiscordBotToken.Value,
@@ -140,6 +140,12 @@ public static class DiscordModManager
     public static bool TryGetDiscordId(string friendCode, out ulong did)
     {
         return PlayerMappings.TryGetValue(friendCode, out did);
+    }
+
+    public static string GetIdentifier(PlayerControl p)
+    {
+        if (p == null || p.Data == null) return null;
+        return !string.IsNullOrEmpty(p.FriendCode) ? p.FriendCode : p.Data.PlayerName;
     }
 
     public static void AddMapping(string friendCode, ulong did)
@@ -275,8 +281,9 @@ public static class DiscordModManager
                         var optionsList = new List<object>();
                         foreach (var p in PlayerControl.AllPlayerControls)
                         {
-                            if (p == null || p.Data == null || string.IsNullOrEmpty(p.FriendCode)) continue;
-                            optionsList.Add(new { label = p.Data.PlayerName, value = p.FriendCode });
+                            var identifier = GetIdentifier(p);
+                            if (string.IsNullOrEmpty(identifier)) continue;
+                            optionsList.Add(new { label = p.Data.PlayerName, value = identifier });
                         }
                         var options = optionsList.ToArray();
 

@@ -24,7 +24,8 @@ public static class DiscordAutoMuteManager
     {
         foreach (var p in PlayerControl.AllPlayerControls)
         {
-            if (p != null && !string.IsNullOrEmpty(p.FriendCode) && DiscordModManager.TryGetDiscordId(p.FriendCode, out var did))
+            var id = DiscordModManager.GetIdentifier(p);
+            if (id != null && DiscordModManager.TryGetDiscordId(id, out var did))
                 SetMute(did, false, false);
         }
     }
@@ -33,7 +34,8 @@ public static class DiscordAutoMuteManager
     {
         foreach (var p in PlayerControl.AllPlayerControls)
         {
-            if (p != null && !string.IsNullOrEmpty(p.FriendCode) && DiscordModManager.TryGetDiscordId(p.FriendCode, out var did))
+            var id = DiscordModManager.GetIdentifier(p);
+            if (id != null && DiscordModManager.TryGetDiscordId(id, out var did))
                 SetMute(did, true, true);
         }
     }
@@ -46,8 +48,9 @@ public static class DiscordAutoMuteManager
 
     public static void UpdatePlayerMute(PlayerControl p)
     {
-        if (!AmongUsClient.Instance.AmHost || p == null || p.Data == null || string.IsNullOrEmpty(p.FriendCode)) return;
-        if (!DiscordModManager.TryGetDiscordId(p.FriendCode, out var did)) return;
+        if (!AmongUsClient.Instance.AmHost) return;
+        var id = DiscordModManager.GetIdentifier(p);
+        if (id == null || !DiscordModManager.TryGetDiscordId(id, out var did)) return;
 
         bool mute = false;
         bool deaf = false;

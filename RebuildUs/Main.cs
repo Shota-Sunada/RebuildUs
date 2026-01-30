@@ -46,7 +46,7 @@ public class RebuildUs : BasePlugin
 {
     public const string MOD_ID = "com.shota-sunada.rebuild-us";
     public const string MOD_NAME = "Rebuild Us";
-    public const string MOD_VERSION = "1.1.0";
+    public const string MOD_VERSION = "1.1.1";
     public const string MOD_DEVELOPER = "Shota Sunada";
 
     public const string REACTOR_GUID = "gg.reactor-sunada.api";

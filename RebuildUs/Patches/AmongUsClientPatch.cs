@@ -61,7 +61,11 @@ public static class AmongUsClientPatch
         {
             GameStart.OnPlayerLeft(data.Id);
             var player = PlayerControl.AllPlayerControls.ToArray().FirstOrDefault(p => p.OwnerId == data.Id);
-            if (player != null) DiscordModManager.OnPlayerLeft(player.FriendCode);
+            if (player != null)
+            {
+                var id = DiscordModManager.GetIdentifier(player);
+                if (id != null) DiscordModManager.OnPlayerLeft(id);
+            }
         }
         else
         {
