@@ -22,11 +22,9 @@ public static class DiscordAutoMuteManager
 
     public static void UnmuteEveryone()
     {
-        foreach (var p in PlayerControl.AllPlayerControls)
+        foreach (var did in DiscordModManager.PlayerVoiceStates.Keys.ToArray())
         {
-            var id = DiscordModManager.GetIdentifier(p);
-            if (id != null && DiscordModManager.TryGetDiscordId(id, out var did))
-                SetMute(did, false, false);
+            SetMute(did, false, false);
         }
     }
 
@@ -59,7 +57,7 @@ public static class DiscordAutoMuteManager
         {
             case "行動中":
             case "追放中":
-                if (!p.Data.IsDead) { mute = true; deaf = true; }
+                if (!p.Data.IsDead && p.PlayerId != DiscordModManager.ExiledPlayerId) { mute = true; deaf = true; }
                 else { mute = false; deaf = false; }
                 break;
             case "会議中":

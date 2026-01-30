@@ -16,6 +16,7 @@ public static class DiscordModManager
 
     internal static string CurrentGameState = "ドロップシップ";
     internal static string ExiledPlayerName = "";
+    internal static byte ExiledPlayerId = 255;
 
     private static DiscordGatewayClient _gateway;
 
@@ -87,6 +88,8 @@ public static class DiscordModManager
     {
         if (!AmongUsClient.Instance.AmHost) return;
         CurrentGameState = "行動中";
+        ExiledPlayerName = "";
+        ExiledPlayerId = 255;
         DiscordAutoMuteManager.MuteEveryone();
         DiscordEmbedManager.UpdateStatus();
     }
@@ -95,6 +98,8 @@ public static class DiscordModManager
     {
         if (!AmongUsClient.Instance.AmHost) return;
         CurrentGameState = "会議中";
+        ExiledPlayerName = "";
+        ExiledPlayerId = 255;
         foreach (var p in PlayerControl.AllPlayerControls) DiscordAutoMuteManager.UpdatePlayerMute(p);
         DiscordEmbedManager.UpdateStatus();
     }
@@ -107,11 +112,12 @@ public static class DiscordModManager
         DiscordEmbedManager.UpdateStatus();
     }
 
-    public static void OnExile(string name)
+    public static void OnExile(string name, byte playerId)
     {
         if (!AmongUsClient.Instance.AmHost) return;
         CurrentGameState = "追放中";
         ExiledPlayerName = name;
+        ExiledPlayerId = playerId;
         foreach (var p in PlayerControl.AllPlayerControls) DiscordAutoMuteManager.UpdatePlayerMute(p);
         DiscordEmbedManager.UpdateStatus();
     }

@@ -1,4 +1,3 @@
-using System.Linq;
 using BepInEx.Unity.IL2CPP.Utils.Collections;
 using InnerNet;
 
@@ -35,6 +34,7 @@ public static class AmongUsClientPatch
     {
         GameStart.PlayerVersions.Clear();
         EndGameMain.OnGameEndPostfix(__instance, ref endGameResult);
+        DiscordModManager.OnGameEnd();
     }
 
     [HarmonyPrefix]
