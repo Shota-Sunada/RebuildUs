@@ -128,20 +128,33 @@ public partial class MainForm : Form
         if (isInstalled)
         {
             lblStatus.Text = $"RebuildUs is installed at:\n{Path.GetDirectoryName(installedModPath)}";
-
-            if (cmbVersions.Text != lastInstalledVersion && !string.IsNullOrEmpty(lastInstalledVersion))
-            {
-                btnAction.Text = "Update";
-            }
-            else
-            {
-                btnAction.Text = "Launch";
-            }
-
             btnUninstall.Visible = true;
 
             // バージョン情報の取得
-            lblVersion.Text = "Version: " + GetInstalledModVersion();
+            string currentVersion = GetInstalledModVersion();
+            lblVersion.Text = "Version: " + currentVersion;
+
+            // コンボボックスで選択されているバージョンと、インストールされているバージョンを比較
+            bool needsUpdate = false;
+            if (!string.IsNullOrEmpty(cmbVersions.Text))
+            {
+                if (!string.IsNullOrEmpty(lastInstalledVersion))
+                {
+                    needsUpdate = cmbVersions.Text != lastInstalledVersion;
+                }
+                else if (currentVersion != "Unknown")
+                {
+                    // lastInstalledVersion がない場合は、ファイルバージョンとタグ名を比較（'v'プレフィックスを無視）
+                    needsUpdate = cmbVersions.Text.TrimStart('v') != currentVersion.TrimStart('v');
+                }
+                else
+                {
+                    // インストールはされているがバージョンが特定できない場合、選択されているものがあればアップデート可能とする
+                    needsUpdate = true;
+                }
+            }
+
+            btnAction.Text = needsUpdate ? "Update" : "Launch";
         }
         else
         {
@@ -150,11 +163,19 @@ public partial class MainForm : Form
             if (detectedOriginalPath != null)
             {
                 string parentDir = Path.GetDirectoryName(Path.GetDirectoryName(detectedOriginalPath))!;
-                string modExePath = Path.Combine(parentDir, ModFolderName, "Among Us.exe");
+                string modFolderName = ModFolderName;
+                string modExePath = Path.Combine(parentDir, modFolderName, "Among Us.exe");
 
                 if (File.Exists(modExePath))
                 {
                     installedModPath = modExePath;
+                    // 自動検出時、可能であればバージョンも特定しておく
+                    string currentVersion = GetInstalledModVersion();
+                    if (currentVersion != "Unknown")
+                    {
+                        var matched = releases.FirstOrDefault(r => r.TagName.TrimStart('v') == currentVersion.TrimStart('v'));
+                        if (matched != null) lastInstalledVersion = matched.TagName;
+                    }
                     SaveSettings();
                     RefreshStatus();
                     return;
