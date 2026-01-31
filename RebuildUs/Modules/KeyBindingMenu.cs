@@ -50,6 +50,7 @@ public static class KeyBindingMenu
 
     private static void CreateCustom(OptionsMenuBehaviour prefab)
     {
+        ModButtons.Clear();
         PopUp = UnityEngine.Object.Instantiate(prefab.gameObject);
         PopUp.name = "KeyBindingMenu";
         UnityEngine.Object.DontDestroyOnLoad(PopUp);
@@ -262,7 +263,7 @@ public static class KeyBindingMenu
 
         var omb = PopUp.GetComponent<OptionsMenuBehaviour>();
 
-        if (ModButtons.Count > 0 && ModButtons.Count == KeyBindingManager.AllInputs.Count)
+        if (ModButtons.Count > 0 && ModButtons.Count == KeyBindingManager.AllInputs.Count && ModButtons[0] != null)
         {
             for (int i = 0; i < KeyBindingManager.AllInputs.Count; i++)
             {

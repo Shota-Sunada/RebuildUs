@@ -193,12 +193,22 @@ public class CustomButton
 
         KeyBackground = baseObj.AddComponent<SpriteRenderer>();
         KeyBackground.sprite = AssetLoader.KeyBindBackground;
+        if (ActionButton.graphic != null)
+        {
+            KeyBackground.sortingLayerID = ActionButton.graphic.sortingLayerID;
+            KeyBackground.sortingOrder = ActionButton.graphic.sortingOrder + 1;
+        }
 
         var guideObj = new GameObject("Guide");
         guideObj.transform.SetParent(baseObj.transform);
         guideObj.transform.localScale = Vector3.one;
         guideObj.transform.localPosition = new Vector3(0f, 0f, -0.1f);
         KeyGuide = guideObj.AddComponent<SpriteRenderer>();
+        if (ActionButton.graphic != null)
+        {
+            KeyGuide.sortingLayerID = ActionButton.graphic.sortingLayerID;
+            KeyGuide.sortingOrder = ActionButton.graphic.sortingOrder + 2;
+        }
 
         PassiveButton button = ActionButton.GetComponent<PassiveButton>();
         button.OnClick = new Button.ButtonClickedEvent();

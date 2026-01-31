@@ -652,7 +652,8 @@
     "NeutralAbilityPrimary": "Neutral Ability Primary",
     "NeutralAbilitySecondary": "Neutral Ability Secondary",
     "CommonAbilityPrimary": "Common Ability Primary",
-    "CommonAbilitySecondary": "Common Ability Secondary"
+    "CommonAbilitySecondary": "Common Ability Secondary",
+    "Host": "Host"
   },
   "FinalStatus": {
     "Alive": "Alive",

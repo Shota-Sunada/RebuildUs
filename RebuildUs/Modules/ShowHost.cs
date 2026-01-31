@@ -26,7 +26,8 @@ public static class ShowHost
             PlayerMaterial.SetColors(host.DefaultOutfit.ColorId, __instance.HostIcon);
 
             _sb.Clear();
-            _sb.Append("host: ");
+            _sb.Append(Tr.Get("Hud.Host"));
+            _sb.Append(": ");
             _sb.Append(host.PlayerName);
 
             string newText = _sb.ToString();

@@ -654,7 +654,8 @@
     "NeutralAbilityPrimary": "第三陣営第一能力",
     "NeutralAbilitySecondary": "第三陣営第二能力",
     "CommonAbilityPrimary": "共通能力など",
-    "CommonAbilitySecondary": "その他能力など"
+    "CommonAbilitySecondary": "その他能力など",
+    "Host": "部屋主"
   },
   "FinalStatus": {
     "Alive": "生存",

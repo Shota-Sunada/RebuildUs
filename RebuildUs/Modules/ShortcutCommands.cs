@@ -11,9 +11,14 @@ public static class ShortcutCommands
             GameManager.Instance.RpcEndGame((GameOverReason)CustomGameOverReason.ForceEnd, false);
         }
 
-        if ((Helpers.GetKeysDown(KeyCode.LeftControl, KeyCode.F6) || Helpers.GetKeysDown(KeyCode.RightControl, KeyCode.F6)) && MeetingHud.Instance)
+        if ((Helpers.GetKeysDown(KeyCode.LeftControl, KeyCode.F6) || Helpers.GetKeysDown(KeyCode.RightControl, KeyCode.F6)) && MeetingHud.Instance && Helpers.GameStarted)
         {
             MeetingHud.Instance.RpcClose();
+        }
+
+        if ((Helpers.GetKeysDown(KeyCode.LeftControl, KeyCode.F7) || Helpers.GetKeysDown(KeyCode.RightControl, KeyCode.F7)) && !MeetingHud.Instance && Helpers.GameStarted)
+        {
+            ShipStatus.Instance.StartMeeting(PlayerControl.LocalPlayer, null);
         }
 
         if ((Input.GetKeyDown(KeyCode.LeftShift) || Input.GetKeyDown(KeyCode.RightShift)) && Helpers.IsCountdown)
