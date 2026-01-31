@@ -18,11 +18,11 @@ public static class DiscordModManager
     internal static string ExiledPlayerName = "";
     internal static byte ExiledPlayerId = 255;
 
-    private static DiscordGatewayClient _gateway;
+    private static readonly List<DiscordGatewayClient> _gateways = [];
 
     public static void Initialize()
     {
-        if (_gateway != null) return;
+        if (_gateways.Count > 0) return;
         if (!ModMapOptions.EnableDiscordAutoMute && !ModMapOptions.EnableDiscordEmbed) return;
 
         _tokens = [.. new[] {
@@ -35,8 +35,19 @@ public static class DiscordModManager
 
         LoadMappings();
 
-        _gateway = new DiscordGatewayClient(_tokens[0]);
-        _ = _gateway.ConnectAsync();
+        // Connect all bots
+        for (int i = 0; i < _tokens.Length; i++)
+        {
+            var token = _tokens[i];
+            // Only the first bot handles events (Interactions/VoiceStateUpdates)
+            // to avoid duplicate processing if they are in the same server/channel.
+            // But if they are different bots, they only receive interactions for themselves.
+            // VoiceStateUpdates are sent to all bots in the guild.
+            // So we enable event handling only for the primary bot to keep logic simple.
+            var gateway = new DiscordGatewayClient(token, i == 0);
+            _ = gateway.ConnectAsync();
+            _gateways.Add(gateway);
+        }
     }
 
     private static void LoadMappings()
@@ -165,8 +176,15 @@ public static class DiscordModManager
     {
         private ClientWebSocket _ws;
         private readonly string _token;
+        private readonly bool _handleEvents;
         private int? _s;
-        public DiscordGatewayClient(string t) => _token = t;
+
+        public DiscordGatewayClient(string t, bool handleEvents)
+        {
+            _token = t;
+            _handleEvents = handleEvents;
+        }
+
         public async Task ConnectAsync()
         {
             try
@@ -221,6 +239,8 @@ public static class DiscordModManager
                 }
                 else if (op == 0)
                 { // Dispatch
+                    if (!_handleEvents) return;
+
                     var t = doc.RootElement.GetProperty("t").GetString();
                     if (t == "INTERACTION_CREATE") HandleInteraction(doc.RootElement.GetProperty("d"));
                     else if (t == "VOICE_STATE_UPDATE")

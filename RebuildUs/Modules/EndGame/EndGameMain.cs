@@ -259,6 +259,7 @@ public static class EndGameMain
             wpd.IsDead = isDead;
         }
 
+        DiscordEmbedManager.SendGameResult();
         RPCProcedure.ResetVariables();
     }
 

@@ -77,6 +77,7 @@ public class RebuildUs : BasePlugin
     public static ConfigEntry<string> DiscordGuildId { get; set; }
     public static ConfigEntry<string> DiscordVCId { get; set; }
     public static ConfigEntry<string> StatusChannelId { get; set; }
+    public static ConfigEntry<string> ResultChannelId { get; set; }
 
     public static ConfigEntry<string> Ip { get; set; }
     public static ConfigEntry<ushort> Port { get; set; }
@@ -111,6 +112,7 @@ public class RebuildUs : BasePlugin
         DiscordGuildId = Config.Bind("Discord", "Guild ID", "");
         DiscordVCId = Config.Bind("Discord", "Voice Channel ID", "");
         StatusChannelId = Config.Bind("Discord", "Status Channel ID", "");
+        ResultChannelId = Config.Bind("Discord", "Result Channel ID", "");
 
         KeyBindingManager.Initialize(Config);
 

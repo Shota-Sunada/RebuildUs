@@ -31,6 +31,12 @@ namespace RebuildUs
                     if (pInfo == null || pInfo.Object == null || !pInfo.Object.TasksCountTowardProgress())
                         continue;
 
+                    if (MadmateRole.IsRole(pInfo.Object) ||
+                        Suicider.IsRole(pInfo.Object))
+                    {
+                        continue;
+                    }
+
                     foreach (var t in pInfo.Tasks.GetFastEnumerator())
                     {
                         if (t.Complete) completed++;

@@ -11,6 +11,27 @@ public static class ShortcutCommands
             GameManager.Instance.RpcEndGame((GameOverReason)CustomGameOverReason.ForceEnd, false);
         }
 
+        if (Helpers.GetKeysDown(KeyCode.LeftShift, KeyCode.F3) || Helpers.GetKeysDown(KeyCode.RightShift, KeyCode.F3))
+        {
+            var linked = new List<string>();
+            var unlinked = new List<string>();
+            foreach (var p in PlayerControl.AllPlayerControls)
+            {
+                if (p.Data == null) continue;
+                var name = p.Data.PlayerName;
+                var id = DiscordModManager.GetIdentifier(p);
+                if (id != null && DiscordModManager.PlayerMappings.ContainsKey(id)) linked.Add(name);
+                else unlinked.Add(name);
+            }
+
+            if (HudManager.Instance && HudManager.Instance.Chat)
+            {
+                HudManager.Instance.Chat.AddChat(PlayerControl.LocalPlayer, "Discord 連携状況:");
+                if (linked.Count > 0) HudManager.Instance.Chat.AddChat(PlayerControl.LocalPlayer, $"連携済み: {string.Join(", ", linked)}");
+                if (unlinked.Count > 0) HudManager.Instance.Chat.AddChat(PlayerControl.LocalPlayer, $"未連携: {string.Join(", ", unlinked)}");
+            }
+        }
+
         if ((Helpers.GetKeysDown(KeyCode.LeftControl, KeyCode.F6) || Helpers.GetKeysDown(KeyCode.RightControl, KeyCode.F6)) && MeetingHud.Instance && Helpers.GameStarted)
         {
             MeetingHud.Instance.RpcClose();
