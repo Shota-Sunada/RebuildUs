@@ -2,6 +2,9 @@ namespace RebuildUs.Patches;
 
 public static class Update
 {
+    private static bool IsUpdating = false;
+    private static readonly Dictionary<byte, Color> ColorCache = [];
+
     public static void SetChatBubbleColor(ChatBubble bubble, string playerName)
     {
         if (bubble == null) return;
@@ -29,73 +32,158 @@ public static class Update
         }
     }
 
-    public static void ResetNameTagsAndColors()
+    public static void UpdatePlayerNamesAndColors()
     {
+        IsUpdating = true;
+        ColorCache.Clear();
+
         var localPlayer = PlayerControl.LocalPlayer;
-        if (localPlayer == null) return;
+        if (localPlayer == null)
+        {
+            IsUpdating = false;
+            return;
+        }
 
-        var playersById = Helpers.AllPlayersById();
         bool isLocalImpostor = localPlayer.IsTeamImpostor();
+        bool isLocalDead = localPlayer.IsDead();
+        bool meetingShow = Helpers.ShowMeetingText;
 
+        // 1. Initialize Base Colors
+        foreach (var p in PlayerControl.AllPlayerControls)
+        {
+            if (p == null) continue;
+            Color baseColor = (isLocalImpostor && p.IsTeamImpostor()) ? Palette.ImpostorRed : Color.white;
+            SetPlayerNameColor(p, baseColor);
+        }
+
+        // 2. Calculate Role/Modifier Colors (populates ColorCache via SetPlayerNameColor)
+        SetNameColors();
+
+        // 3. Update Player Instances
         foreach (PlayerControl player in PlayerControl.AllPlayerControls)
         {
             if (player == null || player.cosmetics == null || player.cosmetics.nameText == null) continue;
 
-            string expectedText = Helpers.HidePlayerName(localPlayer, player) ? "" : player.CurrentOutfit.PlayerName;
-            if (!Helpers.HidePlayerName(localPlayer, player) && localPlayer.IsDead())
+            // --- Name Calculation ---
+            string finalName = player.CurrentOutfit.PlayerName;
+            bool hideName = Helpers.HidePlayerName(localPlayer, player);
+
+            if (hideName)
             {
-                if (expectedText == "" && Camouflager.CamouflageTimer > 0f)
+                finalName = "";
+            }
+            else if (isLocalDead)
+            {
+                if (string.IsNullOrEmpty(finalName) && Camouflager.CamouflageTimer > 0f)
                 {
-                    expectedText = player.Data.DefaultOutfit.PlayerName;
+                    finalName = player.Data.DefaultOutfit.PlayerName;
                 }
                 else if (player.CurrentOutfitType == PlayerOutfitType.Shapeshifted)
                 {
-                    expectedText = $"{player.CurrentOutfit.PlayerName} ({player.Data.DefaultOutfit.PlayerName})";
+                    finalName = $"{player.CurrentOutfit.PlayerName} ({player.Data.DefaultOutfit.PlayerName})";
                 }
             }
 
-            Color expectedColor = (isLocalImpostor && player.IsTeamImpostor()) ? Palette.ImpostorRed : Color.white;
+            TagStringBuilder.Clear();
+            TagStringBuilder.Append(finalName);
 
-            var nameText = player.cosmetics.nameText;
-            if (nameText.text != expectedText) nameText.text = expectedText;
-            if (nameText.color != expectedColor) nameText.color = expectedColor;
+            if (!string.IsNullOrEmpty(finalName))
+            {
+                // Role Tags
+                var r = PlayerRole.GetRole(player);
+                if (r != null)
+                {
+                    if (!string.IsNullOrEmpty(r.NameTag)) TagStringBuilder.Append(r.NameTag);
+                    r.OnUpdateNameTags();
+                }
+
+                // Modifier Tags
+                foreach (var m in PlayerModifier.GetModifiers(player))
+                {
+                    if (!string.IsNullOrEmpty(m.NameTag)) TagStringBuilder.Append(m.NameTag);
+                    m.OnUpdateNameTags();
+                }
+
+                // Lovers
+                if (Lovers.IsLovers(player) && (localPlayer.IsLovers() || (ModMapOptions.GhostsSeeRoles && isLocalDead)))
+                {
+                    TagStringBuilder.Append(Lovers.GetIcon(player));
+                }
+            }
+
+            string resultText = TagStringBuilder.ToString();
+            if (player.cosmetics.nameText.text != resultText) player.cosmetics.nameText.text = resultText;
+
+            if (ColorCache.TryGetValue(player.PlayerId, out Color c))
+            {
+                if (player.cosmetics.nameText.color != c) player.cosmetics.nameText.color = c;
+            }
         }
 
-        var meetingHud = MeetingHud.Instance;
-        if (meetingHud != null)
+        // 4. Update Meeting HUD
+        if (MeetingHud.Instance != null)
         {
-            foreach (PlayerVoteArea pva in meetingHud.playerStates)
+            var playersById = Helpers.AllPlayersById();
+            foreach (var pva in MeetingHud.Instance.playerStates)
             {
                 if (pva == null || pva.NameText == null) continue;
+                if (!playersById.TryGetValue(pva.TargetPlayerId, out var target) || target == null || target.Data == null) continue;
 
-                if (playersById.TryGetValue((byte)pva.TargetPlayerId, out var playerControl))
+                string baseName = target.Data.PlayerName;
+                if (isLocalDead)
                 {
-                    if (playerControl?.Data == null) continue;
-
-                    string expectedText = playerControl.Data.PlayerName;
-                    if (localPlayer.IsDead())
+                    if (string.IsNullOrEmpty(baseName) && Camouflager.CamouflageTimer > 0f)
                     {
-                        if (string.IsNullOrEmpty(expectedText) && Camouflager.CamouflageTimer > 0f)
-                        {
-                            expectedText = playerControl.Data.DefaultOutfit?.PlayerName ?? "";
-                        }
-                        else if (playerControl.CurrentOutfitType == PlayerOutfitType.Shapeshifted)
-                        {
-                            expectedText = $"{playerControl.CurrentOutfit?.PlayerName} ({playerControl.Data.DefaultOutfit?.PlayerName})";
-                        }
+                        baseName = target.Data.DefaultOutfit?.PlayerName ?? "";
                     }
+                    else if (target.CurrentOutfitType == PlayerOutfitType.Shapeshifted)
+                    {
+                        baseName = $"{target.CurrentOutfit?.PlayerName} ({target.Data.DefaultOutfit?.PlayerName})";
+                    }
+                }
 
-                    Color expectedColor = (isLocalImpostor && playerControl.Data.Role != null && playerControl.Data.Role.IsImpostor) ? Palette.ImpostorRed : Color.white;
+                TagStringBuilder.Clear();
+                TagStringBuilder.Append(baseName);
 
-                    if (pva.NameText.text != expectedText) pva.NameText.text = expectedText;
-                    if (pva.NameText.color != expectedColor) pva.NameText.color = expectedColor;
+                // Role Tags (Meeting Only)
+                var r = PlayerRole.GetRole(target);
+                if (r != null && !string.IsNullOrEmpty(r.NameTag)) TagStringBuilder.Append(r.NameTag);
+
+                // Detective / Hacker
+                if (ModMapOptions.ShowLighterDarker && meetingShow)
+                {
+                    TagStringBuilder.Append(" (")
+                        .Append(Helpers.IsLighterColor(target.Data.DefaultOutfit.ColorId) ? Tr.Get("Hud.DetectiveLightLabel") : Tr.Get("Hud.DetectiveDarkLabel"))
+                        .Append(')');
+                }
+
+                // Lovers
+                if (Lovers.IsLovers(target) && (localPlayer.IsLovers() || (ModMapOptions.GhostsSeeRoles && isLocalDead)))
+                {
+                    TagStringBuilder.Append(Lovers.GetIcon(target));
+                }
+
+                string resultText = TagStringBuilder.ToString();
+                if (pva.NameText.text != resultText) pva.NameText.text = resultText;
+
+                if (ColorCache.TryGetValue(target.PlayerId, out Color c))
+                {
+                    if (pva.NameText.color != c) pva.NameText.color = c;
                 }
             }
         }
+
+        IsUpdating = false;
     }
 
     public static void SetPlayerNameColor(PlayerControl p, Color color)
     {
+        if (IsUpdating)
+        {
+            ColorCache[p.PlayerId] = color;
+            return;
+        }
+
         p.cosmetics.nameText.color = color;
         if (MeetingHud.Instance != null)
         {
@@ -132,153 +220,6 @@ public static class Update
     }
 
     private static readonly StringBuilder TagStringBuilder = new();
-
-    public static void SetNameTags()
-    {
-        var lp = PlayerControl.LocalPlayer;
-        if (lp == null) return;
-
-        // 1. Process Roles and Modifiers NameTags
-        foreach (var r in PlayerRole.AllRoles)
-        {
-            if (r.Player == null || r.Player.cosmetics == null || r.Player.cosmetics.nameText == null) continue;
-            if (string.IsNullOrEmpty(r.Player.cosmetics.nameText.text)) continue;
-
-            var tag = r.NameTag;
-            if (!string.IsNullOrEmpty(tag))
-            {
-                TagStringBuilder.Clear();
-                TagStringBuilder.Append(r.Player.cosmetics.nameText.text).Append(tag);
-                r.Player.cosmetics.nameText.text = TagStringBuilder.ToString();
-            }
-            r.OnUpdateNameTags();
-        }
-
-        foreach (var m in PlayerModifier.AllModifiers)
-        {
-            if (m.Player == null || m.Player.cosmetics == null || m.Player.cosmetics.nameText == null) continue;
-            if (string.IsNullOrEmpty(m.Player.cosmetics.nameText.text)) continue;
-
-            var tag = m.NameTag;
-            if (!string.IsNullOrEmpty(tag))
-            {
-                TagStringBuilder.Clear();
-                TagStringBuilder.Append(m.Player.cosmetics.nameText.text).Append(tag);
-                m.Player.cosmetics.nameText.text = TagStringBuilder.ToString();
-            }
-            m.OnUpdateNameTags();
-        }
-
-        bool meetingShow = MeetingHud.Instance != null && (MeetingHud.Instance.state is MeetingHud.VoteStates.Voted or MeetingHud.VoteStates.NotVoted or MeetingHud.VoteStates.Discussion);
-
-        // 2. Voting Area NameTags
-        if (MeetingHud.Instance != null)
-        {
-            var playersById = Helpers.AllPlayersById();
-            foreach (var voteArea in MeetingHud.Instance.playerStates)
-            {
-                if (voteArea == null || voteArea.NameText == null) continue;
-
-                var target = playersById.ContainsKey(voteArea.TargetPlayerId) ? playersById[voteArea.TargetPlayerId] : null;
-                if (target == null) continue;
-
-                var targetRole = PlayerRole.GetRole(target);
-                if (targetRole != null)
-                {
-                    var tag = targetRole.NameTag;
-                    if (!string.IsNullOrEmpty(tag))
-                    {
-                        TagStringBuilder.Clear();
-                        TagStringBuilder.Append(voteArea.NameText.text).Append(tag);
-                        voteArea.NameText.text = TagStringBuilder.ToString();
-                    }
-                }
-
-                // Hacker and Detective Lighter/Darker
-                if (ModMapOptions.ShowLighterDarker && meetingShow)
-                {
-                    TagStringBuilder.Clear();
-                    TagStringBuilder.Append(voteArea.NameText.text)
-                        .Append(" (")
-                        .Append(Helpers.IsLighterColor(target.Data.DefaultOutfit.ColorId) ? Tr.Get("Hud.DetectiveLightLabel") : Tr.Get("Hud.DetectiveDarkLabel"))
-                        .Append(')');
-                    voteArea.NameText.text = TagStringBuilder.ToString();
-                }
-            }
-        }
-
-        // 3. Lovers (Special Logic)
-        if (lp.IsLovers() && lp.IsAlive())
-        {
-            string suffix = Lovers.GetIcon(lp);
-            var lover1 = lp;
-            var lover2 = lp.GetPartner();
-
-            if (lover1.cosmetics?.nameText != null)
-            {
-                TagStringBuilder.Clear();
-                TagStringBuilder.Append(lover1.cosmetics.nameText.text).Append(suffix);
-                lover1.cosmetics.nameText.text = TagStringBuilder.ToString();
-            }
-
-            if (lover2 != null && lover2.cosmetics?.nameText != null && !Helpers.HidePlayerName(lover2))
-            {
-                TagStringBuilder.Clear();
-                TagStringBuilder.Append(lover2.cosmetics.nameText.text).Append(suffix);
-                lover2.cosmetics.nameText.text = TagStringBuilder.ToString();
-            }
-
-            if (meetingShow)
-            {
-                foreach (PlayerVoteArea player in MeetingHud.Instance.playerStates)
-                {
-                    if (player == null || player.NameText == null) continue;
-                    if (lover1.PlayerId == player.TargetPlayerId || (lover2 != null && lover2.PlayerId == player.TargetPlayerId))
-                    {
-                        TagStringBuilder.Clear();
-                        TagStringBuilder.Append(player.NameText.text).Append(suffix);
-                        player.NameText.text = TagStringBuilder.ToString();
-                    }
-                }
-            }
-        }
-
-        if (ModMapOptions.GhostsSeeRoles && lp.IsDead())
-        {
-            foreach (var couple in Lovers.Couples)
-            {
-                string suffix = Lovers.GetIcon(couple.Lover1);
-
-                if (couple.Lover1.cosmetics?.nameText != null)
-                {
-                    TagStringBuilder.Clear();
-                    TagStringBuilder.Append(couple.Lover1.cosmetics.nameText.text).Append(suffix);
-                    couple.Lover1.cosmetics.nameText.text = TagStringBuilder.ToString();
-                }
-
-                if (couple.Lover2.cosmetics?.nameText != null)
-                {
-                    TagStringBuilder.Clear();
-                    TagStringBuilder.Append(couple.Lover2.cosmetics.nameText.text).Append(suffix);
-                    couple.Lover2.cosmetics.nameText.text = TagStringBuilder.ToString();
-                }
-
-                if (meetingShow)
-                {
-                    foreach (PlayerVoteArea player in MeetingHud.Instance.playerStates)
-                    {
-                        if (player == null || player.NameText == null) continue;
-                        if (couple.Lover1.PlayerId == player.TargetPlayerId || couple.Lover2.PlayerId == player.TargetPlayerId)
-                        {
-                            TagStringBuilder.Clear();
-                            TagStringBuilder.Append(player.NameText.text).Append(suffix);
-                            player.NameText.text = TagStringBuilder.ToString();
-                        }
-                    }
-                }
-            }
-        }
-    }
 
     public static void UpdateImpostorKillButton(HudManager __instance)
     {

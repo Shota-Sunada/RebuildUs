@@ -138,8 +138,13 @@ public static class Helpers
     }
 
     private static readonly Dictionary<byte, PlayerControl> PlayerByIdCache = [];
+    private static int LastCacheFrame = -1;
+
     public static Dictionary<byte, PlayerControl> AllPlayersById()
     {
+        if (UnityEngine.Time.frameCount == LastCacheFrame) return PlayerByIdCache;
+
+        LastCacheFrame = UnityEngine.Time.frameCount;
         PlayerByIdCache.Clear();
         foreach (var p in PlayerControl.AllPlayerControls)
         {

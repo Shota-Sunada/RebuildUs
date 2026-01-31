@@ -12,9 +12,7 @@ public static class HudManagerPatch
         try
         {
             CustomButton.HudUpdate();
-            Update.ResetNameTagsAndColors();
-            Update.SetNameColors();
-            Update.SetNameTags();
+            Update.UpdatePlayerNamesAndColors();
             Update.CamouflageAndMorphActions();
             Update.UpdateImpostorKillButton(__instance);
             Update.UpdateSabotageButton(__instance);
