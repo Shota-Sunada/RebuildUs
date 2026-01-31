@@ -14,6 +14,8 @@ public class Suicider : RoleBase<Suicider>
     public static int NumLongTasks { get { return CustomOptionHolder.SuiciderTasks.LongTasksNum; } }
     public static int NumShortTasks { get { return CustomOptionHolder.SuiciderTasks.ShortTasksNum; } }
 
+    private static CustomButton SuicideButton;
+
     public Suicider()
     {
         // write value init here
@@ -48,6 +50,40 @@ public class Suicider : RoleBase<Suicider>
     public override void OnDeath(PlayerControl killer = null) { }
     public override void OnFinishShipStatusBegin() { }
     public override void HandleDisconnect(PlayerControl player, DisconnectReasons reason) { }
+
+    public static void MakeButtons(HudManager hm)
+    {
+        SuicideButton = new CustomButton(
+            () =>
+            {
+                {
+                    using var sender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.UncheckedMurderPlayer);
+                    sender.Write(PlayerControl.LocalPlayer.PlayerId); // source
+                    sender.Write(PlayerControl.LocalPlayer.PlayerId); // target
+                    sender.Write((byte)1); // showAnimation
+                }
+                RPCProcedure.UncheckedMurderPlayer(PlayerControl.LocalPlayer.PlayerId, PlayerControl.LocalPlayer.PlayerId, 1);
+            },
+            () => { return PlayerControl.LocalPlayer.IsRole(RoleType.Suicider) && PlayerControl.LocalPlayer?.Data?.IsDead == false; },
+            () => { return PlayerControl.LocalPlayer.CanMove; },
+            () => { SuicideButton.Timer = SuicideButton.MaxTimer; },
+            hm.KillButton.graphic.sprite,
+            ButtonPosition.Layout,
+            hm,
+            hm.KillButton,
+            AbilitySlot.CrewmateAbilityPrimary,
+            false,
+            0f,
+            null,
+            false,
+            Tr.Get("Hud.Suicide")
+        );
+    }
+
+    public static void SetButtonCooldowns()
+    {
+        SuicideButton?.MaxTimer = 0f;
+    }
 
     public static bool KnowsImpostors(PlayerControl player)
     {

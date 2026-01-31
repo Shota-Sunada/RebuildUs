@@ -257,6 +257,7 @@ public class RebuildUs : BasePlugin
         TimeMaster.MakeButtons(hm);
         SecurityGuard.MakeButtons(hm);
         Tracker.MakeButtons(hm);
+        Suicider.MakeButtons(hm);
 
         // Impostor
         Camouflager.MakeButtons(hm);
@@ -295,6 +296,7 @@ public class RebuildUs : BasePlugin
         TimeMaster.SetButtonCooldowns();
         SecurityGuard.SetButtonCooldowns();
         Tracker.SetButtonCooldowns();
+        Suicider.SetButtonCooldowns();
 
         // Impostor
         Camouflager.SetButtonCooldowns();

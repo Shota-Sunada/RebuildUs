@@ -590,7 +590,7 @@ public static class CustomOptionHolder
         MadmateRoleCanSabotage = CustomOption.Normal(1174, CustomOptionType.Crewmate, "Option.MadmateCanSabotage", false, MadmateRoleSpawnRate);
         MadmateRoleCanFixComm = CustomOption.Normal(1175, CustomOptionType.Crewmate, "Option.MadmateCanFixComm", false, MadmateRoleSpawnRate);
         MadmateRoleCanKnowImpostorAfterFinishTasks = CustomOption.Normal(1176, CustomOptionType.Crewmate, "Option.MadmateCanKnowImpostorAfterFinishTasks", false, MadmateRoleSpawnRate);
-        MadmateRoleTasks = new((1177, 1178,1179), CustomOptionType.Crewmate, (3, 2, 3), MadmateRoleCanKnowImpostorAfterFinishTasks);
+        MadmateRoleTasks = new((1177, 1178, 1179), CustomOptionType.Crewmate, (3, 2, 3), MadmateRoleCanKnowImpostorAfterFinishTasks);
 
         SuiciderSpawnRate = new(1190, CustomOptionType.Crewmate, RoleType.Suicider, Suicider.NameColor, 3);
         SuiciderCanDieToSheriff = CustomOption.Normal(1191, CustomOptionType.Crewmate, "Option.SuiciderCanDieToSheriff", true, SuiciderSpawnRate);
