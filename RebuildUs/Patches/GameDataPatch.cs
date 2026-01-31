@@ -13,4 +13,13 @@ public static class GameDataPatch
             Meeting.SwapperCheckAndReturnSwap(MeetingHud.Instance, player.PlayerId);
         }
     }
+
+    [HarmonyPrefix]
+    [HarmonyPatch(typeof(GameData), nameof(GameData.RecomputeTaskCounts))]
+    private static bool RecomputeTaskCountsPrefix(GameData __instance)
+    {
+        TasksHandler.RecomputeTaskCounts(__instance);
+
+        return false;
+    }
 }

@@ -340,6 +340,10 @@ public static class GameStart
             {
                 __instance.ResetStartState();
             }
+            else
+            {
+                CustomOption.CoSpawnSyncSettings();
+            }
 
             if (CustomOptionHolder.RandomMap.GetBool() && continueStart)
             {

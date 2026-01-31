@@ -148,7 +148,7 @@ public static class Meeting
         var spriteRenderer = UnityEngine.Object.Instantiate(__instance.PlayerVotePrefab);
         var showVoteColors = !GameManager.Instance.LogicOptions.GetAnonymousVotes() ||
                             (PlayerControl.LocalPlayer.IsDead() && ModMapOptions.GhostsSeeVotes) ||
-                            (PlayerControl.LocalPlayer.IsRole(RoleType.Mayor) && Mayor.MayorCanSeeVoteColors && TasksHandler.TaskInfo(PlayerControl.LocalPlayer.Data).Item1 >= Mayor.MayorTasksNeededToSeeVoteColors);
+                            (PlayerControl.LocalPlayer.IsRole(RoleType.Mayor) && Mayor.MayorCanSeeVoteColors && TasksHandler.TaskInfo(PlayerControl.LocalPlayer.Data).Completed >= Mayor.MayorTasksNeededToSeeVoteColors);
         if (showVoteColors)
         {
             PlayerMaterial.SetColors(voterPlayer.DefaultOutfit.ColorId, spriteRenderer);
