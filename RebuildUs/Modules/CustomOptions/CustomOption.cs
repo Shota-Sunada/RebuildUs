@@ -365,7 +365,7 @@ public partial class CustomOption
             }
             else
             {
-                ShareOptionChange((uint)Id);// Share single selection
+                ShareOptionChange((uint)Id);
             }
         }
 

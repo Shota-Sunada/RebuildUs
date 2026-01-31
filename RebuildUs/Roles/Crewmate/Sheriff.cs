@@ -77,38 +77,25 @@ public class Sheriff : RoleBase<Sheriff>
 
                 if (murderAttemptResult == MurderAttemptResult.PerformKill)
                 {
-                    bool misfire = false;
-                    byte targetId = Local.CurrentTarget.PlayerId; ;
-                    if ((Local.CurrentTarget.Data.Role.IsImpostor && (!Local.CurrentTarget.HasModifier(ModifierType.Mini) || Mini.IsGrownUp(Local.CurrentTarget))) ||
-                        (SpyCanDieToSheriff && Local.CurrentTarget.IsRole(RoleType.Spy)) ||
-                        (MadmateCanDieToSheriff && Local.CurrentTarget.HasModifier(ModifierType.Madmate)) ||
-                        (MadmateRoleCanDieToSheriff && Local.CurrentTarget.IsRole(RoleType.Madmate)) ||
-                        (SuiciderCanDieToSheriff && Local.CurrentTarget.IsRole(RoleType.Suicider)) ||
-                        (CreatedMadmateCanDieToSheriff && Local.CurrentTarget.HasModifier(ModifierType.CreatedMadmate)) ||
-                        (CanKillNeutrals && Local.CurrentTarget.IsNeutral()) ||
-                        Local.CurrentTarget.IsRole(RoleType.Jackal) || Local.CurrentTarget.IsRole(RoleType.Sidekick))
+                    byte targetId = Local.CurrentTarget.PlayerId;
+
+                    if (AmongUsClient.Instance.AmHost)
                     {
-                        //targetId = Sheriff.currentTarget.PlayerId;
-                        misfire = false;
+                        bool misfire = CheckKill(Local.CurrentTarget);
+                        {
+                            using var killSender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.SheriffKill);
+                            killSender.Write(PlayerControl.LocalPlayer.Data.PlayerId);
+                            killSender.Write(targetId);
+                            killSender.Write(misfire);
+                        }
+                        RPCProcedure.SheriffKill(PlayerControl.LocalPlayer.Data.PlayerId, targetId, misfire);
                     }
                     else
                     {
-                        //targetId = PlayerControl.LocalPlayer.PlayerId;
-                        misfire = true;
+                        using var requestSender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.SheriffKillRequest);
+                        requestSender.Write(PlayerControl.LocalPlayer.Data.PlayerId);
+                        requestSender.Write(targetId);
                     }
-
-                    // Mad sheriff always misfires.
-                    // if (Local.Player.HasModifier(ModifierType.Madmate))
-                    // {
-                    //     misfire = true;
-                    // }
-                    {
-                        using var killSender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.SheriffKill);
-                        killSender.Write(PlayerControl.LocalPlayer.Data.PlayerId);
-                        killSender.Write(targetId);
-                        killSender.Write(misfire);
-                    }
-                    RPCProcedure.SheriffKill(PlayerControl.LocalPlayer.Data.PlayerId, targetId, misfire);
                 }
 
                 SheriffKillButton.Timer = SheriffKillButton.MaxTimer;
@@ -141,7 +128,24 @@ public class Sheriff : RoleBase<Sheriff>
         SheriffKillButton.MaxTimer = Cooldown;
     }
 
-    // write functions here
+    public static bool CheckKill(PlayerControl target)
+    {
+        if (target == null) return true;
+
+        if ((target.Data.Role.IsImpostor && (!target.HasModifier(ModifierType.Mini) || Mini.IsGrownUp(target))) ||
+            (SpyCanDieToSheriff && target.IsRole(RoleType.Spy)) ||
+            (MadmateCanDieToSheriff && target.HasModifier(ModifierType.Madmate)) ||
+            (MadmateRoleCanDieToSheriff && target.IsRole(RoleType.Madmate)) ||
+            (SuiciderCanDieToSheriff && target.IsRole(RoleType.Suicider)) ||
+            (CreatedMadmateCanDieToSheriff && target.HasModifier(ModifierType.CreatedMadmate)) ||
+            (CanKillNeutrals && target.IsNeutral()) ||
+            target.IsRole(RoleType.Jackal) || target.IsRole(RoleType.Sidekick))
+        {
+            return false;
+        }
+
+        return true;
+    }
 
     public static void Clear()
     {

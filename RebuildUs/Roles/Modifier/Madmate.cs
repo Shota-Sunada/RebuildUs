@@ -176,7 +176,7 @@ public class Madmate : ModifierBase<Madmate>
     public override void OnFinishShipStatusBegin()
     {
         Player.ClearAllTasks();
-        PlayerControlHelpers.GenerateAndAssignTasks(Player, NumCommonTasks, NumShortTasks, NumLongTasks);
+        Helpers.GenerateAndAssignTasks(Player, NumCommonTasks, NumShortTasks, NumLongTasks);
     }
     public override void HandleDisconnect(PlayerControl player, DisconnectReasons reason) { }
 

@@ -81,6 +81,7 @@ public enum CustomRPC : byte
     SUBMERGED_SubmarineSpawnInSystem = 143,
     SUBMERGED_SubmarineBoxCatSystem = 144,
     SheriffKill = 145,
+    SheriffKillRequest = 146,
 
     SUBMERGED_SetCustomData = 210,
     SUBMERGED_RequestChangeFloor = 211,

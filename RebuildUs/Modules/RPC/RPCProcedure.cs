@@ -576,7 +576,7 @@ public static partial class RPCProcedure
                 if (CreatedMadmate.HasTasks)
                 {
                     Helpers.ClearAllTasks(targetPlayer);
-                    PlayerControlHelpers.GenerateAndAssignTasks(targetPlayer, 0, CreatedMadmate.NumTasks, 0);
+                    Helpers.GenerateAndAssignTasks(targetPlayer, 0, CreatedMadmate.NumTasks, 0);
                 }
             }
 
@@ -946,6 +946,24 @@ public static partial class RPCProcedure
     public static void FortuneTellerUsedDivine(byte killerId, byte targetId)
     {
         LastImpostor.NumUsed += 1;
+    }
+    public static void SheriffKillRequest(byte sheriffId, byte targetId)
+    {
+        if (AmongUsClient.Instance.AmHost)
+        {
+            PlayerControl sheriff = Helpers.PlayerById(sheriffId);
+            PlayerControl target = Helpers.PlayerById(targetId);
+            if (sheriff == null || target == null) return;
+
+            bool misfire = Sheriff.CheckKill(target);
+
+            using var killSender = new RPCSender(sheriff.NetId, CustomRPC.SheriffKill);
+            killSender.Write(sheriffId);
+            killSender.Write(targetId);
+            killSender.Write(misfire);
+
+            SheriffKill(sheriffId, targetId, misfire);
+        }
     }
 
     public static void SheriffKill(byte sheriffId, byte targetId, bool misfire)
