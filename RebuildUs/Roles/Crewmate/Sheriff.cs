@@ -125,7 +125,9 @@ public class Sheriff : RoleBase<Sheriff>
             ButtonPosition.Layout,
             hm,
             hm.KillButton,
-            AbilitySlot.CrewmateAbilityPrimary
+            AbilitySlot.CrewmateAbilityPrimary,
+            false,
+            FastDestroyableSingleton<TranslationController>.Instance.GetString(StringNames.KillLabel)
         );
 
         SheriffNumShotsText = GameObject.Instantiate(SheriffKillButton.ActionButton.cooldownTimerText, SheriffKillButton.ActionButton.cooldownTimerText.transform.parent);

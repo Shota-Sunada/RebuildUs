@@ -97,7 +97,9 @@ public class Sidekick : RoleBase<Sidekick>
             ButtonPosition.Layout,
             hm,
             hm.KillButton,
-            AbilitySlot.NeutralAbilityPrimary
+            AbilitySlot.NeutralAbilityPrimary,
+            false,
+            FastDestroyableSingleton<TranslationController>.Instance.GetString(StringNames.KillLabel)
         );
 
         SidekickSabotageLightsButton = new CustomButton(
@@ -126,7 +128,9 @@ public class Sidekick : RoleBase<Sidekick>
             ButtonPosition.Layout,
             hm,
             hm.AbilityButton,
-            AbilitySlot.CommonAbilitySecondary
+            AbilitySlot.CommonAbilitySecondary,
+            false,
+            FastDestroyableSingleton<TranslationController>.Instance.GetString(StringNames.FixLights)
         );
     }
     public static void SetButtonCooldowns()

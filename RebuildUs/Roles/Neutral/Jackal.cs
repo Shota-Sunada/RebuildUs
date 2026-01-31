@@ -131,7 +131,9 @@ public class Jackal : RoleBase<Jackal>
             ButtonPosition.Layout,
             hm,
             hm.KillButton,
-            AbilitySlot.NeutralAbilityPrimary
+            AbilitySlot.NeutralAbilityPrimary,
+            false,
+            FastDestroyableSingleton<TranslationController>.Instance.GetString(StringNames.KillLabel)
         );
 
         // Jackal Sidekick Button
@@ -193,7 +195,9 @@ public class Jackal : RoleBase<Jackal>
             ButtonPosition.Layout,
             hm,
             hm.AbilityButton,
-            AbilitySlot.CommonAbilitySecondary
+            AbilitySlot.CommonAbilitySecondary,
+            false,
+            FastDestroyableSingleton<TranslationController>.Instance.GetString(StringNames.FixLights)
         );
     }
     public static void SetButtonCooldowns()
