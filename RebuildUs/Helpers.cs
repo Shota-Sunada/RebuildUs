@@ -105,29 +105,6 @@ public static class Helpers
             || (player.IsLovers() && Lovers.SeparateTeam && !Lovers.TasksCount);
     }
 
-    public static bool TasksCountTowardProgress(this PlayerControl player)
-    {
-        if (player == null || player.Data == null || player.Data.Disconnected) return false;
-
-        // Use the vanilla TaskCountTowardProgress if available
-        if (player.Data.Role == null || !player.Data.Role.TasksCountTowardProgress) return false;
-
-        // Impostors and Neutrals don't count toward Crewmate progress
-        if (player.IsTeamImpostor() || player.IsNeutral()) return false;
-
-        // Madmate and Suicider are special roles that shouldn't contribute to task bar
-        if (player.IsRole(RoleType.Madmate) || player.IsRole(RoleType.Suicider)) return false;
-        if (player.HasModifier(ModifierType.Madmate) || player.HasModifier(ModifierType.CreatedMadmate)) return false;
-
-        // Lovers check
-        if (player.IsLovers() && Lovers.SeparateTeam && !Lovers.TasksCount) return false;
-
-        // Finally check if they have fake tasks
-        if (player.HasFakeTasks()) return false;
-
-        return true;
-    }
-
     public static PlayerControl PlayerById(byte id)
     {
         foreach (var player in PlayerControl.AllPlayerControls)
