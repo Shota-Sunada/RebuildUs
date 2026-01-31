@@ -920,4 +920,9 @@ public static class Helpers
             _ => RoleTypes.Crewmate
         };
     }
+
+    public static bool HasAliveKillingLover(this PlayerControl player)
+    {
+        return Lovers.ExistingAndAlive(player) && Lovers.ExistingWithKiller(player) && player != null && (player.IsLovers());
+    }
 }
