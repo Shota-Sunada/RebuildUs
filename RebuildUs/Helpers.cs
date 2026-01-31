@@ -567,12 +567,36 @@ public static class Helpers
                     if (p.IsRole(RoleType.Arsonist))
                     {
                         var role = Arsonist.GetRole(p);
-                        if (role != null) statusText = Cs(Arsonist.NameColor, $" ({role.DousedPlayers.Count})");
+                        if (role != null)
+                        {
+                            int dousedSurvivors = 0;
+                            foreach (var dousedPlayer in role.DousedPlayers)
+                            {
+                                if (dousedPlayer?.Data != null && !dousedPlayer.Data.IsDead && !dousedPlayer.Data.Disconnected)
+                                {
+                                    dousedSurvivors++;
+                                }
+                            }
+                            int totalSurvivors = 0;
+                            foreach (var targetPlayer in PlayerControl.AllPlayerControls)
+                            {
+                                if (targetPlayer?.Data != null &&
+                                    !targetPlayer.Data.IsDead &&
+                                    !targetPlayer.Data.Disconnected &&
+                                    !targetPlayer.IsRole(RoleType.Arsonist) &&
+                                    !targetPlayer.IsGM()
+                                )
+                                {
+                                    totalSurvivors++;
+                                }
+                            }
+                            statusText = Cs(Arsonist.NameColor, $" ({dousedSurvivors}/{totalSurvivors})");
+                        }
                     }
                     else if (p.IsRole(RoleType.Vulture))
                     {
                         var role = Vulture.GetRole(p);
-                        if (role != null) statusText = Cs(Vulture.NameColor, $" ({role.EatenBodies})");
+                        if (role != null) statusText = Cs(Vulture.NameColor, $" ({role.EatenBodies}/{Vulture.NumberToWin})");
                     }
                 }
 
@@ -590,7 +614,7 @@ public static class Helpers
 
                     if (commsActive)
                     {
-                        InfoStringBuilder.Append("<color=#808080FF>(??/??)</color>");
+                        InfoStringBuilder.Append("<color=#808080FF>(?/?)</color>");
                     }
                     else
                     {
