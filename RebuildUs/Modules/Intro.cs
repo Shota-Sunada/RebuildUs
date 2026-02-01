@@ -395,7 +395,7 @@ public static class Intro
         {
             if (o.Parent == null ? !o.GetString().Equals("0%") : o.Parent.Enabled)
             {
-                Logger.LogInfo(string.Format("{0}:{1}", o.Parent == null ? o.NameKey.RemoveHtml().PadRightV2(43) : $"┗ {o.NameKey.RemoveHtml().PadRightV2(41)}", o.GetString().RemoveHtml()), "Settings");
+                Logger.LogInfo(string.Format("{0}:{1}", o.Parent == null ? o.NameKey : $"┗ {o.NameKey}", o.GetString().RemoveHtml()), "Settings");
             }
         }
         Logger.LogInfo("--------------------------------", "Settings");
@@ -415,22 +415,22 @@ public static class Intro
         {
             if (roleInfo == RoleInfo.Crewmate)
             {
-                __instance.RoleText.text = Tr.Get("Madmate");
+                __instance.RoleText.text = Tr.Get(TranslateKey.Madmate);
             }
             else
             {
-                __instance.RoleText.text = Tr.Get("MadmatePrefix") + __instance.RoleText.text;
+                __instance.RoleText.text = Tr.Get(TranslateKey.MadmatePrefix) + __instance.RoleText.text;
             }
             __instance.YouAreText.color = Madmate.NameColor;
             __instance.RoleText.color = Madmate.NameColor;
-            __instance.RoleBlurbText.text = Tr.Get("MadmateIntroDesc");
+            __instance.RoleBlurbText.text = Tr.Get(TranslateKey.MadmateIntroDesc);
             __instance.RoleBlurbText.color = Madmate.NameColor;
         }
 
         if (infos.Any(info => info.RoleType == RoleType.Lovers))
         {
             PlayerControl otherLover = PlayerControl.LocalPlayer.GetPartner();
-            __instance.RoleBlurbText.text += "\n" + Helpers.Cs(Lovers.Color, string.Format(Tr.Get("LoversFlavorIntroDesc"), otherLover?.Data?.PlayerName ?? ""));
+            __instance.RoleBlurbText.text += "\n" + Helpers.Cs(Lovers.Color, string.Format(Tr.Get(TranslateKey.LoversFlavorIntroDesc), otherLover?.Data?.PlayerName ?? ""));
         }
 
         // 従来処理
@@ -457,3 +457,4 @@ public static class Intro
         yield break;
     }
 }
+

@@ -70,7 +70,7 @@ public class Shifter : RoleBase<Shifter>
             hm.UseButton,
             AbilitySlot.CrewmateAbilityPrimary,
             false,
-            Tr.Get("ShiftText")
+            Tr.Get(TranslateKey.ShiftText)
         );
     }
     public static void SetButtonCooldowns()
@@ -84,3 +84,4 @@ public class Shifter : RoleBase<Shifter>
         Players.Clear();
     }
 }
+

@@ -76,7 +76,7 @@ public static class KeyBindingMenu
         var tmp = go.AddComponent<TextMeshPro>();
         tmp.fontSize = 4;
         tmp.alignment = TextAlignmentOptions.Center;
-        tmp.text = Tr.Get("KeyBindings");
+        tmp.text = Tr.Get(TranslateKey.KeyBindings);
         tmp.transform.SetParent(PopUp.transform);
         tmp.transform.localPosition = new Vector3(0, 2.2f, -1f);
         TitleText = tmp;
@@ -113,7 +113,7 @@ public static class KeyBindingMenu
         WaitingText = wgo.AddComponent<TextMeshPro>();
         WaitingText.fontSize = 2.5f;
         WaitingText.alignment = TextAlignmentOptions.Center;
-        WaitingText.text = Tr.Get("PressAnyKey");
+        WaitingText.text = Tr.Get(TranslateKey.PressAnyKey);
         WaitingText.transform.SetParent(WaitingPopUp.transform);
         WaitingText.transform.localPosition = new Vector3(0, 0, -1f);
 
@@ -217,9 +217,9 @@ public static class KeyBindingMenu
 
                 if (WaitingText && activeInput != null)
                 {
-                    WaitingText.text = new StringBuilder(Tr.Get($"{activeInput.Identifier}"))
+                    WaitingText.text = new StringBuilder(Tr.GetDynamic($"{activeInput.Identifier}"))
                         .Append("\n")
-                        .Append(Tr.Get("PressAnyKey")).ToString();
+                        .Append(Tr.Get(TranslateKey.PressAnyKey)).ToString();
                 }
             }
 
@@ -270,8 +270,8 @@ public static class KeyBindingMenu
                 var input = KeyBindingManager.AllInputs[i];
                 var button = ModButtons[i];
 
-                string keyText = activeInput == input ? Tr.Get("PressAnyKey") : input.Key.ToString();
-                button.Text.text = new StringBuilder(Tr.Get($"{input.Identifier}")).Append(": ").Append(keyText).ToString();
+                string keyText = activeInput == input ? Tr.Get(TranslateKey.PressAnyKey) : input.Key.ToString();
+                button.Text.text = new StringBuilder(Tr.GetDynamic($"{input.Identifier}")).Append(": ").Append(keyText).ToString();
             }
             return;
         }
@@ -303,8 +303,8 @@ public static class KeyBindingMenu
             button.transform.localPosition = new Vector3(x, y, -1f);
             button.gameObject.SetActive(true);
 
-            string keyText = activeInput == input ? Tr.Get("PressAnyKey") : input.Key.ToString();
-            button.Text.text = new StringBuilder(Tr.Get($"{input.Identifier}")).Append(": ").Append(keyText).ToString();
+            string keyText = activeInput == input ? Tr.Get(TranslateKey.PressAnyKey) : input.Key.ToString();
+            button.Text.text = new StringBuilder(Tr.GetDynamic($"{input.Identifier}")).Append(": ").Append(keyText).ToString();
 
             var passiveButton = button.GetComponent<PassiveButton>();
             passiveButton.OnClick = new Button.ButtonClickedEvent();
@@ -325,4 +325,6 @@ public static class KeyBindingMenu
         }
     }
 }
+
+
 

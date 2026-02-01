@@ -101,7 +101,7 @@ public class Engineer : RoleBase<Engineer>
             hm.UseButton,
             AbilitySlot.CrewmateAbilityPrimary,
             false,
-            Tr.Get("RepairText")
+            Tr.Get(TranslateKey.RepairText)
         );
     }
     public static void SetButtonCooldowns()
@@ -115,3 +115,4 @@ public class Engineer : RoleBase<Engineer>
         Players.Clear();
     }
 }
+

@@ -76,7 +76,7 @@ public class Suicider : RoleBase<Suicider>
             0f,
             null,
             false,
-            Tr.Get("Suicide")
+            Tr.Get(TranslateKey.Suicide)
         );
     }
 
@@ -113,3 +113,4 @@ public class Suicider : RoleBase<Suicider>
         Players.Clear();
     }
 }
+

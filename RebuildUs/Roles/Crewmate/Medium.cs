@@ -140,17 +140,17 @@ public class Medium : RoleBase<Medium>
                         randomNumber = RebuildUs.Instance.Rnd.Next(3);
                     }
                 }
-                string typeOfColor = Helpers.IsLighterColor(Local.Target.KillerIfExisting.Data.DefaultOutfit.ColorId) ? Tr.Get("DetectiveColorLight") : Tr.Get("DetectiveColorDark");
+                string typeOfColor = Helpers.IsLighterColor(Local.Target.KillerIfExisting.Data.DefaultOutfit.ColorId) ? Tr.Get(TranslateKey.DetectiveColorLight) : Tr.Get(TranslateKey.DetectiveColorDark);
                 float timeSinceDeath = (float)(MeetingStartTime - Local.Target.TimeOfDeath).TotalMilliseconds;
                 string name = " (" + Local.Target.Player.Data.PlayerName + ")";
 
                 msg = randomNumber == 0
-                    ? string.Format(Tr.Get("MediumQuestion1"), RoleInfo.GetRolesString(Local.Target.Player, false, includeHidden: true)) + name
+                    ? string.Format(Tr.Get(TranslateKey.MediumQuestion1), RoleInfo.GetRolesString(Local.Target.Player, false, includeHidden: true)) + name
                     : randomNumber == 1
-                        ? string.Format(Tr.Get("MediumQuestion2"), typeOfColor) + name
+                        ? string.Format(Tr.Get(TranslateKey.MediumQuestion2), typeOfColor) + name
                         : randomNumber == 2
-                        ? string.Format(Tr.Get("MediumQuestion3"), Math.Round(timeSinceDeath / 1000)) + name
-                        : string.Format(Tr.Get("MediumQuestion4"), RoleInfo.GetRolesString(Local.Target.KillerIfExisting, false, includeHidden: true)) + name;
+                        ? string.Format(Tr.Get(TranslateKey.MediumQuestion3), Math.Round(timeSinceDeath / 1000)) + name
+                        : string.Format(Tr.Get(TranslateKey.MediumQuestion4), RoleInfo.GetRolesString(Local.Target.KillerIfExisting, false, includeHidden: true)) + name;
 
                 // Excludes mini
 
@@ -198,7 +198,7 @@ public class Medium : RoleBase<Medium>
                 }
             },
             false,
-            Tr.Get("MediumText")
+            Tr.Get(TranslateKey.MediumText)
         );
     }
     public static void SetButtonCooldowns()
@@ -218,3 +218,4 @@ public class Medium : RoleBase<Medium>
         Players.Clear();
     }
 }
+

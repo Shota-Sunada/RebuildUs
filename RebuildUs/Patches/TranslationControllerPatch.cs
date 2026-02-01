@@ -25,7 +25,7 @@ public static class TranslationControllerPatch
                 break;
             }
         }
-        ourString = Helpers.Cs(opt?.Color ?? Color.white, Tr.Get(opt?.NameKey));
+        ourString = Helpers.Cs(opt?.Color ?? Color.white, Tr.Get(opt.NameKey));
 
         __result = ourString;
         return false;

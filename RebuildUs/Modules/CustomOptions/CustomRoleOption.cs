@@ -11,11 +11,11 @@ public class CustomRoleOption : CustomOption
     public (int rate, int count) Data { get { return (Rate, Count); } }
 
     public CustomRoleOption(int baseId, CustomOptionType type, RoleType roleType, Color color, int max = 15, bool roleEnabled = true) :
-    base(baseId, type, $"{Enum.GetName(roleType)}", CustomOptionHolder.RATES, 0, null, false, "", color)
+    base(baseId, type, Enum.TryParse<TranslateKey>(Enum.GetName(roleType), out var key) ? key : TranslateKey.None, CustomOptionHolder.RATES, 0, null, false, "", color)
     {
         IsRoleEnabled = roleEnabled;
         IsHeader = true;
-        HeaderText = $"{Enum.GetName(roleType)}";
+        HeaderKey = NameKey;
 
         if (max <= 0 || !roleEnabled)
         {
@@ -24,16 +24,16 @@ public class CustomRoleOption : CustomOption
 
         if (max > 1)
         {
-            NumberOfRoleOption = Normal(baseId + 10000, type, "NumberOfRole", 1f, 1f, 15f, 1f, this);
+            NumberOfRoleOption = Normal(baseId + 10000, type, TranslateKey.NumberOfRole, 1f, 1f, 15f, 1f, this);
         }
     }
 
-    public CustomRoleOption(int baseId, CustomOptionType type, string name, Color color, int max = 15, bool roleEnabled = true) :
-    base(baseId, type, name, CustomOptionHolder.RATES, 0, null, false, "", color)
+    public CustomRoleOption(int baseId, CustomOptionType type, TranslateKey nameKey, Color color, int max = 15, bool roleEnabled = true) :
+    base(baseId, type, nameKey, CustomOptionHolder.RATES, 0, null, false, "", color)
     {
         IsRoleEnabled = roleEnabled;
         IsHeader = true;
-        HeaderText = name;
+        HeaderKey = nameKey;
 
         if (max <= 0 || !roleEnabled)
         {
@@ -42,7 +42,7 @@ public class CustomRoleOption : CustomOption
 
         if (max > 1)
         {
-            NumberOfRoleOption = Normal(baseId + 10000, type, "NumberOfRole", 1f, 1f, 15f, 1f, this);
+            NumberOfRoleOption = Normal(baseId + 10000, type, TranslateKey.NumberOfRole, 1f, 1f, 15f, 1f, this);
         }
     }
 }

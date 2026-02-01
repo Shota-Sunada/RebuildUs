@@ -85,7 +85,7 @@ public static class ClientOptions
         var moreOptions = UnityEngine.Object.Instantiate(ButtonPrefab, __instance.CensorChatButton.transform.parent);
         moreOptions.transform.localPosition = __instance.CensorChatButton.transform.localPosition + Vector3.down * 1.0f;
         moreOptions.gameObject.SetActive(true);
-        moreOptions.Text.text = Tr.Get("ModOptionsText");
+        moreOptions.Text.text = Tr.Get(TranslateKey.ModOptionsText);
         var moreOptionsButton = moreOptions.GetComponent<PassiveButton>();
         moreOptionsButton.OnClick = new Button.ButtonClickedEvent();
         moreOptionsButton.OnClick.AddListener((Action)(() =>
@@ -136,7 +136,7 @@ public static class ClientOptions
         var title = UnityEngine.Object.Instantiate(TitleText, PopUp.transform);
         title.GetComponent<RectTransform>().localPosition = Vector3.up * 2.3f;
         title.gameObject.SetActive(true);
-        title.text = Tr.Get("MoreOptionsText");
+        title.text = Tr.Get(TranslateKey.MoreOptionsText);
         title.name = "TitleText";
     }
 
@@ -165,7 +165,7 @@ public static class ClientOptions
             button.onState = info.DefaultValue;
             button.Background.color = button.onState ? Color.green : Palette.ImpostorRed;
 
-            button.Text.text = Tr.Get(info.Title);
+            button.Text.text = Tr.GetDynamic(info.Title);
             button.Text.fontSizeMin = button.Text.fontSizeMax = 2.2f;
             button.Text.font = UnityEngine.Object.Instantiate(TitleText.font);
             button.Text.GetComponent<RectTransform>().sizeDelta = new Vector2(2, 2);
@@ -203,7 +203,7 @@ public static class ClientOptions
             var pos = new Vector3(1.2f, -2.5f, -0.5f);
             var transform = button.transform;
             transform.localPosition = pos;
-            button.Text.text = Tr.Get("Next");
+            button.Text.text = Tr.Get(TranslateKey.Next);
             button.Text.fontSizeMin = button.Text.fontSizeMax = 2.2f;
             button.Text.font = UnityEngine.Object.Instantiate(TitleText.font);
             button.Text.GetComponent<RectTransform>().sizeDelta = new Vector2(2, 2);
@@ -227,7 +227,7 @@ public static class ClientOptions
             var pos = new Vector3(-1.2f, -2.5f, -0.5f);
             var transform = button.transform;
             transform.localPosition = pos;
-            button.Text.text = Tr.Get("Previous");
+            button.Text.text = Tr.Get(TranslateKey.Previous);
             button.Text.fontSizeMin = button.Text.fontSizeMax = 2.2f;
             button.Text.font = UnityEngine.Object.Instantiate(TitleText.font);
             button.Text.GetComponent<RectTransform>().sizeDelta = new Vector2(2, 2);
@@ -261,3 +261,5 @@ public static class ClientOptions
         }
     }
 }
+
+

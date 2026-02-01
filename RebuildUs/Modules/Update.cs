@@ -153,7 +153,7 @@ public static class Update
                 if (ModMapOptions.ShowLighterDarker && meetingShow)
                 {
                     TagStringBuilder.Append(" (")
-                        .Append(Helpers.IsLighterColor(target.Data.DefaultOutfit.ColorId) ? Tr.Get("DetectiveLightLabel") : Tr.Get("DetectiveDarkLabel"))
+                        .Append(Helpers.IsLighterColor(target.Data.DefaultOutfit.ColorId) ? Tr.Get(TranslateKey.DetectiveLightLabel) : Tr.Get(TranslateKey.DetectiveDarkLabel))
                         .Append(')');
                 }
 
@@ -414,3 +414,4 @@ public static class Update
         }
     }
 }
+

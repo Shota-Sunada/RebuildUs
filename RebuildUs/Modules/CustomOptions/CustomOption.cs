@@ -25,7 +25,7 @@ public partial class CustomOption
     public static int Preset = 0;
 
     public int Id;
-    public string NameKey;
+    public TranslateKey NameKey;
     public string Format;
     public Color Color;
     public object[] Selections;
@@ -37,7 +37,7 @@ public partial class CustomOption
     public CustomOption Parent;
     public List<CustomOption> Children;
     public bool IsHeader;
-    public string HeaderText;
+    public TranslateKey HeaderKey;
     public CustomOptionType Type;
     public bool HideIfParentEnabled;
 
@@ -52,7 +52,7 @@ public partial class CustomOption
     public CustomOption() { }
 
     // Option creation
-    public CustomOption(int id, CustomOptionType type, string nameKey, object[] selections, object defaultValue, CustomOption parent, bool hideIfParentEnabled, string format, Color color)
+    public CustomOption(int id, CustomOptionType type, TranslateKey nameKey, object[] selections, object defaultValue, CustomOption parent, bool hideIfParentEnabled, string format, Color color)
     {
         Id = id;
         NameKey = nameKey;
@@ -99,7 +99,7 @@ public partial class CustomOption
     public static CustomOption Normal(
         int id,
         CustomOptionType type,
-        string nameKey,
+        TranslateKey nameKey,
         string[] selections,
         CustomOption parent = null,
         byte r = byte.MaxValue,
@@ -116,9 +116,9 @@ public partial class CustomOption
     public static CustomOption Header(
         int id,
         CustomOptionType type,
-        string nameKey,
+        TranslateKey nameKey,
         string[] selections,
-        string headerText,
+        TranslateKey headerKey,
         byte r = byte.MaxValue,
         byte g = byte.MaxValue,
         byte b = byte.MaxValue,
@@ -127,14 +127,14 @@ public partial class CustomOption
         )
     {
         var opt = new CustomOption(id, type, nameKey, selections, "", null, false, format, new Color32(r, g, b, a));
-        opt.SetHeader(headerText);
+        opt.SetHeader(headerKey);
         return opt;
     }
 
     public static CustomOption Normal(
         int id,
         CustomOptionType type,
-        string nameKey,
+        TranslateKey nameKey,
         float defaultValue,
         float min,
         float max,
@@ -159,12 +159,12 @@ public partial class CustomOption
     public static CustomOption Header(
         int id,
         CustomOptionType type,
-        string nameKey,
+        TranslateKey nameKey,
         float defaultValue,
         float min,
         float max,
         float step,
-        string headerText,
+        TranslateKey headerKey,
         byte r = byte.MaxValue,
         byte g = byte.MaxValue,
         byte b = byte.MaxValue,
@@ -179,14 +179,14 @@ public partial class CustomOption
         }
 
         var opt = new CustomOption(id, type, nameKey, [.. selections], defaultValue, null, false, format, new Color32(r, g, b, a));
-        opt.SetHeader(headerText);
+        opt.SetHeader(headerKey);
         return opt;
     }
 
     public static CustomOption Normal(
         int id,
         CustomOptionType type,
-        string nameKey,
+        TranslateKey nameKey,
         bool defaultValue,
         CustomOption parent = null,
         byte r = byte.MaxValue,
@@ -197,15 +197,15 @@ public partial class CustomOption
         string format = ""
     )
     {
-        return new CustomOption(id, type, nameKey, [Tr.Get("Off"), Tr.Get("On")], defaultValue ? Tr.Get("On") : Tr.Get("Off"), parent, hideIfParentEnabled, format, new Color32(r, g, b, a));
+        return new CustomOption(id, type, nameKey, [Tr.Get(TranslateKey.Off), Tr.Get(TranslateKey.On)], defaultValue ? Tr.Get(TranslateKey.On) : Tr.Get(TranslateKey.Off), parent, hideIfParentEnabled, format, new Color32(r, g, b, a));
     }
 
     public static CustomOption Header(
         int id,
         CustomOptionType type,
-        string nameKey,
+        TranslateKey nameKey,
         bool defaultValue,
-        string headerText,
+        TranslateKey headerKey,
         byte r = byte.MaxValue,
         byte g = byte.MaxValue,
         byte b = byte.MaxValue,
@@ -213,15 +213,15 @@ public partial class CustomOption
         string format = ""
     )
     {
-        var opt = new CustomOption(id, type, nameKey, [Tr.Get("Off"), Tr.Get("On")], defaultValue ? Tr.Get("On") : Tr.Get("Off"), null, false, format, new Color32(r, g, b, a));
-        opt.SetHeader(headerText);
+        var opt = new CustomOption(id, type, nameKey, [Tr.Get(TranslateKey.Off), Tr.Get(TranslateKey.On)], defaultValue ? Tr.Get(TranslateKey.On) : Tr.Get(TranslateKey.Off), null, false, format, new Color32(r, g, b, a));
+        opt.SetHeader(headerKey);
         return opt;
     }
 
-    private void SetHeader(string text)
+    private void SetHeader(TranslateKey key)
     {
         IsHeader = true;
-        HeaderText = text;
+        HeaderKey = key;
     }
 
     // Static behaviour
@@ -309,11 +309,11 @@ public partial class CustomOption
 
         if (sel == "On")
         {
-            return "<color=#FFFF00FF>" + Tr.Get("On") + "</color>";
+            return "<color=#FFFF00FF>" + Tr.Get(TranslateKey.On) + "</color>";
         }
         else if (sel == "Off")
         {
-            return "<color=#CCCCCCFF>" + Tr.Get("Off") + "</color>";
+            return "<color=#CCCCCCFF>" + Tr.Get(TranslateKey.Off) + "</color>";
         }
 
         return sel;
@@ -321,7 +321,7 @@ public partial class CustomOption
 
     public string GetName()
     {
-        return Helpers.Cs(Color, Tr.Get(NameKey));
+        return Helpers.Cs(Color, Tr.GetDynamic(NameKey));
     }
 
     public virtual void UpdateSelection(int newSelection, RoleTypes icon, bool notifyUsers = true)
@@ -411,3 +411,5 @@ public partial class CustomOption
         }
     }
 }
+
+

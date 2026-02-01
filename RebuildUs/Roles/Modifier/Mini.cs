@@ -54,14 +54,14 @@ public class Mini : ModifierBase<Mini>
     {
         get
         {
-            return Tr.Get("MiniPostfix");
+            return Tr.Get(TranslateKey.MiniPostfix);
         }
     }
     public static string FullName
     {
         get
         {
-            return Tr.Get("Mini");
+            return Tr.Get(TranslateKey.Mini);
         }
     }
 
@@ -90,3 +90,4 @@ public class Mini : ModifierBase<Mini>
         GrowingUpDuration = CustomOptionHolder.MiniGrowingUpDuration.GetFloat();
     }
 }
+

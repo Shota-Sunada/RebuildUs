@@ -49,6 +49,22 @@
       }
     },
     {
+      "label": "Sync Translations",
+      "command": "go run Tools/TranslateSync/translate_sync.go",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      }
+    },
+    {
+      "label": "Add Translations",
+      "command": "go run Tools/AddTranslation/add_translation.go",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      }
+    },
+    {
       "label": "Taskkill",
       "command": "powershell -ExecutionPolicy Bypass .\\taskkill.ps1",
       "group": {

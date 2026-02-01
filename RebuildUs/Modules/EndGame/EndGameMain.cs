@@ -339,7 +339,7 @@ public static class EndGameMain
 
         if (AdditionalTempData.IsGM)
         {
-            __instance.WinText.text = Tr.Get("GmGameOver");
+            __instance.WinText.text = Tr.Get(TranslateKey.GmGameOver);
             // __instance.WinText.color = GM.color;
         }
 
@@ -417,10 +417,10 @@ public static class EndGameMain
             switch (w)
             {
                 // case EWinCondition.OpportunistWin:
-                //     extraText += Tr.Get("opportunistExtra");
+                //     extraText += Tr.Get(TranslateKey.opportunistExtra);
                 //     break;
                 case WinCondition.LoversTeamWin:
-                    extraText += Tr.Get("LoversExtra");
+                    extraText += Tr.Get(TranslateKey.LoversExtra);
                     break;
                 default:
                     break;
@@ -429,11 +429,11 @@ public static class EndGameMain
 
         if (extraText.Length > 0)
         {
-            TextRenderer.text = string.Format(Tr.Get(bonusText + "Extra"), extraText);
+            TextRenderer.text = string.Format(Tr.GetDynamic(bonusText + "Extra"), extraText);
         }
         else
         {
-            TextRenderer.text = Tr.Get(bonusText);
+            TextRenderer.text = Tr.GetDynamic(bonusText);
         }
 
         if (ModMapOptions.ShowRoleSummary)
@@ -444,7 +444,7 @@ public static class EndGameMain
             roleSummary.transform.localScale = new Vector3(1f, 1f, 1f);
 
             var roleSummaryText = new StringBuilder();
-            roleSummaryText.AppendLine(Tr.Get("RoleSummaryText"));
+            roleSummaryText.AppendLine(Tr.Get(TranslateKey.RoleSummaryText));
             AdditionalTempData.PlayerRoles.Sort((x, y) =>
             {
                 var roleX = x.Roles.Count > 0 ? x.Roles[0] : null;
@@ -465,7 +465,7 @@ public static class EndGameMain
             {
                 if (data.PlayerName == "") continue;
                 var taskInfo = data.TasksTotal > 0 ? $"<color=#FAD934FF>{data.TasksCompleted}/{data.TasksTotal}</color>" : "";
-                var aliveDead = Tr.Get($"{data.Status}");
+                var aliveDead = Tr.GetDynamic($"{data.Status}");
                 var result = $"{data.PlayerName + data.NameSuffix}<pos=18.5%>{taskInfo}<pos=25%>{aliveDead}<pos=34%>{data.RoleNames}";
                 roleSummaryText.AppendLine(result);
                 Logger.LogInfo(result, "Result");
@@ -495,7 +495,7 @@ public static class EndGameMain
             //         if (data.PlayerName == "") continue;
             //         // var taskInfo = data.TasksTotal > 0 ? $"{data.TasksCompleted}/{data.TasksTotal}" : "タスクなし";
             //         var taskInfo = string.Format("{0:D2}", data.TasksCompleted) + "/" + string.Format("{0:D2}", data.TasksTotal);
-            //         string aliveDead = Tr.Get($"{data.Status}");
+            //         string aliveDead = Tr.GetDynamic($"{data.Status}");
             //         string result = "";
             //         result += EndGameResult.CachedWinners.ToArray().Count(x => x.PlayerName == data.PlayerName) != 0 ? ":crown: | " : ":skull: | ";
             //         result += string.Format("{0,-6} | {1,-2} | {2}", taskInfo, aliveDead, data.RoleNames);

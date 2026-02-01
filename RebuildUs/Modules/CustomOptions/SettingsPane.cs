@@ -117,7 +117,7 @@ public partial class CustomOption
 
                 var categoryHeaderMasked = UnityEngine.Object.Instantiate(__instance.categoryHeaderOrigin);
                 categoryHeaderMasked.SetHeader(StringNames.ImpostorsCategory, 61);
-                categoryHeaderMasked.Title.text = Helpers.Cs(option.Color, Tr.Get(option.HeaderText != "" ? option.HeaderText : option.NameKey));
+                categoryHeaderMasked.Title.text = Helpers.Cs(option.Color, option.HeaderKey != TranslateKey.None ? Tr.Get(option.HeaderKey) : Tr.Get(option.NameKey));
                 categoryHeaderMasked.Title.outlineColor = Color.white;
                 categoryHeaderMasked.Title.outlineWidth = 0.1f;
                 categoryHeaderMasked.transform.SetParent(__instance.settingsContainer);
@@ -163,13 +163,13 @@ public partial class CustomOption
             int value = option.GetSelection();
             var (viewName, viewValue) = HandleSpecialOptionsView(option, option.NameKey, option.Selections[value].ToString());
             viewSettingsInfoPanel.SetInfo(StringNames.ImpostorsCategory, viewValue, 61);
-            viewSettingsInfoPanel.titleText.text = Tr.Get(viewName);
+            viewSettingsInfoPanel.titleText.text = Tr.GetDynamic(viewName);
 
             if (option.IsHeader &&
                 (option.Type is CustomOptionType.Neutral or CustomOptionType.Crewmate or CustomOptionType.Impostor or CustomOptionType.Modifier)
             )
             {
-                viewSettingsInfoPanel.titleText.text = Tr.Get("SpawnChance");
+                viewSettingsInfoPanel.titleText.text = Tr.Get(TranslateKey.SpawnChance);
             }
 
             __instance.settingsInfo.Add(viewSettingsInfoPanel.gameObject);
@@ -219,11 +219,11 @@ public partial class CustomOption
                 categoryHeaderMasked.SetHeader(StringNames.ImpostorsCategory, 61);
                 categoryHeaderMasked.Title.text = currentType switch
                 {
-                    CustomOptionType.Impostor => Tr.Get("ImpostorRoles"),
-                    CustomOptionType.Neutral => Tr.Get("NeutralRoles"),
-                    CustomOptionType.Crewmate => Tr.Get("CrewmateRoles"),
-                    CustomOptionType.Modifier => Tr.Get("Modifiers"),
-                    _ => Tr.Get("Others")
+                    CustomOptionType.Impostor => Tr.Get(TranslateKey.ImpostorRoles),
+                    CustomOptionType.Neutral => Tr.Get(TranslateKey.NeutralRoles),
+                    CustomOptionType.Crewmate => Tr.Get(TranslateKey.CrewmateRoles),
+                    CustomOptionType.Modifier => Tr.Get(TranslateKey.Modifiers),
+                    _ => Tr.Get(TranslateKey.Others)
                 };
                 categoryHeaderMasked.Title.outlineColor = Color.white;
                 categoryHeaderMasked.Title.outlineWidth = 0.1f;
@@ -256,7 +256,7 @@ public partial class CustomOption
             int value = option.GetSelection();
             var (optName, optValue) = HandleSpecialOptionsView(option, option.NameKey, option.Selections[value].ToString());
             viewSettingsInfoPanel.SetInfo(StringNames.ImpostorsCategory, optValue, 61);
-            viewSettingsInfoPanel.titleText.text = Helpers.Cs(option.Color, Tr.Get(optName));
+            viewSettingsInfoPanel.titleText.text = Helpers.Cs(option.Color, Tr.GetDynamic(optName));
             viewSettingsInfoPanel.titleText.outlineColor = Color.white;
             viewSettingsInfoPanel.titleText.outlineWidth = 0.1f;
             if (option.Type == CustomOptionType.Modifier)
@@ -274,7 +274,7 @@ public partial class CustomOption
     public static void SettingsPaneAwake(LobbyViewSettingsPane __instance)
     {
         __instance.rolesTabButton.gameObject.SetActive(false);
-        __instance.gameModeText.text = Tr.Get("GameModeText");
+        __instance.gameModeText.text = Tr.Get(TranslateKey.GameModeText);
 
         var overview = __instance.taskTabButton.gameObject;
         __instance.StartCoroutine(Effects.Lerp(2f, new Action<float>(p => { __instance.taskTabButton.gameObject.transform.FindChild("FontPlacer").GetComponentInChildren<TextMeshPro>().text = "Among Us"; })));
@@ -283,12 +283,12 @@ public partial class CustomOption
         overview.transform.FindChild("FontPlacer").transform.localScale = new Vector3(1.35f, 1f, 1f);
         overview.transform.FindChild("FontPlacer").transform.localPosition = new Vector3(-0.6f, -0.1f, 0f);
 
-        GeneralPaneButton = CreateCustomButton(__instance, PanePage.General, "RUSettings", Tr.Get("TabGeneral"), CustomOptionType.General);
-        OverviewPaneButton = CreateCustomButton(__instance, PanePage.Overview, "RoleOverview", Tr.Get("TabRolesOverview"), (CustomOptionType)99);
-        ImpostorPaneButton = CreateCustomButton(__instance, PanePage.Impostor, "ImpostorSettings", Tr.Get("TabImpostor"), CustomOptionType.Impostor);
-        CrewmatePaneButton = CreateCustomButton(__instance, PanePage.Crewmate, "CrewmateSettings", Tr.Get("TabCrewmate"), CustomOptionType.Crewmate);
-        NeutralPaneButton = CreateCustomButton(__instance, PanePage.Neutral, "NeutralSettings", Tr.Get("TabNeutral"), CustomOptionType.Neutral);
-        ModifierPaneButton = CreateCustomButton(__instance, PanePage.Modifier, "ModifierSettings", Tr.Get("TabModifiers"), CustomOptionType.Modifier);
+        GeneralPaneButton = CreateCustomButton(__instance, PanePage.General, "RUSettings", Tr.Get(TranslateKey.TabGeneral), CustomOptionType.General);
+        OverviewPaneButton = CreateCustomButton(__instance, PanePage.Overview, "RoleOverview", Tr.Get(TranslateKey.TabRolesOverview), (CustomOptionType)99);
+        ImpostorPaneButton = CreateCustomButton(__instance, PanePage.Impostor, "ImpostorSettings", Tr.Get(TranslateKey.TabImpostor), CustomOptionType.Impostor);
+        CrewmatePaneButton = CreateCustomButton(__instance, PanePage.Crewmate, "CrewmateSettings", Tr.Get(TranslateKey.TabCrewmate), CustomOptionType.Crewmate);
+        NeutralPaneButton = CreateCustomButton(__instance, PanePage.Neutral, "NeutralSettings", Tr.Get(TranslateKey.TabNeutral), CustomOptionType.Neutral);
+        ModifierPaneButton = CreateCustomButton(__instance, PanePage.Modifier, "ModifierSettings", Tr.Get(TranslateKey.TabModifiers), CustomOptionType.Modifier);
     }
 
     public static GameObject CreateCustomButton(LobbyViewSettingsPane __instance, PanePage id, string buttonName, string buttonText, CustomOptionType optionType)
@@ -353,3 +353,5 @@ public partial class CustomOption
         return new(name, val);
     }
 }
+
+

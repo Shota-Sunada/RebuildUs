@@ -98,49 +98,54 @@ public static class Tr
         }
     }
 
-    public static string Get(string key, params object[] args)
+    public static string Get(TranslateKey key, params object[] args)
     {
-        if (string.IsNullOrEmpty(key)) return NO_KEY;
-        if (key is BLANK) return string.Empty;
-
-        // Strip out color tags and leading dashes
-        string keyClean = Regex.Replace(key, "<.*?>", "");
-        keyClean = Regex.Replace(keyClean, "^-\\s*", "");
-        keyClean = keyClean.Trim();
-
+        string keyStr = key.ToString();
         var lang = TranslationController.InstanceExists ? FastDestroyableSingleton<TranslationController>.Instance.currentLanguage.languageID : SupportedLangs.English;
 
         string result = null;
-        if (CustomTranslations.TryGetValue(lang, out var customLang) && customLang.TryGetValue(keyClean, out result)) { }
-        else if (lang != SupportedLangs.English && CustomTranslations.TryGetValue(SupportedLangs.English, out var customEn) && customEn.TryGetValue(keyClean, out result)) { }
-        else if (InternalTranslations.TryGetValue(lang, out var internalLang) && internalLang.TryGetValue(keyClean, out result)) { }
-        else if (lang != SupportedLangs.English && InternalTranslations.TryGetValue(SupportedLangs.English, out var internalEn) && internalEn.TryGetValue(keyClean, out result)) { }
+        if (CustomTranslations.TryGetValue(lang, out var customLang) && customLang.TryGetValue(keyStr, out result)) { }
+        else if (lang != SupportedLangs.English && CustomTranslations.TryGetValue(SupportedLangs.English, out var customEn) && customEn.TryGetValue(keyStr, out result)) { }
+        else if (InternalTranslations.TryGetValue(lang, out var internalLang) && internalLang.TryGetValue(keyStr, out result)) { }
+        else if (lang != SupportedLangs.English && InternalTranslations.TryGetValue(SupportedLangs.English, out var internalEn) && internalEn.TryGetValue(keyStr, out result)) { }
 
         if (result == null)
         {
-            if (MissingKeys.Add(keyClean))
+            if (MissingKeys.Add(keyStr))
             {
-                Logger.LogWarn($"Translation key not found: {keyClean}");
+                Logger.LogWarn($"Translation key not found: {keyStr}");
             }
             return NOTFOUND;
         }
         else if (string.IsNullOrEmpty(result))
         {
-            Logger.LogWarn($"Translation value is null or empty: {keyClean}");
+            Logger.LogWarn($"Translation value is null or empty: {keyStr}");
             return NO_VALUE;
         }
 
-        string finalStr = key.Replace(keyClean, result);
-
         try
         {
-            return args.Length > 0 ? string.Format(finalStr, args) : finalStr;
+            return args.Length > 0 ? string.Format(result, args) : result;
         }
         catch (Exception ex)
         {
-            Logger.LogError($"Failed to format string for key {key}: {ex.Message}");
-            return finalStr;
+            Logger.LogError($"Failed to format string for key {keyStr}: {ex.Message}");
+            return result;
         }
+    }
+
+    /// <summary>
+    /// Helper to get translation from a string key. Use this only for dynamic keys.
+    /// TODO: This method should be removed and all calls should be replaced with TranslateKey.
+    /// </summary>
+    public static string GetDynamic(string keyStr, params object[] args)
+    {
+        if (Enum.TryParse<TranslateKey>(keyStr, out var key))
+        {
+            return Get(key, args);
+        }
+        Logger.LogWarn($"Dynamic translation key not found in enum: {keyStr}");
+        return NOTFOUND;
     }
 
     public static void Update()

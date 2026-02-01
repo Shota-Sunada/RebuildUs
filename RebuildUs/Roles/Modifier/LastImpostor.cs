@@ -24,14 +24,14 @@ public class LastImpostor : ModifierBase<LastImpostor>
     {
         get
         {
-            return Tr.Get("LastImpostorPostfix");
+            return Tr.Get(TranslateKey.LastImpostorPostfix);
         }
     }
     public static string FullName
     {
         get
         {
-            return Tr.Get("LastImpostor");
+            return Tr.Get(TranslateKey.LastImpostor);
         }
     }
 
@@ -262,17 +262,17 @@ public class LastImpostor : ModifierBase<LastImpostor>
             msgBase = "DivineMessageTeam";
             if (p.IsTeamCrewmate())
             {
-                msgInfo = Tr.Get("DivineCrew");
+                msgInfo = Tr.Get(TranslateKey.DivineCrew);
                 color = Color.white;
             }
             else if (p.IsNeutral())
             {
-                msgInfo = Tr.Get("DivineNeutral");
+                msgInfo = Tr.Get(TranslateKey.DivineNeutral);
                 color = Color.yellow;
             }
             else
             {
-                msgInfo = Tr.Get("DivineImpostor");
+                msgInfo = Tr.Get(TranslateKey.DivineImpostor);
                 color = Palette.ImpostorRed;
             }
         }
@@ -291,7 +291,7 @@ public class LastImpostor : ModifierBase<LastImpostor>
             msgInfo = sb.ToString();
         }
 
-        string msg = string.Format(Tr.Get(msgBase), p.name, msgInfo);
+        string msg = string.Format(Tr.GetDynamic(msgBase), p.name, msgInfo);
         if (!string.IsNullOrWhiteSpace(msg))
         {
             // TODO: FortuneTeller.fortuneTellerMessage(msg, 5f, color);
@@ -327,3 +327,5 @@ public class LastImpostor : ModifierBase<LastImpostor>
         }
     }
 }
+
+

@@ -28,14 +28,14 @@ public class AntiTeleport : ModifierBase<AntiTeleport>
     {
         get
         {
-            return Tr.Get("AntiTeleportPostfix");
+            return Tr.Get(TranslateKey.AntiTeleportPostfix);
         }
     }
     public static string FullName
     {
         get
         {
-            return Tr.Get("AntiTeleport");
+            return Tr.Get(TranslateKey.AntiTeleport);
         }
     }
 
@@ -63,3 +63,4 @@ public class AntiTeleport : ModifierBase<AntiTeleport>
         Position = new Vector3();
     }
 }
+

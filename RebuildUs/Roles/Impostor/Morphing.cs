@@ -58,7 +58,7 @@ public class Morphing : RoleBase<Morphing>
                 {
                     SampledTarget = CurrentTarget;
                     MorphingButton.Sprite = AssetLoader.MorphButton;
-                    MorphingButton.ButtonText = Tr.Get("MorphText");
+                    MorphingButton.ButtonText = Tr.Get(TranslateKey.MorphText);
                     MorphingButton.EffectDuration = 1f;
                 }
             },
@@ -68,7 +68,7 @@ public class Morphing : RoleBase<Morphing>
             {
                 MorphingButton.Timer = MorphingButton.MaxTimer;
                 MorphingButton.Sprite = AssetLoader.SampleButton;
-                MorphingButton.ButtonText = Tr.Get("SampleText");
+                MorphingButton.ButtonText = Tr.Get(TranslateKey.SampleText);
                 MorphingButton.IsEffectActive = false;
                 MorphingButton.ActionButton.cooldownTimerText.color = Palette.EnabledColor;
                 SampledTarget = null;
@@ -86,11 +86,11 @@ public class Morphing : RoleBase<Morphing>
                 {
                     MorphingButton.Timer = MorphingButton.MaxTimer;
                     MorphingButton.Sprite = AssetLoader.SampleButton;
-                    MorphingButton.ButtonText = Tr.Get("SampleText");
+                    MorphingButton.ButtonText = Tr.Get(TranslateKey.SampleText);
                 }
             },
             false,
-            Tr.Get("SampleText")
+            Tr.Get(TranslateKey.SampleText)
         );
     }
     public static void SetButtonCooldowns()
@@ -143,3 +143,4 @@ public class Morphing : RoleBase<Morphing>
         MorphTimer = 0;
     }
 }
+
