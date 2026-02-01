@@ -5,9 +5,6 @@ namespace RebuildUs.Modules.CustomOptions;
 public enum CustomGamemodes
 {
     Classic,
-    Guesser,
-    HideNSeek,
-    PropHunt
 }
 public enum CustomOptionType
 {
