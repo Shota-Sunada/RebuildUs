@@ -66,23 +66,23 @@ public partial class CustomOption
                     break;
                 case OptionPage.GeneralSettings:
                     GeneralTab.gameObject.SetActive(true);
-                    __instance.MenuDescriptionText.text = Tr.Get("OptionPage.GeneralSettings");
+                    __instance.MenuDescriptionText.text = Tr.Get("GeneralSettings");
                     break;
                 case OptionPage.ImpostorSettings:
                     ImpostorTab.gameObject.SetActive(true);
-                    __instance.MenuDescriptionText.text = Tr.Get("OptionPage.ImpostorSettings");
+                    __instance.MenuDescriptionText.text = Tr.Get("ImpostorSettings");
                     break;
                 case OptionPage.CrewmateSettings:
                     CrewmateTab.gameObject.SetActive(true);
-                    __instance.MenuDescriptionText.text = Tr.Get("OptionPage.CrewmateSettings");
+                    __instance.MenuDescriptionText.text = Tr.Get("CrewmateSettings");
                     break;
                 case OptionPage.NeutralSettings:
                     NeutralTab.gameObject.SetActive(true);
-                    __instance.MenuDescriptionText.text = Tr.Get("OptionPage.NeutralSettings");
+                    __instance.MenuDescriptionText.text = Tr.Get("NeutralSettings");
                     break;
                 case OptionPage.ModifierSettings:
                     ModifierTab.gameObject.SetActive(true);
-                    __instance.MenuDescriptionText.text = Tr.Get("OptionPage.ModifierSettings");
+                    __instance.MenuDescriptionText.text = Tr.Get("ModifierSettings");
                     break;
                 default:
                     Logger.LogWarn($"Invalid Option Page ID in ChangeTabPrefix: {tabNum}");
@@ -204,21 +204,21 @@ public partial class CustomOption
         // Game Settings
         gameSettingsButton.transform.localPosition = new(gameSettingsButton.transform.localPosition.x - 0.2f, gameSettingsButton.transform.localPosition.y + 1.65f, gameSettingsButton.transform.localPosition.z);
         gameSettingsButton.transform.localScale *= Vector2.one * 0.75f;
-        __instance.StartCoroutine(Effects.Lerp(2f, new Action<float>(p => { gameSettingsButton.transform.FindChild("FontPlacer").GetComponentInChildren<TextMeshPro>().text = Tr.Get("Option.AmongUsSettings"); })));
+        __instance.StartCoroutine(Effects.Lerp(2f, new Action<float>(p => { gameSettingsButton.transform.FindChild("FontPlacer").GetComponentInChildren<TextMeshPro>().text = Tr.Get("AmongUsSettings"); })));
         gameSettingsButton.OnMouseOut.RemoveAllListeners();
         gameSettingsButton.OnMouseOver.RemoveAllListeners();
         gameSettingsButton.SelectButton(false);
 
         // Mod General Settings
-        GeneralButton = CreateSettingButton(__instance, "RUGeneralSettingsButton", Tr.Get("OptionPage.GeneralSettingsButton"), OptionPage.GeneralSettings);
+        GeneralButton = CreateSettingButton(__instance, "RUGeneralSettingsButton", Tr.Get("GeneralSettingsButton"), OptionPage.GeneralSettings);
         GeneralTab = CreateSettingTab(__instance, "RUGeneralSettingsTab", CustomOptionType.General);
-        ImpostorButton = CreateSettingButton(__instance, "RUImpostorSettingsButton", Tr.Get("OptionPage.ImpostorSettingsButton"), OptionPage.ImpostorSettings);
+        ImpostorButton = CreateSettingButton(__instance, "RUImpostorSettingsButton", Tr.Get("ImpostorSettingsButton"), OptionPage.ImpostorSettings);
         ImpostorTab = CreateSettingTab(__instance, "RUGeneralImpostorTab", CustomOptionType.Impostor);
-        CrewmateButton = CreateSettingButton(__instance, "RUCrewmateSettingsButton", Tr.Get("OptionPage.CrewmateSettingsButton"), OptionPage.CrewmateSettings);
+        CrewmateButton = CreateSettingButton(__instance, "RUCrewmateSettingsButton", Tr.Get("CrewmateSettingsButton"), OptionPage.CrewmateSettings);
         CrewmateTab = CreateSettingTab(__instance, "RUCrewmateSettingsTab", CustomOptionType.Crewmate);
-        NeutralButton = CreateSettingButton(__instance, "RUNeutralSettingsButton", Tr.Get("OptionPage.NeutralSettingsButton"), OptionPage.NeutralSettings);
+        NeutralButton = CreateSettingButton(__instance, "RUNeutralSettingsButton", Tr.Get("NeutralSettingsButton"), OptionPage.NeutralSettings);
         NeutralTab = CreateSettingTab(__instance, "RUNeutralSettingsTab", CustomOptionType.Neutral);
-        ModifierButton = CreateSettingButton(__instance, "RUModifierSettingsButton", Tr.Get("OptionPage.ModifierSettingsButton"), OptionPage.ModifierSettings);
+        ModifierButton = CreateSettingButton(__instance, "RUModifierSettingsButton", Tr.Get("ModifierSettingsButton"), OptionPage.ModifierSettings);
         ModifierTab = CreateSettingTab(__instance, "RUModifierSettingsTab", CustomOptionType.Modifier);
 
         __instance.GameSettingsButton.SelectButton(true);
@@ -325,7 +325,7 @@ public partial class CustomOption
                 && (option.Type is CustomOptionType.Neutral or CustomOptionType.Crewmate or CustomOptionType.Impostor or CustomOptionType.Modifier)
             )
             {
-                so.TitleText.text = Tr.Get("Option.SpawnChance");
+                so.TitleText.text = Tr.Get("SpawnChance");
             }
 
             if (so.TitleText.text.Length > 25)

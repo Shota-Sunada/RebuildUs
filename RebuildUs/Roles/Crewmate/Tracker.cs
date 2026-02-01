@@ -154,7 +154,7 @@ public class Tracker : RoleBase<Tracker>
             hm.UseButton,
             AbilitySlot.CrewmateAbilityPrimary,
             false,
-            Tr.Get("Hud.TrackerText")
+            Tr.Get("TrackerText")
         );
 
         TrackerTrackCorpsesButton = new CustomButton(
@@ -179,7 +179,7 @@ public class Tracker : RoleBase<Tracker>
                 TrackerTrackCorpsesButton.Timer = TrackerTrackCorpsesButton.MaxTimer;
             },
             false,
-            Tr.Get("Hud.PathfindText")
+            Tr.Get("PathfindText")
         );
     }
     public static void SetButtonCooldowns()

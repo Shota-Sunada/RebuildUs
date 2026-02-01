@@ -140,17 +140,17 @@ public class Medium : RoleBase<Medium>
                         randomNumber = RebuildUs.Instance.Rnd.Next(3);
                     }
                 }
-                string typeOfColor = Helpers.IsLighterColor(Local.Target.KillerIfExisting.Data.DefaultOutfit.ColorId) ? Tr.Get("Hud.DetectiveColorLight") : Tr.Get("Hud.DetectiveColorDark");
+                string typeOfColor = Helpers.IsLighterColor(Local.Target.KillerIfExisting.Data.DefaultOutfit.ColorId) ? Tr.Get("DetectiveColorLight") : Tr.Get("DetectiveColorDark");
                 float timeSinceDeath = (float)(MeetingStartTime - Local.Target.TimeOfDeath).TotalMilliseconds;
                 string name = " (" + Local.Target.Player.Data.PlayerName + ")";
 
                 msg = randomNumber == 0
-                    ? string.Format(Tr.Get("Hud.MediumQuestion1"), RoleInfo.GetRolesString(Local.Target.Player, false, includeHidden: true)) + name
+                    ? string.Format(Tr.Get("MediumQuestion1"), RoleInfo.GetRolesString(Local.Target.Player, false, includeHidden: true)) + name
                     : randomNumber == 1
-                        ? string.Format(Tr.Get("Hud.MediumQuestion2"), typeOfColor) + name
+                        ? string.Format(Tr.Get("MediumQuestion2"), typeOfColor) + name
                         : randomNumber == 2
-                        ? string.Format(Tr.Get("Hud.MediumQuestion3"), Math.Round(timeSinceDeath / 1000)) + name
-                        : string.Format(Tr.Get("Hud.MediumQuestion4"), RoleInfo.GetRolesString(Local.Target.KillerIfExisting, false, includeHidden: true)) + name;
+                        ? string.Format(Tr.Get("MediumQuestion3"), Math.Round(timeSinceDeath / 1000)) + name
+                        : string.Format(Tr.Get("MediumQuestion4"), RoleInfo.GetRolesString(Local.Target.KillerIfExisting, false, includeHidden: true)) + name;
 
                 // Excludes mini
 
@@ -198,7 +198,7 @@ public class Medium : RoleBase<Medium>
                 }
             },
             false,
-            Tr.Get("Hud.MediumText")
+            Tr.Get("MediumText")
         );
     }
     public static void SetButtonCooldowns()

@@ -197,7 +197,7 @@ public partial class CustomOption
         string format = ""
     )
     {
-        return new CustomOption(id, type, nameKey, [Tr.Get("Option.Off"), Tr.Get("Option.On")], defaultValue ? Tr.Get("Option.On") : Tr.Get("Option.Off"), parent, hideIfParentEnabled, format, new Color32(r, g, b, a));
+        return new CustomOption(id, type, nameKey, [Tr.Get("Off"), Tr.Get("On")], defaultValue ? Tr.Get("On") : Tr.Get("Off"), parent, hideIfParentEnabled, format, new Color32(r, g, b, a));
     }
 
     public static CustomOption Header(
@@ -213,7 +213,7 @@ public partial class CustomOption
         string format = ""
     )
     {
-        var opt = new CustomOption(id, type, nameKey, [Tr.Get("Option.Off"), Tr.Get("Option.On")], defaultValue ? Tr.Get("Option.On") : Tr.Get("Option.Off"), null, false, format, new Color32(r, g, b, a));
+        var opt = new CustomOption(id, type, nameKey, [Tr.Get("Off"), Tr.Get("On")], defaultValue ? Tr.Get("On") : Tr.Get("Off"), null, false, format, new Color32(r, g, b, a));
         opt.SetHeader(headerText);
         return opt;
     }
@@ -309,11 +309,11 @@ public partial class CustomOption
 
         if (sel == "On")
         {
-            return "<color=#FFFF00FF>" + Tr.Get("Option.On") + "</color>";
+            return "<color=#FFFF00FF>" + Tr.Get("On") + "</color>";
         }
         else if (sel == "Off")
         {
-            return "<color=#CCCCCCFF>" + Tr.Get("Option.Off") + "</color>";
+            return "<color=#CCCCCCFF>" + Tr.Get("Off") + "</color>";
         }
 
         return sel;

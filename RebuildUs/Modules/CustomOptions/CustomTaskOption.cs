@@ -2,9 +2,9 @@ namespace RebuildUs.Modules.CustomOptions;
 
 public class CustomTasksOption((int commonId, int shortId, int longId) ids, CustomOptionType type, (int commonTasks, int shortTasks, int longTasks) defaultValue, CustomOption parent = null) : CustomOption
 {
-    public CustomOption CommonTaskOption = Normal(ids.commonId, type, "Option.NumCommonTask", defaultValue.commonTasks, 0f, 4f, 1f, parent);
-    public CustomOption ShortTaskOption = Normal(ids.shortId, type, "Option.NumShortTask", defaultValue.shortTasks, 0f, 15f, 1f, parent);
-    public CustomOption LongTaskOption = Normal(ids.longId, type, "Option.NumLongTask", defaultValue.longTasks, 0f, 23f, 1f, parent);
+    public CustomOption CommonTaskOption = Normal(ids.commonId, type, "NumCommonTask", defaultValue.commonTasks, 0f, 4f, 1f, parent);
+    public CustomOption ShortTaskOption = Normal(ids.shortId, type, "NumShortTask", defaultValue.shortTasks, 0f, 15f, 1f, parent);
+    public CustomOption LongTaskOption = Normal(ids.longId, type, "NumLongTask", defaultValue.longTasks, 0f, 23f, 1f, parent);
 
     public int CommonTasksNum { get { return Mathf.RoundToInt(CommonTaskOption.GetSelection()); } }
     public int ShortTasksNum { get { return Mathf.RoundToInt(ShortTaskOption.GetSelection()); } }

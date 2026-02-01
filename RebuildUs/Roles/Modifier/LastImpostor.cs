@@ -24,14 +24,14 @@ public class LastImpostor : ModifierBase<LastImpostor>
     {
         get
         {
-            return Tr.Get("Hud.LastImpostorPostfix");
+            return Tr.Get("LastImpostorPostfix");
         }
     }
     public static string FullName
     {
         get
         {
-            return Tr.Get("Modifier.LastImpostor");
+            return Tr.Get("LastImpostor");
         }
     }
 
@@ -259,27 +259,27 @@ public class LastImpostor : ModifierBase<LastImpostor>
 
         else if (DivineResult == DivineResults.Team)
         {
-            msgBase = "Option.DivineMessageTeam";
+            msgBase = "DivineMessageTeam";
             if (p.IsTeamCrewmate())
             {
-                msgInfo = Tr.Get("Option.DivineCrew");
+                msgInfo = Tr.Get("DivineCrew");
                 color = Color.white;
             }
             else if (p.IsNeutral())
             {
-                msgInfo = Tr.Get("Option.DivineNeutral");
+                msgInfo = Tr.Get("DivineNeutral");
                 color = Color.yellow;
             }
             else
             {
-                msgInfo = Tr.Get("Option.DivineImpostor");
+                msgInfo = Tr.Get("DivineImpostor");
                 color = Palette.ImpostorRed;
             }
         }
 
         else if (DivineResult == DivineResults.Role)
         {
-            msgBase = "Option.DivineMessageRole";
+            msgBase = "DivineMessageRole";
             var roleInfos = RoleInfo.GetRoleInfoForPlayer(p);
             var sb = new StringBuilder();
             for (var i = 0; i < roleInfos.Count; i++)

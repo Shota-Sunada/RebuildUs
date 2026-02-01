@@ -5,15 +5,15 @@ namespace RebuildUs.Modules;
 public static class ClientOptions
 {
     private static readonly SelectionBehaviour[] AllOptions = [
-        new SelectionBehaviour("ClientOption.GhostsSeeTasks", () => ModMapOptions.GhostsSeeInformation = RebuildUs.GhostsSeeInformation.Value = !RebuildUs.GhostsSeeInformation.Value, RebuildUs.GhostsSeeInformation.Value),
-        new SelectionBehaviour("ClientOption.GhostsSeeVotes", () => ModMapOptions.GhostsSeeVotes = RebuildUs.GhostsSeeVotes.Value = !RebuildUs.GhostsSeeVotes.Value, RebuildUs.GhostsSeeVotes.Value),
-        new SelectionBehaviour("ClientOption.GhostsSeeRoles", () => ModMapOptions.GhostsSeeRoles = RebuildUs.GhostsSeeRoles.Value = !RebuildUs.GhostsSeeRoles.Value, RebuildUs.GhostsSeeRoles.Value),
-        new SelectionBehaviour("ClientOption.ShowRoleSummary", () => ModMapOptions.ShowRoleSummary = RebuildUs.ShowRoleSummary.Value = !RebuildUs.ShowRoleSummary.Value, RebuildUs.ShowRoleSummary.Value),
-        new SelectionBehaviour("ClientOption.ShowLighterDarker", () => ModMapOptions.ShowLighterDarker = RebuildUs.ShowLighterDarker.Value = !RebuildUs.ShowLighterDarker.Value, RebuildUs.ShowLighterDarker.Value),
-        new SelectionBehaviour("ClientOption.BetterSabotageMap", () => ModMapOptions.BetterSabotageMap = RebuildUs.BetterSabotageMap.Value = !RebuildUs.BetterSabotageMap.Value, RebuildUs.BetterSabotageMap.Value),
-        new SelectionBehaviour("ClientOption.ForceNormalSabotageMap", () => ModMapOptions.ForceNormalSabotageMap = RebuildUs.ForceNormalSabotageMap.Value = !RebuildUs.ForceNormalSabotageMap.Value, RebuildUs.ForceNormalSabotageMap.Value),
-        new SelectionBehaviour("ClientOption.TransparentMap", () => ModMapOptions.TransparentMap = RebuildUs.TransparentMap.Value = !RebuildUs.TransparentMap.Value, RebuildUs.TransparentMap.Value),
-        new SelectionBehaviour("ClientOption.HideFakeTasks", () => ModMapOptions.HideFakeTasks = RebuildUs.HideFakeTasks.Value = !RebuildUs.HideFakeTasks.Value, RebuildUs.HideFakeTasks.Value),
+        new SelectionBehaviour("GhostsSeeTasks", () => ModMapOptions.GhostsSeeInformation = RebuildUs.GhostsSeeInformation.Value = !RebuildUs.GhostsSeeInformation.Value, RebuildUs.GhostsSeeInformation.Value),
+        new SelectionBehaviour("GhostsSeeVotes", () => ModMapOptions.GhostsSeeVotes = RebuildUs.GhostsSeeVotes.Value = !RebuildUs.GhostsSeeVotes.Value, RebuildUs.GhostsSeeVotes.Value),
+        new SelectionBehaviour("GhostsSeeRoles", () => ModMapOptions.GhostsSeeRoles = RebuildUs.GhostsSeeRoles.Value = !RebuildUs.GhostsSeeRoles.Value, RebuildUs.GhostsSeeRoles.Value),
+        new SelectionBehaviour("ShowRoleSummary", () => ModMapOptions.ShowRoleSummary = RebuildUs.ShowRoleSummary.Value = !RebuildUs.ShowRoleSummary.Value, RebuildUs.ShowRoleSummary.Value),
+        new SelectionBehaviour("ShowLighterDarker", () => ModMapOptions.ShowLighterDarker = RebuildUs.ShowLighterDarker.Value = !RebuildUs.ShowLighterDarker.Value, RebuildUs.ShowLighterDarker.Value),
+        new SelectionBehaviour("BetterSabotageMap", () => ModMapOptions.BetterSabotageMap = RebuildUs.BetterSabotageMap.Value = !RebuildUs.BetterSabotageMap.Value, RebuildUs.BetterSabotageMap.Value),
+        new SelectionBehaviour("ForceNormalSabotageMap", () => ModMapOptions.ForceNormalSabotageMap = RebuildUs.ForceNormalSabotageMap.Value = !RebuildUs.ForceNormalSabotageMap.Value, RebuildUs.ForceNormalSabotageMap.Value),
+        new SelectionBehaviour("TransparentMap", () => ModMapOptions.TransparentMap = RebuildUs.TransparentMap.Value = !RebuildUs.TransparentMap.Value, RebuildUs.TransparentMap.Value),
+        new SelectionBehaviour("HideFakeTasks", () => ModMapOptions.HideFakeTasks = RebuildUs.HideFakeTasks.Value = !RebuildUs.HideFakeTasks.Value, RebuildUs.HideFakeTasks.Value),
     ];
 
     private static GameObject PopUp;
@@ -85,7 +85,7 @@ public static class ClientOptions
         var moreOptions = UnityEngine.Object.Instantiate(ButtonPrefab, __instance.CensorChatButton.transform.parent);
         moreOptions.transform.localPosition = __instance.CensorChatButton.transform.localPosition + Vector3.down * 1.0f;
         moreOptions.gameObject.SetActive(true);
-        moreOptions.Text.text = Tr.Get("Hud.ModOptionsText");
+        moreOptions.Text.text = Tr.Get("ModOptionsText");
         var moreOptionsButton = moreOptions.GetComponent<PassiveButton>();
         moreOptionsButton.OnClick = new Button.ButtonClickedEvent();
         moreOptionsButton.OnClick.AddListener((Action)(() =>
@@ -136,7 +136,7 @@ public static class ClientOptions
         var title = UnityEngine.Object.Instantiate(TitleText, PopUp.transform);
         title.GetComponent<RectTransform>().localPosition = Vector3.up * 2.3f;
         title.gameObject.SetActive(true);
-        title.text = Tr.Get("Hud.MoreOptionsText");
+        title.text = Tr.Get("MoreOptionsText");
         title.name = "TitleText";
     }
 
@@ -203,7 +203,7 @@ public static class ClientOptions
             var pos = new Vector3(1.2f, -2.5f, -0.5f);
             var transform = button.transform;
             transform.localPosition = pos;
-            button.Text.text = Tr.Get("Hud.Next");
+            button.Text.text = Tr.Get("Next");
             button.Text.fontSizeMin = button.Text.fontSizeMax = 2.2f;
             button.Text.font = UnityEngine.Object.Instantiate(TitleText.font);
             button.Text.GetComponent<RectTransform>().sizeDelta = new Vector2(2, 2);
@@ -227,7 +227,7 @@ public static class ClientOptions
             var pos = new Vector3(-1.2f, -2.5f, -0.5f);
             var transform = button.transform;
             transform.localPosition = pos;
-            button.Text.text = Tr.Get("Hud.Previous");
+            button.Text.text = Tr.Get("Previous");
             button.Text.fontSizeMin = button.Text.fontSizeMax = 2.2f;
             button.Text.font = UnityEngine.Object.Instantiate(TitleText.font);
             button.Text.GetComponent<RectTransform>().sizeDelta = new Vector2(2, 2);

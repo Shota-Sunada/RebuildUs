@@ -81,7 +81,7 @@ public class Medic : RoleBase<Medic>
             hm.UseButton,
             AbilitySlot.CrewmateAbilityPrimary,
             false,
-            Tr.Get("Hud.ShieldText")
+            Tr.Get("ShieldText")
         );
     }
     public static void SetButtonCooldowns()

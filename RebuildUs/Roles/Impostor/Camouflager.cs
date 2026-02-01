@@ -70,7 +70,7 @@ public class Camouflager : RoleBase<Camouflager>
             Camouflager.Duration,
             () => { CamouflagerButton.Timer = CamouflagerButton.MaxTimer; },
             false,
-            Tr.Get("Hud.CamoText")
+            Tr.Get("CamoText")
         );
     }
     public static void SetButtonCooldowns()

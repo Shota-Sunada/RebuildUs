@@ -169,7 +169,7 @@ public partial class CustomOption
                 (option.Type is CustomOptionType.Neutral or CustomOptionType.Crewmate or CustomOptionType.Impostor or CustomOptionType.Modifier)
             )
             {
-                viewSettingsInfoPanel.titleText.text = Tr.Get("Option.SpawnChance");
+                viewSettingsInfoPanel.titleText.text = Tr.Get("SpawnChance");
             }
 
             __instance.settingsInfo.Add(viewSettingsInfoPanel.gameObject);
@@ -219,11 +219,11 @@ public partial class CustomOption
                 categoryHeaderMasked.SetHeader(StringNames.ImpostorsCategory, 61);
                 categoryHeaderMasked.Title.text = currentType switch
                 {
-                    CustomOptionType.Impostor => Tr.Get("OptionPage.ImpostorRoles"),
-                    CustomOptionType.Neutral => Tr.Get("OptionPage.NeutralRoles"),
-                    CustomOptionType.Crewmate => Tr.Get("OptionPage.CrewmateRoles"),
-                    CustomOptionType.Modifier => Tr.Get("OptionPage.Modifiers"),
-                    _ => Tr.Get("OptionPage.Others")
+                    CustomOptionType.Impostor => Tr.Get("ImpostorRoles"),
+                    CustomOptionType.Neutral => Tr.Get("NeutralRoles"),
+                    CustomOptionType.Crewmate => Tr.Get("CrewmateRoles"),
+                    CustomOptionType.Modifier => Tr.Get("Modifiers"),
+                    _ => Tr.Get("Others")
                 };
                 categoryHeaderMasked.Title.outlineColor = Color.white;
                 categoryHeaderMasked.Title.outlineWidth = 0.1f;
@@ -274,7 +274,7 @@ public partial class CustomOption
     public static void SettingsPaneAwake(LobbyViewSettingsPane __instance)
     {
         __instance.rolesTabButton.gameObject.SetActive(false);
-        __instance.gameModeText.text = Tr.Get("OptionPage.GameModeText");
+        __instance.gameModeText.text = Tr.Get("GameModeText");
 
         var overview = __instance.taskTabButton.gameObject;
         __instance.StartCoroutine(Effects.Lerp(2f, new Action<float>(p => { __instance.taskTabButton.gameObject.transform.FindChild("FontPlacer").GetComponentInChildren<TextMeshPro>().text = "Among Us"; })));
@@ -283,12 +283,12 @@ public partial class CustomOption
         overview.transform.FindChild("FontPlacer").transform.localScale = new Vector3(1.35f, 1f, 1f);
         overview.transform.FindChild("FontPlacer").transform.localPosition = new Vector3(-0.6f, -0.1f, 0f);
 
-        GeneralPaneButton = CreateCustomButton(__instance, PanePage.General, "RUSettings", Tr.Get("OptionPage.TabGeneral"), CustomOptionType.General);
-        OverviewPaneButton = CreateCustomButton(__instance, PanePage.Overview, "RoleOverview", Tr.Get("OptionPage.TabRolesOverview"), (CustomOptionType)99);
-        ImpostorPaneButton = CreateCustomButton(__instance, PanePage.Impostor, "ImpostorSettings", Tr.Get("OptionPage.TabImpostor"), CustomOptionType.Impostor);
-        CrewmatePaneButton = CreateCustomButton(__instance, PanePage.Crewmate, "CrewmateSettings", Tr.Get("OptionPage.TabCrewmate"), CustomOptionType.Crewmate);
-        NeutralPaneButton = CreateCustomButton(__instance, PanePage.Neutral, "NeutralSettings", Tr.Get("OptionPage.TabNeutral"), CustomOptionType.Neutral);
-        ModifierPaneButton = CreateCustomButton(__instance, PanePage.Modifier, "ModifierSettings", Tr.Get("OptionPage.TabModifiers"), CustomOptionType.Modifier);
+        GeneralPaneButton = CreateCustomButton(__instance, PanePage.General, "RUSettings", Tr.Get("TabGeneral"), CustomOptionType.General);
+        OverviewPaneButton = CreateCustomButton(__instance, PanePage.Overview, "RoleOverview", Tr.Get("TabRolesOverview"), (CustomOptionType)99);
+        ImpostorPaneButton = CreateCustomButton(__instance, PanePage.Impostor, "ImpostorSettings", Tr.Get("TabImpostor"), CustomOptionType.Impostor);
+        CrewmatePaneButton = CreateCustomButton(__instance, PanePage.Crewmate, "CrewmateSettings", Tr.Get("TabCrewmate"), CustomOptionType.Crewmate);
+        NeutralPaneButton = CreateCustomButton(__instance, PanePage.Neutral, "NeutralSettings", Tr.Get("TabNeutral"), CustomOptionType.Neutral);
+        ModifierPaneButton = CreateCustomButton(__instance, PanePage.Modifier, "ModifierSettings", Tr.Get("TabModifiers"), CustomOptionType.Modifier);
     }
 
     public static GameObject CreateCustomButton(LobbyViewSettingsPane __instance, PanePage id, string buttonName, string buttonText, CustomOptionType optionType)
@@ -318,7 +318,7 @@ public partial class CustomOption
         if (option == CustomOptionHolder.CrewmateRolesCountMin)
         {
             val = "";
-            name = "OptionPage.CrewmateRoles";
+            name = "CrewmateRoles";
             var min = CustomOptionHolder.CrewmateRolesCountMin.GetSelection();
             var max = CustomOptionHolder.CrewmateRolesCountMax.GetSelection();
             if (min > max) min = max;
@@ -326,7 +326,7 @@ public partial class CustomOption
         }
         if (option == CustomOptionHolder.NeutralRolesCountMin)
         {
-            name = "OptionPage.NeutralRoles";
+            name = "NeutralRoles";
             var min = CustomOptionHolder.NeutralRolesCountMin.GetSelection();
             var max = CustomOptionHolder.NeutralRolesCountMax.GetSelection();
             if (min > max) min = max;
@@ -334,7 +334,7 @@ public partial class CustomOption
         }
         if (option == CustomOptionHolder.ImpostorRolesCountMin)
         {
-            name = "OptionPage.ImpostorRoles";
+            name = "ImpostorRoles";
             var min = CustomOptionHolder.ImpostorRolesCountMin.GetSelection();
             var max = CustomOptionHolder.ImpostorRolesCountMax.GetSelection();
             if (max > Helpers.GetOption(Int32OptionNames.NumImpostors)) max = Helpers.GetOption(Int32OptionNames.NumImpostors);
@@ -343,7 +343,7 @@ public partial class CustomOption
         }
         if (option == CustomOptionHolder.ModifiersCountMin)
         {
-            name = "OptionPage.Modifiers";
+            name = "Modifiers";
             var min = CustomOptionHolder.ModifiersCountMin.GetSelection();
             var max = CustomOptionHolder.ModifiersCountMax.GetSelection();
             if (min > max) min = max;

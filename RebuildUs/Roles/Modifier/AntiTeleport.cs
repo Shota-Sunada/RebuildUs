@@ -28,14 +28,14 @@ public class AntiTeleport : ModifierBase<AntiTeleport>
     {
         get
         {
-            return Tr.Get("Hud.AntiTeleportPostfix");
+            return Tr.Get("AntiTeleportPostfix");
         }
     }
     public static string FullName
     {
         get
         {
-            return Tr.Get("Modifier.AntiTeleport");
+            return Tr.Get("AntiTeleport");
         }
     }
 

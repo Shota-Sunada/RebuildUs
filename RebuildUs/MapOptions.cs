@@ -180,7 +180,7 @@ namespace RebuildUs
                     y += 0.2f;
                 }
                 AdminTimerText.transform.localPosition = new Vector3(-3.5f, y, 0);
-                AdminTimerText.text = RestrictAdminTime > 0 ? string.Format(Tr.Get("Hud.AdminText"), RestrictAdminTime.ToString("0.00")) : Tr.Get("Hud.AdminRanOut");
+                AdminTimerText.text = RestrictAdminTime > 0 ? string.Format(Tr.Get("AdminText"), RestrictAdminTime.ToString("0.00")) : Tr.Get("AdminRanOut");
                 AdminTimerText.gameObject.SetActive(true);
             }
 
@@ -195,8 +195,8 @@ namespace RebuildUs
                 }
                 CamerasTimerText.transform.localPosition = new Vector3(-3.5f, y, 0);
                 CamerasTimerText.text = RestrictCamerasTime > 0
-                    ? string.Format(Tr.Get("Hud.CamerasText"), RestrictCamerasTime.ToString("0.00"))
-                    : Tr.Get("Hud.CamerasRanOut");
+                    ? string.Format(Tr.Get("CamerasText"), RestrictCamerasTime.ToString("0.00"))
+                    : Tr.Get("CamerasRanOut");
                 CamerasTimerText.gameObject.SetActive(true);
             }
 
@@ -206,8 +206,8 @@ namespace RebuildUs
                 VitalsTimerText = UnityEngine.Object.Instantiate(FastDestroyableSingleton<HudManager>.Instance.TaskPanel.taskText, FastDestroyableSingleton<HudManager>.Instance.transform);
                 VitalsTimerText.transform.localPosition = new Vector3(-3.5f, -4.0f, 0);
                 VitalsTimerText.text = RestrictVitalsTime > 0
-                    ? string.Format(Tr.Get("Hud.VitalsText"), RestrictVitalsTime.ToString("0.00"))
-                    : Tr.Get("Hud.VitalsRanOut");
+                    ? string.Format(Tr.Get("VitalsText"), RestrictVitalsTime.ToString("0.00"))
+                    : Tr.Get("VitalsRanOut");
                 VitalsTimerText.gameObject.SetActive(true);
             }
         }

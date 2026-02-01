@@ -523,7 +523,7 @@ public static partial class RPCProcedure
             }
             if (roleInfo != null)
             {
-                string msg = string.Format(Tr.Get("Hud.GuesserGuessChat"), roleInfo.Name, guessedTarget.Data.PlayerName);
+                string msg = string.Format(Tr.Get("GuesserGuessChat"), roleInfo.Name, guessedTarget.Data.PlayerName);
                 if (AmongUsClient.Instance.AmClient && FastDestroyableSingleton<HudManager>.Instance)
                 {
                     FastDestroyableSingleton<HudManager>.Instance.Chat.AddChat(killer, msg);
@@ -550,7 +550,7 @@ public static partial class RPCProcedure
         // If the local player is impostor indicate lights out
         if (Helpers.HasImpostorVision(PlayerControl.LocalPlayer))
         {
-            new CustomMessage("Hud.TricksterLightsOutText", Trickster.LightsOutDuration);
+            new CustomMessage("TricksterLightsOutText", Trickster.LightsOutDuration);
         }
     }
 

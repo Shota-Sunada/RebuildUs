@@ -234,7 +234,7 @@ public static class Usables
         if (IsBlocked(target, pc))
         {
             __instance.currentTarget = null;
-            __instance.buttonLabelText.text = Tr.Get("Hud.ButtonBlocked");
+            __instance.buttonLabelText.text = Tr.Get("ButtonBlocked");
             __instance.enabled = false;
             __instance.graphic.color = Palette.DisabledClear;
             __instance.graphic.material.SetFloat("_Desat", 0f);
@@ -376,13 +376,13 @@ public static class Usables
         if (lp.IsRole(RoleType.Jester) && !Jester.CanCallEmergency)
         {
             roleCanCallEmergency = false;
-            statusTextKey = "Hud.JesterMeetingButton";
+            statusTextKey = "JesterMeetingButton";
         }
 
         if (lp.IsRole(RoleType.NiceSwapper) && !Swapper.CanCallEmergency)
         {
             roleCanCallEmergency = false;
-            statusTextKey = "Hud.SwapperMeetingButton";
+            statusTextKey = "SwapperMeetingButton";
         }
 
         if (!roleCanCallEmergency)
@@ -404,12 +404,12 @@ public static class Usables
 
             EmergencyStringBuilder.Clear();
             EmergencyStringBuilder.Append("<size=100%> ");
-            EmergencyStringBuilder.Append(string.Format(Tr.Get("Hud.MeetingStatus"), lp.name));
+            EmergencyStringBuilder.Append(string.Format(Tr.Get("MeetingStatus"), lp.name));
             EmergencyStringBuilder.Append("</size>");
             __instance.StatusText.text = EmergencyStringBuilder.ToString();
 
             EmergencyStringBuilder.Clear();
-            EmergencyStringBuilder.Append(string.Format(Tr.Get("Hud.MeetingCount"), localRemaining.ToString(), teamRemaining.ToString()));
+            EmergencyStringBuilder.Append(string.Format(Tr.Get("MeetingCount"), localRemaining.ToString(), teamRemaining.ToString()));
             __instance.NumberText.text = EmergencyStringBuilder.ToString();
 
             __instance.ButtonActive = remaining > 0;

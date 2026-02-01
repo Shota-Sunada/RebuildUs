@@ -116,7 +116,7 @@ public class CustomOverlays
 
         int currentPageNumber = (RebuildUs.OptionsPage / 2) + 1;
         int totalPagesNumber = (MaxOptionsPage + 1) / 2;
-        InfoOverlayTitle?.text = new StringBuilder(Tr.Get("Option.GameOptions")).Append(" <size=80%>").Append(Tr.Get("Option.CurrentPage")).Append(" (").Append(currentPageNumber).Append('/').Append(totalPagesNumber).Append(")\n").Append(Tr.Get("Option.ChangePage")).Append("</size>").ToString();
+        InfoOverlayTitle?.text = new StringBuilder(Tr.Get("GameOptions")).Append(" <size=80%>").Append(Tr.Get("CurrentPage")).Append(" (").Append(currentPageNumber).Append('/').Append(totalPagesNumber).Append(")\n").Append(Tr.Get("ChangePage")).Append("</size>").ToString();
 
         var sb = new StringBuilder();
         sb.Append(OptionsData[RebuildUs.OptionsPage]);
@@ -234,17 +234,17 @@ public class CustomOverlays
 
             // Part 1: Among Us Settings
             int votingTime = Helpers.GetOption(Int32OptionNames.VotingTime);
-            sb.Append("<size=120%>").Append(Tr.Get("Option.AmongUsSettings")).Append("</size>\n\n")
+            sb.Append("<size=120%>").Append(Tr.Get("AmongUsSettings")).Append("</size>\n\n")
               .Append(tr.GetString(StringNames.GameNumImpostors)).Append(": ").Append(Helpers.GetOption(Int32OptionNames.NumImpostors)).Append('\n')
-              .Append(tr.GetString(StringNames.GameConfirmImpostor)).Append(": ").Append(Helpers.GetOption(BoolOptionNames.ConfirmImpostor) ? Tr.Get("Option.On") : Tr.Get("Option.Off")).Append('\n')
+              .Append(tr.GetString(StringNames.GameConfirmImpostor)).Append(": ").Append(Helpers.GetOption(BoolOptionNames.ConfirmImpostor) ? Tr.Get("On") : Tr.Get("Off")).Append('\n')
               .Append(tr.GetString(StringNames.GameNumMeetings)).Append(": ").Append(Helpers.GetOption(Int32OptionNames.NumEmergencyMeetings)).Append('\n')
-              .Append(tr.GetString(StringNames.GameAnonymousVotes)).Append(": ").Append(Helpers.GetOption(BoolOptionNames.AnonymousVotes) ? Tr.Get("Option.On") : Tr.Get("Option.Off")).Append('\n')
+              .Append(tr.GetString(StringNames.GameAnonymousVotes)).Append(": ").Append(Helpers.GetOption(BoolOptionNames.AnonymousVotes) ? Tr.Get("On") : Tr.Get("Off")).Append('\n')
               .Append(tr.GetString(StringNames.GameEmergencyCooldown)).Append(": ").Append(tr.GetString(StringNames.GameSecondsAbbrev, Helpers.GetOption(Int32OptionNames.EmergencyCooldown))).Append('\n')
               .Append(tr.GetString(StringNames.GameDiscussTime)).Append(": ").Append(tr.GetString(StringNames.GameSecondsAbbrev, Helpers.GetOption(Int32OptionNames.EmergencyCooldown))).Append('\n')
               .Append(tr.GetString(StringNames.GameVotingTime)).Append(": ").Append(tr.GetString(StringNames.GameSecondsAbbrev, votingTime > 0 ? votingTime : "∞")).Append('\n')
               .Append(tr.GetString(StringNames.GamePlayerSpeed)).Append(": ").Append(Helpers.GetOption(FloatOptionNames.PlayerSpeedMod)).Append('\n')
               .Append(tr.GetString(StringNames.GameTaskBarMode)).Append(": ").Append(tr.GetString((StringNames)(277 + Helpers.GetOption(Int32OptionNames.TaskBarMode)))).Append('\n')
-              .Append(tr.GetString(StringNames.GameVisualTasks)).Append(": ").Append(Helpers.GetOption(BoolOptionNames.VisualTasks) ? Tr.Get("Option.On") : Tr.Get("Option.Off")).Append('\n')
+              .Append(tr.GetString(StringNames.GameVisualTasks)).Append(": ").Append(Helpers.GetOption(BoolOptionNames.VisualTasks) ? Tr.Get("On") : Tr.Get("Off")).Append('\n')
               .Append(tr.GetString(StringNames.GameCrewLight)).Append(": ").Append(Helpers.GetOption(FloatOptionNames.CrewLightMod)).Append('x').Append('\n')
               .Append(tr.GetString(StringNames.GameImpostorLight)).Append(": ").Append(Helpers.GetOption(FloatOptionNames.ImpostorLightMod)).Append('x').Append('\n')
               .Append(tr.GetString(StringNames.GameKillCooldown)).Append(": ").Append(tr.GetString(StringNames.GameSecondsAbbrev, Helpers.GetOption(FloatOptionNames.KillCooldown))).Append('\n')
@@ -277,9 +277,9 @@ public class CustomOverlays
             // Part 4: Detailed Custom Options
             var entries = new List<string> { CustomOption.OptionToString(CustomOptionHolder.PresetSelection) };
             sb.Clear();
-            AppendRoleCount(ref sb, "OptionPage.CrewmateRoles", CustomOptionHolder.CrewmateRolesCountMin, CustomOptionHolder.CrewmateRolesCountMax);
-            AppendRoleCount(ref sb, "OptionPage.NeutralRoles", CustomOptionHolder.NeutralRolesCountMin, CustomOptionHolder.NeutralRolesCountMax);
-            AppendRoleCount(ref sb, "OptionPage.ImpostorRoles", CustomOptionHolder.ImpostorRolesCountMin, CustomOptionHolder.ImpostorRolesCountMax);
+            AppendRoleCount(ref sb, "CrewmateRoles", CustomOptionHolder.CrewmateRolesCountMin, CustomOptionHolder.CrewmateRolesCountMax);
+            AppendRoleCount(ref sb, "NeutralRoles", CustomOptionHolder.NeutralRolesCountMin, CustomOptionHolder.NeutralRolesCountMax);
+            AppendRoleCount(ref sb, "ImpostorRoles", CustomOptionHolder.ImpostorRolesCountMin, CustomOptionHolder.ImpostorRolesCountMax);
             entries.Add(sb.ToString().TrimEnd());
 
             foreach (var option in CustomOption.AllOptions)

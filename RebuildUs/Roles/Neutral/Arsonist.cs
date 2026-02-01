@@ -154,7 +154,7 @@ public class Arsonist : RoleBase<Arsonist>
                 }
             },
             false,
-            Tr.Get("Hud.DouseText")
+            Tr.Get("DouseText")
         );
 
         ArsonistIgniteButton = new CustomButton(
@@ -176,7 +176,7 @@ public class Arsonist : RoleBase<Arsonist>
             hm.KillButton,
             AbilitySlot.NeutralAbilityPrimary,
             false,
-            Tr.Get("Hud.IgniteText")
+            Tr.Get("IgniteText")
         );
     }
     public static void SetButtonCooldowns()

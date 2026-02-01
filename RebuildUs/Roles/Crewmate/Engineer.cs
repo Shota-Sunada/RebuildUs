@@ -101,7 +101,7 @@ public class Engineer : RoleBase<Engineer>
             hm.UseButton,
             AbilitySlot.CrewmateAbilityPrimary,
             false,
-            Tr.Get("Hud.RepairText")
+            Tr.Get("RepairText")
         );
     }
     public static void SetButtonCooldowns()

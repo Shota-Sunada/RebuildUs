@@ -54,7 +54,7 @@ public class Trickster : RoleBase<Trickster>
             hm.KillButton,
             AbilitySlot.ImpostorAbilityPrimary,
             false,
-            Tr.Get("Hud.PlaceJackInTheBoxText")
+            Tr.Get("PlaceJackInTheBoxText")
         );
 
         LightsOutButton = new CustomButton(
@@ -80,7 +80,7 @@ public class Trickster : RoleBase<Trickster>
             LightsOutDuration,
             () => { LightsOutButton.Timer = LightsOutButton.MaxTimer; },
             false,
-            Tr.Get("Hud.LightsOutText")
+            Tr.Get("LightsOutText")
         );
     }
     public static void SetButtonCooldowns()

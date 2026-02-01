@@ -52,7 +52,7 @@ public class Bait : RoleBase<Bait>
                 // Show warning to the killer
                 if (baitDeadPlayer.KillerIfExisting == PlayerControl.LocalPlayer)
                 {
-                    WarningMessage ??= new("Hud.BaitWarning", Delay);
+                    WarningMessage ??= new("BaitWarning", Delay);
                 }
             }
 

@@ -133,7 +133,7 @@ public class Vampire : RoleBase<Vampire>
                 else
                 {
                     VampireKillButton.Sprite = AssetLoader.VampireButton;
-                    VampireKillButton.ButtonText = Tr.Get("Hud.VampireText");
+                    VampireKillButton.ButtonText = Tr.Get("VampireText");
                 }
                 return local.CurrentTarget != null && PlayerControl.LocalPlayer.CanMove && (!local.TargetNearGarlic || CanKillNearGarlics);
             },
@@ -155,7 +155,7 @@ public class Vampire : RoleBase<Vampire>
                 VampireKillButton.Timer = VampireKillButton.MaxTimer;
             },
             false,
-            Tr.Get("Hud.VampireText")
+            Tr.Get("VampireText")
         );
 
         GarlicButton = new CustomButton(
@@ -186,7 +186,7 @@ public class Vampire : RoleBase<Vampire>
             hm.UseButton,
             AbilitySlot.CommonAbilityPrimary,
             true,
-            Tr.Get("Hud.GarlicText")
+            Tr.Get("GarlicText")
         );
     }
     public static void SetButtonCooldowns()

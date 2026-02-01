@@ -71,7 +71,7 @@ public class Lighter : RoleBase<Lighter>
                 LighterButton.Timer = LighterButton.MaxTimer;
             },
             false,
-            Tr.Get("Hud.LighterText")
+            Tr.Get("LighterText")
         );
     }
     public static void SetButtonCooldowns()

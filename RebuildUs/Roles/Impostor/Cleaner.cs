@@ -72,7 +72,7 @@ public class Cleaner : RoleBase<Cleaner>
             hm.KillButton,
             AbilitySlot.ImpostorAbilityPrimary,
             false,
-            Tr.Get("Hud.CleanText")
+            Tr.Get("CleanText")
         );
     }
     public static void SetButtonCooldowns()

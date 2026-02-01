@@ -76,7 +76,7 @@ public class Suicider : RoleBase<Suicider>
             0f,
             null,
             false,
-            Tr.Get("Hud.Suicide")
+            Tr.Get("Suicide")
         );
     }
 

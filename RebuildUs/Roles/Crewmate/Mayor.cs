@@ -47,7 +47,7 @@ public class Mayor : RoleBase<Mayor>
             () => { return PlayerControl.LocalPlayer.IsRole(RoleType.Mayor) && PlayerControl.LocalPlayer?.Data?.IsDead == false && MayorHasMeetingButton; },
             () =>
             {
-                MayorMeetingButton.ActionButton.OverrideText(string.Format(Tr.Get("Hud.Emergency"), Local.RemoteMeetingsLeft));
+                MayorMeetingButton.ActionButton.OverrideText(string.Format(Tr.Get("Emergency"), Local.RemoteMeetingsLeft));
                 bool sabotageActive = false;
                 foreach (var task in PlayerControl.LocalPlayer.myTasks.GetFastEnumerator())
                 {
@@ -70,7 +70,7 @@ public class Mayor : RoleBase<Mayor>
             0f,
             () => { },
             false,
-            Tr.Get("Hud.Meeting")
+            Tr.Get("Meeting")
         );
     }
     public static void SetButtonCooldowns()

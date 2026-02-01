@@ -29,7 +29,7 @@ public static class Mafia
             StaticRoleType = CurrentRoleType = RoleType.Godfather;
         }
 
-        public override string NameTag => (PlayerControl.LocalPlayer?.Data.Role.IsImpostor ?? false) ? $" ({Tr.Get("Role.MafiaG")})" : "";
+        public override string NameTag => (PlayerControl.LocalPlayer?.Data.Role.IsImpostor ?? false) ? $" ({Tr.Get("MafiaG")})" : "";
 
         public override void OnMeetingStart() { }
         public override void OnMeetingEnd() { }
@@ -70,7 +70,7 @@ public static class Mafia
             StaticRoleType = CurrentRoleType = RoleType.Mafioso;
         }
 
-        public override string NameTag => (PlayerControl.LocalPlayer?.Data.Role.IsImpostor ?? false) ? $" ({Tr.Get("Role.MafiaM")})" : "";
+        public override string NameTag => (PlayerControl.LocalPlayer?.Data.Role.IsImpostor ?? false) ? $" ({Tr.Get("MafiaM")})" : "";
 
         public override void OnMeetingStart() { }
         public override void OnMeetingEnd() { }
@@ -111,7 +111,7 @@ public static class Mafia
             StaticRoleType = CurrentRoleType = RoleType.Janitor;
         }
 
-        public override string NameTag => (PlayerControl.LocalPlayer?.Data.Role.IsImpostor ?? false) ? $" ({Tr.Get("Role.MafiaJ")})" : "";
+        public override string NameTag => (PlayerControl.LocalPlayer?.Data.Role.IsImpostor ?? false) ? $" ({Tr.Get("MafiaJ")})" : "";
 
         public override void OnMeetingStart() { }
         public override void OnMeetingEnd() { }
@@ -164,7 +164,7 @@ public static class Mafia
                 hm.KillButton,
                 AbilitySlot.ImpostorAbilityPrimary,
                 false,
-                Tr.Get("Hud.CleanText")
+                Tr.Get("CleanText")
             );
         }
         public static void SetButtonCooldowns()

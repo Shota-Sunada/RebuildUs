@@ -70,7 +70,7 @@ public class Shifter : RoleBase<Shifter>
             hm.UseButton,
             AbilitySlot.CrewmateAbilityPrimary,
             false,
-            Tr.Get("Hud.ShiftText")
+            Tr.Get("ShiftText")
         );
     }
     public static void SetButtonCooldowns()

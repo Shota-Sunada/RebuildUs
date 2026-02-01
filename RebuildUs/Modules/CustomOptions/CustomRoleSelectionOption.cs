@@ -28,7 +28,7 @@ public class CustomRoleSelectionOption : CustomOption
         for (int i = 0; i < roleTypes.Length; i++)
         {
             var x = roleTypes[i];
-            strings[i] = x == RoleType.NoRole ? Tr.Get("Option.NoRole") : Tr.Get("Role." + x.ToString());
+            strings[i] = x == RoleType.NoRole ? Tr.Get("NoRole") : Tr.Get("" + x.ToString());
         }
 
         Normal(id, type, name, strings, parent);

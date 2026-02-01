@@ -65,7 +65,7 @@ public class EvilTracker : RoleBase<EvilTracker>
             hm.KillButton,
             AbilitySlot.ImpostorAbilityPrimary,
             false,
-            Tr.Get("Hud.TrackerText")
+            Tr.Get("TrackerText")
         );
     }
     public static void SetButtonCooldowns()

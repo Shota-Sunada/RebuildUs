@@ -108,18 +108,6 @@ public static class Tr
         keyClean = Regex.Replace(keyClean, "^-\\s*", "");
         keyClean = keyClean.Trim();
 
-        int dotCount = 0;
-        foreach (char c in keyClean) if (c == '.') dotCount++;
-
-        if (dotCount != 1)
-        {
-            if (MissingKeys.Add(keyClean))
-            {
-                Logger.LogError($"Invalid translation key: {keyClean}");
-            }
-            return ERROR;
-        }
-
         var lang = TranslationController.InstanceExists ? FastDestroyableSingleton<TranslationController>.Instance.currentLanguage.languageID : SupportedLangs.English;
 
         string result = null;
