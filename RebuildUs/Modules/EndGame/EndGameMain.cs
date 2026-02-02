@@ -381,8 +381,7 @@ public static class EndGameMain
             TextRenderer.color = Jackal.NameColor;
             __instance.BackgroundBar.material.SetColor("_Color", Jackal.NameColor);
         }
-        // else if (AdditionalTempData.WinCondition == EWinCondition.EveryoneDied)
-        if (AdditionalTempData.WinCondition == WinCondition.EveryoneDied)
+        else if (AdditionalTempData.WinCondition == WinCondition.EveryoneDied)
         {
             bonusText = "EveryoneDied";
             TextRenderer.color = Palette.DisabledGrey;
