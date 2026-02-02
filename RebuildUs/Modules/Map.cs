@@ -98,11 +98,11 @@ public static class Map
 
     public static void UpdatePrefix(MapBehaviour __instance)
     {
-        if (!ShipStatus.Instance || !__instance.HerePoint) return;
+        if (!MapUtilities.CachedShipStatus || !__instance.HerePoint) return;
         var vector = AntiTeleport.Position;
 
-        float mapScale = ShipStatus.Instance.MapScale;
-        float flipX = Mathf.Sign(ShipStatus.Instance.transform.localScale.x);
+        float mapScale = MapUtilities.CachedShipStatus.MapScale;
+        float flipX = Mathf.Sign(MapUtilities.CachedShipStatus.transform.localScale.x);
 
         vector.x /= mapScale;
         vector.y /= mapScale;
@@ -743,7 +743,7 @@ public static class Map
             {
                 CounterArea counterArea = __instance.CountAreas[i];
                 PlainShipRoom plainShipRoom;
-                if (ShipStatus.Instance.FastRooms.TryGetValue(counterArea.RoomType, out plainShipRoom) && plainShipRoom.roomArea)
+                if (MapUtilities.CachedShipStatus.FastRooms.TryGetValue(counterArea.RoomType, out plainShipRoom) && plainShipRoom.roomArea)
                 {
                     int num = plainShipRoom.roomArea.OverlapCollider(__instance.filter, __instance.buffer);
                     HashSet<byte> countedPlayers = [];

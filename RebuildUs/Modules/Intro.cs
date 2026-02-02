@@ -44,9 +44,9 @@ public static class Intro
         RebuildUs.OnIntroEnd();
 
         // インポスター視界の場合に昇降機右の影を無効化
-        if (Helpers.IsAirship && CustomOptionHolder.AirshipOptimize.GetBool() && Helpers.HasImpostorVision(PlayerControl.LocalPlayer) && ShipStatus.Instance.FastRooms.ContainsKey(SystemTypes.GapRoom))
+        if (Helpers.IsAirship && CustomOptionHolder.AirshipOptimize.GetBool() && Helpers.HasImpostorVision(PlayerControl.LocalPlayer) && MapUtilities.CachedShipStatus.FastRooms.ContainsKey(SystemTypes.GapRoom))
         {
-            var obj = ShipStatus.Instance.FastRooms[SystemTypes.GapRoom].gameObject;
+            var obj = MapUtilities.CachedShipStatus.FastRooms[SystemTypes.GapRoom].gameObject;
             var oneWayShadow = obj.transform.FindChild("Shadow").FindChild("LedgeShadow").GetComponent<OneWayShadows>();
             oneWayShadow.gameObject.SetActive(false);
         }
@@ -60,7 +60,7 @@ public static class Intro
         // アーカイブのアドミンを消す
         if (Helpers.IsAirship && CustomOptionHolder.AirshipOldAdmin.GetBool())
         {
-            GameObject records = ShipStatus.Instance.FastRooms[SystemTypes.Records].gameObject;
+            GameObject records = MapUtilities.CachedShipStatus.FastRooms[SystemTypes.Records].gameObject;
             foreach (var console in records.GetComponentsInChildren<MapConsole>())
             {
                 if (console.name == "records_admin_map")
@@ -71,9 +71,9 @@ public static class Intro
             }
         }
 
-        if (ShipStatus.Instance.FastRooms.ContainsKey(SystemTypes.GapRoom))
+        if (MapUtilities.CachedShipStatus.FastRooms.ContainsKey(SystemTypes.GapRoom))
         {
-            var gapRoom = ShipStatus.Instance.FastRooms[SystemTypes.GapRoom].gameObject;
+            var gapRoom = MapUtilities.CachedShipStatus.FastRooms[SystemTypes.GapRoom].gameObject;
             // GapRoomの配電盤を消す
             if (Helpers.IsAirship && CustomOptionHolder.AirshipDisableGapSwitchBoard.GetBool())
             {
@@ -271,7 +271,7 @@ public static class Intro
                 playerSlot.transform.localPosition = __instance.impostorPos;
                 playerSlot.transform.localScale = Vector3.one * __instance.impostorScale;
             }
-            yield return ShipStatus.Instance.CosmeticsCache.PopulateFromPlayers();
+            yield return MapUtilities.CachedShipStatus.CosmeticsCache.PopulateFromPlayers();
             yield return new WaitForSecondsRealtime(6f);
             if (playerSlot == null)
             {
@@ -327,7 +327,7 @@ public static class Intro
             }
             else
             {
-                ShipStatus.Instance.HideCountdown = logicOptions.GetCrewmateLeadTime();
+                MapUtilities.CachedShipStatus.HideCountdown = logicOptions.GetCrewmateLeadTime();
                 if (AprilFoolsMode.ShouldHorseAround())
                 {
                     if (impostor == null)
@@ -351,7 +351,7 @@ public static class Intro
             impostor = null;
             playerSlot = null;
         }
-        ShipStatus.Instance.StartSFX();
+        MapUtilities.CachedShipStatus.StartSFX();
         __instance.gameObject.Destroy();
 
         yield break;

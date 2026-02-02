@@ -12,7 +12,7 @@ public static class HeliSabotageSystemPatch
             return;
         }
 
-        if (ShipStatus.Instance != null)
+        if (MapUtilities.CachedShipStatus != null)
         {
             if (__instance.Countdown >= CustomOptionHolder.AirshipReactorDuration.GetFloat())
             {

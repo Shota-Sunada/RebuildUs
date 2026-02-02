@@ -404,15 +404,15 @@ public static class Helpers
         return murder;
     }
 
-    public static bool SabotageActive() => ShipStatus.Instance.Systems[SystemTypes.Sabotage].CastFast<SabotageSystemType>().AnyActive;
+    public static bool SabotageActive() => MapUtilities.CachedShipStatus.Systems[SystemTypes.Sabotage].CastFast<SabotageSystemType>().AnyActive;
 
-    public static float SabotageTimer() => ShipStatus.Instance.Systems[SystemTypes.Sabotage].CastFast<SabotageSystemType>().Timer;
+    public static float SabotageTimer() => MapUtilities.CachedShipStatus.Systems[SystemTypes.Sabotage].CastFast<SabotageSystemType>().Timer;
 
     public static bool CanUseSabotage()
     {
-        var sabSystem = ShipStatus.Instance.Systems[SystemTypes.Sabotage].CastFast<SabotageSystemType>();
+        var sabSystem = MapUtilities.CachedShipStatus.Systems[SystemTypes.Sabotage].CastFast<SabotageSystemType>();
         IActivatable doors = null;
-        if (ShipStatus.Instance.Systems.TryGetValue(SystemTypes.Doors, out var systemType))
+        if (MapUtilities.CachedShipStatus.Systems.TryGetValue(SystemTypes.Doors, out var systemType))
         {
             doors = systemType.CastFast<IActivatable>();
         }
@@ -606,7 +606,7 @@ public static class Helpers
                     InfoStringBuilder.Clear();
 
                     bool commsActive = false;
-                    if (ShipStatus.Instance != null && ShipStatus.Instance.Systems.TryGetValue(SystemTypes.Comms, out var comms))
+                    if (MapUtilities.CachedShipStatus != null && MapUtilities.CachedShipStatus.Systems.TryGetValue(SystemTypes.Comms, out var comms))
                     {
                         var activatable = comms.TryCast<IActivatable>();
                         if (activatable != null) commsActive = activatable.IsActive;

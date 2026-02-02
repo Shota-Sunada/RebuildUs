@@ -2,7 +2,7 @@ namespace RebuildUs.Utilities;
 
 public static class MapUtilities
 {
-    public static ShipStatus CachedShipStatus = ShipStatus.Instance;
+    public static ShipStatus CachedShipStatus { get; private set; } = ShipStatus.Instance;
 
     public static void MapDestroyed()
     {
@@ -33,26 +33,21 @@ public static class MapUtilities
             _systems[systemTypes] = systems[systemTypes].TryCast<UnityEngine.Object>();
         }
     }
-}
 
-[HarmonyPatch(typeof(ShipStatus), nameof(ShipStatus.Awake))]
-public static class ShipStatus_Awake_Patch
-{
+    [HarmonyPatch(typeof(ShipStatus), nameof(ShipStatus.Awake))]
     [HarmonyPostfix, HarmonyPriority(Priority.Last)]
-    public static void Postfix(ShipStatus __instance)
+    public static void AwakePostfix(ShipStatus __instance)
     {
-        MapUtilities.CachedShipStatus = __instance;
+        CachedShipStatus = __instance;
         SubmergedCompatibility.SetupMap(__instance);
     }
-}
-[HarmonyPatch(typeof(ShipStatus), nameof(ShipStatus.OnDestroy))]
-public static class ShipStatus_OnDestroy_Patch
-{
+
+    [HarmonyPatch(typeof(ShipStatus), nameof(ShipStatus.OnDestroy))]
     [HarmonyPostfix, HarmonyPriority(Priority.Last)]
-    public static void Postfix()
+    public static void OnDestroyPostfix()
     {
-        MapUtilities.CachedShipStatus = null;
-        MapUtilities.MapDestroyed();
+        CachedShipStatus = null;
+        MapDestroyed();
         SubmergedCompatibility.SetupMap(null);
     }
 }

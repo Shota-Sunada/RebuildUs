@@ -26,7 +26,7 @@ public static class MorphHandler
         morphing.RawSetName(outfit.PlayerName);
 
         SkinViewData nextSkin = null;
-        try { nextSkin = ShipStatus.Instance.CosmeticsCache.GetSkin(outfit.SkinId); } catch { return; }
+        try { nextSkin = MapUtilities.CachedShipStatus.CosmeticsCache.GetSkin(outfit.SkinId); } catch { return; }
         var phys = morphing.MyPhysics;
         var group = phys.Animations.group;
         var currentAnim = phys.Animations.Animator.GetCurrentAnimation();

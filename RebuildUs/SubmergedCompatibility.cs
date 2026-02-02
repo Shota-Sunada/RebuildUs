@@ -87,7 +87,7 @@ public static class SubmergedCompatibility
         if (!Loaded) return;
         try
         {
-            ShipStatus.Instance.RpcUpdateSystem((SystemTypes)130, 64);
+            MapUtilities.CachedShipStatus.RpcUpdateSystem((SystemTypes)130, 64);
             SubmarineOxygenSystem.Instance.RepairDamage(PlayerControl.LocalPlayer, 64);
         }
         catch (NullReferenceException)

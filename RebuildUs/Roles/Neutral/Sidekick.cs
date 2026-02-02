@@ -105,7 +105,7 @@ public class Sidekick : RoleBase<Sidekick>
         SidekickSabotageLightsButton = new CustomButton(
             () =>
             {
-                ShipStatus.Instance.RpcUpdateSystem(SystemTypes.Sabotage, (byte)SystemTypes.Electrical);
+                MapUtilities.CachedShipStatus.RpcUpdateSystem(SystemTypes.Sabotage, (byte)SystemTypes.Electrical);
             },
             () =>
             {

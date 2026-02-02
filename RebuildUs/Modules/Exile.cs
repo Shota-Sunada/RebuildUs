@@ -262,7 +262,7 @@ public static class Exile
         }
         if (deadPlayers < (int)CustomOptionHolder.AdditionalEmergencyCooldown.GetFloat())
         {
-            ShipStatus.Instance.EmergencyCooldown = Helpers.GetOption(Int32OptionNames.EmergencyCooldown) + CustomOptionHolder.AdditionalEmergencyCooldownTime.GetFloat();
+            MapUtilities.CachedShipStatus.EmergencyCooldown = Helpers.GetOption(Int32OptionNames.EmergencyCooldown) + CustomOptionHolder.AdditionalEmergencyCooldownTime.GetFloat();
         }
     }
 

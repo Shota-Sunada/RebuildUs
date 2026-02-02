@@ -489,7 +489,7 @@ public static class Meeting
             var button = UnityEngine.Object.Instantiate(buttonTemplate, buttonParent);
             var buttonMask = UnityEngine.Object.Instantiate(maskTemplate, buttonParent);
             var label = UnityEngine.Object.Instantiate(textTemplate, button);
-            button.GetComponent<SpriteRenderer>().sprite = ShipStatus.Instance.CosmeticsCache.GetNameplate("nameplate_NoPlate").Image;
+            button.GetComponent<SpriteRenderer>().sprite = MapUtilities.CachedShipStatus.CosmeticsCache.GetNameplate("nameplate_NoPlate").Image;
             buttons.Add(button);
             int row = i / 5, col = i % 5;
             buttonParent.localPosition = new Vector3(-3.47f + 1.75f * col, 1.5f - 0.45f * row, -5);
@@ -634,7 +634,7 @@ public static class Meeting
 
             Transform meetingExtraButtonMask = UnityEngine.Object.Instantiate(maskTemplate, meetingExtraButtonParent);
             MeetingExtraButtonLabel = UnityEngine.Object.Instantiate(textTemplate, meetingExtraButton);
-            meetingExtraButton.GetComponent<SpriteRenderer>().sprite = ShipStatus.Instance.CosmeticsCache.GetNameplate("nameplate_NoPlate").Image;
+            meetingExtraButton.GetComponent<SpriteRenderer>().sprite = MapUtilities.CachedShipStatus.CosmeticsCache.GetNameplate("nameplate_NoPlate").Image;
 
             meetingExtraButtonParent.localPosition = new Vector3(0, -2.225f, -5);
             meetingExtraButtonParent.localScale = new Vector3(0.55f, 0.55f, 1f);
@@ -851,7 +851,7 @@ public static class Meeting
             bool isEmergency = Target == null;
             DestroyableSingleton<UnityTelemetry>.Instance.WriteMeetingStarted(isEmergency);
             DestroyableSingleton<DebugAnalytics>.Instance.Analytics.MeetingStarted(__instance.Data, Target == null);
-            ShipStatus.Instance.StartCoroutine(CoStartMeeting(__instance, Target).WrapToIl2Cpp());
+            MapUtilities.CachedShipStatus.StartCoroutine(CoStartMeeting(__instance, Target).WrapToIl2Cpp());
             if (!__instance.AmOwner)
             {
                 return false;

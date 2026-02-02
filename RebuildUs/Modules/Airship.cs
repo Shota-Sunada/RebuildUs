@@ -15,7 +15,7 @@ public static class Airship
 
         if (mapId == 4)
         {
-            var obj = ShipStatus.Instance.FastRooms[SystemTypes.GapRoom].gameObject;
+            var obj = MapUtilities.CachedShipStatus.FastRooms[SystemTypes.GapRoom].gameObject;
             // 昇降機右に影を追加
             var oneWayShadow = obj.transform.FindChild("Shadow").FindChild("LedgeShadow").GetComponent<OneWayShadows>();
             oneWayShadow.enabled = false;
@@ -60,8 +60,8 @@ public static class Airship
     {
         if (mapId == 4)
         {
-            var meetingRoom = ShipStatus.Instance.FastRooms[SystemTypes.MeetingRoom].gameObject;
-            var gapRoom = ShipStatus.Instance.FastRooms[SystemTypes.GapRoom].gameObject;
+            var meetingRoom = MapUtilities.CachedShipStatus.FastRooms[SystemTypes.MeetingRoom].gameObject;
+            var gapRoom = MapUtilities.CachedShipStatus.FastRooms[SystemTypes.GapRoom].gameObject;
 
             var meetingRenderers = meetingRoom.GetComponentsInChildren<SpriteRenderer>();
             GameObject ladder = null;
@@ -235,16 +235,16 @@ public static class Airship
             console.TaskTypes = new TaskTypes[0];
             console.ValidTasks = new Il2CppReferenceArray<TaskSet>(0);
 
-            var oldConsoles = ShipStatus.Instance.AllConsoles;
+            var oldConsoles = MapUtilities.CachedShipStatus.AllConsoles;
             var newConsoles = new Il2CppReferenceArray<Console>(oldConsoles.Length + 1);
             for (int i = 0; i < oldConsoles.Length; i++) newConsoles[i] = oldConsoles[i];
             newConsoles[oldConsoles.Length] = console;
-            ShipStatus.Instance.AllConsoles = newConsoles;
+            MapUtilities.CachedShipStatus.AllConsoles = newConsoles;
         }
         if (console.Image == null)
         {
             console.Image = obj.GetComponent<SpriteRenderer>();
-            console.Image.material = new Material(ShipStatus.Instance.AllConsoles[0].Image.material);
+            console.Image.material = new Material(MapUtilities.CachedShipStatus.AllConsoles[0].Image.material);
         }
         if (!button)
         {

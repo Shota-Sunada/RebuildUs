@@ -555,8 +555,8 @@ public static class EndGameMain
 
     public static bool CheckAndEndGameForSabotageWin()
     {
-        if (ShipStatus.Instance.Systems == null) return false;
-        var systems = ShipStatus.Instance.Systems;
+        if (MapUtilities.CachedShipStatus.Systems == null) return false;
+        var systems = MapUtilities.CachedShipStatus.Systems;
         if (systems.TryGetValue(SystemTypes.LifeSupp, out var systemType) && systemType != null)
         {
             var lifeSuppSystemType = systemType.TryCast<LifeSuppSystemType>();

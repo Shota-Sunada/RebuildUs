@@ -39,7 +39,7 @@ public static class ShortcutCommands
 
         if ((Helpers.GetKeysDown(KeyCode.LeftControl, KeyCode.F7) || Helpers.GetKeysDown(KeyCode.RightControl, KeyCode.F7)) && !MeetingHud.Instance && Helpers.GameStarted)
         {
-            ShipStatus.Instance.StartMeeting(PlayerControl.LocalPlayer, null);
+            MapUtilities.CachedShipStatus.StartMeeting(PlayerControl.LocalPlayer, null);
         }
 
         if ((Input.GetKeyDown(KeyCode.LeftShift) || Input.GetKeyDown(KeyCode.RightShift)) && Helpers.IsCountdown)
@@ -56,10 +56,10 @@ public static class ShortcutCommands
     {
         if (Input.GetKeyDown(KeyCode.P))
         {
-            ShipStatus.Instance.RpcUpdateSystem(SystemTypes.Doors, 79);
-            ShipStatus.Instance.RpcUpdateSystem(SystemTypes.Doors, 80);
-            ShipStatus.Instance.RpcUpdateSystem(SystemTypes.Doors, 81);
-            ShipStatus.Instance.RpcUpdateSystem(SystemTypes.Doors, 82);
+            MapUtilities.CachedShipStatus.RpcUpdateSystem(SystemTypes.Doors, 79);
+            MapUtilities.CachedShipStatus.RpcUpdateSystem(SystemTypes.Doors, 80);
+            MapUtilities.CachedShipStatus.RpcUpdateSystem(SystemTypes.Doors, 81);
+            MapUtilities.CachedShipStatus.RpcUpdateSystem(SystemTypes.Doors, 82);
         }
     }
 }

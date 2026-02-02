@@ -112,7 +112,7 @@ public static class RoleAssignment
         }
         // 独自処理終了
 
-        ShipStatus.Instance.Begin();
+        MapUtilities.CachedShipStatus.Begin();
         __instance.SendClientReady();
 
         yield break;
