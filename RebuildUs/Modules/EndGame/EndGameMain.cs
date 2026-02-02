@@ -345,69 +345,72 @@ public static class EndGameMain
 
         string bonusText = "";
 
-        if (AdditionalTempData.WinCondition == WinCondition.JesterWin)
+        switch (AdditionalTempData.WinCondition)
         {
-            bonusText = "JesterWin";
-            TextRenderer.color = Jester.NameColor;
-            __instance.BackgroundBar.material.SetColor("_Color", Jester.NameColor);
-        }
-        else if (AdditionalTempData.WinCondition == WinCondition.ArsonistWin)
-        {
-            bonusText = "ArsonistWin";
-            TextRenderer.color = Arsonist.NameColor;
-            __instance.BackgroundBar.material.SetColor("_Color", Arsonist.NameColor);
-        }
-        else if (AdditionalTempData.WinCondition == WinCondition.VultureWin)
-        {
-            bonusText = "VultureWin";
-            TextRenderer.color = Vulture.NameColor;
-            __instance.BackgroundBar.material.SetColor("_Color", Vulture.NameColor);
-        }
-        else if (AdditionalTempData.WinCondition == WinCondition.LoversTeamWin)
-        {
-            bonusText = "CrewmateWin";
-            TextRenderer.color = Lovers.Color;
-            __instance.BackgroundBar.material.SetColor("_Color", Lovers.Color);
-        }
-        else if (AdditionalTempData.WinCondition == WinCondition.LoversSoloWin)
-        {
-            bonusText = "LoversWin";
-            TextRenderer.color = Lovers.Color;
-            __instance.BackgroundBar.material.SetColor("_Color", Lovers.Color);
-        }
-        else if (AdditionalTempData.WinCondition == WinCondition.JackalWin)
-        {
-            bonusText = "JackalWin";
-            TextRenderer.color = Jackal.NameColor;
-            __instance.BackgroundBar.material.SetColor("_Color", Jackal.NameColor);
-        }
-        else if (AdditionalTempData.WinCondition == WinCondition.EveryoneDied)
-        {
-            bonusText = "EveryoneDied";
-            TextRenderer.color = Palette.DisabledGrey;
-            __instance.BackgroundBar.material.SetColor("_Color", Palette.DisabledGrey);
-        }
-        else if (AdditionalTempData.WinCondition == WinCondition.ForceEnd)
-        {
-            bonusText = "ForceEnd";
-            TextRenderer.color = Palette.DisabledGrey;
-            __instance.BackgroundBar.material.SetColor("_Color", Palette.DisabledGrey);
-        }
-        else if (AdditionalTempData.WinCondition == WinCondition.MiniLose)
-        {
-            bonusText = "MiniDied";
-            TextRenderer.color = Mini.NameColor;
-            __instance.BackgroundBar.material.SetColor("_Color", Palette.DisabledGrey);
-        }
-        else if (AdditionalTempData.GameOverReason is GameOverReason.CrewmatesByTask or GameOverReason.CrewmatesByVote)
-        {
-            bonusText = "CrewmateWin";
-            TextRenderer.color = Palette.CrewmateBlue;
-        }
-        else if (AdditionalTempData.GameOverReason is GameOverReason.ImpostorsByKill or GameOverReason.ImpostorsBySabotage or GameOverReason.ImpostorsByVote)
-        {
-            bonusText = "ImpostorWin";
-            TextRenderer.color = Palette.ImpostorRed;
+            case WinCondition.JesterWin:
+                bonusText = "JesterWin";
+                TextRenderer.color = Jester.NameColor;
+                __instance.BackgroundBar.material.SetColor("_Color", Jester.NameColor);
+                break;
+            case WinCondition.ArsonistWin:
+                bonusText = "ArsonistWin";
+                TextRenderer.color = Arsonist.NameColor;
+                __instance.BackgroundBar.material.SetColor("_Color", Arsonist.NameColor);
+                break;
+            case WinCondition.VultureWin:
+                bonusText = "VultureWin";
+                TextRenderer.color = Vulture.NameColor;
+                __instance.BackgroundBar.material.SetColor("_Color", Vulture.NameColor);
+                break;
+            case WinCondition.JackalWin:
+                bonusText = "JackalWin";
+                TextRenderer.color = Jackal.NameColor;
+                __instance.BackgroundBar.material.SetColor("_Color", Jackal.NameColor);
+                break;
+            case WinCondition.MiniLose:
+                bonusText = "MiniDied";
+                TextRenderer.color = Mini.NameColor;
+                __instance.BackgroundBar.material.SetColor("_Color", Palette.DisabledGrey);
+                break;
+            case WinCondition.LoversTeamWin:
+                bonusText = "CrewmateWin";
+                TextRenderer.color = Lovers.Color;
+                __instance.BackgroundBar.material.SetColor("_Color", Lovers.Color);
+                break;
+            case WinCondition.LoversSoloWin:
+                bonusText = "LoversWin";
+                TextRenderer.color = Lovers.Color;
+                __instance.BackgroundBar.material.SetColor("_Color", Lovers.Color);
+                break;
+            case WinCondition.EveryoneDied:
+                bonusText = "EveryoneDied";
+                TextRenderer.color = Palette.DisabledGrey;
+                __instance.BackgroundBar.material.SetColor("_Color", Palette.DisabledGrey);
+                break;
+            case WinCondition.ForceEnd:
+                bonusText = "ForceEnd";
+                TextRenderer.color = Palette.DisabledGrey;
+                __instance.BackgroundBar.material.SetColor("_Color", Palette.DisabledGrey);
+                break;
+            default:
+                if (AdditionalTempData.GameOverReason
+                    is GameOverReason.CrewmatesByTask
+                    or GameOverReason.CrewmatesByVote
+                )
+                {
+                    bonusText = "CrewmateWin";
+                    TextRenderer.color = Palette.CrewmateBlue;
+                }
+                else if (AdditionalTempData.GameOverReason
+                        is GameOverReason.ImpostorsByKill
+                        or GameOverReason.ImpostorsBySabotage
+                        or GameOverReason.ImpostorsByVote
+                )
+                {
+                    bonusText = "ImpostorWin";
+                    TextRenderer.color = Palette.ImpostorRed;
+                }
+                break;
         }
 
         string extraText = "";
@@ -426,14 +429,9 @@ public static class EndGameMain
             }
         }
 
-        if (extraText.Length > 0)
-        {
-            TextRenderer.text = string.Format(Tr.GetDynamic(bonusText + "Extra"), extraText);
-        }
-        else
-        {
-            TextRenderer.text = Tr.GetDynamic(bonusText);
-        }
+        TextRenderer.text = extraText.Length > 0
+            ? string.Format(Tr.GetDynamic(bonusText + "Extra"), extraText)
+            : Tr.GetDynamic(bonusText);
 
         if (ModMapOptions.ShowRoleSummary)
         {
