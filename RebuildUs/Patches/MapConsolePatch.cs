@@ -15,6 +15,6 @@ public static class MapConsolePatch
     [HarmonyPatch(typeof(MapConsole), nameof(MapConsole.Use))]
     public static bool UsePrefix(MapConsole __instance)
     {
-        return ModMapOptions.CanUseAdmin;
+        return MapSettings.CanUseAdmin;
     }
 }

@@ -345,7 +345,7 @@ public static class Usables
         bool isSecurity = name is "task_cams" or "Surv_Panel" or "SurvLogConsole" or "SurvConsole";
         bool isVitals = name == "panel_vitals";
 
-        if ((isSecurity && !ModMapOptions.CanUseCameras) || (isVitals && !ModMapOptions.CanUseVitals)) return true;
+        if ((isSecurity && !MapSettings.CanUseCameras) || (isVitals && !MapSettings.CanUseVitals)) return true;
         return false;
     }
 
@@ -360,7 +360,7 @@ public static class Usables
         if (targetSysConsole != null) return IsBlocked(targetSysConsole, pc);
 
         var targetMapConsole = target.TryCast<MapConsole>();
-        if (targetMapConsole != null) return !ModMapOptions.CanUseAdmin;
+        if (targetMapConsole != null) return !MapSettings.CanUseAdmin;
 
         return false;
     }
@@ -399,7 +399,7 @@ public static class Usables
         if (__instance.state == 1)
         {
             int localRemaining = lp.RemainingEmergencies;
-            int teamRemaining = Mathf.Max(0, ModMapOptions.MaxNumberOfMeetings - ModMapOptions.MeetingsCount);
+            int teamRemaining = Mathf.Max(0, MapSettings.MaxNumberOfMeetings - MapSettings.MeetingsCount);
             int remaining = Mathf.Min(localRemaining, lp.IsRole(RoleType.Mayor) ? 1 : teamRemaining);
 
             EmergencyStringBuilder.Clear();

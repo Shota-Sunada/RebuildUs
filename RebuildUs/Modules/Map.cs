@@ -71,7 +71,7 @@ public static class Map
         {
             MapIcons = [];
             CorpseIcons = [];
-            foreach (PlayerControl p in PlayerControl.AllPlayerControls)
+            foreach (PlayerControl p in PlayerControl.AllPlayerControls.GetFastEnumerator())
             {
                 players.Add(p);
             }
@@ -139,21 +139,20 @@ public static class Map
                 float flipX = Mathf.Sign(shipStatus.transform.localScale.x);
 
                 var allPlayers = PlayerControl.AllPlayerControls;
-                for (int i = 0; i < allPlayers.Count; i++)
+                foreach (var player in PlayerControl.AllPlayerControls.GetFastEnumerator())
                 {
-                    var p = allPlayers[i];
-                    if (p == null || p.IsGM()) continue;
+                    if (player == null || player.IsGM()) continue;
 
-                    byte id = p.PlayerId;
+                    byte id = player.PlayerId;
                     if (MapIcons == null || !MapIcons.TryGetValue(id, out var icon))
                     {
                         continue;
                     }
 
-                    bool enabled = !p.Data.IsDead;
+                    bool enabled = !player.Data.IsDead;
                     if (enabled)
                     {
-                        Vector3 vector = p.transform.position;
+                        Vector3 vector = player.transform.position;
                         vector.x /= mapScale;
                         vector.y /= mapScale;
                         vector.x *= flipX;

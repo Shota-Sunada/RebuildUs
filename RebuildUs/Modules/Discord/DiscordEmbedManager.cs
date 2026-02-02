@@ -9,7 +9,7 @@ public static class DiscordEmbedManager
 
     public static async void UpdateStatus()
     {
-        if (!ModMapOptions.EnableDiscordEmbed || !AmongUsClient.Instance.AmHost || string.IsNullOrEmpty(RebuildUs.StatusChannelId.Value)) return;
+        if (!MapSettings.EnableDiscordEmbed || !AmongUsClient.Instance.AmHost || string.IsNullOrEmpty(RebuildUs.StatusChannelId.Value)) return;
         if (DiscordModManager.CurrentGameState == "ドロップシップ") return;
 
         var mapName = Helpers.GetOption(ByteOptionNames.MapId) switch
@@ -69,7 +69,7 @@ public static class DiscordEmbedManager
     {
         var linked = new List<string>();
         var unlinked = new List<string>();
-        foreach (var p in PlayerControl.AllPlayerControls)
+        foreach (var p in PlayerControl.AllPlayerControls.GetFastEnumerator())
         {
             if (p.Data == null) continue;
             var name = p.Data.PlayerName;
@@ -85,10 +85,10 @@ public static class DiscordEmbedManager
 
     public static async void SendGameResult()
     {
-        if (!ModMapOptions.EnableDiscordEmbed || !AmongUsClient.Instance.AmHost || string.IsNullOrEmpty(RebuildUs.ResultChannelId.Value)) return;
+        if (!MapSettings.EnableDiscordEmbed || !AmongUsClient.Instance.AmHost || string.IsNullOrEmpty(RebuildUs.ResultChannelId.Value)) return;
 
         var sb = new StringBuilder();
-        foreach (var p in PlayerControl.AllPlayerControls)
+        foreach (var p in PlayerControl.AllPlayerControls.GetFastEnumerator())
         {
             if (p == null || p.Data == null) continue;
             var role = RoleInfo.GetRolesString(p, false, true, null, true, " + ");
@@ -122,7 +122,7 @@ public static class DiscordEmbedManager
                 _ => d.DeathReason.ToString()
             };
 
-            logs.Append(time).Append(" ");
+            logs.Append(time).Append(' ');
             if (d.DeathReason == DeathReason.Exile)
             {
                 logs.Append("投票 => ").Append(victimName).Append(" (").Append(victimRole).Append(") [").Append(reason).Append("]");

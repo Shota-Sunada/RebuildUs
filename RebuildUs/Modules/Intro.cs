@@ -15,7 +15,7 @@ public static class Intro
         {
             BottomLeft = AspectPosition.ComputePosition(AspectPosition.EdgeAlignments.LeftBottom, new(0.9f, 0.7f, -10f));
 
-            foreach (var p in PlayerControl.AllPlayerControls)
+            foreach (var p in PlayerControl.AllPlayerControls.GetFastEnumerator())
             {
                 if (p.Data == null) continue; // Null check for p.Data
                 var data = p.Data;
@@ -25,7 +25,7 @@ public static class Intro
                 player.cosmetics.nameText.text = data.PlayerName;
                 player.cosmetics.nameText.transform.localPosition = new(0f, -0.7f, -0.1f);
                 player.SetFlipX(true);
-                ModMapOptions.PlayerIcons[p.PlayerId] = player;
+                MapSettings.PlayerIcons[p.PlayerId] = player;
                 player.gameObject.SetActive(false);
 
                 // UIレイヤーに設定
@@ -159,7 +159,7 @@ public static class Intro
         if (Spy.Exists && PlayerControl.LocalPlayer.IsTeamImpostor())
         {
             var players = new List<PlayerControl>();
-            foreach (var p in PlayerControl.AllPlayerControls) players.Add(p);
+            foreach (var p in PlayerControl.AllPlayerControls.GetFastEnumerator()) players.Add(p);
             players.Shuffle();
 
             var fakeImpostorTeam = new Il2CppSystem.Collections.Generic.List<PlayerControl>(); // The local player always has to be the first one in the list (to be displayed in the center)

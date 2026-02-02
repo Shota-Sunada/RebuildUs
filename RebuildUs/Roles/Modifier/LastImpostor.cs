@@ -84,7 +84,7 @@ public class LastImpostor : ModifierBase<LastImpostor>
                 var p = PlayerControl.LocalPlayer;
                 if (!p.HasModifier(ModifierType.LastImpostor)) return false;
                 if (p.HasModifier(ModifierType.LastImpostor) && p.CanMove && p.IsAlive() & p.PlayerId != index
-                    && ModMapOptions.PlayerIcons.ContainsKey(index) && NumUsed < 1 && IsCounterMax())
+                    && MapSettings.PlayerIcons.ContainsKey(index) && NumUsed < 1 && IsCounterMax())
                 {
                     return true;
                 }
@@ -130,7 +130,7 @@ public class LastImpostor : ModifierBase<LastImpostor>
         void SetBountyIconPos(Vector3 offset)
         {
             Vector3 bottomLeft = AspectPosition.ComputePosition(AspectPosition.EdgeAlignments.LeftBottom, new(0.9f, 0.7f, -10f));
-            PoolablePlayer icon = ModMapOptions.PlayerIcons[BountyHunter.Bounty.PlayerId];
+            PoolablePlayer icon = MapSettings.PlayerIcons[BountyHunter.Bounty.PlayerId];
             icon.transform.localPosition = bottomLeft + new Vector3(-0.25f, 0f, 0) + offset;
             BountyHunter.CooldownText.transform.localPosition = bottomLeft + new Vector3(-0.25f, 0f, -0.1f) + offset;
         }
@@ -221,10 +221,8 @@ public class LastImpostor : ModifierBase<LastImpostor>
         if (!IsEnable) return;
 
         var impList = new List<PlayerControl>();
-        var allPlayers = PlayerControl.AllPlayerControls;
-        for (var i = 0; i < allPlayers.Count; i++)
+        foreach (var p in PlayerControl.AllPlayerControls.GetFastEnumerator())
         {
-            var p = allPlayers[i];
             if (p.IsTeamImpostor() && p.IsAlive()) impList.Add(p);
         }
         if (impList.Count == 1)
@@ -312,10 +310,8 @@ public class LastImpostor : ModifierBase<LastImpostor>
     {
         if (PlayerControl.LocalPlayer != null && FastDestroyableSingleton<HudManager>.Instance != null)
         {
-            var allPlayers = PlayerControl.AllPlayerControls;
-            for (var i = 0; i < allPlayers.Count; i++)
+            foreach (var p in PlayerControl.AllPlayerControls.GetFastEnumerator())
             {
-                var p = allPlayers[i];
                 var player = UnityEngine.Object.Instantiate(__instance.PlayerPrefab, FastDestroyableSingleton<HudManager>.Instance.transform);
                 player.UpdateFromPlayerOutfit(p.Data.DefaultOutfit, PlayerMaterial.MaskType.ComplexUI, p.Data.IsDead, true);
                 player.SetFlipX(true);

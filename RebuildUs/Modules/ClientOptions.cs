@@ -5,15 +5,15 @@ namespace RebuildUs.Modules;
 public static class ClientOptions
 {
     private static readonly SelectionBehaviour[] AllOptions = [
-        new SelectionBehaviour("GhostsSeeTasks", () => ModMapOptions.GhostsSeeInformation = RebuildUs.GhostsSeeInformation.Value = !RebuildUs.GhostsSeeInformation.Value, RebuildUs.GhostsSeeInformation.Value),
-        new SelectionBehaviour("GhostsSeeVotes", () => ModMapOptions.GhostsSeeVotes = RebuildUs.GhostsSeeVotes.Value = !RebuildUs.GhostsSeeVotes.Value, RebuildUs.GhostsSeeVotes.Value),
-        new SelectionBehaviour("GhostsSeeRoles", () => ModMapOptions.GhostsSeeRoles = RebuildUs.GhostsSeeRoles.Value = !RebuildUs.GhostsSeeRoles.Value, RebuildUs.GhostsSeeRoles.Value),
-        new SelectionBehaviour("ShowRoleSummary", () => ModMapOptions.ShowRoleSummary = RebuildUs.ShowRoleSummary.Value = !RebuildUs.ShowRoleSummary.Value, RebuildUs.ShowRoleSummary.Value),
-        new SelectionBehaviour("ShowLighterDarker", () => ModMapOptions.ShowLighterDarker = RebuildUs.ShowLighterDarker.Value = !RebuildUs.ShowLighterDarker.Value, RebuildUs.ShowLighterDarker.Value),
-        new SelectionBehaviour("BetterSabotageMap", () => ModMapOptions.BetterSabotageMap = RebuildUs.BetterSabotageMap.Value = !RebuildUs.BetterSabotageMap.Value, RebuildUs.BetterSabotageMap.Value),
-        new SelectionBehaviour("ForceNormalSabotageMap", () => ModMapOptions.ForceNormalSabotageMap = RebuildUs.ForceNormalSabotageMap.Value = !RebuildUs.ForceNormalSabotageMap.Value, RebuildUs.ForceNormalSabotageMap.Value),
-        new SelectionBehaviour("TransparentMap", () => ModMapOptions.TransparentMap = RebuildUs.TransparentMap.Value = !RebuildUs.TransparentMap.Value, RebuildUs.TransparentMap.Value),
-        new SelectionBehaviour("HideFakeTasks", () => ModMapOptions.HideFakeTasks = RebuildUs.HideFakeTasks.Value = !RebuildUs.HideFakeTasks.Value, RebuildUs.HideFakeTasks.Value),
+        new SelectionBehaviour("GhostsSeeTasks", () => MapSettings.GhostsSeeInformation = RebuildUs.GhostsSeeInformation.Value = !RebuildUs.GhostsSeeInformation.Value, RebuildUs.GhostsSeeInformation.Value),
+        new SelectionBehaviour("GhostsSeeVotes", () => MapSettings.GhostsSeeVotes = RebuildUs.GhostsSeeVotes.Value = !RebuildUs.GhostsSeeVotes.Value, RebuildUs.GhostsSeeVotes.Value),
+        new SelectionBehaviour("GhostsSeeRoles", () => MapSettings.GhostsSeeRoles = RebuildUs.GhostsSeeRoles.Value = !RebuildUs.GhostsSeeRoles.Value, RebuildUs.GhostsSeeRoles.Value),
+        new SelectionBehaviour("ShowRoleSummary", () => MapSettings.ShowRoleSummary = RebuildUs.ShowRoleSummary.Value = !RebuildUs.ShowRoleSummary.Value, RebuildUs.ShowRoleSummary.Value),
+        new SelectionBehaviour("ShowLighterDarker", () => MapSettings.ShowLighterDarker = RebuildUs.ShowLighterDarker.Value = !RebuildUs.ShowLighterDarker.Value, RebuildUs.ShowLighterDarker.Value),
+        new SelectionBehaviour("BetterSabotageMap", () => MapSettings.BetterSabotageMap = RebuildUs.BetterSabotageMap.Value = !RebuildUs.BetterSabotageMap.Value, RebuildUs.BetterSabotageMap.Value),
+        new SelectionBehaviour("ForceNormalSabotageMap", () => MapSettings.ForceNormalSabotageMap = RebuildUs.ForceNormalSabotageMap.Value = !RebuildUs.ForceNormalSabotageMap.Value, RebuildUs.ForceNormalSabotageMap.Value),
+        new SelectionBehaviour("TransparentMap", () => MapSettings.TransparentMap = RebuildUs.TransparentMap.Value = !RebuildUs.TransparentMap.Value, RebuildUs.TransparentMap.Value),
+        new SelectionBehaviour("HideFakeTasks", () => MapSettings.HideFakeTasks = RebuildUs.HideFakeTasks.Value = !RebuildUs.HideFakeTasks.Value, RebuildUs.HideFakeTasks.Value),
     ];
 
     private static GameObject PopUp;

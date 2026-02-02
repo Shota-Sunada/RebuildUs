@@ -6,7 +6,7 @@ public static class MedScanMinigamePatch
     [HarmonyPatch(typeof(MedScanMinigame), nameof(MedScanMinigame.FixedUpdate))]
     public static void Prefix(MedScanMinigame __instance)
     {
-        if (ModMapOptions.AllowParallelMedBayScans)
+        if (MapSettings.AllowParallelMedBayScans)
         {
             __instance.medscan.CurrentUser = PlayerControl.LocalPlayer.PlayerId;
             __instance.medscan.UsersList.Clear();

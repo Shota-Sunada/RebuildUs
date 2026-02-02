@@ -114,24 +114,24 @@ public static class Exile
         if (ship != null)
         {
             int oldLen = ship.AllCameras.Length;
-            int addLen = ModMapOptions.CamerasToAdd.Count;
+            int addLen = MapSettings.CamerasToAdd.Count;
             if (addLen > 0)
             {
                 var newCameras = new SurvCamera[oldLen + addLen];
                 for (int i = 0; i < oldLen; i++) newCameras[i] = ship.AllCameras[i];
                 for (int i = 0; i < addLen; i++)
                 {
-                    var camera = ModMapOptions.CamerasToAdd[i];
+                    var camera = MapSettings.CamerasToAdd[i];
                     camera.gameObject.SetActive(true);
                     camera.gameObject.GetComponent<SpriteRenderer>().color = Color.white;
                     newCameras[oldLen + i] = camera;
                 }
                 ship.AllCameras = newCameras;
-                ModMapOptions.CamerasToAdd.Clear();
+                MapSettings.CamerasToAdd.Clear();
             }
         }
 
-        foreach (var vent in ModMapOptions.VentsToSeal)
+        foreach (var vent in MapSettings.VentsToSeal)
         {
             var animator = vent.GetComponent<PowerTools.SpriteAnim>();
             vent.EnterVentAnim = vent.ExitVentAnim = null;
@@ -149,12 +149,12 @@ public static class Exile
             vent.myRend.color = Color.white;
             vent.name = "SealedVent_" + vent.name;
         }
-        ModMapOptions.VentsToSeal = [];
+        MapSettings.VentsToSeal = [];
 
         // 1 = reset per turn
-        if (ModMapOptions.RestrictDevices == 1)
+        if (MapSettings.RestrictDevices == 1)
         {
-            ModMapOptions.ResetDeviceTimes();
+            MapSettings.ResetDeviceTimes();
         }
     }
 
@@ -162,7 +162,7 @@ public static class Exile
     {
         int numAliveCrewmates = 0;
         // count alive crewmates
-        foreach (PlayerControl player in PlayerControl.AllPlayerControls)
+        foreach (PlayerControl player in PlayerControl.AllPlayerControls.GetFastEnumerator())
         {
             if (player.IsTeamImpostor())
                 continue;
@@ -177,7 +177,7 @@ public static class Exile
         int targetPlayerIndex = RebuildUs.Instance.Rnd.Next(0, numAliveCrewmates);
         int currentPlayerIndex = 0;
         // return the player
-        foreach (PlayerControl player in PlayerControl.AllPlayerControls)
+        foreach (PlayerControl player in PlayerControl.AllPlayerControls.GetFastEnumerator())
         {
             if (player.IsTeamImpostor())
                 continue;
@@ -219,7 +219,7 @@ public static class Exile
     public static void ReEnableGameplay()
     {
         CustomButton.MeetingEndedUpdate();
-        ModMapOptions.MeetingEndedUpdate();
+        MapSettings.MeetingEndedUpdate();
         RebuildUs.OnMeetingEnd();
 
         // Mini set adapted cooldown

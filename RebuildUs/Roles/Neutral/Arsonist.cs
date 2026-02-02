@@ -21,10 +21,8 @@ public class Arsonist : RoleBase<Arsonist>
 
     public bool DousedEveryoneAlive()
     {
-        var allPlayers = PlayerControl.AllPlayerControls;
-        for (var i = 0; i < allPlayers.Count; i++)
+        foreach (var p in PlayerControl.AllPlayerControls.GetFastEnumerator())
         {
-            var p = allPlayers[i];
             if (p.IsRole(RoleType.Arsonist) || p.Data.IsDead || p.Data.Disconnected || p.IsGM()) continue;
 
             bool isDoused = false;
@@ -69,10 +67,8 @@ public class Arsonist : RoleBase<Arsonist>
             if (DouseTarget != null)
             {
                 _untargetablesCache.Clear();
-                var allPlayers = PlayerControl.AllPlayerControls;
-                for (var i = 0; i < allPlayers.Count; i++)
+                foreach (var p in PlayerControl.AllPlayerControls.GetFastEnumerator())
                 {
-                    var p = allPlayers[i];
                     if (p.PlayerId != DouseTarget.PlayerId)
                     {
                         _untargetablesCache.Add(p);
@@ -124,7 +120,7 @@ public class Arsonist : RoleBase<Arsonist>
                 Local.DouseTarget = null;
                 Local.UpdateStatus();
             },
-            GetDouseSprite(),
+            AssetLoader.DouseButton,
             ButtonPosition.Layout,
             hm,
             hm.KillButton,
@@ -147,9 +143,9 @@ public class Arsonist : RoleBase<Arsonist>
 
                 foreach (var p in Local.DousedPlayers)
                 {
-                    if (ModMapOptions.PlayerIcons.ContainsKey(p.PlayerId))
+                    if (MapSettings.PlayerIcons.ContainsKey(p.PlayerId))
                     {
-                        ModMapOptions.PlayerIcons[p.PlayerId].SetSemiTransparent(false);
+                        MapSettings.PlayerIcons[p.PlayerId].SetSemiTransparent(false);
                     }
                 }
             },
@@ -193,7 +189,7 @@ public class Arsonist : RoleBase<Arsonist>
 
     public void UpdateIcons()
     {
-        foreach (var pp in ModMapOptions.PlayerIcons.Values)
+        foreach (var pp in MapSettings.PlayerIcons.Values)
         {
             pp.gameObject.SetActive(false);
         }
@@ -202,22 +198,20 @@ public class Arsonist : RoleBase<Arsonist>
         {
             var bottomLeft = AspectPosition.ComputePosition(AspectPosition.EdgeAlignments.LeftBottom, new(0.9f, 0.7f, -10f));
             var visibleCounter = 0;
-            var allPlayers = PlayerControl.AllPlayerControls;
-            for (var i = 0; i < allPlayers.Count; i++)
+            foreach (var p in PlayerControl.AllPlayerControls.GetFastEnumerator())
             {
-                var p = allPlayers[i];
                 if (p.PlayerId == PlayerControl.LocalPlayer.PlayerId) continue;
-                if (!ModMapOptions.PlayerIcons.ContainsKey(p.PlayerId)) continue;
+                if (!MapSettings.PlayerIcons.ContainsKey(p.PlayerId)) continue;
 
                 if (p.Data.IsDead || p.Data.Disconnected)
                 {
-                    ModMapOptions.PlayerIcons[p.PlayerId].gameObject.SetActive(false);
+                    MapSettings.PlayerIcons[p.PlayerId].gameObject.SetActive(false);
                 }
                 else
                 {
-                    ModMapOptions.PlayerIcons[p.PlayerId].gameObject.SetActive(true);
-                    ModMapOptions.PlayerIcons[p.PlayerId].transform.localScale = Vector3.one * 0.3f;
-                    ModMapOptions.PlayerIcons[p.PlayerId].transform.localPosition = bottomLeft + Vector3.right * visibleCounter * 0.45f;
+                    MapSettings.PlayerIcons[p.PlayerId].gameObject.SetActive(true);
+                    MapSettings.PlayerIcons[p.PlayerId].transform.localScale = Vector3.one * 0.3f;
+                    MapSettings.PlayerIcons[p.PlayerId].transform.localPosition = bottomLeft + Vector3.right * visibleCounter * 0.45f;
                     visibleCounter++;
 
                     bool isDoused = false;
@@ -229,27 +223,20 @@ public class Arsonist : RoleBase<Arsonist>
                             break;
                         }
                     }
-                    ModMapOptions.PlayerIcons[p.PlayerId].SetSemiTransparent(!isDoused);
+                    MapSettings.PlayerIcons[p.PlayerId].SetSemiTransparent(!isDoused);
                 }
             }
         }
     }
 
     // write functions here
-    private static Sprite DouseSprite;
-    public static Sprite GetDouseSprite()
-    {
-        if (DouseSprite) return DouseSprite;
-        DouseSprite = AssetLoader.DouseButton;
-        return DouseSprite;
-    }
 
     public static void Clear()
     {
         // reset configs here
         Players.Clear();
         TriggerArsonistWin = false;
-        foreach (var p in ModMapOptions.PlayerIcons.Values)
+        foreach (var p in MapSettings.PlayerIcons.Values)
         {
             if (p != null && p.gameObject != null)
             {

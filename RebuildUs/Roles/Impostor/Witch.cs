@@ -35,10 +35,8 @@ public class Witch : RoleBase<Witch>
         List<PlayerControl> untargetables = [];
         if (SpellCastingTarget != null)
         {
-            var allPlayers = PlayerControl.AllPlayerControls;
-            for (var i = 0; i < allPlayers.Count; i++)
+            foreach (var p in PlayerControl.AllPlayerControls.GetFastEnumerator())
             {
-                var p = allPlayers[i];
                 if (p.PlayerId != SpellCastingTarget.PlayerId)
                 {
                     untargetables.Add(p);

@@ -90,7 +90,7 @@ public class SecurityGuard : RoleBase<SecurityGuard>
                     RPCProcedure.SealVent(Local.VentTarget.Id, Local.Player.PlayerId);
                     Local.VentTarget = null;
                 }
-                else if (Helpers.GetOption(ByteOptionNames.MapId) != 1 && ModMapOptions.CouldUseCameras && !SubmergedCompatibility.IsSubmerged)
+                else if (Helpers.GetOption(ByteOptionNames.MapId) != 1 && MapSettings.CouldUseCameras && !SubmergedCompatibility.IsSubmerged)
                 {
                     // Place camera if there's no vent and it's not MiraHQ
                     var pos = PlayerControl.LocalPlayer.transform.position;
@@ -133,7 +133,7 @@ public class SecurityGuard : RoleBase<SecurityGuard>
 
                 return Local.VentTarget != null
                     ? Local.RemainingScrews >= VentPrice && PlayerControl.LocalPlayer.CanMove
-                    : Helpers.GetOption(ByteOptionNames.MapId) != 1 && !SubmergedCompatibility.IsSubmerged && ModMapOptions.CouldUseCameras && Local.RemainingScrews >= CamPrice && PlayerControl.LocalPlayer.CanMove;
+                    : Helpers.GetOption(ByteOptionNames.MapId) != 1 && !SubmergedCompatibility.IsSubmerged && MapSettings.CouldUseCameras && Local.RemainingScrews >= CamPrice && PlayerControl.LocalPlayer.CanMove;
             },
             () => { SecurityGuardButton.Timer = SecurityGuardButton.MaxTimer; },
             AssetLoader.PlaceCameraButton,

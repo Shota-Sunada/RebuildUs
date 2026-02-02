@@ -60,7 +60,7 @@ public static class AmongUsClientPatch
         if (data != null)
         {
             GameStart.OnPlayerLeft(data.Id);
-            var player = PlayerControl.AllPlayerControls.ToArray().FirstOrDefault(p => p.OwnerId == data.Id);
+            var player = PlayerControl.AllPlayerControls.GetFastEnumerator().ToArray().FirstOrDefault(p => p.OwnerId == data.Id);
             if (player != null)
             {
                 var id = DiscordModManager.GetIdentifier(player);

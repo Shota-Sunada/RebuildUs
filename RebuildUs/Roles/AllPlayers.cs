@@ -82,10 +82,8 @@ public static class AllPlayers
             bool anyPlayerInVent = false;
             if (isBait)
             {
-                var allPlayers = PlayerControl.AllPlayerControls;
-                for (int i = 0; i < allPlayers.Count; i++)
+                foreach (var player in PlayerControl.AllPlayerControls.GetFastEnumerator())
                 {
-                    PlayerControl player = allPlayers[i];
                     if (player == null || !player.inVent) continue;
 
                     anyPlayerInVent = true;

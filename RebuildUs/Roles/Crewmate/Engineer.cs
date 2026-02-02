@@ -39,9 +39,8 @@ public class Engineer : RoleBase<Engineer>
                 sender.Write(PlayerControl.LocalPlayer.PlayerId);
                 RPCProcedure.EngineerUsedRepair(PlayerControl.LocalPlayer.PlayerId);
 
-                for (int i = 0; i < PlayerControl.LocalPlayer.myTasks.Count; i++)
+                foreach (var task in PlayerControl.LocalPlayer.myTasks.GetFastEnumerator())
                 {
-                    var task = PlayerControl.LocalPlayer.myTasks[i];
                     if (task.TaskType == TaskTypes.FixLights)
                     {
                         using var sender2 = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.EngineerFixLights);
@@ -81,9 +80,8 @@ public class Engineer : RoleBase<Engineer>
             () =>
             {
                 bool sabotageActive = false;
-                for (int i = 0; i < PlayerControl.LocalPlayer.myTasks.Count; i++)
+                foreach (var task in PlayerControl.LocalPlayer.myTasks.GetFastEnumerator())
                 {
-                    var task = PlayerControl.LocalPlayer.myTasks[i];
                     if (task.TaskType is TaskTypes.FixLights or TaskTypes.RestoreOxy or TaskTypes.ResetReactor or TaskTypes.ResetSeismic or TaskTypes.FixComms or TaskTypes.StopCharles
                     || (SubmergedCompatibility.IsSubmerged && task.TaskType == SubmergedCompatibility.RetrieveOxygenMask))
                     {

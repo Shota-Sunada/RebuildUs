@@ -5,7 +5,6 @@ public partial class RoleInfo(TranslateKey nameKey, Color color, CustomOption ba
     public Color Color = color;
     public virtual string Name { get { return Tr.Get(NameKey); } }
     public virtual string NameColored { get { return Helpers.Cs(Color, Name); } }
-    // TODO: Use individual TranslateKey instead of dynamic lookup
     public virtual string IntroDescription { get { return Tr.GetDynamic($"{NameKey}IntroDesc"); } }
     public virtual string ShortDescription { get { return Tr.GetDynamic($"{NameKey}ShortDesc"); } }
     public virtual string FullDescription { get { return Tr.GetDynamic($"{NameKey}FullDesc"); } }

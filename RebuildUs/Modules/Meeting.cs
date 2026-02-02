@@ -28,7 +28,7 @@ public static class Meeting
         }
 
         // Deactivate skip Button if skipping on emergency meetings is disabled
-        if (ModMapOptions.BlockSkippingInEmergencyMeetings)
+        if (MapSettings.BlockSkippingInEmergencyMeetings)
         {
             __instance.SkipVoteButton?.gameObject?.SetActive(false);
         }
@@ -101,7 +101,7 @@ public static class Meeting
             if (!ps.AmDead && !ps.DidVote) return false;
         }
 
-        if (Target == null && ModMapOptions.BlockSkippingInEmergencyMeetings && ModMapOptions.NoVoteIsSelfVote)
+        if (Target == null && MapSettings.BlockSkippingInEmergencyMeetings && MapSettings.NoVoteIsSelfVote)
         {
             foreach (var playerVoteArea in __instance.playerStates)
             {
@@ -117,7 +117,7 @@ public static class Meeting
         PlayerControl exiledPlayer = null;
         if (!tie)
         {
-            foreach (var p in PlayerControl.AllPlayerControls)
+            foreach (var p in PlayerControl.AllPlayerControls.GetFastEnumerator())
             {
                 if (p.PlayerId == max.Key && !p.Data.IsDead)
                 {
@@ -147,7 +147,7 @@ public static class Meeting
     {
         var spriteRenderer = UnityEngine.Object.Instantiate(__instance.PlayerVotePrefab);
         var showVoteColors = !GameManager.Instance.LogicOptions.GetAnonymousVotes() ||
-                            (PlayerControl.LocalPlayer.IsDead() && ModMapOptions.GhostsSeeVotes) ||
+                            (PlayerControl.LocalPlayer.IsDead() && MapSettings.GhostsSeeVotes) ||
                             (PlayerControl.LocalPlayer.IsRole(RoleType.Mayor) && Mayor.MayorCanSeeVoteColors && TasksHandler.TaskInfo(PlayerControl.LocalPlayer.Data).Completed >= Mayor.MayorTasksNeededToSeeVoteColors);
         if (showVoteColors)
         {
@@ -276,8 +276,8 @@ public static class Meeting
     {
         __result = false;
         // if (GM.gm != null && GM.gm.PlayerId == suspectStateIdx) return false;
-        if (ModMapOptions.NoVoteIsSelfVote && PlayerControl.LocalPlayer.PlayerId == suspectStateIdx) return false;
-        if (ModMapOptions.BlockSkippingInEmergencyMeetings && suspectStateIdx == -1) return false;
+        if (MapSettings.NoVoteIsSelfVote && PlayerControl.LocalPlayer.PlayerId == suspectStateIdx) return false;
+        if (MapSettings.BlockSkippingInEmergencyMeetings && suspectStateIdx == -1) return false;
 
         return true;
     }
@@ -839,7 +839,7 @@ public static class Meeting
             // Reset vampire bitten
             Vampire.Bitten = null;
             // Count meetings
-            if (meetingTarget == null) ModMapOptions.MeetingsCount++;
+            if (meetingTarget == null) MapSettings.MeetingsCount++;
             // Save the meeting target
             Target = meetingTarget;
             Medium.MeetingStartTime = DateTime.UtcNow;
@@ -881,10 +881,9 @@ public static class Meeting
                 yield return null;
             }
             MeetingRoomManager.Instance.RemoveSelf();
-            for (int i = 0; i < PlayerControl.AllPlayerControls.Count; i++)
+            foreach (var player in PlayerControl.AllPlayerControls.GetFastEnumerator())
             {
-                PlayerControl playerControl = PlayerControl.AllPlayerControls[i];
-                playerControl?.ResetForMeeting();
+                player?.ResetForMeeting();
             }
             if (MapBehaviour.Instance)
             {

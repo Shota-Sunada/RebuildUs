@@ -23,7 +23,7 @@ public static class DiscordModManager
     public static void Initialize()
     {
         if (_gateways.Count > 0) return;
-        if (!ModMapOptions.EnableDiscordAutoMute && !ModMapOptions.EnableDiscordEmbed) return;
+        if (!MapSettings.EnableDiscordAutoMute && !MapSettings.EnableDiscordEmbed) return;
 
         _tokens = [.. new[] {
             RebuildUs.DiscordBotToken.Value,
@@ -111,7 +111,7 @@ public static class DiscordModManager
         CurrentGameState = "会議中";
         ExiledPlayerName = "";
         ExiledPlayerId = 255;
-        foreach (var p in PlayerControl.AllPlayerControls) DiscordAutoMuteManager.UpdatePlayerMute(p);
+        foreach (var p in PlayerControl.AllPlayerControls.GetFastEnumerator()) DiscordAutoMuteManager.UpdatePlayerMute(p);
         DiscordEmbedManager.UpdateStatus();
     }
 
@@ -119,7 +119,7 @@ public static class DiscordModManager
     {
         if (!AmongUsClient.Instance.AmHost) return;
         CurrentGameState = "行動中";
-        foreach (var p in PlayerControl.AllPlayerControls) DiscordAutoMuteManager.UpdatePlayerMute(p);
+        foreach (var p in PlayerControl.AllPlayerControls.GetFastEnumerator()) DiscordAutoMuteManager.UpdatePlayerMute(p);
         DiscordEmbedManager.UpdateStatus();
     }
 
@@ -129,7 +129,7 @@ public static class DiscordModManager
         CurrentGameState = "追放中";
         ExiledPlayerName = name;
         ExiledPlayerId = playerId;
-        foreach (var p in PlayerControl.AllPlayerControls) DiscordAutoMuteManager.UpdatePlayerMute(p);
+        foreach (var p in PlayerControl.AllPlayerControls.GetFastEnumerator()) DiscordAutoMuteManager.UpdatePlayerMute(p);
         DiscordEmbedManager.UpdateStatus();
     }
 
@@ -305,7 +305,7 @@ public static class DiscordModManager
                     if (customId == "start_link")
                     {
                         var optionsList = new List<object>();
-                        foreach (var p in PlayerControl.AllPlayerControls)
+                        foreach (var p in PlayerControl.AllPlayerControls.GetFastEnumerator())
                         {
                             var identifier = GetIdentifier(p);
                             if (string.IsNullOrEmpty(identifier)) continue;

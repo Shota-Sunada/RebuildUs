@@ -112,11 +112,9 @@ public class EvilTracker : RoleBase<EvilTracker>
 
             // インポスターの位置を示すArrowsを描画
             int count = 0;
-            var allPlayers = PlayerControl.AllPlayerControls;
             var sb = new StringBuilder();
-            for (var i = 0; i < allPlayers.Count; i++)
+            foreach (var p in PlayerControl.AllPlayerControls.GetFastEnumerator())
             {
-                var p = allPlayers[i];
                 if (p.Data.IsDead)
                 {
                     if (p.IsTeamImpostor() && ImpostorPositionText.TryGetValue(p.name, out var txt))

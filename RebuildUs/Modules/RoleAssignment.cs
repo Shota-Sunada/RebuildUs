@@ -121,7 +121,7 @@ public static class RoleAssignment
     private static void CreateCheckList()
     {
         CheckList = [];
-        foreach (var player in PlayerControl.AllPlayerControls)
+        foreach (var player in PlayerControl.AllPlayerControls.GetFastEnumerator())
         {
             if (player.Data == null || player.Data.Disconnected) continue;
             CheckList.Add(player.PlayerId, false);
@@ -188,8 +188,8 @@ public static class RoleAssignment
         //             PlayerControl newImp;
         //             while (true)
         //             {
-        //                 newImpId = RebuildUs.Instance.rnd.Next(0, PlayerControl.AllPlayerControls.Count);
-        //                 newImp = PlayerControl.AllPlayerControls[newImpId];
+        //                 newImpId = RebuildUs.Instance.rnd.Next(0, PlayerControl.AllPlayerControls.GetFastEnumerator().Count);
+        //                 newImp = PlayerControl.AllPlayerControls.GetFastEnumerator()[newImpId];
         //                 if (newImp == host || newImp.Data.Role.IsImpostor)
         //                 {
         //                     continue;
@@ -240,7 +240,7 @@ public static class RoleAssignment
         List<PlayerControl> crewmates = [];
         List<PlayerControl> impostors = [];
 
-        foreach (var p in PlayerControl.AllPlayerControls)
+        foreach (var p in PlayerControl.AllPlayerControls.GetFastEnumerator())
         {
             if (p.Data == null || p.Data.Disconnected) continue;
             if (p.Data.Role.IsImpostor) impostors.Add(p);

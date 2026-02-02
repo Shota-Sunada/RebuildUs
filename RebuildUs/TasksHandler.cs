@@ -17,7 +17,7 @@ public static class TasksHandler
             !pInfo.Object.HasFakeTasks()
         )
         {
-            foreach (var playerInfoTask in pInfo.Tasks)
+            foreach (var playerInfoTask in pInfo.Tasks.GetFastEnumerator())
             {
                 total++;
                 if (playerInfoTask.Complete) completed++;

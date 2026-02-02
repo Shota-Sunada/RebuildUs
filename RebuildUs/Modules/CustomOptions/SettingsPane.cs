@@ -82,9 +82,9 @@ public partial class CustomOption
     public static void SettingsPaneChangeTab(LobbyViewSettingsPane __instance, PanePage id)
     {
         __instance.currentTab = (StringNames)id;
-        for (int i = 0; i < __instance.settingsInfo.Count; ++i)
+        foreach (var info in __instance.settingsInfo.GetFastEnumerator())
         {
-            __instance.settingsInfo[i].gameObject.Destroy();
+            info.gameObject.Destroy();
         }
         __instance.settingsInfo.Clear();
         SetTab(__instance, id);

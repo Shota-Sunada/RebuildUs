@@ -66,7 +66,7 @@ public static class Admin
         // Don't waste network traffic if we're out of time.
         if (!IsEvilHackerAdmin)
         {
-            if (ModMapOptions.RestrictDevices > 0 && ModMapOptions.RestrictAdmin && ModMapOptions.RestrictAdminTime > 0f && PlayerControl.LocalPlayer.IsAlive())
+            if (MapSettings.RestrictDevices > 0 && MapSettings.RestrictAdmin && MapSettings.RestrictAdminTime > 0f && PlayerControl.LocalPlayer.IsAlive())
             {
                 using var sender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.UseAdminTime);
                 sender.Write(AdminTimer);
@@ -92,7 +92,7 @@ public static class Admin
 
         PlayerColors = [];
 
-        if (ModMapOptions.RestrictDevices > 0 && ModMapOptions.RestrictAdmin)
+        if (MapSettings.RestrictDevices > 0 && MapSettings.RestrictAdmin)
         {
             if (OutOfTime == null)
             {
@@ -110,7 +110,7 @@ public static class Admin
                 TimeRemaining.color = Palette.White;
             }
 
-            if (ModMapOptions.RestrictAdminTime <= 0f && !PlayerControl.LocalPlayer.IsTeamImpostor())
+            if (MapSettings.RestrictAdminTime <= 0f && !PlayerControl.LocalPlayer.IsTeamImpostor())
             {
                 __instance.BackgroundColor.SetColor(Palette.DisabledGrey);
                 OutOfTime.gameObject.SetActive(true);
@@ -125,14 +125,14 @@ public static class Admin
 
             ClearedIcons = false;
             OutOfTime.gameObject.SetActive(false);
-            string timeString = TimeSpan.FromSeconds(ModMapOptions.RestrictAdminTime).ToString(@"mm\:ss\.ff");
+            string timeString = TimeSpan.FromSeconds(MapSettings.RestrictAdminTime).ToString(@"mm\:ss\.ff");
             TimeRemaining.text = string.Format(Tr.Get(TranslateKey.TimeRemaining), timeString);
             //TimeRemaining.color = MapOptions.restrictAdminTime > 10f ? Palette.AcceptedGreen : Palette.ImpostorRed;
             TimeRemaining.gameObject.SetActive(true);
         }
 
         bool commsActive = false;
-        foreach (var task in PlayerControl.LocalPlayer.myTasks)
+        foreach (var task in PlayerControl.LocalPlayer.myTasks.GetFastEnumerator())
         {
             if (task.TaskType == TaskTypes.FixComms)
             {

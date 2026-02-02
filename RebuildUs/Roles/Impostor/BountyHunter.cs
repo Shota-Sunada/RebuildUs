@@ -67,7 +67,7 @@ public class BountyHunter : RoleBase<BountyHunter>
                 CooldownText = null;
                 Bounty = null;
                 _lastSecond = -1;
-                foreach (var p in ModMapOptions.PlayerIcons.Values)
+                foreach (var p in MapSettings.PlayerIcons.Values)
                 {
                     if (p != null && p.gameObject != null) p.gameObject.SetActive(false);
                 }
@@ -84,12 +84,10 @@ public class BountyHunter : RoleBase<BountyHunter>
                 ArrowUpdateTimer = 0f; // Force arrow to update
                 BountyUpdateTimer = BountyDuration;
                 var possibleTargets = new List<PlayerControl>();
-                var players = PlayerControl.AllPlayerControls;
                 var partner = Player.GetPartner();
 
-                for (int i = 0; i < players.Count; i++)
+                foreach (var p in PlayerControl.AllPlayerControls.GetFastEnumerator())
                 {
-                    var p = players[i];
                     if (p == null || p.Data == null) continue;
 
                     if (!p.Data.IsDead && !p.Data.Disconnected && !p.Data.Role.IsImpostor && !p.IsRole(RoleType.Spy)
@@ -114,11 +112,11 @@ public class BountyHunter : RoleBase<BountyHunter>
                 // Show poolable player
                 if (FastDestroyableSingleton<HudManager>.Instance != null)
                 {
-                    foreach (var pp in ModMapOptions.PlayerIcons.Values)
+                    foreach (var pp in MapSettings.PlayerIcons.Values)
                     {
                         if (pp != null && pp.gameObject != null) pp.gameObject.SetActive(false);
                     }
-                    if (ModMapOptions.PlayerIcons.TryGetValue(Bounty.PlayerId, out var icon) && icon != null && icon.gameObject != null)
+                    if (MapSettings.PlayerIcons.TryGetValue(Bounty.PlayerId, out var icon) && icon != null && icon.gameObject != null)
                     {
                         var bottomLeft = AspectPosition.ComputePosition(AspectPosition.EdgeAlignments.LeftBottom, new(0.9f, 0.7f, -10f));
                         icon.transform.localPosition = bottomLeft;
@@ -129,7 +127,7 @@ public class BountyHunter : RoleBase<BountyHunter>
             }
 
             // Hide in meeting
-            if (MeetingHud.Instance && ModMapOptions.PlayerIcons.TryGetValue(Bounty.PlayerId, out var mIcon) && mIcon != null && mIcon.gameObject != null)
+            if (MeetingHud.Instance && MapSettings.PlayerIcons.TryGetValue(Bounty.PlayerId, out var mIcon) && mIcon != null && mIcon.gameObject != null)
             {
                 mIcon.gameObject.SetActive(false);
             }
@@ -190,7 +188,7 @@ public class BountyHunter : RoleBase<BountyHunter>
         Arrow = null;
         if (CooldownText != null && CooldownText.gameObject != null) UnityEngine.Object.Destroy(CooldownText.gameObject);
         CooldownText = null;
-        foreach (var p in ModMapOptions.PlayerIcons.Values)
+        foreach (var p in MapSettings.PlayerIcons.Values)
         {
             if (p != null && p.gameObject != null) p.gameObject.SetActive(false);
         }

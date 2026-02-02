@@ -78,7 +78,7 @@ public abstract class ModifierBase<T> : PlayerModifier where T : ModifierBase<T>
         Player = player;
         Players.Add((T)this);
         AllModifiers.Add(this);
-        PlayerModifier.RemoveFromCache(player.PlayerId);
+        RemoveFromCache(player.PlayerId);
     }
 
     public static T Local
@@ -170,7 +170,7 @@ public abstract class ModifierBase<T> : PlayerModifier where T : ModifierBase<T>
     public static void EraseModifier(PlayerControl player)
     {
         if (player == null) return;
-        PlayerModifier.RemoveFromCache(player.PlayerId);
+        RemoveFromCache(player.PlayerId);
 
         for (int i = Players.Count - 1; i >= 0; i--)
         {
@@ -194,8 +194,8 @@ public abstract class ModifierBase<T> : PlayerModifier where T : ModifierBase<T>
     public static void SwapModifier(PlayerControl p1, PlayerControl p2)
     {
         if (p1 == null || p2 == null) return;
-        PlayerModifier.RemoveFromCache(p1.PlayerId);
-        PlayerModifier.RemoveFromCache(p2.PlayerId);
+        RemoveFromCache(p1.PlayerId);
+        RemoveFromCache(p2.PlayerId);
         for (int i = 0; i < Players.Count; i++)
         {
             if (Players[i].Player == p1)

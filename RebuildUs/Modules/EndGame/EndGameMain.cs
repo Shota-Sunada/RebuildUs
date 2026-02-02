@@ -233,7 +233,7 @@ public static class EndGameMain
         if (forceEnd)
         {
             EndGameResult.CachedWinners = new Il2CppSystem.Collections.Generic.List<CachedPlayerData>();
-            foreach (var player in PlayerControl.AllPlayerControls)
+            foreach (var player in PlayerControl.AllPlayerControls.GetFastEnumerator())
             {
                 player.Data.IsDead = false;
                 EndGameResult.CachedWinners.Add(new(player.Data));
@@ -241,7 +241,7 @@ public static class EndGameMain
             AdditionalTempData.WinCondition = WinCondition.ForceEnd;
         }
 
-        foreach (var wpd in EndGameResult.CachedWinners)
+        foreach (var wpd in EndGameResult.CachedWinners.GetFastEnumerator())
         {
             var isDead = wpd.IsDead;
             if (!isDead)
@@ -433,7 +433,7 @@ public static class EndGameMain
             ? string.Format(Tr.GetDynamic(bonusText + "Extra"), extraText)
             : Tr.GetDynamic(bonusText);
 
-        if (ModMapOptions.ShowRoleSummary)
+        if (MapSettings.ShowRoleSummary)
         {
             var position = Camera.main.ViewportToWorldPoint(new Vector3(0f, 1f, Camera.main.nearClipPlane));
             GameObject roleSummary = UnityEngine.Object.Instantiate(__instance.WinText.gameObject);
@@ -555,8 +555,8 @@ public static class EndGameMain
 
     public static bool CheckAndEndGameForSabotageWin()
     {
-        if (MapUtilities.CachedShipStatus.Systems == null) return false;
-        var systems = MapUtilities.CachedShipStatus.Systems;
+        if (MapUtilities.Systems == null) return false;
+        var systems = MapUtilities.Systems;
         if (systems.TryGetValue(SystemTypes.LifeSupp, out var systemType) && systemType != null)
         {
             var lifeSuppSystemType = systemType.TryCast<LifeSuppSystemType>();
@@ -609,7 +609,7 @@ public static class EndGameMain
         if (statistics.TeamImpostorsAlive >= statistics.TotalAlive - statistics.TeamImpostorsAlive &&
             statistics.TeamJackalAlive == 0 &&
             (statistics.TeamImpostorLovers == 0 || statistics.TeamImpostorLovers >= statistics.CouplesAlive * 2)
-           )
+        )
         {
             var endReason = GameData.LastDeathReason switch
             {

@@ -96,7 +96,7 @@ public class Hacker : RoleBase<Hacker>
                     IncludeDeadBodies = true
                 });
             },
-            () => { return PlayerControl.LocalPlayer.IsRole(RoleType.Hacker) && ModMapOptions.CouldUseAdmin && PlayerControl.LocalPlayer.IsAlive(); },
+            () => { return PlayerControl.LocalPlayer.IsRole(RoleType.Hacker) && MapSettings.CouldUseAdmin && PlayerControl.LocalPlayer.IsAlive(); },
             () =>
             {
                 if (HackerAdminTableChargesText != null || HackerVitalsChargesText != null)
@@ -106,7 +106,7 @@ public class Hacker : RoleBase<Hacker>
                     HackerAdminTableChargesText?.text = text;
                     HackerVitalsChargesText?.text = text;
                 }
-                return Local.ChargesAdminTable > 0 && ModMapOptions.CanUseAdmin; ;
+                return Local.ChargesAdminTable > 0 && MapSettings.CanUseAdmin; ;
             },
             () =>
             {
@@ -193,13 +193,13 @@ public class Hacker : RoleBase<Hacker>
 
                 Local.ChargesVitals--;
             },
-            () => { return PlayerControl.LocalPlayer.IsRole(RoleType.Hacker) && ModMapOptions.CouldUseVitals && PlayerControl.LocalPlayer.IsAlive() && Helpers.GetOption(ByteOptionNames.MapId) != 0 && Helpers.GetOption(ByteOptionNames.MapId) != 3; },
+            () => { return PlayerControl.LocalPlayer.IsRole(RoleType.Hacker) && MapSettings.CouldUseVitals && PlayerControl.LocalPlayer.IsAlive() && Helpers.GetOption(ByteOptionNames.MapId) != 0 && Helpers.GetOption(ByteOptionNames.MapId) != 3; },
             () =>
             {
                 HackerVitalsChargesText?.text = string.Format(Tr.Get(TranslateKey.HackerChargesText), Local.ChargesVitals, ToolsNumber);
                 HackerVitalsButton.ActionButton.graphic.sprite = Helpers.IsMiraHQ ? FastDestroyableSingleton<HudManager>.Instance.UseButton.fastUseSettings[ImageNames.DoorLogsButton].Image : FastDestroyableSingleton<HudManager>.Instance.UseButton.fastUseSettings[ImageNames.VitalsButton].Image;
                 HackerVitalsButton.ActionButton.OverrideText(Helpers.IsMiraHQ ? TranslationController.Instance.GetString(StringNames.DoorlogLabel) : TranslationController.Instance.GetString(StringNames.VitalsLabel));
-                return Local.ChargesVitals > 0 && ModMapOptions.CanUseVitals;
+                return Local.ChargesVitals > 0 && MapSettings.CanUseVitals;
             },
             () =>
             {

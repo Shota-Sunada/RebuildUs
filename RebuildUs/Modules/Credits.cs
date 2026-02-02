@@ -16,7 +16,7 @@ public static class Credits
             PingStringBuilder.Append("<color=#1684B0>").Append(RebuildUs.MOD_NAME).Append("</color> v").Append(RebuildUs.MOD_VERSION).Append('\n').Append(__instance.text.text);
             var newText = PingStringBuilder.ToString();
             if (__instance.text.text != newText) __instance.text.text = newText;
-            position.DistanceFromEdge = MeetingHud.Instance ? new(1.25f, 0.15f, 0) : new(1.55f, 0.15f, 0);
+            position.DistanceFromEdge = MeetingHud.Instance ? new(1.4f, 0f, 0) : new(1.55f, 0f, 0);
         }
         else
         {

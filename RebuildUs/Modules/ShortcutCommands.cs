@@ -15,7 +15,7 @@ public static class ShortcutCommands
         {
             var linked = new List<string>();
             var unlinked = new List<string>();
-            foreach (var p in PlayerControl.AllPlayerControls)
+            foreach (var p in PlayerControl.AllPlayerControls.GetFastEnumerator())
             {
                 if (p.Data == null) continue;
                 var name = p.Data.PlayerName;

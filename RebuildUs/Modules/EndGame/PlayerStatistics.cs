@@ -50,10 +50,8 @@ public class PlayerStatistics
             if (couple.Alive) numCouplesAlive++;
         }
 
-        var allPlayers = GameData.Instance.AllPlayers;
-        for (int i = 0; i < allPlayers.Count; i++)
+        foreach (var playerInfo in GameData.Instance.AllPlayers.GetFastEnumerator())
         {
-            var playerInfo = allPlayers[i];
             if (playerInfo == null) continue;
             var obj = playerInfo.Object;
 

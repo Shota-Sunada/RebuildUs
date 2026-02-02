@@ -253,7 +253,7 @@ public partial class CustomOption
 
         var gameOptionsMenu = tabObj.GetComponent<GameOptionsMenu>();
         gameOptionsMenu.Children ??= new();
-        foreach (var child in gameOptionsMenu.Children)
+        foreach (var child in gameOptionsMenu.Children.GetFastEnumerator())
         {
             child.Destroy();
         }

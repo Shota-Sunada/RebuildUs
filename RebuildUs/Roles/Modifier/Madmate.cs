@@ -27,10 +27,8 @@ public class Madmate : ModifierBase<Madmate>
 
             if (KnowsImpostors(Player))
             {
-                var allPlayers = PlayerControl.AllPlayerControls;
-                for (var i = 0; i < allPlayers.Count; i++)
+                foreach (var p in PlayerControl.AllPlayerControls.GetFastEnumerator())
                 {
-                    var p = allPlayers[i];
                     if (p.IsTeamImpostor() || p.IsRole(RoleType.Spy) || (p.IsRole(RoleType.Jackal) && Jackal.GetRole(p).WasTeamRed) || (p.IsRole(RoleType.Sidekick) && Sidekick.GetRole(p).WasTeamRed))
                     {
                         Update.SetPlayerNameColor(p, Palette.ImpostorRed);
@@ -102,10 +100,8 @@ public class Madmate : ModifierBase<Madmate>
             List<PlayerControl> crewNoRole = [];
             List<PlayerControl> validCrewmates = [];
 
-            var allPlayers = PlayerControl.AllPlayerControls;
-            for (var i = 0; i < allPlayers.Count; i++)
+            foreach (var player in PlayerControl.AllPlayerControls.GetFastEnumerator())
             {
-                var player = allPlayers[i];
                 if (player.IsTeamCrewmate() && !HasModifier(player))
                 {
                     var info = RoleInfo.GetRoleInfoForPlayer(player);

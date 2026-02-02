@@ -4,7 +4,7 @@ public static class DiscordAutoMuteManager
 {
     public static async void SetMute(ulong discordId, bool mute, bool deaf)
     {
-        if (!ModMapOptions.EnableDiscordAutoMute) return;
+        if (!MapSettings.EnableDiscordAutoMute) return;
         var guildId = RebuildUs.DiscordGuildId.Value;
         if (string.IsNullOrEmpty(guildId)) return;
 
@@ -30,7 +30,7 @@ public static class DiscordAutoMuteManager
 
     public static void MuteEveryone()
     {
-        foreach (var p in PlayerControl.AllPlayerControls)
+        foreach (var p in PlayerControl.AllPlayerControls.GetFastEnumerator())
         {
             var id = DiscordModManager.GetIdentifier(p);
             if (id != null && DiscordModManager.TryGetDiscordId(id, out var did))

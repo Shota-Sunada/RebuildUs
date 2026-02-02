@@ -26,7 +26,7 @@ public static class SecurityCamera
     {
         // Don't waste network traffic if we're out of time.
         var lp = PlayerControl.LocalPlayer;
-        if (ModMapOptions.RestrictDevices > 0 && ModMapOptions.RestrictCameras && ModMapOptions.RestrictCamerasTime > 0f && lp != null && lp.IsAlive())
+        if (MapSettings.RestrictDevices > 0 && MapSettings.RestrictCameras && MapSettings.RestrictCamerasTime > 0f && lp != null && lp.IsAlive())
         {
             using var sender = new RPCSender(lp.NetId, CustomRPC.UseCameraTime);
             sender.Write(CameraTimer);
@@ -74,7 +74,7 @@ public static class SecurityCamera
         if (CameraTimer > 0.1f)
             UseCameraTime();
 
-        if (ModMapOptions.RestrictDevices > 0 && ModMapOptions.RestrictCameras)
+        if (MapSettings.RestrictDevices > 0 && MapSettings.RestrictCameras)
         {
             if (TimeRemaining == null)
             {
@@ -86,14 +86,14 @@ public static class SecurityCamera
                 TimeRemaining.color = Palette.White;
             }
 
-            if (ModMapOptions.RestrictCamerasTime <= 0f)
+            if (MapSettings.RestrictCamerasTime <= 0f)
             {
                 __instance.Close();
                 return false;
             }
 
             SecurityStringBuilder.Clear();
-            var ts = TimeSpan.FromSeconds(ModMapOptions.RestrictCamerasTime);
+            var ts = TimeSpan.FromSeconds(MapSettings.RestrictCamerasTime);
             if (ts.TotalHours >= 1) SecurityStringBuilder.Append((int)ts.TotalHours).Append(':');
             SecurityStringBuilder.Append(ts.Minutes.ToString("D2")).Append(':')
                                  .Append(ts.Seconds.ToString("D2")).Append('.')
@@ -117,7 +117,7 @@ public static class SecurityCamera
             UseCameraTime();
         }
 
-        if (ModMapOptions.RestrictDevices > 0 && ModMapOptions.RestrictCameras)
+        if (MapSettings.RestrictDevices > 0 && MapSettings.RestrictCameras)
         {
             if (TimeRemaining == null)
             {
@@ -129,14 +129,14 @@ public static class SecurityCamera
                 TimeRemaining.color = Palette.White;
             }
 
-            if (ModMapOptions.RestrictCamerasTime <= 0f)
+            if (MapSettings.RestrictCamerasTime <= 0f)
             {
                 __instance.Close();
                 return false;
             }
 
             SecurityStringBuilder.Clear();
-            var ts = TimeSpan.FromSeconds(ModMapOptions.RestrictCamerasTime);
+            var ts = TimeSpan.FromSeconds(MapSettings.RestrictCamerasTime);
             if (ts.TotalHours >= 1) SecurityStringBuilder.Append((int)ts.TotalHours).Append(':');
             SecurityStringBuilder.Append(ts.Minutes.ToString("D2")).Append(':')
                                  .Append(ts.Seconds.ToString("D2")).Append('.')
@@ -200,7 +200,7 @@ public static class SecurityCamera
         if (CameraTimer > 0.05f)
             UseCameraTime();
 
-        if (ModMapOptions.RestrictDevices > 0)
+        if (MapSettings.RestrictDevices > 0)
         {
             if (TimeRemaining == null)
             {
@@ -212,13 +212,13 @@ public static class SecurityCamera
                 TimeRemaining.color = Palette.White;
             }
 
-            if (ModMapOptions.RestrictCamerasTime <= 0f)
+            if (MapSettings.RestrictCamerasTime <= 0f)
             {
                 __instance.Close();
                 return false;
             }
 
-            string timeString = TimeSpan.FromSeconds(ModMapOptions.RestrictCamerasTime).ToString(@"mm\:ss\.ff");
+            string timeString = TimeSpan.FromSeconds(MapSettings.RestrictCamerasTime).ToString(@"mm\:ss\.ff");
             TimeRemaining.text = string.Format(Tr.Get(TranslateKey.TimeRemaining), timeString);
             TimeRemaining.gameObject.SetActive(true);
         }

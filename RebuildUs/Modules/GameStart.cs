@@ -300,8 +300,8 @@ public static class GameStart
         {
             {
                 using var sender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.ShareGamemode);
-                sender.Write((byte)ModMapOptions.GameMode);
-                RPCProcedure.ShareGamemode((byte)ModMapOptions.GameMode);
+                sender.Write((byte)MapSettings.GameMode);
+                RPCProcedure.ShareGamemode((byte)MapSettings.GameMode);
             }
             SendGamemode = false;
         }

@@ -25,7 +25,7 @@ public class SynchronizeData
     {
         if (!Dic.TryGetValue(tag, out ulong value)) return false;
 
-        foreach (PlayerControl pc in PlayerControl.AllPlayerControls)
+        foreach (PlayerControl pc in PlayerControl.AllPlayerControls.GetFastEnumerator())
         {
             if (pc == null || pc.Data == null || pc.Data.Disconnected) continue;
 

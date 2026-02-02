@@ -7,7 +7,7 @@ public static partial class RPCProcedure
         RoleAssignment.IsAssigned = false;
         Garlic.ClearGarlics();
         JackInTheBox.ClearJackInTheBoxes();
-        ModMapOptions.ClearAndReloadMapOptions();
+        MapSettings.ClearAndReloadMapOptions();
         RebuildUs.ClearAndReloadRoles();
         GameHistory.ClearGameHistory();
         EndGameMain.IsO2Win = false;
@@ -167,7 +167,7 @@ public static partial class RPCProcedure
 
     public static void ShareGamemode(byte gameMode)
     {
-        ModMapOptions.GameMode = (CustomGamemodes)gameMode;
+        MapSettings.GameMode = (CustomGamemodes)gameMode;
         GameStart.SendGamemode = false;
     }
 
@@ -204,7 +204,7 @@ public static partial class RPCProcedure
 
     public static void SetLovers(byte playerId1, byte playerId2)
     {
-        // Lovers.addCouple(Helpers.PlayerById(playerId1), Helpers.PlayerById(playerId2));
+        Lovers.AddCouple(Helpers.PlayerById(playerId1), Helpers.PlayerById(playerId2));
     }
 
     public static void OverrideNativeRole(byte playerId, byte roleType)
@@ -256,7 +256,7 @@ public static partial class RPCProcedure
 
     public static void EngineerFixLights()
     {
-        SwitchSystem switchSystem = MapUtilities.CachedShipStatus.Systems[SystemTypes.Electrical].Cast<SwitchSystem>();
+        SwitchSystem switchSystem = MapUtilities.Systems[SystemTypes.Electrical].Cast<SwitchSystem>();
         switchSystem.ActualSwitches = switchSystem.ExpectedSwitches;
     }
 
@@ -594,17 +594,17 @@ public static partial class RPCProcedure
 
     public static void UseAdminTime(float time)
     {
-        ModMapOptions.RestrictAdminTime -= time;
+        MapSettings.RestrictAdminTime -= time;
     }
 
     public static void UseCameraTime(float time)
     {
-        ModMapOptions.RestrictCamerasTime -= time;
+        MapSettings.RestrictCamerasTime -= time;
     }
 
     public static void UseVitalsTime(float time)
     {
-        ModMapOptions.RestrictVitalsTime -= time;
+        MapSettings.RestrictVitalsTime -= time;
     }
 
     public static void TrackerUsedTracker(byte targetId, byte trackerId)
@@ -774,7 +774,7 @@ public static partial class RPCProcedure
         {
             camera.gameObject.SetActive(false);
         }
-        ModMapOptions.CamerasToAdd.Add(camera);
+        MapSettings.CamerasToAdd.Add(camera);
     }
 
     public static void SealVent(int ventId, byte sgId)
@@ -808,7 +808,7 @@ public static partial class RPCProcedure
             vent.name = "FutureSealedVent_" + vent.name;
         }
 
-        ModMapOptions.VentsToSeal.Add(vent);
+        MapSettings.VentsToSeal.Add(vent);
     }
 
     public static void MorphingMorph(byte playerId, byte morphId)

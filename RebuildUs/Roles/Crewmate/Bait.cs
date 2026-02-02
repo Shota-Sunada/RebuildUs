@@ -68,10 +68,8 @@ public class Bait : RoleBase<Bait>
                 if (Player.HasModifier(ModifierType.Madmate))
                 {
                     var candidates = new List<PlayerControl>();
-                    var allPlayers = PlayerControl.AllPlayerControls;
-                    for (int i = 0; i < allPlayers.Count; i++)
+                    foreach (var p in PlayerControl.AllPlayerControls.GetFastEnumerator())
                     {
-                        var p = allPlayers[i];
                         if (p != null && p.IsAlive() && !p.IsTeamImpostor() && !p.isDummy)
                         {
                             candidates.Add(p);

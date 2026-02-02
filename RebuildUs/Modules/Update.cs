@@ -11,7 +11,7 @@ public static class Update
         var lp = PlayerControl.LocalPlayer;
         if (lp == null || !lp.IsTeamImpostor()) return;
 
-        foreach (var sourcePlayer in PlayerControl.AllPlayerControls)
+        foreach (var sourcePlayer in PlayerControl.AllPlayerControls.GetFastEnumerator())
         {
             if (sourcePlayer.Data != null && sourcePlayer.Data.PlayerName.Equals(playerName))
             {
@@ -49,7 +49,7 @@ public static class Update
         bool meetingShow = Helpers.ShowMeetingText;
 
         // 1. Initialize Base Colors
-        foreach (var p in PlayerControl.AllPlayerControls)
+        foreach (var p in PlayerControl.AllPlayerControls.GetFastEnumerator())
         {
             if (p == null) continue;
             Color baseColor = (isLocalImpostor && p.IsTeamImpostor()) ? Palette.ImpostorRed : Color.white;
@@ -60,7 +60,7 @@ public static class Update
         SetNameColors();
 
         // 3. Update Player Instances
-        foreach (PlayerControl player in PlayerControl.AllPlayerControls)
+        foreach (PlayerControl player in PlayerControl.AllPlayerControls.GetFastEnumerator())
         {
             if (player == null || player.cosmetics == null || player.cosmetics.nameText == null) continue;
 
@@ -105,7 +105,7 @@ public static class Update
                 }
 
                 // Lovers
-                if (Lovers.IsLovers(player) && (localPlayer.IsLovers() || (ModMapOptions.GhostsSeeRoles && isLocalDead)))
+                if (Lovers.IsLovers(player) && (localPlayer.IsLovers() || (MapSettings.GhostsSeeRoles && isLocalDead)))
                 {
                     TagStringBuilder.Append(Lovers.GetIcon(player));
                 }
@@ -150,7 +150,7 @@ public static class Update
                 if (r != null && !string.IsNullOrEmpty(r.NameTag)) TagStringBuilder.Append(r.NameTag);
 
                 // Detective / Hacker
-                if (ModMapOptions.ShowLighterDarker && meetingShow)
+                if (MapSettings.ShowLighterDarker && meetingShow)
                 {
                     TagStringBuilder.Append(" (")
                         .Append(Helpers.IsLighterColor(target.Data.DefaultOutfit.ColorId) ? Tr.Get(TranslateKey.DetectiveLightLabel) : Tr.Get(TranslateKey.DetectiveDarkLabel))
@@ -158,7 +158,7 @@ public static class Update
                 }
 
                 // Lovers
-                if (Lovers.IsLovers(target) && (localPlayer.IsLovers() || (ModMapOptions.GhostsSeeRoles && isLocalDead)))
+                if (Lovers.IsLovers(target) && (localPlayer.IsLovers() || (MapSettings.GhostsSeeRoles && isLocalDead)))
                 {
                     TagStringBuilder.Append(Lovers.GetIcon(target));
                 }
@@ -295,7 +295,6 @@ public static class Update
             return;
         }
 
-        PlayerControl target = null;
         bool specialTeamRedExists = false;
         if (Spy.Exists)
         {
@@ -324,6 +323,7 @@ public static class Update
             }
         }
 
+        PlayerControl target;
         if (specialTeamRedExists)
         {
             if (Spy.ImpostorsCanKillAnyone)

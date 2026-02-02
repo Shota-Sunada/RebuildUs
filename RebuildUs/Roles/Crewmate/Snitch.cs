@@ -47,10 +47,8 @@ public class Snitch : RoleBase<Snitch>
         else if (localPlayer.IsRole(RoleType.Snitch) && numberOfTasks == 0)
         {
             int arrowIndex = 0;
-            var players = PlayerControl.AllPlayerControls;
-            for (int i = 0; i < players.Count; i++)
+            foreach (var p in PlayerControl.AllPlayerControls.GetFastEnumerator())
             {
-                var p = players[i];
                 if (p == null || p.Data == null) continue;
 
                 bool arrowForImp = p.Data.Role.IsImpostor;

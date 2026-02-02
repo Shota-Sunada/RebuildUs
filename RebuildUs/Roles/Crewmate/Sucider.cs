@@ -30,10 +30,8 @@ public class Suicider : RoleBase<Suicider>
 
             if (KnowsImpostors(Player))
             {
-                var allPlayers = PlayerControl.AllPlayerControls;
-                for (var i = 0; i < allPlayers.Count; i++)
+                foreach (var p in PlayerControl.AllPlayerControls.GetFastEnumerator())
                 {
-                    var p = allPlayers[i];
                     if (p.IsTeamImpostor() || p.IsRole(RoleType.Spy) || (p.IsRole(RoleType.Jackal) && Jackal.GetRole(p).WasTeamRed) || (p.IsRole(RoleType.Sidekick) && Sidekick.GetRole(p).WasTeamRed))
                     {
                         Update.SetPlayerNameColor(p, Palette.ImpostorRed);

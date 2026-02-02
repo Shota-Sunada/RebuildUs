@@ -38,7 +38,7 @@ public class Sheriff : RoleBase<Sheriff>
     public override void OnMeetingEnd()
     {
         bool anyoneDead = false;
-        foreach (var p in PlayerControl.AllPlayerControls)
+        foreach (var p in PlayerControl.AllPlayerControls.GetFastEnumerator())
         {
             if (p.Data.IsDead)
             {

@@ -31,10 +31,8 @@ public class Detective : RoleBase<Detective>
         if (Timer <= 0f)
         {
             Timer = FootprintInterval;
-            var players = PlayerControl.AllPlayerControls;
-            for (int i = 0; i < players.Count; i++)
+            foreach (var player in PlayerControl.AllPlayerControls.GetFastEnumerator())
             {
-                var player = players[i];
                 if (player != null && player != PlayerControl.LocalPlayer && !player.Data.IsDead && !player.inVent && !player.IsGM())
                 {
                     FootprintHolder.Instance.MakeFootprint(player);

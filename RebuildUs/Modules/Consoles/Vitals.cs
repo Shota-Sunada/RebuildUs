@@ -19,7 +19,7 @@ public static class Vitals
     static void UseVitalsTime()
     {
         // Don't waste network traffic if we're out of time.
-        if (ModMapOptions.RestrictDevices > 0 && ModMapOptions.RestrictVitals && ModMapOptions.RestrictVitalsTime > 0f && PlayerControl.LocalPlayer.IsAlive())
+        if (MapSettings.RestrictDevices > 0 && MapSettings.RestrictVitals && MapSettings.RestrictVitalsTime > 0f && PlayerControl.LocalPlayer.IsAlive())
         {
             using var sender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.UseVitalsTime);
             sender.Write(VitalsTimer);
@@ -56,7 +56,7 @@ public static class Vitals
         if (VitalsTimer > 0.05f)
             UseVitalsTime();
 
-        if (ModMapOptions.RestrictDevices > 0 && ModMapOptions.RestrictVitals)
+        if (MapSettings.RestrictDevices > 0 && MapSettings.RestrictVitals)
         {
             if (TimeRemaining == null)
             {
@@ -68,14 +68,14 @@ public static class Vitals
                 TimeRemaining.color = Palette.White;
             }
 
-            if (ModMapOptions.RestrictVitalsTime <= 0f)
+            if (MapSettings.RestrictVitalsTime <= 0f)
             {
                 __instance.Close();
                 return false;
             }
 
             VitalsStringBuilder.Clear();
-            var ts = TimeSpan.FromSeconds(ModMapOptions.RestrictVitalsTime);
+            var ts = TimeSpan.FromSeconds(MapSettings.RestrictVitalsTime);
             if (ts.TotalHours >= 1) VitalsStringBuilder.Append((int)ts.TotalHours).Append(':');
             VitalsStringBuilder.Append(ts.Minutes.ToString("D2")).Append(':')
                                .Append(ts.Seconds.ToString("D2")).Append('.')

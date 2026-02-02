@@ -108,7 +108,7 @@ public static class Helpers
 
     public static PlayerControl PlayerById(byte id)
     {
-        foreach (var player in PlayerControl.AllPlayerControls)
+        foreach (var player in PlayerControl.AllPlayerControls.GetFastEnumerator())
         {
             if (player.PlayerId == id) return player;
         }
@@ -124,7 +124,7 @@ public static class Helpers
 
         LastCacheFrame = UnityEngine.Time.frameCount;
         PlayerByIdCache.Clear();
-        foreach (var p in PlayerControl.AllPlayerControls)
+        foreach (var p in PlayerControl.AllPlayerControls.GetFastEnumerator())
         {
             if (p != null) PlayerByIdCache[p.PlayerId] = p;
         }
@@ -155,7 +155,7 @@ public static class Helpers
         var infos = RoleInfo.GetRoleInfoForPlayer(player);
         var toRemove = new List<PlayerTask>();
 
-        foreach (var t in player.myTasks)
+        foreach (var t in player.myTasks.GetFastEnumerator())
         {
             var textTask = t.TryCast<ImportantTextTask>();
             if (textTask != null)
@@ -287,7 +287,7 @@ public static class Helpers
 
     public static bool IsCrewmateAlive()
     {
-        foreach (var p in PlayerControl.AllPlayerControls)
+        foreach (var p in PlayerControl.AllPlayerControls.GetFastEnumerator())
         {
             if (p.IsTeamCrewmate() && !p.HasModifier(ModifierType.Madmate) && !p.IsRole(RoleType.Madmate) && !p.IsRole(RoleType.Suicider) && p.IsAlive()) return true;
         }
@@ -404,15 +404,15 @@ public static class Helpers
         return murder;
     }
 
-    public static bool SabotageActive() => MapUtilities.CachedShipStatus.Systems[SystemTypes.Sabotage].CastFast<SabotageSystemType>().AnyActive;
+    public static bool SabotageActive() => MapUtilities.Systems[SystemTypes.Sabotage].CastFast<SabotageSystemType>().AnyActive;
 
-    public static float SabotageTimer() => MapUtilities.CachedShipStatus.Systems[SystemTypes.Sabotage].CastFast<SabotageSystemType>().Timer;
+    public static float SabotageTimer() => MapUtilities.Systems[SystemTypes.Sabotage].CastFast<SabotageSystemType>().Timer;
 
     public static bool CanUseSabotage()
     {
-        var sabSystem = MapUtilities.CachedShipStatus.Systems[SystemTypes.Sabotage].CastFast<SabotageSystemType>();
+        var sabSystem = MapUtilities.Systems[SystemTypes.Sabotage].CastFast<SabotageSystemType>();
         IActivatable doors = null;
-        if (MapUtilities.CachedShipStatus.Systems.TryGetValue(SystemTypes.Doors, out var systemType))
+        if (MapUtilities.Systems.TryGetValue(SystemTypes.Doors, out var systemType))
         {
             doors = systemType.CastFast<IActivatable>();
         }
@@ -432,7 +432,7 @@ public static class Helpers
         var truePosition = targetingPlayer.GetTruePosition();
         PlayerControl result = null;
 
-        foreach (var playerInfo in GameData.Instance.AllPlayers)
+        foreach (var playerInfo in GameData.Instance.AllPlayers.GetFastEnumerator())
         {
             if (playerInfo.Disconnected || playerInfo.PlayerId == targetingPlayer.PlayerId || playerInfo.IsDead) continue;
             if (onlyCrewmates && playerInfo.Role.IsImpostor) continue;
@@ -474,7 +474,7 @@ public static class Helpers
     public static void SetBasePlayerOutlines()
     {
         var localPlayer = PlayerControl.LocalPlayer;
-        foreach (var target in PlayerControl.AllPlayerControls)
+        foreach (var target in PlayerControl.AllPlayerControls.GetFastEnumerator())
         {
             if (target?.cosmetics?.currentBodySprite?.BodySprite == null) continue;
 
@@ -521,7 +521,7 @@ public static class Helpers
             foreach (var s in meeting.playerStates) if (s != null) _voteAreaStates[s.TargetPlayerId] = s;
         }
 
-        foreach (var p in PlayerControl.AllPlayerControls)
+        foreach (var p in PlayerControl.AllPlayerControls.GetFastEnumerator())
         {
             if (p?.Data == null || p.cosmetics == null) continue;
 
@@ -559,10 +559,10 @@ public static class Helpers
 
                 var (completed, total) = TasksHandler.TaskInfo(p.Data);
                 string roleBase = RoleInfo.GetRolesString(p, true, false);
-                string roleGhost = RoleInfo.GetRolesString(p, true, ModMapOptions.GhostsSeeModifier);
+                string roleGhost = RoleInfo.GetRolesString(p, true, MapSettings.GhostsSeeModifier);
 
                 string statusText = "";
-                if (p == localPlayer || (localPlayer.Data.IsDead && ModMapOptions.GhostsSeeInformation))
+                if (p == localPlayer || (localPlayer.Data.IsDead && MapSettings.GhostsSeeInformation))
                 {
                     if (p.IsRole(RoleType.Arsonist))
                     {
@@ -578,7 +578,7 @@ public static class Helpers
                                 }
                             }
                             int totalSurvivors = 0;
-                            foreach (var targetPlayer in PlayerControl.AllPlayerControls)
+                            foreach (var targetPlayer in PlayerControl.AllPlayerControls.GetFastEnumerator())
                             {
                                 if (targetPlayer?.Data != null &&
                                     !targetPlayer.Data.IsDead &&
@@ -606,7 +606,7 @@ public static class Helpers
                     InfoStringBuilder.Clear();
 
                     bool commsActive = false;
-                    if (MapUtilities.CachedShipStatus != null && MapUtilities.CachedShipStatus.Systems.TryGetValue(SystemTypes.Comms, out var comms))
+                    if (MapUtilities.CachedShipStatus != null && MapUtilities.Systems.TryGetValue(SystemTypes.Comms, out var comms))
                     {
                         var activatable = comms.TryCast<IActivatable>();
                         if (activatable != null) commsActive = activatable.IsActive;
@@ -667,21 +667,21 @@ public static class Helpers
                     InfoStringBuilder.Append(roles).Append(' ').Append(taskText);
                     mInfo = InfoStringBuilder.ToString().Trim();
                 }
-                else if (ModMapOptions.GhostsSeeRoles && ModMapOptions.GhostsSeeInformation)
+                else if (MapSettings.GhostsSeeRoles && MapSettings.GhostsSeeInformation)
                 {
                     InfoStringBuilder.Clear();
                     InfoStringBuilder.Append(roleGhost).Append(statusText).Append(' ').Append(taskText);
                     pInfo = InfoStringBuilder.ToString().Trim();
                     mInfo = pInfo;
                 }
-                else if (ModMapOptions.GhostsSeeInformation)
+                else if (MapSettings.GhostsSeeInformation)
                 {
                     InfoStringBuilder.Clear();
                     InfoStringBuilder.Append(taskText).Append(statusText);
                     pInfo = InfoStringBuilder.ToString().Trim();
                     mInfo = pInfo;
                 }
-                else if (ModMapOptions.GhostsSeeRoles)
+                else if (MapSettings.GhostsSeeRoles)
                 {
                     pInfo = roleGhost;
                     mInfo = pInfo;
@@ -716,7 +716,7 @@ public static class Helpers
     public static void SetPetVisibility()
     {
         var localDead = PlayerControl.LocalPlayer.Data.IsDead;
-        foreach (var p in PlayerControl.AllPlayerControls)
+        foreach (var p in PlayerControl.AllPlayerControls.GetFastEnumerator())
         {
             p.cosmetics.SetPetVisible((localDead && !p.Data.IsDead) || !localDead);
         }
@@ -762,7 +762,7 @@ public static class Helpers
         if (target.IsDead()) return true;
         if (Camouflager.CamouflageTimer > 0f) return true;
 
-        if (ModMapOptions.HideOutOfSightNametags && GameStarted && MapUtilities.CachedShipStatus != null)
+        if (MapSettings.HideOutOfSightNametags && GameStarted && MapUtilities.CachedShipStatus != null)
         {
             float distMod = 1.025f;
             float distance = Vector3.Distance(source.transform.position, target.transform.position);
@@ -771,7 +771,7 @@ public static class Helpers
             if (distance > MapUtilities.CachedShipStatus.CalculateLightRadius(source.Data) * distMod || blocked) return true;
         }
 
-        if (!ModMapOptions.HidePlayerNames) return false;
+        if (!MapSettings.HidePlayerNames) return false;
         if (source.IsTeamImpostor() && (target.IsTeamImpostor() || target.IsRole(RoleType.Spy) || (target.IsRole(RoleType.Sidekick) && Sidekick.GetRole(target).WasTeamRed) || (target.IsRole(RoleType.Jackal) && Jackal.GetRole(target).WasTeamRed))) return false;
         if (source.GetPartner() == target) return false;
         if ((source.IsRole(RoleType.Jackal) || source.IsRole(RoleType.Sidekick)) && (target.IsRole(RoleType.Jackal) || target.IsRole(RoleType.Sidekick) || target == Jackal.GetRole(target).FakeSidekick)) return false;
@@ -823,7 +823,7 @@ public static class Helpers
             if (p == 1f)
             {
                 bool reactorActive = false;
-                foreach (var task in PlayerControl.LocalPlayer.myTasks)
+                foreach (var task in PlayerControl.LocalPlayer.myTasks.GetFastEnumerator())
                 {
                     if (task.TaskType == TaskTypes.StopCharles) { reactorActive = true; break; }
                 }
@@ -957,12 +957,7 @@ public static class Helpers
         var data = player.Data;
         if (data == null || data.IsDead || data.Disconnected) return true;
 
-        if (GameHistory.FinalStatuses != null && GameHistory.FinalStatuses.TryGetValue(player.PlayerId, out var status))
-        {
-            return status != FinalStatus.Alive;
-        }
-
-        return false;
+        return GameHistory.FinalStatuses != null && GameHistory.FinalStatuses.TryGetValue(player.PlayerId, out var status) && status != FinalStatus.Alive;
     }
 
     public static bool IsAlive(this PlayerControl player)

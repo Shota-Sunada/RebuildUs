@@ -39,7 +39,7 @@ public static class SpawnIn
 
     private static void ResetButtons()
     {
-        // MapUtilities.CachedShipStatus.Systems[SystemTypes.Sabotage].Cast<SabotageSystemType>().ForceSabTime(10f);
+        // MapUtilities.Systems[SystemTypes.Sabotage].Cast<SabotageSystemType>().ForceSabTime(10f);
         IsFirstSpawn = false;
         if (CustomOptionHolder.AirshipSetOriginalCooldown.GetBool())
         {
@@ -245,10 +245,10 @@ public static class SpawnIn
                     __instance.Close();
                     CustomButton.StopCountdown = false;
                     // サボタージュのクールダウンをリセット
-                    var sabotageSystem = MapUtilities.CachedShipStatus.Systems[SystemTypes.Sabotage].Cast<SabotageSystemType>();
+                    var sabotageSystem = MapUtilities.Systems[SystemTypes.Sabotage].Cast<SabotageSystemType>();
                     sabotageSystem.IsDirty = true;
                     sabotageSystem.Timer = InitialSabotageCooldown;
-                    var doorSystem = MapUtilities.CachedShipStatus.Systems[SystemTypes.Doors].Cast<DoorsSystemType>();
+                    var doorSystem = MapUtilities.Systems[SystemTypes.Doors].Cast<DoorsSystemType>();
                     doorSystem.IsDirty = true;
                     doorSystem.timers[SystemTypes.MainHall] = InitialDoorCooldown;
                     doorSystem.timers[SystemTypes.Brig] = InitialDoorCooldown;

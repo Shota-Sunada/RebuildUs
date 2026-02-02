@@ -12,7 +12,6 @@ public static class TranslationControllerPatch
         {
             return true;
         }
-        string ourString = "";
 
         // For now only do this in custom options.
         int idInt = (int)id - CustomOption.CUSTOM_OPTION_PRE_ID;
@@ -25,7 +24,7 @@ public static class TranslationControllerPatch
                 break;
             }
         }
-        ourString = Helpers.Cs(opt?.Color ?? Color.white, Tr.Get(opt.NameKey));
+        string ourString = Helpers.Cs(opt?.Color ?? Color.white, Tr.Get(opt.NameKey));
 
         __result = ourString;
         return false;
