@@ -84,4 +84,3 @@ public class Shifter : RoleBase<Shifter>
         Players.Clear();
     }
 }
-

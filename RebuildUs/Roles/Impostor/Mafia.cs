@@ -181,4 +181,3 @@ public static class Mafia
         }
     }
 }
-

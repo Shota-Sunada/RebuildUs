@@ -62,16 +62,16 @@ public class FootprintHolder : MonoBehaviour
         _activeFootprints.Add(print);
     }
 
-    private static readonly float updateDt = 0.10f;
+    private static readonly float UpdateDt = 0.10f;
 
     private void Start()
     {
-        InvokeRepeating(nameof(FootprintUpdate), updateDt, updateDt);
+        InvokeRepeating(nameof(FootprintUpdate), UpdateDt, UpdateDt);
     }
 
     private void FootprintUpdate()
     {
-        var dt = updateDt;
+        var dt = UpdateDt;
         _toRemove.Clear();
         foreach (var activeFootprint in _activeFootprints)
         {

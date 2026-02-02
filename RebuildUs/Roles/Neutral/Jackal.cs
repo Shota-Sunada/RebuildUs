@@ -233,4 +233,3 @@ public class Jackal : RoleBase<Jackal>
         Players.Clear();
     }
 }
-

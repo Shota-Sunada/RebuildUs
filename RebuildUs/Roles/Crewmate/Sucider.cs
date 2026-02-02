@@ -113,4 +113,3 @@ public class Suicider : RoleBase<Suicider>
         Players.Clear();
     }
 }
-

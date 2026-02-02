@@ -84,4 +84,3 @@ public class Mayor : RoleBase<Mayor>
         Players.Clear();
     }
 }
-

@@ -99,4 +99,3 @@ public class Trickster : RoleBase<Trickster>
         Players.Clear();
     }
 }
-

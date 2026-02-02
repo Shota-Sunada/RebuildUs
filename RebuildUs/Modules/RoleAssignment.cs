@@ -402,7 +402,7 @@ public static class RoleAssignment
 
                     if (lover1 >= 0 && lover2 >= 0)
                     {
-                        using (var sender = new RPCSender   (PlayerControl.LocalPlayer.NetId, CustomRPC.SetLovers))
+                        using (var sender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.SetLovers))
                         {
                             sender.Write((byte)lover1);
                             sender.Write((byte)lover2);

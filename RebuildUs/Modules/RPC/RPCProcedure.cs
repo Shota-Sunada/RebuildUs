@@ -990,4 +990,3 @@ public static partial class RPCProcedure
         sheriff.MurderPlayer(target);
     }
 }
-

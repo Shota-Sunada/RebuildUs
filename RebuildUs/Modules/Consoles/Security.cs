@@ -226,4 +226,3 @@ public static class SecurityCamera
         return true;
     }
 }
-

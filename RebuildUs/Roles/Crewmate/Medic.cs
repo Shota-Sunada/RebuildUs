@@ -100,4 +100,3 @@ public class Medic : RoleBase<Medic>
         UsedShield = false;
     }
 }
-

@@ -208,4 +208,3 @@ public class Vampire : RoleBase<Vampire>
         Players.Clear();
     }
 }
-

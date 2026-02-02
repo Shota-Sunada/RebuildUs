@@ -88,4 +88,3 @@ public class Cleaner : RoleBase<Cleaner>
         Players.Clear();
     }
 }
-

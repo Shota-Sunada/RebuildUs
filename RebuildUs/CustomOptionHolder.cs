@@ -764,9 +764,3 @@ public static class CustomOptionHolder
         BlockedRolePairings.Add((byte)RoleType.Cleaner, [(byte)RoleType.Vulture]);
     }
 }
-
-
-
-
-
-

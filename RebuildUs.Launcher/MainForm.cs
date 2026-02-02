@@ -9,11 +9,11 @@ namespace RebuildUs.Launcher;
 public partial class MainForm : Form
 {
     private const string ModFolderName = "Among Us - RU";
-    private string? installedModPath;
-    private string? detectedOriginalPath;
-    private string? lastInstalledVersion;
-    private readonly string settingsPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "launcher_settings.txt");
-    private readonly List<GitHubRelease> releases = [];
+    private string? InstalledModPath;
+    private string? DetectedOriginalPath;
+    private string? LastInstalledVersion;
+    private readonly string SettingsPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "launcher_settings.txt");
+    private readonly List<GitHubRelease> Releases = [];
 
     public MainForm()
     {
@@ -24,7 +24,7 @@ public partial class MainForm : Form
         try
         {
             this.Icon = Icon.ExtractAssociatedIcon(Application.ExecutablePath);
-            notifyIcon.Icon = this.Icon;
+            NotifyIcon.Icon = this.Icon;
         }
         catch { }
 
@@ -42,7 +42,7 @@ public partial class MainForm : Form
     {
         try
         {
-            lblStatus.Text = "リリース情報を取得中...";
+            LblStatus.Text = "リリース情報を取得中...";
             using var client = new HttpClient();
             client.DefaultRequestHeaders.Add("User-Agent", "RebuildUs-Launcher");
             var response = await client.GetStringAsync("https://api.github.com/repos/Shota-Sunada/RebuildUs/releases");
@@ -50,7 +50,7 @@ public partial class MainForm : Form
 
             if (result != null)
             {
-                releases.Clear();
+                Releases.Clear();
                 // プレリリースでなく、かつ期待するZIPファイル（RebuildUs-v...-Steam-Itch-Submerged.zip）が含まれるリリースのみを対象とする
                 foreach (var release in result)
                 {
@@ -59,53 +59,53 @@ public partial class MainForm : Form
                     string expectedName = $"RebuildUs-v{release.TagName.TrimStart('v')}-Steam-Itch-Submerged.zip";
                     if (release.Assets.Any(a => a.Name == expectedName))
                     {
-                        releases.Add(release);
+                        Releases.Add(release);
                     }
                 }
 
-                cmbVersions.Items.Clear();
-                foreach (var release in releases)
+                CmbVersions.Items.Clear();
+                foreach (var release in Releases)
                 {
-                    cmbVersions.Items.Add(release.TagName);
+                    CmbVersions.Items.Add(release.TagName);
                 }
 
-                if (cmbVersions.Items.Count > 0)
+                if (CmbVersions.Items.Count > 0)
                 {
-                    int index = !string.IsNullOrEmpty(lastInstalledVersion) ? cmbVersions.Items.IndexOf(lastInstalledVersion) : -1;
+                    int index = !string.IsNullOrEmpty(LastInstalledVersion) ? CmbVersions.Items.IndexOf(LastInstalledVersion) : -1;
                     if (index >= 0)
                     {
-                        cmbVersions.SelectedIndex = index;
+                        CmbVersions.SelectedIndex = index;
                     }
                     else
                     {
-                        cmbVersions.SelectedIndex = 0;
+                        CmbVersions.SelectedIndex = 0;
                     }
                 }
                 else
                 {
-                    lblStatus.Text = "インストール可能なリリースが見つかりませんでした。";
-                    btnAction.Enabled = false;
+                    LblStatus.Text = "インストール可能なリリースが見つかりませんでした。";
+                    BtnAction.Enabled = false;
                 }
             }
         }
         catch (Exception ex)
         {
-            lblStatus.Text = "リリース情報の取得に失敗しました。";
-            btnAction.Enabled = false;
+            LblStatus.Text = "リリース情報の取得に失敗しました。";
+            BtnAction.Enabled = false;
             MessageBox.Show($"リリースの取得に失敗しました: {ex.Message}");
         }
     }
 
     private void LoadSettings()
     {
-        if (File.Exists(settingsPath))
+        if (File.Exists(SettingsPath))
         {
             try
             {
-                var lines = File.ReadAllLines(settingsPath);
-                if (lines.Length > 0) installedModPath = lines[0].Trim();
+                var lines = File.ReadAllLines(SettingsPath);
+                if (lines.Length > 0) InstalledModPath = lines[0].Trim();
                 // Previously lines[1] was txtUrl.Text, now we ignore it or use as lastInstalledVersion if it looks like one
-                if (lines.Length > 2) lastInstalledVersion = lines[2].Trim();
+                if (lines.Length > 2) LastInstalledVersion = lines[2].Trim();
             }
             catch { }
         }
@@ -115,37 +115,37 @@ public partial class MainForm : Form
     {
         try
         {
-            File.WriteAllLines(settingsPath, [installedModPath ?? "", cmbVersions.Text, lastInstalledVersion ?? ""]);
+            File.WriteAllLines(SettingsPath, [InstalledModPath ?? "", CmbVersions.Text, LastInstalledVersion ?? ""]);
         }
         catch { }
     }
 
     private void RefreshStatus()
     {
-        bool isInstalled = !string.IsNullOrEmpty(installedModPath) && File.Exists(installedModPath);
+        bool isInstalled = !string.IsNullOrEmpty(InstalledModPath) && File.Exists(InstalledModPath);
 
         // 1. 保存されたパスを優先チェック
         if (isInstalled)
         {
-            lblStatus.Text = $"RebuildUs is installed at:\n{Path.GetDirectoryName(installedModPath)}";
-            btnUninstall.Visible = true;
+            LblStatus.Text = $"RebuildUs is installed at:\n{Path.GetDirectoryName(InstalledModPath)}";
+            BtnUninstall.Visible = true;
 
             // バージョン情報の取得
             string currentVersion = GetInstalledModVersion();
-            lblVersion.Text = "Version: " + currentVersion;
+            LblVersion.Text = "Version: " + currentVersion;
 
             // コンボボックスで選択されているバージョンと、インストールされているバージョンを比較
             bool needsUpdate = false;
-            if (!string.IsNullOrEmpty(cmbVersions.Text))
+            if (!string.IsNullOrEmpty(CmbVersions.Text))
             {
-                if (!string.IsNullOrEmpty(lastInstalledVersion))
+                if (!string.IsNullOrEmpty(LastInstalledVersion))
                 {
-                    needsUpdate = cmbVersions.Text != lastInstalledVersion;
+                    needsUpdate = CmbVersions.Text != LastInstalledVersion;
                 }
                 else if (currentVersion != "Unknown")
                 {
                     // lastInstalledVersion がない場合は、ファイルバージョンとタグ名を比較（'v'プレフィックスを無視）
-                    needsUpdate = cmbVersions.Text.TrimStart('v') != currentVersion.TrimStart('v');
+                    needsUpdate = CmbVersions.Text.TrimStart('v') != currentVersion.TrimStart('v');
                 }
                 else
                 {
@@ -154,27 +154,27 @@ public partial class MainForm : Form
                 }
             }
 
-            btnAction.Text = needsUpdate ? "Update" : "Launch";
+            BtnAction.Text = needsUpdate ? "Update" : "Launch";
         }
         else
         {
             // 2. 自動検出を試みる
-            detectedOriginalPath = DetectAmongUs();
-            if (detectedOriginalPath != null)
+            DetectedOriginalPath = DetectAmongUs();
+            if (DetectedOriginalPath != null)
             {
-                string parentDir = Path.GetDirectoryName(Path.GetDirectoryName(detectedOriginalPath))!;
+                string parentDir = Path.GetDirectoryName(Path.GetDirectoryName(DetectedOriginalPath))!;
                 string modFolderName = ModFolderName;
                 string modExePath = Path.Combine(parentDir, modFolderName, "Among Us.exe");
 
                 if (File.Exists(modExePath))
                 {
-                    installedModPath = modExePath;
+                    InstalledModPath = modExePath;
                     // 自動検出時、可能であればバージョンも特定しておく
                     string currentVersion = GetInstalledModVersion();
                     if (currentVersion != "Unknown")
                     {
-                        var matched = releases.FirstOrDefault(r => r.TagName.TrimStart('v') == currentVersion.TrimStart('v'));
-                        if (matched != null) lastInstalledVersion = matched.TagName;
+                        var matched = Releases.FirstOrDefault(r => r.TagName.TrimStart('v') == currentVersion.TrimStart('v'));
+                        if (matched != null) LastInstalledVersion = matched.TagName;
                     }
                     SaveSettings();
                     RefreshStatus();
@@ -182,11 +182,11 @@ public partial class MainForm : Form
                 }
             }
 
-            lblStatus.Text = "RebuildUs is not installed.";
-            lblVersion.Text = "Version: -";
-            btnAction.Text = "Install";
-            btnUninstall.Visible = false;
-            installedModPath = null;
+            LblStatus.Text = "RebuildUs is not installed.";
+            LblVersion.Text = "Version: -";
+            BtnAction.Text = "Install";
+            BtnUninstall.Visible = false;
+            InstalledModPath = null;
         }
 
         ValidateSelectedVersion();
@@ -194,36 +194,36 @@ public partial class MainForm : Form
 
     private void ValidateSelectedVersion()
     {
-        if (cmbVersions.Items.Count == 0)
+        if (CmbVersions.Items.Count == 0)
         {
-            btnAction.Enabled = false;
+            BtnAction.Enabled = false;
             return;
         }
 
-        btnAction.Enabled = true;
+        BtnAction.Enabled = true;
     }
 
     private void CheckForUpdates()
     {
-        if (releases.Count > 0 && !string.IsNullOrEmpty(lastInstalledVersion))
+        if (Releases.Count > 0 && !string.IsNullOrEmpty(LastInstalledVersion))
         {
-            var latest = releases[0].TagName;
-            if (latest != lastInstalledVersion)
+            var latest = Releases[0].TagName;
+            if (latest != LastInstalledVersion)
             {
-                notifyIcon.Visible = true;
-                notifyIcon.ShowBalloonTip(5000, "Update Available", $"新しいバージョン {latest} が利用可能です。アップデートを推奨します。", ToolTipIcon.Info);
+                NotifyIcon.Visible = true;
+                NotifyIcon.ShowBalloonTip(5000, "Update Available", $"新しいバージョン {latest} が利用可能です。アップデートを推奨します。", ToolTipIcon.Info);
             }
         }
     }
 
     private string GetInstalledModVersion()
     {
-        if (string.IsNullOrEmpty(installedModPath)) return "Unknown";
+        if (string.IsNullOrEmpty(InstalledModPath)) return "Unknown";
 
         try
         {
             // BepInExのプラグインフォルダを探す
-            string modRootDir = Path.GetDirectoryName(installedModPath)!;
+            string modRootDir = Path.GetDirectoryName(InstalledModPath)!;
             string pluginPath = Path.Combine(modRootDir, "BepInEx", "plugins", "RebuildUs.dll");
 
             if (File.Exists(pluginPath))
@@ -237,13 +237,13 @@ public partial class MainForm : Form
         return "Unknown";
     }
 
-    private async void btnAction_Click(object sender, EventArgs e)
+    private async void BtnAction_Click(object sender, EventArgs e)
     {
-        if (installedModPath == null)
+        if (InstalledModPath == null)
         {
             await InstallMod();
         }
-        else if (btnAction.Text == "Update")
+        else if (BtnAction.Text == "Update")
         {
             await UpdateMod();
         }
@@ -253,14 +253,14 @@ public partial class MainForm : Form
         }
     }
 
-    private void cmbVersions_SelectedIndexChanged(object sender, EventArgs e)
+    private void CmbVersions_SelectedIndexChanged(object sender, EventArgs e)
     {
         RefreshStatus();
     }
 
     private async Task InstallMod()
     {
-        string version = cmbVersions.Text;
+        string version = CmbVersions.Text;
         if (string.IsNullOrWhiteSpace(version))
         {
             MessageBox.Show("バージョンを選択してください。");
@@ -269,7 +269,7 @@ public partial class MainForm : Form
 
         string downloadUrl = $"https://github.com/Shota-Sunada/RebuildUs/releases/download/{version}/RebuildUs-v{version.TrimStart('v')}-Steam-Itch-Submerged.zip";
 
-        string? originalExePath = detectedOriginalPath ?? DetectAmongUs();
+        string? originalExePath = DetectedOriginalPath ?? DetectAmongUs();
 
         if (originalExePath == null || !File.Exists(originalExePath))
         {
@@ -299,11 +299,11 @@ public partial class MainForm : Form
 
         try
         {
-            btnAction.Enabled = false;
-            cmbVersions.Enabled = false;
+            BtnAction.Enabled = false;
+            CmbVersions.Enabled = false;
 
             // 1. ZIPのダウンロード
-            lblStatus.Text = "Modをダウンロード中...";
+            LblStatus.Text = "Modをダウンロード中...";
             string tempZipPath = Path.Combine(Path.GetTempPath(), "rebuildus_download.zip");
             using (var client = new HttpClient())
             {
@@ -320,7 +320,7 @@ public partial class MainForm : Form
             }
 
             // 2. ファイルコピー
-            lblStatus.Text = "インストール中... ファイルをコピーしています。";
+            LblStatus.Text = "インストール中... ファイルをコピーしています。";
             await Task.Run(() =>
             {
                 if (Directory.Exists(targetDir)) Directory.Delete(targetDir, true);
@@ -328,14 +328,14 @@ public partial class MainForm : Form
             });
 
             // 3. Modの展開
-            lblStatus.Text = "インストール中... Modを適用しています。";
+            LblStatus.Text = "インストール中... Modを適用しています。";
             await Task.Run(() => ZipFile.ExtractToDirectory(tempZipPath, targetDir, true));
 
             // 一時ファイルの削除
             if (File.Exists(tempZipPath)) File.Delete(tempZipPath);
 
-            installedModPath = newModExePath;
-            lastInstalledVersion = version;
+            InstalledModPath = newModExePath;
+            LastInstalledVersion = version;
             SaveSettings();
 
             MessageBox.Show("インストールが完了しました。");
@@ -344,31 +344,31 @@ public partial class MainForm : Form
         catch (Exception ex)
         {
             MessageBox.Show($"インストールの失敗: {ex.Message}");
-            lblStatus.Text = "インストールに失敗しました。";
+            LblStatus.Text = "インストールに失敗しました。";
         }
         finally
         {
-            btnAction.Enabled = true;
-            cmbVersions.Enabled = true;
+            BtnAction.Enabled = true;
+            CmbVersions.Enabled = true;
         }
     }
 
     private async Task UpdateMod()
     {
-        string version = cmbVersions.Text;
-        if (installedModPath == null || string.IsNullOrWhiteSpace(version)) return;
+        string version = CmbVersions.Text;
+        if (InstalledModPath == null || string.IsNullOrWhiteSpace(version)) return;
 
         string downloadUrl = $"https://github.com/Shota-Sunada/RebuildUs/releases/download/{version}/RebuildUs-v{version.TrimStart('v')}-Steam-Itch-Submerged.zip";
 
         try
         {
-            btnAction.Enabled = false;
-            cmbVersions.Enabled = false;
+            BtnAction.Enabled = false;
+            CmbVersions.Enabled = false;
 
-            string targetDir = Path.GetDirectoryName(installedModPath)!;
+            string targetDir = Path.GetDirectoryName(InstalledModPath)!;
 
             // 1. ZIPのダウンロード
-            lblStatus.Text = "最新のModをダウンロード中...";
+            LblStatus.Text = "最新のModをダウンロード中...";
             string tempZipPath = Path.Combine(Path.GetTempPath(), "rebuildus_update.zip");
             using (var client = new HttpClient())
             {
@@ -385,13 +385,13 @@ public partial class MainForm : Form
             }
 
             // 2. Modの展開 (上書き)
-            lblStatus.Text = "アップデート中... ファイルを更新しています。";
+            LblStatus.Text = "アップデート中... ファイルを更新しています。";
             await Task.Run(() => ZipFile.ExtractToDirectory(tempZipPath, targetDir, true));
 
             // 一時ファイルの削除
             if (File.Exists(tempZipPath)) File.Delete(tempZipPath);
 
-            lastInstalledVersion = version;
+            LastInstalledVersion = version;
             SaveSettings();
 
             MessageBox.Show("アップデートが完了しました。");
@@ -400,23 +400,23 @@ public partial class MainForm : Form
         catch (Exception ex)
         {
             MessageBox.Show($"アップデートの失敗: {ex.Message}");
-            lblStatus.Text = "アップデートに失敗しました。";
+            LblStatus.Text = "アップデートに失敗しました。";
         }
         finally
         {
-            btnAction.Enabled = true;
-            cmbVersions.Enabled = true;
+            BtnAction.Enabled = true;
+            CmbVersions.Enabled = true;
         }
     }
 
-    private async void btnUninstall_Click(object sender, EventArgs e)
+    private async void BtnUninstall_Click(object sender, EventArgs e)
     {
         await UninstallMod();
     }
 
     private async Task UninstallMod()
     {
-        if (installedModPath == null || !File.Exists(installedModPath))
+        if (InstalledModPath == null || !File.Exists(InstalledModPath))
         {
             MessageBox.Show("Modがインストールされていません。");
             return;
@@ -427,7 +427,7 @@ public partial class MainForm : Form
 
         try
         {
-            string targetDir = Path.GetDirectoryName(installedModPath)!;
+            string targetDir = Path.GetDirectoryName(InstalledModPath)!;
 
             // プロセスが動いているかチェックして終了させるか警告
             var processes = Process.GetProcessesByName("Among Us");
@@ -435,7 +435,7 @@ public partial class MainForm : Form
             {
                 try
                 {
-                    if (p.MainModule?.FileName == installedModPath)
+                    if (p.MainModule?.FileName == InstalledModPath)
                     {
                         var stopResult = MessageBox.Show("Among Us が実行中です。終了して続行しますか？", "警告", MessageBoxButtons.YesNo);
                         if (stopResult == DialogResult.Yes)
@@ -459,7 +459,7 @@ public partial class MainForm : Form
                 Directory.Delete(targetDir, true);
             }
 
-            installedModPath = null;
+            InstalledModPath = null;
             SaveSettings();
             MessageBox.Show("アンインストールが完了しました。");
             RefreshStatus();
@@ -472,15 +472,15 @@ public partial class MainForm : Form
 
     private async Task LaunchGame()
     {
-        if (installedModPath == null || !File.Exists(installedModPath))
+        if (InstalledModPath == null || !File.Exists(InstalledModPath))
         {
             RefreshStatus();
             return;
         }
 
-        ProcessStartInfo si = new(installedModPath)
+        ProcessStartInfo si = new(InstalledModPath)
         {
-            WorkingDirectory = Path.GetDirectoryName(installedModPath)
+            WorkingDirectory = Path.GetDirectoryName(InstalledModPath)
         };
 
         try
@@ -489,16 +489,16 @@ public partial class MainForm : Form
             if (process != null)
             {
                 this.Hide();
-                notifyIcon.Visible = true;
-                notifyIcon.Text = "RebuildUs Running...";
-                notifyIcon.ShowBalloonTip(3000, "RebuildUs", "Game is running. Launcher is hidden in tray.", ToolTipIcon.Info);
+                NotifyIcon.Visible = true;
+                NotifyIcon.Text = "RebuildUs Running...";
+                NotifyIcon.ShowBalloonTip(3000, "RebuildUs", "Game is running. Launcher is hidden in tray.", ToolTipIcon.Info);
 
                 await process.WaitForExitAsync();
 
                 this.Show();
                 this.WindowState = FormWindowState.Normal;
                 this.Activate();
-                notifyIcon.Visible = false;
+                NotifyIcon.Visible = false;
             }
         }
         catch (Exception ex)
@@ -559,17 +559,17 @@ public partial class MainForm : Form
         }
     }
 
-    private void notifyIcon_MouseDoubleClick(object sender, MouseEventArgs e)
+    private void NotifyIcon_MouseDoubleClick(object sender, MouseEventArgs e)
     {
         ShowLauncher();
     }
 
-    private void menuShow_Click(object sender, EventArgs e)
+    private void MenuShow_Click(object sender, EventArgs e)
     {
         ShowLauncher();
     }
 
-    private void menuExit_Click(object sender, EventArgs e)
+    private void MenuExit_Click(object sender, EventArgs e)
     {
         Application.Exit();
     }
@@ -579,7 +579,7 @@ public partial class MainForm : Form
         this.Show();
         this.WindowState = FormWindowState.Normal;
         this.Activate();
-        notifyIcon.Visible = false;
+        NotifyIcon.Visible = false;
     }
 }
 

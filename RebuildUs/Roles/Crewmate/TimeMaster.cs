@@ -138,4 +138,3 @@ public class TimeMaster : RoleBase<TimeMaster>
         Players.Clear();
     }
 }
-

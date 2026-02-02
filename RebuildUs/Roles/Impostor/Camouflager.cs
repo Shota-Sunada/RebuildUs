@@ -123,4 +123,3 @@ public class Camouflager : RoleBase<Camouflager>
         Players.Clear();
     }
 }
-

@@ -220,4 +220,3 @@ public class Tracker : RoleBase<Tracker>
         Players.Clear();
     }
 }
-

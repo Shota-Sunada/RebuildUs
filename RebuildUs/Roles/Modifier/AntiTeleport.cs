@@ -63,4 +63,3 @@ public class AntiTeleport : ModifierBase<AntiTeleport>
         Position = new Vector3();
     }
 }
-

@@ -132,4 +132,3 @@ public class Warlock : RoleBase<Warlock>
         Players.Clear();
     }
 }
-

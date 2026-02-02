@@ -42,5 +42,3 @@ public class CustomRoleSelectionOption : CustomOption
         this.Type = opt.Type;
     }
 }
-
-

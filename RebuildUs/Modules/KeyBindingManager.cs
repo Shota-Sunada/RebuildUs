@@ -17,16 +17,16 @@ public static class KeyBindingManager
     public class RebuildUsInput
     {
         public string Identifier { get; private set; }
-        private readonly ConfigEntry<KeyCode> config;
+        private readonly ConfigEntry<KeyCode> Config;
         public KeyCode Key { get; private set; }
-        private readonly KeyCode defaultKey;
+        private readonly KeyCode DefaultKey;
 
         public RebuildUsInput(string identifier, KeyCode defaultKey, ConfigFile config)
         {
             this.Identifier = identifier;
-            this.defaultKey = defaultKey;
-            this.config = config.Bind("Keybindings", identifier, defaultKey);
-            this.Key = this.config.Value;
+            this.DefaultKey = defaultKey;
+            this.Config = config.Bind("Keybindings", identifier, defaultKey);
+            this.Key = this.Config.Value;
             AllInputs.Add(this);
         }
 
@@ -34,12 +34,12 @@ public static class KeyBindingManager
         {
             if (this.Key == newKey) return;
             this.Key = newKey;
-            config.Value = newKey;
+            Config.Value = newKey;
         }
 
         public void Reset()
         {
-            ChangeKey(defaultKey);
+            ChangeKey(DefaultKey);
         }
     }
 
@@ -56,58 +56,58 @@ public static class KeyBindingManager
 
     public class KeyInputTexture
     {
-        private readonly string address;
-        private Texture2D texture = null;
+        private readonly string Address;
+        private Texture2D Texture = null;
         public Texture2D GetTexture()
         {
-            if (texture == null || !texture)
+            if (Texture == null || !Texture)
             {
                 // In RebuildUs, we use AssetLoader to get sprites/textures
-                var sprite = AssetLoader.GetKeyBindTexture(address);
-                if (sprite != null) texture = sprite.texture;
+                var sprite = AssetLoader.GetKeyBindTexture(Address);
+                if (sprite != null) Texture = sprite.texture;
             }
-            return texture;
+            return Texture;
         }
 
         public KeyInputTexture(string address)
         {
-            this.address = address;
+            this.Address = address;
         }
     }
 
     public class KeyCodeData
     {
-        public KeyCode keyCode { get; private set; }
-        public KeyInputTexture texture { get; private set; }
-        public int textureNum { get; private set; }
-        public string displayKey { get; private set; }
-        private Sprite sprite = null;
+        public KeyCode KeyCode { get; private set; }
+        public KeyInputTexture Texture { get; private set; }
+        public int TextureNum { get; private set; }
+        public string DisplayKey { get; private set; }
+        private Sprite Sprite = null;
         public KeyCodeData(KeyCode keyCode, string displayKey, KeyInputTexture texture, int num)
         {
-            this.keyCode = keyCode;
-            this.displayKey = displayKey;
-            this.texture = texture;
-            this.textureNum = num;
+            this.KeyCode = keyCode;
+            this.DisplayKey = displayKey;
+            this.Texture = texture;
+            this.TextureNum = num;
 
-            allKeyCodes[keyCode] = this;
+            AllKeyCodes[keyCode] = this;
         }
 
         public Sprite GetSprite()
         {
-            if (sprite == null || !sprite)
+            if (Sprite == null || !Sprite)
             {
-                var tex = texture.GetTexture();
+                var tex = Texture.GetTexture();
                 if (tex != null)
                 {
-                    sprite = Sprite.Create(tex, new Rect(0f, tex.height - 19f * (textureNum + 1), 18f, 19f), new Vector2(0.5f, 0.5f), 100f);
+                    Sprite = Sprite.Create(tex, new Rect(0f, tex.height - 19f * (TextureNum + 1), 18f, 19f), new Vector2(0.5f, 0.5f), 100f);
                 }
             }
 
-            return sprite;
+            return Sprite;
         }
     }
 
-    public static Dictionary<KeyCode, KeyCodeData> allKeyCodes = [];
+    public static Dictionary<KeyCode, KeyCodeData> AllKeyCodes = [];
 
     public static void Initialize(ConfigFile config)
     {
@@ -141,7 +141,7 @@ public static class KeyBindingManager
 
     public static Sprite GetKeySprite(KeyCode keyCode)
     {
-        if (allKeyCodes.TryGetValue(keyCode, out var data))
+        if (AllKeyCodes.TryGetValue(keyCode, out var data))
         {
             return data.GetSprite();
         }

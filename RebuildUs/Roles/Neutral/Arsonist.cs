@@ -258,4 +258,3 @@ public class Arsonist : RoleBase<Arsonist>
         }
     }
 }
-

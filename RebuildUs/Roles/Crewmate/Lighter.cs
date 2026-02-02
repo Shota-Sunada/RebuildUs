@@ -88,4 +88,3 @@ public class Lighter : RoleBase<Lighter>
         Players.Clear();
     }
 }
-

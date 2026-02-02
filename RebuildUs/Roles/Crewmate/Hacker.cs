@@ -266,4 +266,3 @@ public class Hacker : RoleBase<Hacker>
         Players.Clear();
     }
 }
-

@@ -1158,4 +1158,3 @@ public static class Helpers
         player.MurderPlayer(target, MurderResultFlags.Succeeded);
     }
 }
-

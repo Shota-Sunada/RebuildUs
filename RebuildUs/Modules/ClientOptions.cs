@@ -261,5 +261,3 @@ public static class ClientOptions
         }
     }
 }
-
-

@@ -327,5 +327,3 @@ public class LastImpostor : ModifierBase<LastImpostor>
         }
     }
 }
-
-

@@ -124,4 +124,3 @@ public class EvilHacker : RoleBase<EvilHacker>
         Players.Clear();
     }
 }
-

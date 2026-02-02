@@ -173,4 +173,3 @@ public class Witch : RoleBase<Witch>
         SpellCastingTarget = null;
     }
 }
-

@@ -235,7 +235,7 @@ public static class DiscordModManager
                 { // Hello
                     var hb = doc.RootElement.GetProperty("d").GetProperty("heartbeat_interval").GetInt32();
                     _ = Heartbeat(hb);
-                    Send(new { op = 2, d = new { token = _token, intents = 1 | 128, properties = new { os = "win", browser = "rb", device = "rb" } } });
+                    Send(new { Op = 2, D = new { Token = _token, Intents = 1 | 128, Properties = new { Os = "win", Browser = "rb", Device = "rb" } } });
                 }
                 else if (op == 0)
                 { // Dispatch
@@ -315,7 +315,7 @@ public static class DiscordModManager
 
                         if (options.Length == 0)
                         {
-                            Respond(id, token, new { type = 4, data = new { content = "プレイヤーが見つかりません。", flags = 64 } });
+                            Respond(id, token, new { type = 4, Data = new { Content = "プレイヤーが見つかりません。", Flags = 64 } });
                             return;
                         }
                         Respond(id, token, new
@@ -325,7 +325,7 @@ public static class DiscordModManager
                             {
                                 content = "連携するプレイヤーを選択してください:",
                                 flags = 64,
-                                components = new[] { new { type = 1, components = new[] { new { type = 3, custom_id = "select_player", options = options } } } }
+                                components = new[] { new { type = 1, components = new[] { new { type = 3, custom_id = "select_player", Options = options } } } }
                             }
                         });
                     }
@@ -334,7 +334,7 @@ public static class DiscordModManager
                         var friendCode = d.GetProperty("data").GetProperty("values")[0].GetString();
                         var did = ulong.Parse(d.GetProperty("member").GetProperty("user").GetProperty("id").GetString());
                         AddMapping(friendCode, did);
-                        Respond(id, token, new { type = 4, data = new { content = $"{friendCode} と連携しました！", flags = 64 } });
+                        Respond(id, token, new { type = 4, Data = new { Content = $"{friendCode} と連携しました！", flags = 64 } });
                     }
                 }
             }

@@ -210,4 +210,3 @@ public class EvilTracker : RoleBase<EvilTracker>
         }
     }
 }
-

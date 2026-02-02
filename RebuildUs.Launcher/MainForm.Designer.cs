@@ -5,19 +5,19 @@ partial class MainForm
     /// <summary>
     ///  Required designer variable.
     /// </summary>
-    private System.ComponentModel.IContainer components = null;
+    private System.ComponentModel.IContainer Components = null;
 
-    private System.Windows.Forms.Label lblStatus;
-    private System.Windows.Forms.Label lblVersion;
-    private System.Windows.Forms.Label lblUrl;
-    private System.Windows.Forms.ComboBox cmbVersions;
-    private System.Windows.Forms.Button btnAction;
-    private System.Windows.Forms.Button btnUninstall;
-    private System.Windows.Forms.NotifyIcon notifyIcon;
+    private System.Windows.Forms.Label LblStatus;
+    private System.Windows.Forms.Label LblVersion;
+    private System.Windows.Forms.Label LblUrl;
+    private System.Windows.Forms.ComboBox CmbVersions;
+    private System.Windows.Forms.Button BtnAction;
+    private System.Windows.Forms.Button BtnUninstall;
+    private System.Windows.Forms.NotifyIcon NotifyIcon;
 
-    private System.Windows.Forms.ContextMenuStrip trayMenu;
-    private System.Windows.Forms.ToolStripMenuItem menuShow;
-    private System.Windows.Forms.ToolStripMenuItem menuExit;
+    private System.Windows.Forms.ContextMenuStrip TrayMenu;
+    private System.Windows.Forms.ToolStripMenuItem MenuShow;
+    private System.Windows.Forms.ToolStripMenuItem MenuExit;
 
     /// <summary>
     ///  Clean up any resources being used.
@@ -25,9 +25,9 @@ partial class MainForm
     /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
     protected override void Dispose(bool disposing)
     {
-        if (disposing && (components != null))
+        if (disposing && (Components != null))
         {
-            components.Dispose();
+            Components.Dispose();
         }
         base.Dispose(disposing);
     }
@@ -40,120 +40,120 @@ partial class MainForm
     /// </summary>
     private void InitializeComponent()
     {
-        this.components = new System.ComponentModel.Container();
-        this.lblStatus = new System.Windows.Forms.Label();
-        this.lblVersion = new System.Windows.Forms.Label();
-        this.lblUrl = new System.Windows.Forms.Label();
-        this.cmbVersions = new System.Windows.Forms.ComboBox();
-        this.btnAction = new System.Windows.Forms.Button();
-        this.btnUninstall = new System.Windows.Forms.Button();
-        this.notifyIcon = new System.Windows.Forms.NotifyIcon(this.components);
-        this.trayMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
-        this.menuShow = new System.Windows.Forms.ToolStripMenuItem();
-        this.menuExit = new System.Windows.Forms.ToolStripMenuItem();
-        this.trayMenu.SuspendLayout();
+        this.Components = new System.ComponentModel.Container();
+        this.LblStatus = new System.Windows.Forms.Label();
+        this.LblVersion = new System.Windows.Forms.Label();
+        this.LblUrl = new System.Windows.Forms.Label();
+        this.CmbVersions = new System.Windows.Forms.ComboBox();
+        this.BtnAction = new System.Windows.Forms.Button();
+        this.BtnUninstall = new System.Windows.Forms.Button();
+        this.NotifyIcon = new System.Windows.Forms.NotifyIcon(this.Components);
+        this.TrayMenu = new System.Windows.Forms.ContextMenuStrip(this.Components);
+        this.MenuShow = new System.Windows.Forms.ToolStripMenuItem();
+        this.MenuExit = new System.Windows.Forms.ToolStripMenuItem();
+        this.TrayMenu.SuspendLayout();
         this.SuspendLayout();
         //
         // lblStatus
         //
-        this.lblStatus.AutoSize = true;
-        this.lblStatus.Location = new System.Drawing.Point(12, 9);
-        this.lblStatus.Name = "lblStatus";
-        this.lblStatus.Size = new System.Drawing.Size(39, 15);
-        this.lblStatus.TabIndex = 0;
-        this.lblStatus.Text = "Status";
+        this.LblStatus.AutoSize = true;
+        this.LblStatus.Location = new System.Drawing.Point(12, 9);
+        this.LblStatus.Name = "lblStatus";
+        this.LblStatus.Size = new System.Drawing.Size(39, 15);
+        this.LblStatus.TabIndex = 0;
+        this.LblStatus.Text = "Status";
         //
         // lblVersion
         //
-        this.lblVersion.AutoSize = true;
-        this.lblVersion.Location = new System.Drawing.Point(12, 45);
-        this.lblVersion.Name = "lblVersion";
-        this.lblVersion.Size = new System.Drawing.Size(51, 15);
-        this.lblVersion.TabIndex = 4;
-        this.lblVersion.Text = "Version: -";
+        this.LblVersion.AutoSize = true;
+        this.LblVersion.Location = new System.Drawing.Point(12, 45);
+        this.LblVersion.Name = "lblVersion";
+        this.LblVersion.Size = new System.Drawing.Size(51, 15);
+        this.LblVersion.TabIndex = 4;
+        this.LblVersion.Text = "Version: -";
         //
         // lblUrl
         //
-        this.lblUrl.AutoSize = true;
-        this.lblUrl.Location = new System.Drawing.Point(12, 70);
-        this.lblUrl.Name = "lblUrl";
-        this.lblUrl.Size = new System.Drawing.Size(48, 15);
-        this.lblUrl.TabIndex = 2;
-        this.lblUrl.Text = "Version:";
+        this.LblUrl.AutoSize = true;
+        this.LblUrl.Location = new System.Drawing.Point(12, 70);
+        this.LblUrl.Name = "lblUrl";
+        this.LblUrl.Size = new System.Drawing.Size(48, 15);
+        this.LblUrl.TabIndex = 2;
+        this.LblUrl.Text = "Version:";
         //
         // cmbVersions
         //
-        this.cmbVersions.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-        this.cmbVersions.Location = new System.Drawing.Point(12, 88);
-        this.cmbVersions.Name = "cmbVersions";
-        this.cmbVersions.Size = new System.Drawing.Size(360, 23);
-        this.cmbVersions.TabIndex = 3;
-        this.cmbVersions.SelectedIndexChanged += new System.EventHandler(this.cmbVersions_SelectedIndexChanged);
+        this.CmbVersions.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+        this.CmbVersions.Location = new System.Drawing.Point(12, 88);
+        this.CmbVersions.Name = "cmbVersions";
+        this.CmbVersions.Size = new System.Drawing.Size(360, 23);
+        this.CmbVersions.TabIndex = 3;
+        this.CmbVersions.SelectedIndexChanged += new System.EventHandler(this.CmbVersions_SelectedIndexChanged);
         //
         // btnAction
         //
-        this.btnAction.Location = new System.Drawing.Point(12, 117);
-        this.btnAction.Name = "btnAction";
-        this.btnAction.Size = new System.Drawing.Size(120, 40);
-        this.btnAction.TabIndex = 1;
-        this.btnAction.Text = "Action";
-        this.btnAction.UseVisualStyleBackColor = true;
-        this.btnAction.Click += new System.EventHandler(this.btnAction_Click);
+        this.BtnAction.Location = new System.Drawing.Point(12, 117);
+        this.BtnAction.Name = "btnAction";
+        this.BtnAction.Size = new System.Drawing.Size(120, 40);
+        this.BtnAction.TabIndex = 1;
+        this.BtnAction.Text = "Action";
+        this.BtnAction.UseVisualStyleBackColor = true;
+        this.BtnAction.Click += new System.EventHandler(this.BtnAction_Click);
         //        // btnUninstall
         //
-        this.btnUninstall.Location = new System.Drawing.Point(140, 117);
-        this.btnUninstall.Name = "btnUninstall";
-        this.btnUninstall.Size = new System.Drawing.Size(120, 40);
-        this.btnUninstall.TabIndex = 5;
-        this.btnUninstall.Text = "Uninstall";
-        this.btnUninstall.UseVisualStyleBackColor = true;
-        this.btnUninstall.Visible = false;
-        this.btnUninstall.Click += new System.EventHandler(this.btnUninstall_Click);
+        this.BtnUninstall.Location = new System.Drawing.Point(140, 117);
+        this.BtnUninstall.Name = "btnUninstall";
+        this.BtnUninstall.Size = new System.Drawing.Size(120, 40);
+        this.BtnUninstall.TabIndex = 5;
+        this.BtnUninstall.Text = "Uninstall";
+        this.BtnUninstall.UseVisualStyleBackColor = true;
+        this.BtnUninstall.Visible = false;
+        this.BtnUninstall.Click += new System.EventHandler(this.BtnUninstall_Click);
         //         // notifyIcon
         //
-        this.notifyIcon.ContextMenuStrip = this.trayMenu;
-        this.notifyIcon.Text = "RebuildUs Launcher";
-        this.notifyIcon.Visible = false;
-        this.notifyIcon.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.notifyIcon_MouseDoubleClick);
+        this.NotifyIcon.ContextMenuStrip = this.TrayMenu;
+        this.NotifyIcon.Text = "RebuildUs Launcher";
+        this.NotifyIcon.Visible = false;
+        this.NotifyIcon.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.NotifyIcon_MouseDoubleClick);
         //
         // trayMenu
         //
-        this.trayMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-        this.menuShow,
-        this.menuExit});
-        this.trayMenu.Name = "trayMenu";
-        this.trayMenu.Size = new System.Drawing.Size(104, 48);
+        this.TrayMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+        this.MenuShow,
+        this.MenuExit});
+        this.TrayMenu.Name = "trayMenu";
+        this.TrayMenu.Size = new System.Drawing.Size(104, 48);
         //
         // menuShow
         //
-        this.menuShow.Name = "menuShow";
-        this.menuShow.Size = new System.Drawing.Size(103, 22);
-        this.menuShow.Text = "Show";
-        this.menuShow.Click += new System.EventHandler(this.menuShow_Click);
+        this.MenuShow.Name = "menuShow";
+        this.MenuShow.Size = new System.Drawing.Size(103, 22);
+        this.MenuShow.Text = "Show";
+        this.MenuShow.Click += new System.EventHandler(this.MenuShow_Click);
         //
         // menuExit
         //
-        this.menuExit.Name = "menuExit";
-        this.menuExit.Size = new System.Drawing.Size(103, 22);
-        this.menuExit.Text = "Exit";
-        this.menuExit.Click += new System.EventHandler(this.menuExit_Click);
+        this.MenuExit.Name = "menuExit";
+        this.MenuExit.Size = new System.Drawing.Size(103, 22);
+        this.MenuExit.Text = "Exit";
+        this.MenuExit.Click += new System.EventHandler(this.MenuExit_Click);
         //
         // MainForm
         //
         this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
         this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
         this.ClientSize = new System.Drawing.Size(384, 169);
-        this.Controls.Add(this.btnAction);
-        this.Controls.Add(this.lblVersion);
-        this.Controls.Add(this.cmbVersions);
-        this.Controls.Add(this.lblUrl);
-        this.Controls.Add(this.lblStatus);
+        this.Controls.Add(this.BtnAction);
+        this.Controls.Add(this.LblVersion);
+        this.Controls.Add(this.CmbVersions);
+        this.Controls.Add(this.LblUrl);
+        this.Controls.Add(this.LblStatus);
         this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
         this.MaximizeBox = false;
         this.Name = "MainForm";
         this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
         this.Text = "RebuildUs Launcher";
-        this.trayMenu.ResumeLayout(false);
+        this.TrayMenu.ResumeLayout(false);
         this.ResumeLayout(false);
         this.PerformLayout();
 

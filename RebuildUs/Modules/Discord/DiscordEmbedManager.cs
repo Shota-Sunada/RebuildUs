@@ -36,25 +36,25 @@ public static class DiscordEmbedManager
 
         var embed = new
         {
-            title = "Among Us ルーム情報",
-            color = 3447003,
-            fields = new[] {
+            Title = "Among Us ルーム情報",
+            Color = 3447003,
+            Fields = new[] {
                 new { name = "マップ名", value = mapName, inline = true },
                 new { name = "ルームID", value = roomId, inline = true },
                 new { name = "状態", value = DiscordModManager.CurrentGameState, inline = true },
                 new { name = "状態の説明", value = desc, inline = false },
                 new { name = "部屋人数", value = $"{count}/{Helpers.GetOption(Int32OptionNames.MaxPlayers)}", inline = true }
             },
-            description = GetPlayerListString()
+            Description = GetPlayerListString()
         };
 
         var components = new[] {
-            new { type = 1, components = new[] {
-                new { type = 2, style = 1, label = "アカウント連携", custom_id = "start_link" }
+            new { Type = 1, Components = new[] {
+                new { type = 2, Style = 1, Label = "アカウント連携", Custom_id = "start_link" }
             } }
         };
 
-        var body = new { embeds = new[] { embed }, components };
+        var body = new { Embeds = new[] { embed }, components };
         var url = $"https://discord.com/api/v10/channels/{RebuildUs.StatusChannelId.Value}/messages" + (_statusMessageId == null ? "" : $"/{_statusMessageId}");
         var resp = await DiscordModManager.SendRequest(_statusMessageId == null ? "POST" : "PATCH", url, body, RebuildUs.DiscordBotToken.Value);
         if (_statusMessageId == null && resp != null && resp.IsSuccessStatusCode)
@@ -141,8 +141,8 @@ public static class DiscordEmbedManager
             title = "試合結果",
             color = 15105570,
             fields = new[] {
-                new { name = "役職一覧", value = sb.Length > 0 ? sb.ToString() : "なし", inline = false },
-                new { name = "キル記録", value = logs.Length > 0 ? logs.ToString() : "なし", inline = false }
+                new { Name = "役職一覧", value = sb.Length > 0 ? sb.ToString() : "なし", inline = false },
+                new { Name = "キル記録", value = logs.Length > 0 ? logs.ToString() : "なし", inline = false }
             }
         };
 

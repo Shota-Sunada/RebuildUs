@@ -175,4 +175,3 @@ public partial class RoleInfo(TranslateKey nameKey, Color color, CustomOption ba
         RoleDict[RoleType.Impostor] = new(TranslateKey.Impostor, Palette.ImpostorRed, null, RoleType.Impostor);
     }
 }
-

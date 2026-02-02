@@ -128,4 +128,3 @@ public static class Vitals
         }
     }
 }
-

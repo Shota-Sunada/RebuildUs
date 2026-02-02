@@ -90,4 +90,3 @@ public class Mini : ModifierBase<Mini>
         GrowingUpDuration = CustomOptionHolder.MiniGrowingUpDuration.GetFloat();
     }
 }
-

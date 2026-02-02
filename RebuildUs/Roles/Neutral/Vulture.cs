@@ -167,4 +167,3 @@ public class Vulture : RoleBase<Vulture>
         Players.Clear();
     }
 }
-

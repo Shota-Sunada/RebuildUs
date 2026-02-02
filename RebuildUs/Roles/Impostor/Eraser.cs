@@ -107,4 +107,3 @@ public class Eraser : RoleBase<Eraser>
         FutureErased = [];
     }
 }
-

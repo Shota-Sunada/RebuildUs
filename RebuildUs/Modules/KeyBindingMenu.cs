@@ -11,7 +11,7 @@ public static class KeyBindingMenu
     private static readonly List<ToggleButtonBehaviour> ModButtons = [];
     private static ToggleButtonBehaviour ButtonPrefab;
 
-    private static KeyBindingManager.RebuildUsInput activeInput = null;
+    private static KeyBindingManager.RebuildUsInput ActiveInput = null;
     private static readonly KeyCode[] AllKeyCodes = (KeyCode[])Enum.GetValues(typeof(KeyCode));
 
     public static void Start(OptionsMenuBehaviour __instance)
@@ -136,7 +136,7 @@ public static class KeyBindingMenu
     {
         if (!PopUp) return;
 
-        activeInput = null;
+        ActiveInput = null;
         PopUp.SetActive(false);
         PopUp.transform.SetParent(null);
         UnityEngine.Object.DontDestroyOnLoad(PopUp);
@@ -203,11 +203,11 @@ public static class KeyBindingMenu
         }));
     }
 
-    private static bool waitingForKey = false;
+    private static bool WaitingForKey = false;
 
     public static void Update()
     {
-        if (activeInput != null)
+        if (ActiveInput != null)
         {
             if (WaitingPopUp)
             {
@@ -215,17 +215,17 @@ public static class KeyBindingMenu
                 WaitingPopUp.transform.SetParent(PopUp.transform.parent);
                 WaitingPopUp.transform.localPosition = new Vector3(0, 0, -950f);
 
-                if (WaitingText && activeInput != null)
+                if (WaitingText && ActiveInput != null)
                 {
-                    WaitingText.text = new StringBuilder(Tr.GetDynamic($"{activeInput.Identifier}"))
+                    WaitingText.text = new StringBuilder(Tr.GetDynamic($"{ActiveInput.Identifier}"))
                         .Append("\n")
                         .Append(Tr.Get(TranslateKey.PressAnyKey)).ToString();
                 }
             }
 
-            if (!waitingForKey)
+            if (!WaitingForKey)
             {
-                if (!Input.anyKey) waitingForKey = true;
+                if (!Input.anyKey) WaitingForKey = true;
                 return;
             }
 
@@ -237,10 +237,10 @@ public static class KeyBindingMenu
                     {
                         if (key != KeyCode.Escape)
                         {
-                            activeInput.ChangeKey(key);
+                            ActiveInput.ChangeKey(key);
                         }
-                        activeInput = null;
-                        waitingForKey = false;
+                        ActiveInput = null;
+                        WaitingForKey = false;
                         SetUpOptions();
                         break;
                     }
@@ -270,7 +270,7 @@ public static class KeyBindingMenu
                 var input = KeyBindingManager.AllInputs[i];
                 var button = ModButtons[i];
 
-                string keyText = activeInput == input ? Tr.Get(TranslateKey.PressAnyKey) : input.Key.ToString();
+                string keyText = ActiveInput == input ? Tr.Get(TranslateKey.PressAnyKey) : input.Key.ToString();
                 button.Text.text = new StringBuilder(Tr.GetDynamic($"{input.Identifier}")).Append(": ").Append(keyText).ToString();
             }
             return;
@@ -303,14 +303,14 @@ public static class KeyBindingMenu
             button.transform.localPosition = new Vector3(x, y, -1f);
             button.gameObject.SetActive(true);
 
-            string keyText = activeInput == input ? Tr.Get(TranslateKey.PressAnyKey) : input.Key.ToString();
+            string keyText = ActiveInput == input ? Tr.Get(TranslateKey.PressAnyKey) : input.Key.ToString();
             button.Text.text = new StringBuilder(Tr.GetDynamic($"{input.Identifier}")).Append(": ").Append(keyText).ToString();
 
             var passiveButton = button.GetComponent<PassiveButton>();
             passiveButton.OnClick = new Button.ButtonClickedEvent();
             passiveButton.OnClick.AddListener((Action)(() =>
             {
-                activeInput = input;
+                ActiveInput = input;
                 SetUpOptions();
             }));
 
@@ -325,6 +325,3 @@ public static class KeyBindingMenu
         }
     }
 }
-
-
-

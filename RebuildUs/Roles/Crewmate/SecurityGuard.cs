@@ -296,7 +296,7 @@ public class SecurityGuard : RoleBase<SecurityGuard>
         SecurityGuardCamButton.EffectDuration = SecurityGuard.CamDuration;
     }
 
-    public static Sprite getAnimatedVentSealedSprite()
+    public static Sprite GetAnimatedVentSealedSprite()
     {
         if (SubmergedCompatibility.IsSubmerged) return AssetLoader.AnimatedVentSealedSubmerged;
         return AssetLoader.AnimatedVentSealed;
@@ -310,4 +310,3 @@ public class SecurityGuard : RoleBase<SecurityGuard>
         Players.Clear();
     }
 }
-

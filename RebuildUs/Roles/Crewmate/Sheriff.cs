@@ -153,4 +153,3 @@ public class Sheriff : RoleBase<Sheriff>
         Players.Clear();
     }
 }
-

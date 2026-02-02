@@ -210,4 +210,3 @@ public class Madmate : ModifierBase<Madmate>
         Players.Clear();
     }
 }
-

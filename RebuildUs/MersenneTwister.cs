@@ -82,7 +82,7 @@ public class MersenneTwister : System.Random
     /// <param name="seed">A value to use as a seed.</param>
     public MersenneTwister(int seed)
     {
-        init((uint)seed);
+        Init((uint)seed);
     }
 
     /// <summary>
@@ -289,7 +289,7 @@ public class MersenneTwister : System.Random
     /// </remarks>
     public override double NextDouble()
     {
-        return compute53BitRandom(0, InverseOnePlus53BitsOf1s);
+        return Compute53BitRandom(0, InverseOnePlus53BitsOf1s);
     }
 
     /// <summary>
@@ -312,7 +312,7 @@ public class MersenneTwister : System.Random
     /// </returns>
     public double NextDouble(bool includeOne)
     {
-        return includeOne ? compute53BitRandom(0, Inverse53BitsOf1s) : NextDouble();
+        return includeOne ? Compute53BitRandom(0, Inverse53BitsOf1s) : NextDouble();
     }
 
     /// <summary>
@@ -321,7 +321,7 @@ public class MersenneTwister : System.Random
     /// <returns>A pseudo-random number greater than 0.0 and less than 1.0.</returns>
     public double NextDoublePositive()
     {
-        return compute53BitRandom(0.5, Inverse53BitsOf1s);
+        return Compute53BitRandom(0.5, Inverse53BitsOf1s);
     }
 
     /// <summary>
@@ -400,10 +400,10 @@ public class MersenneTwister : System.Random
         }
 
         y = _mt[_mti++];
-        y ^= temperingShiftU(y);
-        y ^= temperingShiftS(y) & TemperingMaskB;
-        y ^= temperingShiftT(y) & TemperingMaskC;
-        y ^= temperingShiftL(y);
+        y ^= TemperingShiftU(y);
+        y ^= TemperingShiftS(y) & TemperingMaskB;
+        y ^= TemperingShiftT(y) & TemperingMaskC;
+        y ^= TemperingShiftL(y);
 
         return y;
     }
@@ -419,22 +419,22 @@ public class MersenneTwister : System.Random
     private const uint TemperingMaskB = 0x9d2c5680;
     private const uint TemperingMaskC = 0xefc60000;
 
-    private static uint temperingShiftU(uint y)
+    private static uint TemperingShiftU(uint y)
     {
         return (y >> 11);
     }
 
-    private static uint temperingShiftS(uint y)
+    private static uint TemperingShiftS(uint y)
     {
         return (y << 7);
     }
 
-    private static uint temperingShiftT(uint y)
+    private static uint TemperingShiftT(uint y)
     {
         return (y << 15);
     }
 
-    private static uint temperingShiftL(uint y)
+    private static uint TemperingShiftL(uint y)
     {
         return (y >> 18);
     }
@@ -444,7 +444,7 @@ public class MersenneTwister : System.Random
 
     private static readonly uint[] _mag01 = [0x0, MatrixA];
 
-    private void init(uint seed)
+    private void Init(uint seed)
     {
         _mt[0] = seed & 0xffffffffU;
 
@@ -463,7 +463,7 @@ public class MersenneTwister : System.Random
     private void init(uint[] key)
     {
         int i, j, k;
-        init(19650218U);
+        Init(19650218U);
 
         int keyLength = key.Length;
         i = 1; j = 0;
@@ -503,7 +503,7 @@ public class MersenneTwister : System.Random
     private const double OnePlus53BitsOf1s = FiftyThreeBitsOf1s + 1;
     private const double InverseOnePlus53BitsOf1s = 1.0 / OnePlus53BitsOf1s;
 
-    private double compute53BitRandom(double translate, double scale)
+    private double Compute53BitRandom(double translate, double scale)
     {
         // get 27 pseudo-random bits
         ulong a = (ulong)GenerateUInt32() >> 5;
