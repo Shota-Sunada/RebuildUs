@@ -238,9 +238,8 @@ public class CustomColors
 
     public static bool GetColorName(ref string __result, [HarmonyArgument(0)] StringNames name)
     {
-        if ((int)name >= COLOR_BASE_ID_NUMBER)
+        if ((int)name >= COLOR_BASE_ID_NUMBER && ColorStrings.TryGetValue((int)name, out string text))
         {
-            string text = ColorStrings[(int)name];
             if (text != null)
             {
                 __result = text;

@@ -39,7 +39,7 @@ public static class ShortcutCommands
 
         if ((Helpers.GetKeysDown(KeyCode.LeftControl, KeyCode.F7) || Helpers.GetKeysDown(KeyCode.RightControl, KeyCode.F7)) && !MeetingHud.Instance && Helpers.GameStarted)
         {
-            MapUtilities.CachedShipStatus.StartMeeting(PlayerControl.LocalPlayer, null);
+            MapUtilities.CachedShipStatus.StartMeeting(PlayerControl.LocalPlayer, PlayerControl.LocalPlayer.Data);
         }
 
         if ((Input.GetKeyDown(KeyCode.LeftShift) || Input.GetKeyDown(KeyCode.RightShift)) && Helpers.IsCountdown)
@@ -50,6 +50,20 @@ public static class ShortcutCommands
                 using var sender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.StopStart);
             }
         }
+
+#if DEBUG
+        if (Helpers.GetKeysDown(KeyCode.LeftControl, KeyCode.F4) || Helpers.GetKeysDown(KeyCode.RightControl, KeyCode.F4))
+        {
+            HudManager.Instance.Chat.AddChat(PlayerControl.LocalPlayer, "Reloaded Random Number Generation Algorithm.");
+            RebuildUs.Instance.RefreshRnd((int)DateTime.Now.Ticks);
+        }
+
+        if (Helpers.GetKeysDown(KeyCode.LeftControl, KeyCode.F8) || Helpers.GetKeysDown(KeyCode.RightControl, KeyCode.F8))
+        {
+            HudManager.Instance.Chat.AddChat(PlayerControl.LocalPlayer, "Measured Random Number Quality. Check logs for details.");
+            RandomMain.LogScore();
+        }
+#endif
     }
 
     public static void OpenAirshipToilet()

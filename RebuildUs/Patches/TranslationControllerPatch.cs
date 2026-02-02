@@ -24,7 +24,14 @@ public static class TranslationControllerPatch
                 break;
             }
         }
-        string ourString = Helpers.Cs(opt?.Color ?? Color.white, Tr.Get(opt.NameKey));
+
+        if (opt == null)
+        {
+            __result = "Unknown Option";
+            return false;
+        }
+
+        string ourString = Helpers.Cs(opt.Color, Tr.Get(opt.NameKey)) ?? "";
 
         __result = ourString;
         return false;
@@ -35,12 +42,7 @@ public static class TranslationControllerPatch
     [HarmonyPatch(typeof(TranslationController), nameof(TranslationController.GetString), [typeof(StringNames), typeof(Il2CppReferenceArray<Il2CppSystem.Object>)])]
     public static bool GetColorNamePrefix(ref string __result, [HarmonyArgument(0)] StringNames name)
     {
-        if (!CustomColors.GetColorName(ref __result, name))
-        {
-            return false;
-        }
-
-        return true;
+        return CustomColors.GetColorName(ref __result, name);
     }
 
     [HarmonyPostfix]

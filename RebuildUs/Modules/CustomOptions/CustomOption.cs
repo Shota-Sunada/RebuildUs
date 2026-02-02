@@ -16,7 +16,7 @@ public enum CustomOptionType
 }
 public partial class CustomOption
 {
-    public const int CUSTOM_OPTION_PRE_ID = 6000;
+    public const int CUSTOM_OPTION_PRE_ID = 60000;
 
     public static List<CustomOption> AllOptions = [];
     public static Dictionary<int, CustomOption> AllOptionsById = [];

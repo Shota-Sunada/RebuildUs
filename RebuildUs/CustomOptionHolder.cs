@@ -8,6 +8,13 @@ public static class CustomOptionHolder
     #region MOD OPTIONS
     public static CustomOption PresetSelection;
     public static CustomOption ActivateRoles;
+    public static CustomOption RandomNumberAlgorithm;
+    public static CustomOption EnableRandomRandomNumberAlgorithm;
+    public static CustomOption EnableRandomRandomNumberAlgorithmDotnet;
+    public static CustomOption EnableRandomRandomNumberAlgorithmMT;
+    public static CustomOption EnableRandomRandomNumberAlgorithmXorshiro256PP;
+    public static CustomOption EnableRandomRandomNumberAlgorithmXorshiro256SS;
+    public static CustomOption EnableRandomRandomNumberAlgorithmPcg64;
     #endregion
 
     #region GENERAL OPTIONS
@@ -386,7 +393,14 @@ public static class CustomOptionHolder
     {
         #region MOD OPTIONS
         PresetSelection = CustomOption.Header(0, CustomOptionType.General, TranslateKey.Preset, PRESETS, TranslateKey.Preset);
-        ActivateRoles = CustomOption.Normal(1, CustomOptionType.General, TranslateKey.ActivateRoles, true, null);
+        ActivateRoles = CustomOption.Normal(1, CustomOptionType.General, TranslateKey.ActivateRoles, true);
+        EnableRandomRandomNumberAlgorithm = CustomOption.Normal(2, CustomOptionType.General, TranslateKey.RandomRandomNumberAlgorithm, false);
+        RandomNumberAlgorithm = CustomOption.Normal(3, CustomOptionType.General, TranslateKey.RandomNumberAlgorithm, [Tr.Get(TranslateKey.RND_Dotnet), Tr.Get(TranslateKey.RND_MT), Tr.Get(TranslateKey.RND_XOSHIRO256), Tr.Get(TranslateKey.RND_XOSHIRO256SS), Tr.Get(TranslateKey.RND_PCG64)], EnableRandomRandomNumberAlgorithm, 0, 0, 0, 0, true);
+        EnableRandomRandomNumberAlgorithmDotnet = CustomOption.Normal(4, CustomOptionType.General, TranslateKey.EnableRandomRandomNumberAlgorithmDotnet, true, EnableRandomRandomNumberAlgorithm);
+        EnableRandomRandomNumberAlgorithmMT = CustomOption.Normal(5, CustomOptionType.General, TranslateKey.EnableRandomRandomNumberAlgorithmMT, true, EnableRandomRandomNumberAlgorithm);
+        EnableRandomRandomNumberAlgorithmXorshiro256PP = CustomOption.Normal(6, CustomOptionType.General, TranslateKey.EnableRandomRandomNumberAlgorithmXorshiro256PP, true, EnableRandomRandomNumberAlgorithm);
+        EnableRandomRandomNumberAlgorithmXorshiro256SS = CustomOption.Normal(7, CustomOptionType.General, TranslateKey.EnableRandomRandomNumberAlgorithmXorshiro256SS, true, EnableRandomRandomNumberAlgorithm);
+        EnableRandomRandomNumberAlgorithmPcg64 = CustomOption.Normal(8, CustomOptionType.General, TranslateKey.EnableRandomRandomNumberAlgorithmPcg64, true, EnableRandomRandomNumberAlgorithm);
         #endregion
 
         #region GENERAL OPTIONS

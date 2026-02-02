@@ -1,3 +1,5 @@
+namespace RebuildUs.Modules.Random;
+
 // Adapted from:
 // Copyright 2007-2008 Rory Plaire (codekaizen@gmail.com)
 // davide.rambaldi AT gmail.com commented the CLS compliant lines, changed Random to System.Random, changed Next(Int32)
@@ -63,8 +65,6 @@
    http://www.math.sci.hiroshima-u.ac.jp/~m-mat/MT/emt.html
    email: m-mat @ math.sci.hiroshima-u.ac.jp (remove space)
 */
-
-namespace RebuildUs;
 
 /// <summary>
 /// Generates pseudo-random numbers using the Mersenne Twister algorithm.

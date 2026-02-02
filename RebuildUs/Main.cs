@@ -22,6 +22,7 @@ global using RebuildUs.Modules.CustomOptions;
 global using RebuildUs.Modules.Discord;
 global using RebuildUs.Modules.EndGame;
 global using RebuildUs.Modules.GameEvents.Events;
+global using RebuildUs.Modules.Random;
 global using RebuildUs.Modules.RPC;
 global using RebuildUs.Objects;
 global using RebuildUs.Patches;
@@ -83,8 +84,12 @@ public class RebuildUs : BasePlugin
     public static ConfigEntry<ushort> Port { get; set; }
     public static IRegionInfo[] DefaultRegions;
 
-    // public System.Random Rnd = new((int)DateTime.Now.Ticks);
-    public System.Random Rnd = new MersenneTwister((int)DateTime.Now.Ticks);
+    public System.Random Rnd => RandomMain.Rnd;
+
+    public void RefreshRnd(int seed)
+    {
+        RandomMain.RefreshRnd(seed);
+    }
 
     public override void Load()
     {
@@ -127,6 +132,8 @@ public class RebuildUs : BasePlugin
         CustomColors.Load();
         UpdateRegions();
         CustomOptionHolder.Load();
+
+        RefreshRnd((int)DateTime.Now.Ticks);
 
         DiscordModManager.Initialize();
 

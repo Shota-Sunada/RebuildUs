@@ -1,4 +1,4 @@
-﻿Key,English,Japanese
+Key,English,Japanese
 ActivateRoles,Enable Mod Roles And Block Vanilla Roles,Mod役職を有効化
 AdditionalEmergencyCooldown,Additional Emergency Cooldown Until Several Players Are Dead,誰かが死ぬまで緊急会議のクールダウンを増加
 AdditionalEmergencyCooldownTime,Additional Cooldown Time,追加クールダウン
@@ -669,5 +669,17 @@ WitchSpellDuration,Casting Duration,魔術をかけるのに必要な時間
 WitchText,Spell,魔術
 WitchTriggerBoth,Trigger Both Cooldowns,魔術とキルクールを同期
 GmGameOver,GAME OVER,ゲームオーバー
-JackalWithSidekick,Let's make a sidekick,
-Emergency,Meeting,
+JackalWithSidekick,Let's make a sidekick,サイドキックを作ろう
+Emergency,Meeting,会議
+RandomNumberAlgorithm,Random Number Generation Algorithm,乱数生成アルゴリズム
+RND_Dotnet,".NET Legacy (Deprecated)",".NET Legacy (非推奨)"
+RND_MT,"Mersenne Twister","Mersenne Twister"
+RND_XOSHIRO256,"Xoshiro256++","Xoshiro256++"
+RND_XOSHIRO256SS,"Xoshiro256**","Xoshiro256**"
+RND_PCG64,"PCG64","PCG64"
+RandomRandomNumberAlgorithm,Randomly Choose A Random Number Generation Algorithm,乱数生成アルゴリズムをランダムに選ぶ
+EnableRandomRandomNumberAlgorithmDotnet,Enable .NET Legacy (Depricated),.NET Legacy (非推奨) を有効
+EnableRandomRandomNumberAlgorithmMT,Enable Mersenne Twister,Mersenne Twister を有効
+EnableRandomRandomNumberAlgorithmXorshiro256PP,Enable Xorshiro256++,Xorshiro256++ を有効
+EnableRandomRandomNumberAlgorithmXorshiro256SS,Enable Xorshiro256**,Xorshiro256** を有効
+EnableRandomRandomNumberAlgorithmPcg64,Enable PCG64,PCG64 を有効
