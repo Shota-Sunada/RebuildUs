@@ -261,7 +261,7 @@ public partial class CustomOption
             viewSettingsInfoPanel.titleText.outlineWidth = 0.1f;
             if (option.Type == CustomOptionType.Modifier)
             {
-                viewSettingsInfoPanel.settingText.text = viewSettingsInfoPanel.settingText.text + BuildModifierExtras(option);
+                viewSettingsInfoPanel.settingText.text = viewSettingsInfoPanel.settingText.text ;
             }
             __instance.settingsInfo.Add(viewSettingsInfoPanel.gameObject);
 

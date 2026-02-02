@@ -320,7 +320,7 @@ public partial class CustomOption
 
             var so = ob;
             so.OnValueChanged = new Action<OptionBehaviour>((o) => { });
-            so.TitleText.text = Helpers.Cs(option.Color, Tr.GetDynamic(option.NameKey));
+            so.TitleText.text = Helpers.Cs(option.Color, Tr.Get(option.NameKey));
             if (option.IsHeader
                 && (option.Type is CustomOptionType.Neutral or CustomOptionType.Crewmate or CustomOptionType.Impostor or CustomOptionType.Modifier)
             )
@@ -423,26 +423,6 @@ public partial class CustomOption
         }
     }
 
-    public static string BuildModifierExtras(CustomOption customOption)
-    {
-        // find options children with quantity
-        CustomOption quantityOption = null;
-        var children = customOption.Children;
-        for (int i = 0; i < children.Count; i++)
-        {
-            var o = children[i];
-            if (o.NameKey != null && o.NameKey.Contains("Quantity"))
-            {
-                quantityOption = o;
-                break;
-            }
-        }
-
-        if (customOption.GetSelection() == 0) return "";
-        if (quantityOption != null) return $" ({quantityOption.GetQuantity()})";
-        return "";
-    }
-
     public static bool LGOAreInvalid(LegacyGameOptions __instance, ref int maxExpectedPlayers)
     {
         //making the kill distances bound check higher since extra short is added
@@ -500,5 +480,3 @@ public partial class CustomOption
         return string.Join("\n", options);
     }
 }
-
-

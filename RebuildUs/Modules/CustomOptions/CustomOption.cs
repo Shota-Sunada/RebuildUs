@@ -321,7 +321,7 @@ public partial class CustomOption
 
     public string GetName()
     {
-        return Helpers.Cs(Color, Tr.GetDynamic(NameKey));
+        return Helpers.Cs(Color, Tr.Get(NameKey));
     }
 
     public virtual void UpdateSelection(int newSelection, RoleTypes icon, bool notifyUsers = true)
@@ -411,5 +411,3 @@ public partial class CustomOption
         }
     }
 }
-
-
