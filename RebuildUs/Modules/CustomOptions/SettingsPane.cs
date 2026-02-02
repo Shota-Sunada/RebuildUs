@@ -163,7 +163,7 @@ public partial class CustomOption
             int value = option.GetSelection();
             var (viewName, viewValue) = HandleSpecialOptionsView(option, option.NameKey, option.Selections[value].ToString());
             viewSettingsInfoPanel.SetInfo(StringNames.ImpostorsCategory, viewValue, 61);
-            viewSettingsInfoPanel.titleText.text = Tr.GetDynamic(viewName);
+            viewSettingsInfoPanel.titleText.text = Tr.Get(viewName);
 
             if (option.IsHeader &&
                 (option.Type is CustomOptionType.Neutral or CustomOptionType.Crewmate or CustomOptionType.Impostor or CustomOptionType.Modifier)
@@ -256,7 +256,7 @@ public partial class CustomOption
             int value = option.GetSelection();
             var (optName, optValue) = HandleSpecialOptionsView(option, option.NameKey, option.Selections[value].ToString());
             viewSettingsInfoPanel.SetInfo(StringNames.ImpostorsCategory, optValue, 61);
-            viewSettingsInfoPanel.titleText.text = Helpers.Cs(option.Color, Tr.GetDynamic(optName));
+            viewSettingsInfoPanel.titleText.text = Helpers.Cs(option.Color, Tr.Get(optName));
             viewSettingsInfoPanel.titleText.outlineColor = Color.white;
             viewSettingsInfoPanel.titleText.outlineWidth = 0.1f;
             if (option.Type == CustomOptionType.Modifier)
@@ -311,14 +311,14 @@ public partial class CustomOption
         return buttonObj;
     }
 
-    private static (string name, string value) HandleSpecialOptionsView(CustomOption option, string defaultString, string defaultVal)
+    private static (TranslateKey name, string value) HandleSpecialOptionsView(CustomOption option, TranslateKey defKey, string defaultVal)
     {
-        string name = defaultString;
+        var name = defKey;
         string val = defaultVal;
         if (option == CustomOptionHolder.CrewmateRolesCountMin)
         {
             val = "";
-            name = "CrewmateRoles";
+            name = TranslateKey.CrewmateRoles;
             var min = CustomOptionHolder.CrewmateRolesCountMin.GetSelection();
             var max = CustomOptionHolder.CrewmateRolesCountMax.GetSelection();
             if (min > max) min = max;
@@ -326,7 +326,7 @@ public partial class CustomOption
         }
         if (option == CustomOptionHolder.NeutralRolesCountMin)
         {
-            name = "NeutralRoles";
+            name = TranslateKey.NeutralRoles;
             var min = CustomOptionHolder.NeutralRolesCountMin.GetSelection();
             var max = CustomOptionHolder.NeutralRolesCountMax.GetSelection();
             if (min > max) min = max;
@@ -334,7 +334,7 @@ public partial class CustomOption
         }
         if (option == CustomOptionHolder.ImpostorRolesCountMin)
         {
-            name = "ImpostorRoles";
+            name = TranslateKey.ImpostorRoles;
             var min = CustomOptionHolder.ImpostorRolesCountMin.GetSelection();
             var max = CustomOptionHolder.ImpostorRolesCountMax.GetSelection();
             if (max > Helpers.GetOption(Int32OptionNames.NumImpostors)) max = Helpers.GetOption(Int32OptionNames.NumImpostors);
@@ -343,7 +343,7 @@ public partial class CustomOption
         }
         if (option == CustomOptionHolder.ModifiersCountMin)
         {
-            name = "Modifiers";
+            name = TranslateKey.Modifiers;
             var min = CustomOptionHolder.ModifiersCountMin.GetSelection();
             var max = CustomOptionHolder.ModifiersCountMax.GetSelection();
             if (min > max) min = max;
@@ -353,5 +353,3 @@ public partial class CustomOption
         return new(name, val);
     }
 }
-
-
