@@ -4,12 +4,12 @@ RebuildUsは身内で遊ぶように開発されました。一般公開は予�
 外部の方につきましてはいかなるサポートにも対応いたしません。\
 このModはGPL-3.0に基づいて様々なModのアセットを使用しています。\
 
-```
-This mod is not affiliated with Among Us or Innersloth LLC, and the content contained therein is not endorsed or otherwise sponsored by Innersloth LLC. Portions of the materials contained herein are property of Innersloth LLC. © Innersloth LLC.
-```
+> [!IMPORTANT]\
+> This mod is not affiliated with Among Us or Innersloth LLC, and the content contained therein is not endorsed or otherwise sponsored by Innersloth LLC. Portions of the materials contained herein are property of Innersloth LLC. © Innersloth LLC.
 
 ## License
-GPL-3.0ライセンスのもとで公開、また、GPL-3.0のもとで公開されているファイルを使用しています。
+GPL-3.0ライセンスのもとで公開しており、また、GPL-3.0のもとで公開されているファイルを使用しています。\n
+なお、リソースファイルが含まれるアセットバンドルはリポジトリに含まれておりません。\n
 
 ## Credits
 TheOtherRoles GMH - Modのベースシステム・役職・画像\
