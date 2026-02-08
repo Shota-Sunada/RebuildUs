@@ -52,7 +52,7 @@ static class GameHistory
         target.ResetMorph();
     }
 
-    public static void OnMurderPlayerPostfix(PlayerControl killer, PlayerControl target)
+    public static DeadPlayer OnMurderPlayerPostfix(PlayerControl killer, PlayerControl target)
     {
         var sb = new StringBuilder();
         sb.Append(killer.GetNameWithRole());
@@ -78,10 +78,7 @@ static class GameHistory
             DiscordAutoMuteManager.UpdatePlayerMute(target);
         }
 
-        AllPlayers.OnKill(killer, target, deadPlayer);
-
-        killer.OnKill(target);
-        target.OnDeath(killer);
+        return deadPlayer;
     }
 
     public static void OnExiled(PlayerControl player)

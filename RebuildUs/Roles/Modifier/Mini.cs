@@ -52,14 +52,14 @@ public class Mini : ModifierBase<Mini>
     {
         get
         {
-            return Tr.Get(TranslateKey.MiniPostfix);
+            return Tr.Get(TrKey.MiniPostfix);
         }
     }
     public static string FullName
     {
         get
         {
-            return Tr.Get(TranslateKey.Mini);
+            return Tr.Get(TrKey.Mini);
         }
     }
 

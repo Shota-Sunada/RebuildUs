@@ -104,7 +104,7 @@ public class Sheriff : RoleBase<Sheriff>
             () => { return PlayerControl.LocalPlayer.IsRole(RoleType.Sheriff) && Local.NumShots > 0 && PlayerControl.LocalPlayer?.Data?.IsDead == false && Local.CanKill; },
             () =>
             {
-                SheriffNumShotsText?.text = Local.NumShots > 0 ? string.Format(Tr.Get(TranslateKey.SheriffShots), Local.NumShots) : "";
+                SheriffNumShotsText?.text = Local.NumShots > 0 ? string.Format(Tr.Get(TrKey.SheriffShots), Local.NumShots) : "";
                 return Local.CurrentTarget && PlayerControl.LocalPlayer.CanMove;
             },
             () => { SheriffKillButton.Timer = SheriffKillButton.MaxTimer; },

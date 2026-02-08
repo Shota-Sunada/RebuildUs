@@ -99,7 +99,7 @@ public class Engineer : RoleBase<Engineer>
             hm.UseButton,
             AbilitySlot.CrewmateAbilityPrimary,
             false,
-            Tr.Get(TranslateKey.RepairText)
+            Tr.Get(TrKey.RepairText)
         );
     }
     public static void SetButtonCooldowns()

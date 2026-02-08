@@ -86,6 +86,19 @@ public static class EndGameMain
         var miniLose = Mini.Exists && gameOverReason == (GameOverReason)CustomGameOverReason.MiniLose;
         var loversWin = Lovers.AnyAlive() && !(Lovers.SeparateTeam && gameOverReason == GameOverReason.CrewmatesByTask);
 
+        var drawTeamWin = MapSettings.GameMode == CustomGameMode.CaptureTheFlag && gameOverReason == (GameOverReason)CustomGameOverReason.DrawTeamWin;
+        var redTeamFlagWin = MapSettings.GameMode == CustomGameMode.CaptureTheFlag && gameOverReason == (GameOverReason)CustomGameOverReason.RedTeamFlagWin;
+        var blueTeamFlagWin = MapSettings.GameMode == CustomGameMode.CaptureTheFlag && gameOverReason == (GameOverReason)CustomGameOverReason.BlueTeamFlagWin;
+        var thiefModeThiefWin = MapSettings.GameMode == CustomGameMode.PoliceAndThieves && gameOverReason == (GameOverReason)CustomGameOverReason.ThiefModeThiefWin;
+        var thiefModePoliceWin = MapSettings.GameMode == CustomGameMode.PoliceAndThieves && gameOverReason == (GameOverReason)CustomGameOverReason.ThiefModePoliceWin;
+        var hotPotatoEnd = MapSettings.GameMode == CustomGameMode.HotPotato && gameOverReason == (GameOverReason)CustomGameOverReason.HotPotatoEnd;
+        var battleRoyaleSoloWin = MapSettings.GameMode == CustomGameMode.BattleRoyale && gameOverReason == (GameOverReason)CustomGameOverReason.BattleRoyaleSoloWin;
+        var battleRoyaleTimeWin = MapSettings.GameMode == CustomGameMode.BattleRoyale && gameOverReason == (GameOverReason)CustomGameOverReason.BattleRoyaleTimeWin;
+        var battleRoyaleDraw = MapSettings.GameMode == CustomGameMode.BattleRoyale && gameOverReason == (GameOverReason)CustomGameOverReason.BattleRoyaleDraw;
+        var battleRoyaleLimeTeamWin = MapSettings.GameMode == CustomGameMode.BattleRoyale && gameOverReason == (GameOverReason)CustomGameOverReason.BattleRoyaleLimeTeamWin;
+        var battleRoyalePinkTeamWin = MapSettings.GameMode == CustomGameMode.BattleRoyale && gameOverReason == (GameOverReason)CustomGameOverReason.BattleRoyalePinkTeamWin;
+        var battleRoyaleSerialKillerWin = MapSettings.GameMode == CustomGameMode.BattleRoyale && gameOverReason == (GameOverReason)CustomGameOverReason.BattleRoyaleSerialKillerWin;
+
         var everyoneDead = true;
         var playerRoles = AdditionalTempData.PlayerRoles;
         for (int i = 0; i < playerRoles.Count; i++)
@@ -230,6 +243,148 @@ public static class EndGameMain
             AdditionalTempData.WinCondition = WinCondition.EveryoneDied;
         }
 
+        // Flag Game Mode Win
+        // Draw
+        else if (drawTeamWin)
+        {
+            EndGameResult.CachedWinners = new Il2CppSystem.Collections.Generic.List<CachedPlayerData>();
+            foreach (PlayerControl player in PlayerControl.AllPlayerControls.GetFastEnumerator())
+            {
+                EndGameResult.CachedWinners.Add(new(player.Data));
+            }
+            AdditionalTempData.WinCondition = WinCondition.DrawTeamWin;
+        }
+        // Red Team Win
+        else if (redTeamFlagWin)
+        {
+            EndGameResult.CachedWinners = new Il2CppSystem.Collections.Generic.List<CachedPlayerData>();
+            foreach (PlayerControl player in CaptureTheFlag.redteamFlag)
+            {
+                EndGameResult.CachedWinners.Add(new(player.Data));
+            }
+            AdditionalTempData.WinCondition = WinCondition.RedTeamFlagWin;
+        }
+        // Blue Team Win
+        else if (blueTeamFlagWin)
+        {
+            EndGameResult.CachedWinners = new Il2CppSystem.Collections.Generic.List<CachedPlayerData>();
+            foreach (PlayerControl player in CaptureTheFlag.blueteamFlag)
+            {
+                EndGameResult.CachedWinners.Add(new(player.Data));
+            }
+            AdditionalTempData.WinCondition = WinCondition.BlueTeamFlagWin;
+        }
+
+        // Thief Mode Win
+        // Thief Team Win
+        else if (thiefModeThiefWin)
+        {
+            EndGameResult.CachedWinners = new Il2CppSystem.Collections.Generic.List<CachedPlayerData>();
+            foreach (PlayerControl player in PoliceAndThief.thiefTeam)
+            {
+                EndGameResult.CachedWinners.Add(new(player.Data));
+            }
+            AdditionalTempData.WinCondition = WinCondition.ThiefModeThiefWin;
+        }
+        // Police Team Win
+        else if (thiefModePoliceWin)
+        {
+            EndGameResult.CachedWinners = new Il2CppSystem.Collections.Generic.List<CachedPlayerData>();
+            foreach (PlayerControl player in PoliceAndThief.policeTeam)
+            {
+                EndGameResult.CachedWinners.Add(new(player.Data));
+            }
+            AdditionalTempData.WinCondition = WinCondition.ThiefModePoliceWin;
+        }
+
+        // Hot Potato Game Mode Win
+        else if (hotPotatoEnd)
+        {
+            EndGameResult.CachedWinners = new Il2CppSystem.Collections.Generic.List<CachedPlayerData>();
+            foreach (PlayerControl player in HotPotato.notPotatoTeamAlive)
+            {
+                EndGameResult.CachedWinners.Add(new(player.Data));
+            }
+            AdditionalTempData.WinCondition = WinCondition.HotPotatoEnd;
+        }
+
+        // BattleRoyale Win
+        else if (battleRoyaleSoloWin)
+        {
+            EndGameResult.CachedWinners = new Il2CppSystem.Collections.Generic.List<CachedPlayerData>();
+            foreach (PlayerControl player in BattleRoyale.soloPlayerTeam)
+            {
+                if (!player.Data.IsDead)
+                {
+                    EndGameResult.CachedWinners.Add(new(player.Data));
+                }
+            }
+            AdditionalTempData.WinCondition = WinCondition.BattleRoyaleSoloWin;
+        }
+        // BattleRoyale Time Win
+        else if (battleRoyaleTimeWin)
+        {
+            EndGameResult.CachedWinners = new Il2CppSystem.Collections.Generic.List<CachedPlayerData>();
+            if (BattleRoyale.matchType == 0)
+            {
+                foreach (PlayerControl player in BattleRoyale.soloPlayerTeam)
+                {
+                    if (!player.Data.IsDead)
+                    {
+                        EndGameResult.CachedWinners.Add(new(player.Data));
+                    }
+                }
+            }
+            else
+            {
+                foreach (PlayerControl player in PlayerControl.AllPlayerControls.GetFastEnumerator())
+                {
+                    if (!player.Data.IsDead)
+                    {
+                        EndGameResult.CachedWinners.Add(new(player.Data));
+                    }
+                }
+            }
+            AdditionalTempData.WinCondition = WinCondition.BattleRoyaleTimeWin;
+        }
+        // BattleRoyale Lime Team Win
+        else if (battleRoyaleLimeTeamWin)
+        {
+            EndGameResult.CachedWinners = new Il2CppSystem.Collections.Generic.List<CachedPlayerData>();
+            foreach (PlayerControl player in BattleRoyale.limeTeam)
+            {
+                EndGameResult.CachedWinners.Add(new(player.Data));
+            }
+            AdditionalTempData.WinCondition = WinCondition.BattleRoyaleLimeTeamWin;
+        }
+        // BattleRoyale Pink Team Win
+        else if (battleRoyalePinkTeamWin)
+        {
+            EndGameResult.CachedWinners = new Il2CppSystem.Collections.Generic.List<CachedPlayerData>();
+            foreach (PlayerControl player in BattleRoyale.pinkTeam)
+            {
+                EndGameResult.CachedWinners.Add(new(player.Data));
+            }
+            AdditionalTempData.WinCondition = WinCondition.BattleRoyalePinkTeamWin;
+        }
+        // BattleRoyale Serial Killer Win
+        else if (battleRoyaleSerialKillerWin)
+        {
+            EndGameResult.CachedWinners = new Il2CppSystem.Collections.Generic.List<CachedPlayerData>();
+            EndGameResult.CachedWinners.Add(new(BattleRoyale.serialKiller.Data));
+            AdditionalTempData.WinCondition = WinCondition.BattleRoyaleSerialKillerWin;
+        }
+        // BattleRoyale Draw
+        else if (battleRoyaleDraw)
+        {
+            EndGameResult.CachedWinners = new Il2CppSystem.Collections.Generic.List<CachedPlayerData>();
+            foreach (PlayerControl player in PlayerControl.AllPlayerControls.GetFastEnumerator())
+            {
+                EndGameResult.CachedWinners.Add(new(player.Data));
+            }
+            AdditionalTempData.WinCondition = WinCondition.BattleRoyaleDraw;
+        }
+
         if (forceEnd)
         {
             EndGameResult.CachedWinners = new Il2CppSystem.Collections.Generic.List<CachedPlayerData>();
@@ -339,76 +494,151 @@ public static class EndGameMain
 
         if (AdditionalTempData.IsGM)
         {
-            __instance.WinText.text = Tr.Get(TranslateKey.GmGameOver);
+            __instance.WinText.text = Tr.Get(TrKey.GmGameOver);
             // __instance.WinText.color = GM.color;
         }
 
         string bonusText = "";
+        var bonus = TrKey.None;
+        var extra = TrKey.None;
 
         switch (AdditionalTempData.WinCondition)
         {
             case WinCondition.JesterWin:
-                bonusText = "JesterWin";
+                bonus = TrKey.JesterWin;
+                extra = TrKey.JesterWinExtra;
                 TextRenderer.color = Jester.NameColor;
                 __instance.BackgroundBar.material.SetColor("_Color", Jester.NameColor);
                 break;
             case WinCondition.ArsonistWin:
-                bonusText = "ArsonistWin";
+                bonus = TrKey.ArsonistWin;
+                extra = TrKey.ArsonistWinExtra;
                 TextRenderer.color = Arsonist.NameColor;
                 __instance.BackgroundBar.material.SetColor("_Color", Arsonist.NameColor);
                 break;
             case WinCondition.VultureWin:
-                bonusText = "VultureWin";
+                bonus = TrKey.VultureWin;
+                extra = TrKey.VultureWinExtra;
                 TextRenderer.color = Vulture.NameColor;
                 __instance.BackgroundBar.material.SetColor("_Color", Vulture.NameColor);
                 break;
             case WinCondition.JackalWin:
-                bonusText = "JackalWin";
+                bonus = TrKey.JackalWin;
+                extra = TrKey.JackalWinExtra;
                 TextRenderer.color = Jackal.NameColor;
                 __instance.BackgroundBar.material.SetColor("_Color", Jackal.NameColor);
                 break;
             case WinCondition.MiniLose:
-                bonusText = "MiniDied";
+                bonus = TrKey.MiniDied;
+                extra = TrKey.MiniDiedExtra;
                 TextRenderer.color = Mini.NameColor;
                 __instance.BackgroundBar.material.SetColor("_Color", Palette.DisabledGrey);
                 break;
             case WinCondition.LoversTeamWin:
-                bonusText = "CrewmateWin";
+                bonus = TrKey.CrewmateWin;
+                extra = TrKey.CrewmateWinExtra;
                 TextRenderer.color = Lovers.Color;
                 __instance.BackgroundBar.material.SetColor("_Color", Lovers.Color);
                 break;
             case WinCondition.LoversSoloWin:
-                bonusText = "LoversWin";
+                bonus = TrKey.LoversWin;
+                extra = TrKey.LoversWinExtra;
                 TextRenderer.color = Lovers.Color;
                 __instance.BackgroundBar.material.SetColor("_Color", Lovers.Color);
                 break;
             case WinCondition.EveryoneDied:
-                bonusText = "EveryoneDied";
+                bonus = TrKey.EveryoneDied;
+                extra = TrKey.EveryoneDiedExtra;
                 TextRenderer.color = Palette.DisabledGrey;
                 __instance.BackgroundBar.material.SetColor("_Color", Palette.DisabledGrey);
                 break;
             case WinCondition.ForceEnd:
-                bonusText = "ForceEnd";
+                bonus = TrKey.ForceEnd;
+                extra = TrKey.ForceEndExtra;
                 TextRenderer.color = Palette.DisabledGrey;
                 __instance.BackgroundBar.material.SetColor("_Color", Palette.DisabledGrey);
                 break;
+            case WinCondition.DrawTeamWin:
+            case WinCondition.BattleRoyaleDraw:
+                bonus = TrKey.Draw;
+                extra = TrKey.DrawExtra;
+                TextRenderer.color = new Color32(255, 128, 0, byte.MaxValue);
+                __instance.BackgroundBar.material.SetColor("_Color", Palette.DisabledGrey);
+                break;
+            case WinCondition.RedTeamFlagWin:
+                bonus = TrKey.RedTeamFlagWin;
+                extra = TrKey.RedTeamFlagWinExtra;
+                TextRenderer.color = Color.red;
+                __instance.BackgroundBar.material.SetColor("_Color", Color.red);
+                break;
+            case WinCondition.BlueTeamFlagWin:
+                bonus = TrKey.BlueTeamFlagWin;
+                extra = TrKey.BlueTeamFlagWinExtra;
+                TextRenderer.color = Color.blue;
+                __instance.BackgroundBar.material.SetColor("_Color", Color.blue);
+                break;
+            case WinCondition.ThiefModePoliceWin:
+                bonus = TrKey.ThiefModePoliceWin;
+                extra = TrKey.ThiefModePoliceWinExtra;
+                TextRenderer.color = PoliceAndThief.PolicePlayerColor;
+                __instance.BackgroundBar.material.SetColor("_Color", PoliceAndThief.PolicePlayerColor);
+                break;
+            case WinCondition.ThiefModeThiefWin:
+                bonus = TrKey.ThiefModeThiefWin;
+                extra = TrKey.ThiefModeThiefWinExtra;
+                TextRenderer.color = PoliceAndThief.ThiefPlayerColor;
+                __instance.BackgroundBar.material.SetColor("_Color", PoliceAndThief.ThiefPlayerColor);
+                break;
+            case WinCondition.HotPotatoEnd:
+                bonus = TrKey.HotPotatoEnd;
+                extra = TrKey.HotPotatoEndExtra;
+                TextRenderer.color = Color.cyan;
+                __instance.BackgroundBar.material.SetColor("_Color", Color.cyan);
+                break;
+            case WinCondition.BattleRoyaleSoloWin:
+                bonus = TrKey.BattleRoyaleSoloWin;
+                extra = TrKey.BattleRoyaleSoloWinExtra;
+                TextRenderer.color = BattleRoyale.IntroColor;
+                __instance.BackgroundBar.material.SetColor("_Color", BattleRoyale.IntroColor);
+                break;
+            case WinCondition.BattleRoyaleTimeWin:
+                bonus = TrKey.BattleRoyaleTimeWin;
+                extra = TrKey.BattleRoyaleTimeWinExtra;
+                TextRenderer.color = BattleRoyale.IntroColor;
+                __instance.BackgroundBar.material.SetColor("_Color", BattleRoyale.IntroColor);
+                break;
+            case WinCondition.BattleRoyaleLimeTeamWin:
+                bonus = TrKey.BattleRoyaleLimeTeamWin;
+                extra = TrKey.BattleRoyaleLimeTeamWinExtra;
+                TextRenderer.color = BattleRoyale.LimeTeamColor;
+                __instance.BackgroundBar.material.SetColor("_Color",BattleRoyale.LimeTeamColor);
+                break;
+            case WinCondition.BattleRoyalePinkTeamWin:
+                bonus = TrKey.BattleRoyalePinkTeamWin;
+                extra = TrKey.BattleRoyalePinkTeamWinExtra;
+                TextRenderer.color = BattleRoyale.PinkTeamColor;
+                __instance.BackgroundBar.material.SetColor("_Color", BattleRoyale.PinkTeamColor);
+                break;
+            case WinCondition.BattleRoyaleSerialKillerWin:
+                bonus = TrKey.BattleRoyaleSerialKillerWin;
+                extra = TrKey.BattleRoyaleSerialKillerWinExtra;
+                TextRenderer.color = BattleRoyale.SerialKillerColor;
+                __instance.BackgroundBar.material.SetColor("_Color", BattleRoyale.SerialKillerColor);
+                break;
             default:
-                if (AdditionalTempData.GameOverReason
-                    is GameOverReason.CrewmatesByTask
-                    or GameOverReason.CrewmatesByVote
-                )
+                switch (AdditionalTempData.GameOverReason)
                 {
-                    bonusText = "CrewmateWin";
-                    TextRenderer.color = Palette.CrewmateBlue;
-                }
-                else if (AdditionalTempData.GameOverReason
-                        is GameOverReason.ImpostorsByKill
-                        or GameOverReason.ImpostorsBySabotage
-                        or GameOverReason.ImpostorsByVote
-                )
-                {
-                    bonusText = "ImpostorWin";
-                    TextRenderer.color = Palette.ImpostorRed;
+                    case GameOverReason.CrewmatesByVote:
+                    case GameOverReason.CrewmatesByTask:
+                        bonusText = "CrewmateWin";
+                        TextRenderer.color = Palette.CrewmateBlue;
+                        break;
+                    case GameOverReason.ImpostorsByVote:
+                    case GameOverReason.ImpostorsBySabotage:
+                    case GameOverReason.ImpostorsByKill:
+                        bonusText = "ImpostorWin";
+                        TextRenderer.color = Palette.ImpostorRed;
+                        break;
                 }
                 break;
         }
@@ -422,7 +652,7 @@ public static class EndGameMain
                 //     extraText += Tr.Get(TranslateKey.opportunistExtra);
                 //     break;
                 case WinCondition.LoversTeamWin:
-                    extraText += Tr.Get(TranslateKey.LoversExtra);
+                    extraText += Tr.Get(TrKey.LoversExtra);
                     break;
                 default:
                     break;
@@ -435,51 +665,54 @@ public static class EndGameMain
 
         if (MapSettings.ShowRoleSummary)
         {
-            var position = Camera.main.ViewportToWorldPoint(new Vector3(0f, 1f, Camera.main.nearClipPlane));
-            GameObject roleSummary = UnityEngine.Object.Instantiate(__instance.WinText.gameObject);
-            roleSummary.transform.position = new Vector3(__instance.Navigation.ExitButton.transform.position.x + 0.1f, position.y - 0.1f, -14f);
-            roleSummary.transform.localScale = new Vector3(1f, 1f, 1f);
-
-            var roleSummaryText = new StringBuilder();
-            roleSummaryText.AppendLine(Tr.Get(TranslateKey.RoleSummaryText));
-            AdditionalTempData.PlayerRoles.Sort((x, y) =>
+            if (Camera.main != null)
             {
-                var roleX = x.Roles.Count > 0 ? x.Roles[0] : null;
-                var roleY = y.Roles.Count > 0 ? y.Roles[0] : null;
-                var idX = roleX == null ? RoleType.NoRole : roleX.RoleType;
-                var idY = roleY == null ? RoleType.NoRole : roleY.RoleType;
+                var position = Camera.main.ViewportToWorldPoint(new Vector3(0f, 1f, Camera.main.nearClipPlane));
+                GameObject roleSummary = UnityEngine.Object.Instantiate(__instance.WinText.gameObject);
+                roleSummary.transform.position = new Vector3(__instance.Navigation.ExitButton.transform.position.x + 0.1f, position.y - 0.1f, -14f);
+                roleSummary.transform.localScale = new Vector3(1f, 1f, 1f);
 
-                if (x.Status == y.Status)
+                var roleSummaryText = new StringBuilder();
+                roleSummaryText.AppendLine(Tr.Get(TrKey.RoleSummaryText));
+                AdditionalTempData.PlayerRoles.Sort((x, y) =>
                 {
-                    return idX == idY ? x.PlayerName.CompareTo(y.PlayerName) : idX.CompareTo(idY);
+                    var roleX = x.Roles.Count > 0 ? x.Roles[0] : null;
+                    var roleY = y.Roles.Count > 0 ? y.Roles[0] : null;
+                    var idX = roleX == null ? RoleType.NoRole : roleX.RoleType;
+                    var idY = roleY == null ? RoleType.NoRole : roleY.RoleType;
+
+                    if (x.Status == y.Status)
+                    {
+                        return idX == idY ? x.PlayerName.CompareTo(y.PlayerName) : idX.CompareTo(idY);
+                    }
+                    return x.Status.CompareTo(y.Status);
+
+                });
+                Logger.LogInfo(TextRenderer.text, "Result");
+                Logger.LogInfo("----------Game Result-----------", "Result");
+                foreach (var data in AdditionalTempData.PlayerRoles)
+                {
+                    if (data.PlayerName == "") continue;
+                    var taskInfo = data.TasksTotal > 0 ? $"<color=#FAD934FF>{data.TasksCompleted}/{data.TasksTotal}</color>" : "";
+                    var aliveDead = Tr.GetDynamic($"{data.Status}");
+                    var result = $"{data.PlayerName + data.NameSuffix}<pos=18.5%>{taskInfo}<pos=25%>{aliveDead}<pos=34%>{data.RoleNames}";
+                    roleSummaryText.AppendLine(result);
+                    Logger.LogInfo(result, "Result");
                 }
-                return x.Status.CompareTo(y.Status);
+                Logger.LogInfo("--------------------------------", "Result");
 
-            });
-            Logger.LogInfo(TextRenderer.text, "Result");
-            Logger.LogInfo("----------Game Result-----------", "Result");
-            foreach (var data in AdditionalTempData.PlayerRoles)
-            {
-                if (data.PlayerName == "") continue;
-                var taskInfo = data.TasksTotal > 0 ? $"<color=#FAD934FF>{data.TasksCompleted}/{data.TasksTotal}</color>" : "";
-                var aliveDead = Tr.GetDynamic($"{data.Status}");
-                var result = $"{data.PlayerName + data.NameSuffix}<pos=18.5%>{taskInfo}<pos=25%>{aliveDead}<pos=34%>{data.RoleNames}";
-                roleSummaryText.AppendLine(result);
-                Logger.LogInfo(result, "Result");
+                var roleSummaryTextMesh = roleSummary.GetComponent<TMP_Text>();
+                roleSummaryTextMesh.alignment = TextAlignmentOptions.TopLeft;
+                roleSummaryTextMesh.color = Color.white;
+                roleSummaryTextMesh.outlineWidth *= 1.2f;
+                roleSummaryTextMesh.fontSizeMin = 1.25f;
+                roleSummaryTextMesh.fontSizeMax = 1.25f;
+                roleSummaryTextMesh.fontSize = 1.25f;
+
+                var roleSummaryTextMeshRectTransform = roleSummaryTextMesh.GetComponent<RectTransform>();
+                roleSummaryTextMeshRectTransform.anchoredPosition = new Vector2(position.x + 3.5f, position.y - 0.1f);
+                roleSummaryTextMesh.text = roleSummaryText.ToString();
             }
-            Logger.LogInfo("--------------------------------", "Result");
-
-            var roleSummaryTextMesh = roleSummary.GetComponent<TMP_Text>();
-            roleSummaryTextMesh.alignment = TextAlignmentOptions.TopLeft;
-            roleSummaryTextMesh.color = Color.white;
-            roleSummaryTextMesh.outlineWidth *= 1.2f;
-            roleSummaryTextMesh.fontSizeMin = 1.25f;
-            roleSummaryTextMesh.fontSizeMax = 1.25f;
-            roleSummaryTextMesh.fontSize = 1.25f;
-
-            var roleSummaryTextMeshRectTransform = roleSummaryTextMesh.GetComponent<RectTransform>();
-            roleSummaryTextMeshRectTransform.anchoredPosition = new Vector2(position.x + 3.5f, position.y - 0.1f);
-            roleSummaryTextMesh.text = roleSummaryText.ToString();
 
             // // webhook
             // if (AmongUsClient.Instance.AmHost)
@@ -651,5 +884,125 @@ public static class EndGameMain
     public static void UncheckedEndGame(CustomGameOverReason reason)
     {
         UncheckedEndGame((GameOverReason)reason);
+    }
+
+    public static bool CheckAndEndGameForDrawFlagWin()
+    {
+        if (CaptureTheFlag.triggerDrawWin)
+        {
+            UncheckedEndGame(CustomGameOverReason.DrawTeamWin);
+            return true;
+        }
+        return false;
+    }
+
+    public static bool CheckAndEndGameForRedTeamFlagWin()
+    {
+        if (CaptureTheFlag.triggerRedTeamWin)
+        {
+            UncheckedEndGame(CustomGameOverReason.RedTeamFlagWin);
+            return true;
+        }
+        return false;
+    }
+
+    public static bool CheckAndEndGameForBlueTeamFlagWin()
+    {
+        if (CaptureTheFlag.triggerBlueTeamWin)
+        {
+            UncheckedEndGame(CustomGameOverReason.BlueTeamFlagWin);
+            return true;
+        }
+        return false;
+    }
+
+    public static bool CheckAndEndGameForThiefModeThiefWin()
+    {
+        if (PoliceAndThief.triggerThiefWin)
+        {
+            UncheckedEndGame(CustomGameOverReason.ThiefModeThiefWin);
+            return true;
+        }
+        return false;
+    }
+
+    public static bool CheckAndEndGameForThiefModePoliceWin()
+    {
+        if (PoliceAndThief.triggerPoliceWin)
+        {
+            UncheckedEndGame(CustomGameOverReason.ThiefModePoliceWin);
+            return true;
+        }
+        return false;
+    }
+
+    public static bool CheckAndEndGameForHotPotatoEnd()
+    {
+        if (HotPotato.triggerHotPotatoEnd)
+        {
+            UncheckedEndGame(CustomGameOverReason.HotPotatoEnd);
+            return true;
+        }
+        return false;
+    }
+
+    public static bool CheckAndEndGameForBattleRoyaleSoloWin()
+    {
+        if (BattleRoyale.triggerSoloWin)
+        {
+            UncheckedEndGame(CustomGameOverReason.BattleRoyaleSoloWin);
+            return true;
+        }
+        return false;
+    }
+
+    public static bool CheckAndEndGameForBattleRoyaleTimeWin()
+    {
+        if (BattleRoyale.triggerTimeWin)
+        {
+            UncheckedEndGame(CustomGameOverReason.BattleRoyaleTimeWin);
+            return true;
+        }
+        return false;
+    }
+
+    public static bool CheckAndEndGameForBattleRoyaleDraw()
+    {
+        if (BattleRoyale.triggerDrawWin)
+        {
+            UncheckedEndGame(CustomGameOverReason.BattleRoyaleDraw);
+            return true;
+        }
+        return false;
+    }
+
+    public static bool CheckAndEndGameForBattleRoyaleLimeTeamWin()
+    {
+        if (BattleRoyale.triggerLimeTeamWin)
+        {
+            UncheckedEndGame(CustomGameOverReason.BattleRoyaleLimeTeamWin);
+            return true;
+        }
+        return false;
+    }
+
+    public static bool CheckAndEndGameForBattleRoyalePinkTeamWin()
+    {
+        if (BattleRoyale.triggerPinkTeamWin)
+        {
+            UncheckedEndGame(CustomGameOverReason.BattleRoyalePinkTeamWin);
+            return true;
+        }
+        return false;
+    }
+
+    public static bool CheckAndEndGameForBattleRoyaleSerialKillerWin()
+    {
+        if (BattleRoyale.triggerSerialKillerWin)
+        {
+            UncheckedEndGame(CustomGameOverReason.BattleRoyaleSerialKillerWin);
+            return true;
+        }
+        return false;
     }
 }

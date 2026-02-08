@@ -2,10 +2,6 @@ using static RebuildUs.RebuildUs;
 
 namespace RebuildUs.Modules.CustomOptions;
 
-public enum CustomGamemodes
-{
-    Classic,
-}
 public enum CustomOptionType
 {
     General,
@@ -13,6 +9,8 @@ public enum CustomOptionType
     Neutral,
     Crewmate,
     Modifier,
+
+
 }
 public partial class CustomOption
 {
@@ -25,7 +23,7 @@ public partial class CustomOption
     public static int Preset = 0;
 
     public int Id;
-    public TranslateKey NameKey;
+    public TrKey NameKey;
     public string Format;
     public Color Color;
     public object[] Selections;
@@ -37,7 +35,7 @@ public partial class CustomOption
     public CustomOption Parent;
     public List<CustomOption> Children;
     public bool IsHeader;
-    public TranslateKey HeaderKey;
+    public TrKey HeaderKey;
     public CustomOptionType Type;
     public bool HideIfParentEnabled;
 
@@ -52,7 +50,7 @@ public partial class CustomOption
     public CustomOption() { }
 
     // Option creation
-    public CustomOption(int id, CustomOptionType type, TranslateKey nameKey, object[] selections, object defaultValue, CustomOption parent, bool hideIfParentEnabled, string format, Color color)
+    public CustomOption(int id, CustomOptionType type, TrKey nameKey, object[] selections, object defaultValue, CustomOption parent, bool hideIfParentEnabled, string format, Color color)
     {
         Id = id;
         NameKey = nameKey;
@@ -99,7 +97,7 @@ public partial class CustomOption
     public static CustomOption Normal(
         int id,
         CustomOptionType type,
-        TranslateKey nameKey,
+        TrKey nameKey,
         string[] selections,
         CustomOption parent = null,
         byte r = byte.MaxValue,
@@ -116,9 +114,9 @@ public partial class CustomOption
     public static CustomOption Header(
         int id,
         CustomOptionType type,
-        TranslateKey nameKey,
+        TrKey nameKey,
         string[] selections,
-        TranslateKey headerKey,
+        TrKey headerKey,
         byte r = byte.MaxValue,
         byte g = byte.MaxValue,
         byte b = byte.MaxValue,
@@ -134,7 +132,7 @@ public partial class CustomOption
     public static CustomOption Normal(
         int id,
         CustomOptionType type,
-        TranslateKey nameKey,
+        TrKey nameKey,
         float defaultValue,
         float min,
         float max,
@@ -159,12 +157,12 @@ public partial class CustomOption
     public static CustomOption Header(
         int id,
         CustomOptionType type,
-        TranslateKey nameKey,
+        TrKey nameKey,
         float defaultValue,
         float min,
         float max,
         float step,
-        TranslateKey headerKey,
+        TrKey headerKey,
         byte r = byte.MaxValue,
         byte g = byte.MaxValue,
         byte b = byte.MaxValue,
@@ -186,7 +184,7 @@ public partial class CustomOption
     public static CustomOption Normal(
         int id,
         CustomOptionType type,
-        TranslateKey nameKey,
+        TrKey nameKey,
         bool defaultValue,
         CustomOption parent = null,
         byte r = byte.MaxValue,
@@ -197,15 +195,15 @@ public partial class CustomOption
         string format = ""
     )
     {
-        return new CustomOption(id, type, nameKey, [Tr.Get(TranslateKey.Off), Tr.Get(TranslateKey.On)], defaultValue ? Tr.Get(TranslateKey.On) : Tr.Get(TranslateKey.Off), parent, hideIfParentEnabled, format, new Color32(r, g, b, a));
+        return new CustomOption(id, type, nameKey, [Tr.Get(TrKey.Off), Tr.Get(TrKey.On)], defaultValue ? Tr.Get(TrKey.On) : Tr.Get(TrKey.Off), parent, hideIfParentEnabled, format, new Color32(r, g, b, a));
     }
 
     public static CustomOption Header(
         int id,
         CustomOptionType type,
-        TranslateKey nameKey,
+        TrKey nameKey,
         bool defaultValue,
-        TranslateKey headerKey,
+        TrKey headerKey,
         byte r = byte.MaxValue,
         byte g = byte.MaxValue,
         byte b = byte.MaxValue,
@@ -213,12 +211,12 @@ public partial class CustomOption
         string format = ""
     )
     {
-        var opt = new CustomOption(id, type, nameKey, [Tr.Get(TranslateKey.Off), Tr.Get(TranslateKey.On)], defaultValue ? Tr.Get(TranslateKey.On) : Tr.Get(TranslateKey.Off), null, false, format, new Color32(r, g, b, a));
+        var opt = new CustomOption(id, type, nameKey, [Tr.Get(TrKey.Off), Tr.Get(TrKey.On)], defaultValue ? Tr.Get(TrKey.On) : Tr.Get(TrKey.Off), null, false, format, new Color32(r, g, b, a));
         opt.SetHeader(headerKey);
         return opt;
     }
 
-    private void SetHeader(TranslateKey key)
+    private void SetHeader(TrKey key)
     {
         IsHeader = true;
         HeaderKey = key;
@@ -309,11 +307,11 @@ public partial class CustomOption
 
         if (sel == "On")
         {
-            return "<color=#FFFF00FF>" + Tr.Get(TranslateKey.On) + "</color>";
+            return "<color=#FFFF00FF>" + Tr.Get(TrKey.On) + "</color>";
         }
         else if (sel == "Off")
         {
-            return "<color=#CCCCCCFF>" + Tr.Get(TranslateKey.Off) + "</color>";
+            return "<color=#CCCCCCFF>" + Tr.Get(TrKey.Off) + "</color>";
         }
 
         return sel;

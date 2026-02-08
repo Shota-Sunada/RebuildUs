@@ -1,0 +1,1 @@
+﻿dotnet format RebuildUs.sln

@@ -147,32 +147,90 @@ public static class Intro
 
     public static void SetupIntroTeamIcons(IntroCutscene __instance, ref Il2CppSystem.Collections.Generic.List<PlayerControl> yourTeam)
     {
-        // Intro solo teams
-        if (PlayerControl.LocalPlayer.IsNeutral())
+        switch (MapSettings.GameMode)
         {
-            var soloTeam = new Il2CppSystem.Collections.Generic.List<PlayerControl>();
-            soloTeam.Add(PlayerControl.LocalPlayer);
-            yourTeam = soloTeam;
-        }
-
-        // Add the Spy to the Impostor team (for the Impostors)
-        if (Spy.Exists && PlayerControl.LocalPlayer.IsTeamImpostor())
-        {
-            var players = new List<PlayerControl>();
-            foreach (var p in PlayerControl.AllPlayerControls.GetFastEnumerator()) players.Add(p);
-            players.Shuffle();
-
-            var fakeImpostorTeam = new Il2CppSystem.Collections.Generic.List<PlayerControl>(); // The local player always has to be the first one in the list (to be displayed in the center)
-            fakeImpostorTeam.Add(PlayerControl.LocalPlayer);
-
-            foreach (var p in players)
-            {
-                if (PlayerControl.LocalPlayer != p && (p.IsRole(RoleType.Spy) || p.Data.Role.IsImpostor))
+            case CustomGameMode.Roles:
+                // Intro solo teams
+                if (PlayerControl.LocalPlayer.IsNeutral())
                 {
-                    fakeImpostorTeam.Add(p);
+                    var soloTeam = new Il2CppSystem.Collections.Generic.List<PlayerControl>();
+                    soloTeam.Add(PlayerControl.LocalPlayer);
+                    yourTeam = soloTeam;
                 }
-            }
-            yourTeam = fakeImpostorTeam;
+
+                // Add the Spy to the Impostor team (for the Impostors)
+                if (Spy.Exists && PlayerControl.LocalPlayer.IsTeamImpostor())
+                {
+                    var players = new List<PlayerControl>();
+                    foreach (var p in PlayerControl.AllPlayerControls.GetFastEnumerator()) players.Add(p);
+                    players.Shuffle();
+
+                    var fakeImpostorTeam = new Il2CppSystem.Collections.Generic.List<PlayerControl>(); // The local player always has to be the first one in the list (to be displayed in the center)
+                    fakeImpostorTeam.Add(PlayerControl.LocalPlayer);
+
+                    foreach (var p in players)
+                    {
+                        if (PlayerControl.LocalPlayer != p && (p.IsRole(RoleType.Spy) || p.Data.Role.IsImpostor))
+                        {
+                            fakeImpostorTeam.Add(p);
+                        }
+                    }
+                    yourTeam = fakeImpostorTeam;
+                }
+                break;
+            case CustomGameMode.CaptureTheFlag:
+                // SoundManager.Instance.PlaySound(AssetLoader.captureTheFlagMusic, true, 25f);
+                if (PlayerControl.LocalPlayer == CaptureTheFlag.stealerPlayer)
+                {
+                    var greyTeam = new Il2CppSystem.Collections.Generic.List<PlayerControl>();
+                    greyTeam.Add(PlayerControl.LocalPlayer);
+                    yourTeam = greyTeam;
+                    PlayerControl.LocalPlayer.Data.Role.IntroSound = Helpers.GetIntroSound(RoleTypes.Shapeshifter);
+                }
+                else
+                {
+                    PlayerControl.LocalPlayer.Data.Role.IntroSound = Helpers.GetIntroSound(RoleTypes.Crewmate);
+                }
+                break;
+            case CustomGameMode.PoliceAndThieves:
+                // SoundManager.Instance.PlaySound(AssetLoader.policeAndThiefMusic, true, 25f);
+                PlayerControl.LocalPlayer.Data.Role.IntroSound = Helpers.GetIntroSound(RoleTypes.Crewmate);
+                break;
+            case CustomGameMode.HotPotato:
+                // SoundManager.Instance.PlaySound(AssetLoader.hotPotatoMusic, true, 25f);
+                if (PlayerControl.LocalPlayer == HotPotato.hotPotatoPlayer)
+                {
+                    var greyTeam = new Il2CppSystem.Collections.Generic.List<PlayerControl>();
+                    greyTeam.Add(PlayerControl.LocalPlayer);
+                    yourTeam = greyTeam;
+                    PlayerControl.LocalPlayer.Data.Role.IntroSound = Helpers.GetIntroSound(RoleTypes.Impostor);
+                }
+                else
+                {
+                    PlayerControl.LocalPlayer.Data.Role.IntroSound = Helpers.GetIntroSound(RoleTypes.Crewmate);
+                }
+                break;
+            case CustomGameMode.BattleRoyale:
+                // SoundManager.Instance.PlaySound(AssetLoader.battleRoyaleMusic, true, 25f);
+                if (BattleRoyale.matchType == 0)
+                {
+                    PlayerControl.LocalPlayer.Data.Role.IntroSound = Helpers.GetIntroSound(RoleTypes.Crewmate);
+                }
+                else
+                {
+                    if (PlayerControl.LocalPlayer == BattleRoyale.serialKiller)
+                    {
+                        var greyTeam = new Il2CppSystem.Collections.Generic.List<PlayerControl>();
+                        greyTeam.Add(PlayerControl.LocalPlayer);
+                        yourTeam = greyTeam;
+                        PlayerControl.LocalPlayer.Data.Role.IntroSound = Helpers.GetIntroSound(RoleTypes.Shapeshifter);
+                    }
+                    else
+                    {
+                        PlayerControl.LocalPlayer.Data.Role.IntroSound = Helpers.GetIntroSound(RoleTypes.Crewmate);
+                    }
+                }
+                break;
         }
     }
 
@@ -181,13 +239,42 @@ public static class Intro
         var infos = RoleInfo.GetRoleInfoForPlayer(PlayerControl.LocalPlayer);
         var roleInfo = infos.FirstOrDefault(info => info.RoleType != RoleType.Lovers);
         if (roleInfo == null) return;
-        // if (PlayerControl.LocalPlayer.IsNeutral() || PlayerControl.LocalPlayer.IsGM())
-        if (PlayerControl.LocalPlayer.IsNeutral())
+
+        switch (MapSettings.GameMode)
         {
-            __instance.BackgroundBar.material.color = roleInfo.Color;
-            __instance.TeamTitle.text = roleInfo.Name;
-            __instance.TeamTitle.color = roleInfo.Color;
-            __instance.ImpostorText.text = "";
+            case CustomGameMode.Roles:
+                // if (PlayerControl.LocalPlayer.IsNeutral() || PlayerControl.LocalPlayer.IsGM())
+                if (PlayerControl.LocalPlayer.IsNeutral())
+                {
+                    __instance.BackgroundBar.material.color = roleInfo.Color;
+                    __instance.TeamTitle.text = roleInfo.Name;
+                    __instance.TeamTitle.color = roleInfo.Color;
+                    __instance.ImpostorText.text = "";
+                }
+                break;
+            case CustomGameMode.CaptureTheFlag:
+                __instance.ImpostorText.text = "";
+                __instance.BackgroundBar.material.color = CaptureTheFlag.IntroColor;
+                __instance.TeamTitle.color = CaptureTheFlag.IntroColor;
+                break;
+            case CustomGameMode.PoliceAndThieves:
+                __instance.ImpostorText.text = "";
+                __instance.BackgroundBar.material.color = PoliceAndThief.IntroColor;
+                __instance.TeamTitle.text = Tr.Get(TrKey.PoliceAndThiefIntro);
+                __instance.TeamTitle.color = PoliceAndThief.IntroColor;
+                break;
+            case CustomGameMode.HotPotato:
+                __instance.ImpostorText.text = "";
+                __instance.BackgroundBar.material.color = HotPotato.IntroColor;
+                __instance.TeamTitle.text = Tr.Get(TrKey.HotPotatoIntro);
+                __instance.TeamTitle.color = HotPotato.IntroColor;
+                break;
+            case CustomGameMode.BattleRoyale:
+                __instance.ImpostorText.text = "";
+                __instance.BackgroundBar.material.color = BattleRoyale.IntroColor;
+                __instance.TeamTitle.text = Tr.Get(TrKey.BattleRoyaleIntro);
+                __instance.TeamTitle.color = BattleRoyale.IntroColor;
+                break;
         }
     }
 
@@ -228,7 +315,8 @@ public static class Intro
             }
             yield return __instance.ShowTeam(show, 3f);
             // 独自処理挿入
-            yield return SetupRole(__instance);
+            yield return ShowRole(__instance);
+            yield return ShowRolePostfix(__instance);
         }
         else
         {
@@ -368,7 +456,7 @@ public static class Intro
         yield break;
     }
 
-    private static IEnumerator SetupRole(IntroCutscene __instance)
+    private static IEnumerator ShowRole(IntroCutscene __instance)
     {
         var infos = RoleInfo.GetRoleInfoForPlayer(PlayerControl.LocalPlayer, false, [RoleType.Lovers]);
         var roleInfo = infos.FirstOrDefault();
@@ -415,22 +503,22 @@ public static class Intro
         {
             if (roleInfo == RoleInfo.Crewmate)
             {
-                __instance.RoleText.text = Tr.Get(TranslateKey.Madmate);
+                __instance.RoleText.text = Tr.Get(TrKey.Madmate);
             }
             else
             {
-                __instance.RoleText.text = Tr.Get(TranslateKey.MadmatePrefix) + __instance.RoleText.text;
+                __instance.RoleText.text = Tr.Get(TrKey.MadmatePrefix) + __instance.RoleText.text;
             }
             __instance.YouAreText.color = Madmate.NameColor;
             __instance.RoleText.color = Madmate.NameColor;
-            __instance.RoleBlurbText.text = Tr.Get(TranslateKey.MadmateIntroDesc);
+            __instance.RoleBlurbText.text = Tr.Get(TrKey.MadmateIntroDesc);
             __instance.RoleBlurbText.color = Madmate.NameColor;
         }
 
         if (infos.Any(info => info.RoleType == RoleType.Lovers))
         {
             PlayerControl otherLover = PlayerControl.LocalPlayer.GetPartner();
-            __instance.RoleBlurbText.text += "\n" + Helpers.Cs(Lovers.Color, string.Format(Tr.Get(TranslateKey.LoversFlavorIntroDesc), otherLover?.Data?.PlayerName ?? ""));
+            __instance.RoleBlurbText.text += "\n" + Helpers.Cs(Lovers.Color, string.Format(Tr.Get(TrKey.LoversFlavorIntroDesc), otherLover?.Data?.PlayerName ?? ""));
         }
 
         // 従来処理
@@ -453,6 +541,162 @@ public static class Intro
         __instance.RoleText.gameObject.SetActive(false);
         __instance.RoleBlurbText.gameObject.SetActive(false);
         __instance.ourCrewmate.gameObject.SetActive(false);
+
+        yield break;
+    }
+
+    private static IEnumerator ShowRolePostfix(IntroCutscene __instance)
+    {
+        if (MapSettings.GameMode is CustomGameMode.Roles) yield break;
+
+        RebuildUs.progress = GameObject.Find("ProgressTracker");
+        RebuildUs.progress.GetComponentInChildren<TextTranslatorTMP>().enabled = false;
+        RebuildUs.progress.GetComponentInChildren<TextMeshPro>().alignment = TextAlignmentOptions.Right;
+
+        switch (MapSettings.GameMode)
+        {
+            case CustomGameMode.CaptureTheFlag:
+                CaptureTheFlag.CreateCTF();
+                RebuildUs.progress.GetComponentInChildren<TextMeshPro>().text = new StringBuilder(Tr.Get(TrKey.TimeLeft)).Append(MapSettings.gamemodeMatchDuration.ToString("F0")).ToString();
+                new CustomMessage(CaptureTheFlag.flagpointCounter, MapSettings.gamemodeMatchDuration, new Vector2(-2.5f, 2.35f), MessageType.GameMode);
+                // Add Arrows pointing the flags
+                if (CaptureTheFlag.localRedFlagArrow.Count == 0) CaptureTheFlag.localRedFlagArrow.Add(new Arrow(Color.red));
+                CaptureTheFlag.localRedFlagArrow[0].ArrowObject.SetActive(true);
+                if (CaptureTheFlag.localBlueFlagArrow.Count == 0) CaptureTheFlag.localBlueFlagArrow.Add(new Arrow(Color.blue));
+                CaptureTheFlag.localBlueFlagArrow[0].ArrowObject.SetActive(true);
+                break;
+            case CustomGameMode.PoliceAndThieves:
+                PoliceAndThief.CreatePAT();
+                if (!PoliceAndThief.policeCanSeeJewels)
+                {
+                    foreach (PlayerControl police in PoliceAndThief.policeTeam)
+                    {
+                        if (police == PlayerControl.LocalPlayer)
+                        {
+                            foreach (GameObject jewel in PoliceAndThief.thiefTreasures)
+                            {
+                                jewel.SetActive(false);
+                            }
+                        }
+                    }
+                }
+                RebuildUs.progress.GetComponentInChildren<TextMeshPro>().text = new StringBuilder(Tr.Get(TrKey.TimeLeft)).Append(MapSettings.gamemodeMatchDuration.ToString("F0")).ToString();
+                var sbPnT = new StringBuilder(Tr.Get(TrKey.StolenJewels))
+                                   .Append("<color=#00F7FFFF>")
+                                   .Append(PoliceAndThief.currentJewelsStoled)
+                                   .Append(" / ")
+                                   .Append(PoliceAndThief.requiredJewels)
+                                   .Append("</color> | ")
+                                   .Append(Tr.Get(TrKey.CapturedThieves))
+                                   .Append("<color=#928B55FF>")
+                                   .Append(PoliceAndThief.currentThiefsCaptured)
+                                   .Append(" / ")
+                                   .Append(PoliceAndThief.thiefTeam.Count)
+                                   .Append("</color>");
+                PoliceAndThief.thiefpointCounter = sbPnT.ToString();
+                new CustomMessage(PoliceAndThief.thiefpointCounter, MapSettings.gamemodeMatchDuration, new Vector2(-2.5f, 2.35f), MessageType.GameMode);
+                break;
+            case CustomGameMode.HotPotato:
+                HotPotato.CreateHP();
+                var sbHp = new StringBuilder("<color=#FF8000FF>")
+                                   .Append(Tr.Get(TrKey.TimeLeft))
+                                   .Append("</color>")
+                                   .Append(MapSettings.gamemodeMatchDuration.ToString("F0"))
+                                   .Append(" | <color=#FF8000FF>")
+                                   .Append(Tr.Get(TrKey.HotPotatoIntro))
+                                   .Append("</color>")
+                                   .Append(HotPotato.timeforTransfer.ToString("F0"));
+                var sbHp2 = new StringBuilder(Tr.Get(TrKey.HotPotatoIntro))
+                                      .Append("<color=#808080FF>")
+                                      .Append(HotPotato.hotPotatoPlayer.name)
+                                      .Append("</color> | ")
+                                      .Append(Tr.Get(TrKey.ColdPotatoes))
+                                      .Append("<color=#00F7FFFF>")
+                                      .Append(HotPotato.notPotatoTeam.Count)
+                                      .Append("</color>");
+                RebuildUs.progress.GetComponentInChildren<TextMeshPro>().text = sbHp.ToString();
+                HotPotato.hotpotatopointCounter = sbHp2.ToString();
+                new CustomMessage(HotPotato.hotpotatopointCounter, MapSettings.gamemodeMatchDuration, new Vector2(-2.5f, 2.35f), MessageType.GameMode);
+                break;
+            case CustomGameMode.BattleRoyale:
+                BattleRoyale.CreateBR();
+                RebuildUs.progress.GetComponentInChildren<TextMeshPro>().text = new StringBuilder(Tr.Get(TrKey.TimeLeft)).Append(MapSettings.gamemodeMatchDuration.ToString("F0")).ToString();
+                switch (BattleRoyale.matchType)
+                {
+                    case 0:
+                        var sbBr = new StringBuilder(Tr.Get(TrKey.BattleRoyaleFighters))
+                                             .Append("<color=#009F57FF>")
+                                             .Append(BattleRoyale.soloPlayerTeam.Count)
+                                             .Append("</color>");
+                        BattleRoyale.battleRoyalePointCounter = sbBr.ToString();
+                        break;
+                    case 1:
+                        if (BattleRoyale.serialKiller != null)
+                        {
+                            var sbBr2 = new StringBuilder(Tr.Get(TrKey.BattleRoyaleLimeTeam))
+                                                  .Append("<color=#39FF14FF>")
+                                                  .Append(BattleRoyale.limeTeam.Count)
+                                                  .Append("</color> | ")
+                                                  .Append(Tr.Get(TrKey.BattleRoyalePinkTeam))
+                                                  .Append("<color=#F2BEFFFF>")
+                                                  .Append(BattleRoyale.pinkTeam.Count)
+                                                  .Append("</color> | ")
+                                                  .Append(Tr.Get(TrKey.BattleRoyaleSerialKiller))
+                                                  .Append("<color=#808080FF>")
+                                                  .Append(BattleRoyale.serialKillerTeam.Count)
+                                                  .Append("</color>");
+                            BattleRoyale.battleRoyalePointCounter = sbBr2.ToString();
+                        }
+                        else
+                        {
+                            var sbBr3 = new StringBuilder(Tr.Get(TrKey.BattleRoyaleLimeTeam))
+                                                  .Append("<color=#39FF14FF>")
+                                                  .Append(BattleRoyale.limeTeam.Count)
+                                                  .Append("</color> | ")
+                                                  .Append(Tr.Get(TrKey.BattleRoyalePinkTeam))
+                                                  .Append("<color=#F2BEFFFF>")
+                                                  .Append(BattleRoyale.pinkTeam.Count)
+                                                  .Append("</color>");
+                            BattleRoyale.battleRoyalePointCounter = sbBr3.ToString();
+                        }
+                        break;
+                    case 2:
+                        if (BattleRoyale.serialKiller != null)
+                        {
+                            var sbBr4 = new StringBuilder(Tr.Get(TrKey.BattleRoyaleGoal))
+                                                  .Append(BattleRoyale.requiredScore)
+                                                  .Append(" | <color=#39FF14FF>")
+                                                  .Append(Tr.Get(TrKey.BattleRoyaleLimeTeam))
+                                                  .Append(BattleRoyale.limePoints)
+                                                  .Append("</color> | <color=#F2BEFFFF>")
+                                                  .Append(Tr.Get(TrKey.BattleRoyalePinkTeam))
+                                                  .Append(BattleRoyale.pinkPoints)
+                                                  .Append("</color> | <color=#808080FF>")
+                                                  .Append(Tr.Get(TrKey.BattleRoyaleSerialKillerPoints))
+                                                  .Append(BattleRoyale.serialKillerPoints)
+                                                  .Append("</color>");
+                            BattleRoyale.battleRoyalePointCounter = sbBr4.ToString();
+                        }
+                        else
+                        {
+                            var sbBr5 = new StringBuilder(Tr.Get(TrKey.BattleRoyaleGoal))
+                                                  .Append(BattleRoyale.requiredScore)
+                                                  .Append(" | <color=#39FF14FF>")
+                                                  .Append(Tr.Get(TrKey.BattleRoyaleLimeTeam))
+                                                  .Append(BattleRoyale.limePoints)
+                                                  .Append("</color> | <color=#F2BEFFFF>")
+                                                  .Append(Tr.Get(TrKey.BattleRoyalePinkTeam))
+                                                  .Append(BattleRoyale.pinkPoints)
+                                                  .Append("</color>");
+                            BattleRoyale.battleRoyalePointCounter = sbBr5.ToString();
+                        }
+                        break;
+                }
+                new CustomMessage(BattleRoyale.battleRoyalePointCounter, MapSettings.gamemodeMatchDuration, new Vector2(-2.5f, 2.35f), MessageType.GameMode);
+                break;
+            default:
+                break;
+        }
 
         yield break;
     }

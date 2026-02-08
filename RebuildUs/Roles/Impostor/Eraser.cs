@@ -90,7 +90,7 @@ public class Eraser : RoleBase<Eraser>
             hm.KillButton,
             AbilitySlot.ImpostorAbilityPrimary,
             false,
-            Tr.Get(TranslateKey.EraserText)
+            Tr.Get(TrKey.EraserText)
         );
     }
     public static void SetButtonCooldowns()

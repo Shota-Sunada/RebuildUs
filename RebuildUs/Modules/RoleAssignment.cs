@@ -225,14 +225,31 @@ public static class RoleAssignment
             BlockLovers.Add((byte)RoleType.Arsonist);
         }
 
-        var data = GetRoleAssignmentData();
-        AssignSpecialRoles(data); // Assign special roles like mafia and lovers first as they assign a role to multiple players and the chances are independent of the ticket system
-        SelectFactionForFactionIndependentRoles(data);
-        AssignEnsuredRoles(data); // Assign roles that should always be in the game next
-        AssignChanceRoles(data); // Assign roles that may or may not be in the game last
-        AssignRoleTargets(data);
-        AssignRoleModifiers(data);
-        SetRolesAgain();
+        switch (MapSettings.GameMode)
+        {
+            case CustomGameMode.Roles:
+                var data = GetRoleAssignmentData();
+                AssignSpecialRoles(data); // Assign special roles like mafia and lovers first as they assign a role to multiple players and the chances are independent of the ticket system
+                SelectFactionForFactionIndependentRoles(data);
+                AssignEnsuredRoles(data); // Assign roles that should always be in the game next
+                AssignChanceRoles(data); // Assign roles that may or may not be in the game last
+                AssignRoleTargets(data);
+                AssignRoleModifiers(data);
+                SetRolesAgain();
+                break;
+            case CustomGameMode.CaptureTheFlag:
+                AssignCaptureTheFlagRoles();
+                break;
+            case CustomGameMode.PoliceAndThieves:
+                AssignPoliceAndThievesRoles();
+                break;
+            case CustomGameMode.HotPotato:
+                AssignHotPotatoRoles();
+                break;
+            case CustomGameMode.BattleRoyale:
+                AssignBattleRoyaleRoles();
+                break;
+        }
     }
 
     public static RoleAssignmentData GetRoleAssignmentData()
@@ -341,7 +358,7 @@ public static class RoleAssignment
         //     }
         //     else
         //     {
-        //         gmID = setRoleToRandomPlayer((byte)ERoleType.GM, data.crewmates);
+        //         gmID = SetRoleToRandomPlayer((byte)ERoleType.GM, data.crewmates);
         //     }
 
         //     PlayerControl p = PlayerControl.AllPlayerControls.GetFastEnumerator().ToArray().ToList().Find(x => x.PlayerId == gmID);
@@ -826,9 +843,367 @@ public static class RoleAssignment
         return playerId;
     }
 
+    private static List<int> myGamemodeList = new List<int>();
+
+    private static void AssignCaptureTheFlagRoles()
+    {
+        var players = new List<PlayerControl>();
+        foreach (var p in PlayerControl.AllPlayerControls.GetFastEnumerator())
+        {
+            players.Add(p);
+        }
+
+        myGamemodeList.Clear();
+        bool oddNumber = false;
+        int playerNumber = 1;
+
+        if (Mathf.Ceil(PlayerControl.AllPlayerControls.Count) % 2 != 0)
+        {
+            oddNumber = true;
+            SetRoleToRandomPlayer((byte)RoleType.StealerPlayer, players);
+        }
+        while (myGamemodeList.Count < Mathf.Round(PlayerControl.AllPlayerControls.Count / 2))
+        {
+            switch (playerNumber)
+            {
+                case 1:
+                    SetRoleToRandomPlayer((byte)RoleType.RedPlayer01, players);
+                    break;
+                case 2:
+                    SetRoleToRandomPlayer((byte)RoleType.RedPlayer02, players);
+                    break;
+                case 3:
+                    SetRoleToRandomPlayer((byte)RoleType.RedPlayer03, players);
+                    break;
+                case 4:
+                    SetRoleToRandomPlayer((byte)RoleType.RedPlayer04, players);
+                    break;
+                case 5:
+                    SetRoleToRandomPlayer((byte)RoleType.RedPlayer05, players);
+                    break;
+                case 6:
+                    SetRoleToRandomPlayer((byte)RoleType.RedPlayer06, players);
+                    break;
+                case 7:
+                    SetRoleToRandomPlayer((byte)RoleType.RedPlayer07, players);
+                    break;
+            }
+            myGamemodeList.Add(playerNumber);
+            playerNumber += 1;
+        }
+        playerNumber = 9;
+        while (!oddNumber && myGamemodeList.Count < PlayerControl.AllPlayerControls.Count || oddNumber && myGamemodeList.Count < PlayerControl.AllPlayerControls.Count - 1)
+        {
+            switch (playerNumber)
+            {
+                case 9:
+                    SetRoleToRandomPlayer((byte)RoleType.BluePlayer01, players);
+                    break;
+                case 10:
+                    SetRoleToRandomPlayer((byte)RoleType.BluePlayer02, players);
+                    break;
+                case 11:
+                    SetRoleToRandomPlayer((byte)RoleType.BluePlayer03, players);
+                    break;
+                case 12:
+                    SetRoleToRandomPlayer((byte)RoleType.BluePlayer04, players);
+                    break;
+                case 13:
+                    SetRoleToRandomPlayer((byte)RoleType.BluePlayer05, players);
+                    break;
+                case 14:
+                    SetRoleToRandomPlayer((byte)RoleType.BluePlayer06, players);
+                    break;
+                case 15:
+                    SetRoleToRandomPlayer((byte)RoleType.BluePlayer07, players);
+                    break;
+            }
+            myGamemodeList.Add(playerNumber);
+            playerNumber += 1;
+        }
+    }
+
+    private static void AssignPoliceAndThievesRoles()
+    {
+        var players = new List<PlayerControl>();
+        foreach (var p in PlayerControl.AllPlayerControls.GetFastEnumerator())
+        {
+            players.Add(p);
+        }
+
+        myGamemodeList.Clear();
+        int playerNumber = 1;
+
+        while (myGamemodeList.Count < Mathf.Round(PlayerControl.AllPlayerControls.Count / 2.39f))
+        {
+            switch (playerNumber)
+            {
+                case 1:
+                    SetRoleToRandomPlayer((byte)RoleType.PolicePlayer01, players);
+                    break;
+                case 2:
+                    SetRoleToRandomPlayer((byte)RoleType.PolicePlayer03, players);
+                    break;
+                case 3:
+                    SetRoleToRandomPlayer((byte)RoleType.PolicePlayer02, players);
+                    break;
+                case 4:
+                    SetRoleToRandomPlayer((byte)RoleType.PolicePlayer05, players);
+                    break;
+                case 5:
+                    SetRoleToRandomPlayer((byte)RoleType.PolicePlayer04, players);
+                    break;
+                case 6:
+                    SetRoleToRandomPlayer((byte)RoleType.PolicePlayer06, players);
+                    break;
+            }
+            myGamemodeList.Add(playerNumber);
+            playerNumber += 1;
+        }
+        playerNumber = 7;
+        while (myGamemodeList.Count < PlayerControl.AllPlayerControls.Count)
+        {
+            switch (playerNumber)
+            {
+                case 7:
+                    SetRoleToRandomPlayer((byte)RoleType.ThiefPlayer01, players);
+                    break;
+                case 8:
+                    SetRoleToRandomPlayer((byte)RoleType.ThiefPlayer02, players);
+                    break;
+                case 9:
+                    SetRoleToRandomPlayer((byte)RoleType.ThiefPlayer03, players);
+                    break;
+                case 10:
+                    SetRoleToRandomPlayer((byte)RoleType.ThiefPlayer04, players);
+                    break;
+                case 11:
+                    SetRoleToRandomPlayer((byte)RoleType.ThiefPlayer05, players);
+                    break;
+                case 12:
+                    SetRoleToRandomPlayer((byte)RoleType.ThiefPlayer06, players);
+                    break;
+                case 13:
+                    SetRoleToRandomPlayer((byte)RoleType.ThiefPlayer07, players);
+                    break;
+                case 14:
+                    SetRoleToRandomPlayer((byte)RoleType.ThiefPlayer08, players);
+                    break;
+                case 15:
+                    SetRoleToRandomPlayer((byte)RoleType.ThiefPlayer09, players);
+                    break;
+            }
+            myGamemodeList.Add(playerNumber);
+            playerNumber += 1;
+        }
+    }
+
+    private static void AssignHotPotatoRoles()
+    {
+        var players = new List<PlayerControl>();
+        foreach (var p in PlayerControl.AllPlayerControls.GetFastEnumerator())
+        {
+            players.Add(p);
+        }
+
+        myGamemodeList.Clear();
+        int playerNumber = 1;
+
+        while (myGamemodeList.Count < PlayerControl.AllPlayerControls.Count)
+        {
+            switch (playerNumber)
+            {
+                case 1:
+                    SetRoleToRandomPlayer((byte)RoleType.HotPotato, players);
+                    break;
+                case 2:
+                    SetRoleToRandomPlayer((byte)RoleType.NotPotato01, players);
+                    break;
+                case 3:
+                    SetRoleToRandomPlayer((byte)RoleType.NotPotato02, players);
+                    break;
+                case 4:
+                    SetRoleToRandomPlayer((byte)RoleType.NotPotato03, players);
+                    break;
+                case 5:
+                    SetRoleToRandomPlayer((byte)RoleType.NotPotato04, players);
+                    break;
+                case 6:
+                    SetRoleToRandomPlayer((byte)RoleType.NotPotato05, players);
+                    break;
+                case 7:
+                    SetRoleToRandomPlayer((byte)RoleType.NotPotato06, players);
+                    break;
+                case 8:
+                    SetRoleToRandomPlayer((byte)RoleType.NotPotato07, players);
+                    break;
+                case 9:
+                    SetRoleToRandomPlayer((byte)RoleType.NotPotato08, players);
+                    break;
+                case 10:
+                    SetRoleToRandomPlayer((byte)RoleType.NotPotato09, players);
+                    break;
+                case 11:
+                    SetRoleToRandomPlayer((byte)RoleType.NotPotato10, players);
+                    break;
+                case 12:
+                    SetRoleToRandomPlayer((byte)RoleType.NotPotato11, players);
+                    break;
+                case 13:
+                    SetRoleToRandomPlayer((byte)RoleType.NotPotato12, players);
+                    break;
+                case 14:
+                    SetRoleToRandomPlayer((byte)RoleType.NotPotato13, players);
+                    break;
+                case 15:
+                    SetRoleToRandomPlayer((byte)RoleType.NotPotato14, players);
+                    break;
+            }
+            myGamemodeList.Add(playerNumber);
+            playerNumber += 1;
+        }
+    }
+
+    private static void AssignBattleRoyaleRoles()
+    {
+        var players = new List<PlayerControl>();
+        foreach (var p in PlayerControl.AllPlayerControls.GetFastEnumerator())
+        {
+            players.Add(p);
+        }
+
+        myGamemodeList.Clear();
+        bool oddNumber = false;
+        int playerNumber = 1;
+
+        if (BattleRoyale.matchType == 0)
+        {
+            while (myGamemodeList.Count < PlayerControl.AllPlayerControls.Count)
+            {
+                switch (playerNumber)
+                {
+                    case 1:
+                        SetRoleToRandomPlayer((byte)RoleType.SoloPlayer01, players);
+                        break;
+                    case 2:
+                        SetRoleToRandomPlayer((byte)RoleType.SoloPlayer02, players);
+                        break;
+                    case 3:
+                        SetRoleToRandomPlayer((byte)RoleType.SoloPlayer03, players);
+                        break;
+                    case 4:
+                        SetRoleToRandomPlayer((byte)RoleType.SoloPlayer04, players);
+                        break;
+                    case 5:
+                        SetRoleToRandomPlayer((byte)RoleType.SoloPlayer05, players);
+                        break;
+                    case 6:
+                        SetRoleToRandomPlayer((byte)RoleType.SoloPlayer06, players);
+                        break;
+                    case 7:
+                        SetRoleToRandomPlayer((byte)RoleType.SoloPlayer07, players);
+                        break;
+                    case 8:
+                        SetRoleToRandomPlayer((byte)RoleType.SoloPlayer08, players);
+                        break;
+                    case 9:
+                        SetRoleToRandomPlayer((byte)RoleType.SoloPlayer09, players);
+                        break;
+                    case 10:
+                        SetRoleToRandomPlayer((byte)RoleType.SoloPlayer10, players);
+                        break;
+                    case 11:
+                        SetRoleToRandomPlayer((byte)RoleType.SoloPlayer11, players);
+                        break;
+                    case 12:
+                        SetRoleToRandomPlayer((byte)RoleType.SoloPlayer12, players);
+                        break;
+                    case 13:
+                        SetRoleToRandomPlayer((byte)RoleType.SoloPlayer13, players);
+                        break;
+                    case 14:
+                        SetRoleToRandomPlayer((byte)RoleType.SoloPlayer14, players);
+                        break;
+                    case 15:
+                        SetRoleToRandomPlayer((byte)RoleType.SoloPlayer15, players);
+                        break;
+                }
+                myGamemodeList.Add(playerNumber);
+                playerNumber += 1;
+            }
+        }
+        else
+        {
+            // Battle Royale Teams
+            if (Mathf.Ceil(PlayerControl.AllPlayerControls.Count) % 2 != 0)
+            {
+                oddNumber = true;
+                SetRoleToRandomPlayer((byte)RoleType.SerialKiller, players);
+            }
+            while (myGamemodeList.Count < (Mathf.Round(PlayerControl.AllPlayerControls.Count / 2)))
+            {
+                switch (playerNumber)
+                {
+                    case 1:
+                        SetRoleToRandomPlayer((byte)RoleType.LimePlayer01, players);
+                        break;
+                    case 2:
+                        SetRoleToRandomPlayer((byte)RoleType.LimePlayer02, players);
+                        break;
+                    case 3:
+                        SetRoleToRandomPlayer((byte)RoleType.LimePlayer03, players);
+                        break;
+                    case 4:
+                        SetRoleToRandomPlayer((byte)RoleType.LimePlayer04, players);
+                        break;
+                    case 5:
+                        SetRoleToRandomPlayer((byte)RoleType.LimePlayer05, players);
+                        break;
+                    case 6:
+                        SetRoleToRandomPlayer((byte)RoleType.LimePlayer06, players);
+                        break;
+                    case 7:
+                        SetRoleToRandomPlayer((byte)RoleType.LimePlayer07, players);
+                        break;
+                }
+                myGamemodeList.Add(playerNumber);
+                playerNumber += 1;
+            }
+            playerNumber = 9;
+            while (!oddNumber && myGamemodeList.Count < PlayerControl.AllPlayerControls.Count || oddNumber && myGamemodeList.Count < PlayerControl.AllPlayerControls.Count - 1)
+            {
+                switch (playerNumber)
+                {
+                    case 9:
+                        SetRoleToRandomPlayer((byte)RoleType.PinkPlayer01, players);
+                        break;
+                    case 10:
+                        SetRoleToRandomPlayer((byte)RoleType.PinkPlayer02, players);
+                        break;
+                    case 11:
+                        SetRoleToRandomPlayer((byte)RoleType.PinkPlayer03, players);
+                        break;
+                    case 12:
+                        SetRoleToRandomPlayer((byte)RoleType.PinkPlayer04, players);
+                        break;
+                    case 13:
+                        SetRoleToRandomPlayer((byte)RoleType.PinkPlayer05, players);
+                        break;
+                    case 14:
+                        SetRoleToRandomPlayer((byte)RoleType.PinkPlayer06, players);
+                        break;
+                    case 15:
+                        SetRoleToRandomPlayer((byte)RoleType.PinkPlayer07, players);
+                        break;
+                }
+                myGamemodeList.Add(playerNumber);
+                playerNumber += 1;
+            }
+        }
+    }
+
     private static void SetRolesAgain()
     {
-
         while (PlayerRoleMap.Count > 0)
         {
             byte amount = (byte)Math.Min(PlayerRoleMap.Count, 20);

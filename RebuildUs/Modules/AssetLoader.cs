@@ -15,6 +15,7 @@ public static class AssetLoader
         LoadSpriteAssets();
         LoadLocationAssets();
         LoadKeyBindAssets();
+        LoadGameModeAssets();
     }
 
     #region Animations
@@ -229,6 +230,115 @@ public static class AssetLoader
         KeyBindSprites["KeyBindCharacters4"] = ab.LoadAsset<Sprite>("KeyBindCharacters4.png").DontUnload();
         KeyBindSprites["KeyBindCharacters5"] = ab.LoadAsset<Sprite>("KeyBindCharacters5.png").DontUnload();
         KeyBindBackground = ab.LoadAsset<Sprite>("KeyBindBackground.png").DontUnload();
+    }
+    #endregion
+
+    #region Game Mode
+    public static Sprite BattleRoyaleFootprint;
+
+    public static GameObject royaleShoot;
+    public static GameObject greenfloor;
+
+    public static AudioClip royaleGetHit;
+    public static AudioClip royaleHitPlayer;
+
+    public static Sprite CaptureTheFlagStealRedFlagButton;
+    public static Sprite CaptureTheFlagStealBlueFlagButton;
+    public static Sprite CaptureTheFlagDeliverRedFlagButton;
+    public static Sprite CaptureTheFlagDeliverBlueFlagButton;
+
+    public static Sprite HotPotatoHotPotatusButton;
+
+    public static Sprite PoliceAndThiefsLightButton;
+    public static Sprite PoliceAndThiefCaptureButton;
+    public static Sprite PoliceAndThiefFreeButton;
+    public static Sprite PoliceAndThiefDeliverJewelButton;
+    public static Sprite PoliceAndThiefTakeJewelButton;
+    public static Sprite PoliceAndThiefsTaser;
+    public static Sprite PoliceAndThiefsTaserButton;
+
+    public static GameObject hotPotato;
+
+    public static GameObject cell;
+    public static GameObject jewelbutton;
+    public static GameObject freethiefbutton;
+    public static GameObject jeweldiamond;
+    public static GameObject jewelruby;
+    public static GameObject thiefspaceship;
+    public static GameObject thiefspaceshiphatch;
+    public static GameObject policeParalyze;
+    public static AudioClip policeTaser;
+
+    public static GameObject redflag;
+    public static GameObject redflagbase;
+    public static GameObject blueflag;
+    public static GameObject blueflagbase;
+    public static GameObject redfloor;
+    public static GameObject bluefloor;
+
+    public static Sprite Bow;
+
+    public static GameObject customMap;
+    public static GameObject customMinimap;
+    public static GameObject customComms;
+
+    public static AudioClip JailSound;
+    public static AudioClip StealRoleSound;
+
+    private static void LoadGameModeAssets()
+    {
+        var resource = Assembly.GetExecutingAssembly().GetManifestResourceStream("RebuildUs.Resources.gamemode");
+        var ab = AssetBundle.LoadFromMemory(resource.ReadFully());
+
+        greenfloor = ab.LoadAsset<GameObject>("greenfloorbase.prefab").DontUnload();
+
+        BattleRoyaleFootprint = ab.LoadAsset<Sprite>("BattleRoyaleFootprint.png").Resize(100f);
+        royaleShoot = ab.LoadAsset<GameObject>("BattleRoyale_Shoot.prefab").DontUnload();
+        royaleGetHit = ab.LoadAsset<AudioClip>("battleroyaleGetHit_Blow3.ogg").DontUnload();
+        royaleHitPlayer = ab.LoadAsset<AudioClip>("battleroyaleHit_Damage3.ogg").DontUnload();
+
+        CaptureTheFlagStealRedFlagButton = ab.LoadAsset<Sprite>("CaptureTheFlagStealRedFlagButton.png").Resize(90f);
+        CaptureTheFlagStealBlueFlagButton = ab.LoadAsset<Sprite>("CaptureTheFlagStealBlueFlagButton.png").Resize(90f);
+        CaptureTheFlagDeliverRedFlagButton = ab.LoadAsset<Sprite>("CaptureTheFlagDeliverRedFlagButton.png").Resize(90f);
+        CaptureTheFlagDeliverBlueFlagButton = ab.LoadAsset<Sprite>("CaptureTheFlagDeliverBlueFlagButton.png").Resize(90f);
+
+        HotPotatoHotPotatusButton = ab.LoadAsset<Sprite>("HotPotatoHotPotatusButton.png").Resize(90f);
+
+        PoliceAndThiefsLightButton = ab.LoadAsset<Sprite>("PoliceAndThiefsLightButton.png").Resize(90f);
+        PoliceAndThiefCaptureButton = ab.LoadAsset<Sprite>("PoliceAndThiefCaptureButton.png").Resize(90f);
+        PoliceAndThiefFreeButton = ab.LoadAsset<Sprite>("PoliceAndThiefFreeButton.png").Resize(90f);
+        PoliceAndThiefDeliverJewelButton = ab.LoadAsset<Sprite>("PoliceAndThiefDeliverJewelButton.png").Resize(90f);
+        PoliceAndThiefTakeJewelButton = ab.LoadAsset<Sprite>("PoliceAndThiefTakeJewelButton.png").Resize(90f);
+        PoliceAndThiefsTaser = ab.LoadAsset<Sprite>("PoliceAndThiefsTaser.png").Resize(100f);
+        PoliceAndThiefsTaserButton = ab.LoadAsset<Sprite>("PoliceAndThiefsTaserButton.png").Resize(90f);
+
+        hotPotato = ab.LoadAsset<GameObject>("Hot_Potato.prefab").DontUnload();
+
+        cell = ab.LoadAsset<GameObject>("Cell.prefab").DontUnload();
+        jewelbutton = ab.LoadAsset<GameObject>("deliverjewel_floor.prefab").DontUnload();
+        freethiefbutton = ab.LoadAsset<GameObject>("cell_button.prefab").DontUnload();
+        jeweldiamond = ab.LoadAsset<GameObject>("jewel_diamond.prefab").DontUnload();
+        jewelruby = ab.LoadAsset<GameObject>("jewel_ruby.prefab").DontUnload();
+        thiefspaceship = ab.LoadAsset<GameObject>("thief_spaceship.prefab").DontUnload();
+        thiefspaceshiphatch = ab.LoadAsset<GameObject>("thief_spaceship_hatch.prefab").DontUnload();
+        policeParalyze = ab.LoadAsset<GameObject>("Tased.prefab").DontUnload();
+        policeTaser = ab.LoadAsset<AudioClip>("policeandThiefsTase_Paralyze3.ogg").DontUnload();
+
+        redflag = ab.LoadAsset<GameObject>("redFlag.prefab").DontUnload();
+        redflagbase = ab.LoadAsset<GameObject>("redFlagBase.prefab").DontUnload();
+        blueflag = ab.LoadAsset<GameObject>("blueFlag.prefab").DontUnload();
+        blueflagbase = ab.LoadAsset<GameObject>("blueFlagBase.prefab").DontUnload();
+        redfloor = ab.LoadAsset<GameObject>("redfloorbase.prefab").DontUnload();
+        bluefloor = ab.LoadAsset<GameObject>("bluefloorbase.prefab").DontUnload();
+
+        Bow = ab.LoadAsset<Sprite>("Bow.png").Resize(100f);
+
+        customMap = ab.LoadAsset<GameObject>("HalconUI.prefab").DontUnload();
+        customMinimap = ab.LoadAsset<GameObject>("Minimap.prefab").DontUnload();
+        customComms = ab.LoadAsset<GameObject>("new_comms.prefab").DontUnload();
+
+        JailSound = ab.LoadAsset<AudioClip>("Jail.ogg").DontUnload();
+        StealRoleSound = ab.LoadAsset<AudioClip>("StealRole.ogg").DontUnload();
     }
     #endregion
 

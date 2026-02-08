@@ -21,6 +21,19 @@ public static class LogicGameFlowNormalPatch
         if (EndGameMain.CheckAndEndGameForJackalWin(statistics)) return false;
         if (EndGameMain.CheckAndEndGameForImpostorWin(statistics)) return false;
         if (EndGameMain.CheckAndEndGameForCrewmateWin(statistics)) return false;
+        if (EndGameMain.CheckAndEndGameForDrawFlagWin()) return false;
+        if (EndGameMain.CheckAndEndGameForRedTeamFlagWin()) return false;
+        if (EndGameMain.CheckAndEndGameForBlueTeamFlagWin()) return false;
+        if (EndGameMain.CheckAndEndGameForThiefModeThiefWin()) return false;
+        if (EndGameMain.CheckAndEndGameForThiefModePoliceWin()) return false;
+        if (EndGameMain.CheckAndEndGameForHotPotatoEnd()) return false;
+        if (EndGameMain.CheckAndEndGameForBattleRoyaleSoloWin()) return false;
+        if (EndGameMain.CheckAndEndGameForBattleRoyaleTimeWin()) return false;
+        if (EndGameMain.CheckAndEndGameForBattleRoyaleDraw()) return false;
+        if (EndGameMain.CheckAndEndGameForBattleRoyaleLimeTeamWin()) return false;
+        if (EndGameMain.CheckAndEndGameForBattleRoyalePinkTeamWin()) return false;
+        if (EndGameMain.CheckAndEndGameForBattleRoyaleSerialKillerWin()) return false;
+
         return false;
     }
 

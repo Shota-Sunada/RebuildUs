@@ -121,15 +121,15 @@ public class SecurityGuard : RoleBase<SecurityGuard>
             {
                 if (Local.VentTarget == null && Helpers.GetOption(ByteOptionNames.MapId) != 1 && !SubmergedCompatibility.IsSubmerged)
                 {
-                    SecurityGuardButton.ButtonText = Tr.Get(TranslateKey.PlaceCameraText);
+                    SecurityGuardButton.ButtonText = Tr.Get(TrKey.PlaceCameraText);
                     SecurityGuardButton.Sprite = AssetLoader.PlaceCameraButton;
                 }
                 else
                 {
-                    SecurityGuardButton.ButtonText = Tr.Get(TranslateKey.CloseVentText);
+                    SecurityGuardButton.ButtonText = Tr.Get(TrKey.CloseVentText);
                     SecurityGuardButton.Sprite = AssetLoader.CloseVentButton;
                 }
-                SecurityGuardButtonScrewsText?.text = string.Format(Tr.Get(TranslateKey.SecurityGuardScrews), Local.RemainingScrews);
+                SecurityGuardButtonScrewsText?.text = string.Format(Tr.Get(TrKey.SecurityGuardScrews), Local.RemainingScrews);
 
                 return Local.VentTarget != null
                     ? Local.RemainingScrews >= VentPrice && PlayerControl.LocalPlayer.CanMove
@@ -142,7 +142,7 @@ public class SecurityGuard : RoleBase<SecurityGuard>
             hm.UseButton,
             AbilitySlot.CrewmateAbilityPrimary,
             false,
-            Tr.Get(TranslateKey.PlaceCameraText)
+            Tr.Get(TrKey.PlaceCameraText)
         );
 
         SecurityGuardButtonScrewsText = GameObject.Instantiate(SecurityGuardButton.ActionButton.cooldownTimerText, SecurityGuardButton.ActionButton.cooldownTimerText.transform.parent);
@@ -248,7 +248,7 @@ public class SecurityGuard : RoleBase<SecurityGuard>
             () => { return PlayerControl.LocalPlayer.IsRole(RoleType.SecurityGuard) && PlayerControl.LocalPlayer?.Data?.IsDead == false && Local.RemainingScrews < Mathf.Min(SecurityGuard.VentPrice, SecurityGuard.CamPrice) && !SubmergedCompatibility.IsSubmerged; },
             () =>
             {
-                SecurityGuardChargesText?.text = string.Format(Tr.Get(TranslateKey.HackerChargesText), Local.Charges, CamMaxCharges);
+                SecurityGuardChargesText?.text = string.Format(Tr.Get(TrKey.HackerChargesText), Local.Charges, CamMaxCharges);
                 SecurityGuardCamButton.ActionButton.graphic.sprite = Helpers.IsMiraHQ ? FastDestroyableSingleton<HudManager>.Instance.UseButton.fastUseSettings[ImageNames.DoorLogsButton].Image : FastDestroyableSingleton<HudManager>.Instance.UseButton.fastUseSettings[ImageNames.CamsButton].Image;
                 SecurityGuardCamButton.ActionButton.OverrideText(Helpers.IsMiraHQ ?
                     TranslationController.Instance.GetString(StringNames.SecurityLogsSystem) :

@@ -19,6 +19,12 @@ public static class HudManagerPatch
             Update.UpdateUseButton(__instance);
             Update.UpdateReportButton(__instance);
             Update.UpdateVentButton(__instance);
+            Update.TimerUpdate();
+
+            CaptureTheFlag.captureTheFlagUpdate();
+            PoliceAndThief.policeandthiefUpdate();
+            HotPotato.hotPotatoUpdate();
+            BattleRoyale.battleRoyaleUpdate();
 
             Hacker.HackerTimer -= Time.deltaTime;
             Trickster.LightsOutTimer -= Time.deltaTime;
