@@ -1,7 +1,8 @@
 # This script formats all JSON files in the Translations folder.
 $translationsPath = Join-Path $PSScriptRoot "RebuildUs\Localization\Translations"
 
-if (-not (Test-Path $translationsPath)) {
+if (-not (Test-Path $translationsPath))
+{
     Write-Host "Translations directory not found: $translationsPath" -ForegroundColor Red
     return
 }
@@ -9,11 +10,14 @@ if (-not (Test-Path $translationsPath)) {
 Write-Host "Starting translation formatting..." -ForegroundColor Cyan
 $jsonFiles = Get-ChildItem -Path $translationsPath -Filter "*.json"
 
-foreach ($file in $jsonFiles) {
-    Write-Host "Formatting $($file.Name)..." -ForegroundColor Yellow
-    try {
+foreach ($file in $jsonFiles)
+{
+    Write-Host "Formatting $( $file.Name )..." -ForegroundColor Yellow
+    try
+    {
         $rawContent = Get-Content -Path $file.FullName -Raw -Encoding UTF8
-        if ([string]::IsNullOrWhiteSpace($rawContent)) {
+        if ( [string]::IsNullOrWhiteSpace($rawContent))
+        {
             continue
         }
 
@@ -28,17 +32,23 @@ foreach ($file in $jsonFiles) {
         $newJson = New-Object System.Text.StringBuilder
         $level = 0
 
-        foreach ($line in $lines) {
+        foreach ($line in $lines)
+        {
             $trimmed = $line.Trim()
-            if ($trimmed -eq "") { continue }
+            if ($trimmed -eq "")
+            {
+                continue
+            }
 
             # Decrease level if line starts with closing bracket
-            if ($trimmed.StartsWith("}") -or $trimmed.StartsWith("]")) {
+            if ($trimmed.StartsWith("}") -or $trimmed.StartsWith("]"))
+            {
                 $level--
             }
 
             # Fix double spaces after colons (PS 5.1 quirk)
-            if ($trimmed -match '":  ') {
+            if ($trimmed -match '":  ')
+            {
                 $trimmed = $trimmed -replace '":  ', '": '
             }
 
@@ -47,7 +57,8 @@ foreach ($file in $jsonFiles) {
             [void]$newJson.AppendLine("$indent$trimmed")
 
             # Increase level if line ends with opening bracket and doesn't close it on the same line
-            if (($trimmed.EndsWith("{") -or $trimmed.EndsWith("[")) -and -not ($trimmed.Contains("}") -or $trimmed.Contains("]"))) {
+            if (($trimmed.EndsWith("{") -or $trimmed.EndsWith("[")) -and -not ($trimmed.Contains("}") -or $trimmed.Contains("]")))
+            {
                 $level++
             }
         }
@@ -57,10 +68,11 @@ foreach ($file in $jsonFiles) {
         # Ensure UTF-8 without BOM (Byte Order Mark)
         $utf8NoBom = New-Object System.Text.UTF8Encoding($false)
         [System.IO.File]::WriteAllText($file.FullName, $finalOutput, $utf8NoBom)
-        Write-Host "Formatted $($file.Name) successfully." -ForegroundColor Green
+        Write-Host "Formatted $( $file.Name ) successfully." -ForegroundColor Green
     }
-    catch {
-        Write-Host "Error formatting $($file.Name): $($_.Exception.Message)" -ForegroundColor Red
+    catch
+    {
+        Write-Host "Error formatting $( $file.Name ): $( $_.Exception.Message )" -ForegroundColor Red
     }
 }
 

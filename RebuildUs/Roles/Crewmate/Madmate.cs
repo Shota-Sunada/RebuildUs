@@ -4,21 +4,56 @@ namespace RebuildUs.Roles.Crewmate;
 public class MadmateRole : RoleBase<MadmateRole>
 {
     public static Color NameColor = Palette.ImpostorRed;
-    public override Color RoleColor => NameColor;
-
-    public static bool CanEnterVents { get { return CustomOptionHolder.MadmateRoleCanEnterVents.GetBool(); } }
-    public static bool HasImpostorVision { get { return CustomOptionHolder.MadmateRoleHasImpostorVision.GetBool(); } }
-    public static bool CanSabotage { get { return CustomOptionHolder.MadmateRoleCanSabotage.GetBool(); } }
-    public static bool CanFixComm { get { return CustomOptionHolder.MadmateRoleCanFixComm.GetBool(); } }
-    public static bool CanKnowImpostorAfterFinishTasks { get { return CustomOptionHolder.MadmateRoleCanKnowImpostorAfterFinishTasks.GetBool(); } }
-    public static int NumCommonTasks { get { return CustomOptionHolder.MadmateRoleTasks.CommonTasksNum; } }
-    public static int NumLongTasks { get { return CustomOptionHolder.MadmateRoleTasks.LongTasksNum; } }
-    public static int NumShortTasks { get { return CustomOptionHolder.MadmateRoleTasks.ShortTasksNum; } }
 
     public MadmateRole()
     {
         // write value init here
         StaticRoleType = CurrentRoleType = RoleType.Madmate;
+    }
+
+    public override Color RoleColor
+    {
+        get => NameColor;
+    }
+
+    public static bool CanEnterVents
+    {
+        get => CustomOptionHolder.MadmateRoleCanEnterVents.GetBool();
+    }
+
+    public static bool HasImpostorVision
+    {
+        get => CustomOptionHolder.MadmateRoleHasImpostorVision.GetBool();
+    }
+
+    public static bool CanSabotage
+    {
+        get => CustomOptionHolder.MadmateRoleCanSabotage.GetBool();
+    }
+
+    public static bool CanFixComm
+    {
+        get => CustomOptionHolder.MadmateRoleCanFixComm.GetBool();
+    }
+
+    public static bool CanKnowImpostorAfterFinishTasks
+    {
+        get => CustomOptionHolder.MadmateRoleCanKnowImpostorAfterFinishTasks.GetBool();
+    }
+
+    public static int NumCommonTasks
+    {
+        get => CustomOptionHolder.MadmateRoleTasks.CommonTasksNum;
+    }
+
+    public static int NumLongTasks
+    {
+        get => CustomOptionHolder.MadmateRoleTasks.LongTasksNum;
+    }
+
+    public static int NumShortTasks
+    {
+        get => CustomOptionHolder.MadmateRoleTasks.ShortTasksNum;
     }
 
     public override void OnUpdateNameColors()
@@ -32,13 +67,12 @@ public class MadmateRole : RoleBase<MadmateRole>
                 foreach (var p in PlayerControl.AllPlayerControls.GetFastEnumerator())
                 {
                     if (p.IsTeamImpostor() || p.IsRole(RoleType.Spy) || (p.IsRole(RoleType.Jackal) && Jackal.GetRole(p).WasTeamRed) || (p.IsRole(RoleType.Sidekick) && Sidekick.GetRole(p).WasTeamRed))
-                    {
                         Update.SetPlayerNameColor(p, Palette.ImpostorRed);
-                    }
                 }
             }
         }
     }
+
     public override void OnMeetingStart() { }
     public override void OnMeetingEnd() { }
     public override void OnIntroEnd() { }
@@ -57,16 +91,15 @@ public class MadmateRole : RoleBase<MadmateRole>
     {
         if (!CanKnowImpostorAfterFinishTasks) return false;
 
-        int counter = 0;
-        int totalTasks = NumCommonTasks + NumLongTasks + NumShortTasks;
+        var counter = 0;
+        var totalTasks = NumCommonTasks + NumLongTasks + NumShortTasks;
         if (totalTasks == 0) return true;
         foreach (var task in player.Data.Tasks)
         {
             if (task.Complete)
-            {
                 counter++;
-            }
         }
+
         return counter == totalTasks;
     }
 

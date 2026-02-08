@@ -3,11 +3,19 @@ namespace RebuildUs.Roles;
 public abstract class PlayerRole
 {
     public static List<PlayerRole> AllRoles = [];
-    private static readonly Dictionary<byte, PlayerRole> PlayerRoleCache = [];
-    public PlayerControl Player;
+    private static readonly Dictionary<byte, PlayerRole> PLAYER_ROLE_CACHE = [];
     public RoleType CurrentRoleType;
-    public virtual Color RoleColor => Color.white;
-    public virtual string NameTag => "";
+    public PlayerControl Player;
+
+    public virtual Color RoleColor
+    {
+        get => Color.white;
+    }
+
+    public virtual string NameTag
+    {
+        get => "";
+    }
 
     public virtual void OnUpdateNameColors() { }
     public virtual void OnUpdateNameTags() { }
@@ -23,33 +31,42 @@ public abstract class PlayerRole
 
     public virtual void ResetRole() { }
     public virtual void PostInit() { }
-    public virtual string ModifyNameText(string nameText) { return nameText; }
-    public virtual string MeetingInfoText() { return ""; }
+
+    public virtual string ModifyNameText(string nameText)
+    {
+        return nameText;
+    }
+
+    public virtual string MeetingInfoText()
+    {
+        return "";
+    }
 
     public static void ClearAll()
     {
         AllRoles.Clear();
-        PlayerRoleCache.Clear();
+        PLAYER_ROLE_CACHE.Clear();
     }
 
     public static void RemoveFromCache(byte playerId)
     {
-        PlayerRoleCache.Remove(playerId);
+        PLAYER_ROLE_CACHE.Remove(playerId);
     }
 
     public static PlayerRole GetRole(PlayerControl player)
     {
         if (player == null) return null;
-        if (PlayerRoleCache.TryGetValue(player.PlayerId, out var role)) return role;
+        if (PLAYER_ROLE_CACHE.TryGetValue(player.PlayerId, out var role)) return role;
 
-        for (int i = 0; i < AllRoles.Count; i++)
+        for (var i = 0; i < AllRoles.Count; i++)
         {
             if (AllRoles[i].Player == player)
             {
-                PlayerRoleCache[player.PlayerId] = AllRoles[i];
+                PLAYER_ROLE_CACHE[player.PlayerId] = AllRoles[i];
                 return AllRoles[i];
             }
         }
+
         return null;
     }
 }
@@ -60,24 +77,18 @@ public abstract class RoleBase<T> : PlayerRole where T : RoleBase<T>, new()
     public static List<T> Players = [];
     public static RoleType StaticRoleType;
 
-    public void Init(PlayerControl player)
-    {
-        Player = player;
-        Players.Add((T)this);
-        AllRoles.Add(this);
-        RemoveFromCache(player.PlayerId);
-    }
-
     public static T Local
     {
         get
         {
             var local = PlayerControl.LocalPlayer;
             if (local == null) return null;
-            for (int i = 0; i < Players.Count; i++)
+            for (var i = 0; i < Players.Count; i++)
             {
-                if (Players[i].Player == local) return Players[i];
+                if (Players[i].Player == local)
+                    return Players[i];
             }
+
             return null;
         }
     }
@@ -87,7 +98,7 @@ public abstract class RoleBase<T> : PlayerRole where T : RoleBase<T>, new()
         get
         {
             var list = new List<PlayerControl>(Players.Count);
-            for (int i = 0; i < Players.Count; i++) list.Add(Players[i].Player);
+            for (var i = 0; i < Players.Count; i++) list.Add(Players[i].Player);
             return list;
         }
     }
@@ -97,11 +108,12 @@ public abstract class RoleBase<T> : PlayerRole where T : RoleBase<T>, new()
         get
         {
             var list = new List<PlayerControl>(Players.Count);
-            for (int i = 0; i < Players.Count; i++)
+            for (var i = 0; i < Players.Count; i++)
             {
                 var p = Players[i].Player;
                 if (p.IsAlive()) list.Add(p);
             }
+
             return list;
         }
     }
@@ -111,38 +123,51 @@ public abstract class RoleBase<T> : PlayerRole where T : RoleBase<T>, new()
         get
         {
             var list = new List<PlayerControl>(Players.Count);
-            for (int i = 0; i < Players.Count; i++)
+            for (var i = 0; i < Players.Count; i++)
             {
                 var p = Players[i].Player;
                 if (!p.IsAlive()) list.Add(p);
             }
+
             return list;
         }
     }
 
     public static bool Exists
     {
-        get { return Helpers.RolesEnabled && Players.Count > 0; }
+        get => Helpers.RolesEnabled && Players.Count > 0;
     }
 
-    public static new T GetRole(PlayerControl player = null)
+    public void Init(PlayerControl player)
+    {
+        Player = player;
+        Players.Add((T)this);
+        AllRoles.Add(this);
+        RemoveFromCache(player.PlayerId);
+    }
+
+    public new static T GetRole(PlayerControl player = null)
     {
         player ??= PlayerControl.LocalPlayer;
         if (player == null) return null;
-        for (int i = 0; i < Players.Count; i++)
+        for (var i = 0; i < Players.Count; i++)
         {
-            if (Players[i].Player == player) return Players[i];
+            if (Players[i].Player == player)
+                return Players[i];
         }
+
         return null;
     }
 
     public static bool IsRole(PlayerControl player)
     {
         if (player == null) return false;
-        for (int i = 0; i < Players.Count; i++)
+        for (var i = 0; i < Players.Count; i++)
         {
-            if (Players[i].Player == player) return true;
+            if (Players[i].Player == player)
+                return true;
         }
+
         return false;
     }
 
@@ -159,7 +184,7 @@ public abstract class RoleBase<T> : PlayerRole where T : RoleBase<T>, new()
     {
         if (player == null) return;
         RemoveFromCache(player.PlayerId);
-        for (int i = Players.Count - 1; i >= 0; i--)
+        for (var i = Players.Count - 1; i >= 0; i--)
         {
             var x = Players[i];
             if (x.Player == player && x.CurrentRoleType == StaticRoleType)
@@ -168,13 +193,11 @@ public abstract class RoleBase<T> : PlayerRole where T : RoleBase<T>, new()
                 Players.RemoveAt(i);
             }
         }
-        for (int i = AllRoles.Count - 1; i >= 0; i--)
+
+        for (var i = AllRoles.Count - 1; i >= 0; i--)
         {
             var x = AllRoles[i];
-            if (x.Player == player && x.CurrentRoleType == StaticRoleType)
-            {
-                AllRoles.RemoveAt(i);
-            }
+            if (x.Player == player && x.CurrentRoleType == StaticRoleType) AllRoles.RemoveAt(i);
         }
     }
 
@@ -183,16 +206,11 @@ public abstract class RoleBase<T> : PlayerRole where T : RoleBase<T>, new()
         if (p1 == null || p2 == null) return;
         RemoveFromCache(p1.PlayerId);
         RemoveFromCache(p2.PlayerId);
-        for (int i = 0; i < Players.Count; i++)
+        for (var i = 0; i < Players.Count; i++)
         {
             if (Players[i].Player == p1)
-            {
                 Players[i].Player = p2;
-            }
-            else if (Players[i].Player == p2)
-            {
-                Players[i].Player = p1;
-            }
+            else if (Players[i].Player == p2) Players[i].Player = p1;
         }
     }
 }

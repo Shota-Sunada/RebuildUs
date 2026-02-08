@@ -1,4 +1,3 @@
-using System.Net.Http.Headers;
 using System.Net.WebSockets;
 using System.Text.Json;
 
@@ -6,37 +5,33 @@ namespace RebuildUs.Modules.Discord;
 
 public static class DiscordModManager
 {
-    private static readonly HttpClient _httpClient = new();
-    private static readonly string MappingFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "discord_mapping.json");
+    private static readonly HttpClient HTTP_CLIENT = new();
+    private static readonly string MAPPING_FILE = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "discord_mapping.json");
     internal static Dictionary<string, ulong> PlayerMappings = []; // FriendCode -> DiscordId
     internal static Dictionary<ulong, string> PlayerVoiceStates = []; // DiscordId -> ChannelId
 
     private static string[] _tokens = [];
-    private static int _currentTokenIndex = 0;
+    private static int _currentTokenIndex;
 
     internal static string CurrentGameState = "ドロップシップ";
     internal static string ExiledPlayerName = "";
     internal static byte ExiledPlayerId = 255;
 
-    private static readonly List<DiscordGatewayClient> _gateways = [];
+    private static readonly List<DiscordGatewayClient> GATEWAYS = [];
 
     public static void Initialize()
     {
-        if (_gateways.Count > 0) return;
+        if (GATEWAYS.Count > 0) return;
         if (!MapSettings.EnableDiscordAutoMute && !MapSettings.EnableDiscordEmbed) return;
 
-        _tokens = [.. new[] {
-            RebuildUs.DiscordBotToken.Value,
-            RebuildUs.DiscordBotToken2.Value,
-            RebuildUs.DiscordBotToken3.Value
-        }.Where(t => !string.IsNullOrEmpty(t))];
+        _tokens = [.. new[] { RebuildUs.DiscordBotToken.Value, RebuildUs.DiscordBotToken2.Value, RebuildUs.DiscordBotToken3.Value }.Where(t => !string.IsNullOrEmpty(t))];
 
         if (_tokens.Length == 0) return;
 
         LoadMappings();
 
         // Connect all bots
-        for (int i = 0; i < _tokens.Length; i++)
+        for (var i = 0; i < _tokens.Length; i++)
         {
             var token = _tokens[i];
             // Only the first bot handles events (Interactions/VoiceStateUpdates)
@@ -46,20 +41,23 @@ public static class DiscordModManager
             // So we enable event handling only for the primary bot to keep logic simple.
             var gateway = new DiscordGatewayClient(token, i == 0);
             _ = gateway.ConnectAsync();
-            _gateways.Add(gateway);
+            GATEWAYS.Add(gateway);
         }
     }
 
     private static void LoadMappings()
     {
-        if (File.Exists(MappingFile))
+        if (File.Exists(MAPPING_FILE))
         {
             try
             {
-                var json = File.ReadAllText(MappingFile);
+                var json = File.ReadAllText(MAPPING_FILE);
                 PlayerMappings = JsonSerializer.Deserialize<Dictionary<string, ulong>>(json) ?? [];
             }
-            catch (Exception e) { Logger.LogError($"[Discord] LoadMappings: {e.Message}"); }
+            catch (Exception e)
+            {
+                Logger.LogError($"[Discord] LoadMappings: {e.Message}");
+            }
         }
     }
 
@@ -68,9 +66,12 @@ public static class DiscordModManager
         try
         {
             var json = JsonSerializer.Serialize(PlayerMappings);
-            File.WriteAllText(MappingFile, json);
+            File.WriteAllText(MAPPING_FILE, json);
         }
-        catch (Exception e) { Logger.LogError($"[Discord] SaveMappings: {e.Message}"); }
+        catch (Exception e)
+        {
+            Logger.LogError($"[Discord] SaveMappings: {e.Message}");
+        }
     }
 
     private static string GetNextToken()
@@ -86,13 +87,20 @@ public static class DiscordModManager
         var token = overrideToken ?? GetNextToken();
         if (string.IsNullOrEmpty(token)) return null;
 
-        using var request = new HttpRequestMessage(new HttpMethod(method), url);
-        request.Headers.Authorization = new AuthenticationHeaderValue("Bot", token);
+        using var request = new HttpRequestMessage(new(method), url);
+        request.Headers.Authorization = new("Bot", token);
         if (body != null)
             request.Content = new StringContent(JsonSerializer.Serialize(body), Encoding.UTF8, "application/json");
 
-        try { return await _httpClient.SendAsync(request).ConfigureAwait(false); }
-        catch (Exception e) { Logger.LogError($"[Discord] Request error: {e.Message}"); return null; }
+        try
+        {
+            return await HTTP_CLIENT.SendAsync(request).ConfigureAwait(false);
+        }
+        catch (Exception e)
+        {
+            Logger.LogError($"[Discord] Request error: {e.Message}");
+            return null;
+        }
     }
 
     public static void OnGameStart()
@@ -174,10 +182,10 @@ public static class DiscordModManager
 
     private class DiscordGatewayClient
     {
-        private ClientWebSocket _ws;
-        private readonly string _token;
         private readonly bool _handleEvents;
+        private readonly string _token;
         private int? _s;
+        private ClientWebSocket _ws;
 
         public DiscordGatewayClient(string t, bool handleEvents)
         {
@@ -189,12 +197,16 @@ public static class DiscordModManager
         {
             try
             {
-                _ws = new ClientWebSocket();
-                await _ws.ConnectAsync(new Uri("wss://gateway.discord.gg/?v=10&encoding=json"), CancellationToken.None);
+                _ws = new();
+                await _ws.ConnectAsync(new("wss://gateway.discord.gg/?v=10&encoding=json"), CancellationToken.None);
                 _ = ReceiveLoop();
             }
-            catch (Exception e) { Logger.LogError($"[Discord] WS Connect: {e.Message}"); }
+            catch (Exception e)
+            {
+                Logger.LogError($"[Discord] WS Connect: {e.Message}");
+            }
         }
+
         private async Task ReceiveLoop()
         {
             var buf = new byte[1024 * 16];
@@ -207,7 +219,7 @@ public static class DiscordModManager
                     WebSocketReceiveResult res;
                     do
                     {
-                        res = await _ws.ReceiveAsync(new ArraySegment<byte>(buf), CancellationToken.None);
+                        res = await _ws.ReceiveAsync(new(buf), CancellationToken.None);
                         if (res.MessageType == WebSocketMessageType.Close) break;
                         ms.Write(buf, 0, res.Count);
                     } while (!res.EndOfMessage);
@@ -224,6 +236,7 @@ public static class DiscordModManager
                 }
             }
         }
+
         private void Handle(string json)
         {
             try
@@ -232,13 +245,15 @@ public static class DiscordModManager
                 if (doc.RootElement.TryGetProperty("s", out var s) && s.ValueKind != JsonValueKind.Null) _s = s.GetInt32();
                 var op = doc.RootElement.GetProperty("op").GetInt32();
                 if (op == 10)
-                { // Hello
+                {
+                    // Hello
                     var hb = doc.RootElement.GetProperty("d").GetProperty("heartbeat_interval").GetInt32();
                     _ = Heartbeat(hb);
                     Send(new { Op = 2, D = new { Token = _token, Intents = 1 | 128, Properties = new { Os = "win", Browser = "rb", Device = "rb" } } });
                 }
                 else if (op == 0)
-                { // Dispatch
+                {
+                    // Dispatch
                     if (!_handleEvents) return;
 
                     var t = doc.RootElement.GetProperty("t").GetString();
@@ -268,6 +283,7 @@ public static class DiscordModManager
             }
             catch { }
         }
+
         private async Task Heartbeat(int ms)
         {
             while (_ws.State == WebSocketState.Open)
@@ -276,22 +292,21 @@ public static class DiscordModManager
                 Send(new { op = 1, d = _s });
             }
         }
+
         private async void Send(object o)
         {
             try
             {
                 var j = JsonSerializer.Serialize(o);
                 var bytes = Encoding.UTF8.GetBytes(j);
-                if (_ws.State == WebSocketState.Open)
-                {
-                    await _ws.SendAsync(new ArraySegment<byte>(bytes), WebSocketMessageType.Text, true, CancellationToken.None);
-                }
+                if (_ws.State == WebSocketState.Open) await _ws.SendAsync(new(bytes), WebSocketMessageType.Text, true, CancellationToken.None);
             }
             catch (Exception e)
             {
                 Logger.LogError($"[Discord] Send error: {e.Message}");
             }
         }
+
         private async void HandleInteraction(JsonElement d)
         {
             try
@@ -300,7 +315,8 @@ public static class DiscordModManager
                 var token = d.GetProperty("token").GetString();
                 var type = d.GetProperty("type").GetInt32();
                 if (type == 3)
-                { // Component
+                {
+                    // Component
                     var customId = d.GetProperty("data").GetProperty("custom_id").GetString();
                     if (customId == "start_link")
                     {
@@ -311,6 +327,7 @@ public static class DiscordModManager
                             if (string.IsNullOrEmpty(identifier)) continue;
                             optionsList.Add(new { label = p.Data.PlayerName, value = identifier });
                         }
+
                         var options = optionsList.ToArray();
 
                         if (options.Length == 0)
@@ -318,16 +335,8 @@ public static class DiscordModManager
                             Respond(id, token, new { type = 4, Data = new { Content = "プレイヤーが見つかりません。", Flags = 64 } });
                             return;
                         }
-                        Respond(id, token, new
-                        {
-                            type = 4,
-                            data = new
-                            {
-                                content = "連携するプレイヤーを選択してください:",
-                                flags = 64,
-                                components = new[] { new { type = 1, components = new[] { new { type = 3, custom_id = "select_player", Options = options } } } }
-                            }
-                        });
+
+                        Respond(id, token, new { type = 4, data = new { content = "連携するプレイヤーを選択してください:", flags = 64, components = new[] { new { type = 1, components = new[] { new { type = 3, custom_id = "select_player", Options = options } } } } } });
                     }
                     else if (customId == "select_player")
                     {
@@ -343,6 +352,7 @@ public static class DiscordModManager
                 Logger.LogError($"[Discord] HandleInteraction error: {e.Message}");
             }
         }
+
         private async void Respond(string id, string token, object body)
         {
             await SendRequest("POST", $"https://discord.com/api/v10/interactions/{id}/{token}/callback", body, _token);

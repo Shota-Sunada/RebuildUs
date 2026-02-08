@@ -8,7 +8,8 @@ Set-StrictMode -Off
 
 # 基準となるディレクトリを取得
 $ProjectRoot = $PSScriptRoot
-if ([string]::IsNullOrEmpty($ProjectRoot)) {
+if ( [string]::IsNullOrEmpty($ProjectRoot))
+{
     $ProjectRoot = Get-Location
 }
 
@@ -16,7 +17,8 @@ if ([string]::IsNullOrEmpty($ProjectRoot)) {
 Write-Host "--- Starting Reactor Release Build ---"
 & "$ProjectRoot\build-reactor.ps1" -Configuration "Release"
 
-if ($LASTEXITCODE -ne 0) {
+if ($LASTEXITCODE -ne 0)
+{
     Write-Host "Reactor build failed. Aborting Submerged build."
     exit 1
 }
@@ -26,7 +28,8 @@ Write-Host "--- Starting Submerged $Configuration Build ---"
 # プロジェクトファイルのパス
 $SubmergedProj = "$ProjectRoot\Submerged\Submerged\Submerged.csproj"
 
-if (-not (Test-Path $SubmergedProj)) {
+if (-not (Test-Path $SubmergedProj))
+{
     Write-Host "Error: Cannot find $SubmergedProj"
     exit 1
 }
@@ -35,18 +38,22 @@ if (-not (Test-Path $SubmergedProj)) {
 Write-Host "Building Submerged: $SubmergedProj"
 dotnet build "$SubmergedProj" -c $Configuration --verbosity minimal
 
-if ($LASTEXITCODE -eq 0) {
+if ($LASTEXITCODE -eq 0)
+{
     $sourcePath = "$ProjectRoot\Submerged\Submerged\bin\$Configuration\net6.0\Submerged.dll"
     $destinationPath = "$ProjectRoot\SDK\"
 
-    if (Test-Path $sourcePath) {
+    if (Test-Path $sourcePath)
+    {
         Copy-Item -Path $sourcePath -Destination $destinationPath -Force
         Write-Host "Submerged.dll copied to RebuildUs SDK folder."
     }
-    else {
+    else
+    {
         Write-Host "Error: Build succeeded but DLL not found at $sourcePath"
     }
 }
-else {
+else
+{
     Write-Host "Submerged build failed."
 }

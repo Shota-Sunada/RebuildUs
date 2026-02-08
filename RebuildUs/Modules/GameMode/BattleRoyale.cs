@@ -1,3 +1,5 @@
+using Object = UnityEngine.Object;
+
 namespace RebuildUs.Modules.GameMode;
 
 public static partial class BattleRoyale
@@ -8,551 +10,518 @@ public static partial class BattleRoyale
     public static Color SerialKillerColor = new Color32(128, 128, 128, byte.MaxValue);
     public static Color IntroColor = new Color32(0, 159, 87, byte.MaxValue);
 
-    private static bool createdbattleroyale = false;
-    private static int howmanyBattleRoyaleplayers = 0;
+    private static bool _createdbattleroyale;
+    private static int _howmanyBattleRoyaleplayers;
 
-    public static List<PlayerControl> soloPlayerTeam = [];
-    public static PlayerControl soloPlayer01 = null;
-    public static float soloPlayer01mouseAngle = 0f;
-    public static GameObject soloPlayer01Wep = null;
-    public static float soloPlayer01Lifes = 3;
-    public static PlayerControl soloPlayer02 = null;
-    public static float soloPlayer02mouseAngle = 0f;
-    public static GameObject soloPlayer02Wep = null;
-    public static float soloPlayer02Lifes = 3;
-    public static PlayerControl soloPlayer03 = null;
-    public static float soloPlayer03mouseAngle = 0f;
-    public static GameObject soloPlayer03Wep = null;
-    public static float soloPlayer03Lifes = 3;
-    public static PlayerControl soloPlayer04 = null;
-    public static float soloPlayer04mouseAngle = 0f;
-    public static GameObject soloPlayer04Wep = null;
-    public static float soloPlayer04Lifes = 3;
-    public static PlayerControl soloPlayer05 = null;
-    public static float soloPlayer05mouseAngle = 0f;
-    public static GameObject soloPlayer05Wep = null;
-    public static float soloPlayer05Lifes = 3;
-    public static PlayerControl soloPlayer06 = null;
-    public static float soloPlayer06mouseAngle = 0f;
-    public static GameObject soloPlayer06Wep = null;
-    public static float soloPlayer06Lifes = 3;
-    public static PlayerControl soloPlayer07 = null;
-    public static float soloPlayer07mouseAngle = 0f;
-    public static GameObject soloPlayer07Wep = null;
-    public static float soloPlayer07Lifes = 3;
-    public static PlayerControl soloPlayer08 = null;
-    public static float soloPlayer08mouseAngle = 0f;
-    public static GameObject soloPlayer08Wep = null;
-    public static float soloPlayer08Lifes = 3;
-    public static PlayerControl soloPlayer09 = null;
-    public static float soloPlayer09mouseAngle = 0f;
-    public static GameObject soloPlayer09Wep = null;
-    public static float soloPlayer09Lifes = 3;
-    public static PlayerControl soloPlayer10 = null;
-    public static float soloPlayer10mouseAngle = 0f;
-    public static GameObject soloPlayer10Wep = null;
-    public static float soloPlayer10Lifes = 3;
-    public static PlayerControl soloPlayer11 = null;
-    public static float soloPlayer11mouseAngle = 0f;
-    public static GameObject soloPlayer11Wep = null;
-    public static float soloPlayer11Lifes = 3;
-    public static PlayerControl soloPlayer12 = null;
-    public static float soloPlayer12mouseAngle = 0f;
-    public static GameObject soloPlayer12Wep = null;
-    public static float soloPlayer12Lifes = 3;
-    public static PlayerControl soloPlayer13 = null;
-    public static float soloPlayer13mouseAngle = 0f;
-    public static GameObject soloPlayer13Wep = null;
-    public static float soloPlayer13Lifes = 3;
-    public static PlayerControl soloPlayer14 = null;
-    public static float soloPlayer14mouseAngle = 0f;
-    public static GameObject soloPlayer14Wep = null;
-    public static float soloPlayer14Lifes = 3;
-    public static PlayerControl soloPlayer15 = null;
-    public static float soloPlayer15mouseAngle = 0f;
-    public static GameObject soloPlayer15Wep = null;
-    public static float soloPlayer15Lifes = 3;
+    public static List<PlayerControl> SoloPlayerTeam = [];
+    public static PlayerControl SoloPlayer01;
+    public static float SoloPlayer01MouseAngle;
+    public static GameObject SoloPlayer01Wep;
+    public static float SoloPlayer01Lifes = 3;
+    public static PlayerControl SoloPlayer02;
+    public static float SoloPlayer02MouseAngle;
+    public static GameObject SoloPlayer02Wep;
+    public static float SoloPlayer02Lifes = 3;
+    public static PlayerControl SoloPlayer03;
+    public static float SoloPlayer03MouseAngle;
+    public static GameObject SoloPlayer03Wep;
+    public static float SoloPlayer03Lifes = 3;
+    public static PlayerControl SoloPlayer04;
+    public static float SoloPlayer04MouseAngle;
+    public static GameObject SoloPlayer04Wep;
+    public static float SoloPlayer04Lifes = 3;
+    public static PlayerControl SoloPlayer05;
+    public static float SoloPlayer05MouseAngle;
+    public static GameObject SoloPlayer05Wep;
+    public static float SoloPlayer05Lifes = 3;
+    public static PlayerControl SoloPlayer06;
+    public static float SoloPlayer06MouseAngle;
+    public static GameObject SoloPlayer06Wep;
+    public static float SoloPlayer06Lifes = 3;
+    public static PlayerControl SoloPlayer07;
+    public static float SoloPlayer07MouseAngle;
+    public static GameObject SoloPlayer07Wep;
+    public static float SoloPlayer07Lifes = 3;
+    public static PlayerControl SoloPlayer08;
+    public static float SoloPlayer08MouseAngle;
+    public static GameObject SoloPlayer08Wep;
+    public static float SoloPlayer08Lifes = 3;
+    public static PlayerControl SoloPlayer09;
+    public static float SoloPlayer09MouseAngle;
+    public static GameObject SoloPlayer09Wep;
+    public static float SoloPlayer09Lifes = 3;
+    public static PlayerControl SoloPlayer10;
+    public static float SoloPlayer10MouseAngle;
+    public static GameObject SoloPlayer10Wep;
+    public static float SoloPlayer10Lifes = 3;
+    public static PlayerControl SoloPlayer11;
+    public static float SoloPlayer11MouseAngle;
+    public static GameObject SoloPlayer11Wep;
+    public static float SoloPlayer11Lifes = 3;
+    public static PlayerControl SoloPlayer12;
+    public static float SoloPlayer12MouseAngle;
+    public static GameObject SoloPlayer12Wep;
+    public static float SoloPlayer12Lifes = 3;
+    public static PlayerControl SoloPlayer13;
+    public static float SoloPlayer13MouseAngle;
+    public static GameObject SoloPlayer13Wep;
+    public static float SoloPlayer13Lifes = 3;
+    public static PlayerControl SoloPlayer14;
+    public static float SoloPlayer14MouseAngle;
+    public static GameObject SoloPlayer14Wep;
+    public static float SoloPlayer14Lifes = 3;
+    public static PlayerControl SoloPlayer15;
+    public static float SoloPlayer15MouseAngle;
+    public static GameObject SoloPlayer15Wep;
+    public static float SoloPlayer15Lifes = 3;
 
-    public static List<PlayerControl> limeTeam = [];
-    public static PlayerControl limePlayer01 = null;
-    public static float limePlayer01mouseAngle = 0f;
-    public static GameObject limePlayer01Wep = null;
-    public static float limePlayer01Lifes = 3;
-    public static bool limePlayer01IsReviving = false;
-    public static PlayerControl limePlayer02 = null;
-    public static float limePlayer02mouseAngle = 0f;
-    public static GameObject limePlayer02Wep = null;
-    public static float limePlayer02Lifes = 3;
-    public static bool limePlayer02IsReviving = false;
-    public static PlayerControl limePlayer03 = null;
-    public static float limePlayer03mouseAngle = 0f;
-    public static GameObject limePlayer03Wep = null;
-    public static float limePlayer03Lifes = 3;
-    public static bool limePlayer03IsReviving = false;
-    public static PlayerControl limePlayer04 = null;
-    public static float limePlayer04mouseAngle = 0f;
-    public static GameObject limePlayer04Wep = null;
-    public static float limePlayer04Lifes = 3;
-    public static bool limePlayer04IsReviving = false;
-    public static PlayerControl limePlayer05 = null;
-    public static float limePlayer05mouseAngle = 0f;
-    public static GameObject limePlayer05Wep = null;
-    public static float limePlayer05Lifes = 3;
-    public static bool limePlayer05IsReviving = false;
-    public static PlayerControl limePlayer06 = null;
-    public static float limePlayer06mouseAngle = 0f;
-    public static GameObject limePlayer06Wep = null;
-    public static float limePlayer06Lifes = 3;
-    public static bool limePlayer06IsReviving = false;
-    public static PlayerControl limePlayer07 = null;
-    public static float limePlayer07mouseAngle = 0f;
-    public static GameObject limePlayer07Wep = null;
-    public static float limePlayer07Lifes = 3;
-    public static bool limePlayer07IsReviving = false;
+    public static List<PlayerControl> LimeTeam = [];
+    public static PlayerControl LimePlayer01;
+    public static float LimePlayer01MouseAngle;
+    public static GameObject LimePlayer01Wep;
+    public static float LimePlayer01Lifes = 3;
+    public static bool LimePlayer01IsReviving;
+    public static PlayerControl LimePlayer02;
+    public static float LimePlayer02MouseAngle;
+    public static GameObject LimePlayer02Wep;
+    public static float LimePlayer02Lifes = 3;
+    public static bool LimePlayer02IsReviving;
+    public static PlayerControl LimePlayer03;
+    public static float LimePlayer03MouseAngle;
+    public static GameObject LimePlayer03Wep;
+    public static float LimePlayer03Lifes = 3;
+    public static bool LimePlayer03IsReviving;
+    public static PlayerControl LimePlayer04;
+    public static float LimePlayer04MouseAngle;
+    public static GameObject LimePlayer04Wep;
+    public static float LimePlayer04Lifes = 3;
+    public static bool LimePlayer04IsReviving;
+    public static PlayerControl LimePlayer05;
+    public static float LimePlayer05MouseAngle;
+    public static GameObject LimePlayer05Wep;
+    public static float LimePlayer05Lifes = 3;
+    public static bool LimePlayer05IsReviving;
+    public static PlayerControl LimePlayer06;
+    public static float LimePlayer06MouseAngle;
+    public static GameObject LimePlayer06Wep;
+    public static float LimePlayer06Lifes = 3;
+    public static bool LimePlayer06IsReviving;
+    public static PlayerControl LimePlayer07;
+    public static float LimePlayer07MouseAngle;
+    public static GameObject LimePlayer07Wep;
+    public static float LimePlayer07Lifes = 3;
+    public static bool LimePlayer07IsReviving;
 
-    public static List<PlayerControl> pinkTeam = [];
-    public static PlayerControl pinkPlayer01 = null;
-    public static float pinkPlayer01mouseAngle = 0f;
-    public static GameObject pinkPlayer01Wep = null;
-    public static float pinkPlayer01Lifes = 3;
-    public static bool pinkPlayer01IsReviving = false;
-    public static PlayerControl pinkPlayer02 = null;
-    public static float pinkPlayer02mouseAngle = 0f;
-    public static GameObject pinkPlayer02Wep = null;
-    public static float pinkPlayer02Lifes = 3;
-    public static bool pinkPlayer02IsReviving = false;
-    public static PlayerControl pinkPlayer03 = null;
-    public static float pinkPlayer03mouseAngle = 0f;
-    public static GameObject pinkPlayer03Wep = null;
-    public static float pinkPlayer03Lifes = 3;
-    public static bool pinkPlayer03IsReviving = false;
-    public static PlayerControl pinkPlayer04 = null;
-    public static float pinkPlayer04mouseAngle = 0f;
-    public static GameObject pinkPlayer04Wep = null;
-    public static float pinkPlayer04Lifes = 3;
-    public static bool pinkPlayer04IsReviving = false;
-    public static PlayerControl pinkPlayer05 = null;
-    public static float pinkPlayer05mouseAngle = 0f;
-    public static GameObject pinkPlayer05Wep = null;
-    public static float pinkPlayer05Lifes = 3;
-    public static bool pinkPlayer05IsReviving = false;
-    public static PlayerControl pinkPlayer06 = null;
-    public static float pinkPlayer06mouseAngle = 0f;
-    public static GameObject pinkPlayer06Wep = null;
-    public static float pinkPlayer06Lifes = 3;
-    public static bool pinkPlayer06IsReviving = false;
-    public static PlayerControl pinkPlayer07 = null;
-    public static float pinkPlayer07mouseAngle = 0f;
-    public static GameObject pinkPlayer07Wep = null;
-    public static float pinkPlayer07Lifes = 3;
-    public static bool pinkPlayer07IsReviving = false;
+    public static List<PlayerControl> PinkTeam = [];
+    public static PlayerControl PinkPlayer01;
+    public static float PinkPlayer01MouseAngle;
+    public static GameObject PinkPlayer01Wep;
+    public static float PinkPlayer01Lifes = 3;
+    public static bool PinkPlayer01IsReviving;
+    public static PlayerControl PinkPlayer02;
+    public static float PinkPlayer02MouseAngle;
+    public static GameObject PinkPlayer02Wep;
+    public static float PinkPlayer02Lifes = 3;
+    public static bool PinkPlayer02IsReviving;
+    public static PlayerControl PinkPlayer03;
+    public static float PinkPlayer03MouseAngle;
+    public static GameObject PinkPlayer03Wep;
+    public static float PinkPlayer03Lifes = 3;
+    public static bool PinkPlayer03IsReviving;
+    public static PlayerControl PinkPlayer04;
+    public static float PinkPlayer04MouseAngle;
+    public static GameObject PinkPlayer04Wep;
+    public static float PinkPlayer04Lifes = 3;
+    public static bool PinkPlayer04IsReviving;
+    public static PlayerControl PinkPlayer05;
+    public static float PinkPlayer05MouseAngle;
+    public static GameObject PinkPlayer05Wep;
+    public static float PinkPlayer05Lifes = 3;
+    public static bool PinkPlayer05IsReviving;
+    public static PlayerControl PinkPlayer06;
+    public static float PinkPlayer06MouseAngle;
+    public static GameObject PinkPlayer06Wep;
+    public static float PinkPlayer06Lifes = 3;
+    public static bool PinkPlayer06IsReviving;
+    public static PlayerControl PinkPlayer07;
+    public static float PinkPlayer07MouseAngle;
+    public static GameObject PinkPlayer07Wep;
+    public static float PinkPlayer07Lifes = 3;
+    public static bool PinkPlayer07IsReviving;
 
-    public static List<PlayerControl> serialKillerTeam = [];
-    public static PlayerControl serialKiller = null;
-    public static float serialKillermouseAngle = 0f;
-    public static GameObject serialKillerWep = null;
-    public static float serialKillerLifes = 3;
-    public static float serialKillerCooldown = 3;
-    public static bool serialKillerIsReviving = false;
-    public static List<GameObject> serialKillerSpawns = [];
+    public static List<PlayerControl> SerialKillerTeam = [];
+    public static PlayerControl SerialKiller;
+    public static float SerialKillermouseAngle;
+    public static GameObject SerialKillerWep;
+    public static float SerialKillerLifes = 3;
+    public static float SerialKillerCooldown = 3;
+    public static bool SerialKillerIsReviving;
+    public static List<GameObject> SerialKillerSpawns = [];
 
-    public static List<Vector3> soloPlayersSpawnPositions = [];
-    public static bool battleRoyaleSenseiMapMode = false;
-    public static bool battleRoyaleDleksMap = false;
+    public static List<Vector3> SoloPlayersSpawnPositions = [];
+    public static bool BattleRoyaleSenseiMapMode;
+    public static bool BattleRoyaleDleksMap;
 
-    public static float killCooldown = 1;
-    public static float fighterLifes = 3f;
-    public static int matchType = 0;
-    public static float requiredScore = 0;
+    public static float KillCooldown = 1;
+    public static float FighterLifes = 3f;
+    public static int MatchType;
+    public static float RequiredScore;
 
-    public static int limePoints = 0;
-    public static int pinkPoints = 0;
-    public static int serialKillerPoints = 0;
+    public static int LimePoints;
+    public static int PinkPoints;
+    public static int SerialKillerPoints;
 
-    public static bool triggerSoloWin = false;
-    public static bool triggerTimeWin = false;
-    public static bool triggerLimeTeamWin = false;
-    public static bool triggerPinkTeamWin = false;
-    public static bool triggerSerialKillerWin = false;
-    public static bool triggerDrawWin = false;
+    public static bool TriggerSoloWin;
+    public static bool TriggerTimeWin;
+    public static bool TriggerLimeTeamWin;
+    public static bool TriggerPinkTeamWin;
+    public static bool TriggerSerialKillerWin;
+    public static bool TriggerDrawWin;
 
-    public static string battleRoyalePointCounter = "";
+    public static string BattleRoyalePointCounter = "";
 
-    public static void clearAndReload()
+    public static void ClearAndReload()
     {
-        fighterLifes = CustomOptionHolder.battleRoyaleLifes.GetFloat();
+        FighterLifes = CustomOptionHolder.BattleRoyaleLifes.GetFloat();
 
-        howmanyBattleRoyaleplayers = 0;
-        createdbattleroyale = false;
+        _howmanyBattleRoyaleplayers = 0;
+        _createdbattleroyale = false;
 
-        soloPlayersSpawnPositions.Clear();
-        soloPlayerTeam.Clear();
-        limeTeam.Clear();
-        pinkTeam.Clear();
-        serialKillerTeam.Clear();
-        soloPlayer01 = null;
-        soloPlayer01mouseAngle = 0;
-        soloPlayer01Wep = null;
-        soloPlayer01Lifes = fighterLifes;
-        soloPlayer02 = null;
-        soloPlayer02mouseAngle = 0;
-        soloPlayer02Wep = null;
-        soloPlayer02Lifes = fighterLifes;
-        soloPlayer03 = null;
-        soloPlayer03mouseAngle = 0;
-        soloPlayer03Wep = null;
-        soloPlayer03Lifes = fighterLifes;
-        soloPlayer04 = null;
-        soloPlayer04mouseAngle = 0;
-        soloPlayer04Wep = null;
-        soloPlayer04Lifes = fighterLifes;
-        soloPlayer05 = null;
-        soloPlayer05mouseAngle = 0;
-        soloPlayer05Wep = null;
-        soloPlayer05Lifes = fighterLifes;
-        soloPlayer06 = null;
-        soloPlayer06mouseAngle = 0;
-        soloPlayer06Wep = null;
-        soloPlayer06Lifes = fighterLifes;
-        soloPlayer07 = null;
-        soloPlayer07mouseAngle = 0;
-        soloPlayer07Wep = null;
-        soloPlayer07Lifes = fighterLifes;
-        soloPlayer08 = null;
-        soloPlayer08mouseAngle = 0;
-        soloPlayer08Wep = null;
-        soloPlayer08Lifes = fighterLifes;
-        soloPlayer09 = null;
-        soloPlayer09mouseAngle = 0;
-        soloPlayer09Wep = null;
-        soloPlayer09Lifes = fighterLifes;
-        soloPlayer10 = null;
-        soloPlayer10mouseAngle = 0;
-        soloPlayer10Wep = null;
-        soloPlayer10Lifes = fighterLifes;
-        soloPlayer11 = null;
-        soloPlayer11mouseAngle = 0;
-        soloPlayer11Wep = null;
-        soloPlayer11Lifes = fighterLifes;
-        soloPlayer12 = null;
-        soloPlayer12mouseAngle = 0;
-        soloPlayer12Wep = null;
-        soloPlayer12Lifes = fighterLifes;
-        soloPlayer13 = null;
-        soloPlayer13mouseAngle = 0;
-        soloPlayer13Wep = null;
-        soloPlayer13Lifes = fighterLifes;
-        soloPlayer14 = null;
-        soloPlayer14mouseAngle = 0;
-        soloPlayer14Wep = null;
-        soloPlayer14Lifes = fighterLifes;
-        soloPlayer15 = null;
-        soloPlayer15mouseAngle = 0;
-        soloPlayer15Wep = null;
-        soloPlayer15Lifes = fighterLifes;
+        SoloPlayersSpawnPositions.Clear();
+        SoloPlayerTeam.Clear();
+        LimeTeam.Clear();
+        PinkTeam.Clear();
+        SerialKillerTeam.Clear();
+        SoloPlayer01 = null;
+        SoloPlayer01MouseAngle = 0;
+        SoloPlayer01Wep = null;
+        SoloPlayer01Lifes = FighterLifes;
+        SoloPlayer02 = null;
+        SoloPlayer02MouseAngle = 0;
+        SoloPlayer02Wep = null;
+        SoloPlayer02Lifes = FighterLifes;
+        SoloPlayer03 = null;
+        SoloPlayer03MouseAngle = 0;
+        SoloPlayer03Wep = null;
+        SoloPlayer03Lifes = FighterLifes;
+        SoloPlayer04 = null;
+        SoloPlayer04MouseAngle = 0;
+        SoloPlayer04Wep = null;
+        SoloPlayer04Lifes = FighterLifes;
+        SoloPlayer05 = null;
+        SoloPlayer05MouseAngle = 0;
+        SoloPlayer05Wep = null;
+        SoloPlayer05Lifes = FighterLifes;
+        SoloPlayer06 = null;
+        SoloPlayer06MouseAngle = 0;
+        SoloPlayer06Wep = null;
+        SoloPlayer06Lifes = FighterLifes;
+        SoloPlayer07 = null;
+        SoloPlayer07MouseAngle = 0;
+        SoloPlayer07Wep = null;
+        SoloPlayer07Lifes = FighterLifes;
+        SoloPlayer08 = null;
+        SoloPlayer08MouseAngle = 0;
+        SoloPlayer08Wep = null;
+        SoloPlayer08Lifes = FighterLifes;
+        SoloPlayer09 = null;
+        SoloPlayer09MouseAngle = 0;
+        SoloPlayer09Wep = null;
+        SoloPlayer09Lifes = FighterLifes;
+        SoloPlayer10 = null;
+        SoloPlayer10MouseAngle = 0;
+        SoloPlayer10Wep = null;
+        SoloPlayer10Lifes = FighterLifes;
+        SoloPlayer11 = null;
+        SoloPlayer11MouseAngle = 0;
+        SoloPlayer11Wep = null;
+        SoloPlayer11Lifes = FighterLifes;
+        SoloPlayer12 = null;
+        SoloPlayer12MouseAngle = 0;
+        SoloPlayer12Wep = null;
+        SoloPlayer12Lifes = FighterLifes;
+        SoloPlayer13 = null;
+        SoloPlayer13MouseAngle = 0;
+        SoloPlayer13Wep = null;
+        SoloPlayer13Lifes = FighterLifes;
+        SoloPlayer14 = null;
+        SoloPlayer14MouseAngle = 0;
+        SoloPlayer14Wep = null;
+        SoloPlayer14Lifes = FighterLifes;
+        SoloPlayer15 = null;
+        SoloPlayer15MouseAngle = 0;
+        SoloPlayer15Wep = null;
+        SoloPlayer15Lifes = FighterLifes;
 
-        limePlayer01 = null;
-        limePlayer01mouseAngle = 0;
-        limePlayer01Wep = null;
-        limePlayer01Lifes = fighterLifes;
-        limePlayer01IsReviving = false;
-        limePlayer02 = null;
-        limePlayer02mouseAngle = 0;
-        limePlayer02Wep = null;
-        limePlayer02Lifes = fighterLifes;
-        limePlayer02IsReviving = false;
-        limePlayer03 = null;
-        limePlayer03mouseAngle = 0;
-        limePlayer03Wep = null;
-        limePlayer03Lifes = fighterLifes;
-        limePlayer03IsReviving = false;
-        limePlayer04 = null;
-        limePlayer04mouseAngle = 0;
-        limePlayer04Wep = null;
-        limePlayer04Lifes = fighterLifes;
-        limePlayer04IsReviving = false;
-        limePlayer05 = null;
-        limePlayer05mouseAngle = 0;
-        limePlayer05Wep = null;
-        limePlayer05Lifes = fighterLifes;
-        limePlayer05IsReviving = false;
-        limePlayer06 = null;
-        limePlayer06mouseAngle = 0;
-        limePlayer06Wep = null;
-        limePlayer06Lifes = fighterLifes;
-        limePlayer06IsReviving = false;
-        limePlayer07 = null;
-        limePlayer07mouseAngle = 0;
-        limePlayer07Wep = null;
-        limePlayer07Lifes = fighterLifes;
-        limePlayer07IsReviving = false;
-        pinkPlayer01 = null;
-        pinkPlayer01mouseAngle = 0;
-        pinkPlayer01Wep = null;
-        pinkPlayer01Lifes = fighterLifes;
-        pinkPlayer01IsReviving = false;
-        pinkPlayer02 = null;
-        pinkPlayer02mouseAngle = 0;
-        pinkPlayer02Wep = null;
-        pinkPlayer02Lifes = fighterLifes;
-        pinkPlayer02IsReviving = false;
-        pinkPlayer03 = null;
-        pinkPlayer03mouseAngle = 0;
-        pinkPlayer03Wep = null;
-        pinkPlayer03Lifes = fighterLifes;
-        pinkPlayer03IsReviving = false;
-        pinkPlayer04 = null;
-        pinkPlayer04mouseAngle = 0;
-        pinkPlayer04Wep = null;
-        pinkPlayer04Lifes = fighterLifes;
-        pinkPlayer04IsReviving = false;
-        pinkPlayer05 = null;
-        pinkPlayer05mouseAngle = 0;
-        pinkPlayer05Wep = null;
-        pinkPlayer05Lifes = fighterLifes;
-        pinkPlayer05IsReviving = false;
-        pinkPlayer06 = null;
-        pinkPlayer06mouseAngle = 0;
-        pinkPlayer06Wep = null;
-        pinkPlayer06Lifes = fighterLifes;
-        pinkPlayer06IsReviving = false;
-        pinkPlayer07 = null;
-        pinkPlayer07mouseAngle = 0;
-        pinkPlayer07Wep = null;
-        pinkPlayer07Lifes = fighterLifes;
-        pinkPlayer07IsReviving = false;
-        serialKiller = null;
-        serialKillermouseAngle = 0;
-        serialKillerWep = null;
-        serialKillerIsReviving = false;
-        serialKillerSpawns.Clear();
+        LimePlayer01 = null;
+        LimePlayer01MouseAngle = 0;
+        LimePlayer01Wep = null;
+        LimePlayer01Lifes = FighterLifes;
+        LimePlayer01IsReviving = false;
+        LimePlayer02 = null;
+        LimePlayer02MouseAngle = 0;
+        LimePlayer02Wep = null;
+        LimePlayer02Lifes = FighterLifes;
+        LimePlayer02IsReviving = false;
+        LimePlayer03 = null;
+        LimePlayer03MouseAngle = 0;
+        LimePlayer03Wep = null;
+        LimePlayer03Lifes = FighterLifes;
+        LimePlayer03IsReviving = false;
+        LimePlayer04 = null;
+        LimePlayer04MouseAngle = 0;
+        LimePlayer04Wep = null;
+        LimePlayer04Lifes = FighterLifes;
+        LimePlayer04IsReviving = false;
+        LimePlayer05 = null;
+        LimePlayer05MouseAngle = 0;
+        LimePlayer05Wep = null;
+        LimePlayer05Lifes = FighterLifes;
+        LimePlayer05IsReviving = false;
+        LimePlayer06 = null;
+        LimePlayer06MouseAngle = 0;
+        LimePlayer06Wep = null;
+        LimePlayer06Lifes = FighterLifes;
+        LimePlayer06IsReviving = false;
+        LimePlayer07 = null;
+        LimePlayer07MouseAngle = 0;
+        LimePlayer07Wep = null;
+        LimePlayer07Lifes = FighterLifes;
+        LimePlayer07IsReviving = false;
+        PinkPlayer01 = null;
+        PinkPlayer01MouseAngle = 0;
+        PinkPlayer01Wep = null;
+        PinkPlayer01Lifes = FighterLifes;
+        PinkPlayer01IsReviving = false;
+        PinkPlayer02 = null;
+        PinkPlayer02MouseAngle = 0;
+        PinkPlayer02Wep = null;
+        PinkPlayer02Lifes = FighterLifes;
+        PinkPlayer02IsReviving = false;
+        PinkPlayer03 = null;
+        PinkPlayer03MouseAngle = 0;
+        PinkPlayer03Wep = null;
+        PinkPlayer03Lifes = FighterLifes;
+        PinkPlayer03IsReviving = false;
+        PinkPlayer04 = null;
+        PinkPlayer04MouseAngle = 0;
+        PinkPlayer04Wep = null;
+        PinkPlayer04Lifes = FighterLifes;
+        PinkPlayer04IsReviving = false;
+        PinkPlayer05 = null;
+        PinkPlayer05MouseAngle = 0;
+        PinkPlayer05Wep = null;
+        PinkPlayer05Lifes = FighterLifes;
+        PinkPlayer05IsReviving = false;
+        PinkPlayer06 = null;
+        PinkPlayer06MouseAngle = 0;
+        PinkPlayer06Wep = null;
+        PinkPlayer06Lifes = FighterLifes;
+        PinkPlayer06IsReviving = false;
+        PinkPlayer07 = null;
+        PinkPlayer07MouseAngle = 0;
+        PinkPlayer07Wep = null;
+        PinkPlayer07Lifes = FighterLifes;
+        PinkPlayer07IsReviving = false;
+        SerialKiller = null;
+        SerialKillermouseAngle = 0;
+        SerialKillerWep = null;
+        SerialKillerIsReviving = false;
+        SerialKillerSpawns.Clear();
 
-        killCooldown = CustomOptionHolder.battleRoyaleKillCooldown.GetFloat();
-        battleRoyaleSenseiMapMode = CustomOptionHolder.CustomSkeldMap.GetSelection() == 2;
-        battleRoyaleDleksMap = CustomOptionHolder.CustomSkeldMap.GetSelection() == 1;
-        matchType = CustomOptionHolder.battleRoyaleMatchType.GetSelection();
+        KillCooldown = CustomOptionHolder.BattleRoyaleKillCooldown.GetFloat();
+        BattleRoyaleSenseiMapMode = CustomOptionHolder.CustomSkeldMap.GetSelection() == 2;
+        BattleRoyaleDleksMap = CustomOptionHolder.CustomSkeldMap.GetSelection() == 1;
+        MatchType = CustomOptionHolder.BattleRoyaleMatchType.GetSelection();
         if (PlayerControl.AllPlayerControls.Count >= 11)
         {
-            serialKillerCooldown = killCooldown / 3;
-            serialKillerLifes = fighterLifes * 3;
+            SerialKillerCooldown = KillCooldown / 3;
+            SerialKillerLifes = FighterLifes * 3;
         }
         else
         {
-            serialKillerCooldown = killCooldown / 2;
-            serialKillerLifes = fighterLifes * 2;
+            SerialKillerCooldown = KillCooldown / 2;
+            SerialKillerLifes = FighterLifes * 2;
         }
-        requiredScore = CustomOptionHolder.battleRoyaleScoreNeeded.GetFloat();
 
-        limePoints = 0;
-        pinkPoints = 0;
-        serialKillerPoints = 0;
+        RequiredScore = CustomOptionHolder.BattleRoyaleScoreNeeded.GetFloat();
 
-        triggerSoloWin = false;
-        triggerTimeWin = false;
-        triggerLimeTeamWin = false;
-        triggerPinkTeamWin = false;
-        triggerSerialKillerWin = false;
-        triggerDrawWin = false;
+        LimePoints = 0;
+        PinkPoints = 0;
+        SerialKillerPoints = 0;
 
-        switch (matchType)
+        TriggerSoloWin = false;
+        TriggerTimeWin = false;
+        TriggerLimeTeamWin = false;
+        TriggerPinkTeamWin = false;
+        TriggerSerialKillerWin = false;
+        TriggerDrawWin = false;
+
+        switch (MatchType)
         {
             case 0:
-                battleRoyalePointCounter = new StringBuilder(Tr.Get(TrKey.BattleRoyaleFighters)).Append("<color=#009F57FF>").Append(soloPlayerTeam.Count).Append("</color>").ToString();
+                BattleRoyalePointCounter = new StringBuilder(Tr.Get(TrKey.BattleRoyaleFighters)).Append("<color=#009F57FF>").Append(SoloPlayerTeam.Count).Append("</color>").ToString();
                 break;
             case 1:
-                if (serialKiller != null)
+                if (SerialKiller != null)
                 {
-                    var sb = new StringBuilder(Tr.Get(TrKey.BattleRoyaleLimeTeam))
-                                         .Append("<color=#39FF14FF>")
-                                         .Append(limeTeam.Count)
-                                         .Append("</color> | ")
-                                         .Append(Tr.Get(TrKey.BattleRoyalePinkTeam))
-                                         .Append("<color=#F2BEFFFF>")
-                                         .Append(pinkTeam.Count)
-                                         .Append("</color> | ")
-                                         .Append(Tr.Get(TrKey.SerialKiller))
-                                         .Append("<color=#808080FF>")
-                                         .Append(serialKillerTeam.Count)
-                                         .Append("</color>");
-                    battleRoyalePointCounter = sb.ToString();
+                    var sb = new StringBuilder(Tr.Get(TrKey.BattleRoyaleLimeTeam)).Append("<color=#39FF14FF>").Append(LimeTeam.Count).Append("</color> | ").Append(Tr.Get(TrKey.BattleRoyalePinkTeam)).Append("<color=#F2BEFFFF>").Append(PinkTeam.Count).Append("</color> | ").Append(Tr.Get(TrKey.SerialKiller)).Append("<color=#808080FF>").Append(SerialKillerTeam.Count).Append("</color>");
+                    BattleRoyalePointCounter = sb.ToString();
                 }
                 else
                 {
-                    var sb = new StringBuilder(Tr.Get(TrKey.BattleRoyaleLimeTeam))
-                                         .Append("<color=#39FF14FF>")
-                                         .Append(limeTeam.Count)
-                                         .Append("</color> | ")
-                                         .Append(Tr.Get(TrKey.BattleRoyalePinkTeam))
-                                         .Append("<color=#F2BEFFFF>")
-                                         .Append(pinkTeam.Count)
-                                         .Append("</color>");
-                    battleRoyalePointCounter = sb.ToString();
+                    var sb = new StringBuilder(Tr.Get(TrKey.BattleRoyaleLimeTeam)).Append("<color=#39FF14FF>").Append(LimeTeam.Count).Append("</color> | ").Append(Tr.Get(TrKey.BattleRoyalePinkTeam)).Append("<color=#F2BEFFFF>").Append(PinkTeam.Count).Append("</color>");
+                    BattleRoyalePointCounter = sb.ToString();
                 }
+
                 break;
             case 2:
-                if (serialKiller != null)
+                if (SerialKiller != null)
                 {
-                    var sb = new StringBuilder(Tr.Get(TrKey.BattleRoyaleGoal))
-                                       .Append(requiredScore)
-                                       .Append(" | <color=#39FF14FF>")
-                                       .Append(Tr.Get(TrKey.BattleRoyaleLimeTeam))
-                                       .Append(limePoints)
-                                       .Append("</color> | <color=#F2BEFFFF>")
-                                       .Append(Tr.Get(TrKey.BattleRoyalePinkTeam))
-                                       .Append(pinkPoints)
-                                       .Append("</color> | <color=#808080FF>")
-                                       .Append(Tr.Get(TrKey.SerialKiller))
-                                       .Append(serialKillerPoints)
-                                       .Append("</color>");
-                    battleRoyalePointCounter = sb.ToString();
+                    var sb = new StringBuilder(Tr.Get(TrKey.BattleRoyaleGoal)).Append(RequiredScore).Append(" | <color=#39FF14FF>").Append(Tr.Get(TrKey.BattleRoyaleLimeTeam)).Append(LimePoints).Append("</color> | <color=#F2BEFFFF>").Append(Tr.Get(TrKey.BattleRoyalePinkTeam)).Append(PinkPoints).Append("</color> | <color=#808080FF>").Append(Tr.Get(TrKey.SerialKiller)).Append(SerialKillerPoints).Append("</color>");
+                    BattleRoyalePointCounter = sb.ToString();
                 }
                 else
                 {
-                    var sb = new StringBuilder(Tr.Get(TrKey.BattleRoyaleGoal))
-                                       .Append(requiredScore)
-                                       .Append(" | <color=#39FF14FF>")
-                                       .Append(Tr.Get(TrKey.BattleRoyaleLimeTeam))
-                                       .Append(limePoints)
-                                       .Append("</color> | <color=#F2BEFFFF>")
-                                       .Append(Tr.Get(TrKey.BattleRoyalePinkTeam))
-                                       .Append(pinkPoints)
-                                       .Append("</color>");
-                    battleRoyalePointCounter = sb.ToString();
+                    var sb = new StringBuilder(Tr.Get(TrKey.BattleRoyaleGoal)).Append(RequiredScore).Append(" | <color=#39FF14FF>").Append(Tr.Get(TrKey.BattleRoyaleLimeTeam)).Append(LimePoints).Append("</color> | <color=#F2BEFFFF>").Append(Tr.Get(TrKey.BattleRoyalePinkTeam)).Append(PinkPoints).Append("</color>");
+                    BattleRoyalePointCounter = sb.ToString();
                 }
+
                 break;
         }
 
         switch (GameOptionsManager.Instance.currentGameOptions.MapId)
         {
             case 0:
-                if (battleRoyaleSenseiMapMode)
+                if (BattleRoyaleSenseiMapMode)
                 {
-                    soloPlayersSpawnPositions.Add(new Vector3(-6.8f, 11f, 0f)); // secutiry
-                    soloPlayersSpawnPositions.Add(new Vector3(10f, -2.15f, 0f)); // wep shields
-                    soloPlayersSpawnPositions.Add(new Vector3(-19f, 5.5f, 0f)); // upper engine
-                    soloPlayersSpawnPositions.Add(new Vector3(7f, -14f, 0f)); // nav
-                    soloPlayersSpawnPositions.Add(new Vector3(-6.25f, -1.5f, 0f)); // medbey
-                    soloPlayersSpawnPositions.Add(new Vector3(-18.85f, -8f, 0f)); // lower engine
-                    soloPlayersSpawnPositions.Add(new Vector3(4.75f, -8.5f, 0f)); // admin
-                    soloPlayersSpawnPositions.Add(new Vector3(-0.75f, -1.5f, 0f)); // cafete
-                    soloPlayersSpawnPositions.Add(new Vector3(-12f, 7f, 0f)); // empty room
-                    soloPlayersSpawnPositions.Add(new Vector3(-5.5f, -13.15f, 0f)); // elect
-                    soloPlayersSpawnPositions.Add(new Vector3(6.75f, 4.75f, 0f)); // comms
-                    soloPlayersSpawnPositions.Add(new Vector3(-8.4f, -0.4f, 0f)); // o2
-                    soloPlayersSpawnPositions.Add(new Vector3(-12f, -12.75f, 0f)); // storage
-                    soloPlayersSpawnPositions.Add(new Vector3(-3.75f, 5f, 0f)); // hidden cafeteria room
-                    soloPlayersSpawnPositions.Add(new Vector3(-19.5f, -1.5f, 0f)); // reactor
+                    SoloPlayersSpawnPositions.Add(new(-6.8f, 11f, 0f)); // secutiry
+                    SoloPlayersSpawnPositions.Add(new(10f, -2.15f, 0f)); // wep shields
+                    SoloPlayersSpawnPositions.Add(new(-19f, 5.5f, 0f)); // upper engine
+                    SoloPlayersSpawnPositions.Add(new(7f, -14f, 0f)); // nav
+                    SoloPlayersSpawnPositions.Add(new(-6.25f, -1.5f, 0f)); // medbey
+                    SoloPlayersSpawnPositions.Add(new(-18.85f, -8f, 0f)); // lower engine
+                    SoloPlayersSpawnPositions.Add(new(4.75f, -8.5f, 0f)); // admin
+                    SoloPlayersSpawnPositions.Add(new(-0.75f, -1.5f, 0f)); // cafete
+                    SoloPlayersSpawnPositions.Add(new(-12f, 7f, 0f)); // empty room
+                    SoloPlayersSpawnPositions.Add(new(-5.5f, -13.15f, 0f)); // elect
+                    SoloPlayersSpawnPositions.Add(new(6.75f, 4.75f, 0f)); // comms
+                    SoloPlayersSpawnPositions.Add(new(-8.4f, -0.4f, 0f)); // o2
+                    SoloPlayersSpawnPositions.Add(new(-12f, -12.75f, 0f)); // storage
+                    SoloPlayersSpawnPositions.Add(new(-3.75f, 5f, 0f)); // hidden cafeteria room
+                    SoloPlayersSpawnPositions.Add(new(-19.5f, -1.5f, 0f)); // reactor
                 }
-                else if (battleRoyaleDleksMap)
+                else if (BattleRoyaleDleksMap)
                 {
-                    soloPlayersSpawnPositions.Add(new Vector3(8.75f, -8.5f, 0f)); // elec
-                    soloPlayersSpawnPositions.Add(new Vector3(9.15f, -4.75f, 0f)); // medbey
-                    soloPlayersSpawnPositions.Add(new Vector3(-6f, -3.5f, 0f)); // o2
-                    soloPlayersSpawnPositions.Add(new Vector3(-6.25f, -8.5f, 0f)); // admin
-                    soloPlayersSpawnPositions.Add(new Vector3(17.75f, 2.5f, 0f)); // upper engine
-                    soloPlayersSpawnPositions.Add(new Vector3(-2.75f, -15.25f, 0f)); // comms
-                    soloPlayersSpawnPositions.Add(new Vector3(17.75f, -13.25f, 0f)); // lower engine
-                    soloPlayersSpawnPositions.Add(new Vector3(-9.75f, 2.75f, 0f)); // weapons
-                    soloPlayersSpawnPositions.Add(new Vector3(13.5f, -6.75f, 0f)); // seguridad
-                    soloPlayersSpawnPositions.Add(new Vector3(-9.5f, -12.25f, 0f)); // shields
-                    soloPlayersSpawnPositions.Add(new Vector3(21.5f, -2.5f, 0f)); // reactor
-                    soloPlayersSpawnPositions.Add(new Vector3(-16.5f, -3.5f, 0f)); // nav
-                    soloPlayersSpawnPositions.Add(new Vector3(0.75f, 5.25f, 0f)); // caftereria upper
-                    soloPlayersSpawnPositions.Add(new Vector3(1.75f, -16f, 0f)); // stoage
-                    soloPlayersSpawnPositions.Add(new Vector3(0.75f, -2.75f, 0f)); // caftereria lower
+                    SoloPlayersSpawnPositions.Add(new(8.75f, -8.5f, 0f)); // elec
+                    SoloPlayersSpawnPositions.Add(new(9.15f, -4.75f, 0f)); // medbey
+                    SoloPlayersSpawnPositions.Add(new(-6f, -3.5f, 0f)); // o2
+                    SoloPlayersSpawnPositions.Add(new(-6.25f, -8.5f, 0f)); // admin
+                    SoloPlayersSpawnPositions.Add(new(17.75f, 2.5f, 0f)); // upper engine
+                    SoloPlayersSpawnPositions.Add(new(-2.75f, -15.25f, 0f)); // comms
+                    SoloPlayersSpawnPositions.Add(new(17.75f, -13.25f, 0f)); // lower engine
+                    SoloPlayersSpawnPositions.Add(new(-9.75f, 2.75f, 0f)); // weapons
+                    SoloPlayersSpawnPositions.Add(new(13.5f, -6.75f, 0f)); // seguridad
+                    SoloPlayersSpawnPositions.Add(new(-9.5f, -12.25f, 0f)); // shields
+                    SoloPlayersSpawnPositions.Add(new(21.5f, -2.5f, 0f)); // reactor
+                    SoloPlayersSpawnPositions.Add(new(-16.5f, -3.5f, 0f)); // nav
+                    SoloPlayersSpawnPositions.Add(new(0.75f, 5.25f, 0f)); // caftereria upper
+                    SoloPlayersSpawnPositions.Add(new(1.75f, -16f, 0f)); // stoage
+                    SoloPlayersSpawnPositions.Add(new(0.75f, -2.75f, 0f)); // caftereria lower
                 }
                 else
                 {
-                    soloPlayersSpawnPositions.Add(new Vector3(-8.75f, -8.5f, 0f)); // elec
-                    soloPlayersSpawnPositions.Add(new Vector3(-9.15f, -4.75f, 0f)); // medbey
-                    soloPlayersSpawnPositions.Add(new Vector3(6f, -3.5f, 0f)); // o2
-                    soloPlayersSpawnPositions.Add(new Vector3(6.25f, -8.5f, 0f)); // admin
-                    soloPlayersSpawnPositions.Add(new Vector3(-17.75f, 2.5f, 0f)); // upper engine
-                    soloPlayersSpawnPositions.Add(new Vector3(2.75f, -15.25f, 0f)); // comms
-                    soloPlayersSpawnPositions.Add(new Vector3(-17.75f, -13.25f, 0f)); // lower engine
-                    soloPlayersSpawnPositions.Add(new Vector3(9.75f, 2.75f, 0f)); // weapons
-                    soloPlayersSpawnPositions.Add(new Vector3(-13.5f, -6.75f, 0f)); // seguridad
-                    soloPlayersSpawnPositions.Add(new Vector3(9.5f, -12.25f, 0f)); // shields
-                    soloPlayersSpawnPositions.Add(new Vector3(-21.5f, -2.5f, 0f)); // reactor
-                    soloPlayersSpawnPositions.Add(new Vector3(16.5f, -3.5f, 0f)); // nav
-                    soloPlayersSpawnPositions.Add(new Vector3(-0.75f, 5.25f, 0f)); // caftereria upper
-                    soloPlayersSpawnPositions.Add(new Vector3(-1.75f, -16f, 0f)); // stoage
-                    soloPlayersSpawnPositions.Add(new Vector3(-0.75f, -2.75f, 0f)); // caftereria lower
+                    SoloPlayersSpawnPositions.Add(new(-8.75f, -8.5f, 0f)); // elec
+                    SoloPlayersSpawnPositions.Add(new(-9.15f, -4.75f, 0f)); // medbey
+                    SoloPlayersSpawnPositions.Add(new(6f, -3.5f, 0f)); // o2
+                    SoloPlayersSpawnPositions.Add(new(6.25f, -8.5f, 0f)); // admin
+                    SoloPlayersSpawnPositions.Add(new(-17.75f, 2.5f, 0f)); // upper engine
+                    SoloPlayersSpawnPositions.Add(new(2.75f, -15.25f, 0f)); // comms
+                    SoloPlayersSpawnPositions.Add(new(-17.75f, -13.25f, 0f)); // lower engine
+                    SoloPlayersSpawnPositions.Add(new(9.75f, 2.75f, 0f)); // weapons
+                    SoloPlayersSpawnPositions.Add(new(-13.5f, -6.75f, 0f)); // seguridad
+                    SoloPlayersSpawnPositions.Add(new(9.5f, -12.25f, 0f)); // shields
+                    SoloPlayersSpawnPositions.Add(new(-21.5f, -2.5f, 0f)); // reactor
+                    SoloPlayersSpawnPositions.Add(new(16.5f, -3.5f, 0f)); // nav
+                    SoloPlayersSpawnPositions.Add(new(-0.75f, 5.25f, 0f)); // caftereria upper
+                    SoloPlayersSpawnPositions.Add(new(-1.75f, -16f, 0f)); // stoage
+                    SoloPlayersSpawnPositions.Add(new(-0.75f, -2.75f, 0f)); // caftereria lower
                 }
+
                 break;
             case 1:
-                soloPlayersSpawnPositions.Add(new Vector3(19.5f, 4.65f, 0f)); // storage
-                soloPlayersSpawnPositions.Add(new Vector3(11.25f, 10.5f, 0f)); // lab
-                soloPlayersSpawnPositions.Add(new Vector3(14.75f, 20.5f, 0f)); // office
-                soloPlayersSpawnPositions.Add(new Vector3(15.5f, -0.5f, 0f)); // medbey
-                soloPlayersSpawnPositions.Add(new Vector3(27.5f, -1.75f, 0f)); // balcony
-                soloPlayersSpawnPositions.Add(new Vector3(2.5f, 13.15f, 0f)); // reactor
-                soloPlayersSpawnPositions.Add(new Vector3(15.5f, 4f, 0f)); // comms
-                soloPlayersSpawnPositions.Add(new Vector3(21f, 20.5f, 0f)); // admin
-                soloPlayersSpawnPositions.Add(new Vector3(27, 4.75f, 0f)); // cafeteria
-                soloPlayersSpawnPositions.Add(new Vector3(6.15f, 6.5f, 0f)); // decom
-                soloPlayersSpawnPositions.Add(new Vector3(5f, -1.25f, 0f)); // long hallway
-                soloPlayersSpawnPositions.Add(new Vector3(16.15f, 24.25f, 0f)); // greenhouse
-                soloPlayersSpawnPositions.Add(new Vector3(-4.35f, 3.25f, 0f)); // launch pad
-                soloPlayersSpawnPositions.Add(new Vector3(9.5f, 1.25f, 0f)); // lockroom
-                soloPlayersSpawnPositions.Add(new Vector3(18f, 11.5f, 0f)); // midway
+                SoloPlayersSpawnPositions.Add(new(19.5f, 4.65f, 0f)); // storage
+                SoloPlayersSpawnPositions.Add(new(11.25f, 10.5f, 0f)); // lab
+                SoloPlayersSpawnPositions.Add(new(14.75f, 20.5f, 0f)); // office
+                SoloPlayersSpawnPositions.Add(new(15.5f, -0.5f, 0f)); // medbey
+                SoloPlayersSpawnPositions.Add(new(27.5f, -1.75f, 0f)); // balcony
+                SoloPlayersSpawnPositions.Add(new(2.5f, 13.15f, 0f)); // reactor
+                SoloPlayersSpawnPositions.Add(new(15.5f, 4f, 0f)); // comms
+                SoloPlayersSpawnPositions.Add(new(21f, 20.5f, 0f)); // admin
+                SoloPlayersSpawnPositions.Add(new(27, 4.75f, 0f)); // cafeteria
+                SoloPlayersSpawnPositions.Add(new(6.15f, 6.5f, 0f)); // decom
+                SoloPlayersSpawnPositions.Add(new(5f, -1.25f, 0f)); // long hallway
+                SoloPlayersSpawnPositions.Add(new(16.15f, 24.25f, 0f)); // greenhouse
+                SoloPlayersSpawnPositions.Add(new(-4.35f, 3.25f, 0f)); // launch pad
+                SoloPlayersSpawnPositions.Add(new(9.5f, 1.25f, 0f)); // lockroom
+                SoloPlayersSpawnPositions.Add(new(18f, 11.5f, 0f)); // midway
                 break;
             case 2:
-                soloPlayersSpawnPositions.Add(new Vector3(9.75f, -12.15f, 0f)); // elec
-                soloPlayersSpawnPositions.Add(new Vector3(40.5f, -7.75f, 0f)); // right lab
-                soloPlayersSpawnPositions.Add(new Vector3(11f, -23f, 0f)); // weapons
-                soloPlayersSpawnPositions.Add(new Vector3(36.5f, -21.5f, 0f)); // specifmen
-                soloPlayersSpawnPositions.Add(new Vector3(1f, -16.5f, 0f)); // up o2
-                soloPlayersSpawnPositions.Add(new Vector3(27.75f, -7.5f, 0f)); // left lab
-                soloPlayersSpawnPositions.Add(new Vector3(26.5f, -17f, 0f)); // right office
-                soloPlayersSpawnPositions.Add(new Vector3(12.5f, -16.5f, 0f)); // comms
-                soloPlayersSpawnPositions.Add(new Vector3(16.75f, -1f, 0f)); // launch pad
-                soloPlayersSpawnPositions.Add(new Vector3(22f, -25.15f, 0f)); // admin
-                soloPlayersSpawnPositions.Add(new Vector3(1.75f, -23.75f, 0f)); // low o2
-                soloPlayersSpawnPositions.Add(new Vector3(17.15f, -17f, 0f)); // left office
-                soloPlayersSpawnPositions.Add(new Vector3(3.75f, -12f, 0f)); // secutiry
-                soloPlayersSpawnPositions.Add(new Vector3(20.75f, -12f, 0f)); // storage
-                soloPlayersSpawnPositions.Add(new Vector3(1.5f, -20f, 0f)); // mid o2
+                SoloPlayersSpawnPositions.Add(new(9.75f, -12.15f, 0f)); // elec
+                SoloPlayersSpawnPositions.Add(new(40.5f, -7.75f, 0f)); // right lab
+                SoloPlayersSpawnPositions.Add(new(11f, -23f, 0f)); // weapons
+                SoloPlayersSpawnPositions.Add(new(36.5f, -21.5f, 0f)); // specifmen
+                SoloPlayersSpawnPositions.Add(new(1f, -16.5f, 0f)); // up o2
+                SoloPlayersSpawnPositions.Add(new(27.75f, -7.5f, 0f)); // left lab
+                SoloPlayersSpawnPositions.Add(new(26.5f, -17f, 0f)); // right office
+                SoloPlayersSpawnPositions.Add(new(12.5f, -16.5f, 0f)); // comms
+                SoloPlayersSpawnPositions.Add(new(16.75f, -1f, 0f)); // launch pad
+                SoloPlayersSpawnPositions.Add(new(22f, -25.15f, 0f)); // admin
+                SoloPlayersSpawnPositions.Add(new(1.75f, -23.75f, 0f)); // low o2
+                SoloPlayersSpawnPositions.Add(new(17.15f, -17f, 0f)); // left office
+                SoloPlayersSpawnPositions.Add(new(3.75f, -12f, 0f)); // secutiry
+                SoloPlayersSpawnPositions.Add(new(20.75f, -12f, 0f)); // storage
+                SoloPlayersSpawnPositions.Add(new(1.5f, -20f, 0f)); // mid o2
                 break;
             case 3:
-                soloPlayersSpawnPositions.Add(new Vector3(8.75f, -8.5f, 0f)); // elec
-                soloPlayersSpawnPositions.Add(new Vector3(9.15f, -4.75f, 0f)); // medbey
-                soloPlayersSpawnPositions.Add(new Vector3(-6f, -3.5f, 0f)); // o2
-                soloPlayersSpawnPositions.Add(new Vector3(-6.25f, -8.5f, 0f)); // admin
-                soloPlayersSpawnPositions.Add(new Vector3(17.75f, 2.5f, 0f)); // upper engine
-                soloPlayersSpawnPositions.Add(new Vector3(-2.75f, -15.25f, 0f)); // comms
-                soloPlayersSpawnPositions.Add(new Vector3(17.75f, -13.25f, 0f)); // lower engine
-                soloPlayersSpawnPositions.Add(new Vector3(-9.75f, 2.75f, 0f)); // weapons
-                soloPlayersSpawnPositions.Add(new Vector3(13.5f, -6.75f, 0f)); // seguridad
-                soloPlayersSpawnPositions.Add(new Vector3(-9.5f, -12.25f, 0f)); // shields
-                soloPlayersSpawnPositions.Add(new Vector3(21.5f, -2.5f, 0f)); // reactor
-                soloPlayersSpawnPositions.Add(new Vector3(-16.5f, -3.5f, 0f)); // nav
-                soloPlayersSpawnPositions.Add(new Vector3(0.75f, 5.25f, 0f)); // caftereria upper
-                soloPlayersSpawnPositions.Add(new Vector3(1.75f, -16f, 0f)); // stoage
-                soloPlayersSpawnPositions.Add(new Vector3(0.75f, -2.75f, 0f)); // caftereria lower
+                SoloPlayersSpawnPositions.Add(new(8.75f, -8.5f, 0f)); // elec
+                SoloPlayersSpawnPositions.Add(new(9.15f, -4.75f, 0f)); // medbey
+                SoloPlayersSpawnPositions.Add(new(-6f, -3.5f, 0f)); // o2
+                SoloPlayersSpawnPositions.Add(new(-6.25f, -8.5f, 0f)); // admin
+                SoloPlayersSpawnPositions.Add(new(17.75f, 2.5f, 0f)); // upper engine
+                SoloPlayersSpawnPositions.Add(new(-2.75f, -15.25f, 0f)); // comms
+                SoloPlayersSpawnPositions.Add(new(17.75f, -13.25f, 0f)); // lower engine
+                SoloPlayersSpawnPositions.Add(new(-9.75f, 2.75f, 0f)); // weapons
+                SoloPlayersSpawnPositions.Add(new(13.5f, -6.75f, 0f)); // seguridad
+                SoloPlayersSpawnPositions.Add(new(-9.5f, -12.25f, 0f)); // shields
+                SoloPlayersSpawnPositions.Add(new(21.5f, -2.5f, 0f)); // reactor
+                SoloPlayersSpawnPositions.Add(new(-16.5f, -3.5f, 0f)); // nav
+                SoloPlayersSpawnPositions.Add(new(0.75f, 5.25f, 0f)); // caftereria upper
+                SoloPlayersSpawnPositions.Add(new(1.75f, -16f, 0f)); // stoage
+                SoloPlayersSpawnPositions.Add(new(0.75f, -2.75f, 0f)); // caftereria lower
                 break;
             case 4:
-                soloPlayersSpawnPositions.Add(new Vector3(-0.5f, -1, 0f));
+                SoloPlayersSpawnPositions.Add(new(-0.5f, -1, 0f));
                 break;
             case 5:
-                soloPlayersSpawnPositions.Add(new Vector3(-18.25f, 5f, 0f));
-                soloPlayersSpawnPositions.Add(new Vector3(-22.65f, -7.15f, 0f));
-                soloPlayersSpawnPositions.Add(new Vector3(2, 4.35f, 0f));
-                soloPlayersSpawnPositions.Add(new Vector3(-3.15f, -10.5f, 0f));
-                soloPlayersSpawnPositions.Add(new Vector3(23.7f, -7.8f, 0f));
-                soloPlayersSpawnPositions.Add(new Vector3(-4.75f, -1.75f, 0f));
-                soloPlayersSpawnPositions.Add(new Vector3(8f, -10f, 0f));
-                soloPlayersSpawnPositions.Add(new Vector3(7f, 1.75f, 0f));
-                soloPlayersSpawnPositions.Add(new Vector3(13.25f, 10, 0f));
-                soloPlayersSpawnPositions.Add(new Vector3(22.3f, 3.3f, 0f));
-                soloPlayersSpawnPositions.Add(new Vector3(20.5f, 7.35f, 0f));
-                soloPlayersSpawnPositions.Add(new Vector3(24.15f, 14.45f, 0f));
-                soloPlayersSpawnPositions.Add(new Vector3(-16.12f, 0.7f, 0f));
-                soloPlayersSpawnPositions.Add(new Vector3(1.65f, -1.5f, 0f));
-                soloPlayersSpawnPositions.Add(new Vector3(10.5f, -12, 0f));
+                SoloPlayersSpawnPositions.Add(new(-18.25f, 5f, 0f));
+                SoloPlayersSpawnPositions.Add(new(-22.65f, -7.15f, 0f));
+                SoloPlayersSpawnPositions.Add(new(2, 4.35f, 0f));
+                SoloPlayersSpawnPositions.Add(new(-3.15f, -10.5f, 0f));
+                SoloPlayersSpawnPositions.Add(new(23.7f, -7.8f, 0f));
+                SoloPlayersSpawnPositions.Add(new(-4.75f, -1.75f, 0f));
+                SoloPlayersSpawnPositions.Add(new(8f, -10f, 0f));
+                SoloPlayersSpawnPositions.Add(new(7f, 1.75f, 0f));
+                SoloPlayersSpawnPositions.Add(new(13.25f, 10, 0f));
+                SoloPlayersSpawnPositions.Add(new(22.3f, 3.3f, 0f));
+                SoloPlayersSpawnPositions.Add(new(20.5f, 7.35f, 0f));
+                SoloPlayersSpawnPositions.Add(new(24.15f, 14.45f, 0f));
+                SoloPlayersSpawnPositions.Add(new(-16.12f, 0.7f, 0f));
+                SoloPlayersSpawnPositions.Add(new(1.65f, -1.5f, 0f));
+                SoloPlayersSpawnPositions.Add(new(10.5f, -12, 0f));
                 break;
             case 6:
-                soloPlayersSpawnPositions.Add(new Vector3(3.75f, -26.5f, 0f));
+                SoloPlayersSpawnPositions.Add(new(3.75f, -26.5f, 0f));
                 break;
         }
     }
@@ -564,96 +533,90 @@ public static partial class BattleRoyale
         switch (whichPlayerShot)
         {
             case 1:
-                playerMouse = soloPlayer01mouseAngle;
-                originPlayer = soloPlayer01.GetTruePosition();
+                playerMouse = SoloPlayer01MouseAngle;
+                originPlayer = SoloPlayer01.GetTruePosition();
                 break;
             case 2:
-                playerMouse = soloPlayer02mouseAngle;
-                originPlayer = soloPlayer02.GetTruePosition();
+                playerMouse = SoloPlayer02MouseAngle;
+                originPlayer = SoloPlayer02.GetTruePosition();
                 break;
             case 3:
-                playerMouse = soloPlayer03mouseAngle;
-                originPlayer = soloPlayer03.GetTruePosition();
+                playerMouse = SoloPlayer03MouseAngle;
+                originPlayer = SoloPlayer03.GetTruePosition();
                 break;
             case 4:
-                playerMouse = soloPlayer04mouseAngle;
-                originPlayer = soloPlayer04.GetTruePosition();
+                playerMouse = SoloPlayer04MouseAngle;
+                originPlayer = SoloPlayer04.GetTruePosition();
                 break;
             case 5:
-                playerMouse = soloPlayer05mouseAngle;
-                originPlayer = soloPlayer05.GetTruePosition();
+                playerMouse = SoloPlayer05MouseAngle;
+                originPlayer = SoloPlayer05.GetTruePosition();
                 break;
             case 6:
-                playerMouse = soloPlayer06mouseAngle;
-                originPlayer = soloPlayer06.GetTruePosition();
+                playerMouse = SoloPlayer06MouseAngle;
+                originPlayer = SoloPlayer06.GetTruePosition();
                 break;
             case 7:
-                playerMouse = soloPlayer07mouseAngle;
-                originPlayer = soloPlayer07.GetTruePosition();
+                playerMouse = SoloPlayer07MouseAngle;
+                originPlayer = SoloPlayer07.GetTruePosition();
                 break;
             case 8:
-                playerMouse = soloPlayer08mouseAngle;
-                originPlayer = soloPlayer08.GetTruePosition();
+                playerMouse = SoloPlayer08MouseAngle;
+                originPlayer = SoloPlayer08.GetTruePosition();
                 break;
             case 9:
-                playerMouse = soloPlayer09mouseAngle;
-                originPlayer = soloPlayer09.GetTruePosition();
+                playerMouse = SoloPlayer09MouseAngle;
+                originPlayer = SoloPlayer09.GetTruePosition();
                 break;
             case 10:
-                playerMouse = soloPlayer10mouseAngle;
-                originPlayer = soloPlayer10.GetTruePosition();
+                playerMouse = SoloPlayer10MouseAngle;
+                originPlayer = SoloPlayer10.GetTruePosition();
                 break;
             case 11:
-                playerMouse = soloPlayer11mouseAngle;
-                originPlayer = soloPlayer11.GetTruePosition();
+                playerMouse = SoloPlayer11MouseAngle;
+                originPlayer = SoloPlayer11.GetTruePosition();
                 break;
             case 12:
-                playerMouse = soloPlayer12mouseAngle;
-                originPlayer = soloPlayer12.GetTruePosition();
+                playerMouse = SoloPlayer12MouseAngle;
+                originPlayer = SoloPlayer12.GetTruePosition();
                 break;
             case 13:
-                playerMouse = soloPlayer13mouseAngle;
-                originPlayer = soloPlayer13.GetTruePosition();
+                playerMouse = SoloPlayer13MouseAngle;
+                originPlayer = SoloPlayer13.GetTruePosition();
                 break;
             case 14:
-                playerMouse = soloPlayer14mouseAngle;
-                originPlayer = soloPlayer14.GetTruePosition();
+                playerMouse = SoloPlayer14MouseAngle;
+                originPlayer = SoloPlayer14.GetTruePosition();
                 break;
             case 15:
-                playerMouse = soloPlayer15mouseAngle;
-                originPlayer = soloPlayer15.GetTruePosition();
+                playerMouse = SoloPlayer15MouseAngle;
+                originPlayer = SoloPlayer15.GetTruePosition();
                 break;
         }
+
         PlayerControl result = null;
-        float num = effectiveRange;
+        var num = effectiveRange;
         Vector3 pos;
-        float mouseAngle = playerMouse;
-        foreach (PlayerControl player in soloPlayerTeam)
+        var mouseAngle = playerMouse;
+        foreach (var player in SoloPlayerTeam)
         {
             if (player.PlayerId == PlayerControl.LocalPlayer.PlayerId) continue;
 
             if (player.Data.IsDead || player.inVent) continue;
 
             pos = player.transform.position - PlayerControl.LocalPlayer.transform.position;
-            pos = new Vector3(
-                pos.x * MathF.Cos(mouseAngle) + pos.y * MathF.Sin(mouseAngle),
-                pos.y * MathF.Cos(mouseAngle) - pos.x * MathF.Sin(mouseAngle));
-            if (Math.Abs(pos.y) < shotSize && (!(pos.x < 0)) && pos.x < num)
+            pos = new((pos.x * MathF.Cos(mouseAngle)) + (pos.y * MathF.Sin(mouseAngle)), (pos.y * MathF.Cos(mouseAngle)) - (pos.x * MathF.Sin(mouseAngle)));
+            if (Math.Abs(pos.y) < shotSize && !(pos.x < 0) && pos.x < num)
             {
                 num = pos.x;
-                if (!PhysicsHelpers.AnythingBetween(
-                        originPlayer,
-                        player.GetTruePosition(),
-                        Constants.ShipOnlyMask,
-                        false
-                    ))
-                {
+                if (!PhysicsHelpers.AnythingBetween(originPlayer, player.GetTruePosition(), Constants.ShipOnlyMask, false))
                     result = player;
-                }
             }
         }
+
         return result;
     }
+
     public static PlayerControl GetLimeShotPlayer(float shotSize, float effectiveRange, int whichPlayerShot)
     {
         float playerMouse = 0;
@@ -661,88 +624,74 @@ public static partial class BattleRoyale
         switch (whichPlayerShot)
         {
             case 1:
-                playerMouse = limePlayer01mouseAngle;
-                originPlayer = limePlayer01.GetTruePosition();
+                playerMouse = LimePlayer01MouseAngle;
+                originPlayer = LimePlayer01.GetTruePosition();
                 break;
             case 2:
-                playerMouse = limePlayer02mouseAngle;
-                originPlayer = limePlayer02.GetTruePosition();
+                playerMouse = LimePlayer02MouseAngle;
+                originPlayer = LimePlayer02.GetTruePosition();
                 break;
             case 3:
-                playerMouse = limePlayer03mouseAngle;
-                originPlayer = limePlayer03.GetTruePosition();
+                playerMouse = LimePlayer03MouseAngle;
+                originPlayer = LimePlayer03.GetTruePosition();
                 break;
             case 4:
-                playerMouse = limePlayer04mouseAngle;
-                originPlayer = limePlayer04.GetTruePosition();
+                playerMouse = LimePlayer04MouseAngle;
+                originPlayer = LimePlayer04.GetTruePosition();
                 break;
             case 5:
-                playerMouse = limePlayer05mouseAngle;
-                originPlayer = limePlayer05.GetTruePosition();
+                playerMouse = LimePlayer05MouseAngle;
+                originPlayer = LimePlayer05.GetTruePosition();
                 break;
             case 6:
-                playerMouse = limePlayer06mouseAngle;
-                originPlayer = limePlayer06.GetTruePosition();
+                playerMouse = LimePlayer06MouseAngle;
+                originPlayer = LimePlayer06.GetTruePosition();
                 break;
             case 7:
-                playerMouse = limePlayer07mouseAngle;
-                originPlayer = limePlayer07.GetTruePosition();
+                playerMouse = LimePlayer07MouseAngle;
+                originPlayer = LimePlayer07.GetTruePosition();
                 break;
         }
+
         PlayerControl result = null;
-        float num = effectiveRange;
+        var num = effectiveRange;
         Vector3 pos;
-        float mouseAngle = playerMouse;
-        foreach (PlayerControl player in pinkTeam)
+        var mouseAngle = playerMouse;
+        foreach (var player in PinkTeam)
         {
             if (player.PlayerId == PlayerControl.LocalPlayer.PlayerId) continue;
 
             if (player.Data.IsDead || player.inVent) continue;
 
             pos = player.transform.position - PlayerControl.LocalPlayer.transform.position;
-            pos = new Vector3(
-                pos.x * MathF.Cos(mouseAngle) + pos.y * MathF.Sin(mouseAngle),
-                pos.y * MathF.Cos(mouseAngle) - pos.x * MathF.Sin(mouseAngle));
-            if (Math.Abs(pos.y) < shotSize && (!(pos.x < 0)) && pos.x < num)
+            pos = new((pos.x * MathF.Cos(mouseAngle)) + (pos.y * MathF.Sin(mouseAngle)), (pos.y * MathF.Cos(mouseAngle)) - (pos.x * MathF.Sin(mouseAngle)));
+            if (Math.Abs(pos.y) < shotSize && !(pos.x < 0) && pos.x < num)
             {
                 num = pos.x;
-                if (!PhysicsHelpers.AnythingBetween(
-                        originPlayer,
-                        player.GetTruePosition(),
-                        Constants.ShipOnlyMask,
-                        false
-                    ))
-                {
+                if (!PhysicsHelpers.AnythingBetween(originPlayer, player.GetTruePosition(), Constants.ShipOnlyMask, false))
                     result = player;
-                }
             }
         }
-        foreach (PlayerControl player in serialKillerTeam)
+
+        foreach (var player in SerialKillerTeam)
         {
             if (player.PlayerId == PlayerControl.LocalPlayer.PlayerId) continue;
 
             if (player.Data.IsDead || player.inVent) continue;
 
             pos = player.transform.position - PlayerControl.LocalPlayer.transform.position;
-            pos = new Vector3(
-                pos.x * MathF.Cos(mouseAngle) + pos.y * MathF.Sin(mouseAngle),
-                pos.y * MathF.Cos(mouseAngle) - pos.x * MathF.Sin(mouseAngle));
-            if (Math.Abs(pos.y) < shotSize && (!(pos.x < 0)) && pos.x < num)
+            pos = new((pos.x * MathF.Cos(mouseAngle)) + (pos.y * MathF.Sin(mouseAngle)), (pos.y * MathF.Cos(mouseAngle)) - (pos.x * MathF.Sin(mouseAngle)));
+            if (Math.Abs(pos.y) < shotSize && !(pos.x < 0) && pos.x < num)
             {
                 num = pos.x;
-                if (!PhysicsHelpers.AnythingBetween(
-                        originPlayer,
-                        player.GetTruePosition(),
-                        Constants.ShipOnlyMask,
-                        false
-                    ))
-                {
+                if (!PhysicsHelpers.AnythingBetween(originPlayer, player.GetTruePosition(), Constants.ShipOnlyMask, false))
                     result = player;
-                }
             }
         }
+
         return result;
     }
+
     public static PlayerControl GetPinkShotPlayer(float shotSize, float effectiveRange, int whichPlayerShot)
     {
         float playerMouse = 0;
@@ -750,432 +699,379 @@ public static partial class BattleRoyale
         switch (whichPlayerShot)
         {
             case 1:
-                playerMouse = pinkPlayer01mouseAngle;
-                originPlayer = pinkPlayer01.GetTruePosition();
+                playerMouse = PinkPlayer01MouseAngle;
+                originPlayer = PinkPlayer01.GetTruePosition();
                 break;
             case 2:
-                playerMouse = pinkPlayer02mouseAngle;
-                originPlayer = pinkPlayer02.GetTruePosition();
+                playerMouse = PinkPlayer02MouseAngle;
+                originPlayer = PinkPlayer02.GetTruePosition();
                 break;
             case 3:
-                playerMouse = pinkPlayer03mouseAngle;
-                originPlayer = pinkPlayer03.GetTruePosition();
+                playerMouse = PinkPlayer03MouseAngle;
+                originPlayer = PinkPlayer03.GetTruePosition();
                 break;
             case 4:
-                playerMouse = pinkPlayer04mouseAngle;
-                originPlayer = pinkPlayer04.GetTruePosition();
+                playerMouse = PinkPlayer04MouseAngle;
+                originPlayer = PinkPlayer04.GetTruePosition();
                 break;
             case 5:
-                playerMouse = pinkPlayer05mouseAngle;
-                originPlayer = pinkPlayer05.GetTruePosition();
+                playerMouse = PinkPlayer05MouseAngle;
+                originPlayer = PinkPlayer05.GetTruePosition();
                 break;
             case 6:
-                playerMouse = pinkPlayer06mouseAngle;
-                originPlayer = pinkPlayer06.GetTruePosition();
+                playerMouse = PinkPlayer06MouseAngle;
+                originPlayer = PinkPlayer06.GetTruePosition();
                 break;
             case 7:
-                playerMouse = pinkPlayer07mouseAngle;
-                originPlayer = pinkPlayer07.GetTruePosition();
+                playerMouse = PinkPlayer07MouseAngle;
+                originPlayer = PinkPlayer07.GetTruePosition();
                 break;
         }
+
         PlayerControl result = null;
-        float num = effectiveRange;
+        var num = effectiveRange;
         Vector3 pos;
-        float mouseAngle = playerMouse;
-        foreach (PlayerControl player in limeTeam)
+        var mouseAngle = playerMouse;
+        foreach (var player in LimeTeam)
         {
             if (player.PlayerId == PlayerControl.LocalPlayer.PlayerId) continue;
 
             if (player.Data.IsDead || player.inVent) continue;
 
             pos = player.transform.position - PlayerControl.LocalPlayer.transform.position;
-            pos = new Vector3(
-                pos.x * MathF.Cos(mouseAngle) + pos.y * MathF.Sin(mouseAngle),
-                pos.y * MathF.Cos(mouseAngle) - pos.x * MathF.Sin(mouseAngle));
-            if (Math.Abs(pos.y) < shotSize && (!(pos.x < 0)) && pos.x < num)
+            pos = new((pos.x * MathF.Cos(mouseAngle)) + (pos.y * MathF.Sin(mouseAngle)), (pos.y * MathF.Cos(mouseAngle)) - (pos.x * MathF.Sin(mouseAngle)));
+            if (Math.Abs(pos.y) < shotSize && !(pos.x < 0) && pos.x < num)
             {
                 num = pos.x;
-                if (!PhysicsHelpers.AnythingBetween(
-                        originPlayer,
-                        player.GetTruePosition(),
-                        Constants.ShipOnlyMask,
-                        false
-                    ))
-                {
+                if (!PhysicsHelpers.AnythingBetween(originPlayer, player.GetTruePosition(), Constants.ShipOnlyMask, false))
                     result = player;
-                }
             }
         }
-        foreach (PlayerControl player in serialKillerTeam)
+
+        foreach (var player in SerialKillerTeam)
         {
             if (player.PlayerId == PlayerControl.LocalPlayer.PlayerId) continue;
 
             if (player.Data.IsDead || player.inVent) continue;
 
             pos = player.transform.position - PlayerControl.LocalPlayer.transform.position;
-            pos = new Vector3(
-                pos.x * MathF.Cos(mouseAngle) + pos.y * MathF.Sin(mouseAngle),
-                pos.y * MathF.Cos(mouseAngle) - pos.x * MathF.Sin(mouseAngle));
-            if (Math.Abs(pos.y) < shotSize && (!(pos.x < 0)) && pos.x < num)
+            pos = new((pos.x * MathF.Cos(mouseAngle)) + (pos.y * MathF.Sin(mouseAngle)), (pos.y * MathF.Cos(mouseAngle)) - (pos.x * MathF.Sin(mouseAngle)));
+            if (Math.Abs(pos.y) < shotSize && !(pos.x < 0) && pos.x < num)
             {
                 num = pos.x;
-                if (!PhysicsHelpers.AnythingBetween(
-                        originPlayer,
-                        player.GetTruePosition(),
-                        Constants.ShipOnlyMask,
-                        false
-                    ))
-                {
+                if (!PhysicsHelpers.AnythingBetween(originPlayer, player.GetTruePosition(), Constants.ShipOnlyMask, false))
                     result = player;
-                }
             }
         }
+
         return result;
     }
+
     public static PlayerControl GetSerialShootPlayer(float shotSize, float effectiveRange)
     {
         PlayerControl result = null;
-        float num = effectiveRange;
+        var num = effectiveRange;
         Vector3 pos;
-        float mouseAngle = serialKillermouseAngle;
-        foreach (PlayerControl player in PlayerControl.AllPlayerControls.GetFastEnumerator())
+        var mouseAngle = SerialKillermouseAngle;
+        foreach (var player in PlayerControl.AllPlayerControls.GetFastEnumerator())
         {
             if (player.PlayerId == PlayerControl.LocalPlayer.PlayerId) continue;
 
             if (player.Data.IsDead) continue;
 
             pos = player.transform.position - PlayerControl.LocalPlayer.transform.position;
-            pos = new Vector3(
-                pos.x * MathF.Cos(mouseAngle) + pos.y * MathF.Sin(mouseAngle),
-                pos.y * MathF.Cos(mouseAngle) - pos.x * MathF.Sin(mouseAngle));
-            if (Math.Abs(pos.y) < shotSize && (!(pos.x < 0)) && pos.x < num)
+            pos = new((pos.x * MathF.Cos(mouseAngle)) + (pos.y * MathF.Sin(mouseAngle)), (pos.y * MathF.Cos(mouseAngle)) - (pos.x * MathF.Sin(mouseAngle)));
+            if (Math.Abs(pos.y) < shotSize && !(pos.x < 0) && pos.x < num)
             {
                 num = pos.x;
-                if (!PhysicsHelpers.AnythingBetween(
-                        serialKiller.GetTruePosition(),
-                        player.GetTruePosition(),
-                        Constants.ShipOnlyMask,
-                        false
-                    ))
-                {
+                if (!PhysicsHelpers.AnythingBetween(SerialKiller.GetTruePosition(), player.GetTruePosition(), Constants.ShipOnlyMask, false))
                     result = player;
-                }
             }
         }
+
         return result;
     }
 
     public static void CreateBR()
     {
-
-        Vector3 serialKillerPos = new Vector3();
-        Vector3 limeTeamPos = new Vector3();
-        Vector3 pinkTeamPos = new Vector3();
-        Vector3 limeTeamFloorPos = new Vector3();
-        Vector3 pinkTeamFloorPos = new Vector3();
+        var serialKillerPos = new Vector3();
+        var limeTeamPos = new Vector3();
+        var pinkTeamPos = new Vector3();
+        var limeTeamFloorPos = new Vector3();
+        var pinkTeamFloorPos = new Vector3();
 
         switch (GameOptionsManager.Instance.currentGameOptions.MapId)
         {
             // Skeld / Custom Skeld
             case 0:
-                if (RebuildUs.activatedSensei)
+                if (RebuildUs.ActivatedSensei)
                 {
-                    serialKillerPos = new Vector3(-3.65f, 5f, PlayerControl.LocalPlayer.transform.position.z);
-                    limeTeamPos = new Vector3(-17.5f, -1.15f, PlayerControl.LocalPlayer.transform.position.z);
-                    pinkTeamPos = new Vector3(7.7f, -0.95f, PlayerControl.LocalPlayer.transform.position.z);
-                    limeTeamFloorPos = new Vector3(-17.5f, -1.15f, 0.5f);
-                    pinkTeamFloorPos = new Vector3(7.7f, -0.95f, 0.5f);
+                    serialKillerPos = new(-3.65f, 5f, PlayerControl.LocalPlayer.transform.position.z);
+                    limeTeamPos = new(-17.5f, -1.15f, PlayerControl.LocalPlayer.transform.position.z);
+                    pinkTeamPos = new(7.7f, -0.95f, PlayerControl.LocalPlayer.transform.position.z);
+                    limeTeamFloorPos = new(-17.5f, -1.15f, 0.5f);
+                    pinkTeamFloorPos = new(7.7f, -0.95f, 0.5f);
                 }
-                else if (RebuildUs.activatedDleks)
+                else if (RebuildUs.ActivatedDleks)
                 {
-                    serialKillerPos = new Vector3(-6.35f, -7.5f, PlayerControl.LocalPlayer.transform.position.z);
-                    limeTeamPos = new Vector3(17f, -5.5f, PlayerControl.LocalPlayer.transform.position.z);
-                    pinkTeamPos = new Vector3(-12f, -4.75f, PlayerControl.LocalPlayer.transform.position.z);
-                    limeTeamFloorPos = new Vector3(17f, -5.5f, 0.5f);
-                    pinkTeamFloorPos = new Vector3(-12f, -4.75f, 0.5f);
+                    serialKillerPos = new(-6.35f, -7.5f, PlayerControl.LocalPlayer.transform.position.z);
+                    limeTeamPos = new(17f, -5.5f, PlayerControl.LocalPlayer.transform.position.z);
+                    pinkTeamPos = new(-12f, -4.75f, PlayerControl.LocalPlayer.transform.position.z);
+                    limeTeamFloorPos = new(17f, -5.5f, 0.5f);
+                    pinkTeamFloorPos = new(-12f, -4.75f, 0.5f);
                 }
                 else
                 {
-                    serialKillerPos = new Vector3(6.35f, -7.5f, PlayerControl.LocalPlayer.transform.position.z);
-                    limeTeamPos = new Vector3(-17f, -5.5f, PlayerControl.LocalPlayer.transform.position.z);
-                    pinkTeamPos = new Vector3(12f, -4.75f, PlayerControl.LocalPlayer.transform.position.z);
-                    limeTeamFloorPos = new Vector3(-17f, -5.5f, 0.5f);
-                    pinkTeamFloorPos = new Vector3(12f, -4.75f, 0.5f);
+                    serialKillerPos = new(6.35f, -7.5f, PlayerControl.LocalPlayer.transform.position.z);
+                    limeTeamPos = new(-17f, -5.5f, PlayerControl.LocalPlayer.transform.position.z);
+                    pinkTeamPos = new(12f, -4.75f, PlayerControl.LocalPlayer.transform.position.z);
+                    limeTeamFloorPos = new(-17f, -5.5f, 0.5f);
+                    pinkTeamFloorPos = new(12f, -4.75f, 0.5f);
                 }
+
                 break;
             // Mira HQ
             case 1:
-                serialKillerPos = new Vector3(16.25f, 24.5f, PlayerControl.LocalPlayer.transform.position.z);
-                limeTeamPos = new Vector3(6.15f, 13.25f, PlayerControl.LocalPlayer.transform.position.z);
-                pinkTeamPos = new Vector3(22.25f, 3f, PlayerControl.LocalPlayer.transform.position.z);
-                limeTeamFloorPos = new Vector3(6.15f, 13.25f, 0.5f);
-                pinkTeamFloorPos = new Vector3(22.25f, 3f, 0.5f);
+                serialKillerPos = new(16.25f, 24.5f, PlayerControl.LocalPlayer.transform.position.z);
+                limeTeamPos = new(6.15f, 13.25f, PlayerControl.LocalPlayer.transform.position.z);
+                pinkTeamPos = new(22.25f, 3f, PlayerControl.LocalPlayer.transform.position.z);
+                limeTeamFloorPos = new(6.15f, 13.25f, 0.5f);
+                pinkTeamFloorPos = new(22.25f, 3f, 0.5f);
                 break;
             // Polus
             case 2:
-                serialKillerPos = new Vector3(22.3f, -19.15f, PlayerControl.LocalPlayer.transform.position.z);
-                limeTeamPos = new Vector3(2.35f, -23.75f, PlayerControl.LocalPlayer.transform.position.z);
-                pinkTeamPos = new Vector3(36.35f, -8f, PlayerControl.LocalPlayer.transform.position.z);
-                limeTeamFloorPos = new Vector3(2.35f, -23.75f, 0.5f);
-                pinkTeamFloorPos = new Vector3(36.35f, -8f, 0.5f);
+                serialKillerPos = new(22.3f, -19.15f, PlayerControl.LocalPlayer.transform.position.z);
+                limeTeamPos = new(2.35f, -23.75f, PlayerControl.LocalPlayer.transform.position.z);
+                pinkTeamPos = new(36.35f, -8f, PlayerControl.LocalPlayer.transform.position.z);
+                limeTeamFloorPos = new(2.35f, -23.75f, 0.5f);
+                pinkTeamFloorPos = new(36.35f, -8f, 0.5f);
                 break;
             // Dleks
             case 3:
-                serialKillerPos = new Vector3(-6.35f, -7.5f, PlayerControl.LocalPlayer.transform.position.z);
-                limeTeamPos = new Vector3(17f, -5.5f, PlayerControl.LocalPlayer.transform.position.z);
-                pinkTeamPos = new Vector3(-12f, -4.75f, PlayerControl.LocalPlayer.transform.position.z);
-                limeTeamFloorPos = new Vector3(17f, -5.5f, 0.5f);
-                pinkTeamFloorPos = new Vector3(-12f, -4.75f, 0.5f);
+                serialKillerPos = new(-6.35f, -7.5f, PlayerControl.LocalPlayer.transform.position.z);
+                limeTeamPos = new(17f, -5.5f, PlayerControl.LocalPlayer.transform.position.z);
+                pinkTeamPos = new(-12f, -4.75f, PlayerControl.LocalPlayer.transform.position.z);
+                limeTeamFloorPos = new(17f, -5.5f, 0.5f);
+                pinkTeamFloorPos = new(-12f, -4.75f, 0.5f);
                 break;
             // Airship
             case 4:
-                serialKillerPos = new Vector3(12.25f, 2f, PlayerControl.LocalPlayer.transform.position.z);
-                limeTeamPos = new Vector3(-13.9f, -14.45f, PlayerControl.LocalPlayer.transform.position.z);
-                pinkTeamPos = new Vector3(37.35f, -3.25f, PlayerControl.LocalPlayer.transform.position.z);
-                limeTeamFloorPos = new Vector3(-13.9f, -14.45f, 0.5f);
-                pinkTeamFloorPos = new Vector3(37.35f, -3.25f, 0.5f);
+                serialKillerPos = new(12.25f, 2f, PlayerControl.LocalPlayer.transform.position.z);
+                limeTeamPos = new(-13.9f, -14.45f, PlayerControl.LocalPlayer.transform.position.z);
+                pinkTeamPos = new(37.35f, -3.25f, PlayerControl.LocalPlayer.transform.position.z);
+                limeTeamFloorPos = new(-13.9f, -14.45f, 0.5f);
+                pinkTeamFloorPos = new(37.35f, -3.25f, 0.5f);
                 break;
             // Fungle
             case 5:
-                serialKillerPos = new Vector3(9.35f, -9.85f, PlayerControl.LocalPlayer.transform.position.z);
-                limeTeamPos = new Vector3(1.6f, -1.65f, PlayerControl.LocalPlayer.transform.position.z);
-                pinkTeamPos = new Vector3(6.75f, 2f, PlayerControl.LocalPlayer.transform.position.z);
-                limeTeamFloorPos = new Vector3(1.6f, -1.65f, 0.5f);
-                pinkTeamFloorPos = new Vector3(6.75f, 2, 0.5f);
+                serialKillerPos = new(9.35f, -9.85f, PlayerControl.LocalPlayer.transform.position.z);
+                limeTeamPos = new(1.6f, -1.65f, PlayerControl.LocalPlayer.transform.position.z);
+                pinkTeamPos = new(6.75f, 2f, PlayerControl.LocalPlayer.transform.position.z);
+                limeTeamFloorPos = new(1.6f, -1.65f, 0.5f);
+                pinkTeamFloorPos = new(6.75f, 2, 0.5f);
                 break;
             // Submerged
             case 6:
-                serialKillerPos = new Vector3(5.75f, 31.25f, PlayerControl.LocalPlayer.transform.position.z);
-                limeTeamPos = new Vector3(-12.25f, 18.5f, PlayerControl.LocalPlayer.transform.position.z);
-                pinkTeamPos = new Vector3(-8.5f, -39.5f, PlayerControl.LocalPlayer.transform.position.z);
-                limeTeamFloorPos = new Vector3(-12.25f, 18.5f, 0.03f);
-                pinkTeamFloorPos = new Vector3(-8.5f, -39.5f, -0.01f);
-                GameObject limeTeamFloorTwo = GameObject.Instantiate(AssetLoader.greenfloor, PlayerControl.LocalPlayer.transform.parent);
+                serialKillerPos = new(5.75f, 31.25f, PlayerControl.LocalPlayer.transform.position.z);
+                limeTeamPos = new(-12.25f, 18.5f, PlayerControl.LocalPlayer.transform.position.z);
+                pinkTeamPos = new(-8.5f, -39.5f, PlayerControl.LocalPlayer.transform.position.z);
+                limeTeamFloorPos = new(-12.25f, 18.5f, 0.03f);
+                pinkTeamFloorPos = new(-8.5f, -39.5f, -0.01f);
+                var limeTeamFloorTwo = GameObject.Instantiate(AssetLoader.Greenfloor, PlayerControl.LocalPlayer.transform.parent);
                 limeTeamFloorTwo.name = "LimeTeamFloorTwo";
-                limeTeamFloorTwo.transform.position = new Vector3(-14.5f, -34.35f, -0.01f);
-                GameObject pinkTeamFloorTwo = GameObject.Instantiate(AssetLoader.redfloor, PlayerControl.LocalPlayer.transform.parent);
+                limeTeamFloorTwo.transform.position = new(-14.5f, -34.35f, -0.01f);
+                var pinkTeamFloorTwo = GameObject.Instantiate(AssetLoader.Redfloor, PlayerControl.LocalPlayer.transform.parent);
                 pinkTeamFloorTwo.name = "PinkTeamFloorTwo";
-                pinkTeamFloorTwo.transform.position = new Vector3(0f, 33.5f, 0.03f);
-                BattleRoyale.serialKillerSpawns.Add(limeTeamFloorTwo);
-                BattleRoyale.serialKillerSpawns.Add(pinkTeamFloorTwo);
+                pinkTeamFloorTwo.transform.position = new(0f, 33.5f, 0.03f);
+                SerialKillerSpawns.Add(limeTeamFloorTwo);
+                SerialKillerSpawns.Add(pinkTeamFloorTwo);
                 break;
         }
 
-        if (BattleRoyale.matchType == 0)
+        if (MatchType == 0)
         {
-            foreach (PlayerControl soloPlayer in BattleRoyale.soloPlayerTeam)
+            foreach (var soloPlayer in SoloPlayerTeam)
             {
-                soloPlayer.transform.position = new Vector3(BattleRoyale.soloPlayersSpawnPositions[howmanyBattleRoyaleplayers].x, BattleRoyale.soloPlayersSpawnPositions[howmanyBattleRoyaleplayers].y, PlayerControl.LocalPlayer.transform.position.z);
-                howmanyBattleRoyaleplayers += 1;
+                soloPlayer.transform.position = new(SoloPlayersSpawnPositions[_howmanyBattleRoyaleplayers].x, SoloPlayersSpawnPositions[_howmanyBattleRoyaleplayers].y, PlayerControl.LocalPlayer.transform.position.z);
+                _howmanyBattleRoyaleplayers += 1;
             }
         }
         else
         {
-            if (BattleRoyale.serialKiller != null)
+            if (SerialKiller != null)
             {
-                BattleRoyale.serialKiller.MyPhysics.SetBodyType(PlayerBodyTypes.Seeker);
-                BattleRoyale.serialKiller.transform.position = serialKillerPos;
+                SerialKiller.MyPhysics.SetBodyType(PlayerBodyTypes.Seeker);
+                SerialKiller.transform.position = serialKillerPos;
             }
 
-            foreach (PlayerControl player in BattleRoyale.limeTeam)
-            {
-                player.transform.position = limeTeamPos;
-            }
+            foreach (var player in LimeTeam) player.transform.position = limeTeamPos;
 
-            foreach (PlayerControl player in BattleRoyale.pinkTeam)
-            {
-                player.transform.position = pinkTeamPos;
-            }
+            foreach (var player in PinkTeam) player.transform.position = pinkTeamPos;
         }
 
-        if (PlayerControl.LocalPlayer != null && !createdbattleroyale)
+        if (PlayerControl.LocalPlayer != null && !_createdbattleroyale)
         {
-            Helpers.ClearAllTasks(PlayerControl.LocalPlayer);
+            PlayerControl.LocalPlayer.ClearAllTasks();
 
-            if (BattleRoyale.matchType != 0)
+            if (MatchType != 0)
             {
-                GameObject limeteamfloor = GameObject.Instantiate(AssetLoader.greenfloor, PlayerControl.LocalPlayer.transform.parent);
+                var limeteamfloor = GameObject.Instantiate(AssetLoader.Greenfloor, PlayerControl.LocalPlayer.transform.parent);
                 limeteamfloor.name = "limeteamfloor";
                 limeteamfloor.transform.position = limeTeamFloorPos;
-                GameObject pinkteamfloor = GameObject.Instantiate(AssetLoader.redfloor, PlayerControl.LocalPlayer.transform.parent);
+                var pinkteamfloor = GameObject.Instantiate(AssetLoader.Redfloor, PlayerControl.LocalPlayer.transform.parent);
                 pinkteamfloor.name = "pinkteamfloor";
                 pinkteamfloor.transform.position = pinkTeamFloorPos;
-                BattleRoyale.serialKillerSpawns.Add(limeteamfloor);
-                BattleRoyale.serialKillerSpawns.Add(pinkteamfloor);
+                SerialKillerSpawns.Add(limeteamfloor);
+                SerialKillerSpawns.Add(pinkteamfloor);
             }
 
-            createdbattleroyale = true;
+            _createdbattleroyale = true;
         }
     }
 
     public static void OnMurderPlayerPostfix(PlayerControl __instance, PlayerControl target)
     {
-        var brBody = UnityEngine.Object.FindObjectsOfType<DeadBody>().FirstOrDefault(b => b.ParentId == target.PlayerId);
-        brBody.transform.position = new Vector3(50, 50, 1);
+        var brBody = Object.FindObjectsOfType<DeadBody>().FirstOrDefault(b => b.ParentId == target.PlayerId);
+        brBody.transform.position = new(50, 50, 1);
 
-        if (BattleRoyale.matchType == 2)
+        if (MatchType == 2)
         {
-            if (BattleRoyale.serialKiller != null && BattleRoyale.serialKiller.PlayerId == target.PlayerId)
+            if (SerialKiller != null && SerialKiller.PlayerId == target.PlayerId)
             {
-                BattleRoyale.serialKillerIsReviving = true;
-                BattleRoyale.serialKiller.MyPhysics.SetBodyType(PlayerBodyTypes.Normal);
-                Helpers.alphaPlayer(true, BattleRoyale.serialKiller.PlayerId);
-                HudManager.Instance.StartCoroutine(Effects.Lerp(MapSettings.gamemodeReviveTime, new Action<float>((p) =>
+                SerialKillerIsReviving = true;
+                SerialKiller.MyPhysics.SetBodyType(PlayerBodyTypes.Normal);
+                Helpers.AlphaPlayer(true, SerialKiller.PlayerId);
+                HudManager.Instance.StartCoroutine(Effects.Lerp(MapSettings.GamemodeReviveTime, new Action<float>(p =>
                 {
-                    if (p == 1f && BattleRoyale.serialKiller != null)
+                    if (p == 1f && SerialKiller != null)
                     {
-                        BattleRoyale.serialKillerIsReviving = false;
+                        SerialKillerIsReviving = false;
                         if (PlayerControl.AllPlayerControls.Count >= 11)
-                        {
-                            BattleRoyale.serialKillerLifes = BattleRoyale.fighterLifes * 3;
-                        }
+                            SerialKillerLifes = FighterLifes * 3;
                         else
-                        {
-                            BattleRoyale.serialKillerLifes = BattleRoyale.fighterLifes * 2;
-                        }
-                        Helpers.alphaPlayer(false, BattleRoyale.serialKiller.PlayerId);
-                        BattleRoyale.serialKiller.MyPhysics.SetBodyType(PlayerBodyTypes.Seeker);
+                            SerialKillerLifes = FighterLifes * 2;
+                        Helpers.AlphaPlayer(false, SerialKiller.PlayerId);
+                        SerialKiller.MyPhysics.SetBodyType(PlayerBodyTypes.Seeker);
                     }
                 })));
-                HudManager.Instance.StartCoroutine(Effects.Lerp(MapSettings.gamemodeReviveTime - MapSettings.gamemodeInvincibilityTime, new Action<float>((p) =>
+                HudManager.Instance.StartCoroutine(Effects.Lerp(MapSettings.GamemodeReviveTime - MapSettings.GamemodeInvincibilityTime, new Action<float>(p =>
                 {
-                    if (p == 1f && BattleRoyale.serialKiller != null)
+                    if (p == 1f && SerialKiller != null)
                     {
-                        BattleRoyale.serialKiller.Revive();
+                        SerialKiller.Revive();
                         switch (GameOptionsManager.Instance.currentGameOptions.MapId)
                         {
                             // Skeld
                             case 0:
-                                if (RebuildUs.activatedSensei)
-                                {
-                                    BattleRoyale.serialKiller.transform.position = new Vector3(-3.65f, 5f, PlayerControl.LocalPlayer.transform.position.z);
-                                }
-                                else if (RebuildUs.activatedDleks)
-                                {
-                                    BattleRoyale.serialKiller.transform.position = new Vector3(-6.35f, -7.5f, PlayerControl.LocalPlayer.transform.position.z);
-                                }
+                                if (RebuildUs.ActivatedSensei)
+                                    SerialKiller.transform.position = new(-3.65f, 5f, PlayerControl.LocalPlayer.transform.position.z);
+                                else if (RebuildUs.ActivatedDleks)
+                                    SerialKiller.transform.position = new(-6.35f, -7.5f, PlayerControl.LocalPlayer.transform.position.z);
                                 else
-                                {
-                                    BattleRoyale.serialKiller.transform.position = new Vector3(6.35f, -7.5f, PlayerControl.LocalPlayer.transform.position.z);
-                                }
+                                    SerialKiller.transform.position = new(6.35f, -7.5f, PlayerControl.LocalPlayer.transform.position.z);
+
                                 break;
                             // MiraHQ
                             case 1:
-                                BattleRoyale.serialKiller.transform.position = new Vector3(16.25f, 24.5f, PlayerControl.LocalPlayer.transform.position.z);
+                                SerialKiller.transform.position = new(16.25f, 24.5f, PlayerControl.LocalPlayer.transform.position.z);
                                 break;
                             // Polus
                             case 2:
-                                BattleRoyale.serialKiller.transform.position = new Vector3(22.3f, -19.15f, PlayerControl.LocalPlayer.transform.position.z);
+                                SerialKiller.transform.position = new(22.3f, -19.15f, PlayerControl.LocalPlayer.transform.position.z);
                                 break;
                             // Dleks
                             case 3:
-                                BattleRoyale.serialKiller.transform.position = new Vector3(-6.35f, -7.5f, PlayerControl.LocalPlayer.transform.position.z);
+                                SerialKiller.transform.position = new(-6.35f, -7.5f, PlayerControl.LocalPlayer.transform.position.z);
                                 break;
                             // Airship
                             case 4:
-                                BattleRoyale.serialKiller.transform.position = new Vector3(12.25f, 2f, PlayerControl.LocalPlayer.transform.position.z);
+                                SerialKiller.transform.position = new(12.25f, 2f, PlayerControl.LocalPlayer.transform.position.z);
                                 break;
                             // Fungle
                             case 5:
-                                BattleRoyale.serialKiller.transform.position = new Vector3(9.35f, -9.85f, PlayerControl.LocalPlayer.transform.position.z);
+                                SerialKiller.transform.position = new(9.35f, -9.85f, PlayerControl.LocalPlayer.transform.position.z);
                                 break;
                             // Submerged
                             case 6:
-                                if (BattleRoyale.serialKiller.transform.position.y > 0)
-                                {
-                                    BattleRoyale.serialKiller.transform.position = new Vector3(5.75f, 31.25f, BattleRoyale.serialKiller.transform.position.z);
-                                }
+                                if (SerialKiller.transform.position.y > 0)
+                                    SerialKiller.transform.position = new(5.75f, 31.25f, SerialKiller.transform.position.z);
                                 else
-                                {
-                                    BattleRoyale.serialKiller.transform.position = new Vector3(-4.25f, -33.5f, BattleRoyale.serialKiller.transform.position.z);
-                                }
+                                    SerialKiller.transform.position = new(-4.25f, -33.5f, SerialKiller.transform.position.z);
+
                                 break;
                         }
-                        DeadPlayer deadPlayerEntry = GameHistory.DeadPlayers.Where(x => x.Player.PlayerId == target.PlayerId).FirstOrDefault();
-                        if (brBody != null) UnityEngine.Object.Destroy(brBody.gameObject);
-                        if (deadPlayerEntry != null) GameHistory.DeadPlayers.Remove(deadPlayerEntry);
+
+                        var deadPlayerEntry = GameHistory.DEAD_PLAYERS.Where(x => x.Player.PlayerId == target.PlayerId).FirstOrDefault();
+                        if (brBody != null)
+                            Object.Destroy(brBody.gameObject);
+                        if (deadPlayerEntry != null) GameHistory.DEAD_PLAYERS.Remove(deadPlayerEntry);
                     }
                 })));
-
             }
 
-            foreach (PlayerControl player in BattleRoyale.limeTeam)
+            foreach (var player in LimeTeam)
             {
                 if (player.PlayerId == target.PlayerId)
                 {
-
-                    if (BattleRoyale.limePlayer01 != null && target.PlayerId == BattleRoyale.limePlayer01.PlayerId)
-                    {
-                        BattleRoyale.limePlayer01IsReviving = true;
-                    }
-                    else if (BattleRoyale.limePlayer02 != null && target.PlayerId == BattleRoyale.limePlayer02.PlayerId)
-                    {
-                        BattleRoyale.limePlayer02IsReviving = true;
-                    }
-                    else if (BattleRoyale.limePlayer03 != null && target.PlayerId == BattleRoyale.limePlayer03.PlayerId)
-                    {
-                        BattleRoyale.limePlayer03IsReviving = true;
-                    }
-                    else if (BattleRoyale.limePlayer04 != null && target.PlayerId == BattleRoyale.limePlayer04.PlayerId)
-                    {
-                        BattleRoyale.limePlayer04IsReviving = true;
-                    }
-                    else if (BattleRoyale.limePlayer05 != null && target.PlayerId == BattleRoyale.limePlayer05.PlayerId)
-                    {
-                        BattleRoyale.limePlayer05IsReviving = true;
-                    }
-                    else if (BattleRoyale.limePlayer06 != null && target.PlayerId == BattleRoyale.limePlayer06.PlayerId)
-                    {
-                        BattleRoyale.limePlayer06IsReviving = true;
-                    }
-                    else if (BattleRoyale.limePlayer07 != null && target.PlayerId == BattleRoyale.limePlayer07.PlayerId)
-                    {
-                        BattleRoyale.limePlayer07IsReviving = true;
-                    }
-                    Helpers.alphaPlayer(true, player.PlayerId);
-                    HudManager.Instance.StartCoroutine(Effects.Lerp(MapSettings.gamemodeReviveTime, new Action<float>((p) =>
+                    if (LimePlayer01 != null && target.PlayerId == LimePlayer01.PlayerId)
+                        LimePlayer01IsReviving = true;
+                    else if (LimePlayer02 != null && target.PlayerId == LimePlayer02.PlayerId)
+                        LimePlayer02IsReviving = true;
+                    else if (LimePlayer03 != null && target.PlayerId == LimePlayer03.PlayerId)
+                        LimePlayer03IsReviving = true;
+                    else if (LimePlayer04 != null && target.PlayerId == LimePlayer04.PlayerId)
+                        LimePlayer04IsReviving = true;
+                    else if (LimePlayer05 != null && target.PlayerId == LimePlayer05.PlayerId)
+                        LimePlayer05IsReviving = true;
+                    else if (LimePlayer06 != null && target.PlayerId == LimePlayer06.PlayerId)
+                        LimePlayer06IsReviving = true;
+                    else if (LimePlayer07 != null && target.PlayerId == LimePlayer07.PlayerId)
+                        LimePlayer07IsReviving = true;
+                    Helpers.AlphaPlayer(true, player.PlayerId);
+                    HudManager.Instance.StartCoroutine(Effects.Lerp(MapSettings.GamemodeReviveTime, new Action<float>(p =>
                     {
                         if (p == 1f && player != null)
                         {
-                            if (BattleRoyale.limePlayer01 != null && target.PlayerId == BattleRoyale.limePlayer01.PlayerId)
+                            if (LimePlayer01 != null && target.PlayerId == LimePlayer01.PlayerId)
                             {
-                                BattleRoyale.limePlayer01IsReviving = false;
-                                BattleRoyale.limePlayer01Lifes = BattleRoyale.fighterLifes;
+                                LimePlayer01IsReviving = false;
+                                LimePlayer01Lifes = FighterLifes;
                             }
-                            else if (BattleRoyale.limePlayer02 != null && target.PlayerId == BattleRoyale.limePlayer02.PlayerId)
+                            else if (LimePlayer02 != null && target.PlayerId == LimePlayer02.PlayerId)
                             {
-                                BattleRoyale.limePlayer02IsReviving = false;
-                                BattleRoyale.limePlayer02Lifes = BattleRoyale.fighterLifes;
+                                LimePlayer02IsReviving = false;
+                                LimePlayer02Lifes = FighterLifes;
                             }
-                            else if (BattleRoyale.limePlayer03 != null && target.PlayerId == BattleRoyale.limePlayer03.PlayerId)
+                            else if (LimePlayer03 != null && target.PlayerId == LimePlayer03.PlayerId)
                             {
-                                BattleRoyale.limePlayer03IsReviving = false;
-                                BattleRoyale.limePlayer03Lifes = BattleRoyale.fighterLifes;
+                                LimePlayer03IsReviving = false;
+                                LimePlayer03Lifes = FighterLifes;
                             }
-                            else if (BattleRoyale.limePlayer04 != null && target.PlayerId == BattleRoyale.limePlayer04.PlayerId)
+                            else if (LimePlayer04 != null && target.PlayerId == LimePlayer04.PlayerId)
                             {
-                                BattleRoyale.limePlayer04IsReviving = false;
-                                BattleRoyale.limePlayer04Lifes = BattleRoyale.fighterLifes;
+                                LimePlayer04IsReviving = false;
+                                LimePlayer04Lifes = FighterLifes;
                             }
-                            else if (BattleRoyale.limePlayer05 != null && target.PlayerId == BattleRoyale.limePlayer05.PlayerId)
+                            else if (LimePlayer05 != null && target.PlayerId == LimePlayer05.PlayerId)
                             {
-                                BattleRoyale.limePlayer05IsReviving = false;
-                                BattleRoyale.limePlayer05Lifes = BattleRoyale.fighterLifes;
+                                LimePlayer05IsReviving = false;
+                                LimePlayer05Lifes = FighterLifes;
                             }
-                            else if (BattleRoyale.limePlayer06 != null && target.PlayerId == BattleRoyale.limePlayer06.PlayerId)
+                            else if (LimePlayer06 != null && target.PlayerId == LimePlayer06.PlayerId)
                             {
-                                BattleRoyale.limePlayer06IsReviving = false;
-                                BattleRoyale.limePlayer06Lifes = BattleRoyale.fighterLifes;
+                                LimePlayer06IsReviving = false;
+                                LimePlayer06Lifes = FighterLifes;
                             }
-                            else if (BattleRoyale.limePlayer07 != null && target.PlayerId == BattleRoyale.limePlayer07.PlayerId)
+                            else if (LimePlayer07 != null && target.PlayerId == LimePlayer07.PlayerId)
                             {
-                                BattleRoyale.limePlayer07IsReviving = false;
-                                BattleRoyale.limePlayer07Lifes = BattleRoyale.fighterLifes;
+                                LimePlayer07IsReviving = false;
+                                LimePlayer07Lifes = FighterLifes;
                             }
-                            Helpers.alphaPlayer(false, player.PlayerId);
+
+                            Helpers.AlphaPlayer(false, player.PlayerId);
                         }
                     })));
-                    HudManager.Instance.StartCoroutine(Effects.Lerp(MapSettings.gamemodeReviveTime - MapSettings.gamemodeInvincibilityTime, new Action<float>((p) =>
+                    HudManager.Instance.StartCoroutine(Effects.Lerp(MapSettings.GamemodeReviveTime - MapSettings.GamemodeInvincibilityTime, new Action<float>(p =>
                     {
                         if (p == 1f && player != null)
                         {
@@ -1184,137 +1080,117 @@ public static partial class BattleRoyale
                             {
                                 // Skeld
                                 case 0:
-                                    if (RebuildUs.activatedSensei)
-                                    {
-                                        player.transform.position = new Vector3(-17.5f, -1.15f, player.transform.position.z);
-                                    }
-                                    else if (RebuildUs.activatedDleks)
-                                    {
-                                        player.transform.position = new Vector3(17f, -5.5f, player.transform.position.z);
-                                    }
+                                    if (RebuildUs.ActivatedSensei)
+                                        player.transform.position = new(-17.5f, -1.15f, player.transform.position.z);
+                                    else if (RebuildUs.ActivatedDleks)
+                                        player.transform.position = new(17f, -5.5f, player.transform.position.z);
                                     else
-                                    {
-                                        player.transform.position = new Vector3(-17f, -5.5f, player.transform.position.z);
-                                    }
+                                        player.transform.position = new(-17f, -5.5f, player.transform.position.z);
+
                                     break;
                                 // MiraHQ
                                 case 1:
-                                    player.transform.position = new Vector3(6.15f, 13.25f, player.transform.position.z);
+                                    player.transform.position = new(6.15f, 13.25f, player.transform.position.z);
                                     break;
                                 // Polus
                                 case 2:
-                                    player.transform.position = new Vector3(2.35f, -23.75f, player.transform.position.z);
+                                    player.transform.position = new(2.35f, -23.75f, player.transform.position.z);
                                     break;
                                 // Dleks
                                 case 3:
-                                    player.transform.position = new Vector3(17f, -5.5f, player.transform.position.z);
+                                    player.transform.position = new(17f, -5.5f, player.transform.position.z);
                                     break;
                                 // Airship
                                 case 4:
-                                    player.transform.position = new Vector3(-13.9f, -14.45f, player.transform.position.z);
+                                    player.transform.position = new(-13.9f, -14.45f, player.transform.position.z);
                                     break;
                                 // Fungle
                                 case 5:
-                                    player.transform.position = new Vector3(1.6f, -1.65f, player.transform.position.z);
+                                    player.transform.position = new(1.6f, -1.65f, player.transform.position.z);
                                     break;
                                 // Submerged
                                 case 6:
                                     if (player.transform.position.y > 0)
-                                    {
-                                        player.transform.position = new Vector3(-12.25f, 18.5f, player.transform.position.z);
-                                    }
+                                        player.transform.position = new(-12.25f, 18.5f, player.transform.position.z);
                                     else
-                                    {
-                                        player.transform.position = new Vector3(-14.5f, -34.35f, player.transform.position.z);
-                                    }
+                                        player.transform.position = new(-14.5f, -34.35f, player.transform.position.z);
+
                                     break;
                             }
-                            DeadPlayer deadPlayerEntry = GameHistory.DeadPlayers.Where(x => x.Player.PlayerId == target.PlayerId).FirstOrDefault();
-                            if (brBody != null) UnityEngine.Object.Destroy(brBody.gameObject);
-                            if (deadPlayerEntry != null) GameHistory.DeadPlayers.Remove(deadPlayerEntry);
+
+                            var deadPlayerEntry = GameHistory.DEAD_PLAYERS.Where(x => x.Player.PlayerId == target.PlayerId).FirstOrDefault();
+                            if (brBody != null)
+                                Object.Destroy(brBody.gameObject);
+                            if (deadPlayerEntry != null) GameHistory.DEAD_PLAYERS.Remove(deadPlayerEntry);
                         }
                     })));
-
                 }
             }
-            foreach (PlayerControl player in BattleRoyale.pinkTeam)
+
+            foreach (var player in PinkTeam)
             {
                 if (player.PlayerId == target.PlayerId)
                 {
-
-                    if (BattleRoyale.pinkPlayer01 != null && target.PlayerId == BattleRoyale.pinkPlayer01.PlayerId)
-                    {
-                        BattleRoyale.pinkPlayer01IsReviving = true;
-                    }
-                    else if (BattleRoyale.pinkPlayer02 != null && target.PlayerId == BattleRoyale.pinkPlayer02.PlayerId)
-                    {
-                        BattleRoyale.pinkPlayer02IsReviving = true;
-                    }
-                    else if (BattleRoyale.pinkPlayer03 != null && target.PlayerId == BattleRoyale.pinkPlayer03.PlayerId)
-                    {
-                        BattleRoyale.pinkPlayer03IsReviving = true;
-                    }
-                    else if (BattleRoyale.pinkPlayer04 != null && target.PlayerId == BattleRoyale.pinkPlayer04.PlayerId)
-                    {
-                        BattleRoyale.pinkPlayer04IsReviving = true;
-                    }
-                    else if (BattleRoyale.pinkPlayer05 != null && target.PlayerId == BattleRoyale.pinkPlayer05.PlayerId)
-                    {
-                        BattleRoyale.pinkPlayer05IsReviving = true;
-                    }
-                    else if (BattleRoyale.pinkPlayer06 != null && target.PlayerId == BattleRoyale.pinkPlayer06.PlayerId)
-                    {
-                        BattleRoyale.pinkPlayer06IsReviving = true;
-                    }
-                    else if (BattleRoyale.pinkPlayer01 != null && target.PlayerId == BattleRoyale.pinkPlayer07.PlayerId)
-                    {
-                        BattleRoyale.pinkPlayer07IsReviving = true;
-                    }
-                    Helpers.alphaPlayer(true, player.PlayerId);
-                    HudManager.Instance.StartCoroutine(Effects.Lerp(MapSettings.gamemodeReviveTime, new Action<float>((p) =>
+                    if (PinkPlayer01 != null && target.PlayerId == PinkPlayer01.PlayerId)
+                        PinkPlayer01IsReviving = true;
+                    else if (PinkPlayer02 != null && target.PlayerId == PinkPlayer02.PlayerId)
+                        PinkPlayer02IsReviving = true;
+                    else if (PinkPlayer03 != null && target.PlayerId == PinkPlayer03.PlayerId)
+                        PinkPlayer03IsReviving = true;
+                    else if (PinkPlayer04 != null && target.PlayerId == PinkPlayer04.PlayerId)
+                        PinkPlayer04IsReviving = true;
+                    else if (PinkPlayer05 != null && target.PlayerId == PinkPlayer05.PlayerId)
+                        PinkPlayer05IsReviving = true;
+                    else if (PinkPlayer06 != null && target.PlayerId == PinkPlayer06.PlayerId)
+                        PinkPlayer06IsReviving = true;
+                    else if (PinkPlayer01 != null && target.PlayerId == PinkPlayer07.PlayerId)
+                        PinkPlayer07IsReviving = true;
+                    Helpers.AlphaPlayer(true, player.PlayerId);
+                    HudManager.Instance.StartCoroutine(Effects.Lerp(MapSettings.GamemodeReviveTime, new Action<float>(p =>
                     {
                         if (p == 1f && player != null)
                         {
-                            if (BattleRoyale.pinkPlayer01 != null && target.PlayerId == BattleRoyale.pinkPlayer01.PlayerId)
+                            if (PinkPlayer01 != null && target.PlayerId == PinkPlayer01.PlayerId)
                             {
-                                BattleRoyale.pinkPlayer01IsReviving = false;
-                                BattleRoyale.pinkPlayer01Lifes = BattleRoyale.fighterLifes;
+                                PinkPlayer01IsReviving = false;
+                                PinkPlayer01Lifes = FighterLifes;
                             }
-                            else if (BattleRoyale.pinkPlayer02 != null && target.PlayerId == BattleRoyale.pinkPlayer02.PlayerId)
+                            else if (PinkPlayer02 != null && target.PlayerId == PinkPlayer02.PlayerId)
                             {
-                                BattleRoyale.pinkPlayer02IsReviving = false;
-                                BattleRoyale.pinkPlayer02Lifes = BattleRoyale.fighterLifes;
+                                PinkPlayer02IsReviving = false;
+                                PinkPlayer02Lifes = FighterLifes;
                             }
-                            else if (BattleRoyale.pinkPlayer03 != null && target.PlayerId == BattleRoyale.pinkPlayer03.PlayerId)
+                            else if (PinkPlayer03 != null && target.PlayerId == PinkPlayer03.PlayerId)
                             {
-                                BattleRoyale.pinkPlayer03IsReviving = false;
-                                BattleRoyale.pinkPlayer03Lifes = BattleRoyale.fighterLifes;
+                                PinkPlayer03IsReviving = false;
+                                PinkPlayer03Lifes = FighterLifes;
                             }
-                            else if (BattleRoyale.pinkPlayer04 != null && target.PlayerId == BattleRoyale.pinkPlayer04.PlayerId)
+                            else if (PinkPlayer04 != null && target.PlayerId == PinkPlayer04.PlayerId)
                             {
-                                BattleRoyale.pinkPlayer04IsReviving = false;
-                                BattleRoyale.pinkPlayer04Lifes = BattleRoyale.fighterLifes;
+                                PinkPlayer04IsReviving = false;
+                                PinkPlayer04Lifes = FighterLifes;
                             }
-                            else if (BattleRoyale.pinkPlayer05 != null && target.PlayerId == BattleRoyale.pinkPlayer05.PlayerId)
+                            else if (PinkPlayer05 != null && target.PlayerId == PinkPlayer05.PlayerId)
                             {
-                                BattleRoyale.pinkPlayer05IsReviving = false;
-                                BattleRoyale.pinkPlayer05Lifes = BattleRoyale.fighterLifes;
+                                PinkPlayer05IsReviving = false;
+                                PinkPlayer05Lifes = FighterLifes;
                             }
-                            else if (BattleRoyale.pinkPlayer06 != null && target.PlayerId == BattleRoyale.pinkPlayer06.PlayerId)
+                            else if (PinkPlayer06 != null && target.PlayerId == PinkPlayer06.PlayerId)
                             {
-                                BattleRoyale.pinkPlayer06IsReviving = false;
-                                BattleRoyale.pinkPlayer06Lifes = BattleRoyale.fighterLifes;
+                                PinkPlayer06IsReviving = false;
+                                PinkPlayer06Lifes = FighterLifes;
                             }
-                            else if (BattleRoyale.pinkPlayer01 != null && target.PlayerId == BattleRoyale.pinkPlayer07.PlayerId)
+                            else if (PinkPlayer01 != null && target.PlayerId == PinkPlayer07.PlayerId)
                             {
-                                BattleRoyale.pinkPlayer07IsReviving = false;
-                                BattleRoyale.pinkPlayer07Lifes = BattleRoyale.fighterLifes;
+                                PinkPlayer07IsReviving = false;
+                                PinkPlayer07Lifes = FighterLifes;
                             }
-                            Helpers.alphaPlayer(false, player.PlayerId);
+
+                            Helpers.AlphaPlayer(false, player.PlayerId);
                         }
                     })));
 
-                    HudManager.Instance.StartCoroutine(Effects.Lerp(MapSettings.gamemodeReviveTime - MapSettings.gamemodeInvincibilityTime, new Action<float>((p) =>
+                    HudManager.Instance.StartCoroutine(Effects.Lerp(MapSettings.GamemodeReviveTime - MapSettings.GamemodeInvincibilityTime, new Action<float>(p =>
                     {
                         if (p == 1f && player != null)
                         {
@@ -1323,153 +1199,113 @@ public static partial class BattleRoyale
                             {
                                 // Skeld
                                 case 0:
-                                    if (RebuildUs.activatedSensei)
-                                    {
-                                        player.transform.position = new Vector3(7.7f, -0.95f, player.transform.position.z);
-                                    }
-                                    else if (RebuildUs.activatedDleks)
-                                    {
-                                        player.transform.position = new Vector3(-12f, -4.75f, player.transform.position.z);
-                                    }
+                                    if (RebuildUs.ActivatedSensei)
+                                        player.transform.position = new(7.7f, -0.95f, player.transform.position.z);
+                                    else if (RebuildUs.ActivatedDleks)
+                                        player.transform.position = new(-12f, -4.75f, player.transform.position.z);
                                     else
-                                    {
-                                        player.transform.position = new Vector3(12f, -4.75f, player.transform.position.z);
-                                    }
+                                        player.transform.position = new(12f, -4.75f, player.transform.position.z);
+
                                     break;
                                 // MiraHQ
                                 case 1:
-                                    player.transform.position = new Vector3(22.25f, 3f, player.transform.position.z);
+                                    player.transform.position = new(22.25f, 3f, player.transform.position.z);
                                     break;
                                 // Polus
                                 case 2:
-                                    player.transform.position = new Vector3(36.35f, -8f, player.transform.position.z);
+                                    player.transform.position = new(36.35f, -8f, player.transform.position.z);
                                     break;
                                 // Dleks
                                 case 3:
-                                    player.transform.position = new Vector3(-12f, -4.75f, player.transform.position.z);
+                                    player.transform.position = new(-12f, -4.75f, player.transform.position.z);
                                     break;
                                 // Airship
                                 case 4:
-                                    player.transform.position = new Vector3(37.35f, -3.25f, player.transform.position.z);
+                                    player.transform.position = new(37.35f, -3.25f, player.transform.position.z);
                                     break;
                                 // Fungle
                                 case 5:
-                                    player.transform.position = new Vector3(6.75f, 2f, player.transform.position.z);
+                                    player.transform.position = new(6.75f, 2f, player.transform.position.z);
                                     break;
                                 // Submerged
                                 case 6:
                                     if (player.transform.position.y > 0)
-                                    {
-                                        player.transform.position = new Vector3(0f, 33.5f, player.transform.position.z);
-                                    }
+                                        player.transform.position = new(0f, 33.5f, player.transform.position.z);
                                     else
-                                    {
-                                        player.transform.position = new Vector3(-8.5f, -39.5f, player.transform.position.z);
-                                    }
+                                        player.transform.position = new(-8.5f, -39.5f, player.transform.position.z);
+
                                     break;
                             }
-                            DeadPlayer deadPlayerEntry = GameHistory.DeadPlayers.Where(x => x.Player.PlayerId == target.PlayerId).FirstOrDefault();
-                            if (brBody != null) UnityEngine.Object.Destroy(brBody.gameObject);
-                            if (deadPlayerEntry != null) GameHistory.DeadPlayers.Remove(deadPlayerEntry);
+
+                            var deadPlayerEntry = GameHistory.DEAD_PLAYERS.Where(x => x.Player.PlayerId == target.PlayerId).FirstOrDefault();
+                            if (brBody != null)
+                                Object.Destroy(brBody.gameObject);
+                            if (deadPlayerEntry != null) GameHistory.DEAD_PLAYERS.Remove(deadPlayerEntry);
                         }
                     })));
-
                 }
             }
         }
     }
 
-    public static void battleRoyaleUpdate()
+    public static void BattleRoyaleUpdate()
     {
         if (MapSettings.GameMode is not CustomGameMode.BattleRoyale) return;
 
-        if (BattleRoyale.matchType == 0)
+        if (MatchType == 0)
         {
             // If solo player disconnects, check number of players
-            foreach (PlayerControl soloPlayer in BattleRoyale.soloPlayerTeam)
+            foreach (var soloPlayer in SoloPlayerTeam)
             {
                 if (soloPlayer.Data.Disconnected)
                 {
+                    if (SoloPlayer01 != null && soloPlayer.PlayerId == SoloPlayer01.PlayerId)
+                        SoloPlayerTeam.Remove(SoloPlayer01);
+                    else if (SoloPlayer02 != null && soloPlayer.PlayerId == SoloPlayer02.PlayerId)
+                        SoloPlayerTeam.Remove(SoloPlayer02);
+                    else if (SoloPlayer03 != null && soloPlayer.PlayerId == SoloPlayer03.PlayerId)
+                        SoloPlayerTeam.Remove(SoloPlayer03);
+                    else if (SoloPlayer04 != null && soloPlayer.PlayerId == SoloPlayer04.PlayerId)
+                        SoloPlayerTeam.Remove(SoloPlayer04);
+                    else if (SoloPlayer05 != null && soloPlayer.PlayerId == SoloPlayer05.PlayerId)
+                        SoloPlayerTeam.Remove(SoloPlayer05);
+                    else if (SoloPlayer06 != null && soloPlayer.PlayerId == SoloPlayer06.PlayerId)
+                        SoloPlayerTeam.Remove(SoloPlayer06);
+                    else if (SoloPlayer07 != null && soloPlayer.PlayerId == SoloPlayer07.PlayerId)
+                        SoloPlayerTeam.Remove(SoloPlayer07);
+                    else if (SoloPlayer08 != null && soloPlayer.PlayerId == SoloPlayer08.PlayerId)
+                        SoloPlayerTeam.Remove(SoloPlayer08);
+                    else if (SoloPlayer09 != null && soloPlayer.PlayerId == SoloPlayer09.PlayerId)
+                        SoloPlayerTeam.Remove(SoloPlayer09);
+                    else if (SoloPlayer10 != null && soloPlayer.PlayerId == SoloPlayer10.PlayerId)
+                        SoloPlayerTeam.Remove(SoloPlayer10);
+                    else if (SoloPlayer11 != null && soloPlayer.PlayerId == SoloPlayer11.PlayerId)
+                        SoloPlayerTeam.Remove(SoloPlayer11);
+                    else if (SoloPlayer12 != null && soloPlayer.PlayerId == SoloPlayer12.PlayerId)
+                        SoloPlayerTeam.Remove(SoloPlayer12);
+                    else if (SoloPlayer13 != null && soloPlayer.PlayerId == SoloPlayer13.PlayerId)
+                        SoloPlayerTeam.Remove(SoloPlayer13);
+                    else if (SoloPlayer14 != null && soloPlayer.PlayerId == SoloPlayer14.PlayerId)
+                        SoloPlayerTeam.Remove(SoloPlayer14);
+                    else if (SoloPlayer15 != null && soloPlayer.PlayerId == SoloPlayer15.PlayerId)
+                        SoloPlayerTeam.Remove(SoloPlayer15);
 
-                    if (BattleRoyale.soloPlayer01 != null && soloPlayer.PlayerId == BattleRoyale.soloPlayer01.PlayerId)
-                    {
-                        BattleRoyale.soloPlayerTeam.Remove(BattleRoyale.soloPlayer01);
-                    }
-                    else if (BattleRoyale.soloPlayer02 != null && soloPlayer.PlayerId == BattleRoyale.soloPlayer02.PlayerId)
-                    {
-                        BattleRoyale.soloPlayerTeam.Remove(BattleRoyale.soloPlayer02);
-                    }
-                    else if (BattleRoyale.soloPlayer03 != null && soloPlayer.PlayerId == BattleRoyale.soloPlayer03.PlayerId)
-                    {
-                        BattleRoyale.soloPlayerTeam.Remove(BattleRoyale.soloPlayer03);
-                    }
-                    else if (BattleRoyale.soloPlayer04 != null && soloPlayer.PlayerId == BattleRoyale.soloPlayer04.PlayerId)
-                    {
-                        BattleRoyale.soloPlayerTeam.Remove(BattleRoyale.soloPlayer04);
-                    }
-                    else if (BattleRoyale.soloPlayer05 != null && soloPlayer.PlayerId == BattleRoyale.soloPlayer05.PlayerId)
-                    {
-                        BattleRoyale.soloPlayerTeam.Remove(BattleRoyale.soloPlayer05);
-                    }
-                    else if (BattleRoyale.soloPlayer06 != null && soloPlayer.PlayerId == BattleRoyale.soloPlayer06.PlayerId)
-                    {
-                        BattleRoyale.soloPlayerTeam.Remove(BattleRoyale.soloPlayer06);
-                    }
-                    else if (BattleRoyale.soloPlayer07 != null && soloPlayer.PlayerId == BattleRoyale.soloPlayer07.PlayerId)
-                    {
-                        BattleRoyale.soloPlayerTeam.Remove(BattleRoyale.soloPlayer07);
-                    }
-                    else if (BattleRoyale.soloPlayer08 != null && soloPlayer.PlayerId == BattleRoyale.soloPlayer08.PlayerId)
-                    {
-                        BattleRoyale.soloPlayerTeam.Remove(BattleRoyale.soloPlayer08);
-                    }
-                    else if (BattleRoyale.soloPlayer09 != null && soloPlayer.PlayerId == BattleRoyale.soloPlayer09.PlayerId)
-                    {
-                        BattleRoyale.soloPlayerTeam.Remove(BattleRoyale.soloPlayer09);
-                    }
-                    else if (BattleRoyale.soloPlayer10 != null && soloPlayer.PlayerId == BattleRoyale.soloPlayer10.PlayerId)
-                    {
-                        BattleRoyale.soloPlayerTeam.Remove(BattleRoyale.soloPlayer10);
-                    }
-                    else if (BattleRoyale.soloPlayer11 != null && soloPlayer.PlayerId == BattleRoyale.soloPlayer11.PlayerId)
-                    {
-                        BattleRoyale.soloPlayerTeam.Remove(BattleRoyale.soloPlayer11);
-                    }
-                    else if (BattleRoyale.soloPlayer12 != null && soloPlayer.PlayerId == BattleRoyale.soloPlayer12.PlayerId)
-                    {
-                        BattleRoyale.soloPlayerTeam.Remove(BattleRoyale.soloPlayer12);
-                    }
-                    else if (BattleRoyale.soloPlayer13 != null && soloPlayer.PlayerId == BattleRoyale.soloPlayer13.PlayerId)
-                    {
-                        BattleRoyale.soloPlayerTeam.Remove(BattleRoyale.soloPlayer13);
-                    }
-                    else if (BattleRoyale.soloPlayer14 != null && soloPlayer.PlayerId == BattleRoyale.soloPlayer14.PlayerId)
-                    {
-                        BattleRoyale.soloPlayerTeam.Remove(BattleRoyale.soloPlayer14);
-                    }
-                    else if (BattleRoyale.soloPlayer15 != null && soloPlayer.PlayerId == BattleRoyale.soloPlayer15.PlayerId)
-                    {
-                        BattleRoyale.soloPlayerTeam.Remove(BattleRoyale.soloPlayer15);
-                    }
+                    var soloPlayersAlives = 0;
 
-                    int soloPlayersAlives = 0;
-
-                    foreach (PlayerControl remainPlayer in BattleRoyale.soloPlayerTeam)
+                    foreach (var remainPlayer in SoloPlayerTeam)
                     {
-
                         if (!remainPlayer.Data.IsDead)
-                        {
                             soloPlayersAlives += 1;
-                        }
                     }
 
-                    BattleRoyale.battleRoyalePointCounter = new StringBuilder(Tr.Get(TrKey.BattleRoyaleFighters)).Append("<color=#009F57FF>").Append(soloPlayersAlives).Append("</color>").ToString();
+                    BattleRoyalePointCounter = new StringBuilder(Tr.Get(TrKey.BattleRoyaleFighters)).Append("<color=#009F57FF>").Append(soloPlayersAlives).Append("</color>").ToString();
 
                     if (soloPlayersAlives <= 1)
                     {
-                        BattleRoyale.triggerSoloWin = true;
+                        TriggerSoloWin = true;
                         GameManager.Instance.RpcEndGame((GameOverReason)CustomGameOverReason.BattleRoyaleSoloWin, false);
                     }
+
                     break;
                 }
             }
@@ -1477,320 +1313,220 @@ public static partial class BattleRoyale
         else
         {
             // lime Team disconnects
-            foreach (PlayerControl limePlayer in BattleRoyale.limeTeam)
+            foreach (var limePlayer in LimeTeam)
             {
                 if (limePlayer.Data.Disconnected)
                 {
+                    if (LimePlayer01 != null && limePlayer.PlayerId == LimePlayer01.PlayerId)
+                        LimeTeam.Remove(LimePlayer01);
+                    else if (LimePlayer02 != null && limePlayer.PlayerId == LimePlayer02.PlayerId)
+                        LimeTeam.Remove(LimePlayer02);
+                    else if (LimePlayer03 != null && limePlayer.PlayerId == LimePlayer03.PlayerId)
+                        LimeTeam.Remove(LimePlayer03);
+                    else if (LimePlayer04 != null && limePlayer.PlayerId == LimePlayer04.PlayerId)
+                        LimeTeam.Remove(LimePlayer04);
+                    else if (LimePlayer05 != null && limePlayer.PlayerId == LimePlayer05.PlayerId)
+                        LimeTeam.Remove(LimePlayer05);
+                    else if (LimePlayer06 != null && limePlayer.PlayerId == LimePlayer06.PlayerId)
+                        LimeTeam.Remove(LimePlayer06);
+                    else if (LimePlayer07 != null && limePlayer.PlayerId == LimePlayer07.PlayerId)
+                        LimeTeam.Remove(LimePlayer07);
 
-                    if (BattleRoyale.limePlayer01 != null && limePlayer.PlayerId == BattleRoyale.limePlayer01.PlayerId)
-                    {
-                        BattleRoyale.limeTeam.Remove(BattleRoyale.limePlayer01);
-                    }
-                    else if (BattleRoyale.limePlayer02 != null && limePlayer.PlayerId == BattleRoyale.limePlayer02.PlayerId)
-                    {
-                        BattleRoyale.limeTeam.Remove(BattleRoyale.limePlayer02);
-                    }
-                    else if (BattleRoyale.limePlayer03 != null && limePlayer.PlayerId == BattleRoyale.limePlayer03.PlayerId)
-                    {
-                        BattleRoyale.limeTeam.Remove(BattleRoyale.limePlayer03);
-                    }
-                    else if (BattleRoyale.limePlayer04 != null && limePlayer.PlayerId == BattleRoyale.limePlayer04.PlayerId)
-                    {
-                        BattleRoyale.limeTeam.Remove(BattleRoyale.limePlayer04);
-                    }
-                    else if (BattleRoyale.limePlayer05 != null && limePlayer.PlayerId == BattleRoyale.limePlayer05.PlayerId)
-                    {
-                        BattleRoyale.limeTeam.Remove(BattleRoyale.limePlayer05);
-                    }
-                    else if (BattleRoyale.limePlayer06 != null && limePlayer.PlayerId == BattleRoyale.limePlayer06.PlayerId)
-                    {
-                        BattleRoyale.limeTeam.Remove(BattleRoyale.limePlayer06);
-                    }
-                    else if (BattleRoyale.limePlayer07 != null && limePlayer.PlayerId == BattleRoyale.limePlayer07.PlayerId)
-                    {
-                        BattleRoyale.limeTeam.Remove(BattleRoyale.limePlayer07);
-                    }
+                    var limePlayersAlive = 0;
 
-                    int limePlayersAlive = 0;
-
-                    foreach (PlayerControl remainingLimePlayer in BattleRoyale.limeTeam)
+                    foreach (var remainingLimePlayer in LimeTeam)
                     {
-
                         if (!remainingLimePlayer.Data.IsDead)
-                        {
                             limePlayersAlive += 1;
-                        }
                     }
 
-                    int pinkPlayersAlive = 0;
+                    var pinkPlayersAlive = 0;
 
-                    foreach (PlayerControl remainingPinkPlayer in BattleRoyale.pinkTeam)
+                    foreach (var remainingPinkPlayer in PinkTeam)
                     {
-
                         if (!remainingPinkPlayer.Data.IsDead)
-                        {
                             pinkPlayersAlive += 1;
-                        }
                     }
 
-                    if (BattleRoyale.serialKiller != null)
+                    if (SerialKiller != null)
                     {
+                        var serialKillerAlive = 0;
 
-                        int serialKillerAlive = 0;
-
-                        foreach (PlayerControl serialKiller in BattleRoyale.serialKillerTeam)
+                        foreach (var serialKiller in SerialKillerTeam)
                         {
-
                             if (!serialKiller.Data.IsDead)
-                            {
                                 serialKillerAlive += 1;
-                            }
                         }
 
-                        if (BattleRoyale.matchType == 1)
+                        if (MatchType == 1)
                         {
-                            var sb = new StringBuilder(Tr.Get(TrKey.BattleRoyaleLimeTeam))
-                                               .Append("<color=#39FF14FF>")
-                                               .Append(limePlayersAlive)
-                                               .Append("</color> | ")
-                                               .Append(Tr.Get(TrKey.BattleRoyalePinkTeam))
-                                               .Append("<color=#F2BEFFFF>")
-                                               .Append(pinkPlayersAlive)
-                                               .Append("</color> | ")
-                                               .Append(Tr.Get(TrKey.BattleRoyaleSerialKiller))
-                                               .Append("<color=#808080FF>")
-                                               .Append(serialKillerAlive)
-                                               .Append("</color>");
-                            BattleRoyale.battleRoyalePointCounter = sb.ToString();
-                            if (limePlayersAlive <= 0 && pinkPlayersAlive <= 0 && !BattleRoyale.serialKiller.Data.IsDead)
+                            var sb = new StringBuilder(Tr.Get(TrKey.BattleRoyaleLimeTeam)).Append("<color=#39FF14FF>").Append(limePlayersAlive).Append("</color> | ").Append(Tr.Get(TrKey.BattleRoyalePinkTeam)).Append("<color=#F2BEFFFF>").Append(pinkPlayersAlive).Append("</color> | ").Append(Tr.Get(TrKey.BattleRoyaleSerialKiller)).Append("<color=#808080FF>").Append(serialKillerAlive).Append("</color>");
+                            BattleRoyalePointCounter = sb.ToString();
+                            if (limePlayersAlive <= 0 && pinkPlayersAlive <= 0 && !SerialKiller.Data.IsDead)
                             {
-                                BattleRoyale.triggerSerialKillerWin = true;
+                                TriggerSerialKillerWin = true;
                                 GameManager.Instance.RpcEndGame((GameOverReason)CustomGameOverReason.BattleRoyaleSerialKillerWin, false);
                             }
-                            else if (pinkPlayersAlive <= 0 && BattleRoyale.serialKiller.Data.IsDead)
+                            else if (pinkPlayersAlive <= 0 && SerialKiller.Data.IsDead)
                             {
-                                BattleRoyale.triggerLimeTeamWin = true;
+                                TriggerLimeTeamWin = true;
                                 GameManager.Instance.RpcEndGame((GameOverReason)CustomGameOverReason.BattleRoyaleLimeTeamWin, false);
                             }
-                            else if (limePlayersAlive <= 0 && BattleRoyale.serialKiller.Data.IsDead)
+                            else if (limePlayersAlive <= 0 && SerialKiller.Data.IsDead)
                             {
-                                BattleRoyale.triggerPinkTeamWin = true;
+                                TriggerPinkTeamWin = true;
                                 GameManager.Instance.RpcEndGame((GameOverReason)CustomGameOverReason.BattleRoyalePinkTeamWin, false);
                             }
                         }
                     }
                     else
                     {
-                        if (BattleRoyale.matchType == 1)
+                        if (MatchType == 1)
                         {
-                            var sb = new StringBuilder(Tr.Get(TrKey.BattleRoyaleLimeTeam))
-                                               .Append("<color=#39FF14FF>")
-                                               .Append(limePlayersAlive)
-                                               .Append("</color> | ")
-                                               .Append(Tr.Get(TrKey.BattleRoyalePinkTeam))
-                                               .Append("<color=#F2BEFFFF>")
-                                               .Append(pinkPlayersAlive)
-                                               .Append("</color>");
-                            BattleRoyale.battleRoyalePointCounter = sb.ToString();
+                            var sb = new StringBuilder(Tr.Get(TrKey.BattleRoyaleLimeTeam)).Append("<color=#39FF14FF>").Append(limePlayersAlive).Append("</color> | ").Append(Tr.Get(TrKey.BattleRoyalePinkTeam)).Append("<color=#F2BEFFFF>").Append(pinkPlayersAlive).Append("</color>");
+                            BattleRoyalePointCounter = sb.ToString();
                             if (pinkPlayersAlive <= 0)
                             {
-                                BattleRoyale.triggerLimeTeamWin = true;
+                                TriggerLimeTeamWin = true;
                                 GameManager.Instance.RpcEndGame((GameOverReason)CustomGameOverReason.BattleRoyaleLimeTeamWin, false);
                             }
                             else if (limePlayersAlive <= 0)
                             {
-                                BattleRoyale.triggerPinkTeamWin = true;
+                                TriggerPinkTeamWin = true;
                                 GameManager.Instance.RpcEndGame((GameOverReason)CustomGameOverReason.BattleRoyalePinkTeamWin, false);
                             }
                         }
                     }
+
                     break;
                 }
             }
+
             // Pink Team disconnects
-            foreach (PlayerControl pinkPlayer in BattleRoyale.pinkTeam)
+            foreach (var pinkPlayer in PinkTeam)
             {
                 if (pinkPlayer.Data.Disconnected)
                 {
+                    if (PinkPlayer01 != null && pinkPlayer.PlayerId == PinkPlayer01.PlayerId)
+                        PinkTeam.Remove(PinkPlayer01);
+                    else if (PinkPlayer02 != null && pinkPlayer.PlayerId == PinkPlayer02.PlayerId)
+                        PinkTeam.Remove(PinkPlayer02);
+                    else if (PinkPlayer03 != null && pinkPlayer.PlayerId == PinkPlayer03.PlayerId)
+                        PinkTeam.Remove(PinkPlayer03);
+                    else if (PinkPlayer04 != null && pinkPlayer.PlayerId == PinkPlayer04.PlayerId)
+                        PinkTeam.Remove(PinkPlayer04);
+                    else if (PinkPlayer05 != null && pinkPlayer.PlayerId == PinkPlayer05.PlayerId)
+                        PinkTeam.Remove(PinkPlayer05);
+                    else if (PinkPlayer06 != null && pinkPlayer.PlayerId == PinkPlayer06.PlayerId)
+                        PinkTeam.Remove(PinkPlayer06);
+                    else if (PinkPlayer07 != null && pinkPlayer.PlayerId == PinkPlayer07.PlayerId)
+                        PinkTeam.Remove(PinkPlayer07);
 
-                    if (BattleRoyale.pinkPlayer01 != null && pinkPlayer.PlayerId == BattleRoyale.pinkPlayer01.PlayerId)
-                    {
-                        BattleRoyale.pinkTeam.Remove(BattleRoyale.pinkPlayer01);
-                    }
-                    else if (BattleRoyale.pinkPlayer02 != null && pinkPlayer.PlayerId == BattleRoyale.pinkPlayer02.PlayerId)
-                    {
-                        BattleRoyale.pinkTeam.Remove(BattleRoyale.pinkPlayer02);
-                    }
-                    else if (BattleRoyale.pinkPlayer03 != null && pinkPlayer.PlayerId == BattleRoyale.pinkPlayer03.PlayerId)
-                    {
-                        BattleRoyale.pinkTeam.Remove(BattleRoyale.pinkPlayer03);
-                    }
-                    else if (BattleRoyale.pinkPlayer04 != null && pinkPlayer.PlayerId == BattleRoyale.pinkPlayer04.PlayerId)
-                    {
-                        BattleRoyale.pinkTeam.Remove(BattleRoyale.pinkPlayer04);
-                    }
-                    else if (BattleRoyale.pinkPlayer05 != null && pinkPlayer.PlayerId == BattleRoyale.pinkPlayer05.PlayerId)
-                    {
-                        BattleRoyale.pinkTeam.Remove(BattleRoyale.pinkPlayer05);
-                    }
-                    else if (BattleRoyale.pinkPlayer06 != null && pinkPlayer.PlayerId == BattleRoyale.pinkPlayer06.PlayerId)
-                    {
-                        BattleRoyale.pinkTeam.Remove(BattleRoyale.pinkPlayer06);
-                    }
-                    else if (BattleRoyale.pinkPlayer07 != null && pinkPlayer.PlayerId == BattleRoyale.pinkPlayer07.PlayerId)
-                    {
-                        BattleRoyale.pinkTeam.Remove(BattleRoyale.pinkPlayer07);
-                    }
+                    var limePlayersAlive = 0;
 
-                    int limePlayersAlive = 0;
-
-                    foreach (PlayerControl remainingLimePlayer in BattleRoyale.limeTeam)
+                    foreach (var remainingLimePlayer in LimeTeam)
                     {
-
                         if (!remainingLimePlayer.Data.IsDead)
-                        {
                             limePlayersAlive += 1;
-                        }
                     }
 
-                    int pinkPlayersAlive = 0;
+                    var pinkPlayersAlive = 0;
 
-                    foreach (PlayerControl remainingPinkPlayer in BattleRoyale.pinkTeam)
+                    foreach (var remainingPinkPlayer in PinkTeam)
                     {
-
                         if (!remainingPinkPlayer.Data.IsDead)
-                        {
                             pinkPlayersAlive += 1;
-                        }
                     }
 
-                    if (BattleRoyale.serialKiller != null)
+                    if (SerialKiller != null)
                     {
+                        var serialKillerAlive = 0;
 
-                        int serialKillerAlive = 0;
-
-                        foreach (PlayerControl serialKiller in BattleRoyale.serialKillerTeam)
+                        foreach (var serialKiller in SerialKillerTeam)
                         {
-
                             if (!serialKiller.Data.IsDead)
-                            {
                                 serialKillerAlive += 1;
-                            }
                         }
 
-                        if (BattleRoyale.matchType == 1)
+                        if (MatchType == 1)
                         {
-                            var sb = new StringBuilder(Tr.Get(TrKey.BattleRoyaleLimeTeam))
-                                               .Append("<color=#39FF14FF>")
-                                               .Append(limePlayersAlive)
-                                               .Append("</color> | ")
-                                               .Append(Tr.Get(TrKey.BattleRoyalePinkTeam))
-                                               .Append("<color=#F2BEFFFF>")
-                                               .Append(pinkPlayersAlive)
-                                               .Append("</color> | ")
-                                               .Append(Tr.Get(TrKey.BattleRoyaleSerialKiller))
-                                               .Append("<color=#808080FF>")
-                                               .Append(serialKillerAlive)
-                                               .Append("</color>");
-                            BattleRoyale.battleRoyalePointCounter = sb.ToString();
-                            if (limePlayersAlive <= 0 && pinkPlayersAlive <= 0 && !BattleRoyale.serialKiller.Data.IsDead)
+                            var sb = new StringBuilder(Tr.Get(TrKey.BattleRoyaleLimeTeam)).Append("<color=#39FF14FF>").Append(limePlayersAlive).Append("</color> | ").Append(Tr.Get(TrKey.BattleRoyalePinkTeam)).Append("<color=#F2BEFFFF>").Append(pinkPlayersAlive).Append("</color> | ").Append(Tr.Get(TrKey.BattleRoyaleSerialKiller)).Append("<color=#808080FF>").Append(serialKillerAlive).Append("</color>");
+                            BattleRoyalePointCounter = sb.ToString();
+                            if (limePlayersAlive <= 0 && pinkPlayersAlive <= 0 && !SerialKiller.Data.IsDead)
                             {
-                                BattleRoyale.triggerSerialKillerWin = true;
+                                TriggerSerialKillerWin = true;
                                 GameManager.Instance.RpcEndGame((GameOverReason)CustomGameOverReason.BattleRoyaleSerialKillerWin, false);
                             }
-                            else if (pinkPlayersAlive <= 0 && BattleRoyale.serialKiller.Data.IsDead)
+                            else if (pinkPlayersAlive <= 0 && SerialKiller.Data.IsDead)
                             {
-                                BattleRoyale.triggerLimeTeamWin = true;
+                                TriggerLimeTeamWin = true;
                                 GameManager.Instance.RpcEndGame((GameOverReason)CustomGameOverReason.BattleRoyaleLimeTeamWin, false);
                             }
-                            else if (limePlayersAlive <= 0 && BattleRoyale.serialKiller.Data.IsDead)
+                            else if (limePlayersAlive <= 0 && SerialKiller.Data.IsDead)
                             {
-                                BattleRoyale.triggerPinkTeamWin = true;
+                                TriggerPinkTeamWin = true;
                                 GameManager.Instance.RpcEndGame((GameOverReason)CustomGameOverReason.BattleRoyalePinkTeamWin, false);
                             }
                         }
                     }
                     else
                     {
-                        if (BattleRoyale.matchType == 1)
+                        if (MatchType == 1)
                         {
-                            var sb = new StringBuilder(Tr.Get(TrKey.BattleRoyaleLimeTeam))
-                                               .Append("<color=#39FF14FF>")
-                                               .Append(limePlayersAlive)
-                                               .Append("</color> | ")
-                                               .Append(Tr.Get(TrKey.BattleRoyalePinkTeam))
-                                               .Append("<color=#F2BEFFFF>")
-                                               .Append(pinkPlayersAlive)
-                                               .Append("</color>");
-                            BattleRoyale.battleRoyalePointCounter = sb.ToString();
+                            var sb = new StringBuilder(Tr.Get(TrKey.BattleRoyaleLimeTeam)).Append("<color=#39FF14FF>").Append(limePlayersAlive).Append("</color> | ").Append(Tr.Get(TrKey.BattleRoyalePinkTeam)).Append("<color=#F2BEFFFF>").Append(pinkPlayersAlive).Append("</color>");
+                            BattleRoyalePointCounter = sb.ToString();
                             if (pinkPlayersAlive <= 0)
                             {
-                                BattleRoyale.triggerLimeTeamWin = true;
+                                TriggerLimeTeamWin = true;
                                 GameManager.Instance.RpcEndGame((GameOverReason)CustomGameOverReason.BattleRoyaleLimeTeamWin, false);
                             }
                             else if (limePlayersAlive <= 0)
                             {
-                                BattleRoyale.triggerPinkTeamWin = true;
+                                TriggerPinkTeamWin = true;
                                 GameManager.Instance.RpcEndGame((GameOverReason)CustomGameOverReason.BattleRoyalePinkTeamWin, false);
                             }
                         }
                     }
+
                     break;
                 }
             }
+
             // Serial Killer disconnects
-            if (BattleRoyale.serialKiller != null && BattleRoyale.serialKiller.Data.Disconnected)
+            if (SerialKiller != null && SerialKiller.Data.Disconnected)
             {
+                SerialKillerTeam.Remove(SerialKiller);
 
-                BattleRoyale.serialKillerTeam.Remove(BattleRoyale.serialKiller);
+                var limePlayersAlive = 0;
 
-                int limePlayersAlive = 0;
-
-                foreach (PlayerControl limePlayer in BattleRoyale.limeTeam)
+                foreach (var limePlayer in LimeTeam)
                 {
-
                     if (!limePlayer.Data.IsDead)
-                    {
                         limePlayersAlive += 1;
-                    }
                 }
 
-                int pinkPlayersAlive = 0;
+                var pinkPlayersAlive = 0;
 
-                foreach (PlayerControl pinkPlayer in BattleRoyale.pinkTeam)
+                foreach (var pinkPlayer in PinkTeam)
                 {
-
                     if (!pinkPlayer.Data.IsDead)
-                    {
                         pinkPlayersAlive += 1;
-                    }
                 }
 
-                int serialKillerAlive = 0;
+                var serialKillerAlive = 0;
 
-                if (BattleRoyale.matchType == 1)
+                if (MatchType == 1)
                 {
-                    var sb = new StringBuilder(Tr.Get(TrKey.BattleRoyaleLimeTeam))
-                                       .Append("<color=#39FF14FF>")
-                                       .Append(limePlayersAlive)
-                                       .Append("</color> | ")
-                                       .Append(Tr.Get(TrKey.BattleRoyalePinkTeam))
-                                       .Append("<color=#F2BEFFFF>")
-                                       .Append(pinkPlayersAlive)
-                                       .Append("</color> | ")
-                                       .Append(Tr.Get(TrKey.BattleRoyaleSerialKiller))
-                                       .Append("<color=#808080FF>")
-                                       .Append(serialKillerAlive)
-                                       .Append("</color>");
-                    BattleRoyale.battleRoyalePointCounter = sb.ToString();
+                    var sb = new StringBuilder(Tr.Get(TrKey.BattleRoyaleLimeTeam)).Append("<color=#39FF14FF>").Append(limePlayersAlive).Append("</color> | ").Append(Tr.Get(TrKey.BattleRoyalePinkTeam)).Append("<color=#F2BEFFFF>").Append(pinkPlayersAlive).Append("</color> | ").Append(Tr.Get(TrKey.BattleRoyaleSerialKiller)).Append("<color=#808080FF>").Append(serialKillerAlive).Append("</color>");
+                    BattleRoyalePointCounter = sb.ToString();
                     if (pinkPlayersAlive <= 0)
                     {
-                        BattleRoyale.triggerLimeTeamWin = true;
+                        TriggerLimeTeamWin = true;
                         GameManager.Instance.RpcEndGame((GameOverReason)CustomGameOverReason.BattleRoyaleLimeTeamWin, false);
                     }
                     else if (limePlayersAlive <= 0)
                     {
-                        BattleRoyale.triggerPinkTeamWin = true;
+                        TriggerPinkTeamWin = true;
                         GameManager.Instance.RpcEndGame((GameOverReason)CustomGameOverReason.BattleRoyalePinkTeamWin, false);
                     }
                 }

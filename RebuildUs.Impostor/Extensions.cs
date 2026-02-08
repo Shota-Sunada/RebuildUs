@@ -5,8 +5,8 @@ namespace RebuildUs.Impostor;
 public static class Extensions
 {
     /// <summary>
-    /// Implementation of the Fisher-Yates shuffle.
-    /// Shuffles the list in place.
+    ///     Implementation of the Fisher-Yates shuffle.
+    ///     Shuffles the list in place.
     /// </summary>
     public static void Shuffle<T>(this IList<T> list)
     {

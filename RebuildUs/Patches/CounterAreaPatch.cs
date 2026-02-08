@@ -5,7 +5,7 @@ public static class CounterAreaPatch
 {
     [HarmonyPostfix]
     [HarmonyPatch(typeof(CounterArea), nameof(CounterArea.UpdateCount))]
-    static void UpdateCountPostfix(CounterArea __instance)
+    private static void UpdateCountPostfix(CounterArea __instance)
     {
         Admin.UpdateCount(__instance);
     }

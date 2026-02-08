@@ -4,36 +4,30 @@ namespace RebuildUs.Roles;
 
 public static class RoleHelpers
 {
-    private static readonly Dictionary<RoleType, (MethodInfo exists, MethodInfo isRole, MethodInfo setRole, MethodInfo eraseRole, MethodInfo swapRole)> MethodCache = [];
+    private static readonly Dictionary<RoleType, (MethodInfo exists, MethodInfo isRole, MethodInfo setRole, MethodInfo eraseRole, MethodInfo swapRole)> METHOD_CACHE = [];
 
     private static (MethodInfo exists, MethodInfo isRole, MethodInfo setRole, MethodInfo eraseRole, MethodInfo swapRole) GetMethods(RoleType roleType)
     {
-        if (MethodCache.TryGetValue(roleType, out var cached)) return cached;
+        if (METHOD_CACHE.TryGetValue(roleType, out var cached)) return cached;
 
-        foreach (var reg in RoleData.Roles)
+        foreach (var reg in RoleData.ROLES)
         {
-            if (reg.roleType == roleType)
+            if (reg.RoleType == roleType)
             {
-                var type = reg.classType;
+                var type = reg.ClassType;
                 if (type == null) break;
 
-                var methods = (
-                    type.GetProperty("Exists", BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy)?.GetMethod,
-                    type.GetMethod("IsRole", BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy),
-                    type.GetMethod("SetRole", BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy),
-                    type.GetMethod("EraseRole", BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy),
-                    type.GetMethod("SwapRole", BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy)
-                );
-                MethodCache[roleType] = methods;
+                var methods = (type.GetProperty("Exists", BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy)?.GetMethod, type.GetMethod("IsRole", BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy), type.GetMethod("SetRole", BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy), type.GetMethod("EraseRole", BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy), type.GetMethod("SwapRole", BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy));
+                METHOD_CACHE[roleType] = methods;
                 return methods;
             }
         }
 
-        if (roleType != RoleType.NoRole && roleType != RoleType.Crewmate && roleType != RoleType.Impostor && roleType != RoleType.Lovers && roleType != RoleType.GM)
+        if (roleType != RoleType.NoRole && roleType != RoleType.Crewmate && roleType != RoleType.Impostor && roleType != RoleType.Lovers && roleType != RoleType.Gm)
             Logger.LogWarn($"There is no role type registration for: {roleType}", "GetMethods");
 
         var nullMethods = ((MethodInfo)null, (MethodInfo)null, (MethodInfo)null, (MethodInfo)null, (MethodInfo)null);
-        MethodCache[roleType] = nullMethods;
+        METHOD_CACHE[roleType] = nullMethods;
         return nullMethods;
     }
 
@@ -47,7 +41,7 @@ public static class RoleHelpers
         if (roleType == RoleType.Crewmate) return player.IsTeamCrewmate();
         if (roleType == RoleType.Impostor) return player.IsTeamImpostor();
         if (roleType == RoleType.Lovers) return player.IsLovers();
-        if (roleType == RoleType.GM) return player.IsGM();
+        if (roleType == RoleType.Gm) return player.IsGm();
 
         return false;
     }
@@ -86,7 +80,7 @@ public static class RoleHelpers
             return;
         }
 
-        if (IsRole(player, roleType))
+        if (player.IsRole(roleType))
         {
             var methods = GetMethods(roleType);
             if (methods.eraseRole != null)
@@ -103,10 +97,10 @@ public static class RoleHelpers
     {
         if (player == null) return;
 
-        foreach (var reg in RoleData.Roles)
+        foreach (var reg in RoleData.ROLES)
         {
-            if (reg.classType == null) continue;
-            var methods = GetMethods(reg.roleType);
+            if (reg.ClassType == null) continue;
+            var methods = GetMethods(reg.RoleType);
             methods.eraseRole?.Invoke(null, [player]);
         }
     }
@@ -115,11 +109,11 @@ public static class RoleHelpers
     {
         if (player == null || target == null) return;
 
-        foreach (var reg in RoleData.Roles)
+        foreach (var reg in RoleData.ROLES)
         {
-            if (reg.classType != null && (player.IsRole(reg.roleType) || target.IsRole(reg.roleType)))
+            if (reg.ClassType != null && (player.IsRole(reg.RoleType) || target.IsRole(reg.RoleType)))
             {
-                var methods = GetMethods(reg.roleType);
+                var methods = GetMethods(reg.RoleType);
                 methods.swapRole?.Invoke(null, [player, target]);
             }
         }
@@ -132,17 +126,13 @@ public static class RoleHelpers
         foreach (var role in PlayerRole.AllRoles)
         {
             if (role.Player == player)
-            {
                 nameText = role.ModifyNameText(nameText);
-            }
         }
 
         foreach (var mod in PlayerModifier.AllModifiers)
         {
             if (mod.Player == player)
-            {
                 nameText = mod.ModifyNameText(nameText);
-            }
         }
 
         // nameText += Lovers.getIcon(player);
@@ -155,10 +145,9 @@ public static class RoleHelpers
         foreach (var mod in PlayerModifier.AllModifiers)
         {
             if (mod.Player == player)
-            {
                 roleText = mod.ModifyRoleText(roleText, roleInfo, useColors, includeHidden);
-            }
         }
+
         return roleText;
     }
 
@@ -177,15 +166,12 @@ public static class RoleHelpers
         // if (player.isLovers())
         //     Lovers.killLovers(player, killer);
 
-        if (MeetingHud.Instance?.state != MeetingHud.VoteStates.Animating)
-        {
-            RPCProcedure.UpdateMeeting(player.PlayerId, true);
-        }
+        if (MeetingHud.Instance?.state != MeetingHud.VoteStates.Animating) RPCProcedure.UpdateMeeting(player.PlayerId);
     }
 
     public static void OnFinishShipStatusBegin(this PlayerControl player)
     {
-        HudManager.Instance.StartCoroutine(Effects.Lerp(1f, new Action<float>((p) =>
+        HudManager.Instance.StartCoroutine(Effects.Lerp(1f, new Action<float>(p =>
         {
             if (p == 1f)
             {

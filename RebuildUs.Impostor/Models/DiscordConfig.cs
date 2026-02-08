@@ -1,6 +1,6 @@
 namespace RebuildUs.Impostor.Models;
 
-public class DiscordConfig
+public sealed class DiscordConfig
 {
     public bool DisableDiscord { get; set; }
     public bool AutoMute { get; set; } = true;

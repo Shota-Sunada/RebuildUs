@@ -4,12 +4,6 @@ namespace RebuildUs.Roles.Crewmate;
 public class Spy : RoleBase<Spy>
 {
     public static Color NameColor = Palette.ImpostorRed;
-    public override Color RoleColor => NameColor;
-
-    // write configs here
-    public static bool ImpostorsCanKillAnyone { get { return CustomOptionHolder.SpyImpostorsCanKillAnyone.GetBool(); } }
-    public static bool CanEnterVents { get { return CustomOptionHolder.SpyCanEnterVents.GetBool(); } }
-    public static bool HasImpostorVision { get { return CustomOptionHolder.SpyHasImpostorVision.GetBool(); } }
 
     public Spy()
     {
@@ -17,13 +11,31 @@ public class Spy : RoleBase<Spy>
         StaticRoleType = CurrentRoleType = RoleType.Spy;
     }
 
+    public override Color RoleColor
+    {
+        get => NameColor;
+    }
+
+    // write configs here
+    public static bool ImpostorsCanKillAnyone
+    {
+        get => CustomOptionHolder.SpyImpostorsCanKillAnyone.GetBool();
+    }
+
+    public static bool CanEnterVents
+    {
+        get => CustomOptionHolder.SpyCanEnterVents.GetBool();
+    }
+
+    public static bool HasImpostorVision
+    {
+        get => CustomOptionHolder.SpyHasImpostorVision.GetBool();
+    }
+
     public override void OnUpdateNameColors()
     {
         var localPlayer = PlayerControl.LocalPlayer;
-        if (localPlayer != null && localPlayer.IsTeamImpostor())
-        {
-            Update.SetPlayerNameColor(Player, NameColor);
-        }
+        if (localPlayer != null && localPlayer.IsTeamImpostor()) Update.SetPlayerNameColor(Player, NameColor);
     }
 
     public override void OnMeetingStart() { }

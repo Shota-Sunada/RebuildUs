@@ -3,8 +3,24 @@ namespace RebuildUs.Roles.Modifier;
 [HarmonyPatch]
 public class Mini : ModifierBase<Mini>
 {
+    public const float DEFAULT_COLLIDER_RADIUS = 0.2233912f;
+    public const float DEFAULT_COLLIDER_OFFSET = 0.3636057f;
     public static Color NameColor = Color.yellow;
-    public override Color ModifierColor => NameColor;
+
+    public static float GrowingUpDuration = 400f;
+    public static bool TriggerMiniLose;
+    public DateTime TimeOfGrowthStart = DateTime.UtcNow;
+
+    public Mini()
+    {
+        // write value init here
+        StaticModifierType = CurrentModifierType = ModifierType.Mini;
+    }
+
+    public override Color ModifierColor
+    {
+        get => NameColor;
+    }
 
     public static List<PlayerControl> Candidates
     {
@@ -14,25 +30,26 @@ public class Mini : ModifierBase<Mini>
             foreach (var player in PlayerControl.AllPlayerControls.GetFastEnumerator())
             {
                 if (!player.HasModifier(ModifierType.Mini))
-                {
                     validPlayers.Add(player);
-                }
             }
 
             return validPlayers;
         }
     }
 
-    public const float DefaultColliderRadius = 0.2233912f;
-    public const float DefaultColliderOffset = 0.3636057f;
+    public static string Postfix
+    {
+        get => Tr.Get(TrKey.MiniPostfix);
+    }
 
-    public static float GrowingUpDuration = 400f;
-    public DateTime TimeOfGrowthStart = DateTime.UtcNow;
-    public static bool TriggerMiniLose = false;
+    public static string FullName
+    {
+        get => Tr.Get(TrKey.Mini);
+    }
 
     public float GrowingProgress()
     {
-        float timeSinceStart = (float)(DateTime.UtcNow - TimeOfGrowthStart).TotalMilliseconds;
+        var timeSinceStart = (float)(DateTime.UtcNow - TimeOfGrowthStart).TotalMilliseconds;
         return Mathf.Clamp(timeSinceStart / (GrowingUpDuration * 1000), 0f, 1f);
     }
 
@@ -41,32 +58,10 @@ public class Mini : ModifierBase<Mini>
         for (var i = 0; i < Players.Count; i++)
         {
             var mini = Players[i];
-            if (mini.Player == player)
-            {
-                return mini.GrowingProgress() == 1f;
-            }
+            if (mini.Player == player) return mini.GrowingProgress() == 1f;
         }
-        return true;
-    }
-    public static string Postfix
-    {
-        get
-        {
-            return Tr.Get(TrKey.MiniPostfix);
-        }
-    }
-    public static string FullName
-    {
-        get
-        {
-            return Tr.Get(TrKey.Mini);
-        }
-    }
 
-    public Mini()
-    {
-        // write value init here
-        StaticModifierType = CurrentModifierType = ModifierType.Mini;
+        return true;
     }
 
     public override void OnMeetingStart() { }

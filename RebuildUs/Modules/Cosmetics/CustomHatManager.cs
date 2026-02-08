@@ -1,64 +1,70 @@
 using System.Security.Cryptography;
-using UnityEngine.AddressableAssets;
 
 namespace RebuildUs.Modules.Cosmetics;
 
 public static class CustomHatManager
 {
-    public const string ResourcesDirectory = "RebuildHats";
-    public const string InnerslothPackageName = "Innersloth Hats";
-    public const string DeveloperPackageName = "Developer Hats";
+    public const string RESOURCES_DIRECTORY = "RebuildHats";
+    public const string INNERSLOTH_PACKAGE_NAME = "Innersloth Hats";
+    public const string DEVELOPER_PACKAGE_NAME = "Developer Hats";
 
-    internal static readonly string[] Repositories =
-    [
-        "https://raw.githubusercontent.com/TheOtherRolesAU/TheOtherHats/master",
-        "https://raw.githubusercontent.com/hinakkyu/TheOtherHats/master",
-        "https://raw.githubusercontent.com/yukinogatari/TheOtherHats-GM/main"
-    ];
-
-    internal static string CustomSkinsDirectory => Path.Combine(Path.GetDirectoryName(Application.dataPath), ResourcesDirectory);
-    internal static string HatsDirectory => CustomSkinsDirectory;
+    internal static readonly string[] REPOSITORIES = ["https://raw.githubusercontent.com/TheOtherRolesAU/TheOtherHats/master", "https://raw.githubusercontent.com/hinakkyu/TheOtherHats/master", "https://raw.githubusercontent.com/yukinogatari/TheOtherHats-GM/main"];
 
     internal static List<CustomHat> UnregisteredHats = [];
-    internal static readonly Dictionary<string, HatViewData> ViewDataCache = [];
-    internal static readonly Dictionary<string, HatViewData> ViewDataCacheByName = [];
-    internal static readonly Dictionary<string, HatExtension> ExtensionCache = [];
+    internal static readonly Dictionary<string, HatViewData> VIEW_DATA_CACHE = [];
+    internal static readonly Dictionary<string, HatViewData> VIEW_DATA_CACHE_BY_NAME = [];
+    internal static readonly Dictionary<string, HatExtension> EXTENSION_CACHE = [];
 
-    public static readonly HatsLoader Loader;
-
-    internal static HatExtension TestExtension { get; private set; }
+    public static readonly HatsLoader LOADER;
 
     static CustomHatManager()
     {
-        Loader = RebuildUs.Instance?.AddComponent<HatsLoader>();
+        LOADER = RebuildUs.Instance?.AddComponent<HatsLoader>();
     }
+
+    internal static string CustomSkinsDirectory
+    {
+        get => Path.Combine(Path.GetDirectoryName(Application.dataPath), RESOURCES_DIRECTORY);
+    }
+
+    internal static string HatsDirectory
+    {
+        get => CustomSkinsDirectory;
+    }
+
+    internal static HatExtension TestExtension { get; private set; }
 
     internal static void LoadHats()
     {
-        Loader?.FetchHats();
+        LOADER?.FetchHats();
     }
 
     internal static bool TryGetCached(this HatParent hatParent, out HatViewData asset)
     {
-        if (hatParent != null && hatParent.Hat != null) return ViewDataCache.TryGetValue(hatParent.Hat.name, out asset);
+        if (hatParent != null && hatParent.Hat != null) return VIEW_DATA_CACHE.TryGetValue(hatParent.Hat.name, out asset);
         asset = null;
         return false;
     }
 
     internal static bool TryGetCached(this HatData hat, out HatViewData asset)
     {
-        if (hat == null) { asset = null; return false; }
-        return ViewDataCache.TryGetValue(hat.name, out asset);
+        if (hat == null)
+        {
+            asset = null;
+            return false;
+        }
+
+        return VIEW_DATA_CACHE.TryGetValue(hat.name, out asset);
     }
 
     internal static bool IsCached(this HatData hat)
     {
-        return hat != null && ViewDataCache.ContainsKey(hat.name);
+        return hat != null && VIEW_DATA_CACHE.ContainsKey(hat.name);
     }
 
     internal static bool IsCached(this HatParent hatParent)
     {
-        return hatParent != null && hatParent.Hat != null && IsCached(hatParent.Hat);
+        return hatParent != null && hatParent.Hat != null && hatParent.Hat.IsCached();
     }
 
     internal static HatData CreateHatBehaviour(CustomHat ch, bool testOnly = false)
@@ -85,7 +91,7 @@ public static class CustomHatManager
         hat.ProductId = "hat_" + ch.Name.Replace(' ', '_');
         hat.InFront = !ch.Behind;
         hat.NoBounce = !ch.Bounce;
-        hat.ChipOffset = new Vector2(0f, 0.2f);
+        hat.ChipOffset = new(0f, 0.2f);
         hat.Free = true;
 
         var extend = new HatExtension
@@ -96,15 +102,9 @@ public static class CustomHatManager
             Adaptive = ch.Adaptive,
         };
 
-        if (ch.FlipResource != null)
-        {
-            extend.FlipImage = CreateHatSprite(ch.FlipResource);
-        }
+        if (ch.FlipResource != null) extend.FlipImage = CreateHatSprite(ch.FlipResource);
 
-        if (ch.BackFlipResource != null)
-        {
-            extend.BackFlipImage = CreateHatSprite(ch.BackFlipResource);
-        }
+        if (ch.BackFlipResource != null) extend.BackFlipImage = CreateHatSprite(ch.BackFlipResource);
 
         if (testOnly)
         {
@@ -113,24 +113,21 @@ public static class CustomHatManager
         }
         else
         {
-            ExtensionCache[hat.name] = extend;
-            ViewDataCache[hat.name] = viewData;
-            ViewDataCacheByName[hat.name] = viewData;
+            EXTENSION_CACHE[hat.name] = extend;
+            VIEW_DATA_CACHE[hat.name] = viewData;
+            VIEW_DATA_CACHE_BY_NAME[hat.name] = viewData;
         }
 
-        hat.ViewDataRef = new AssetReference(viewData.Pointer);
+        hat.ViewDataRef = new(viewData.Pointer);
         hat.CreateAddressableAsset();
         return hat;
     }
 
     private static Sprite CreateHatSprite(string path)
     {
-        var texture = Helpers.LoadTextureFromDisk(System.IO.Path.Combine(HatsDirectory, path));
+        var texture = Helpers.LoadTextureFromDisk(Path.Combine(HatsDirectory, path));
         if (texture == null) return null;
-        var sprite = UnityEngine.Sprite.Create(texture,
-            new Rect(0, 0, texture.width, texture.height),
-            new Vector2(0.53f, 0.575f),
-            texture.width * 0.375f);
+        var sprite = Sprite.Create(texture, new(0, 0, texture.width, texture.height), new(0.53f, 0.575f), texture.width * 0.375f);
         if (sprite == null) return null;
         texture.hideFlags |= HideFlags.HideAndDontSave | HideFlags.DontUnloadUnusedAsset;
         sprite.hideFlags |= HideFlags.HideAndDontSave | HideFlags.DontUnloadUnusedAsset;
@@ -153,24 +150,16 @@ public static class CustomHatManager
             var p = s.Split('_');
             var options = new HashSet<string>(p);
             if (options.Contains("back") && options.Contains("flip"))
-            {
                 backFlips[p[0]] = fileName;
-            }
             else if (options.Contains("climb"))
-            {
                 climbs[p[0]] = fileName;
-            }
             else if (options.Contains("back"))
-            {
                 backs[p[0]] = fileName;
-            }
             else if (options.Contains("flip"))
-            {
                 flips[p[0]] = fileName;
-            }
             else
             {
-                fronts[p[0]] = new CustomHat
+                fronts[p[0]] = new()
                 {
                     Resource = fileName,
                     Name = p[0].Replace('-', ' '),
@@ -223,19 +212,17 @@ public static class CustomHatManager
 
         var sb = new StringBuilder();
         // We only want to sanitize the part before the .png extension
-        int nameLen = path.Length - 4;
-        for (int i = 0; i < nameLen; i++)
+        var nameLen = path.Length - 4;
+        for (var i = 0; i < nameLen; i++)
         {
-            char c = path[i];
+            var c = path[i];
             if (c == '\\' || c == '/' || c == '*' || c == '.')
             {
                 // Skip these characters or handle '..'
-                if (c == '.' && i + 1 < nameLen && path[i + 1] == '.')
-                {
-                    i++; // skip second dot
-                }
+                if (c == '.' && i + 1 < nameLen && path[i + 1] == '.') i++; // skip second dot
                 continue;
             }
+
             sb.Append(c);
         }
 
@@ -246,14 +233,9 @@ public static class CustomHatManager
     private static bool ResourceRequireDownload(string resFile, string resHash, HashAlgorithm algorithm)
     {
         var filePath = Path.Combine(HatsDirectory, resFile);
-        if (resHash == null || !File.Exists(filePath))
-        {
-            return true;
-        }
+        if (resHash == null || !File.Exists(filePath)) return true;
         using var stream = File.OpenRead(filePath);
-        var hash = BitConverter.ToString(algorithm.ComputeHash(stream))
-            .Replace("-", string.Empty)
-            .ToLowerInvariant();
+        var hash = BitConverter.ToString(algorithm.ComputeHash(stream)).Replace("-", string.Empty).ToLowerInvariant();
         return !resHash.Equals(hash);
     }
 
@@ -262,7 +244,7 @@ public static class CustomHatManager
         using var algorithm = MD5.Create();
         var toDownload = new List<string>();
 
-        for (int i = 0; i < hats.Count; i++)
+        for (var i = 0; i < hats.Count; i++)
         {
             var hat = hats[i];
 

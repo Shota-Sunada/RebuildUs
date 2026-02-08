@@ -1,23 +1,23 @@
 namespace RebuildUs.Modules.Random;
 
-public static class RandomMain
+internal static class RandomMain
 {
-    public static System.Random Rnd { get; private set; } = new MersenneTwister((int)System.DateTime.Now.Ticks);
+    internal static System.Random Rnd { get; private set; } = new MersenneTwister((int)DateTime.Now.Ticks);
 
-    public static void RefreshRnd(int seed)
+    internal static void RefreshRnd(int seed)
     {
         Rnd = CustomOptionHolder.RandomNumberAlgorithm.Selection switch
         {
-            0 => new System.Random(seed),
+            0 => new(seed),
             1 => new MersenneTwister(seed),
             2 => new Xoshiro256PlusPlus(seed),
             3 => new Xoshiro256StarStar(seed),
             4 => new Pcg64(seed),
-            _ => new Xoshiro256PlusPlus(seed)
+            _ => new Xoshiro256PlusPlus(seed),
         };
     }
 
-    public static void LogScore()
+    internal static void LogScore()
     {
         Logger.LogInfo(RandomScorer.MeasureQuality(Rnd), "RandomScorer");
     }

@@ -1,607 +1,533 @@
+using Object = UnityEngine.Object;
+
 namespace RebuildUs.Modules.GameMode;
 
-public static partial class HotPotato
+internal static partial class HotPotato
 {
     public static Color IntroColor = new Color32(242, 190, 255, byte.MaxValue);
 
-    public static bool createdhotpotato = false;
+    public static bool Createdhotpotato;
 
-    public static List<PlayerControl> notPotatoTeam = [];
-    public static List<PlayerControl> notPotatoTeamAlive = [];
-    public static List<PlayerControl> explodedPotatoTeam = [];
+    public static readonly List<PlayerControl> NOT_POTATO_TEAM = [];
+    public static readonly List<PlayerControl> NOT_POTATO_TEAM_ALIVE = [];
+    public static readonly List<PlayerControl> EXPLODED_POTATO_TEAM = [];
 
-    public static PlayerControl hotPotatoPlayer = null;
-    public static PlayerControl hotPotatoPlayerCurrentTarget = null;
-    public static PlayerControl notPotato01 = null;
-    public static PlayerControl notPotato02 = null;
-    public static PlayerControl notPotato03 = null;
-    public static PlayerControl notPotato04 = null;
-    public static PlayerControl notPotato05 = null;
-    public static PlayerControl notPotato06 = null;
-    public static PlayerControl notPotato07 = null;
-    public static PlayerControl notPotato08 = null;
-    public static PlayerControl notPotato09 = null;
-    public static PlayerControl notPotato10 = null;
-    public static PlayerControl notPotato11 = null;
-    public static PlayerControl notPotato12 = null;
-    public static PlayerControl notPotato13 = null;
-    public static PlayerControl notPotato14 = null;
+    internal static PlayerControl HotPotatoPlayer;
+    private static PlayerControl _hotPotatoPlayerCurrentTarget;
+    internal static PlayerControl NotPotato01;
+    internal static PlayerControl NotPotato02;
+    internal static PlayerControl NotPotato03;
+    public static PlayerControl NotPotato04;
+    public static PlayerControl NotPotato05;
+    public static PlayerControl NotPotato06;
+    public static PlayerControl NotPotato07;
+    public static PlayerControl NotPotato08;
+    public static PlayerControl NotPotato09;
+    public static PlayerControl NotPotato10;
+    public static PlayerControl NotPotato11;
+    public static PlayerControl NotPotato12;
+    public static PlayerControl NotPotato13;
+    public static PlayerControl NotPotato14;
 
-    public static PlayerControl explodedPotato01 = null;
-    public static PlayerControl explodedPotato02 = null;
-    public static PlayerControl explodedPotato03 = null;
-    public static PlayerControl explodedPotato04 = null;
-    public static PlayerControl explodedPotato05 = null;
-    public static PlayerControl explodedPotato06 = null;
-    public static PlayerControl explodedPotato07 = null;
-    public static PlayerControl explodedPotato08 = null;
-    public static PlayerControl explodedPotato09 = null;
-    public static PlayerControl explodedPotato10 = null;
-    public static PlayerControl explodedPotato11 = null;
-    public static PlayerControl explodedPotato12 = null;
-    public static PlayerControl explodedPotato13 = null;
-    public static PlayerControl explodedPotato14 = null;
+    public static PlayerControl ExplodedPotato01;
+    public static PlayerControl ExplodedPotato02;
+    public static PlayerControl ExplodedPotato03;
+    public static PlayerControl ExplodedPotato04;
+    public static PlayerControl ExplodedPotato05;
+    public static PlayerControl ExplodedPotato06;
+    public static PlayerControl ExplodedPotato07;
+    public static PlayerControl ExplodedPotato08;
+    public static PlayerControl ExplodedPotato09;
+    public static PlayerControl ExplodedPotato10;
+    public static PlayerControl ExplodedPotato11;
+    public static PlayerControl ExplodedPotato12;
+    public static PlayerControl ExplodedPotato13;
+    public static PlayerControl ExplodedPotato14;
 
-    public static GameObject hotPotato = null;
+    public static GameObject HotPotatoObject;
 
-    public static float timeforTransfer = 15;
-    public static float transferCooldown = 10f;
-    public static float savedtimeforTransfer = 15;
-    public static bool resetTimeForTransfer = true;
-    public static float increaseTimeIfNoReset = 5f;
-    public static bool firstPotatoTransfered = false;
+    public static float TimeforTransfer = 15;
+    public static float TransferCooldown = 10f;
+    public static float SavedtimeforTransfer = 15;
+    public static bool ResetTimeForTransfer = true;
+    public static float IncreaseTimeIfNoReset = 5f;
+    public static bool FirstPotatoTransfered;
 
-    public static bool notPotatoTeamAlerted = false;
+    public static bool NotPotatoTeamAlerted;
 
-    public static bool triggerHotPotatoEnd = false;
+    public static bool TriggerHotPotatoEnd;
 
-    public static string hotpotatopointCounter = new StringBuilder(Tr.Get(TrKey.HotPotatoStatus)).Append("<color=#808080FF></color> | ").Append(Tr.Get(TrKey.ColdPotatoes)).Append("<color=#00F7FFFF>").Append(notPotatoTeam.Count).Append("</color>").ToString();
+    public static string HotpotatopointCounter = new StringBuilder(Tr.Get(TrKey.HotPotatoStatus))
+                                                 .Append("<color=#808080FF></color> | ")
+                                                 .Append(Tr.Get(TrKey.ColdPotatoes))
+                                                 .Append("<color=#00F7FFFF>")
+                                                 .Append(NOT_POTATO_TEAM.Count)
+                                                 .Append("</color>")
+                                                 .ToString();
 
-    public static void clearAndReload()
+    public static void ClearAndReload()
     {
-        createdhotpotato = false;
+        Createdhotpotato = false;
 
-        notPotatoTeam.Clear();
-        notPotatoTeamAlive.Clear();
-        hotPotatoPlayer = null;
-        hotPotatoPlayerCurrentTarget = null;
-        notPotato01 = null;
-        notPotato02 = null;
-        notPotato03 = null;
-        notPotato04 = null;
-        notPotato05 = null;
-        notPotato06 = null;
-        notPotato07 = null;
-        notPotato08 = null;
-        notPotato09 = null;
-        notPotato10 = null;
-        notPotato11 = null;
-        notPotato12 = null;
-        notPotato13 = null;
-        notPotato14 = null;
+        NOT_POTATO_TEAM.Clear();
+        NOT_POTATO_TEAM_ALIVE.Clear();
+        HotPotatoPlayer = null;
+        _hotPotatoPlayerCurrentTarget = null;
+        NotPotato01 = null;
+        NotPotato02 = null;
+        NotPotato03 = null;
+        NotPotato04 = null;
+        NotPotato05 = null;
+        NotPotato06 = null;
+        NotPotato07 = null;
+        NotPotato08 = null;
+        NotPotato09 = null;
+        NotPotato10 = null;
+        NotPotato11 = null;
+        NotPotato12 = null;
+        NotPotato13 = null;
+        NotPotato14 = null;
 
-        explodedPotato01 = null;
-        explodedPotato02 = null;
-        explodedPotato03 = null;
-        explodedPotato04 = null;
-        explodedPotato05 = null;
-        explodedPotato06 = null;
-        explodedPotato07 = null;
-        explodedPotato08 = null;
-        explodedPotato09 = null;
-        explodedPotato10 = null;
-        explodedPotato11 = null;
-        explodedPotato12 = null;
-        explodedPotato13 = null;
-        explodedPotato14 = null;
+        ExplodedPotato01 = null;
+        ExplodedPotato02 = null;
+        ExplodedPotato03 = null;
+        ExplodedPotato04 = null;
+        ExplodedPotato05 = null;
+        ExplodedPotato06 = null;
+        ExplodedPotato07 = null;
+        ExplodedPotato08 = null;
+        ExplodedPotato09 = null;
+        ExplodedPotato10 = null;
+        ExplodedPotato11 = null;
+        ExplodedPotato12 = null;
+        ExplodedPotato13 = null;
+        ExplodedPotato14 = null;
 
-        timeforTransfer = CustomOptionHolder.hotPotatoTransferLimit.GetFloat() + 10f;
-        transferCooldown = CustomOptionHolder.hotPotatoCooldown.GetFloat();
-        resetTimeForTransfer = CustomOptionHolder.hotPotatoResetTimeForTransfer.GetBool();
-        increaseTimeIfNoReset = CustomOptionHolder.hotPotatoIncreaseTimeIfNoReset.GetFloat();
-        notPotatoTeamAlerted = false;
-        triggerHotPotatoEnd = false;
-        savedtimeforTransfer = timeforTransfer - 10f;
-        firstPotatoTransfered = false;
-        hotPotato = null;
+        TimeforTransfer = CustomOptionHolder.HotPotatoTransferLimit.GetFloat() + 10f;
+        TransferCooldown = CustomOptionHolder.HotPotatoCooldown.GetFloat();
+        ResetTimeForTransfer = CustomOptionHolder.HotPotatoResetTimeForTransfer.GetBool();
+        IncreaseTimeIfNoReset = CustomOptionHolder.HotPotatoIncreaseTimeIfNoReset.GetFloat();
+        NotPotatoTeamAlerted = false;
+        TriggerHotPotatoEnd = false;
+        SavedtimeforTransfer = TimeforTransfer - 10f;
+        FirstPotatoTransfered = false;
+        HotPotatoObject = null;
 
-        hotpotatopointCounter = new StringBuilder(Tr.Get(TrKey.HotPotatoStatus)).Append("<color=#00F7FFFF></color> | ").Append(Tr.Get(TrKey.ColdPotatoes)).Append("<color=#928B55FF>").Append(notPotatoTeam.Count).Append("</color>").ToString();
+        HotpotatopointCounter = new StringBuilder(Tr.Get(TrKey.HotPotatoStatus)).Append("<color=#00F7FFFF></color> | ")
+            .Append(Tr.Get(TrKey.ColdPotatoes))
+            .Append("<color=#928B55FF>")
+            .Append(NOT_POTATO_TEAM.Count)
+            .Append("</color>")
+            .ToString();
     }
 
-    public static void CreateHP()
+    public static void CreateHp()
     {
-
-        Vector3 hotPotatoPlayerPos = new Vector3();
-        Vector3 notPotatoTeamPos = new Vector3();
+        var hotPotatoPlayerPos = new Vector3();
+        var notPotatoTeamPos = new Vector3();
 
         switch (GameOptionsManager.Instance.currentGameOptions.MapId)
         {
             // Skeld / Custom Skeld
             case 0:
-                if (RebuildUs.activatedSensei)
+                if (RebuildUs.ActivatedSensei)
                 {
-                    hotPotatoPlayerPos = new Vector3(-6.5f, -2.25f, PlayerControl.LocalPlayer.transform.position.z);
-                    notPotatoTeamPos = new Vector3(12.5f, -0.25f, PlayerControl.LocalPlayer.transform.position.z);
+                    hotPotatoPlayerPos = new(-6.5f, -2.25f, PlayerControl.LocalPlayer.transform.position.z);
+                    notPotatoTeamPos = new(12.5f, -0.25f, PlayerControl.LocalPlayer.transform.position.z);
                 }
-                else if (RebuildUs.activatedDleks)
+                else if (RebuildUs.ActivatedDleks)
                 {
-                    hotPotatoPlayerPos = new Vector3(0.75f, -7f, PlayerControl.LocalPlayer.transform.position.z);
-                    notPotatoTeamPos = new Vector3(-6.25f, -3.5f, PlayerControl.LocalPlayer.transform.position.z);
+                    hotPotatoPlayerPos = new(0.75f, -7f, PlayerControl.LocalPlayer.transform.position.z);
+                    notPotatoTeamPos = new(-6.25f, -3.5f, PlayerControl.LocalPlayer.transform.position.z);
                 }
                 else
                 {
-                    hotPotatoPlayerPos = new Vector3(-0.75f, -7f, PlayerControl.LocalPlayer.transform.position.z);
-                    notPotatoTeamPos = new Vector3(6.25f, -3.5f, PlayerControl.LocalPlayer.transform.position.z);
+                    hotPotatoPlayerPos = new(-0.75f, -7f, PlayerControl.LocalPlayer.transform.position.z);
+                    notPotatoTeamPos = new(6.25f, -3.5f, PlayerControl.LocalPlayer.transform.position.z);
                 }
+
                 break;
             // Mira HQ
             case 1:
-                hotPotatoPlayerPos = new Vector3(6.15f, 6.25f, PlayerControl.LocalPlayer.transform.position.z);
-                notPotatoTeamPos = new Vector3(17.75f, 11.5f, PlayerControl.LocalPlayer.transform.position.z);
+                hotPotatoPlayerPos = new(6.15f, 6.25f, PlayerControl.LocalPlayer.transform.position.z);
+                notPotatoTeamPos = new(17.75f, 11.5f, PlayerControl.LocalPlayer.transform.position.z);
                 break;
             // Polus
             case 2:
-                hotPotatoPlayerPos = new Vector3(20.5f, -11.75f, PlayerControl.LocalPlayer.transform.position.z);
-                notPotatoTeamPos = new Vector3(12.25f, -16f, PlayerControl.LocalPlayer.transform.position.z);
+                hotPotatoPlayerPos = new(20.5f, -11.75f, PlayerControl.LocalPlayer.transform.position.z);
+                notPotatoTeamPos = new(12.25f, -16f, PlayerControl.LocalPlayer.transform.position.z);
                 break;
             // Dleks
             case 3:
-                hotPotatoPlayerPos = new Vector3(0.75f, -7f, PlayerControl.LocalPlayer.transform.position.z);
-                notPotatoTeamPos = new Vector3(-6.25f, -3.5f, PlayerControl.LocalPlayer.transform.position.z);
+                hotPotatoPlayerPos = new(0.75f, -7f, PlayerControl.LocalPlayer.transform.position.z);
+                notPotatoTeamPos = new(-6.25f, -3.5f, PlayerControl.LocalPlayer.transform.position.z);
                 break;
             // Airship
             case 4:
-                hotPotatoPlayerPos = new Vector3(12.25f, 2f, PlayerControl.LocalPlayer.transform.position.z);
-                notPotatoTeamPos = new Vector3(6.25f, 2.5f, PlayerControl.LocalPlayer.transform.position.z);
+                hotPotatoPlayerPos = new(12.25f, 2f, PlayerControl.LocalPlayer.transform.position.z);
+                notPotatoTeamPos = new(6.25f, 2.5f, PlayerControl.LocalPlayer.transform.position.z);
                 break;
             // Fungle
             case 5:
-                hotPotatoPlayerPos = new Vector3(-10.75f, 12.75f, PlayerControl.LocalPlayer.transform.position.z);
-                notPotatoTeamPos = new Vector3(-3.25f, -10.5f, PlayerControl.LocalPlayer.transform.position.z);
+                hotPotatoPlayerPos = new(-10.75f, 12.75f, PlayerControl.LocalPlayer.transform.position.z);
+                notPotatoTeamPos = new(-3.25f, -10.5f, PlayerControl.LocalPlayer.transform.position.z);
                 break;
             // Submerged
             case 6:
-                hotPotatoPlayerPos = new Vector3(-4.25f, -33.5f, PlayerControl.LocalPlayer.transform.position.z);
-                notPotatoTeamPos = new Vector3(13f, -25.25f, PlayerControl.LocalPlayer.transform.position.z);
+                hotPotatoPlayerPos = new(-4.25f, -33.5f, PlayerControl.LocalPlayer.transform.position.z);
+                notPotatoTeamPos = new(13f, -25.25f, PlayerControl.LocalPlayer.transform.position.z);
                 break;
         }
 
-        HotPotato.hotPotatoPlayer.MyPhysics.SetBodyType(PlayerBodyTypes.Seeker);
-        HotPotato.hotPotatoPlayer.transform.position = hotPotatoPlayerPos;
+        HotPotatoPlayer.MyPhysics.SetBodyType(PlayerBodyTypes.Seeker);
+        HotPotatoPlayer.transform.position = hotPotatoPlayerPos;
 
-        foreach (PlayerControl player in HotPotato.notPotatoTeam)
-        {
-            player.transform.position = notPotatoTeamPos;
-        }
+        foreach (var player in NOT_POTATO_TEAM) player.transform.position = notPotatoTeamPos;
 
-        if (PlayerControl.LocalPlayer != null && !createdhotpotato)
-        {
-            Helpers.ClearAllTasks(PlayerControl.LocalPlayer);
+        if (PlayerControl.LocalPlayer == null || Createdhotpotato) return;
+        PlayerControl.LocalPlayer.ClearAllTasks();
 
-            GameObject hotpotato = GameObject.Instantiate(AssetLoader.hotPotato, HotPotato.hotPotatoPlayer.transform);
-            hotpotato.name = "HotPotato";
-            hotpotato.transform.position = HotPotato.hotPotatoPlayer.transform.position + new Vector3(0, 0.5f, -0.25f);
-            HotPotato.hotPotato = hotpotato;
+        var hotpotato = Object.Instantiate(AssetLoader.HotPotato, HotPotatoPlayer.transform);
+        hotpotato.name = "HotPotato";
+        hotpotato.transform.position = HotPotatoPlayer.transform.position + new Vector3(0, 0.5f, -0.25f);
+        HotPotatoObject = hotpotato;
 
-            HudManager.Instance.DangerMeter.gameObject.SetActive(true);
+        HudManager.Instance.DangerMeter.gameObject.SetActive(true);
 
-            createdhotpotato = true;
-        }
+        Createdhotpotato = true;
     }
 
-    public static void hotPotatoSetTarget()
+    public static void HotPotatoSetTarget()
     {
         if (MapSettings.GameMode is not CustomGameMode.HotPotato) return;
 
-        if (HotPotato.hotPotatoPlayer != null && HotPotato.hotPotatoPlayer == PlayerControl.LocalPlayer)
+        if (HotPotatoPlayer != null && HotPotatoPlayer == PlayerControl.LocalPlayer)
         {
-            HotPotato.hotPotatoPlayerCurrentTarget = Helpers.SetTarget();
-            Helpers.SetPlayerOutline(HotPotato.hotPotatoPlayerCurrentTarget, Color.grey);
+            _hotPotatoPlayerCurrentTarget = Helpers.SetTarget();
+            Helpers.SetPlayerOutline(_hotPotatoPlayerCurrentTarget, Color.grey);
         }
     }
 
     public static void OnMurderPlayerPostfix(PlayerControl __instance, PlayerControl target)
     {
-        if (HotPotato.hotPotatoPlayer != null && HotPotato.hotPotatoPlayer.PlayerId == target.PlayerId)
+        if (HotPotatoPlayer == null || HotPotatoPlayer.PlayerId != target.PlayerId) return;
+        var hpBody = Object.FindObjectsOfType<DeadBody>().FirstOrDefault(b => b.ParentId == target.PlayerId);
+        hpBody.transform.position = new(50, 50, 1);
+
+        TimeforTransfer = SavedtimeforTransfer + 4f;
+
+        HudManager.Instance.StartCoroutine(Effects.Lerp(1, new Action<float>(p =>
         {
+            // Delayed action
+            if (!Mathf.Approximately(p, 1f)) return;
 
-            var hpBody = UnityEngine.Object.FindObjectsOfType<DeadBody>().FirstOrDefault(b => b.ParentId == target.PlayerId);
-            hpBody.transform.position = new Vector3(50, 50, 1);
-
-            HotPotato.timeforTransfer = HotPotato.savedtimeforTransfer + 4f;
-
-            HudManager.Instance.StartCoroutine(Effects.Lerp(1, new Action<float>((p) =>
-            { // Delayed action
-                if (p == 1f)
-                {
-
-                    if (HotPotato.explodedPotato01 == null)
-                    {
-                        HotPotato.explodedPotato01 = HotPotato.hotPotatoPlayer;
-                        HotPotato.explodedPotatoTeam.Add(HotPotato.explodedPotato01);
-                    }
-                    else if (HotPotato.explodedPotato02 == null)
-                    {
-                        HotPotato.explodedPotato02 = HotPotato.hotPotatoPlayer;
-                        HotPotato.explodedPotatoTeam.Add(HotPotato.explodedPotato02);
-                    }
-                    else if (HotPotato.explodedPotato03 == null)
-                    {
-                        HotPotato.explodedPotato03 = HotPotato.hotPotatoPlayer;
-                        HotPotato.explodedPotatoTeam.Add(HotPotato.explodedPotato03);
-                    }
-                    else if (HotPotato.explodedPotato04 == null)
-                    {
-                        HotPotato.explodedPotato04 = HotPotato.hotPotatoPlayer;
-                        HotPotato.explodedPotatoTeam.Add(HotPotato.explodedPotato04);
-                    }
-                    else if (HotPotato.explodedPotato05 == null)
-                    {
-                        HotPotato.explodedPotato05 = HotPotato.hotPotatoPlayer;
-                        HotPotato.explodedPotatoTeam.Add(HotPotato.explodedPotato05);
-                    }
-                    else if (HotPotato.explodedPotato06 == null)
-                    {
-                        HotPotato.explodedPotato06 = HotPotato.hotPotatoPlayer;
-                        HotPotato.explodedPotatoTeam.Add(HotPotato.explodedPotato06);
-                    }
-                    else if (HotPotato.explodedPotato07 == null)
-                    {
-                        HotPotato.explodedPotato07 = HotPotato.hotPotatoPlayer;
-                        HotPotato.explodedPotatoTeam.Add(HotPotato.explodedPotato07);
-                    }
-                    else if (HotPotato.explodedPotato08 == null)
-                    {
-                        HotPotato.explodedPotato08 = HotPotato.hotPotatoPlayer;
-                        HotPotato.explodedPotatoTeam.Add(HotPotato.explodedPotato08);
-                    }
-                    else if (HotPotato.explodedPotato09 == null)
-                    {
-                        HotPotato.explodedPotato09 = HotPotato.hotPotatoPlayer;
-                        HotPotato.explodedPotatoTeam.Add(HotPotato.explodedPotato09);
-                    }
-                    else if (HotPotato.explodedPotato10 == null)
-                    {
-                        HotPotato.explodedPotato10 = HotPotato.hotPotatoPlayer;
-                        HotPotato.explodedPotatoTeam.Add(HotPotato.explodedPotato10);
-                    }
-                    else if (HotPotato.explodedPotato11 == null)
-                    {
-                        HotPotato.explodedPotato11 = HotPotato.hotPotatoPlayer;
-                        HotPotato.explodedPotatoTeam.Add(HotPotato.explodedPotato11);
-                    }
-                    else if (HotPotato.explodedPotato12 == null)
-                    {
-                        HotPotato.explodedPotato12 = HotPotato.hotPotatoPlayer;
-                        HotPotato.explodedPotatoTeam.Add(HotPotato.explodedPotato12);
-                    }
-                    else if (HotPotato.explodedPotato13 == null)
-                    {
-                        HotPotato.explodedPotato13 = HotPotato.hotPotatoPlayer;
-                        HotPotato.explodedPotatoTeam.Add(HotPotato.explodedPotato13);
-                    }
-                    else if (HotPotato.explodedPotato14 == null)
-                    {
-                        HotPotato.explodedPotato14 = HotPotato.hotPotatoPlayer;
-                        HotPotato.explodedPotatoTeam.Add(HotPotato.explodedPotato14);
-                    }
-
-                    int notPotatosAlives = -1;
-                    HotPotato.notPotatoTeamAlive.Clear();
-                    foreach (PlayerControl notPotato in HotPotato.notPotatoTeam)
-                    {
-                        if (!notPotato.Data.IsDead)
-                        {
-                            notPotatosAlives += 1;
-                            HotPotato.notPotatoTeamAlive.Add(notPotato);
-                        }
-                    }
-
-                    if (notPotatosAlives < 1)
-                    {
-                        HotPotato.triggerHotPotatoEnd = true;
-                        GameManager.Instance.RpcEndGame((GameOverReason)CustomGameOverReason.HotPotatoEnd, false);
-                        return;
-                    }
-
-                    HotPotato.hotPotatoPlayer = HotPotato.notPotatoTeam[0];
-
-                    // If hot potato timed out, assing new potato
-                    if (HotPotato.notPotato01 != null && HotPotato.notPotatoTeam[0] == HotPotato.notPotato01)
-                    {
-                        HotPotato.notPotato01 = null;
-                    }
-                    else if (HotPotato.notPotato02 != null && HotPotato.notPotatoTeam[0] == HotPotato.notPotato02)
-                    {
-                        HotPotato.notPotato02 = null;
-                    }
-                    else if (HotPotato.notPotato03 != null && HotPotato.notPotatoTeam[0] == HotPotato.notPotato03)
-                    {
-                        HotPotato.notPotato03 = null;
-                    }
-                    else if (HotPotato.notPotato04 != null && HotPotato.notPotatoTeam[0] == HotPotato.notPotato04)
-                    {
-                        HotPotato.notPotato04 = null;
-                    }
-                    else if (HotPotato.notPotato05 != null && HotPotato.notPotatoTeam[0] == HotPotato.notPotato05)
-                    {
-                        HotPotato.notPotato05 = null;
-                    }
-                    else if (HotPotato.notPotato06 != null && HotPotato.notPotatoTeam[0] == HotPotato.notPotato06)
-                    {
-                        HotPotato.notPotato06 = null;
-                    }
-                    else if (HotPotato.notPotato07 != null && HotPotato.notPotatoTeam[0] == HotPotato.notPotato07)
-                    {
-                        HotPotato.notPotato07 = null;
-                    }
-                    else if (HotPotato.notPotato08 != null && HotPotato.notPotatoTeam[0] == HotPotato.notPotato08)
-                    {
-                        HotPotato.notPotato08 = null;
-                    }
-                    else if (HotPotato.notPotato09 != null && HotPotato.notPotatoTeam[0] == HotPotato.notPotato09)
-                    {
-                        HotPotato.notPotato09 = null;
-                    }
-                    else if (HotPotato.notPotato10 != null && HotPotato.notPotatoTeam[0] == HotPotato.notPotato10)
-                    {
-                        HotPotato.notPotato10 = null;
-                    }
-                    else if (HotPotato.notPotato11 != null && HotPotato.notPotatoTeam[0] == HotPotato.notPotato11)
-                    {
-                        HotPotato.notPotato11 = null;
-                    }
-                    else if (HotPotato.notPotato12 != null && HotPotato.notPotatoTeam[0] == HotPotato.notPotato12)
-                    {
-                        HotPotato.notPotato12 = null;
-                    }
-                    else if (HotPotato.notPotato13 != null && HotPotato.notPotatoTeam[0] == HotPotato.notPotato13)
-                    {
-                        HotPotato.notPotato13 = null;
-                    }
-                    else if (HotPotato.notPotato14 != null && HotPotato.notPotatoTeam[0] == HotPotato.notPotato14)
-                    {
-                        HotPotato.notPotato14 = null;
-                    }
-
-                    HotPotato.notPotatoTeam.RemoveAt(0);
-
-                    HotPotato.hotPotatoPlayer.NetTransform.Halt();
-                    HotPotato.hotPotatoPlayer.moveable = false;
-                    HotPotato.hotPotatoPlayer.MyPhysics.SetBodyType(PlayerBodyTypes.Seeker);
-                    HotPotato.hotPotato.transform.position = HotPotato.hotPotatoPlayer.transform.position + new Vector3(0, 0.5f, -0.25f);
-                    HotPotato.hotPotato.transform.parent = HotPotato.hotPotatoPlayer.transform;
-
-                    HudManager.Instance.StartCoroutine(Effects.Lerp(3, new Action<float>((p) =>
-                    { // Delayed action
-                        if (p == 1f)
-                        {
-                            HotPotato.hotPotatoPlayer.moveable = true;
-                        }
-                    })));
-
-                    Helpers.showGamemodesPopUp(1, Helpers.PlayerById(HotPotato.hotPotatoPlayer.PlayerId));
-                    HotPotato.hotpotatopointCounter = new StringBuilder(Tr.Get(TrKey.HotPotatoStatus)).Append("<color=#808080FF>").Append(HotPotato.hotPotatoPlayer.name).Append("</color> | ").Append(Tr.Get(TrKey.ColdPotatoes)).Append("<color=#00F7FFFF>").Append(notPotatosAlives).Append("</color>").ToString();
-                }
-            })));
-        }
-    }
-
-    public static void hotPotatoUpdate()
-    {
-        if (MapSettings.GameMode is not CustomGameMode.HotPotato) return;
-
-        // Fill the Danger Metter for hotPotato and update its distance for coldpotatoes
-        if (HotPotato.hotPotatoPlayer != null && HudManager.Instance.DangerMeter.gameObject.active)
-        {
-            float leftdistance = 55f;
-            float rightdistance = 15f;
-            float currentdistance = float.MaxValue;
-
-            float sqrMagnitude = (HotPotato.hotPotatoPlayer.transform.position - PlayerControl.LocalPlayer.transform.position).sqrMagnitude;
-            if (sqrMagnitude < leftdistance && currentdistance > sqrMagnitude)
+            if (ExplodedPotato01 == null)
             {
-                currentdistance = sqrMagnitude;
+                ExplodedPotato01 = HotPotatoPlayer;
+                EXPLODED_POTATO_TEAM.Add(ExplodedPotato01);
+            }
+            else if (ExplodedPotato02 == null)
+            {
+                ExplodedPotato02 = HotPotatoPlayer;
+                EXPLODED_POTATO_TEAM.Add(ExplodedPotato02);
+            }
+            else if (ExplodedPotato03 == null)
+            {
+                ExplodedPotato03 = HotPotatoPlayer;
+                EXPLODED_POTATO_TEAM.Add(ExplodedPotato03);
+            }
+            else if (ExplodedPotato04 == null)
+            {
+                ExplodedPotato04 = HotPotatoPlayer;
+                EXPLODED_POTATO_TEAM.Add(ExplodedPotato04);
+            }
+            else if (ExplodedPotato05 == null)
+            {
+                ExplodedPotato05 = HotPotatoPlayer;
+                EXPLODED_POTATO_TEAM.Add(ExplodedPotato05);
+            }
+            else if (ExplodedPotato06 == null)
+            {
+                ExplodedPotato06 = HotPotatoPlayer;
+                EXPLODED_POTATO_TEAM.Add(ExplodedPotato06);
+            }
+            else if (ExplodedPotato07 == null)
+            {
+                ExplodedPotato07 = HotPotatoPlayer;
+                EXPLODED_POTATO_TEAM.Add(ExplodedPotato07);
+            }
+            else if (ExplodedPotato08 == null)
+            {
+                ExplodedPotato08 = HotPotatoPlayer;
+                EXPLODED_POTATO_TEAM.Add(ExplodedPotato08);
+            }
+            else if (ExplodedPotato09 == null)
+            {
+                ExplodedPotato09 = HotPotatoPlayer;
+                EXPLODED_POTATO_TEAM.Add(ExplodedPotato09);
+            }
+            else if (ExplodedPotato10 == null)
+            {
+                ExplodedPotato10 = HotPotatoPlayer;
+                EXPLODED_POTATO_TEAM.Add(ExplodedPotato10);
+            }
+            else if (ExplodedPotato11 == null)
+            {
+                ExplodedPotato11 = HotPotatoPlayer;
+                EXPLODED_POTATO_TEAM.Add(ExplodedPotato11);
+            }
+            else if (ExplodedPotato12 == null)
+            {
+                ExplodedPotato12 = HotPotatoPlayer;
+                EXPLODED_POTATO_TEAM.Add(ExplodedPotato12);
+            }
+            else if (ExplodedPotato13 == null)
+            {
+                ExplodedPotato13 = HotPotatoPlayer;
+                EXPLODED_POTATO_TEAM.Add(ExplodedPotato13);
+            }
+            else if (ExplodedPotato14 == null)
+            {
+                ExplodedPotato14 = HotPotatoPlayer;
+                EXPLODED_POTATO_TEAM.Add(ExplodedPotato14);
             }
 
-            float dangerLevelLeft = Mathf.Clamp01((leftdistance - currentdistance) / (leftdistance - rightdistance));
-            float dangerLevelRight = Mathf.Clamp01((rightdistance - currentdistance) / rightdistance);
-            HudManager.Instance.DangerMeter.SetDangerValue(dangerLevelLeft, dangerLevelRight);
-        }
-
-        // Hide hot potato sprite if in vent
-        if (HotPotato.hotPotatoPlayer != null && HotPotato.hotPotato != null)
-        {
-            if (HotPotato.hotPotatoPlayer.inVent)
+            var notPotatosAlives = -1;
+            NOT_POTATO_TEAM_ALIVE.Clear();
+            foreach (var notPotato in NOT_POTATO_TEAM)
             {
-                HotPotato.hotPotato.SetActive(false);
-            }
-            else
-            {
-                HotPotato.hotPotato.SetActive(true);
-            }
-        }
-
-        // If hot potato disconnects, assing new potato and reset timer
-        if (HotPotato.hotPotatoPlayer != null && HotPotato.hotPotatoPlayer.Data.Disconnected)
-        {
-
-            if (!HotPotato.firstPotatoTransfered)
-            {
-                HotPotato.firstPotatoTransfered = true;
-            }
-
-            HotPotato.timeforTransfer = HotPotato.savedtimeforTransfer;
-
-            int notPotatosAlives = -1;
-            HotPotato.notPotatoTeamAlive.Clear();
-            foreach (PlayerControl remainPotato in HotPotato.notPotatoTeam)
-            {
-                if (!remainPotato.Data.IsDead)
+                if (!notPotato.Data.IsDead)
                 {
                     notPotatosAlives += 1;
-                    HotPotato.notPotatoTeamAlive.Add(remainPotato);
+                    NOT_POTATO_TEAM_ALIVE.Add(notPotato);
                 }
             }
 
             if (notPotatosAlives < 1)
             {
-                HotPotato.triggerHotPotatoEnd = true;
+                TriggerHotPotatoEnd = true;
+                GameManager.Instance.RpcEndGame((GameOverReason)CustomGameOverReason.HotPotatoEnd, false);
+                return;
+            }
+
+            HotPotatoPlayer = NOT_POTATO_TEAM[0];
+
+            // If hot potato timed out, assing new potato
+            if (NotPotato01 != null && NOT_POTATO_TEAM[0] == NotPotato01)
+                NotPotato01 = null;
+            else if (NotPotato02 != null && NOT_POTATO_TEAM[0] == NotPotato02)
+                NotPotato02 = null;
+            else if (NotPotato03 != null && NOT_POTATO_TEAM[0] == NotPotato03)
+                NotPotato03 = null;
+            else if (NotPotato04 != null && NOT_POTATO_TEAM[0] == NotPotato04)
+                NotPotato04 = null;
+            else if (NotPotato05 != null && NOT_POTATO_TEAM[0] == NotPotato05)
+                NotPotato05 = null;
+            else if (NotPotato06 != null && NOT_POTATO_TEAM[0] == NotPotato06)
+                NotPotato06 = null;
+            else if (NotPotato07 != null && NOT_POTATO_TEAM[0] == NotPotato07)
+                NotPotato07 = null;
+            else if (NotPotato08 != null && NOT_POTATO_TEAM[0] == NotPotato08)
+                NotPotato08 = null;
+            else if (NotPotato09 != null && NOT_POTATO_TEAM[0] == NotPotato09)
+                NotPotato09 = null;
+            else if (NotPotato10 != null && NOT_POTATO_TEAM[0] == NotPotato10)
+                NotPotato10 = null;
+            else if (NotPotato11 != null && NOT_POTATO_TEAM[0] == NotPotato11)
+                NotPotato11 = null;
+            else if (NotPotato12 != null && NOT_POTATO_TEAM[0] == NotPotato12)
+                NotPotato12 = null;
+            else if (NotPotato13 != null && NOT_POTATO_TEAM[0] == NotPotato13)
+                NotPotato13 = null;
+            else if (NotPotato14 != null && NOT_POTATO_TEAM[0] == NotPotato14) NotPotato14 = null;
+
+            NOT_POTATO_TEAM.RemoveAt(0);
+
+            HotPotatoPlayer.NetTransform.Halt();
+            HotPotatoPlayer.moveable = false;
+            HotPotatoPlayer.MyPhysics.SetBodyType(PlayerBodyTypes.Seeker);
+            HotPotatoObject.transform.position = HotPotatoPlayer.transform.position + new Vector3(0, 0.5f, -0.25f);
+            HotPotatoObject.transform.parent = HotPotatoPlayer.transform;
+
+            HudManager.Instance.StartCoroutine(Effects.Lerp(3, new Action<float>(p =>
+            {
+                // Delayed action
+                if (p == 1f) HotPotatoPlayer.moveable = true;
+            })));
+
+            Helpers.ShowGamemodesPopUp(1, Helpers.PlayerById(HotPotatoPlayer.PlayerId));
+            HotpotatopointCounter = new StringBuilder(Tr.Get(TrKey.HotPotatoStatus)).Append("<color=#808080FF>")
+                .Append(HotPotatoPlayer.name)
+                .Append("</color> | ")
+                .Append(Tr.Get(TrKey.ColdPotatoes))
+                .Append("<color=#00F7FFFF>")
+                .Append(notPotatosAlives)
+                .Append("</color>")
+                .ToString();
+        })));
+    }
+
+    public static void HotPotatoUpdate()
+    {
+        if (MapSettings.GameMode is not CustomGameMode.HotPotato) return;
+
+        // Fill the Danger Metter for hotPotato and update its distance for coldpotatoes
+        if (HotPotatoPlayer != null && HudManager.Instance.DangerMeter.gameObject.active)
+        {
+            var leftdistance = 55f;
+            var rightdistance = 15f;
+            var currentdistance = float.MaxValue;
+
+            var sqrMagnitude = (HotPotatoPlayer.transform.position - PlayerControl.LocalPlayer.transform.position)
+                .sqrMagnitude;
+            if (sqrMagnitude < leftdistance && currentdistance > sqrMagnitude) currentdistance = sqrMagnitude;
+
+            var dangerLevelLeft = Mathf.Clamp01((leftdistance - currentdistance) / (leftdistance - rightdistance));
+            var dangerLevelRight = Mathf.Clamp01((rightdistance - currentdistance) / rightdistance);
+            HudManager.Instance.DangerMeter.SetDangerValue(dangerLevelLeft, dangerLevelRight);
+        }
+
+        // Hide hot potato sprite if in vent
+        if (HotPotatoPlayer != null && HotPotatoObject != null)
+        {
+            if (HotPotatoPlayer.inVent)
+                HotPotatoObject.SetActive(false);
+            else
+                HotPotatoObject.SetActive(true);
+        }
+
+        // If hot potato disconnects, assing new potato and reset timer
+        if (HotPotatoPlayer != null && HotPotatoPlayer.Data.Disconnected)
+        {
+            if (!FirstPotatoTransfered) FirstPotatoTransfered = true;
+
+            TimeforTransfer = SavedtimeforTransfer;
+
+            var notPotatosAlives = -1;
+            NOT_POTATO_TEAM_ALIVE.Clear();
+            foreach (var remainPotato in NOT_POTATO_TEAM)
+            {
+                if (!remainPotato.Data.IsDead)
+                {
+                    notPotatosAlives += 1;
+                    NOT_POTATO_TEAM_ALIVE.Add(remainPotato);
+                }
+            }
+
+            if (notPotatosAlives < 1)
+            {
+                TriggerHotPotatoEnd = true;
                 GameManager.Instance.RpcEndGame((GameOverReason)CustomGameOverReason.HotPotatoEnd, false);
             }
 
-            HotPotato.hotPotatoPlayer = HotPotato.notPotatoTeam[0];
-            HotPotato.hotPotatoPlayer.MyPhysics.SetBodyType(PlayerBodyTypes.Seeker);
-            HotPotato.hotPotato.transform.position = HotPotato.hotPotatoPlayer.transform.position + new Vector3(0, 0.5f, -0.25f);
-            HotPotato.hotPotato.transform.parent = HotPotato.hotPotatoPlayer.transform;
+            HotPotatoPlayer = NOT_POTATO_TEAM[0];
+            HotPotatoPlayer.MyPhysics.SetBodyType(PlayerBodyTypes.Seeker);
+            HotPotatoObject.transform.position = HotPotatoPlayer.transform.position + new Vector3(0, 0.5f, -0.25f);
+            HotPotatoObject.transform.parent = HotPotatoPlayer.transform;
 
             // If hot potato timed out, assing new potato
-            if (HotPotato.notPotato01 != null && HotPotato.notPotatoTeam[0] == HotPotato.notPotato01)
-            {
-                HotPotato.notPotato01 = null;
-            }
-            else if (HotPotato.notPotato02 != null && HotPotato.notPotatoTeam[0] == HotPotato.notPotato02)
-            {
-                HotPotato.notPotato02 = null;
-            }
-            else if (HotPotato.notPotato03 != null && HotPotato.notPotatoTeam[0] == HotPotato.notPotato03)
-            {
-                HotPotato.notPotato03 = null;
-            }
-            else if (HotPotato.notPotato04 != null && HotPotato.notPotatoTeam[0] == HotPotato.notPotato04)
-            {
-                HotPotato.notPotato04 = null;
-            }
-            else if (HotPotato.notPotato05 != null && HotPotato.notPotatoTeam[0] == HotPotato.notPotato05)
-            {
-                HotPotato.notPotato05 = null;
-            }
-            else if (HotPotato.notPotato06 != null && HotPotato.notPotatoTeam[0] == HotPotato.notPotato06)
-            {
-                HotPotato.notPotato06 = null;
-            }
-            else if (HotPotato.notPotato07 != null && HotPotato.notPotatoTeam[0] == HotPotato.notPotato07)
-            {
-                HotPotato.notPotato07 = null;
-            }
-            else if (HotPotato.notPotato08 != null && HotPotato.notPotatoTeam[0] == HotPotato.notPotato08)
-            {
-                HotPotato.notPotato08 = null;
-            }
-            else if (HotPotato.notPotato09 != null && HotPotato.notPotatoTeam[0] == HotPotato.notPotato09)
-            {
-                HotPotato.notPotato09 = null;
-            }
-            else if (HotPotato.notPotato10 != null && HotPotato.notPotatoTeam[0] == HotPotato.notPotato10)
-            {
-                HotPotato.notPotato10 = null;
-            }
-            else if (HotPotato.notPotato11 != null && HotPotato.notPotatoTeam[0] == HotPotato.notPotato11)
-            {
-                HotPotato.notPotato11 = null;
-            }
-            else if (HotPotato.notPotato12 != null && HotPotato.notPotatoTeam[0] == HotPotato.notPotato12)
-            {
-                HotPotato.notPotato12 = null;
-            }
-            else if (HotPotato.notPotato13 != null && HotPotato.notPotatoTeam[0] == HotPotato.notPotato13)
-            {
-                HotPotato.notPotato13 = null;
-            }
-            else if (HotPotato.notPotato14 != null && HotPotato.notPotatoTeam[0] == HotPotato.notPotato14)
-            {
-                HotPotato.notPotato14 = null;
-            }
+            if (NotPotato01 != null && NOT_POTATO_TEAM[0] == NotPotato01)
+                NotPotato01 = null;
+            else if (NotPotato02 != null && NOT_POTATO_TEAM[0] == NotPotato02)
+                NotPotato02 = null;
+            else if (NotPotato03 != null && NOT_POTATO_TEAM[0] == NotPotato03)
+                NotPotato03 = null;
+            else if (NotPotato04 != null && NOT_POTATO_TEAM[0] == NotPotato04)
+                NotPotato04 = null;
+            else if (NotPotato05 != null && NOT_POTATO_TEAM[0] == NotPotato05)
+                NotPotato05 = null;
+            else if (NotPotato06 != null && NOT_POTATO_TEAM[0] == NotPotato06)
+                NotPotato06 = null;
+            else if (NotPotato07 != null && NOT_POTATO_TEAM[0] == NotPotato07)
+                NotPotato07 = null;
+            else if (NotPotato08 != null && NOT_POTATO_TEAM[0] == NotPotato08)
+                NotPotato08 = null;
+            else if (NotPotato09 != null && NOT_POTATO_TEAM[0] == NotPotato09)
+                NotPotato09 = null;
+            else if (NotPotato10 != null && NOT_POTATO_TEAM[0] == NotPotato10)
+                NotPotato10 = null;
+            else if (NotPotato11 != null && NOT_POTATO_TEAM[0] == NotPotato11)
+                NotPotato11 = null;
+            else if (NotPotato12 != null && NOT_POTATO_TEAM[0] == NotPotato12)
+                NotPotato12 = null;
+            else if (NotPotato13 != null && NOT_POTATO_TEAM[0] == NotPotato13)
+                NotPotato13 = null;
+            else if (NotPotato14 != null && NOT_POTATO_TEAM[0] == NotPotato14) NotPotato14 = null;
 
-            HotPotato.notPotatoTeam.RemoveAt(0);
+            NOT_POTATO_TEAM.RemoveAt(0);
 
-            hotPotatoButton.Timer = HotPotato.transferCooldown;
+            HotPotatoButton.Timer = TransferCooldown;
 
-            Helpers.showGamemodesPopUp(1, Helpers.PlayerById(HotPotato.hotPotatoPlayer.PlayerId));
-            HotPotato.hotpotatopointCounter = new StringBuilder(Tr.Get(TrKey.HotPotatoStatus)).Append("<color=#808080FF>").Append(HotPotato.hotPotatoPlayer.name).Append("</color> | ").Append(Tr.Get(TrKey.ColdPotatoes)).Append("<color=#00F7FFFF>").Append(notPotatosAlives).Append("</color>").ToString();
+            Helpers.ShowGamemodesPopUp(1, Helpers.PlayerById(HotPotatoPlayer.PlayerId));
+            HotpotatopointCounter = new StringBuilder(Tr.Get(TrKey.HotPotatoStatus)).Append("<color=#808080FF>")
+                .Append(HotPotatoPlayer.name)
+                .Append("</color> | ")
+                .Append(Tr.Get(TrKey.ColdPotatoes))
+                .Append("<color=#00F7FFFF>")
+                .Append(notPotatosAlives)
+                .Append("</color>")
+                .ToString();
         }
 
         // If notpotato disconnects, check number of notpotatos
-        foreach (PlayerControl notPotato in HotPotato.notPotatoTeam)
+        foreach (var notPotato in NOT_POTATO_TEAM)
         {
             if (notPotato.Data.Disconnected)
             {
-
-                int notPotatosAlives = -1;
-                HotPotato.notPotatoTeamAlive.Clear();
-                foreach (PlayerControl remainPotato in HotPotato.notPotatoTeam)
+                var notPotatosAlives = -1;
+                NOT_POTATO_TEAM_ALIVE.Clear();
+                foreach (var remainPotato in NOT_POTATO_TEAM)
                 {
                     if (!remainPotato.Data.IsDead)
                     {
                         notPotatosAlives += 1;
-                        HotPotato.notPotatoTeamAlive.Add(remainPotato);
+                        NOT_POTATO_TEAM_ALIVE.Add(remainPotato);
                     }
                 }
 
                 if (notPotatosAlives < 1)
                 {
-                    HotPotato.triggerHotPotatoEnd = true;
+                    TriggerHotPotatoEnd = true;
                     GameManager.Instance.RpcEndGame((GameOverReason)CustomGameOverReason.HotPotatoEnd, false);
                 }
 
-                if (HotPotato.notPotato01 != null && notPotato.PlayerId == HotPotato.notPotato01.PlayerId)
-                {
-                    HotPotato.notPotatoTeam.Remove(HotPotato.notPotato01);
-                }
-                else if (HotPotato.notPotato02 != null && notPotato.PlayerId == HotPotato.notPotato02.PlayerId)
-                {
-                    HotPotato.notPotatoTeam.Remove(HotPotato.notPotato02);
-                }
-                else if (HotPotato.notPotato03 != null && notPotato.PlayerId == HotPotato.notPotato03.PlayerId)
-                {
-                    HotPotato.notPotatoTeam.Remove(HotPotato.notPotato03);
-                }
-                else if (HotPotato.notPotato04 != null && notPotato.PlayerId == HotPotato.notPotato04.PlayerId)
-                {
-                    HotPotato.notPotatoTeam.Remove(HotPotato.notPotato04);
-                }
-                else if (HotPotato.notPotato05 != null && notPotato.PlayerId == HotPotato.notPotato05.PlayerId)
-                {
-                    HotPotato.notPotatoTeam.Remove(HotPotato.notPotato05);
-                }
-                else if (HotPotato.notPotato06 != null && notPotato.PlayerId == HotPotato.notPotato06.PlayerId)
-                {
-                    HotPotato.notPotatoTeam.Remove(HotPotato.notPotato06);
-                }
-                else if (HotPotato.notPotato07 != null && notPotato.PlayerId == HotPotato.notPotato07.PlayerId)
-                {
-                    HotPotato.notPotatoTeam.Remove(HotPotato.notPotato07);
-                }
-                else if (HotPotato.notPotato08 != null && notPotato.PlayerId == HotPotato.notPotato08.PlayerId)
-                {
-                    HotPotato.notPotatoTeam.Remove(HotPotato.notPotato08);
-                }
-                else if (HotPotato.notPotato09 != null && notPotato.PlayerId == HotPotato.notPotato09.PlayerId)
-                {
-                    HotPotato.notPotatoTeam.Remove(HotPotato.notPotato09);
-                }
-                else if (HotPotato.notPotato10 != null && notPotato.PlayerId == HotPotato.notPotato10.PlayerId)
-                {
-                    HotPotato.notPotatoTeam.Remove(HotPotato.notPotato10);
-                }
-                else if (HotPotato.notPotato11 != null && notPotato.PlayerId == HotPotato.notPotato11.PlayerId)
-                {
-                    HotPotato.notPotatoTeam.Remove(HotPotato.notPotato11);
-                }
-                else if (HotPotato.notPotato12 != null && notPotato.PlayerId == HotPotato.notPotato12.PlayerId)
-                {
-                    HotPotato.notPotatoTeam.Remove(HotPotato.notPotato12);
-                }
-                else if (HotPotato.notPotato13 != null && notPotato.PlayerId == HotPotato.notPotato13.PlayerId)
-                {
-                    HotPotato.notPotatoTeam.Remove(HotPotato.notPotato13);
-                }
-                else if (HotPotato.notPotato14 != null && notPotato.PlayerId == HotPotato.notPotato14.PlayerId)
-                {
-                    HotPotato.notPotatoTeam.Remove(HotPotato.notPotato14);
-                }
+                if (NotPotato01 != null && notPotato.PlayerId == NotPotato01.PlayerId)
+                    NOT_POTATO_TEAM.Remove(NotPotato01);
+                else if (NotPotato02 != null && notPotato.PlayerId == NotPotato02.PlayerId)
+                    NOT_POTATO_TEAM.Remove(NotPotato02);
+                else if (NotPotato03 != null && notPotato.PlayerId == NotPotato03.PlayerId)
+                    NOT_POTATO_TEAM.Remove(NotPotato03);
+                else if (NotPotato04 != null && notPotato.PlayerId == NotPotato04.PlayerId)
+                    NOT_POTATO_TEAM.Remove(NotPotato04);
+                else if (NotPotato05 != null && notPotato.PlayerId == NotPotato05.PlayerId)
+                    NOT_POTATO_TEAM.Remove(NotPotato05);
+                else if (NotPotato06 != null && notPotato.PlayerId == NotPotato06.PlayerId)
+                    NOT_POTATO_TEAM.Remove(NotPotato06);
+                else if (NotPotato07 != null && notPotato.PlayerId == NotPotato07.PlayerId)
+                    NOT_POTATO_TEAM.Remove(NotPotato07);
+                else if (NotPotato08 != null && notPotato.PlayerId == NotPotato08.PlayerId)
+                    NOT_POTATO_TEAM.Remove(NotPotato08);
+                else if (NotPotato09 != null && notPotato.PlayerId == NotPotato09.PlayerId)
+                    NOT_POTATO_TEAM.Remove(NotPotato09);
+                else if (NotPotato10 != null && notPotato.PlayerId == NotPotato10.PlayerId)
+                    NOT_POTATO_TEAM.Remove(NotPotato10);
+                else if (NotPotato11 != null && notPotato.PlayerId == NotPotato11.PlayerId)
+                    NOT_POTATO_TEAM.Remove(NotPotato11);
+                else if (NotPotato12 != null && notPotato.PlayerId == NotPotato12.PlayerId)
+                    NOT_POTATO_TEAM.Remove(NotPotato12);
+                else if (NotPotato13 != null && notPotato.PlayerId == NotPotato13.PlayerId)
+                    NOT_POTATO_TEAM.Remove(NotPotato13);
+                else if (NotPotato14 != null && notPotato.PlayerId == NotPotato14.PlayerId)
+                    NOT_POTATO_TEAM.Remove(NotPotato14);
 
-                HotPotato.hotpotatopointCounter = new StringBuilder(Tr.Get(TrKey.HotPotatoStatus)).Append("<color=#808080FF>").Append(HotPotato.hotPotatoPlayer.name).Append("</color> | ").Append(Tr.Get(TrKey.ColdPotatoes)).Append("<color=#00F7FFFF>").Append(notPotatosAlives).Append("</color>").ToString();
+                HotpotatopointCounter = new StringBuilder(Tr.Get(TrKey.HotPotatoStatus)).Append("<color=#808080FF>")
+                    .Append(HotPotatoPlayer.name)
+                    .Append("</color> | ")
+                    .Append(Tr.Get(TrKey.ColdPotatoes))
+                    .Append("<color=#00F7FFFF>")
+                    .Append(notPotatosAlives)
+                    .Append("</color>")
+                    .ToString();
                 break;
             }
         }

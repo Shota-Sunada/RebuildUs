@@ -7,7 +7,7 @@ public static class LegacyGameOptionsPatch
     [HarmonyPatch(typeof(LegacyGameOptions), nameof(LegacyGameOptions.AreInvalid))]
     public static bool AreInvalidPrefix(LegacyGameOptions __instance, ref int maxExpectedPlayers)
     {
-        return CustomOption.LGOAreInvalid(__instance, ref maxExpectedPlayers);
+        return CustomOption.LgoAreInvalid(__instance, ref maxExpectedPlayers);
     }
 
     [HarmonyPostfix]

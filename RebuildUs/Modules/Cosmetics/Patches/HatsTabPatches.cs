@@ -7,18 +7,15 @@ namespace RebuildUs.Modules.Cosmetics.Patches;
 [HarmonyPatch]
 internal static class HatsTabPatches
 {
-    private static TextMeshPro TextTemplate;
+    private static TextMeshPro _textTemplate;
 
     [HarmonyPatch(typeof(HatsTab), nameof(HatsTab.OnEnable))]
     [HarmonyPrefix]
     private static bool OnEnablePrefix(HatsTab __instance)
     {
-        for (var i = 0; i < __instance.scroller.Inner.childCount; i++)
-        {
-            Object.Destroy(__instance.scroller.Inner.GetChild(i).gameObject);
-        }
+        for (var i = 0; i < __instance.scroller.Inner.childCount; i++) Object.Destroy(__instance.scroller.Inner.GetChild(i).gameObject);
 
-        __instance.ColorChips = new Il2CppSystem.Collections.Generic.List<ColorChip>();
+        __instance.ColorChips = new();
         var unlockedHats = DestroyableSingleton<HatManager>.Instance.GetUnlockedHats();
         var packages = new Dictionary<string, List<Tuple<HatData, HatExtension>>>();
 
@@ -27,32 +24,25 @@ internal static class HatsTabPatches
             var ext = hatBehaviour.GetHatExtension();
             if (ext != null)
             {
-                if (!packages.ContainsKey(ext.Package))
-                {
-                    packages[ext.Package] = [];
-                }
-                packages[ext.Package].Add(new Tuple<HatData, HatExtension>(hatBehaviour, ext));
+                if (!packages.ContainsKey(ext.Package)) packages[ext.Package] = [];
+                packages[ext.Package].Add(new(hatBehaviour, ext));
             }
             else
             {
-                if (!packages.ContainsKey(CustomHatManager.InnerslothPackageName))
-                {
-                    packages[CustomHatManager.InnerslothPackageName] = [];
-                }
-                packages[CustomHatManager.InnerslothPackageName].Add(new Tuple<HatData, HatExtension>(hatBehaviour, null));
+                if (!packages.ContainsKey(CustomHatManager.INNERSLOTH_PACKAGE_NAME)) packages[CustomHatManager.INNERSLOTH_PACKAGE_NAME] = [];
+                packages[CustomHatManager.INNERSLOTH_PACKAGE_NAME].Add(new(hatBehaviour, null));
             }
         }
 
         var yOffset = __instance.YStart;
-        TextTemplate = GameObject.Find("HatsGroup").transform.FindChild("Text").GetComponent<TextMeshPro>();
+        _textTemplate = GameObject.Find("HatsGroup").transform.FindChild("Text").GetComponent<TextMeshPro>();
 
-        var orderedKeys = packages.Keys.OrderBy(x =>
-            x switch
-            {
-                CustomHatManager.InnerslothPackageName => 1000,
-                CustomHatManager.DeveloperPackageName => 0,
-                _ => 500
-            });
+        var orderedKeys = packages.Keys.OrderBy(x => x switch
+        {
+            CustomHatManager.INNERSLOTH_PACKAGE_NAME => 1000,
+            CustomHatManager.DEVELOPER_PACKAGE_NAME => 0,
+            _ => 500,
+        });
         foreach (var key in orderedKeys)
         {
             var value = packages[key];
@@ -64,20 +54,16 @@ internal static class HatsTabPatches
         return false;
     }
 
-    private static float CreateHatPackage(List<Tuple<HatData, HatExtension>> hats, string packageName, float yStart,
-        HatsTab hatsTab)
+    private static float CreateHatPackage(List<Tuple<HatData, HatExtension>> hats, string packageName, float yStart, HatsTab hatsTab)
     {
-        var isDefaultPackage = CustomHatManager.InnerslothPackageName == packageName;
-        if (!isDefaultPackage)
-        {
-            hats = [.. hats.OrderBy(x => x.Item1.name)];
-        }
+        var isDefaultPackage = CustomHatManager.INNERSLOTH_PACKAGE_NAME == packageName;
+        if (!isDefaultPackage) hats = [.. hats.OrderBy(x => x.Item1.name)];
 
         var offset = yStart;
-        if (TextTemplate != null)
+        if (_textTemplate != null)
         {
-            var title = Object.Instantiate(TextTemplate, hatsTab.scroller.Inner);
-            title.transform.localPosition = new Vector3(2.25f, yStart, -1f);
+            var title = Object.Instantiate(_textTemplate, hatsTab.scroller.Inner);
+            title.transform.localPosition = new(2.25f, yStart, -1f);
             title.transform.localScale = Vector3.one * 1.5f;
             title.fontSize *= 0.5f;
             title.enableAutoSizing = false;
@@ -88,8 +74,8 @@ internal static class HatsTabPatches
         for (var i = 0; i < hats.Count; i++)
         {
             var (hat, ext) = hats[i];
-            var xPos = hatsTab.XRange.Lerp(i % hatsTab.NumPerRow / (hatsTab.NumPerRow - 1f));
-            var yPos = offset - i / hatsTab.NumPerRow * (isDefaultPackage ? 1f : 1.5f) * hatsTab.YOffset;
+            var xPos = hatsTab.XRange.Lerp((i % hatsTab.NumPerRow) / (hatsTab.NumPerRow - 1f));
+            var yPos = offset - ((i / hatsTab.NumPerRow) * (isDefaultPackage ? 1f : 1.5f) * hatsTab.YOffset);
             var colorChip = Object.Instantiate(hatsTab.ColorTabPrefab, hatsTab.scroller.Inner);
             if (ActiveInputManager.currentControlType == ActiveInputManager.InputType.Keyboard)
             {
@@ -98,9 +84,8 @@ internal static class HatsTabPatches
                 colorChip.Button.OnClick.AddListener((Action)hatsTab.ClickEquip);
             }
             else
-            {
                 colorChip.Button.OnClick.AddListener((Action)(() => hatsTab.SelectHat(hat)));
-            }
+
             colorChip.Button.ClickMask = hatsTab.scroller.Hitbox;
             colorChip.Inner.SetMaskType(PlayerMaterial.MaskType.SimpleUI);
             hatsTab.UpdateMaterials(colorChip.Inner.FrontLayer, hat);
@@ -112,21 +97,22 @@ internal static class HatsTabPatches
                 if (background != null)
                 {
                     background.localPosition = Vector3.down * 0.243f;
-                    background.localScale = new Vector3(background.localScale.x, 0.8f, background.localScale.y);
+                    background.localScale = new(background.localScale.x, 0.8f, background.localScale.y);
                 }
+
                 foreground?.localPosition = Vector3.down * 0.243f;
 
-                if (TextTemplate != null)
+                if (_textTemplate != null)
                 {
-                    var description = Object.Instantiate(TextTemplate, colorChip.transform);
-                    description.transform.localPosition = new Vector3(0f, -0.65f, -1f);
+                    var description = Object.Instantiate(_textTemplate, colorChip.transform);
+                    description.transform.localPosition = new(0f, -0.65f, -1f);
                     description.alignment = TextAlignmentOptions.Center;
                     description.transform.localScale = Vector3.one * 0.65f;
                     hatsTab.StartCoroutine(Effects.Lerp(0.1f, new Action<float>(p => { description.SetText($"{hat.name}\nby {ext.Author}"); })));
                 }
             }
 
-            colorChip.transform.localPosition = new Vector3(xPos, yPos, -1f);
+            colorChip.transform.localPosition = new(xPos, yPos, -1f);
             colorChip.Inner.SetHat(hat, hatsTab.HasLocalPlayer() ? PlayerControl.LocalPlayer.Data.DefaultOutfit.ColorId : DataManager.Player.Customization.Color);
             colorChip.Inner.transform.localPosition = hat.ChipOffset;
             colorChip.Tag = hat;
@@ -134,7 +120,6 @@ internal static class HatsTabPatches
             hatsTab.ColorChips.Add(colorChip);
         }
 
-        return offset - (hats.Count - 1) / hatsTab.NumPerRow * (isDefaultPackage ? 1f : 1.5f) * hatsTab.YOffset -
-               1.75f;
+        return offset - (((hats.Count - 1) / hatsTab.NumPerRow) * (isDefaultPackage ? 1f : 1.5f) * hatsTab.YOffset) - 1.75f;
     }
 }

@@ -3,2802 +3,2195 @@ namespace RebuildUs.Modules.GameMode;
 public static partial class BattleRoyale
 {
     // Battle Royale
-    private static CustomButton soloPlayer01KillButton;
-    private static CustomButton soloPlayer02KillButton;
-    private static CustomButton soloPlayer03KillButton;
-    private static CustomButton soloPlayer04KillButton;
-    private static CustomButton soloPlayer05KillButton;
-    private static CustomButton soloPlayer06KillButton;
-    private static CustomButton soloPlayer07KillButton;
-    private static CustomButton soloPlayer08KillButton;
-    private static CustomButton soloPlayer09KillButton;
-    private static CustomButton soloPlayer10KillButton;
-    private static CustomButton soloPlayer11KillButton;
-    private static CustomButton soloPlayer12KillButton;
-    private static CustomButton soloPlayer13KillButton;
-    private static CustomButton soloPlayer14KillButton;
-    private static CustomButton soloPlayer15KillButton;
-    private static CustomButton limePlayer01KillButton;
-    private static CustomButton limePlayer02KillButton;
-    private static CustomButton limePlayer03KillButton;
-    private static CustomButton limePlayer04KillButton;
-    private static CustomButton limePlayer05KillButton;
-    private static CustomButton limePlayer06KillButton;
-    private static CustomButton limePlayer07KillButton;
-    private static CustomButton pinkPlayer01KillButton;
-    private static CustomButton pinkPlayer02KillButton;
-    private static CustomButton pinkPlayer03KillButton;
-    private static CustomButton pinkPlayer04KillButton;
-    private static CustomButton pinkPlayer05KillButton;
-    private static CustomButton pinkPlayer06KillButton;
-    private static CustomButton pinkPlayer07KillButton;
-    private static CustomButton serialKillerKillButton;
+    private static CustomButton _soloPlayer01KillButton;
+    private static CustomButton _soloPlayer02KillButton;
+    private static CustomButton _soloPlayer03KillButton;
+    private static CustomButton _soloPlayer04KillButton;
+    private static CustomButton _soloPlayer05KillButton;
+    private static CustomButton _soloPlayer06KillButton;
+    private static CustomButton _soloPlayer07KillButton;
+    private static CustomButton _soloPlayer08KillButton;
+    private static CustomButton _soloPlayer09KillButton;
+    private static CustomButton _soloPlayer10KillButton;
+    private static CustomButton _soloPlayer11KillButton;
+    private static CustomButton _soloPlayer12KillButton;
+    private static CustomButton _soloPlayer13KillButton;
+    private static CustomButton _soloPlayer14KillButton;
+    private static CustomButton _soloPlayer15KillButton;
+    private static CustomButton _limePlayer01KillButton;
+    private static CustomButton _limePlayer02KillButton;
+    private static CustomButton _limePlayer03KillButton;
+    private static CustomButton _limePlayer04KillButton;
+    private static CustomButton _limePlayer05KillButton;
+    private static CustomButton _limePlayer06KillButton;
+    private static CustomButton _limePlayer07KillButton;
+    private static CustomButton _pinkPlayer01KillButton;
+    private static CustomButton _pinkPlayer02KillButton;
+    private static CustomButton _pinkPlayer03KillButton;
+    private static CustomButton _pinkPlayer04KillButton;
+    private static CustomButton _pinkPlayer05KillButton;
+    private static CustomButton _pinkPlayer06KillButton;
+    private static CustomButton _pinkPlayer07KillButton;
+    private static CustomButton _serialKillerKillButton;
 
     public static void SetButtonCooldowns()
     {
         // Battle Royale
-        soloPlayer01KillButton.MaxTimer = BattleRoyale.killCooldown;
-        soloPlayer02KillButton.MaxTimer = BattleRoyale.killCooldown;
-        soloPlayer03KillButton.MaxTimer = BattleRoyale.killCooldown;
-        soloPlayer04KillButton.MaxTimer = BattleRoyale.killCooldown;
-        soloPlayer05KillButton.MaxTimer = BattleRoyale.killCooldown;
-        soloPlayer06KillButton.MaxTimer = BattleRoyale.killCooldown;
-        soloPlayer07KillButton.MaxTimer = BattleRoyale.killCooldown;
-        soloPlayer08KillButton.MaxTimer = BattleRoyale.killCooldown;
-        soloPlayer09KillButton.MaxTimer = BattleRoyale.killCooldown;
-        soloPlayer10KillButton.MaxTimer = BattleRoyale.killCooldown;
-        soloPlayer11KillButton.MaxTimer = BattleRoyale.killCooldown;
-        soloPlayer12KillButton.MaxTimer = BattleRoyale.killCooldown;
-        soloPlayer13KillButton.MaxTimer = BattleRoyale.killCooldown;
-        soloPlayer14KillButton.MaxTimer = BattleRoyale.killCooldown;
-        soloPlayer15KillButton.MaxTimer = BattleRoyale.killCooldown;
-        limePlayer01KillButton.MaxTimer = BattleRoyale.killCooldown;
-        limePlayer02KillButton.MaxTimer = BattleRoyale.killCooldown;
-        limePlayer03KillButton.MaxTimer = BattleRoyale.killCooldown;
-        limePlayer04KillButton.MaxTimer = BattleRoyale.killCooldown;
-        limePlayer05KillButton.MaxTimer = BattleRoyale.killCooldown;
-        limePlayer06KillButton.MaxTimer = BattleRoyale.killCooldown;
-        limePlayer07KillButton.MaxTimer = BattleRoyale.killCooldown;
-        pinkPlayer01KillButton.MaxTimer = BattleRoyale.killCooldown;
-        pinkPlayer02KillButton.MaxTimer = BattleRoyale.killCooldown;
-        pinkPlayer03KillButton.MaxTimer = BattleRoyale.killCooldown;
-        pinkPlayer04KillButton.MaxTimer = BattleRoyale.killCooldown;
-        pinkPlayer05KillButton.MaxTimer = BattleRoyale.killCooldown;
-        pinkPlayer06KillButton.MaxTimer = BattleRoyale.killCooldown;
-        pinkPlayer07KillButton.MaxTimer = BattleRoyale.killCooldown;
-        serialKillerKillButton.MaxTimer = BattleRoyale.serialKillerCooldown;
+        _soloPlayer01KillButton.MaxTimer = KillCooldown;
+        _soloPlayer02KillButton.MaxTimer = KillCooldown;
+        _soloPlayer03KillButton.MaxTimer = KillCooldown;
+        _soloPlayer04KillButton.MaxTimer = KillCooldown;
+        _soloPlayer05KillButton.MaxTimer = KillCooldown;
+        _soloPlayer06KillButton.MaxTimer = KillCooldown;
+        _soloPlayer07KillButton.MaxTimer = KillCooldown;
+        _soloPlayer08KillButton.MaxTimer = KillCooldown;
+        _soloPlayer09KillButton.MaxTimer = KillCooldown;
+        _soloPlayer10KillButton.MaxTimer = KillCooldown;
+        _soloPlayer11KillButton.MaxTimer = KillCooldown;
+        _soloPlayer12KillButton.MaxTimer = KillCooldown;
+        _soloPlayer13KillButton.MaxTimer = KillCooldown;
+        _soloPlayer14KillButton.MaxTimer = KillCooldown;
+        _soloPlayer15KillButton.MaxTimer = KillCooldown;
+        _limePlayer01KillButton.MaxTimer = KillCooldown;
+        _limePlayer02KillButton.MaxTimer = KillCooldown;
+        _limePlayer03KillButton.MaxTimer = KillCooldown;
+        _limePlayer04KillButton.MaxTimer = KillCooldown;
+        _limePlayer05KillButton.MaxTimer = KillCooldown;
+        _limePlayer06KillButton.MaxTimer = KillCooldown;
+        _limePlayer07KillButton.MaxTimer = KillCooldown;
+        _pinkPlayer01KillButton.MaxTimer = KillCooldown;
+        _pinkPlayer02KillButton.MaxTimer = KillCooldown;
+        _pinkPlayer03KillButton.MaxTimer = KillCooldown;
+        _pinkPlayer04KillButton.MaxTimer = KillCooldown;
+        _pinkPlayer05KillButton.MaxTimer = KillCooldown;
+        _pinkPlayer06KillButton.MaxTimer = KillCooldown;
+        _pinkPlayer07KillButton.MaxTimer = KillCooldown;
+        _serialKillerKillButton.MaxTimer = SerialKillerCooldown;
     }
 
     public static void MakeButtons(HudManager __instance)
     {
         // Battle Royale
         // SoloPlayer01 Kill
-        soloPlayer01KillButton = new CustomButton(
-            () =>
+        _soloPlayer01KillButton = new(() =>
+        {
+            var target = GetShotPlayer(2 * 0.2f, 6, 1);
+
+            var writerShot = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.BattleRoyaleShowShoots, SendOption.Reliable);
+            writerShot.Write(SoloPlayer01.PlayerId);
+            writerShot.Write(0);
+            writerShot.Write(SoloPlayer01MouseAngle);
+            AmongUsClient.Instance.FinishRpcImmediately(writerShot);
+            RPCProcedure.BattleRoyaleShowShoots(SoloPlayer01.PlayerId, 0, SoloPlayer01MouseAngle);
+
+            if (target == null)
             {
-                PlayerControl target = BattleRoyale.GetShotPlayer(2 * 0.2f, 6, 1);
+                _soloPlayer01KillButton.Timer = _soloPlayer01KillButton.MaxTimer;
+                return;
+            }
 
-                MessageWriter writerShot = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.BattleRoyaleShowShoots, Hazel.SendOption.Reliable, -1);
-                writerShot.Write(BattleRoyale.soloPlayer01.PlayerId);
-                writerShot.Write(0);
-                writerShot.Write(BattleRoyale.soloPlayer01mouseAngle);
-                AmongUsClient.Instance.FinishRpcImmediately(writerShot);
-                RPCProcedure.battleRoyaleShowShoots(BattleRoyale.soloPlayer01.PlayerId, 0, BattleRoyale.soloPlayer01mouseAngle);
+            var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.GamemodeKills, SendOption.Reliable);
+            writer.Write(target.PlayerId);
+            writer.Write(SoloPlayer01.PlayerId);
+            AmongUsClient.Instance.FinishRpcImmediately(writer);
+            RPCProcedure.GamemodeKills(target.PlayerId, SoloPlayer01.PlayerId);
 
-                if (target == null)
-                {
-                    soloPlayer01KillButton.Timer = soloPlayer01KillButton.MaxTimer;
-                    return;
-                }
+            _soloPlayer01KillButton.Timer = _soloPlayer01KillButton.MaxTimer;
+            SoundManager.Instance.PlaySound(AssetLoader.RoyaleHitPlayer, false, 100f);
 
-                MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.GamemodeKills, Hazel.SendOption.Reliable, -1);
-                writer.Write(target.PlayerId);
-                writer.Write(BattleRoyale.soloPlayer01.PlayerId);
-                AmongUsClient.Instance.FinishRpcImmediately(writer);
-                RPCProcedure.gamemodeKills(target.PlayerId, BattleRoyale.soloPlayer01.PlayerId);
-
-                soloPlayer01KillButton.Timer = soloPlayer01KillButton.MaxTimer;
-                SoundManager.Instance.PlaySound(AssetLoader.royaleHitPlayer, false, 100f);
-
-                target = null;
-            },
-            () => { return BattleRoyale.soloPlayer01 != null && BattleRoyale.soloPlayer01 == PlayerControl.LocalPlayer; },
-            () =>
+            target = null;
+        }, () => { return SoloPlayer01 != null && SoloPlayer01 == PlayerControl.LocalPlayer; }, () =>
+        {
+            if (SoloPlayer01Wep == null)
             {
-                if (BattleRoyale.soloPlayer01Wep == null)
-                {
-                    BattleRoyale.soloPlayer01Wep = new GameObject("Weapon");
-                    var renderer = BattleRoyale.soloPlayer01Wep.AddComponent<SpriteRenderer>();
+                SoloPlayer01Wep = new("Weapon");
+                var renderer = SoloPlayer01Wep.AddComponent<SpriteRenderer>();
 
-                    renderer.sprite = AssetLoader.Bow;
-                    renderer.transform.parent = BattleRoyale.soloPlayer01.transform;
-                    renderer.color = new Color(1, 1, 1, 1);
-                    renderer.transform.position = new Vector3(0, 0, -30f);
+                renderer.sprite = AssetLoader.Bow;
+                renderer.transform.parent = SoloPlayer01.transform;
+                renderer.color = new(1, 1, 1, 1);
+                renderer.transform.position = new(0, 0, -30f);
+            }
+            else
+            {
+                if (PlayerControl.LocalPlayer.Data.IsDead) SoloPlayer01Wep.SetActive(false);
+
+                var mouseDirection = Input.mousePosition - new Vector3(Screen.width / 2, Screen.height / 2);
+                SoloPlayer01MouseAngle = Mathf.Atan2(mouseDirection.y, mouseDirection.x);
+
+                var targetPosition = SoloPlayer01.transform.position + new Vector3(0.8f * (float)Math.Cos(SoloPlayer01MouseAngle), 0.8f * (float)Math.Sin(SoloPlayer01MouseAngle));
+                SoloPlayer01Wep.transform.position += (targetPosition - SoloPlayer01Wep.transform.position) * 0.4f;
+                SoloPlayer01Wep.GetComponent<SpriteRenderer>().transform.eulerAngles = new(0f, 0f, (float)((SoloPlayer01MouseAngle * 360f) / Math.PI / 2f));
+                if (Math.Cos(SoloPlayer01MouseAngle) < 0.0)
+                {
+                    if (SoloPlayer01Wep.GetComponent<SpriteRenderer>().transform.localScale.y > 0)
+                        SoloPlayer01Wep.GetComponent<SpriteRenderer>().transform.localScale = new(1f, -1f);
                 }
                 else
                 {
-
-                    if (PlayerControl.LocalPlayer.Data.IsDead)
-                    {
-                        BattleRoyale.soloPlayer01Wep.SetActive(false);
-                    }
-
-                    Vector3 mouseDirection = Input.mousePosition - new Vector3(Screen.width / 2, Screen.height / 2);
-                    BattleRoyale.soloPlayer01mouseAngle = Mathf.Atan2(mouseDirection.y, mouseDirection.x);
-
-                    var targetPosition = BattleRoyale.soloPlayer01.transform.position + new Vector3(0.8f * (float)Math.Cos(BattleRoyale.soloPlayer01mouseAngle), 0.8f * (float)Math.Sin(BattleRoyale.soloPlayer01mouseAngle));
-                    BattleRoyale.soloPlayer01Wep.transform.position += (targetPosition - BattleRoyale.soloPlayer01Wep.transform.position) * 0.4f;
-                    BattleRoyale.soloPlayer01Wep.GetComponent<SpriteRenderer>().transform.eulerAngles = new Vector3(0f, 0f, (float)(BattleRoyale.soloPlayer01mouseAngle * 360f / Math.PI / 2f));
-                    if (Math.Cos(BattleRoyale.soloPlayer01mouseAngle) < 0.0)
-                    {
-                        if (BattleRoyale.soloPlayer01Wep.GetComponent<SpriteRenderer>().transform.localScale.y > 0)
-                            BattleRoyale.soloPlayer01Wep.GetComponent<SpriteRenderer>().transform.localScale = new Vector3(1f, -1f);
-                    }
-                    else
-                    {
-                        if (BattleRoyale.soloPlayer01Wep.GetComponent<SpriteRenderer>().transform.localScale.y < 0)
-                            BattleRoyale.soloPlayer01Wep.GetComponent<SpriteRenderer>().transform.localScale = new Vector3(1f, 1f);
-                    }
+                    if (SoloPlayer01Wep.GetComponent<SpriteRenderer>().transform.localScale.y < 0)
+                        SoloPlayer01Wep.GetComponent<SpriteRenderer>().transform.localScale = new(1f, 1f);
                 }
-                return PlayerControl.LocalPlayer.CanMove && !PlayerControl.LocalPlayer.Data.IsDead;
-            },
-            () => { soloPlayer01KillButton.Timer = soloPlayer01KillButton.MaxTimer; },
-            __instance.KillButton.graphic.sprite,
-            ButtonPosition.Layout,
-            __instance,
-            __instance.KillButton,
-            KeyCode.Mouse1,
-            false,
-            TranslationController.Instance.GetString(StringNames.KillLabel)
-        );
+            }
+
+            return PlayerControl.LocalPlayer.CanMove && !PlayerControl.LocalPlayer.Data.IsDead;
+        }, () => { _soloPlayer01KillButton.Timer = _soloPlayer01KillButton.MaxTimer; }, __instance.KillButton.graphic.sprite, ButtonPosition.Layout, __instance, __instance.KillButton, KeyCode.Mouse1, false, TranslationController.Instance.GetString(StringNames.KillLabel));
 
         // SoloPlayer02 Kill
-        soloPlayer02KillButton = new CustomButton(
-            () =>
+        _soloPlayer02KillButton = new(() =>
+        {
+            var target = GetShotPlayer(2 * 0.2f, 6, 2);
+
+            var writerShot = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.BattleRoyaleShowShoots, SendOption.Reliable);
+            writerShot.Write(SoloPlayer02.PlayerId);
+            writerShot.Write(0);
+            writerShot.Write(SoloPlayer02MouseAngle);
+            AmongUsClient.Instance.FinishRpcImmediately(writerShot);
+            RPCProcedure.BattleRoyaleShowShoots(SoloPlayer02.PlayerId, 0, SoloPlayer02MouseAngle);
+
+            if (target == null)
             {
-                PlayerControl target = BattleRoyale.GetShotPlayer(2 * 0.2f, 6, 2);
+                _soloPlayer02KillButton.Timer = _soloPlayer02KillButton.MaxTimer;
+                return;
+            }
 
-                MessageWriter writerShot = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.BattleRoyaleShowShoots, Hazel.SendOption.Reliable, -1);
-                writerShot.Write(BattleRoyale.soloPlayer02.PlayerId);
-                writerShot.Write(0);
-                writerShot.Write(BattleRoyale.soloPlayer02mouseAngle);
-                AmongUsClient.Instance.FinishRpcImmediately(writerShot);
-                RPCProcedure.battleRoyaleShowShoots(BattleRoyale.soloPlayer02.PlayerId, 0, BattleRoyale.soloPlayer02mouseAngle);
+            var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.GamemodeKills, SendOption.Reliable);
+            writer.Write(target.PlayerId);
+            writer.Write(SoloPlayer02.PlayerId);
+            AmongUsClient.Instance.FinishRpcImmediately(writer);
+            RPCProcedure.GamemodeKills(target.PlayerId, SoloPlayer02.PlayerId);
 
-                if (target == null)
-                {
-                    soloPlayer02KillButton.Timer = soloPlayer02KillButton.MaxTimer;
-                    return;
-                }
+            _soloPlayer02KillButton.Timer = _soloPlayer02KillButton.MaxTimer;
+            SoundManager.Instance.PlaySound(AssetLoader.RoyaleHitPlayer, false, 100f);
 
-                MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.GamemodeKills, Hazel.SendOption.Reliable, -1);
-                writer.Write(target.PlayerId);
-                writer.Write(BattleRoyale.soloPlayer02.PlayerId);
-                AmongUsClient.Instance.FinishRpcImmediately(writer);
-                RPCProcedure.gamemodeKills(target.PlayerId, BattleRoyale.soloPlayer02.PlayerId);
-
-                soloPlayer02KillButton.Timer = soloPlayer02KillButton.MaxTimer;
-                SoundManager.Instance.PlaySound(AssetLoader.royaleHitPlayer, false, 100f);
-
-                target = null;
-            },
-            () => { return BattleRoyale.soloPlayer02 != null && BattleRoyale.soloPlayer02 == PlayerControl.LocalPlayer; },
-            () =>
+            target = null;
+        }, () => { return SoloPlayer02 != null && SoloPlayer02 == PlayerControl.LocalPlayer; }, () =>
+        {
+            if (SoloPlayer02Wep == null)
             {
-                if (BattleRoyale.soloPlayer02Wep == null)
-                {
-                    BattleRoyale.soloPlayer02Wep = new GameObject("Weapon");
-                    var renderer = BattleRoyale.soloPlayer02Wep.AddComponent<SpriteRenderer>();
+                SoloPlayer02Wep = new("Weapon");
+                var renderer = SoloPlayer02Wep.AddComponent<SpriteRenderer>();
 
-                    renderer.sprite = AssetLoader.Bow;
-                    renderer.transform.parent = BattleRoyale.soloPlayer02.transform;
-                    renderer.color = new Color(1, 1, 1, 1);
-                    renderer.transform.position = new Vector3(0, 0, -30f);
+                renderer.sprite = AssetLoader.Bow;
+                renderer.transform.parent = SoloPlayer02.transform;
+                renderer.color = new(1, 1, 1, 1);
+                renderer.transform.position = new(0, 0, -30f);
+            }
+            else
+            {
+                if (PlayerControl.LocalPlayer.Data.IsDead) SoloPlayer02Wep.SetActive(false);
+
+                var mouseDirection = Input.mousePosition - new Vector3(Screen.width / 2, Screen.height / 2);
+                SoloPlayer02MouseAngle = Mathf.Atan2(mouseDirection.y, mouseDirection.x);
+
+                var targetPosition = SoloPlayer02.transform.position + new Vector3(0.8f * (float)Math.Cos(SoloPlayer02MouseAngle), 0.8f * (float)Math.Sin(SoloPlayer02MouseAngle));
+                SoloPlayer02Wep.transform.position += (targetPosition - SoloPlayer02Wep.transform.position) * 0.4f;
+                SoloPlayer02Wep.GetComponent<SpriteRenderer>().transform.eulerAngles = new(0f, 0f, (float)((SoloPlayer02MouseAngle * 360f) / Math.PI / 2f));
+                if (Math.Cos(SoloPlayer02MouseAngle) < 0.0)
+                {
+                    if (SoloPlayer02Wep.GetComponent<SpriteRenderer>().transform.localScale.y > 0)
+                        SoloPlayer02Wep.GetComponent<SpriteRenderer>().transform.localScale = new(1f, -1f);
                 }
                 else
                 {
-
-                    if (PlayerControl.LocalPlayer.Data.IsDead)
-                    {
-                        BattleRoyale.soloPlayer02Wep.SetActive(false);
-                    }
-
-                    Vector3 mouseDirection = Input.mousePosition - new Vector3(Screen.width / 2, Screen.height / 2);
-                    BattleRoyale.soloPlayer02mouseAngle = Mathf.Atan2(mouseDirection.y, mouseDirection.x);
-
-                    var targetPosition = BattleRoyale.soloPlayer02.transform.position + new Vector3(0.8f * (float)Math.Cos(BattleRoyale.soloPlayer02mouseAngle), 0.8f * (float)Math.Sin(BattleRoyale.soloPlayer02mouseAngle));
-                    BattleRoyale.soloPlayer02Wep.transform.position += (targetPosition - BattleRoyale.soloPlayer02Wep.transform.position) * 0.4f;
-                    BattleRoyale.soloPlayer02Wep.GetComponent<SpriteRenderer>().transform.eulerAngles = new Vector3(0f, 0f, (float)(BattleRoyale.soloPlayer02mouseAngle * 360f / Math.PI / 2f));
-                    if (Math.Cos(BattleRoyale.soloPlayer02mouseAngle) < 0.0)
-                    {
-                        if (BattleRoyale.soloPlayer02Wep.GetComponent<SpriteRenderer>().transform.localScale.y > 0)
-                            BattleRoyale.soloPlayer02Wep.GetComponent<SpriteRenderer>().transform.localScale = new Vector3(1f, -1f);
-                    }
-                    else
-                    {
-                        if (BattleRoyale.soloPlayer02Wep.GetComponent<SpriteRenderer>().transform.localScale.y < 0)
-                            BattleRoyale.soloPlayer02Wep.GetComponent<SpriteRenderer>().transform.localScale = new Vector3(1f, 1f);
-                    }
+                    if (SoloPlayer02Wep.GetComponent<SpriteRenderer>().transform.localScale.y < 0)
+                        SoloPlayer02Wep.GetComponent<SpriteRenderer>().transform.localScale = new(1f, 1f);
                 }
-                return PlayerControl.LocalPlayer.CanMove && !PlayerControl.LocalPlayer.Data.IsDead;
-            },
-            () => { soloPlayer02KillButton.Timer = soloPlayer02KillButton.MaxTimer; },
-            __instance.KillButton.graphic.sprite,
-            ButtonPosition.Layout,
-            __instance,
-            __instance.KillButton,
-            KeyCode.Mouse1,
-            false,
-            TranslationController.Instance.GetString(StringNames.KillLabel)
-        );
+            }
+
+            return PlayerControl.LocalPlayer.CanMove && !PlayerControl.LocalPlayer.Data.IsDead;
+        }, () => { _soloPlayer02KillButton.Timer = _soloPlayer02KillButton.MaxTimer; }, __instance.KillButton.graphic.sprite, ButtonPosition.Layout, __instance, __instance.KillButton, KeyCode.Mouse1, false, TranslationController.Instance.GetString(StringNames.KillLabel));
 
         // SoloPlayer03 Kill
-        soloPlayer03KillButton = new CustomButton(
-            () =>
+        _soloPlayer03KillButton = new(() =>
+        {
+            var target = GetShotPlayer(2 * 0.2f, 6, 3);
+
+            var writerShot = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.BattleRoyaleShowShoots, SendOption.Reliable);
+            writerShot.Write(SoloPlayer03.PlayerId);
+            writerShot.Write(0);
+            writerShot.Write(SoloPlayer03MouseAngle);
+            AmongUsClient.Instance.FinishRpcImmediately(writerShot);
+            RPCProcedure.BattleRoyaleShowShoots(SoloPlayer03.PlayerId, 0, SoloPlayer03MouseAngle);
+
+            if (target == null)
             {
-                PlayerControl target = BattleRoyale.GetShotPlayer(2 * 0.2f, 6, 3);
+                _soloPlayer03KillButton.Timer = _soloPlayer03KillButton.MaxTimer;
+                return;
+            }
 
-                MessageWriter writerShot = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.BattleRoyaleShowShoots, Hazel.SendOption.Reliable, -1);
-                writerShot.Write(BattleRoyale.soloPlayer03.PlayerId);
-                writerShot.Write(0);
-                writerShot.Write(BattleRoyale.soloPlayer03mouseAngle);
-                AmongUsClient.Instance.FinishRpcImmediately(writerShot);
-                RPCProcedure.battleRoyaleShowShoots(BattleRoyale.soloPlayer03.PlayerId, 0, BattleRoyale.soloPlayer03mouseAngle);
+            var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.GamemodeKills, SendOption.Reliable);
+            writer.Write(target.PlayerId);
+            writer.Write(SoloPlayer03.PlayerId);
+            AmongUsClient.Instance.FinishRpcImmediately(writer);
+            RPCProcedure.GamemodeKills(target.PlayerId, SoloPlayer03.PlayerId);
 
-                if (target == null)
-                {
-                    soloPlayer03KillButton.Timer = soloPlayer03KillButton.MaxTimer;
-                    return;
-                }
+            _soloPlayer03KillButton.Timer = _soloPlayer03KillButton.MaxTimer;
+            SoundManager.Instance.PlaySound(AssetLoader.RoyaleHitPlayer, false, 100f);
 
-                MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.GamemodeKills, Hazel.SendOption.Reliable, -1);
-                writer.Write(target.PlayerId);
-                writer.Write(BattleRoyale.soloPlayer03.PlayerId);
-                AmongUsClient.Instance.FinishRpcImmediately(writer);
-                RPCProcedure.gamemodeKills(target.PlayerId, BattleRoyale.soloPlayer03.PlayerId);
-
-                soloPlayer03KillButton.Timer = soloPlayer03KillButton.MaxTimer;
-                SoundManager.Instance.PlaySound(AssetLoader.royaleHitPlayer, false, 100f);
-
-                target = null;
-            },
-            () => { return BattleRoyale.soloPlayer03 != null && BattleRoyale.soloPlayer03 == PlayerControl.LocalPlayer; },
-            () =>
+            target = null;
+        }, () => { return SoloPlayer03 != null && SoloPlayer03 == PlayerControl.LocalPlayer; }, () =>
+        {
+            if (SoloPlayer03Wep == null)
             {
-                if (BattleRoyale.soloPlayer03Wep == null)
-                {
-                    BattleRoyale.soloPlayer03Wep = new GameObject("Weapon");
-                    var renderer = BattleRoyale.soloPlayer03Wep.AddComponent<SpriteRenderer>();
+                SoloPlayer03Wep = new("Weapon");
+                var renderer = SoloPlayer03Wep.AddComponent<SpriteRenderer>();
 
-                    renderer.sprite = AssetLoader.Bow;
-                    renderer.transform.parent = BattleRoyale.soloPlayer03.transform;
-                    renderer.color = new Color(1, 1, 1, 1);
-                    renderer.transform.position = new Vector3(0, 0, -30f);
+                renderer.sprite = AssetLoader.Bow;
+                renderer.transform.parent = SoloPlayer03.transform;
+                renderer.color = new(1, 1, 1, 1);
+                renderer.transform.position = new(0, 0, -30f);
+            }
+            else
+            {
+                if (PlayerControl.LocalPlayer.Data.IsDead) SoloPlayer03Wep.SetActive(false);
+
+                var mouseDirection = Input.mousePosition - new Vector3(Screen.width / 2, Screen.height / 2);
+                SoloPlayer03MouseAngle = Mathf.Atan2(mouseDirection.y, mouseDirection.x);
+
+                var targetPosition = SoloPlayer03.transform.position + new Vector3(0.8f * (float)Math.Cos(SoloPlayer03MouseAngle), 0.8f * (float)Math.Sin(SoloPlayer03MouseAngle));
+                SoloPlayer03Wep.transform.position += (targetPosition - SoloPlayer03Wep.transform.position) * 0.4f;
+                SoloPlayer03Wep.GetComponent<SpriteRenderer>().transform.eulerAngles = new(0f, 0f, (float)((SoloPlayer03MouseAngle * 360f) / Math.PI / 2f));
+                if (Math.Cos(SoloPlayer03MouseAngle) < 0.0)
+                {
+                    if (SoloPlayer03Wep.GetComponent<SpriteRenderer>().transform.localScale.y > 0)
+                        SoloPlayer03Wep.GetComponent<SpriteRenderer>().transform.localScale = new(1f, -1f);
                 }
                 else
                 {
-
-                    if (PlayerControl.LocalPlayer.Data.IsDead)
-                    {
-                        BattleRoyale.soloPlayer03Wep.SetActive(false);
-                    }
-
-                    Vector3 mouseDirection = Input.mousePosition - new Vector3(Screen.width / 2, Screen.height / 2);
-                    BattleRoyale.soloPlayer03mouseAngle = Mathf.Atan2(mouseDirection.y, mouseDirection.x);
-
-                    var targetPosition = BattleRoyale.soloPlayer03.transform.position + new Vector3(0.8f * (float)Math.Cos(BattleRoyale.soloPlayer03mouseAngle), 0.8f * (float)Math.Sin(BattleRoyale.soloPlayer03mouseAngle));
-                    BattleRoyale.soloPlayer03Wep.transform.position += (targetPosition - BattleRoyale.soloPlayer03Wep.transform.position) * 0.4f;
-                    BattleRoyale.soloPlayer03Wep.GetComponent<SpriteRenderer>().transform.eulerAngles = new Vector3(0f, 0f, (float)(BattleRoyale.soloPlayer03mouseAngle * 360f / Math.PI / 2f));
-                    if (Math.Cos(BattleRoyale.soloPlayer03mouseAngle) < 0.0)
-                    {
-                        if (BattleRoyale.soloPlayer03Wep.GetComponent<SpriteRenderer>().transform.localScale.y > 0)
-                            BattleRoyale.soloPlayer03Wep.GetComponent<SpriteRenderer>().transform.localScale = new Vector3(1f, -1f);
-                    }
-                    else
-                    {
-                        if (BattleRoyale.soloPlayer03Wep.GetComponent<SpriteRenderer>().transform.localScale.y < 0)
-                            BattleRoyale.soloPlayer03Wep.GetComponent<SpriteRenderer>().transform.localScale = new Vector3(1f, 1f);
-                    }
+                    if (SoloPlayer03Wep.GetComponent<SpriteRenderer>().transform.localScale.y < 0)
+                        SoloPlayer03Wep.GetComponent<SpriteRenderer>().transform.localScale = new(1f, 1f);
                 }
-                return PlayerControl.LocalPlayer.CanMove && !PlayerControl.LocalPlayer.Data.IsDead;
-            },
-            () => { soloPlayer03KillButton.Timer = soloPlayer03KillButton.MaxTimer; },
-            __instance.KillButton.graphic.sprite,
-            ButtonPosition.Layout,
-            __instance,
-            __instance.KillButton,
-            KeyCode.Mouse1,
-            false,
-            TranslationController.Instance.GetString(StringNames.KillLabel)
-        );
+            }
+
+            return PlayerControl.LocalPlayer.CanMove && !PlayerControl.LocalPlayer.Data.IsDead;
+        }, () => { _soloPlayer03KillButton.Timer = _soloPlayer03KillButton.MaxTimer; }, __instance.KillButton.graphic.sprite, ButtonPosition.Layout, __instance, __instance.KillButton, KeyCode.Mouse1, false, TranslationController.Instance.GetString(StringNames.KillLabel));
 
         // SoloPlayer04 Kill
-        soloPlayer04KillButton = new CustomButton(
-            () =>
+        _soloPlayer04KillButton = new(() =>
+        {
+            var target = GetShotPlayer(2 * 0.2f, 6, 4);
+
+            var writerShot = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.BattleRoyaleShowShoots, SendOption.Reliable);
+            writerShot.Write(SoloPlayer04.PlayerId);
+            writerShot.Write(0);
+            writerShot.Write(SoloPlayer04MouseAngle);
+            AmongUsClient.Instance.FinishRpcImmediately(writerShot);
+            RPCProcedure.BattleRoyaleShowShoots(SoloPlayer04.PlayerId, 0, SoloPlayer04MouseAngle);
+
+            if (target == null)
             {
-                PlayerControl target = BattleRoyale.GetShotPlayer(2 * 0.2f, 6, 4);
+                _soloPlayer04KillButton.Timer = _soloPlayer04KillButton.MaxTimer;
+                return;
+            }
 
-                MessageWriter writerShot = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.BattleRoyaleShowShoots, Hazel.SendOption.Reliable, -1);
-                writerShot.Write(BattleRoyale.soloPlayer04.PlayerId);
-                writerShot.Write(0);
-                writerShot.Write(BattleRoyale.soloPlayer04mouseAngle);
-                AmongUsClient.Instance.FinishRpcImmediately(writerShot);
-                RPCProcedure.battleRoyaleShowShoots(BattleRoyale.soloPlayer04.PlayerId, 0, BattleRoyale.soloPlayer04mouseAngle);
+            var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.GamemodeKills, SendOption.Reliable);
+            writer.Write(target.PlayerId);
+            writer.Write(SoloPlayer04.PlayerId);
+            AmongUsClient.Instance.FinishRpcImmediately(writer);
+            RPCProcedure.GamemodeKills(target.PlayerId, SoloPlayer04.PlayerId);
 
-                if (target == null)
-                {
-                    soloPlayer04KillButton.Timer = soloPlayer04KillButton.MaxTimer;
-                    return;
-                }
+            _soloPlayer04KillButton.Timer = _soloPlayer04KillButton.MaxTimer;
+            SoundManager.Instance.PlaySound(AssetLoader.RoyaleHitPlayer, false, 100f);
 
-                MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.GamemodeKills, Hazel.SendOption.Reliable, -1);
-                writer.Write(target.PlayerId);
-                writer.Write(BattleRoyale.soloPlayer04.PlayerId);
-                AmongUsClient.Instance.FinishRpcImmediately(writer);
-                RPCProcedure.gamemodeKills(target.PlayerId, BattleRoyale.soloPlayer04.PlayerId);
-
-                soloPlayer04KillButton.Timer = soloPlayer04KillButton.MaxTimer;
-                SoundManager.Instance.PlaySound(AssetLoader.royaleHitPlayer, false, 100f);
-
-                target = null;
-            },
-            () => { return BattleRoyale.soloPlayer04 != null && BattleRoyale.soloPlayer04 == PlayerControl.LocalPlayer; },
-            () =>
+            target = null;
+        }, () => { return SoloPlayer04 != null && SoloPlayer04 == PlayerControl.LocalPlayer; }, () =>
+        {
+            if (SoloPlayer04Wep == null)
             {
-                if (BattleRoyale.soloPlayer04Wep == null)
-                {
-                    BattleRoyale.soloPlayer04Wep = new GameObject("Weapon");
-                    var renderer = BattleRoyale.soloPlayer04Wep.AddComponent<SpriteRenderer>();
+                SoloPlayer04Wep = new("Weapon");
+                var renderer = SoloPlayer04Wep.AddComponent<SpriteRenderer>();
 
-                    renderer.sprite = AssetLoader.Bow;
-                    renderer.transform.parent = BattleRoyale.soloPlayer04.transform;
-                    renderer.color = new Color(1, 1, 1, 1);
-                    renderer.transform.position = new Vector3(0, 0, -30f);
+                renderer.sprite = AssetLoader.Bow;
+                renderer.transform.parent = SoloPlayer04.transform;
+                renderer.color = new(1, 1, 1, 1);
+                renderer.transform.position = new(0, 0, -30f);
+            }
+            else
+            {
+                if (PlayerControl.LocalPlayer.Data.IsDead) SoloPlayer04Wep.SetActive(false);
+
+                var mouseDirection = Input.mousePosition - new Vector3(Screen.width / 2, Screen.height / 2);
+                SoloPlayer04MouseAngle = Mathf.Atan2(mouseDirection.y, mouseDirection.x);
+
+                var targetPosition = SoloPlayer04.transform.position + new Vector3(0.8f * (float)Math.Cos(SoloPlayer04MouseAngle), 0.8f * (float)Math.Sin(SoloPlayer04MouseAngle));
+                SoloPlayer04Wep.transform.position += (targetPosition - SoloPlayer04Wep.transform.position) * 0.4f;
+                SoloPlayer04Wep.GetComponent<SpriteRenderer>().transform.eulerAngles = new(0f, 0f, (float)((SoloPlayer04MouseAngle * 360f) / Math.PI / 2f));
+                if (Math.Cos(SoloPlayer04MouseAngle) < 0.0)
+                {
+                    if (SoloPlayer04Wep.GetComponent<SpriteRenderer>().transform.localScale.y > 0)
+                        SoloPlayer04Wep.GetComponent<SpriteRenderer>().transform.localScale = new(1f, -1f);
                 }
                 else
                 {
-
-                    if (PlayerControl.LocalPlayer.Data.IsDead)
-                    {
-                        BattleRoyale.soloPlayer04Wep.SetActive(false);
-                    }
-
-                    Vector3 mouseDirection = Input.mousePosition - new Vector3(Screen.width / 2, Screen.height / 2);
-                    BattleRoyale.soloPlayer04mouseAngle = Mathf.Atan2(mouseDirection.y, mouseDirection.x);
-
-                    var targetPosition = BattleRoyale.soloPlayer04.transform.position + new Vector3(0.8f * (float)Math.Cos(BattleRoyale.soloPlayer04mouseAngle), 0.8f * (float)Math.Sin(BattleRoyale.soloPlayer04mouseAngle));
-                    BattleRoyale.soloPlayer04Wep.transform.position += (targetPosition - BattleRoyale.soloPlayer04Wep.transform.position) * 0.4f;
-                    BattleRoyale.soloPlayer04Wep.GetComponent<SpriteRenderer>().transform.eulerAngles = new Vector3(0f, 0f, (float)(BattleRoyale.soloPlayer04mouseAngle * 360f / Math.PI / 2f));
-                    if (Math.Cos(BattleRoyale.soloPlayer04mouseAngle) < 0.0)
-                    {
-                        if (BattleRoyale.soloPlayer04Wep.GetComponent<SpriteRenderer>().transform.localScale.y > 0)
-                            BattleRoyale.soloPlayer04Wep.GetComponent<SpriteRenderer>().transform.localScale = new Vector3(1f, -1f);
-                    }
-                    else
-                    {
-                        if (BattleRoyale.soloPlayer04Wep.GetComponent<SpriteRenderer>().transform.localScale.y < 0)
-                            BattleRoyale.soloPlayer04Wep.GetComponent<SpriteRenderer>().transform.localScale = new Vector3(1f, 1f);
-                    }
+                    if (SoloPlayer04Wep.GetComponent<SpriteRenderer>().transform.localScale.y < 0)
+                        SoloPlayer04Wep.GetComponent<SpriteRenderer>().transform.localScale = new(1f, 1f);
                 }
-                return PlayerControl.LocalPlayer.CanMove && !PlayerControl.LocalPlayer.Data.IsDead;
-            },
-            () => { soloPlayer04KillButton.Timer = soloPlayer04KillButton.MaxTimer; },
-            __instance.KillButton.graphic.sprite,
-            ButtonPosition.Layout,
-            __instance,
-            __instance.KillButton,
-            KeyCode.Mouse1,
-            false,
-            TranslationController.Instance.GetString(StringNames.KillLabel)
-        );
+            }
+
+            return PlayerControl.LocalPlayer.CanMove && !PlayerControl.LocalPlayer.Data.IsDead;
+        }, () => { _soloPlayer04KillButton.Timer = _soloPlayer04KillButton.MaxTimer; }, __instance.KillButton.graphic.sprite, ButtonPosition.Layout, __instance, __instance.KillButton, KeyCode.Mouse1, false, TranslationController.Instance.GetString(StringNames.KillLabel));
 
         // SoloPlayer05 Kill
-        soloPlayer05KillButton = new CustomButton(
-            () =>
+        _soloPlayer05KillButton = new(() =>
+        {
+            var target = GetShotPlayer(2 * 0.2f, 6, 5);
+
+            var writerShot = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.BattleRoyaleShowShoots, SendOption.Reliable);
+            writerShot.Write(SoloPlayer05.PlayerId);
+            writerShot.Write(0);
+            writerShot.Write(SoloPlayer05MouseAngle);
+            AmongUsClient.Instance.FinishRpcImmediately(writerShot);
+            RPCProcedure.BattleRoyaleShowShoots(SoloPlayer05.PlayerId, 0, SoloPlayer05MouseAngle);
+
+            if (target == null)
             {
-                PlayerControl target = BattleRoyale.GetShotPlayer(2 * 0.2f, 6, 5);
+                _soloPlayer05KillButton.Timer = _soloPlayer05KillButton.MaxTimer;
+                return;
+            }
 
-                MessageWriter writerShot = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.BattleRoyaleShowShoots, Hazel.SendOption.Reliable, -1);
-                writerShot.Write(BattleRoyale.soloPlayer05.PlayerId);
-                writerShot.Write(0);
-                writerShot.Write(BattleRoyale.soloPlayer05mouseAngle);
-                AmongUsClient.Instance.FinishRpcImmediately(writerShot);
-                RPCProcedure.battleRoyaleShowShoots(BattleRoyale.soloPlayer05.PlayerId, 0, BattleRoyale.soloPlayer05mouseAngle);
+            var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.GamemodeKills, SendOption.Reliable);
+            writer.Write(target.PlayerId);
+            writer.Write(SoloPlayer05.PlayerId);
+            AmongUsClient.Instance.FinishRpcImmediately(writer);
+            RPCProcedure.GamemodeKills(target.PlayerId, SoloPlayer05.PlayerId);
 
-                if (target == null)
-                {
-                    soloPlayer05KillButton.Timer = soloPlayer05KillButton.MaxTimer;
-                    return;
-                }
+            _soloPlayer05KillButton.Timer = _soloPlayer05KillButton.MaxTimer;
+            SoundManager.Instance.PlaySound(AssetLoader.RoyaleHitPlayer, false, 100f);
 
-                MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.GamemodeKills, Hazel.SendOption.Reliable, -1);
-                writer.Write(target.PlayerId);
-                writer.Write(BattleRoyale.soloPlayer05.PlayerId);
-                AmongUsClient.Instance.FinishRpcImmediately(writer);
-                RPCProcedure.gamemodeKills(target.PlayerId, BattleRoyale.soloPlayer05.PlayerId);
-
-                soloPlayer05KillButton.Timer = soloPlayer05KillButton.MaxTimer;
-                SoundManager.Instance.PlaySound(AssetLoader.royaleHitPlayer, false, 100f);
-
-                target = null;
-            },
-            () => { return BattleRoyale.soloPlayer05 != null && BattleRoyale.soloPlayer05 == PlayerControl.LocalPlayer; },
-            () =>
+            target = null;
+        }, () => { return SoloPlayer05 != null && SoloPlayer05 == PlayerControl.LocalPlayer; }, () =>
+        {
+            if (SoloPlayer05Wep == null)
             {
-                if (BattleRoyale.soloPlayer05Wep == null)
-                {
-                    BattleRoyale.soloPlayer05Wep = new GameObject("Weapon");
-                    var renderer = BattleRoyale.soloPlayer05Wep.AddComponent<SpriteRenderer>();
+                SoloPlayer05Wep = new("Weapon");
+                var renderer = SoloPlayer05Wep.AddComponent<SpriteRenderer>();
 
-                    renderer.sprite = AssetLoader.Bow;
-                    renderer.transform.parent = BattleRoyale.soloPlayer05.transform;
-                    renderer.color = new Color(1, 1, 1, 1);
-                    renderer.transform.position = new Vector3(0, 0, -30f);
+                renderer.sprite = AssetLoader.Bow;
+                renderer.transform.parent = SoloPlayer05.transform;
+                renderer.color = new(1, 1, 1, 1);
+                renderer.transform.position = new(0, 0, -30f);
+            }
+            else
+            {
+                if (PlayerControl.LocalPlayer.Data.IsDead) SoloPlayer05Wep.SetActive(false);
+
+                var mouseDirection = Input.mousePosition - new Vector3(Screen.width / 2, Screen.height / 2);
+                SoloPlayer05MouseAngle = Mathf.Atan2(mouseDirection.y, mouseDirection.x);
+
+                var targetPosition = SoloPlayer05.transform.position + new Vector3(0.8f * (float)Math.Cos(SoloPlayer05MouseAngle), 0.8f * (float)Math.Sin(SoloPlayer05MouseAngle));
+                SoloPlayer05Wep.transform.position += (targetPosition - SoloPlayer05Wep.transform.position) * 0.4f;
+                SoloPlayer05Wep.GetComponent<SpriteRenderer>().transform.eulerAngles = new(0f, 0f, (float)((SoloPlayer05MouseAngle * 360f) / Math.PI / 2f));
+                if (Math.Cos(SoloPlayer05MouseAngle) < 0.0)
+                {
+                    if (SoloPlayer05Wep.GetComponent<SpriteRenderer>().transform.localScale.y > 0)
+                        SoloPlayer05Wep.GetComponent<SpriteRenderer>().transform.localScale = new(1f, -1f);
                 }
                 else
                 {
-
-                    if (PlayerControl.LocalPlayer.Data.IsDead)
-                    {
-                        BattleRoyale.soloPlayer05Wep.SetActive(false);
-                    }
-
-                    Vector3 mouseDirection = Input.mousePosition - new Vector3(Screen.width / 2, Screen.height / 2);
-                    BattleRoyale.soloPlayer05mouseAngle = Mathf.Atan2(mouseDirection.y, mouseDirection.x);
-
-                    var targetPosition = BattleRoyale.soloPlayer05.transform.position + new Vector3(0.8f * (float)Math.Cos(BattleRoyale.soloPlayer05mouseAngle), 0.8f * (float)Math.Sin(BattleRoyale.soloPlayer05mouseAngle));
-                    BattleRoyale.soloPlayer05Wep.transform.position += (targetPosition - BattleRoyale.soloPlayer05Wep.transform.position) * 0.4f;
-                    BattleRoyale.soloPlayer05Wep.GetComponent<SpriteRenderer>().transform.eulerAngles = new Vector3(0f, 0f, (float)(BattleRoyale.soloPlayer05mouseAngle * 360f / Math.PI / 2f));
-                    if (Math.Cos(BattleRoyale.soloPlayer05mouseAngle) < 0.0)
-                    {
-                        if (BattleRoyale.soloPlayer05Wep.GetComponent<SpriteRenderer>().transform.localScale.y > 0)
-                            BattleRoyale.soloPlayer05Wep.GetComponent<SpriteRenderer>().transform.localScale = new Vector3(1f, -1f);
-                    }
-                    else
-                    {
-                        if (BattleRoyale.soloPlayer05Wep.GetComponent<SpriteRenderer>().transform.localScale.y < 0)
-                            BattleRoyale.soloPlayer05Wep.GetComponent<SpriteRenderer>().transform.localScale = new Vector3(1f, 1f);
-                    }
+                    if (SoloPlayer05Wep.GetComponent<SpriteRenderer>().transform.localScale.y < 0)
+                        SoloPlayer05Wep.GetComponent<SpriteRenderer>().transform.localScale = new(1f, 1f);
                 }
-                return PlayerControl.LocalPlayer.CanMove && !PlayerControl.LocalPlayer.Data.IsDead;
-            },
-            () => { soloPlayer05KillButton.Timer = soloPlayer05KillButton.MaxTimer; },
-            __instance.KillButton.graphic.sprite,
-            ButtonPosition.Layout,
-            __instance,
-            __instance.KillButton,
-            KeyCode.Mouse1,
-            false,
-            TranslationController.Instance.GetString(StringNames.KillLabel)
-        );
+            }
+
+            return PlayerControl.LocalPlayer.CanMove && !PlayerControl.LocalPlayer.Data.IsDead;
+        }, () => { _soloPlayer05KillButton.Timer = _soloPlayer05KillButton.MaxTimer; }, __instance.KillButton.graphic.sprite, ButtonPosition.Layout, __instance, __instance.KillButton, KeyCode.Mouse1, false, TranslationController.Instance.GetString(StringNames.KillLabel));
 
         // SoloPlayer06 Kill
-        soloPlayer06KillButton = new CustomButton(
-            () =>
+        _soloPlayer06KillButton = new(() =>
+        {
+            var target = GetShotPlayer(2 * 0.2f, 6, 6);
+
+            var writerShot = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.BattleRoyaleShowShoots, SendOption.Reliable);
+            writerShot.Write(SoloPlayer06.PlayerId);
+            writerShot.Write(0);
+            writerShot.Write(SoloPlayer06MouseAngle);
+            AmongUsClient.Instance.FinishRpcImmediately(writerShot);
+            RPCProcedure.BattleRoyaleShowShoots(SoloPlayer06.PlayerId, 0, SoloPlayer06MouseAngle);
+
+            if (target == null)
             {
-                PlayerControl target = BattleRoyale.GetShotPlayer(2 * 0.2f, 6, 6);
+                _soloPlayer06KillButton.Timer = _soloPlayer06KillButton.MaxTimer;
+                return;
+            }
 
-                MessageWriter writerShot = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.BattleRoyaleShowShoots, Hazel.SendOption.Reliable, -1);
-                writerShot.Write(BattleRoyale.soloPlayer06.PlayerId);
-                writerShot.Write(0);
-                writerShot.Write(BattleRoyale.soloPlayer06mouseAngle);
-                AmongUsClient.Instance.FinishRpcImmediately(writerShot);
-                RPCProcedure.battleRoyaleShowShoots(BattleRoyale.soloPlayer06.PlayerId, 0, BattleRoyale.soloPlayer06mouseAngle);
+            var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.GamemodeKills, SendOption.Reliable);
+            writer.Write(target.PlayerId);
+            writer.Write(SoloPlayer06.PlayerId);
+            AmongUsClient.Instance.FinishRpcImmediately(writer);
+            RPCProcedure.GamemodeKills(target.PlayerId, SoloPlayer06.PlayerId);
 
-                if (target == null)
-                {
-                    soloPlayer06KillButton.Timer = soloPlayer06KillButton.MaxTimer;
-                    return;
-                }
+            _soloPlayer06KillButton.Timer = _soloPlayer06KillButton.MaxTimer;
+            SoundManager.Instance.PlaySound(AssetLoader.RoyaleHitPlayer, false, 100f);
 
-                MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.GamemodeKills, Hazel.SendOption.Reliable, -1);
-                writer.Write(target.PlayerId);
-                writer.Write(BattleRoyale.soloPlayer06.PlayerId);
-                AmongUsClient.Instance.FinishRpcImmediately(writer);
-                RPCProcedure.gamemodeKills(target.PlayerId, BattleRoyale.soloPlayer06.PlayerId);
-
-                soloPlayer06KillButton.Timer = soloPlayer06KillButton.MaxTimer;
-                SoundManager.Instance.PlaySound(AssetLoader.royaleHitPlayer, false, 100f);
-
-                target = null;
-            },
-            () => { return BattleRoyale.soloPlayer06 != null && BattleRoyale.soloPlayer06 == PlayerControl.LocalPlayer; },
-            () =>
+            target = null;
+        }, () => { return SoloPlayer06 != null && SoloPlayer06 == PlayerControl.LocalPlayer; }, () =>
+        {
+            if (SoloPlayer06Wep == null)
             {
-                if (BattleRoyale.soloPlayer06Wep == null)
-                {
-                    BattleRoyale.soloPlayer06Wep = new GameObject("Weapon");
-                    var renderer = BattleRoyale.soloPlayer06Wep.AddComponent<SpriteRenderer>();
+                SoloPlayer06Wep = new("Weapon");
+                var renderer = SoloPlayer06Wep.AddComponent<SpriteRenderer>();
 
-                    renderer.sprite = AssetLoader.Bow;
-                    renderer.transform.parent = BattleRoyale.soloPlayer06.transform;
-                    renderer.color = new Color(1, 1, 1, 1);
-                    renderer.transform.position = new Vector3(0, 0, -30f);
+                renderer.sprite = AssetLoader.Bow;
+                renderer.transform.parent = SoloPlayer06.transform;
+                renderer.color = new(1, 1, 1, 1);
+                renderer.transform.position = new(0, 0, -30f);
+            }
+            else
+            {
+                if (PlayerControl.LocalPlayer.Data.IsDead) SoloPlayer06Wep.SetActive(false);
+
+                var mouseDirection = Input.mousePosition - new Vector3(Screen.width / 2, Screen.height / 2);
+                SoloPlayer06MouseAngle = Mathf.Atan2(mouseDirection.y, mouseDirection.x);
+
+                var targetPosition = SoloPlayer06.transform.position + new Vector3(0.8f * (float)Math.Cos(SoloPlayer06MouseAngle), 0.8f * (float)Math.Sin(SoloPlayer06MouseAngle));
+                SoloPlayer06Wep.transform.position += (targetPosition - SoloPlayer06Wep.transform.position) * 0.4f;
+                SoloPlayer06Wep.GetComponent<SpriteRenderer>().transform.eulerAngles = new(0f, 0f, (float)((SoloPlayer06MouseAngle * 360f) / Math.PI / 2f));
+                if (Math.Cos(SoloPlayer06MouseAngle) < 0.0)
+                {
+                    if (SoloPlayer06Wep.GetComponent<SpriteRenderer>().transform.localScale.y > 0)
+                        SoloPlayer06Wep.GetComponent<SpriteRenderer>().transform.localScale = new(1f, -1f);
                 }
                 else
                 {
-
-                    if (PlayerControl.LocalPlayer.Data.IsDead)
-                    {
-                        BattleRoyale.soloPlayer06Wep.SetActive(false);
-                    }
-
-                    Vector3 mouseDirection = Input.mousePosition - new Vector3(Screen.width / 2, Screen.height / 2);
-                    BattleRoyale.soloPlayer06mouseAngle = Mathf.Atan2(mouseDirection.y, mouseDirection.x);
-
-                    var targetPosition = BattleRoyale.soloPlayer06.transform.position + new Vector3(0.8f * (float)Math.Cos(BattleRoyale.soloPlayer06mouseAngle), 0.8f * (float)Math.Sin(BattleRoyale.soloPlayer06mouseAngle));
-                    BattleRoyale.soloPlayer06Wep.transform.position += (targetPosition - BattleRoyale.soloPlayer06Wep.transform.position) * 0.4f;
-                    BattleRoyale.soloPlayer06Wep.GetComponent<SpriteRenderer>().transform.eulerAngles = new Vector3(0f, 0f, (float)(BattleRoyale.soloPlayer06mouseAngle * 360f / Math.PI / 2f));
-                    if (Math.Cos(BattleRoyale.soloPlayer06mouseAngle) < 0.0)
-                    {
-                        if (BattleRoyale.soloPlayer06Wep.GetComponent<SpriteRenderer>().transform.localScale.y > 0)
-                            BattleRoyale.soloPlayer06Wep.GetComponent<SpriteRenderer>().transform.localScale = new Vector3(1f, -1f);
-                    }
-                    else
-                    {
-                        if (BattleRoyale.soloPlayer06Wep.GetComponent<SpriteRenderer>().transform.localScale.y < 0)
-                            BattleRoyale.soloPlayer06Wep.GetComponent<SpriteRenderer>().transform.localScale = new Vector3(1f, 1f);
-                    }
+                    if (SoloPlayer06Wep.GetComponent<SpriteRenderer>().transform.localScale.y < 0)
+                        SoloPlayer06Wep.GetComponent<SpriteRenderer>().transform.localScale = new(1f, 1f);
                 }
-                return PlayerControl.LocalPlayer.CanMove && !PlayerControl.LocalPlayer.Data.IsDead;
-            },
-            () => { soloPlayer06KillButton.Timer = soloPlayer06KillButton.MaxTimer; },
-            __instance.KillButton.graphic.sprite,
-            ButtonPosition.Layout,
-            __instance,
-            __instance.KillButton,
-            KeyCode.Mouse1,
-            false,
-            TranslationController.Instance.GetString(StringNames.KillLabel)
-        );
+            }
+
+            return PlayerControl.LocalPlayer.CanMove && !PlayerControl.LocalPlayer.Data.IsDead;
+        }, () => { _soloPlayer06KillButton.Timer = _soloPlayer06KillButton.MaxTimer; }, __instance.KillButton.graphic.sprite, ButtonPosition.Layout, __instance, __instance.KillButton, KeyCode.Mouse1, false, TranslationController.Instance.GetString(StringNames.KillLabel));
 
         // SoloPlayer07 Kill
-        soloPlayer07KillButton = new CustomButton(
-            () =>
+        _soloPlayer07KillButton = new(() =>
+        {
+            var target = GetShotPlayer(2 * 0.2f, 6, 7);
+
+            var writerShot = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.BattleRoyaleShowShoots, SendOption.Reliable);
+            writerShot.Write(SoloPlayer07.PlayerId);
+            writerShot.Write(0);
+            writerShot.Write(SoloPlayer07MouseAngle);
+            AmongUsClient.Instance.FinishRpcImmediately(writerShot);
+            RPCProcedure.BattleRoyaleShowShoots(SoloPlayer07.PlayerId, 0, SoloPlayer07MouseAngle);
+
+            if (target == null)
             {
-                PlayerControl target = BattleRoyale.GetShotPlayer(2 * 0.2f, 6, 7);
+                _soloPlayer07KillButton.Timer = _soloPlayer07KillButton.MaxTimer;
+                return;
+            }
 
-                MessageWriter writerShot = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.BattleRoyaleShowShoots, Hazel.SendOption.Reliable, -1);
-                writerShot.Write(BattleRoyale.soloPlayer07.PlayerId);
-                writerShot.Write(0);
-                writerShot.Write(BattleRoyale.soloPlayer07mouseAngle);
-                AmongUsClient.Instance.FinishRpcImmediately(writerShot);
-                RPCProcedure.battleRoyaleShowShoots(BattleRoyale.soloPlayer07.PlayerId, 0, BattleRoyale.soloPlayer07mouseAngle);
+            var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.GamemodeKills, SendOption.Reliable);
+            writer.Write(target.PlayerId);
+            writer.Write(SoloPlayer07.PlayerId);
+            AmongUsClient.Instance.FinishRpcImmediately(writer);
+            RPCProcedure.GamemodeKills(target.PlayerId, SoloPlayer07.PlayerId);
 
-                if (target == null)
-                {
-                    soloPlayer07KillButton.Timer = soloPlayer07KillButton.MaxTimer;
-                    return;
-                }
+            _soloPlayer07KillButton.Timer = _soloPlayer07KillButton.MaxTimer;
+            SoundManager.Instance.PlaySound(AssetLoader.RoyaleHitPlayer, false, 100f);
 
-                MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.GamemodeKills, Hazel.SendOption.Reliable, -1);
-                writer.Write(target.PlayerId);
-                writer.Write(BattleRoyale.soloPlayer07.PlayerId);
-                AmongUsClient.Instance.FinishRpcImmediately(writer);
-                RPCProcedure.gamemodeKills(target.PlayerId, BattleRoyale.soloPlayer07.PlayerId);
-
-                soloPlayer07KillButton.Timer = soloPlayer07KillButton.MaxTimer;
-                SoundManager.Instance.PlaySound(AssetLoader.royaleHitPlayer, false, 100f);
-
-                target = null;
-            },
-            () => { return BattleRoyale.soloPlayer07 != null && BattleRoyale.soloPlayer07 == PlayerControl.LocalPlayer; },
-            () =>
+            target = null;
+        }, () => { return SoloPlayer07 != null && SoloPlayer07 == PlayerControl.LocalPlayer; }, () =>
+        {
+            if (SoloPlayer07Wep == null)
             {
-                if (BattleRoyale.soloPlayer07Wep == null)
-                {
-                    BattleRoyale.soloPlayer07Wep = new GameObject("Weapon");
-                    var renderer = BattleRoyale.soloPlayer07Wep.AddComponent<SpriteRenderer>();
+                SoloPlayer07Wep = new("Weapon");
+                var renderer = SoloPlayer07Wep.AddComponent<SpriteRenderer>();
 
-                    renderer.sprite = AssetLoader.Bow;
-                    renderer.transform.parent = BattleRoyale.soloPlayer07.transform;
-                    renderer.color = new Color(1, 1, 1, 1);
-                    renderer.transform.position = new Vector3(0, 0, -30f);
+                renderer.sprite = AssetLoader.Bow;
+                renderer.transform.parent = SoloPlayer07.transform;
+                renderer.color = new(1, 1, 1, 1);
+                renderer.transform.position = new(0, 0, -30f);
+            }
+            else
+            {
+                if (PlayerControl.LocalPlayer.Data.IsDead) SoloPlayer07Wep.SetActive(false);
+
+                var mouseDirection = Input.mousePosition - new Vector3(Screen.width / 2, Screen.height / 2);
+                SoloPlayer07MouseAngle = Mathf.Atan2(mouseDirection.y, mouseDirection.x);
+
+                var targetPosition = SoloPlayer07.transform.position + new Vector3(0.8f * (float)Math.Cos(SoloPlayer07MouseAngle), 0.8f * (float)Math.Sin(SoloPlayer07MouseAngle));
+                SoloPlayer07Wep.transform.position += (targetPosition - SoloPlayer07Wep.transform.position) * 0.4f;
+                SoloPlayer07Wep.GetComponent<SpriteRenderer>().transform.eulerAngles = new(0f, 0f, (float)((SoloPlayer07MouseAngle * 360f) / Math.PI / 2f));
+                if (Math.Cos(SoloPlayer07MouseAngle) < 0.0)
+                {
+                    if (SoloPlayer07Wep.GetComponent<SpriteRenderer>().transform.localScale.y > 0)
+                        SoloPlayer07Wep.GetComponent<SpriteRenderer>().transform.localScale = new(1f, -1f);
                 }
                 else
                 {
-
-                    if (PlayerControl.LocalPlayer.Data.IsDead)
-                    {
-                        BattleRoyale.soloPlayer07Wep.SetActive(false);
-                    }
-
-                    Vector3 mouseDirection = Input.mousePosition - new Vector3(Screen.width / 2, Screen.height / 2);
-                    BattleRoyale.soloPlayer07mouseAngle = Mathf.Atan2(mouseDirection.y, mouseDirection.x);
-
-                    var targetPosition = BattleRoyale.soloPlayer07.transform.position + new Vector3(0.8f * (float)Math.Cos(BattleRoyale.soloPlayer07mouseAngle), 0.8f * (float)Math.Sin(BattleRoyale.soloPlayer07mouseAngle));
-                    BattleRoyale.soloPlayer07Wep.transform.position += (targetPosition - BattleRoyale.soloPlayer07Wep.transform.position) * 0.4f;
-                    BattleRoyale.soloPlayer07Wep.GetComponent<SpriteRenderer>().transform.eulerAngles = new Vector3(0f, 0f, (float)(BattleRoyale.soloPlayer07mouseAngle * 360f / Math.PI / 2f));
-                    if (Math.Cos(BattleRoyale.soloPlayer07mouseAngle) < 0.0)
-                    {
-                        if (BattleRoyale.soloPlayer07Wep.GetComponent<SpriteRenderer>().transform.localScale.y > 0)
-                            BattleRoyale.soloPlayer07Wep.GetComponent<SpriteRenderer>().transform.localScale = new Vector3(1f, -1f);
-                    }
-                    else
-                    {
-                        if (BattleRoyale.soloPlayer07Wep.GetComponent<SpriteRenderer>().transform.localScale.y < 0)
-                            BattleRoyale.soloPlayer07Wep.GetComponent<SpriteRenderer>().transform.localScale = new Vector3(1f, 1f);
-                    }
+                    if (SoloPlayer07Wep.GetComponent<SpriteRenderer>().transform.localScale.y < 0)
+                        SoloPlayer07Wep.GetComponent<SpriteRenderer>().transform.localScale = new(1f, 1f);
                 }
-                return PlayerControl.LocalPlayer.CanMove && !PlayerControl.LocalPlayer.Data.IsDead;
-            },
-            () => { soloPlayer07KillButton.Timer = soloPlayer07KillButton.MaxTimer; },
-            __instance.KillButton.graphic.sprite,
-            ButtonPosition.Layout,
-            __instance,
-            __instance.KillButton,
-            KeyCode.Mouse1,
-            false,
-            TranslationController.Instance.GetString(StringNames.KillLabel)
-        );
+            }
+
+            return PlayerControl.LocalPlayer.CanMove && !PlayerControl.LocalPlayer.Data.IsDead;
+        }, () => { _soloPlayer07KillButton.Timer = _soloPlayer07KillButton.MaxTimer; }, __instance.KillButton.graphic.sprite, ButtonPosition.Layout, __instance, __instance.KillButton, KeyCode.Mouse1, false, TranslationController.Instance.GetString(StringNames.KillLabel));
 
         // SoloPlayer08 Kill
-        soloPlayer08KillButton = new CustomButton(
-            () =>
+        _soloPlayer08KillButton = new(() =>
+        {
+            var target = GetShotPlayer(2 * 0.2f, 6, 8);
+
+            var writerShot = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.BattleRoyaleShowShoots, SendOption.Reliable);
+            writerShot.Write(SoloPlayer08.PlayerId);
+            writerShot.Write(0);
+            writerShot.Write(SoloPlayer08MouseAngle);
+            AmongUsClient.Instance.FinishRpcImmediately(writerShot);
+            RPCProcedure.BattleRoyaleShowShoots(SoloPlayer08.PlayerId, 0, SoloPlayer08MouseAngle);
+
+            if (target == null)
             {
-                PlayerControl target = BattleRoyale.GetShotPlayer(2 * 0.2f, 6, 8);
+                _soloPlayer08KillButton.Timer = _soloPlayer08KillButton.MaxTimer;
+                return;
+            }
 
-                MessageWriter writerShot = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.BattleRoyaleShowShoots, Hazel.SendOption.Reliable, -1);
-                writerShot.Write(BattleRoyale.soloPlayer08.PlayerId);
-                writerShot.Write(0);
-                writerShot.Write(BattleRoyale.soloPlayer08mouseAngle);
-                AmongUsClient.Instance.FinishRpcImmediately(writerShot);
-                RPCProcedure.battleRoyaleShowShoots(BattleRoyale.soloPlayer08.PlayerId, 0, BattleRoyale.soloPlayer08mouseAngle);
+            var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.GamemodeKills, SendOption.Reliable);
+            writer.Write(target.PlayerId);
+            writer.Write(SoloPlayer08.PlayerId);
+            AmongUsClient.Instance.FinishRpcImmediately(writer);
+            RPCProcedure.GamemodeKills(target.PlayerId, SoloPlayer08.PlayerId);
 
-                if (target == null)
-                {
-                    soloPlayer08KillButton.Timer = soloPlayer08KillButton.MaxTimer;
-                    return;
-                }
+            _soloPlayer08KillButton.Timer = _soloPlayer08KillButton.MaxTimer;
+            SoundManager.Instance.PlaySound(AssetLoader.RoyaleHitPlayer, false, 100f);
 
-                MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.GamemodeKills, Hazel.SendOption.Reliable, -1);
-                writer.Write(target.PlayerId);
-                writer.Write(BattleRoyale.soloPlayer08.PlayerId);
-                AmongUsClient.Instance.FinishRpcImmediately(writer);
-                RPCProcedure.gamemodeKills(target.PlayerId, BattleRoyale.soloPlayer08.PlayerId);
-
-                soloPlayer08KillButton.Timer = soloPlayer08KillButton.MaxTimer;
-                SoundManager.Instance.PlaySound(AssetLoader.royaleHitPlayer, false, 100f);
-
-                target = null;
-            },
-            () => { return BattleRoyale.soloPlayer08 != null && BattleRoyale.soloPlayer08 == PlayerControl.LocalPlayer; },
-            () =>
+            target = null;
+        }, () => { return SoloPlayer08 != null && SoloPlayer08 == PlayerControl.LocalPlayer; }, () =>
+        {
+            if (SoloPlayer08Wep == null)
             {
-                if (BattleRoyale.soloPlayer08Wep == null)
-                {
-                    BattleRoyale.soloPlayer08Wep = new GameObject("Weapon");
-                    var renderer = BattleRoyale.soloPlayer08Wep.AddComponent<SpriteRenderer>();
+                SoloPlayer08Wep = new("Weapon");
+                var renderer = SoloPlayer08Wep.AddComponent<SpriteRenderer>();
 
-                    renderer.sprite = AssetLoader.Bow;
-                    renderer.transform.parent = BattleRoyale.soloPlayer08.transform;
-                    renderer.color = new Color(1, 1, 1, 1);
-                    renderer.transform.position = new Vector3(0, 0, -30f);
+                renderer.sprite = AssetLoader.Bow;
+                renderer.transform.parent = SoloPlayer08.transform;
+                renderer.color = new(1, 1, 1, 1);
+                renderer.transform.position = new(0, 0, -30f);
+            }
+            else
+            {
+                if (PlayerControl.LocalPlayer.Data.IsDead) SoloPlayer08Wep.SetActive(false);
+
+                var mouseDirection = Input.mousePosition - new Vector3(Screen.width / 2, Screen.height / 2);
+                SoloPlayer08MouseAngle = Mathf.Atan2(mouseDirection.y, mouseDirection.x);
+
+                var targetPosition = SoloPlayer08.transform.position + new Vector3(0.8f * (float)Math.Cos(SoloPlayer08MouseAngle), 0.8f * (float)Math.Sin(SoloPlayer08MouseAngle));
+                SoloPlayer08Wep.transform.position += (targetPosition - SoloPlayer08Wep.transform.position) * 0.4f;
+                SoloPlayer08Wep.GetComponent<SpriteRenderer>().transform.eulerAngles = new(0f, 0f, (float)((SoloPlayer08MouseAngle * 360f) / Math.PI / 2f));
+                if (Math.Cos(SoloPlayer08MouseAngle) < 0.0)
+                {
+                    if (SoloPlayer08Wep.GetComponent<SpriteRenderer>().transform.localScale.y > 0)
+                        SoloPlayer08Wep.GetComponent<SpriteRenderer>().transform.localScale = new(1f, -1f);
                 }
                 else
                 {
-
-                    if (PlayerControl.LocalPlayer.Data.IsDead)
-                    {
-                        BattleRoyale.soloPlayer08Wep.SetActive(false);
-                    }
-
-                    Vector3 mouseDirection = Input.mousePosition - new Vector3(Screen.width / 2, Screen.height / 2);
-                    BattleRoyale.soloPlayer08mouseAngle = Mathf.Atan2(mouseDirection.y, mouseDirection.x);
-
-                    var targetPosition = BattleRoyale.soloPlayer08.transform.position + new Vector3(0.8f * (float)Math.Cos(BattleRoyale.soloPlayer08mouseAngle), 0.8f * (float)Math.Sin(BattleRoyale.soloPlayer08mouseAngle));
-                    BattleRoyale.soloPlayer08Wep.transform.position += (targetPosition - BattleRoyale.soloPlayer08Wep.transform.position) * 0.4f;
-                    BattleRoyale.soloPlayer08Wep.GetComponent<SpriteRenderer>().transform.eulerAngles = new Vector3(0f, 0f, (float)(BattleRoyale.soloPlayer08mouseAngle * 360f / Math.PI / 2f));
-                    if (Math.Cos(BattleRoyale.soloPlayer08mouseAngle) < 0.0)
-                    {
-                        if (BattleRoyale.soloPlayer08Wep.GetComponent<SpriteRenderer>().transform.localScale.y > 0)
-                            BattleRoyale.soloPlayer08Wep.GetComponent<SpriteRenderer>().transform.localScale = new Vector3(1f, -1f);
-                    }
-                    else
-                    {
-                        if (BattleRoyale.soloPlayer08Wep.GetComponent<SpriteRenderer>().transform.localScale.y < 0)
-                            BattleRoyale.soloPlayer08Wep.GetComponent<SpriteRenderer>().transform.localScale = new Vector3(1f, 1f);
-                    }
+                    if (SoloPlayer08Wep.GetComponent<SpriteRenderer>().transform.localScale.y < 0)
+                        SoloPlayer08Wep.GetComponent<SpriteRenderer>().transform.localScale = new(1f, 1f);
                 }
-                return PlayerControl.LocalPlayer.CanMove && !PlayerControl.LocalPlayer.Data.IsDead;
-            },
-            () => { soloPlayer08KillButton.Timer = soloPlayer08KillButton.MaxTimer; },
-            __instance.KillButton.graphic.sprite,
-            ButtonPosition.Layout,
-            __instance,
-            __instance.KillButton,
-            KeyCode.Mouse1,
-            false,
-            TranslationController.Instance.GetString(StringNames.KillLabel)
-        );
+            }
+
+            return PlayerControl.LocalPlayer.CanMove && !PlayerControl.LocalPlayer.Data.IsDead;
+        }, () => { _soloPlayer08KillButton.Timer = _soloPlayer08KillButton.MaxTimer; }, __instance.KillButton.graphic.sprite, ButtonPosition.Layout, __instance, __instance.KillButton, KeyCode.Mouse1, false, TranslationController.Instance.GetString(StringNames.KillLabel));
 
         // SoloPlayer09 Kill
-        soloPlayer09KillButton = new CustomButton(
-            () =>
+        _soloPlayer09KillButton = new(() =>
+        {
+            var target = GetShotPlayer(2 * 0.2f, 6, 9);
+
+            var writerShot = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.BattleRoyaleShowShoots, SendOption.Reliable);
+            writerShot.Write(SoloPlayer09.PlayerId);
+            writerShot.Write(0);
+            writerShot.Write(SoloPlayer09MouseAngle);
+            AmongUsClient.Instance.FinishRpcImmediately(writerShot);
+            RPCProcedure.BattleRoyaleShowShoots(SoloPlayer09.PlayerId, 0, SoloPlayer09MouseAngle);
+
+            if (target == null)
             {
-                PlayerControl target = BattleRoyale.GetShotPlayer(2 * 0.2f, 6, 9);
+                _soloPlayer09KillButton.Timer = _soloPlayer09KillButton.MaxTimer;
+                return;
+            }
 
-                MessageWriter writerShot = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.BattleRoyaleShowShoots, Hazel.SendOption.Reliable, -1);
-                writerShot.Write(BattleRoyale.soloPlayer09.PlayerId);
-                writerShot.Write(0);
-                writerShot.Write(BattleRoyale.soloPlayer09mouseAngle);
-                AmongUsClient.Instance.FinishRpcImmediately(writerShot);
-                RPCProcedure.battleRoyaleShowShoots(BattleRoyale.soloPlayer09.PlayerId, 0, BattleRoyale.soloPlayer09mouseAngle);
+            var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.GamemodeKills, SendOption.Reliable);
+            writer.Write(target.PlayerId);
+            writer.Write(SoloPlayer09.PlayerId);
+            AmongUsClient.Instance.FinishRpcImmediately(writer);
+            RPCProcedure.GamemodeKills(target.PlayerId, SoloPlayer09.PlayerId);
 
-                if (target == null)
-                {
-                    soloPlayer09KillButton.Timer = soloPlayer09KillButton.MaxTimer;
-                    return;
-                }
+            _soloPlayer09KillButton.Timer = _soloPlayer09KillButton.MaxTimer;
+            SoundManager.Instance.PlaySound(AssetLoader.RoyaleHitPlayer, false, 100f);
 
-                MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.GamemodeKills, Hazel.SendOption.Reliable, -1);
-                writer.Write(target.PlayerId);
-                writer.Write(BattleRoyale.soloPlayer09.PlayerId);
-                AmongUsClient.Instance.FinishRpcImmediately(writer);
-                RPCProcedure.gamemodeKills(target.PlayerId, BattleRoyale.soloPlayer09.PlayerId);
-
-                soloPlayer09KillButton.Timer = soloPlayer09KillButton.MaxTimer;
-                SoundManager.Instance.PlaySound(AssetLoader.royaleHitPlayer, false, 100f);
-
-                target = null;
-            },
-            () => { return BattleRoyale.soloPlayer09 != null && BattleRoyale.soloPlayer09 == PlayerControl.LocalPlayer; },
-            () =>
+            target = null;
+        }, () => { return SoloPlayer09 != null && SoloPlayer09 == PlayerControl.LocalPlayer; }, () =>
+        {
+            if (SoloPlayer09Wep == null)
             {
-                if (BattleRoyale.soloPlayer09Wep == null)
-                {
-                    BattleRoyale.soloPlayer09Wep = new GameObject("Weapon");
-                    var renderer = BattleRoyale.soloPlayer09Wep.AddComponent<SpriteRenderer>();
+                SoloPlayer09Wep = new("Weapon");
+                var renderer = SoloPlayer09Wep.AddComponent<SpriteRenderer>();
 
-                    renderer.sprite = AssetLoader.Bow;
-                    renderer.transform.parent = BattleRoyale.soloPlayer09.transform;
-                    renderer.color = new Color(1, 1, 1, 1);
-                    renderer.transform.position = new Vector3(0, 0, -30f);
+                renderer.sprite = AssetLoader.Bow;
+                renderer.transform.parent = SoloPlayer09.transform;
+                renderer.color = new(1, 1, 1, 1);
+                renderer.transform.position = new(0, 0, -30f);
+            }
+            else
+            {
+                if (PlayerControl.LocalPlayer.Data.IsDead) SoloPlayer09Wep.SetActive(false);
+
+                var mouseDirection = Input.mousePosition - new Vector3(Screen.width / 2, Screen.height / 2);
+                SoloPlayer09MouseAngle = Mathf.Atan2(mouseDirection.y, mouseDirection.x);
+
+                var targetPosition = SoloPlayer09.transform.position + new Vector3(0.8f * (float)Math.Cos(SoloPlayer09MouseAngle), 0.8f * (float)Math.Sin(SoloPlayer09MouseAngle));
+                SoloPlayer09Wep.transform.position += (targetPosition - SoloPlayer09Wep.transform.position) * 0.4f;
+                SoloPlayer09Wep.GetComponent<SpriteRenderer>().transform.eulerAngles = new(0f, 0f, (float)((SoloPlayer09MouseAngle * 360f) / Math.PI / 2f));
+                if (Math.Cos(SoloPlayer09MouseAngle) < 0.0)
+                {
+                    if (SoloPlayer09Wep.GetComponent<SpriteRenderer>().transform.localScale.y > 0)
+                        SoloPlayer09Wep.GetComponent<SpriteRenderer>().transform.localScale = new(1f, -1f);
                 }
                 else
                 {
-
-                    if (PlayerControl.LocalPlayer.Data.IsDead)
-                    {
-                        BattleRoyale.soloPlayer09Wep.SetActive(false);
-                    }
-
-                    Vector3 mouseDirection = Input.mousePosition - new Vector3(Screen.width / 2, Screen.height / 2);
-                    BattleRoyale.soloPlayer09mouseAngle = Mathf.Atan2(mouseDirection.y, mouseDirection.x);
-
-                    var targetPosition = BattleRoyale.soloPlayer09.transform.position + new Vector3(0.8f * (float)Math.Cos(BattleRoyale.soloPlayer09mouseAngle), 0.8f * (float)Math.Sin(BattleRoyale.soloPlayer09mouseAngle));
-                    BattleRoyale.soloPlayer09Wep.transform.position += (targetPosition - BattleRoyale.soloPlayer09Wep.transform.position) * 0.4f;
-                    BattleRoyale.soloPlayer09Wep.GetComponent<SpriteRenderer>().transform.eulerAngles = new Vector3(0f, 0f, (float)(BattleRoyale.soloPlayer09mouseAngle * 360f / Math.PI / 2f));
-                    if (Math.Cos(BattleRoyale.soloPlayer09mouseAngle) < 0.0)
-                    {
-                        if (BattleRoyale.soloPlayer09Wep.GetComponent<SpriteRenderer>().transform.localScale.y > 0)
-                            BattleRoyale.soloPlayer09Wep.GetComponent<SpriteRenderer>().transform.localScale = new Vector3(1f, -1f);
-                    }
-                    else
-                    {
-                        if (BattleRoyale.soloPlayer09Wep.GetComponent<SpriteRenderer>().transform.localScale.y < 0)
-                            BattleRoyale.soloPlayer09Wep.GetComponent<SpriteRenderer>().transform.localScale = new Vector3(1f, 1f);
-                    }
+                    if (SoloPlayer09Wep.GetComponent<SpriteRenderer>().transform.localScale.y < 0)
+                        SoloPlayer09Wep.GetComponent<SpriteRenderer>().transform.localScale = new(1f, 1f);
                 }
-                return PlayerControl.LocalPlayer.CanMove && !PlayerControl.LocalPlayer.Data.IsDead;
-            },
-            () => { soloPlayer09KillButton.Timer = soloPlayer09KillButton.MaxTimer; },
-            __instance.KillButton.graphic.sprite,
-            ButtonPosition.Layout,
-            __instance,
-            __instance.KillButton,
-            KeyCode.Mouse1,
-            false,
-            TranslationController.Instance.GetString(StringNames.KillLabel)
-        );
+            }
+
+            return PlayerControl.LocalPlayer.CanMove && !PlayerControl.LocalPlayer.Data.IsDead;
+        }, () => { _soloPlayer09KillButton.Timer = _soloPlayer09KillButton.MaxTimer; }, __instance.KillButton.graphic.sprite, ButtonPosition.Layout, __instance, __instance.KillButton, KeyCode.Mouse1, false, TranslationController.Instance.GetString(StringNames.KillLabel));
 
         // SoloPlayer10 Kill
-        soloPlayer10KillButton = new CustomButton(
-            () =>
+        _soloPlayer10KillButton = new(() =>
+        {
+            var target = GetShotPlayer(2 * 0.2f, 6, 10);
+
+            var writerShot = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.BattleRoyaleShowShoots, SendOption.Reliable);
+            writerShot.Write(SoloPlayer10.PlayerId);
+            writerShot.Write(0);
+            writerShot.Write(SoloPlayer10MouseAngle);
+            AmongUsClient.Instance.FinishRpcImmediately(writerShot);
+            RPCProcedure.BattleRoyaleShowShoots(SoloPlayer10.PlayerId, 0, SoloPlayer10MouseAngle);
+
+            if (target == null)
             {
-                PlayerControl target = BattleRoyale.GetShotPlayer(2 * 0.2f, 6, 10);
+                _soloPlayer10KillButton.Timer = _soloPlayer10KillButton.MaxTimer;
+                return;
+            }
 
-                MessageWriter writerShot = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.BattleRoyaleShowShoots, Hazel.SendOption.Reliable, -1);
-                writerShot.Write(BattleRoyale.soloPlayer10.PlayerId);
-                writerShot.Write(0);
-                writerShot.Write(BattleRoyale.soloPlayer10mouseAngle);
-                AmongUsClient.Instance.FinishRpcImmediately(writerShot);
-                RPCProcedure.battleRoyaleShowShoots(BattleRoyale.soloPlayer10.PlayerId, 0, BattleRoyale.soloPlayer10mouseAngle);
+            var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.GamemodeKills, SendOption.Reliable);
+            writer.Write(target.PlayerId);
+            writer.Write(SoloPlayer10.PlayerId);
+            AmongUsClient.Instance.FinishRpcImmediately(writer);
+            RPCProcedure.GamemodeKills(target.PlayerId, SoloPlayer10.PlayerId);
 
-                if (target == null)
-                {
-                    soloPlayer10KillButton.Timer = soloPlayer10KillButton.MaxTimer;
-                    return;
-                }
+            _soloPlayer10KillButton.Timer = _soloPlayer10KillButton.MaxTimer;
+            SoundManager.Instance.PlaySound(AssetLoader.RoyaleHitPlayer, false, 100f);
 
-                MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.GamemodeKills, Hazel.SendOption.Reliable, -1);
-                writer.Write(target.PlayerId);
-                writer.Write(BattleRoyale.soloPlayer10.PlayerId);
-                AmongUsClient.Instance.FinishRpcImmediately(writer);
-                RPCProcedure.gamemodeKills(target.PlayerId, BattleRoyale.soloPlayer10.PlayerId);
-
-                soloPlayer10KillButton.Timer = soloPlayer10KillButton.MaxTimer;
-                SoundManager.Instance.PlaySound(AssetLoader.royaleHitPlayer, false, 100f);
-
-                target = null;
-            },
-            () => { return BattleRoyale.soloPlayer10 != null && BattleRoyale.soloPlayer10 == PlayerControl.LocalPlayer; },
-            () =>
+            target = null;
+        }, () => { return SoloPlayer10 != null && SoloPlayer10 == PlayerControl.LocalPlayer; }, () =>
+        {
+            if (SoloPlayer10Wep == null)
             {
-                if (BattleRoyale.soloPlayer10Wep == null)
-                {
-                    BattleRoyale.soloPlayer10Wep = new GameObject("Weapon");
-                    var renderer = BattleRoyale.soloPlayer10Wep.AddComponent<SpriteRenderer>();
+                SoloPlayer10Wep = new("Weapon");
+                var renderer = SoloPlayer10Wep.AddComponent<SpriteRenderer>();
 
-                    renderer.sprite = AssetLoader.Bow;
-                    renderer.transform.parent = BattleRoyale.soloPlayer10.transform;
-                    renderer.color = new Color(1, 1, 1, 1);
-                    renderer.transform.position = new Vector3(0, 0, -30f);
+                renderer.sprite = AssetLoader.Bow;
+                renderer.transform.parent = SoloPlayer10.transform;
+                renderer.color = new(1, 1, 1, 1);
+                renderer.transform.position = new(0, 0, -30f);
+            }
+            else
+            {
+                if (PlayerControl.LocalPlayer.Data.IsDead) SoloPlayer10Wep.SetActive(false);
+
+                var mouseDirection = Input.mousePosition - new Vector3(Screen.width / 2, Screen.height / 2);
+                SoloPlayer10MouseAngle = Mathf.Atan2(mouseDirection.y, mouseDirection.x);
+
+                var targetPosition = SoloPlayer10.transform.position + new Vector3(0.8f * (float)Math.Cos(SoloPlayer10MouseAngle), 0.8f * (float)Math.Sin(SoloPlayer10MouseAngle));
+                SoloPlayer10Wep.transform.position += (targetPosition - SoloPlayer10Wep.transform.position) * 0.4f;
+                SoloPlayer10Wep.GetComponent<SpriteRenderer>().transform.eulerAngles = new(0f, 0f, (float)((SoloPlayer10MouseAngle * 360f) / Math.PI / 2f));
+                if (Math.Cos(SoloPlayer10MouseAngle) < 0.0)
+                {
+                    if (SoloPlayer10Wep.GetComponent<SpriteRenderer>().transform.localScale.y > 0)
+                        SoloPlayer10Wep.GetComponent<SpriteRenderer>().transform.localScale = new(1f, -1f);
                 }
                 else
                 {
-
-                    if (PlayerControl.LocalPlayer.Data.IsDead)
-                    {
-                        BattleRoyale.soloPlayer10Wep.SetActive(false);
-                    }
-
-                    Vector3 mouseDirection = Input.mousePosition - new Vector3(Screen.width / 2, Screen.height / 2);
-                    BattleRoyale.soloPlayer10mouseAngle = Mathf.Atan2(mouseDirection.y, mouseDirection.x);
-
-                    var targetPosition = BattleRoyale.soloPlayer10.transform.position + new Vector3(0.8f * (float)Math.Cos(BattleRoyale.soloPlayer10mouseAngle), 0.8f * (float)Math.Sin(BattleRoyale.soloPlayer10mouseAngle));
-                    BattleRoyale.soloPlayer10Wep.transform.position += (targetPosition - BattleRoyale.soloPlayer10Wep.transform.position) * 0.4f;
-                    BattleRoyale.soloPlayer10Wep.GetComponent<SpriteRenderer>().transform.eulerAngles = new Vector3(0f, 0f, (float)(BattleRoyale.soloPlayer10mouseAngle * 360f / Math.PI / 2f));
-                    if (Math.Cos(BattleRoyale.soloPlayer10mouseAngle) < 0.0)
-                    {
-                        if (BattleRoyale.soloPlayer10Wep.GetComponent<SpriteRenderer>().transform.localScale.y > 0)
-                            BattleRoyale.soloPlayer10Wep.GetComponent<SpriteRenderer>().transform.localScale = new Vector3(1f, -1f);
-                    }
-                    else
-                    {
-                        if (BattleRoyale.soloPlayer10Wep.GetComponent<SpriteRenderer>().transform.localScale.y < 0)
-                            BattleRoyale.soloPlayer10Wep.GetComponent<SpriteRenderer>().transform.localScale = new Vector3(1f, 1f);
-                    }
+                    if (SoloPlayer10Wep.GetComponent<SpriteRenderer>().transform.localScale.y < 0)
+                        SoloPlayer10Wep.GetComponent<SpriteRenderer>().transform.localScale = new(1f, 1f);
                 }
-                return PlayerControl.LocalPlayer.CanMove && !PlayerControl.LocalPlayer.Data.IsDead;
-            },
-            () => { soloPlayer10KillButton.Timer = soloPlayer10KillButton.MaxTimer; },
-            __instance.KillButton.graphic.sprite,
-            ButtonPosition.Layout,
-            __instance,
-            __instance.KillButton,
-            KeyCode.Mouse1,
-            false,
-            TranslationController.Instance.GetString(StringNames.KillLabel)
-        );
+            }
+
+            return PlayerControl.LocalPlayer.CanMove && !PlayerControl.LocalPlayer.Data.IsDead;
+        }, () => { _soloPlayer10KillButton.Timer = _soloPlayer10KillButton.MaxTimer; }, __instance.KillButton.graphic.sprite, ButtonPosition.Layout, __instance, __instance.KillButton, KeyCode.Mouse1, false, TranslationController.Instance.GetString(StringNames.KillLabel));
 
         // SoloPlayer11 Kill
-        soloPlayer11KillButton = new CustomButton(
-            () =>
+        _soloPlayer11KillButton = new(() =>
+        {
+            var target = GetShotPlayer(2 * 0.2f, 6, 11);
+
+            var writerShot = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.BattleRoyaleShowShoots, SendOption.Reliable);
+            writerShot.Write(SoloPlayer11.PlayerId);
+            writerShot.Write(0);
+            writerShot.Write(SoloPlayer11MouseAngle);
+            AmongUsClient.Instance.FinishRpcImmediately(writerShot);
+            RPCProcedure.BattleRoyaleShowShoots(SoloPlayer11.PlayerId, 0, SoloPlayer11MouseAngle);
+
+            if (target == null)
             {
-                PlayerControl target = BattleRoyale.GetShotPlayer(2 * 0.2f, 6, 11);
+                _soloPlayer11KillButton.Timer = _soloPlayer11KillButton.MaxTimer;
+                return;
+            }
 
-                MessageWriter writerShot = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.BattleRoyaleShowShoots, Hazel.SendOption.Reliable, -1);
-                writerShot.Write(BattleRoyale.soloPlayer11.PlayerId);
-                writerShot.Write(0);
-                writerShot.Write(BattleRoyale.soloPlayer11mouseAngle);
-                AmongUsClient.Instance.FinishRpcImmediately(writerShot);
-                RPCProcedure.battleRoyaleShowShoots(BattleRoyale.soloPlayer11.PlayerId, 0, BattleRoyale.soloPlayer11mouseAngle);
+            var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.GamemodeKills, SendOption.Reliable);
+            writer.Write(target.PlayerId);
+            writer.Write(SoloPlayer11.PlayerId);
+            AmongUsClient.Instance.FinishRpcImmediately(writer);
+            RPCProcedure.GamemodeKills(target.PlayerId, SoloPlayer11.PlayerId);
 
-                if (target == null)
-                {
-                    soloPlayer11KillButton.Timer = soloPlayer11KillButton.MaxTimer;
-                    return;
-                }
+            _soloPlayer11KillButton.Timer = _soloPlayer11KillButton.MaxTimer;
+            SoundManager.Instance.PlaySound(AssetLoader.RoyaleHitPlayer, false, 100f);
 
-                MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.GamemodeKills, Hazel.SendOption.Reliable, -1);
-                writer.Write(target.PlayerId);
-                writer.Write(BattleRoyale.soloPlayer11.PlayerId);
-                AmongUsClient.Instance.FinishRpcImmediately(writer);
-                RPCProcedure.gamemodeKills(target.PlayerId, BattleRoyale.soloPlayer11.PlayerId);
-
-                soloPlayer11KillButton.Timer = soloPlayer11KillButton.MaxTimer;
-                SoundManager.Instance.PlaySound(AssetLoader.royaleHitPlayer, false, 100f);
-
-                target = null;
-            },
-            () => { return BattleRoyale.soloPlayer11 != null && BattleRoyale.soloPlayer11 == PlayerControl.LocalPlayer; },
-            () =>
+            target = null;
+        }, () => { return SoloPlayer11 != null && SoloPlayer11 == PlayerControl.LocalPlayer; }, () =>
+        {
+            if (SoloPlayer11Wep == null)
             {
-                if (BattleRoyale.soloPlayer11Wep == null)
-                {
-                    BattleRoyale.soloPlayer11Wep = new GameObject("Weapon");
-                    var renderer = BattleRoyale.soloPlayer11Wep.AddComponent<SpriteRenderer>();
+                SoloPlayer11Wep = new("Weapon");
+                var renderer = SoloPlayer11Wep.AddComponent<SpriteRenderer>();
 
-                    renderer.sprite = AssetLoader.Bow;
-                    renderer.transform.parent = BattleRoyale.soloPlayer11.transform;
-                    renderer.color = new Color(1, 1, 1, 1);
-                    renderer.transform.position = new Vector3(0, 0, -30f);
+                renderer.sprite = AssetLoader.Bow;
+                renderer.transform.parent = SoloPlayer11.transform;
+                renderer.color = new(1, 1, 1, 1);
+                renderer.transform.position = new(0, 0, -30f);
+            }
+            else
+            {
+                if (PlayerControl.LocalPlayer.Data.IsDead) SoloPlayer11Wep.SetActive(false);
+
+                var mouseDirection = Input.mousePosition - new Vector3(Screen.width / 2, Screen.height / 2);
+                SoloPlayer11MouseAngle = Mathf.Atan2(mouseDirection.y, mouseDirection.x);
+
+                var targetPosition = SoloPlayer11.transform.position + new Vector3(0.8f * (float)Math.Cos(SoloPlayer11MouseAngle), 0.8f * (float)Math.Sin(SoloPlayer11MouseAngle));
+                SoloPlayer11Wep.transform.position += (targetPosition - SoloPlayer11Wep.transform.position) * 0.4f;
+                SoloPlayer11Wep.GetComponent<SpriteRenderer>().transform.eulerAngles = new(0f, 0f, (float)((SoloPlayer11MouseAngle * 360f) / Math.PI / 2f));
+                if (Math.Cos(SoloPlayer11MouseAngle) < 0.0)
+                {
+                    if (SoloPlayer11Wep.GetComponent<SpriteRenderer>().transform.localScale.y > 0)
+                        SoloPlayer11Wep.GetComponent<SpriteRenderer>().transform.localScale = new(1f, -1f);
                 }
                 else
                 {
-
-                    if (PlayerControl.LocalPlayer.Data.IsDead)
-                    {
-                        BattleRoyale.soloPlayer11Wep.SetActive(false);
-                    }
-
-                    Vector3 mouseDirection = Input.mousePosition - new Vector3(Screen.width / 2, Screen.height / 2);
-                    BattleRoyale.soloPlayer11mouseAngle = Mathf.Atan2(mouseDirection.y, mouseDirection.x);
-
-                    var targetPosition = BattleRoyale.soloPlayer11.transform.position + new Vector3(0.8f * (float)Math.Cos(BattleRoyale.soloPlayer11mouseAngle), 0.8f * (float)Math.Sin(BattleRoyale.soloPlayer11mouseAngle));
-                    BattleRoyale.soloPlayer11Wep.transform.position += (targetPosition - BattleRoyale.soloPlayer11Wep.transform.position) * 0.4f;
-                    BattleRoyale.soloPlayer11Wep.GetComponent<SpriteRenderer>().transform.eulerAngles = new Vector3(0f, 0f, (float)(BattleRoyale.soloPlayer11mouseAngle * 360f / Math.PI / 2f));
-                    if (Math.Cos(BattleRoyale.soloPlayer11mouseAngle) < 0.0)
-                    {
-                        if (BattleRoyale.soloPlayer11Wep.GetComponent<SpriteRenderer>().transform.localScale.y > 0)
-                            BattleRoyale.soloPlayer11Wep.GetComponent<SpriteRenderer>().transform.localScale = new Vector3(1f, -1f);
-                    }
-                    else
-                    {
-                        if (BattleRoyale.soloPlayer11Wep.GetComponent<SpriteRenderer>().transform.localScale.y < 0)
-                            BattleRoyale.soloPlayer11Wep.GetComponent<SpriteRenderer>().transform.localScale = new Vector3(1f, 1f);
-                    }
+                    if (SoloPlayer11Wep.GetComponent<SpriteRenderer>().transform.localScale.y < 0)
+                        SoloPlayer11Wep.GetComponent<SpriteRenderer>().transform.localScale = new(1f, 1f);
                 }
-                return PlayerControl.LocalPlayer.CanMove && !PlayerControl.LocalPlayer.Data.IsDead;
-            },
-            () => { soloPlayer11KillButton.Timer = soloPlayer11KillButton.MaxTimer; },
-            __instance.KillButton.graphic.sprite,
-            ButtonPosition.Layout,
-            __instance,
-            __instance.KillButton,
-            KeyCode.Mouse1,
-            false,
-            TranslationController.Instance.GetString(StringNames.KillLabel)
-        );
+            }
+
+            return PlayerControl.LocalPlayer.CanMove && !PlayerControl.LocalPlayer.Data.IsDead;
+        }, () => { _soloPlayer11KillButton.Timer = _soloPlayer11KillButton.MaxTimer; }, __instance.KillButton.graphic.sprite, ButtonPosition.Layout, __instance, __instance.KillButton, KeyCode.Mouse1, false, TranslationController.Instance.GetString(StringNames.KillLabel));
 
         // SoloPlayer12 Kill
-        soloPlayer12KillButton = new CustomButton(
-            () =>
+        _soloPlayer12KillButton = new(() =>
+        {
+            var target = GetShotPlayer(2 * 0.2f, 6, 12);
+
+            var writerShot = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.BattleRoyaleShowShoots, SendOption.Reliable);
+            writerShot.Write(SoloPlayer12.PlayerId);
+            writerShot.Write(0);
+            writerShot.Write(SoloPlayer12MouseAngle);
+            AmongUsClient.Instance.FinishRpcImmediately(writerShot);
+            RPCProcedure.BattleRoyaleShowShoots(SoloPlayer12.PlayerId, 0, SoloPlayer12MouseAngle);
+
+            if (target == null)
             {
-                PlayerControl target = BattleRoyale.GetShotPlayer(2 * 0.2f, 6, 12);
+                _soloPlayer12KillButton.Timer = _soloPlayer12KillButton.MaxTimer;
+                return;
+            }
 
-                MessageWriter writerShot = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.BattleRoyaleShowShoots, Hazel.SendOption.Reliable, -1);
-                writerShot.Write(BattleRoyale.soloPlayer12.PlayerId);
-                writerShot.Write(0);
-                writerShot.Write(BattleRoyale.soloPlayer12mouseAngle);
-                AmongUsClient.Instance.FinishRpcImmediately(writerShot);
-                RPCProcedure.battleRoyaleShowShoots(BattleRoyale.soloPlayer12.PlayerId, 0, BattleRoyale.soloPlayer12mouseAngle);
+            var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.GamemodeKills, SendOption.Reliable);
+            writer.Write(target.PlayerId);
+            writer.Write(SoloPlayer12.PlayerId);
+            AmongUsClient.Instance.FinishRpcImmediately(writer);
+            RPCProcedure.GamemodeKills(target.PlayerId, SoloPlayer12.PlayerId);
 
-                if (target == null)
-                {
-                    soloPlayer12KillButton.Timer = soloPlayer12KillButton.MaxTimer;
-                    return;
-                }
+            _soloPlayer12KillButton.Timer = _soloPlayer12KillButton.MaxTimer;
+            SoundManager.Instance.PlaySound(AssetLoader.RoyaleHitPlayer, false, 100f);
 
-                MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.GamemodeKills, Hazel.SendOption.Reliable, -1);
-                writer.Write(target.PlayerId);
-                writer.Write(BattleRoyale.soloPlayer12.PlayerId);
-                AmongUsClient.Instance.FinishRpcImmediately(writer);
-                RPCProcedure.gamemodeKills(target.PlayerId, BattleRoyale.soloPlayer12.PlayerId);
-
-                soloPlayer12KillButton.Timer = soloPlayer12KillButton.MaxTimer;
-                SoundManager.Instance.PlaySound(AssetLoader.royaleHitPlayer, false, 100f);
-
-                target = null;
-            },
-            () => { return BattleRoyale.soloPlayer12 != null && BattleRoyale.soloPlayer12 == PlayerControl.LocalPlayer; },
-            () =>
+            target = null;
+        }, () => { return SoloPlayer12 != null && SoloPlayer12 == PlayerControl.LocalPlayer; }, () =>
+        {
+            if (SoloPlayer12Wep == null)
             {
-                if (BattleRoyale.soloPlayer12Wep == null)
-                {
-                    BattleRoyale.soloPlayer12Wep = new GameObject("Weapon");
-                    var renderer = BattleRoyale.soloPlayer12Wep.AddComponent<SpriteRenderer>();
+                SoloPlayer12Wep = new("Weapon");
+                var renderer = SoloPlayer12Wep.AddComponent<SpriteRenderer>();
 
-                    renderer.sprite = AssetLoader.Bow;
-                    renderer.transform.parent = BattleRoyale.soloPlayer12.transform;
-                    renderer.color = new Color(1, 1, 1, 1);
-                    renderer.transform.position = new Vector3(0, 0, -30f);
+                renderer.sprite = AssetLoader.Bow;
+                renderer.transform.parent = SoloPlayer12.transform;
+                renderer.color = new(1, 1, 1, 1);
+                renderer.transform.position = new(0, 0, -30f);
+            }
+            else
+            {
+                if (PlayerControl.LocalPlayer.Data.IsDead) SoloPlayer12Wep.SetActive(false);
+
+                var mouseDirection = Input.mousePosition - new Vector3(Screen.width / 2, Screen.height / 2);
+                SoloPlayer12MouseAngle = Mathf.Atan2(mouseDirection.y, mouseDirection.x);
+
+                var targetPosition = SoloPlayer12.transform.position + new Vector3(0.8f * (float)Math.Cos(SoloPlayer12MouseAngle), 0.8f * (float)Math.Sin(SoloPlayer12MouseAngle));
+                SoloPlayer12Wep.transform.position += (targetPosition - SoloPlayer12Wep.transform.position) * 0.4f;
+                SoloPlayer12Wep.GetComponent<SpriteRenderer>().transform.eulerAngles = new(0f, 0f, (float)((SoloPlayer12MouseAngle * 360f) / Math.PI / 2f));
+                if (Math.Cos(SoloPlayer12MouseAngle) < 0.0)
+                {
+                    if (SoloPlayer12Wep.GetComponent<SpriteRenderer>().transform.localScale.y > 0)
+                        SoloPlayer12Wep.GetComponent<SpriteRenderer>().transform.localScale = new(1f, -1f);
                 }
                 else
                 {
-
-                    if (PlayerControl.LocalPlayer.Data.IsDead)
-                    {
-                        BattleRoyale.soloPlayer12Wep.SetActive(false);
-                    }
-
-                    Vector3 mouseDirection = Input.mousePosition - new Vector3(Screen.width / 2, Screen.height / 2);
-                    BattleRoyale.soloPlayer12mouseAngle = Mathf.Atan2(mouseDirection.y, mouseDirection.x);
-
-                    var targetPosition = BattleRoyale.soloPlayer12.transform.position + new Vector3(0.8f * (float)Math.Cos(BattleRoyale.soloPlayer12mouseAngle), 0.8f * (float)Math.Sin(BattleRoyale.soloPlayer12mouseAngle));
-                    BattleRoyale.soloPlayer12Wep.transform.position += (targetPosition - BattleRoyale.soloPlayer12Wep.transform.position) * 0.4f;
-                    BattleRoyale.soloPlayer12Wep.GetComponent<SpriteRenderer>().transform.eulerAngles = new Vector3(0f, 0f, (float)(BattleRoyale.soloPlayer12mouseAngle * 360f / Math.PI / 2f));
-                    if (Math.Cos(BattleRoyale.soloPlayer12mouseAngle) < 0.0)
-                    {
-                        if (BattleRoyale.soloPlayer12Wep.GetComponent<SpriteRenderer>().transform.localScale.y > 0)
-                            BattleRoyale.soloPlayer12Wep.GetComponent<SpriteRenderer>().transform.localScale = new Vector3(1f, -1f);
-                    }
-                    else
-                    {
-                        if (BattleRoyale.soloPlayer12Wep.GetComponent<SpriteRenderer>().transform.localScale.y < 0)
-                            BattleRoyale.soloPlayer12Wep.GetComponent<SpriteRenderer>().transform.localScale = new Vector3(1f, 1f);
-                    }
+                    if (SoloPlayer12Wep.GetComponent<SpriteRenderer>().transform.localScale.y < 0)
+                        SoloPlayer12Wep.GetComponent<SpriteRenderer>().transform.localScale = new(1f, 1f);
                 }
-                return PlayerControl.LocalPlayer.CanMove && !PlayerControl.LocalPlayer.Data.IsDead;
-            },
-            () => { soloPlayer12KillButton.Timer = soloPlayer12KillButton.MaxTimer; },
-            __instance.KillButton.graphic.sprite,
-            ButtonPosition.Layout,
-            __instance,
-            __instance.KillButton,
-            KeyCode.Mouse1,
-            false,
-            TranslationController.Instance.GetString(StringNames.KillLabel)
-        );
+            }
+
+            return PlayerControl.LocalPlayer.CanMove && !PlayerControl.LocalPlayer.Data.IsDead;
+        }, () => { _soloPlayer12KillButton.Timer = _soloPlayer12KillButton.MaxTimer; }, __instance.KillButton.graphic.sprite, ButtonPosition.Layout, __instance, __instance.KillButton, KeyCode.Mouse1, false, TranslationController.Instance.GetString(StringNames.KillLabel));
 
         // SoloPlayer13 Kill
-        soloPlayer13KillButton = new CustomButton(
-            () =>
+        _soloPlayer13KillButton = new(() =>
+        {
+            var target = GetShotPlayer(2 * 0.2f, 6, 13);
+
+            var writerShot = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.BattleRoyaleShowShoots, SendOption.Reliable);
+            writerShot.Write(SoloPlayer13.PlayerId);
+            writerShot.Write(0);
+            writerShot.Write(SoloPlayer13MouseAngle);
+            AmongUsClient.Instance.FinishRpcImmediately(writerShot);
+            RPCProcedure.BattleRoyaleShowShoots(SoloPlayer13.PlayerId, 0, SoloPlayer13MouseAngle);
+
+            if (target == null)
             {
-                PlayerControl target = BattleRoyale.GetShotPlayer(2 * 0.2f, 6, 13);
+                _soloPlayer13KillButton.Timer = _soloPlayer13KillButton.MaxTimer;
+                return;
+            }
 
-                MessageWriter writerShot = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.BattleRoyaleShowShoots, Hazel.SendOption.Reliable, -1);
-                writerShot.Write(BattleRoyale.soloPlayer13.PlayerId);
-                writerShot.Write(0);
-                writerShot.Write(BattleRoyale.soloPlayer13mouseAngle);
-                AmongUsClient.Instance.FinishRpcImmediately(writerShot);
-                RPCProcedure.battleRoyaleShowShoots(BattleRoyale.soloPlayer13.PlayerId, 0, BattleRoyale.soloPlayer13mouseAngle);
+            var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.GamemodeKills, SendOption.Reliable);
+            writer.Write(target.PlayerId);
+            writer.Write(SoloPlayer13.PlayerId);
+            AmongUsClient.Instance.FinishRpcImmediately(writer);
+            RPCProcedure.GamemodeKills(target.PlayerId, SoloPlayer13.PlayerId);
 
-                if (target == null)
-                {
-                    soloPlayer13KillButton.Timer = soloPlayer13KillButton.MaxTimer;
-                    return;
-                }
+            _soloPlayer13KillButton.Timer = _soloPlayer13KillButton.MaxTimer;
+            SoundManager.Instance.PlaySound(AssetLoader.RoyaleHitPlayer, false, 100f);
 
-                MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.GamemodeKills, Hazel.SendOption.Reliable, -1);
-                writer.Write(target.PlayerId);
-                writer.Write(BattleRoyale.soloPlayer13.PlayerId);
-                AmongUsClient.Instance.FinishRpcImmediately(writer);
-                RPCProcedure.gamemodeKills(target.PlayerId, BattleRoyale.soloPlayer13.PlayerId);
-
-                soloPlayer13KillButton.Timer = soloPlayer13KillButton.MaxTimer;
-                SoundManager.Instance.PlaySound(AssetLoader.royaleHitPlayer, false, 100f);
-
-                target = null;
-            },
-            () => { return BattleRoyale.soloPlayer13 != null && BattleRoyale.soloPlayer13 == PlayerControl.LocalPlayer; },
-            () =>
+            target = null;
+        }, () => { return SoloPlayer13 != null && SoloPlayer13 == PlayerControl.LocalPlayer; }, () =>
+        {
+            if (SoloPlayer13Wep == null)
             {
-                if (BattleRoyale.soloPlayer13Wep == null)
-                {
-                    BattleRoyale.soloPlayer13Wep = new GameObject("Weapon");
-                    var renderer = BattleRoyale.soloPlayer13Wep.AddComponent<SpriteRenderer>();
+                SoloPlayer13Wep = new("Weapon");
+                var renderer = SoloPlayer13Wep.AddComponent<SpriteRenderer>();
 
-                    renderer.sprite = AssetLoader.Bow;
-                    renderer.transform.parent = BattleRoyale.soloPlayer13.transform;
-                    renderer.color = new Color(1, 1, 1, 1);
-                    renderer.transform.position = new Vector3(0, 0, -30f);
+                renderer.sprite = AssetLoader.Bow;
+                renderer.transform.parent = SoloPlayer13.transform;
+                renderer.color = new(1, 1, 1, 1);
+                renderer.transform.position = new(0, 0, -30f);
+            }
+            else
+            {
+                if (PlayerControl.LocalPlayer.Data.IsDead) SoloPlayer13Wep.SetActive(false);
+
+                var mouseDirection = Input.mousePosition - new Vector3(Screen.width / 2, Screen.height / 2);
+                SoloPlayer13MouseAngle = Mathf.Atan2(mouseDirection.y, mouseDirection.x);
+
+                var targetPosition = SoloPlayer13.transform.position + new Vector3(0.8f * (float)Math.Cos(SoloPlayer13MouseAngle), 0.8f * (float)Math.Sin(SoloPlayer13MouseAngle));
+                SoloPlayer13Wep.transform.position += (targetPosition - SoloPlayer13Wep.transform.position) * 0.4f;
+                SoloPlayer13Wep.GetComponent<SpriteRenderer>().transform.eulerAngles = new(0f, 0f, (float)((SoloPlayer13MouseAngle * 360f) / Math.PI / 2f));
+                if (Math.Cos(SoloPlayer13MouseAngle) < 0.0)
+                {
+                    if (SoloPlayer13Wep.GetComponent<SpriteRenderer>().transform.localScale.y > 0)
+                        SoloPlayer13Wep.GetComponent<SpriteRenderer>().transform.localScale = new(1f, -1f);
                 }
                 else
                 {
-
-                    if (PlayerControl.LocalPlayer.Data.IsDead)
-                    {
-                        BattleRoyale.soloPlayer13Wep.SetActive(false);
-                    }
-
-                    Vector3 mouseDirection = Input.mousePosition - new Vector3(Screen.width / 2, Screen.height / 2);
-                    BattleRoyale.soloPlayer13mouseAngle = Mathf.Atan2(mouseDirection.y, mouseDirection.x);
-
-                    var targetPosition = BattleRoyale.soloPlayer13.transform.position + new Vector3(0.8f * (float)Math.Cos(BattleRoyale.soloPlayer13mouseAngle), 0.8f * (float)Math.Sin(BattleRoyale.soloPlayer13mouseAngle));
-                    BattleRoyale.soloPlayer13Wep.transform.position += (targetPosition - BattleRoyale.soloPlayer13Wep.transform.position) * 0.4f;
-                    BattleRoyale.soloPlayer13Wep.GetComponent<SpriteRenderer>().transform.eulerAngles = new Vector3(0f, 0f, (float)(BattleRoyale.soloPlayer13mouseAngle * 360f / Math.PI / 2f));
-                    if (Math.Cos(BattleRoyale.soloPlayer13mouseAngle) < 0.0)
-                    {
-                        if (BattleRoyale.soloPlayer13Wep.GetComponent<SpriteRenderer>().transform.localScale.y > 0)
-                            BattleRoyale.soloPlayer13Wep.GetComponent<SpriteRenderer>().transform.localScale = new Vector3(1f, -1f);
-                    }
-                    else
-                    {
-                        if (BattleRoyale.soloPlayer13Wep.GetComponent<SpriteRenderer>().transform.localScale.y < 0)
-                            BattleRoyale.soloPlayer13Wep.GetComponent<SpriteRenderer>().transform.localScale = new Vector3(1f, 1f);
-                    }
+                    if (SoloPlayer13Wep.GetComponent<SpriteRenderer>().transform.localScale.y < 0)
+                        SoloPlayer13Wep.GetComponent<SpriteRenderer>().transform.localScale = new(1f, 1f);
                 }
-                return PlayerControl.LocalPlayer.CanMove && !PlayerControl.LocalPlayer.Data.IsDead;
-            },
-            () => { soloPlayer13KillButton.Timer = soloPlayer13KillButton.MaxTimer; },
-            __instance.KillButton.graphic.sprite,
-            ButtonPosition.Layout,
-            __instance,
-            __instance.KillButton,
-            KeyCode.Mouse1,
-            false,
-            TranslationController.Instance.GetString(StringNames.KillLabel)
-        );
+            }
+
+            return PlayerControl.LocalPlayer.CanMove && !PlayerControl.LocalPlayer.Data.IsDead;
+        }, () => { _soloPlayer13KillButton.Timer = _soloPlayer13KillButton.MaxTimer; }, __instance.KillButton.graphic.sprite, ButtonPosition.Layout, __instance, __instance.KillButton, KeyCode.Mouse1, false, TranslationController.Instance.GetString(StringNames.KillLabel));
 
         // SoloPlayer14 Kill
-        soloPlayer14KillButton = new CustomButton(
-            () =>
+        _soloPlayer14KillButton = new(() =>
+        {
+            var target = GetShotPlayer(2 * 0.2f, 6, 14);
+
+            var writerShot = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.BattleRoyaleShowShoots, SendOption.Reliable);
+            writerShot.Write(SoloPlayer14.PlayerId);
+            writerShot.Write(0);
+            writerShot.Write(SoloPlayer14MouseAngle);
+            AmongUsClient.Instance.FinishRpcImmediately(writerShot);
+            RPCProcedure.BattleRoyaleShowShoots(SoloPlayer14.PlayerId, 0, SoloPlayer14MouseAngle);
+
+            if (target == null)
             {
-                PlayerControl target = BattleRoyale.GetShotPlayer(2 * 0.2f, 6, 14);
+                _soloPlayer14KillButton.Timer = _soloPlayer14KillButton.MaxTimer;
+                return;
+            }
 
-                MessageWriter writerShot = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.BattleRoyaleShowShoots, Hazel.SendOption.Reliable, -1);
-                writerShot.Write(BattleRoyale.soloPlayer14.PlayerId);
-                writerShot.Write(0);
-                writerShot.Write(BattleRoyale.soloPlayer14mouseAngle);
-                AmongUsClient.Instance.FinishRpcImmediately(writerShot);
-                RPCProcedure.battleRoyaleShowShoots(BattleRoyale.soloPlayer14.PlayerId, 0, BattleRoyale.soloPlayer14mouseAngle);
+            var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.GamemodeKills, SendOption.Reliable);
+            writer.Write(target.PlayerId);
+            writer.Write(SoloPlayer14.PlayerId);
+            AmongUsClient.Instance.FinishRpcImmediately(writer);
+            RPCProcedure.GamemodeKills(target.PlayerId, SoloPlayer14.PlayerId);
 
-                if (target == null)
-                {
-                    soloPlayer14KillButton.Timer = soloPlayer14KillButton.MaxTimer;
-                    return;
-                }
+            _soloPlayer14KillButton.Timer = _soloPlayer14KillButton.MaxTimer;
+            SoundManager.Instance.PlaySound(AssetLoader.RoyaleHitPlayer, false, 100f);
 
-                MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.GamemodeKills, Hazel.SendOption.Reliable, -1);
-                writer.Write(target.PlayerId);
-                writer.Write(BattleRoyale.soloPlayer14.PlayerId);
-                AmongUsClient.Instance.FinishRpcImmediately(writer);
-                RPCProcedure.gamemodeKills(target.PlayerId, BattleRoyale.soloPlayer14.PlayerId);
-
-                soloPlayer14KillButton.Timer = soloPlayer14KillButton.MaxTimer;
-                SoundManager.Instance.PlaySound(AssetLoader.royaleHitPlayer, false, 100f);
-
-                target = null;
-            },
-            () => { return BattleRoyale.soloPlayer14 != null && BattleRoyale.soloPlayer14 == PlayerControl.LocalPlayer; },
-            () =>
+            target = null;
+        }, () => { return SoloPlayer14 != null && SoloPlayer14 == PlayerControl.LocalPlayer; }, () =>
+        {
+            if (SoloPlayer14Wep == null)
             {
-                if (BattleRoyale.soloPlayer14Wep == null)
-                {
-                    BattleRoyale.soloPlayer14Wep = new GameObject("Weapon");
-                    var renderer = BattleRoyale.soloPlayer14Wep.AddComponent<SpriteRenderer>();
+                SoloPlayer14Wep = new("Weapon");
+                var renderer = SoloPlayer14Wep.AddComponent<SpriteRenderer>();
 
-                    renderer.sprite = AssetLoader.Bow;
-                    renderer.transform.parent = BattleRoyale.soloPlayer14.transform;
-                    renderer.color = new Color(1, 1, 1, 1);
-                    renderer.transform.position = new Vector3(0, 0, -30f);
+                renderer.sprite = AssetLoader.Bow;
+                renderer.transform.parent = SoloPlayer14.transform;
+                renderer.color = new(1, 1, 1, 1);
+                renderer.transform.position = new(0, 0, -30f);
+            }
+            else
+            {
+                if (PlayerControl.LocalPlayer.Data.IsDead) SoloPlayer14Wep.SetActive(false);
+
+                var mouseDirection = Input.mousePosition - new Vector3(Screen.width / 2, Screen.height / 2);
+                SoloPlayer14MouseAngle = Mathf.Atan2(mouseDirection.y, mouseDirection.x);
+
+                var targetPosition = SoloPlayer14.transform.position + new Vector3(0.8f * (float)Math.Cos(SoloPlayer14MouseAngle), 0.8f * (float)Math.Sin(SoloPlayer14MouseAngle));
+                SoloPlayer14Wep.transform.position += (targetPosition - SoloPlayer14Wep.transform.position) * 0.4f;
+                SoloPlayer14Wep.GetComponent<SpriteRenderer>().transform.eulerAngles = new(0f, 0f, (float)((SoloPlayer14MouseAngle * 360f) / Math.PI / 2f));
+                if (Math.Cos(SoloPlayer14MouseAngle) < 0.0)
+                {
+                    if (SoloPlayer14Wep.GetComponent<SpriteRenderer>().transform.localScale.y > 0)
+                        SoloPlayer14Wep.GetComponent<SpriteRenderer>().transform.localScale = new(1f, -1f);
                 }
                 else
                 {
-
-                    if (PlayerControl.LocalPlayer.Data.IsDead)
-                    {
-                        BattleRoyale.soloPlayer14Wep.SetActive(false);
-                    }
-
-                    Vector3 mouseDirection = Input.mousePosition - new Vector3(Screen.width / 2, Screen.height / 2);
-                    BattleRoyale.soloPlayer14mouseAngle = Mathf.Atan2(mouseDirection.y, mouseDirection.x);
-
-                    var targetPosition = BattleRoyale.soloPlayer14.transform.position + new Vector3(0.8f * (float)Math.Cos(BattleRoyale.soloPlayer14mouseAngle), 0.8f * (float)Math.Sin(BattleRoyale.soloPlayer14mouseAngle));
-                    BattleRoyale.soloPlayer14Wep.transform.position += (targetPosition - BattleRoyale.soloPlayer14Wep.transform.position) * 0.4f;
-                    BattleRoyale.soloPlayer14Wep.GetComponent<SpriteRenderer>().transform.eulerAngles = new Vector3(0f, 0f, (float)(BattleRoyale.soloPlayer14mouseAngle * 360f / Math.PI / 2f));
-                    if (Math.Cos(BattleRoyale.soloPlayer14mouseAngle) < 0.0)
-                    {
-                        if (BattleRoyale.soloPlayer14Wep.GetComponent<SpriteRenderer>().transform.localScale.y > 0)
-                            BattleRoyale.soloPlayer14Wep.GetComponent<SpriteRenderer>().transform.localScale = new Vector3(1f, -1f);
-                    }
-                    else
-                    {
-                        if (BattleRoyale.soloPlayer14Wep.GetComponent<SpriteRenderer>().transform.localScale.y < 0)
-                            BattleRoyale.soloPlayer14Wep.GetComponent<SpriteRenderer>().transform.localScale = new Vector3(1f, 1f);
-                    }
+                    if (SoloPlayer14Wep.GetComponent<SpriteRenderer>().transform.localScale.y < 0)
+                        SoloPlayer14Wep.GetComponent<SpriteRenderer>().transform.localScale = new(1f, 1f);
                 }
-                return PlayerControl.LocalPlayer.CanMove && !PlayerControl.LocalPlayer.Data.IsDead;
-            },
-            () => { soloPlayer14KillButton.Timer = soloPlayer14KillButton.MaxTimer; },
-            __instance.KillButton.graphic.sprite,
-            ButtonPosition.Layout,
-            __instance,
-            __instance.KillButton,
-            KeyCode.Mouse1,
-            false,
-            TranslationController.Instance.GetString(StringNames.KillLabel)
-        );
+            }
+
+            return PlayerControl.LocalPlayer.CanMove && !PlayerControl.LocalPlayer.Data.IsDead;
+        }, () => { _soloPlayer14KillButton.Timer = _soloPlayer14KillButton.MaxTimer; }, __instance.KillButton.graphic.sprite, ButtonPosition.Layout, __instance, __instance.KillButton, KeyCode.Mouse1, false, TranslationController.Instance.GetString(StringNames.KillLabel));
 
         // SoloPlayer15 Kill
-        soloPlayer15KillButton = new CustomButton(
-            () =>
+        _soloPlayer15KillButton = new(() =>
+        {
+            var target = GetShotPlayer(2 * 0.2f, 6, 15);
+
+            var writerShot = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.BattleRoyaleShowShoots, SendOption.Reliable);
+            writerShot.Write(SoloPlayer15.PlayerId);
+            writerShot.Write(0);
+            writerShot.Write(SoloPlayer15MouseAngle);
+            AmongUsClient.Instance.FinishRpcImmediately(writerShot);
+            RPCProcedure.BattleRoyaleShowShoots(SoloPlayer15.PlayerId, 0, SoloPlayer15MouseAngle);
+
+            if (target == null)
             {
-                PlayerControl target = BattleRoyale.GetShotPlayer(2 * 0.2f, 6, 15);
+                _soloPlayer15KillButton.Timer = _soloPlayer15KillButton.MaxTimer;
+                return;
+            }
 
-                MessageWriter writerShot = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.BattleRoyaleShowShoots, Hazel.SendOption.Reliable, -1);
-                writerShot.Write(BattleRoyale.soloPlayer15.PlayerId);
-                writerShot.Write(0);
-                writerShot.Write(BattleRoyale.soloPlayer15mouseAngle);
-                AmongUsClient.Instance.FinishRpcImmediately(writerShot);
-                RPCProcedure.battleRoyaleShowShoots(BattleRoyale.soloPlayer15.PlayerId, 0, BattleRoyale.soloPlayer15mouseAngle);
+            var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.GamemodeKills, SendOption.Reliable);
+            writer.Write(target.PlayerId);
+            writer.Write(SoloPlayer15.PlayerId);
+            AmongUsClient.Instance.FinishRpcImmediately(writer);
+            RPCProcedure.GamemodeKills(target.PlayerId, SoloPlayer15.PlayerId);
 
-                if (target == null)
-                {
-                    soloPlayer15KillButton.Timer = soloPlayer15KillButton.MaxTimer;
-                    return;
-                }
+            _soloPlayer15KillButton.Timer = _soloPlayer15KillButton.MaxTimer;
+            SoundManager.Instance.PlaySound(AssetLoader.RoyaleHitPlayer, false, 100f);
 
-                MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.GamemodeKills, Hazel.SendOption.Reliable, -1);
-                writer.Write(target.PlayerId);
-                writer.Write(BattleRoyale.soloPlayer15.PlayerId);
-                AmongUsClient.Instance.FinishRpcImmediately(writer);
-                RPCProcedure.gamemodeKills(target.PlayerId, BattleRoyale.soloPlayer15.PlayerId);
-
-                soloPlayer15KillButton.Timer = soloPlayer15KillButton.MaxTimer;
-                SoundManager.Instance.PlaySound(AssetLoader.royaleHitPlayer, false, 100f);
-
-                target = null;
-            },
-            () => { return BattleRoyale.soloPlayer15 != null && BattleRoyale.soloPlayer15 == PlayerControl.LocalPlayer; },
-            () =>
+            target = null;
+        }, () => { return SoloPlayer15 != null && SoloPlayer15 == PlayerControl.LocalPlayer; }, () =>
+        {
+            if (SoloPlayer15Wep == null)
             {
-                if (BattleRoyale.soloPlayer15Wep == null)
-                {
-                    BattleRoyale.soloPlayer15Wep = new GameObject("Weapon");
-                    var renderer = BattleRoyale.soloPlayer15Wep.AddComponent<SpriteRenderer>();
+                SoloPlayer15Wep = new("Weapon");
+                var renderer = SoloPlayer15Wep.AddComponent<SpriteRenderer>();
 
-                    renderer.sprite = AssetLoader.Bow;
-                    renderer.transform.parent = BattleRoyale.soloPlayer15.transform;
-                    renderer.color = new Color(1, 1, 1, 1);
-                    renderer.transform.position = new Vector3(0, 0, -30f);
+                renderer.sprite = AssetLoader.Bow;
+                renderer.transform.parent = SoloPlayer15.transform;
+                renderer.color = new(1, 1, 1, 1);
+                renderer.transform.position = new(0, 0, -30f);
+            }
+            else
+            {
+                if (PlayerControl.LocalPlayer.Data.IsDead) SoloPlayer15Wep.SetActive(false);
+
+                var mouseDirection = Input.mousePosition - new Vector3(Screen.width / 2, Screen.height / 2);
+                SoloPlayer15MouseAngle = Mathf.Atan2(mouseDirection.y, mouseDirection.x);
+
+                var targetPosition = SoloPlayer15.transform.position + new Vector3(0.8f * (float)Math.Cos(SoloPlayer15MouseAngle), 0.8f * (float)Math.Sin(SoloPlayer15MouseAngle));
+                SoloPlayer15Wep.transform.position += (targetPosition - SoloPlayer15Wep.transform.position) * 0.4f;
+                SoloPlayer15Wep.GetComponent<SpriteRenderer>().transform.eulerAngles = new(0f, 0f, (float)((SoloPlayer15MouseAngle * 360f) / Math.PI / 2f));
+                if (Math.Cos(SoloPlayer15MouseAngle) < 0.0)
+                {
+                    if (SoloPlayer15Wep.GetComponent<SpriteRenderer>().transform.localScale.y > 0)
+                        SoloPlayer15Wep.GetComponent<SpriteRenderer>().transform.localScale = new(1f, -1f);
                 }
                 else
                 {
-
-                    if (PlayerControl.LocalPlayer.Data.IsDead)
-                    {
-                        BattleRoyale.soloPlayer15Wep.SetActive(false);
-                    }
-
-                    Vector3 mouseDirection = Input.mousePosition - new Vector3(Screen.width / 2, Screen.height / 2);
-                    BattleRoyale.soloPlayer15mouseAngle = Mathf.Atan2(mouseDirection.y, mouseDirection.x);
-
-                    var targetPosition = BattleRoyale.soloPlayer15.transform.position + new Vector3(0.8f * (float)Math.Cos(BattleRoyale.soloPlayer15mouseAngle), 0.8f * (float)Math.Sin(BattleRoyale.soloPlayer15mouseAngle));
-                    BattleRoyale.soloPlayer15Wep.transform.position += (targetPosition - BattleRoyale.soloPlayer15Wep.transform.position) * 0.4f;
-                    BattleRoyale.soloPlayer15Wep.GetComponent<SpriteRenderer>().transform.eulerAngles = new Vector3(0f, 0f, (float)(BattleRoyale.soloPlayer15mouseAngle * 360f / Math.PI / 2f));
-                    if (Math.Cos(BattleRoyale.soloPlayer15mouseAngle) < 0.0)
-                    {
-                        if (BattleRoyale.soloPlayer15Wep.GetComponent<SpriteRenderer>().transform.localScale.y > 0)
-                            BattleRoyale.soloPlayer15Wep.GetComponent<SpriteRenderer>().transform.localScale = new Vector3(1f, -1f);
-                    }
-                    else
-                    {
-                        if (BattleRoyale.soloPlayer15Wep.GetComponent<SpriteRenderer>().transform.localScale.y < 0)
-                            BattleRoyale.soloPlayer15Wep.GetComponent<SpriteRenderer>().transform.localScale = new Vector3(1f, 1f);
-                    }
+                    if (SoloPlayer15Wep.GetComponent<SpriteRenderer>().transform.localScale.y < 0)
+                        SoloPlayer15Wep.GetComponent<SpriteRenderer>().transform.localScale = new(1f, 1f);
                 }
-                return PlayerControl.LocalPlayer.CanMove && !PlayerControl.LocalPlayer.Data.IsDead;
-            },
-            () => { soloPlayer15KillButton.Timer = soloPlayer15KillButton.MaxTimer; },
-            __instance.KillButton.graphic.sprite,
-            ButtonPosition.Layout,
-            __instance,
-            __instance.KillButton,
-            KeyCode.Mouse1,
-            false,
-            TranslationController.Instance.GetString(StringNames.KillLabel)
-        );
+            }
+
+            return PlayerControl.LocalPlayer.CanMove && !PlayerControl.LocalPlayer.Data.IsDead;
+        }, () => { _soloPlayer15KillButton.Timer = _soloPlayer15KillButton.MaxTimer; }, __instance.KillButton.graphic.sprite, ButtonPosition.Layout, __instance, __instance.KillButton, KeyCode.Mouse1, false, TranslationController.Instance.GetString(StringNames.KillLabel));
 
         // LimePlayer01 Kill
-        limePlayer01KillButton = new CustomButton(
-            () =>
+        _limePlayer01KillButton = new(() =>
+        {
+            var target = GetLimeShotPlayer(2 * 0.2f, 6, 1);
+
+            var writerShot = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.BattleRoyaleShowShoots, SendOption.Reliable);
+            writerShot.Write(LimePlayer01.PlayerId);
+            writerShot.Write(1);
+            writerShot.Write(LimePlayer01MouseAngle);
+            AmongUsClient.Instance.FinishRpcImmediately(writerShot);
+            RPCProcedure.BattleRoyaleShowShoots(LimePlayer01.PlayerId, 1, LimePlayer01MouseAngle);
+
+            if (target == null)
             {
-                PlayerControl target = BattleRoyale.GetLimeShotPlayer(2 * 0.2f, 6, 1);
+                _limePlayer01KillButton.Timer = _limePlayer01KillButton.MaxTimer;
+                return;
+            }
 
-                MessageWriter writerShot = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.BattleRoyaleShowShoots, Hazel.SendOption.Reliable, -1);
-                writerShot.Write(BattleRoyale.limePlayer01.PlayerId);
-                writerShot.Write(1);
-                writerShot.Write(BattleRoyale.limePlayer01mouseAngle);
-                AmongUsClient.Instance.FinishRpcImmediately(writerShot);
-                RPCProcedure.battleRoyaleShowShoots(BattleRoyale.limePlayer01.PlayerId, 1, BattleRoyale.limePlayer01mouseAngle);
-
-                if (target == null)
+            if (MatchType == 2)
+            {
+                if ((PinkPlayer01 != null && target == PinkPlayer01 && PinkPlayer01IsReviving) || (PinkPlayer02 != null && target == PinkPlayer02 && PinkPlayer02IsReviving) || (PinkPlayer03 != null && target == PinkPlayer03 && PinkPlayer03IsReviving) || (PinkPlayer04 != null && target == PinkPlayer04 && PinkPlayer04IsReviving) || (PinkPlayer05 != null && target == PinkPlayer05 && PinkPlayer05IsReviving) || (PinkPlayer06 != null && target == PinkPlayer06 && PinkPlayer06IsReviving) || (PinkPlayer07 != null && target == PinkPlayer07 && PinkPlayer07IsReviving) || (SerialKiller != null && target == SerialKiller && SerialKillerIsReviving))
                 {
-                    limePlayer01KillButton.Timer = limePlayer01KillButton.MaxTimer;
+                    _limePlayer01KillButton.Timer = _limePlayer01KillButton.MaxTimer;
                     return;
                 }
+            }
 
-                if (BattleRoyale.matchType == 2)
-                {
-                    if (BattleRoyale.pinkPlayer01 != null && target == BattleRoyale.pinkPlayer01 && BattleRoyale.pinkPlayer01IsReviving ||
-                    BattleRoyale.pinkPlayer02 != null && target == BattleRoyale.pinkPlayer02 && BattleRoyale.pinkPlayer02IsReviving ||
-                    BattleRoyale.pinkPlayer03 != null && target == BattleRoyale.pinkPlayer03 && BattleRoyale.pinkPlayer03IsReviving ||
-                    BattleRoyale.pinkPlayer04 != null && target == BattleRoyale.pinkPlayer04 && BattleRoyale.pinkPlayer04IsReviving ||
-                    BattleRoyale.pinkPlayer05 != null && target == BattleRoyale.pinkPlayer05 && BattleRoyale.pinkPlayer05IsReviving ||
-                    BattleRoyale.pinkPlayer06 != null && target == BattleRoyale.pinkPlayer06 && BattleRoyale.pinkPlayer06IsReviving ||
-                    BattleRoyale.pinkPlayer07 != null && target == BattleRoyale.pinkPlayer07 && BattleRoyale.pinkPlayer07IsReviving ||
-                    BattleRoyale.serialKiller != null && target == BattleRoyale.serialKiller && BattleRoyale.serialKillerIsReviving)
-                    {
-                        limePlayer01KillButton.Timer = limePlayer01KillButton.MaxTimer;
-                        return;
-                    }
-                }
+            var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.GamemodeKills, SendOption.Reliable);
+            writer.Write(target.PlayerId);
+            writer.Write(LimePlayer01.PlayerId);
+            AmongUsClient.Instance.FinishRpcImmediately(writer);
+            RPCProcedure.GamemodeKills(target.PlayerId, LimePlayer01.PlayerId);
 
-                MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.GamemodeKills, Hazel.SendOption.Reliable, -1);
-                writer.Write(target.PlayerId);
-                writer.Write(BattleRoyale.limePlayer01.PlayerId);
-                AmongUsClient.Instance.FinishRpcImmediately(writer);
-                RPCProcedure.gamemodeKills(target.PlayerId, BattleRoyale.limePlayer01.PlayerId);
+            _limePlayer01KillButton.Timer = _limePlayer01KillButton.MaxTimer;
+            SoundManager.Instance.PlaySound(AssetLoader.RoyaleHitPlayer, false, 100f);
 
-                limePlayer01KillButton.Timer = limePlayer01KillButton.MaxTimer;
-                SoundManager.Instance.PlaySound(AssetLoader.royaleHitPlayer, false, 100f);
-
-                target = null;
-            },
-            () => { return BattleRoyale.limePlayer01 != null && BattleRoyale.limePlayer01 == PlayerControl.LocalPlayer; },
-            () =>
+            target = null;
+        }, () => { return LimePlayer01 != null && LimePlayer01 == PlayerControl.LocalPlayer; }, () =>
+        {
+            if (LimePlayer01Wep == null)
             {
-                if (BattleRoyale.limePlayer01Wep == null)
-                {
-                    BattleRoyale.limePlayer01Wep = new GameObject("Weapon");
-                    var renderer = BattleRoyale.limePlayer01Wep.AddComponent<SpriteRenderer>();
+                LimePlayer01Wep = new("Weapon");
+                var renderer = LimePlayer01Wep.AddComponent<SpriteRenderer>();
 
-                    renderer.sprite = AssetLoader.Bow;
-                    renderer.transform.parent = BattleRoyale.limePlayer01.transform;
-                    renderer.color = new Color(1, 1, 1, 1);
-                    renderer.transform.position = new Vector3(0, 0, -30f);
+                renderer.sprite = AssetLoader.Bow;
+                renderer.transform.parent = LimePlayer01.transform;
+                renderer.color = new(1, 1, 1, 1);
+                renderer.transform.position = new(0, 0, -30f);
+            }
+            else
+            {
+                if (PlayerControl.LocalPlayer.Data.IsDead && MatchType != 2) LimePlayer01Wep.SetActive(false);
+
+                var mouseDirection = Input.mousePosition - new Vector3(Screen.width / 2, Screen.height / 2);
+                LimePlayer01MouseAngle = Mathf.Atan2(mouseDirection.y, mouseDirection.x);
+
+                var targetPosition = LimePlayer01.transform.position + new Vector3(0.8f * (float)Math.Cos(LimePlayer01MouseAngle), 0.8f * (float)Math.Sin(LimePlayer01MouseAngle));
+                LimePlayer01Wep.transform.position += (targetPosition - LimePlayer01Wep.transform.position) * 0.4f;
+                LimePlayer01Wep.GetComponent<SpriteRenderer>().transform.eulerAngles = new(0f, 0f, (float)((LimePlayer01MouseAngle * 360f) / Math.PI / 2f));
+                if (Math.Cos(LimePlayer01MouseAngle) < 0.0)
+                {
+                    if (LimePlayer01Wep.GetComponent<SpriteRenderer>().transform.localScale.y > 0)
+                        LimePlayer01Wep.GetComponent<SpriteRenderer>().transform.localScale = new(1f, -1f);
                 }
                 else
                 {
-
-                    if (PlayerControl.LocalPlayer.Data.IsDead && BattleRoyale.matchType != 2)
-                    {
-                        BattleRoyale.limePlayer01Wep.SetActive(false);
-                    }
-
-                    Vector3 mouseDirection = Input.mousePosition - new Vector3(Screen.width / 2, Screen.height / 2);
-                    BattleRoyale.limePlayer01mouseAngle = Mathf.Atan2(mouseDirection.y, mouseDirection.x);
-
-                    var targetPosition = BattleRoyale.limePlayer01.transform.position + new Vector3(0.8f * (float)Math.Cos(BattleRoyale.limePlayer01mouseAngle), 0.8f * (float)Math.Sin(BattleRoyale.limePlayer01mouseAngle));
-                    BattleRoyale.limePlayer01Wep.transform.position += (targetPosition - BattleRoyale.limePlayer01Wep.transform.position) * 0.4f;
-                    BattleRoyale.limePlayer01Wep.GetComponent<SpriteRenderer>().transform.eulerAngles = new Vector3(0f, 0f, (float)(BattleRoyale.limePlayer01mouseAngle * 360f / Math.PI / 2f));
-                    if (Math.Cos(BattleRoyale.limePlayer01mouseAngle) < 0.0)
-                    {
-                        if (BattleRoyale.limePlayer01Wep.GetComponent<SpriteRenderer>().transform.localScale.y > 0)
-                            BattleRoyale.limePlayer01Wep.GetComponent<SpriteRenderer>().transform.localScale = new Vector3(1f, -1f);
-                    }
-                    else
-                    {
-                        if (BattleRoyale.limePlayer01Wep.GetComponent<SpriteRenderer>().transform.localScale.y < 0)
-                            BattleRoyale.limePlayer01Wep.GetComponent<SpriteRenderer>().transform.localScale = new Vector3(1f, 1f);
-                    }
+                    if (LimePlayer01Wep.GetComponent<SpriteRenderer>().transform.localScale.y < 0)
+                        LimePlayer01Wep.GetComponent<SpriteRenderer>().transform.localScale = new(1f, 1f);
                 }
-                bool CanUse = true;
-                if (BattleRoyale.limePlayer01IsReviving)
-                {
-                    CanUse = false;
-                }
-                return CanUse && PlayerControl.LocalPlayer.CanMove && !PlayerControl.LocalPlayer.Data.IsDead;
-            },
-            () => { limePlayer01KillButton.Timer = limePlayer01KillButton.MaxTimer; },
-            __instance.KillButton.graphic.sprite,
-            ButtonPosition.Layout,
-            __instance,
-            __instance.KillButton,
-            KeyCode.Mouse1,
-            false,
-            TranslationController.Instance.GetString(StringNames.KillLabel)
-        );
+            }
+
+            var canUse = true;
+            if (LimePlayer01IsReviving) canUse = false;
+            return canUse && PlayerControl.LocalPlayer.CanMove && !PlayerControl.LocalPlayer.Data.IsDead;
+        }, () => { _limePlayer01KillButton.Timer = _limePlayer01KillButton.MaxTimer; }, __instance.KillButton.graphic.sprite, ButtonPosition.Layout, __instance, __instance.KillButton, KeyCode.Mouse1, false, TranslationController.Instance.GetString(StringNames.KillLabel));
 
         // LimePlayer02 Kill
-        limePlayer02KillButton = new CustomButton(
-            () =>
+        _limePlayer02KillButton = new(() =>
+        {
+            var target = GetLimeShotPlayer(2 * 0.2f, 6, 2);
+
+            var writerShot = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.BattleRoyaleShowShoots, SendOption.Reliable);
+            writerShot.Write(LimePlayer02.PlayerId);
+            writerShot.Write(1);
+            writerShot.Write(LimePlayer02MouseAngle);
+            AmongUsClient.Instance.FinishRpcImmediately(writerShot);
+            RPCProcedure.BattleRoyaleShowShoots(LimePlayer02.PlayerId, 1, LimePlayer02MouseAngle);
+
+            if (target == null)
             {
-                PlayerControl target = BattleRoyale.GetLimeShotPlayer(2 * 0.2f, 6, 2);
+                _limePlayer02KillButton.Timer = _limePlayer02KillButton.MaxTimer;
+                return;
+            }
 
-                MessageWriter writerShot = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.BattleRoyaleShowShoots, Hazel.SendOption.Reliable, -1);
-                writerShot.Write(BattleRoyale.limePlayer02.PlayerId);
-                writerShot.Write(1);
-                writerShot.Write(BattleRoyale.limePlayer02mouseAngle);
-                AmongUsClient.Instance.FinishRpcImmediately(writerShot);
-                RPCProcedure.battleRoyaleShowShoots(BattleRoyale.limePlayer02.PlayerId, 1, BattleRoyale.limePlayer02mouseAngle);
-
-                if (target == null)
+            if (MatchType == 2)
+            {
+                if ((PinkPlayer01 != null && target == PinkPlayer01 && PinkPlayer01IsReviving) || (PinkPlayer02 != null && target == PinkPlayer02 && PinkPlayer02IsReviving) || (PinkPlayer03 != null && target == PinkPlayer03 && PinkPlayer03IsReviving) || (PinkPlayer04 != null && target == PinkPlayer04 && PinkPlayer04IsReviving) || (PinkPlayer05 != null && target == PinkPlayer05 && PinkPlayer05IsReviving) || (PinkPlayer06 != null && target == PinkPlayer06 && PinkPlayer06IsReviving) || (PinkPlayer07 != null && target == PinkPlayer07 && PinkPlayer07IsReviving) || (SerialKiller != null && target == SerialKiller && SerialKillerIsReviving))
                 {
-                    limePlayer02KillButton.Timer = limePlayer02KillButton.MaxTimer;
+                    _limePlayer02KillButton.Timer = _limePlayer02KillButton.MaxTimer;
                     return;
                 }
+            }
 
-                if (BattleRoyale.matchType == 2)
-                {
-                    if (BattleRoyale.pinkPlayer01 != null && target == BattleRoyale.pinkPlayer01 && BattleRoyale.pinkPlayer01IsReviving ||
-                    BattleRoyale.pinkPlayer02 != null && target == BattleRoyale.pinkPlayer02 && BattleRoyale.pinkPlayer02IsReviving ||
-                    BattleRoyale.pinkPlayer03 != null && target == BattleRoyale.pinkPlayer03 && BattleRoyale.pinkPlayer03IsReviving ||
-                    BattleRoyale.pinkPlayer04 != null && target == BattleRoyale.pinkPlayer04 && BattleRoyale.pinkPlayer04IsReviving ||
-                    BattleRoyale.pinkPlayer05 != null && target == BattleRoyale.pinkPlayer05 && BattleRoyale.pinkPlayer05IsReviving ||
-                    BattleRoyale.pinkPlayer06 != null && target == BattleRoyale.pinkPlayer06 && BattleRoyale.pinkPlayer06IsReviving ||
-                    BattleRoyale.pinkPlayer07 != null && target == BattleRoyale.pinkPlayer07 && BattleRoyale.pinkPlayer07IsReviving ||
-                    BattleRoyale.serialKiller != null && target == BattleRoyale.serialKiller && BattleRoyale.serialKillerIsReviving)
-                    {
-                        limePlayer02KillButton.Timer = limePlayer02KillButton.MaxTimer;
-                        return;
-                    }
-                }
+            var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.GamemodeKills, SendOption.Reliable);
+            writer.Write(target.PlayerId);
+            writer.Write(LimePlayer02.PlayerId);
+            AmongUsClient.Instance.FinishRpcImmediately(writer);
+            RPCProcedure.GamemodeKills(target.PlayerId, LimePlayer02.PlayerId);
 
-                MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.GamemodeKills, Hazel.SendOption.Reliable, -1);
-                writer.Write(target.PlayerId);
-                writer.Write(BattleRoyale.limePlayer02.PlayerId);
-                AmongUsClient.Instance.FinishRpcImmediately(writer);
-                RPCProcedure.gamemodeKills(target.PlayerId, BattleRoyale.limePlayer02.PlayerId);
+            _limePlayer02KillButton.Timer = _limePlayer02KillButton.MaxTimer;
+            SoundManager.Instance.PlaySound(AssetLoader.RoyaleHitPlayer, false, 100f);
 
-                limePlayer02KillButton.Timer = limePlayer02KillButton.MaxTimer;
-                SoundManager.Instance.PlaySound(AssetLoader.royaleHitPlayer, false, 100f);
-
-                target = null;
-            },
-            () => { return BattleRoyale.limePlayer02 != null && BattleRoyale.limePlayer02 == PlayerControl.LocalPlayer; },
-            () =>
+            target = null;
+        }, () => { return LimePlayer02 != null && LimePlayer02 == PlayerControl.LocalPlayer; }, () =>
+        {
+            if (LimePlayer02Wep == null)
             {
-                if (BattleRoyale.limePlayer02Wep == null)
-                {
-                    BattleRoyale.limePlayer02Wep = new GameObject("Weapon");
-                    var renderer = BattleRoyale.limePlayer02Wep.AddComponent<SpriteRenderer>();
+                LimePlayer02Wep = new("Weapon");
+                var renderer = LimePlayer02Wep.AddComponent<SpriteRenderer>();
 
-                    renderer.sprite = AssetLoader.Bow;
-                    renderer.transform.parent = BattleRoyale.limePlayer02.transform;
-                    renderer.color = new Color(1, 1, 1, 1);
-                    renderer.transform.position = new Vector3(0, 0, -30f);
+                renderer.sprite = AssetLoader.Bow;
+                renderer.transform.parent = LimePlayer02.transform;
+                renderer.color = new(1, 1, 1, 1);
+                renderer.transform.position = new(0, 0, -30f);
+            }
+            else
+            {
+                if (PlayerControl.LocalPlayer.Data.IsDead && MatchType != 2) LimePlayer02Wep.SetActive(false);
+
+                var mouseDirection = Input.mousePosition - new Vector3(Screen.width / 2, Screen.height / 2);
+                LimePlayer02MouseAngle = Mathf.Atan2(mouseDirection.y, mouseDirection.x);
+
+                var targetPosition = LimePlayer02.transform.position + new Vector3(0.8f * (float)Math.Cos(LimePlayer02MouseAngle), 0.8f * (float)Math.Sin(LimePlayer02MouseAngle));
+                LimePlayer02Wep.transform.position += (targetPosition - LimePlayer02Wep.transform.position) * 0.4f;
+                LimePlayer02Wep.GetComponent<SpriteRenderer>().transform.eulerAngles = new(0f, 0f, (float)((LimePlayer02MouseAngle * 360f) / Math.PI / 2f));
+                if (Math.Cos(LimePlayer02MouseAngle) < 0.0)
+                {
+                    if (LimePlayer02Wep.GetComponent<SpriteRenderer>().transform.localScale.y > 0)
+                        LimePlayer02Wep.GetComponent<SpriteRenderer>().transform.localScale = new(1f, -1f);
                 }
                 else
                 {
-
-                    if (PlayerControl.LocalPlayer.Data.IsDead && BattleRoyale.matchType != 2)
-                    {
-                        BattleRoyale.limePlayer02Wep.SetActive(false);
-                    }
-
-                    Vector3 mouseDirection = Input.mousePosition - new Vector3(Screen.width / 2, Screen.height / 2);
-                    BattleRoyale.limePlayer02mouseAngle = Mathf.Atan2(mouseDirection.y, mouseDirection.x);
-
-                    var targetPosition = BattleRoyale.limePlayer02.transform.position + new Vector3(0.8f * (float)Math.Cos(BattleRoyale.limePlayer02mouseAngle), 0.8f * (float)Math.Sin(BattleRoyale.limePlayer02mouseAngle));
-                    BattleRoyale.limePlayer02Wep.transform.position += (targetPosition - BattleRoyale.limePlayer02Wep.transform.position) * 0.4f;
-                    BattleRoyale.limePlayer02Wep.GetComponent<SpriteRenderer>().transform.eulerAngles = new Vector3(0f, 0f, (float)(BattleRoyale.limePlayer02mouseAngle * 360f / Math.PI / 2f));
-                    if (Math.Cos(BattleRoyale.limePlayer02mouseAngle) < 0.0)
-                    {
-                        if (BattleRoyale.limePlayer02Wep.GetComponent<SpriteRenderer>().transform.localScale.y > 0)
-                            BattleRoyale.limePlayer02Wep.GetComponent<SpriteRenderer>().transform.localScale = new Vector3(1f, -1f);
-                    }
-                    else
-                    {
-                        if (BattleRoyale.limePlayer02Wep.GetComponent<SpriteRenderer>().transform.localScale.y < 0)
-                            BattleRoyale.limePlayer02Wep.GetComponent<SpriteRenderer>().transform.localScale = new Vector3(1f, 1f);
-                    }
+                    if (LimePlayer02Wep.GetComponent<SpriteRenderer>().transform.localScale.y < 0)
+                        LimePlayer02Wep.GetComponent<SpriteRenderer>().transform.localScale = new(1f, 1f);
                 }
-                bool CanUse = true;
-                if (BattleRoyale.limePlayer02IsReviving)
-                {
-                    CanUse = false;
-                }
-                return CanUse && PlayerControl.LocalPlayer.CanMove && !PlayerControl.LocalPlayer.Data.IsDead;
-            },
-            () => { limePlayer02KillButton.Timer = limePlayer02KillButton.MaxTimer; },
-            __instance.KillButton.graphic.sprite,
-            ButtonPosition.Layout,
-            __instance,
-            __instance.KillButton,
-            KeyCode.Mouse1,
-            false,
-            TranslationController.Instance.GetString(StringNames.KillLabel)
-        );
+            }
+
+            var canUse = true;
+            if (LimePlayer02IsReviving) canUse = false;
+            return canUse && PlayerControl.LocalPlayer.CanMove && !PlayerControl.LocalPlayer.Data.IsDead;
+        }, () => { _limePlayer02KillButton.Timer = _limePlayer02KillButton.MaxTimer; }, __instance.KillButton.graphic.sprite, ButtonPosition.Layout, __instance, __instance.KillButton, KeyCode.Mouse1, false, TranslationController.Instance.GetString(StringNames.KillLabel));
 
         // LimePlayer03 Kill
-        limePlayer03KillButton = new CustomButton(
-            () =>
+        _limePlayer03KillButton = new(() =>
+        {
+            var target = GetLimeShotPlayer(2 * 0.2f, 6, 3);
+
+            var writerShot = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.BattleRoyaleShowShoots, SendOption.Reliable);
+            writerShot.Write(LimePlayer03.PlayerId);
+            writerShot.Write(1);
+            writerShot.Write(LimePlayer03MouseAngle);
+            AmongUsClient.Instance.FinishRpcImmediately(writerShot);
+            RPCProcedure.BattleRoyaleShowShoots(LimePlayer03.PlayerId, 1, LimePlayer03MouseAngle);
+
+            if (target == null)
             {
-                PlayerControl target = BattleRoyale.GetLimeShotPlayer(2 * 0.2f, 6, 3);
+                _limePlayer03KillButton.Timer = _limePlayer03KillButton.MaxTimer;
+                return;
+            }
 
-                MessageWriter writerShot = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.BattleRoyaleShowShoots, Hazel.SendOption.Reliable, -1);
-                writerShot.Write(BattleRoyale.limePlayer03.PlayerId);
-                writerShot.Write(1);
-                writerShot.Write(BattleRoyale.limePlayer03mouseAngle);
-                AmongUsClient.Instance.FinishRpcImmediately(writerShot);
-                RPCProcedure.battleRoyaleShowShoots(BattleRoyale.limePlayer03.PlayerId, 1, BattleRoyale.limePlayer03mouseAngle);
-
-                if (target == null)
+            if (MatchType == 2)
+            {
+                if ((PinkPlayer01 != null && target == PinkPlayer01 && PinkPlayer01IsReviving) || (PinkPlayer02 != null && target == PinkPlayer02 && PinkPlayer02IsReviving) || (PinkPlayer03 != null && target == PinkPlayer03 && PinkPlayer03IsReviving) || (PinkPlayer04 != null && target == PinkPlayer04 && PinkPlayer04IsReviving) || (PinkPlayer05 != null && target == PinkPlayer05 && PinkPlayer05IsReviving) || (PinkPlayer06 != null && target == PinkPlayer06 && PinkPlayer06IsReviving) || (PinkPlayer07 != null && target == PinkPlayer07 && PinkPlayer07IsReviving) || (SerialKiller != null && target == SerialKiller && SerialKillerIsReviving))
                 {
-                    limePlayer03KillButton.Timer = limePlayer03KillButton.MaxTimer;
+                    _limePlayer03KillButton.Timer = _limePlayer03KillButton.MaxTimer;
                     return;
                 }
+            }
 
-                if (BattleRoyale.matchType == 2)
-                {
-                    if (BattleRoyale.pinkPlayer01 != null && target == BattleRoyale.pinkPlayer01 && BattleRoyale.pinkPlayer01IsReviving ||
-                    BattleRoyale.pinkPlayer02 != null && target == BattleRoyale.pinkPlayer02 && BattleRoyale.pinkPlayer02IsReviving ||
-                    BattleRoyale.pinkPlayer03 != null && target == BattleRoyale.pinkPlayer03 && BattleRoyale.pinkPlayer03IsReviving ||
-                    BattleRoyale.pinkPlayer04 != null && target == BattleRoyale.pinkPlayer04 && BattleRoyale.pinkPlayer04IsReviving ||
-                    BattleRoyale.pinkPlayer05 != null && target == BattleRoyale.pinkPlayer05 && BattleRoyale.pinkPlayer05IsReviving ||
-                    BattleRoyale.pinkPlayer06 != null && target == BattleRoyale.pinkPlayer06 && BattleRoyale.pinkPlayer06IsReviving ||
-                    BattleRoyale.pinkPlayer07 != null && target == BattleRoyale.pinkPlayer07 && BattleRoyale.pinkPlayer07IsReviving ||
-                    BattleRoyale.serialKiller != null && target == BattleRoyale.serialKiller && BattleRoyale.serialKillerIsReviving)
-                    {
-                        limePlayer03KillButton.Timer = limePlayer03KillButton.MaxTimer;
-                        return;
-                    }
-                }
+            var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.GamemodeKills, SendOption.Reliable);
+            writer.Write(target.PlayerId);
+            writer.Write(LimePlayer03.PlayerId);
+            AmongUsClient.Instance.FinishRpcImmediately(writer);
+            RPCProcedure.GamemodeKills(target.PlayerId, LimePlayer03.PlayerId);
 
-                MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.GamemodeKills, Hazel.SendOption.Reliable, -1);
-                writer.Write(target.PlayerId);
-                writer.Write(BattleRoyale.limePlayer03.PlayerId);
-                AmongUsClient.Instance.FinishRpcImmediately(writer);
-                RPCProcedure.gamemodeKills(target.PlayerId, BattleRoyale.limePlayer03.PlayerId);
+            _limePlayer03KillButton.Timer = _limePlayer03KillButton.MaxTimer;
+            SoundManager.Instance.PlaySound(AssetLoader.RoyaleHitPlayer, false, 100f);
 
-                limePlayer03KillButton.Timer = limePlayer03KillButton.MaxTimer;
-                SoundManager.Instance.PlaySound(AssetLoader.royaleHitPlayer, false, 100f);
-
-                target = null;
-            },
-            () => { return BattleRoyale.limePlayer03 != null && BattleRoyale.limePlayer03 == PlayerControl.LocalPlayer; },
-            () =>
+            target = null;
+        }, () => { return LimePlayer03 != null && LimePlayer03 == PlayerControl.LocalPlayer; }, () =>
+        {
+            if (LimePlayer03Wep == null)
             {
-                if (BattleRoyale.limePlayer03Wep == null)
-                {
-                    BattleRoyale.limePlayer03Wep = new GameObject("Weapon");
-                    var renderer = BattleRoyale.limePlayer03Wep.AddComponent<SpriteRenderer>();
+                LimePlayer03Wep = new("Weapon");
+                var renderer = LimePlayer03Wep.AddComponent<SpriteRenderer>();
 
-                    renderer.sprite = AssetLoader.Bow;
-                    renderer.transform.parent = BattleRoyale.limePlayer03.transform;
-                    renderer.color = new Color(1, 1, 1, 1);
-                    renderer.transform.position = new Vector3(0, 0, -30f);
+                renderer.sprite = AssetLoader.Bow;
+                renderer.transform.parent = LimePlayer03.transform;
+                renderer.color = new(1, 1, 1, 1);
+                renderer.transform.position = new(0, 0, -30f);
+            }
+            else
+            {
+                if (PlayerControl.LocalPlayer.Data.IsDead && MatchType != 2) LimePlayer03Wep.SetActive(false);
+
+                var mouseDirection = Input.mousePosition - new Vector3(Screen.width / 2, Screen.height / 2);
+                LimePlayer03MouseAngle = Mathf.Atan2(mouseDirection.y, mouseDirection.x);
+
+                var targetPosition = LimePlayer03.transform.position + new Vector3(0.8f * (float)Math.Cos(LimePlayer03MouseAngle), 0.8f * (float)Math.Sin(LimePlayer03MouseAngle));
+                LimePlayer03Wep.transform.position += (targetPosition - LimePlayer03Wep.transform.position) * 0.4f;
+                LimePlayer03Wep.GetComponent<SpriteRenderer>().transform.eulerAngles = new(0f, 0f, (float)((LimePlayer03MouseAngle * 360f) / Math.PI / 2f));
+                if (Math.Cos(LimePlayer03MouseAngle) < 0.0)
+                {
+                    if (LimePlayer03Wep.GetComponent<SpriteRenderer>().transform.localScale.y > 0)
+                        LimePlayer03Wep.GetComponent<SpriteRenderer>().transform.localScale = new(1f, -1f);
                 }
                 else
                 {
-
-                    if (PlayerControl.LocalPlayer.Data.IsDead && BattleRoyale.matchType != 2)
-                    {
-                        BattleRoyale.limePlayer03Wep.SetActive(false);
-                    }
-
-                    Vector3 mouseDirection = Input.mousePosition - new Vector3(Screen.width / 2, Screen.height / 2);
-                    BattleRoyale.limePlayer03mouseAngle = Mathf.Atan2(mouseDirection.y, mouseDirection.x);
-
-                    var targetPosition = BattleRoyale.limePlayer03.transform.position + new Vector3(0.8f * (float)Math.Cos(BattleRoyale.limePlayer03mouseAngle), 0.8f * (float)Math.Sin(BattleRoyale.limePlayer03mouseAngle));
-                    BattleRoyale.limePlayer03Wep.transform.position += (targetPosition - BattleRoyale.limePlayer03Wep.transform.position) * 0.4f;
-                    BattleRoyale.limePlayer03Wep.GetComponent<SpriteRenderer>().transform.eulerAngles = new Vector3(0f, 0f, (float)(BattleRoyale.limePlayer03mouseAngle * 360f / Math.PI / 2f));
-                    if (Math.Cos(BattleRoyale.limePlayer03mouseAngle) < 0.0)
-                    {
-                        if (BattleRoyale.limePlayer03Wep.GetComponent<SpriteRenderer>().transform.localScale.y > 0)
-                            BattleRoyale.limePlayer03Wep.GetComponent<SpriteRenderer>().transform.localScale = new Vector3(1f, -1f);
-                    }
-                    else
-                    {
-                        if (BattleRoyale.limePlayer03Wep.GetComponent<SpriteRenderer>().transform.localScale.y < 0)
-                            BattleRoyale.limePlayer03Wep.GetComponent<SpriteRenderer>().transform.localScale = new Vector3(1f, 1f);
-                    }
+                    if (LimePlayer03Wep.GetComponent<SpriteRenderer>().transform.localScale.y < 0)
+                        LimePlayer03Wep.GetComponent<SpriteRenderer>().transform.localScale = new(1f, 1f);
                 }
-                bool CanUse = true;
-                if (BattleRoyale.limePlayer03IsReviving)
-                {
-                    CanUse = false;
-                }
-                return CanUse && PlayerControl.LocalPlayer.CanMove && !PlayerControl.LocalPlayer.Data.IsDead;
-            },
-            () => { limePlayer03KillButton.Timer = limePlayer03KillButton.MaxTimer; },
-            __instance.KillButton.graphic.sprite,
-            ButtonPosition.Layout,
-            __instance,
-            __instance.KillButton,
-            KeyCode.Mouse1,
-            false,
-            TranslationController.Instance.GetString(StringNames.KillLabel)
-        );
+            }
+
+            var canUse = true;
+            if (LimePlayer03IsReviving) canUse = false;
+            return canUse && PlayerControl.LocalPlayer.CanMove && !PlayerControl.LocalPlayer.Data.IsDead;
+        }, () => { _limePlayer03KillButton.Timer = _limePlayer03KillButton.MaxTimer; }, __instance.KillButton.graphic.sprite, ButtonPosition.Layout, __instance, __instance.KillButton, KeyCode.Mouse1, false, TranslationController.Instance.GetString(StringNames.KillLabel));
 
         // LimePlayer04 Kill
-        limePlayer04KillButton = new CustomButton(
-            () =>
+        _limePlayer04KillButton = new(() =>
+        {
+            var target = GetLimeShotPlayer(2 * 0.2f, 6, 4);
+
+            var writerShot = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.BattleRoyaleShowShoots, SendOption.Reliable);
+            writerShot.Write(LimePlayer04.PlayerId);
+            writerShot.Write(1);
+            writerShot.Write(LimePlayer04MouseAngle);
+            AmongUsClient.Instance.FinishRpcImmediately(writerShot);
+            RPCProcedure.BattleRoyaleShowShoots(LimePlayer04.PlayerId, 1, LimePlayer04MouseAngle);
+
+            if (target == null)
             {
-                PlayerControl target = BattleRoyale.GetLimeShotPlayer(2 * 0.2f, 6, 4);
+                _limePlayer04KillButton.Timer = _limePlayer04KillButton.MaxTimer;
+                return;
+            }
 
-                MessageWriter writerShot = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.BattleRoyaleShowShoots, Hazel.SendOption.Reliable, -1);
-                writerShot.Write(BattleRoyale.limePlayer04.PlayerId);
-                writerShot.Write(1);
-                writerShot.Write(BattleRoyale.limePlayer04mouseAngle);
-                AmongUsClient.Instance.FinishRpcImmediately(writerShot);
-                RPCProcedure.battleRoyaleShowShoots(BattleRoyale.limePlayer04.PlayerId, 1, BattleRoyale.limePlayer04mouseAngle);
-
-                if (target == null)
+            if (MatchType == 2)
+            {
+                if ((PinkPlayer01 != null && target == PinkPlayer01 && PinkPlayer01IsReviving) || (PinkPlayer02 != null && target == PinkPlayer02 && PinkPlayer02IsReviving) || (PinkPlayer03 != null && target == PinkPlayer03 && PinkPlayer03IsReviving) || (PinkPlayer04 != null && target == PinkPlayer04 && PinkPlayer04IsReviving) || (PinkPlayer05 != null && target == PinkPlayer05 && PinkPlayer05IsReviving) || (PinkPlayer06 != null && target == PinkPlayer06 && PinkPlayer06IsReviving) || (PinkPlayer07 != null && target == PinkPlayer07 && PinkPlayer07IsReviving) || (SerialKiller != null && target == SerialKiller && SerialKillerIsReviving))
                 {
-                    limePlayer04KillButton.Timer = limePlayer04KillButton.MaxTimer;
+                    _limePlayer04KillButton.Timer = _limePlayer04KillButton.MaxTimer;
                     return;
                 }
+            }
 
-                if (BattleRoyale.matchType == 2)
-                {
-                    if (BattleRoyale.pinkPlayer01 != null && target == BattleRoyale.pinkPlayer01 && BattleRoyale.pinkPlayer01IsReviving ||
-                    BattleRoyale.pinkPlayer02 != null && target == BattleRoyale.pinkPlayer02 && BattleRoyale.pinkPlayer02IsReviving ||
-                    BattleRoyale.pinkPlayer03 != null && target == BattleRoyale.pinkPlayer03 && BattleRoyale.pinkPlayer03IsReviving ||
-                    BattleRoyale.pinkPlayer04 != null && target == BattleRoyale.pinkPlayer04 && BattleRoyale.pinkPlayer04IsReviving ||
-                    BattleRoyale.pinkPlayer05 != null && target == BattleRoyale.pinkPlayer05 && BattleRoyale.pinkPlayer05IsReviving ||
-                    BattleRoyale.pinkPlayer06 != null && target == BattleRoyale.pinkPlayer06 && BattleRoyale.pinkPlayer06IsReviving ||
-                    BattleRoyale.pinkPlayer07 != null && target == BattleRoyale.pinkPlayer07 && BattleRoyale.pinkPlayer07IsReviving ||
-                    BattleRoyale.serialKiller != null && target == BattleRoyale.serialKiller && BattleRoyale.serialKillerIsReviving)
-                    {
-                        limePlayer04KillButton.Timer = limePlayer04KillButton.MaxTimer;
-                        return;
-                    }
-                }
+            var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.GamemodeKills, SendOption.Reliable);
+            writer.Write(target.PlayerId);
+            writer.Write(LimePlayer04.PlayerId);
+            AmongUsClient.Instance.FinishRpcImmediately(writer);
+            RPCProcedure.GamemodeKills(target.PlayerId, LimePlayer04.PlayerId);
 
-                MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.GamemodeKills, Hazel.SendOption.Reliable, -1);
-                writer.Write(target.PlayerId);
-                writer.Write(BattleRoyale.limePlayer04.PlayerId);
-                AmongUsClient.Instance.FinishRpcImmediately(writer);
-                RPCProcedure.gamemodeKills(target.PlayerId, BattleRoyale.limePlayer04.PlayerId);
+            _limePlayer04KillButton.Timer = _limePlayer04KillButton.MaxTimer;
+            SoundManager.Instance.PlaySound(AssetLoader.RoyaleHitPlayer, false, 100f);
 
-                limePlayer04KillButton.Timer = limePlayer04KillButton.MaxTimer;
-                SoundManager.Instance.PlaySound(AssetLoader.royaleHitPlayer, false, 100f);
-
-                target = null;
-            },
-            () => { return BattleRoyale.limePlayer04 != null && BattleRoyale.limePlayer04 == PlayerControl.LocalPlayer; },
-            () =>
+            target = null;
+        }, () => { return LimePlayer04 != null && LimePlayer04 == PlayerControl.LocalPlayer; }, () =>
+        {
+            if (LimePlayer04Wep == null)
             {
-                if (BattleRoyale.limePlayer04Wep == null)
-                {
-                    BattleRoyale.limePlayer04Wep = new GameObject("Weapon");
-                    var renderer = BattleRoyale.limePlayer04Wep.AddComponent<SpriteRenderer>();
+                LimePlayer04Wep = new("Weapon");
+                var renderer = LimePlayer04Wep.AddComponent<SpriteRenderer>();
 
-                    renderer.sprite = AssetLoader.Bow;
-                    renderer.transform.parent = BattleRoyale.limePlayer04.transform;
-                    renderer.color = new Color(1, 1, 1, 1);
-                    renderer.transform.position = new Vector3(0, 0, -30f);
+                renderer.sprite = AssetLoader.Bow;
+                renderer.transform.parent = LimePlayer04.transform;
+                renderer.color = new(1, 1, 1, 1);
+                renderer.transform.position = new(0, 0, -30f);
+            }
+            else
+            {
+                if (PlayerControl.LocalPlayer.Data.IsDead && MatchType != 2) LimePlayer04Wep.SetActive(false);
+
+                var mouseDirection = Input.mousePosition - new Vector3(Screen.width / 2, Screen.height / 2);
+                LimePlayer04MouseAngle = Mathf.Atan2(mouseDirection.y, mouseDirection.x);
+
+                var targetPosition = LimePlayer04.transform.position + new Vector3(0.8f * (float)Math.Cos(LimePlayer04MouseAngle), 0.8f * (float)Math.Sin(LimePlayer04MouseAngle));
+                LimePlayer04Wep.transform.position += (targetPosition - LimePlayer04Wep.transform.position) * 0.4f;
+                LimePlayer04Wep.GetComponent<SpriteRenderer>().transform.eulerAngles = new(0f, 0f, (float)((LimePlayer04MouseAngle * 360f) / Math.PI / 2f));
+                if (Math.Cos(LimePlayer04MouseAngle) < 0.0)
+                {
+                    if (LimePlayer04Wep.GetComponent<SpriteRenderer>().transform.localScale.y > 0)
+                        LimePlayer04Wep.GetComponent<SpriteRenderer>().transform.localScale = new(1f, -1f);
                 }
                 else
                 {
-
-                    if (PlayerControl.LocalPlayer.Data.IsDead && BattleRoyale.matchType != 2)
-                    {
-                        BattleRoyale.limePlayer04Wep.SetActive(false);
-                    }
-
-                    Vector3 mouseDirection = Input.mousePosition - new Vector3(Screen.width / 2, Screen.height / 2);
-                    BattleRoyale.limePlayer04mouseAngle = Mathf.Atan2(mouseDirection.y, mouseDirection.x);
-
-                    var targetPosition = BattleRoyale.limePlayer04.transform.position + new Vector3(0.8f * (float)Math.Cos(BattleRoyale.limePlayer04mouseAngle), 0.8f * (float)Math.Sin(BattleRoyale.limePlayer04mouseAngle));
-                    BattleRoyale.limePlayer04Wep.transform.position += (targetPosition - BattleRoyale.limePlayer04Wep.transform.position) * 0.4f;
-                    BattleRoyale.limePlayer04Wep.GetComponent<SpriteRenderer>().transform.eulerAngles = new Vector3(0f, 0f, (float)(BattleRoyale.limePlayer04mouseAngle * 360f / Math.PI / 2f));
-                    if (Math.Cos(BattleRoyale.limePlayer04mouseAngle) < 0.0)
-                    {
-                        if (BattleRoyale.limePlayer04Wep.GetComponent<SpriteRenderer>().transform.localScale.y > 0)
-                            BattleRoyale.limePlayer04Wep.GetComponent<SpriteRenderer>().transform.localScale = new Vector3(1f, -1f);
-                    }
-                    else
-                    {
-                        if (BattleRoyale.limePlayer04Wep.GetComponent<SpriteRenderer>().transform.localScale.y < 0)
-                            BattleRoyale.limePlayer04Wep.GetComponent<SpriteRenderer>().transform.localScale = new Vector3(1f, 1f);
-                    }
+                    if (LimePlayer04Wep.GetComponent<SpriteRenderer>().transform.localScale.y < 0)
+                        LimePlayer04Wep.GetComponent<SpriteRenderer>().transform.localScale = new(1f, 1f);
                 }
-                bool CanUse = true;
-                if (BattleRoyale.limePlayer04IsReviving)
-                {
-                    CanUse = false;
-                }
-                return CanUse && PlayerControl.LocalPlayer.CanMove && !PlayerControl.LocalPlayer.Data.IsDead;
-            },
-            () => { limePlayer04KillButton.Timer = limePlayer04KillButton.MaxTimer; },
-            __instance.KillButton.graphic.sprite,
-            ButtonPosition.Layout,
-            __instance,
-            __instance.KillButton,
-            KeyCode.Mouse1,
-            false,
-            TranslationController.Instance.GetString(StringNames.KillLabel)
-        );
+            }
+
+            var canUse = true;
+            if (LimePlayer04IsReviving) canUse = false;
+            return canUse && PlayerControl.LocalPlayer.CanMove && !PlayerControl.LocalPlayer.Data.IsDead;
+        }, () => { _limePlayer04KillButton.Timer = _limePlayer04KillButton.MaxTimer; }, __instance.KillButton.graphic.sprite, ButtonPosition.Layout, __instance, __instance.KillButton, KeyCode.Mouse1, false, TranslationController.Instance.GetString(StringNames.KillLabel));
 
         // LimePlayer05 Kill
-        limePlayer05KillButton = new CustomButton(
-            () =>
+        _limePlayer05KillButton = new(() =>
+        {
+            var target = GetLimeShotPlayer(2 * 0.2f, 6, 5);
+
+            var writerShot = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.BattleRoyaleShowShoots, SendOption.Reliable);
+            writerShot.Write(LimePlayer05.PlayerId);
+            writerShot.Write(1);
+            writerShot.Write(LimePlayer05MouseAngle);
+            AmongUsClient.Instance.FinishRpcImmediately(writerShot);
+            RPCProcedure.BattleRoyaleShowShoots(LimePlayer05.PlayerId, 1, LimePlayer05MouseAngle);
+
+            if (target == null)
             {
-                PlayerControl target = BattleRoyale.GetLimeShotPlayer(2 * 0.2f, 6, 5);
+                _limePlayer05KillButton.Timer = _limePlayer05KillButton.MaxTimer;
+                return;
+            }
 
-                MessageWriter writerShot = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.BattleRoyaleShowShoots, Hazel.SendOption.Reliable, -1);
-                writerShot.Write(BattleRoyale.limePlayer05.PlayerId);
-                writerShot.Write(1);
-                writerShot.Write(BattleRoyale.limePlayer05mouseAngle);
-                AmongUsClient.Instance.FinishRpcImmediately(writerShot);
-                RPCProcedure.battleRoyaleShowShoots(BattleRoyale.limePlayer05.PlayerId, 1, BattleRoyale.limePlayer05mouseAngle);
-
-                if (target == null)
+            if (MatchType == 2)
+            {
+                if ((PinkPlayer01 != null && target == PinkPlayer01 && PinkPlayer01IsReviving) || (PinkPlayer02 != null && target == PinkPlayer02 && PinkPlayer02IsReviving) || (PinkPlayer03 != null && target == PinkPlayer03 && PinkPlayer03IsReviving) || (PinkPlayer04 != null && target == PinkPlayer04 && PinkPlayer04IsReviving) || (PinkPlayer05 != null && target == PinkPlayer05 && PinkPlayer05IsReviving) || (PinkPlayer06 != null && target == PinkPlayer06 && PinkPlayer06IsReviving) || (PinkPlayer07 != null && target == PinkPlayer07 && PinkPlayer07IsReviving) || (SerialKiller != null && target == SerialKiller && SerialKillerIsReviving))
                 {
-                    limePlayer05KillButton.Timer = limePlayer05KillButton.MaxTimer;
+                    _limePlayer05KillButton.Timer = _limePlayer05KillButton.MaxTimer;
                     return;
                 }
+            }
 
-                if (BattleRoyale.matchType == 2)
-                {
-                    if (BattleRoyale.pinkPlayer01 != null && target == BattleRoyale.pinkPlayer01 && BattleRoyale.pinkPlayer01IsReviving ||
-                    BattleRoyale.pinkPlayer02 != null && target == BattleRoyale.pinkPlayer02 && BattleRoyale.pinkPlayer02IsReviving ||
-                    BattleRoyale.pinkPlayer03 != null && target == BattleRoyale.pinkPlayer03 && BattleRoyale.pinkPlayer03IsReviving ||
-                    BattleRoyale.pinkPlayer04 != null && target == BattleRoyale.pinkPlayer04 && BattleRoyale.pinkPlayer04IsReviving ||
-                    BattleRoyale.pinkPlayer05 != null && target == BattleRoyale.pinkPlayer05 && BattleRoyale.pinkPlayer05IsReviving ||
-                    BattleRoyale.pinkPlayer06 != null && target == BattleRoyale.pinkPlayer06 && BattleRoyale.pinkPlayer06IsReviving ||
-                    BattleRoyale.pinkPlayer07 != null && target == BattleRoyale.pinkPlayer07 && BattleRoyale.pinkPlayer07IsReviving ||
-                    BattleRoyale.serialKiller != null && target == BattleRoyale.serialKiller && BattleRoyale.serialKillerIsReviving)
-                    {
-                        limePlayer05KillButton.Timer = limePlayer05KillButton.MaxTimer;
-                        return;
-                    }
-                }
+            var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.GamemodeKills, SendOption.Reliable);
+            writer.Write(target.PlayerId);
+            writer.Write(LimePlayer05.PlayerId);
+            AmongUsClient.Instance.FinishRpcImmediately(writer);
+            RPCProcedure.GamemodeKills(target.PlayerId, LimePlayer05.PlayerId);
 
-                MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.GamemodeKills, Hazel.SendOption.Reliable, -1);
-                writer.Write(target.PlayerId);
-                writer.Write(BattleRoyale.limePlayer05.PlayerId);
-                AmongUsClient.Instance.FinishRpcImmediately(writer);
-                RPCProcedure.gamemodeKills(target.PlayerId, BattleRoyale.limePlayer05.PlayerId);
+            _limePlayer05KillButton.Timer = _limePlayer05KillButton.MaxTimer;
+            SoundManager.Instance.PlaySound(AssetLoader.RoyaleHitPlayer, false, 100f);
 
-                limePlayer05KillButton.Timer = limePlayer05KillButton.MaxTimer;
-                SoundManager.Instance.PlaySound(AssetLoader.royaleHitPlayer, false, 100f);
-
-                target = null;
-            },
-            () => { return BattleRoyale.limePlayer05 != null && BattleRoyale.limePlayer05 == PlayerControl.LocalPlayer; },
-            () =>
+            target = null;
+        }, () => { return LimePlayer05 != null && LimePlayer05 == PlayerControl.LocalPlayer; }, () =>
+        {
+            if (LimePlayer05Wep == null)
             {
-                if (BattleRoyale.limePlayer05Wep == null)
-                {
-                    BattleRoyale.limePlayer05Wep = new GameObject("Weapon");
-                    var renderer = BattleRoyale.limePlayer05Wep.AddComponent<SpriteRenderer>();
+                LimePlayer05Wep = new("Weapon");
+                var renderer = LimePlayer05Wep.AddComponent<SpriteRenderer>();
 
-                    renderer.sprite = AssetLoader.Bow;
-                    renderer.transform.parent = BattleRoyale.limePlayer05.transform;
-                    renderer.color = new Color(1, 1, 1, 1);
-                    renderer.transform.position = new Vector3(0, 0, -30f);
+                renderer.sprite = AssetLoader.Bow;
+                renderer.transform.parent = LimePlayer05.transform;
+                renderer.color = new(1, 1, 1, 1);
+                renderer.transform.position = new(0, 0, -30f);
+            }
+            else
+            {
+                if (PlayerControl.LocalPlayer.Data.IsDead && MatchType != 2) LimePlayer05Wep.SetActive(false);
+
+                var mouseDirection = Input.mousePosition - new Vector3(Screen.width / 2, Screen.height / 2);
+                LimePlayer05MouseAngle = Mathf.Atan2(mouseDirection.y, mouseDirection.x);
+
+                var targetPosition = LimePlayer05.transform.position + new Vector3(0.8f * (float)Math.Cos(LimePlayer05MouseAngle), 0.8f * (float)Math.Sin(LimePlayer05MouseAngle));
+                LimePlayer05Wep.transform.position += (targetPosition - LimePlayer05Wep.transform.position) * 0.4f;
+                LimePlayer05Wep.GetComponent<SpriteRenderer>().transform.eulerAngles = new(0f, 0f, (float)((LimePlayer05MouseAngle * 360f) / Math.PI / 2f));
+                if (Math.Cos(LimePlayer05MouseAngle) < 0.0)
+                {
+                    if (LimePlayer05Wep.GetComponent<SpriteRenderer>().transform.localScale.y > 0)
+                        LimePlayer05Wep.GetComponent<SpriteRenderer>().transform.localScale = new(1f, -1f);
                 }
                 else
                 {
-
-                    if (PlayerControl.LocalPlayer.Data.IsDead && BattleRoyale.matchType != 2)
-                    {
-                        BattleRoyale.limePlayer05Wep.SetActive(false);
-                    }
-
-                    Vector3 mouseDirection = Input.mousePosition - new Vector3(Screen.width / 2, Screen.height / 2);
-                    BattleRoyale.limePlayer05mouseAngle = Mathf.Atan2(mouseDirection.y, mouseDirection.x);
-
-                    var targetPosition = BattleRoyale.limePlayer05.transform.position + new Vector3(0.8f * (float)Math.Cos(BattleRoyale.limePlayer05mouseAngle), 0.8f * (float)Math.Sin(BattleRoyale.limePlayer05mouseAngle));
-                    BattleRoyale.limePlayer05Wep.transform.position += (targetPosition - BattleRoyale.limePlayer05Wep.transform.position) * 0.4f;
-                    BattleRoyale.limePlayer05Wep.GetComponent<SpriteRenderer>().transform.eulerAngles = new Vector3(0f, 0f, (float)(BattleRoyale.limePlayer05mouseAngle * 360f / Math.PI / 2f));
-                    if (Math.Cos(BattleRoyale.limePlayer05mouseAngle) < 0.0)
-                    {
-                        if (BattleRoyale.limePlayer05Wep.GetComponent<SpriteRenderer>().transform.localScale.y > 0)
-                            BattleRoyale.limePlayer05Wep.GetComponent<SpriteRenderer>().transform.localScale = new Vector3(1f, -1f);
-                    }
-                    else
-                    {
-                        if (BattleRoyale.limePlayer05Wep.GetComponent<SpriteRenderer>().transform.localScale.y < 0)
-                            BattleRoyale.limePlayer05Wep.GetComponent<SpriteRenderer>().transform.localScale = new Vector3(1f, 1f);
-                    }
+                    if (LimePlayer05Wep.GetComponent<SpriteRenderer>().transform.localScale.y < 0)
+                        LimePlayer05Wep.GetComponent<SpriteRenderer>().transform.localScale = new(1f, 1f);
                 }
-                bool CanUse = true;
-                if (BattleRoyale.limePlayer05IsReviving)
-                {
-                    CanUse = false;
-                }
-                return CanUse && PlayerControl.LocalPlayer.CanMove && !PlayerControl.LocalPlayer.Data.IsDead;
-            },
-            () => { limePlayer05KillButton.Timer = limePlayer05KillButton.MaxTimer; },
-            __instance.KillButton.graphic.sprite,
-            ButtonPosition.Layout,
-            __instance,
-            __instance.KillButton,
-            KeyCode.Mouse1,
-            false,
-            TranslationController.Instance.GetString(StringNames.KillLabel)
-        );
+            }
+
+            var canUse = true;
+            if (LimePlayer05IsReviving) canUse = false;
+            return canUse && PlayerControl.LocalPlayer.CanMove && !PlayerControl.LocalPlayer.Data.IsDead;
+        }, () => { _limePlayer05KillButton.Timer = _limePlayer05KillButton.MaxTimer; }, __instance.KillButton.graphic.sprite, ButtonPosition.Layout, __instance, __instance.KillButton, KeyCode.Mouse1, false, TranslationController.Instance.GetString(StringNames.KillLabel));
 
         // LimePlayer06 Kill
-        limePlayer06KillButton = new CustomButton(
-            () =>
+        _limePlayer06KillButton = new(() =>
+        {
+            var target = GetLimeShotPlayer(2 * 0.2f, 6, 6);
+
+            var writerShot = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.BattleRoyaleShowShoots, SendOption.Reliable);
+            writerShot.Write(LimePlayer06.PlayerId);
+            writerShot.Write(1);
+            writerShot.Write(LimePlayer06MouseAngle);
+            AmongUsClient.Instance.FinishRpcImmediately(writerShot);
+            RPCProcedure.BattleRoyaleShowShoots(LimePlayer06.PlayerId, 1, LimePlayer06MouseAngle);
+
+            if (target == null)
             {
-                PlayerControl target = BattleRoyale.GetLimeShotPlayer(2 * 0.2f, 6, 6);
+                _limePlayer06KillButton.Timer = _limePlayer06KillButton.MaxTimer;
+                return;
+            }
 
-                MessageWriter writerShot = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.BattleRoyaleShowShoots, Hazel.SendOption.Reliable, -1);
-                writerShot.Write(BattleRoyale.limePlayer06.PlayerId);
-                writerShot.Write(1);
-                writerShot.Write(BattleRoyale.limePlayer06mouseAngle);
-                AmongUsClient.Instance.FinishRpcImmediately(writerShot);
-                RPCProcedure.battleRoyaleShowShoots(BattleRoyale.limePlayer06.PlayerId, 1, BattleRoyale.limePlayer06mouseAngle);
-
-                if (target == null)
+            if (MatchType == 2)
+            {
+                if ((PinkPlayer01 != null && target == PinkPlayer01 && PinkPlayer01IsReviving) || (PinkPlayer02 != null && target == PinkPlayer02 && PinkPlayer02IsReviving) || (PinkPlayer03 != null && target == PinkPlayer03 && PinkPlayer03IsReviving) || (PinkPlayer04 != null && target == PinkPlayer04 && PinkPlayer04IsReviving) || (PinkPlayer05 != null && target == PinkPlayer05 && PinkPlayer05IsReviving) || (PinkPlayer06 != null && target == PinkPlayer06 && PinkPlayer06IsReviving) || (PinkPlayer07 != null && target == PinkPlayer07 && PinkPlayer07IsReviving) || (SerialKiller != null && target == SerialKiller && SerialKillerIsReviving))
                 {
-                    limePlayer06KillButton.Timer = limePlayer06KillButton.MaxTimer;
+                    _limePlayer06KillButton.Timer = _limePlayer06KillButton.MaxTimer;
                     return;
                 }
+            }
 
-                if (BattleRoyale.matchType == 2)
-                {
-                    if (BattleRoyale.pinkPlayer01 != null && target == BattleRoyale.pinkPlayer01 && BattleRoyale.pinkPlayer01IsReviving ||
-                    BattleRoyale.pinkPlayer02 != null && target == BattleRoyale.pinkPlayer02 && BattleRoyale.pinkPlayer02IsReviving ||
-                    BattleRoyale.pinkPlayer03 != null && target == BattleRoyale.pinkPlayer03 && BattleRoyale.pinkPlayer03IsReviving ||
-                    BattleRoyale.pinkPlayer04 != null && target == BattleRoyale.pinkPlayer04 && BattleRoyale.pinkPlayer04IsReviving ||
-                    BattleRoyale.pinkPlayer05 != null && target == BattleRoyale.pinkPlayer05 && BattleRoyale.pinkPlayer05IsReviving ||
-                    BattleRoyale.pinkPlayer06 != null && target == BattleRoyale.pinkPlayer06 && BattleRoyale.pinkPlayer06IsReviving ||
-                    BattleRoyale.pinkPlayer07 != null && target == BattleRoyale.pinkPlayer07 && BattleRoyale.pinkPlayer07IsReviving ||
-                    BattleRoyale.serialKiller != null && target == BattleRoyale.serialKiller && BattleRoyale.serialKillerIsReviving)
-                    {
-                        limePlayer06KillButton.Timer = limePlayer06KillButton.MaxTimer;
-                        return;
-                    }
-                }
+            var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.GamemodeKills, SendOption.Reliable);
+            writer.Write(target.PlayerId);
+            writer.Write(LimePlayer06.PlayerId);
+            AmongUsClient.Instance.FinishRpcImmediately(writer);
+            RPCProcedure.GamemodeKills(target.PlayerId, LimePlayer06.PlayerId);
 
-                MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.GamemodeKills, Hazel.SendOption.Reliable, -1);
-                writer.Write(target.PlayerId);
-                writer.Write(BattleRoyale.limePlayer06.PlayerId);
-                AmongUsClient.Instance.FinishRpcImmediately(writer);
-                RPCProcedure.gamemodeKills(target.PlayerId, BattleRoyale.limePlayer06.PlayerId);
+            _limePlayer06KillButton.Timer = _limePlayer06KillButton.MaxTimer;
+            SoundManager.Instance.PlaySound(AssetLoader.RoyaleHitPlayer, false, 100f);
 
-                limePlayer06KillButton.Timer = limePlayer06KillButton.MaxTimer;
-                SoundManager.Instance.PlaySound(AssetLoader.royaleHitPlayer, false, 100f);
-
-                target = null;
-            },
-            () => { return BattleRoyale.limePlayer06 != null && BattleRoyale.limePlayer06 == PlayerControl.LocalPlayer; },
-            () =>
+            target = null;
+        }, () => { return LimePlayer06 != null && LimePlayer06 == PlayerControl.LocalPlayer; }, () =>
+        {
+            if (LimePlayer06Wep == null)
             {
-                if (BattleRoyale.limePlayer06Wep == null)
-                {
-                    BattleRoyale.limePlayer06Wep = new GameObject("Weapon");
-                    var renderer = BattleRoyale.limePlayer06Wep.AddComponent<SpriteRenderer>();
+                LimePlayer06Wep = new("Weapon");
+                var renderer = LimePlayer06Wep.AddComponent<SpriteRenderer>();
 
-                    renderer.sprite = AssetLoader.Bow;
-                    renderer.transform.parent = BattleRoyale.limePlayer06.transform;
-                    renderer.color = new Color(1, 1, 1, 1);
-                    renderer.transform.position = new Vector3(0, 0, -30f);
+                renderer.sprite = AssetLoader.Bow;
+                renderer.transform.parent = LimePlayer06.transform;
+                renderer.color = new(1, 1, 1, 1);
+                renderer.transform.position = new(0, 0, -30f);
+            }
+            else
+            {
+                if (PlayerControl.LocalPlayer.Data.IsDead && MatchType != 2) LimePlayer06Wep.SetActive(false);
+
+                var mouseDirection = Input.mousePosition - new Vector3(Screen.width / 2, Screen.height / 2);
+                LimePlayer06MouseAngle = Mathf.Atan2(mouseDirection.y, mouseDirection.x);
+
+                var targetPosition = LimePlayer06.transform.position + new Vector3(0.8f * (float)Math.Cos(LimePlayer06MouseAngle), 0.8f * (float)Math.Sin(LimePlayer06MouseAngle));
+                LimePlayer06Wep.transform.position += (targetPosition - LimePlayer06Wep.transform.position) * 0.4f;
+                LimePlayer06Wep.GetComponent<SpriteRenderer>().transform.eulerAngles = new(0f, 0f, (float)((LimePlayer06MouseAngle * 360f) / Math.PI / 2f));
+                if (Math.Cos(LimePlayer06MouseAngle) < 0.0)
+                {
+                    if (LimePlayer06Wep.GetComponent<SpriteRenderer>().transform.localScale.y > 0)
+                        LimePlayer06Wep.GetComponent<SpriteRenderer>().transform.localScale = new(1f, -1f);
                 }
                 else
                 {
-
-                    if (PlayerControl.LocalPlayer.Data.IsDead && BattleRoyale.matchType != 2)
-                    {
-                        BattleRoyale.limePlayer06Wep.SetActive(false);
-                    }
-
-                    Vector3 mouseDirection = Input.mousePosition - new Vector3(Screen.width / 2, Screen.height / 2);
-                    BattleRoyale.limePlayer06mouseAngle = Mathf.Atan2(mouseDirection.y, mouseDirection.x);
-
-                    var targetPosition = BattleRoyale.limePlayer06.transform.position + new Vector3(0.8f * (float)Math.Cos(BattleRoyale.limePlayer06mouseAngle), 0.8f * (float)Math.Sin(BattleRoyale.limePlayer06mouseAngle));
-                    BattleRoyale.limePlayer06Wep.transform.position += (targetPosition - BattleRoyale.limePlayer06Wep.transform.position) * 0.4f;
-                    BattleRoyale.limePlayer06Wep.GetComponent<SpriteRenderer>().transform.eulerAngles = new Vector3(0f, 0f, (float)(BattleRoyale.limePlayer06mouseAngle * 360f / Math.PI / 2f));
-                    if (Math.Cos(BattleRoyale.limePlayer06mouseAngle) < 0.0)
-                    {
-                        if (BattleRoyale.limePlayer06Wep.GetComponent<SpriteRenderer>().transform.localScale.y > 0)
-                            BattleRoyale.limePlayer06Wep.GetComponent<SpriteRenderer>().transform.localScale = new Vector3(1f, -1f);
-                    }
-                    else
-                    {
-                        if (BattleRoyale.limePlayer06Wep.GetComponent<SpriteRenderer>().transform.localScale.y < 0)
-                            BattleRoyale.limePlayer06Wep.GetComponent<SpriteRenderer>().transform.localScale = new Vector3(1f, 1f);
-                    }
+                    if (LimePlayer06Wep.GetComponent<SpriteRenderer>().transform.localScale.y < 0)
+                        LimePlayer06Wep.GetComponent<SpriteRenderer>().transform.localScale = new(1f, 1f);
                 }
-                bool CanUse = true;
-                if (BattleRoyale.limePlayer06IsReviving)
-                {
-                    CanUse = false;
-                }
-                return CanUse && PlayerControl.LocalPlayer.CanMove && !PlayerControl.LocalPlayer.Data.IsDead;
-            },
-            () => { limePlayer06KillButton.Timer = limePlayer06KillButton.MaxTimer; },
-            __instance.KillButton.graphic.sprite,
-            ButtonPosition.Layout,
-            __instance,
-            __instance.KillButton,
-            KeyCode.Mouse1,
-            false,
-            TranslationController.Instance.GetString(StringNames.KillLabel)
-        );
+            }
+
+            var canUse = true;
+            if (LimePlayer06IsReviving) canUse = false;
+            return canUse && PlayerControl.LocalPlayer.CanMove && !PlayerControl.LocalPlayer.Data.IsDead;
+        }, () => { _limePlayer06KillButton.Timer = _limePlayer06KillButton.MaxTimer; }, __instance.KillButton.graphic.sprite, ButtonPosition.Layout, __instance, __instance.KillButton, KeyCode.Mouse1, false, TranslationController.Instance.GetString(StringNames.KillLabel));
 
         // LimePlayer07 Kill
-        limePlayer07KillButton = new CustomButton(
-            () =>
+        _limePlayer07KillButton = new(() =>
+        {
+            var target = GetLimeShotPlayer(2 * 0.2f, 6, 7);
+
+            var writerShot = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.BattleRoyaleShowShoots, SendOption.Reliable);
+            writerShot.Write(LimePlayer07.PlayerId);
+            writerShot.Write(1);
+            writerShot.Write(LimePlayer07MouseAngle);
+            AmongUsClient.Instance.FinishRpcImmediately(writerShot);
+            RPCProcedure.BattleRoyaleShowShoots(LimePlayer07.PlayerId, 1, LimePlayer07MouseAngle);
+
+            if (target == null)
             {
-                PlayerControl target = BattleRoyale.GetLimeShotPlayer(2 * 0.2f, 6, 7);
+                _limePlayer07KillButton.Timer = _limePlayer07KillButton.MaxTimer;
+                return;
+            }
 
-                MessageWriter writerShot = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.BattleRoyaleShowShoots, Hazel.SendOption.Reliable, -1);
-                writerShot.Write(BattleRoyale.limePlayer07.PlayerId);
-                writerShot.Write(1);
-                writerShot.Write(BattleRoyale.limePlayer07mouseAngle);
-                AmongUsClient.Instance.FinishRpcImmediately(writerShot);
-                RPCProcedure.battleRoyaleShowShoots(BattleRoyale.limePlayer07.PlayerId, 1, BattleRoyale.limePlayer07mouseAngle);
-
-                if (target == null)
+            if (MatchType == 2)
+            {
+                if ((PinkPlayer01 != null && target == PinkPlayer01 && PinkPlayer01IsReviving) || (PinkPlayer02 != null && target == PinkPlayer02 && PinkPlayer02IsReviving) || (PinkPlayer03 != null && target == PinkPlayer03 && PinkPlayer03IsReviving) || (PinkPlayer04 != null && target == PinkPlayer04 && PinkPlayer04IsReviving) || (PinkPlayer05 != null && target == PinkPlayer05 && PinkPlayer05IsReviving) || (PinkPlayer06 != null && target == PinkPlayer06 && PinkPlayer06IsReviving) || (PinkPlayer07 != null && target == PinkPlayer07 && PinkPlayer07IsReviving) || (SerialKiller != null && target == SerialKiller && SerialKillerIsReviving))
                 {
-                    limePlayer07KillButton.Timer = limePlayer07KillButton.MaxTimer;
+                    _limePlayer07KillButton.Timer = _limePlayer07KillButton.MaxTimer;
                     return;
                 }
+            }
 
-                if (BattleRoyale.matchType == 2)
-                {
-                    if (BattleRoyale.pinkPlayer01 != null && target == BattleRoyale.pinkPlayer01 && BattleRoyale.pinkPlayer01IsReviving ||
-                    BattleRoyale.pinkPlayer02 != null && target == BattleRoyale.pinkPlayer02 && BattleRoyale.pinkPlayer02IsReviving ||
-                    BattleRoyale.pinkPlayer03 != null && target == BattleRoyale.pinkPlayer03 && BattleRoyale.pinkPlayer03IsReviving ||
-                    BattleRoyale.pinkPlayer04 != null && target == BattleRoyale.pinkPlayer04 && BattleRoyale.pinkPlayer04IsReviving ||
-                    BattleRoyale.pinkPlayer05 != null && target == BattleRoyale.pinkPlayer05 && BattleRoyale.pinkPlayer05IsReviving ||
-                    BattleRoyale.pinkPlayer06 != null && target == BattleRoyale.pinkPlayer06 && BattleRoyale.pinkPlayer06IsReviving ||
-                    BattleRoyale.pinkPlayer07 != null && target == BattleRoyale.pinkPlayer07 && BattleRoyale.pinkPlayer07IsReviving ||
-                    BattleRoyale.serialKiller != null && target == BattleRoyale.serialKiller && BattleRoyale.serialKillerIsReviving)
-                    {
-                        limePlayer07KillButton.Timer = limePlayer07KillButton.MaxTimer;
-                        return;
-                    }
-                }
+            var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.GamemodeKills, SendOption.Reliable);
+            writer.Write(target.PlayerId);
+            writer.Write(LimePlayer07.PlayerId);
+            AmongUsClient.Instance.FinishRpcImmediately(writer);
+            RPCProcedure.GamemodeKills(target.PlayerId, LimePlayer07.PlayerId);
 
-                MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.GamemodeKills, Hazel.SendOption.Reliable, -1);
-                writer.Write(target.PlayerId);
-                writer.Write(BattleRoyale.limePlayer07.PlayerId);
-                AmongUsClient.Instance.FinishRpcImmediately(writer);
-                RPCProcedure.gamemodeKills(target.PlayerId, BattleRoyale.limePlayer07.PlayerId);
+            _limePlayer07KillButton.Timer = _limePlayer07KillButton.MaxTimer;
+            SoundManager.Instance.PlaySound(AssetLoader.RoyaleHitPlayer, false, 100f);
 
-                limePlayer07KillButton.Timer = limePlayer07KillButton.MaxTimer;
-                SoundManager.Instance.PlaySound(AssetLoader.royaleHitPlayer, false, 100f);
-
-                target = null;
-            },
-            () => { return BattleRoyale.limePlayer07 != null && BattleRoyale.limePlayer07 == PlayerControl.LocalPlayer; },
-            () =>
+            target = null;
+        }, () => { return LimePlayer07 != null && LimePlayer07 == PlayerControl.LocalPlayer; }, () =>
+        {
+            if (LimePlayer07Wep == null)
             {
-                if (BattleRoyale.limePlayer07Wep == null)
-                {
-                    BattleRoyale.limePlayer07Wep = new GameObject("Weapon");
-                    var renderer = BattleRoyale.limePlayer07Wep.AddComponent<SpriteRenderer>();
+                LimePlayer07Wep = new("Weapon");
+                var renderer = LimePlayer07Wep.AddComponent<SpriteRenderer>();
 
-                    renderer.sprite = AssetLoader.Bow;
-                    renderer.transform.parent = BattleRoyale.limePlayer07.transform;
-                    renderer.color = new Color(1, 1, 1, 1);
-                    renderer.transform.position = new Vector3(0, 0, -30f);
+                renderer.sprite = AssetLoader.Bow;
+                renderer.transform.parent = LimePlayer07.transform;
+                renderer.color = new(1, 1, 1, 1);
+                renderer.transform.position = new(0, 0, -30f);
+            }
+            else
+            {
+                if (PlayerControl.LocalPlayer.Data.IsDead && MatchType != 2) LimePlayer07Wep.SetActive(false);
+
+                var mouseDirection = Input.mousePosition - new Vector3(Screen.width / 2, Screen.height / 2);
+                LimePlayer07MouseAngle = Mathf.Atan2(mouseDirection.y, mouseDirection.x);
+
+                var targetPosition = LimePlayer07.transform.position + new Vector3(0.8f * (float)Math.Cos(LimePlayer07MouseAngle), 0.8f * (float)Math.Sin(LimePlayer07MouseAngle));
+                LimePlayer07Wep.transform.position += (targetPosition - LimePlayer07Wep.transform.position) * 0.4f;
+                LimePlayer07Wep.GetComponent<SpriteRenderer>().transform.eulerAngles = new(0f, 0f, (float)((LimePlayer07MouseAngle * 360f) / Math.PI / 2f));
+                if (Math.Cos(LimePlayer07MouseAngle) < 0.0)
+                {
+                    if (LimePlayer07Wep.GetComponent<SpriteRenderer>().transform.localScale.y > 0)
+                        LimePlayer07Wep.GetComponent<SpriteRenderer>().transform.localScale = new(1f, -1f);
                 }
                 else
                 {
-
-                    if (PlayerControl.LocalPlayer.Data.IsDead && BattleRoyale.matchType != 2)
-                    {
-                        BattleRoyale.limePlayer07Wep.SetActive(false);
-                    }
-
-                    Vector3 mouseDirection = Input.mousePosition - new Vector3(Screen.width / 2, Screen.height / 2);
-                    BattleRoyale.limePlayer07mouseAngle = Mathf.Atan2(mouseDirection.y, mouseDirection.x);
-
-                    var targetPosition = BattleRoyale.limePlayer07.transform.position + new Vector3(0.8f * (float)Math.Cos(BattleRoyale.limePlayer07mouseAngle), 0.8f * (float)Math.Sin(BattleRoyale.limePlayer07mouseAngle));
-                    BattleRoyale.limePlayer07Wep.transform.position += (targetPosition - BattleRoyale.limePlayer07Wep.transform.position) * 0.4f;
-                    BattleRoyale.limePlayer07Wep.GetComponent<SpriteRenderer>().transform.eulerAngles = new Vector3(0f, 0f, (float)(BattleRoyale.limePlayer07mouseAngle * 360f / Math.PI / 2f));
-                    if (Math.Cos(BattleRoyale.limePlayer07mouseAngle) < 0.0)
-                    {
-                        if (BattleRoyale.limePlayer07Wep.GetComponent<SpriteRenderer>().transform.localScale.y > 0)
-                            BattleRoyale.limePlayer07Wep.GetComponent<SpriteRenderer>().transform.localScale = new Vector3(1f, -1f);
-                    }
-                    else
-                    {
-                        if (BattleRoyale.limePlayer07Wep.GetComponent<SpriteRenderer>().transform.localScale.y < 0)
-                            BattleRoyale.limePlayer07Wep.GetComponent<SpriteRenderer>().transform.localScale = new Vector3(1f, 1f);
-                    }
+                    if (LimePlayer07Wep.GetComponent<SpriteRenderer>().transform.localScale.y < 0)
+                        LimePlayer07Wep.GetComponent<SpriteRenderer>().transform.localScale = new(1f, 1f);
                 }
-                bool CanUse = true;
-                if (BattleRoyale.limePlayer07IsReviving)
-                {
-                    CanUse = false;
-                }
-                return CanUse && PlayerControl.LocalPlayer.CanMove && !PlayerControl.LocalPlayer.Data.IsDead;
-            },
-            () => { limePlayer07KillButton.Timer = limePlayer07KillButton.MaxTimer; },
-            __instance.KillButton.graphic.sprite,
-            ButtonPosition.Layout,
-            __instance,
-            __instance.KillButton,
-            KeyCode.Mouse1,
-            false,
-            TranslationController.Instance.GetString(StringNames.KillLabel)
-        );
+            }
+
+            var canUse = true;
+            if (LimePlayer07IsReviving) canUse = false;
+            return canUse && PlayerControl.LocalPlayer.CanMove && !PlayerControl.LocalPlayer.Data.IsDead;
+        }, () => { _limePlayer07KillButton.Timer = _limePlayer07KillButton.MaxTimer; }, __instance.KillButton.graphic.sprite, ButtonPosition.Layout, __instance, __instance.KillButton, KeyCode.Mouse1, false, TranslationController.Instance.GetString(StringNames.KillLabel));
 
         // PinkPlayer01 Kill
-        pinkPlayer01KillButton = new CustomButton(
-            () =>
+        _pinkPlayer01KillButton = new(() =>
+        {
+            var target = GetPinkShotPlayer(2 * 0.2f, 6, 1);
+
+            var writerShot = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.BattleRoyaleShowShoots, SendOption.Reliable);
+            writerShot.Write(PinkPlayer01.PlayerId);
+            writerShot.Write(2);
+            writerShot.Write(PinkPlayer01MouseAngle);
+            AmongUsClient.Instance.FinishRpcImmediately(writerShot);
+            RPCProcedure.BattleRoyaleShowShoots(PinkPlayer01.PlayerId, 2, PinkPlayer01MouseAngle);
+
+            if (target == null)
             {
-                PlayerControl target = BattleRoyale.GetPinkShotPlayer(2 * 0.2f, 6, 1);
+                _pinkPlayer01KillButton.Timer = _pinkPlayer01KillButton.MaxTimer;
+                return;
+            }
 
-                MessageWriter writerShot = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.BattleRoyaleShowShoots, Hazel.SendOption.Reliable, -1);
-                writerShot.Write(BattleRoyale.pinkPlayer01.PlayerId);
-                writerShot.Write(2);
-                writerShot.Write(BattleRoyale.pinkPlayer01mouseAngle);
-                AmongUsClient.Instance.FinishRpcImmediately(writerShot);
-                RPCProcedure.battleRoyaleShowShoots(BattleRoyale.pinkPlayer01.PlayerId, 2, BattleRoyale.pinkPlayer01mouseAngle);
-
-                if (target == null)
+            if (MatchType == 2)
+            {
+                if ((LimePlayer01 != null && target == LimePlayer01 && LimePlayer01IsReviving) || (LimePlayer02 != null && target == LimePlayer02 && LimePlayer02IsReviving) || (LimePlayer03 != null && target == LimePlayer03 && LimePlayer03IsReviving) || (LimePlayer04 != null && target == LimePlayer04 && LimePlayer04IsReviving) || (LimePlayer05 != null && target == LimePlayer05 && LimePlayer05IsReviving) || (LimePlayer06 != null && target == LimePlayer06 && LimePlayer06IsReviving) || (LimePlayer07 != null && target == LimePlayer07 && LimePlayer07IsReviving) || (SerialKiller != null && target == SerialKiller && SerialKillerIsReviving))
                 {
-                    pinkPlayer01KillButton.Timer = pinkPlayer01KillButton.MaxTimer;
+                    _pinkPlayer01KillButton.Timer = _pinkPlayer01KillButton.MaxTimer;
                     return;
                 }
+            }
 
-                if (BattleRoyale.matchType == 2)
-                {
-                    if (BattleRoyale.limePlayer01 != null && target == BattleRoyale.limePlayer01 && BattleRoyale.limePlayer01IsReviving ||
-                    BattleRoyale.limePlayer02 != null && target == BattleRoyale.limePlayer02 && BattleRoyale.limePlayer02IsReviving ||
-                    BattleRoyale.limePlayer03 != null && target == BattleRoyale.limePlayer03 && BattleRoyale.limePlayer03IsReviving ||
-                    BattleRoyale.limePlayer04 != null && target == BattleRoyale.limePlayer04 && BattleRoyale.limePlayer04IsReviving ||
-                    BattleRoyale.limePlayer05 != null && target == BattleRoyale.limePlayer05 && BattleRoyale.limePlayer05IsReviving ||
-                    BattleRoyale.limePlayer06 != null && target == BattleRoyale.limePlayer06 && BattleRoyale.limePlayer06IsReviving ||
-                    BattleRoyale.limePlayer07 != null && target == BattleRoyale.limePlayer07 && BattleRoyale.limePlayer07IsReviving ||
-                    BattleRoyale.serialKiller != null && target == BattleRoyale.serialKiller && BattleRoyale.serialKillerIsReviving)
-                    {
-                        pinkPlayer01KillButton.Timer = pinkPlayer01KillButton.MaxTimer;
-                        return;
-                    }
-                }
+            var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.GamemodeKills, SendOption.Reliable);
+            writer.Write(target.PlayerId);
+            writer.Write(PinkPlayer01.PlayerId);
+            AmongUsClient.Instance.FinishRpcImmediately(writer);
+            RPCProcedure.GamemodeKills(target.PlayerId, PinkPlayer01.PlayerId);
 
-                MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.GamemodeKills, Hazel.SendOption.Reliable, -1);
-                writer.Write(target.PlayerId);
-                writer.Write(BattleRoyale.pinkPlayer01.PlayerId);
-                AmongUsClient.Instance.FinishRpcImmediately(writer);
-                RPCProcedure.gamemodeKills(target.PlayerId, BattleRoyale.pinkPlayer01.PlayerId);
+            _pinkPlayer01KillButton.Timer = _pinkPlayer01KillButton.MaxTimer;
+            SoundManager.Instance.PlaySound(AssetLoader.RoyaleHitPlayer, false, 100f);
 
-                pinkPlayer01KillButton.Timer = pinkPlayer01KillButton.MaxTimer;
-                SoundManager.Instance.PlaySound(AssetLoader.royaleHitPlayer, false, 100f);
-
-                target = null;
-            },
-            () => { return BattleRoyale.pinkPlayer01 != null && BattleRoyale.pinkPlayer01 == PlayerControl.LocalPlayer; },
-            () =>
+            target = null;
+        }, () => { return PinkPlayer01 != null && PinkPlayer01 == PlayerControl.LocalPlayer; }, () =>
+        {
+            if (PinkPlayer01Wep == null)
             {
-                if (BattleRoyale.pinkPlayer01Wep == null)
-                {
-                    BattleRoyale.pinkPlayer01Wep = new GameObject("Weapon");
-                    var renderer = BattleRoyale.pinkPlayer01Wep.AddComponent<SpriteRenderer>();
+                PinkPlayer01Wep = new("Weapon");
+                var renderer = PinkPlayer01Wep.AddComponent<SpriteRenderer>();
 
-                    renderer.sprite = AssetLoader.Bow;
-                    renderer.transform.parent = BattleRoyale.pinkPlayer01.transform;
-                    renderer.color = new Color(1, 1, 1, 1);
-                    renderer.transform.position = new Vector3(0, 0, -30f);
+                renderer.sprite = AssetLoader.Bow;
+                renderer.transform.parent = PinkPlayer01.transform;
+                renderer.color = new(1, 1, 1, 1);
+                renderer.transform.position = new(0, 0, -30f);
+            }
+            else
+            {
+                if (PlayerControl.LocalPlayer.Data.IsDead && MatchType != 2) PinkPlayer01Wep.SetActive(false);
+
+                var mouseDirection = Input.mousePosition - new Vector3(Screen.width / 2, Screen.height / 2);
+                PinkPlayer01MouseAngle = Mathf.Atan2(mouseDirection.y, mouseDirection.x);
+
+                var targetPosition = PinkPlayer01.transform.position + new Vector3(0.8f * (float)Math.Cos(PinkPlayer01MouseAngle), 0.8f * (float)Math.Sin(PinkPlayer01MouseAngle));
+                PinkPlayer01Wep.transform.position += (targetPosition - PinkPlayer01Wep.transform.position) * 0.4f;
+                PinkPlayer01Wep.GetComponent<SpriteRenderer>().transform.eulerAngles = new(0f, 0f, (float)((PinkPlayer01MouseAngle * 360f) / Math.PI / 2f));
+                if (Math.Cos(PinkPlayer01MouseAngle) < 0.0)
+                {
+                    if (PinkPlayer01Wep.GetComponent<SpriteRenderer>().transform.localScale.y > 0)
+                        PinkPlayer01Wep.GetComponent<SpriteRenderer>().transform.localScale = new(1f, -1f);
                 }
                 else
                 {
-
-                    if (PlayerControl.LocalPlayer.Data.IsDead && BattleRoyale.matchType != 2)
-                    {
-                        BattleRoyale.pinkPlayer01Wep.SetActive(false);
-                    }
-
-                    Vector3 mouseDirection = Input.mousePosition - new Vector3(Screen.width / 2, Screen.height / 2);
-                    BattleRoyale.pinkPlayer01mouseAngle = Mathf.Atan2(mouseDirection.y, mouseDirection.x);
-
-                    var targetPosition = BattleRoyale.pinkPlayer01.transform.position + new Vector3(0.8f * (float)Math.Cos(BattleRoyale.pinkPlayer01mouseAngle), 0.8f * (float)Math.Sin(BattleRoyale.pinkPlayer01mouseAngle));
-                    BattleRoyale.pinkPlayer01Wep.transform.position += (targetPosition - BattleRoyale.pinkPlayer01Wep.transform.position) * 0.4f;
-                    BattleRoyale.pinkPlayer01Wep.GetComponent<SpriteRenderer>().transform.eulerAngles = new Vector3(0f, 0f, (float)(BattleRoyale.pinkPlayer01mouseAngle * 360f / Math.PI / 2f));
-                    if (Math.Cos(BattleRoyale.pinkPlayer01mouseAngle) < 0.0)
-                    {
-                        if (BattleRoyale.pinkPlayer01Wep.GetComponent<SpriteRenderer>().transform.localScale.y > 0)
-                            BattleRoyale.pinkPlayer01Wep.GetComponent<SpriteRenderer>().transform.localScale = new Vector3(1f, -1f);
-                    }
-                    else
-                    {
-                        if (BattleRoyale.pinkPlayer01Wep.GetComponent<SpriteRenderer>().transform.localScale.y < 0)
-                            BattleRoyale.pinkPlayer01Wep.GetComponent<SpriteRenderer>().transform.localScale = new Vector3(1f, 1f);
-                    }
+                    if (PinkPlayer01Wep.GetComponent<SpriteRenderer>().transform.localScale.y < 0)
+                        PinkPlayer01Wep.GetComponent<SpriteRenderer>().transform.localScale = new(1f, 1f);
                 }
-                bool CanUse = true;
-                if (BattleRoyale.pinkPlayer01IsReviving)
-                {
-                    CanUse = false;
-                }
-                return CanUse && PlayerControl.LocalPlayer.CanMove && !PlayerControl.LocalPlayer.Data.IsDead;
-            },
-            () => { pinkPlayer01KillButton.Timer = pinkPlayer01KillButton.MaxTimer; },
-            __instance.KillButton.graphic.sprite,
-            ButtonPosition.Layout,
-            __instance,
-            __instance.KillButton,
-            KeyCode.Mouse1,
-            false,
-            TranslationController.Instance.GetString(StringNames.KillLabel)
-        );
+            }
+
+            var canUse = true;
+            if (PinkPlayer01IsReviving) canUse = false;
+            return canUse && PlayerControl.LocalPlayer.CanMove && !PlayerControl.LocalPlayer.Data.IsDead;
+        }, () => { _pinkPlayer01KillButton.Timer = _pinkPlayer01KillButton.MaxTimer; }, __instance.KillButton.graphic.sprite, ButtonPosition.Layout, __instance, __instance.KillButton, KeyCode.Mouse1, false, TranslationController.Instance.GetString(StringNames.KillLabel));
 
         // PinkPlayer02 Kill
-        pinkPlayer02KillButton = new CustomButton(
-            () =>
+        _pinkPlayer02KillButton = new(() =>
+        {
+            var target = GetPinkShotPlayer(2 * 0.2f, 6, 2);
+
+            var writerShot = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.BattleRoyaleShowShoots, SendOption.Reliable);
+            writerShot.Write(PinkPlayer02.PlayerId);
+            writerShot.Write(2);
+            writerShot.Write(PinkPlayer02MouseAngle);
+            AmongUsClient.Instance.FinishRpcImmediately(writerShot);
+            RPCProcedure.BattleRoyaleShowShoots(PinkPlayer02.PlayerId, 2, PinkPlayer02MouseAngle);
+
+            if (target == null)
             {
-                PlayerControl target = BattleRoyale.GetPinkShotPlayer(2 * 0.2f, 6, 2);
+                _pinkPlayer02KillButton.Timer = _pinkPlayer02KillButton.MaxTimer;
+                return;
+            }
 
-                MessageWriter writerShot = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.BattleRoyaleShowShoots, Hazel.SendOption.Reliable, -1);
-                writerShot.Write(BattleRoyale.pinkPlayer02.PlayerId);
-                writerShot.Write(2);
-                writerShot.Write(BattleRoyale.pinkPlayer02mouseAngle);
-                AmongUsClient.Instance.FinishRpcImmediately(writerShot);
-                RPCProcedure.battleRoyaleShowShoots(BattleRoyale.pinkPlayer02.PlayerId, 2, BattleRoyale.pinkPlayer02mouseAngle);
-
-                if (target == null)
+            if (MatchType == 2)
+            {
+                if ((LimePlayer01 != null && target == LimePlayer01 && LimePlayer01IsReviving) || (LimePlayer02 != null && target == LimePlayer02 && LimePlayer02IsReviving) || (LimePlayer03 != null && target == LimePlayer03 && LimePlayer03IsReviving) || (LimePlayer04 != null && target == LimePlayer04 && LimePlayer04IsReviving) || (LimePlayer05 != null && target == LimePlayer05 && LimePlayer05IsReviving) || (LimePlayer06 != null && target == LimePlayer06 && LimePlayer06IsReviving) || (LimePlayer07 != null && target == LimePlayer07 && LimePlayer07IsReviving) || (SerialKiller != null && target == SerialKiller && SerialKillerIsReviving))
                 {
-                    pinkPlayer02KillButton.Timer = pinkPlayer02KillButton.MaxTimer;
+                    _pinkPlayer02KillButton.Timer = _pinkPlayer02KillButton.MaxTimer;
                     return;
                 }
+            }
 
-                if (BattleRoyale.matchType == 2)
-                {
-                    if (BattleRoyale.limePlayer01 != null && target == BattleRoyale.limePlayer01 && BattleRoyale.limePlayer01IsReviving ||
-                    BattleRoyale.limePlayer02 != null && target == BattleRoyale.limePlayer02 && BattleRoyale.limePlayer02IsReviving ||
-                    BattleRoyale.limePlayer03 != null && target == BattleRoyale.limePlayer03 && BattleRoyale.limePlayer03IsReviving ||
-                    BattleRoyale.limePlayer04 != null && target == BattleRoyale.limePlayer04 && BattleRoyale.limePlayer04IsReviving ||
-                    BattleRoyale.limePlayer05 != null && target == BattleRoyale.limePlayer05 && BattleRoyale.limePlayer05IsReviving ||
-                    BattleRoyale.limePlayer06 != null && target == BattleRoyale.limePlayer06 && BattleRoyale.limePlayer06IsReviving ||
-                    BattleRoyale.limePlayer07 != null && target == BattleRoyale.limePlayer07 && BattleRoyale.limePlayer07IsReviving ||
-                    BattleRoyale.serialKiller != null && target == BattleRoyale.serialKiller && BattleRoyale.serialKillerIsReviving)
-                    {
-                        pinkPlayer02KillButton.Timer = pinkPlayer02KillButton.MaxTimer;
-                        return;
-                    }
-                }
+            var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.GamemodeKills, SendOption.Reliable);
+            writer.Write(target.PlayerId);
+            writer.Write(PinkPlayer02.PlayerId);
+            AmongUsClient.Instance.FinishRpcImmediately(writer);
+            RPCProcedure.GamemodeKills(target.PlayerId, PinkPlayer02.PlayerId);
 
-                MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.GamemodeKills, Hazel.SendOption.Reliable, -1);
-                writer.Write(target.PlayerId);
-                writer.Write(BattleRoyale.pinkPlayer02.PlayerId);
-                AmongUsClient.Instance.FinishRpcImmediately(writer);
-                RPCProcedure.gamemodeKills(target.PlayerId, BattleRoyale.pinkPlayer02.PlayerId);
+            _pinkPlayer02KillButton.Timer = _pinkPlayer02KillButton.MaxTimer;
+            SoundManager.Instance.PlaySound(AssetLoader.RoyaleHitPlayer, false, 100f);
 
-                pinkPlayer02KillButton.Timer = pinkPlayer02KillButton.MaxTimer;
-                SoundManager.Instance.PlaySound(AssetLoader.royaleHitPlayer, false, 100f);
-
-                target = null;
-            },
-            () => { return BattleRoyale.pinkPlayer02 != null && BattleRoyale.pinkPlayer02 == PlayerControl.LocalPlayer; },
-            () =>
+            target = null;
+        }, () => { return PinkPlayer02 != null && PinkPlayer02 == PlayerControl.LocalPlayer; }, () =>
+        {
+            if (PinkPlayer02Wep == null)
             {
-                if (BattleRoyale.pinkPlayer02Wep == null)
-                {
-                    BattleRoyale.pinkPlayer02Wep = new GameObject("Weapon");
-                    var renderer = BattleRoyale.pinkPlayer02Wep.AddComponent<SpriteRenderer>();
+                PinkPlayer02Wep = new("Weapon");
+                var renderer = PinkPlayer02Wep.AddComponent<SpriteRenderer>();
 
-                    renderer.sprite = AssetLoader.Bow;
-                    renderer.transform.parent = BattleRoyale.pinkPlayer02.transform;
-                    renderer.color = new Color(1, 1, 1, 1);
-                    renderer.transform.position = new Vector3(0, 0, -30f);
+                renderer.sprite = AssetLoader.Bow;
+                renderer.transform.parent = PinkPlayer02.transform;
+                renderer.color = new(1, 1, 1, 1);
+                renderer.transform.position = new(0, 0, -30f);
+            }
+            else
+            {
+                if (PlayerControl.LocalPlayer.Data.IsDead && MatchType != 2) PinkPlayer02Wep.SetActive(false);
+
+                var mouseDirection = Input.mousePosition - new Vector3(Screen.width / 2, Screen.height / 2);
+                PinkPlayer02MouseAngle = Mathf.Atan2(mouseDirection.y, mouseDirection.x);
+
+                var targetPosition = PinkPlayer02.transform.position + new Vector3(0.8f * (float)Math.Cos(PinkPlayer02MouseAngle), 0.8f * (float)Math.Sin(PinkPlayer02MouseAngle));
+                PinkPlayer02Wep.transform.position += (targetPosition - PinkPlayer02Wep.transform.position) * 0.4f;
+                PinkPlayer02Wep.GetComponent<SpriteRenderer>().transform.eulerAngles = new(0f, 0f, (float)((PinkPlayer02MouseAngle * 360f) / Math.PI / 2f));
+                if (Math.Cos(PinkPlayer02MouseAngle) < 0.0)
+                {
+                    if (PinkPlayer02Wep.GetComponent<SpriteRenderer>().transform.localScale.y > 0)
+                        PinkPlayer02Wep.GetComponent<SpriteRenderer>().transform.localScale = new(1f, -1f);
                 }
                 else
                 {
-
-                    if (PlayerControl.LocalPlayer.Data.IsDead && BattleRoyale.matchType != 2)
-                    {
-                        BattleRoyale.pinkPlayer02Wep.SetActive(false);
-                    }
-
-                    Vector3 mouseDirection = Input.mousePosition - new Vector3(Screen.width / 2, Screen.height / 2);
-                    BattleRoyale.pinkPlayer02mouseAngle = Mathf.Atan2(mouseDirection.y, mouseDirection.x);
-
-                    var targetPosition = BattleRoyale.pinkPlayer02.transform.position + new Vector3(0.8f * (float)Math.Cos(BattleRoyale.pinkPlayer02mouseAngle), 0.8f * (float)Math.Sin(BattleRoyale.pinkPlayer02mouseAngle));
-                    BattleRoyale.pinkPlayer02Wep.transform.position += (targetPosition - BattleRoyale.pinkPlayer02Wep.transform.position) * 0.4f;
-                    BattleRoyale.pinkPlayer02Wep.GetComponent<SpriteRenderer>().transform.eulerAngles = new Vector3(0f, 0f, (float)(BattleRoyale.pinkPlayer02mouseAngle * 360f / Math.PI / 2f));
-                    if (Math.Cos(BattleRoyale.pinkPlayer02mouseAngle) < 0.0)
-                    {
-                        if (BattleRoyale.pinkPlayer02Wep.GetComponent<SpriteRenderer>().transform.localScale.y > 0)
-                            BattleRoyale.pinkPlayer02Wep.GetComponent<SpriteRenderer>().transform.localScale = new Vector3(1f, -1f);
-                    }
-                    else
-                    {
-                        if (BattleRoyale.pinkPlayer02Wep.GetComponent<SpriteRenderer>().transform.localScale.y < 0)
-                            BattleRoyale.pinkPlayer02Wep.GetComponent<SpriteRenderer>().transform.localScale = new Vector3(1f, 1f);
-                    }
+                    if (PinkPlayer02Wep.GetComponent<SpriteRenderer>().transform.localScale.y < 0)
+                        PinkPlayer02Wep.GetComponent<SpriteRenderer>().transform.localScale = new(1f, 1f);
                 }
-                bool CanUse = true;
-                if (BattleRoyale.pinkPlayer02IsReviving)
-                {
-                    CanUse = false;
-                }
-                return CanUse && PlayerControl.LocalPlayer.CanMove && !PlayerControl.LocalPlayer.Data.IsDead;
-            },
-            () => { pinkPlayer02KillButton.Timer = pinkPlayer02KillButton.MaxTimer; },
-            __instance.KillButton.graphic.sprite,
-            ButtonPosition.Layout,
-            __instance,
-            __instance.KillButton,
-            KeyCode.Mouse1,
-            false,
-            TranslationController.Instance.GetString(StringNames.KillLabel)
-        );
+            }
+
+            var canUse = true;
+            if (PinkPlayer02IsReviving) canUse = false;
+            return canUse && PlayerControl.LocalPlayer.CanMove && !PlayerControl.LocalPlayer.Data.IsDead;
+        }, () => { _pinkPlayer02KillButton.Timer = _pinkPlayer02KillButton.MaxTimer; }, __instance.KillButton.graphic.sprite, ButtonPosition.Layout, __instance, __instance.KillButton, KeyCode.Mouse1, false, TranslationController.Instance.GetString(StringNames.KillLabel));
 
         // PinkPlayer03 Kill
-        pinkPlayer03KillButton = new CustomButton(
-            () =>
+        _pinkPlayer03KillButton = new(() =>
+        {
+            var target = GetPinkShotPlayer(2 * 0.2f, 6, 3);
+
+            var writerShot = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.BattleRoyaleShowShoots, SendOption.Reliable);
+            writerShot.Write(PinkPlayer03.PlayerId);
+            writerShot.Write(2);
+            writerShot.Write(PinkPlayer03MouseAngle);
+            AmongUsClient.Instance.FinishRpcImmediately(writerShot);
+            RPCProcedure.BattleRoyaleShowShoots(PinkPlayer03.PlayerId, 2, PinkPlayer03MouseAngle);
+
+            if (target == null)
             {
-                PlayerControl target = BattleRoyale.GetPinkShotPlayer(2 * 0.2f, 6, 3);
+                _pinkPlayer03KillButton.Timer = _pinkPlayer03KillButton.MaxTimer;
+                return;
+            }
 
-                MessageWriter writerShot = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.BattleRoyaleShowShoots, Hazel.SendOption.Reliable, -1);
-                writerShot.Write(BattleRoyale.pinkPlayer03.PlayerId);
-                writerShot.Write(2);
-                writerShot.Write(BattleRoyale.pinkPlayer03mouseAngle);
-                AmongUsClient.Instance.FinishRpcImmediately(writerShot);
-                RPCProcedure.battleRoyaleShowShoots(BattleRoyale.pinkPlayer03.PlayerId, 2, BattleRoyale.pinkPlayer03mouseAngle);
-
-                if (target == null)
+            if (MatchType == 2)
+            {
+                if ((LimePlayer01 != null && target == LimePlayer01 && LimePlayer01IsReviving) || (LimePlayer02 != null && target == LimePlayer02 && LimePlayer02IsReviving) || (LimePlayer03 != null && target == LimePlayer03 && LimePlayer03IsReviving) || (LimePlayer04 != null && target == LimePlayer04 && LimePlayer04IsReviving) || (LimePlayer05 != null && target == LimePlayer05 && LimePlayer05IsReviving) || (LimePlayer06 != null && target == LimePlayer06 && LimePlayer06IsReviving) || (LimePlayer07 != null && target == LimePlayer07 && LimePlayer07IsReviving) || (SerialKiller != null && target == SerialKiller && SerialKillerIsReviving))
                 {
-                    pinkPlayer03KillButton.Timer = pinkPlayer03KillButton.MaxTimer;
+                    _pinkPlayer03KillButton.Timer = _pinkPlayer03KillButton.MaxTimer;
                     return;
                 }
+            }
 
-                if (BattleRoyale.matchType == 2)
-                {
-                    if (BattleRoyale.limePlayer01 != null && target == BattleRoyale.limePlayer01 && BattleRoyale.limePlayer01IsReviving ||
-                    BattleRoyale.limePlayer02 != null && target == BattleRoyale.limePlayer02 && BattleRoyale.limePlayer02IsReviving ||
-                    BattleRoyale.limePlayer03 != null && target == BattleRoyale.limePlayer03 && BattleRoyale.limePlayer03IsReviving ||
-                    BattleRoyale.limePlayer04 != null && target == BattleRoyale.limePlayer04 && BattleRoyale.limePlayer04IsReviving ||
-                    BattleRoyale.limePlayer05 != null && target == BattleRoyale.limePlayer05 && BattleRoyale.limePlayer05IsReviving ||
-                    BattleRoyale.limePlayer06 != null && target == BattleRoyale.limePlayer06 && BattleRoyale.limePlayer06IsReviving ||
-                    BattleRoyale.limePlayer07 != null && target == BattleRoyale.limePlayer07 && BattleRoyale.limePlayer07IsReviving ||
-                    BattleRoyale.serialKiller != null && target == BattleRoyale.serialKiller && BattleRoyale.serialKillerIsReviving)
-                    {
-                        pinkPlayer03KillButton.Timer = pinkPlayer03KillButton.MaxTimer;
-                        return;
-                    }
-                }
+            var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.GamemodeKills, SendOption.Reliable);
+            writer.Write(target.PlayerId);
+            writer.Write(PinkPlayer03.PlayerId);
+            AmongUsClient.Instance.FinishRpcImmediately(writer);
+            RPCProcedure.GamemodeKills(target.PlayerId, PinkPlayer03.PlayerId);
 
-                MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.GamemodeKills, Hazel.SendOption.Reliable, -1);
-                writer.Write(target.PlayerId);
-                writer.Write(BattleRoyale.pinkPlayer03.PlayerId);
-                AmongUsClient.Instance.FinishRpcImmediately(writer);
-                RPCProcedure.gamemodeKills(target.PlayerId, BattleRoyale.pinkPlayer03.PlayerId);
+            _pinkPlayer03KillButton.Timer = _pinkPlayer03KillButton.MaxTimer;
+            SoundManager.Instance.PlaySound(AssetLoader.RoyaleHitPlayer, false, 100f);
 
-                pinkPlayer03KillButton.Timer = pinkPlayer03KillButton.MaxTimer;
-                SoundManager.Instance.PlaySound(AssetLoader.royaleHitPlayer, false, 100f);
-
-                target = null;
-            },
-            () => { return BattleRoyale.pinkPlayer03 != null && BattleRoyale.pinkPlayer03 == PlayerControl.LocalPlayer; },
-            () =>
+            target = null;
+        }, () => { return PinkPlayer03 != null && PinkPlayer03 == PlayerControl.LocalPlayer; }, () =>
+        {
+            if (PinkPlayer03Wep == null)
             {
-                if (BattleRoyale.pinkPlayer03Wep == null)
-                {
-                    BattleRoyale.pinkPlayer03Wep = new GameObject("Weapon");
-                    var renderer = BattleRoyale.pinkPlayer03Wep.AddComponent<SpriteRenderer>();
+                PinkPlayer03Wep = new("Weapon");
+                var renderer = PinkPlayer03Wep.AddComponent<SpriteRenderer>();
 
-                    renderer.sprite = AssetLoader.Bow;
-                    renderer.transform.parent = BattleRoyale.pinkPlayer03.transform;
-                    renderer.color = new Color(1, 1, 1, 1);
-                    renderer.transform.position = new Vector3(0, 0, -30f);
+                renderer.sprite = AssetLoader.Bow;
+                renderer.transform.parent = PinkPlayer03.transform;
+                renderer.color = new(1, 1, 1, 1);
+                renderer.transform.position = new(0, 0, -30f);
+            }
+            else
+            {
+                if (PlayerControl.LocalPlayer.Data.IsDead && MatchType != 2) PinkPlayer03Wep.SetActive(false);
+
+                var mouseDirection = Input.mousePosition - new Vector3(Screen.width / 2, Screen.height / 2);
+                PinkPlayer03MouseAngle = Mathf.Atan2(mouseDirection.y, mouseDirection.x);
+
+                var targetPosition = PinkPlayer03.transform.position + new Vector3(0.8f * (float)Math.Cos(PinkPlayer03MouseAngle), 0.8f * (float)Math.Sin(PinkPlayer03MouseAngle));
+                PinkPlayer03Wep.transform.position += (targetPosition - PinkPlayer03Wep.transform.position) * 0.4f;
+                PinkPlayer03Wep.GetComponent<SpriteRenderer>().transform.eulerAngles = new(0f, 0f, (float)((PinkPlayer03MouseAngle * 360f) / Math.PI / 2f));
+                if (Math.Cos(PinkPlayer03MouseAngle) < 0.0)
+                {
+                    if (PinkPlayer03Wep.GetComponent<SpriteRenderer>().transform.localScale.y > 0)
+                        PinkPlayer03Wep.GetComponent<SpriteRenderer>().transform.localScale = new(1f, -1f);
                 }
                 else
                 {
-
-                    if (PlayerControl.LocalPlayer.Data.IsDead && BattleRoyale.matchType != 2)
-                    {
-                        BattleRoyale.pinkPlayer03Wep.SetActive(false);
-                    }
-
-                    Vector3 mouseDirection = Input.mousePosition - new Vector3(Screen.width / 2, Screen.height / 2);
-                    BattleRoyale.pinkPlayer03mouseAngle = Mathf.Atan2(mouseDirection.y, mouseDirection.x);
-
-                    var targetPosition = BattleRoyale.pinkPlayer03.transform.position + new Vector3(0.8f * (float)Math.Cos(BattleRoyale.pinkPlayer03mouseAngle), 0.8f * (float)Math.Sin(BattleRoyale.pinkPlayer03mouseAngle));
-                    BattleRoyale.pinkPlayer03Wep.transform.position += (targetPosition - BattleRoyale.pinkPlayer03Wep.transform.position) * 0.4f;
-                    BattleRoyale.pinkPlayer03Wep.GetComponent<SpriteRenderer>().transform.eulerAngles = new Vector3(0f, 0f, (float)(BattleRoyale.pinkPlayer03mouseAngle * 360f / Math.PI / 2f));
-                    if (Math.Cos(BattleRoyale.pinkPlayer03mouseAngle) < 0.0)
-                    {
-                        if (BattleRoyale.pinkPlayer03Wep.GetComponent<SpriteRenderer>().transform.localScale.y > 0)
-                            BattleRoyale.pinkPlayer03Wep.GetComponent<SpriteRenderer>().transform.localScale = new Vector3(1f, -1f);
-                    }
-                    else
-                    {
-                        if (BattleRoyale.pinkPlayer03Wep.GetComponent<SpriteRenderer>().transform.localScale.y < 0)
-                            BattleRoyale.pinkPlayer03Wep.GetComponent<SpriteRenderer>().transform.localScale = new Vector3(1f, 1f);
-                    }
+                    if (PinkPlayer03Wep.GetComponent<SpriteRenderer>().transform.localScale.y < 0)
+                        PinkPlayer03Wep.GetComponent<SpriteRenderer>().transform.localScale = new(1f, 1f);
                 }
-                bool CanUse = true;
-                if (BattleRoyale.pinkPlayer03IsReviving)
-                {
-                    CanUse = false;
-                }
-                return CanUse && PlayerControl.LocalPlayer.CanMove && !PlayerControl.LocalPlayer.Data.IsDead;
-            },
-            () => { pinkPlayer03KillButton.Timer = pinkPlayer03KillButton.MaxTimer; },
-            __instance.KillButton.graphic.sprite,
-            ButtonPosition.Layout,
-            __instance,
-            __instance.KillButton,
-            KeyCode.Mouse1,
-            false,
-            TranslationController.Instance.GetString(StringNames.KillLabel)
-        );
+            }
+
+            var canUse = true;
+            if (PinkPlayer03IsReviving) canUse = false;
+            return canUse && PlayerControl.LocalPlayer.CanMove && !PlayerControl.LocalPlayer.Data.IsDead;
+        }, () => { _pinkPlayer03KillButton.Timer = _pinkPlayer03KillButton.MaxTimer; }, __instance.KillButton.graphic.sprite, ButtonPosition.Layout, __instance, __instance.KillButton, KeyCode.Mouse1, false, TranslationController.Instance.GetString(StringNames.KillLabel));
 
         // PinkPlayer04 Kill
-        pinkPlayer04KillButton = new CustomButton(
-            () =>
+        _pinkPlayer04KillButton = new(() =>
+        {
+            var target = GetPinkShotPlayer(2 * 0.2f, 6, 4);
+
+            var writerShot = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.BattleRoyaleShowShoots, SendOption.Reliable);
+            writerShot.Write(PinkPlayer04.PlayerId);
+            writerShot.Write(2);
+            writerShot.Write(PinkPlayer04MouseAngle);
+            AmongUsClient.Instance.FinishRpcImmediately(writerShot);
+            RPCProcedure.BattleRoyaleShowShoots(PinkPlayer04.PlayerId, 2, PinkPlayer04MouseAngle);
+
+            if (target == null)
             {
-                PlayerControl target = BattleRoyale.GetPinkShotPlayer(2 * 0.2f, 6, 4);
+                _pinkPlayer04KillButton.Timer = _pinkPlayer04KillButton.MaxTimer;
+                return;
+            }
 
-                MessageWriter writerShot = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.BattleRoyaleShowShoots, Hazel.SendOption.Reliable, -1);
-                writerShot.Write(BattleRoyale.pinkPlayer04.PlayerId);
-                writerShot.Write(2);
-                writerShot.Write(BattleRoyale.pinkPlayer04mouseAngle);
-                AmongUsClient.Instance.FinishRpcImmediately(writerShot);
-                RPCProcedure.battleRoyaleShowShoots(BattleRoyale.pinkPlayer04.PlayerId, 2, BattleRoyale.pinkPlayer04mouseAngle);
-
-                if (target == null)
+            if (MatchType == 2)
+            {
+                if ((LimePlayer01 != null && target == LimePlayer01 && LimePlayer01IsReviving) || (LimePlayer02 != null && target == LimePlayer02 && LimePlayer02IsReviving) || (LimePlayer03 != null && target == LimePlayer03 && LimePlayer03IsReviving) || (LimePlayer04 != null && target == LimePlayer04 && LimePlayer04IsReviving) || (LimePlayer05 != null && target == LimePlayer05 && LimePlayer05IsReviving) || (LimePlayer06 != null && target == LimePlayer06 && LimePlayer06IsReviving) || (LimePlayer07 != null && target == LimePlayer07 && LimePlayer07IsReviving) || (SerialKiller != null && target == SerialKiller && SerialKillerIsReviving))
                 {
-                    pinkPlayer04KillButton.Timer = pinkPlayer04KillButton.MaxTimer;
+                    _pinkPlayer04KillButton.Timer = _pinkPlayer04KillButton.MaxTimer;
                     return;
                 }
+            }
 
-                if (BattleRoyale.matchType == 2)
-                {
-                    if (BattleRoyale.limePlayer01 != null && target == BattleRoyale.limePlayer01 && BattleRoyale.limePlayer01IsReviving ||
-                    BattleRoyale.limePlayer02 != null && target == BattleRoyale.limePlayer02 && BattleRoyale.limePlayer02IsReviving ||
-                    BattleRoyale.limePlayer03 != null && target == BattleRoyale.limePlayer03 && BattleRoyale.limePlayer03IsReviving ||
-                    BattleRoyale.limePlayer04 != null && target == BattleRoyale.limePlayer04 && BattleRoyale.limePlayer04IsReviving ||
-                    BattleRoyale.limePlayer05 != null && target == BattleRoyale.limePlayer05 && BattleRoyale.limePlayer05IsReviving ||
-                    BattleRoyale.limePlayer06 != null && target == BattleRoyale.limePlayer06 && BattleRoyale.limePlayer06IsReviving ||
-                    BattleRoyale.limePlayer07 != null && target == BattleRoyale.limePlayer07 && BattleRoyale.limePlayer07IsReviving ||
-                    BattleRoyale.serialKiller != null && target == BattleRoyale.serialKiller && BattleRoyale.serialKillerIsReviving)
-                    {
-                        pinkPlayer04KillButton.Timer = pinkPlayer04KillButton.MaxTimer;
-                        return;
-                    }
-                }
+            var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.GamemodeKills, SendOption.Reliable);
+            writer.Write(target.PlayerId);
+            writer.Write(PinkPlayer04.PlayerId);
+            AmongUsClient.Instance.FinishRpcImmediately(writer);
+            RPCProcedure.GamemodeKills(target.PlayerId, PinkPlayer04.PlayerId);
 
-                MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.GamemodeKills, Hazel.SendOption.Reliable, -1);
-                writer.Write(target.PlayerId);
-                writer.Write(BattleRoyale.pinkPlayer04.PlayerId);
-                AmongUsClient.Instance.FinishRpcImmediately(writer);
-                RPCProcedure.gamemodeKills(target.PlayerId, BattleRoyale.pinkPlayer04.PlayerId);
+            _pinkPlayer04KillButton.Timer = _pinkPlayer04KillButton.MaxTimer;
+            SoundManager.Instance.PlaySound(AssetLoader.RoyaleHitPlayer, false, 100f);
 
-                pinkPlayer04KillButton.Timer = pinkPlayer04KillButton.MaxTimer;
-                SoundManager.Instance.PlaySound(AssetLoader.royaleHitPlayer, false, 100f);
-
-                target = null;
-            },
-            () => { return BattleRoyale.pinkPlayer04 != null && BattleRoyale.pinkPlayer04 == PlayerControl.LocalPlayer; },
-            () =>
+            target = null;
+        }, () => { return PinkPlayer04 != null && PinkPlayer04 == PlayerControl.LocalPlayer; }, () =>
+        {
+            if (PinkPlayer04Wep == null)
             {
-                if (BattleRoyale.pinkPlayer04Wep == null)
-                {
-                    BattleRoyale.pinkPlayer04Wep = new GameObject("Weapon");
-                    var renderer = BattleRoyale.pinkPlayer04Wep.AddComponent<SpriteRenderer>();
+                PinkPlayer04Wep = new("Weapon");
+                var renderer = PinkPlayer04Wep.AddComponent<SpriteRenderer>();
 
-                    renderer.sprite = AssetLoader.Bow;
-                    renderer.transform.parent = BattleRoyale.pinkPlayer04.transform;
-                    renderer.color = new Color(1, 1, 1, 1);
-                    renderer.transform.position = new Vector3(0, 0, -30f);
+                renderer.sprite = AssetLoader.Bow;
+                renderer.transform.parent = PinkPlayer04.transform;
+                renderer.color = new(1, 1, 1, 1);
+                renderer.transform.position = new(0, 0, -30f);
+            }
+            else
+            {
+                if (PlayerControl.LocalPlayer.Data.IsDead && MatchType != 2) PinkPlayer04Wep.SetActive(false);
+
+                var mouseDirection = Input.mousePosition - new Vector3(Screen.width / 2, Screen.height / 2);
+                PinkPlayer04MouseAngle = Mathf.Atan2(mouseDirection.y, mouseDirection.x);
+
+                var targetPosition = PinkPlayer04.transform.position + new Vector3(0.8f * (float)Math.Cos(PinkPlayer04MouseAngle), 0.8f * (float)Math.Sin(PinkPlayer04MouseAngle));
+                PinkPlayer04Wep.transform.position += (targetPosition - PinkPlayer04Wep.transform.position) * 0.4f;
+                PinkPlayer04Wep.GetComponent<SpriteRenderer>().transform.eulerAngles = new(0f, 0f, (float)((PinkPlayer04MouseAngle * 360f) / Math.PI / 2f));
+                if (Math.Cos(PinkPlayer04MouseAngle) < 0.0)
+                {
+                    if (PinkPlayer04Wep.GetComponent<SpriteRenderer>().transform.localScale.y > 0)
+                        PinkPlayer04Wep.GetComponent<SpriteRenderer>().transform.localScale = new(1f, -1f);
                 }
                 else
                 {
-
-                    if (PlayerControl.LocalPlayer.Data.IsDead && BattleRoyale.matchType != 2)
-                    {
-                        BattleRoyale.pinkPlayer04Wep.SetActive(false);
-                    }
-
-                    Vector3 mouseDirection = Input.mousePosition - new Vector3(Screen.width / 2, Screen.height / 2);
-                    BattleRoyale.pinkPlayer04mouseAngle = Mathf.Atan2(mouseDirection.y, mouseDirection.x);
-
-                    var targetPosition = BattleRoyale.pinkPlayer04.transform.position + new Vector3(0.8f * (float)Math.Cos(BattleRoyale.pinkPlayer04mouseAngle), 0.8f * (float)Math.Sin(BattleRoyale.pinkPlayer04mouseAngle));
-                    BattleRoyale.pinkPlayer04Wep.transform.position += (targetPosition - BattleRoyale.pinkPlayer04Wep.transform.position) * 0.4f;
-                    BattleRoyale.pinkPlayer04Wep.GetComponent<SpriteRenderer>().transform.eulerAngles = new Vector3(0f, 0f, (float)(BattleRoyale.pinkPlayer04mouseAngle * 360f / Math.PI / 2f));
-                    if (Math.Cos(BattleRoyale.pinkPlayer04mouseAngle) < 0.0)
-                    {
-                        if (BattleRoyale.pinkPlayer04Wep.GetComponent<SpriteRenderer>().transform.localScale.y > 0)
-                            BattleRoyale.pinkPlayer04Wep.GetComponent<SpriteRenderer>().transform.localScale = new Vector3(1f, -1f);
-                    }
-                    else
-                    {
-                        if (BattleRoyale.pinkPlayer04Wep.GetComponent<SpriteRenderer>().transform.localScale.y < 0)
-                            BattleRoyale.pinkPlayer04Wep.GetComponent<SpriteRenderer>().transform.localScale = new Vector3(1f, 1f);
-                    }
+                    if (PinkPlayer04Wep.GetComponent<SpriteRenderer>().transform.localScale.y < 0)
+                        PinkPlayer04Wep.GetComponent<SpriteRenderer>().transform.localScale = new(1f, 1f);
                 }
-                bool CanUse = true;
-                if (BattleRoyale.pinkPlayer04IsReviving)
-                {
-                    CanUse = false;
-                }
-                return CanUse && PlayerControl.LocalPlayer.CanMove && !PlayerControl.LocalPlayer.Data.IsDead;
-            },
-            () => { pinkPlayer04KillButton.Timer = pinkPlayer04KillButton.MaxTimer; },
-            __instance.KillButton.graphic.sprite,
-            ButtonPosition.Layout,
-            __instance,
-            __instance.KillButton,
-            KeyCode.Mouse1,
-            false,
-            TranslationController.Instance.GetString(StringNames.KillLabel)
-        );
+            }
+
+            var canUse = true;
+            if (PinkPlayer04IsReviving) canUse = false;
+            return canUse && PlayerControl.LocalPlayer.CanMove && !PlayerControl.LocalPlayer.Data.IsDead;
+        }, () => { _pinkPlayer04KillButton.Timer = _pinkPlayer04KillButton.MaxTimer; }, __instance.KillButton.graphic.sprite, ButtonPosition.Layout, __instance, __instance.KillButton, KeyCode.Mouse1, false, TranslationController.Instance.GetString(StringNames.KillLabel));
 
         // PinkPlayer05 Kill
-        pinkPlayer05KillButton = new CustomButton(
-            () =>
+        _pinkPlayer05KillButton = new(() =>
+        {
+            var target = GetPinkShotPlayer(2 * 0.2f, 6, 5);
+
+            var writerShot = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.BattleRoyaleShowShoots, SendOption.Reliable);
+            writerShot.Write(PinkPlayer05.PlayerId);
+            writerShot.Write(2);
+            writerShot.Write(PinkPlayer05MouseAngle);
+            AmongUsClient.Instance.FinishRpcImmediately(writerShot);
+            RPCProcedure.BattleRoyaleShowShoots(PinkPlayer05.PlayerId, 2, PinkPlayer05MouseAngle);
+
+            if (target == null)
             {
-                PlayerControl target = BattleRoyale.GetPinkShotPlayer(2 * 0.2f, 6, 5);
+                _pinkPlayer05KillButton.Timer = _pinkPlayer05KillButton.MaxTimer;
+                return;
+            }
 
-                MessageWriter writerShot = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.BattleRoyaleShowShoots, Hazel.SendOption.Reliable, -1);
-                writerShot.Write(BattleRoyale.pinkPlayer05.PlayerId);
-                writerShot.Write(2);
-                writerShot.Write(BattleRoyale.pinkPlayer05mouseAngle);
-                AmongUsClient.Instance.FinishRpcImmediately(writerShot);
-                RPCProcedure.battleRoyaleShowShoots(BattleRoyale.pinkPlayer05.PlayerId, 2, BattleRoyale.pinkPlayer05mouseAngle);
-
-                if (target == null)
+            if (MatchType == 2)
+            {
+                if ((LimePlayer01 != null && target == LimePlayer01 && LimePlayer01IsReviving) || (LimePlayer02 != null && target == LimePlayer02 && LimePlayer02IsReviving) || (LimePlayer03 != null && target == LimePlayer03 && LimePlayer03IsReviving) || (LimePlayer04 != null && target == LimePlayer04 && LimePlayer04IsReviving) || (LimePlayer05 != null && target == LimePlayer05 && LimePlayer05IsReviving) || (LimePlayer06 != null && target == LimePlayer06 && LimePlayer06IsReviving) || (LimePlayer07 != null && target == LimePlayer07 && LimePlayer07IsReviving) || (SerialKiller != null && target == SerialKiller && SerialKillerIsReviving))
                 {
-                    pinkPlayer05KillButton.Timer = pinkPlayer05KillButton.MaxTimer;
+                    _pinkPlayer05KillButton.Timer = _pinkPlayer05KillButton.MaxTimer;
                     return;
                 }
+            }
 
-                if (BattleRoyale.matchType == 2)
-                {
-                    if (BattleRoyale.limePlayer01 != null && target == BattleRoyale.limePlayer01 && BattleRoyale.limePlayer01IsReviving ||
-                    BattleRoyale.limePlayer02 != null && target == BattleRoyale.limePlayer02 && BattleRoyale.limePlayer02IsReviving ||
-                    BattleRoyale.limePlayer03 != null && target == BattleRoyale.limePlayer03 && BattleRoyale.limePlayer03IsReviving ||
-                    BattleRoyale.limePlayer04 != null && target == BattleRoyale.limePlayer04 && BattleRoyale.limePlayer04IsReviving ||
-                    BattleRoyale.limePlayer05 != null && target == BattleRoyale.limePlayer05 && BattleRoyale.limePlayer05IsReviving ||
-                    BattleRoyale.limePlayer06 != null && target == BattleRoyale.limePlayer06 && BattleRoyale.limePlayer06IsReviving ||
-                    BattleRoyale.limePlayer07 != null && target == BattleRoyale.limePlayer07 && BattleRoyale.limePlayer07IsReviving ||
-                    BattleRoyale.serialKiller != null && target == BattleRoyale.serialKiller && BattleRoyale.serialKillerIsReviving)
-                    {
-                        pinkPlayer05KillButton.Timer = pinkPlayer05KillButton.MaxTimer;
-                        return;
-                    }
-                }
+            var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.GamemodeKills, SendOption.Reliable);
+            writer.Write(target.PlayerId);
+            writer.Write(PinkPlayer05.PlayerId);
+            AmongUsClient.Instance.FinishRpcImmediately(writer);
+            RPCProcedure.GamemodeKills(target.PlayerId, PinkPlayer05.PlayerId);
 
-                MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.GamemodeKills, Hazel.SendOption.Reliable, -1);
-                writer.Write(target.PlayerId);
-                writer.Write(BattleRoyale.pinkPlayer05.PlayerId);
-                AmongUsClient.Instance.FinishRpcImmediately(writer);
-                RPCProcedure.gamemodeKills(target.PlayerId, BattleRoyale.pinkPlayer05.PlayerId);
+            _pinkPlayer05KillButton.Timer = _pinkPlayer05KillButton.MaxTimer;
+            SoundManager.Instance.PlaySound(AssetLoader.RoyaleHitPlayer, false, 100f);
 
-                pinkPlayer05KillButton.Timer = pinkPlayer05KillButton.MaxTimer;
-                SoundManager.Instance.PlaySound(AssetLoader.royaleHitPlayer, false, 100f);
-
-                target = null;
-            },
-            () => { return BattleRoyale.pinkPlayer05 != null && BattleRoyale.pinkPlayer05 == PlayerControl.LocalPlayer; },
-            () =>
+            target = null;
+        }, () => { return PinkPlayer05 != null && PinkPlayer05 == PlayerControl.LocalPlayer; }, () =>
+        {
+            if (PinkPlayer05Wep == null)
             {
-                if (BattleRoyale.pinkPlayer05Wep == null)
-                {
-                    BattleRoyale.pinkPlayer05Wep = new GameObject("Weapon");
-                    var renderer = BattleRoyale.pinkPlayer05Wep.AddComponent<SpriteRenderer>();
+                PinkPlayer05Wep = new("Weapon");
+                var renderer = PinkPlayer05Wep.AddComponent<SpriteRenderer>();
 
-                    renderer.sprite = AssetLoader.Bow;
-                    renderer.transform.parent = BattleRoyale.pinkPlayer05.transform;
-                    renderer.color = new Color(1, 1, 1, 1);
-                    renderer.transform.position = new Vector3(0, 0, -30f);
+                renderer.sprite = AssetLoader.Bow;
+                renderer.transform.parent = PinkPlayer05.transform;
+                renderer.color = new(1, 1, 1, 1);
+                renderer.transform.position = new(0, 0, -30f);
+            }
+            else
+            {
+                if (PlayerControl.LocalPlayer.Data.IsDead && MatchType != 2) PinkPlayer05Wep.SetActive(false);
+
+                var mouseDirection = Input.mousePosition - new Vector3(Screen.width / 2, Screen.height / 2);
+                PinkPlayer05MouseAngle = Mathf.Atan2(mouseDirection.y, mouseDirection.x);
+
+                var targetPosition = PinkPlayer05.transform.position + new Vector3(0.8f * (float)Math.Cos(PinkPlayer05MouseAngle), 0.8f * (float)Math.Sin(PinkPlayer05MouseAngle));
+                PinkPlayer05Wep.transform.position += (targetPosition - PinkPlayer05Wep.transform.position) * 0.4f;
+                PinkPlayer05Wep.GetComponent<SpriteRenderer>().transform.eulerAngles = new(0f, 0f, (float)((PinkPlayer05MouseAngle * 360f) / Math.PI / 2f));
+                if (Math.Cos(PinkPlayer05MouseAngle) < 0.0)
+                {
+                    if (PinkPlayer05Wep.GetComponent<SpriteRenderer>().transform.localScale.y > 0)
+                        PinkPlayer05Wep.GetComponent<SpriteRenderer>().transform.localScale = new(1f, -1f);
                 }
                 else
                 {
-
-                    if (PlayerControl.LocalPlayer.Data.IsDead && BattleRoyale.matchType != 2)
-                    {
-                        BattleRoyale.pinkPlayer05Wep.SetActive(false);
-                    }
-
-                    Vector3 mouseDirection = Input.mousePosition - new Vector3(Screen.width / 2, Screen.height / 2);
-                    BattleRoyale.pinkPlayer05mouseAngle = Mathf.Atan2(mouseDirection.y, mouseDirection.x);
-
-                    var targetPosition = BattleRoyale.pinkPlayer05.transform.position + new Vector3(0.8f * (float)Math.Cos(BattleRoyale.pinkPlayer05mouseAngle), 0.8f * (float)Math.Sin(BattleRoyale.pinkPlayer05mouseAngle));
-                    BattleRoyale.pinkPlayer05Wep.transform.position += (targetPosition - BattleRoyale.pinkPlayer05Wep.transform.position) * 0.4f;
-                    BattleRoyale.pinkPlayer05Wep.GetComponent<SpriteRenderer>().transform.eulerAngles = new Vector3(0f, 0f, (float)(BattleRoyale.pinkPlayer05mouseAngle * 360f / Math.PI / 2f));
-                    if (Math.Cos(BattleRoyale.pinkPlayer05mouseAngle) < 0.0)
-                    {
-                        if (BattleRoyale.pinkPlayer05Wep.GetComponent<SpriteRenderer>().transform.localScale.y > 0)
-                            BattleRoyale.pinkPlayer05Wep.GetComponent<SpriteRenderer>().transform.localScale = new Vector3(1f, -1f);
-                    }
-                    else
-                    {
-                        if (BattleRoyale.pinkPlayer05Wep.GetComponent<SpriteRenderer>().transform.localScale.y < 0)
-                            BattleRoyale.pinkPlayer05Wep.GetComponent<SpriteRenderer>().transform.localScale = new Vector3(1f, 1f);
-                    }
+                    if (PinkPlayer05Wep.GetComponent<SpriteRenderer>().transform.localScale.y < 0)
+                        PinkPlayer05Wep.GetComponent<SpriteRenderer>().transform.localScale = new(1f, 1f);
                 }
-                bool CanUse = true;
-                if (BattleRoyale.pinkPlayer05IsReviving)
-                {
-                    CanUse = false;
-                }
-                return CanUse && PlayerControl.LocalPlayer.CanMove && !PlayerControl.LocalPlayer.Data.IsDead;
-            },
-            () => { pinkPlayer05KillButton.Timer = pinkPlayer05KillButton.MaxTimer; },
-            __instance.KillButton.graphic.sprite,
-            ButtonPosition.Layout,
-            __instance,
-            __instance.KillButton,
-            KeyCode.Mouse1,
-            false,
-            TranslationController.Instance.GetString(StringNames.KillLabel)
-        );
+            }
+
+            var canUse = true;
+            if (PinkPlayer05IsReviving) canUse = false;
+            return canUse && PlayerControl.LocalPlayer.CanMove && !PlayerControl.LocalPlayer.Data.IsDead;
+        }, () => { _pinkPlayer05KillButton.Timer = _pinkPlayer05KillButton.MaxTimer; }, __instance.KillButton.graphic.sprite, ButtonPosition.Layout, __instance, __instance.KillButton, KeyCode.Mouse1, false, TranslationController.Instance.GetString(StringNames.KillLabel));
 
         // PinkPlayer06 Kill
-        pinkPlayer06KillButton = new CustomButton(
-            () =>
+        _pinkPlayer06KillButton = new(() =>
+        {
+            var target = GetPinkShotPlayer(2 * 0.2f, 6, 6);
+
+            var writerShot = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.BattleRoyaleShowShoots, SendOption.Reliable);
+            writerShot.Write(PinkPlayer06.PlayerId);
+            writerShot.Write(2);
+            writerShot.Write(PinkPlayer06MouseAngle);
+            AmongUsClient.Instance.FinishRpcImmediately(writerShot);
+            RPCProcedure.BattleRoyaleShowShoots(PinkPlayer06.PlayerId, 2, PinkPlayer06MouseAngle);
+
+            if (target == null)
             {
-                PlayerControl target = BattleRoyale.GetPinkShotPlayer(2 * 0.2f, 6, 6);
+                _pinkPlayer06KillButton.Timer = _pinkPlayer06KillButton.MaxTimer;
+                return;
+            }
 
-                MessageWriter writerShot = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.BattleRoyaleShowShoots, Hazel.SendOption.Reliable, -1);
-                writerShot.Write(BattleRoyale.pinkPlayer06.PlayerId);
-                writerShot.Write(2);
-                writerShot.Write(BattleRoyale.pinkPlayer06mouseAngle);
-                AmongUsClient.Instance.FinishRpcImmediately(writerShot);
-                RPCProcedure.battleRoyaleShowShoots(BattleRoyale.pinkPlayer06.PlayerId, 2, BattleRoyale.pinkPlayer06mouseAngle);
-
-                if (target == null)
+            if (MatchType == 2)
+            {
+                if ((LimePlayer01 != null && target == LimePlayer01 && LimePlayer01IsReviving) || (LimePlayer02 != null && target == LimePlayer02 && LimePlayer02IsReviving) || (LimePlayer03 != null && target == LimePlayer03 && LimePlayer03IsReviving) || (LimePlayer04 != null && target == LimePlayer04 && LimePlayer04IsReviving) || (LimePlayer05 != null && target == LimePlayer05 && LimePlayer05IsReviving) || (LimePlayer06 != null && target == LimePlayer06 && LimePlayer06IsReviving) || (LimePlayer07 != null && target == LimePlayer07 && LimePlayer07IsReviving) || (SerialKiller != null && target == SerialKiller && SerialKillerIsReviving))
                 {
-                    pinkPlayer06KillButton.Timer = pinkPlayer06KillButton.MaxTimer;
+                    _pinkPlayer06KillButton.Timer = _pinkPlayer06KillButton.MaxTimer;
                     return;
                 }
+            }
 
-                if (BattleRoyale.matchType == 2)
-                {
-                    if (BattleRoyale.limePlayer01 != null && target == BattleRoyale.limePlayer01 && BattleRoyale.limePlayer01IsReviving ||
-                    BattleRoyale.limePlayer02 != null && target == BattleRoyale.limePlayer02 && BattleRoyale.limePlayer02IsReviving ||
-                    BattleRoyale.limePlayer03 != null && target == BattleRoyale.limePlayer03 && BattleRoyale.limePlayer03IsReviving ||
-                    BattleRoyale.limePlayer04 != null && target == BattleRoyale.limePlayer04 && BattleRoyale.limePlayer04IsReviving ||
-                    BattleRoyale.limePlayer05 != null && target == BattleRoyale.limePlayer05 && BattleRoyale.limePlayer05IsReviving ||
-                    BattleRoyale.limePlayer06 != null && target == BattleRoyale.limePlayer06 && BattleRoyale.limePlayer06IsReviving ||
-                    BattleRoyale.limePlayer07 != null && target == BattleRoyale.limePlayer07 && BattleRoyale.limePlayer07IsReviving ||
-                    BattleRoyale.serialKiller != null && target == BattleRoyale.serialKiller && BattleRoyale.serialKillerIsReviving)
-                    {
-                        pinkPlayer06KillButton.Timer = pinkPlayer06KillButton.MaxTimer;
-                        return;
-                    }
-                }
+            var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.GamemodeKills, SendOption.Reliable);
+            writer.Write(target.PlayerId);
+            writer.Write(PinkPlayer06.PlayerId);
+            AmongUsClient.Instance.FinishRpcImmediately(writer);
+            RPCProcedure.GamemodeKills(target.PlayerId, PinkPlayer06.PlayerId);
 
-                MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.GamemodeKills, Hazel.SendOption.Reliable, -1);
-                writer.Write(target.PlayerId);
-                writer.Write(BattleRoyale.pinkPlayer06.PlayerId);
-                AmongUsClient.Instance.FinishRpcImmediately(writer);
-                RPCProcedure.gamemodeKills(target.PlayerId, BattleRoyale.pinkPlayer06.PlayerId);
+            _pinkPlayer06KillButton.Timer = _pinkPlayer06KillButton.MaxTimer;
+            SoundManager.Instance.PlaySound(AssetLoader.RoyaleHitPlayer, false, 100f);
 
-                pinkPlayer06KillButton.Timer = pinkPlayer06KillButton.MaxTimer;
-                SoundManager.Instance.PlaySound(AssetLoader.royaleHitPlayer, false, 100f);
-
-                target = null;
-            },
-            () => { return BattleRoyale.pinkPlayer06 != null && BattleRoyale.pinkPlayer06 == PlayerControl.LocalPlayer; },
-            () =>
+            target = null;
+        }, () => { return PinkPlayer06 != null && PinkPlayer06 == PlayerControl.LocalPlayer; }, () =>
+        {
+            if (PinkPlayer06Wep == null)
             {
-                if (BattleRoyale.pinkPlayer06Wep == null)
-                {
-                    BattleRoyale.pinkPlayer06Wep = new GameObject("Weapon");
-                    var renderer = BattleRoyale.pinkPlayer06Wep.AddComponent<SpriteRenderer>();
+                PinkPlayer06Wep = new("Weapon");
+                var renderer = PinkPlayer06Wep.AddComponent<SpriteRenderer>();
 
-                    renderer.sprite = AssetLoader.Bow;
-                    renderer.transform.parent = BattleRoyale.pinkPlayer06.transform;
-                    renderer.color = new Color(1, 1, 1, 1);
-                    renderer.transform.position = new Vector3(0, 0, -30f);
+                renderer.sprite = AssetLoader.Bow;
+                renderer.transform.parent = PinkPlayer06.transform;
+                renderer.color = new(1, 1, 1, 1);
+                renderer.transform.position = new(0, 0, -30f);
+            }
+            else
+            {
+                if (PlayerControl.LocalPlayer.Data.IsDead && MatchType != 2) PinkPlayer06Wep.SetActive(false);
+
+                var mouseDirection = Input.mousePosition - new Vector3(Screen.width / 2, Screen.height / 2);
+                PinkPlayer06MouseAngle = Mathf.Atan2(mouseDirection.y, mouseDirection.x);
+
+                var targetPosition = PinkPlayer06.transform.position + new Vector3(0.8f * (float)Math.Cos(PinkPlayer06MouseAngle), 0.8f * (float)Math.Sin(PinkPlayer06MouseAngle));
+                PinkPlayer06Wep.transform.position += (targetPosition - PinkPlayer06Wep.transform.position) * 0.4f;
+                PinkPlayer06Wep.GetComponent<SpriteRenderer>().transform.eulerAngles = new(0f, 0f, (float)((PinkPlayer06MouseAngle * 360f) / Math.PI / 2f));
+                if (Math.Cos(PinkPlayer06MouseAngle) < 0.0)
+                {
+                    if (PinkPlayer06Wep.GetComponent<SpriteRenderer>().transform.localScale.y > 0)
+                        PinkPlayer06Wep.GetComponent<SpriteRenderer>().transform.localScale = new(1f, -1f);
                 }
                 else
                 {
-
-                    if (PlayerControl.LocalPlayer.Data.IsDead && BattleRoyale.matchType != 2)
-                    {
-                        BattleRoyale.pinkPlayer06Wep.SetActive(false);
-                    }
-
-                    Vector3 mouseDirection = Input.mousePosition - new Vector3(Screen.width / 2, Screen.height / 2);
-                    BattleRoyale.pinkPlayer06mouseAngle = Mathf.Atan2(mouseDirection.y, mouseDirection.x);
-
-                    var targetPosition = BattleRoyale.pinkPlayer06.transform.position + new Vector3(0.8f * (float)Math.Cos(BattleRoyale.pinkPlayer06mouseAngle), 0.8f * (float)Math.Sin(BattleRoyale.pinkPlayer06mouseAngle));
-                    BattleRoyale.pinkPlayer06Wep.transform.position += (targetPosition - BattleRoyale.pinkPlayer06Wep.transform.position) * 0.4f;
-                    BattleRoyale.pinkPlayer06Wep.GetComponent<SpriteRenderer>().transform.eulerAngles = new Vector3(0f, 0f, (float)(BattleRoyale.pinkPlayer06mouseAngle * 360f / Math.PI / 2f));
-                    if (Math.Cos(BattleRoyale.pinkPlayer06mouseAngle) < 0.0)
-                    {
-                        if (BattleRoyale.pinkPlayer06Wep.GetComponent<SpriteRenderer>().transform.localScale.y > 0)
-                            BattleRoyale.pinkPlayer06Wep.GetComponent<SpriteRenderer>().transform.localScale = new Vector3(1f, -1f);
-                    }
-                    else
-                    {
-                        if (BattleRoyale.pinkPlayer06Wep.GetComponent<SpriteRenderer>().transform.localScale.y < 0)
-                            BattleRoyale.pinkPlayer06Wep.GetComponent<SpriteRenderer>().transform.localScale = new Vector3(1f, 1f);
-                    }
+                    if (PinkPlayer06Wep.GetComponent<SpriteRenderer>().transform.localScale.y < 0)
+                        PinkPlayer06Wep.GetComponent<SpriteRenderer>().transform.localScale = new(1f, 1f);
                 }
-                bool CanUse = true;
-                if (BattleRoyale.pinkPlayer06IsReviving)
-                {
-                    CanUse = false;
-                }
-                return CanUse && PlayerControl.LocalPlayer.CanMove && !PlayerControl.LocalPlayer.Data.IsDead;
-            },
-            () => { pinkPlayer06KillButton.Timer = pinkPlayer06KillButton.MaxTimer; },
-            __instance.KillButton.graphic.sprite,
-            ButtonPosition.Layout,
-            __instance,
-            __instance.KillButton,
-            KeyCode.Mouse1,
-            false,
-            TranslationController.Instance.GetString(StringNames.KillLabel)
-        );
+            }
+
+            var canUse = true;
+            if (PinkPlayer06IsReviving) canUse = false;
+            return canUse && PlayerControl.LocalPlayer.CanMove && !PlayerControl.LocalPlayer.Data.IsDead;
+        }, () => { _pinkPlayer06KillButton.Timer = _pinkPlayer06KillButton.MaxTimer; }, __instance.KillButton.graphic.sprite, ButtonPosition.Layout, __instance, __instance.KillButton, KeyCode.Mouse1, false, TranslationController.Instance.GetString(StringNames.KillLabel));
 
         // PinkPlayer07 Kill
-        pinkPlayer07KillButton = new CustomButton(
-            () =>
+        _pinkPlayer07KillButton = new(() =>
+        {
+            var target = GetPinkShotPlayer(2 * 0.2f, 6, 7);
+
+            var writerShot = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.BattleRoyaleShowShoots, SendOption.Reliable);
+            writerShot.Write(PinkPlayer07.PlayerId);
+            writerShot.Write(2);
+            writerShot.Write(PinkPlayer07MouseAngle);
+            AmongUsClient.Instance.FinishRpcImmediately(writerShot);
+            RPCProcedure.BattleRoyaleShowShoots(PinkPlayer07.PlayerId, 2, PinkPlayer07MouseAngle);
+
+            if (target == null)
             {
-                PlayerControl target = BattleRoyale.GetPinkShotPlayer(2 * 0.2f, 6, 7);
+                _pinkPlayer07KillButton.Timer = _pinkPlayer07KillButton.MaxTimer;
+                return;
+            }
 
-                MessageWriter writerShot = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.BattleRoyaleShowShoots, Hazel.SendOption.Reliable, -1);
-                writerShot.Write(BattleRoyale.pinkPlayer07.PlayerId);
-                writerShot.Write(2);
-                writerShot.Write(BattleRoyale.pinkPlayer07mouseAngle);
-                AmongUsClient.Instance.FinishRpcImmediately(writerShot);
-                RPCProcedure.battleRoyaleShowShoots(BattleRoyale.pinkPlayer07.PlayerId, 2, BattleRoyale.pinkPlayer07mouseAngle);
-
-                if (target == null)
+            if (MatchType == 2)
+            {
+                if ((LimePlayer01 != null && target == LimePlayer01 && LimePlayer01IsReviving) || (LimePlayer02 != null && target == LimePlayer02 && LimePlayer02IsReviving) || (LimePlayer03 != null && target == LimePlayer03 && LimePlayer03IsReviving) || (LimePlayer04 != null && target == LimePlayer04 && LimePlayer04IsReviving) || (LimePlayer05 != null && target == LimePlayer05 && LimePlayer05IsReviving) || (LimePlayer06 != null && target == LimePlayer06 && LimePlayer06IsReviving) || (LimePlayer07 != null && target == LimePlayer07 && LimePlayer07IsReviving) || (SerialKiller != null && target == SerialKiller && SerialKillerIsReviving))
                 {
-                    pinkPlayer07KillButton.Timer = pinkPlayer07KillButton.MaxTimer;
+                    _pinkPlayer07KillButton.Timer = _pinkPlayer07KillButton.MaxTimer;
                     return;
                 }
+            }
 
-                if (BattleRoyale.matchType == 2)
-                {
-                    if (BattleRoyale.limePlayer01 != null && target == BattleRoyale.limePlayer01 && BattleRoyale.limePlayer01IsReviving ||
-                    BattleRoyale.limePlayer02 != null && target == BattleRoyale.limePlayer02 && BattleRoyale.limePlayer02IsReviving ||
-                    BattleRoyale.limePlayer03 != null && target == BattleRoyale.limePlayer03 && BattleRoyale.limePlayer03IsReviving ||
-                    BattleRoyale.limePlayer04 != null && target == BattleRoyale.limePlayer04 && BattleRoyale.limePlayer04IsReviving ||
-                    BattleRoyale.limePlayer05 != null && target == BattleRoyale.limePlayer05 && BattleRoyale.limePlayer05IsReviving ||
-                    BattleRoyale.limePlayer06 != null && target == BattleRoyale.limePlayer06 && BattleRoyale.limePlayer06IsReviving ||
-                    BattleRoyale.limePlayer07 != null && target == BattleRoyale.limePlayer07 && BattleRoyale.limePlayer07IsReviving ||
-                    BattleRoyale.serialKiller != null && target == BattleRoyale.serialKiller && BattleRoyale.serialKillerIsReviving)
-                    {
-                        pinkPlayer07KillButton.Timer = pinkPlayer07KillButton.MaxTimer;
-                        return;
-                    }
-                }
+            var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.GamemodeKills, SendOption.Reliable);
+            writer.Write(target.PlayerId);
+            writer.Write(PinkPlayer07.PlayerId);
+            AmongUsClient.Instance.FinishRpcImmediately(writer);
+            RPCProcedure.GamemodeKills(target.PlayerId, PinkPlayer07.PlayerId);
 
-                MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.GamemodeKills, Hazel.SendOption.Reliable, -1);
-                writer.Write(target.PlayerId);
-                writer.Write(BattleRoyale.pinkPlayer07.PlayerId);
-                AmongUsClient.Instance.FinishRpcImmediately(writer);
-                RPCProcedure.gamemodeKills(target.PlayerId, BattleRoyale.pinkPlayer07.PlayerId);
+            _pinkPlayer07KillButton.Timer = _pinkPlayer07KillButton.MaxTimer;
+            SoundManager.Instance.PlaySound(AssetLoader.RoyaleHitPlayer, false, 100f);
 
-                pinkPlayer07KillButton.Timer = pinkPlayer07KillButton.MaxTimer;
-                SoundManager.Instance.PlaySound(AssetLoader.royaleHitPlayer, false, 100f);
-
-                target = null;
-            },
-            () => { return BattleRoyale.pinkPlayer07 != null && BattleRoyale.pinkPlayer07 == PlayerControl.LocalPlayer; },
-            () =>
+            target = null;
+        }, () => { return PinkPlayer07 != null && PinkPlayer07 == PlayerControl.LocalPlayer; }, () =>
+        {
+            if (PinkPlayer07Wep == null)
             {
-                if (BattleRoyale.pinkPlayer07Wep == null)
-                {
-                    BattleRoyale.pinkPlayer07Wep = new GameObject("Weapon");
-                    var renderer = BattleRoyale.pinkPlayer07Wep.AddComponent<SpriteRenderer>();
+                PinkPlayer07Wep = new("Weapon");
+                var renderer = PinkPlayer07Wep.AddComponent<SpriteRenderer>();
 
-                    renderer.sprite = AssetLoader.Bow;
-                    renderer.transform.parent = BattleRoyale.pinkPlayer07.transform;
-                    renderer.color = new Color(1, 1, 1, 1);
-                    renderer.transform.position = new Vector3(0, 0, -30f);
+                renderer.sprite = AssetLoader.Bow;
+                renderer.transform.parent = PinkPlayer07.transform;
+                renderer.color = new(1, 1, 1, 1);
+                renderer.transform.position = new(0, 0, -30f);
+            }
+            else
+            {
+                if (PlayerControl.LocalPlayer.Data.IsDead && MatchType != 2) PinkPlayer07Wep.SetActive(false);
+
+                var mouseDirection = Input.mousePosition - new Vector3(Screen.width / 2, Screen.height / 2);
+                PinkPlayer07MouseAngle = Mathf.Atan2(mouseDirection.y, mouseDirection.x);
+
+                var targetPosition = PinkPlayer07.transform.position + new Vector3(0.8f * (float)Math.Cos(PinkPlayer07MouseAngle), 0.8f * (float)Math.Sin(PinkPlayer07MouseAngle));
+                PinkPlayer07Wep.transform.position += (targetPosition - PinkPlayer07Wep.transform.position) * 0.4f;
+                PinkPlayer07Wep.GetComponent<SpriteRenderer>().transform.eulerAngles = new(0f, 0f, (float)((PinkPlayer07MouseAngle * 360f) / Math.PI / 2f));
+                if (Math.Cos(PinkPlayer07MouseAngle) < 0.0)
+                {
+                    if (PinkPlayer07Wep.GetComponent<SpriteRenderer>().transform.localScale.y > 0)
+                        PinkPlayer07Wep.GetComponent<SpriteRenderer>().transform.localScale = new(1f, -1f);
                 }
                 else
                 {
-
-                    if (PlayerControl.LocalPlayer.Data.IsDead && BattleRoyale.matchType != 2)
-                    {
-                        BattleRoyale.pinkPlayer07Wep.SetActive(false);
-                    }
-
-                    Vector3 mouseDirection = Input.mousePosition - new Vector3(Screen.width / 2, Screen.height / 2);
-                    BattleRoyale.pinkPlayer07mouseAngle = Mathf.Atan2(mouseDirection.y, mouseDirection.x);
-
-                    var targetPosition = BattleRoyale.pinkPlayer07.transform.position + new Vector3(0.8f * (float)Math.Cos(BattleRoyale.pinkPlayer07mouseAngle), 0.8f * (float)Math.Sin(BattleRoyale.pinkPlayer07mouseAngle));
-                    BattleRoyale.pinkPlayer07Wep.transform.position += (targetPosition - BattleRoyale.pinkPlayer07Wep.transform.position) * 0.4f;
-                    BattleRoyale.pinkPlayer07Wep.GetComponent<SpriteRenderer>().transform.eulerAngles = new Vector3(0f, 0f, (float)(BattleRoyale.pinkPlayer07mouseAngle * 360f / Math.PI / 2f));
-                    if (Math.Cos(BattleRoyale.pinkPlayer07mouseAngle) < 0.0)
-                    {
-                        if (BattleRoyale.pinkPlayer07Wep.GetComponent<SpriteRenderer>().transform.localScale.y > 0)
-                            BattleRoyale.pinkPlayer07Wep.GetComponent<SpriteRenderer>().transform.localScale = new Vector3(1f, -1f);
-                    }
-                    else
-                    {
-                        if (BattleRoyale.pinkPlayer07Wep.GetComponent<SpriteRenderer>().transform.localScale.y < 0)
-                            BattleRoyale.pinkPlayer07Wep.GetComponent<SpriteRenderer>().transform.localScale = new Vector3(1f, 1f);
-                    }
+                    if (PinkPlayer07Wep.GetComponent<SpriteRenderer>().transform.localScale.y < 0)
+                        PinkPlayer07Wep.GetComponent<SpriteRenderer>().transform.localScale = new(1f, 1f);
                 }
-                bool CanUse = true;
-                if (BattleRoyale.pinkPlayer07IsReviving)
-                {
-                    CanUse = false;
-                }
-                return CanUse && PlayerControl.LocalPlayer.CanMove && !PlayerControl.LocalPlayer.Data.IsDead;
-            },
-            () => { pinkPlayer07KillButton.Timer = pinkPlayer07KillButton.MaxTimer; },
-            __instance.KillButton.graphic.sprite,
-            ButtonPosition.Layout,
-            __instance,
-            __instance.KillButton,
-            KeyCode.Mouse1,
-            false,
-            TranslationController.Instance.GetString(StringNames.KillLabel)
-        );
+            }
+
+            var canUse = true;
+            if (PinkPlayer07IsReviving) canUse = false;
+            return canUse && PlayerControl.LocalPlayer.CanMove && !PlayerControl.LocalPlayer.Data.IsDead;
+        }, () => { _pinkPlayer07KillButton.Timer = _pinkPlayer07KillButton.MaxTimer; }, __instance.KillButton.graphic.sprite, ButtonPosition.Layout, __instance, __instance.KillButton, KeyCode.Mouse1, false, TranslationController.Instance.GetString(StringNames.KillLabel));
 
         // Serial Killer Kill
-        serialKillerKillButton = new CustomButton(
-            () =>
+        _serialKillerKillButton = new(() =>
+        {
+            var target = GetSerialShootPlayer(2 * 0.2f, 6);
+
+            var writerShot = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.BattleRoyaleShowShoots, SendOption.Reliable);
+            writerShot.Write(SerialKiller.PlayerId);
+            writerShot.Write(3);
+            writerShot.Write(SerialKillermouseAngle);
+            AmongUsClient.Instance.FinishRpcImmediately(writerShot);
+            RPCProcedure.BattleRoyaleShowShoots(SerialKiller.PlayerId, 3, SerialKillermouseAngle);
+
+            if (target == null)
             {
-                PlayerControl target = BattleRoyale.GetSerialShootPlayer(2 * 0.2f, 6);
+                _serialKillerKillButton.Timer = _serialKillerKillButton.MaxTimer;
+                return;
+            }
 
-                MessageWriter writerShot = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.BattleRoyaleShowShoots, Hazel.SendOption.Reliable, -1);
-                writerShot.Write(BattleRoyale.serialKiller.PlayerId);
-                writerShot.Write(3);
-                writerShot.Write(BattleRoyale.serialKillermouseAngle);
-                AmongUsClient.Instance.FinishRpcImmediately(writerShot);
-                RPCProcedure.battleRoyaleShowShoots(BattleRoyale.serialKiller.PlayerId, 3, BattleRoyale.serialKillermouseAngle);
-
-                if (target == null)
+            if (MatchType == 2)
+            {
+                if ((LimePlayer01 != null && target == LimePlayer01 && LimePlayer01IsReviving) || (LimePlayer02 != null && target == LimePlayer02 && LimePlayer02IsReviving) || (LimePlayer03 != null && target == LimePlayer03 && LimePlayer03IsReviving) || (LimePlayer04 != null && target == LimePlayer04 && LimePlayer04IsReviving) || (LimePlayer05 != null && target == LimePlayer05 && LimePlayer05IsReviving) || (LimePlayer06 != null && target == LimePlayer06 && LimePlayer06IsReviving) || (LimePlayer07 != null && target == LimePlayer07 && LimePlayer07IsReviving) || (PinkPlayer01 != null && target == PinkPlayer01 && PinkPlayer01IsReviving) || (PinkPlayer02 != null && target == PinkPlayer02 && PinkPlayer02IsReviving) || (PinkPlayer03 != null && target == PinkPlayer03 && PinkPlayer03IsReviving) || (PinkPlayer04 != null && target == PinkPlayer04 && PinkPlayer04IsReviving) || (PinkPlayer05 != null && target == PinkPlayer05 && PinkPlayer05IsReviving) || (PinkPlayer06 != null && target == PinkPlayer06 && PinkPlayer06IsReviving) || (PinkPlayer07 != null && target == PinkPlayer07 && PinkPlayer07IsReviving))
                 {
-                    serialKillerKillButton.Timer = serialKillerKillButton.MaxTimer;
+                    _serialKillerKillButton.Timer = _serialKillerKillButton.MaxTimer;
                     return;
                 }
+            }
 
-                if (BattleRoyale.matchType == 2)
-                {
-                    if (BattleRoyale.limePlayer01 != null && target == BattleRoyale.limePlayer01 && BattleRoyale.limePlayer01IsReviving ||
-                    BattleRoyale.limePlayer02 != null && target == BattleRoyale.limePlayer02 && BattleRoyale.limePlayer02IsReviving ||
-                    BattleRoyale.limePlayer03 != null && target == BattleRoyale.limePlayer03 && BattleRoyale.limePlayer03IsReviving ||
-                    BattleRoyale.limePlayer04 != null && target == BattleRoyale.limePlayer04 && BattleRoyale.limePlayer04IsReviving ||
-                    BattleRoyale.limePlayer05 != null && target == BattleRoyale.limePlayer05 && BattleRoyale.limePlayer05IsReviving ||
-                    BattleRoyale.limePlayer06 != null && target == BattleRoyale.limePlayer06 && BattleRoyale.limePlayer06IsReviving ||
-                    BattleRoyale.limePlayer07 != null && target == BattleRoyale.limePlayer07 && BattleRoyale.limePlayer07IsReviving ||
-                    BattleRoyale.pinkPlayer01 != null && target == BattleRoyale.pinkPlayer01 && BattleRoyale.pinkPlayer01IsReviving ||
-                    BattleRoyale.pinkPlayer02 != null && target == BattleRoyale.pinkPlayer02 && BattleRoyale.pinkPlayer02IsReviving ||
-                    BattleRoyale.pinkPlayer03 != null && target == BattleRoyale.pinkPlayer03 && BattleRoyale.pinkPlayer03IsReviving ||
-                    BattleRoyale.pinkPlayer04 != null && target == BattleRoyale.pinkPlayer04 && BattleRoyale.pinkPlayer04IsReviving ||
-                    BattleRoyale.pinkPlayer05 != null && target == BattleRoyale.pinkPlayer05 && BattleRoyale.pinkPlayer05IsReviving ||
-                    BattleRoyale.pinkPlayer06 != null && target == BattleRoyale.pinkPlayer06 && BattleRoyale.pinkPlayer06IsReviving ||
-                    BattleRoyale.pinkPlayer07 != null && target == BattleRoyale.pinkPlayer07 && BattleRoyale.pinkPlayer07IsReviving)
-                    {
-                        serialKillerKillButton.Timer = serialKillerKillButton.MaxTimer;
-                        return;
-                    }
-                }
+            var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.GamemodeKills, SendOption.Reliable);
+            writer.Write(target.PlayerId);
+            writer.Write(SerialKiller.PlayerId);
+            AmongUsClient.Instance.FinishRpcImmediately(writer);
+            RPCProcedure.GamemodeKills(target.PlayerId, SerialKiller.PlayerId);
 
-                MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.GamemodeKills, Hazel.SendOption.Reliable, -1);
-                writer.Write(target.PlayerId);
-                writer.Write(BattleRoyale.serialKiller.PlayerId);
-                AmongUsClient.Instance.FinishRpcImmediately(writer);
-                RPCProcedure.gamemodeKills(target.PlayerId, BattleRoyale.serialKiller.PlayerId);
+            _serialKillerKillButton.Timer = _serialKillerKillButton.MaxTimer;
+            SoundManager.Instance.PlaySound(AssetLoader.RoyaleHitPlayer, false, 100f);
 
-                serialKillerKillButton.Timer = serialKillerKillButton.MaxTimer;
-                SoundManager.Instance.PlaySound(AssetLoader.royaleHitPlayer, false, 100f);
-
-                target = null;
-            },
-            () => { return BattleRoyale.serialKiller != null && BattleRoyale.serialKiller == PlayerControl.LocalPlayer; },
-            () =>
+            target = null;
+        }, () => { return SerialKiller != null && SerialKiller == PlayerControl.LocalPlayer; }, () =>
+        {
+            if (SerialKillerWep == null)
             {
-                if (BattleRoyale.serialKillerWep == null)
-                {
-                    BattleRoyale.serialKillerWep = new GameObject("Weapon");
-                    var renderer = BattleRoyale.serialKillerWep.AddComponent<SpriteRenderer>();
+                SerialKillerWep = new("Weapon");
+                var renderer = SerialKillerWep.AddComponent<SpriteRenderer>();
 
-                    renderer.sprite = AssetLoader.Bow;
-                    renderer.transform.parent = BattleRoyale.serialKiller.transform;
-                    renderer.color = new Color(1, 1, 1, 1);
-                    renderer.transform.position = new Vector3(0, 0, -30f);
+                renderer.sprite = AssetLoader.Bow;
+                renderer.transform.parent = SerialKiller.transform;
+                renderer.color = new(1, 1, 1, 1);
+                renderer.transform.position = new(0, 0, -30f);
+            }
+            else
+            {
+                if (PlayerControl.LocalPlayer.Data.IsDead && MatchType != 2) SerialKillerWep.SetActive(false);
+
+                var mouseDirection = Input.mousePosition - new Vector3(Screen.width / 2, Screen.height / 2);
+                SerialKillermouseAngle = Mathf.Atan2(mouseDirection.y, mouseDirection.x);
+
+                var targetPosition = SerialKiller.transform.position + new Vector3(0.8f * (float)Math.Cos(SerialKillermouseAngle), 0.8f * (float)Math.Sin(SerialKillermouseAngle));
+                SerialKillerWep.transform.position += (targetPosition - SerialKillerWep.transform.position) * 0.4f;
+                SerialKillerWep.GetComponent<SpriteRenderer>().transform.eulerAngles = new(0f, 0f, (float)((SerialKillermouseAngle * 360f) / Math.PI / 2f));
+                if (Math.Cos(SerialKillermouseAngle) < 0.0)
+                {
+                    if (SerialKillerWep.GetComponent<SpriteRenderer>().transform.localScale.y > 0)
+                        SerialKillerWep.GetComponent<SpriteRenderer>().transform.localScale = new(1f, -1f);
                 }
                 else
                 {
-
-                    if (PlayerControl.LocalPlayer.Data.IsDead && BattleRoyale.matchType != 2)
-                    {
-                        BattleRoyale.serialKillerWep.SetActive(false);
-                    }
-
-                    Vector3 mouseDirection = Input.mousePosition - new Vector3(Screen.width / 2, Screen.height / 2);
-                    BattleRoyale.serialKillermouseAngle = Mathf.Atan2(mouseDirection.y, mouseDirection.x);
-
-                    var targetPosition = BattleRoyale.serialKiller.transform.position + new Vector3(0.8f * (float)Math.Cos(BattleRoyale.serialKillermouseAngle), 0.8f * (float)Math.Sin(BattleRoyale.serialKillermouseAngle));
-                    BattleRoyale.serialKillerWep.transform.position += (targetPosition - BattleRoyale.serialKillerWep.transform.position) * 0.4f;
-                    BattleRoyale.serialKillerWep.GetComponent<SpriteRenderer>().transform.eulerAngles = new Vector3(0f, 0f, (float)(BattleRoyale.serialKillermouseAngle * 360f / Math.PI / 2f));
-                    if (Math.Cos(BattleRoyale.serialKillermouseAngle) < 0.0)
-                    {
-                        if (BattleRoyale.serialKillerWep.GetComponent<SpriteRenderer>().transform.localScale.y > 0)
-                            BattleRoyale.serialKillerWep.GetComponent<SpriteRenderer>().transform.localScale = new Vector3(1f, -1f);
-                    }
-                    else
-                    {
-                        if (BattleRoyale.serialKillerWep.GetComponent<SpriteRenderer>().transform.localScale.y < 0)
-                            BattleRoyale.serialKillerWep.GetComponent<SpriteRenderer>().transform.localScale = new Vector3(1f, 1f);
-                    }
+                    if (SerialKillerWep.GetComponent<SpriteRenderer>().transform.localScale.y < 0)
+                        SerialKillerWep.GetComponent<SpriteRenderer>().transform.localScale = new(1f, 1f);
                 }
-                bool CanUse = true;
-                if (BattleRoyale.serialKillerIsReviving)
-                {
-                    CanUse = false;
-                }
-                bool canSpawnKill = true;
-                foreach (GameObject spawns in BattleRoyale.serialKillerSpawns)
-                {
-                    if (spawns != null && BattleRoyale.matchType == 2 && Vector2.Distance(PlayerControl.LocalPlayer.transform.position, spawns.transform.position) < 3f)
-                    {
-                        canSpawnKill = false;
-                    }
-                }
-                return CanUse && canSpawnKill && PlayerControl.LocalPlayer.CanMove && !PlayerControl.LocalPlayer.Data.IsDead;
-            },
-            () => { serialKillerKillButton.Timer = serialKillerKillButton.MaxTimer; },
-            __instance.KillButton.graphic.sprite,
-            ButtonPosition.Layout,
-            __instance,
-            __instance.KillButton,
-            KeyCode.Mouse1,
-            false,
-            TranslationController.Instance.GetString(StringNames.KillLabel)
-        );
+            }
+
+            var canUse = true;
+            if (SerialKillerIsReviving) canUse = false;
+            var canSpawnKill = true;
+            foreach (var spawns in SerialKillerSpawns)
+            {
+                if (spawns != null && MatchType == 2 && Vector2.Distance(PlayerControl.LocalPlayer.transform.position, spawns.transform.position) < 3f)
+                    canSpawnKill = false;
+            }
+
+            return canUse && canSpawnKill && PlayerControl.LocalPlayer.CanMove && !PlayerControl.LocalPlayer.Data.IsDead;
+        }, () => { _serialKillerKillButton.Timer = _serialKillerKillButton.MaxTimer; }, __instance.KillButton.graphic.sprite, ButtonPosition.Layout, __instance, __instance.KillButton, KeyCode.Mouse1, false, TranslationController.Instance.GetString(StringNames.KillLabel));
     }
 }

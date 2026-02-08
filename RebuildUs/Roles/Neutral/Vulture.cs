@@ -1,23 +1,19 @@
+using Object = UnityEngine.Object;
+
 namespace RebuildUs.Roles.Neutral;
 
 [HarmonyPatch]
 public class Vulture : RoleBase<Vulture>
 {
     public static Color NameColor = new Color32(139, 69, 19, byte.MaxValue);
-    public override Color RoleColor => NameColor;
-    public static bool TriggerVultureWin = false;
-    public List<Arrow> LocalArrows = [];
-    public int EatenBodies = 0;
-    private float TimeUntilUpdate = 0f;
+
+    public static bool TriggerVultureWin;
 
     public static CustomButton VultureEatButton;
     public static TMP_Text VultureNumCorpsesText;
-
-    // write configs here
-    public static float Cooldown { get { return CustomOptionHolder.VultureCooldown.GetFloat(); } }
-    public static int NumberToWin { get { return (int)CustomOptionHolder.VultureNumberToWin.GetFloat(); } }
-    public static bool CanUseVents { get { return CustomOptionHolder.VultureCanUseVents.GetBool(); } }
-    public static bool ShowArrows { get { return CustomOptionHolder.VultureShowArrows.GetBool(); } }
+    private float _timeUntilUpdate;
+    public int EatenBodies;
+    public List<Arrow> LocalArrows = [];
 
     public Vulture()
     {
@@ -27,9 +23,36 @@ public class Vulture : RoleBase<Vulture>
         LocalArrows = [];
     }
 
+    public override Color RoleColor
+    {
+        get => NameColor;
+    }
+
+    // write configs here
+    public static float Cooldown
+    {
+        get => CustomOptionHolder.VultureCooldown.GetFloat();
+    }
+
+    public static int NumberToWin
+    {
+        get => (int)CustomOptionHolder.VultureNumberToWin.GetFloat();
+    }
+
+    public static bool CanUseVents
+    {
+        get => CustomOptionHolder.VultureCanUseVents.GetBool();
+    }
+
+    public static bool ShowArrows
+    {
+        get => CustomOptionHolder.VultureShowArrows.GetBool();
+    }
+
     public override void OnMeetingStart() { }
     public override void OnMeetingEnd() { }
     public override void OnIntroEnd() { }
+
     public override void FixedUpdate()
     {
         if (LocalArrows == null || !ShowArrows) return;
@@ -39,27 +62,21 @@ public class Vulture : RoleBase<Vulture>
         {
             if (Player.IsDead())
             {
-                for (var i = 0; i < LocalArrows.Count; i++)
-                {
-                    UnityEngine.Object.Destroy(LocalArrows[i].ArrowObject);
-                }
+                for (var i = 0; i < LocalArrows.Count; i++) Object.Destroy(LocalArrows[i].ArrowObject);
                 LocalArrows.Clear();
                 return;
             }
 
-            TimeUntilUpdate -= Time.fixedDeltaTime;
-            if (TimeUntilUpdate > 0f) return;
-            TimeUntilUpdate = 0.25f;
+            _timeUntilUpdate -= Time.fixedDeltaTime;
+            if (_timeUntilUpdate > 0f) return;
+            _timeUntilUpdate = 0.25f;
 
-            DeadBody[] deadBodies = UnityEngine.Object.FindObjectsOfType<DeadBody>();
+            DeadBody[] deadBodies = Object.FindObjectsOfType<DeadBody>();
             var arrowUpdate = LocalArrows.Count != deadBodies.Length;
 
             if (arrowUpdate)
             {
-                for (var i = 0; i < LocalArrows.Count; i++)
-                {
-                    UnityEngine.Object.Destroy(LocalArrows[i].ArrowObject);
-                }
+                for (var i = 0; i < LocalArrows.Count; i++) Object.Destroy(LocalArrows[i].ArrowObject);
                 LocalArrows.Clear();
             }
 
@@ -71,75 +88,66 @@ public class Vulture : RoleBase<Vulture>
                     LocalArrows.Add(new(Color.blue));
                     LocalArrows[i].ArrowObject.SetActive(true);
                 }
+
                 LocalArrows[i]?.Update(db.transform.position);
             }
         }
     }
+
     public override void OnKill(PlayerControl target) { }
     public override void OnDeath(PlayerControl killer = null) { }
     public override void OnFinishShipStatusBegin() { }
     public override void HandleDisconnect(PlayerControl player, DisconnectReasons reason) { }
+
     public static void MakeButtons(HudManager hm)
     {
-        VultureEatButton = new CustomButton(
-            () =>
+        VultureEatButton = new(() =>
+        {
+            var bodies = Object.FindObjectsOfType<DeadBody>();
+            var local = PlayerControl.LocalPlayer;
+            var truePosition = local.GetTruePosition();
+            var maxDist = local.MaxReportDistance;
+
+            for (var i = 0; i < bodies.Length; i++)
             {
-                var bodies = UnityEngine.Object.FindObjectsOfType<DeadBody>();
-                var local = PlayerControl.LocalPlayer;
-                var truePosition = local.GetTruePosition();
-                var maxDist = local.MaxReportDistance;
+                var body = bodies[i];
+                if (body == null || body.Reported) continue;
 
-                for (var i = 0; i < bodies.Length; i++)
+                var bodyPos = body.TruePosition;
+                if (Vector2.Distance(bodyPos, truePosition) <= maxDist && local.CanMove && !PhysicsHelpers.AnythingBetween(truePosition, bodyPos, Constants.ShipAndObjectsMask, false))
                 {
-                    var body = bodies[i];
-                    if (body == null || body.Reported) continue;
-
-                    var bodyPos = body.TruePosition;
-                    if (Vector2.Distance(bodyPos, truePosition) <= maxDist && local.CanMove && !PhysicsHelpers.AnythingBetween(truePosition, bodyPos, Constants.ShipAndObjectsMask, false))
+                    var playerInfo = GameData.Instance.GetPlayerById(body.ParentId);
+                    if (playerInfo != null)
                     {
-                        var playerInfo = GameData.Instance.GetPlayerById(body.ParentId);
-                        if (playerInfo != null)
-                        {
-                            using var sender = new RPCSender(local.NetId, CustomRPC.VultureEat);
-                            sender.Write(playerInfo.PlayerId);
-                            sender.Write(local.PlayerId);
-                            RPCProcedure.VultureEat(playerInfo.PlayerId, local.PlayerId);
+                        using var sender = new RPCSender(local.NetId, CustomRPC.VultureEat);
+                        sender.Write(playerInfo.PlayerId);
+                        sender.Write(local.PlayerId);
+                        RPCProcedure.VultureEat(playerInfo.PlayerId, local.PlayerId);
 
-                            VultureEatButton.Timer = VultureEatButton.MaxTimer;
-                            break;
-                        }
+                        VultureEatButton.Timer = VultureEatButton.MaxTimer;
+                        break;
                     }
                 }
+            }
 
-                if (Local.EatenBodies >= NumberToWin)
-                {
-                    using var sender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.VultureWin);
-                    RPCProcedure.VultureWin();
-                    return;
-                }
-            },
-            () => { return PlayerControl.LocalPlayer.IsRole(RoleType.Vulture) && PlayerControl.LocalPlayer.IsAlive(); },
-            () =>
+            if (Local.EatenBodies >= NumberToWin)
             {
-                VultureNumCorpsesText?.text = string.Format(Tr.Get(TrKey.VultureCorpses), NumberToWin - Local.EatenBodies);
-                return hm.ReportButton.graphic.color == Palette.EnabledColor && PlayerControl.LocalPlayer.CanMove;
-            },
-            () => { VultureEatButton.Timer = VultureEatButton.MaxTimer; },
-            AssetLoader.VultureButton,
-            ButtonPosition.Layout,
-            hm,
-            hm.KillButton,
-            AbilitySlot.NeutralAbilityPrimary,
-            false,
-            Tr.Get(TrKey.VultureText)
-        );
+                using var sender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.VultureWin);
+                RPCProcedure.VultureWin();
+            }
+        }, () => { return PlayerControl.LocalPlayer.IsRole(RoleType.Vulture) && PlayerControl.LocalPlayer.IsAlive(); }, () =>
+        {
+            VultureNumCorpsesText?.text = string.Format(Tr.Get(TrKey.VultureCorpses), NumberToWin - Local.EatenBodies);
+            return hm.ReportButton.graphic.color == Palette.EnabledColor && PlayerControl.LocalPlayer.CanMove;
+        }, () => { VultureEatButton.Timer = VultureEatButton.MaxTimer; }, AssetLoader.VultureButton, ButtonPosition.Layout, hm, hm.KillButton, AbilitySlot.NeutralAbilityPrimary, false, Tr.Get(TrKey.VultureText));
 
-        VultureNumCorpsesText = UnityEngine.Object.Instantiate(VultureEatButton.ActionButton.cooldownTimerText, VultureEatButton.ActionButton.cooldownTimerText.transform.parent);
+        VultureNumCorpsesText = Object.Instantiate(VultureEatButton.ActionButton.cooldownTimerText, VultureEatButton.ActionButton.cooldownTimerText.transform.parent);
         VultureNumCorpsesText.text = "";
         VultureNumCorpsesText.enableWordWrapping = false;
         VultureNumCorpsesText.transform.localScale = Vector3.one * 0.5f;
         VultureNumCorpsesText.transform.localPosition += new Vector3(0.0f, 0.7f, 0);
     }
+
     public static void SetButtonCooldowns()
     {
         VultureEatButton.MaxTimer = Cooldown;
@@ -156,14 +164,13 @@ public class Vulture : RoleBase<Vulture>
                 for (var j = 0; j < p.LocalArrows.Count; j++)
                 {
                     var arrow = p.LocalArrows[j];
-                    if (arrow?.ArrowObject != null)
-                    {
-                        UnityEngine.Object.Destroy(arrow.ArrowObject);
-                    }
+                    if (arrow?.ArrowObject != null) Object.Destroy(arrow.ArrowObject);
                 }
+
                 p.LocalArrows.Clear();
             }
         }
+
         Players.Clear();
     }
 }

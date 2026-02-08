@@ -3,7 +3,8 @@ namespace RebuildUs.Objects;
 public class SpecimenVital
 {
     public static Vector3 Pos = new(35.39f, -22.10f, 1.0f);
-    public static bool Flag = false;
+    public static bool Flag;
+
     public static void ClearAndReload()
     {
         Flag = false;

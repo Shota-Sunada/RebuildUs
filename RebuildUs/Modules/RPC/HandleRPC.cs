@@ -1,8 +1,8 @@
 namespace RebuildUs.Modules.RPC;
 
-public static partial class RPCProcedure
+internal static partial class RPCProcedure
 {
-    public static void Handle(CustomRPC callId, MessageReader reader)
+    internal static void Handle(CustomRPC callId, MessageReader reader)
     {
         if (callId < CustomRPC.ResetVariables) return;
 
@@ -26,26 +26,22 @@ public static partial class RPCProcedure
                 AddModifier(reader.ReadByte(), reader.ReadByte());
                 break;
             case CustomRPC.VersionHandshake:
+                var major = reader.ReadByte();
+                var minor = reader.ReadByte();
+                var patch = reader.ReadByte();
+                var versionOwnerId = reader.ReadPackedInt32();
+                var revRaw = reader.ReadByte();
+                byte[] guidBytes = reader.ReadBytes(16);
+                var rev = revRaw == 0xFF ? -1 : revRaw;
+
+                var isNewToMe = !GameStart.PlayerVersions.ContainsKey(versionOwnerId);
+                VersionHandshake(major, minor, patch, rev, versionOwnerId, new(guidBytes));
+
+                // If it's a new player to me, or I am host, send my version back
+                if (versionOwnerId != AmongUsClient.Instance.ClientId)
                 {
-                    byte major = reader.ReadByte();
-                    byte minor = reader.ReadByte();
-                    byte patch = reader.ReadByte();
-                    int versionOwnerId = reader.ReadPackedInt32();
-                    byte revRaw = reader.ReadByte();
-                    byte[] guidBytes = reader.ReadBytes(16);
-                    int rev = revRaw == 0xFF ? -1 : revRaw;
-
-                    bool isNewToMe = !GameStart.PlayerVersions.ContainsKey(versionOwnerId);
-                    VersionHandshake(major, minor, patch, rev, versionOwnerId, new Guid(guidBytes));
-
-                    // If it's a new player to me, or I am host, send my version back
-                    if (versionOwnerId != AmongUsClient.Instance.ClientId)
-                    {
-                        if (isNewToMe || AmongUsClient.Instance.AmHost)
-                        {
-                            Helpers.ShareGameVersion(versionOwnerId);
-                        }
-                    }
+                    if (isNewToMe || AmongUsClient.Instance.AmHost)
+                        Helpers.ShareGameVersion(versionOwnerId);
                 }
                 break;
             case CustomRPC.UseUncheckedVent:
@@ -232,57 +228,55 @@ public static partial class RPCProcedure
                 SheriffKillRequest(reader.ReadByte(), reader.ReadByte());
                 break;
             case CustomRPC.GamemodeKills:
-                byte gamemodeTarget = reader.ReadByte();
-                byte gamemodeSource = reader.ReadByte();
-                RPCProcedure.gamemodeKills(gamemodeTarget, gamemodeSource);
+                var gamemodeTarget = reader.ReadByte();
+                var gamemodeSource = reader.ReadByte();
+                GamemodeKills(gamemodeTarget, gamemodeSource);
                 break;
             case CustomRPC.CaptureTheFlagWhoTookTheFlag:
-                byte bluePlayerWhoHasRedFlag = reader.ReadByte();
-                byte redorblue = reader.ReadByte();
-                RPCProcedure.captureTheFlagWhoTookTheFlag(bluePlayerWhoHasRedFlag, redorblue);
+                var bluePlayerWhoHasRedFlag = reader.ReadByte();
+                var redorblue = reader.ReadByte();
+                CaptureTheFlagWhoTookTheFlag(bluePlayerWhoHasRedFlag, redorblue);
                 break;
             case CustomRPC.CaptureTheFlagWhichTeamScored:
-                byte whichteam = reader.ReadByte();
-                RPCProcedure.captureTheFlagWhichTeamScored(whichteam);
+                var whichteam = reader.ReadByte();
+                CaptureTheFlagWhichTeamScored(whichteam);
                 break;
             case CustomRPC.PoliceandThiefJail:
-                byte thiefId = reader.ReadByte();
-                RPCProcedure.policeandThiefJail(thiefId);
+                var thiefId = reader.ReadByte();
+                PoliceandThiefJail(thiefId);
                 break;
             case CustomRPC.PoliceandThiefFreeThief:
-                RPCProcedure.policeandThiefFreeThief();
+                PoliceandThiefFreeThief();
                 break;
             case CustomRPC.PoliceandThiefTakeJewel:
-                byte thiefwhotookjewel = reader.ReadByte();
-                byte jewelTakeId = reader.ReadByte();
-                RPCProcedure.policeandThiefTakeJewel(thiefwhotookjewel, jewelTakeId);
+                var thiefwhotookjewel = reader.ReadByte();
+                var jewelTakeId = reader.ReadByte();
+                PoliceandThiefTakeJewel(thiefwhotookjewel, jewelTakeId);
                 break;
             case CustomRPC.PoliceandThiefDeliverJewel:
-                byte thiefwhodeliverjewel = reader.ReadByte();
-                byte jewelDeliverId = reader.ReadByte();
-                RPCProcedure.policeandThiefDeliverJewel(thiefwhodeliverjewel, jewelDeliverId);
+                var thiefwhodeliverjewel = reader.ReadByte();
+                var jewelDeliverId = reader.ReadByte();
+                PoliceandThiefDeliverJewel(thiefwhodeliverjewel, jewelDeliverId);
                 break;
             case CustomRPC.PoliceandThiefRevertedJewelPosition:
-                byte thiefWhoLostJewel = reader.ReadByte();
-                byte jewelRevertedId = reader.ReadByte();
-                RPCProcedure.policeandThiefRevertedJewelPosition(thiefWhoLostJewel, jewelRevertedId);
+                var thiefWhoLostJewel = reader.ReadByte();
+                var jewelRevertedId = reader.ReadByte();
+                PoliceandThiefRevertedJewelPosition(thiefWhoLostJewel, jewelRevertedId);
                 break;
             case CustomRPC.PoliceandThiefsTased:
-                RPCProcedure.policeandThiefsTased(reader.ReadByte());
+                PoliceandThiefsTased(reader.ReadByte());
                 break;
             case CustomRPC.HotPotatoTransfer:
-                RPCProcedure.hotPotatoTransfer(reader.ReadByte());
+                HotPotatoTransfer(reader.ReadByte());
                 break;
             case CustomRPC.HotPotatoExploded:
-                RPCProcedure.hotPotatoExploded();
+                HotPotatoExploded();
                 break;
             case CustomRPC.BattleRoyaleShowShoots:
-                byte playerWhoShot = reader.ReadByte();
-                byte color = reader.ReadByte();
-                float angle = reader.ReadSingle();
-                RPCProcedure.battleRoyaleShowShoots(playerWhoShot, color, angle);
-                break;
-            default:
+                var playerWhoShot = reader.ReadByte();
+                var color = reader.ReadByte();
+                var angle = reader.ReadSingle();
+                BattleRoyaleShowShoots(playerWhoShot, color, angle);
                 break;
         }
     }

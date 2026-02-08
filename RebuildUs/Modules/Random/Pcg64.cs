@@ -1,18 +1,16 @@
 namespace RebuildUs.Modules.Random;
 
-public class Pcg64 : System.Random
+public sealed class Pcg64 : System.Random
 {
-    private ulong _state;
     private ulong _inc;
+    private ulong _state;
 
     public Pcg64(int seed)
     {
         Seed(seed);
     }
 
-    public Pcg64() : this((int)DateTime.Now.Ticks)
-    {
-    }
+    public Pcg64() : this((int)DateTime.Now.Ticks) { }
 
     private void Seed(int seed)
     {
@@ -25,11 +23,11 @@ public class Pcg64 : System.Random
 
     public ulong NextUInt64()
     {
-        ulong oldstate = _state;
-        _state = oldstate * 6364136223846793005UL + _inc;
+        var oldstate = _state;
+        _state = (oldstate * 6364136223846793005UL) + _inc;
 
         // RXS-M-XS output function
-        ulong word = ((oldstate >> (int)((oldstate >> 59) + 5)) ^ oldstate) * 12605985483714317049UL;
+        var word = ((oldstate >> (int)((oldstate >> 59) + 5)) ^ oldstate) * 12605985483714317049UL;
         return (word >> 43) ^ word;
     }
 
@@ -60,11 +58,11 @@ public class Pcg64 : System.Random
     public override void NextBytes(byte[] buffer)
     {
         if (buffer == null) throw new ArgumentNullException(nameof(buffer));
-        int i = 0;
+        var i = 0;
         while (i < buffer.Length)
         {
-            ulong r = NextUInt64();
-            for (int j = 0; j < 8 && i < buffer.Length; j++)
+            var r = NextUInt64();
+            for (var j = 0; j < 8 && i < buffer.Length; j++)
             {
                 buffer[i++] = (byte)(r & 0xFF);
                 r >>= 8;

@@ -8,8 +8,8 @@ public enum CustomGameOverReason
     TeamJackalWin,
     MiniLose,
     LoversWin,
+    O2SabotageEnd,
     ForceEnd,
-
     DrawTeamWin,
     RedTeamFlagWin,
     BlueTeamFlagWin,
@@ -21,5 +21,5 @@ public enum CustomGameOverReason
     BattleRoyaleDraw,
     BattleRoyaleLimeTeamWin,
     BattleRoyalePinkTeamWin,
-    BattleRoyaleSerialKillerWin,
+    BattleRoyaleSerialKillerWin
 }

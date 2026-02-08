@@ -1,15 +1,8 @@
 namespace RebuildUs.Modules.CustomOptions;
 
-public class CustomRoleSelectionOption : CustomOption
+public sealed class CustomRoleSelectionOption : CustomOption
 {
     public RoleType[] RoleTypes;
-    public RoleType Role
-    {
-        get
-        {
-            return RoleTypes[Selection];
-        }
-    }
 
     public CustomRoleSelectionOption(int id, CustomOptionType type, TrKey nameKey, RoleType[] roleTypes = null, CustomOption parent = null)
     {
@@ -17,28 +10,30 @@ public class CustomRoleSelectionOption : CustomOption
         {
             var values = Enum.GetValues(typeof(RoleType));
             roleTypes = new RoleType[values.Length];
-            for (int i = 0; i < values.Length; i++)
-            {
-                roleTypes[i] = (RoleType)values.GetValue(i);
-            }
+            for (var i = 0; i < values.Length; i++) roleTypes[i] = (RoleType)values.GetValue(i);
         }
 
-        this.RoleTypes = roleTypes;
+        RoleTypes = roleTypes;
         var strings = new string[roleTypes.Length];
-        for (int i = 0; i < roleTypes.Length; i++)
+        for (var i = 0; i < roleTypes.Length; i++)
         {
             var x = roleTypes[i];
-            strings[i] = x == RoleType.NoRole ? Tr.Get(TrKey.NoRole) : Tr.GetDynamic("" + x.ToString());
+            strings[i] = x == RoleType.NoRole ? Tr.Get(TrKey.NoRole) : Tr.GetDynamic("" + x);
         }
 
         var opt = Normal(id, type, nameKey, strings, parent);
-        this.Id = opt.Id;
-        this.NameKey = opt.NameKey;
-        this.Selections = opt.Selections;
-        this.DefaultSelection = opt.DefaultSelection;
-        this.Entry = opt.Entry;
-        this.Selection = opt.Selection;
-        this.Parent = opt.Parent;
-        this.Type = opt.Type;
+        Id = opt.Id;
+        NameKey = opt.NameKey;
+        Selections = opt.Selections;
+        DefaultSelection = opt.DefaultSelection;
+        Entry = opt.Entry;
+        Selection = opt.Selection;
+        Parent = opt.Parent;
+        Type = opt.Type;
+    }
+
+    public RoleType Role
+    {
+        get => RoleTypes[Selection];
     }
 }

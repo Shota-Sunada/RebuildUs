@@ -23,7 +23,7 @@ public static class MapCountOverlayPatch
 
     [HarmonyPrefix]
     [HarmonyPatch(typeof(MapCountOverlay), nameof(MapCountOverlay.OnDisable))]
-    static void OnDisablePrefix(MapCountOverlay __instance)
+    private static void OnDisablePrefix(MapCountOverlay __instance)
     {
         Admin.OnDisable();
     }

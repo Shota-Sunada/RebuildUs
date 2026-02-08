@@ -2,7 +2,6 @@ global using Il2CppInterop.Runtime;
 global using Il2CppInterop.Runtime.InteropTypes;
 global using Il2CppInterop.Runtime.InteropTypes.Arrays;
 global using Il2CppInterop.Runtime.Injection;
-
 global using HarmonyLib;
 global using Hazel;
 global using BepInEx;
@@ -33,9 +32,11 @@ global using RebuildUs.Roles.Impostor;
 global using RebuildUs.Roles.Neutral;
 global using RebuildUs.Roles.Modifier;
 global using RebuildUs.Utilities;
-
 global using Reactor.Networking;
 global using Reactor.Networking.Attributes;
+global using Submerged.Extensions;
+using InnerNet;
+using Random = System.Random;
 
 namespace RebuildUs;
 
@@ -46,19 +47,29 @@ namespace RebuildUs;
 [ReactorModFlags(ModFlags.RequireOnAllClients)]
 public class RebuildUs : BasePlugin
 {
-    public const string MOD_ID = "com.shota-sunada.rebuild-us";
-    public const string MOD_NAME = "Rebuild Us";
-    public const string MOD_VERSION = "2.0.0";
-    public const string MOD_DEVELOPER = "Shota Sunada";
+    private const string MOD_ID = "com.shota-sunada.rebuild-us";
+    internal const string MOD_NAME = "Rebuild Us";
+    internal const string MOD_VERSION = "2.0.0";
+    internal const string MOD_DEVELOPER = "Shota Sunada";
 
-    public const string REACTOR_GUID = "gg.reactor-sunada.api";
-    public const string REACTOR_VERSION = "3.3.4-SND";
+    private const string REACTOR_GUID = "gg.reactor-sunada.api";
+    private const string REACTOR_VERSION = "3.3.4-SND";
 
-    public static RebuildUs Instance;
-    public Harmony Harmony { get; } = new(MOD_ID);
-    public Version Version { get; } = Version.Parse(MOD_VERSION);
+    internal static RebuildUs Instance;
 
-    public static int OptionsPage = 0;
+    internal static int OptionsPage = 0;
+    public static IRegionInfo[] DefaultRegions;
+
+    internal static bool ActivatedSensei;
+    internal static bool ActivatedDleks;
+    internal static bool UpdatedSenseiMinimap;
+    internal static bool UpdatedSenseiAdminmap;
+
+    internal static GameObject Progress = null;
+    internal static float ProgressStart = 0;
+    internal static float ProgressEnd = 0;
+    private Harmony Harmony { get; } = new(MOD_ID);
+    internal Version Version { get; } = Version.Parse(MOD_VERSION);
 
     public static ConfigEntry<bool> GhostsSeeInformation { get; set; }
     public static ConfigEntry<bool> GhostsSeeRoles { get; set; }
@@ -77,36 +88,27 @@ public class RebuildUs : BasePlugin
     public static ConfigEntry<string> DiscordBotToken2 { get; set; }
     public static ConfigEntry<string> DiscordBotToken3 { get; set; }
     public static ConfigEntry<string> DiscordGuildId { get; set; }
-    public static ConfigEntry<string> DiscordVCId { get; set; }
+    public static ConfigEntry<string> DiscordVcId { get; set; }
     public static ConfigEntry<string> StatusChannelId { get; set; }
     public static ConfigEntry<string> ResultChannelId { get; set; }
 
     public static ConfigEntry<string> Ip { get; set; }
     public static ConfigEntry<ushort> Port { get; set; }
-    public static IRegionInfo[] DefaultRegions;
 
-    public System.Random Rnd => RandomMain.Rnd;
+    public Random Rnd
+    {
+        get => RandomMain.Rnd;
+    }
 
     public void RefreshRnd(int seed)
     {
         RandomMain.RefreshRnd(seed);
     }
 
-    public static bool activatedSensei = false;
-    public static bool activatedDleks = false;
-    public static bool updatedSenseiMinimap = false;
-    public static bool updatedSenseiAdminmap = false;
-
-    public static GameObject progress = null;
-    public static float progressStart = 0;
-    public static float progressEnd = 0;
-
     public override void Load()
     {
         Logger.Initialize(Log);
         Instance = this;
-
-        Debug.Initialize();
 
         GhostsSeeInformation = Config.Bind("Custom", "Ghosts See Remaining Tasks", true);
         GhostsSeeRoles = Config.Bind("Custom", "Ghosts See Roles", true);
@@ -125,7 +127,7 @@ public class RebuildUs : BasePlugin
         DiscordBotToken2 = Config.Bind("Discord", "Bot Token 2", "");
         DiscordBotToken3 = Config.Bind("Discord", "Bot Token 3", "");
         DiscordGuildId = Config.Bind("Discord", "Guild ID", "");
-        DiscordVCId = Config.Bind("Discord", "Voice Channel ID", "");
+        DiscordVcId = Config.Bind("Discord", "Voice Channel ID", "");
         StatusChannelId = Config.Bind("Discord", "Status Channel ID", "");
         ResultChannelId = Config.Bind("Discord", "Result Channel ID", "");
 
@@ -208,12 +210,12 @@ public class RebuildUs : BasePlugin
         PlayerRole.ClearAll();
         PlayerModifier.ClearAll();
 
-        Update.activatedReportButtonAfterCustomMode = false;
+        Update.ActivatedReportButtonAfterCustomMode = false;
 
-        activatedSensei = false;
-        updatedSenseiMinimap = false;
-        updatedSenseiAdminmap = false;
-        activatedDleks = false;
+        ActivatedSensei = false;
+        UpdatedSenseiMinimap = false;
+        UpdatedSenseiAdminmap = false;
+        ActivatedDleks = false;
     }
 
     public static void FixedUpdate(PlayerControl player)
@@ -228,7 +230,7 @@ public class RebuildUs : BasePlugin
         PlayerModifier.AllModifiers.Do(x => x.OnMeetingStart());
 
         // GM.resetZoom();
-        FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(3f, new Action<float>((p) =>
+        FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(3f, new Action<float>(p =>
         {
             if (p == 1)
             {
@@ -244,7 +246,7 @@ public class RebuildUs : BasePlugin
         PlayerModifier.AllModifiers.Do(x => x.OnMeetingEnd());
 
         CustomOverlays.HideInfoOverlay();
-        CustomOverlays.HideBlackBG();
+        CustomOverlays.HideBlackBg();
     }
 
     public static void OnIntroEnd()
@@ -255,7 +257,7 @@ public class RebuildUs : BasePlugin
 
     public static void HandleDisconnect(PlayerControl player, DisconnectReasons reason)
     {
-        if (AmongUsClient.Instance.GameState == InnerNet.InnerNetClient.GameStates.Started)
+        if (AmongUsClient.Instance.GameState == InnerNetClient.GameStates.Started)
         {
             PlayerRole.AllRoles.Do(x => x.HandleDisconnect(player, reason));
             PlayerModifier.AllModifiers.Do(x => x.HandleDisconnect(player, reason));
@@ -263,7 +265,7 @@ public class RebuildUs : BasePlugin
             Lovers.HandleDisconnect(player, reason);
             // Shifter.HandleDisconnect(player, reason);
 
-            GameHistory.FinalStatuses[player.PlayerId] = FinalStatus.Disconnected;
+            GameHistory.FINAL_STATUSES[player.PlayerId] = FinalStatus.Disconnected;
         }
     }
 
@@ -348,22 +350,22 @@ public class RebuildUs : BasePlugin
 
         serverManager.AvailableRegions = ServerManager.DefaultRegions;
 
-        IRegionInfo[] regions = [new DnsRegionInfo(Ip.Value, "Custom", StringNames.NoTranslation, Ip.Value, Port.Value, false).CastFast<IRegionInfo>()];
+        IRegionInfo[] regions =
+        [
+            new DnsRegionInfo(Ip.Value, "Custom", StringNames.NoTranslation, Ip.Value, Port.Value, false)
+                .CastFast<IRegionInfo>()
+        ];
 #nullable enable
-        IRegionInfo? currentRegion = serverManager.CurrentRegion;
+        var currentRegion = serverManager.CurrentRegion;
 #nullable disable
-        foreach (IRegionInfo region in regions)
+        foreach (var region in regions)
         {
             if (region == null)
-            {
                 Logger.LogError("Could not add region");
-            }
             else
             {
                 if (currentRegion != null && region.Name.Equals(currentRegion.Name, StringComparison.OrdinalIgnoreCase))
-                {
                     currentRegion = region;
-                }
                 serverManager.AddOrUpdateRegion(region);
             }
         }

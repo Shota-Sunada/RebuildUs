@@ -11,13 +11,13 @@ public static class Tr
     private const string NO_VALUE = "[NO VALUE]";
     private const string ERROR = "[ERROR]";
 
-    private static readonly Dictionary<SupportedLangs, Dictionary<string, string>> InternalTranslations = [];
-    private static readonly Dictionary<SupportedLangs, Dictionary<string, string>> CustomTranslations = [];
-    private static readonly HashSet<string> MissingKeys = [];
+    private static readonly Dictionary<SupportedLangs, Dictionary<string, string>> INTERNAL_TRANSLATIONS = [];
+    private static readonly Dictionary<SupportedLangs, Dictionary<string, string>> CUSTOM_TRANSLATIONS = [];
+    private static readonly HashSet<string> MISSING_KEYS = [];
 
     public static void Initialize()
     {
-        InternalTranslations.Clear();
+        INTERNAL_TRANSLATIONS.Clear();
         foreach (SupportedLangs lang in Enum.GetValues(typeof(SupportedLangs)))
         {
             var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream($"RebuildUs.Localization.Translations.{lang}.json");
@@ -30,7 +30,7 @@ public static class Tr
                 {
                     var flattened = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
                     FlattenTranslations(nestedDict, flattened);
-                    InternalTranslations[lang] = flattened;
+                    INTERNAL_TRANSLATIONS[lang] = flattened;
                 }
             }
             catch (Exception ex)
@@ -38,6 +38,7 @@ public static class Tr
                 Logger.LogError($"Failed to load internal translation for {lang}: {ex.Message}");
             }
         }
+
         LoadCustomTranslations();
     }
 
@@ -54,21 +55,24 @@ public static class Tr
                 }
             }
             else
-            {
                 target[category.Key] = category.Value.GetString() ?? "";
-            }
         }
     }
 
     private static void LoadCustomTranslations()
     {
-        CustomTranslations.Clear();
+        CUSTOM_TRANSLATIONS.Clear();
         var modDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
         var langDir = Path.Combine(modDir, "Language");
 
         if (!Directory.Exists(langDir))
         {
-            try { Directory.CreateDirectory(langDir); } catch { }
+            try
+            {
+                Directory.CreateDirectory(langDir);
+            }
+            catch { }
+
             return;
         }
 
@@ -85,7 +89,7 @@ public static class Tr
                     {
                         var flattened = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
                         FlattenTranslations(nestedDict, flattened);
-                        CustomTranslations[lang] = flattened;
+                        CUSTOM_TRANSLATIONS[lang] = flattened;
                         Logger.LogInfo($"Loaded custom translation for {lang} from {file}");
                     }
                 }
@@ -99,24 +103,22 @@ public static class Tr
 
     public static string Get(TrKey key, params object[] args)
     {
-        string keyStr = key.ToString();
+        var keyStr = key.ToString();
         var lang = TranslationController.InstanceExists ? FastDestroyableSingleton<TranslationController>.Instance.currentLanguage.languageID : SupportedLangs.English;
 
         string result = null;
-        if (CustomTranslations.TryGetValue(lang, out var customLang) && customLang.TryGetValue(keyStr, out result)) { }
-        else if (lang != SupportedLangs.English && CustomTranslations.TryGetValue(SupportedLangs.English, out var customEn) && customEn.TryGetValue(keyStr, out result)) { }
-        else if (InternalTranslations.TryGetValue(lang, out var internalLang) && internalLang.TryGetValue(keyStr, out result)) { }
-        else if (lang != SupportedLangs.English && InternalTranslations.TryGetValue(SupportedLangs.English, out var internalEn) && internalEn.TryGetValue(keyStr, out result)) { }
+        if (CUSTOM_TRANSLATIONS.TryGetValue(lang, out var customLang) && customLang.TryGetValue(keyStr, out result)) { }
+        else if (lang != SupportedLangs.English && CUSTOM_TRANSLATIONS.TryGetValue(SupportedLangs.English, out var customEn) && customEn.TryGetValue(keyStr, out result)) { }
+        else if (INTERNAL_TRANSLATIONS.TryGetValue(lang, out var internalLang) && internalLang.TryGetValue(keyStr, out result)) { }
+        else if (lang != SupportedLangs.English && INTERNAL_TRANSLATIONS.TryGetValue(SupportedLangs.English, out var internalEn) && internalEn.TryGetValue(keyStr, out result)) { }
 
         if (result == null)
         {
-            if (MissingKeys.Add(keyStr))
-            {
-                Logger.LogWarn($"Translation key not found: {keyStr}");
-            }
+            if (MISSING_KEYS.Add(keyStr)) Logger.LogWarn($"Translation key not found: {keyStr}");
             return NOTFOUND;
         }
-        else if (string.IsNullOrEmpty(result))
+
+        if (string.IsNullOrEmpty(result))
         {
             Logger.LogWarn($"Translation value is null or empty: {keyStr}");
             return NO_VALUE;
@@ -134,25 +136,19 @@ public static class Tr
     }
 
     /// <summary>
-    /// Helper to get translation from a string key. Use this only for dynamic keys.
-    /// TODO: This method should be removed and all calls should be replaced with TranslateKey.
+    ///     Helper to get translation from a string key. Use this only for dynamic keys.
+    ///     TODO: This method should be removed and all calls should be replaced with TranslateKey.
     /// </summary>
     public static string GetDynamic(string keyStr, params object[] args)
     {
-        if (Enum.TryParse<TrKey>(keyStr, out var key))
-        {
-            return Get(key, args);
-        }
+        if (Enum.TryParse<TrKey>(keyStr, out var key)) return Get(key, args);
         Logger.LogWarn($"Dynamic translation key not found in enum: {keyStr}");
         return NOTFOUND;
     }
 
     public static void Update()
     {
-        if (Helpers.GetKeysDown(KeyCode.LeftShift, KeyCode.L) || Helpers.GetKeysDown(KeyCode.RightShift, KeyCode.L))
-        {
-            DumpMissingKeys();
-        }
+        if (Helpers.GetKeysDown(KeyCode.LeftShift, KeyCode.L) || Helpers.GetKeysDown(KeyCode.RightShift, KeyCode.L)) DumpMissingKeys();
         if (Helpers.GetKeysDown(KeyCode.LeftShift, KeyCode.T) || Helpers.GetKeysDown(KeyCode.RightShift, KeyCode.T))
         {
             Initialize();
@@ -162,7 +158,7 @@ public static class Tr
 
     private static void DumpMissingKeys()
     {
-        if (MissingKeys.Count == 0)
+        if (MISSING_KEYS.Count == 0)
         {
             Logger.LogInfo("No missing translation keys found.");
             return;
@@ -171,7 +167,7 @@ public static class Tr
         try
         {
             var path = Path.Combine(Directory.GetCurrentDirectory(), "MissingKeys.json");
-            var json = JsonSerializer.Serialize(MissingKeys, new JsonSerializerOptions { WriteIndented = true });
+            var json = JsonSerializer.Serialize(MISSING_KEYS, new JsonSerializerOptions { WriteIndented = true });
             File.WriteAllText(path, json);
             Logger.LogInfo($"Missing translation keys dumped to {path}");
         }

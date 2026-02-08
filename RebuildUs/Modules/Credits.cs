@@ -1,8 +1,10 @@
+using InnerNet;
+
 namespace RebuildUs.Modules;
 
 public static class Credits
 {
-    private static readonly StringBuilder PingStringBuilder = new();
+    private static readonly StringBuilder PING_STRING_BUILDER = new();
 
     public static void UpdatePingText(PingTracker __instance)
     {
@@ -10,18 +12,18 @@ public static class Credits
         var position = __instance.GetComponent<AspectPosition>();
         position.Alignment = AspectPosition.EdgeAlignments.Top;
 
-        PingStringBuilder.Clear();
-        if (AmongUsClient.Instance.GameState == InnerNet.InnerNetClient.GameStates.Started)
+        PING_STRING_BUILDER.Clear();
+        if (AmongUsClient.Instance.GameState == InnerNetClient.GameStates.Started)
         {
-            PingStringBuilder.Append("<color=#1684B0>").Append(RebuildUs.MOD_NAME).Append("</color> v").Append(RebuildUs.MOD_VERSION).Append('\n').Append(__instance.text.text);
-            var newText = PingStringBuilder.ToString();
+            PING_STRING_BUILDER.Append("<color=#1684B0>").Append(RebuildUs.MOD_NAME).Append("</color> v").Append(RebuildUs.MOD_VERSION).Append('\n').Append(__instance.text.text);
+            var newText = PING_STRING_BUILDER.ToString();
             if (__instance.text.text != newText) __instance.text.text = newText;
             position.DistanceFromEdge = MeetingHud.Instance ? new(1.4f, 0f, 0) : new(1.55f, 0f, 0);
         }
         else
         {
-            PingStringBuilder.Append("<color=#1684B0>").Append(RebuildUs.MOD_NAME).Append("</color> v").Append(RebuildUs.MOD_VERSION).Append("\n<size=70%>By ").Append(RebuildUs.MOD_DEVELOPER).Append("</size>\n").Append(__instance.text.text);
-            var newText = PingStringBuilder.ToString();
+            PING_STRING_BUILDER.Append("<color=#1684B0>").Append(RebuildUs.MOD_NAME).Append("</color> v").Append(RebuildUs.MOD_VERSION).Append("\n<size=70%>By ").Append(RebuildUs.MOD_DEVELOPER).Append("</size>\n").Append(__instance.text.text);
+            var newText = PING_STRING_BUILDER.ToString();
             if (__instance.text.text != newText) __instance.text.text = newText;
             position.DistanceFromEdge = new(0f, 0f, 0);
         }

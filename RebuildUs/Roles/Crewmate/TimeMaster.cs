@@ -4,16 +4,11 @@ namespace RebuildUs.Roles.Crewmate;
 public class TimeMaster : RoleBase<TimeMaster>
 {
     public static Color NameColor = new Color32(112, 142, 239, byte.MaxValue);
-    public override Color RoleColor => NameColor;
-    private static CustomButton TimeMasterShieldButton;
 
-    // write configs here
-    public static float Cooldown { get { return CustomOptionHolder.TimeMasterCooldown.GetFloat(); } }
-    public static float RewindTime { get { return CustomOptionHolder.TimeMasterRewindTime.GetFloat(); } }
-    public static float ShieldDuration { get { return CustomOptionHolder.TimeMasterShieldDuration.GetFloat(); } }
+    private static CustomButton _timeMasterShieldButton;
 
     public static bool ShieldActive = false;
-    public static bool IsRewinding = false;
+    public static bool IsRewinding;
 
     public TimeMaster()
     {
@@ -21,27 +16,49 @@ public class TimeMaster : RoleBase<TimeMaster>
         StaticRoleType = CurrentRoleType = RoleType.TimeMaster;
     }
 
+    public override Color RoleColor
+    {
+        get => NameColor;
+    }
+
+    // write configs here
+    public static float Cooldown
+    {
+        get => CustomOptionHolder.TimeMasterCooldown.GetFloat();
+    }
+
+    public static float RewindTime
+    {
+        get => CustomOptionHolder.TimeMasterRewindTime.GetFloat();
+    }
+
+    public static float ShieldDuration
+    {
+        get => CustomOptionHolder.TimeMasterShieldDuration.GetFloat();
+    }
+
     public override void OnMeetingStart() { }
     public override void OnMeetingEnd() { }
     public override void OnIntroEnd() { }
+
     public override void FixedUpdate()
     {
         if (IsRewinding)
         {
-            if (GameHistory.LocalPlayerPositions.Count > 0)
+            if (GameHistory.LOCAL_PLAYER_POSITIONS.Count > 0)
             {
                 // Set position
-                var next = GameHistory.LocalPlayerPositions[0];
-                if (next.Item2 == true)
+                var next = GameHistory.LOCAL_PLAYER_POSITIONS[0];
+                if (next.Item2)
                 {
                     // Exit current vent if necessary
                     if (PlayerControl.LocalPlayer.inVent)
                     {
                         var vents = MapUtilities.CachedShipStatus.AllVents;
-                        for (int i = 0; i < vents.Length; i++)
+                        for (var i = 0; i < vents.Length; i++)
                         {
                             var vent = vents[i];
-                            vent.CanUse(PlayerControl.LocalPlayer?.Data, out bool canUse, out bool couldUse);
+                            vent.CanUse(PlayerControl.LocalPlayer?.Data, out var canUse, out var couldUse);
                             if (canUse)
                             {
                                 PlayerControl.LocalPlayer.MyPhysics.RpcExitVent(vent.Id);
@@ -49,24 +66,20 @@ public class TimeMaster : RoleBase<TimeMaster>
                             }
                         }
                     }
+
                     // Set position
                     PlayerControl.LocalPlayer.transform.position = next.Item1;
                 }
-                else if (GameHistory.LocalPlayerPositions.Any(x => x.Item2 == true))
-                {
-                    PlayerControl.LocalPlayer.transform.position = next.Item1;
-                }
-                if (SubmergedCompatibility.IsSubmerged)
-                {
-                    SubmergedCompatibility.ChangeFloor(next.Item1.y > -7);
-                }
+                else if (GameHistory.LOCAL_PLAYER_POSITIONS.Any(x => x.Item2)) PlayerControl.LocalPlayer.transform.position = next.Item1;
 
-                GameHistory.LocalPlayerPositions.RemoveAt(0);
+                if (SubmergedCompatibility.IsSubmerged) SubmergedCompatibility.ChangeFloor(next.Item1.y > -7);
 
-                if (GameHistory.LocalPlayerPositions.Count > 1)
+                GameHistory.LOCAL_PLAYER_POSITIONS.RemoveAt(0);
+
+                if (GameHistory.LOCAL_PLAYER_POSITIONS.Count > 1)
                 {
                     // Skip every second position to rewind twice as fast, but never skip the last position
-                    GameHistory.LocalPlayerPositions.RemoveAt(0);
+                    GameHistory.LOCAL_PLAYER_POSITIONS.RemoveAt(0);
                 }
             }
             else
@@ -77,57 +90,41 @@ public class TimeMaster : RoleBase<TimeMaster>
         }
         else
         {
-            while (GameHistory.LocalPlayerPositions.Count >= Mathf.Round(RewindTime / Time.fixedDeltaTime))
-            {
-                GameHistory.LocalPlayerPositions.RemoveAt(GameHistory.LocalPlayerPositions.Count - 1);
-            }
-            GameHistory.LocalPlayerPositions.Insert(0, new Tuple<Vector3, bool>(PlayerControl.LocalPlayer.transform.position, PlayerControl.LocalPlayer.CanMove)); // CanMove = CanMove
+            while (GameHistory.LOCAL_PLAYER_POSITIONS.Count >= Mathf.Round(RewindTime / Time.fixedDeltaTime)) GameHistory.LOCAL_PLAYER_POSITIONS.RemoveAt(GameHistory.LOCAL_PLAYER_POSITIONS.Count - 1);
+            GameHistory.LOCAL_PLAYER_POSITIONS.Insert(0, new(PlayerControl.LocalPlayer.transform.position, PlayerControl.LocalPlayer.CanMove)); // CanMove = CanMove
         }
     }
+
     public override void OnKill(PlayerControl target) { }
     public override void OnDeath(PlayerControl killer = null) { }
     public override void OnFinishShipStatusBegin() { }
     public override void HandleDisconnect(PlayerControl player, DisconnectReasons reason) { }
+
     public static void MakeButtons(HudManager hm)
     {
-        TimeMasterShieldButton = new CustomButton
-        (
-            () =>
-            {
-                using var sender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.TimeMasterShield);
-                RPCProcedure.TimeMasterShield();
-            },
-            () => { return PlayerControl.LocalPlayer.IsRole(RoleType.TimeMaster) && PlayerControl.LocalPlayer.IsAlive(); },
-            () => { return PlayerControl.LocalPlayer.CanMove; },
-            () =>
-            {
-                TimeMasterShieldButton.Timer = TimeMasterShieldButton.MaxTimer;
-                TimeMasterShieldButton.IsEffectActive = false;
-                TimeMasterShieldButton.ActionButton.cooldownTimerText.color = Palette.EnabledColor;
-            },
-            AssetLoader.TimeShieldButton,
-            ButtonPosition.Layout,
-            hm,
-            hm.UseButton,
-            AbilitySlot.CrewmateAbilityPrimary,
-            true,
-            ShieldDuration,
-            () => { TimeMasterShieldButton.Timer = TimeMasterShieldButton.MaxTimer; },
-            false,
-            Tr.Get(TrKey.TimeShieldText)
-        );
+        _timeMasterShieldButton = new(() =>
+        {
+            using var sender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.TimeMasterShield);
+            RPCProcedure.TimeMasterShield();
+        }, () => { return PlayerControl.LocalPlayer.IsRole(RoleType.TimeMaster) && PlayerControl.LocalPlayer.IsAlive(); }, () => { return PlayerControl.LocalPlayer.CanMove; }, () =>
+        {
+            _timeMasterShieldButton.Timer = _timeMasterShieldButton.MaxTimer;
+            _timeMasterShieldButton.IsEffectActive = false;
+            _timeMasterShieldButton.ActionButton.cooldownTimerText.color = Palette.EnabledColor;
+        }, AssetLoader.TimeShieldButton, ButtonPosition.Layout, hm, hm.UseButton, AbilitySlot.CrewmateAbilityPrimary, true, ShieldDuration, () => { _timeMasterShieldButton.Timer = _timeMasterShieldButton.MaxTimer; }, false, Tr.Get(TrKey.TimeShieldText));
     }
+
     public static void SetButtonCooldowns()
     {
-        TimeMasterShieldButton.MaxTimer = Cooldown;
-        TimeMasterShieldButton.EffectDuration = ShieldDuration;
+        _timeMasterShieldButton.MaxTimer = Cooldown;
+        _timeMasterShieldButton.EffectDuration = ShieldDuration;
     }
 
     public static void ResetTimeMasterButton()
     {
-        TimeMasterShieldButton.Timer = TimeMasterShieldButton.MaxTimer;
-        TimeMasterShieldButton.IsEffectActive = false;
-        TimeMasterShieldButton.ActionButton.cooldownTimerText.color = Palette.EnabledColor;
+        _timeMasterShieldButton.Timer = _timeMasterShieldButton.MaxTimer;
+        _timeMasterShieldButton.IsEffectActive = false;
+        _timeMasterShieldButton.ActionButton.cooldownTimerText.color = Palette.EnabledColor;
     }
 
     // write functions here

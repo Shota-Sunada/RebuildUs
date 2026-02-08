@@ -1,22 +1,25 @@
 using System.Collections;
 using System.Collections.Concurrent;
-using System.Text.Json;
 using System.Security.Cryptography;
+using System.Text.Json;
 using BepInEx.Unity.IL2CPP.Utils;
 using Il2CppInterop.Runtime.Attributes;
 using static RebuildUs.Modules.Cosmetics.CustomHatManager;
 
 namespace RebuildUs.Modules.Cosmetics;
 
-public class HatsLoader : MonoBehaviour
+public sealed class HatsLoader : MonoBehaviour
 {
-    public bool IsRunning { get; private set; }
-    private static readonly HttpClient Client = new();
+    private static readonly HttpClient CLIENT = new();
+
+    private static readonly JsonSerializerOptions JSON_OPTIONS = new() { AllowTrailingCommas = true };
 
     static HatsLoader()
     {
-        Client.DefaultRequestHeaders.TryAddWithoutValidation("User-Agent", "RebuildUs-Mod");
+        CLIENT.DefaultRequestHeaders.TryAddWithoutValidation("User-Agent", "RebuildUs-Mod");
     }
+
+    public bool IsRunning { get; private set; }
 
     public void FetchHats()
     {
@@ -33,12 +36,13 @@ public class HatsLoader : MonoBehaviour
         LoadScreen.Create();
 
         Logger.LogMessage("Downloading cosmetics...");
-        var downloadTask = DownloadAllHats(Repositories, HatsDirectory);
+        var downloadTask = DownloadAllHats(REPOSITORIES, HatsDirectory);
         while (!downloadTask.IsCompleted)
         {
             LoadScreen.Update();
             yield return null;
         }
+
         Logger.LogMessage("Downloading finished.");
 
         UnregisteredHats.Clear();
@@ -56,10 +60,7 @@ public class HatsLoader : MonoBehaviour
                     try
                     {
                         var text = File.ReadAllText(manifestPath);
-                        var response = JsonSerializer.Deserialize<SkinsConfigFile>(text, new JsonSerializerOptions
-                        {
-                            AllowTrailingCommas = true
-                        });
+                        var response = JsonSerializer.Deserialize<SkinsConfigFile>(text, new JsonSerializerOptions { AllowTrailingCommas = true });
 
                         if (response?.Hats != null)
                         {
@@ -72,6 +73,7 @@ public class HatsLoader : MonoBehaviour
                                 hat.FlipResource = SanitizeAndPrefix(hat.FlipResource, dirName);
                                 hat.BackFlipResource = SanitizeAndPrefix(hat.BackFlipResource, dirName);
                             }
+
                             UnregisteredHats.AddRange(response.Hats);
                             Logger.LogMessage($"Loaded {response.Hats.Count} hats from {manifestPath}.");
                         }
@@ -89,8 +91,6 @@ public class HatsLoader : MonoBehaviour
         LoadScreen.Destroy();
         IsRunning = false;
     }
-
-    private static readonly JsonSerializerOptions JsonOptions = new() { AllowTrailingCommas = true };
 
     private string SanitizeAndPrefix(string path, string prefix)
     {
@@ -126,16 +126,17 @@ public class HatsLoader : MonoBehaviour
                 try
                 {
                     Logger.LogMessage($"Downloading manifest: {manifestURL}");
-                    var response = await Client.GetAsync(manifestURL);
+                    var response = await CLIENT.GetAsync(manifestURL);
                     if (!response.IsSuccessStatusCode)
                     {
                         Logger.LogWarn($"Failed to download manifest from {manifestURL}: {response.StatusCode}");
                         return;
                     }
+
                     var manifestData = await response.Content.ReadAsByteArrayAsync();
                     await File.WriteAllBytesAsync(manifestPath, manifestData);
 
-                    var config = JsonSerializer.Deserialize<SkinsConfigFile>(manifestData, JsonOptions);
+                    var config = JsonSerializer.Deserialize<SkinsConfigFile>(manifestData, JSON_OPTIONS);
                     if (config == null || config.Hats == null) return;
 
                     foreach (var hat in config.Hats)
@@ -157,8 +158,8 @@ public class HatsLoader : MonoBehaviour
 
             if (toDownload.Count > 0)
             {
-                int completed = 0;
-                int total = toDownload.Count;
+                var completed = 0;
+                var total = toDownload.Count;
                 var semaphore = new SemaphoreSlim(10); // Limit concurrent downloads
 
                 var tasks = toDownload.Select(async item =>
@@ -167,16 +168,14 @@ public class HatsLoader : MonoBehaviour
                     try
                     {
                         LoadScreen.StatusText = $"Downloading {item.fileName}";
-                        var response = await Client.GetAsync(item.url);
+                        var response = await CLIENT.GetAsync(item.url);
                         if (response.IsSuccessStatusCode)
                         {
                             var fileData = await response.Content.ReadAsByteArrayAsync();
                             await File.WriteAllBytesAsync(item.localPath, fileData);
                         }
                         else
-                        {
                             Logger.LogWarn($"Failed to download {item.url}: {response.StatusCode}");
-                        }
                     }
                     catch (Exception ex)
                     {
@@ -187,12 +186,13 @@ public class HatsLoader : MonoBehaviour
                         semaphore.Release();
                         var done = Interlocked.Increment(ref completed);
                         LoadScreen.StatusText = $"Downloading {item.fileName} ({done} / {total})";
-                        LoadScreen.Progress = 0.2f + ((float)done / total * 0.8f);
+                        LoadScreen.Progress = 0.2f + (((float)done / total) * 0.8f);
                     }
                 });
 
                 await Task.WhenAll(tasks);
             }
+
             LoadScreen.Progress = 1.0f;
             LoadScreen.ProgressDetailText = "";
         }
@@ -231,12 +231,10 @@ public class HatsLoader : MonoBehaviour
         {
             var uri = new Uri(url);
             var segments = uri.AbsolutePath.Split('/', StringSplitOptions.RemoveEmptyEntries);
-            if (segments.Length >= 2)
-            {
-                return $"{segments[0]}-{segments[1]}";
-            }
+            if (segments.Length >= 2) return $"{segments[0]}-{segments[1]}";
         }
         catch { }
+
         return "unknown-repo-" + Guid.NewGuid().ToString("N").Substring(0, 8);
     }
 

@@ -11,11 +11,11 @@ public interface IPlayerMappingService
     void Load();
 }
 
-public class PlayerMappingService : IPlayerMappingService
+public sealed class PlayerMappingService : IPlayerMappingService
 {
     private readonly string _filePath = "player_mappings.json";
-    private Dictionary<string, ulong> _mappings = [];
     private readonly ILogger<PlayerMappingService> _logger;
+    private Dictionary<string, ulong> _mappings = [];
 
     public PlayerMappingService(ILogger<PlayerMappingService> logger)
     {

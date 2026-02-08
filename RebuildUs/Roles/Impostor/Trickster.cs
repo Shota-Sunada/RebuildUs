@@ -4,20 +4,36 @@ namespace RebuildUs.Roles.Impostor;
 public class Trickster : RoleBase<Trickster>
 {
     public static Color NameColor = Palette.ImpostorRed;
-    public override Color RoleColor => NameColor;
-    private static CustomButton PlaceJackInTheBoxButton;
-    private static CustomButton LightsOutButton;
 
-    // write configs here
-    public static float PlaceBoxCooldown { get { return CustomOptionHolder.TricksterPlaceBoxCooldown.GetFloat(); } }
-    public static float LightsOutCooldown { get { return CustomOptionHolder.TricksterLightsOutCooldown.GetFloat(); } }
-    public static float LightsOutDuration { get { return CustomOptionHolder.TricksterLightsOutDuration.GetFloat(); } }
-    public static float LightsOutTimer = 0f;
+    private static CustomButton _placeJackInTheBoxButton;
+    private static CustomButton _lightsOutButton;
+    public static float LightsOutTimer;
 
     public Trickster()
     {
         // write value init here
         StaticRoleType = CurrentRoleType = RoleType.Trickster;
+    }
+
+    public override Color RoleColor
+    {
+        get => NameColor;
+    }
+
+    // write configs here
+    public static float PlaceBoxCooldown
+    {
+        get => CustomOptionHolder.TricksterPlaceBoxCooldown.GetFloat();
+    }
+
+    public static float LightsOutCooldown
+    {
+        get => CustomOptionHolder.TricksterLightsOutCooldown.GetFloat();
+    }
+
+    public static float LightsOutDuration
+    {
+        get => CustomOptionHolder.TricksterLightsOutDuration.GetFloat();
     }
 
     public override void OnMeetingStart() { }
@@ -31,63 +47,37 @@ public class Trickster : RoleBase<Trickster>
 
     public static void MakeButtons(HudManager hm)
     {
-        PlaceJackInTheBoxButton = new CustomButton(
-            () =>
-            {
-                PlaceJackInTheBoxButton.Timer = PlaceJackInTheBoxButton.MaxTimer;
+        _placeJackInTheBoxButton = new(() =>
+        {
+            _placeJackInTheBoxButton.Timer = _placeJackInTheBoxButton.MaxTimer;
 
-                var pos = PlayerControl.LocalPlayer.transform.position;
-                byte[] buff = new byte[sizeof(float) * 2];
-                Buffer.BlockCopy(BitConverter.GetBytes(pos.x), 0, buff, 0 * sizeof(float), sizeof(float));
-                Buffer.BlockCopy(BitConverter.GetBytes(pos.y), 0, buff, 1 * sizeof(float), sizeof(float));
+            var pos = PlayerControl.LocalPlayer.transform.position;
+            var buff = new byte[sizeof(float) * 2];
+            Buffer.BlockCopy(BitConverter.GetBytes(pos.x), 0, buff, 0 * sizeof(float), sizeof(float));
+            Buffer.BlockCopy(BitConverter.GetBytes(pos.y), 0, buff, 1 * sizeof(float), sizeof(float));
 
-                using var sender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.PlaceJackInTheBox);
-                sender.WriteBytesAndSize(buff);
-                RPCProcedure.PlaceJackInTheBox(buff);
-            },
-            () => { return PlayerControl.LocalPlayer.IsRole(RoleType.Trickster) && PlayerControl.LocalPlayer.IsAlive() && !JackInTheBox.HasJackInTheBoxLimitReached(); },
-            () => { return PlayerControl.LocalPlayer.CanMove && !JackInTheBox.HasJackInTheBoxLimitReached(); },
-            () => { PlaceJackInTheBoxButton.Timer = PlaceJackInTheBoxButton.MaxTimer; },
-            AssetLoader.PlaceJackInTheBoxButton,
-            ButtonPosition.Layout,
-            hm,
-            hm.KillButton,
-            AbilitySlot.ImpostorAbilityPrimary,
-            false,
-            Tr.Get(TrKey.PlaceJackInTheBoxText)
-        );
+            using var sender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.PlaceJackInTheBox);
+            sender.WriteBytesAndSize(buff);
+            RPCProcedure.PlaceJackInTheBox(buff);
+        }, () => { return PlayerControl.LocalPlayer.IsRole(RoleType.Trickster) && PlayerControl.LocalPlayer.IsAlive() && !JackInTheBox.HasJackInTheBoxLimitReached(); }, () => { return PlayerControl.LocalPlayer.CanMove && !JackInTheBox.HasJackInTheBoxLimitReached(); }, () => { _placeJackInTheBoxButton.Timer = _placeJackInTheBoxButton.MaxTimer; }, AssetLoader.PlaceJackInTheBoxButton, ButtonPosition.Layout, hm, hm.KillButton, AbilitySlot.ImpostorAbilityPrimary, false, Tr.Get(TrKey.PlaceJackInTheBoxText));
 
-        LightsOutButton = new CustomButton(
-            () =>
-            {
-                using var sender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.LightsOut);
-                RPCProcedure.LightsOut();
-            },
-            () => { return PlayerControl.LocalPlayer.IsRole(RoleType.Trickster) && PlayerControl.LocalPlayer.IsAlive() && JackInTheBox.HasJackInTheBoxLimitReached() && JackInTheBox.BoxesConvertedToVents; },
-            () => { return PlayerControl.LocalPlayer.CanMove && JackInTheBox.HasJackInTheBoxLimitReached() && JackInTheBox.BoxesConvertedToVents; },
-            () =>
-            {
-                LightsOutButton.Timer = LightsOutButton.MaxTimer;
-                LightsOutButton.IsEffectActive = false;
-                LightsOutButton.ActionButton.graphic.color = Palette.EnabledColor;
-            },
-            AssetLoader.LightsOutButton,
-            ButtonPosition.Layout,
-            hm,
-            hm.KillButton,
-            AbilitySlot.ImpostorAbilityPrimary,
-            true,
-            LightsOutDuration,
-            () => { LightsOutButton.Timer = LightsOutButton.MaxTimer; },
-            false,
-            Tr.Get(TrKey.LightsOutText)
-        );
+        _lightsOutButton = new(() =>
+        {
+            using var sender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.LightsOut);
+            RPCProcedure.LightsOut();
+        }, () => { return PlayerControl.LocalPlayer.IsRole(RoleType.Trickster) && PlayerControl.LocalPlayer.IsAlive() && JackInTheBox.HasJackInTheBoxLimitReached() && JackInTheBox.BoxesConvertedToVents; }, () => { return PlayerControl.LocalPlayer.CanMove && JackInTheBox.HasJackInTheBoxLimitReached() && JackInTheBox.BoxesConvertedToVents; }, () =>
+        {
+            _lightsOutButton.Timer = _lightsOutButton.MaxTimer;
+            _lightsOutButton.IsEffectActive = false;
+            _lightsOutButton.ActionButton.graphic.color = Palette.EnabledColor;
+        }, AssetLoader.LightsOutButton, ButtonPosition.Layout, hm, hm.KillButton, AbilitySlot.ImpostorAbilityPrimary, true, LightsOutDuration, () => { _lightsOutButton.Timer = _lightsOutButton.MaxTimer; }, false, Tr.Get(TrKey.LightsOutText));
     }
+
     public static void SetButtonCooldowns()
     {
-        PlaceJackInTheBoxButton.MaxTimer = PlaceBoxCooldown;
-        LightsOutButton.MaxTimer = LightsOutCooldown;
-        LightsOutButton.EffectDuration = LightsOutDuration;
+        _placeJackInTheBoxButton.MaxTimer = PlaceBoxCooldown;
+        _lightsOutButton.MaxTimer = LightsOutCooldown;
+        _lightsOutButton.EffectDuration = LightsOutDuration;
     }
 
     // write functions here

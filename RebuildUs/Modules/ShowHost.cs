@@ -2,8 +2,8 @@ namespace RebuildUs.Modules;
 
 public static class ShowHost
 {
-    private static TextMeshPro _text = null;
-    private static readonly StringBuilder _sb = new();
+    private static TextMeshPro _text;
+    private static readonly StringBuilder SB = new();
 
     public static void Setup(MeetingHud __instance)
     {
@@ -25,16 +25,13 @@ public static class ShowHost
         {
             PlayerMaterial.SetColors(host.DefaultOutfit.ColorId, __instance.HostIcon);
 
-            _sb.Clear();
-            _sb.Append(Tr.Get(TrKey.Host));
-            _sb.Append(": ");
-            _sb.Append(host.PlayerName);
+            SB.Clear();
+            SB.Append(Tr.Get(TrKey.Host));
+            SB.Append(": ");
+            SB.Append(host.PlayerName);
 
-            string newText = _sb.ToString();
-            if (_text.text != newText)
-            {
-                _text.text = newText;
-            }
+            var newText = SB.ToString();
+            if (_text.text != newText) _text.text = newText;
         }
     }
 }

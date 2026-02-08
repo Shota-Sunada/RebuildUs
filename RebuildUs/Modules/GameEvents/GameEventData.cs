@@ -1,5 +1,3 @@
 namespace RebuildUs.Modules.GameEvents;
 
-public abstract class GameEventData
-{
-}
+public abstract class GameEventData { }

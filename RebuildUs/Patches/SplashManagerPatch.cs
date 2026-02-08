@@ -7,21 +7,22 @@ namespace RebuildUs.Patches;
 [HarmonyPatch(typeof(SplashManager), nameof(SplashManager.Update))]
 public static class SplashManagerPatch
 {
-    private static bool IsProcessing = false;
-    private static bool IsDone = false;
+    private static bool _isProcessing;
+    private static bool _isDone;
 
     [HarmonyPrefix]
     public static bool Prefix(SplashManager __instance)
     {
-        if (IsDone) return true;
+        if (_isDone) return true;
 
         if (__instance.doneLoadingRefdata && !__instance.startedSceneLoad && Time.time - __instance.startTime > __instance.minimumSecondsBeforeSceneChange)
         {
-            if (!IsProcessing)
+            if (!_isProcessing)
             {
-                IsProcessing = true;
+                _isProcessing = true;
                 __instance.StartCoroutine(CoProcess(__instance).WrapToIl2Cpp());
             }
+
             return false;
         }
 
@@ -32,11 +33,8 @@ public static class SplashManagerPatch
     {
         CustomHatManager.LoadHats();
 
-        while (CustomHatManager.Loader.IsRunning)
-        {
-            yield return null;
-        }
+        while (CustomHatManager.LOADER.IsRunning) yield return null;
 
-        IsDone = true;
+        _isDone = true;
     }
 }

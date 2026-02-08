@@ -6,7 +6,7 @@ public static class MorphHandler
 {
     public static void MorphToPlayer(this PlayerControl pc, PlayerControl target)
     {
-        SetOutfit(pc, target.Data.DefaultOutfit, target.Visible);
+        pc.SetOutfit(target.Data.DefaultOutfit, target.Visible);
     }
 
     public static void SetOutfit(this PlayerControl morphing, NetworkedPlayerInfo.PlayerOutfit outfit, bool visible = true)
@@ -26,27 +26,35 @@ public static class MorphHandler
         morphing.RawSetName(outfit.PlayerName);
 
         SkinViewData nextSkin = null;
-        try { nextSkin = MapUtilities.CachedShipStatus.CosmeticsCache.GetSkin(outfit.SkinId); } catch { return; }
+        try
+        {
+            nextSkin = MapUtilities.CachedShipStatus.CosmeticsCache.GetSkin(outfit.SkinId);
+        }
+        catch
+        {
+            return;
+        }
+
         var phys = morphing.MyPhysics;
         var group = phys.Animations.group;
         var currentAnim = phys.Animations.Animator.GetCurrentAnimation();
 
-        AnimationClip clip = currentAnim switch
+        var clip = currentAnim switch
         {
             var a when a == group.RunAnim => nextSkin.RunAnim,
             var a when a == group.SpawnAnim => nextSkin.SpawnAnim,
             var a when a == group.EnterVentAnim => nextSkin.EnterVentAnim,
             var a when a == group.ExitVentAnim => nextSkin.ExitVentAnim,
-            _ => nextSkin.IdleAnim
+            _ => nextSkin.IdleAnim,
         };
 
         var spriteAnim = phys.myPlayer.cosmetics.skin.animator;
-        float progress = phys.Animations.Animator.m_animator.GetCurrentAnimatorStateInfo(0).normalizedTime;
+        var progress = phys.Animations.Animator.m_animator.GetCurrentAnimatorStateInfo(0).normalizedTime;
 
         phys.myPlayer.cosmetics.skin.skin = nextSkin;
         phys.myPlayer.cosmetics.skin.UpdateMaterial();
 
-        spriteAnim.Play(clip, 1f);
+        spriteAnim.Play(clip);
         spriteAnim.m_animator.Play("a", 0, progress % 1);
         spriteAnim.m_animator.Update(0f);
 
@@ -55,7 +63,7 @@ public static class MorphHandler
 
     public static void ResetMorph(this PlayerControl pc)
     {
-        MorphToPlayer(pc, pc);
+        pc.MorphToPlayer(pc);
         // Munou.reMorph(pc.PlayerId);
         pc.CurrentOutfitType = PlayerOutfitType.Default;
     }

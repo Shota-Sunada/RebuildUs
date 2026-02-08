@@ -1,6 +1,6 @@
 namespace RebuildUs.Modules.Cosmetics;
 
-public class HatExtension
+public sealed class HatExtension
 {
     public string Author { get; set; }
     public string Package { get; set; }

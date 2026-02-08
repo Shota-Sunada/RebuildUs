@@ -1,3 +1,5 @@
+using Object = UnityEngine.Object;
+
 namespace RebuildUs.Modules;
 
 public static class Airship
@@ -19,20 +21,14 @@ public static class Airship
             // 昇降機右に影を追加
             var oneWayShadow = obj.transform.FindChild("Shadow").FindChild("LedgeShadow").GetComponent<OneWayShadows>();
             oneWayShadow.enabled = false;
-            if (PlayerControl.LocalPlayer.IsTeamImpostor())
-            {
-                oneWayShadow.gameObject.SetActive(false);
-            }
+            if (PlayerControl.LocalPlayer.IsTeamImpostor()) oneWayShadow.gameObject.SetActive(false);
 
             SpriteRenderer renderer;
 
-            GameObject fence = new("ModFence")
-            {
-                layer = LayerMask.NameToLayer("Ship")
-            };
+            GameObject fence = new("ModFence") { layer = LayerMask.NameToLayer("Ship") };
             fence.transform.SetParent(obj.transform);
-            fence.transform.localPosition = new Vector3(4.2f, 0.15f, 0.5f);
-            fence.transform.localScale = new Vector3(1f, 1f, 1f);
+            fence.transform.localPosition = new(4.2f, 0.15f, 0.5f);
+            fence.transform.localScale = new(1f, 1f, 1f);
             fence.SetActive(true);
             var collider = fence.AddComponent<EdgeCollider2D>();
             collider.points = new Vector2[] { new(1.5f, -0.2f), new(-1.5f, -0.2f), new(-1.5f, 1.5f) };
@@ -51,7 +47,7 @@ public static class Airship
             // renderer.sprite = AssetLoader.AirshipDownloadG;
 
             var panel = obj.transform.FindChild("panel_data");
-            panel.localPosition = new Vector3(4.52f, -3.95f, 0.1f);
+            panel.localPosition = new(4.52f, -3.95f, 0.1f);
             // panel.gameObject.GetComponent<Console>().usableDistance = 0.9f;
         }
     }
@@ -79,9 +75,9 @@ public static class Airship
                 // 梯子追加
                 if (ladder != null)
                 {
-                    var newLadder = UnityEngine.Object.Instantiate(ladder, ladder.transform.parent);
+                    var newLadder = Object.Instantiate(ladder, ladder.transform.parent);
                     var ladders = newLadder.GetComponentsInChildren<Ladder>();
-                    int id = 100;
+                    var id = 100;
                     foreach (var l in ladders)
                     {
                         if (l.name == "LadderBottom") l.gameObject.SetActive(false);
@@ -89,7 +85,8 @@ public static class Airship
                         FastDestroyableSingleton<AirshipStatus>.Instance.Ladders.AddItem(l);
                         id++;
                     }
-                    newLadder.transform.position = new Vector3(15.442f, 12.18f, 0.1f);
+
+                    newLadder.transform.position = new(15.442f, 12.18f, 0.1f);
                     newLadder.GetComponentInChildren<SpriteRenderer>().sprite = AssetLoader.Ladder;
                 }
 
@@ -98,7 +95,7 @@ public static class Airship
                 {
                     if (Math.Abs(x.points[0].x + 6.2984f) < 0.1)
                     {
-                        UnityEngine.Object.Destroy(x);
+                        Object.Destroy(x);
                         break;
                     }
                 }
@@ -125,12 +122,9 @@ public static class Airship
                     points.Add(collider.points[41]);
                     newCollider.SetPoints(points);
                     points.Clear();
-                    for (int i = 0; i < 41; i++)
-                    {
-                        points.Add(collider.points[i]);
-                    }
+                    for (var i = 0; i < 41; i++) points.Add(collider.points[i]);
                     newCollider2.SetPoints(points);
-                    UnityEngine.Object.DestroyObject(collider);
+                    Object.DestroyObject(collider);
                 }
 
                 // 梯子の背景を変更
@@ -143,13 +137,15 @@ public static class Airship
                         break;
                     }
                 }
+
                 if (side != null)
                 {
-                    SpriteRenderer bg = UnityEngine.Object.Instantiate(side, side.transform.parent);
+                    var bg = Object.Instantiate(side, side.transform.parent);
                     bg.sprite = AssetLoader.LadderBackground;
-                    bg.transform.localPosition = new Vector3(9.57f, -3.355f, 4.9f);
+                    bg.transform.localPosition = new(9.57f, -3.355f, 4.9f);
                 }
             }
+
             if (CustomOptionHolder.AirshipOneWayLadder.GetBool())
             {
                 if (ladder != null)
@@ -166,6 +162,7 @@ public static class Airship
             }
         }
     }
+
     public static void AddWireTasks(int mapId)
     {
         if (!CustomOptionHolder.AirshipAdditionalWireTask.GetBool()) return;
@@ -186,7 +183,7 @@ public static class Airship
 
     private static Console ActivateWiring(string consoleName, int consoleId)
     {
-        Console console = ActivateConsole(consoleName);
+        var console = ActivateConsole(consoleName);
 
         if (console == null)
         {
@@ -194,7 +191,7 @@ public static class Airship
             return null;
         }
 
-        bool hasWiringText = false;
+        var hasWiringText = false;
         foreach (var taskType in console.TaskTypes)
         {
             if (taskType == TaskTypes.FixWiring)
@@ -207,59 +204,65 @@ public static class Airship
         if (!hasWiringText)
         {
             var newTasks = new TaskTypes[console.TaskTypes.Length + 1];
-            for (int i = 0; i < console.TaskTypes.Length; i++) newTasks[i] = console.TaskTypes[i];
+            for (var i = 0; i < console.TaskTypes.Length; i++) newTasks[i] = console.TaskTypes[i];
             newTasks[console.TaskTypes.Length] = TaskTypes.FixWiring;
             console.TaskTypes = newTasks;
         }
+
         console.ConsoleId = consoleId;
         return console;
     }
 
     private static Console ActivateConsole(string objectName)
     {
-        GameObject obj = GameObject.Find(objectName);
+        var obj = GameObject.Find(objectName);
         if (obj == null)
         {
             Logger.LogError($"Object \"{objectName}\" was not found!", "ActivateConsole");
             return null;
         }
+
         obj.layer = LayerMask.NameToLayer("ShortObjects");
-        Console console = obj.GetComponent<Console>();
-        PassiveButton button = obj.GetComponent<PassiveButton>();
-        CircleCollider2D collider = obj.GetComponent<CircleCollider2D>();
+        var console = obj.GetComponent<Console>();
+        var button = obj.GetComponent<PassiveButton>();
+        var collider = obj.GetComponent<CircleCollider2D>();
         if (!console)
         {
             console = obj.AddComponent<Console>();
             console.checkWalls = true;
             console.usableDistance = 0.7f;
             console.TaskTypes = new TaskTypes[0];
-            console.ValidTasks = new Il2CppReferenceArray<TaskSet>(0);
+            console.ValidTasks = new(0);
 
             var oldConsoles = MapUtilities.CachedShipStatus.AllConsoles;
             var newConsoles = new Il2CppReferenceArray<Console>(oldConsoles.Length + 1);
-            for (int i = 0; i < oldConsoles.Length; i++) newConsoles[i] = oldConsoles[i];
+            for (var i = 0; i < oldConsoles.Length; i++) newConsoles[i] = oldConsoles[i];
             newConsoles[oldConsoles.Length] = console;
             MapUtilities.CachedShipStatus.AllConsoles = newConsoles;
         }
+
         if (console.Image == null)
         {
             console.Image = obj.GetComponent<SpriteRenderer>();
-            console.Image.material = new Material(MapUtilities.CachedShipStatus.AllConsoles[0].Image.material);
+            console.Image.material = new(MapUtilities.CachedShipStatus.AllConsoles[0].Image.material);
         }
+
         if (!button)
         {
             button = obj.AddComponent<PassiveButton>();
-            button.OnMouseOut = new UnityEngine.Events.UnityEvent();
-            button.OnMouseOver = new UnityEngine.Events.UnityEvent();
+            button.OnMouseOut = new();
+            button.OnMouseOver = new();
             button._CachedZ_k__BackingField = 0.1f;
             button.CachedZ = 0.1f;
         }
+
         if (!collider)
         {
             collider = obj.AddComponent<CircleCollider2D>();
             collider.radius = 0.4f;
             collider.isTrigger = true;
         }
+
         return console;
     }
 }

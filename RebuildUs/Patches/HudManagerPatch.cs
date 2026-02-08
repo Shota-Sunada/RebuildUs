@@ -1,3 +1,5 @@
+using InnerNet;
+
 namespace RebuildUs.Patches;
 
 [HarmonyPatch]
@@ -7,7 +9,7 @@ public static class HudManagerPatch
     [HarmonyPatch(typeof(HudManager), nameof(HudManager.Update))]
     public static void UpdatePostfix(HudManager __instance)
     {
-        if (AmongUsClient.Instance?.GameState != InnerNet.InnerNetClient.GameStates.Started) return;
+        if (AmongUsClient.Instance?.GameState != InnerNetClient.GameStates.Started) return;
 
         try
         {
@@ -21,10 +23,10 @@ public static class HudManagerPatch
             Update.UpdateVentButton(__instance);
             Update.TimerUpdate();
 
-            CaptureTheFlag.captureTheFlagUpdate();
-            PoliceAndThief.policeandthiefUpdate();
-            HotPotato.hotPotatoUpdate();
-            BattleRoyale.battleRoyaleUpdate();
+            CaptureTheFlag.CaptureTheFlagUpdate();
+            PoliceAndThief.PoliceandthiefUpdate();
+            HotPotato.HotPotatoUpdate();
+            BattleRoyale.BattleRoyaleUpdate();
 
             Hacker.HackerTimer -= Time.deltaTime;
             Trickster.LightsOutTimer -= Time.deltaTime;
@@ -37,7 +39,8 @@ public static class HudManagerPatch
     }
 
     [HarmonyPostfix]
-    [HarmonyPatch(typeof(HudManager), nameof(HudManager.SetHudActive), typeof(PlayerControl), typeof(RoleBehaviour), typeof(bool))]
+    [HarmonyPatch(typeof(HudManager), nameof(HudManager.SetHudActive), typeof(PlayerControl), typeof(RoleBehaviour),
+                  typeof(bool))]
     public static void SetHudActivePostfix(HudManager __instance)
     {
         __instance.TaskPanel.gameObject.SetActive(true);
@@ -54,7 +57,6 @@ public static class HudManagerPatch
     [HarmonyPatch(typeof(HudManager), nameof(HudManager.Start))]
     public static void StartPostfix(HudManager __instance)
     {
-        Debug.CreateDebugManager(__instance);
         RebuildUs.MakeButtons(__instance);
         RebuildUs.SetButtonCooldowns();
     }
