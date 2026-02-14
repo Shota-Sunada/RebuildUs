@@ -1,22 +1,42 @@
-using Object = UnityEngine.Object;
-
 namespace RebuildUs.Roles.Modifier;
 
 [HarmonyPatch]
 public class LastImpostor : ModifierBase<LastImpostor>
 {
+    public static Color NameColor = Palette.ImpostorRed;
+    public override Color ModifierColor => NameColor;
     public enum DivineResults
     {
-        BlackWhite, Team, Role,
+        BlackWhite,
+        Team,
+        Role,
     }
 
-    public static Color NameColor = Palette.ImpostorRed;
-    public static int KillCounter;
-    public static int NumUsed;
-    public static int RemainingShots;
+    public static bool IsEnable { get { return CustomOptionHolder.LastImpostorEnable.GetBool(); } }
+    public static int KillCounter = 0;
+    public static int MaxKillCounter { get { return (int)CustomOptionHolder.LastImpostorNumKills.GetFloat(); } }
+    public static int NumUsed = 0;
+    public static int RemainingShots = 0;
+    public static int SelectedFunction { get { return CustomOptionHolder.LastImpostorFunctions.GetSelection(); } }
+    public static DivineResults DivineResult { get { return (DivineResults)CustomOptionHolder.LastImpostorResults.GetSelection(); } }
+
+    public static string Postfix
+    {
+        get
+        {
+            return Tr.Get(TrKey.LastImpostorPostfix);
+        }
+    }
+    public static string FullName
+    {
+        get
+        {
+            return Tr.Get(TrKey.LastImpostor);
+        }
+    }
 
     public static List<CustomButton> LastImpostorButtons = [];
-    private static Dictionary<byte, PoolablePlayer> _playerIcons = [];
+    static Dictionary<byte, PoolablePlayer> PlayerIcons = [];
 
     public LastImpostor()
     {
@@ -24,55 +44,17 @@ public class LastImpostor : ModifierBase<LastImpostor>
         StaticModifierType = CurrentModifierType = ModifierType.LastImpostor;
     }
 
-    public override Color ModifierColor
-    {
-        get => NameColor;
-    }
-
-    public static bool IsEnable
-    {
-        get => CustomOptionHolder.LastImpostorEnable.GetBool();
-    }
-
-    public static int MaxKillCounter
-    {
-        get => (int)CustomOptionHolder.LastImpostorNumKills.GetFloat();
-    }
-
-    public static int SelectedFunction
-    {
-        get => CustomOptionHolder.LastImpostorFunctions.GetSelection();
-    }
-
-    public static DivineResults DivineResult
-    {
-        get => (DivineResults)CustomOptionHolder.LastImpostorResults.GetSelection();
-    }
-
-    public static string Postfix
-    {
-        get => Tr.Get(TrKey.LastImpostorPostfix);
-    }
-
-    public static string FullName
-    {
-        get => Tr.Get(TrKey.LastImpostor);
-    }
-
     public override void OnMeetingStart() { }
     public override void OnMeetingEnd() { }
     public override void OnIntroEnd() { }
     public override void FixedUpdate() { }
-
     public override void OnKill(PlayerControl target)
     {
         KillCounter += 1;
     }
-
     public override void OnDeath(PlayerControl killer = null) { }
     public override void OnFinishShipStatusBegin() { }
     public override void HandleDisconnect(PlayerControl player, DisconnectReasons reason) { }
-
     public static void MakeButtons(HudManager hm)
     {
         LastImpostorButtons = [];
@@ -80,7 +62,7 @@ public class LastImpostor : ModifierBase<LastImpostor>
         Vector3 LastImpostorCalcPos(byte index)
         {
             //return new Vector3(-0.25f, -0.25f, 0) + Vector3.right * index * 0.55f;
-            return new Vector3(-0.25f, -0.15f, 0) + (Vector3.right * index * 0.55f);
+            return new Vector3(-0.25f, -0.15f, 0) + Vector3.right * index * 0.55f;
         }
 
         Action LastImpostorButtonOnClick(byte index)
@@ -88,11 +70,10 @@ public class LastImpostor : ModifierBase<LastImpostor>
             return () =>
             {
                 if (SelectedFunction == 1) return;
-                var p = Helpers.PlayerById(index);
-                Divine(p);
+                PlayerControl p = Helpers.PlayerById(index);
+                LastImpostor.Divine(p);
             };
         }
-
         ;
 
         Func<bool> LastImpostorHasButton(byte index)
@@ -102,47 +83,54 @@ public class LastImpostor : ModifierBase<LastImpostor>
                 if (SelectedFunction == 1) return false;
                 var p = PlayerControl.LocalPlayer;
                 if (!p.HasModifier(ModifierType.LastImpostor)) return false;
-                if (p.HasModifier(ModifierType.LastImpostor) && p.CanMove && p.IsAlive() & (p.PlayerId != index) && MapSettings.PlayerIcons.ContainsKey(index) && NumUsed < 1 && IsCounterMax())
-                    return true;
-
-                if (_playerIcons.ContainsKey(index))
+                if (p.HasModifier(ModifierType.LastImpostor) && p.CanMove && p.IsAlive() & p.PlayerId != index
+                    && MapSettings.PlayerIcons.ContainsKey(index) && NumUsed < 1 && IsCounterMax())
                 {
-                    _playerIcons[index].gameObject.SetActive(false);
-                    if (PlayerControl.LocalPlayer.IsRole(RoleType.BountyHunter))
-                        SetBountyIconPos(Vector3.zero);
+                    return true;
                 }
-
-                if (LastImpostorButtons.Count > index) LastImpostorButtons[index].SetActive(false);
-                return false;
+                else
+                {
+                    if (PlayerIcons.ContainsKey(index))
+                    {
+                        PlayerIcons[index].gameObject.SetActive(false);
+                        if (PlayerControl.LocalPlayer.IsRole(RoleType.BountyHunter))
+                            SetBountyIconPos(Vector3.zero);
+                    }
+                    if (LastImpostorButtons.Count > index)
+                    {
+                        LastImpostorButtons[index].SetActive(false);
+                    }
+                    return false;
+                }
             };
         }
 
         void SetButtonPos(byte index)
         {
-            var pos = LastImpostorCalcPos(index);
+            Vector3 pos = LastImpostorCalcPos(index);
             Vector3 scale = new(0.4f, 0.8f, 1.0f);
 
-            var iconBase = hm.UseButton.transform.localPosition;
+            Vector3 iconBase = hm.UseButton.transform.localPosition;
             iconBase.x *= -1;
             if (LastImpostorButtons[index].PositionOffset != pos)
             {
                 LastImpostorButtons[index].PositionOffset = pos;
                 LastImpostorButtons[index].LocalScale = scale;
-                _playerIcons[index].transform.localPosition = iconBase + pos;
+                PlayerIcons[index].transform.localPosition = iconBase + pos;
             }
         }
 
         void SetIconStatus(byte index, bool transparent)
         {
-            _playerIcons[index].transform.localScale = Vector3.one * 0.25f;
-            _playerIcons[index].gameObject.SetActive(PlayerControl.LocalPlayer.CanMove);
-            _playerIcons[index].SetSemiTransparent(transparent);
+            PlayerIcons[index].transform.localScale = Vector3.one * 0.25f;
+            PlayerIcons[index].gameObject.SetActive(PlayerControl.LocalPlayer.CanMove);
+            PlayerIcons[index].SetSemiTransparent(transparent);
         }
 
         void SetBountyIconPos(Vector3 offset)
         {
-            var bottomLeft = AspectPosition.ComputePosition(AspectPosition.EdgeAlignments.LeftBottom, new(0.9f, 0.7f, -10f));
-            var icon = MapSettings.PlayerIcons[BountyHunter.Bounty.PlayerId];
+            Vector3 bottomLeft = AspectPosition.ComputePosition(AspectPosition.EdgeAlignments.LeftBottom, new(0.9f, 0.7f, -10f));
+            PoolablePlayer icon = MapSettings.PlayerIcons[BountyHunter.Bounty.PlayerId];
             icon.transform.localPosition = bottomLeft + new Vector3(-0.25f, 0f, 0) + offset;
             BountyHunter.CooldownText.transform.localPosition = bottomLeft + new Vector3(-0.25f, 0f, -0.1f) + offset;
         }
@@ -155,8 +143,12 @@ public class LastImpostor : ModifierBase<LastImpostor>
 
                 //　ラストインポスター以外の場合、リソースがない場合はボタンを表示しない
                 var p = Helpers.PlayerById(index);
-                if (!_playerIcons.ContainsKey(index) || !PlayerControl.LocalPlayer.HasModifier(ModifierType.LastImpostor) || !IsCounterMax())
+                if (!PlayerIcons.ContainsKey(index) ||
+                    !PlayerControl.LocalPlayer.HasModifier(ModifierType.LastImpostor) ||
+                    !IsCounterMax())
+                {
                     return false;
+                }
 
                 // ボタンの位置を変更
                 SetButtonPos(index);
@@ -180,7 +172,22 @@ public class LastImpostor : ModifierBase<LastImpostor>
 
         for (byte i = 0; i < 15; i++)
         {
-            CustomButton lastImpostorButton = new(LastImpostorButtonOnClick(i), LastImpostorHasButton(i), LastImpostorCouldUse(i), () => { }, null, Vector3.zero, hm, null, KeyCode.None, true) { Timer = 0.0f, MaxTimer = 0.0f };
+            CustomButton lastImpostorButton = new(
+                LastImpostorButtonOnClick(i),
+                LastImpostorHasButton(i),
+                LastImpostorCouldUse(i),
+                () => { },
+                null,
+                Vector3.zero,
+                hm,
+                null,
+                KeyCode.None,
+                true
+            )
+            {
+                Timer = 0.0f,
+                MaxTimer = 0.0f
+            };
 
             LastImpostorButtons.Add(lastImpostorButton);
         }
@@ -195,7 +202,7 @@ public class LastImpostor : ModifierBase<LastImpostor>
         KillCounter = 0;
         NumUsed = 0;
         RemainingShots = (int)CustomOptionHolder.LastImpostorNumShots.GetFloat();
-        _playerIcons = [];
+        PlayerIcons = [];
     }
 
     public static bool IsCounterMax()
@@ -216,10 +223,8 @@ public class LastImpostor : ModifierBase<LastImpostor>
         var impList = new List<PlayerControl>();
         foreach (var p in PlayerControl.AllPlayerControls.GetFastEnumerator())
         {
-            if (p.IsTeamImpostor() && p.IsAlive())
-                impList.Add(p);
+            if (p.IsTeamImpostor() && p.IsAlive()) impList.Add(p);
         }
-
         if (impList.Count == 1)
         {
             {
@@ -229,13 +234,12 @@ public class LastImpostor : ModifierBase<LastImpostor>
             RPCProcedure.ImpostorPromotesToLastImpostor(impList[0].PlayerId);
         }
     }
-
     public static void Divine(PlayerControl p)
     {
         // FortuneTeller.divine(p, resultIsCrewOrNot);
-        var msgBase = "";
-        var msgInfo = "";
-        var color = Color.white;
+        string msgBase = "";
+        string msgInfo = "";
+        Color color = Color.white;
 
         if (DivineResult == DivineResults.BlackWhite)
         {
@@ -282,11 +286,10 @@ public class LastImpostor : ModifierBase<LastImpostor>
                 var info = roleInfos[i];
                 sb.Append(Helpers.Cs(info.Color, info.Name));
             }
-
             msgInfo = sb.ToString();
         }
 
-        var msg = string.Format(Tr.GetDynamic(msgBase), p.name, msgInfo);
+        string msg = string.Format(Tr.GetDynamic(msgBase), p.name, msgInfo);
         if (!string.IsNullOrWhiteSpace(msg))
         {
             // TODO: FortuneTeller.fortuneTellerMessage(msg, 5f, color);
@@ -309,13 +312,13 @@ public class LastImpostor : ModifierBase<LastImpostor>
         {
             foreach (var p in PlayerControl.AllPlayerControls.GetFastEnumerator())
             {
-                var player = Object.Instantiate(__instance.PlayerPrefab, FastDestroyableSingleton<HudManager>.Instance.transform);
+                var player = UnityEngine.Object.Instantiate(__instance.PlayerPrefab, FastDestroyableSingleton<HudManager>.Instance.transform);
                 player.UpdateFromPlayerOutfit(p.Data.DefaultOutfit, PlayerMaterial.MaskType.ComplexUI, p.Data.IsDead, true);
                 player.SetFlipX(true);
                 player.cosmetics.currentPet?.gameObject.SetActive(false);
                 player.cosmetics.nameText.text = p.Data.DefaultOutfit.PlayerName;
                 player.gameObject.SetActive(false);
-                _playerIcons[p.PlayerId] = player;
+                PlayerIcons[p.PlayerId] = player;
             }
         }
     }

@@ -12,8 +12,7 @@ dotnet cake build.cake --target=Build --configuration=$Configuration
 
 Write-Host "LASTEXITCODE after dotnet cake: $LASTEXITCODE" -ForegroundColor Magenta
 
-if ($LASTEXITCODE -eq 0)
-{
+if ($LASTEXITCODE -eq 0) {
     $sourcePath = "Reactor\bin\$Configuration\net6.0\Reactor.dll"
     $sourcePath2 = "Reactor\bin\$Configuration\net6.0\Reactor.xml"
     $destinationPath = "..\SDK\"
@@ -21,8 +20,7 @@ if ($LASTEXITCODE -eq 0)
     Copy-Item -Path $sourcePath2 -Destination $destinationPath -Force
     Write-Host "Reactor.dll copied to RebuildUs SDK folder."
 }
-else
-{
+else {
     Write-Host "Build failed. Skipping copy."
 }
 

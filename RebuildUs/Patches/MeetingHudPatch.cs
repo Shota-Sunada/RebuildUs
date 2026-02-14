@@ -84,9 +84,9 @@ public static class MeetingHudPatch
             if (AmongUsClient.Instance.AmHost)
             {
                 var rand = RebuildUs.Instance.Rnd;
-                foreach (var player in PlayerControl.AllPlayerControls.GetFastEnumerator())
+                foreach (PlayerControl player in PlayerControl.AllPlayerControls.GetFastEnumerator())
                 {
-                    var randVal = rand.Next(0, 6);
+                    int randVal = rand.Next(0, 6);
                     using var sender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.PolusRandomSpawn);
                     sender.Write(player.Data.PlayerId);
                     sender.Write((byte)randVal);

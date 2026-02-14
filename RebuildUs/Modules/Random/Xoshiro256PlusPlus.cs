@@ -1,6 +1,6 @@
 namespace RebuildUs.Modules.Random;
 
-public sealed class Xoshiro256PlusPlus : System.Random
+public class Xoshiro256PlusPlus : System.Random
 {
     private ulong _s0, _s1, _s2, _s3;
 
@@ -9,11 +9,13 @@ public sealed class Xoshiro256PlusPlus : System.Random
         Seed(seed);
     }
 
-    public Xoshiro256PlusPlus() : this((int)DateTime.Now.Ticks) { }
+    public Xoshiro256PlusPlus() : this((int)DateTime.Now.Ticks)
+    {
+    }
 
     private void Seed(int seed)
     {
-        var s = (ulong)seed;
+        ulong s = (ulong)seed;
         _s0 = SplitMix64(ref s);
         _s1 = SplitMix64(ref s);
         _s2 = SplitMix64(ref s);
@@ -22,7 +24,7 @@ public sealed class Xoshiro256PlusPlus : System.Random
 
     private static ulong SplitMix64(ref ulong x)
     {
-        var z = x += 0x9e3779b97f4a7c15;
+        ulong z = (x += 0x9e3779b97f4a7c15);
         z = (z ^ (z >> 30)) * 0xbf58476d1ce4e5b9;
         z = (z ^ (z >> 27)) * 0x94d049bb133111eb;
         return z ^ (z >> 31);
@@ -35,9 +37,9 @@ public sealed class Xoshiro256PlusPlus : System.Random
 
     public ulong NextUInt64()
     {
-        var result = Rotl(_s0 + _s3, 23) + _s0;
+        ulong result = Rotl(_s0 + _s3, 23) + _s0;
 
-        var t = _s1 << 17;
+        ulong t = _s1 << 17;
 
         _s2 ^= _s0;
         _s3 ^= _s1;
@@ -63,12 +65,9 @@ public sealed class Xoshiro256PlusPlus : System.Random
 
     public override int Next(int maxValue)
     {
-        return maxValue switch
-        {
-            < 0 => throw new ArgumentOutOfRangeException(nameof(maxValue)),
-            <= 1 => 0,
-            _ => (int)(NextDouble() * maxValue)
-        };
+        if (maxValue < 0) throw new ArgumentOutOfRangeException(nameof(maxValue));
+        if (maxValue <= 1) return 0;
+        return (int)(NextDouble() * maxValue);
     }
 
     public override int Next(int minValue, int maxValue)
@@ -81,11 +80,11 @@ public sealed class Xoshiro256PlusPlus : System.Random
     public override void NextBytes(byte[] buffer)
     {
         if (buffer == null) throw new ArgumentNullException(nameof(buffer));
-        var i = 0;
+        int i = 0;
         while (i < buffer.Length)
         {
-            var r = NextUInt64();
-            for (var j = 0; j < 8 && i < buffer.Length; j++)
+            ulong r = NextUInt64();
+            for (int j = 0; j < 8 && i < buffer.Length; j++)
             {
                 buffer[i++] = (byte)(r & 0xFF);
                 r >>= 8;

@@ -8,11 +8,13 @@ public static class DiscordAutoMuteManager
         var guildId = RebuildUs.DiscordGuildId.Value;
         if (string.IsNullOrEmpty(guildId)) return;
 
-        var targetVcId = RebuildUs.DiscordVcId.Value;
+        var targetVcId = RebuildUs.DiscordVCId.Value;
         if (!string.IsNullOrEmpty(targetVcId))
         {
             if (!DiscordModManager.PlayerVoiceStates.TryGetValue(discordId, out var currentVcId) || currentVcId != targetVcId)
+            {
                 return;
+            }
         }
 
         await DiscordModManager.SendRequest("PATCH", $"https://discord.com/api/v10/guilds/{guildId}/members/{discordId}", new { mute, deaf });
@@ -20,7 +22,10 @@ public static class DiscordAutoMuteManager
 
     public static void UnmuteEveryone()
     {
-        foreach (var did in DiscordModManager.PlayerVoiceStates.Keys.ToArray()) SetMute(did, false, false);
+        foreach (var did in DiscordModManager.PlayerVoiceStates.Keys.ToArray())
+        {
+            SetMute(did, false, false);
+        }
     }
 
     public static void MuteEveryone()
@@ -45,37 +50,19 @@ public static class DiscordAutoMuteManager
         var id = DiscordModManager.GetIdentifier(p);
         if (id == null || !DiscordModManager.TryGetDiscordId(id, out var did)) return;
 
-        var mute = false;
-        var deaf = false;
+        bool mute = false;
+        bool deaf = false;
 
         switch (DiscordModManager.CurrentGameState)
         {
             case "行動中":
             case "追放中":
-                if (!p.Data.IsDead && p.PlayerId != DiscordModManager.ExiledPlayerId)
-                {
-                    mute = true;
-                    deaf = true;
-                }
-                else
-                {
-                    mute = false;
-                    deaf = false;
-                }
-
+                if (!p.Data.IsDead && p.PlayerId != DiscordModManager.ExiledPlayerId) { mute = true; deaf = true; }
+                else { mute = false; deaf = false; }
                 break;
             case "会議中":
-                if (!p.Data.IsDead)
-                {
-                    mute = false;
-                    deaf = false;
-                }
-                else
-                {
-                    mute = true;
-                    deaf = false;
-                }
-
+                if (!p.Data.IsDead) { mute = false; deaf = false; }
+                else { mute = true; deaf = false; }
                 break;
             case "ドロップシップ":
                 mute = false;

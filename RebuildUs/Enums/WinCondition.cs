@@ -12,6 +12,7 @@ public enum WinCondition
     LoversSoloWin,
     EveryoneDied,
     ForceEnd,
+
     DrawTeamWin,
     RedTeamFlagWin,
     BlueTeamFlagWin,
@@ -23,5 +24,5 @@ public enum WinCondition
     BattleRoyaleDraw,
     BattleRoyaleLimeTeamWin,
     BattleRoyalePinkTeamWin,
-    BattleRoyaleSerialKillerWin
+    BattleRoyaleSerialKillerWin,
 }

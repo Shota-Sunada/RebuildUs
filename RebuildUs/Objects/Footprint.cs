@@ -3,58 +3,58 @@ using Il2CppInterop.Runtime.Attributes;
 
 namespace RebuildUs.Objects;
 
-public sealed class FootprintHolder : MonoBehaviour
+public class FootprintHolder : MonoBehaviour
 {
-    private static FootprintHolder _instance;
-
-    private static readonly float UPDATE_DT = 0.10f;
-    private readonly List<Footprint> _activeFootprints = [];
-
-    private readonly ConcurrentBag<Footprint> _pool = [];
-    private readonly List<Footprint> _toRemove = [];
-
-    static FootprintHolder()
-    {
-        ClassInjector.RegisterTypeInIl2Cpp<FootprintHolder>();
-    }
+    static FootprintHolder() => ClassInjector.RegisterTypeInIl2Cpp<FootprintHolder>();
 
     public FootprintHolder(IntPtr ptr) : base(ptr) { }
 
+    private static FootprintHolder _instance;
     public static FootprintHolder Instance
     {
         get => _instance ? _instance : _instance = new GameObject("FootprintHolder").AddComponent<FootprintHolder>();
         set => _instance = value;
     }
 
-    private static bool AnonymousFootprints
+    private static bool AnonymousFootprints => Detective.AnonymousFootprints;
+    private static float FootprintDuration => Detective.FootprintDuration;
+
+    private class Footprint
     {
-        get => Detective.AnonymousFootprints;
+        public GameObject GameObject;
+        public Transform Transform;
+        public SpriteRenderer Renderer;
+        public PlayerControl Owner;
+        public NetworkedPlayerInfo Data;
+        public float Lifetime;
+
+        public Footprint()
+        {
+            GameObject = new("Footprint") { layer = 8 };
+            Transform = GameObject.transform;
+            Renderer = GameObject.AddComponent<SpriteRenderer>();
+            Renderer.sprite = AssetLoader.Footprint;
+            Renderer.color = Color.clear;
+            GameObject.AddSubmergedComponent(SubmergedCompatibility.Classes.ElevatorMover);
+        }
     }
 
-    private static float FootprintDuration
-    {
-        get => Detective.FootprintDuration;
-    }
-
-    private void Start()
-    {
-        InvokeRepeating(nameof(FootprintUpdate), UPDATE_DT, UPDATE_DT);
-    }
-
-    private void OnDestroy()
-    {
-        Instance = null;
-    }
+    private readonly ConcurrentBag<Footprint> _pool = [];
+    private readonly List<Footprint> _activeFootprints = [];
+    private readonly List<Footprint> _toRemove = [];
 
     [HideFromIl2Cpp]
     public void MakeFootprint(PlayerControl player)
     {
-        if (!_pool.TryTake(out var print)) print = new();
+        if (!_pool.TryTake(out var print))
+        {
+            print = new();
+        }
 
         print.Lifetime = FootprintDuration;
 
         var pos = player.transform.position;
-        pos.z = (pos.y / 1000f) + 0.001f;
+        pos.z = pos.y / 1000f + 0.001f;
         print.Transform.SetPositionAndRotation(pos, Quaternion.EulerRotation(0, 0, RebuildUs.Instance.Rnd.Next(0, 360)));
         print.GameObject.SetActive(true);
         print.Owner = player;
@@ -62,9 +62,16 @@ public sealed class FootprintHolder : MonoBehaviour
         _activeFootprints.Add(print);
     }
 
+    private static readonly float UpdateDt = 0.10f;
+
+    private void Start()
+    {
+        InvokeRepeating(nameof(FootprintUpdate), UpdateDt, UpdateDt);
+    }
+
     private void FootprintUpdate()
     {
-        var dt = UPDATE_DT;
+        var dt = UpdateDt;
         _toRemove.Clear();
         foreach (var activeFootprint in _activeFootprints)
         {
@@ -78,11 +85,17 @@ public sealed class FootprintHolder : MonoBehaviour
 
             Color color;
             if (AnonymousFootprints || Camouflager.CamouflageTimer > 0 || Helpers.MushroomSabotageActive())
+            {
                 color = Palette.PlayerColors[6];
+            }
             else if (activeFootprint.Owner.IsRole(RoleType.Morphing) && Morphing.MorphTimer > 0 && Morphing.MorphTarget && Morphing.MorphTarget.Data != null)
+            {
                 color = Palette.PlayerColors[Morphing.MorphTarget.Data.DefaultOutfit.ColorId];
+            }
             else
+            {
                 color = Palette.PlayerColors[activeFootprint.Data.DefaultOutfit.ColorId];
+            }
 
             color.a = Math.Clamp(p, 0f, 1f);
             activeFootprint.Renderer.color = color;
@@ -98,23 +111,8 @@ public sealed class FootprintHolder : MonoBehaviour
         }
     }
 
-    private class Footprint
+    private void OnDestroy()
     {
-        public readonly GameObject GameObject;
-        public readonly SpriteRenderer Renderer;
-        public readonly Transform Transform;
-        public NetworkedPlayerInfo Data;
-        public float Lifetime;
-        public PlayerControl Owner;
-
-        public Footprint()
-        {
-            GameObject = new("Footprint") { layer = 8 };
-            Transform = GameObject.transform;
-            Renderer = GameObject.AddComponent<SpriteRenderer>();
-            Renderer.sprite = AssetLoader.Footprint;
-            Renderer.color = Color.clear;
-            GameObject.AddSubmergedComponent(SubmergedCompatibility.ELEVATOR_MOVER);
-        }
+        Instance = null;
     }
 }

@@ -1,15 +1,12 @@
 using AmongUs.Data;
 using Assets.CoreScripts;
 using BepInEx.Unity.IL2CPP.Utils.Collections;
-using InnerNet;
 
 namespace RebuildUs.Patches;
 
 [HarmonyPatch]
 public static class PlayerControlPatch
 {
-    private static float _timer;
-
     [HarmonyPostfix]
     [HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.HandleRpc))]
     public static void HandleRpcPostfix(byte callId, MessageReader reader)
@@ -35,7 +32,7 @@ public static class PlayerControlPatch
     [HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.SetKillTimer))]
     public static bool SetKillTimerPrefix(PlayerControl __instance, [HarmonyArgument(0)] float time)
     {
-        var baseCooldown = Helpers.GetOption(FloatOptionNames.KillCooldown);
+        float baseCooldown = Helpers.GetOption(FloatOptionNames.KillCooldown);
         if (baseCooldown <= 0f) return false;
         if (Helpers.IsHideNSeekMode) return true;
 
@@ -44,13 +41,22 @@ public static class PlayerControlPatch
         var localPlayer = PlayerControl.LocalPlayer;
         if (localPlayer != null)
         {
-            if (Mini.Exists && localPlayer.HasModifier(ModifierType.Mini)) multiplier = Mini.IsGrownUp(localPlayer) ? 0.66f : 2f;
-            if (localPlayer.IsRole(RoleType.BountyHunter)) addition = BountyHunter.PunishmentTime;
+            if (Mini.Exists && localPlayer.HasModifier(ModifierType.Mini))
+            {
+                multiplier = Mini.IsGrownUp(localPlayer) ? 0.66f : 2f;
+            }
+            if (localPlayer.IsRole(RoleType.BountyHunter))
+            {
+                addition = BountyHunter.PunishmentTime;
+            }
         }
 
-        var maxCooldown = (baseCooldown * multiplier) + addition;
+        float maxCooldown = baseCooldown * multiplier + addition;
         __instance.killTimer = Mathf.Clamp(time, 0f, maxCooldown);
-        if (FastDestroyableSingleton<HudManager>.Instance) FastDestroyableSingleton<HudManager>.Instance.KillButton.SetCoolDown(__instance.killTimer, maxCooldown);
+        if (FastDestroyableSingleton<HudManager>.Instance)
+        {
+            FastDestroyableSingleton<HudManager>.Instance.KillButton.SetCoolDown(__instance.killTimer, maxCooldown);
+        }
         return false;
     }
 
@@ -58,7 +64,7 @@ public static class PlayerControlPatch
     [HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.FixedUpdate))]
     public static void FixedUpdatePostfix(PlayerControl __instance)
     {
-        if (AmongUsClient.Instance.GameState != InnerNetClient.GameStates.Started || Helpers.IsHideNSeekMode) return;
+        if (AmongUsClient.Instance.GameState != InnerNet.InnerNetClient.GameStates.Started || Helpers.IsHideNSeekMode) return;
 
         if (PlayerControl.LocalPlayer == __instance)
         {
@@ -78,9 +84,9 @@ public static class PlayerControlPatch
 
             Garlic.UpdateAll();
 
-            CaptureTheFlag.SetTarget();
-            PoliceAndThief.PoliceandThiefSetTarget();
-            HotPotato.HotPotatoSetTarget();
+            CaptureTheFlag.setTarget();
+            PoliceAndThief.policeandThiefSetTarget();
+            HotPotato.hotPotatoSetTarget();
         }
 
         RebuildUs.FixedUpdate(__instance);
@@ -90,6 +96,8 @@ public static class PlayerControlPatch
         Usables.FixedUpdate(__instance);
         Update.StopCooldown(__instance);
     }
+
+    private static float _timer = 0f;
 
     [HarmonyPrefix]
     [HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.StartMeeting))]
@@ -106,7 +114,10 @@ public static class PlayerControlPatch
 
         Helpers.HandleVampireBiteOnBodyReport();
 
-        if (__instance.IsGm()) return false;
+        if (__instance.IsGM())
+        {
+            return false;
+        }
         return true;
     }
 
@@ -132,18 +143,17 @@ public static class PlayerControlPatch
         // ORIGINAL MURDER_PLAYER
         __instance.isKilling = false;
         __instance.logger.Debug($"{__instance.PlayerId} trying to murder {target.PlayerId}");
-        var data = target.Data;
+        NetworkedPlayerInfo data = target.Data;
         if (resultFlags.HasFlag(MurderResultFlags.FailedError)) return false;
-        if (resultFlags.HasFlag(MurderResultFlags.FailedProtected) || (resultFlags.HasFlag(MurderResultFlags.DecisionByHost) && target.protectedByGuardianId > -1))
+        if (resultFlags.HasFlag(MurderResultFlags.FailedProtected) || resultFlags.HasFlag(MurderResultFlags.DecisionByHost) && target.protectedByGuardianId > -1)
         {
             target.protectedByGuardianThisRound = true;
-            var flag = PlayerControl.LocalPlayer.Data.Role.Role == RoleTypes.GuardianAngel;
+            bool flag = PlayerControl.LocalPlayer.Data.Role.Role == RoleTypes.GuardianAngel;
             if (flag && PlayerControl.LocalPlayer.Data.PlayerId == target.protectedByGuardianId)
             {
                 DataManager.Player.Stats.IncrementStat(StatID.Role_GuardianAngel_CrewmatesProtected);
                 DestroyableSingleton<AchievementManager>.Instance.OnProtectACrewmate();
             }
-
             if (__instance.AmOwner | flag)
             {
                 target.ShowFailedMurder();
@@ -151,7 +161,6 @@ public static class PlayerControlPatch
             }
             else
                 target.RemoveProtection();
-
             __instance.logger.Debug($"{__instance.PlayerId} failed to murder {target.PlayerId} due to guardian angel protection");
         }
         else
@@ -170,7 +179,6 @@ public static class PlayerControlPatch
                     SoundManager.Instance.PlaySound(__instance.KillSfx, false, 0.8f);
                 __instance.SetKillTimer(GameOptionsManager.Instance.CurrentGameOptions.GetFloat(FloatOptionNames.KillCooldown));
             }
-
             DestroyableSingleton<UnityTelemetry>.Instance.WriteMurder();
             target.gameObject.layer = LayerMask.NameToLayer("Ghost");
             if (target.AmOwner)
@@ -183,14 +191,14 @@ public static class PlayerControlPatch
                         Minigame.Instance.Close();
                         Minigame.Instance.Close();
                     }
-                    catch { }
+                    catch
+                    {
+                    }
                 }
-
                 DestroyableSingleton<HudManager>.Instance.KillOverlay.ShowKillAnimation(__instance.Data, data);
                 target.cosmetics.SetNameMask(false);
                 target.RpcSetScanner(false);
             }
-
             DestroyableSingleton<AchievementManager>.Instance.OnMurder(__instance.AmOwner, target.AmOwner, __instance.CurrentOutfitType == PlayerOutfitType.Shapeshifted, __instance.shapeshiftTargetPlayerId, target.PlayerId);
             // DISABLE ORIGINAL CO_PERFORM_KILL
             // __instance.MyPhysics.StartCoroutine(__instance.KillAnimations.Random().CoPerformKill(__instance, target));
@@ -238,7 +246,13 @@ public static class PlayerControlPatch
     [HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.CanMove), MethodType.Getter)]
     public static bool CanMovePrefix(PlayerControl __instance, ref bool __result)
     {
-        __result = __instance.moveable && !Minigame.Instance && (!DestroyableSingleton<HudManager>.InstanceExists || (!FastDestroyableSingleton<HudManager>.Instance.Chat.IsOpenOrOpening && !FastDestroyableSingleton<HudManager>.Instance.KillOverlay.IsOpen && !FastDestroyableSingleton<HudManager>.Instance.GameMenu.IsOpen)) && (!MapBehaviour.Instance || !MapBehaviour.Instance.IsOpenStopped) && !MeetingHud.Instance && !ExileController.Instance && !IntroCutscene.Instance;
+        __result = __instance.moveable &&
+            !Minigame.Instance &&
+            (!DestroyableSingleton<HudManager>.InstanceExists || (!FastDestroyableSingleton<HudManager>.Instance.Chat.IsOpenOrOpening && !FastDestroyableSingleton<HudManager>.Instance.KillOverlay.IsOpen && !FastDestroyableSingleton<HudManager>.Instance.GameMenu.IsOpen)) &&
+            (!MapBehaviour.Instance || !MapBehaviour.Instance.IsOpenStopped) &&
+            !MeetingHud.Instance &&
+            !ExileController.Instance &&
+            !IntroCutscene.Instance;
         return false;
     }
 }

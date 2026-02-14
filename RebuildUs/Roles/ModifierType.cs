@@ -9,5 +9,5 @@ public enum ModifierType : byte
     Mini,
     // Munou,
 
-    NoModifier = byte.MaxValue,
+    NoModifier = byte.MaxValue
 }

@@ -1,5 +1,4 @@
 using BepInEx.Unity.IL2CPP.Utils.Collections;
-using Il2CppSystem.Collections;
 using InnerNet;
 
 namespace RebuildUs.Patches;
@@ -40,7 +39,7 @@ public static class AmongUsClientPatch
 
     [HarmonyPrefix]
     [HarmonyPatch(typeof(AmongUsClient), nameof(AmongUsClient.CoStartGameHost))]
-    public static bool CoStartGameHostPrefix(AmongUsClient __instance, ref IEnumerator __result)
+    public static bool CoStartGameHostPrefix(AmongUsClient __instance, ref Il2CppSystem.Collections.IEnumerator __result)
     {
         __result = RoleAssignment.CoStartGameHost(__instance).WrapToIl2Cpp();
         return false;
@@ -61,20 +60,16 @@ public static class AmongUsClientPatch
         if (data != null)
         {
             GameStart.OnPlayerLeft(data.Id);
-            PlayerControl player = null;
-            foreach (var p in PlayerControl.AllPlayerControls.GetFastEnumerator())
+            var player = PlayerControl.AllPlayerControls.GetFastEnumerator().ToArray().FirstOrDefault(p => p.OwnerId == data.Id);
+            if (player != null)
             {
-                if (p.PlayerId != data.Id) continue;
-                player = p;
-                break;
+                var id = DiscordModManager.GetIdentifier(player);
+                if (id != null) DiscordModManager.OnPlayerLeft(id);
             }
-
-            if (player == null) return;
-
-            var id = DiscordModManager.GetIdentifier(player);
-            if (id != null) DiscordModManager.OnPlayerLeft(id);
         }
         else
+        {
             DiscordEmbedManager.UpdateStatus();
+        }
     }
 }

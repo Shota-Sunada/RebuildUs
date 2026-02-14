@@ -5,7 +5,7 @@ public static class CreateGame
     public static void Customize(CreateGameOptions __instance)
     {
         // Disable HideNSeek
-        __instance.SelectMode(0);
+        __instance.SelectMode(0, true);
         __instance.modeButtons[1].gameObject.SetActive(false);
     }
 }

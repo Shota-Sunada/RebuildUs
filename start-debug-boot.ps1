@@ -7,13 +7,11 @@ $gamePath = $gamePath.Trim()
 
 $exePath = Join-Path $gamePath "Among Us.exe"
 
-if (Test-Path $exePath)
-{
+if (Test-Path $exePath) {
     Write-Host "Starting Among Us"
     Start-Process -FilePath $exePath
 }
-else
-{
+else {
     Write-Error "Among Us.exe not found at $exePath"
     exit 1
 }

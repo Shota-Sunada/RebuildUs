@@ -6,30 +6,26 @@ $ErrorActionPreference = "Stop"
 $csvPath = "Translations.csv"
 $enumPath = "RebuildUs/Localization/TranslateKey.cs"
 
-function Update-Enum
-{
+function Update-Enum {
     param (
         [string]$CsvPath,
         [string]$EnumPath
     )
 
-    try
-    {
+    try {
         # Read CSV and extract unique keys
         $csvData = Import-Csv -Path $CsvPath -Encoding UTF8
         $keysSet = [System.Collections.Generic.HashSet[string]]::new()
 
-        foreach ($row in $csvData)
-        {
+        foreach ($row in $csvData) {
             $k = $row.Key.Trim()
-            if (-not [string]::IsNullOrWhiteSpace($k))
-            {
+            if (-not [string]::IsNullOrWhiteSpace($k)) {
                 [void]$keysSet.Add($k)
             }
         }
 
         # Sort keys
-        $keys = [System.Linq.Enumerable]::OrderBy([string[]]$keysSet, [Func[string, string]]{ param($x) $x })
+        $keys = [System.Linq.Enumerable]::OrderBy([string[]]$keysSet, [Func[string, string]] { param($x) $x })
 
         # Generate enum file
         $sb = New-Object System.Text.StringBuilder
@@ -40,8 +36,7 @@ function Update-Enum
         [void]$sb.AppendLine("{")
         [void]$sb.AppendLine("    None,")
 
-        foreach ($k in $keys)
-        {
+        foreach ($k in $keys) {
             [void]$sb.AppendLine("    $k,")
         }
 
@@ -49,33 +44,29 @@ function Update-Enum
 
         # Ensure directory exists
         $enumDir = Split-Path -Parent $EnumPath
-        if (-not (Test-Path $enumDir))
-        {
+        if (-not (Test-Path $enumDir)) {
             New-Item -ItemType Directory -Path $enumDir -Force | Out-Null
         }
 
         # Write with UTF8 encoding (without BOM)
         $utf8NoBom = New-Object System.Text.UTF8Encoding $false
-        [System.IO.File]::WriteAllText($EnumPath,$sb.ToString(), $utf8NoBom)
+        [System.IO.File]::WriteAllText($EnumPath, $sb.ToString(), $utf8NoBom)
 
         Write-Host "Updated $EnumPath" -ForegroundColor Cyan
     }
-    catch
-    {
+    catch {
         Write-Host "Error updating enum: $_" -ForegroundColor Red
     }
 }
 
 Write-Host "Translation Registration Tool (Press Enter with empty key to finish)" -ForegroundColor Cyan
 
-while ($true)
-{
+while ($true) {
     Write-Host ""
     $key = Read-Host "Enter Translation Key"
     $key = $key.Trim()
 
-    if ( [string]::IsNullOrWhiteSpace($key))
-    {
+    if ([string]::IsNullOrWhiteSpace($key)) {
         break
     }
 
@@ -83,24 +74,21 @@ while ($true)
     $enText = $enText.Trim()
 
     # Append to CSV
-    try
-    {
+    try {
         # Read existing CSV to check for duplicates
-        if (Test-Path $csvPath)
-        {
+        if (Test-Path $csvPath) {
             $existingData = Import-Csv -Path $csvPath -Encoding UTF8
             $duplicate = $existingData | Where-Object { $_.Key -eq $key }
 
-            if ($duplicate)
-            {
+            if ($duplicate) {
                 Write-Host "Warning: Key '$key' already exists in the CSV. Appending anyway..." -ForegroundColor Yellow
             }
         }
 
         # Append new row (Key, English, Japanese)
         $newRow = [PSCustomObject]@{
-            Key = $key
-            English = $enText
+            Key      = $key
+            English  = $enText
             Japanese = ""
         }
 
@@ -114,8 +102,7 @@ while ($true)
 
         Write-Host "TranslateKey.cs has been updated. You can now use the new key in your code." -ForegroundColor Green
     }
-    catch
-    {
+    catch {
         Write-Host "Error: $_" -ForegroundColor Red
         continue
     }

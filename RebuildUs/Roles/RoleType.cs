@@ -49,17 +49,15 @@ public enum RoleType : byte
     Arsonist,
     Jackal,
     Sidekick,
-
     // Opportunist,
     Vulture,
-
     // PlagueDoctor,
     // Watcher,
     EvilTracker,
     EvilHacker,
 
     // Others
-    Gm,
+    GM,
 
     // GameMode
     RedPlayer01,
@@ -77,6 +75,7 @@ public enum RoleType : byte
     BluePlayer06,
     BluePlayer07,
     StealerPlayer,
+
     PolicePlayer01,
     PolicePlayer02,
     PolicePlayer03,
@@ -92,6 +91,7 @@ public enum RoleType : byte
     ThiefPlayer07,
     ThiefPlayer08,
     ThiefPlayer09,
+
     HotPotato,
     NotPotato01,
     NotPotato02,
@@ -107,6 +107,7 @@ public enum RoleType : byte
     NotPotato12,
     NotPotato13,
     NotPotato14,
+
     SoloPlayer01,
     SoloPlayer02,
     SoloPlayer03,
@@ -139,5 +140,5 @@ public enum RoleType : byte
     SerialKiller,
 
     // don't put anything below this
-    NoRole = byte.MaxValue,
+    NoRole = byte.MaxValue
 }

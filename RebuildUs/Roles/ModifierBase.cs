@@ -3,19 +3,11 @@ namespace RebuildUs.Roles;
 public abstract class PlayerModifier
 {
     public static List<PlayerModifier> AllModifiers = [];
-    public static readonly List<PlayerModifier>[] PLAYER_MODIFIER_CACHE = new List<PlayerModifier>[256];
-    public ModifierType CurrentModifierType;
+    public static readonly List<PlayerModifier>[] PlayerModifierCache = new List<PlayerModifier>[256];
     public PlayerControl Player;
-
-    public virtual Color ModifierColor
-    {
-        get => Color.white;
-    }
-
-    public virtual string NameTag
-    {
-        get => "";
-    }
+    public ModifierType CurrentModifierType;
+    public virtual Color ModifierColor => Color.white;
+    public virtual string NameTag => "";
 
     public virtual void OnUpdateNameColors() { }
     public virtual void OnUpdateNameTags() { }
@@ -31,59 +23,46 @@ public abstract class PlayerModifier
 
     public virtual void ResetRole() { }
     public virtual void PostInit() { }
-
-    public virtual string ModifyNameText(string nameText)
-    {
-        return nameText;
-    }
-
-    public virtual string ModifyRoleText(string roleText, List<RoleInfo> roleInfo, bool useColors = true, bool includeHidden = false)
-    {
-        return roleText;
-    }
-
-    public virtual string MeetingInfoText()
-    {
-        return "";
-    }
+    public virtual string ModifyNameText(string nameText) { return nameText; }
+    public virtual string ModifyRoleText(string roleText, List<RoleInfo> roleInfo, bool useColors = true, bool includeHidden = false) { return roleText; }
+    public virtual string MeetingInfoText() { return ""; }
 
     public static void ClearAll()
     {
         AllModifiers.Clear();
-        for (var i = 0; i < 256; i++) PLAYER_MODIFIER_CACHE[i] = null;
+        for (int i = 0; i < 256; i++) PlayerModifierCache[i] = null;
     }
 
     public static void RemoveFromCache(byte playerId)
     {
-        PLAYER_MODIFIER_CACHE[playerId] = null;
+        PlayerModifierCache[playerId] = null;
     }
 
     public static PlayerModifier GetModifier(PlayerControl player, ModifierType type)
     {
         if (player == null) return null;
         var list = GetModifiers(player);
-        for (var i = 0; i < list.Count; i++)
+        for (int i = 0; i < list.Count; i++)
         {
-            if (list[i].CurrentModifierType == type)
-                return list[i];
+            if (list[i].CurrentModifierType == type) return list[i];
         }
-
         return null;
     }
 
     public static List<PlayerModifier> GetModifiers(PlayerControl player)
     {
         if (player == null) return [];
-        if (PLAYER_MODIFIER_CACHE[player.PlayerId] != null) return PLAYER_MODIFIER_CACHE[player.PlayerId];
+        if (PlayerModifierCache[player.PlayerId] != null) return PlayerModifierCache[player.PlayerId];
 
         var list = new List<PlayerModifier>();
-        for (var i = 0; i < AllModifiers.Count; i++)
+        for (int i = 0; i < AllModifiers.Count; i++)
         {
             if (AllModifiers[i].Player == player)
+            {
                 list.Add(AllModifiers[i]);
+            }
         }
-
-        PLAYER_MODIFIER_CACHE[player.PlayerId] = list;
+        PlayerModifierCache[player.PlayerId] = list;
         return list;
     }
 }
@@ -94,18 +73,24 @@ public abstract class ModifierBase<T> : PlayerModifier where T : ModifierBase<T>
     public static List<T> Players = [];
     public static ModifierType StaticModifierType;
 
+    public void Init(PlayerControl player)
+    {
+        Player = player;
+        Players.Add((T)this);
+        AllModifiers.Add(this);
+        RemoveFromCache(player.PlayerId);
+    }
+
     public static T Local
     {
         get
         {
             var local = PlayerControl.LocalPlayer;
             if (local == null) return null;
-            for (var i = 0; i < Players.Count; i++)
+            for (int i = 0; i < Players.Count; i++)
             {
-                if (Players[i].Player == local)
-                    return Players[i];
+                if (Players[i].Player == local) return Players[i];
             }
-
             return null;
         }
     }
@@ -115,7 +100,7 @@ public abstract class ModifierBase<T> : PlayerModifier where T : ModifierBase<T>
         get
         {
             var list = new List<PlayerControl>(Players.Count);
-            for (var i = 0; i < Players.Count; i++) list.Add(Players[i].Player);
+            for (int i = 0; i < Players.Count; i++) list.Add(Players[i].Player);
             return list;
         }
     }
@@ -125,12 +110,11 @@ public abstract class ModifierBase<T> : PlayerModifier where T : ModifierBase<T>
         get
         {
             var list = new List<PlayerControl>(Players.Count);
-            for (var i = 0; i < Players.Count; i++)
+            for (int i = 0; i < Players.Count; i++)
             {
                 var p = Players[i].Player;
                 if (p.IsAlive()) list.Add(p);
             }
-
             return list;
         }
     }
@@ -140,51 +124,38 @@ public abstract class ModifierBase<T> : PlayerModifier where T : ModifierBase<T>
         get
         {
             var list = new List<PlayerControl>(Players.Count);
-            for (var i = 0; i < Players.Count; i++)
+            for (int i = 0; i < Players.Count; i++)
             {
                 var p = Players[i].Player;
                 if (!p.IsAlive()) list.Add(p);
             }
-
             return list;
         }
     }
 
     public static bool Exists
     {
-        get => Helpers.RolesEnabled && Players.Count > 0;
-    }
-
-    public void Init(PlayerControl player)
-    {
-        Player = player;
-        Players.Add((T)this);
-        AllModifiers.Add(this);
-        RemoveFromCache(player.PlayerId);
+        get { return Helpers.RolesEnabled && Players.Count > 0; }
     }
 
     public static T GetModifier(PlayerControl player = null)
     {
         player ??= PlayerControl.LocalPlayer;
         if (player == null) return null;
-        for (var i = 0; i < Players.Count; i++)
+        for (int i = 0; i < Players.Count; i++)
         {
-            if (Players[i].Player == player)
-                return Players[i];
+            if (Players[i].Player == player) return Players[i];
         }
-
         return null;
     }
 
     public static bool HasModifier(PlayerControl player)
     {
         if (player == null) return false;
-        for (var i = 0; i < Players.Count; i++)
+        for (int i = 0; i < Players.Count; i++)
         {
-            if (Players[i].Player == player)
-                return true;
+            if (Players[i].Player == player) return true;
         }
-
         return false;
     }
 
@@ -201,7 +172,7 @@ public abstract class ModifierBase<T> : PlayerModifier where T : ModifierBase<T>
         if (player == null) return;
         RemoveFromCache(player.PlayerId);
 
-        for (var i = Players.Count - 1; i >= 0; i--)
+        for (int i = Players.Count - 1; i >= 0; i--)
         {
             var x = Players[i];
             if (x.Player == player && x.CurrentModifierType == StaticModifierType)
@@ -210,11 +181,13 @@ public abstract class ModifierBase<T> : PlayerModifier where T : ModifierBase<T>
                 Players.RemoveAt(i);
             }
         }
-
-        for (var i = AllModifiers.Count - 1; i >= 0; i--)
+        for (int i = AllModifiers.Count - 1; i >= 0; i--)
         {
             var x = AllModifiers[i];
-            if (x.Player == player && x.CurrentModifierType == StaticModifierType) AllModifiers.RemoveAt(i);
+            if (x.Player == player && x.CurrentModifierType == StaticModifierType)
+            {
+                AllModifiers.RemoveAt(i);
+            }
         }
     }
 
@@ -223,11 +196,16 @@ public abstract class ModifierBase<T> : PlayerModifier where T : ModifierBase<T>
         if (p1 == null || p2 == null) return;
         RemoveFromCache(p1.PlayerId);
         RemoveFromCache(p2.PlayerId);
-        for (var i = 0; i < Players.Count; i++)
+        for (int i = 0; i < Players.Count; i++)
         {
             if (Players[i].Player == p1)
+            {
                 Players[i].Player = p2;
-            else if (Players[i].Player == p2) Players[i].Player = p1;
+            }
+            else if (Players[i].Player == p2)
+            {
+                Players[i].Player = p1;
+            }
         }
     }
 }

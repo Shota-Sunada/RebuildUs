@@ -2,22 +2,70 @@ namespace RebuildUs.Roles;
 
 public enum RoleTeam
 {
-    Crewmate, Impostor, Neutral,
+    Crewmate,
+    Impostor,
+    Neutral
 }
 
 public static class RoleData
 {
-    public static readonly RoleRegistration[] ROLES =
+    public record RoleRegistration(
+        RoleType roleType,
+        RoleTeam roleTeam,
+        Type classType,
+        Func<Color> getColor,
+        Func<CustomOption> getOption
+    );
+
+    public static readonly RoleRegistration[] Roles =
     [
-		// Crewmate
-		new(RoleType.Mayor, RoleTeam.Crewmate, typeof(RoleBase<Mayor>), () => Mayor.NameColor, () => CustomOptionHolder.MayorSpawnRate), new(RoleType.Engineer, RoleTeam.Crewmate, typeof(RoleBase<Engineer>), () => Engineer.NameColor, () => CustomOptionHolder.EngineerSpawnRate), new(RoleType.Sheriff, RoleTeam.Crewmate, typeof(RoleBase<Sheriff>), () => Sheriff.NameColor, () => CustomOptionHolder.SheriffSpawnRate), new(RoleType.Lighter, RoleTeam.Crewmate, typeof(RoleBase<Lighter>), () => Lighter.NameColor, () => CustomOptionHolder.LighterSpawnRate), new(RoleType.Detective, RoleTeam.Crewmate, typeof(RoleBase<Detective>), () => Detective.NameColor, () => CustomOptionHolder.DetectiveSpawnRate), new(RoleType.TimeMaster, RoleTeam.Crewmate, typeof(RoleBase<TimeMaster>), () => TimeMaster.NameColor, () => CustomOptionHolder.TimeMasterSpawnRate), new(RoleType.Medic, RoleTeam.Crewmate, typeof(RoleBase<Medic>), () => Medic.NameColor, () => CustomOptionHolder.MedicSpawnRate), new(RoleType.Seer, RoleTeam.Crewmate, typeof(RoleBase<Seer>), () => Seer.NameColor, () => CustomOptionHolder.SeerSpawnRate), new(RoleType.Hacker, RoleTeam.Crewmate, typeof(RoleBase<Hacker>), () => Hacker.NameColor, () => CustomOptionHolder.HackerSpawnRate), new(RoleType.Tracker, RoleTeam.Crewmate, typeof(RoleBase<Tracker>), () => Tracker.NameColor, () => CustomOptionHolder.TrackerSpawnRate), new(RoleType.Snitch, RoleTeam.Crewmate, typeof(RoleBase<Snitch>), () => Snitch.NameColor, () => CustomOptionHolder.SnitchSpawnRate), new(RoleType.Spy, RoleTeam.Crewmate, typeof(RoleBase<Spy>), () => Spy.NameColor, () => CustomOptionHolder.SpySpawnRate), new(RoleType.SecurityGuard, RoleTeam.Crewmate, typeof(RoleBase<SecurityGuard>), () => SecurityGuard.NameColor, () => CustomOptionHolder.SecurityGuardSpawnRate), new(RoleType.Bait, RoleTeam.Crewmate, typeof(RoleBase<Bait>), () => Bait.NameColor, () => CustomOptionHolder.BaitSpawnRate), new(RoleType.Medium, RoleTeam.Crewmate, typeof(RoleBase<Medium>), () => Medium.NameColor, () => CustomOptionHolder.MediumSpawnRate), new(RoleType.Shifter, RoleTeam.Crewmate, typeof(RoleBase<Shifter>), () => Shifter.NameColor, () => CustomOptionHolder.ShifterSpawnRate), new(RoleType.Madmate, RoleTeam.Crewmate, typeof(RoleBase<MadmateRole>), () => MadmateRole.NameColor, () => CustomOptionHolder.MadmateRoleSpawnRate), new(RoleType.Suicider, RoleTeam.Crewmate, typeof(RoleBase<Suicider>), () => Suicider.NameColor, () => CustomOptionHolder.SuiciderSpawnRate),
+        // Crewmate
+        new(RoleType.Mayor, RoleTeam.Crewmate, typeof(RoleBase<Mayor>), () => Mayor.NameColor, () => CustomOptionHolder.MayorSpawnRate),
+        new(RoleType.Engineer, RoleTeam.Crewmate, typeof(RoleBase<Engineer>), () => Engineer.NameColor, () => CustomOptionHolder.EngineerSpawnRate),
+        new(RoleType.Sheriff, RoleTeam.Crewmate, typeof(RoleBase<Sheriff>), () => Sheriff.NameColor, () => CustomOptionHolder.SheriffSpawnRate),
+        new(RoleType.Lighter, RoleTeam.Crewmate, typeof(RoleBase<Lighter>), () => Lighter.NameColor, () => CustomOptionHolder.LighterSpawnRate),
+        new(RoleType.Detective, RoleTeam.Crewmate, typeof(RoleBase<Detective>), () => Detective.NameColor, () => CustomOptionHolder.DetectiveSpawnRate),
+        new(RoleType.TimeMaster, RoleTeam.Crewmate, typeof(RoleBase<TimeMaster>), () => TimeMaster.NameColor, () => CustomOptionHolder.TimeMasterSpawnRate),
+        new(RoleType.Medic, RoleTeam.Crewmate, typeof(RoleBase<Medic>), () => Medic.NameColor, () => CustomOptionHolder.MedicSpawnRate),
+        new(RoleType.Seer, RoleTeam.Crewmate, typeof(RoleBase<Seer>), () => Seer.NameColor, () => CustomOptionHolder.SeerSpawnRate),
+        new(RoleType.Hacker, RoleTeam.Crewmate, typeof(RoleBase<Hacker>), () => Hacker.NameColor, () => CustomOptionHolder.HackerSpawnRate),
+        new(RoleType.Tracker, RoleTeam.Crewmate, typeof(RoleBase<Tracker>), () => Tracker.NameColor, () => CustomOptionHolder.TrackerSpawnRate),
+        new(RoleType.Snitch, RoleTeam.Crewmate, typeof(RoleBase<Snitch>), () => Snitch.NameColor, () => CustomOptionHolder.SnitchSpawnRate),
+        new(RoleType.Spy, RoleTeam.Crewmate, typeof(RoleBase<Spy>), () => Spy.NameColor, () => CustomOptionHolder.SpySpawnRate),
+        new(RoleType.SecurityGuard, RoleTeam.Crewmate, typeof(RoleBase<SecurityGuard>), () => SecurityGuard.NameColor, () => CustomOptionHolder.SecurityGuardSpawnRate),
+        new(RoleType.Bait, RoleTeam.Crewmate, typeof(RoleBase<Bait>), () => Bait.NameColor, () => CustomOptionHolder.BaitSpawnRate),
+        new(RoleType.Medium, RoleTeam.Crewmate, typeof(RoleBase<Medium>), () => Medium.NameColor, () => CustomOptionHolder.MediumSpawnRate),
+        new(RoleType.Shifter, RoleTeam.Crewmate, typeof(RoleBase<Shifter>), () => Shifter.NameColor, () => CustomOptionHolder.ShifterSpawnRate),
+        new(RoleType.Madmate, RoleTeam.Crewmate, typeof(RoleBase<MadmateRole>), () => MadmateRole.NameColor, () => CustomOptionHolder.MadmateRoleSpawnRate),
+        new(RoleType.Suicider, RoleTeam.Crewmate, typeof(RoleBase<Suicider>), () => Suicider.NameColor, () => CustomOptionHolder.SuiciderSpawnRate),
 
-		// Impostor
-		new(RoleType.BountyHunter, RoleTeam.Impostor, typeof(RoleBase<BountyHunter>), () => BountyHunter.NameColor, () => CustomOptionHolder.BountyHunterSpawnRate), new(RoleType.Godfather, RoleTeam.Impostor, typeof(RoleBase<Mafia.Godfather>), () => Mafia.NameColor, () => CustomOptionHolder.MafiaSpawnRate), new(RoleType.Mafioso, RoleTeam.Impostor, typeof(RoleBase<Mafia.Mafioso>), () => Mafia.NameColor, () => CustomOptionHolder.MafiaSpawnRate), new(RoleType.Janitor, RoleTeam.Impostor, typeof(RoleBase<Mafia.Janitor>), () => Mafia.NameColor, () => CustomOptionHolder.MafiaSpawnRate), new(RoleType.Morphing, RoleTeam.Impostor, typeof(RoleBase<Morphing>), () => Morphing.NameColor, () => CustomOptionHolder.MorphingSpawnRate), new(RoleType.Camouflager, RoleTeam.Impostor, typeof(RoleBase<Camouflager>), () => Camouflager.NameColor, () => CustomOptionHolder.CamouflagerSpawnRate), new(RoleType.Vampire, RoleTeam.Impostor, typeof(RoleBase<Vampire>), () => Vampire.NameColor, () => CustomOptionHolder.VampireSpawnRate), new(RoleType.Eraser, RoleTeam.Impostor, typeof(RoleBase<Eraser>), () => Eraser.NameColor, () => CustomOptionHolder.EraserSpawnRate), new(RoleType.Trickster, RoleTeam.Impostor, typeof(RoleBase<Trickster>), () => Trickster.NameColor, () => CustomOptionHolder.TricksterSpawnRate), new(RoleType.Cleaner, RoleTeam.Impostor, typeof(RoleBase<Cleaner>), () => Cleaner.NameColor, () => CustomOptionHolder.CleanerSpawnRate), new(RoleType.Warlock, RoleTeam.Impostor, typeof(RoleBase<Warlock>), () => Warlock.NameColor, () => CustomOptionHolder.WarlockSpawnRate), new(RoleType.Witch, RoleTeam.Impostor, typeof(RoleBase<Witch>), () => Witch.NameColor, () => CustomOptionHolder.WitchSpawnRate), new(RoleType.EvilHacker, RoleTeam.Impostor, typeof(RoleBase<EvilHacker>), () => EvilHacker.NameColor, () => CustomOptionHolder.EvilHackerSpawnRate), new(RoleType.EvilTracker, RoleTeam.Impostor, typeof(RoleBase<EvilTracker>), () => EvilTracker.NameColor, () => CustomOptionHolder.EvilTrackerSpawnRate),
+        // Impostor
+        new(RoleType.BountyHunter, RoleTeam.Impostor, typeof(RoleBase<BountyHunter>), () => BountyHunter.NameColor, () => CustomOptionHolder.BountyHunterSpawnRate),
+        new(RoleType.Godfather, RoleTeam.Impostor, typeof(RoleBase<Mafia.Godfather>), () => Mafia.NameColor, () => CustomOptionHolder.MafiaSpawnRate),
+        new(RoleType.Mafioso, RoleTeam.Impostor, typeof(RoleBase<Mafia.Mafioso>), () => Mafia.NameColor, () => CustomOptionHolder.MafiaSpawnRate),
+        new(RoleType.Janitor, RoleTeam.Impostor, typeof(RoleBase<Mafia.Janitor>), () => Mafia.NameColor, () => CustomOptionHolder.MafiaSpawnRate),
+        new(RoleType.Morphing, RoleTeam.Impostor, typeof(RoleBase<Morphing>), () => Morphing.NameColor, () => CustomOptionHolder.MorphingSpawnRate),
+        new(RoleType.Camouflager, RoleTeam.Impostor, typeof(RoleBase<Camouflager>), () => Camouflager.NameColor, () => CustomOptionHolder.CamouflagerSpawnRate),
+        new(RoleType.Vampire, RoleTeam.Impostor, typeof(RoleBase<Vampire>), () => Vampire.NameColor, () => CustomOptionHolder.VampireSpawnRate),
+        new(RoleType.Eraser, RoleTeam.Impostor, typeof(RoleBase<Eraser>), () => Eraser.NameColor, () => CustomOptionHolder.EraserSpawnRate),
+        new(RoleType.Trickster, RoleTeam.Impostor, typeof(RoleBase<Trickster>), () => Trickster.NameColor, () => CustomOptionHolder.TricksterSpawnRate),
+        new(RoleType.Cleaner, RoleTeam.Impostor, typeof(RoleBase<Cleaner>), () => Cleaner.NameColor, () => CustomOptionHolder.CleanerSpawnRate),
+        new(RoleType.Warlock, RoleTeam.Impostor, typeof(RoleBase<Warlock>), () => Warlock.NameColor, () => CustomOptionHolder.WarlockSpawnRate),
+        new(RoleType.Witch, RoleTeam.Impostor, typeof(RoleBase<Witch>), () => Witch.NameColor, () => CustomOptionHolder.WitchSpawnRate),
+        new(RoleType.EvilHacker, RoleTeam.Impostor, typeof(RoleBase<EvilHacker>), () => EvilHacker.NameColor, () => CustomOptionHolder.EvilHackerSpawnRate),
+        new(RoleType.EvilTracker, RoleTeam.Impostor, typeof(RoleBase<EvilTracker>), () => EvilTracker.NameColor, () => CustomOptionHolder.EvilTrackerSpawnRate),
 
-		// Neutral
-		new(RoleType.Jester, RoleTeam.Neutral, typeof(RoleBase<Jester>), () => Jester.NameColor, () => CustomOptionHolder.JesterSpawnRate), new(RoleType.Arsonist, RoleTeam.Neutral, typeof(RoleBase<Arsonist>), () => Arsonist.NameColor, () => CustomOptionHolder.ArsonistSpawnRate), new(RoleType.Vulture, RoleTeam.Neutral, typeof(RoleBase<Vulture>), () => Vulture.NameColor, () => CustomOptionHolder.VultureSpawnRate), new(RoleType.Jackal, RoleTeam.Neutral, typeof(RoleBase<Jackal>), () => Jackal.NameColor, () => CustomOptionHolder.JackalSpawnRate), new(RoleType.Sidekick, RoleTeam.Neutral, typeof(RoleBase<Sidekick>), () => Jackal.NameColor, () => CustomOptionHolder.JackalSpawnRate), new(RoleType.Lovers, RoleTeam.Neutral, null, () => Lovers.Color, () => CustomOptionHolder.LoversSpawnRate), new(RoleType.NiceGuesser, RoleTeam.Crewmate, typeof(RoleBase<Guesser.NiceGuesser>), () => Guesser.NiceGuesser.NameColor, () => CustomOptionHolder.GuesserSpawnRate), new(RoleType.EvilGuesser, RoleTeam.Impostor, typeof(RoleBase<Guesser.EvilGuesser>), () => Guesser.EvilGuesser.NameColor, () => CustomOptionHolder.GuesserSpawnRate), new(RoleType.NiceSwapper, RoleTeam.Crewmate, typeof(RoleBase<Swapper>), () => Swapper.NameColor, () => CustomOptionHolder.SwapperSpawnRate), new(RoleType.EvilSwapper, RoleTeam.Impostor, typeof(RoleBase<Swapper>), () => Palette.ImpostorRed, () => CustomOptionHolder.SwapperSpawnRate),
+        // Neutral
+        new(RoleType.Jester, RoleTeam.Neutral, typeof(RoleBase<Jester>), () => Jester.NameColor, () => CustomOptionHolder.JesterSpawnRate),
+        new(RoleType.Arsonist, RoleTeam.Neutral, typeof(RoleBase<Arsonist>), () => Arsonist.NameColor, () => CustomOptionHolder.ArsonistSpawnRate),
+        new(RoleType.Vulture, RoleTeam.Neutral, typeof(RoleBase<Vulture>), () => Vulture.NameColor, () => CustomOptionHolder.VultureSpawnRate),
+        new(RoleType.Jackal, RoleTeam.Neutral, typeof(RoleBase<Jackal>), () => Jackal.NameColor, () => CustomOptionHolder.JackalSpawnRate),
+        new(RoleType.Sidekick, RoleTeam.Neutral, typeof(RoleBase<Sidekick>), () => Jackal.NameColor, () => CustomOptionHolder.JackalSpawnRate),
+        new(RoleType.Lovers, RoleTeam.Neutral, null, () => Lovers.Color, () => CustomOptionHolder.LoversSpawnRate),
+
+        new(RoleType.NiceGuesser, RoleTeam.Crewmate, typeof(RoleBase<Guesser.NiceGuesser>), () => Guesser.NiceGuesser.NameColor, () => CustomOptionHolder.GuesserSpawnRate),
+        new(RoleType.EvilGuesser, RoleTeam.Impostor, typeof(RoleBase<Guesser.EvilGuesser>), () => Guesser.EvilGuesser.NameColor, () => CustomOptionHolder.GuesserSpawnRate),
+        new(RoleType.NiceSwapper, RoleTeam.Crewmate, typeof(RoleBase<Swapper>), () => Swapper.NameColor, () => CustomOptionHolder.SwapperSpawnRate),
+        new(RoleType.EvilSwapper, RoleTeam.Impostor, typeof(RoleBase<Swapper>), () => Palette.ImpostorRed, () => CustomOptionHolder.SwapperSpawnRate),
     ];
-
-    public sealed record RoleRegistration(RoleType RoleType, RoleTeam RoleTeam, Type ClassType, Func<Color> GetColor, Func<CustomOption> GetOption);
 }

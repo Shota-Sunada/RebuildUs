@@ -1,17 +1,20 @@
 using Impostor.Api.Plugins;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using RebuildUs.Impostor.Models;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Configuration;
 using RebuildUs.Impostor.Services;
+using RebuildUs.Impostor.Models;
 
 namespace RebuildUs.Impostor;
 
-public sealed class RebuildUsPluginStartup : IPluginStartup
+public class RebuildUsPluginStartup : IPluginStartup
 {
     public void ConfigureHost(IHostBuilder host)
     {
-        host.ConfigureAppConfiguration((_, config) => { config.AddJsonFile("rebuildus.discord.json", true, true); });
+        host.ConfigureAppConfiguration((_, config) =>
+        {
+            config.AddJsonFile("rebuildus.discord.json", optional: true, reloadOnChange: true);
+        });
     }
 
     public void ConfigureServices(IServiceCollection services)
@@ -21,13 +24,19 @@ public sealed class RebuildUsPluginStartup : IPluginStartup
         services.AddSingleton<IDiscordService, DiscordService>();
 
         services.AddOptions<DiscordConfig>()
-                .Configure<IConfiguration>((settings, configuration) =>
+            .Configure<IConfiguration>((settings, configuration) =>
+            {
+                configuration.GetSection("Discord").Bind(settings);
+
+                if (bool.TryParse(configuration["disableDiscord"], out var disableDiscord))
                 {
-                    configuration.GetSection("Discord").Bind(settings);
+                    settings.DisableDiscord = disableDiscord;
+                }
 
-                    if (bool.TryParse(configuration["disableDiscord"], out var disableDiscord)) settings.DisableDiscord = disableDiscord;
-
-                    if (bool.TryParse(configuration["Discord:AutoMute"], out var autoMute)) settings.AutoMute = autoMute;
-                });
+                if (bool.TryParse(configuration["Discord:AutoMute"], out var autoMute))
+                {
+                    settings.AutoMute = autoMute;
+                }
+            });
     }
 }

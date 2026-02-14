@@ -1,23 +1,25 @@
 using System.Reflection;
 using Submerged.Enums;
+using Submerged.Extensions;
 using Submerged.Floors;
 using Submerged.Map;
 using Submerged.Systems.Oxygen;
 using Submerged.Vents;
-using Version = SemanticVersioning.Version;
 
 namespace RebuildUs;
 
 public static class SubmergedCompatibility
 {
+    public static class Classes
+    {
+        public const string ElevatorMover = "ElevatorMover";
+    }
+
     public const string SUBMERGED_GUID = "Submerged";
     public const string SUBMERGED_VERSION = "2026.1.26";
     public const ShipStatus.MapType SUBMERGED_MAP_TYPE = (ShipStatus.MapType)6;
-    public const string ELEVATOR_MOVER = "ElevatorMover";
 
-    public static TaskTypes RetrieveOxygenMask;
-
-    public static Version Version { get; private set; }
+    public static SemanticVersioning.Version Version { get; private set; }
     public static bool Loaded { get; private set; }
     public static bool LoadedExternally { get; private set; }
     public static BasePlugin Plugin { get; private set; }
@@ -42,9 +44,11 @@ public static class SubmergedCompatibility
         SubmarineStatus = map.GetComponent<SubmarineStatus>();
     }
 
+    public static TaskTypes RetrieveOxygenMask;
+
     public static void Initialize()
     {
-        Loaded = IL2CPPChainloader.Instance.Plugins.TryGetValue(SUBMERGED_GUID, out var plugin);
+        Loaded = IL2CPPChainloader.Instance.Plugins.TryGetValue(SUBMERGED_GUID, out PluginInfo plugin);
         if (!Loaded) return;
 
         LoadedExternally = true;
@@ -58,7 +62,7 @@ public static class SubmergedCompatibility
     public static MonoBehaviour AddSubmergedComponent(this GameObject obj, string typeName)
     {
         if (!Loaded) return obj.AddComponent<MissingSubmergedBehaviour>();
-        var validType = ComponentExtensions.RegisteredTypes.TryGetValue(typeName, out var type);
+        bool validType = ComponentExtensions.RegisteredTypes.TryGetValue(typeName, out Type type);
         return validType ? obj.AddComponent(Il2CppType.From(type)).TryCast<MonoBehaviour>() : obj.AddComponent<MissingSubmergedBehaviour>();
     }
 
@@ -93,12 +97,8 @@ public static class SubmergedCompatibility
     }
 }
 
-public sealed class MissingSubmergedBehaviour : MonoBehaviour
+public class MissingSubmergedBehaviour : MonoBehaviour
 {
-    static MissingSubmergedBehaviour()
-    {
-        ClassInjector.RegisterTypeInIl2Cpp<MissingSubmergedBehaviour>();
-    }
-
+    static MissingSubmergedBehaviour() => ClassInjector.RegisterTypeInIl2Cpp<MissingSubmergedBehaviour>();
     public MissingSubmergedBehaviour(IntPtr ptr) : base(ptr) { }
 }

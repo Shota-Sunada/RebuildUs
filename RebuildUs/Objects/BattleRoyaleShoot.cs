@@ -1,71 +1,74 @@
-using Object = UnityEngine.Object;
-
 namespace RebuildUs.Objects;
 
-public sealed class BattleRoyaleShoot
+public class BattleRoyaleShoot
 {
-    private static List<BattleRoyaleShoot> _shoots = [];
-    private static Sprite _sprite;
-    private readonly Color _color;
-    private readonly Vector3 _position;
-    private readonly GameObject _shoot;
-    private readonly SpriteRenderer _spriteRenderer;
+    private static List<BattleRoyaleShoot> shoots = [];
+    private static Sprite sprite;
+    private Color color;
+    private readonly GameObject shoot;
+    private readonly SpriteRenderer spriteRenderer;
+    private Vector3 position;
+
+    public static Sprite getShootSprite()
+    {
+        if (sprite) return sprite;
+        sprite = AssetLoader.royaleShoot.GetComponent<SpriteRenderer>().sprite;
+        return sprite;
+    }
 
     public BattleRoyaleShoot(PlayerControl player, int whichColor, float angle)
     {
+
         switch (whichColor)
         {
             case 0:
-                _color = Palette.PlayerColors[player.Data.DefaultOutfit.ColorId];
+                color = Palette.PlayerColors[(int)player.Data.DefaultOutfit.ColorId];
                 break;
             case 1:
-                _color = Palette.PlayerColors[11];
+                color = Palette.PlayerColors[11];
                 break;
             case 2:
-                _color = Palette.PlayerColors[13];
+                color = Palette.PlayerColors[13];
                 break;
             case 3:
-                _color = Palette.PlayerColors[15];
+                color = Palette.PlayerColors[15];
                 break;
         }
 
-        _shoot = new("BattleRoyaleShoot");
-        _shoot.AddSubmergedComponent(SubmergedCompatibility.ELEVATOR_MOVER);
+        shoot = new GameObject("BattleRoyaleShoot");
+        shoot.AddSubmergedComponent(SubmergedCompatibility.Classes.ElevatorMover);
         if (GameOptionsManager.Instance.currentGameOptions.MapId == 6)
-            _position = new(player.transform.position.x, player.transform.position.y, -0.5f);
-        else
-            _position = new(player.transform.position.x, player.transform.position.y, player.transform.position.z + 1f);
-        _shoot.transform.position = _position;
-        _shoot.transform.localPosition = _position;
-        _shoot.transform.SetParent(player.transform.parent);
-        _shoot.transform.eulerAngles = new(0f, 0f, (float)((angle * 360f) / Math.PI / 2f));
-
-        _spriteRenderer = _shoot.AddComponent<SpriteRenderer>();
-        _spriteRenderer.sprite = GetShootSprite();
-        _spriteRenderer.color = _color;
-
-        _shoots.Add(this);
-        _shoot.SetActive(true);
-
-        HudManager.Instance.StartCoroutine(Effects.Lerp(0.5f, new Action<float>(p =>
         {
-            if (p == 1f && _shoot != null)
+            position = new Vector3(player.transform.position.x, player.transform.position.y, -0.5f);
+        }
+        else
+        {
+            position = new Vector3(player.transform.position.x, player.transform.position.y, player.transform.position.z + 1f);
+        }
+        shoot.transform.position = position;
+        shoot.transform.localPosition = position;
+        shoot.transform.SetParent(player.transform.parent);
+        shoot.transform.eulerAngles = new Vector3(0f, 0f, (float)(angle * 360f / Math.PI / 2f));
+
+        spriteRenderer = shoot.AddComponent<SpriteRenderer>();
+        spriteRenderer.sprite = getShootSprite();
+        spriteRenderer.color = color;
+
+        shoots.Add(this);
+        shoot.SetActive(true);
+
+        HudManager.Instance.StartCoroutine(Effects.Lerp(0.5f, new Action<float>((p) =>
+        {
+
+            if (p == 1f && shoot != null)
             {
-                Object.Destroy(_shoot);
-                _shoots.Remove(this);
+                UnityEngine.Object.Destroy(shoot);
+                shoots.Remove(this);
             }
         })));
     }
-
-    public static Sprite GetShootSprite()
+    public static void clearBattleRoyaleShoots()
     {
-        if (_sprite) return _sprite;
-        _sprite = AssetLoader.RoyaleShoot.GetComponent<SpriteRenderer>().sprite;
-        return _sprite;
-    }
-
-    public static void ClearBattleRoyaleShoots()
-    {
-        _shoots = [];
+        shoots = [];
     }
 }

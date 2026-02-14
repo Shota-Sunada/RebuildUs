@@ -2,33 +2,14 @@ namespace RebuildUs.Roles.Neutral;
 
 public static class Guesser
 {
-    public static int RemainingShotsNiceGuesser;
-    public static int RemainingShotsEvilGuesser;
+    public static bool OnlyAvailableRoles { get { return CustomOptionHolder.GuesserOnlyAvailableRoles.GetBool(); } }
+    public static bool HasMultipleShotsPerMeeting { get { return CustomOptionHolder.GuesserHasMultipleShotsPerMeeting.GetBool(); } }
+    public static bool ShowInfoInGhostChat { get { return CustomOptionHolder.GuesserShowInfoInGhostChat.GetBool(); } }
+    public static bool KillsThroughShield { get { return CustomOptionHolder.GuesserKillsThroughShield.GetBool(); } }
+    public static bool EvilCanKillSpy { get { return CustomOptionHolder.GuesserEvilCanKillSpy.GetBool(); } }
 
-    public static bool OnlyAvailableRoles
-    {
-        get => CustomOptionHolder.GuesserOnlyAvailableRoles.GetBool();
-    }
-
-    public static bool HasMultipleShotsPerMeeting
-    {
-        get => CustomOptionHolder.GuesserHasMultipleShotsPerMeeting.GetBool();
-    }
-
-    public static bool ShowInfoInGhostChat
-    {
-        get => CustomOptionHolder.GuesserShowInfoInGhostChat.GetBool();
-    }
-
-    public static bool KillsThroughShield
-    {
-        get => CustomOptionHolder.GuesserKillsThroughShield.GetBool();
-    }
-
-    public static bool EvilCanKillSpy
-    {
-        get => CustomOptionHolder.GuesserEvilCanKillSpy.GetBool();
-    }
+    public static int RemainingShotsNiceGuesser = 0;
+    public static int RemainingShotsEvilGuesser = 0;
 
     public static void ClearAndReload()
     {
@@ -48,7 +29,7 @@ public static class Guesser
 
     public static int RemainingShots(PlayerControl player, bool shoot = false)
     {
-        var remainingShots = 0;
+        int remainingShots = 0;
         if (player.IsRole(RoleType.NiceGuesser))
         {
             remainingShots = RemainingShotsNiceGuesser;
@@ -57,14 +38,21 @@ public static class Guesser
         else if (player.IsRole(RoleType.EvilGuesser))
         {
             remainingShots = RemainingShotsEvilGuesser;
-            if (player.HasModifier(ModifierType.LastImpostor) && LastImpostor.CanGuess()) remainingShots += LastImpostor.RemainingShots;
+            if (player.HasModifier(ModifierType.LastImpostor) && LastImpostor.CanGuess())
+            {
+                remainingShots += LastImpostor.RemainingShots;
+            }
             if (shoot)
             {
                 // ラストインポスターの弾数を優先的に消費させる
                 if (player.HasModifier(ModifierType.LastImpostor) && LastImpostor.CanGuess())
+                {
                     LastImpostor.RemainingShots = Mathf.Max(0, LastImpostor.RemainingShots - 1);
+                }
                 else
+                {
                     RemainingShotsEvilGuesser = Mathf.Max(0, RemainingShotsEvilGuesser - 1);
+                }
             }
         }
         else if (player.HasModifier(ModifierType.LastImpostor) && LastImpostor.CanGuess())
@@ -80,6 +68,7 @@ public static class Guesser
     public class NiceGuesser : RoleBase<NiceGuesser>
     {
         public static Color NameColor = new Color32(255, 255, 0, byte.MaxValue);
+        public override Color RoleColor => NameColor;
 
         // write configs here
 
@@ -87,11 +76,6 @@ public static class Guesser
         {
             // write value init here
             StaticRoleType = CurrentRoleType = RoleType.NiceGuesser;
-        }
-
-        public override Color RoleColor
-        {
-            get => NameColor;
         }
 
         public override void OnMeetingStart() { }
@@ -116,6 +100,7 @@ public static class Guesser
     public class EvilGuesser : RoleBase<EvilGuesser>
     {
         public static Color NameColor = Palette.ImpostorRed;
+        public override Color RoleColor => NameColor;
 
         // write configs here
 
@@ -123,11 +108,6 @@ public static class Guesser
         {
             // write value init here
             StaticRoleType = CurrentRoleType = RoleType.EvilGuesser;
-        }
-
-        public override Color RoleColor
-        {
-            get => NameColor;
         }
 
         public override void OnMeetingStart() { }

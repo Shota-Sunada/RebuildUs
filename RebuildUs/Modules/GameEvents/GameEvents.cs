@@ -1,6 +1,6 @@
 namespace RebuildUs.Modules.GameEvents;
 
-public sealed class GameEvent
+public class GameEvent
 {
     public GameEventType Type { get; set; }
     public DateTime Timestamp { get; set; }
@@ -9,26 +9,26 @@ public sealed class GameEvent
 
 public static class GameEventManager
 {
-    private static readonly List<GameEvent> EVENTS = [];
+    private static readonly List<GameEvent> Events = [];
 
     public static void Add(GameEventType type, GameEventData data)
     {
-        EVENTS.Add(new() { Type = type, Timestamp = DateTime.Now, Data = data });
+        Events.Add(new GameEvent { Type = type, Timestamp = DateTime.Now, Data = data });
     }
 
     public static List<GameEvent> GetEvents()
     {
-        return [.. EVENTS];
+        return [.. Events];
     }
 
     public static void ClearEvents()
     {
-        EVENTS.Clear();
+        Events.Clear();
     }
 
     private static string FormatEvent(GameEvent e)
     {
-        var time = e.Timestamp.ToString("yyyy-MM-dd HH:mm:ss");
+        string time = e.Timestamp.ToString("yyyy-MM-dd HH:mm:ss");
         switch (e.Type)
         {
             case GameEventType.Kill:
@@ -38,8 +38,8 @@ public static class GameEventManager
                 return $"[{time}] Meeting started";
             case GameEventType.MeetingEnd:
                 var endData = e.Data as MeetingEndEventData;
-                var result = endData?.Result.ToString() ?? "Unknown";
-                var exiled = GetPlayerName(endData?.ExiledPlayer);
+                string result = endData?.Result.ToString() ?? "Unknown";
+                string exiled = GetPlayerName(endData?.ExiledPlayer);
                 return $"[{time}] Meeting ended - Result: {result}, Exiled: {exiled}";
             case GameEventType.RoleAction:
                 var roleData = e.Data as RoleActionEventData;
@@ -93,12 +93,11 @@ public static class GameEventManager
     public static string GetEventsAsString()
     {
         var sb = new StringBuilder();
-        foreach (var e in EVENTS)
+        foreach (var e in Events)
         {
             if (sb.Length > 0) sb.Append('\n');
             sb.Append(FormatEvent(e));
         }
-
         return sb.ToString();
     }
 }

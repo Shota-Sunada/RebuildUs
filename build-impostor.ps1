@@ -6,8 +6,7 @@ Write-Host "Starting RebuildUs.Impostor build..." -ForegroundColor Cyan
 # Build project
 dotnet build (Join-Path $PSScriptRoot "RebuildUs.Impostor\RebuildUs.Impostor.csproj") -c Debug
 
-if ($LASTEXITCODE -ne 0)
-{
+if ($LASTEXITCODE -ne 0) {
     Write-Error "Build failed"
     exit $LASTEXITCODE
 }
@@ -15,22 +14,19 @@ if ($LASTEXITCODE -ne 0)
 Write-Host "Build completed successfully." -ForegroundColor Green
 
 # Ensure plugins directory exists
-if (-not (Test-Path $pluginsPath))
-{
+if (-not (Test-Path $pluginsPath)) {
     New-Item -ItemType Directory -Path $pluginsPath
 }
 
 Write-Host "Starting file copy..." -ForegroundColor Cyan
 # Copy files
 Get-ChildItem -Path $buildPath -Filter *.dll | ForEach-Object {
-    if ($_.Name -eq "RebuildUs.Impostor.dll" -or $_.Name -like "Discord.*.dll" -or $_.Name -eq "Newtonsoft.Json.dll")
-    {
-        Write-Host "Copying $( $_.Name ) to plugins folder"
+    if ($_.Name -eq "RebuildUs.Impostor.dll" -or $_.Name -like "Discord.*.dll" -or $_.Name -eq "Newtonsoft.Json.dll") {
+        Write-Host "Copying $($_.Name) to plugins folder"
         Copy-Item $_.FullName -Destination $pluginsPath -Force
     }
-    else
-    {
-        Write-Host "Copying $( $_.Name ) to server root"
+    else {
+        Write-Host "Copying $($_.Name) to server root"
         Copy-Item $_.FullName -Destination $serverPath -Force
     }
 }

@@ -7,7 +7,7 @@ public class MapData
 {
     public static ShipStatus AirShip;
     public static ShipStatus SkeldShip;
-    public static ShipStatus MiraHq;
+    public static ShipStatus MiraHQ;
     public static ShipStatus PolusShip;
 
     public static void LoadAssets(AmongUsClient __instance)
@@ -24,12 +24,12 @@ public class MapData
         }
 
         // Mira
-        if (!MiraHq)
+        if (!MiraHQ)
         {
             assetReference = __instance.ShipPrefabs[1];
             asset = assetReference.LoadAsset<GameObject>();
             asset.WaitForCompletion();
-            MiraHq = assetReference.Asset.Cast<GameObject>().GetComponent<ShipStatus>();
+            MiraHQ = assetReference.Asset.Cast<GameObject>().GetComponent<ShipStatus>();
         }
 
         // Polus

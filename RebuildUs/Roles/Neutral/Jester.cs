@@ -4,33 +4,17 @@ namespace RebuildUs.Roles.Neutral;
 public class Jester : RoleBase<Jester>
 {
     public static Color NameColor = new Color32(236, 98, 165, byte.MaxValue);
+    public override Color RoleColor => NameColor;
 
-    public static bool TriggerJesterWin;
+    public static bool TriggerJesterWin = false;
+    public static bool CanCallEmergency { get { return CustomOptionHolder.JesterCanCallEmergency.GetBool(); } }
+    public static bool CanSabotage { get { return CustomOptionHolder.JesterCanSabotage.GetBool(); } }
+    public static bool HasImpostorVision { get { return CustomOptionHolder.JesterHasImpostorVision.GetBool(); } }
 
     public Jester()
     {
         // write value init here
         StaticRoleType = CurrentRoleType = RoleType.Jester;
-    }
-
-    public override Color RoleColor
-    {
-        get => NameColor;
-    }
-
-    public static bool CanCallEmergency
-    {
-        get => CustomOptionHolder.JesterCanCallEmergency.GetBool();
-    }
-
-    public static bool CanSabotage
-    {
-        get => CustomOptionHolder.JesterCanSabotage.GetBool();
-    }
-
-    public static bool HasImpostorVision
-    {
-        get => CustomOptionHolder.JesterHasImpostorVision.GetBool();
     }
 
     public override void OnMeetingStart() { }

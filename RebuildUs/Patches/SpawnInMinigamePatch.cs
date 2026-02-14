@@ -5,7 +5,9 @@ public static class SpawnInMinigamePatch
 {
     [HarmonyPostfix]
     [HarmonyPatch(typeof(SpawnInMinigame), nameof(SpawnInMinigame.Close))]
-    public static void ClosePostfix() { }
+    public static void ClosePostfix()
+    {
+    }
 
     [HarmonyPrefix]
     [HarmonyPatch(typeof(SpawnInMinigame), nameof(SpawnInMinigame.Begin))]

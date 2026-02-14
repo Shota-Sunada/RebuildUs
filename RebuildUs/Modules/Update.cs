@@ -2,12 +2,8 @@ namespace RebuildUs.Patches;
 
 public static class Update
 {
-    private static bool _isUpdating;
-    private static readonly Dictionary<byte, Color> COLOR_CACHE = [];
-
-    private static readonly StringBuilder TAG_STRING_BUILDER = new();
-
-    public static bool ActivatedReportButtonAfterCustomMode;
+    private static bool IsUpdating = false;
+    private static readonly Dictionary<byte, Color> ColorCache = [];
 
     public static void SetChatBubbleColor(ChatBubble bubble, string playerName)
     {
@@ -20,11 +16,17 @@ public static class Update
             if (sourcePlayer.Data != null && sourcePlayer.Data.PlayerName.Equals(playerName))
             {
                 if (sourcePlayer.IsRole(RoleType.Spy))
+                {
                     bubble.NameText.color = Palette.ImpostorRed;
+                }
                 else if (sourcePlayer.IsRole(RoleType.Sidekick) && Sidekick.GetRole(sourcePlayer)?.WasTeamRed == true)
+                {
                     bubble.NameText.color = Palette.ImpostorRed;
+                }
                 else if (sourcePlayer.IsRole(RoleType.Jackal) && Jackal.GetRole(sourcePlayer)?.WasTeamRed == true)
+                {
                     bubble.NameText.color = Palette.ImpostorRed;
+                }
 
                 break;
             }
@@ -33,54 +35,60 @@ public static class Update
 
     public static void UpdatePlayerNamesAndColors()
     {
-        _isUpdating = true;
-        COLOR_CACHE.Clear();
+        IsUpdating = true;
+        ColorCache.Clear();
 
         var localPlayer = PlayerControl.LocalPlayer;
         if (localPlayer == null)
         {
-            _isUpdating = false;
+            IsUpdating = false;
             return;
         }
 
-        var isLocalImpostor = localPlayer.IsTeamImpostor();
-        var isLocalDead = localPlayer.IsDead();
-        var meetingShow = Helpers.ShowMeetingText;
+        bool isLocalImpostor = localPlayer.IsTeamImpostor();
+        bool isLocalDead = localPlayer.IsDead();
+        bool meetingShow = Helpers.ShowMeetingText;
 
         // 1. Initialize Base Colors
         foreach (var p in PlayerControl.AllPlayerControls.GetFastEnumerator())
         {
             if (p == null) continue;
-            var baseColor = isLocalImpostor && p.IsTeamImpostor() ? Palette.ImpostorRed : Color.white;
+            Color baseColor = (isLocalImpostor && p.IsTeamImpostor()) ? Palette.ImpostorRed : Color.white;
             SetPlayerNameColor(p, baseColor);
         }
 
         // 2. Calculate Role/Modifier Colors (populates ColorCache via SetPlayerNameColor)
         SetNameColors();
 
-        SetNameTags();
+        setNameTags();
 
         // 3. Update Player Instances
-        foreach (var player in PlayerControl.AllPlayerControls.GetFastEnumerator())
+        foreach (PlayerControl player in PlayerControl.AllPlayerControls.GetFastEnumerator())
         {
             if (player == null || player.cosmetics == null || player.cosmetics.nameText == null) continue;
 
             // --- Name Calculation ---
-            var finalName = player.CurrentOutfit.PlayerName;
-            var hideName = Helpers.HidePlayerName(localPlayer, player);
+            string finalName = player.CurrentOutfit.PlayerName;
+            bool hideName = Helpers.HidePlayerName(localPlayer, player);
 
             if (hideName)
+            {
                 finalName = "";
+            }
             else if (isLocalDead)
             {
                 if (string.IsNullOrEmpty(finalName) && Camouflager.CamouflageTimer > 0f)
+                {
                     finalName = player.Data.DefaultOutfit.PlayerName;
+                }
                 else if (player.CurrentOutfitType == PlayerOutfitType.Shapeshifted)
+                {
                     finalName = $"{player.CurrentOutfit.PlayerName} ({player.Data.DefaultOutfit.PlayerName})";
+                }
             }
 
-            TAG_STRING_BUILDER.Clear();
-            TAG_STRING_BUILDER.Append(finalName);
+            TagStringBuilder.Clear();
+            TagStringBuilder.Append(finalName);
 
             if (!string.IsNullOrEmpty(finalName))
             {
@@ -88,29 +96,30 @@ public static class Update
                 var r = PlayerRole.GetRole(player);
                 if (r != null)
                 {
-                    if (!string.IsNullOrEmpty(r.NameTag)) TAG_STRING_BUILDER.Append(r.NameTag);
+                    if (!string.IsNullOrEmpty(r.NameTag)) TagStringBuilder.Append(r.NameTag);
                     r.OnUpdateNameTags();
                 }
 
                 // Modifier Tags
                 foreach (var m in PlayerModifier.GetModifiers(player))
                 {
-                    if (!string.IsNullOrEmpty(m.NameTag)) TAG_STRING_BUILDER.Append(m.NameTag);
+                    if (!string.IsNullOrEmpty(m.NameTag)) TagStringBuilder.Append(m.NameTag);
                     m.OnUpdateNameTags();
                 }
 
                 // Lovers
                 if (Lovers.IsLovers(player) && (localPlayer.IsLovers() || (MapSettings.GhostsSeeRoles && isLocalDead)))
-                    TAG_STRING_BUILDER.Append(Lovers.GetIcon(player));
+                {
+                    TagStringBuilder.Append(Lovers.GetIcon(player));
+                }
             }
 
-            var resultText = TAG_STRING_BUILDER.ToString();
+            string resultText = TagStringBuilder.ToString();
             if (player.cosmetics.nameText.text != resultText) player.cosmetics.nameText.text = resultText;
 
-            if (COLOR_CACHE.TryGetValue(player.PlayerId, out var c))
+            if (ColorCache.TryGetValue(player.PlayerId, out Color c))
             {
-                if (player.cosmetics.nameText.color != c)
-                    player.cosmetics.nameText.color = c;
+                if (player.cosmetics.nameText.color != c) player.cosmetics.nameText.color = c;
             }
         }
 
@@ -125,63 +134,72 @@ public static class Update
                     || target == null
                     || target.Data == null) continue;
 
-                var baseName = target.Data.PlayerName;
+                string baseName = target.Data.PlayerName;
                 if (isLocalDead)
                 {
                     if (string.IsNullOrEmpty(baseName) && Camouflager.CamouflageTimer > 0f)
+                    {
                         baseName = target.Data.DefaultOutfit?.PlayerName ?? "";
+                    }
                     else if (target.CurrentOutfitType == PlayerOutfitType.Shapeshifted)
+                    {
                         baseName = $"{target.CurrentOutfit?.PlayerName} ({target.Data.DefaultOutfit?.PlayerName})";
+                    }
                 }
 
-                TAG_STRING_BUILDER.Clear();
-                TAG_STRING_BUILDER.Append(baseName);
+                TagStringBuilder.Clear();
+                TagStringBuilder.Append(baseName);
 
                 // Role Tags (Meeting Only)
                 var r = PlayerRole.GetRole(target);
-                if (r != null && !string.IsNullOrEmpty(r.NameTag)) TAG_STRING_BUILDER.Append(r.NameTag);
+                if (r != null && !string.IsNullOrEmpty(r.NameTag)) TagStringBuilder.Append(r.NameTag);
 
                 // Detective / Hacker
                 if (MapSettings.ShowLighterDarker && meetingShow)
-                    TAG_STRING_BUILDER.Append(" (")
-                                      .Append(Helpers.IsLighterColor(target.Data.DefaultOutfit.ColorId)
-                                                  ? Tr.Get(TrKey.DetectiveLightLabel)
-                                                  : Tr.Get(TrKey.DetectiveDarkLabel))
-                                      .Append(')');
+                {
+                    TagStringBuilder.Append(" (")
+                                    .Append(Helpers.IsLighterColor(target.Data.DefaultOutfit.ColorId)
+                                                ? Tr.Get(TrKey.DetectiveLightLabel)
+                                                : Tr.Get(TrKey.DetectiveDarkLabel))
+                                    .Append(')');
+                }
 
                 // Lovers
                 if (Lovers.IsLovers(target) && (localPlayer.IsLovers() || (MapSettings.GhostsSeeRoles && isLocalDead)))
-                    TAG_STRING_BUILDER.Append(Lovers.GetIcon(target));
+                {
+                    TagStringBuilder.Append(Lovers.GetIcon(target));
+                }
 
-                var resultText = TAG_STRING_BUILDER.ToString();
+                string resultText = TagStringBuilder.ToString();
                 if (pva.NameText.text != resultText) pva.NameText.text = resultText;
 
-                if (COLOR_CACHE.TryGetValue(target.PlayerId, out var c))
+                if (ColorCache.TryGetValue(target.PlayerId, out Color c))
                 {
-                    if (pva.NameText.color != c)
-                        pva.NameText.color = c;
+                    if (pva.NameText.color != c) pva.NameText.color = c;
                 }
             }
         }
 
-        _isUpdating = false;
+        IsUpdating = false;
     }
 
     public static void SetPlayerNameColor(PlayerControl p, Color color)
     {
-        if (_isUpdating)
+        if (IsUpdating)
         {
-            COLOR_CACHE[p.PlayerId] = color;
+            ColorCache[p.PlayerId] = color;
             return;
         }
 
         p.cosmetics.nameText.color = color;
         if (MeetingHud.Instance != null)
         {
-            foreach (var player in MeetingHud.Instance.playerStates)
+            foreach (PlayerVoteArea player in MeetingHud.Instance.playerStates)
             {
                 if (player.NameText != null && p.PlayerId == player.TargetPlayerId)
+                {
                     player.NameText.color = color;
+                }
             }
         }
     }
@@ -196,9 +214,15 @@ public static class Update
 
                 // 1. Set Local Player Color
                 var roleInstance = PlayerRole.GetRole(lp);
-                if (roleInstance != null) SetPlayerNameColor(lp, roleInstance.RoleColor);
+                if (roleInstance != null)
+                {
+                    SetPlayerNameColor(lp, roleInstance.RoleColor);
+                }
 
-                foreach (var mod in PlayerModifier.GetModifiers(lp)) SetPlayerNameColor(lp, mod.ModifierColor);
+                foreach (var mod in PlayerModifier.GetModifiers(lp))
+                {
+                    SetPlayerNameColor(lp, mod.ModifierColor);
+                }
 
                 // 2. Process logic-heavy vision (Jackal seeing Sidekick, Spy seeing Impostors, etc.)
                 foreach (var r in PlayerRole.AllRoles) r.OnUpdateNameColors();
@@ -206,86 +230,112 @@ public static class Update
                 break;
 
             case CustomGameMode.CaptureTheFlag:
-                if (CaptureTheFlag.StealerPlayer != null)
-                    SetPlayerNameColor(CaptureTheFlag.StealerPlayer, Palette.PlayerColors[15]);
-
-                foreach (var redplayer in CaptureTheFlag.RedteamFlag)
+                if (CaptureTheFlag.stealerPlayer != null)
                 {
-                    if (redplayer != null)
-                        SetPlayerNameColor(redplayer, Palette.PlayerColors[0]);
+                    SetPlayerNameColor(CaptureTheFlag.stealerPlayer, Palette.PlayerColors[15]);
                 }
 
-                foreach (var blueplayer in CaptureTheFlag.BlueteamFlag)
+                foreach (PlayerControl redplayer in CaptureTheFlag.redteamFlag)
+                {
+                    if (redplayer != null)
+                    {
+                        SetPlayerNameColor(redplayer, Palette.PlayerColors[0]);
+                    }
+                }
+
+                foreach (PlayerControl blueplayer in CaptureTheFlag.blueteamFlag)
                 {
                     if (blueplayer != null)
+                    {
                         SetPlayerNameColor(blueplayer, Palette.PlayerColors[1]);
+                    }
                 }
 
                 break;
 
             case CustomGameMode.PoliceAndThieves:
-                foreach (var policeplayer in PoliceAndThief.PoliceTeam)
+                foreach (PlayerControl policeplayer in PoliceAndThief.policeTeam)
                 {
                     if (policeplayer != null)
                     {
-                        if ((PoliceAndThief.Policeplayer02 != null && policeplayer == PoliceAndThief.Policeplayer02)
-                            || (PoliceAndThief.Policeplayer04 != null && policeplayer == PoliceAndThief.Policeplayer04))
+                        if (PoliceAndThief.policeplayer02 != null && policeplayer == PoliceAndThief.policeplayer02
+                            || PoliceAndThief.policeplayer04 != null && policeplayer == PoliceAndThief.policeplayer04)
+                        {
                             SetPlayerNameColor(policeplayer, Palette.PlayerColors[5]);
+                        }
                         else
+                        {
                             SetPlayerNameColor(policeplayer, Palette.PlayerColors[10]);
+                        }
                     }
                 }
 
-                foreach (var thiefplayer in PoliceAndThief.ThiefTeam)
+                foreach (PlayerControl thiefplayer in PoliceAndThief.thiefTeam)
                 {
                     if (thiefplayer != null)
+                    {
                         SetPlayerNameColor(thiefplayer, Palette.PlayerColors[16]);
+                    }
                 }
 
                 break;
 
             case CustomGameMode.HotPotato:
-                foreach (var notpotatoplayer in HotPotato.NOT_POTATO_TEAM)
+                foreach (PlayerControl notpotatoplayer in HotPotato.notPotatoTeam)
                 {
                     if (notpotatoplayer != null)
+                    {
                         SetPlayerNameColor(notpotatoplayer, Palette.PlayerColors[10]);
+                    }
                 }
 
-                foreach (var explodedpotatoplayer in HotPotato.EXPLODED_POTATO_TEAM)
+                foreach (PlayerControl explodedpotatoplayer in HotPotato.explodedPotatoTeam)
                 {
                     if (explodedpotatoplayer != null)
+                    {
                         SetPlayerNameColor(explodedpotatoplayer, Palette.PlayerColors[9]);
+                    }
                 }
 
-                if (HotPotato.HotPotatoPlayer != null)
-                    SetPlayerNameColor(HotPotato.HotPotatoPlayer, Palette.PlayerColors[15]);
+                if (HotPotato.hotPotatoPlayer != null)
+                {
+                    SetPlayerNameColor(HotPotato.hotPotatoPlayer, Palette.PlayerColors[15]);
+                }
 
                 break;
 
             case CustomGameMode.BattleRoyale:
-                if (BattleRoyale.MatchType == 0)
+                if (BattleRoyale.matchType == 0)
                 {
-                    foreach (var soloPlayer in BattleRoyale.SoloPlayerTeam)
+                    foreach (PlayerControl soloPlayer in BattleRoyale.soloPlayerTeam)
                     {
                         if (soloPlayer != null)
+                        {
                             SetPlayerNameColor(soloPlayer, Palette.PlayerColors[2]);
+                        }
                     }
                 }
                 else
                 {
-                    if (BattleRoyale.SerialKiller != null)
-                        SetPlayerNameColor(BattleRoyale.SerialKiller, Palette.PlayerColors[15]);
-
-                    foreach (var limeplayer in BattleRoyale.LimeTeam)
+                    if (BattleRoyale.serialKiller != null)
                     {
-                        if (limeplayer != null)
-                            SetPlayerNameColor(limeplayer, Palette.PlayerColors[11]);
+                        SetPlayerNameColor(BattleRoyale.serialKiller, Palette.PlayerColors[15]);
                     }
 
-                    foreach (var pinkplayer in BattleRoyale.PinkTeam)
+                    foreach (PlayerControl limeplayer in BattleRoyale.limeTeam)
+                    {
+                        if (limeplayer != null)
+                        {
+                            SetPlayerNameColor(limeplayer, Palette.PlayerColors[11]);
+                        }
+                    }
+
+                    foreach (PlayerControl pinkplayer in BattleRoyale.pinkTeam)
                     {
                         if (pinkplayer != null)
+                        {
                             SetPlayerNameColor(pinkplayer, Palette.PlayerColors[13]);
+                        }
                     }
                 }
 
@@ -293,301 +343,333 @@ public static class Update
         }
     }
 
-    private static void SetNameTags()
+    private static readonly StringBuilder TagStringBuilder = new();
+
+    private static void setNameTags()
     {
         switch (MapSettings.GameMode)
         {
             case CustomGameMode.BattleRoyale:
                 // BR Lives
-                if (BattleRoyale.MatchType == 0)
+                if (BattleRoyale.matchType == 0)
                 {
                     if (PlayerControl.LocalPlayer.Data.IsDead)
                     {
-                        if (BattleRoyale.SoloPlayer01 != null)
-                            BattleRoyale.SoloPlayer01.cosmetics.nameText.text +=
-                                Helpers.Cs(BattleRoyale.SoloPlayerColor, " (" + BattleRoyale.SoloPlayer01Lifes + "♥)");
+                        if (BattleRoyale.soloPlayer01 != null)
+                        {
+                            BattleRoyale.soloPlayer01.cosmetics.nameText.text +=
+                                Helpers.Cs(BattleRoyale.SoloPlayerColor, " (" + BattleRoyale.soloPlayer01Lifes + "♥)");
+                        }
 
-                        if (BattleRoyale.SoloPlayer02 != null)
-                            BattleRoyale.SoloPlayer02.cosmetics.nameText.text +=
-                                Helpers.Cs(BattleRoyale.SoloPlayerColor, " (" + BattleRoyale.SoloPlayer02Lifes + "♥)");
+                        if (BattleRoyale.soloPlayer02 != null)
+                        {
+                            BattleRoyale.soloPlayer02.cosmetics.nameText.text +=
+                                Helpers.Cs(BattleRoyale.SoloPlayerColor, " (" + BattleRoyale.soloPlayer02Lifes + "♥)");
+                        }
 
-                        if (BattleRoyale.SoloPlayer03 != null)
-                            BattleRoyale.SoloPlayer03.cosmetics.nameText.text +=
-                                Helpers.Cs(BattleRoyale.SoloPlayerColor, " (" + BattleRoyale.SoloPlayer03Lifes + "♥)");
+                        if (BattleRoyale.soloPlayer03 != null)
+                        {
+                            BattleRoyale.soloPlayer03.cosmetics.nameText.text +=
+                                Helpers.Cs(BattleRoyale.SoloPlayerColor, " (" + BattleRoyale.soloPlayer03Lifes + "♥)");
+                        }
 
-                        if (BattleRoyale.SoloPlayer04 != null)
-                            BattleRoyale.SoloPlayer04.cosmetics.nameText.text +=
-                                Helpers.Cs(BattleRoyale.SoloPlayerColor, " (" + BattleRoyale.SoloPlayer04Lifes + "♥)");
+                        if (BattleRoyale.soloPlayer04 != null)
+                        {
+                            BattleRoyale.soloPlayer04.cosmetics.nameText.text +=
+                                Helpers.Cs(BattleRoyale.SoloPlayerColor, " (" + BattleRoyale.soloPlayer04Lifes + "♥)");
+                        }
 
-                        if (BattleRoyale.SoloPlayer05 != null)
-                            BattleRoyale.SoloPlayer05.cosmetics.nameText.text +=
-                                Helpers.Cs(BattleRoyale.SoloPlayerColor, " (" + BattleRoyale.SoloPlayer05Lifes + "♥)");
+                        if (BattleRoyale.soloPlayer05 != null)
+                        {
+                            BattleRoyale.soloPlayer05.cosmetics.nameText.text +=
+                                Helpers.Cs(BattleRoyale.SoloPlayerColor, " (" + BattleRoyale.soloPlayer05Lifes + "♥)");
+                        }
 
-                        if (BattleRoyale.SoloPlayer06 != null)
-                            BattleRoyale.SoloPlayer06.cosmetics.nameText.text +=
-                                Helpers.Cs(BattleRoyale.SoloPlayerColor, " (" + BattleRoyale.SoloPlayer06Lifes + "♥)");
+                        if (BattleRoyale.soloPlayer06 != null)
+                        {
+                            BattleRoyale.soloPlayer06.cosmetics.nameText.text +=
+                                Helpers.Cs(BattleRoyale.SoloPlayerColor, " (" + BattleRoyale.soloPlayer06Lifes + "♥)");
+                        }
 
-                        if (BattleRoyale.SoloPlayer07 != null)
-                            BattleRoyale.SoloPlayer07.cosmetics.nameText.text +=
-                                Helpers.Cs(BattleRoyale.SoloPlayerColor, " (" + BattleRoyale.SoloPlayer07Lifes + "♥)");
+                        if (BattleRoyale.soloPlayer07 != null)
+                        {
+                            BattleRoyale.soloPlayer07.cosmetics.nameText.text +=
+                                Helpers.Cs(BattleRoyale.SoloPlayerColor, " (" + BattleRoyale.soloPlayer07Lifes + "♥)");
+                        }
 
-                        if (BattleRoyale.SoloPlayer08 != null)
-                            BattleRoyale.SoloPlayer08.cosmetics.nameText.text +=
-                                Helpers.Cs(BattleRoyale.SoloPlayerColor, " (" + BattleRoyale.SoloPlayer08Lifes + "♥)");
+                        if (BattleRoyale.soloPlayer08 != null)
+                        {
+                            BattleRoyale.soloPlayer08.cosmetics.nameText.text +=
+                                Helpers.Cs(BattleRoyale.SoloPlayerColor, " (" + BattleRoyale.soloPlayer08Lifes + "♥)");
+                        }
 
-                        if (BattleRoyale.SoloPlayer09 != null)
-                            BattleRoyale.SoloPlayer09.cosmetics.nameText.text +=
-                                Helpers.Cs(BattleRoyale.SoloPlayerColor, " (" + BattleRoyale.SoloPlayer09Lifes + "♥)");
+                        if (BattleRoyale.soloPlayer09 != null)
+                        {
+                            BattleRoyale.soloPlayer09.cosmetics.nameText.text +=
+                                Helpers.Cs(BattleRoyale.SoloPlayerColor, " (" + BattleRoyale.soloPlayer09Lifes + "♥)");
+                        }
 
-                        if (BattleRoyale.SoloPlayer10 != null)
-                            BattleRoyale.SoloPlayer10.cosmetics.nameText.text +=
-                                Helpers.Cs(BattleRoyale.SoloPlayerColor, " (" + BattleRoyale.SoloPlayer10Lifes + "♥)");
+                        if (BattleRoyale.soloPlayer10 != null)
+                        {
+                            BattleRoyale.soloPlayer10.cosmetics.nameText.text +=
+                                Helpers.Cs(BattleRoyale.SoloPlayerColor, " (" + BattleRoyale.soloPlayer10Lifes + "♥)");
+                        }
 
-                        if (BattleRoyale.SoloPlayer11 != null)
-                            BattleRoyale.SoloPlayer11.cosmetics.nameText.text +=
-                                Helpers.Cs(BattleRoyale.SoloPlayerColor, " (" + BattleRoyale.SoloPlayer11Lifes + "♥)");
+                        if (BattleRoyale.soloPlayer11 != null)
+                        {
+                            BattleRoyale.soloPlayer11.cosmetics.nameText.text +=
+                                Helpers.Cs(BattleRoyale.SoloPlayerColor, " (" + BattleRoyale.soloPlayer11Lifes + "♥)");
+                        }
 
-                        if (BattleRoyale.SoloPlayer12 != null)
-                            BattleRoyale.SoloPlayer12.cosmetics.nameText.text +=
-                                Helpers.Cs(BattleRoyale.SoloPlayerColor, " (" + BattleRoyale.SoloPlayer12Lifes + "♥)");
+                        if (BattleRoyale.soloPlayer12 != null)
+                        {
+                            BattleRoyale.soloPlayer12.cosmetics.nameText.text +=
+                                Helpers.Cs(BattleRoyale.SoloPlayerColor, " (" + BattleRoyale.soloPlayer12Lifes + "♥)");
+                        }
 
-                        if (BattleRoyale.SoloPlayer13 != null)
-                            BattleRoyale.SoloPlayer13.cosmetics.nameText.text +=
-                                Helpers.Cs(BattleRoyale.SoloPlayerColor, " (" + BattleRoyale.SoloPlayer13Lifes + "♥)");
+                        if (BattleRoyale.soloPlayer13 != null)
+                        {
+                            BattleRoyale.soloPlayer13.cosmetics.nameText.text +=
+                                Helpers.Cs(BattleRoyale.SoloPlayerColor, " (" + BattleRoyale.soloPlayer13Lifes + "♥)");
+                        }
 
-                        if (BattleRoyale.SoloPlayer14 != null)
-                            BattleRoyale.SoloPlayer14.cosmetics.nameText.text +=
-                                Helpers.Cs(BattleRoyale.SoloPlayerColor, " (" + BattleRoyale.SoloPlayer14Lifes + "♥)");
+                        if (BattleRoyale.soloPlayer14 != null)
+                        {
+                            BattleRoyale.soloPlayer14.cosmetics.nameText.text +=
+                                Helpers.Cs(BattleRoyale.SoloPlayerColor, " (" + BattleRoyale.soloPlayer14Lifes + "♥)");
+                        }
 
-                        if (BattleRoyale.SoloPlayer15 != null)
-                            BattleRoyale.SoloPlayer15.cosmetics.nameText.text +=
-                                Helpers.Cs(BattleRoyale.SoloPlayerColor, " (" + BattleRoyale.SoloPlayer15Lifes + "♥)");
+                        if (BattleRoyale.soloPlayer15 != null)
+                        {
+                            BattleRoyale.soloPlayer15.cosmetics.nameText.text +=
+                                Helpers.Cs(BattleRoyale.SoloPlayerColor, " (" + BattleRoyale.soloPlayer15Lifes + "♥)");
+                        }
                     }
                     else
                     {
-                        if (BattleRoyale.SoloPlayer01 != null && PlayerControl.LocalPlayer == BattleRoyale.SoloPlayer01)
+                        if (BattleRoyale.soloPlayer01 != null && PlayerControl.LocalPlayer == BattleRoyale.soloPlayer01)
                         {
-                            var suffix = Helpers.Cs(BattleRoyale.SoloPlayerColor,
-                                                    " (" + BattleRoyale.SoloPlayer01Lifes + "♥)");
-                            BattleRoyale.SoloPlayer01.cosmetics.nameText.text += suffix;
+                            string suffix = Helpers.Cs(BattleRoyale.SoloPlayerColor,
+                                                       " (" + BattleRoyale.soloPlayer01Lifes + "♥)");
+                            BattleRoyale.soloPlayer01.cosmetics.nameText.text += suffix;
                         }
 
-                        if (BattleRoyale.SoloPlayer02 != null && PlayerControl.LocalPlayer == BattleRoyale.SoloPlayer02)
+                        if (BattleRoyale.soloPlayer02 != null && PlayerControl.LocalPlayer == BattleRoyale.soloPlayer02)
                         {
-                            var suffix = Helpers.Cs(BattleRoyale.SoloPlayerColor,
-                                                    " (" + BattleRoyale.SoloPlayer02Lifes + "♥)");
-                            BattleRoyale.SoloPlayer02.cosmetics.nameText.text += suffix;
+                            string suffix = Helpers.Cs(BattleRoyale.SoloPlayerColor,
+                                                       " (" + BattleRoyale.soloPlayer02Lifes + "♥)");
+                            BattleRoyale.soloPlayer02.cosmetics.nameText.text += suffix;
                         }
 
-                        if (BattleRoyale.SoloPlayer03 != null && PlayerControl.LocalPlayer == BattleRoyale.SoloPlayer03)
+                        if (BattleRoyale.soloPlayer03 != null && PlayerControl.LocalPlayer == BattleRoyale.soloPlayer03)
                         {
-                            var suffix = Helpers.Cs(BattleRoyale.SoloPlayerColor,
-                                                    " (" + BattleRoyale.SoloPlayer03Lifes + "♥)");
-                            BattleRoyale.SoloPlayer03.cosmetics.nameText.text += suffix;
+                            string suffix = Helpers.Cs(BattleRoyale.SoloPlayerColor,
+                                                       " (" + BattleRoyale.soloPlayer03Lifes + "♥)");
+                            BattleRoyale.soloPlayer03.cosmetics.nameText.text += suffix;
                         }
 
-                        if (BattleRoyale.SoloPlayer04 != null && PlayerControl.LocalPlayer == BattleRoyale.SoloPlayer04)
+                        if (BattleRoyale.soloPlayer04 != null && PlayerControl.LocalPlayer == BattleRoyale.soloPlayer04)
                         {
-                            var suffix = Helpers.Cs(BattleRoyale.SoloPlayerColor,
-                                                    " (" + BattleRoyale.SoloPlayer04Lifes + "♥)");
-                            BattleRoyale.SoloPlayer04.cosmetics.nameText.text += suffix;
+                            string suffix = Helpers.Cs(BattleRoyale.SoloPlayerColor,
+                                                       " (" + BattleRoyale.soloPlayer04Lifes + "♥)");
+                            BattleRoyale.soloPlayer04.cosmetics.nameText.text += suffix;
                         }
 
-                        if (BattleRoyale.SoloPlayer05 != null && PlayerControl.LocalPlayer == BattleRoyale.SoloPlayer05)
+                        if (BattleRoyale.soloPlayer05 != null && PlayerControl.LocalPlayer == BattleRoyale.soloPlayer05)
                         {
-                            var suffix = Helpers.Cs(BattleRoyale.SoloPlayerColor,
-                                                    " (" + BattleRoyale.SoloPlayer05Lifes + "♥)");
-                            BattleRoyale.SoloPlayer05.cosmetics.nameText.text += suffix;
+                            string suffix = Helpers.Cs(BattleRoyale.SoloPlayerColor,
+                                                       " (" + BattleRoyale.soloPlayer05Lifes + "♥)");
+                            BattleRoyale.soloPlayer05.cosmetics.nameText.text += suffix;
                         }
 
-                        if (BattleRoyale.SoloPlayer06 != null && PlayerControl.LocalPlayer == BattleRoyale.SoloPlayer06)
+                        if (BattleRoyale.soloPlayer06 != null && PlayerControl.LocalPlayer == BattleRoyale.soloPlayer06)
                         {
-                            var suffix = Helpers.Cs(BattleRoyale.SoloPlayerColor,
-                                                    " (" + BattleRoyale.SoloPlayer06Lifes + "♥)");
-                            BattleRoyale.SoloPlayer06.cosmetics.nameText.text += suffix;
+                            string suffix = Helpers.Cs(BattleRoyale.SoloPlayerColor,
+                                                       " (" + BattleRoyale.soloPlayer06Lifes + "♥)");
+                            BattleRoyale.soloPlayer06.cosmetics.nameText.text += suffix;
                         }
 
-                        if (BattleRoyale.SoloPlayer07 != null && PlayerControl.LocalPlayer == BattleRoyale.SoloPlayer07)
+                        if (BattleRoyale.soloPlayer07 != null && PlayerControl.LocalPlayer == BattleRoyale.soloPlayer07)
                         {
-                            var suffix = Helpers.Cs(BattleRoyale.SoloPlayerColor,
-                                                    " (" + BattleRoyale.SoloPlayer07Lifes + "♥)");
-                            BattleRoyale.SoloPlayer07.cosmetics.nameText.text += suffix;
+                            string suffix = Helpers.Cs(BattleRoyale.SoloPlayerColor,
+                                                       " (" + BattleRoyale.soloPlayer07Lifes + "♥)");
+                            BattleRoyale.soloPlayer07.cosmetics.nameText.text += suffix;
                         }
 
-                        if (BattleRoyale.SoloPlayer08 != null && PlayerControl.LocalPlayer == BattleRoyale.SoloPlayer08)
+                        if (BattleRoyale.soloPlayer08 != null && PlayerControl.LocalPlayer == BattleRoyale.soloPlayer08)
                         {
-                            var suffix = Helpers.Cs(BattleRoyale.SoloPlayerColor,
-                                                    " (" + BattleRoyale.SoloPlayer08Lifes + "♥)");
-                            BattleRoyale.SoloPlayer08.cosmetics.nameText.text += suffix;
+                            string suffix = Helpers.Cs(BattleRoyale.SoloPlayerColor,
+                                                       " (" + BattleRoyale.soloPlayer08Lifes + "♥)");
+                            BattleRoyale.soloPlayer08.cosmetics.nameText.text += suffix;
                         }
 
-                        if (BattleRoyale.SoloPlayer09 != null && PlayerControl.LocalPlayer == BattleRoyale.SoloPlayer09)
+                        if (BattleRoyale.soloPlayer09 != null && PlayerControl.LocalPlayer == BattleRoyale.soloPlayer09)
                         {
-                            var suffix = Helpers.Cs(BattleRoyale.SoloPlayerColor,
-                                                    " (" + BattleRoyale.SoloPlayer09Lifes + "♥)");
-                            BattleRoyale.SoloPlayer09.cosmetics.nameText.text += suffix;
+                            string suffix = Helpers.Cs(BattleRoyale.SoloPlayerColor,
+                                                       " (" + BattleRoyale.soloPlayer09Lifes + "♥)");
+                            BattleRoyale.soloPlayer09.cosmetics.nameText.text += suffix;
                         }
 
-                        if (BattleRoyale.SoloPlayer10 != null && PlayerControl.LocalPlayer == BattleRoyale.SoloPlayer10)
+                        if (BattleRoyale.soloPlayer10 != null && PlayerControl.LocalPlayer == BattleRoyale.soloPlayer10)
                         {
-                            var suffix = Helpers.Cs(BattleRoyale.SoloPlayerColor,
-                                                    " (" + BattleRoyale.SoloPlayer10Lifes + "♥)");
-                            BattleRoyale.SoloPlayer10.cosmetics.nameText.text += suffix;
+                            string suffix = Helpers.Cs(BattleRoyale.SoloPlayerColor,
+                                                       " (" + BattleRoyale.soloPlayer10Lifes + "♥)");
+                            BattleRoyale.soloPlayer10.cosmetics.nameText.text += suffix;
                         }
 
-                        if (BattleRoyale.SoloPlayer11 != null && PlayerControl.LocalPlayer == BattleRoyale.SoloPlayer11)
+                        if (BattleRoyale.soloPlayer11 != null && PlayerControl.LocalPlayer == BattleRoyale.soloPlayer11)
                         {
-                            var suffix = Helpers.Cs(BattleRoyale.SoloPlayerColor,
-                                                    " (" + BattleRoyale.SoloPlayer11Lifes + "♥)");
-                            BattleRoyale.SoloPlayer11.cosmetics.nameText.text += suffix;
+                            string suffix = Helpers.Cs(BattleRoyale.SoloPlayerColor,
+                                                       " (" + BattleRoyale.soloPlayer11Lifes + "♥)");
+                            BattleRoyale.soloPlayer11.cosmetics.nameText.text += suffix;
                         }
 
-                        if (BattleRoyale.SoloPlayer12 != null && PlayerControl.LocalPlayer == BattleRoyale.SoloPlayer12)
+                        if (BattleRoyale.soloPlayer12 != null && PlayerControl.LocalPlayer == BattleRoyale.soloPlayer12)
                         {
-                            var suffix = Helpers.Cs(BattleRoyale.SoloPlayerColor,
-                                                    " (" + BattleRoyale.SoloPlayer12Lifes + "♥)");
-                            BattleRoyale.SoloPlayer12.cosmetics.nameText.text += suffix;
+                            string suffix = Helpers.Cs(BattleRoyale.SoloPlayerColor,
+                                                       " (" + BattleRoyale.soloPlayer12Lifes + "♥)");
+                            BattleRoyale.soloPlayer12.cosmetics.nameText.text += suffix;
                         }
 
-                        if (BattleRoyale.SoloPlayer13 != null && PlayerControl.LocalPlayer == BattleRoyale.SoloPlayer13)
+                        if (BattleRoyale.soloPlayer13 != null && PlayerControl.LocalPlayer == BattleRoyale.soloPlayer13)
                         {
-                            var suffix = Helpers.Cs(BattleRoyale.SoloPlayerColor,
-                                                    " (" + BattleRoyale.SoloPlayer13Lifes + "♥)");
-                            BattleRoyale.SoloPlayer13.cosmetics.nameText.text += suffix;
+                            string suffix = Helpers.Cs(BattleRoyale.SoloPlayerColor,
+                                                       " (" + BattleRoyale.soloPlayer13Lifes + "♥)");
+                            BattleRoyale.soloPlayer13.cosmetics.nameText.text += suffix;
                         }
 
-                        if (BattleRoyale.SoloPlayer14 != null && PlayerControl.LocalPlayer == BattleRoyale.SoloPlayer14)
+                        if (BattleRoyale.soloPlayer14 != null && PlayerControl.LocalPlayer == BattleRoyale.soloPlayer14)
                         {
-                            var suffix = Helpers.Cs(BattleRoyale.SoloPlayerColor,
-                                                    " (" + BattleRoyale.SoloPlayer14Lifes + "♥)");
-                            BattleRoyale.SoloPlayer14.cosmetics.nameText.text += suffix;
+                            string suffix = Helpers.Cs(BattleRoyale.SoloPlayerColor,
+                                                       " (" + BattleRoyale.soloPlayer14Lifes + "♥)");
+                            BattleRoyale.soloPlayer14.cosmetics.nameText.text += suffix;
                         }
 
-                        if (BattleRoyale.SoloPlayer15 != null && PlayerControl.LocalPlayer == BattleRoyale.SoloPlayer15)
+                        if (BattleRoyale.soloPlayer15 != null && PlayerControl.LocalPlayer == BattleRoyale.soloPlayer15)
                         {
-                            var suffix = Helpers.Cs(BattleRoyale.SoloPlayerColor,
-                                                    " (" + BattleRoyale.SoloPlayer15Lifes + "♥)");
-                            BattleRoyale.SoloPlayer15.cosmetics.nameText.text += suffix;
+                            string suffix = Helpers.Cs(BattleRoyale.SoloPlayerColor,
+                                                       " (" + BattleRoyale.soloPlayer15Lifes + "♥)");
+                            BattleRoyale.soloPlayer15.cosmetics.nameText.text += suffix;
                         }
                     }
                 }
                 else
                 {
-                    foreach (var limePlayer in BattleRoyale.LimeTeam)
+                    foreach (PlayerControl limePlayer in BattleRoyale.limeTeam)
                     {
                         if (limePlayer == PlayerControl.LocalPlayer)
                         {
-                            if (BattleRoyale.LimePlayer01 != null)
+                            if (BattleRoyale.limePlayer01 != null)
                             {
-                                var suffix = Helpers.Cs(BattleRoyale.LimeTeamColor,
-                                                        " (" + BattleRoyale.LimePlayer01Lifes + "♥)");
-                                BattleRoyale.LimePlayer01.cosmetics.nameText.text += suffix;
+                                string suffix = Helpers.Cs(BattleRoyale.LimeTeamColor,
+                                                           " (" + BattleRoyale.limePlayer01Lifes + "♥)");
+                                BattleRoyale.limePlayer01.cosmetics.nameText.text += suffix;
                             }
 
-                            if (BattleRoyale.LimePlayer02 != null)
+                            if (BattleRoyale.limePlayer02 != null)
                             {
-                                var suffix = Helpers.Cs(BattleRoyale.LimeTeamColor,
-                                                        " (" + BattleRoyale.LimePlayer02Lifes + "♥)");
-                                BattleRoyale.LimePlayer02.cosmetics.nameText.text += suffix;
+                                string suffix = Helpers.Cs(BattleRoyale.LimeTeamColor,
+                                                           " (" + BattleRoyale.limePlayer02Lifes + "♥)");
+                                BattleRoyale.limePlayer02.cosmetics.nameText.text += suffix;
                             }
 
-                            if (BattleRoyale.LimePlayer03 != null)
+                            if (BattleRoyale.limePlayer03 != null)
                             {
-                                var suffix = Helpers.Cs(BattleRoyale.LimeTeamColor,
-                                                        " (" + BattleRoyale.LimePlayer03Lifes + "♥)");
-                                BattleRoyale.LimePlayer03.cosmetics.nameText.text += suffix;
+                                string suffix = Helpers.Cs(BattleRoyale.LimeTeamColor,
+                                                           " (" + BattleRoyale.limePlayer03Lifes + "♥)");
+                                BattleRoyale.limePlayer03.cosmetics.nameText.text += suffix;
                             }
 
-                            if (BattleRoyale.LimePlayer04 != null)
+                            if (BattleRoyale.limePlayer04 != null)
                             {
-                                var suffix = Helpers.Cs(BattleRoyale.LimeTeamColor,
-                                                        " (" + BattleRoyale.LimePlayer04Lifes + "♥)");
-                                BattleRoyale.LimePlayer04.cosmetics.nameText.text += suffix;
+                                string suffix = Helpers.Cs(BattleRoyale.LimeTeamColor,
+                                                           " (" + BattleRoyale.limePlayer04Lifes + "♥)");
+                                BattleRoyale.limePlayer04.cosmetics.nameText.text += suffix;
                             }
 
-                            if (BattleRoyale.LimePlayer05 != null)
+                            if (BattleRoyale.limePlayer05 != null)
                             {
-                                var suffix = Helpers.Cs(BattleRoyale.LimeTeamColor,
-                                                        " (" + BattleRoyale.LimePlayer05Lifes + "♥)");
-                                BattleRoyale.LimePlayer05.cosmetics.nameText.text += suffix;
+                                string suffix = Helpers.Cs(BattleRoyale.LimeTeamColor,
+                                                           " (" + BattleRoyale.limePlayer05Lifes + "♥)");
+                                BattleRoyale.limePlayer05.cosmetics.nameText.text += suffix;
                             }
 
-                            if (BattleRoyale.LimePlayer06 != null)
+                            if (BattleRoyale.limePlayer06 != null)
                             {
-                                var suffix = Helpers.Cs(BattleRoyale.LimeTeamColor,
-                                                        " (" + BattleRoyale.LimePlayer06Lifes + "♥)");
-                                BattleRoyale.LimePlayer06.cosmetics.nameText.text += suffix;
+                                string suffix = Helpers.Cs(BattleRoyale.LimeTeamColor,
+                                                           " (" + BattleRoyale.limePlayer06Lifes + "♥)");
+                                BattleRoyale.limePlayer06.cosmetics.nameText.text += suffix;
                             }
 
-                            if (BattleRoyale.LimePlayer07 != null)
+                            if (BattleRoyale.limePlayer07 != null)
                             {
-                                var suffix = Helpers.Cs(BattleRoyale.LimeTeamColor,
-                                                        " (" + BattleRoyale.LimePlayer07Lifes + "♥)");
-                                BattleRoyale.LimePlayer07.cosmetics.nameText.text += suffix;
+                                string suffix = Helpers.Cs(BattleRoyale.LimeTeamColor,
+                                                           " (" + BattleRoyale.limePlayer07Lifes + "♥)");
+                                BattleRoyale.limePlayer07.cosmetics.nameText.text += suffix;
                             }
                         }
                     }
 
-                    foreach (var pinkPlayer in BattleRoyale.PinkTeam)
+                    foreach (PlayerControl pinkPlayer in BattleRoyale.pinkTeam)
                     {
                         if (pinkPlayer == PlayerControl.LocalPlayer)
                         {
-                            if (BattleRoyale.PinkPlayer01 != null)
+                            if (BattleRoyale.pinkPlayer01 != null)
                             {
-                                var suffix = Helpers.Cs(BattleRoyale.PinkTeamColor,
-                                                        " (" + BattleRoyale.PinkPlayer01Lifes + "♥)");
-                                BattleRoyale.PinkPlayer01.cosmetics.nameText.text += suffix;
+                                string suffix = Helpers.Cs(BattleRoyale.PinkTeamColor,
+                                                           " (" + BattleRoyale.pinkPlayer01Lifes + "♥)");
+                                BattleRoyale.pinkPlayer01.cosmetics.nameText.text += suffix;
                             }
 
-                            if (BattleRoyale.PinkPlayer02 != null)
+                            if (BattleRoyale.pinkPlayer02 != null)
                             {
-                                var suffix = Helpers.Cs(BattleRoyale.PinkTeamColor,
-                                                        " (" + BattleRoyale.PinkPlayer02Lifes + "♥)");
-                                BattleRoyale.PinkPlayer02.cosmetics.nameText.text += suffix;
+                                string suffix = Helpers.Cs(BattleRoyale.PinkTeamColor,
+                                                           " (" + BattleRoyale.pinkPlayer02Lifes + "♥)");
+                                BattleRoyale.pinkPlayer02.cosmetics.nameText.text += suffix;
                             }
 
-                            if (BattleRoyale.PinkPlayer03 != null)
+                            if (BattleRoyale.pinkPlayer03 != null)
                             {
-                                var suffix = Helpers.Cs(BattleRoyale.PinkTeamColor,
-                                                        " (" + BattleRoyale.PinkPlayer03Lifes + "♥)");
-                                BattleRoyale.PinkPlayer03.cosmetics.nameText.text += suffix;
+                                string suffix = Helpers.Cs(BattleRoyale.PinkTeamColor,
+                                                           " (" + BattleRoyale.pinkPlayer03Lifes + "♥)");
+                                BattleRoyale.pinkPlayer03.cosmetics.nameText.text += suffix;
                             }
 
-                            if (BattleRoyale.PinkPlayer04 != null)
+                            if (BattleRoyale.pinkPlayer04 != null)
                             {
-                                var suffix = Helpers.Cs(BattleRoyale.PinkTeamColor,
-                                                        " (" + BattleRoyale.PinkPlayer04Lifes + "♥)");
-                                BattleRoyale.PinkPlayer04.cosmetics.nameText.text += suffix;
+                                string suffix = Helpers.Cs(BattleRoyale.PinkTeamColor,
+                                                           " (" + BattleRoyale.pinkPlayer04Lifes + "♥)");
+                                BattleRoyale.pinkPlayer04.cosmetics.nameText.text += suffix;
                             }
 
-                            if (BattleRoyale.PinkPlayer05 != null)
+                            if (BattleRoyale.pinkPlayer05 != null)
                             {
-                                var suffix = Helpers.Cs(BattleRoyale.PinkTeamColor,
-                                                        " (" + BattleRoyale.PinkPlayer05Lifes + "♥)");
-                                BattleRoyale.PinkPlayer05.cosmetics.nameText.text += suffix;
+                                string suffix = Helpers.Cs(BattleRoyale.PinkTeamColor,
+                                                           " (" + BattleRoyale.pinkPlayer05Lifes + "♥)");
+                                BattleRoyale.pinkPlayer05.cosmetics.nameText.text += suffix;
                             }
 
-                            if (BattleRoyale.PinkPlayer06 != null)
+                            if (BattleRoyale.pinkPlayer06 != null)
                             {
-                                var suffix = Helpers.Cs(BattleRoyale.PinkTeamColor,
-                                                        " (" + BattleRoyale.PinkPlayer06Lifes + "♥)");
-                                BattleRoyale.PinkPlayer06.cosmetics.nameText.text += suffix;
+                                string suffix = Helpers.Cs(BattleRoyale.PinkTeamColor,
+                                                           " (" + BattleRoyale.pinkPlayer06Lifes + "♥)");
+                                BattleRoyale.pinkPlayer06.cosmetics.nameText.text += suffix;
                             }
 
-                            if (BattleRoyale.PinkPlayer07 != null)
+                            if (BattleRoyale.pinkPlayer07 != null)
                             {
-                                var suffix = Helpers.Cs(BattleRoyale.PinkTeamColor,
-                                                        " (" + BattleRoyale.PinkPlayer07Lifes + "♥)");
-                                BattleRoyale.PinkPlayer07.cosmetics.nameText.text += suffix;
+                                string suffix = Helpers.Cs(BattleRoyale.PinkTeamColor,
+                                                           " (" + BattleRoyale.pinkPlayer07Lifes + "♥)");
+                                BattleRoyale.pinkPlayer07.cosmetics.nameText.text += suffix;
                             }
                         }
                     }
 
-                    if (BattleRoyale.SerialKiller != null && PlayerControl.LocalPlayer == BattleRoyale.SerialKiller)
+                    if (BattleRoyale.serialKiller != null && PlayerControl.LocalPlayer == BattleRoyale.serialKiller)
                     {
-                        var suffix = Helpers.Cs(BattleRoyale.SerialKillerColor,
-                                                " (" + BattleRoyale.SerialKillerLifes + "♥)");
-                        BattleRoyale.SerialKiller.cosmetics.nameText.text += suffix;
+                        string suffix = Helpers.Cs(BattleRoyale.SerialKillerColor,
+                                                   " (" + BattleRoyale.serialKillerLifes + "♥)");
+                        BattleRoyale.serialKiller.cosmetics.nameText.text += suffix;
                     }
                 }
 
@@ -605,12 +687,19 @@ public static class Update
             return;
         }
 
-        var enabled = Helpers.ShowButtons;
+        bool enabled = Helpers.ShowButtons;
         if (PlayerControl.LocalPlayer.IsRole(RoleType.Vampire))
+        {
             enabled &= false;
+        }
         else if (PlayerControl.LocalPlayer.IsRole(RoleType.Mafioso) && !Mafia.Mafioso.CanKill)
+        {
             enabled &= false;
-        else if (PlayerControl.LocalPlayer.IsRole(RoleType.Janitor)) enabled &= false;
+        }
+        else if (PlayerControl.LocalPlayer.IsRole(RoleType.Janitor))
+        {
+            enabled &= false;
+        }
 
         if (enabled) __instance.KillButton.Show();
         else __instance.KillButton.Hide();
@@ -634,31 +723,43 @@ public static class Update
         if (MeetingHud.Instance) __instance.ImpostorVentButton.Hide();
     }
 
+    public static bool activatedReportButtonAfterCustomMode = false;
+
     public static void UpdateReportButton(HudManager __instance)
     {
         if (__instance?.ReportButton == null) return;
-        if (MeetingHud.Instance) __instance.ReportButton.Hide();
+        if (MeetingHud.Instance)
+        {
+            __instance.ReportButton.Hide();
+        }
 
         if (MapSettings.GameMode is CustomGameMode.Roles)
         {
-            if (!ActivatedReportButtonAfterCustomMode)
+            if (!activatedReportButtonAfterCustomMode)
             {
                 __instance.ReportButton.Show();
-                ActivatedReportButtonAfterCustomMode = true;
+                activatedReportButtonAfterCustomMode = true;
             }
 
             return;
         }
 
-        var enabled = true;
-        if (MapSettings.GameMode is not CustomGameMode.Roles) enabled = false;
+        bool enabled = true;
+        if (MapSettings.GameMode is not CustomGameMode.Roles)
+        {
+            enabled = false;
+        }
 
         enabled &= __instance.ReportButton.isActiveAndEnabled;
 
         if (enabled)
+        {
             __instance.ReportButton.Show();
+        }
         else
+        {
             __instance.ReportButton.Hide();
+        }
     }
 
     public static void StopCooldown(PlayerControl __instance)
@@ -666,7 +767,9 @@ public static class Update
         if (CustomOptionHolder.StopCooldownOnFixingElecSabotage.GetBool())
         {
             if (Helpers.IsOnElecTask())
+            {
                 __instance.SetKillTimer(__instance.killTimer + Time.fixedDeltaTime);
+            }
         }
     }
 
@@ -676,14 +779,18 @@ public static class Update
         if (localPlayer == null || !localPlayer.Data.Role.IsImpostor || !localPlayer.CanMove || localPlayer.Data.IsDead)
         {
             if (FastDestroyableSingleton<HudManager>.Instance)
+            {
                 FastDestroyableSingleton<HudManager>.Instance.KillButton.SetTarget(null);
+            }
 
             return;
         }
 
-        var specialTeamRedExists = false;
+        bool specialTeamRedExists = false;
         if (Spy.Exists)
+        {
             specialTeamRedExists = true;
+        }
         else
         {
             foreach (var sk in Sidekick.Players)
@@ -712,27 +819,35 @@ public static class Update
         if (specialTeamRedExists)
         {
             if (Spy.ImpostorsCanKillAnyone)
+            {
                 target = Helpers.SetTarget(false, true);
+            }
             else
             {
                 List<PlayerControl> listP = [.. Spy.AllPlayers];
                 foreach (var sidekick in Sidekick.Players)
                 {
                     if (sidekick.WasTeamRed)
+                    {
                         listP.Add(sidekick.Player);
+                    }
                 }
 
                 foreach (var jackal in Jackal.Players)
                 {
                     if (jackal.WasTeamRed)
+                    {
                         listP.Add(jackal.Player);
+                    }
                 }
 
                 target = Helpers.SetTarget(true, true, listP);
             }
         }
         else
+        {
             target = Helpers.SetTarget(true, true);
+        }
 
         FastDestroyableSingleton<HudManager>.Instance.KillButton.SetTarget(target);
     }
@@ -741,50 +856,60 @@ public static class Update
     {
         if (p == null) return;
 
-        var collider = p.GetComponent<CircleCollider2D>();
+        CircleCollider2D collider = p.GetComponent<CircleCollider2D>();
         if (collider == null) return;
 
-        p.transform.localScale = new(0.7f, 0.7f, 1f);
-        collider.radius = Mini.DEFAULT_COLLIDER_RADIUS;
-        collider.offset = Mini.DEFAULT_COLLIDER_OFFSET * Vector2.down;
+        p.transform.localScale = new Vector3(0.7f, 0.7f, 1f);
+        collider.radius = Mini.DefaultColliderRadius;
+        collider.offset = Mini.DefaultColliderOffset * Vector2.down;
 
         // Set adapted player size to Mini and Morphing
         if (Camouflager.CamouflageTimer > 0f) return;
 
         Mini miniRole = null;
         if (p.HasModifier(ModifierType.Mini))
+        {
             miniRole = Mini.GetModifier(p);
+        }
         else if (Morphing.Exists
                  && p.IsRole(RoleType.Morphing)
                  && Morphing.MorphTimer > 0f
                  && Morphing.MorphTarget != null
                  && Morphing.MorphTarget.HasModifier(ModifierType.Mini))
+        {
             miniRole = Mini.GetModifier(Morphing.MorphTarget);
+        }
 
         if (miniRole != null)
         {
-            var growingProgress = miniRole.GrowingProgress();
-            var scale = (growingProgress * 0.35f) + 0.35f;
-            var correctedColliderRadius = (Mini.DEFAULT_COLLIDER_RADIUS * 0.7f) / scale;
+            float growingProgress = miniRole.GrowingProgress();
+            float scale = growingProgress * 0.35f + 0.35f;
+            float correctedColliderRadius = Mini.DefaultColliderRadius * 0.7f / scale;
 
-            p.transform.localScale = new(scale, scale, 1f);
+            p.transform.localScale = new Vector3(scale, scale, 1f);
             collider.radius = correctedColliderRadius;
         }
     }
 
     public static void CamouflageAndMorphActions()
     {
-        var oldCamouflageTimer = Camouflager.CamouflageTimer;
-        var oldMorphTimer = Morphing.MorphTimer;
+        float oldCamouflageTimer = Camouflager.CamouflageTimer;
+        float oldMorphTimer = Morphing.MorphTimer;
 
         Camouflager.CamouflageTimer -= Time.deltaTime;
         Morphing.MorphTimer -= Time.deltaTime;
 
         // Everyone but morphing reset
-        if (oldCamouflageTimer > 0f && Camouflager.CamouflageTimer <= 0f) Camouflager.ResetCamouflage();
+        if (oldCamouflageTimer > 0f && Camouflager.CamouflageTimer <= 0f)
+        {
+            Camouflager.ResetCamouflage();
+        }
 
         // Morphing reset
-        if (oldMorphTimer > 0f && Morphing.MorphTimer <= 0f) Morphing.ResetMorph();
+        if (oldMorphTimer > 0f && Morphing.MorphTimer <= 0f)
+        {
+            Morphing.ResetMorph();
+        }
     }
 
     public static void TimerUpdate()
@@ -795,38 +920,38 @@ public static class Update
         {
             case CustomGameMode.CaptureTheFlag:
                 // CTF timers
-                RebuildUs.ProgressStart += deltaTime;
-                MapSettings.GamemodeMatchDuration -= deltaTime;
-                if (RebuildUs.Progress != null)
+                RebuildUs.progressStart += deltaTime;
+                MapSettings.gamemodeMatchDuration -= deltaTime;
+                if (RebuildUs.progress != null)
                 {
-                    RebuildUs.Progress.GetComponentInChildren<TextMeshPro>().text =
+                    RebuildUs.progress.GetComponentInChildren<TextMeshPro>().text =
                         new StringBuilder("<color=#FF8000FF>").Append(Tr.Get(TrKey.TimeLeft))
                                                               .Append("</color>")
-                                                              .Append(MapSettings.GamemodeMatchDuration.ToString("F0"))
+                                                              .Append(MapSettings.gamemodeMatchDuration.ToString("F0"))
                                                               .ToString();
-                    RebuildUs.Progress.GetComponent<ProgressTracker>().curValue =
+                    RebuildUs.progress.GetComponent<ProgressTracker>().curValue =
                         Mathf.Lerp(PlayerControl.AllPlayerControls.Count - 1, 0,
-                                   RebuildUs.ProgressStart / RebuildUs.ProgressEnd);
+                                   RebuildUs.progressStart / RebuildUs.progressEnd);
                 }
 
-                if (MapSettings.GamemodeMatchDuration <= 0)
+                if (MapSettings.gamemodeMatchDuration <= 0)
                 {
                     // both teams with same points = Draw
-                    if (CaptureTheFlag.CurrentRedTeamPoints == CaptureTheFlag.CurrentBlueTeamPoints)
+                    if (CaptureTheFlag.currentRedTeamPoints == CaptureTheFlag.currentBlueTeamPoints)
                     {
-                        CaptureTheFlag.TriggerDrawWin = true;
+                        CaptureTheFlag.triggerDrawWin = true;
                         GameManager.Instance.RpcEndGame((GameOverReason)CustomGameOverReason.DrawTeamWin, false);
                     }
                     // Red team more points than blue team = red team win
-                    else if (CaptureTheFlag.CurrentRedTeamPoints > CaptureTheFlag.CurrentBlueTeamPoints)
+                    else if (CaptureTheFlag.currentRedTeamPoints > CaptureTheFlag.currentBlueTeamPoints)
                     {
-                        CaptureTheFlag.TriggerRedTeamWin = true;
+                        CaptureTheFlag.triggerRedTeamWin = true;
                         GameManager.Instance.RpcEndGame((GameOverReason)CustomGameOverReason.RedTeamFlagWin, false);
                     }
                     // otherwise blue team win
                     else
                     {
-                        CaptureTheFlag.TriggerBlueTeamWin = true;
+                        CaptureTheFlag.triggerBlueTeamWin = true;
                         GameManager.Instance.RpcEndGame((GameOverReason)CustomGameOverReason.BlueTeamFlagWin, false);
                     }
                 }
@@ -834,73 +959,75 @@ public static class Update
                 break;
             case CustomGameMode.PoliceAndThieves:
                 // PT timers
-                PoliceAndThief.Policeplayer01LightTimer -= deltaTime;
-                PoliceAndThief.Policeplayer02LightTimer -= deltaTime;
-                PoliceAndThief.Policeplayer03LightTimer -= deltaTime;
-                PoliceAndThief.Policeplayer04LightTimer -= deltaTime;
-                PoliceAndThief.Policeplayer05LightTimer -= deltaTime;
-                PoliceAndThief.Policeplayer06LightTimer -= deltaTime;
+                PoliceAndThief.policeplayer01lightTimer -= deltaTime;
+                PoliceAndThief.policeplayer02lightTimer -= deltaTime;
+                PoliceAndThief.policeplayer03lightTimer -= deltaTime;
+                PoliceAndThief.policeplayer04lightTimer -= deltaTime;
+                PoliceAndThief.policeplayer05lightTimer -= deltaTime;
+                PoliceAndThief.policeplayer06lightTimer -= deltaTime;
 
-                RebuildUs.ProgressStart += deltaTime;
-                MapSettings.GamemodeMatchDuration -= deltaTime;
-                if (RebuildUs.Progress != null)
+                RebuildUs.progressStart += deltaTime;
+                MapSettings.gamemodeMatchDuration -= deltaTime;
+                if (RebuildUs.progress != null)
                 {
-                    RebuildUs.Progress.GetComponentInChildren<TextMeshPro>().text =
+                    RebuildUs.progress.GetComponentInChildren<TextMeshPro>().text =
                         new StringBuilder("<color=#FF8000FF>").Append(Tr.Get(TrKey.TimeLeft))
                                                               .Append("</color>")
-                                                              .Append(MapSettings.GamemodeMatchDuration.ToString("F0"))
+                                                              .Append(MapSettings.gamemodeMatchDuration.ToString("F0"))
                                                               .ToString();
-                    RebuildUs.Progress.GetComponent<ProgressTracker>().curValue =
+                    RebuildUs.progress.GetComponent<ProgressTracker>().curValue =
                         Mathf.Lerp(PlayerControl.AllPlayerControls.Count - 1, 0,
-                                   RebuildUs.ProgressStart / RebuildUs.ProgressEnd);
+                                   RebuildUs.progressStart / RebuildUs.progressEnd);
                 }
 
-                if (MapSettings.GamemodeMatchDuration <= 0)
+                if (MapSettings.gamemodeMatchDuration <= 0)
                 {
-                    PoliceAndThief.TriggerPoliceWin = true;
+                    PoliceAndThief.triggerPoliceWin = true;
                     GameManager.Instance.RpcEndGame((GameOverReason)CustomGameOverReason.ThiefModePoliceWin, false);
                 }
 
                 break;
             case CustomGameMode.HotPotato:
                 // HP timers
-                if (HotPotato.FirstPotatoTransfered)
+                if (HotPotato.firstPotatoTransfered)
                 {
-                    HotPotato.TimeforTransfer -= deltaTime;
+                    HotPotato.timeforTransfer -= deltaTime;
 
-                    if (HotPotato.TimeforTransfer <= 0
-                        && !HotPotato.HotPotatoPlayer.Data.IsDead
+                    if (HotPotato.timeforTransfer <= 0
+                        && !HotPotato.hotPotatoPlayer.Data.IsDead
                         && AmongUsClient.Instance.AmHost)
                     {
                         // Ensure host send an RPC so the time doesn't bug
-                        var winWriter = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
-                            (byte)CustomRPC.HotPotatoExploded, SendOption.Reliable);
+                        MessageWriter winWriter =
+                            AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
+                                                                       (byte)CustomRPC.HotPotatoExploded,
+                                                                       Hazel.SendOption.Reliable, -1);
                         AmongUsClient.Instance.FinishRpcImmediately(winWriter);
-                        RPCProcedure.HotPotatoExploded();
+                        RPCProcedure.hotPotatoExploded();
                     }
 
-                    RebuildUs.ProgressStart += deltaTime;
-                    MapSettings.GamemodeMatchDuration -= deltaTime;
-                    if (RebuildUs.Progress != null)
+                    RebuildUs.progressStart += deltaTime;
+                    MapSettings.gamemodeMatchDuration -= deltaTime;
+                    if (RebuildUs.progress != null)
                     {
-                        RebuildUs.Progress.GetComponentInChildren<TextMeshPro>().text =
+                        RebuildUs.progress.GetComponentInChildren<TextMeshPro>().text =
                             new StringBuilder("<color=#FF8000FF>").Append(Tr.Get(TrKey.TimeLeft))
                                                                   .Append("</color>")
-                                                                  .Append(MapSettings.GamemodeMatchDuration
+                                                                  .Append(MapSettings.gamemodeMatchDuration
                                                                               .ToString("F0"))
                                                                   .Append(" | <color=#FF8000FF>")
                                                                   .Append(Tr.Get(TrKey.HotPotatoStatus))
                                                                   .Append("</color>")
-                                                                  .Append(HotPotato.TimeforTransfer.ToString("F0"))
+                                                                  .Append(HotPotato.timeforTransfer.ToString("F0"))
                                                                   .ToString();
-                        RebuildUs.Progress.GetComponent<ProgressTracker>().curValue =
+                        RebuildUs.progress.GetComponent<ProgressTracker>().curValue =
                             Mathf.Lerp(PlayerControl.AllPlayerControls.Count - 1, 0,
-                                       RebuildUs.ProgressStart / RebuildUs.ProgressEnd);
+                                       RebuildUs.progressStart / RebuildUs.progressEnd);
                     }
 
-                    if (MapSettings.GamemodeMatchDuration <= 0)
+                    if (MapSettings.gamemodeMatchDuration <= 0)
                     {
-                        HotPotato.TriggerHotPotatoEnd = true;
+                        HotPotato.triggerHotPotatoEnd = true;
                         GameManager.Instance.RpcEndGame((GameOverReason)CustomGameOverReason.HotPotatoEnd, false);
                     }
                 }
@@ -908,62 +1035,62 @@ public static class Update
                 break;
             case CustomGameMode.BattleRoyale:
                 // BR timers
-                RebuildUs.ProgressStart += deltaTime;
-                MapSettings.GamemodeMatchDuration -= deltaTime;
-                if (RebuildUs.Progress != null)
+                RebuildUs.progressStart += deltaTime;
+                MapSettings.gamemodeMatchDuration -= deltaTime;
+                if (RebuildUs.progress != null)
                 {
-                    RebuildUs.Progress.GetComponentInChildren<TextMeshPro>().text =
+                    RebuildUs.progress.GetComponentInChildren<TextMeshPro>().text =
                         new StringBuilder("<color=#FF8000FF>").Append(Tr.Get(TrKey.TimeLeft))
                                                               .Append("</color>")
-                                                              .Append(MapSettings.GamemodeMatchDuration.ToString("F0"))
+                                                              .Append(MapSettings.gamemodeMatchDuration.ToString("F0"))
                                                               .ToString();
-                    RebuildUs.Progress.GetComponent<ProgressTracker>().curValue =
+                    RebuildUs.progress.GetComponent<ProgressTracker>().curValue =
                         Mathf.Lerp(PlayerControl.AllPlayerControls.Count - 1, 0,
-                                   RebuildUs.ProgressStart / RebuildUs.ProgressEnd);
+                                   RebuildUs.progressStart / RebuildUs.progressEnd);
                 }
 
-                if (MapSettings.GamemodeMatchDuration <= 0)
+                if (MapSettings.gamemodeMatchDuration <= 0)
                 {
-                    if (BattleRoyale.MatchType == 2)
+                    if (BattleRoyale.matchType == 2)
                     {
-                        if (BattleRoyale.SerialKiller != null)
+                        if (BattleRoyale.serialKiller != null)
                         {
                             // all teams with same points = Draw
-                            if (BattleRoyale.LimePoints == BattleRoyale.PinkPoints
-                                && BattleRoyale.PinkPoints == BattleRoyale.SerialKillerPoints)
+                            if (BattleRoyale.limePoints == BattleRoyale.pinkPoints
+                                && BattleRoyale.pinkPoints == BattleRoyale.serialKillerPoints)
                             {
-                                BattleRoyale.TriggerDrawWin = true;
+                                BattleRoyale.triggerDrawWin = true;
                                 GameManager.Instance.RpcEndGame((GameOverReason)CustomGameOverReason.BattleRoyaleDraw,
                                                                 false);
                             }
                             // Lime team more points than pink team and serial killer = lime team win
-                            else if (BattleRoyale.LimePoints > BattleRoyale.PinkPoints
-                                     && BattleRoyale.LimePoints > BattleRoyale.SerialKillerPoints)
+                            else if (BattleRoyale.limePoints > BattleRoyale.pinkPoints
+                                     && BattleRoyale.limePoints > BattleRoyale.serialKillerPoints)
                             {
-                                BattleRoyale.TriggerLimeTeamWin = true;
+                                BattleRoyale.triggerLimeTeamWin = true;
                                 GameManager.Instance.RpcEndGame((GameOverReason)CustomGameOverReason
                                                                     .BattleRoyaleLimeTeamWin, false);
                             }
                             // otherwise pink team win
-                            else if (BattleRoyale.PinkPoints > BattleRoyale.LimePoints
-                                     && BattleRoyale.PinkPoints > BattleRoyale.SerialKillerPoints)
+                            else if (BattleRoyale.pinkPoints > BattleRoyale.limePoints
+                                     && BattleRoyale.pinkPoints > BattleRoyale.serialKillerPoints)
                             {
-                                BattleRoyale.TriggerPinkTeamWin = true;
+                                BattleRoyale.triggerPinkTeamWin = true;
                                 GameManager.Instance.RpcEndGame((GameOverReason)CustomGameOverReason
                                                                     .BattleRoyalePinkTeamWin, false);
                             }
                             // otherwise serial killer win
-                            else if (BattleRoyale.SerialKillerPoints > BattleRoyale.LimePoints
-                                     && BattleRoyale.SerialKillerPoints > BattleRoyale.PinkPoints)
+                            else if (BattleRoyale.serialKillerPoints > BattleRoyale.limePoints
+                                     && BattleRoyale.serialKillerPoints > BattleRoyale.pinkPoints)
                             {
-                                BattleRoyale.TriggerSerialKillerWin = true;
+                                BattleRoyale.triggerSerialKillerWin = true;
                                 GameManager.Instance.RpcEndGame((GameOverReason)CustomGameOverReason
                                                                     .BattleRoyaleSerialKillerWin, false);
                             }
                             // draw between some of the teams
                             else
                             {
-                                BattleRoyale.TriggerDrawWin = true;
+                                BattleRoyale.triggerDrawWin = true;
                                 GameManager.Instance.RpcEndGame((GameOverReason)CustomGameOverReason.BattleRoyaleDraw,
                                                                 false);
                             }
@@ -971,23 +1098,23 @@ public static class Update
                         else
                         {
                             // both teams with same points = Draw
-                            if (BattleRoyale.LimePoints == BattleRoyale.PinkPoints)
+                            if (BattleRoyale.limePoints == BattleRoyale.pinkPoints)
                             {
-                                BattleRoyale.TriggerDrawWin = true;
+                                BattleRoyale.triggerDrawWin = true;
                                 GameManager.Instance.RpcEndGame((GameOverReason)CustomGameOverReason.BattleRoyaleDraw,
                                                                 false);
                             }
                             // Lime team more points than pink team = lime team win
-                            else if (BattleRoyale.LimePoints > BattleRoyale.PinkPoints)
+                            else if (BattleRoyale.limePoints > BattleRoyale.pinkPoints)
                             {
-                                BattleRoyale.TriggerLimeTeamWin = true;
+                                BattleRoyale.triggerLimeTeamWin = true;
                                 GameManager.Instance.RpcEndGame((GameOverReason)CustomGameOverReason
                                                                     .BattleRoyaleLimeTeamWin, false);
                             }
                             // otherwise pink team win
                             else
                             {
-                                BattleRoyale.TriggerPinkTeamWin = true;
+                                BattleRoyale.triggerPinkTeamWin = true;
                                 GameManager.Instance.RpcEndGame((GameOverReason)CustomGameOverReason
                                                                     .BattleRoyalePinkTeamWin, false);
                             }
@@ -995,7 +1122,7 @@ public static class Update
                     }
                     else
                     {
-                        BattleRoyale.TriggerTimeWin = true;
+                        BattleRoyale.triggerTimeWin = true;
                         GameManager.Instance.RpcEndGame((GameOverReason)CustomGameOverReason.BattleRoyaleTimeWin,
                                                         false);
                     }
@@ -1014,20 +1141,17 @@ public static class Update
                 switch (GameOptionsManager.Instance.currentGameOptions.MapId)
                 {
                     case 0:
-                        var minimapSabotageSkeld = GameObject.Find("Main Camera/Hud/ShipMap(Clone)/InfectedOverlay");
+                        GameObject minimapSabotageSkeld = GameObject.Find("Main Camera/Hud/ShipMap(Clone)/InfectedOverlay");
                         minimapSabotageSkeld.SetActive(false);
-                        if (RebuildUs.ActivatedSensei && !RebuildUs.UpdatedSenseiMinimap)
+                        if (RebuildUs.activatedSensei && !RebuildUs.updatedSenseiMinimap)
                         {
-                            var mymap = GameObject.Find("Main Camera/Hud/ShipMap(Clone)/Background");
-                            mymap.GetComponent<SpriteRenderer>().sprite = AssetLoader.CustomMinimap
-                                .GetComponent<SpriteRenderer>()
-                                .sprite;
-                            var hereindicator = GameObject.Find("Main Camera/Hud/ShipMap(Clone)/HereIndicatorParent");
-                            hereindicator.transform.position = hereindicator.transform.position
-                                                               + new Vector3(0.23f, -0.8f, 0);
+                            GameObject mymap = GameObject.Find("Main Camera/Hud/ShipMap(Clone)/Background");
+                            mymap.GetComponent<SpriteRenderer>().sprite = AssetLoader.customMinimap.GetComponent<SpriteRenderer>().sprite;
+                            GameObject hereindicator = GameObject.Find("Main Camera/Hud/ShipMap(Clone)/HereIndicatorParent");
+                            hereindicator.transform.position = hereindicator.transform.position + new Vector3(0.23f, -0.8f, 0);
 
                             // Map room names
-                            var minimapNames = GameObject.Find("Main Camera/Hud/ShipMap(Clone)/RoomNames (1)");
+                            GameObject minimapNames = GameObject.Find("Main Camera/Hud/ShipMap(Clone)/RoomNames (1)");
                             minimapNames.transform.GetChild(0).transform.position =
                                 minimapNames.transform.GetChild(0).transform.position
                                 + new Vector3(0f, -0.5f, 0); // Upper engine
@@ -1069,7 +1193,8 @@ public static class Update
                                 + new Vector3(-3.5f, -0.5f, 0); // o2
 
                             // Map sabotage
-                            var minimapSabotage = GameObject.Find("Main Camera/Hud/ShipMap(Clone)/InfectedOverlay");
+                            GameObject minimapSabotage =
+                                GameObject.Find("Main Camera/Hud/ShipMap(Clone)/InfectedOverlay");
                             minimapSabotage.transform.GetChild(0).gameObject.SetActive(false); // cafeteria doors
                             minimapSabotage.transform.GetChild(2).gameObject.SetActive(false); // medbey doors
                             minimapSabotage.transform
@@ -1096,51 +1221,57 @@ public static class Update
                                 minimapSabotage.transform.GetChild(8).transform.position
                                 + new Vector3(0.6f, 0.1f, 0); // Sabotage reactor
 
-                            RebuildUs.UpdatedSenseiMinimap = true;
+
+                            RebuildUs.updatedSenseiMinimap = true;
                         }
 
                         break;
                     case 1:
-                        var minimapSabotageMira = GameObject.Find("Main Camera/Hud/HqMap(Clone)/InfectedOverlay");
+                        GameObject minimapSabotageMira =
+                            GameObject.Find("Main Camera/Hud/HqMap(Clone)/InfectedOverlay");
                         minimapSabotageMira.SetActive(false);
                         break;
                     case 2:
-                        var minimapSabotagePolus = GameObject.Find("Main Camera/Hud/PbMap(Clone)/InfectedOverlay");
+                        GameObject minimapSabotagePolus =
+                            GameObject.Find("Main Camera/Hud/PbMap(Clone)/InfectedOverlay");
                         minimapSabotagePolus.SetActive(false);
                         break;
                     case 3:
-                        var minimapSabotageDleks = GameObject.Find("Main Camera/Hud/ShipMap(Clone)/InfectedOverlay");
+                        GameObject minimapSabotageDleks =
+                            GameObject.Find("Main Camera/Hud/ShipMap(Clone)/InfectedOverlay");
                         minimapSabotageDleks.SetActive(false);
                         break;
                     case 4:
-                        var minimapSabotageAirship =
+                        GameObject minimapSabotageAirship =
                             GameObject.Find("Main Camera/Hud/AirshipMap(Clone)/InfectedOverlay");
                         minimapSabotageAirship.SetActive(false);
                         break;
                     case 5:
-                        var minimapSabotageFungle = GameObject.Find("Main Camera/Hud/FungleMap(Clone)/InfectedOverlay");
+                        GameObject minimapSabotageFungle =
+                            GameObject.Find("Main Camera/Hud/FungleMap(Clone)/InfectedOverlay");
                         minimapSabotageFungle.SetActive(false);
                         break;
                     case 6:
-                        var minimapSabotageSubmerged =
+                        GameObject minimapSabotageSubmerged =
                             GameObject.Find("Main Camera/Hud/HudMapPrefab(Clone)(Clone)/MapHud/InfectedOverlay");
                         minimapSabotageSubmerged.SetActive(false);
                         break;
                 }
             }
             else if (GameOptionsManager.Instance.currentGameOptions.MapId == 0
-                     && RebuildUs.ActivatedSensei
-                     && !RebuildUs.UpdatedSenseiMinimap
+                     && RebuildUs.activatedSensei
+                     && !RebuildUs.updatedSenseiMinimap
                      && MapSettings.GameMode is CustomGameMode.Roles)
             {
-                var mymap = GameObject.Find("Main Camera/Hud/ShipMap(Clone)/Background");
-                mymap.GetComponent<SpriteRenderer>().sprite = AssetLoader.CustomMinimap.GetComponent<SpriteRenderer>()
-                                                                         .sprite;
-                var hereindicator = GameObject.Find("Main Camera/Hud/ShipMap(Clone)/HereIndicatorParent");
+                GameObject mymap = GameObject.Find("Main Camera/Hud/ShipMap(Clone)/Background");
+                mymap.GetComponent<SpriteRenderer>().sprite = AssetLoader.customMinimap
+                                                                        .GetComponent<SpriteRenderer>()
+                                                                        .sprite;
+                GameObject hereindicator = GameObject.Find("Main Camera/Hud/ShipMap(Clone)/HereIndicatorParent");
                 hereindicator.transform.position = hereindicator.transform.position + new Vector3(0.23f, -0.8f, 0);
 
                 // Map room names
-                var minimapNames = GameObject.Find("Main Camera/Hud/ShipMap(Clone)/RoomNames (1)");
+                GameObject minimapNames = GameObject.Find("Main Camera/Hud/ShipMap(Clone)/RoomNames (1)");
                 minimapNames.transform.GetChild(0).transform.position =
                     minimapNames.transform.GetChild(0).transform.position + new Vector3(0f, -0.5f, 0); // upper engine
                 minimapNames.transform.GetChild(2).transform.position =
@@ -1169,7 +1300,7 @@ public static class Update
                     minimapNames.transform.GetChild(13).transform.position + new Vector3(-3.5f, -0.5f, 0); // o2
 
                 // Map sabotage
-                var minimapSabotage = GameObject.Find("Main Camera/Hud/ShipMap(Clone)/InfectedOverlay");
+                GameObject minimapSabotage = GameObject.Find("Main Camera/Hud/ShipMap(Clone)/InfectedOverlay");
                 minimapSabotage.transform.GetChild(0).gameObject.SetActive(false); // cafeteria doors
                 minimapSabotage.transform.GetChild(2).gameObject.SetActive(false); // medbey doors
                 minimapSabotage.transform
@@ -1196,7 +1327,8 @@ public static class Update
                     minimapSabotage.transform.GetChild(8).transform.position
                     + new Vector3(0.6f, 0.1f, 0); // Sabotage reactor
 
-                RebuildUs.UpdatedSenseiMinimap = true;
+
+                RebuildUs.updatedSenseiMinimap = true;
             }
 
             // If bomb, lights actives or special 1vs1 condition, prevent sabotage open map
@@ -1205,7 +1337,9 @@ public static class Update
                 && PlayerControl.LocalPlayer.Data.Role.IsImpostor
                 && MapBehaviour.Instance != null
                 && MapBehaviour.Instance.IsOpen)
+            {
                 MapBehaviour.Instance.Close();
+            }
         }
     }
 }

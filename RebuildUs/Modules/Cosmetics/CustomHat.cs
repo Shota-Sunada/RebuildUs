@@ -2,7 +2,7 @@ using System.Text.Json.Serialization;
 
 namespace RebuildUs.Modules.Cosmetics;
 
-public sealed class CustomHat : CustomHatHashes
+public class CustomHat : CustomHatHashes
 {
     [JsonPropertyName("author")] public string Author { get; set; }
 

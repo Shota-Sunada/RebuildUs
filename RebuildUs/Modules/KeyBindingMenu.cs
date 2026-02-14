@@ -1,47 +1,48 @@
-using Object = UnityEngine.Object;
+using UnityEngine.UI;
 
 namespace RebuildUs.Modules;
 
 public static class KeyBindingMenu
 {
-    private static GameObject _popUp;
-    private static TextMeshPro _titleText;
-    private static GameObject _waitingPopUp;
-    private static TextMeshPro _waitingText;
-    private static readonly List<ToggleButtonBehaviour> MOD_BUTTONS = [];
-    private static ToggleButtonBehaviour _buttonPrefab;
+    private static GameObject PopUp;
+    private static TextMeshPro TitleText;
+    private static GameObject WaitingPopUp;
+    private static TextMeshPro WaitingText;
+    private static readonly List<ToggleButtonBehaviour> ModButtons = [];
+    private static ToggleButtonBehaviour ButtonPrefab;
 
-    private static KeyBindingManager.RebuildUsInput _activeInput;
-    private static readonly KeyCode[] ALL_KEY_CODES = (KeyCode[])Enum.GetValues(typeof(KeyCode));
-
-    private static bool _waitingForKey;
+    private static KeyBindingManager.RebuildUsInput ActiveInput = null;
+    private static readonly KeyCode[] AllKeyCodes = (KeyCode[])Enum.GetValues(typeof(KeyCode));
 
     public static void Start(OptionsMenuBehaviour __instance)
     {
         if (__instance.name == "KeyBindingMenu") return;
         if (!__instance.CensorChatButton) return;
 
-        if (!_popUp) CreateCustom(__instance);
-
-        if (!_buttonPrefab)
+        if (!PopUp)
         {
-            _buttonPrefab = Object.Instantiate(__instance.CensorChatButton);
-            Object.DontDestroyOnLoad(_buttonPrefab);
-            _buttonPrefab.name = "KeyBindPrefab";
+            CreateCustom(__instance);
+        }
 
-            var toggle = _buttonPrefab.GetComponent<ToggleButtonBehaviour>();
+        if (!ButtonPrefab)
+        {
+            ButtonPrefab = UnityEngine.Object.Instantiate(__instance.CensorChatButton);
+            UnityEngine.Object.DontDestroyOnLoad(ButtonPrefab);
+            ButtonPrefab.name = "KeyBindPrefab";
+
+            var toggle = ButtonPrefab.GetComponent<ToggleButtonBehaviour>();
             if (toggle) toggle.enabled = false;
 
-            var collider = _buttonPrefab.GetComponent<BoxCollider2D>();
-            if (collider) collider.size = new(2.5f, 0.7f);
+            var collider = ButtonPrefab.GetComponent<BoxCollider2D>();
+            if (collider) collider.size = new Vector2(2.5f, 0.7f);
 
-            _buttonPrefab.transform.localScale = new(1f, 2f, 1f);
-            _buttonPrefab.Text.transform.localScale = new(1f, 0.5f, 1f);
+            ButtonPrefab.transform.localScale = new Vector3(1f, 2f, 1f);
+            ButtonPrefab.Text.transform.localScale = new Vector3(1f, 0.5f, 1f);
 
-            _buttonPrefab.Text.fontSizeMax = _buttonPrefab.Text.fontSizeMin = 1.6f;
-            _buttonPrefab.Text.alignment = TextAlignmentOptions.Center;
+            ButtonPrefab.Text.fontSizeMax = ButtonPrefab.Text.fontSizeMin = 1.6f;
+            ButtonPrefab.Text.alignment = TextAlignmentOptions.Center;
 
-            _buttonPrefab.gameObject.SetActive(false);
+            ButtonPrefab.gameObject.SetActive(false);
         }
 
         InitializeMenuButton(__instance);
@@ -49,13 +50,13 @@ public static class KeyBindingMenu
 
     private static void CreateCustom(OptionsMenuBehaviour prefab)
     {
-        MOD_BUTTONS.Clear();
-        _popUp = Object.Instantiate(prefab.gameObject);
-        _popUp.name = "KeyBindingMenu";
-        Object.DontDestroyOnLoad(_popUp);
-        var transform = _popUp.transform;
+        ModButtons.Clear();
+        PopUp = UnityEngine.Object.Instantiate(prefab.gameObject);
+        PopUp.name = "KeyBindingMenu";
+        UnityEngine.Object.DontDestroyOnLoad(PopUp);
+        var transform = PopUp.transform;
 
-        var omb = _popUp.GetComponent<OptionsMenuBehaviour>();
+        var omb = PopUp.GetComponent<OptionsMenuBehaviour>();
         if (omb)
         {
             omb.Tabs = Array.Empty<TabGroup>();
@@ -76,69 +77,81 @@ public static class KeyBindingMenu
         tmp.fontSize = 4;
         tmp.alignment = TextAlignmentOptions.Center;
         tmp.text = Tr.Get(TrKey.KeyBindings);
-        tmp.transform.SetParent(_popUp.transform);
-        tmp.transform.localPosition = new(0, 2.2f, -1f);
-        _titleText = tmp;
+        tmp.transform.SetParent(PopUp.transform);
+        tmp.transform.localPosition = new Vector3(0, 2.2f, -1f);
+        TitleText = tmp;
 
         // Setup Close Button
-        var closeButton = _popUp.transform.Find("CloseButton")?.GetComponent<PassiveButton>();
+        var closeButton = PopUp.transform.Find("CloseButton")?.GetComponent<PassiveButton>();
         if (closeButton)
         {
-            closeButton.OnClick = new();
-            closeButton.OnClick.AddListener((Action)(() => { Close(); }));
+            closeButton.OnClick = new Button.ButtonClickedEvent();
+            closeButton.OnClick.AddListener((Action)(() =>
+            {
+                Close();
+            }));
 
-            if (omb) omb.BackButton = closeButton.GetComponent<UiElement>();
+            if (omb)
+            {
+                omb.BackButton = closeButton.GetComponent<UiElement>();
+            }
         }
 
         // Setup Waiting PopUp
-        _waitingPopUp = new("KeyBindingWaitingPopUp");
-        Object.DontDestroyOnLoad(_waitingPopUp);
+        WaitingPopUp = new GameObject("KeyBindingWaitingPopUp");
+        UnityEngine.Object.DontDestroyOnLoad(WaitingPopUp);
 
-        var bgObj = _popUp.transform.Find("Background")?.gameObject;
+        var bgObj = PopUp.transform.Find("Background")?.gameObject;
         if (bgObj)
         {
-            var bg = Object.Instantiate(bgObj, _waitingPopUp.transform);
+            var bg = UnityEngine.Object.Instantiate(bgObj, WaitingPopUp.transform);
             bg.transform.localPosition = Vector3.zero;
-            bg.transform.localScale = new(0.7f, 0.4f, 1f);
+            bg.transform.localScale = new Vector3(0.7f, 0.4f, 1f);
         }
 
         var wgo = new GameObject("WaitingText");
-        _waitingText = wgo.AddComponent<TextMeshPro>();
-        _waitingText.fontSize = 2.5f;
-        _waitingText.alignment = TextAlignmentOptions.Center;
-        _waitingText.text = Tr.Get(TrKey.PressAnyKey);
-        _waitingText.transform.SetParent(_waitingPopUp.transform);
-        _waitingText.transform.localPosition = new(0, 0, -1f);
+        WaitingText = wgo.AddComponent<TextMeshPro>();
+        WaitingText.fontSize = 2.5f;
+        WaitingText.alignment = TextAlignmentOptions.Center;
+        WaitingText.text = Tr.Get(TrKey.PressAnyKey);
+        WaitingText.transform.SetParent(WaitingPopUp.transform);
+        WaitingText.transform.localPosition = new Vector3(0, 0, -1f);
 
-        _waitingPopUp.SetActive(false);
+        WaitingPopUp.SetActive(false);
 
         // Remove unnecessary components
-        for (var i = transform.childCount - 1; i >= 0; i--)
+        for (int i = transform.childCount - 1; i >= 0; i--)
         {
             var obj = transform.GetChild(i).gameObject;
-            if (obj.name is not "Background" and not "CloseButton") Object.Destroy(obj);
+            if (obj.name is not "Background" and not "CloseButton")
+            {
+                UnityEngine.Object.Destroy(obj);
+            }
         }
 
-        _popUp.SetActive(false);
+        PopUp.SetActive(false);
     }
 
     public static void Close()
     {
-        if (!_popUp) return;
+        if (!PopUp) return;
 
-        _activeInput = null;
-        _popUp.SetActive(false);
-        _popUp.transform.SetParent(null);
-        Object.DontDestroyOnLoad(_popUp);
+        ActiveInput = null;
+        PopUp.SetActive(false);
+        PopUp.transform.SetParent(null);
+        UnityEngine.Object.DontDestroyOnLoad(PopUp);
 
-        if (_waitingPopUp)
+        if (WaitingPopUp)
         {
-            _waitingPopUp.SetActive(false);
-            _waitingPopUp.transform.SetParent(null);
-            Object.DontDestroyOnLoad(_waitingPopUp);
+            WaitingPopUp.SetActive(false);
+            WaitingPopUp.transform.SetParent(null);
+            UnityEngine.Object.DontDestroyOnLoad(WaitingPopUp);
         }
 
-        if (ControllerManager.Instance) ControllerManager.Instance.CloseOverlayMenu("OptionsMenu");
+        if (ControllerManager.Instance)
+        {
+            ControllerManager.Instance.CloseOverlayMenu("OptionsMenu");
+        }
     }
 
     private static void InitializeMenuButton(OptionsMenuBehaviour __instance)
@@ -146,100 +159,120 @@ public static class KeyBindingMenu
         // Add a button to open this menu in the main options menu
         if (__instance.CensorChatButton.transform.parent.Find("KeyBindingMenuButton")) return;
 
-        var openButton = Object.Instantiate(__instance.CensorChatButton, __instance.CensorChatButton.transform.parent);
+        var openButton = UnityEngine.Object.Instantiate(__instance.CensorChatButton, __instance.CensorChatButton.transform.parent);
         openButton.name = "KeyBindingMenuButton";
 
         // Position it symmetrical to the Client Options button (which is at down * 1.0)
         var pos = __instance.CensorChatButton.transform.localPosition;
-        openButton.transform.localPosition = new(1.3f, pos.y - 1.0f, pos.z);
+        openButton.transform.localPosition = new Vector3(1.3f, pos.y - 1.0f, pos.z);
 
         // Adjust size to fit in the space
         var collider = openButton.GetComponent<BoxCollider2D>();
-        if (collider) collider.size = new(1.5f, 0.7f);
+        if (collider) collider.size = new Vector2(1.5f, 0.7f);
 
         openButton.gameObject.SetActive(true);
         openButton.Text.text = "Keys";
         openButton.Text.fontSizeMax = openButton.Text.fontSizeMin = 2.0f;
 
         var passiveButton = openButton.GetComponent<PassiveButton>();
-        passiveButton.OnClick = new();
+        passiveButton.OnClick = new Button.ButtonClickedEvent();
         passiveButton.OnClick.AddListener((Action)(() =>
         {
-            if (!_popUp) CreateCustom(__instance);
+            if (!PopUp)
+            {
+                CreateCustom(__instance);
+            }
 
-            _popUp.transform.SetParent(__instance.transform.parent);
-            _popUp.transform.localPosition = new(0, 0, -900f);
+            PopUp.transform.SetParent(__instance.transform.parent);
+            PopUp.transform.localPosition = new Vector3(0, 0, -900f);
 
             SetUpOptions();
-            _popUp.SetActive(true);
+            PopUp.SetActive(true);
 
             // Re-grab controller buttons for navigation
-            var omb = _popUp.GetComponent<OptionsMenuBehaviour>();
-            if (omb) ControllerManager.Instance.OpenOverlayMenu("OptionsMenu", omb.BackButton, omb.DefaultButtonSelected, omb.ControllerSelectable);
+            var omb = PopUp.GetComponent<OptionsMenuBehaviour>();
+            if (omb)
+            {
+                ControllerManager.Instance.OpenOverlayMenu("OptionsMenu", omb.BackButton, omb.DefaultButtonSelected, omb.ControllerSelectable);
+            }
 
-            if (__instance.transform.parent && __instance.transform.parent == FastDestroyableSingleton<HudManager>.Instance?.transform) __instance.Close();
+            if (__instance.transform.parent && __instance.transform.parent == FastDestroyableSingleton<HudManager>.Instance?.transform)
+            {
+                __instance.Close();
+            }
         }));
     }
 
+    private static bool WaitingForKey = false;
+
     public static void Update()
     {
-        if (_activeInput != null)
+        if (ActiveInput != null)
         {
-            if (_waitingPopUp)
+            if (WaitingPopUp)
             {
-                if (!_waitingPopUp.activeSelf) _waitingPopUp.SetActive(true);
-                _waitingPopUp.transform.SetParent(_popUp.transform.parent);
-                _waitingPopUp.transform.localPosition = new(0, 0, -950f);
+                if (!WaitingPopUp.activeSelf) WaitingPopUp.SetActive(true);
+                WaitingPopUp.transform.SetParent(PopUp.transform.parent);
+                WaitingPopUp.transform.localPosition = new Vector3(0, 0, -950f);
 
-                if (_waitingText && _activeInput != null) _waitingText.text = new StringBuilder(Tr.GetDynamic($"{_activeInput.Identifier}")).Append("\n").Append(Tr.Get(TrKey.PressAnyKey)).ToString();
+                if (WaitingText && ActiveInput != null)
+                {
+                    WaitingText.text = new StringBuilder(Tr.GetDynamic($"{ActiveInput.Identifier}"))
+                        .Append("\n")
+                        .Append(Tr.Get(TrKey.PressAnyKey)).ToString();
+                }
             }
 
-            if (!_waitingForKey)
+            if (!WaitingForKey)
             {
-                if (!Input.anyKey) _waitingForKey = true;
+                if (!Input.anyKey) WaitingForKey = true;
                 return;
             }
 
             if (Input.anyKeyDown)
             {
-                foreach (var key in ALL_KEY_CODES)
+                foreach (KeyCode key in AllKeyCodes)
                 {
                     if (Input.GetKeyDown(key))
                     {
-                        if (key != KeyCode.Escape) _activeInput.ChangeKey(key);
-                        _activeInput = null;
-                        _waitingForKey = false;
+                        if (key != KeyCode.Escape)
+                        {
+                            ActiveInput.ChangeKey(key);
+                        }
+                        ActiveInput = null;
+                        WaitingForKey = false;
                         SetUpOptions();
                         break;
                     }
                 }
             }
-
             return;
         }
 
-        if (_waitingPopUp && _waitingPopUp.activeSelf) _waitingPopUp.SetActive(false);
+        if (WaitingPopUp && WaitingPopUp.activeSelf) WaitingPopUp.SetActive(false);
 
-        if (Input.GetKeyUp(KeyCode.Escape)) Close();
+        if (Input.GetKeyUp(KeyCode.Escape))
+        {
+            Close();
+        }
     }
 
     private static void SetUpOptions()
     {
-        if (!_popUp) return;
+        if (!PopUp) return;
 
-        var omb = _popUp.GetComponent<OptionsMenuBehaviour>();
+        var omb = PopUp.GetComponent<OptionsMenuBehaviour>();
 
-        if (MOD_BUTTONS.Count > 0 && MOD_BUTTONS.Count == KeyBindingManager.AllInputs.Count && MOD_BUTTONS[0] != null)
+        if (ModButtons.Count > 0 && ModButtons.Count == KeyBindingManager.AllInputs.Count && ModButtons[0] != null)
         {
-            for (var i = 0; i < KeyBindingManager.AllInputs.Count; i++)
+            for (int i = 0; i < KeyBindingManager.AllInputs.Count; i++)
             {
                 var input = KeyBindingManager.AllInputs[i];
-                var button = MOD_BUTTONS[i];
+                var button = ModButtons[i];
 
-                var keyText = _activeInput == input ? Tr.Get(TrKey.PressAnyKey) : input.Key.ToString();
+                string keyText = ActiveInput == input ? Tr.Get(TrKey.PressAnyKey) : input.Key.ToString();
                 button.Text.text = new StringBuilder(Tr.GetDynamic($"{input.Identifier}")).Append(": ").Append(keyText).ToString();
             }
-
             return;
         }
 
@@ -249,37 +282,35 @@ public static class KeyBindingMenu
             omb.ControllerSelectable.Clear();
         }
 
-        foreach (var button in MOD_BUTTONS)
+        foreach (var button in ModButtons)
         {
-            if (button != null)
-                Object.Destroy(button.gameObject);
+            if (button != null) UnityEngine.Object.Destroy(button.gameObject);
         }
+        ModButtons.Clear();
 
-        MOD_BUTTONS.Clear();
+        float startY = 1.4f;
+        float spacing = 1.0f;
+        float xOffset = 1.4f;
 
-        var startY = 1.4f;
-        var spacing = 1.0f;
-        var xOffset = 1.4f;
-
-        for (var i = 0; i < KeyBindingManager.AllInputs.Count; i++)
+        for (int i = 0; i < KeyBindingManager.AllInputs.Count; i++)
         {
             var input = KeyBindingManager.AllInputs[i];
-            var button = Object.Instantiate(_buttonPrefab, _popUp.transform);
+            var button = UnityEngine.Object.Instantiate(ButtonPrefab, PopUp.transform);
 
-            var x = i % 2 == 0 ? -xOffset : xOffset;
-            var y = startY - ((i / 2) * spacing);
+            float x = (i % 2 == 0) ? -xOffset : xOffset;
+            float y = startY - ((i / 2) * spacing);
 
-            button.transform.localPosition = new(x, y, -1f);
+            button.transform.localPosition = new Vector3(x, y, -1f);
             button.gameObject.SetActive(true);
 
-            var keyText = _activeInput == input ? Tr.Get(TrKey.PressAnyKey) : input.Key.ToString();
+            string keyText = ActiveInput == input ? Tr.Get(TrKey.PressAnyKey) : input.Key.ToString();
             button.Text.text = new StringBuilder(Tr.GetDynamic($"{input.Identifier}")).Append(": ").Append(keyText).ToString();
 
             var passiveButton = button.GetComponent<PassiveButton>();
-            passiveButton.OnClick = new();
+            passiveButton.OnClick = new Button.ButtonClickedEvent();
             passiveButton.OnClick.AddListener((Action)(() =>
             {
-                _activeInput = input;
+                ActiveInput = input;
                 SetUpOptions();
             }));
 
@@ -290,7 +321,7 @@ public static class KeyBindingMenu
                 if (i == 0) omb.DefaultButtonSelected = uiElement;
             }
 
-            MOD_BUTTONS.Add(button);
+            ModButtons.Add(button);
         }
     }
 }

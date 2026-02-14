@@ -5,35 +5,34 @@ public enum SynchronizeTag
     PreSpawnMinigame,
 }
 
-public sealed class SynchronizeData
+public class SynchronizeData
 {
-    private readonly Dictionary<SynchronizeTag, ulong> _dic;
+    private readonly Dictionary<SynchronizeTag, ulong> Dic;
 
     public SynchronizeData()
     {
-        _dic = [];
+        Dic = [];
     }
 
     public void Synchronize(SynchronizeTag tag, byte playerId)
     {
-        if (!_dic.ContainsKey(tag)) _dic[tag] = 0;
+        if (!Dic.ContainsKey(tag)) Dic[tag] = 0;
 
-        _dic[tag] |= (ulong)1 << playerId;
+        Dic[tag] |= (ulong)1 << playerId;
     }
 
     public bool Align(SynchronizeTag tag, bool withGhost, bool withSurvivor = true)
     {
-        if (!_dic.TryGetValue(tag, out var value)) return false;
+        if (!Dic.TryGetValue(tag, out ulong value)) return false;
 
-        foreach (var pc in PlayerControl.AllPlayerControls.GetFastEnumerator())
+        foreach (PlayerControl pc in PlayerControl.AllPlayerControls.GetFastEnumerator())
         {
             if (pc == null || pc.Data == null || pc.Data.Disconnected) continue;
 
-            var shouldCheck = pc.Data.IsDead ? withGhost : withSurvivor;
+            bool shouldCheck = pc.Data.IsDead ? withGhost : withSurvivor;
             if (shouldCheck)
             {
-                if ((value & ((ulong)1 << pc.PlayerId)) == 0)
-                    return false;
+                if ((value & ((ulong)1 << pc.PlayerId)) == 0) return false;
             }
         }
 
@@ -42,11 +41,11 @@ public sealed class SynchronizeData
 
     public void Reset(SynchronizeTag tag)
     {
-        _dic[tag] = 0;
+        Dic[tag] = 0;
     }
 
     public void Initialize()
     {
-        _dic.Clear();
+        Dic.Clear();
     }
 }

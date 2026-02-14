@@ -1,72 +1,67 @@
-using Object = UnityEngine.Object;
-
 namespace RebuildUs.Objects;
 
-public sealed class CustomMessage
+public class CustomMessage
 {
-    private static readonly List<CustomMessage> CUSTOM_MESSAGES = [];
+    private readonly TMP_Text Text;
+    private static readonly List<CustomMessage> CustomMessages = [];
 
-    private static readonly Color YELLOW_COLOR = new(0.988f, 0.729f, 0.012f, 1f);
-    private readonly TMP_Text _text;
+    private static readonly Color YellowColor = new(0.988f, 0.729f, 0.012f, 1f);
 
     public CustomMessage(string message, float duration, Vector2 localPosition, MessageType type)
     {
-        var roomTracker = FastDestroyableSingleton<HudManager>.Instance?.roomTracker;
+        RoomTracker roomTracker = FastDestroyableSingleton<HudManager>.Instance?.roomTracker;
         if (roomTracker != null)
         {
-            var gameObject = Object.Instantiate(roomTracker.gameObject, FastDestroyableSingleton<HudManager>.Instance.transform, true);
+            GameObject gameObject = UnityEngine.Object.Instantiate(roomTracker.gameObject, FastDestroyableSingleton<HudManager>.Instance.transform, true);
 
-            Object.DestroyImmediate(gameObject.GetComponent<RoomTracker>());
-            _text = gameObject.GetComponent<TMP_Text>();
-            _text.text = Tr.GetDynamic(message);
+            UnityEngine.Object.DestroyImmediate(gameObject.GetComponent<RoomTracker>());
+            Text = gameObject.GetComponent<TMP_Text>();
+            Text.text = Tr.GetDynamic(message);
 
             // Use local position to place it in the player's view instead of the world location
-            gameObject.transform.localPosition = new(localPosition.x, localPosition.y, gameObject.transform.localPosition.z);
-            CUSTOM_MESSAGES.Add(this);
+            gameObject.transform.localPosition = new Vector3(localPosition.x, localPosition.y, gameObject.transform.localPosition.z);
+            CustomMessages.Add(this);
 
-            FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(duration, new Action<float>(p =>
+            FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(duration, new Action<float>((p) =>
             {
-                if (_text == null || _text.gameObject == null) return;
-                var even = (int)((p * duration) / 0.25f) % 2 == 0; // Bool flips every 0.25 seconds
+                if (Text == null || Text.gameObject == null) return;
+                bool even = ((int)(p * duration / 0.25f)) % 2 == 0; // Bool flips every 0.25 seconds
 
                 switch (type)
                 {
                     case MessageType.GameMode:
-                        _text.alignment = TextAlignmentOptions.Left;
-                        while (MapSettings.GameMode is not CustomGameMode.Roles && MapSettings.GamemodeMatchDuration >= 0)
-                        {
-                            var prefix = "<color=#FF8000FF>";
+                        Text.alignment = TMPro.TextAlignmentOptions.Left;
+                        while (MapSettings.GameMode is not CustomGameMode.Roles && MapSettings.gamemodeMatchDuration >= 0) {
+                            string prefix = ("<color=#FF8000FF>");
                             switch (MapSettings.GameMode)
                             {
                                 case CustomGameMode.Roles:
-                                    _text.text = prefix + CaptureTheFlag.FlagpointCounter + "</color>";
+                                    Text.text = prefix + CaptureTheFlag.flagpointCounter + "</color>";
                                     break;
                                 case CustomGameMode.PoliceAndThieves:
-                                    _text.text = prefix + PoliceAndThief.ThiefpointCounter + "</color>";
+                                    Text.text = prefix + PoliceAndThief.thiefpointCounter + "</color>";
                                     break;
                                 case CustomGameMode.HotPotato:
-                                    _text.text = prefix + HotPotato.HotpotatopointCounter + "</color>";
+                                    Text.text = prefix + HotPotato.hotpotatopointCounter + "</color>";
                                     break;
                                 case CustomGameMode.BattleRoyale:
-                                    _text.text = prefix + BattleRoyale.BattleRoyalePointCounter + "</color>";
+                                    Text.text = prefix + BattleRoyale.battleRoyalePointCounter + "</color>";
                                     break;
                             }
-
                             return;
                         }
-
-                        _text.text = "";
+                        Text.text = "";
                         break;
                     case MessageType.Normal:
                         break;
                 }
 
-                if (_text != null) _text.color = even ? YELLOW_COLOR : Color.red;
+                if (Text != null) Text.color = even ? YellowColor : Color.red;
 
-                if (Mathf.Approximately(p, 1f) && _text != null && _text.gameObject != null)
+                if (Mathf.Approximately(p, 1f) && Text != null && Text.gameObject != null)
                 {
-                    Object.Destroy(_text.gameObject);
-                    CUSTOM_MESSAGES.Remove(this);
+                    UnityEngine.Object.Destroy(Text.gameObject);
+                    CustomMessages.Remove(this);
                 }
             })));
         }

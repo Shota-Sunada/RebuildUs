@@ -1,10 +1,8 @@
 // TODO: 設定画面開いたときに説明文章が更新されない問題があります
 
-using Object = UnityEngine.Object;
-
 namespace RebuildUs.Modules.CustomOptions;
 
-public enum OptionPage
+public enum OptionPage : int
 {
     Presets = 0, // Disabled in mod
     GameSettings = 1,
@@ -13,44 +11,44 @@ public enum OptionPage
     ImpostorSettings = 4,
     CrewmateSettings = 5,
     NeutralSettings = 6,
-    ModifierSettings = 7
+    ModifierSettings = 7,
 }
 
 public partial class CustomOption
 {
-    private static GameObject _generalButton;
-    private static GameObject _impostorButton;
-    private static GameObject _crewmateButton;
-    private static GameObject _neutralButton;
-    private static GameObject _modifierButton;
-    private static GameObject _generalTab;
-    private static GameObject _impostorTab;
-    private static GameObject _crewmateTab;
-    private static GameObject _neutralTab;
-    private static GameObject _modifierTab;
+    private static GameObject GeneralButton;
+    private static GameObject ImpostorButton;
+    private static GameObject CrewmateButton;
+    private static GameObject NeutralButton;
+    private static GameObject ModifierButton;
+    private static GameObject GeneralTab;
+    private static GameObject ImpostorTab;
+    private static GameObject CrewmateTab;
+    private static GameObject NeutralTab;
+    private static GameObject ModifierTab;
 
     public static bool ChangeTabPrefix(GameSettingMenu __instance, OptionPage tabNum, bool previewOnly)
     {
-        if (_generalTab == null) return true;
+        if (GeneralTab == null) return true;
 
-        if ((previewOnly && Controller.currentTouchType == Controller.TouchType.Joystick) || !previewOnly)
+        if (previewOnly && Controller.currentTouchType == Controller.TouchType.Joystick || !previewOnly)
         {
             __instance.PresetsTab.gameObject.SetActive(false);
             __instance.GameSettingsTab.gameObject.SetActive(false);
             __instance.RoleSettingsTab.gameObject.SetActive(false);
-            _generalTab.SetActive(false);
-            _impostorTab.SetActive(false);
-            _crewmateTab.SetActive(false);
-            _neutralTab.SetActive(false);
-            _modifierTab.SetActive(false);
+            GeneralTab.SetActive(false);
+            ImpostorTab.SetActive(false);
+            CrewmateTab.SetActive(false);
+            NeutralTab.SetActive(false);
+            ModifierTab.SetActive(false);
             __instance.GamePresetsButton.SelectButton(false);
             __instance.GameSettingsButton.SelectButton(false);
             __instance.RoleSettingsButton.SelectButton(false);
-            _generalButton.GetComponent<PassiveButton>().SelectButton(false);
-            _impostorButton.GetComponent<PassiveButton>().SelectButton(false);
-            _crewmateButton.GetComponent<PassiveButton>().SelectButton(false);
-            _neutralButton.GetComponent<PassiveButton>().SelectButton(false);
-            _modifierButton.GetComponent<PassiveButton>().SelectButton(false);
+            GeneralButton.GetComponent<PassiveButton>().SelectButton(false);
+            ImpostorButton.GetComponent<PassiveButton>().SelectButton(false);
+            CrewmateButton.GetComponent<PassiveButton>().SelectButton(false);
+            NeutralButton.GetComponent<PassiveButton>().SelectButton(false);
+            ModifierButton.GetComponent<PassiveButton>().SelectButton(false);
             switch (tabNum)
             {
                 case OptionPage.Presets:
@@ -67,23 +65,23 @@ public partial class CustomOption
                     __instance.MenuDescriptionText.text = DestroyableSingleton<TranslationController>.Instance.GetString(StringNames.RoleSettingsDescription);
                     break;
                 case OptionPage.GeneralSettings:
-                    _generalTab.gameObject.SetActive(true);
+                    GeneralTab.gameObject.SetActive(true);
                     __instance.MenuDescriptionText.text = Tr.Get(TrKey.GeneralSettings);
                     break;
                 case OptionPage.ImpostorSettings:
-                    _impostorTab.gameObject.SetActive(true);
+                    ImpostorTab.gameObject.SetActive(true);
                     __instance.MenuDescriptionText.text = Tr.Get(TrKey.ImpostorSettings);
                     break;
                 case OptionPage.CrewmateSettings:
-                    _crewmateTab.gameObject.SetActive(true);
+                    CrewmateTab.gameObject.SetActive(true);
                     __instance.MenuDescriptionText.text = Tr.Get(TrKey.CrewmateSettings);
                     break;
                 case OptionPage.NeutralSettings:
-                    _neutralTab.gameObject.SetActive(true);
+                    NeutralTab.gameObject.SetActive(true);
                     __instance.MenuDescriptionText.text = Tr.Get(TrKey.NeutralSettings);
                     break;
                 case OptionPage.ModifierSettings:
-                    _modifierTab.gameObject.SetActive(true);
+                    ModifierTab.gameObject.SetActive(true);
                     __instance.MenuDescriptionText.text = Tr.Get(TrKey.ModifierSettings);
                     break;
                 default:
@@ -112,24 +110,24 @@ public partial class CustomOption
                     __instance.RoleSettingsButton.SelectButton(true);
                     break;
                 case OptionPage.GeneralSettings:
-                    _generalTab.GetComponent<GameOptionsMenu>().OpenMenu();
-                    _generalButton.GetComponent<PassiveButton>().SelectButton(true);
+                    GeneralTab.GetComponent<GameOptionsMenu>().OpenMenu();
+                    GeneralButton.GetComponent<PassiveButton>().SelectButton(true);
                     break;
                 case OptionPage.ImpostorSettings:
-                    _impostorTab.GetComponent<GameOptionsMenu>().OpenMenu();
-                    _impostorButton.GetComponent<PassiveButton>().SelectButton(true);
+                    ImpostorTab.GetComponent<GameOptionsMenu>().OpenMenu();
+                    ImpostorButton.GetComponent<PassiveButton>().SelectButton(true);
                     break;
                 case OptionPage.CrewmateSettings:
-                    _crewmateTab.GetComponent<GameOptionsMenu>().OpenMenu();
-                    _crewmateButton.GetComponent<PassiveButton>().SelectButton(true);
+                    CrewmateTab.GetComponent<GameOptionsMenu>().OpenMenu();
+                    CrewmateButton.GetComponent<PassiveButton>().SelectButton(true);
                     break;
                 case OptionPage.NeutralSettings:
-                    _neutralTab.GetComponent<GameOptionsMenu>().OpenMenu();
-                    _neutralButton.GetComponent<PassiveButton>().SelectButton(true);
+                    NeutralTab.GetComponent<GameOptionsMenu>().OpenMenu();
+                    NeutralButton.GetComponent<PassiveButton>().SelectButton(true);
                     break;
                 case OptionPage.ModifierSettings:
-                    _modifierTab.GetComponent<GameOptionsMenu>().OpenMenu();
-                    _modifierButton.GetComponent<PassiveButton>().SelectButton(true);
+                    ModifierTab.GetComponent<GameOptionsMenu>().OpenMenu();
+                    ModifierButton.GetComponent<PassiveButton>().SelectButton(true);
                     break;
                 default:
                     Logger.LogWarn($"Invalid Option Page ID in ChangeTabPrefix: {tabNum}");
@@ -167,16 +165,19 @@ public partial class CustomOption
                     longTasksOption = numOpt;
             }
 
-            commonTasksOption?.ValidRange = new(0f, 4f);
-            shortTasksOption?.ValidRange = new(0f, 23f);
-            longTasksOption?.ValidRange = new(0f, 15f);
+            commonTasksOption?.ValidRange = new FloatRange(0f, 4f);
+            shortTasksOption?.ValidRange = new FloatRange(0f, 23f);
+            longTasksOption?.ValidRange = new FloatRange(0f, 15f);
         }
     }
 
     public static void OnEnablePrefix(GameSettingMenu __instance)
     {
         ControllerManager.Instance.OpenOverlayMenu(__instance.name, __instance.BackButton, __instance.GameSettingsButton, __instance.ControllerSelectable);
-        if (Controller.currentTouchType != Controller.TouchType.Joystick) __instance.ChangeTab((int)OptionPage.GameSettings, Controller.currentTouchType == Controller.TouchType.Joystick);
+        if (Controller.currentTouchType != Controller.TouchType.Joystick)
+        {
+            __instance.ChangeTab((int)OptionPage.GameSettings, Controller.currentTouchType == Controller.TouchType.Joystick);
+        }
         __instance.StartCoroutine(__instance.CoSelectDefault());
     }
 
@@ -209,16 +210,16 @@ public partial class CustomOption
         gameSettingsButton.SelectButton(false);
 
         // Mod General Settings
-        _generalButton = CreateSettingButton(__instance, "RUGeneralSettingsButton", Tr.Get(TrKey.GeneralSettingsButton), OptionPage.GeneralSettings);
-        _generalTab = CreateSettingTab(__instance, "RUGeneralSettingsTab", CustomOptionType.General);
-        _impostorButton = CreateSettingButton(__instance, "RUImpostorSettingsButton", Tr.Get(TrKey.ImpostorSettingsButton), OptionPage.ImpostorSettings);
-        _impostorTab = CreateSettingTab(__instance, "RUGeneralImpostorTab", CustomOptionType.Impostor);
-        _crewmateButton = CreateSettingButton(__instance, "RUCrewmateSettingsButton", Tr.Get(TrKey.CrewmateSettingsButton), OptionPage.CrewmateSettings);
-        _crewmateTab = CreateSettingTab(__instance, "RUCrewmateSettingsTab", CustomOptionType.Crewmate);
-        _neutralButton = CreateSettingButton(__instance, "RUNeutralSettingsButton", Tr.Get(TrKey.NeutralSettingsButton), OptionPage.NeutralSettings);
-        _neutralTab = CreateSettingTab(__instance, "RUNeutralSettingsTab", CustomOptionType.Neutral);
-        _modifierButton = CreateSettingButton(__instance, "RUModifierSettingsButton", Tr.Get(TrKey.ModifierSettingsButton), OptionPage.ModifierSettings);
-        _modifierTab = CreateSettingTab(__instance, "RUModifierSettingsTab", CustomOptionType.Modifier);
+        GeneralButton = CreateSettingButton(__instance, "RUGeneralSettingsButton", Tr.Get(TrKey.GeneralSettingsButton), OptionPage.GeneralSettings);
+        GeneralTab = CreateSettingTab(__instance, "RUGeneralSettingsTab", CustomOptionType.General);
+        ImpostorButton = CreateSettingButton(__instance, "RUImpostorSettingsButton", Tr.Get(TrKey.ImpostorSettingsButton), OptionPage.ImpostorSettings);
+        ImpostorTab = CreateSettingTab(__instance, "RUGeneralImpostorTab", CustomOptionType.Impostor);
+        CrewmateButton = CreateSettingButton(__instance, "RUCrewmateSettingsButton", Tr.Get(TrKey.CrewmateSettingsButton), OptionPage.CrewmateSettings);
+        CrewmateTab = CreateSettingTab(__instance, "RUCrewmateSettingsTab", CustomOptionType.Crewmate);
+        NeutralButton = CreateSettingButton(__instance, "RUNeutralSettingsButton", Tr.Get(TrKey.NeutralSettingsButton), OptionPage.NeutralSettings);
+        NeutralTab = CreateSettingTab(__instance, "RUNeutralSettingsTab", CustomOptionType.Neutral);
+        ModifierButton = CreateSettingButton(__instance, "RUModifierSettingsButton", Tr.Get(TrKey.ModifierSettingsButton), OptionPage.ModifierSettings);
+        ModifierTab = CreateSettingTab(__instance, "RUModifierSettingsTab", CustomOptionType.Modifier);
 
         __instance.GameSettingsButton.SelectButton(true);
         __instance.MenuDescriptionText.text = DestroyableSingleton<TranslationController>.Instance.GetString(StringNames.GameSettingsDescription);
@@ -227,16 +228,19 @@ public partial class CustomOption
     private static GameObject CreateSettingButton(GameSettingMenu __instance, string name, string buttontext, OptionPage id)
     {
         var template = __instance.GameSettingsButton.gameObject;
-        var buttonObj = Object.Instantiate(template, template.transform.parent);
+        var buttonObj = UnityEngine.Object.Instantiate(template, template.transform.parent);
         buttonObj.transform.localPosition += Vector3.down * 0.5f * ((int)id - 2); // 場所調整
         buttonObj.name = name;
         __instance.StartCoroutine(Effects.Lerp(2f, new Action<float>(p => { buttonObj.transform.FindChild("FontPlacer").GetComponentInChildren<TextMeshPro>().text = buttontext; })));
-        var buttonPb = buttonObj.GetComponent<PassiveButton>();
-        buttonPb.OnClick.RemoveAllListeners();
-        buttonPb.OnClick.AddListener((Action)(() => { __instance.ChangeTab((int)id, false); }));
-        buttonPb.OnMouseOut.RemoveAllListeners();
-        buttonPb.OnMouseOver.RemoveAllListeners();
-        buttonPb.SelectButton(false);
+        var buttonPB = buttonObj.GetComponent<PassiveButton>();
+        buttonPB.OnClick.RemoveAllListeners();
+        buttonPB.OnClick.AddListener((Action)(() =>
+        {
+            __instance.ChangeTab((int)id, false);
+        }));
+        buttonPB.OnMouseOut.RemoveAllListeners();
+        buttonPB.OnMouseOver.RemoveAllListeners();
+        buttonPB.SelectButton(false);
 
         return buttonObj;
     }
@@ -244,16 +248,22 @@ public partial class CustomOption
     private static GameObject CreateSettingTab(GameSettingMenu __instance, string name, CustomOptionType optionType)
     {
         var template = __instance.GameSettingsTab.gameObject;
-        var tabObj = Object.Instantiate(template, template.transform.parent);
+        var tabObj = UnityEngine.Object.Instantiate(template, template.transform.parent);
         tabObj.name = name;
 
         var gameOptionsMenu = tabObj.GetComponent<GameOptionsMenu>();
         gameOptionsMenu.Children ??= new();
-        foreach (var child in gameOptionsMenu.Children.GetFastEnumerator()) child.Destroy();
+        foreach (var child in gameOptionsMenu.Children.GetFastEnumerator())
+        {
+            child.Destroy();
+        }
         gameOptionsMenu.scrollBar.transform.FindChild("SliderInner").DestroyChildren();
         gameOptionsMenu.Children.Clear();
 
-        if (OptionsByType.TryGetValue(optionType, out var relevantOptions)) CreateSettingsNew(gameOptionsMenu, relevantOptions);
+        if (OptionsByType.TryGetValue(optionType, out var relevantOptions))
+        {
+            CreateSettingsNew(gameOptionsMenu, relevantOptions);
+        }
 
         tabObj.SetActive(false);
         return tabObj;
@@ -262,32 +272,46 @@ public partial class CustomOption
     private static void CreateSettingsNew(GameOptionsMenu menu, List<CustomOption> options)
     {
         var num = 1.5f;
-        for (var i = 0; i < options.Count; i++)
+        for (int i = 0; i < options.Count; i++)
         {
             var option = options[i];
             if (option.IsHeader)
             {
-                var categoryHeaderMasked = Object.Instantiate(menu.categoryHeaderOrigin, Vector3.zero, Quaternion.identity, menu.settingsContainer);
+                var categoryHeaderMasked = UnityEngine.Object.Instantiate(menu.categoryHeaderOrigin, Vector3.zero, Quaternion.identity, menu.settingsContainer);
                 categoryHeaderMasked.SetHeader(StringNames.ImpostorsCategory, 20);
                 categoryHeaderMasked.Title.text = Helpers.Cs(option.Color, option.HeaderKey != TrKey.None ? Tr.Get(option.HeaderKey) : Tr.Get(option.NameKey));
                 categoryHeaderMasked.Title.outlineColor = Color.white;
                 categoryHeaderMasked.Title.outlineWidth = 0.1f;
                 categoryHeaderMasked.transform.localScale = Vector3.one * 0.63f;
-                categoryHeaderMasked.transform.localPosition = new(-0.903f, num, -2f);
+                categoryHeaderMasked.transform.localPosition = new Vector3(-0.903f, num, -2f);
                 num -= 0.63f;
             }
-            else if (option.Parent != null && ((option.Parent.Selection == 0 && !option.HideIfParentEnabled) || (option.Parent.Parent != null && option.Parent.Parent.Selection == 0 && !option.Parent.HideIfParentEnabled)))
-                continue; // Hides options, for which the parent is disabled!
-            else if (option.Parent != null && option.Parent.Selection != 0 && option.HideIfParentEnabled)
+            else if (option.Parent != null
+                    && (option.Parent.Selection == 0
+                    && !option.HideIfParentEnabled || option.Parent.Parent != null
+                    && option.Parent.Parent.Selection == 0 && !option.Parent.HideIfParentEnabled)
+                )
+            {
+                continue;  // Hides options, for which the parent is disabled!
+            }
+            else if (option.Parent != null
+                    && option.Parent.Selection != 0
+                    && option.HideIfParentEnabled
+                )
+            {
                 continue;
+            }
 
-            var ob = Object.Instantiate(menu.stringOptionOrigin, Vector3.zero, Quaternion.identity, menu.settingsContainer);
-            ob.transform.localPosition = new(0.952f, num, -2f);
+            var ob = UnityEngine.Object.Instantiate(menu.stringOptionOrigin, Vector3.zero, Quaternion.identity, menu.settingsContainer);
+            ob.transform.localPosition = new Vector3(0.952f, num, -2f);
             ob.SetClickMask(menu.ButtonClickMask);
 
             // "SetUpFromData"
             var renderer = ob.GetComponentsInChildren<SpriteRenderer>(true);
-            for (var j = 0; j < renderer.Length; j++) renderer[j].material.SetInt(PlayerMaterial.MaskLayer, 20);
+            for (int j = 0; j < renderer.Length; j++)
+            {
+                renderer[j].material.SetInt(PlayerMaterial.MaskLayer, 20);
+            }
             foreach (var tmp in ob.GetComponentsInChildren<TextMeshPro>(true))
             {
                 tmp.fontMaterial.SetFloat("_StencilComp", 3f);
@@ -295,14 +319,24 @@ public partial class CustomOption
             }
 
             var so = ob;
-            so.OnValueChanged = new Action<OptionBehaviour>(o => { });
+            so.OnValueChanged = new Action<OptionBehaviour>((o) => { });
             so.TitleText.text = Helpers.Cs(option.Color, Tr.Get(option.NameKey));
-            if (option.IsHeader && option.Type is CustomOptionType.Neutral or CustomOptionType.Crewmate or CustomOptionType.Impostor or CustomOptionType.Modifier)
+            if (option.IsHeader
+                && (option.Type is CustomOptionType.Neutral or CustomOptionType.Crewmate or CustomOptionType.Impostor or CustomOptionType.Modifier)
+            )
+            {
                 so.TitleText.text = Tr.Get(TrKey.SpawnChance);
+            }
 
-            if (so.TitleText.text.Length > 25) so.TitleText.fontSize = 2.2f;
+            if (so.TitleText.text.Length > 25)
+            {
+                so.TitleText.fontSize = 2.2f;
+            }
 
-            if (so.TitleText.text.Length > 40) so.TitleText.fontSize = 2f;
+            if (so.TitleText.text.Length > 40)
+            {
+                so.TitleText.fontSize = 2f;
+            }
 
             so.Value = so.oldValue = option.Selection;
             so.ValueText.text = option.Selections[option.Selection].ToString();
@@ -314,27 +348,36 @@ public partial class CustomOption
             menu.scrollBar.SetYBoundsMax(-num - 1.65f);
         }
 
-        for (var i = 0; i < menu.Children.Count; i++)
+        for (int i = 0; i < menu.Children.Count; i++)
         {
             var ob = menu.Children[i];
-            if (AmongUsClient.Instance && !AmongUsClient.Instance.AmHost) ob.SetAsPlayer();
+            if (AmongUsClient.Instance && !AmongUsClient.Instance.AmHost)
+            {
+                ob.SetAsPlayer();
+            }
         }
     }
 
     public static void UpdateGameOptionsMenu(CustomOptionType optionType, GameOptionsMenu menu)
     {
         var children = menu.Children;
-        for (var i = 0; i < children.Count; i++) children[i].Destroy();
+        for (int i = 0; i < children.Count; i++)
+        {
+            children[i].Destroy();
+        }
         menu.scrollBar.transform.FindChild("SliderInner").DestroyChildren();
         children.Clear();
 
-        if (OptionsByType.TryGetValue(optionType, out var options)) CreateSettingsNew(menu, options);
+        if (OptionsByType.TryGetValue(optionType, out var options))
+        {
+            CreateSettingsNew(menu, options);
+        }
     }
 
     public static bool StringOptionInitialize(StringOption __instance)
     {
         CustomOption option = null;
-        for (var i = 0; i < AllOptions.Count; i++)
+        for (int i = 0; i < AllOptions.Count; i++)
         {
             if (AllOptions[i].OptionBehavior == __instance)
             {
@@ -342,10 +385,9 @@ public partial class CustomOption
                 break;
             }
         }
-
         if (option == null) return true;
 
-        __instance.OnValueChanged = new Action<OptionBehaviour>(o => { });
+        __instance.OnValueChanged = new Action<OptionBehaviour>((o) => { });
         //__instance.TitleText.text = option.name;
         __instance.Value = __instance.oldValue = option.Selection;
         __instance.ValueText.text = option.Selections[option.Selection].ToString();
@@ -372,28 +414,43 @@ public partial class CustomOption
         if (PlayerControl.LocalPlayer != null && AmongUsClient.Instance.AmHost)
         {
             // Save all custom option selections to config at game start
-            foreach (var option in AllOptions) option.Entry?.Value = option.Selection;
+            foreach (var option in AllOptions)
+            {
+                option.Entry?.Value = option.Selection;
+            }
             GameManager.Instance.LogicOptions.SyncOptions();
             ShareOptionSelections();
         }
     }
 
-    public static bool LgoAreInvalid(LegacyGameOptions __instance, ref int maxExpectedPlayers)
+    public static bool LGOAreInvalid(LegacyGameOptions __instance, ref int maxExpectedPlayers)
     {
         //making the kill distances bound check higher since extra short is added
-        return __instance.MaxPlayers > maxExpectedPlayers || __instance.NumImpostors < 1 || __instance.NumImpostors > 3 || __instance.KillDistance < 0 || __instance.KillDistance >= LegacyGameOptions.KillDistances.Count || __instance.PlayerSpeedMod <= 0f || __instance.PlayerSpeedMod > 3f;
+        return __instance.MaxPlayers > maxExpectedPlayers || __instance.NumImpostors < 1
+                || __instance.NumImpostors > 3 || __instance.KillDistance < 0
+                || __instance.KillDistance >= LegacyGameOptions.KillDistances.Count
+                || __instance.PlayerSpeedMod <= 0f || __instance.PlayerSpeedMod > 3f;
     }
 
-    public static bool Ngo10AreInvalid(NormalGameOptionsV10 __instance, ref int maxExpectedPlayers)
+    public static bool NGO10AreInvalid(NormalGameOptionsV10 __instance, ref int maxExpectedPlayers)
     {
-        return __instance.MaxPlayers > maxExpectedPlayers || __instance.NumImpostors < 1 || __instance.NumImpostors > 3 || __instance.KillDistance < 0 || __instance.KillDistance >= LegacyGameOptions.KillDistances.Count || __instance.PlayerSpeedMod <= 0f || __instance.PlayerSpeedMod > 3f;
+        return __instance.MaxPlayers > maxExpectedPlayers || __instance.NumImpostors < 1
+                || __instance.NumImpostors > 3 || __instance.KillDistance < 0
+                || __instance.KillDistance >= LegacyGameOptions.KillDistances.Count
+                || __instance.PlayerSpeedMod <= 0f || __instance.PlayerSpeedMod > 3f;
     }
 
-    public static void StringOptionInitializePrefix(StringOption __instance) { }
+    public static void StringOptionInitializePrefix(StringOption __instance)
+    {
+    }
 
-    public static void StringOptionInitializePostfix(StringOption __instance) { }
+    public static void StringOptionInitializePostfix(StringOption __instance)
+    {
+    }
 
-    public static void AppendItem(ref StringNames stringName, ref string value) { }
+    public static void AppendItem(ref StringNames stringName, ref string value)
+    {
+    }
 
     public static bool AdjustStringForViewPanel(StringGameSetting __instance, float value, ref string __result)
     {
@@ -414,13 +471,12 @@ public partial class CustomOption
         if (!skipFirst) options.Add(OptionToString(option));
         if (option.Enabled)
         {
-            foreach (var op in option.Children)
+            foreach (CustomOption op in option.Children)
             {
-                var str = OptionsToString(op);
+                string str = OptionsToString(op);
                 if (str != "") options.Add(str);
             }
         }
-
         return string.Join("\n", options);
     }
 }

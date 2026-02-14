@@ -4,23 +4,29 @@ namespace RebuildUs.Roles;
 
 public static class ModifierHelpers
 {
-    private static readonly Dictionary<ModifierType, (MethodInfo exists, MethodInfo hasModifier, MethodInfo addModifier, MethodInfo eraseModifier, MethodInfo swapModifier)> METHOD_CACHE = [];
+    private static readonly Dictionary<ModifierType, (MethodInfo exists, MethodInfo hasModifier, MethodInfo addModifier, MethodInfo eraseModifier, MethodInfo swapModifier)> MethodCache = [];
 
     private static (MethodInfo exists, MethodInfo hasModifier, MethodInfo addModifier, MethodInfo eraseModifier, MethodInfo swapModifier) GetMethods(ModifierType modType)
     {
-        if (METHOD_CACHE.TryGetValue(modType, out var cached)) return cached;
+        if (MethodCache.TryGetValue(modType, out var cached)) return cached;
 
-        var modifiers = ModifierData.MODIFIERS;
+        var modifiers = ModifierData.Modifiers;
         for (var i = 0; i < modifiers.Length; i++)
         {
             var reg = modifiers[i];
-            if (reg.ModType == modType)
+            if (reg.modType == modType)
             {
-                var type = reg.ClassType;
+                var type = reg.classType;
                 if (type == null) break;
 
-                var methods = (type.GetProperty("Exists", BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy)?.GetMethod, type.GetMethod("HasModifier", BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy), type.GetMethod("AddModifier", BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy) ?? type.GetMethod("SetRole", BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy), type.GetMethod("EraseModifier", BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy), type.GetMethod("SwapModifier", BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy));
-                METHOD_CACHE[modType] = methods;
+                var methods = (
+                    type.GetProperty("Exists", BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy)?.GetMethod,
+                    type.GetMethod("HasModifier", BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy),
+                    type.GetMethod("AddModifier", BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy) ?? type.GetMethod("SetRole", BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy),
+                    type.GetMethod("EraseModifier", BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy),
+                    type.GetMethod("SwapModifier", BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy)
+                );
+                MethodCache[modType] = methods;
                 return methods;
             }
         }
@@ -29,7 +35,7 @@ public static class ModifierHelpers
             Logger.LogWarn($"There is no modifier type registration for: {modType}", "GetMethods");
 
         var nullMethods = ((MethodInfo)null, (MethodInfo)null, (MethodInfo)null, (MethodInfo)null, (MethodInfo)null);
-        METHOD_CACHE[modType] = nullMethods;
+        MethodCache[modType] = nullMethods;
         return nullMethods;
     }
 
@@ -38,12 +44,10 @@ public static class ModifierHelpers
         if (player == null || modType == ModifierType.NoModifier) return false;
 
         var mods = PlayerModifier.GetModifiers(player);
-        for (var i = 0; i < mods.Count; i++)
+        for (int i = 0; i < mods.Count; i++)
         {
-            if (mods[i].CurrentModifierType == modType)
-                return true;
+            if (mods[i].CurrentModifierType == modType) return true;
         }
-
         return false;
     }
 
@@ -67,7 +71,7 @@ public static class ModifierHelpers
     {
         if (player == null || modType == ModifierType.NoModifier) return;
 
-        if (player.HasModifier(modType))
+        if (HasModifier(player, modType))
         {
             var methods = GetMethods(modType);
             if (methods.eraseModifier != null)
@@ -84,12 +88,12 @@ public static class ModifierHelpers
     {
         if (player == null) return;
 
-        var modifiers = ModifierData.MODIFIERS;
+        var modifiers = ModifierData.Modifiers;
         for (var i = 0; i < modifiers.Length; i++)
         {
             var reg = modifiers[i];
-            if (reg.ClassType == null) continue;
-            var methods = GetMethods(reg.ModType);
+            if (reg.classType == null) continue;
+            var methods = GetMethods(reg.modType);
             methods.eraseModifier?.Invoke(null, [player]);
         }
     }
@@ -98,13 +102,13 @@ public static class ModifierHelpers
     {
         if (player == null || target == null) return;
 
-        var modifiers = ModifierData.MODIFIERS;
+        var modifiers = ModifierData.Modifiers;
         for (var i = 0; i < modifiers.Length; i++)
         {
             var reg = modifiers[i];
-            if (reg.ClassType != null && (player.HasModifier(reg.ModType) || target.HasModifier(reg.ModType)))
+            if (reg.classType != null && (player.HasModifier(reg.modType) || target.HasModifier(reg.modType)))
             {
-                var methods = GetMethods(reg.ModType);
+                var methods = GetMethods(reg.modType);
                 methods.swapModifier?.Invoke(null, [player, target]);
             }
         }

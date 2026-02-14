@@ -4,20 +4,8 @@ namespace RebuildUs.Roles.Modifier;
 public class AntiTeleport : ModifierBase<AntiTeleport>
 {
     public static Color NameColor = Palette.Orange;
-
-    public static Vector3 Position;
-
-    public AntiTeleport()
-    {
-        // write value init here
-        StaticModifierType = CurrentModifierType = ModifierType.AntiTeleport;
-    }
-
-    public override Color ModifierColor
-    {
-        get => NameColor;
-    }
-
+    public override Color ModifierColor => NameColor;
+    public static Vector3 Position = new();
     public static List<PlayerControl> Candidates
     {
         get
@@ -26,21 +14,33 @@ public class AntiTeleport : ModifierBase<AntiTeleport>
             foreach (var player in PlayerControl.AllPlayerControls.GetFastEnumerator())
             {
                 if (!player.HasModifier(ModifierType.AntiTeleport))
+                {
                     validPlayers.Add(player);
+                }
             }
 
             return validPlayers;
         }
     }
-
     public static string Postfix
     {
-        get => Tr.Get(TrKey.AntiTeleportPostfix);
+        get
+        {
+            return Tr.Get(TrKey.AntiTeleportPostfix);
+        }
     }
-
     public static string FullName
     {
-        get => Tr.Get(TrKey.AntiTeleport);
+        get
+        {
+            return Tr.Get(TrKey.AntiTeleport);
+        }
+    }
+
+    public AntiTeleport()
+    {
+        // write value init here
+        StaticModifierType = CurrentModifierType = ModifierType.AntiTeleport;
     }
 
     public override void OnMeetingStart() { }
@@ -58,6 +58,6 @@ public class AntiTeleport : ModifierBase<AntiTeleport>
     {
         // reset configs here
         Players.Clear();
-        Position = new();
+        Position = new Vector3();
     }
 }

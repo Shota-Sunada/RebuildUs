@@ -1,12 +1,10 @@
-using StringBuilder = Il2CppSystem.Text.StringBuilder;
-
 namespace RebuildUs.Patches;
 
 [HarmonyPatch]
-public static class GameOptionsExtensionsPatch
+public static class IGameOptionsExtensionsPatch
 {
     [HarmonyPrefix]
-    [HarmonyPatch(typeof(IGameOptionsExtensions), nameof(IGameOptionsExtensions.AppendItem), typeof(StringBuilder), typeof(StringNames), typeof(string))]
+    [HarmonyPatch(typeof(IGameOptionsExtensions), nameof(IGameOptionsExtensions.AppendItem), [typeof(Il2CppSystem.Text.StringBuilder), typeof(StringNames), typeof(string)])]
     public static void AppendItemPrefix(ref StringNames stringName, ref string value)
     {
         CustomOption.AppendItem(ref stringName, ref value);

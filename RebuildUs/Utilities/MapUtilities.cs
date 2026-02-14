@@ -1,25 +1,23 @@
-using Object = UnityEngine.Object;
-
 namespace RebuildUs.Utilities;
 
 public static class MapUtilities
 {
-    private static readonly Dictionary<SystemTypes, Object> SYSTEMS = [];
-    internal static ShipStatus CachedShipStatus { get; private set; } = ShipStatus.Instance;
+    public static ShipStatus CachedShipStatus { get; private set; } = ShipStatus.Instance;
 
-    internal static Dictionary<SystemTypes, Object> Systems
+    public static void MapDestroyed()
+    {
+        CachedShipStatus = ShipStatus.Instance;
+        _systems.Clear();
+    }
+
+    private static readonly Dictionary<SystemTypes, UnityEngine.Object> _systems = [];
+    public static Dictionary<SystemTypes, UnityEngine.Object> Systems
     {
         get
         {
-            if (SYSTEMS.Count == 0) GetSystems();
-            return SYSTEMS;
+            if (_systems.Count == 0) GetSystems();
+            return _systems;
         }
-    }
-
-    private static void MapDestroyed()
-    {
-        CachedShipStatus = ShipStatus.Instance;
-        SYSTEMS.Clear();
     }
 
     private static void GetSystems()
@@ -32,13 +30,12 @@ public static class MapUtilities
         foreach (var systemTypes in SystemTypeHelpers.AllTypes)
         {
             if (!systems.ContainsKey(systemTypes)) continue;
-            SYSTEMS[systemTypes] = systems[systemTypes].TryCast<Object>();
+            _systems[systemTypes] = systems[systemTypes].TryCast<UnityEngine.Object>();
         }
     }
 
     [HarmonyPatch(typeof(ShipStatus), nameof(ShipStatus.Awake))]
-    [HarmonyPostfix]
-    [HarmonyPriority(Priority.Last)]
+    [HarmonyPostfix, HarmonyPriority(Priority.Last)]
     public static void AwakePostfix(ShipStatus __instance)
     {
         CachedShipStatus = __instance;
@@ -46,8 +43,7 @@ public static class MapUtilities
     }
 
     [HarmonyPatch(typeof(ShipStatus), nameof(ShipStatus.OnDestroy))]
-    [HarmonyPostfix]
-    [HarmonyPriority(Priority.Last)]
+    [HarmonyPostfix, HarmonyPriority(Priority.Last)]
     public static void OnDestroyPostfix()
     {
         CachedShipStatus = null;

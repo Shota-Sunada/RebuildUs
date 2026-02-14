@@ -1,5 +1,4 @@
 using BepInEx.Unity.IL2CPP.Utils.Collections;
-using Il2CppSystem.Collections;
 
 namespace RebuildUs.Patches;
 
@@ -16,7 +15,7 @@ public static class IntroCutscenePatch
 
     [HarmonyPrefix]
     [HarmonyPatch(typeof(IntroCutscene), nameof(IntroCutscene.CoBegin))]
-    public static bool CoBeginPrefix(IntroCutscene __instance, ref IEnumerator __result)
+    public static bool CoBeginPrefix(IntroCutscene __instance, ref Il2CppSystem.Collections.IEnumerator __result)
     {
         __result = Intro.CoBegin(__instance).WrapToIl2Cpp();
         return false;

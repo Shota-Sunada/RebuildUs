@@ -3,2051 +3,2748 @@ namespace RebuildUs.Modules.GameMode;
 public static partial class PoliceAndThief
 {
     // Police and Thief
-    private static CustomButton _policeplayer01JailButton;
-    private static CustomButton _policeplayer01KillButton;
-    private static CustomButton _policeplayer01LightButton;
-    private static CustomButton _policeplayer02KillButton;
-    private static CustomButton _policeplayer02TaseButton;
-    private static CustomButton _policeplayer02LightButton;
-    private static CustomButton _policeplayer03JailButton;
-    private static CustomButton _policeplayer03KillButton;
-    private static CustomButton _policeplayer03LightButton;
-    private static CustomButton _policeplayer04TaseButton;
-    private static CustomButton _policeplayer04KillButton;
-    private static CustomButton _policeplayer04LightButton;
-    private static CustomButton _policeplayer05JailButton;
-    private static CustomButton _policeplayer05KillButton;
-    private static CustomButton _policeplayer05LightButton;
-    private static CustomButton _policeplayer06JailButton;
-    private static CustomButton _policeplayer06KillButton;
-    private static CustomButton _policeplayer06LightButton;
+    private static CustomButton policeplayer01JailButton;
+    private static CustomButton policeplayer01KillButton;
+    private static CustomButton policeplayer01LightButton;
+    private static CustomButton policeplayer02KillButton;
+    private static CustomButton policeplayer02TaseButton;
+    private static CustomButton policeplayer02LightButton;
+    private static CustomButton policeplayer03JailButton;
+    private static CustomButton policeplayer03KillButton;
+    private static CustomButton policeplayer03LightButton;
+    private static CustomButton policeplayer04TaseButton;
+    private static CustomButton policeplayer04KillButton;
+    private static CustomButton policeplayer04LightButton;
+    private static CustomButton policeplayer05JailButton;
+    private static CustomButton policeplayer05KillButton;
+    private static CustomButton policeplayer05LightButton;
+    private static CustomButton policeplayer06JailButton;
+    private static CustomButton policeplayer06KillButton;
+    private static CustomButton policeplayer06LightButton;
 
-    private static CustomButton _thiefplayer01KillButton;
-    private static CustomButton _thiefplayer01FreeThiefButton;
-    private static CustomButton _thiefplayer01TakeDeliverJewelButton;
-    private static CustomButton _thiefplayer02KillButton;
-    private static CustomButton _thiefplayer02FreeThiefButton;
-    private static CustomButton _thiefplayer02TakeDeliverJewelButton;
-    private static CustomButton _thiefplayer03KillButton;
-    private static CustomButton _thiefplayer03FreeThiefButton;
-    private static CustomButton _thiefplayer03TakeDeliverJewelButton;
-    private static CustomButton _thiefplayer04KillButton;
-    private static CustomButton _thiefplayer04FreeThiefButton;
-    private static CustomButton _thiefplayer04TakeDeliverJewelButton;
-    private static CustomButton _thiefplayer05KillButton;
-    private static CustomButton _thiefplayer05FreeThiefButton;
-    private static CustomButton _thiefplayer05TakeDeliverJewelButton;
-    private static CustomButton _thiefplayer06KillButton;
-    private static CustomButton _thiefplayer06FreeThiefButton;
-    private static CustomButton _thiefplayer06TakeDeliverJewelButton;
-    private static CustomButton _thiefplayer07KillButton;
-    private static CustomButton _thiefplayer07FreeThiefButton;
-    private static CustomButton _thiefplayer07TakeDeliverJewelButton;
-    private static CustomButton _thiefplayer08KillButton;
-    private static CustomButton _thiefplayer08FreeThiefButton;
-    private static CustomButton _thiefplayer08TakeDeliverJewelButton;
-    private static CustomButton _thiefplayer09KillButton;
-    private static CustomButton _thiefplayer09FreeThiefButton;
-    private static CustomButton _thiefplayer09TakeDeliverJewelButton;
+    private static CustomButton thiefplayer01KillButton;
+    private static CustomButton thiefplayer01FreeThiefButton;
+    private static CustomButton thiefplayer01TakeDeliverJewelButton;
+    private static CustomButton thiefplayer02KillButton;
+    private static CustomButton thiefplayer02FreeThiefButton;
+    private static CustomButton thiefplayer02TakeDeliverJewelButton;
+    private static CustomButton thiefplayer03KillButton;
+    private static CustomButton thiefplayer03FreeThiefButton;
+    private static CustomButton thiefplayer03TakeDeliverJewelButton;
+    private static CustomButton thiefplayer04KillButton;
+    private static CustomButton thiefplayer04FreeThiefButton;
+    private static CustomButton thiefplayer04TakeDeliverJewelButton;
+    private static CustomButton thiefplayer05KillButton;
+    private static CustomButton thiefplayer05FreeThiefButton;
+    private static CustomButton thiefplayer05TakeDeliverJewelButton;
+    private static CustomButton thiefplayer06KillButton;
+    private static CustomButton thiefplayer06FreeThiefButton;
+    private static CustomButton thiefplayer06TakeDeliverJewelButton;
+    private static CustomButton thiefplayer07KillButton;
+    private static CustomButton thiefplayer07FreeThiefButton;
+    private static CustomButton thiefplayer07TakeDeliverJewelButton;
+    private static CustomButton thiefplayer08KillButton;
+    private static CustomButton thiefplayer08FreeThiefButton;
+    private static CustomButton thiefplayer08TakeDeliverJewelButton;
+    private static CustomButton thiefplayer09KillButton;
+    private static CustomButton thiefplayer09FreeThiefButton;
+    private static CustomButton thiefplayer09TakeDeliverJewelButton;
 
     public static void SetButtonCooldowns()
     {
         // Police And Thief buttons
-        _policeplayer01KillButton.MaxTimer = MapSettings.GamemodeKillCooldown;
-        _policeplayer01JailButton.MaxTimer = PoliceCatchCooldown;
-        _policeplayer01JailButton.EffectDuration = CaptureThiefTime;
-        _policeplayer01LightButton.MaxTimer = 15;
-        _policeplayer01LightButton.EffectDuration = 10;
-        _policeplayer02KillButton.MaxTimer = MapSettings.GamemodeKillCooldown;
-        _policeplayer02TaseButton.MaxTimer = PoliceTaseCooldown;
-        _policeplayer02LightButton.MaxTimer = 15;
-        _policeplayer02LightButton.EffectDuration = 10;
-        _policeplayer03KillButton.MaxTimer = MapSettings.GamemodeKillCooldown;
-        _policeplayer03JailButton.MaxTimer = PoliceCatchCooldown;
-        _policeplayer03JailButton.EffectDuration = CaptureThiefTime;
-        _policeplayer03LightButton.MaxTimer = 15;
-        _policeplayer03LightButton.EffectDuration = 10;
-        _policeplayer04KillButton.MaxTimer = MapSettings.GamemodeKillCooldown;
-        _policeplayer04TaseButton.MaxTimer = PoliceTaseCooldown;
-        _policeplayer04LightButton.MaxTimer = 15;
-        _policeplayer04LightButton.EffectDuration = 10;
-        _policeplayer05KillButton.MaxTimer = MapSettings.GamemodeKillCooldown;
-        _policeplayer05JailButton.MaxTimer = PoliceCatchCooldown;
-        _policeplayer05JailButton.EffectDuration = CaptureThiefTime;
-        _policeplayer05LightButton.MaxTimer = 15;
-        _policeplayer05LightButton.EffectDuration = 10;
-        _policeplayer06KillButton.MaxTimer = MapSettings.GamemodeKillCooldown;
-        _policeplayer06JailButton.MaxTimer = PoliceCatchCooldown;
-        _policeplayer06JailButton.EffectDuration = CaptureThiefTime;
-        _policeplayer06LightButton.MaxTimer = 15;
-        _policeplayer06LightButton.EffectDuration = 10;
+        policeplayer01KillButton.MaxTimer = MapSettings.gamemodeKillCooldown;
+        policeplayer01JailButton.MaxTimer = PoliceAndThief.policeCatchCooldown;
+        policeplayer01JailButton.EffectDuration = PoliceAndThief.captureThiefTime;
+        policeplayer01LightButton.MaxTimer = 15;
+        policeplayer01LightButton.EffectDuration = 10;
+        policeplayer02KillButton.MaxTimer = MapSettings.gamemodeKillCooldown;
+        policeplayer02TaseButton.MaxTimer = PoliceAndThief.policeTaseCooldown;
+        policeplayer02LightButton.MaxTimer = 15;
+        policeplayer02LightButton.EffectDuration = 10;
+        policeplayer03KillButton.MaxTimer = MapSettings.gamemodeKillCooldown;
+        policeplayer03JailButton.MaxTimer = PoliceAndThief.policeCatchCooldown;
+        policeplayer03JailButton.EffectDuration = PoliceAndThief.captureThiefTime;
+        policeplayer03LightButton.MaxTimer = 15;
+        policeplayer03LightButton.EffectDuration = 10;
+        policeplayer04KillButton.MaxTimer = MapSettings.gamemodeKillCooldown;
+        policeplayer04TaseButton.MaxTimer = PoliceAndThief.policeTaseCooldown;
+        policeplayer04LightButton.MaxTimer = 15;
+        policeplayer04LightButton.EffectDuration = 10;
+        policeplayer05KillButton.MaxTimer = MapSettings.gamemodeKillCooldown;
+        policeplayer05JailButton.MaxTimer = PoliceAndThief.policeCatchCooldown;
+        policeplayer05JailButton.EffectDuration = PoliceAndThief.captureThiefTime;
+        policeplayer05LightButton.MaxTimer = 15;
+        policeplayer05LightButton.EffectDuration = 10;
+        policeplayer06KillButton.MaxTimer = MapSettings.gamemodeKillCooldown;
+        policeplayer06JailButton.MaxTimer = PoliceAndThief.policeCatchCooldown;
+        policeplayer06JailButton.EffectDuration = PoliceAndThief.captureThiefTime;
+        policeplayer06LightButton.MaxTimer = 15;
+        policeplayer06LightButton.EffectDuration = 10;
 
-        _thiefplayer01KillButton.MaxTimer = MapSettings.GamemodeKillCooldown * 1.25f;
-        _thiefplayer01FreeThiefButton.MaxTimer = 20f;
-        _thiefplayer01TakeDeliverJewelButton.MaxTimer = 5f;
-        _thiefplayer02KillButton.MaxTimer = MapSettings.GamemodeKillCooldown * 1.25f;
-        _thiefplayer02FreeThiefButton.MaxTimer = 20f;
-        _thiefplayer02TakeDeliverJewelButton.MaxTimer = 5f;
-        _thiefplayer03KillButton.MaxTimer = MapSettings.GamemodeKillCooldown * 1.25f;
-        _thiefplayer03FreeThiefButton.MaxTimer = 20f;
-        _thiefplayer03TakeDeliverJewelButton.MaxTimer = 5f;
-        _thiefplayer04KillButton.MaxTimer = MapSettings.GamemodeKillCooldown * 1.25f;
-        _thiefplayer04FreeThiefButton.MaxTimer = 20f;
-        _thiefplayer04TakeDeliverJewelButton.MaxTimer = 5f;
-        _thiefplayer05KillButton.MaxTimer = MapSettings.GamemodeKillCooldown * 1.25f;
-        _thiefplayer05FreeThiefButton.MaxTimer = 20f;
-        _thiefplayer05TakeDeliverJewelButton.MaxTimer = 5f;
-        _thiefplayer06KillButton.MaxTimer = MapSettings.GamemodeKillCooldown * 1.25f;
-        _thiefplayer06FreeThiefButton.MaxTimer = 20f;
-        _thiefplayer06TakeDeliverJewelButton.MaxTimer = 5f;
-        _thiefplayer07KillButton.MaxTimer = MapSettings.GamemodeKillCooldown * 1.25f;
-        _thiefplayer07FreeThiefButton.MaxTimer = 20f;
-        _thiefplayer07TakeDeliverJewelButton.MaxTimer = 5f;
-        _thiefplayer08KillButton.MaxTimer = MapSettings.GamemodeKillCooldown * 1.25f;
-        _thiefplayer08FreeThiefButton.MaxTimer = 20f;
-        _thiefplayer08TakeDeliverJewelButton.MaxTimer = 5f;
-        _thiefplayer09KillButton.MaxTimer = MapSettings.GamemodeKillCooldown * 1.25f;
-        _thiefplayer09FreeThiefButton.MaxTimer = 20f;
-        _thiefplayer09TakeDeliverJewelButton.MaxTimer = 5f;
+        thiefplayer01KillButton.MaxTimer = MapSettings.gamemodeKillCooldown * 1.25f;
+        thiefplayer01FreeThiefButton.MaxTimer = 20f;
+        thiefplayer01TakeDeliverJewelButton.MaxTimer = 5f;
+        thiefplayer02KillButton.MaxTimer = MapSettings.gamemodeKillCooldown * 1.25f;
+        thiefplayer02FreeThiefButton.MaxTimer = 20f;
+        thiefplayer02TakeDeliverJewelButton.MaxTimer = 5f;
+        thiefplayer03KillButton.MaxTimer = MapSettings.gamemodeKillCooldown * 1.25f;
+        thiefplayer03FreeThiefButton.MaxTimer = 20f;
+        thiefplayer03TakeDeliverJewelButton.MaxTimer = 5f;
+        thiefplayer04KillButton.MaxTimer = MapSettings.gamemodeKillCooldown * 1.25f;
+        thiefplayer04FreeThiefButton.MaxTimer = 20f;
+        thiefplayer04TakeDeliverJewelButton.MaxTimer = 5f;
+        thiefplayer05KillButton.MaxTimer = MapSettings.gamemodeKillCooldown * 1.25f;
+        thiefplayer05FreeThiefButton.MaxTimer = 20f;
+        thiefplayer05TakeDeliverJewelButton.MaxTimer = 5f;
+        thiefplayer06KillButton.MaxTimer = MapSettings.gamemodeKillCooldown * 1.25f;
+        thiefplayer06FreeThiefButton.MaxTimer = 20f;
+        thiefplayer06TakeDeliverJewelButton.MaxTimer = 5f;
+        thiefplayer07KillButton.MaxTimer = MapSettings.gamemodeKillCooldown * 1.25f;
+        thiefplayer07FreeThiefButton.MaxTimer = 20f;
+        thiefplayer07TakeDeliverJewelButton.MaxTimer = 5f;
+        thiefplayer08KillButton.MaxTimer = MapSettings.gamemodeKillCooldown * 1.25f;
+        thiefplayer08FreeThiefButton.MaxTimer = 20f;
+        thiefplayer08TakeDeliverJewelButton.MaxTimer = 5f;
+        thiefplayer09KillButton.MaxTimer = MapSettings.gamemodeKillCooldown * 1.25f;
+        thiefplayer09FreeThiefButton.MaxTimer = 20f;
+        thiefplayer09TakeDeliverJewelButton.MaxTimer = 5f;
     }
 
     public static void MakeButtons(HudManager __instance)
     {
         // Police and Thief Mode
         // Policeplayer01 Kill
-        _policeplayer01KillButton = new(() =>
-        {
-            var targetId = Policeplayer01CurrentTarget.PlayerId;
-            var sourceId = Policeplayer01.PlayerId;
-            var killWriter = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.GamemodeKills, SendOption.Reliable);
-            killWriter.Write(targetId);
-            killWriter.Write(sourceId);
-            AmongUsClient.Instance.FinishRpcImmediately(killWriter);
-            RPCProcedure.GamemodeKills(targetId, sourceId);
-            _policeplayer01KillButton.Timer = _policeplayer01KillButton.MaxTimer;
-            Policeplayer01CurrentTarget = null;
-        }, () => { return Policeplayer01 != null && Policeplayer01 == PlayerControl.LocalPlayer; }, () =>
-        {
-            var canUse = true;
-            if (((Cellbuttontwo != null && Vector2.Distance(PlayerControl.LocalPlayer.transform.position, Cellbuttontwo.transform.position) <= 3f) || (Cellbutton != null && Vector2.Distance(PlayerControl.LocalPlayer.transform.position, Cellbutton.transform.position) <= 3f)) && !PlayerControl.LocalPlayer.Data.IsDead) canUse = false;
-            return canUse && Policeplayer01CurrentTarget && PlayerControl.LocalPlayer.CanMove && !Policeplayer01IsReviving && !PlayerControl.LocalPlayer.Data.IsDead;
-        }, () => { _policeplayer01KillButton.Timer = _policeplayer01KillButton.MaxTimer; }, __instance.KillButton.graphic.sprite, ButtonPosition.Layout, __instance, __instance.KillButton, AbilitySlot.ImpostorAbilityPrimary, false, TranslationController.Instance.GetString(StringNames.KillLabel));
+        policeplayer01KillButton = new CustomButton(
+            () =>
+            {
+                byte targetId = PoliceAndThief.policeplayer01currentTarget.PlayerId;
+                byte sourceId = PoliceAndThief.policeplayer01.PlayerId;
+                MessageWriter killWriter = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.GamemodeKills, Hazel.SendOption.Reliable, -1);
+                killWriter.Write(targetId);
+                killWriter.Write(sourceId);
+                AmongUsClient.Instance.FinishRpcImmediately(killWriter);
+                RPCProcedure.gamemodeKills(targetId, sourceId);
+                policeplayer01KillButton.Timer = policeplayer01KillButton.MaxTimer;
+                PoliceAndThief.policeplayer01currentTarget = null;
+            },
+            () => { return PoliceAndThief.policeplayer01 != null && PoliceAndThief.policeplayer01 == PlayerControl.LocalPlayer; },
+            () =>
+            {
+                bool CanUse = true;
+                if ((PoliceAndThief.cellbuttontwo != null && Vector2.Distance(PlayerControl.LocalPlayer.transform.position, PoliceAndThief.cellbuttontwo.transform.position) <= 3f || PoliceAndThief.cellbutton != null && Vector2.Distance(PlayerControl.LocalPlayer.transform.position, PoliceAndThief.cellbutton.transform.position) <= 3f) && !PlayerControl.LocalPlayer.Data.IsDead)
+                {
+                    CanUse = false;
+                }
+                return CanUse && PoliceAndThief.policeplayer01currentTarget && PlayerControl.LocalPlayer.CanMove && !PoliceAndThief.policeplayer01IsReviving && !PlayerControl.LocalPlayer.Data.IsDead;
+            },
+            () => { policeplayer01KillButton.Timer = policeplayer01KillButton.MaxTimer; },
+            __instance.KillButton.graphic.sprite,
+            ButtonPosition.Layout,
+            __instance,
+            __instance.KillButton,
+            AbilitySlot.ImpostorAbilityPrimary,
+            false,
+            TranslationController.Instance.GetString(StringNames.KillLabel)
+        );
 
         // Policeplayer01 Jail
-        _policeplayer01JailButton = new(() =>
-        {
-            if (Policeplayer01CurrentTarget != null)
+        policeplayer01JailButton = new CustomButton(
+            () =>
             {
-                Policeplayer01TargetedPlayer = Policeplayer01CurrentTarget;
-                _policeplayer01JailButton.HasEffect = true;
-            }
-        }, () => { return Policeplayer01 != null && Policeplayer01 == PlayerControl.LocalPlayer && !PlayerControl.LocalPlayer.Data.IsDead; }, () =>
-        {
-            if (_policeplayer01JailButton.IsEffectActive && Policeplayer01TargetedPlayer != null && Vector2.Distance(PlayerControl.LocalPlayer.transform.position, Policeplayer01TargetedPlayer.transform.position) > LegacyGameOptions.KillDistances[Mathf.Clamp(GameOptionsManager.Instance.currentGameOptions.GetInt(Int32OptionNames.KillDistance), 0, 2)])
+                if (PoliceAndThief.policeplayer01currentTarget != null)
+                {
+                    PoliceAndThief.policeplayer01targetedPlayer = PoliceAndThief.policeplayer01currentTarget;
+                    policeplayer01JailButton.HasEffect = true;
+                }
+            },
+            () => { return PoliceAndThief.policeplayer01 != null && PoliceAndThief.policeplayer01 == PlayerControl.LocalPlayer && !PlayerControl.LocalPlayer.Data.IsDead; },
+            () =>
             {
-                Policeplayer01TargetedPlayer = null;
-                _policeplayer01JailButton.Timer = 0f;
-                _policeplayer01JailButton.IsEffectActive = false;
-            }
-
-            var canUse = true;
-            if (((Jewelbuttontwo != null && Vector2.Distance(PlayerControl.LocalPlayer.transform.position, Jewelbuttontwo.transform.position) <= 3f) || (Jewelbutton != null && Vector2.Distance(PlayerControl.LocalPlayer.transform.position, Jewelbutton.transform.position) <= 3f)) && !PlayerControl.LocalPlayer.Data.IsDead) canUse = false;
-            return canUse && PlayerControl.LocalPlayer.CanMove && !Policeplayer01IsReviving && Policeplayer01CurrentTarget != null;
-        }, () =>
-        {
-            Policeplayer01TargetedPlayer = null;
-            _policeplayer01JailButton.IsEffectActive = false;
-            _policeplayer01JailButton.Timer = _policeplayer01JailButton.MaxTimer;
-            _policeplayer01JailButton.ActionButton.cooldownTimerText.color = Palette.EnabledColor;
-        }, AssetLoader.PoliceAndThiefCaptureButton, ButtonPosition.Layout, __instance, __instance.UseButton, AbilitySlot.CommonAbilityPrimary, true, CaptureThiefTime, () =>
-        {
-            if (Policeplayer01TargetedPlayer != null && !Policeplayer01TargetedPlayer.Data.IsDead)
+                if (policeplayer01JailButton.IsEffectActive && PoliceAndThief.policeplayer01targetedPlayer != null && Vector2.Distance(PlayerControl.LocalPlayer.transform.position, PoliceAndThief.policeplayer01targetedPlayer.transform.position) > LegacyGameOptions.KillDistances[Mathf.Clamp(GameOptionsManager.Instance.currentGameOptions.GetInt(Int32OptionNames.KillDistance), 0, 2)])
+                {
+                    PoliceAndThief.policeplayer01targetedPlayer = null;
+                    policeplayer01JailButton.Timer = 0f;
+                    policeplayer01JailButton.IsEffectActive = false;
+                }
+                bool CanUse = true;
+                if ((PoliceAndThief.jewelbuttontwo != null && Vector2.Distance(PlayerControl.LocalPlayer.transform.position, PoliceAndThief.jewelbuttontwo.transform.position) <= 3f || PoliceAndThief.jewelbutton != null && Vector2.Distance(PlayerControl.LocalPlayer.transform.position, PoliceAndThief.jewelbutton.transform.position) <= 3f) && !PlayerControl.LocalPlayer.Data.IsDead)
+                {
+                    CanUse = false;
+                }
+                return CanUse && PlayerControl.LocalPlayer.CanMove && !PoliceAndThief.policeplayer01IsReviving && PoliceAndThief.policeplayer01currentTarget != null;
+            },
+            () =>
             {
-                var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.PoliceandThiefJail, SendOption.Reliable);
-                writer.Write(Policeplayer01TargetedPlayer.PlayerId);
-                AmongUsClient.Instance.FinishRpcImmediately(writer);
-                RPCProcedure.PoliceandThiefJail(Policeplayer01TargetedPlayer.PlayerId);
-                Policeplayer01TargetedPlayer = null;
-                _policeplayer01JailButton.Timer = _policeplayer01JailButton.MaxTimer;
+                PoliceAndThief.policeplayer01targetedPlayer = null;
+                policeplayer01JailButton.IsEffectActive = false;
+                policeplayer01JailButton.Timer = policeplayer01JailButton.MaxTimer;
+                policeplayer01JailButton.ActionButton.cooldownTimerText.color = Palette.EnabledColor;
+            },
+            AssetLoader.PoliceAndThiefCaptureButton,
+            ButtonPosition.Layout,
+            __instance,
+            __instance.UseButton,
+            AbilitySlot.CommonAbilityPrimary,
+            true,
+            PoliceAndThief.captureThiefTime,
+            () =>
+            {
+                if (PoliceAndThief.policeplayer01targetedPlayer != null && !PoliceAndThief.policeplayer01targetedPlayer.Data.IsDead)
+                {
+                    MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.PoliceandThiefJail, Hazel.SendOption.Reliable, -1);
+                    writer.Write(PoliceAndThief.policeplayer01targetedPlayer.PlayerId);
+                    AmongUsClient.Instance.FinishRpcImmediately(writer);
+                    RPCProcedure.policeandThiefJail(PoliceAndThief.policeplayer01targetedPlayer.PlayerId);
+                    PoliceAndThief.policeplayer01targetedPlayer = null;
+                    policeplayer01JailButton.Timer = policeplayer01JailButton.MaxTimer;
+                }
             }
-        });
+        );
 
         // Policeplayer01 Light
-        _policeplayer01LightButton = new(() => { Policeplayer01LightTimer = 10; }, () => { return Policeplayer01 != null && Policeplayer01 == PlayerControl.LocalPlayer && !PlayerControl.LocalPlayer.Data.IsDead; }, () => { return PlayerControl.LocalPlayer.CanMove && !Policeplayer01IsReviving; }, () =>
-        {
-            _policeplayer01LightButton.Timer = _policeplayer01LightButton.MaxTimer;
-            _policeplayer01LightButton.IsEffectActive = false;
-            _policeplayer01LightButton.ActionButton.graphic.color = Palette.EnabledColor;
-        }, AssetLoader.PoliceAndThiefsLightButton, ButtonPosition.Layout, __instance, __instance.UseButton, AbilitySlot.ImpostorAbilitySecondary, true, 10, () => { _policeplayer01LightButton.Timer = _policeplayer01LightButton.MaxTimer; });
+        policeplayer01LightButton = new CustomButton(
+            () =>
+            {
+                PoliceAndThief.policeplayer01lightTimer = 10;
+            },
+            () => { return PoliceAndThief.policeplayer01 != null && PoliceAndThief.policeplayer01 == PlayerControl.LocalPlayer && !PlayerControl.LocalPlayer.Data.IsDead; },
+            () => { return PlayerControl.LocalPlayer.CanMove && !PoliceAndThief.policeplayer01IsReviving; },
+            () =>
+            {
+                policeplayer01LightButton.Timer = policeplayer01LightButton.MaxTimer;
+                policeplayer01LightButton.IsEffectActive = false;
+                policeplayer01LightButton.ActionButton.graphic.color = Palette.EnabledColor;
+            },
+            AssetLoader.PoliceAndThiefsLightButton,
+            ButtonPosition.Layout,
+            __instance,
+            __instance.UseButton,
+            AbilitySlot.ImpostorAbilitySecondary,
+            true,
+            10,
+            () => { policeplayer01LightButton.Timer = policeplayer01LightButton.MaxTimer; }
+        );
 
         // Policeplayer02 Kill
-        _policeplayer02KillButton = new(() =>
-        {
-            var targetId = Policeplayer02CurrentTarget.PlayerId;
-            var sourceId = Policeplayer02.PlayerId;
-            var killWriter = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.GamemodeKills, SendOption.Reliable);
-            killWriter.Write(targetId);
-            killWriter.Write(sourceId);
-            AmongUsClient.Instance.FinishRpcImmediately(killWriter);
-            RPCProcedure.GamemodeKills(targetId, sourceId);
-            _policeplayer02KillButton.Timer = _policeplayer02KillButton.MaxTimer;
-            Policeplayer02CurrentTarget = null;
-        }, () => { return Policeplayer02 != null && Policeplayer02 == PlayerControl.LocalPlayer; }, () =>
-        {
-            var canUse = true;
-            if (((Cellbuttontwo != null && Vector2.Distance(PlayerControl.LocalPlayer.transform.position, Cellbuttontwo.transform.position) <= 3f) || (Cellbutton != null && Vector2.Distance(PlayerControl.LocalPlayer.transform.position, Cellbutton.transform.position) <= 3f)) && !PlayerControl.LocalPlayer.Data.IsDead) canUse = false;
-            return canUse && Policeplayer02CurrentTarget && PlayerControl.LocalPlayer.CanMove && !Policeplayer02IsReviving && !PlayerControl.LocalPlayer.Data.IsDead;
-        }, () => { _policeplayer02KillButton.Timer = _policeplayer02KillButton.MaxTimer; }, __instance.KillButton.graphic.sprite, ButtonPosition.Layout, __instance, __instance.KillButton, AbilitySlot.ImpostorAbilityPrimary, false, TranslationController.Instance.GetString(StringNames.KillLabel));
+        policeplayer02KillButton = new CustomButton(
+            () =>
+            {
+                byte targetId = PoliceAndThief.policeplayer02currentTarget.PlayerId;
+                byte sourceId = PoliceAndThief.policeplayer02.PlayerId;
+                MessageWriter killWriter = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.GamemodeKills, Hazel.SendOption.Reliable, -1);
+                killWriter.Write(targetId);
+                killWriter.Write(sourceId);
+                AmongUsClient.Instance.FinishRpcImmediately(killWriter);
+                RPCProcedure.gamemodeKills(targetId, sourceId);
+                policeplayer02KillButton.Timer = policeplayer02KillButton.MaxTimer;
+                PoliceAndThief.policeplayer02currentTarget = null;
+            },
+            () => { return PoliceAndThief.policeplayer02 != null && PoliceAndThief.policeplayer02 == PlayerControl.LocalPlayer; },
+            () =>
+            {
+                bool CanUse = true;
+                if ((PoliceAndThief.cellbuttontwo != null && Vector2.Distance(PlayerControl.LocalPlayer.transform.position, PoliceAndThief.cellbuttontwo.transform.position) <= 3f || PoliceAndThief.cellbutton != null && Vector2.Distance(PlayerControl.LocalPlayer.transform.position, PoliceAndThief.cellbutton.transform.position) <= 3f) && !PlayerControl.LocalPlayer.Data.IsDead)
+                {
+                    CanUse = false;
+                }
+                return CanUse && PoliceAndThief.policeplayer02currentTarget && PlayerControl.LocalPlayer.CanMove && !PoliceAndThief.policeplayer02IsReviving && !PlayerControl.LocalPlayer.Data.IsDead;
+            },
+            () => { policeplayer02KillButton.Timer = policeplayer02KillButton.MaxTimer; },
+            __instance.KillButton.graphic.sprite,
+            ButtonPosition.Layout,
+            __instance,
+            __instance.KillButton,
+            AbilitySlot.ImpostorAbilityPrimary,
+            false,
+            TranslationController.Instance.GetString(StringNames.KillLabel)
+        );
 
         // Policeplayer02 Tase
-        _policeplayer02TaseButton = new(() =>
-        {
-            var target = GetTasedPlayer(2 * 0.2f, 6, true);
-
-            if (target == null) target = PlayerControl.LocalPlayer;
-
-            var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.PoliceandThiefsTased, SendOption.Reliable);
-            writer.Write(target.PlayerId);
-            AmongUsClient.Instance.FinishRpcImmediately(writer);
-            RPCProcedure.PoliceandThiefsTased(target.PlayerId);
-
-            _policeplayer02TaseButton.Timer = _policeplayer02TaseButton.MaxTimer;
-            Policeplayer02CurrentTarget = null;
-
-            target = null;
-        }, () => { return Policeplayer02 != null && Policeplayer02 == PlayerControl.LocalPlayer; }, () =>
-        {
-            if (Policeplayer02Taser == null)
+        policeplayer02TaseButton = new CustomButton(
+            () =>
             {
-                Policeplayer02Taser = new("Weapon");
-                var renderer = Policeplayer02Taser.AddComponent<SpriteRenderer>();
+                PlayerControl target = PoliceAndThief.GetTasedPlayer(2 * 0.2f, 6, true);
 
-                renderer.sprite = AssetLoader.PoliceAndThiefsTaser;
-                renderer.transform.parent = Policeplayer02.transform;
-                renderer.color = new(1, 1, 1, 1);
-                renderer.transform.position = new(0, 0, -30f);
-            }
-            else
-            {
-                var mouseDirection = Input.mousePosition - new Vector3(Screen.width / 2, Screen.height / 2);
-                Policeplayer02MouseAngle = Mathf.Atan2(mouseDirection.y, mouseDirection.x);
-
-                var targetPosition = Policeplayer02.transform.position + new Vector3(0.8f * (float)Math.Cos(Policeplayer02MouseAngle), 0.8f * (float)Math.Sin(Policeplayer02MouseAngle));
-                Policeplayer02Taser.transform.position += (targetPosition - Policeplayer02Taser.transform.position) * 0.4f;
-                Policeplayer02Taser.GetComponent<SpriteRenderer>().transform.eulerAngles = new(0f, 0f, (float)((Policeplayer02MouseAngle * 360f) / Math.PI / 2f));
-                if (Math.Cos(Policeplayer02MouseAngle) < 0.0)
+                if (target == null)
                 {
-                    if (Policeplayer02Taser.GetComponent<SpriteRenderer>().transform.localScale.y > 0)
-                        Policeplayer02Taser.GetComponent<SpriteRenderer>().transform.localScale = new(1f, -1f);
+                    target = PlayerControl.LocalPlayer;
+                }
+
+                MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.PoliceandThiefsTased, Hazel.SendOption.Reliable, -1);
+                writer.Write(target.PlayerId);
+                AmongUsClient.Instance.FinishRpcImmediately(writer);
+                RPCProcedure.policeandThiefsTased(target.PlayerId);
+
+                policeplayer02TaseButton.Timer = policeplayer02TaseButton.MaxTimer;
+                PoliceAndThief.policeplayer02currentTarget = null;
+
+                target = null;
+            },
+            () => { return PoliceAndThief.policeplayer02 != null && PoliceAndThief.policeplayer02 == PlayerControl.LocalPlayer; },
+            () =>
+            {
+                if (PoliceAndThief.policeplayer02Taser == null)
+                {
+                    PoliceAndThief.policeplayer02Taser = new GameObject("Weapon");
+                    var renderer = PoliceAndThief.policeplayer02Taser.AddComponent<SpriteRenderer>();
+
+                    renderer.sprite = AssetLoader.PoliceAndThiefsTaser;
+                    renderer.transform.parent = PoliceAndThief.policeplayer02.transform;
+                    renderer.color = new Color(1, 1, 1, 1);
+                    renderer.transform.position = new Vector3(0, 0, -30f);
                 }
                 else
                 {
-                    if (Policeplayer02Taser.GetComponent<SpriteRenderer>().transform.localScale.y < 0)
-                        Policeplayer02Taser.GetComponent<SpriteRenderer>().transform.localScale = new(1f, 1f);
-                }
-            }
+                    Vector3 mouseDirection = Input.mousePosition - new Vector3(Screen.width / 2, Screen.height / 2);
+                    PoliceAndThief.policeplayer02mouseAngle = Mathf.Atan2(mouseDirection.y, mouseDirection.x);
 
-            var canUse = true;
-            if (((Jewelbuttontwo != null && Vector2.Distance(PlayerControl.LocalPlayer.transform.position, Jewelbuttontwo.transform.position) <= 3f) || (Jewelbutton != null && Vector2.Distance(PlayerControl.LocalPlayer.transform.position, Jewelbutton.transform.position) <= 3f)) && !PlayerControl.LocalPlayer.Data.IsDead) canUse = false;
-            return canUse && PlayerControl.LocalPlayer.CanMove && !Policeplayer02IsReviving && !PlayerControl.LocalPlayer.Data.IsDead;
-        }, () => { _policeplayer02TaseButton.Timer = _policeplayer02TaseButton.MaxTimer; }, AssetLoader.PoliceAndThiefsTaserButton, ButtonPosition.Layout, __instance, __instance.UseButton, KeyCode.Mouse1, false, Tr.Get(TrKey.ParalyzeButton));
+                    var targetPosition = PoliceAndThief.policeplayer02.transform.position + new Vector3(0.8f * (float)Math.Cos(PoliceAndThief.policeplayer02mouseAngle), 0.8f * (float)Math.Sin(PoliceAndThief.policeplayer02mouseAngle));
+                    PoliceAndThief.policeplayer02Taser.transform.position += (targetPosition - PoliceAndThief.policeplayer02Taser.transform.position) * 0.4f;
+                    PoliceAndThief.policeplayer02Taser.GetComponent<SpriteRenderer>().transform.eulerAngles = new Vector3(0f, 0f, (float)(PoliceAndThief.policeplayer02mouseAngle * 360f / Math.PI / 2f));
+                    if (Math.Cos(PoliceAndThief.policeplayer02mouseAngle) < 0.0)
+                    {
+                        if (PoliceAndThief.policeplayer02Taser.GetComponent<SpriteRenderer>().transform.localScale.y > 0)
+                            PoliceAndThief.policeplayer02Taser.GetComponent<SpriteRenderer>().transform.localScale = new Vector3(1f, -1f);
+                    }
+                    else
+                    {
+                        if (PoliceAndThief.policeplayer02Taser.GetComponent<SpriteRenderer>().transform.localScale.y < 0)
+                            PoliceAndThief.policeplayer02Taser.GetComponent<SpriteRenderer>().transform.localScale = new Vector3(1f, 1f);
+                    }
+                }
+                bool CanUse = true;
+                if ((PoliceAndThief.jewelbuttontwo != null && Vector2.Distance(PlayerControl.LocalPlayer.transform.position, PoliceAndThief.jewelbuttontwo.transform.position) <= 3f || PoliceAndThief.jewelbutton != null && Vector2.Distance(PlayerControl.LocalPlayer.transform.position, PoliceAndThief.jewelbutton.transform.position) <= 3f) && !PlayerControl.LocalPlayer.Data.IsDead)
+                {
+                    CanUse = false;
+                }
+                return CanUse && PlayerControl.LocalPlayer.CanMove && !PoliceAndThief.policeplayer02IsReviving && !PlayerControl.LocalPlayer.Data.IsDead;
+            },
+            () => { policeplayer02TaseButton.Timer = policeplayer02TaseButton.MaxTimer; },
+            AssetLoader.PoliceAndThiefsTaserButton,
+            ButtonPosition.Layout,
+            __instance,
+            __instance.UseButton,
+            KeyCode.Mouse1,
+            false,
+            Tr.Get(TrKey.ParalyzeButton)
+        );
 
         // Policeplayer02 Light
-        _policeplayer02LightButton = new(() => { Policeplayer02LightTimer = 10; }, () => { return Policeplayer02 != null && Policeplayer02 == PlayerControl.LocalPlayer && !PlayerControl.LocalPlayer.Data.IsDead; }, () => { return PlayerControl.LocalPlayer.CanMove && !Policeplayer02IsReviving; }, () =>
-        {
-            _policeplayer02LightButton.Timer = _policeplayer02LightButton.MaxTimer;
-            _policeplayer02LightButton.IsEffectActive = false;
-            _policeplayer02LightButton.ActionButton.graphic.color = Palette.EnabledColor;
-        }, AssetLoader.PoliceAndThiefsLightButton, ButtonPosition.Layout, __instance, __instance.UseButton, AbilitySlot.ImpostorAbilitySecondary, true, 10, () => { _policeplayer02LightButton.Timer = _policeplayer02LightButton.MaxTimer; });
+        policeplayer02LightButton = new CustomButton(
+            () =>
+            {
+                PoliceAndThief.policeplayer02lightTimer = 10;
+            },
+            () => { return PoliceAndThief.policeplayer02 != null && PoliceAndThief.policeplayer02 == PlayerControl.LocalPlayer && !PlayerControl.LocalPlayer.Data.IsDead; },
+            () => { return PlayerControl.LocalPlayer.CanMove && !PoliceAndThief.policeplayer02IsReviving; },
+            () =>
+            {
+                policeplayer02LightButton.Timer = policeplayer02LightButton.MaxTimer;
+                policeplayer02LightButton.IsEffectActive = false;
+                policeplayer02LightButton.ActionButton.graphic.color = Palette.EnabledColor;
+            },
+            AssetLoader.PoliceAndThiefsLightButton,
+            ButtonPosition.Layout,
+            __instance,
+            __instance.UseButton,
+            AbilitySlot.ImpostorAbilitySecondary,
+            true,
+            10,
+            () => { policeplayer02LightButton.Timer = policeplayer02LightButton.MaxTimer; }
+        );
 
         // Policeplayer03 Kill
-        _policeplayer03KillButton = new(() =>
-        {
-            var targetId = Policeplayer03CurrentTarget.PlayerId;
-            var sourceId = Policeplayer03.PlayerId;
-            var killWriter = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.GamemodeKills, SendOption.Reliable);
-            killWriter.Write(targetId);
-            killWriter.Write(sourceId);
-            AmongUsClient.Instance.FinishRpcImmediately(killWriter);
-            RPCProcedure.GamemodeKills(targetId, sourceId);
-            _policeplayer03KillButton.Timer = _policeplayer03KillButton.MaxTimer;
-            Policeplayer03CurrentTarget = null;
-        }, () => { return Policeplayer03 != null && Policeplayer03 == PlayerControl.LocalPlayer; }, () =>
-        {
-            var canUse = true;
-            if (((Cellbuttontwo != null && Vector2.Distance(PlayerControl.LocalPlayer.transform.position, Cellbuttontwo.transform.position) <= 3f) || (Cellbutton != null && Vector2.Distance(PlayerControl.LocalPlayer.transform.position, Cellbutton.transform.position) <= 3f)) && !PlayerControl.LocalPlayer.Data.IsDead) canUse = false;
-            return canUse && Policeplayer03CurrentTarget && PlayerControl.LocalPlayer.CanMove && !Policeplayer03IsReviving && !PlayerControl.LocalPlayer.Data.IsDead;
-        }, () => { _policeplayer03KillButton.Timer = _policeplayer03KillButton.MaxTimer; }, __instance.KillButton.graphic.sprite, ButtonPosition.Layout, __instance, __instance.KillButton, AbilitySlot.ImpostorAbilityPrimary, false, TranslationController.Instance.GetString(StringNames.KillLabel));
+        policeplayer03KillButton = new CustomButton(
+            () =>
+            {
+                byte targetId = PoliceAndThief.policeplayer03currentTarget.PlayerId;
+                byte sourceId = PoliceAndThief.policeplayer03.PlayerId;
+                MessageWriter killWriter = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.GamemodeKills, Hazel.SendOption.Reliable, -1);
+                killWriter.Write(targetId);
+                killWriter.Write(sourceId);
+                AmongUsClient.Instance.FinishRpcImmediately(killWriter);
+                RPCProcedure.gamemodeKills(targetId, sourceId);
+                policeplayer03KillButton.Timer = policeplayer03KillButton.MaxTimer;
+                PoliceAndThief.policeplayer03currentTarget = null;
+            },
+            () => { return PoliceAndThief.policeplayer03 != null && PoliceAndThief.policeplayer03 == PlayerControl.LocalPlayer; },
+            () =>
+            {
+                bool CanUse = true;
+                if ((PoliceAndThief.cellbuttontwo != null && Vector2.Distance(PlayerControl.LocalPlayer.transform.position, PoliceAndThief.cellbuttontwo.transform.position) <= 3f || PoliceAndThief.cellbutton != null && Vector2.Distance(PlayerControl.LocalPlayer.transform.position, PoliceAndThief.cellbutton.transform.position) <= 3f) && !PlayerControl.LocalPlayer.Data.IsDead)
+                {
+                    CanUse = false;
+                }
+                return CanUse && PoliceAndThief.policeplayer03currentTarget && PlayerControl.LocalPlayer.CanMove && !PoliceAndThief.policeplayer03IsReviving && !PlayerControl.LocalPlayer.Data.IsDead;
+            },
+            () => { policeplayer03KillButton.Timer = policeplayer03KillButton.MaxTimer; },
+            __instance.KillButton.graphic.sprite,
+            ButtonPosition.Layout,
+            __instance,
+            __instance.KillButton,
+            AbilitySlot.ImpostorAbilityPrimary,
+            false,
+            TranslationController.Instance.GetString(StringNames.KillLabel)
+        );
 
         // Policeplayer03 Jail
-        _policeplayer03JailButton = new(() =>
-        {
-            if (Policeplayer03CurrentTarget != null)
+        policeplayer03JailButton = new CustomButton(
+            () =>
             {
-                Policeplayer03TargetedPlayer = Policeplayer03CurrentTarget;
-                _policeplayer03JailButton.HasEffect = true;
-            }
-        }, () => { return Policeplayer03 != null && Policeplayer03 == PlayerControl.LocalPlayer && !PlayerControl.LocalPlayer.Data.IsDead; }, () =>
-        {
-            if (_policeplayer03JailButton.IsEffectActive && Policeplayer03TargetedPlayer != null && Vector2.Distance(PlayerControl.LocalPlayer.transform.position, Policeplayer03TargetedPlayer.transform.position) > LegacyGameOptions.KillDistances[Mathf.Clamp(GameOptionsManager.Instance.currentGameOptions.GetInt(Int32OptionNames.KillDistance), 0, 2)])
+                if (PoliceAndThief.policeplayer03currentTarget != null)
+                {
+                    PoliceAndThief.policeplayer03targetedPlayer = PoliceAndThief.policeplayer03currentTarget;
+                    policeplayer03JailButton.HasEffect = true;
+                }
+            },
+            () => { return PoliceAndThief.policeplayer03 != null && PoliceAndThief.policeplayer03 == PlayerControl.LocalPlayer && !PlayerControl.LocalPlayer.Data.IsDead; },
+            () =>
             {
-                Policeplayer03TargetedPlayer = null;
-                _policeplayer03JailButton.Timer = 0f;
-                _policeplayer03JailButton.IsEffectActive = false;
-            }
+                if (policeplayer03JailButton.IsEffectActive && PoliceAndThief.policeplayer03targetedPlayer != null && Vector2.Distance(PlayerControl.LocalPlayer.transform.position, PoliceAndThief.policeplayer03targetedPlayer.transform.position) > LegacyGameOptions.KillDistances[Mathf.Clamp(GameOptionsManager.Instance.currentGameOptions.GetInt(Int32OptionNames.KillDistance), 0, 2)])
+                {
+                    PoliceAndThief.policeplayer03targetedPlayer = null;
+                    policeplayer03JailButton.Timer = 0f;
+                    policeplayer03JailButton.IsEffectActive = false;
+                }
 
-            var canUse = true;
-            if (((Jewelbuttontwo != null && Vector2.Distance(PlayerControl.LocalPlayer.transform.position, Jewelbuttontwo.transform.position) <= 3f) || (Jewelbutton != null && Vector2.Distance(PlayerControl.LocalPlayer.transform.position, Jewelbutton.transform.position) <= 3f)) && !PlayerControl.LocalPlayer.Data.IsDead) canUse = false;
-            return canUse && PlayerControl.LocalPlayer.CanMove && !Policeplayer03IsReviving && Policeplayer03CurrentTarget != null;
-        }, () =>
-        {
-            Policeplayer03TargetedPlayer = null;
-            _policeplayer03JailButton.IsEffectActive = false;
-            _policeplayer03JailButton.Timer = _policeplayer03JailButton.MaxTimer;
-            _policeplayer03JailButton.ActionButton.cooldownTimerText.color = Palette.EnabledColor;
-        }, AssetLoader.PoliceAndThiefCaptureButton, ButtonPosition.Layout, __instance, __instance.UseButton, AbilitySlot.CommonAbilityPrimary, true, CaptureThiefTime, () =>
-        {
-            if (Policeplayer03TargetedPlayer != null && !Policeplayer03TargetedPlayer.Data.IsDead)
+                bool CanUse = true;
+                if ((PoliceAndThief.jewelbuttontwo != null && Vector2.Distance(PlayerControl.LocalPlayer.transform.position, PoliceAndThief.jewelbuttontwo.transform.position) <= 3f || PoliceAndThief.jewelbutton != null && Vector2.Distance(PlayerControl.LocalPlayer.transform.position, PoliceAndThief.jewelbutton.transform.position) <= 3f) && !PlayerControl.LocalPlayer.Data.IsDead)
+                {
+                    CanUse = false;
+                }
+                return CanUse && PlayerControl.LocalPlayer.CanMove && !PoliceAndThief.policeplayer03IsReviving && PoliceAndThief.policeplayer03currentTarget != null;
+            },
+            () =>
             {
-                var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.PoliceandThiefJail, SendOption.Reliable);
-                writer.Write(Policeplayer03TargetedPlayer.PlayerId);
-                AmongUsClient.Instance.FinishRpcImmediately(writer);
-                RPCProcedure.PoliceandThiefJail(Policeplayer03TargetedPlayer.PlayerId);
-                Policeplayer03TargetedPlayer = null;
-                _policeplayer03JailButton.Timer = _policeplayer03JailButton.MaxTimer;
+                PoliceAndThief.policeplayer03targetedPlayer = null;
+                policeplayer03JailButton.IsEffectActive = false;
+                policeplayer03JailButton.Timer = policeplayer03JailButton.MaxTimer;
+                policeplayer03JailButton.ActionButton.cooldownTimerText.color = Palette.EnabledColor;
+            },
+            AssetLoader.PoliceAndThiefCaptureButton,
+            ButtonPosition.Layout,
+            __instance,
+            __instance.UseButton,
+            AbilitySlot.CommonAbilityPrimary,
+            true,
+            PoliceAndThief.captureThiefTime,
+            () =>
+            {
+                if (PoliceAndThief.policeplayer03targetedPlayer != null && !PoliceAndThief.policeplayer03targetedPlayer.Data.IsDead)
+                {
+                    MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.PoliceandThiefJail, Hazel.SendOption.Reliable, -1);
+                    writer.Write(PoliceAndThief.policeplayer03targetedPlayer.PlayerId);
+                    AmongUsClient.Instance.FinishRpcImmediately(writer);
+                    RPCProcedure.policeandThiefJail(PoliceAndThief.policeplayer03targetedPlayer.PlayerId);
+                    PoliceAndThief.policeplayer03targetedPlayer = null;
+                    policeplayer03JailButton.Timer = policeplayer03JailButton.MaxTimer;
+                }
             }
-        });
+        );
 
         // Policeplayer03 Light
-        _policeplayer03LightButton = new(() => { Policeplayer03LightTimer = 10; }, () => { return Policeplayer03 != null && Policeplayer03 == PlayerControl.LocalPlayer && !PlayerControl.LocalPlayer.Data.IsDead; }, () => { return PlayerControl.LocalPlayer.CanMove && !Policeplayer03IsReviving; }, () =>
-        {
-            _policeplayer03LightButton.Timer = _policeplayer03LightButton.MaxTimer;
-            _policeplayer03LightButton.IsEffectActive = false;
-            _policeplayer03LightButton.ActionButton.graphic.color = Palette.EnabledColor;
-        }, AssetLoader.PoliceAndThiefsLightButton, ButtonPosition.Layout, __instance, __instance.UseButton, AbilitySlot.ImpostorAbilitySecondary, true, 10, () => { _policeplayer03LightButton.Timer = _policeplayer03LightButton.MaxTimer; });
+        policeplayer03LightButton = new CustomButton(
+            () =>
+            {
+                PoliceAndThief.policeplayer03lightTimer = 10;
+            },
+            () => { return PoliceAndThief.policeplayer03 != null && PoliceAndThief.policeplayer03 == PlayerControl.LocalPlayer && !PlayerControl.LocalPlayer.Data.IsDead; },
+            () => { return PlayerControl.LocalPlayer.CanMove && !PoliceAndThief.policeplayer03IsReviving; },
+            () =>
+            {
+                policeplayer03LightButton.Timer = policeplayer03LightButton.MaxTimer;
+                policeplayer03LightButton.IsEffectActive = false;
+                policeplayer03LightButton.ActionButton.graphic.color = Palette.EnabledColor;
+            },
+            AssetLoader.PoliceAndThiefsLightButton,
+            ButtonPosition.Layout,
+            __instance,
+            __instance.UseButton,
+            AbilitySlot.ImpostorAbilitySecondary,
+            true,
+            10,
+            () => { policeplayer03LightButton.Timer = policeplayer03LightButton.MaxTimer; }
+        );
 
         // Policeplayer04 Kill
-        _policeplayer04KillButton = new(() =>
-        {
-            var targetId = Policeplayer04CurrentTarget.PlayerId;
-            var sourceId = Policeplayer04.PlayerId;
-            var killWriter = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.GamemodeKills, SendOption.Reliable);
-            killWriter.Write(targetId);
-            killWriter.Write(sourceId);
-            AmongUsClient.Instance.FinishRpcImmediately(killWriter);
-            RPCProcedure.GamemodeKills(targetId, sourceId);
-            _policeplayer04KillButton.Timer = _policeplayer04KillButton.MaxTimer;
-            Policeplayer04CurrentTarget = null;
-        }, () => { return Policeplayer04 != null && Policeplayer04 == PlayerControl.LocalPlayer; }, () =>
-        {
-            var canUse = true;
-            if (((Cellbuttontwo != null && Vector2.Distance(PlayerControl.LocalPlayer.transform.position, Cellbuttontwo.transform.position) <= 3f) || (Cellbutton != null && Vector2.Distance(PlayerControl.LocalPlayer.transform.position, Cellbutton.transform.position) <= 3f)) && !PlayerControl.LocalPlayer.Data.IsDead) canUse = false;
-            return canUse && Policeplayer04CurrentTarget && PlayerControl.LocalPlayer.CanMove && !Policeplayer04IsReviving && !PlayerControl.LocalPlayer.Data.IsDead;
-        }, () => { _policeplayer04KillButton.Timer = _policeplayer04KillButton.MaxTimer; }, __instance.KillButton.graphic.sprite, ButtonPosition.Layout, __instance, __instance.KillButton, AbilitySlot.ImpostorAbilityPrimary, false, TranslationController.Instance.GetString(StringNames.KillLabel));
+        policeplayer04KillButton = new CustomButton(
+            () =>
+            {
+                byte targetId = PoliceAndThief.policeplayer04currentTarget.PlayerId;
+                byte sourceId = PoliceAndThief.policeplayer04.PlayerId;
+                MessageWriter killWriter = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.GamemodeKills, Hazel.SendOption.Reliable, -1);
+                killWriter.Write(targetId);
+                killWriter.Write(sourceId);
+                AmongUsClient.Instance.FinishRpcImmediately(killWriter);
+                RPCProcedure.gamemodeKills(targetId, sourceId);
+                policeplayer04KillButton.Timer = policeplayer04KillButton.MaxTimer;
+                PoliceAndThief.policeplayer04currentTarget = null;
+            },
+            () => { return PoliceAndThief.policeplayer04 != null && PoliceAndThief.policeplayer04 == PlayerControl.LocalPlayer; },
+            () =>
+            {
+                bool CanUse = true;
+                if ((PoliceAndThief.cellbuttontwo != null && Vector2.Distance(PlayerControl.LocalPlayer.transform.position, PoliceAndThief.cellbuttontwo.transform.position) <= 3f || PoliceAndThief.cellbutton != null && Vector2.Distance(PlayerControl.LocalPlayer.transform.position, PoliceAndThief.cellbutton.transform.position) <= 3f) && !PlayerControl.LocalPlayer.Data.IsDead)
+                {
+                    CanUse = false;
+                }
+                return CanUse && PoliceAndThief.policeplayer04currentTarget && PlayerControl.LocalPlayer.CanMove && !PoliceAndThief.policeplayer04IsReviving && !PlayerControl.LocalPlayer.Data.IsDead;
+            },
+            () => { policeplayer04KillButton.Timer = policeplayer04KillButton.MaxTimer; },
+            __instance.KillButton.graphic.sprite,
+            ButtonPosition.Layout,
+            __instance,
+            __instance.KillButton,
+            AbilitySlot.ImpostorAbilityPrimary,
+            false,
+            TranslationController.Instance.GetString(StringNames.KillLabel)
+        );
 
         // Policeplayer04 Tase
-        _policeplayer04TaseButton = new(() =>
-        {
-            var target = GetTasedPlayer(2 * 0.2f, 6, false);
-
-            if (target == null) target = PlayerControl.LocalPlayer;
-
-            var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.PoliceandThiefsTased, SendOption.Reliable);
-            writer.Write(target.PlayerId);
-            AmongUsClient.Instance.FinishRpcImmediately(writer);
-            RPCProcedure.PoliceandThiefsTased(target.PlayerId);
-
-            _policeplayer04TaseButton.Timer = _policeplayer04TaseButton.MaxTimer;
-            Policeplayer04CurrentTarget = null;
-
-            target = null;
-        }, () => { return Policeplayer04 != null && Policeplayer04 == PlayerControl.LocalPlayer; }, () =>
-        {
-            if (Policeplayer04Taser == null)
+        policeplayer04TaseButton = new CustomButton(
+            () =>
             {
-                Policeplayer04Taser = new("Weapon");
-                var renderer = Policeplayer04Taser.AddComponent<SpriteRenderer>();
+                PlayerControl target = PoliceAndThief.GetTasedPlayer(2 * 0.2f, 6, false);
 
-                renderer.sprite = AssetLoader.PoliceAndThiefsTaser;
-                renderer.transform.parent = Policeplayer04.transform;
-                renderer.color = new(1, 1, 1, 1);
-                renderer.transform.position = new(0, 0, -30f);
-            }
-            else
-            {
-                var mouseDirection = Input.mousePosition - new Vector3(Screen.width / 2, Screen.height / 2);
-                Policeplayer04MouseAngle = Mathf.Atan2(mouseDirection.y, mouseDirection.x);
-
-                var targetPosition = Policeplayer04.transform.position + new Vector3(0.8f * (float)Math.Cos(Policeplayer04MouseAngle), 0.8f * (float)Math.Sin(Policeplayer04MouseAngle));
-                Policeplayer04Taser.transform.position += (targetPosition - Policeplayer04Taser.transform.position) * 0.4f;
-                Policeplayer04Taser.GetComponent<SpriteRenderer>().transform.eulerAngles = new(0f, 0f, (float)((Policeplayer04MouseAngle * 360f) / Math.PI / 2f));
-                if (Math.Cos(Policeplayer04MouseAngle) < 0.0)
+                if (target == null)
                 {
-                    if (Policeplayer04Taser.GetComponent<SpriteRenderer>().transform.localScale.y > 0)
-                        Policeplayer04Taser.GetComponent<SpriteRenderer>().transform.localScale = new(1f, -1f);
+                    target = PlayerControl.LocalPlayer;
+                }
+
+                MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.PoliceandThiefsTased, Hazel.SendOption.Reliable, -1);
+                writer.Write(target.PlayerId);
+                AmongUsClient.Instance.FinishRpcImmediately(writer);
+                RPCProcedure.policeandThiefsTased(target.PlayerId);
+
+                policeplayer04TaseButton.Timer = policeplayer04TaseButton.MaxTimer;
+                PoliceAndThief.policeplayer04currentTarget = null;
+
+                target = null;
+            },
+            () => { return PoliceAndThief.policeplayer04 != null && PoliceAndThief.policeplayer04 == PlayerControl.LocalPlayer; },
+            () =>
+            {
+                if (PoliceAndThief.policeplayer04Taser == null)
+                {
+                    PoliceAndThief.policeplayer04Taser = new GameObject("Weapon");
+                    var renderer = PoliceAndThief.policeplayer04Taser.AddComponent<SpriteRenderer>();
+
+                    renderer.sprite = AssetLoader.PoliceAndThiefsTaser;
+                    renderer.transform.parent = PoliceAndThief.policeplayer04.transform;
+                    renderer.color = new Color(1, 1, 1, 1);
+                    renderer.transform.position = new Vector3(0, 0, -30f);
                 }
                 else
                 {
-                    if (Policeplayer04Taser.GetComponent<SpriteRenderer>().transform.localScale.y < 0)
-                        Policeplayer04Taser.GetComponent<SpriteRenderer>().transform.localScale = new(1f, 1f);
-                }
-            }
+                    Vector3 mouseDirection = Input.mousePosition - new Vector3(Screen.width / 2, Screen.height / 2);
+                    PoliceAndThief.policeplayer04mouseAngle = Mathf.Atan2(mouseDirection.y, mouseDirection.x);
 
-            var canUse = true;
-            if (((Jewelbuttontwo != null && Vector2.Distance(PlayerControl.LocalPlayer.transform.position, Jewelbuttontwo.transform.position) <= 3f) || (Jewelbutton != null && Vector2.Distance(PlayerControl.LocalPlayer.transform.position, Jewelbutton.transform.position) <= 3f)) && !PlayerControl.LocalPlayer.Data.IsDead) canUse = false;
-            return canUse && PlayerControl.LocalPlayer.CanMove && !Policeplayer04IsReviving && !PlayerControl.LocalPlayer.Data.IsDead;
-        }, () => { _policeplayer04TaseButton.Timer = _policeplayer04TaseButton.MaxTimer; }, AssetLoader.PoliceAndThiefsTaserButton, ButtonPosition.Layout, __instance, __instance.UseButton, KeyCode.Mouse1, false, Tr.Get(TrKey.ParalyzeButton));
+                    var targetPosition = PoliceAndThief.policeplayer04.transform.position + new Vector3(0.8f * (float)Math.Cos(PoliceAndThief.policeplayer04mouseAngle), 0.8f * (float)Math.Sin(PoliceAndThief.policeplayer04mouseAngle));
+                    PoliceAndThief.policeplayer04Taser.transform.position += (targetPosition - PoliceAndThief.policeplayer04Taser.transform.position) * 0.4f;
+                    PoliceAndThief.policeplayer04Taser.GetComponent<SpriteRenderer>().transform.eulerAngles = new Vector3(0f, 0f, (float)(PoliceAndThief.policeplayer04mouseAngle * 360f / Math.PI / 2f));
+                    if (Math.Cos(PoliceAndThief.policeplayer04mouseAngle) < 0.0)
+                    {
+                        if (PoliceAndThief.policeplayer04Taser.GetComponent<SpriteRenderer>().transform.localScale.y > 0)
+                            PoliceAndThief.policeplayer04Taser.GetComponent<SpriteRenderer>().transform.localScale = new Vector3(1f, -1f);
+                    }
+                    else
+                    {
+                        if (PoliceAndThief.policeplayer04Taser.GetComponent<SpriteRenderer>().transform.localScale.y < 0)
+                            PoliceAndThief.policeplayer04Taser.GetComponent<SpriteRenderer>().transform.localScale = new Vector3(1f, 1f);
+                    }
+                }
+                bool CanUse = true;
+                if ((PoliceAndThief.jewelbuttontwo != null && Vector2.Distance(PlayerControl.LocalPlayer.transform.position, PoliceAndThief.jewelbuttontwo.transform.position) <= 3f || PoliceAndThief.jewelbutton != null && Vector2.Distance(PlayerControl.LocalPlayer.transform.position, PoliceAndThief.jewelbutton.transform.position) <= 3f) && !PlayerControl.LocalPlayer.Data.IsDead)
+                {
+                    CanUse = false;
+                }
+                return CanUse && PlayerControl.LocalPlayer.CanMove && !PoliceAndThief.policeplayer04IsReviving && !PlayerControl.LocalPlayer.Data.IsDead;
+            },
+            () => { policeplayer04TaseButton.Timer = policeplayer04TaseButton.MaxTimer; },
+            AssetLoader.PoliceAndThiefsTaserButton,
+            ButtonPosition.Layout,
+            __instance,
+            __instance.UseButton,
+            KeyCode.Mouse1,
+            false,
+            Tr.Get(TrKey.ParalyzeButton)
+        );
 
         // Policeplayer04 Light
-        _policeplayer04LightButton = new(() => { Policeplayer04LightTimer = 10; }, () => { return Policeplayer04 != null && Policeplayer04 == PlayerControl.LocalPlayer && !PlayerControl.LocalPlayer.Data.IsDead; }, () => { return PlayerControl.LocalPlayer.CanMove && !Policeplayer04IsReviving; }, () =>
-        {
-            _policeplayer04LightButton.Timer = _policeplayer04LightButton.MaxTimer;
-            _policeplayer04LightButton.IsEffectActive = false;
-            _policeplayer04LightButton.ActionButton.graphic.color = Palette.EnabledColor;
-        }, AssetLoader.PoliceAndThiefsLightButton, ButtonPosition.Layout, __instance, __instance.UseButton, AbilitySlot.ImpostorAbilitySecondary, true, 10, () => { _policeplayer04LightButton.Timer = _policeplayer04LightButton.MaxTimer; });
+        policeplayer04LightButton = new CustomButton(
+            () =>
+            {
+                PoliceAndThief.policeplayer04lightTimer = 10;
+            },
+            () => { return PoliceAndThief.policeplayer04 != null && PoliceAndThief.policeplayer04 == PlayerControl.LocalPlayer && !PlayerControl.LocalPlayer.Data.IsDead; },
+            () => { return PlayerControl.LocalPlayer.CanMove && !PoliceAndThief.policeplayer04IsReviving; },
+            () =>
+            {
+                policeplayer04LightButton.Timer = policeplayer04LightButton.MaxTimer;
+                policeplayer04LightButton.IsEffectActive = false;
+                policeplayer04LightButton.ActionButton.graphic.color = Palette.EnabledColor;
+            },
+            AssetLoader.PoliceAndThiefsLightButton,
+            ButtonPosition.Layout,
+            __instance,
+            __instance.UseButton,
+            AbilitySlot.ImpostorAbilitySecondary,
+            true,
+            10,
+            () => { policeplayer04LightButton.Timer = policeplayer04LightButton.MaxTimer; }
+        );
 
         // Policeplayer05 Kill
-        _policeplayer05KillButton = new(() =>
-        {
-            var targetId = Policeplayer05CurrentTarget.PlayerId;
-            var sourceId = Policeplayer05.PlayerId;
-            var killWriter = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.GamemodeKills, SendOption.Reliable);
-            killWriter.Write(targetId);
-            killWriter.Write(sourceId);
-            AmongUsClient.Instance.FinishRpcImmediately(killWriter);
-            RPCProcedure.GamemodeKills(targetId, sourceId);
-            _policeplayer05KillButton.Timer = _policeplayer05KillButton.MaxTimer;
-            Policeplayer05CurrentTarget = null;
-        }, () => { return Policeplayer05 != null && Policeplayer05 == PlayerControl.LocalPlayer; }, () =>
-        {
-            var canUse = true;
-            if (((Cellbuttontwo != null && Vector2.Distance(PlayerControl.LocalPlayer.transform.position, Cellbuttontwo.transform.position) <= 3f) || (Cellbutton != null && Vector2.Distance(PlayerControl.LocalPlayer.transform.position, Cellbutton.transform.position) <= 3f)) && !PlayerControl.LocalPlayer.Data.IsDead) canUse = false;
-            return canUse && Policeplayer05CurrentTarget && PlayerControl.LocalPlayer.CanMove && !Policeplayer05IsReviving && !PlayerControl.LocalPlayer.Data.IsDead;
-        }, () => { _policeplayer05KillButton.Timer = _policeplayer05KillButton.MaxTimer; }, __instance.KillButton.graphic.sprite, ButtonPosition.Layout, __instance, __instance.KillButton, AbilitySlot.ImpostorAbilityPrimary, false, TranslationController.Instance.GetString(StringNames.KillLabel));
+        policeplayer05KillButton = new CustomButton(
+            () =>
+            {
+                byte targetId = PoliceAndThief.policeplayer05currentTarget.PlayerId;
+                byte sourceId = PoliceAndThief.policeplayer05.PlayerId;
+                MessageWriter killWriter = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.GamemodeKills, Hazel.SendOption.Reliable, -1);
+                killWriter.Write(targetId);
+                killWriter.Write(sourceId);
+                AmongUsClient.Instance.FinishRpcImmediately(killWriter);
+                RPCProcedure.gamemodeKills(targetId, sourceId);
+                policeplayer05KillButton.Timer = policeplayer05KillButton.MaxTimer;
+                PoliceAndThief.policeplayer05currentTarget = null;
+            },
+            () => { return PoliceAndThief.policeplayer05 != null && PoliceAndThief.policeplayer05 == PlayerControl.LocalPlayer; },
+            () =>
+            {
+                bool CanUse = true;
+                if ((PoliceAndThief.cellbuttontwo != null && Vector2.Distance(PlayerControl.LocalPlayer.transform.position, PoliceAndThief.cellbuttontwo.transform.position) <= 3f || PoliceAndThief.cellbutton != null && Vector2.Distance(PlayerControl.LocalPlayer.transform.position, PoliceAndThief.cellbutton.transform.position) <= 3f) && !PlayerControl.LocalPlayer.Data.IsDead)
+                {
+                    CanUse = false;
+                }
+                return CanUse && PoliceAndThief.policeplayer05currentTarget && PlayerControl.LocalPlayer.CanMove && !PoliceAndThief.policeplayer05IsReviving && !PlayerControl.LocalPlayer.Data.IsDead;
+            },
+            () => { policeplayer05KillButton.Timer = policeplayer05KillButton.MaxTimer; },
+            __instance.KillButton.graphic.sprite,
+            ButtonPosition.Layout,
+            __instance,
+            __instance.KillButton,
+            AbilitySlot.ImpostorAbilityPrimary,
+            false,
+            TranslationController.Instance.GetString(StringNames.KillLabel)
+        );
 
         // Policeplayer05 Jail
-        _policeplayer05JailButton = new(() =>
-        {
-            if (Policeplayer05CurrentTarget != null)
+        policeplayer05JailButton = new CustomButton(
+            () =>
             {
-                Policeplayer05TargetedPlayer = Policeplayer05CurrentTarget;
-                _policeplayer05JailButton.HasEffect = true;
-            }
-        }, () => { return Policeplayer05 != null && Policeplayer05 == PlayerControl.LocalPlayer && !PlayerControl.LocalPlayer.Data.IsDead; }, () =>
-        {
-            if (_policeplayer05JailButton.IsEffectActive && Policeplayer05TargetedPlayer != null && Vector2.Distance(PlayerControl.LocalPlayer.transform.position, Policeplayer05TargetedPlayer.transform.position) > LegacyGameOptions.KillDistances[Mathf.Clamp(GameOptionsManager.Instance.currentGameOptions.GetInt(Int32OptionNames.KillDistance), 0, 2)])
+                if (PoliceAndThief.policeplayer05currentTarget != null)
+                {
+                    PoliceAndThief.policeplayer05targetedPlayer = PoliceAndThief.policeplayer05currentTarget;
+                    policeplayer05JailButton.HasEffect = true;
+                }
+            },
+            () => { return PoliceAndThief.policeplayer05 != null && PoliceAndThief.policeplayer05 == PlayerControl.LocalPlayer && !PlayerControl.LocalPlayer.Data.IsDead; },
+            () =>
             {
-                Policeplayer05TargetedPlayer = null;
-                _policeplayer05JailButton.Timer = 0f;
-                _policeplayer05JailButton.IsEffectActive = false;
-            }
+                if (policeplayer05JailButton.IsEffectActive && PoliceAndThief.policeplayer05targetedPlayer != null && Vector2.Distance(PlayerControl.LocalPlayer.transform.position, PoliceAndThief.policeplayer05targetedPlayer.transform.position) > LegacyGameOptions.KillDistances[Mathf.Clamp(GameOptionsManager.Instance.currentGameOptions.GetInt(Int32OptionNames.KillDistance), 0, 2)])
+                {
+                    PoliceAndThief.policeplayer05targetedPlayer = null;
+                    policeplayer05JailButton.Timer = 0f;
+                    policeplayer05JailButton.IsEffectActive = false;
+                }
 
-            var canUse = true;
-            if (((Jewelbuttontwo != null && Vector2.Distance(PlayerControl.LocalPlayer.transform.position, Jewelbuttontwo.transform.position) <= 3f) || (Jewelbutton != null && Vector2.Distance(PlayerControl.LocalPlayer.transform.position, Jewelbutton.transform.position) <= 3f)) && !PlayerControl.LocalPlayer.Data.IsDead) canUse = false;
-            return canUse && PlayerControl.LocalPlayer.CanMove && !Policeplayer05IsReviving && Policeplayer05CurrentTarget != null;
-        }, () =>
-        {
-            Policeplayer05TargetedPlayer = null;
-            _policeplayer05JailButton.IsEffectActive = false;
-            _policeplayer05JailButton.Timer = _policeplayer05JailButton.MaxTimer;
-            _policeplayer05JailButton.ActionButton.cooldownTimerText.color = Palette.EnabledColor;
-        }, AssetLoader.PoliceAndThiefCaptureButton, ButtonPosition.Layout, __instance, __instance.UseButton, AbilitySlot.CommonAbilityPrimary, true, CaptureThiefTime, () =>
-        {
-            if (Policeplayer05TargetedPlayer != null && !Policeplayer05TargetedPlayer.Data.IsDead)
+                bool CanUse = true;
+                if ((PoliceAndThief.jewelbuttontwo != null && Vector2.Distance(PlayerControl.LocalPlayer.transform.position, PoliceAndThief.jewelbuttontwo.transform.position) <= 3f || PoliceAndThief.jewelbutton != null && Vector2.Distance(PlayerControl.LocalPlayer.transform.position, PoliceAndThief.jewelbutton.transform.position) <= 3f) && !PlayerControl.LocalPlayer.Data.IsDead)
+                {
+                    CanUse = false;
+                }
+                return CanUse && PlayerControl.LocalPlayer.CanMove && !PoliceAndThief.policeplayer05IsReviving && PoliceAndThief.policeplayer05currentTarget != null;
+            },
+            () =>
             {
-                var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.PoliceandThiefJail, SendOption.Reliable);
-                writer.Write(Policeplayer05TargetedPlayer.PlayerId);
-                AmongUsClient.Instance.FinishRpcImmediately(writer);
-                RPCProcedure.PoliceandThiefJail(Policeplayer05TargetedPlayer.PlayerId);
-                Policeplayer05TargetedPlayer = null;
-                _policeplayer05JailButton.Timer = _policeplayer05JailButton.MaxTimer;
+                PoliceAndThief.policeplayer05targetedPlayer = null;
+                policeplayer05JailButton.IsEffectActive = false;
+                policeplayer05JailButton.Timer = policeplayer05JailButton.MaxTimer;
+                policeplayer05JailButton.ActionButton.cooldownTimerText.color = Palette.EnabledColor;
+            },
+            AssetLoader.PoliceAndThiefCaptureButton,
+            ButtonPosition.Layout,
+            __instance,
+            __instance.UseButton,
+            AbilitySlot.CommonAbilityPrimary,
+            true,
+            PoliceAndThief.captureThiefTime,
+            () =>
+            {
+                if (PoliceAndThief.policeplayer05targetedPlayer != null && !PoliceAndThief.policeplayer05targetedPlayer.Data.IsDead)
+                {
+                    MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.PoliceandThiefJail, Hazel.SendOption.Reliable, -1);
+                    writer.Write(PoliceAndThief.policeplayer05targetedPlayer.PlayerId);
+                    AmongUsClient.Instance.FinishRpcImmediately(writer);
+                    RPCProcedure.policeandThiefJail(PoliceAndThief.policeplayer05targetedPlayer.PlayerId);
+                    PoliceAndThief.policeplayer05targetedPlayer = null;
+                    policeplayer05JailButton.Timer = policeplayer05JailButton.MaxTimer;
+                }
             }
-        });
+        );
 
         // Policeplayer05 Light
-        _policeplayer05LightButton = new(() => { Policeplayer05LightTimer = 10; }, () => { return Policeplayer05 != null && Policeplayer05 == PlayerControl.LocalPlayer && !PlayerControl.LocalPlayer.Data.IsDead; }, () => { return PlayerControl.LocalPlayer.CanMove && !Policeplayer05IsReviving; }, () =>
-        {
-            _policeplayer05LightButton.Timer = _policeplayer05LightButton.MaxTimer;
-            _policeplayer05LightButton.IsEffectActive = false;
-            _policeplayer05LightButton.ActionButton.graphic.color = Palette.EnabledColor;
-        }, AssetLoader.PoliceAndThiefsLightButton, ButtonPosition.Layout, __instance, __instance.UseButton, AbilitySlot.ImpostorAbilitySecondary, true, 10, () => { _policeplayer05LightButton.Timer = _policeplayer05LightButton.MaxTimer; });
+        policeplayer05LightButton = new CustomButton(
+            () =>
+            {
+                PoliceAndThief.policeplayer05lightTimer = 10;
+            },
+            () => { return PoliceAndThief.policeplayer05 != null && PoliceAndThief.policeplayer05 == PlayerControl.LocalPlayer && !PlayerControl.LocalPlayer.Data.IsDead; },
+            () => { return PlayerControl.LocalPlayer.CanMove && !PoliceAndThief.policeplayer05IsReviving; },
+            () =>
+            {
+                policeplayer05LightButton.Timer = policeplayer05LightButton.MaxTimer;
+                policeplayer05LightButton.IsEffectActive = false;
+                policeplayer05LightButton.ActionButton.graphic.color = Palette.EnabledColor;
+            },
+            AssetLoader.PoliceAndThiefsLightButton,
+            ButtonPosition.Layout,
+            __instance,
+            __instance.UseButton,
+            AbilitySlot.ImpostorAbilitySecondary,
+            true,
+            10,
+            () => { policeplayer05LightButton.Timer = policeplayer05LightButton.MaxTimer; }
+        );
 
         // Policeplayer06 Kill
-        _policeplayer06KillButton = new(() =>
-        {
-            var targetId = Policeplayer06CurrentTarget.PlayerId;
-            var sourceId = Policeplayer06.PlayerId;
-            var killWriter = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.GamemodeKills, SendOption.Reliable);
-            killWriter.Write(targetId);
-            killWriter.Write(sourceId);
-            AmongUsClient.Instance.FinishRpcImmediately(killWriter);
-            RPCProcedure.GamemodeKills(targetId, sourceId);
-            _policeplayer06KillButton.Timer = _policeplayer06KillButton.MaxTimer;
-            Policeplayer06CurrentTarget = null;
-        }, () => { return Policeplayer06 != null && Policeplayer06 == PlayerControl.LocalPlayer; }, () =>
-        {
-            var canUse = true;
-            if (((Cellbuttontwo != null && Vector2.Distance(PlayerControl.LocalPlayer.transform.position, Cellbuttontwo.transform.position) <= 3f) || (Cellbutton != null && Vector2.Distance(PlayerControl.LocalPlayer.transform.position, Cellbutton.transform.position) <= 3f)) && !PlayerControl.LocalPlayer.Data.IsDead) canUse = false;
-            return canUse && Policeplayer06CurrentTarget && PlayerControl.LocalPlayer.CanMove && !Policeplayer06IsReviving && !PlayerControl.LocalPlayer.Data.IsDead;
-        }, () => { _policeplayer06KillButton.Timer = _policeplayer06KillButton.MaxTimer; }, __instance.KillButton.graphic.sprite, ButtonPosition.Layout, __instance, __instance.KillButton, AbilitySlot.ImpostorAbilityPrimary, false, TranslationController.Instance.GetString(StringNames.KillLabel));
+        policeplayer06KillButton = new CustomButton(
+            () =>
+            {
+                byte targetId = PoliceAndThief.policeplayer06currentTarget.PlayerId;
+                byte sourceId = PoliceAndThief.policeplayer06.PlayerId;
+                MessageWriter killWriter = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.GamemodeKills, Hazel.SendOption.Reliable, -1);
+                killWriter.Write(targetId);
+                killWriter.Write(sourceId);
+                AmongUsClient.Instance.FinishRpcImmediately(killWriter);
+                RPCProcedure.gamemodeKills(targetId, sourceId);
+                policeplayer06KillButton.Timer = policeplayer06KillButton.MaxTimer;
+                PoliceAndThief.policeplayer06currentTarget = null;
+            },
+            () => { return PoliceAndThief.policeplayer06 != null && PoliceAndThief.policeplayer06 == PlayerControl.LocalPlayer; },
+            () =>
+            {
+                bool CanUse = true;
+                if ((PoliceAndThief.cellbuttontwo != null && Vector2.Distance(PlayerControl.LocalPlayer.transform.position, PoliceAndThief.cellbuttontwo.transform.position) <= 3f || PoliceAndThief.cellbutton != null && Vector2.Distance(PlayerControl.LocalPlayer.transform.position, PoliceAndThief.cellbutton.transform.position) <= 3f) && !PlayerControl.LocalPlayer.Data.IsDead)
+                {
+                    CanUse = false;
+                }
+                return CanUse && PoliceAndThief.policeplayer06currentTarget && PlayerControl.LocalPlayer.CanMove && !PoliceAndThief.policeplayer06IsReviving && !PlayerControl.LocalPlayer.Data.IsDead;
+            },
+            () => { policeplayer06KillButton.Timer = policeplayer06KillButton.MaxTimer; },
+            __instance.KillButton.graphic.sprite,
+            ButtonPosition.Layout,
+            __instance,
+            __instance.KillButton,
+            AbilitySlot.ImpostorAbilityPrimary,
+            false,
+            TranslationController.Instance.GetString(StringNames.KillLabel)
+        );
 
         // Policeplayer06 Jail
-        _policeplayer06JailButton = new(() =>
-        {
-            if (Policeplayer06CurrentTarget != null)
+        policeplayer06JailButton = new CustomButton(
+            () =>
             {
-                Policeplayer06TargetedPlayer = Policeplayer06CurrentTarget;
-                _policeplayer06JailButton.HasEffect = true;
-            }
-        }, () => { return Policeplayer06 != null && Policeplayer06 == PlayerControl.LocalPlayer && !PlayerControl.LocalPlayer.Data.IsDead; }, () =>
-        {
-            if (_policeplayer06JailButton.IsEffectActive && Policeplayer06TargetedPlayer != null && Vector2.Distance(PlayerControl.LocalPlayer.transform.position, Policeplayer06TargetedPlayer.transform.position) > LegacyGameOptions.KillDistances[Mathf.Clamp(GameOptionsManager.Instance.currentGameOptions.GetInt(Int32OptionNames.KillDistance), 0, 2)])
+                if (PoliceAndThief.policeplayer06currentTarget != null)
+                {
+                    PoliceAndThief.policeplayer06targetedPlayer = PoliceAndThief.policeplayer06currentTarget;
+                    policeplayer06JailButton.HasEffect = true;
+                }
+            },
+            () => { return PoliceAndThief.policeplayer06 != null && PoliceAndThief.policeplayer06 == PlayerControl.LocalPlayer && !PlayerControl.LocalPlayer.Data.IsDead; },
+            () =>
             {
-                Policeplayer06TargetedPlayer = null;
-                _policeplayer06JailButton.Timer = 0f;
-                _policeplayer06JailButton.IsEffectActive = false;
-            }
+                if (policeplayer06JailButton.IsEffectActive && PoliceAndThief.policeplayer06targetedPlayer != null && Vector2.Distance(PlayerControl.LocalPlayer.transform.position, PoliceAndThief.policeplayer06targetedPlayer.transform.position) > LegacyGameOptions.KillDistances[Mathf.Clamp(GameOptionsManager.Instance.currentGameOptions.GetInt(Int32OptionNames.KillDistance), 0, 2)])
+                {
+                    PoliceAndThief.policeplayer06targetedPlayer = null;
+                    policeplayer06JailButton.Timer = 0f;
+                    policeplayer06JailButton.IsEffectActive = false;
+                }
 
-            var canUse = true;
-            if (((Jewelbuttontwo != null && Vector2.Distance(PlayerControl.LocalPlayer.transform.position, Jewelbuttontwo.transform.position) <= 3f) || (Jewelbutton != null && Vector2.Distance(PlayerControl.LocalPlayer.transform.position, Jewelbutton.transform.position) <= 3f)) && !PlayerControl.LocalPlayer.Data.IsDead) canUse = false;
-            return canUse && PlayerControl.LocalPlayer.CanMove && !Policeplayer06IsReviving && Policeplayer06CurrentTarget != null;
-        }, () =>
-        {
-            Policeplayer06TargetedPlayer = null;
-            _policeplayer06JailButton.IsEffectActive = false;
-            _policeplayer06JailButton.Timer = _policeplayer06JailButton.MaxTimer;
-            _policeplayer06JailButton.ActionButton.cooldownTimerText.color = Palette.EnabledColor;
-        }, AssetLoader.PoliceAndThiefCaptureButton, ButtonPosition.Layout, __instance, __instance.UseButton, AbilitySlot.CommonAbilityPrimary, true, CaptureThiefTime, () =>
-        {
-            if (Policeplayer06TargetedPlayer != null && !Policeplayer06TargetedPlayer.Data.IsDead)
+                bool CanUse = true;
+                if ((PoliceAndThief.jewelbuttontwo != null && Vector2.Distance(PlayerControl.LocalPlayer.transform.position, PoliceAndThief.jewelbuttontwo.transform.position) <= 3f || PoliceAndThief.jewelbutton != null && Vector2.Distance(PlayerControl.LocalPlayer.transform.position, PoliceAndThief.jewelbutton.transform.position) <= 3f) && !PlayerControl.LocalPlayer.Data.IsDead)
+                {
+                    CanUse = false;
+                }
+                return CanUse && PlayerControl.LocalPlayer.CanMove && !PoliceAndThief.policeplayer06IsReviving && PoliceAndThief.policeplayer06currentTarget != null;
+            },
+            () =>
             {
-                var writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.PoliceandThiefJail, SendOption.Reliable);
-                writer.Write(Policeplayer06TargetedPlayer.PlayerId);
-                AmongUsClient.Instance.FinishRpcImmediately(writer);
-                RPCProcedure.PoliceandThiefJail(Policeplayer06TargetedPlayer.PlayerId);
-                Policeplayer06TargetedPlayer = null;
-                _policeplayer06JailButton.Timer = _policeplayer06JailButton.MaxTimer;
+                PoliceAndThief.policeplayer06targetedPlayer = null;
+                policeplayer06JailButton.IsEffectActive = false;
+                policeplayer06JailButton.Timer = policeplayer06JailButton.MaxTimer;
+                policeplayer06JailButton.ActionButton.cooldownTimerText.color = Palette.EnabledColor;
+            },
+            AssetLoader.PoliceAndThiefCaptureButton,
+            ButtonPosition.Layout,
+            __instance,
+            __instance.UseButton,
+            AbilitySlot.CommonAbilityPrimary,
+            true,
+            PoliceAndThief.captureThiefTime,
+            () =>
+            {
+                if (PoliceAndThief.policeplayer06targetedPlayer != null && !PoliceAndThief.policeplayer06targetedPlayer.Data.IsDead)
+                {
+                    MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.PoliceandThiefJail, Hazel.SendOption.Reliable, -1);
+                    writer.Write(PoliceAndThief.policeplayer06targetedPlayer.PlayerId);
+                    AmongUsClient.Instance.FinishRpcImmediately(writer);
+                    RPCProcedure.policeandThiefJail(PoliceAndThief.policeplayer06targetedPlayer.PlayerId);
+                    PoliceAndThief.policeplayer06targetedPlayer = null;
+                    policeplayer06JailButton.Timer = policeplayer06JailButton.MaxTimer;
+                }
             }
-        });
+        );
 
         // Policeplayer06 Light
-        _policeplayer06LightButton = new(() => { Policeplayer06LightTimer = 10; }, () => { return Policeplayer06 != null && Policeplayer06 == PlayerControl.LocalPlayer && !PlayerControl.LocalPlayer.Data.IsDead; }, () => { return PlayerControl.LocalPlayer.CanMove && !Policeplayer06IsReviving; }, () =>
-        {
-            _policeplayer06LightButton.Timer = _policeplayer06LightButton.MaxTimer;
-            _policeplayer06LightButton.IsEffectActive = false;
-            _policeplayer06LightButton.ActionButton.graphic.color = Palette.EnabledColor;
-        }, AssetLoader.PoliceAndThiefsLightButton, ButtonPosition.Layout, __instance, __instance.UseButton, AbilitySlot.ImpostorAbilitySecondary, true, 10, () => { _policeplayer06LightButton.Timer = _policeplayer06LightButton.MaxTimer; });
+        policeplayer06LightButton = new CustomButton(
+            () =>
+            {
+                PoliceAndThief.policeplayer06lightTimer = 10;
+            },
+            () => { return PoliceAndThief.policeplayer06 != null && PoliceAndThief.policeplayer06 == PlayerControl.LocalPlayer && !PlayerControl.LocalPlayer.Data.IsDead; },
+            () => { return PlayerControl.LocalPlayer.CanMove && !PoliceAndThief.policeplayer06IsReviving; },
+            () =>
+            {
+                policeplayer06LightButton.Timer = policeplayer06LightButton.MaxTimer;
+                policeplayer06LightButton.IsEffectActive = false;
+                policeplayer06LightButton.ActionButton.graphic.color = Palette.EnabledColor;
+            },
+            AssetLoader.PoliceAndThiefsLightButton,
+            ButtonPosition.Layout,
+            __instance,
+            __instance.UseButton,
+            AbilitySlot.ImpostorAbilitySecondary,
+            true,
+            10,
+            () => { policeplayer06LightButton.Timer = policeplayer06LightButton.MaxTimer; }
+        );
 
         // Thiefplayer01 Kill
-        _thiefplayer01KillButton = new(() =>
-        {
-            var targetId = Thiefplayer01CurrentTarget.PlayerId;
-            var sourceId = Thiefplayer01.PlayerId;
-            var killWriter = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.GamemodeKills, SendOption.Reliable);
-            killWriter.Write(targetId);
-            killWriter.Write(sourceId);
-            AmongUsClient.Instance.FinishRpcImmediately(killWriter);
-            RPCProcedure.GamemodeKills(targetId, sourceId);
-            _thiefplayer01KillButton.Timer = _thiefplayer01KillButton.MaxTimer;
-            Thiefplayer01CurrentTarget = null;
-        }, () => { return Thiefplayer01 != null && Thiefplayer01 == PlayerControl.LocalPlayer && WhoCanThiefsKill != 2; }, () =>
-        {
-            var canUse = false;
-            switch (WhoCanThiefsKill)
+        thiefplayer01KillButton = new CustomButton(
+            () =>
             {
-                case 0:
-                    if ((Policeplayer02 != null && Thiefplayer01CurrentTarget == Policeplayer02) || (Policeplayer04 != null && Thiefplayer01CurrentTarget == Policeplayer04)) canUse = true;
-                    break;
-                case 1:
-                    canUse = true;
-                    break;
-            }
-
-            return canUse && Thiefplayer01CurrentTarget && PlayerControl.LocalPlayer.CanMove && !PlayerControl.LocalPlayer.Data.IsDead && !Thiefplayer01IsReviving && !Thiefplayer01IsStealing;
-        }, () => { _thiefplayer01KillButton.Timer = _thiefplayer01KillButton.MaxTimer; }, __instance.KillButton.graphic.sprite, ButtonPosition.Layout, __instance, __instance.KillButton, AbilitySlot.CrewmateAbilityPrimary, false, TranslationController.Instance.GetString(StringNames.KillLabel));
+                byte targetId = PoliceAndThief.thiefplayer01currentTarget.PlayerId;
+                byte sourceId = PoliceAndThief.thiefplayer01.PlayerId;
+                MessageWriter killWriter = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.GamemodeKills, Hazel.SendOption.Reliable, -1);
+                killWriter.Write(targetId);
+                killWriter.Write(sourceId);
+                AmongUsClient.Instance.FinishRpcImmediately(killWriter);
+                RPCProcedure.gamemodeKills(targetId, sourceId);
+                thiefplayer01KillButton.Timer = thiefplayer01KillButton.MaxTimer;
+                PoliceAndThief.thiefplayer01currentTarget = null;
+            },
+            () => { return PoliceAndThief.thiefplayer01 != null && PoliceAndThief.thiefplayer01 == PlayerControl.LocalPlayer && PoliceAndThief.whoCanThiefsKill != 2; },
+            () =>
+            {
+                bool canUse = false;
+                switch (PoliceAndThief.whoCanThiefsKill)
+                {
+                    case 0:
+                        if (PoliceAndThief.policeplayer02 != null && PoliceAndThief.thiefplayer01currentTarget == PoliceAndThief.policeplayer02 || PoliceAndThief.policeplayer04 != null && PoliceAndThief.thiefplayer01currentTarget == PoliceAndThief.policeplayer04)
+                        {
+                            canUse = true;
+                        }
+                        break;
+                    case 1:
+                        canUse = true;
+                        break;
+                }
+                return canUse && PoliceAndThief.thiefplayer01currentTarget && PlayerControl.LocalPlayer.CanMove && !PlayerControl.LocalPlayer.Data.IsDead && !PoliceAndThief.thiefplayer01IsReviving && !PoliceAndThief.thiefplayer01IsStealing;
+            },
+            () => { thiefplayer01KillButton.Timer = thiefplayer01KillButton.MaxTimer; },
+            __instance.KillButton.graphic.sprite,
+            ButtonPosition.Layout,
+            __instance,
+            __instance.KillButton,
+            AbilitySlot.CrewmateAbilityPrimary,
+            false,
+            TranslationController.Instance.GetString(StringNames.KillLabel)
+        );
 
         // Thiefplayer01 FreeThief Button
-        _thiefplayer01FreeThiefButton = new(() =>
-        {
-            var thiefFree = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.PoliceandThiefFreeThief, SendOption.Reliable);
-            AmongUsClient.Instance.FinishRpcImmediately(thiefFree);
-            RPCProcedure.PoliceandThiefFreeThief();
-            _thiefplayer01FreeThiefButton.Timer = _thiefplayer01FreeThiefButton.MaxTimer;
-        }, () => { return Thiefplayer01 != null && Thiefplayer01 == PlayerControl.LocalPlayer; }, () =>
-        {
-            if (LocalThiefReleaseArrow.Count != 0)
+        thiefplayer01FreeThiefButton = new CustomButton(
+            () =>
             {
-                LocalThiefReleaseArrow[0].Update(Cellbutton.transform.position);
-                if (GameOptionsManager.Instance.currentGameOptions.MapId == 6) LocalThiefReleaseArrow[1].Update(Cellbuttontwo.transform.position);
-            }
-
-            if (LocalThiefDeliverArrow.Count != 0)
+                MessageWriter thiefFree = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.PoliceandThiefFreeThief, Hazel.SendOption.Reliable, -1);
+                AmongUsClient.Instance.FinishRpcImmediately(thiefFree);
+                RPCProcedure.policeandThiefFreeThief();
+                thiefplayer01FreeThiefButton.Timer = thiefplayer01FreeThiefButton.MaxTimer;
+            },
+            () => { return PoliceAndThief.thiefplayer01 != null && PoliceAndThief.thiefplayer01 == PlayerControl.LocalPlayer; },
+            () =>
             {
-                LocalThiefDeliverArrow[0].Update(Jewelbutton.transform.position);
-                if (GameOptionsManager.Instance.currentGameOptions.MapId == 6) LocalThiefDeliverArrow[1].Update(Jewelbuttontwo.transform.position);
-            }
+                if (PoliceAndThief.localThiefReleaseArrow.Count != 0)
+                {
+                    PoliceAndThief.localThiefReleaseArrow[0].Update(PoliceAndThief.cellbutton.transform.position);
+                    if (GameOptionsManager.Instance.currentGameOptions.MapId == 6)
+                    {
+                        PoliceAndThief.localThiefReleaseArrow[1].Update(PoliceAndThief.cellbuttontwo.transform.position);
+                    }
+                }
+                if (PoliceAndThief.localThiefDeliverArrow.Count != 0)
+                {
+                    PoliceAndThief.localThiefDeliverArrow[0].Update(PoliceAndThief.jewelbutton.transform.position);
+                    if (GameOptionsManager.Instance.currentGameOptions.MapId == 6)
+                    {
+                        PoliceAndThief.localThiefDeliverArrow[1].Update(PoliceAndThief.jewelbuttontwo.transform.position);
+                    }
+                }
 
-            var canUse = false;
-            if (CurrentThiefsCaptured > 0)
-            {
-                if (((Cellbuttontwo != null && Vector2.Distance(Thiefplayer01.transform.position, Cellbuttontwo.transform.position) < 0.4f) || Vector2.Distance(Thiefplayer01.transform.position, Cellbutton.transform.position) < 0.4f) && !Thiefplayer01.Data.IsDead)
-                    canUse = true;
-            }
-
-            return canUse && PlayerControl.LocalPlayer.CanMove && !Thiefplayer01IsReviving && !PlayerControl.LocalPlayer.Data.IsDead;
-        }, () => { _thiefplayer01FreeThiefButton.Timer = _thiefplayer01FreeThiefButton.MaxTimer; }, AssetLoader.PoliceAndThiefFreeButton, ButtonPosition.Layout, __instance, __instance.UseButton, AbilitySlot.CrewmateAbilitySecondary, false, Tr.Get(TrKey.ReleaseButton));
+                bool CanUse = false;
+                if (PoliceAndThief.currentThiefsCaptured > 0)
+                {
+                    if ((PoliceAndThief.cellbuttontwo != null && Vector2.Distance(PoliceAndThief.thiefplayer01.transform.position, PoliceAndThief.cellbuttontwo.transform.position) < 0.4f || Vector2.Distance(PoliceAndThief.thiefplayer01.transform.position, PoliceAndThief.cellbutton.transform.position) < 0.4f) && !PoliceAndThief.thiefplayer01.Data.IsDead)
+                    {
+                        CanUse = true;
+                    }
+                }
+                return CanUse && PlayerControl.LocalPlayer.CanMove && !PoliceAndThief.thiefplayer01IsReviving && !PlayerControl.LocalPlayer.Data.IsDead;
+            },
+            () => { thiefplayer01FreeThiefButton.Timer = thiefplayer01FreeThiefButton.MaxTimer; },
+            AssetLoader.PoliceAndThiefFreeButton,
+            ButtonPosition.Layout,
+            __instance,
+            __instance.UseButton,
+            AbilitySlot.CrewmateAbilitySecondary,
+            false,
+            Tr.Get(TrKey.ReleaseButton)
+        );
 
         // Thiefplayer01 Take/Deliver Jewel Button
-        _thiefplayer01TakeDeliverJewelButton = new(() =>
-        {
-            if (Thiefplayer01IsStealing)
+        thiefplayer01TakeDeliverJewelButton = new CustomButton(
+            () =>
             {
-                var targetId = PlayerControl.LocalPlayer.PlayerId;
-                var jewelId = Thiefplayer01JewelId;
-                var thiefScore = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.PoliceandThiefDeliverJewel, SendOption.Reliable);
-                thiefScore.Write(targetId);
-                thiefScore.Write(jewelId);
-                AmongUsClient.Instance.FinishRpcImmediately(thiefScore);
-                RPCProcedure.PoliceandThiefDeliverJewel(targetId, jewelId);
-            }
-            else
-            {
-                var targetId = PlayerControl.LocalPlayer.PlayerId;
-                var jewelId = Thiefplayer01JewelId;
-                var thiefWhoTookATreasure = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.PoliceandThiefTakeJewel, SendOption.Reliable);
-                thiefWhoTookATreasure.Write(targetId);
-                thiefWhoTookATreasure.Write(jewelId);
-                AmongUsClient.Instance.FinishRpcImmediately(thiefWhoTookATreasure);
-                RPCProcedure.PoliceandThiefTakeJewel(targetId, jewelId);
-            }
-
-            _thiefplayer01TakeDeliverJewelButton.Timer = _thiefplayer01TakeDeliverJewelButton.MaxTimer;
-        }, () => { return Thiefplayer01 != null && Thiefplayer01 == PlayerControl.LocalPlayer; }, () =>
-        {
-            if (Thiefplayer01IsStealing)
-                _thiefplayer01TakeDeliverJewelButton.ActionButton.graphic.sprite = AssetLoader.PoliceAndThiefDeliverJewelButton;
-            else
-                _thiefplayer01TakeDeliverJewelButton.ActionButton.graphic.sprite = AssetLoader.PoliceAndThiefTakeJewelButton;
-            var canUse = false;
-            if (ThiefTreasures.Count != 0)
-            {
-                foreach (var jewel in ThiefTreasures)
+                if (PoliceAndThief.thiefplayer01IsStealing)
                 {
-                    if (jewel != null && Vector2.Distance(PlayerControl.LocalPlayer.transform.position, jewel.transform.position) < 0.5f && !Thiefplayer01IsStealing)
+                    byte targetId = PlayerControl.LocalPlayer.PlayerId;
+                    byte jewelId = PoliceAndThief.thiefplayer01JewelId;
+                    MessageWriter thiefScore = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.PoliceandThiefDeliverJewel, Hazel.SendOption.Reliable, -1);
+                    thiefScore.Write(targetId);
+                    thiefScore.Write(jewelId);
+                    AmongUsClient.Instance.FinishRpcImmediately(thiefScore);
+                    RPCProcedure.policeandThiefDeliverJewel(targetId, jewelId);
+                }
+                else
+                {
+                    byte targetId = PlayerControl.LocalPlayer.PlayerId;
+                    byte jewelId = PoliceAndThief.thiefplayer01JewelId;
+                    MessageWriter thiefWhoTookATreasure = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.PoliceandThiefTakeJewel, Hazel.SendOption.Reliable, -1);
+                    thiefWhoTookATreasure.Write(targetId);
+                    thiefWhoTookATreasure.Write(jewelId);
+                    AmongUsClient.Instance.FinishRpcImmediately(thiefWhoTookATreasure);
+                    RPCProcedure.policeandThiefTakeJewel(targetId, jewelId);
+                }
+                thiefplayer01TakeDeliverJewelButton.Timer = thiefplayer01TakeDeliverJewelButton.MaxTimer;
+            },
+            () => { return PoliceAndThief.thiefplayer01 != null && PoliceAndThief.thiefplayer01 == PlayerControl.LocalPlayer; },
+            () =>
+            {
+                if (PoliceAndThief.thiefplayer01IsStealing)
+                    thiefplayer01TakeDeliverJewelButton.ActionButton.graphic.sprite = AssetLoader.PoliceAndThiefDeliverJewelButton;
+                else
+                    thiefplayer01TakeDeliverJewelButton.ActionButton.graphic.sprite = AssetLoader.PoliceAndThiefTakeJewelButton;
+                bool CanUse = false;
+                if (PoliceAndThief.thiefTreasures.Count != 0)
+                {
+                    foreach (GameObject jewel in PoliceAndThief.thiefTreasures)
                     {
-                        switch (jewel.name)
+                        if (jewel != null && Vector2.Distance(PlayerControl.LocalPlayer.transform.position, jewel.transform.position) < 0.5f && !PoliceAndThief.thiefplayer01IsStealing)
                         {
-                            case "jewel01":
-                                Thiefplayer01JewelId = 1;
-                                canUse = !Jewel01BeingStealed;
-                                break;
-                            case "jewel02":
-                                Thiefplayer01JewelId = 2;
-                                canUse = !Jewel02BeingStealed;
-                                break;
-                            case "jewel03":
-                                Thiefplayer01JewelId = 3;
-                                canUse = !Jewel03BeingStealed;
-                                break;
-                            case "jewel04":
-                                Thiefplayer01JewelId = 4;
-                                canUse = !Jewel04BeingStealed;
-                                break;
-                            case "jewel05":
-                                Thiefplayer01JewelId = 5;
-                                canUse = !Jewel05BeingStealed;
-                                break;
-                            case "jewel06":
-                                Thiefplayer01JewelId = 6;
-                                canUse = !Jewel06BeingStealed;
-                                break;
-                            case "jewel07":
-                                Thiefplayer01JewelId = 7;
-                                canUse = !Jewel07BeingStealed;
-                                break;
-                            case "jewel08":
-                                Thiefplayer01JewelId = 8;
-                                canUse = !Jewel08BeingStealed;
-                                break;
-                            case "jewel09":
-                                Thiefplayer01JewelId = 9;
-                                canUse = !Jewel09BeingStealed;
-                                break;
-                            case "jewel10":
-                                Thiefplayer01JewelId = 10;
-                                canUse = !Jewel10BeingStealed;
-                                break;
-                            case "jewel11":
-                                Thiefplayer01JewelId = 11;
-                                canUse = !Jewel11BeingStealed;
-                                break;
-                            case "jewel12":
-                                Thiefplayer01JewelId = 12;
-                                canUse = !Jewel12BeingStealed;
-                                break;
-                            case "jewel13":
-                                Thiefplayer01JewelId = 13;
-                                canUse = !Jewel13BeingStealed;
-                                break;
-                            case "jewel14":
-                                Thiefplayer01JewelId = 14;
-                                canUse = !Jewel14BeingStealed;
-                                break;
-                            case "jewel15":
-                                Thiefplayer01JewelId = 15;
-                                canUse = !Jewel15BeingStealed;
-                                break;
+                            switch (jewel.name)
+                            {
+                                case "jewel01":
+                                    PoliceAndThief.thiefplayer01JewelId = 1;
+                                    CanUse = !PoliceAndThief.jewel01BeingStealed;
+                                    break;
+                                case "jewel02":
+                                    PoliceAndThief.thiefplayer01JewelId = 2;
+                                    CanUse = !PoliceAndThief.jewel02BeingStealed;
+                                    break;
+                                case "jewel03":
+                                    PoliceAndThief.thiefplayer01JewelId = 3;
+                                    CanUse = !PoliceAndThief.jewel03BeingStealed;
+                                    break;
+                                case "jewel04":
+                                    PoliceAndThief.thiefplayer01JewelId = 4;
+                                    CanUse = !PoliceAndThief.jewel04BeingStealed;
+                                    break;
+                                case "jewel05":
+                                    PoliceAndThief.thiefplayer01JewelId = 5;
+                                    CanUse = !PoliceAndThief.jewel05BeingStealed;
+                                    break;
+                                case "jewel06":
+                                    PoliceAndThief.thiefplayer01JewelId = 6;
+                                    CanUse = !PoliceAndThief.jewel06BeingStealed;
+                                    break;
+                                case "jewel07":
+                                    PoliceAndThief.thiefplayer01JewelId = 7;
+                                    CanUse = !PoliceAndThief.jewel07BeingStealed;
+                                    break;
+                                case "jewel08":
+                                    PoliceAndThief.thiefplayer01JewelId = 8;
+                                    CanUse = !PoliceAndThief.jewel08BeingStealed;
+                                    break;
+                                case "jewel09":
+                                    PoliceAndThief.thiefplayer01JewelId = 9;
+                                    CanUse = !PoliceAndThief.jewel09BeingStealed;
+                                    break;
+                                case "jewel10":
+                                    PoliceAndThief.thiefplayer01JewelId = 10;
+                                    CanUse = !PoliceAndThief.jewel10BeingStealed;
+                                    break;
+                                case "jewel11":
+                                    PoliceAndThief.thiefplayer01JewelId = 11;
+                                    CanUse = !PoliceAndThief.jewel11BeingStealed;
+                                    break;
+                                case "jewel12":
+                                    PoliceAndThief.thiefplayer01JewelId = 12;
+                                    CanUse = !PoliceAndThief.jewel12BeingStealed;
+                                    break;
+                                case "jewel13":
+                                    PoliceAndThief.thiefplayer01JewelId = 13;
+                                    CanUse = !PoliceAndThief.jewel13BeingStealed;
+                                    break;
+                                case "jewel14":
+                                    PoliceAndThief.thiefplayer01JewelId = 14;
+                                    CanUse = !PoliceAndThief.jewel14BeingStealed;
+                                    break;
+                                case "jewel15":
+                                    PoliceAndThief.thiefplayer01JewelId = 15;
+                                    CanUse = !PoliceAndThief.jewel15BeingStealed;
+                                    break;
+                            }
+                        }
+                        else if ((PoliceAndThief.jewelbuttontwo != null && Vector2.Distance(PlayerControl.LocalPlayer.transform.position, PoliceAndThief.jewelbuttontwo.transform.position) < 0.5f || PoliceAndThief.jewelbutton != null && Vector2.Distance(PlayerControl.LocalPlayer.transform.position, PoliceAndThief.jewelbutton.transform.position) < 0.5f) && PoliceAndThief.thiefplayer01IsStealing)
+                        {
+                            CanUse = true;
                         }
                     }
-                    else if (((Jewelbuttontwo != null && Vector2.Distance(PlayerControl.LocalPlayer.transform.position, Jewelbuttontwo.transform.position) < 0.5f) || (Jewelbutton != null && Vector2.Distance(PlayerControl.LocalPlayer.transform.position, Jewelbutton.transform.position) < 0.5f)) && Thiefplayer01IsStealing) canUse = true;
-                }
-            }
 
-            return canUse && PlayerControl.LocalPlayer.CanMove && !Thiefplayer01IsReviving && !PlayerControl.LocalPlayer.Data.IsDead;
-        }, () => { _thiefplayer01TakeDeliverJewelButton.Timer = _thiefplayer01TakeDeliverJewelButton.MaxTimer; }, AssetLoader.PoliceAndThiefTakeJewelButton, ButtonPosition.Layout, __instance, __instance.UseButton, AbilitySlot.CommonAbilityPrimary, false, Tr.Get(TrKey.DeliverButton));
+                }
+                return CanUse && PlayerControl.LocalPlayer.CanMove && !PoliceAndThief.thiefplayer01IsReviving && !PlayerControl.LocalPlayer.Data.IsDead;
+            },
+            () => { thiefplayer01TakeDeliverJewelButton.Timer = thiefplayer01TakeDeliverJewelButton.MaxTimer; },
+            AssetLoader.PoliceAndThiefTakeJewelButton,
+            ButtonPosition.Layout,
+            __instance,
+            __instance.UseButton,
+            AbilitySlot.CommonAbilityPrimary,
+            false,
+            Tr.Get(TrKey.DeliverButton)
+        );
 
         // Thiefplayer02 Kill
-        _thiefplayer02KillButton = new(() =>
-        {
-            var targetId = Thiefplayer02CurrentTarget.PlayerId;
-            var sourceId = Thiefplayer02.PlayerId;
-            var killWriter = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.GamemodeKills, SendOption.Reliable);
-            killWriter.Write(targetId);
-            killWriter.Write(sourceId);
-            AmongUsClient.Instance.FinishRpcImmediately(killWriter);
-            RPCProcedure.GamemodeKills(targetId, sourceId);
-            _thiefplayer02KillButton.Timer = _thiefplayer02KillButton.MaxTimer;
-            Thiefplayer02CurrentTarget = null;
-        }, () => { return Thiefplayer02 != null && Thiefplayer02 == PlayerControl.LocalPlayer && WhoCanThiefsKill != 2; }, () =>
-        {
-            var canUse = false;
-            switch (WhoCanThiefsKill)
+        thiefplayer02KillButton = new CustomButton(
+            () =>
             {
-                case 0:
-                    if ((Policeplayer02 != null && Thiefplayer02CurrentTarget == Policeplayer02) || (Policeplayer04 != null && Thiefplayer02CurrentTarget == Policeplayer04)) canUse = true;
-                    break;
-                case 1:
-                    canUse = true;
-                    break;
-            }
-
-            return canUse && Thiefplayer02CurrentTarget && PlayerControl.LocalPlayer.CanMove && !Thiefplayer02IsReviving && !PlayerControl.LocalPlayer.Data.IsDead && !Thiefplayer02IsStealing;
-        }, () => { _thiefplayer02KillButton.Timer = _thiefplayer02KillButton.MaxTimer; }, __instance.KillButton.graphic.sprite, ButtonPosition.Layout, __instance, __instance.KillButton, AbilitySlot.CrewmateAbilityPrimary, false, TranslationController.Instance.GetString(StringNames.KillLabel));
+                byte targetId = PoliceAndThief.thiefplayer02currentTarget.PlayerId;
+                byte sourceId = PoliceAndThief.thiefplayer02.PlayerId;
+                MessageWriter killWriter = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.GamemodeKills, Hazel.SendOption.Reliable, -1);
+                killWriter.Write(targetId);
+                killWriter.Write(sourceId);
+                AmongUsClient.Instance.FinishRpcImmediately(killWriter);
+                RPCProcedure.gamemodeKills(targetId, sourceId);
+                thiefplayer02KillButton.Timer = thiefplayer02KillButton.MaxTimer;
+                PoliceAndThief.thiefplayer02currentTarget = null;
+            },
+            () => { return PoliceAndThief.thiefplayer02 != null && PoliceAndThief.thiefplayer02 == PlayerControl.LocalPlayer && PoliceAndThief.whoCanThiefsKill != 2; },
+            () =>
+            {
+                bool canUse = false;
+                switch (PoliceAndThief.whoCanThiefsKill)
+                {
+                    case 0:
+                        if (PoliceAndThief.policeplayer02 != null && PoliceAndThief.thiefplayer02currentTarget == PoliceAndThief.policeplayer02 || PoliceAndThief.policeplayer04 != null && PoliceAndThief.thiefplayer02currentTarget == PoliceAndThief.policeplayer04)
+                        {
+                            canUse = true;
+                        }
+                        break;
+                    case 1:
+                        canUse = true;
+                        break;
+                }
+                return canUse && PoliceAndThief.thiefplayer02currentTarget && PlayerControl.LocalPlayer.CanMove && !PoliceAndThief.thiefplayer02IsReviving && !PlayerControl.LocalPlayer.Data.IsDead && !PoliceAndThief.thiefplayer02IsStealing;
+            },
+            () => { thiefplayer02KillButton.Timer = thiefplayer02KillButton.MaxTimer; },
+            __instance.KillButton.graphic.sprite,
+            ButtonPosition.Layout,
+            __instance,
+            __instance.KillButton,
+            AbilitySlot.CrewmateAbilityPrimary,
+            false,
+            TranslationController.Instance.GetString(StringNames.KillLabel)
+        );
 
         // Thiefplayer02 FreeThief Button
-        _thiefplayer02FreeThiefButton = new(() =>
-        {
-            var thiefFree = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.PoliceandThiefFreeThief, SendOption.Reliable);
-            AmongUsClient.Instance.FinishRpcImmediately(thiefFree);
-            RPCProcedure.PoliceandThiefFreeThief();
-            _thiefplayer02FreeThiefButton.Timer = _thiefplayer02FreeThiefButton.MaxTimer;
-        }, () => { return Thiefplayer02 != null && Thiefplayer02 == PlayerControl.LocalPlayer; }, () =>
-        {
-            if (LocalThiefReleaseArrow.Count != 0)
+        thiefplayer02FreeThiefButton = new CustomButton(
+            () =>
             {
-                LocalThiefReleaseArrow[0].Update(Cellbutton.transform.position);
-                if (GameOptionsManager.Instance.currentGameOptions.MapId == 6) LocalThiefReleaseArrow[1].Update(Cellbuttontwo.transform.position);
-            }
-
-            if (LocalThiefDeliverArrow.Count != 0)
+                MessageWriter thiefFree = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.PoliceandThiefFreeThief, Hazel.SendOption.Reliable, -1);
+                AmongUsClient.Instance.FinishRpcImmediately(thiefFree);
+                RPCProcedure.policeandThiefFreeThief();
+                thiefplayer02FreeThiefButton.Timer = thiefplayer02FreeThiefButton.MaxTimer;
+            },
+            () => { return PoliceAndThief.thiefplayer02 != null && PoliceAndThief.thiefplayer02 == PlayerControl.LocalPlayer; },
+            () =>
             {
-                LocalThiefDeliverArrow[0].Update(Jewelbutton.transform.position);
-                if (GameOptionsManager.Instance.currentGameOptions.MapId == 6) LocalThiefDeliverArrow[1].Update(Jewelbuttontwo.transform.position);
-            }
+                if (PoliceAndThief.localThiefReleaseArrow.Count != 0)
+                {
+                    PoliceAndThief.localThiefReleaseArrow[0].Update(PoliceAndThief.cellbutton.transform.position);
+                    if (GameOptionsManager.Instance.currentGameOptions.MapId == 6)
+                    {
+                        PoliceAndThief.localThiefReleaseArrow[1].Update(PoliceAndThief.cellbuttontwo.transform.position);
+                    }
+                }
+                if (PoliceAndThief.localThiefDeliverArrow.Count != 0)
+                {
+                    PoliceAndThief.localThiefDeliverArrow[0].Update(PoliceAndThief.jewelbutton.transform.position);
+                    if (GameOptionsManager.Instance.currentGameOptions.MapId == 6)
+                    {
+                        PoliceAndThief.localThiefDeliverArrow[1].Update(PoliceAndThief.jewelbuttontwo.transform.position);
+                    }
+                }
 
-            var canUse = false;
-            if (CurrentThiefsCaptured > 0)
-            {
-                if (((Cellbuttontwo != null && Vector2.Distance(Thiefplayer02.transform.position, Cellbuttontwo.transform.position) < 0.4f) || Vector2.Distance(Thiefplayer02.transform.position, Cellbutton.transform.position) < 0.4f) && !Thiefplayer02.Data.IsDead)
-                    canUse = true;
-            }
-
-            return canUse && PlayerControl.LocalPlayer.CanMove && !Thiefplayer02IsReviving && !PlayerControl.LocalPlayer.Data.IsDead;
-        }, () => { _thiefplayer02FreeThiefButton.Timer = _thiefplayer02FreeThiefButton.MaxTimer; }, AssetLoader.PoliceAndThiefFreeButton, ButtonPosition.Layout, __instance, __instance.UseButton, AbilitySlot.CrewmateAbilitySecondary, false, Tr.Get(TrKey.ReleaseButton));
+                bool CanUse = false;
+                if (PoliceAndThief.currentThiefsCaptured > 0)
+                {
+                    if ((PoliceAndThief.cellbuttontwo != null && Vector2.Distance(PoliceAndThief.thiefplayer02.transform.position, PoliceAndThief.cellbuttontwo.transform.position) < 0.4f || Vector2.Distance(PoliceAndThief.thiefplayer02.transform.position, PoliceAndThief.cellbutton.transform.position) < 0.4f) && !PoliceAndThief.thiefplayer02.Data.IsDead)
+                    {
+                        CanUse = true;
+                    }
+                }
+                return CanUse && PlayerControl.LocalPlayer.CanMove && !PoliceAndThief.thiefplayer02IsReviving && !PlayerControl.LocalPlayer.Data.IsDead;
+            },
+            () => { thiefplayer02FreeThiefButton.Timer = thiefplayer02FreeThiefButton.MaxTimer; },
+            AssetLoader.PoliceAndThiefFreeButton,
+            ButtonPosition.Layout,
+            __instance,
+            __instance.UseButton,
+            AbilitySlot.CrewmateAbilitySecondary,
+            false,
+            Tr.Get(TrKey.ReleaseButton)
+        );
 
         // Thiefplayer02 Take/Deliver Jewel Button
-        _thiefplayer02TakeDeliverJewelButton = new(() =>
-        {
-            if (Thiefplayer02IsStealing)
+        thiefplayer02TakeDeliverJewelButton = new CustomButton(
+            () =>
             {
-                var targetId = PlayerControl.LocalPlayer.PlayerId;
-                var jewelId = Thiefplayer02JewelId;
-                var thiefScore = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.PoliceandThiefDeliverJewel, SendOption.Reliable);
-                thiefScore.Write(targetId);
-                thiefScore.Write(jewelId);
-                AmongUsClient.Instance.FinishRpcImmediately(thiefScore);
-                RPCProcedure.PoliceandThiefDeliverJewel(targetId, jewelId);
-            }
-            else
-            {
-                var targetId = PlayerControl.LocalPlayer.PlayerId;
-                var jewelId = Thiefplayer02JewelId;
-                var thiefWhoTookATreasure = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.PoliceandThiefTakeJewel, SendOption.Reliable);
-                thiefWhoTookATreasure.Write(targetId);
-                thiefWhoTookATreasure.Write(jewelId);
-                AmongUsClient.Instance.FinishRpcImmediately(thiefWhoTookATreasure);
-                RPCProcedure.PoliceandThiefTakeJewel(targetId, jewelId);
-            }
-
-            _thiefplayer02TakeDeliverJewelButton.Timer = _thiefplayer02TakeDeliverJewelButton.MaxTimer;
-        }, () => { return Thiefplayer02 != null && Thiefplayer02 == PlayerControl.LocalPlayer; }, () =>
-        {
-            if (Thiefplayer02IsStealing)
-                _thiefplayer02TakeDeliverJewelButton.ActionButton.graphic.sprite = AssetLoader.PoliceAndThiefDeliverJewelButton;
-            else
-                _thiefplayer02TakeDeliverJewelButton.ActionButton.graphic.sprite = AssetLoader.PoliceAndThiefTakeJewelButton;
-            var canUse = false;
-            if (ThiefTreasures.Count != 0)
-            {
-                foreach (var jewel in ThiefTreasures)
+                if (PoliceAndThief.thiefplayer02IsStealing)
                 {
-                    if (jewel != null && Vector2.Distance(PlayerControl.LocalPlayer.transform.position, jewel.transform.position) < 0.5f && !Thiefplayer02IsStealing)
+                    byte targetId = PlayerControl.LocalPlayer.PlayerId;
+                    byte jewelId = PoliceAndThief.thiefplayer02JewelId;
+                    MessageWriter thiefScore = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.PoliceandThiefDeliverJewel, Hazel.SendOption.Reliable, -1);
+                    thiefScore.Write(targetId);
+                    thiefScore.Write(jewelId);
+                    AmongUsClient.Instance.FinishRpcImmediately(thiefScore);
+                    RPCProcedure.policeandThiefDeliverJewel(targetId, jewelId);
+                }
+                else
+                {
+                    byte targetId = PlayerControl.LocalPlayer.PlayerId;
+                    byte jewelId = PoliceAndThief.thiefplayer02JewelId;
+                    MessageWriter thiefWhoTookATreasure = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.PoliceandThiefTakeJewel, Hazel.SendOption.Reliable, -1);
+                    thiefWhoTookATreasure.Write(targetId);
+                    thiefWhoTookATreasure.Write(jewelId);
+                    AmongUsClient.Instance.FinishRpcImmediately(thiefWhoTookATreasure);
+                    RPCProcedure.policeandThiefTakeJewel(targetId, jewelId);
+                }
+                thiefplayer02TakeDeliverJewelButton.Timer = thiefplayer02TakeDeliverJewelButton.MaxTimer;
+            },
+            () => { return PoliceAndThief.thiefplayer02 != null && PoliceAndThief.thiefplayer02 == PlayerControl.LocalPlayer; },
+            () =>
+            {
+                if (PoliceAndThief.thiefplayer02IsStealing)
+                    thiefplayer02TakeDeliverJewelButton.ActionButton.graphic.sprite = AssetLoader.PoliceAndThiefDeliverJewelButton;
+                else
+                    thiefplayer02TakeDeliverJewelButton.ActionButton.graphic.sprite = AssetLoader.PoliceAndThiefTakeJewelButton;
+                bool CanUse = false;
+                if (PoliceAndThief.thiefTreasures.Count != 0)
+                {
+                    foreach (GameObject jewel in PoliceAndThief.thiefTreasures)
                     {
-                        switch (jewel.name)
+                        if (jewel != null && Vector2.Distance(PlayerControl.LocalPlayer.transform.position, jewel.transform.position) < 0.5f && !PoliceAndThief.thiefplayer02IsStealing)
                         {
-                            case "jewel01":
-                                Thiefplayer02JewelId = 1;
-                                canUse = !Jewel01BeingStealed;
-                                break;
-                            case "jewel02":
-                                Thiefplayer02JewelId = 2;
-                                canUse = !Jewel02BeingStealed;
-                                break;
-                            case "jewel03":
-                                Thiefplayer02JewelId = 3;
-                                canUse = !Jewel03BeingStealed;
-                                break;
-                            case "jewel04":
-                                Thiefplayer02JewelId = 4;
-                                canUse = !Jewel04BeingStealed;
-                                break;
-                            case "jewel05":
-                                Thiefplayer02JewelId = 5;
-                                canUse = !Jewel05BeingStealed;
-                                break;
-                            case "jewel06":
-                                Thiefplayer02JewelId = 6;
-                                canUse = !Jewel06BeingStealed;
-                                break;
-                            case "jewel07":
-                                Thiefplayer02JewelId = 7;
-                                canUse = !Jewel07BeingStealed;
-                                break;
-                            case "jewel08":
-                                Thiefplayer02JewelId = 8;
-                                canUse = !Jewel08BeingStealed;
-                                break;
-                            case "jewel09":
-                                Thiefplayer02JewelId = 9;
-                                canUse = !Jewel09BeingStealed;
-                                break;
-                            case "jewel10":
-                                Thiefplayer02JewelId = 10;
-                                canUse = !Jewel10BeingStealed;
-                                break;
-                            case "jewel11":
-                                Thiefplayer02JewelId = 11;
-                                canUse = !Jewel11BeingStealed;
-                                break;
-                            case "jewel12":
-                                Thiefplayer02JewelId = 12;
-                                canUse = !Jewel12BeingStealed;
-                                break;
-                            case "jewel13":
-                                Thiefplayer02JewelId = 13;
-                                canUse = !Jewel13BeingStealed;
-                                break;
-                            case "jewel14":
-                                Thiefplayer02JewelId = 14;
-                                canUse = !Jewel14BeingStealed;
-                                break;
-                            case "jewel15":
-                                Thiefplayer02JewelId = 15;
-                                canUse = !Jewel15BeingStealed;
-                                break;
+                            switch (jewel.name)
+                            {
+                                case "jewel01":
+                                    PoliceAndThief.thiefplayer02JewelId = 1;
+                                    CanUse = !PoliceAndThief.jewel01BeingStealed;
+                                    break;
+                                case "jewel02":
+                                    PoliceAndThief.thiefplayer02JewelId = 2;
+                                    CanUse = !PoliceAndThief.jewel02BeingStealed;
+                                    break;
+                                case "jewel03":
+                                    PoliceAndThief.thiefplayer02JewelId = 3;
+                                    CanUse = !PoliceAndThief.jewel03BeingStealed;
+                                    break;
+                                case "jewel04":
+                                    PoliceAndThief.thiefplayer02JewelId = 4;
+                                    CanUse = !PoliceAndThief.jewel04BeingStealed;
+                                    break;
+                                case "jewel05":
+                                    PoliceAndThief.thiefplayer02JewelId = 5;
+                                    CanUse = !PoliceAndThief.jewel05BeingStealed;
+                                    break;
+                                case "jewel06":
+                                    PoliceAndThief.thiefplayer02JewelId = 6;
+                                    CanUse = !PoliceAndThief.jewel06BeingStealed;
+                                    break;
+                                case "jewel07":
+                                    PoliceAndThief.thiefplayer02JewelId = 7;
+                                    CanUse = !PoliceAndThief.jewel07BeingStealed;
+                                    break;
+                                case "jewel08":
+                                    PoliceAndThief.thiefplayer02JewelId = 8;
+                                    CanUse = !PoliceAndThief.jewel08BeingStealed;
+                                    break;
+                                case "jewel09":
+                                    PoliceAndThief.thiefplayer02JewelId = 9;
+                                    CanUse = !PoliceAndThief.jewel09BeingStealed;
+                                    break;
+                                case "jewel10":
+                                    PoliceAndThief.thiefplayer02JewelId = 10;
+                                    CanUse = !PoliceAndThief.jewel10BeingStealed;
+                                    break;
+                                case "jewel11":
+                                    PoliceAndThief.thiefplayer02JewelId = 11;
+                                    CanUse = !PoliceAndThief.jewel11BeingStealed;
+                                    break;
+                                case "jewel12":
+                                    PoliceAndThief.thiefplayer02JewelId = 12;
+                                    CanUse = !PoliceAndThief.jewel12BeingStealed;
+                                    break;
+                                case "jewel13":
+                                    PoliceAndThief.thiefplayer02JewelId = 13;
+                                    CanUse = !PoliceAndThief.jewel13BeingStealed;
+                                    break;
+                                case "jewel14":
+                                    PoliceAndThief.thiefplayer02JewelId = 14;
+                                    CanUse = !PoliceAndThief.jewel14BeingStealed;
+                                    break;
+                                case "jewel15":
+                                    PoliceAndThief.thiefplayer02JewelId = 15;
+                                    CanUse = !PoliceAndThief.jewel15BeingStealed;
+                                    break;
+                            }
+                        }
+                        else if ((PoliceAndThief.jewelbuttontwo != null && Vector2.Distance(PlayerControl.LocalPlayer.transform.position, PoliceAndThief.jewelbuttontwo.transform.position) < 0.5f || PoliceAndThief.jewelbutton != null && Vector2.Distance(PlayerControl.LocalPlayer.transform.position, PoliceAndThief.jewelbutton.transform.position) < 0.5f) && PoliceAndThief.thiefplayer02IsStealing)
+                        {
+                            CanUse = true;
                         }
                     }
-                    else if (((Jewelbuttontwo != null && Vector2.Distance(PlayerControl.LocalPlayer.transform.position, Jewelbuttontwo.transform.position) < 0.5f) || (Jewelbutton != null && Vector2.Distance(PlayerControl.LocalPlayer.transform.position, Jewelbutton.transform.position) < 0.5f)) && Thiefplayer02IsStealing) canUse = true;
-                }
-            }
 
-            return canUse && PlayerControl.LocalPlayer.CanMove && !Thiefplayer02IsReviving && !PlayerControl.LocalPlayer.Data.IsDead;
-        }, () => { _thiefplayer02TakeDeliverJewelButton.Timer = _thiefplayer02TakeDeliverJewelButton.MaxTimer; }, AssetLoader.PoliceAndThiefTakeJewelButton, ButtonPosition.Layout, __instance, __instance.UseButton, AbilitySlot.CommonAbilityPrimary, false, Tr.Get(TrKey.DeliverButton));
+                }
+                return CanUse && PlayerControl.LocalPlayer.CanMove && !PoliceAndThief.thiefplayer02IsReviving && !PlayerControl.LocalPlayer.Data.IsDead;
+            },
+            () => { thiefplayer02TakeDeliverJewelButton.Timer = thiefplayer02TakeDeliverJewelButton.MaxTimer; },
+            AssetLoader.PoliceAndThiefTakeJewelButton,
+            ButtonPosition.Layout,
+            __instance,
+            __instance.UseButton,
+            AbilitySlot.CommonAbilityPrimary,
+            false,
+            Tr.Get(TrKey.DeliverButton)
+        );
 
         // Thiefplayer03 Kill
-        _thiefplayer03KillButton = new(() =>
-        {
-            var targetId = Thiefplayer03CurrentTarget.PlayerId;
-            var sourceId = Thiefplayer03.PlayerId;
-            var killWriter = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.GamemodeKills, SendOption.Reliable);
-            killWriter.Write(targetId);
-            killWriter.Write(sourceId);
-            AmongUsClient.Instance.FinishRpcImmediately(killWriter);
-            RPCProcedure.GamemodeKills(targetId, sourceId);
-            _thiefplayer03KillButton.Timer = _thiefplayer03KillButton.MaxTimer;
-            Thiefplayer03CurrentTarget = null;
-        }, () => { return Thiefplayer03 != null && Thiefplayer03 == PlayerControl.LocalPlayer && WhoCanThiefsKill != 2; }, () =>
-        {
-            var canUse = false;
-            switch (WhoCanThiefsKill)
+        thiefplayer03KillButton = new CustomButton(
+            () =>
             {
-                case 0:
-                    if ((Policeplayer02 != null && Thiefplayer03CurrentTarget == Policeplayer02) || (Policeplayer04 != null && Thiefplayer03CurrentTarget == Policeplayer04)) canUse = true;
-                    break;
-                case 1:
-                    canUse = true;
-                    break;
-            }
-
-            return canUse && Thiefplayer03CurrentTarget && PlayerControl.LocalPlayer.CanMove && !Thiefplayer03IsReviving && !PlayerControl.LocalPlayer.Data.IsDead && !Thiefplayer03IsStealing;
-        }, () => { _thiefplayer03KillButton.Timer = _thiefplayer03KillButton.MaxTimer; }, __instance.KillButton.graphic.sprite, ButtonPosition.Layout, __instance, __instance.KillButton, AbilitySlot.CrewmateAbilityPrimary, false, TranslationController.Instance.GetString(StringNames.KillLabel));
+                byte targetId = PoliceAndThief.thiefplayer03currentTarget.PlayerId;
+                byte sourceId = PoliceAndThief.thiefplayer03.PlayerId;
+                MessageWriter killWriter = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.GamemodeKills, Hazel.SendOption.Reliable, -1);
+                killWriter.Write(targetId);
+                killWriter.Write(sourceId);
+                AmongUsClient.Instance.FinishRpcImmediately(killWriter);
+                RPCProcedure.gamemodeKills(targetId, sourceId);
+                thiefplayer03KillButton.Timer = thiefplayer03KillButton.MaxTimer;
+                PoliceAndThief.thiefplayer03currentTarget = null;
+            },
+            () => { return PoliceAndThief.thiefplayer03 != null && PoliceAndThief.thiefplayer03 == PlayerControl.LocalPlayer && PoliceAndThief.whoCanThiefsKill != 2; },
+            () =>
+            {
+                bool canUse = false;
+                switch (PoliceAndThief.whoCanThiefsKill)
+                {
+                    case 0:
+                        if (PoliceAndThief.policeplayer02 != null && PoliceAndThief.thiefplayer03currentTarget == PoliceAndThief.policeplayer02 || PoliceAndThief.policeplayer04 != null && PoliceAndThief.thiefplayer03currentTarget == PoliceAndThief.policeplayer04)
+                        {
+                            canUse = true;
+                        }
+                        break;
+                    case 1:
+                        canUse = true;
+                        break;
+                }
+                return canUse && PoliceAndThief.thiefplayer03currentTarget && PlayerControl.LocalPlayer.CanMove && !PoliceAndThief.thiefplayer03IsReviving && !PlayerControl.LocalPlayer.Data.IsDead && !PoliceAndThief.thiefplayer03IsStealing;
+            },
+            () => { thiefplayer03KillButton.Timer = thiefplayer03KillButton.MaxTimer; },
+            __instance.KillButton.graphic.sprite,
+            ButtonPosition.Layout,
+            __instance,
+            __instance.KillButton,
+            AbilitySlot.CrewmateAbilityPrimary,
+            false,
+            TranslationController.Instance.GetString(StringNames.KillLabel)
+        );
 
         // Thiefplayer03 FreeThief Button
-        _thiefplayer03FreeThiefButton = new(() =>
-        {
-            var thiefFree = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.PoliceandThiefFreeThief, SendOption.Reliable);
-            AmongUsClient.Instance.FinishRpcImmediately(thiefFree);
-            RPCProcedure.PoliceandThiefFreeThief();
-            _thiefplayer03FreeThiefButton.Timer = _thiefplayer03FreeThiefButton.MaxTimer;
-        }, () => { return Thiefplayer03 != null && Thiefplayer03 == PlayerControl.LocalPlayer; }, () =>
-        {
-            if (LocalThiefReleaseArrow.Count != 0)
+        thiefplayer03FreeThiefButton = new CustomButton(
+            () =>
             {
-                LocalThiefReleaseArrow[0].Update(Cellbutton.transform.position);
-                if (GameOptionsManager.Instance.currentGameOptions.MapId == 6) LocalThiefReleaseArrow[1].Update(Cellbuttontwo.transform.position);
-            }
-
-            if (LocalThiefDeliverArrow.Count != 0)
+                MessageWriter thiefFree = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.PoliceandThiefFreeThief, Hazel.SendOption.Reliable, -1);
+                AmongUsClient.Instance.FinishRpcImmediately(thiefFree);
+                RPCProcedure.policeandThiefFreeThief();
+                thiefplayer03FreeThiefButton.Timer = thiefplayer03FreeThiefButton.MaxTimer;
+            },
+            () => { return PoliceAndThief.thiefplayer03 != null && PoliceAndThief.thiefplayer03 == PlayerControl.LocalPlayer; },
+            () =>
             {
-                LocalThiefDeliverArrow[0].Update(Jewelbutton.transform.position);
-                if (GameOptionsManager.Instance.currentGameOptions.MapId == 6) LocalThiefDeliverArrow[1].Update(Jewelbuttontwo.transform.position);
-            }
+                if (PoliceAndThief.localThiefReleaseArrow.Count != 0)
+                {
+                    PoliceAndThief.localThiefReleaseArrow[0].Update(PoliceAndThief.cellbutton.transform.position);
+                    if (GameOptionsManager.Instance.currentGameOptions.MapId == 6)
+                    {
+                        PoliceAndThief.localThiefReleaseArrow[1].Update(PoliceAndThief.cellbuttontwo.transform.position);
+                    }
+                }
+                if (PoliceAndThief.localThiefDeliverArrow.Count != 0)
+                {
+                    PoliceAndThief.localThiefDeliverArrow[0].Update(PoliceAndThief.jewelbutton.transform.position);
+                    if (GameOptionsManager.Instance.currentGameOptions.MapId == 6)
+                    {
+                        PoliceAndThief.localThiefDeliverArrow[1].Update(PoliceAndThief.jewelbuttontwo.transform.position);
+                    }
+                }
 
-            var canUse = false;
-            if (CurrentThiefsCaptured > 0)
-            {
-                if (((Cellbuttontwo != null && Vector2.Distance(Thiefplayer03.transform.position, Cellbuttontwo.transform.position) < 0.4f) || Vector2.Distance(Thiefplayer03.transform.position, Cellbutton.transform.position) < 0.4f) && !Thiefplayer03.Data.IsDead)
-                    canUse = true;
-            }
-
-            return canUse && PlayerControl.LocalPlayer.CanMove && !Thiefplayer03IsReviving && !PlayerControl.LocalPlayer.Data.IsDead;
-        }, () => { _thiefplayer03FreeThiefButton.Timer = _thiefplayer03FreeThiefButton.MaxTimer; }, AssetLoader.PoliceAndThiefFreeButton, ButtonPosition.Layout, __instance, __instance.UseButton, AbilitySlot.CrewmateAbilitySecondary, false, Tr.Get(TrKey.ReleaseButton));
+                bool CanUse = false;
+                if (PoliceAndThief.currentThiefsCaptured > 0)
+                {
+                    if ((PoliceAndThief.cellbuttontwo != null && Vector2.Distance(PoliceAndThief.thiefplayer03.transform.position, PoliceAndThief.cellbuttontwo.transform.position) < 0.4f || Vector2.Distance(PoliceAndThief.thiefplayer03.transform.position, PoliceAndThief.cellbutton.transform.position) < 0.4f) && !PoliceAndThief.thiefplayer03.Data.IsDead)
+                    {
+                        CanUse = true;
+                    }
+                }
+                return CanUse && PlayerControl.LocalPlayer.CanMove && !PoliceAndThief.thiefplayer03IsReviving && !PlayerControl.LocalPlayer.Data.IsDead;
+            },
+            () => { thiefplayer03FreeThiefButton.Timer = thiefplayer03FreeThiefButton.MaxTimer; },
+            AssetLoader.PoliceAndThiefFreeButton,
+            ButtonPosition.Layout,
+            __instance,
+            __instance.UseButton,
+            AbilitySlot.CrewmateAbilitySecondary,
+            false,
+            Tr.Get(TrKey.ReleaseButton)
+        );
 
         // Thiefplayer03 Take/Deliver Jewel Button
-        _thiefplayer03TakeDeliverJewelButton = new(() =>
-        {
-            if (Thiefplayer03IsStealing)
+        thiefplayer03TakeDeliverJewelButton = new CustomButton(
+            () =>
             {
-                var targetId = PlayerControl.LocalPlayer.PlayerId;
-                var jewelId = Thiefplayer03JewelId;
-                var thiefScore = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.PoliceandThiefDeliverJewel, SendOption.Reliable);
-                thiefScore.Write(targetId);
-                thiefScore.Write(jewelId);
-                AmongUsClient.Instance.FinishRpcImmediately(thiefScore);
-                RPCProcedure.PoliceandThiefDeliverJewel(targetId, jewelId);
-            }
-            else
-            {
-                var targetId = PlayerControl.LocalPlayer.PlayerId;
-                var jewelId = Thiefplayer03JewelId;
-                var thiefWhoTookATreasure = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.PoliceandThiefTakeJewel, SendOption.Reliable);
-                thiefWhoTookATreasure.Write(targetId);
-                thiefWhoTookATreasure.Write(jewelId);
-                AmongUsClient.Instance.FinishRpcImmediately(thiefWhoTookATreasure);
-                RPCProcedure.PoliceandThiefTakeJewel(targetId, jewelId);
-            }
-
-            _thiefplayer03TakeDeliverJewelButton.Timer = _thiefplayer03TakeDeliverJewelButton.MaxTimer;
-        }, () => { return Thiefplayer03 != null && Thiefplayer03 == PlayerControl.LocalPlayer; }, () =>
-        {
-            if (Thiefplayer03IsStealing)
-                _thiefplayer03TakeDeliverJewelButton.ActionButton.graphic.sprite = AssetLoader.PoliceAndThiefDeliverJewelButton;
-            else
-                _thiefplayer03TakeDeliverJewelButton.ActionButton.graphic.sprite = AssetLoader.PoliceAndThiefTakeJewelButton;
-            var canUse = false;
-            if (ThiefTreasures.Count != 0)
-            {
-                foreach (var jewel in ThiefTreasures)
+                if (PoliceAndThief.thiefplayer03IsStealing)
                 {
-                    if (jewel != null && Vector2.Distance(PlayerControl.LocalPlayer.transform.position, jewel.transform.position) < 0.5f && !Thiefplayer03IsStealing)
+                    byte targetId = PlayerControl.LocalPlayer.PlayerId;
+                    byte jewelId = PoliceAndThief.thiefplayer03JewelId;
+                    MessageWriter thiefScore = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.PoliceandThiefDeliverJewel, Hazel.SendOption.Reliable, -1);
+                    thiefScore.Write(targetId);
+                    thiefScore.Write(jewelId);
+                    AmongUsClient.Instance.FinishRpcImmediately(thiefScore);
+                    RPCProcedure.policeandThiefDeliverJewel(targetId, jewelId);
+                }
+                else
+                {
+                    byte targetId = PlayerControl.LocalPlayer.PlayerId;
+                    byte jewelId = PoliceAndThief.thiefplayer03JewelId;
+                    MessageWriter thiefWhoTookATreasure = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.PoliceandThiefTakeJewel, Hazel.SendOption.Reliable, -1);
+                    thiefWhoTookATreasure.Write(targetId);
+                    thiefWhoTookATreasure.Write(jewelId);
+                    AmongUsClient.Instance.FinishRpcImmediately(thiefWhoTookATreasure);
+                    RPCProcedure.policeandThiefTakeJewel(targetId, jewelId);
+                }
+                thiefplayer03TakeDeliverJewelButton.Timer = thiefplayer03TakeDeliverJewelButton.MaxTimer;
+            },
+            () => { return PoliceAndThief.thiefplayer03 != null && PoliceAndThief.thiefplayer03 == PlayerControl.LocalPlayer; },
+            () =>
+            {
+                if (PoliceAndThief.thiefplayer03IsStealing)
+                    thiefplayer03TakeDeliverJewelButton.ActionButton.graphic.sprite = AssetLoader.PoliceAndThiefDeliverJewelButton;
+                else
+                    thiefplayer03TakeDeliverJewelButton.ActionButton.graphic.sprite = AssetLoader.PoliceAndThiefTakeJewelButton;
+                bool CanUse = false;
+                if (PoliceAndThief.thiefTreasures.Count != 0)
+                {
+                    foreach (GameObject jewel in PoliceAndThief.thiefTreasures)
                     {
-                        switch (jewel.name)
+                        if (jewel != null && Vector2.Distance(PlayerControl.LocalPlayer.transform.position, jewel.transform.position) < 0.5f && !PoliceAndThief.thiefplayer03IsStealing)
                         {
-                            case "jewel01":
-                                Thiefplayer03JewelId = 1;
-                                canUse = !Jewel01BeingStealed;
-                                break;
-                            case "jewel02":
-                                Thiefplayer03JewelId = 2;
-                                canUse = !Jewel02BeingStealed;
-                                break;
-                            case "jewel03":
-                                Thiefplayer03JewelId = 3;
-                                canUse = !Jewel03BeingStealed;
-                                break;
-                            case "jewel04":
-                                Thiefplayer03JewelId = 4;
-                                canUse = !Jewel04BeingStealed;
-                                break;
-                            case "jewel05":
-                                Thiefplayer03JewelId = 5;
-                                canUse = !Jewel05BeingStealed;
-                                break;
-                            case "jewel06":
-                                Thiefplayer03JewelId = 6;
-                                canUse = !Jewel06BeingStealed;
-                                break;
-                            case "jewel07":
-                                Thiefplayer03JewelId = 7;
-                                canUse = !Jewel07BeingStealed;
-                                break;
-                            case "jewel08":
-                                Thiefplayer03JewelId = 8;
-                                canUse = !Jewel08BeingStealed;
-                                break;
-                            case "jewel09":
-                                Thiefplayer03JewelId = 9;
-                                canUse = !Jewel09BeingStealed;
-                                break;
-                            case "jewel10":
-                                Thiefplayer03JewelId = 10;
-                                canUse = !Jewel10BeingStealed;
-                                break;
-                            case "jewel11":
-                                Thiefplayer03JewelId = 11;
-                                canUse = !Jewel11BeingStealed;
-                                break;
-                            case "jewel12":
-                                Thiefplayer03JewelId = 12;
-                                canUse = !Jewel12BeingStealed;
-                                break;
-                            case "jewel13":
-                                Thiefplayer03JewelId = 13;
-                                canUse = !Jewel13BeingStealed;
-                                break;
-                            case "jewel14":
-                                Thiefplayer03JewelId = 14;
-                                canUse = !Jewel14BeingStealed;
-                                break;
-                            case "jewel15":
-                                Thiefplayer03JewelId = 15;
-                                canUse = !Jewel15BeingStealed;
-                                break;
+                            switch (jewel.name)
+                            {
+                                case "jewel01":
+                                    PoliceAndThief.thiefplayer03JewelId = 1;
+                                    CanUse = !PoliceAndThief.jewel01BeingStealed;
+                                    break;
+                                case "jewel02":
+                                    PoliceAndThief.thiefplayer03JewelId = 2;
+                                    CanUse = !PoliceAndThief.jewel02BeingStealed;
+                                    break;
+                                case "jewel03":
+                                    PoliceAndThief.thiefplayer03JewelId = 3;
+                                    CanUse = !PoliceAndThief.jewel03BeingStealed;
+                                    break;
+                                case "jewel04":
+                                    PoliceAndThief.thiefplayer03JewelId = 4;
+                                    CanUse = !PoliceAndThief.jewel04BeingStealed;
+                                    break;
+                                case "jewel05":
+                                    PoliceAndThief.thiefplayer03JewelId = 5;
+                                    CanUse = !PoliceAndThief.jewel05BeingStealed;
+                                    break;
+                                case "jewel06":
+                                    PoliceAndThief.thiefplayer03JewelId = 6;
+                                    CanUse = !PoliceAndThief.jewel06BeingStealed;
+                                    break;
+                                case "jewel07":
+                                    PoliceAndThief.thiefplayer03JewelId = 7;
+                                    CanUse = !PoliceAndThief.jewel07BeingStealed;
+                                    break;
+                                case "jewel08":
+                                    PoliceAndThief.thiefplayer03JewelId = 8;
+                                    CanUse = !PoliceAndThief.jewel08BeingStealed;
+                                    break;
+                                case "jewel09":
+                                    PoliceAndThief.thiefplayer03JewelId = 9;
+                                    CanUse = !PoliceAndThief.jewel09BeingStealed;
+                                    break;
+                                case "jewel10":
+                                    PoliceAndThief.thiefplayer03JewelId = 10;
+                                    CanUse = !PoliceAndThief.jewel10BeingStealed;
+                                    break;
+                                case "jewel11":
+                                    PoliceAndThief.thiefplayer03JewelId = 11;
+                                    CanUse = !PoliceAndThief.jewel11BeingStealed;
+                                    break;
+                                case "jewel12":
+                                    PoliceAndThief.thiefplayer03JewelId = 12;
+                                    CanUse = !PoliceAndThief.jewel12BeingStealed;
+                                    break;
+                                case "jewel13":
+                                    PoliceAndThief.thiefplayer03JewelId = 13;
+                                    CanUse = !PoliceAndThief.jewel13BeingStealed;
+                                    break;
+                                case "jewel14":
+                                    PoliceAndThief.thiefplayer03JewelId = 14;
+                                    CanUse = !PoliceAndThief.jewel14BeingStealed;
+                                    break;
+                                case "jewel15":
+                                    PoliceAndThief.thiefplayer03JewelId = 15;
+                                    CanUse = !PoliceAndThief.jewel15BeingStealed;
+                                    break;
+                            }
+                        }
+                        else if ((PoliceAndThief.jewelbuttontwo != null && Vector2.Distance(PlayerControl.LocalPlayer.transform.position, PoliceAndThief.jewelbuttontwo.transform.position) < 0.5f || PoliceAndThief.jewelbutton != null && Vector2.Distance(PlayerControl.LocalPlayer.transform.position, PoliceAndThief.jewelbutton.transform.position) < 0.5f) && PoliceAndThief.thiefplayer03IsStealing)
+                        {
+                            CanUse = true;
                         }
                     }
-                    else if (((Jewelbuttontwo != null && Vector2.Distance(PlayerControl.LocalPlayer.transform.position, Jewelbuttontwo.transform.position) < 0.5f) || (Jewelbutton != null && Vector2.Distance(PlayerControl.LocalPlayer.transform.position, Jewelbutton.transform.position) < 0.5f)) && Thiefplayer03IsStealing) canUse = true;
-                }
-            }
 
-            return canUse && PlayerControl.LocalPlayer.CanMove && !Thiefplayer03IsReviving && !PlayerControl.LocalPlayer.Data.IsDead;
-        }, () => { _thiefplayer03TakeDeliverJewelButton.Timer = _thiefplayer03TakeDeliverJewelButton.MaxTimer; }, AssetLoader.PoliceAndThiefTakeJewelButton, ButtonPosition.Layout, __instance, __instance.UseButton, AbilitySlot.CommonAbilityPrimary, false, Tr.Get(TrKey.DeliverButton));
+                }
+                return CanUse && PlayerControl.LocalPlayer.CanMove && !PoliceAndThief.thiefplayer03IsReviving && !PlayerControl.LocalPlayer.Data.IsDead;
+            },
+            () => { thiefplayer03TakeDeliverJewelButton.Timer = thiefplayer03TakeDeliverJewelButton.MaxTimer; },
+            AssetLoader.PoliceAndThiefTakeJewelButton,
+            ButtonPosition.Layout,
+            __instance,
+            __instance.UseButton,
+            AbilitySlot.CommonAbilityPrimary,
+            false,
+            Tr.Get(TrKey.DeliverButton)
+        );
 
         // Thiefplayer04 Kill
-        _thiefplayer04KillButton = new(() =>
-        {
-            var targetId = Thiefplayer04CurrentTarget.PlayerId;
-            var sourceId = Thiefplayer04.PlayerId;
-            var killWriter = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.GamemodeKills, SendOption.Reliable);
-            killWriter.Write(targetId);
-            killWriter.Write(sourceId);
-            AmongUsClient.Instance.FinishRpcImmediately(killWriter);
-            RPCProcedure.GamemodeKills(targetId, sourceId);
-            _thiefplayer04KillButton.Timer = _thiefplayer04KillButton.MaxTimer;
-            Thiefplayer04CurrentTarget = null;
-        }, () => { return Thiefplayer04 != null && Thiefplayer04 == PlayerControl.LocalPlayer && WhoCanThiefsKill != 2; }, () =>
-        {
-            var canUse = false;
-            switch (WhoCanThiefsKill)
+        thiefplayer04KillButton = new CustomButton(
+            () =>
             {
-                case 0:
-                    if ((Policeplayer02 != null && Thiefplayer04CurrentTarget == Policeplayer02) || (Policeplayer04 != null && Thiefplayer04CurrentTarget == Policeplayer04)) canUse = true;
-                    break;
-                case 1:
-                    canUse = true;
-                    break;
-            }
-
-            return canUse && Thiefplayer04CurrentTarget && PlayerControl.LocalPlayer.CanMove && !Thiefplayer04IsReviving && !PlayerControl.LocalPlayer.Data.IsDead && !Thiefplayer04IsStealing;
-        }, () => { _thiefplayer04KillButton.Timer = _thiefplayer04KillButton.MaxTimer; }, __instance.KillButton.graphic.sprite, ButtonPosition.Layout, __instance, __instance.KillButton, AbilitySlot.CrewmateAbilityPrimary, false, TranslationController.Instance.GetString(StringNames.KillLabel));
+                byte targetId = PoliceAndThief.thiefplayer04currentTarget.PlayerId;
+                byte sourceId = PoliceAndThief.thiefplayer04.PlayerId;
+                MessageWriter killWriter = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.GamemodeKills, Hazel.SendOption.Reliable, -1);
+                killWriter.Write(targetId);
+                killWriter.Write(sourceId);
+                AmongUsClient.Instance.FinishRpcImmediately(killWriter);
+                RPCProcedure.gamemodeKills(targetId, sourceId);
+                thiefplayer04KillButton.Timer = thiefplayer04KillButton.MaxTimer;
+                PoliceAndThief.thiefplayer04currentTarget = null;
+            },
+            () => { return PoliceAndThief.thiefplayer04 != null && PoliceAndThief.thiefplayer04 == PlayerControl.LocalPlayer && PoliceAndThief.whoCanThiefsKill != 2; },
+            () =>
+            {
+                bool canUse = false;
+                switch (PoliceAndThief.whoCanThiefsKill)
+                {
+                    case 0:
+                        if (PoliceAndThief.policeplayer02 != null && PoliceAndThief.thiefplayer04currentTarget == PoliceAndThief.policeplayer02 || PoliceAndThief.policeplayer04 != null && PoliceAndThief.thiefplayer04currentTarget == PoliceAndThief.policeplayer04)
+                        {
+                            canUse = true;
+                        }
+                        break;
+                    case 1:
+                        canUse = true;
+                        break;
+                }
+                return canUse && PoliceAndThief.thiefplayer04currentTarget && PlayerControl.LocalPlayer.CanMove && !PoliceAndThief.thiefplayer04IsReviving && !PlayerControl.LocalPlayer.Data.IsDead && !PoliceAndThief.thiefplayer04IsStealing;
+            },
+            () => { thiefplayer04KillButton.Timer = thiefplayer04KillButton.MaxTimer; },
+            __instance.KillButton.graphic.sprite,
+            ButtonPosition.Layout,
+            __instance,
+            __instance.KillButton,
+            AbilitySlot.CrewmateAbilityPrimary,
+            false,
+            TranslationController.Instance.GetString(StringNames.KillLabel)
+        );
 
         // Thiefplayer04 FreeThief Button
-        _thiefplayer04FreeThiefButton = new(() =>
-        {
-            var thiefFree = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.PoliceandThiefFreeThief, SendOption.Reliable);
-            AmongUsClient.Instance.FinishRpcImmediately(thiefFree);
-            RPCProcedure.PoliceandThiefFreeThief();
-            _thiefplayer04FreeThiefButton.Timer = _thiefplayer04FreeThiefButton.MaxTimer;
-        }, () => { return Thiefplayer04 != null && Thiefplayer04 == PlayerControl.LocalPlayer; }, () =>
-        {
-            if (LocalThiefReleaseArrow.Count != 0)
+        thiefplayer04FreeThiefButton = new CustomButton(
+            () =>
             {
-                LocalThiefReleaseArrow[0].Update(Cellbutton.transform.position);
-                if (GameOptionsManager.Instance.currentGameOptions.MapId == 6) LocalThiefReleaseArrow[1].Update(Cellbuttontwo.transform.position);
-            }
-
-            if (LocalThiefDeliverArrow.Count != 0)
+                MessageWriter thiefFree = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.PoliceandThiefFreeThief, Hazel.SendOption.Reliable, -1);
+                AmongUsClient.Instance.FinishRpcImmediately(thiefFree);
+                RPCProcedure.policeandThiefFreeThief();
+                thiefplayer04FreeThiefButton.Timer = thiefplayer04FreeThiefButton.MaxTimer;
+            },
+            () => { return PoliceAndThief.thiefplayer04 != null && PoliceAndThief.thiefplayer04 == PlayerControl.LocalPlayer; },
+            () =>
             {
-                LocalThiefDeliverArrow[0].Update(Jewelbutton.transform.position);
-                if (GameOptionsManager.Instance.currentGameOptions.MapId == 6) LocalThiefDeliverArrow[1].Update(Jewelbuttontwo.transform.position);
-            }
+                if (PoliceAndThief.localThiefReleaseArrow.Count != 0)
+                {
+                    PoliceAndThief.localThiefReleaseArrow[0].Update(PoliceAndThief.cellbutton.transform.position);
+                    if (GameOptionsManager.Instance.currentGameOptions.MapId == 6)
+                    {
+                        PoliceAndThief.localThiefReleaseArrow[1].Update(PoliceAndThief.cellbuttontwo.transform.position);
+                    }
+                }
+                if (PoliceAndThief.localThiefDeliverArrow.Count != 0)
+                {
+                    PoliceAndThief.localThiefDeliverArrow[0].Update(PoliceAndThief.jewelbutton.transform.position);
+                    if (GameOptionsManager.Instance.currentGameOptions.MapId == 6)
+                    {
+                        PoliceAndThief.localThiefDeliverArrow[1].Update(PoliceAndThief.jewelbuttontwo.transform.position);
+                    }
+                }
 
-            var canUse = false;
-            if (CurrentThiefsCaptured > 0)
-            {
-                if (((Cellbuttontwo != null && Vector2.Distance(Thiefplayer04.transform.position, Cellbuttontwo.transform.position) < 0.4f) || Vector2.Distance(Thiefplayer04.transform.position, Cellbutton.transform.position) < 0.4f) && !Thiefplayer04.Data.IsDead)
-                    canUse = true;
-            }
-
-            return canUse && PlayerControl.LocalPlayer.CanMove && !Thiefplayer04IsReviving && !PlayerControl.LocalPlayer.Data.IsDead;
-        }, () => { _thiefplayer04FreeThiefButton.Timer = _thiefplayer04FreeThiefButton.MaxTimer; }, AssetLoader.PoliceAndThiefFreeButton, ButtonPosition.Layout, __instance, __instance.UseButton, AbilitySlot.CrewmateAbilitySecondary, false, Tr.Get(TrKey.ReleaseButton));
+                bool CanUse = false;
+                if (PoliceAndThief.currentThiefsCaptured > 0)
+                {
+                    if ((PoliceAndThief.cellbuttontwo != null && Vector2.Distance(PoliceAndThief.thiefplayer04.transform.position, PoliceAndThief.cellbuttontwo.transform.position) < 0.4f || Vector2.Distance(PoliceAndThief.thiefplayer04.transform.position, PoliceAndThief.cellbutton.transform.position) < 0.4f) && !PoliceAndThief.thiefplayer04.Data.IsDead)
+                    {
+                        CanUse = true;
+                    }
+                }
+                return CanUse && PlayerControl.LocalPlayer.CanMove && !PoliceAndThief.thiefplayer04IsReviving && !PlayerControl.LocalPlayer.Data.IsDead;
+            },
+            () => { thiefplayer04FreeThiefButton.Timer = thiefplayer04FreeThiefButton.MaxTimer; },
+            AssetLoader.PoliceAndThiefFreeButton,
+            ButtonPosition.Layout,
+            __instance,
+            __instance.UseButton,
+            AbilitySlot.CrewmateAbilitySecondary,
+            false,
+            Tr.Get(TrKey.ReleaseButton)
+        );
 
         // Thiefplayer04 Take/Deliver Jewel Button
-        _thiefplayer04TakeDeliverJewelButton = new(() =>
-        {
-            if (Thiefplayer04IsStealing)
+        thiefplayer04TakeDeliverJewelButton = new CustomButton(
+            () =>
             {
-                var targetId = PlayerControl.LocalPlayer.PlayerId;
-                var jewelId = Thiefplayer04JewelId;
-                var thiefScore = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.PoliceandThiefDeliverJewel, SendOption.Reliable);
-                thiefScore.Write(targetId);
-                thiefScore.Write(jewelId);
-                AmongUsClient.Instance.FinishRpcImmediately(thiefScore);
-                RPCProcedure.PoliceandThiefDeliverJewel(targetId, jewelId);
-            }
-            else
-            {
-                var targetId = PlayerControl.LocalPlayer.PlayerId;
-                var jewelId = Thiefplayer04JewelId;
-                var thiefWhoTookATreasure = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.PoliceandThiefTakeJewel, SendOption.Reliable);
-                thiefWhoTookATreasure.Write(targetId);
-                thiefWhoTookATreasure.Write(jewelId);
-                AmongUsClient.Instance.FinishRpcImmediately(thiefWhoTookATreasure);
-                RPCProcedure.PoliceandThiefTakeJewel(targetId, jewelId);
-            }
-
-            _thiefplayer04TakeDeliverJewelButton.Timer = _thiefplayer04TakeDeliverJewelButton.MaxTimer;
-        }, () => { return Thiefplayer04 != null && Thiefplayer04 == PlayerControl.LocalPlayer; }, () =>
-        {
-            if (Thiefplayer04IsStealing)
-                _thiefplayer04TakeDeliverJewelButton.ActionButton.graphic.sprite = AssetLoader.PoliceAndThiefDeliverJewelButton;
-            else
-                _thiefplayer04TakeDeliverJewelButton.ActionButton.graphic.sprite = AssetLoader.PoliceAndThiefTakeJewelButton;
-            var canUse = false;
-            if (ThiefTreasures.Count != 0)
-            {
-                foreach (var jewel in ThiefTreasures)
+                if (PoliceAndThief.thiefplayer04IsStealing)
                 {
-                    if (jewel != null && Vector2.Distance(PlayerControl.LocalPlayer.transform.position, jewel.transform.position) < 0.5f && !Thiefplayer04IsStealing)
+                    byte targetId = PlayerControl.LocalPlayer.PlayerId;
+                    byte jewelId = PoliceAndThief.thiefplayer04JewelId;
+                    MessageWriter thiefScore = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.PoliceandThiefDeliverJewel, Hazel.SendOption.Reliable, -1);
+                    thiefScore.Write(targetId);
+                    thiefScore.Write(jewelId);
+                    AmongUsClient.Instance.FinishRpcImmediately(thiefScore);
+                    RPCProcedure.policeandThiefDeliverJewel(targetId, jewelId);
+                }
+                else
+                {
+                    byte targetId = PlayerControl.LocalPlayer.PlayerId;
+                    byte jewelId = PoliceAndThief.thiefplayer04JewelId;
+                    MessageWriter thiefWhoTookATreasure = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.PoliceandThiefTakeJewel, Hazel.SendOption.Reliable, -1);
+                    thiefWhoTookATreasure.Write(targetId);
+                    thiefWhoTookATreasure.Write(jewelId);
+                    AmongUsClient.Instance.FinishRpcImmediately(thiefWhoTookATreasure);
+                    RPCProcedure.policeandThiefTakeJewel(targetId, jewelId);
+                }
+                thiefplayer04TakeDeliverJewelButton.Timer = thiefplayer04TakeDeliverJewelButton.MaxTimer;
+            },
+            () => { return PoliceAndThief.thiefplayer04 != null && PoliceAndThief.thiefplayer04 == PlayerControl.LocalPlayer; },
+            () =>
+            {
+                if (PoliceAndThief.thiefplayer04IsStealing)
+                    thiefplayer04TakeDeliverJewelButton.ActionButton.graphic.sprite = AssetLoader.PoliceAndThiefDeliverJewelButton;
+                else
+                    thiefplayer04TakeDeliverJewelButton.ActionButton.graphic.sprite = AssetLoader.PoliceAndThiefTakeJewelButton;
+                bool CanUse = false;
+                if (PoliceAndThief.thiefTreasures.Count != 0)
+                {
+                    foreach (GameObject jewel in PoliceAndThief.thiefTreasures)
                     {
-                        switch (jewel.name)
+                        if (jewel != null && Vector2.Distance(PlayerControl.LocalPlayer.transform.position, jewel.transform.position) < 0.5f && !PoliceAndThief.thiefplayer04IsStealing)
                         {
-                            case "jewel01":
-                                Thiefplayer04JewelId = 1;
-                                canUse = !Jewel01BeingStealed;
-                                break;
-                            case "jewel02":
-                                Thiefplayer04JewelId = 2;
-                                canUse = !Jewel02BeingStealed;
-                                break;
-                            case "jewel03":
-                                Thiefplayer04JewelId = 3;
-                                canUse = !Jewel03BeingStealed;
-                                break;
-                            case "jewel04":
-                                Thiefplayer04JewelId = 4;
-                                canUse = !Jewel04BeingStealed;
-                                break;
-                            case "jewel05":
-                                Thiefplayer04JewelId = 5;
-                                canUse = !Jewel05BeingStealed;
-                                break;
-                            case "jewel06":
-                                Thiefplayer04JewelId = 6;
-                                canUse = !Jewel06BeingStealed;
-                                break;
-                            case "jewel07":
-                                Thiefplayer04JewelId = 7;
-                                canUse = !Jewel07BeingStealed;
-                                break;
-                            case "jewel08":
-                                Thiefplayer04JewelId = 8;
-                                canUse = !Jewel08BeingStealed;
-                                break;
-                            case "jewel09":
-                                Thiefplayer04JewelId = 9;
-                                canUse = !Jewel09BeingStealed;
-                                break;
-                            case "jewel10":
-                                Thiefplayer04JewelId = 10;
-                                canUse = !Jewel10BeingStealed;
-                                break;
-                            case "jewel11":
-                                Thiefplayer04JewelId = 11;
-                                canUse = !Jewel11BeingStealed;
-                                break;
-                            case "jewel12":
-                                Thiefplayer04JewelId = 12;
-                                canUse = !Jewel12BeingStealed;
-                                break;
-                            case "jewel13":
-                                Thiefplayer04JewelId = 13;
-                                canUse = !Jewel13BeingStealed;
-                                break;
-                            case "jewel14":
-                                Thiefplayer04JewelId = 14;
-                                canUse = !Jewel14BeingStealed;
-                                break;
-                            case "jewel15":
-                                Thiefplayer04JewelId = 15;
-                                canUse = !Jewel15BeingStealed;
-                                break;
+                            switch (jewel.name)
+                            {
+                                case "jewel01":
+                                    PoliceAndThief.thiefplayer04JewelId = 1;
+                                    CanUse = !PoliceAndThief.jewel01BeingStealed;
+                                    break;
+                                case "jewel02":
+                                    PoliceAndThief.thiefplayer04JewelId = 2;
+                                    CanUse = !PoliceAndThief.jewel02BeingStealed;
+                                    break;
+                                case "jewel03":
+                                    PoliceAndThief.thiefplayer04JewelId = 3;
+                                    CanUse = !PoliceAndThief.jewel03BeingStealed;
+                                    break;
+                                case "jewel04":
+                                    PoliceAndThief.thiefplayer04JewelId = 4;
+                                    CanUse = !PoliceAndThief.jewel04BeingStealed;
+                                    break;
+                                case "jewel05":
+                                    PoliceAndThief.thiefplayer04JewelId = 5;
+                                    CanUse = !PoliceAndThief.jewel05BeingStealed;
+                                    break;
+                                case "jewel06":
+                                    PoliceAndThief.thiefplayer04JewelId = 6;
+                                    CanUse = !PoliceAndThief.jewel06BeingStealed;
+                                    break;
+                                case "jewel07":
+                                    PoliceAndThief.thiefplayer04JewelId = 7;
+                                    CanUse = !PoliceAndThief.jewel07BeingStealed;
+                                    break;
+                                case "jewel08":
+                                    PoliceAndThief.thiefplayer04JewelId = 8;
+                                    CanUse = !PoliceAndThief.jewel08BeingStealed;
+                                    break;
+                                case "jewel09":
+                                    PoliceAndThief.thiefplayer04JewelId = 9;
+                                    CanUse = !PoliceAndThief.jewel09BeingStealed;
+                                    break;
+                                case "jewel10":
+                                    PoliceAndThief.thiefplayer04JewelId = 10;
+                                    CanUse = !PoliceAndThief.jewel10BeingStealed;
+                                    break;
+                                case "jewel11":
+                                    PoliceAndThief.thiefplayer04JewelId = 11;
+                                    CanUse = !PoliceAndThief.jewel11BeingStealed;
+                                    break;
+                                case "jewel12":
+                                    PoliceAndThief.thiefplayer04JewelId = 12;
+                                    CanUse = !PoliceAndThief.jewel12BeingStealed;
+                                    break;
+                                case "jewel13":
+                                    PoliceAndThief.thiefplayer04JewelId = 13;
+                                    CanUse = !PoliceAndThief.jewel13BeingStealed;
+                                    break;
+                                case "jewel14":
+                                    PoliceAndThief.thiefplayer04JewelId = 14;
+                                    CanUse = !PoliceAndThief.jewel14BeingStealed;
+                                    break;
+                                case "jewel15":
+                                    PoliceAndThief.thiefplayer04JewelId = 15;
+                                    CanUse = !PoliceAndThief.jewel15BeingStealed;
+                                    break;
+                            }
+                        }
+                        else if ((PoliceAndThief.jewelbuttontwo != null && Vector2.Distance(PlayerControl.LocalPlayer.transform.position, PoliceAndThief.jewelbuttontwo.transform.position) < 0.5f || PoliceAndThief.jewelbutton != null && Vector2.Distance(PlayerControl.LocalPlayer.transform.position, PoliceAndThief.jewelbutton.transform.position) < 0.5f) && PoliceAndThief.thiefplayer04IsStealing)
+                        {
+                            CanUse = true;
                         }
                     }
-                    else if (((Jewelbuttontwo != null && Vector2.Distance(PlayerControl.LocalPlayer.transform.position, Jewelbuttontwo.transform.position) < 0.5f) || (Jewelbutton != null && Vector2.Distance(PlayerControl.LocalPlayer.transform.position, Jewelbutton.transform.position) < 0.5f)) && Thiefplayer04IsStealing) canUse = true;
-                }
-            }
 
-            return canUse && PlayerControl.LocalPlayer.CanMove && !Thiefplayer04IsReviving && !PlayerControl.LocalPlayer.Data.IsDead;
-        }, () => { _thiefplayer04TakeDeliverJewelButton.Timer = _thiefplayer04TakeDeliverJewelButton.MaxTimer; }, AssetLoader.PoliceAndThiefTakeJewelButton, ButtonPosition.Layout, __instance, __instance.UseButton, AbilitySlot.CommonAbilityPrimary, false, Tr.Get(TrKey.DeliverButton));
+                }
+                return CanUse && PlayerControl.LocalPlayer.CanMove && !PoliceAndThief.thiefplayer04IsReviving && !PlayerControl.LocalPlayer.Data.IsDead;
+            },
+            () => { thiefplayer04TakeDeliverJewelButton.Timer = thiefplayer04TakeDeliverJewelButton.MaxTimer; },
+            AssetLoader.PoliceAndThiefTakeJewelButton,
+            ButtonPosition.Layout,
+            __instance,
+            __instance.UseButton,
+            AbilitySlot.CommonAbilityPrimary,
+            false,
+            Tr.Get(TrKey.DeliverButton)
+        );
 
         // Thiefplayer05 Kill
-        _thiefplayer05KillButton = new(() =>
-        {
-            var targetId = Thiefplayer05CurrentTarget.PlayerId;
-            var sourceId = Thiefplayer05.PlayerId;
-            var killWriter = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.GamemodeKills, SendOption.Reliable);
-            killWriter.Write(targetId);
-            killWriter.Write(sourceId);
-            AmongUsClient.Instance.FinishRpcImmediately(killWriter);
-            RPCProcedure.GamemodeKills(targetId, sourceId);
-            _thiefplayer05KillButton.Timer = _thiefplayer05KillButton.MaxTimer;
-            Thiefplayer05CurrentTarget = null;
-        }, () => { return Thiefplayer05 != null && Thiefplayer05 == PlayerControl.LocalPlayer && WhoCanThiefsKill != 2; }, () =>
-        {
-            var canUse = false;
-            switch (WhoCanThiefsKill)
+        thiefplayer05KillButton = new CustomButton(
+            () =>
             {
-                case 0:
-                    if ((Policeplayer02 != null && Thiefplayer05CurrentTarget == Policeplayer02) || (Policeplayer04 != null && Thiefplayer05CurrentTarget == Policeplayer04)) canUse = true;
-                    break;
-                case 1:
-                    canUse = true;
-                    break;
-            }
-
-            return canUse && Thiefplayer05CurrentTarget && PlayerControl.LocalPlayer.CanMove && !Thiefplayer05IsReviving && !PlayerControl.LocalPlayer.Data.IsDead && !Thiefplayer05IsStealing;
-        }, () => { _thiefplayer05KillButton.Timer = _thiefplayer05KillButton.MaxTimer; }, __instance.KillButton.graphic.sprite, ButtonPosition.Layout, __instance, __instance.KillButton, AbilitySlot.CrewmateAbilityPrimary, false, TranslationController.Instance.GetString(StringNames.KillLabel));
+                byte targetId = PoliceAndThief.thiefplayer05currentTarget.PlayerId;
+                byte sourceId = PoliceAndThief.thiefplayer05.PlayerId;
+                MessageWriter killWriter = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.GamemodeKills, Hazel.SendOption.Reliable, -1);
+                killWriter.Write(targetId);
+                killWriter.Write(sourceId);
+                AmongUsClient.Instance.FinishRpcImmediately(killWriter);
+                RPCProcedure.gamemodeKills(targetId, sourceId);
+                thiefplayer05KillButton.Timer = thiefplayer05KillButton.MaxTimer;
+                PoliceAndThief.thiefplayer05currentTarget = null;
+            },
+            () => { return PoliceAndThief.thiefplayer05 != null && PoliceAndThief.thiefplayer05 == PlayerControl.LocalPlayer && PoliceAndThief.whoCanThiefsKill != 2; },
+            () =>
+            {
+                bool canUse = false;
+                switch (PoliceAndThief.whoCanThiefsKill)
+                {
+                    case 0:
+                        if (PoliceAndThief.policeplayer02 != null && PoliceAndThief.thiefplayer05currentTarget == PoliceAndThief.policeplayer02 || PoliceAndThief.policeplayer04 != null && PoliceAndThief.thiefplayer05currentTarget == PoliceAndThief.policeplayer04)
+                        {
+                            canUse = true;
+                        }
+                        break;
+                    case 1:
+                        canUse = true;
+                        break;
+                }
+                return canUse && PoliceAndThief.thiefplayer05currentTarget && PlayerControl.LocalPlayer.CanMove && !PoliceAndThief.thiefplayer05IsReviving && !PlayerControl.LocalPlayer.Data.IsDead && !PoliceAndThief.thiefplayer05IsStealing;
+            },
+            () => { thiefplayer05KillButton.Timer = thiefplayer05KillButton.MaxTimer; },
+            __instance.KillButton.graphic.sprite,
+            ButtonPosition.Layout,
+            __instance,
+            __instance.KillButton,
+            AbilitySlot.CrewmateAbilityPrimary,
+            false,
+            TranslationController.Instance.GetString(StringNames.KillLabel)
+        );
 
         // Thiefplayer05 FreeThief Button
-        _thiefplayer05FreeThiefButton = new(() =>
-        {
-            var thiefFree = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.PoliceandThiefFreeThief, SendOption.Reliable);
-            AmongUsClient.Instance.FinishRpcImmediately(thiefFree);
-            RPCProcedure.PoliceandThiefFreeThief();
-            _thiefplayer05FreeThiefButton.Timer = _thiefplayer05FreeThiefButton.MaxTimer;
-        }, () => { return Thiefplayer05 != null && Thiefplayer05 == PlayerControl.LocalPlayer; }, () =>
-        {
-            if (LocalThiefReleaseArrow.Count != 0)
+        thiefplayer05FreeThiefButton = new CustomButton(
+            () =>
             {
-                LocalThiefReleaseArrow[0].Update(Cellbutton.transform.position);
-                if (GameOptionsManager.Instance.currentGameOptions.MapId == 6) LocalThiefReleaseArrow[1].Update(Cellbuttontwo.transform.position);
-            }
-
-            if (LocalThiefDeliverArrow.Count != 0)
+                MessageWriter thiefFree = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.PoliceandThiefFreeThief, Hazel.SendOption.Reliable, -1);
+                AmongUsClient.Instance.FinishRpcImmediately(thiefFree);
+                RPCProcedure.policeandThiefFreeThief();
+                thiefplayer05FreeThiefButton.Timer = thiefplayer05FreeThiefButton.MaxTimer;
+            },
+            () => { return PoliceAndThief.thiefplayer05 != null && PoliceAndThief.thiefplayer05 == PlayerControl.LocalPlayer; },
+            () =>
             {
-                LocalThiefDeliverArrow[0].Update(Jewelbutton.transform.position);
-                if (GameOptionsManager.Instance.currentGameOptions.MapId == 6) LocalThiefDeliverArrow[1].Update(Jewelbuttontwo.transform.position);
-            }
+                if (PoliceAndThief.localThiefReleaseArrow.Count != 0)
+                {
+                    PoliceAndThief.localThiefReleaseArrow[0].Update(PoliceAndThief.cellbutton.transform.position);
+                    if (GameOptionsManager.Instance.currentGameOptions.MapId == 6)
+                    {
+                        PoliceAndThief.localThiefReleaseArrow[1].Update(PoliceAndThief.cellbuttontwo.transform.position);
+                    }
+                }
+                if (PoliceAndThief.localThiefDeliverArrow.Count != 0)
+                {
+                    PoliceAndThief.localThiefDeliverArrow[0].Update(PoliceAndThief.jewelbutton.transform.position);
+                    if (GameOptionsManager.Instance.currentGameOptions.MapId == 6)
+                    {
+                        PoliceAndThief.localThiefDeliverArrow[1].Update(PoliceAndThief.jewelbuttontwo.transform.position);
+                    }
+                }
 
-            var canUse = false;
-            if (CurrentThiefsCaptured > 0)
-            {
-                if (((Cellbuttontwo != null && Vector2.Distance(Thiefplayer05.transform.position, Cellbuttontwo.transform.position) < 0.4f) || Vector2.Distance(Thiefplayer05.transform.position, Cellbutton.transform.position) < 0.4f) && !Thiefplayer05.Data.IsDead)
-                    canUse = true;
-            }
-
-            return canUse && PlayerControl.LocalPlayer.CanMove && !Thiefplayer05IsReviving && !PlayerControl.LocalPlayer.Data.IsDead;
-        }, () => { _thiefplayer05FreeThiefButton.Timer = _thiefplayer05FreeThiefButton.MaxTimer; }, AssetLoader.PoliceAndThiefFreeButton, ButtonPosition.Layout, __instance, __instance.UseButton, AbilitySlot.CrewmateAbilitySecondary, false, Tr.Get(TrKey.ReleaseButton));
+                bool CanUse = false;
+                if (PoliceAndThief.currentThiefsCaptured > 0)
+                {
+                    if ((PoliceAndThief.cellbuttontwo != null && Vector2.Distance(PoliceAndThief.thiefplayer05.transform.position, PoliceAndThief.cellbuttontwo.transform.position) < 0.4f || Vector2.Distance(PoliceAndThief.thiefplayer05.transform.position, PoliceAndThief.cellbutton.transform.position) < 0.4f) && !PoliceAndThief.thiefplayer05.Data.IsDead)
+                    {
+                        CanUse = true;
+                    }
+                }
+                return CanUse && PlayerControl.LocalPlayer.CanMove && !PoliceAndThief.thiefplayer05IsReviving && !PlayerControl.LocalPlayer.Data.IsDead;
+            },
+            () => { thiefplayer05FreeThiefButton.Timer = thiefplayer05FreeThiefButton.MaxTimer; },
+            AssetLoader.PoliceAndThiefFreeButton,
+            ButtonPosition.Layout,
+            __instance,
+            __instance.UseButton,
+            AbilitySlot.CrewmateAbilitySecondary,
+            false,
+            Tr.Get(TrKey.ReleaseButton)
+        );
 
         // Thiefplayer05 Take/Deliver Jewel Button
-        _thiefplayer05TakeDeliverJewelButton = new(() =>
-        {
-            if (Thiefplayer05IsStealing)
+        thiefplayer05TakeDeliverJewelButton = new CustomButton(
+            () =>
             {
-                var targetId = PlayerControl.LocalPlayer.PlayerId;
-                var jewelId = Thiefplayer05JewelId;
-                var thiefScore = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.PoliceandThiefDeliverJewel, SendOption.Reliable);
-                thiefScore.Write(targetId);
-                thiefScore.Write(jewelId);
-                AmongUsClient.Instance.FinishRpcImmediately(thiefScore);
-                RPCProcedure.PoliceandThiefDeliverJewel(targetId, jewelId);
-            }
-            else
-            {
-                var targetId = PlayerControl.LocalPlayer.PlayerId;
-                var jewelId = Thiefplayer05JewelId;
-                var thiefWhoTookATreasure = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.PoliceandThiefTakeJewel, SendOption.Reliable);
-                thiefWhoTookATreasure.Write(targetId);
-                thiefWhoTookATreasure.Write(jewelId);
-                AmongUsClient.Instance.FinishRpcImmediately(thiefWhoTookATreasure);
-                RPCProcedure.PoliceandThiefTakeJewel(targetId, jewelId);
-            }
-
-            _thiefplayer05TakeDeliverJewelButton.Timer = _thiefplayer05TakeDeliverJewelButton.MaxTimer;
-        }, () => { return Thiefplayer05 != null && Thiefplayer05 == PlayerControl.LocalPlayer; }, () =>
-        {
-            if (Thiefplayer05IsStealing)
-                _thiefplayer05TakeDeliverJewelButton.ActionButton.graphic.sprite = AssetLoader.PoliceAndThiefDeliverJewelButton;
-            else
-                _thiefplayer05TakeDeliverJewelButton.ActionButton.graphic.sprite = AssetLoader.PoliceAndThiefTakeJewelButton;
-            var canUse = false;
-            if (ThiefTreasures.Count != 0)
-            {
-                foreach (var jewel in ThiefTreasures)
+                if (PoliceAndThief.thiefplayer05IsStealing)
                 {
-                    if (jewel != null && Vector2.Distance(PlayerControl.LocalPlayer.transform.position, jewel.transform.position) < 0.5f && !Thiefplayer05IsStealing)
+                    byte targetId = PlayerControl.LocalPlayer.PlayerId;
+                    byte jewelId = PoliceAndThief.thiefplayer05JewelId;
+                    MessageWriter thiefScore = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.PoliceandThiefDeliverJewel, Hazel.SendOption.Reliable, -1);
+                    thiefScore.Write(targetId);
+                    thiefScore.Write(jewelId);
+                    AmongUsClient.Instance.FinishRpcImmediately(thiefScore);
+                    RPCProcedure.policeandThiefDeliverJewel(targetId, jewelId);
+                }
+                else
+                {
+                    byte targetId = PlayerControl.LocalPlayer.PlayerId;
+                    byte jewelId = PoliceAndThief.thiefplayer05JewelId;
+                    MessageWriter thiefWhoTookATreasure = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.PoliceandThiefTakeJewel, Hazel.SendOption.Reliable, -1);
+                    thiefWhoTookATreasure.Write(targetId);
+                    thiefWhoTookATreasure.Write(jewelId);
+                    AmongUsClient.Instance.FinishRpcImmediately(thiefWhoTookATreasure);
+                    RPCProcedure.policeandThiefTakeJewel(targetId, jewelId);
+                }
+                thiefplayer05TakeDeliverJewelButton.Timer = thiefplayer05TakeDeliverJewelButton.MaxTimer;
+            },
+            () => { return PoliceAndThief.thiefplayer05 != null && PoliceAndThief.thiefplayer05 == PlayerControl.LocalPlayer; },
+            () =>
+            {
+                if (PoliceAndThief.thiefplayer05IsStealing)
+                    thiefplayer05TakeDeliverJewelButton.ActionButton.graphic.sprite = AssetLoader.PoliceAndThiefDeliverJewelButton;
+                else
+                    thiefplayer05TakeDeliverJewelButton.ActionButton.graphic.sprite = AssetLoader.PoliceAndThiefTakeJewelButton;
+                bool CanUse = false;
+                if (PoliceAndThief.thiefTreasures.Count != 0)
+                {
+                    foreach (GameObject jewel in PoliceAndThief.thiefTreasures)
                     {
-                        switch (jewel.name)
+                        if (jewel != null && Vector2.Distance(PlayerControl.LocalPlayer.transform.position, jewel.transform.position) < 0.5f && !PoliceAndThief.thiefplayer05IsStealing)
                         {
-                            case "jewel01":
-                                Thiefplayer05JewelId = 1;
-                                canUse = !Jewel01BeingStealed;
-                                break;
-                            case "jewel02":
-                                Thiefplayer05JewelId = 2;
-                                canUse = !Jewel02BeingStealed;
-                                break;
-                            case "jewel03":
-                                Thiefplayer05JewelId = 3;
-                                canUse = !Jewel03BeingStealed;
-                                break;
-                            case "jewel04":
-                                Thiefplayer05JewelId = 4;
-                                canUse = !Jewel04BeingStealed;
-                                break;
-                            case "jewel05":
-                                Thiefplayer05JewelId = 5;
-                                canUse = !Jewel05BeingStealed;
-                                break;
-                            case "jewel06":
-                                Thiefplayer05JewelId = 6;
-                                canUse = !Jewel06BeingStealed;
-                                break;
-                            case "jewel07":
-                                Thiefplayer05JewelId = 7;
-                                canUse = !Jewel07BeingStealed;
-                                break;
-                            case "jewel08":
-                                Thiefplayer05JewelId = 8;
-                                canUse = !Jewel08BeingStealed;
-                                break;
-                            case "jewel09":
-                                Thiefplayer05JewelId = 9;
-                                canUse = !Jewel09BeingStealed;
-                                break;
-                            case "jewel10":
-                                Thiefplayer05JewelId = 10;
-                                canUse = !Jewel10BeingStealed;
-                                break;
-                            case "jewel11":
-                                Thiefplayer05JewelId = 11;
-                                canUse = !Jewel11BeingStealed;
-                                break;
-                            case "jewel12":
-                                Thiefplayer05JewelId = 12;
-                                canUse = !Jewel12BeingStealed;
-                                break;
-                            case "jewel13":
-                                Thiefplayer05JewelId = 13;
-                                canUse = !Jewel13BeingStealed;
-                                break;
-                            case "jewel14":
-                                Thiefplayer05JewelId = 14;
-                                canUse = !Jewel14BeingStealed;
-                                break;
-                            case "jewel15":
-                                Thiefplayer05JewelId = 15;
-                                canUse = !Jewel15BeingStealed;
-                                break;
+                            switch (jewel.name)
+                            {
+                                case "jewel01":
+                                    PoliceAndThief.thiefplayer05JewelId = 1;
+                                    CanUse = !PoliceAndThief.jewel01BeingStealed;
+                                    break;
+                                case "jewel02":
+                                    PoliceAndThief.thiefplayer05JewelId = 2;
+                                    CanUse = !PoliceAndThief.jewel02BeingStealed;
+                                    break;
+                                case "jewel03":
+                                    PoliceAndThief.thiefplayer05JewelId = 3;
+                                    CanUse = !PoliceAndThief.jewel03BeingStealed;
+                                    break;
+                                case "jewel04":
+                                    PoliceAndThief.thiefplayer05JewelId = 4;
+                                    CanUse = !PoliceAndThief.jewel04BeingStealed;
+                                    break;
+                                case "jewel05":
+                                    PoliceAndThief.thiefplayer05JewelId = 5;
+                                    CanUse = !PoliceAndThief.jewel05BeingStealed;
+                                    break;
+                                case "jewel06":
+                                    PoliceAndThief.thiefplayer05JewelId = 6;
+                                    CanUse = !PoliceAndThief.jewel06BeingStealed;
+                                    break;
+                                case "jewel07":
+                                    PoliceAndThief.thiefplayer05JewelId = 7;
+                                    CanUse = !PoliceAndThief.jewel07BeingStealed;
+                                    break;
+                                case "jewel08":
+                                    PoliceAndThief.thiefplayer05JewelId = 8;
+                                    CanUse = !PoliceAndThief.jewel08BeingStealed;
+                                    break;
+                                case "jewel09":
+                                    PoliceAndThief.thiefplayer05JewelId = 9;
+                                    CanUse = !PoliceAndThief.jewel09BeingStealed;
+                                    break;
+                                case "jewel10":
+                                    PoliceAndThief.thiefplayer05JewelId = 10;
+                                    CanUse = !PoliceAndThief.jewel10BeingStealed;
+                                    break;
+                                case "jewel11":
+                                    PoliceAndThief.thiefplayer05JewelId = 11;
+                                    CanUse = !PoliceAndThief.jewel11BeingStealed;
+                                    break;
+                                case "jewel12":
+                                    PoliceAndThief.thiefplayer05JewelId = 12;
+                                    CanUse = !PoliceAndThief.jewel12BeingStealed;
+                                    break;
+                                case "jewel13":
+                                    PoliceAndThief.thiefplayer05JewelId = 13;
+                                    CanUse = !PoliceAndThief.jewel13BeingStealed;
+                                    break;
+                                case "jewel14":
+                                    PoliceAndThief.thiefplayer05JewelId = 14;
+                                    CanUse = !PoliceAndThief.jewel14BeingStealed;
+                                    break;
+                                case "jewel15":
+                                    PoliceAndThief.thiefplayer05JewelId = 15;
+                                    CanUse = !PoliceAndThief.jewel15BeingStealed;
+                                    break;
+                            }
+                        }
+                        else if ((PoliceAndThief.jewelbuttontwo != null && Vector2.Distance(PlayerControl.LocalPlayer.transform.position, PoliceAndThief.jewelbuttontwo.transform.position) < 0.5f || PoliceAndThief.jewelbutton != null && Vector2.Distance(PlayerControl.LocalPlayer.transform.position, PoliceAndThief.jewelbutton.transform.position) < 0.5f) && PoliceAndThief.thiefplayer05IsStealing)
+                        {
+                            CanUse = true;
                         }
                     }
-                    else if (((Jewelbuttontwo != null && Vector2.Distance(PlayerControl.LocalPlayer.transform.position, Jewelbuttontwo.transform.position) < 0.5f) || (Jewelbutton != null && Vector2.Distance(PlayerControl.LocalPlayer.transform.position, Jewelbutton.transform.position) < 0.5f)) && Thiefplayer05IsStealing) canUse = true;
-                }
-            }
 
-            return canUse && PlayerControl.LocalPlayer.CanMove && !Thiefplayer05IsReviving && !PlayerControl.LocalPlayer.Data.IsDead;
-        }, () => { _thiefplayer05TakeDeliverJewelButton.Timer = _thiefplayer05TakeDeliverJewelButton.MaxTimer; }, AssetLoader.PoliceAndThiefTakeJewelButton, ButtonPosition.Layout, __instance, __instance.UseButton, AbilitySlot.CommonAbilityPrimary, false, Tr.Get(TrKey.DeliverButton));
+                }
+                return CanUse && PlayerControl.LocalPlayer.CanMove && !PoliceAndThief.thiefplayer05IsReviving && !PlayerControl.LocalPlayer.Data.IsDead;
+            },
+            () => { thiefplayer05TakeDeliverJewelButton.Timer = thiefplayer05TakeDeliverJewelButton.MaxTimer; },
+            AssetLoader.PoliceAndThiefTakeJewelButton,
+            ButtonPosition.Layout,
+            __instance,
+            __instance.UseButton,
+            AbilitySlot.CommonAbilityPrimary,
+            false,
+            Tr.Get(TrKey.DeliverButton)
+        );
 
         // Thiefplayer06 Kill
-        _thiefplayer06KillButton = new(() =>
-        {
-            var targetId = Thiefplayer06CurrentTarget.PlayerId;
-            var sourceId = Thiefplayer06.PlayerId;
-            var killWriter = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.GamemodeKills, SendOption.Reliable);
-            killWriter.Write(targetId);
-            killWriter.Write(sourceId);
-            AmongUsClient.Instance.FinishRpcImmediately(killWriter);
-            RPCProcedure.GamemodeKills(targetId, sourceId);
-            _thiefplayer06KillButton.Timer = _thiefplayer06KillButton.MaxTimer;
-            Thiefplayer06CurrentTarget = null;
-        }, () => { return Thiefplayer06 != null && Thiefplayer06 == PlayerControl.LocalPlayer && WhoCanThiefsKill != 2; }, () =>
-        {
-            var canUse = false;
-            switch (WhoCanThiefsKill)
+        thiefplayer06KillButton = new CustomButton(
+            () =>
             {
-                case 0:
-                    if ((Policeplayer02 != null && Thiefplayer06CurrentTarget == Policeplayer02) || (Policeplayer04 != null && Thiefplayer06CurrentTarget == Policeplayer04)) canUse = true;
-                    break;
-                case 1:
-                    canUse = true;
-                    break;
-            }
-
-            return canUse && Thiefplayer06CurrentTarget && PlayerControl.LocalPlayer.CanMove && !Thiefplayer06IsReviving && !PlayerControl.LocalPlayer.Data.IsDead && !Thiefplayer06IsStealing;
-        }, () => { _thiefplayer06KillButton.Timer = _thiefplayer06KillButton.MaxTimer; }, __instance.KillButton.graphic.sprite, ButtonPosition.Layout, __instance, __instance.KillButton, AbilitySlot.CrewmateAbilityPrimary, false, TranslationController.Instance.GetString(StringNames.KillLabel));
+                byte targetId = PoliceAndThief.thiefplayer06currentTarget.PlayerId;
+                byte sourceId = PoliceAndThief.thiefplayer06.PlayerId;
+                MessageWriter killWriter = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.GamemodeKills, Hazel.SendOption.Reliable, -1);
+                killWriter.Write(targetId);
+                killWriter.Write(sourceId);
+                AmongUsClient.Instance.FinishRpcImmediately(killWriter);
+                RPCProcedure.gamemodeKills(targetId, sourceId);
+                thiefplayer06KillButton.Timer = thiefplayer06KillButton.MaxTimer;
+                PoliceAndThief.thiefplayer06currentTarget = null;
+            },
+            () => { return PoliceAndThief.thiefplayer06 != null && PoliceAndThief.thiefplayer06 == PlayerControl.LocalPlayer && PoliceAndThief.whoCanThiefsKill != 2; },
+            () =>
+            {
+                bool canUse = false;
+                switch (PoliceAndThief.whoCanThiefsKill)
+                {
+                    case 0:
+                        if (PoliceAndThief.policeplayer02 != null && PoliceAndThief.thiefplayer06currentTarget == PoliceAndThief.policeplayer02 || PoliceAndThief.policeplayer04 != null && PoliceAndThief.thiefplayer06currentTarget == PoliceAndThief.policeplayer04)
+                        {
+                            canUse = true;
+                        }
+                        break;
+                    case 1:
+                        canUse = true;
+                        break;
+                }
+                return canUse && PoliceAndThief.thiefplayer06currentTarget && PlayerControl.LocalPlayer.CanMove && !PoliceAndThief.thiefplayer06IsReviving && !PlayerControl.LocalPlayer.Data.IsDead && !PoliceAndThief.thiefplayer06IsStealing;
+            },
+            () => { thiefplayer06KillButton.Timer = thiefplayer06KillButton.MaxTimer; },
+            __instance.KillButton.graphic.sprite,
+            ButtonPosition.Layout,
+            __instance,
+            __instance.KillButton,
+            AbilitySlot.CrewmateAbilityPrimary,
+            false,
+            TranslationController.Instance.GetString(StringNames.KillLabel)
+        );
 
         // Thiefplayer06 FreeThief Button
-        _thiefplayer06FreeThiefButton = new(() =>
-        {
-            var thiefFree = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.PoliceandThiefFreeThief, SendOption.Reliable);
-            AmongUsClient.Instance.FinishRpcImmediately(thiefFree);
-            RPCProcedure.PoliceandThiefFreeThief();
-            _thiefplayer06FreeThiefButton.Timer = _thiefplayer06FreeThiefButton.MaxTimer;
-        }, () => { return Thiefplayer06 != null && Thiefplayer06 == PlayerControl.LocalPlayer; }, () =>
-        {
-            if (LocalThiefReleaseArrow.Count != 0)
+        thiefplayer06FreeThiefButton = new CustomButton(
+            () =>
             {
-                LocalThiefReleaseArrow[0].Update(Cellbutton.transform.position);
-                if (GameOptionsManager.Instance.currentGameOptions.MapId == 6) LocalThiefReleaseArrow[1].Update(Cellbuttontwo.transform.position);
-            }
-
-            if (LocalThiefDeliverArrow.Count != 0)
+                MessageWriter thiefFree = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.PoliceandThiefFreeThief, Hazel.SendOption.Reliable, -1);
+                AmongUsClient.Instance.FinishRpcImmediately(thiefFree);
+                RPCProcedure.policeandThiefFreeThief();
+                thiefplayer06FreeThiefButton.Timer = thiefplayer06FreeThiefButton.MaxTimer;
+            },
+            () => { return PoliceAndThief.thiefplayer06 != null && PoliceAndThief.thiefplayer06 == PlayerControl.LocalPlayer; },
+            () =>
             {
-                LocalThiefDeliverArrow[0].Update(Jewelbutton.transform.position);
-                if (GameOptionsManager.Instance.currentGameOptions.MapId == 6) LocalThiefDeliverArrow[1].Update(Jewelbuttontwo.transform.position);
-            }
+                if (PoliceAndThief.localThiefReleaseArrow.Count != 0)
+                {
+                    PoliceAndThief.localThiefReleaseArrow[0].Update(PoliceAndThief.cellbutton.transform.position);
+                    if (GameOptionsManager.Instance.currentGameOptions.MapId == 6)
+                    {
+                        PoliceAndThief.localThiefReleaseArrow[1].Update(PoliceAndThief.cellbuttontwo.transform.position);
+                    }
+                }
+                if (PoliceAndThief.localThiefDeliverArrow.Count != 0)
+                {
+                    PoliceAndThief.localThiefDeliverArrow[0].Update(PoliceAndThief.jewelbutton.transform.position);
+                    if (GameOptionsManager.Instance.currentGameOptions.MapId == 6)
+                    {
+                        PoliceAndThief.localThiefDeliverArrow[1].Update(PoliceAndThief.jewelbuttontwo.transform.position);
+                    }
+                }
 
-            var canUse = false;
-            if (CurrentThiefsCaptured > 0)
-            {
-                if (((Cellbuttontwo != null && Vector2.Distance(Thiefplayer06.transform.position, Cellbuttontwo.transform.position) < 0.4f) || Vector2.Distance(Thiefplayer06.transform.position, Cellbutton.transform.position) < 0.4f) && !Thiefplayer06.Data.IsDead)
-                    canUse = true;
-            }
-
-            return canUse && PlayerControl.LocalPlayer.CanMove && !Thiefplayer06IsReviving && !PlayerControl.LocalPlayer.Data.IsDead;
-        }, () => { _thiefplayer06FreeThiefButton.Timer = _thiefplayer06FreeThiefButton.MaxTimer; }, AssetLoader.PoliceAndThiefFreeButton, ButtonPosition.Layout, __instance, __instance.UseButton, AbilitySlot.CrewmateAbilitySecondary, false, Tr.Get(TrKey.ReleaseButton));
+                bool CanUse = false;
+                if (PoliceAndThief.currentThiefsCaptured > 0)
+                {
+                    if ((PoliceAndThief.cellbuttontwo != null && Vector2.Distance(PoliceAndThief.thiefplayer06.transform.position, PoliceAndThief.cellbuttontwo.transform.position) < 0.4f || Vector2.Distance(PoliceAndThief.thiefplayer06.transform.position, PoliceAndThief.cellbutton.transform.position) < 0.4f) && !PoliceAndThief.thiefplayer06.Data.IsDead)
+                    {
+                        CanUse = true;
+                    }
+                }
+                return CanUse && PlayerControl.LocalPlayer.CanMove && !PoliceAndThief.thiefplayer06IsReviving && !PlayerControl.LocalPlayer.Data.IsDead;
+            },
+            () => { thiefplayer06FreeThiefButton.Timer = thiefplayer06FreeThiefButton.MaxTimer; },
+            AssetLoader.PoliceAndThiefFreeButton,
+            ButtonPosition.Layout,
+            __instance,
+            __instance.UseButton,
+            AbilitySlot.CrewmateAbilitySecondary,
+            false,
+            Tr.Get(TrKey.ReleaseButton)
+        );
 
         // Thiefplayer06 Take/Deliver Jewel Button
-        _thiefplayer06TakeDeliverJewelButton = new(() =>
-        {
-            if (Thiefplayer06IsStealing)
+        thiefplayer06TakeDeliverJewelButton = new CustomButton(
+            () =>
             {
-                var targetId = PlayerControl.LocalPlayer.PlayerId;
-                var jewelId = Thiefplayer06JewelId;
-                var thiefScore = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.PoliceandThiefDeliverJewel, SendOption.Reliable);
-                thiefScore.Write(targetId);
-                thiefScore.Write(jewelId);
-                AmongUsClient.Instance.FinishRpcImmediately(thiefScore);
-                RPCProcedure.PoliceandThiefDeliverJewel(targetId, jewelId);
-            }
-            else
-            {
-                var targetId = PlayerControl.LocalPlayer.PlayerId;
-                var jewelId = Thiefplayer06JewelId;
-                var thiefWhoTookATreasure = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.PoliceandThiefTakeJewel, SendOption.Reliable);
-                thiefWhoTookATreasure.Write(targetId);
-                thiefWhoTookATreasure.Write(jewelId);
-                AmongUsClient.Instance.FinishRpcImmediately(thiefWhoTookATreasure);
-                RPCProcedure.PoliceandThiefTakeJewel(targetId, jewelId);
-            }
-
-            _thiefplayer06TakeDeliverJewelButton.Timer = _thiefplayer06TakeDeliverJewelButton.MaxTimer;
-        }, () => { return Thiefplayer06 != null && Thiefplayer06 == PlayerControl.LocalPlayer; }, () =>
-        {
-            if (Thiefplayer06IsStealing)
-                _thiefplayer06TakeDeliverJewelButton.ActionButton.graphic.sprite = AssetLoader.PoliceAndThiefDeliverJewelButton;
-            else
-                _thiefplayer06TakeDeliverJewelButton.ActionButton.graphic.sprite = AssetLoader.PoliceAndThiefTakeJewelButton;
-            var canUse = false;
-            if (ThiefTreasures.Count != 0)
-            {
-                foreach (var jewel in ThiefTreasures)
+                if (PoliceAndThief.thiefplayer06IsStealing)
                 {
-                    if (jewel != null && Vector2.Distance(PlayerControl.LocalPlayer.transform.position, jewel.transform.position) < 0.5f && !Thiefplayer06IsStealing)
+                    byte targetId = PlayerControl.LocalPlayer.PlayerId;
+                    byte jewelId = PoliceAndThief.thiefplayer06JewelId;
+                    MessageWriter thiefScore = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.PoliceandThiefDeliverJewel, Hazel.SendOption.Reliable, -1);
+                    thiefScore.Write(targetId);
+                    thiefScore.Write(jewelId);
+                    AmongUsClient.Instance.FinishRpcImmediately(thiefScore);
+                    RPCProcedure.policeandThiefDeliverJewel(targetId, jewelId);
+                }
+                else
+                {
+                    byte targetId = PlayerControl.LocalPlayer.PlayerId;
+                    byte jewelId = PoliceAndThief.thiefplayer06JewelId;
+                    MessageWriter thiefWhoTookATreasure = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.PoliceandThiefTakeJewel, Hazel.SendOption.Reliable, -1);
+                    thiefWhoTookATreasure.Write(targetId);
+                    thiefWhoTookATreasure.Write(jewelId);
+                    AmongUsClient.Instance.FinishRpcImmediately(thiefWhoTookATreasure);
+                    RPCProcedure.policeandThiefTakeJewel(targetId, jewelId);
+                }
+                thiefplayer06TakeDeliverJewelButton.Timer = thiefplayer06TakeDeliverJewelButton.MaxTimer;
+            },
+            () => { return PoliceAndThief.thiefplayer06 != null && PoliceAndThief.thiefplayer06 == PlayerControl.LocalPlayer; },
+            () =>
+            {
+                if (PoliceAndThief.thiefplayer06IsStealing)
+                    thiefplayer06TakeDeliverJewelButton.ActionButton.graphic.sprite = AssetLoader.PoliceAndThiefDeliverJewelButton;
+                else
+                    thiefplayer06TakeDeliverJewelButton.ActionButton.graphic.sprite = AssetLoader.PoliceAndThiefTakeJewelButton;
+                bool CanUse = false;
+                if (PoliceAndThief.thiefTreasures.Count != 0)
+                {
+                    foreach (GameObject jewel in PoliceAndThief.thiefTreasures)
                     {
-                        switch (jewel.name)
+                        if (jewel != null && Vector2.Distance(PlayerControl.LocalPlayer.transform.position, jewel.transform.position) < 0.5f && !PoliceAndThief.thiefplayer06IsStealing)
                         {
-                            case "jewel01":
-                                Thiefplayer06JewelId = 1;
-                                canUse = !Jewel01BeingStealed;
-                                break;
-                            case "jewel02":
-                                Thiefplayer06JewelId = 2;
-                                canUse = !Jewel02BeingStealed;
-                                break;
-                            case "jewel03":
-                                Thiefplayer06JewelId = 3;
-                                canUse = !Jewel03BeingStealed;
-                                break;
-                            case "jewel04":
-                                Thiefplayer06JewelId = 4;
-                                canUse = !Jewel04BeingStealed;
-                                break;
-                            case "jewel05":
-                                Thiefplayer06JewelId = 5;
-                                canUse = !Jewel05BeingStealed;
-                                break;
-                            case "jewel06":
-                                Thiefplayer06JewelId = 6;
-                                canUse = !Jewel06BeingStealed;
-                                break;
-                            case "jewel07":
-                                Thiefplayer06JewelId = 7;
-                                canUse = !Jewel07BeingStealed;
-                                break;
-                            case "jewel08":
-                                Thiefplayer06JewelId = 8;
-                                canUse = !Jewel08BeingStealed;
-                                break;
-                            case "jewel09":
-                                Thiefplayer06JewelId = 9;
-                                canUse = !Jewel09BeingStealed;
-                                break;
-                            case "jewel10":
-                                Thiefplayer06JewelId = 10;
-                                canUse = !Jewel10BeingStealed;
-                                break;
-                            case "jewel11":
-                                Thiefplayer06JewelId = 11;
-                                canUse = !Jewel11BeingStealed;
-                                break;
-                            case "jewel12":
-                                Thiefplayer06JewelId = 12;
-                                canUse = !Jewel12BeingStealed;
-                                break;
-                            case "jewel13":
-                                Thiefplayer06JewelId = 13;
-                                canUse = !Jewel13BeingStealed;
-                                break;
-                            case "jewel14":
-                                Thiefplayer06JewelId = 14;
-                                canUse = !Jewel14BeingStealed;
-                                break;
-                            case "jewel15":
-                                Thiefplayer06JewelId = 15;
-                                canUse = !Jewel15BeingStealed;
-                                break;
+                            switch (jewel.name)
+                            {
+                                case "jewel01":
+                                    PoliceAndThief.thiefplayer06JewelId = 1;
+                                    CanUse = !PoliceAndThief.jewel01BeingStealed;
+                                    break;
+                                case "jewel02":
+                                    PoliceAndThief.thiefplayer06JewelId = 2;
+                                    CanUse = !PoliceAndThief.jewel02BeingStealed;
+                                    break;
+                                case "jewel03":
+                                    PoliceAndThief.thiefplayer06JewelId = 3;
+                                    CanUse = !PoliceAndThief.jewel03BeingStealed;
+                                    break;
+                                case "jewel04":
+                                    PoliceAndThief.thiefplayer06JewelId = 4;
+                                    CanUse = !PoliceAndThief.jewel04BeingStealed;
+                                    break;
+                                case "jewel05":
+                                    PoliceAndThief.thiefplayer06JewelId = 5;
+                                    CanUse = !PoliceAndThief.jewel05BeingStealed;
+                                    break;
+                                case "jewel06":
+                                    PoliceAndThief.thiefplayer06JewelId = 6;
+                                    CanUse = !PoliceAndThief.jewel06BeingStealed;
+                                    break;
+                                case "jewel07":
+                                    PoliceAndThief.thiefplayer06JewelId = 7;
+                                    CanUse = !PoliceAndThief.jewel07BeingStealed;
+                                    break;
+                                case "jewel08":
+                                    PoliceAndThief.thiefplayer06JewelId = 8;
+                                    CanUse = !PoliceAndThief.jewel08BeingStealed;
+                                    break;
+                                case "jewel09":
+                                    PoliceAndThief.thiefplayer06JewelId = 9;
+                                    CanUse = !PoliceAndThief.jewel09BeingStealed;
+                                    break;
+                                case "jewel10":
+                                    PoliceAndThief.thiefplayer06JewelId = 10;
+                                    CanUse = !PoliceAndThief.jewel10BeingStealed;
+                                    break;
+                                case "jewel11":
+                                    PoliceAndThief.thiefplayer06JewelId = 11;
+                                    CanUse = !PoliceAndThief.jewel11BeingStealed;
+                                    break;
+                                case "jewel12":
+                                    PoliceAndThief.thiefplayer06JewelId = 12;
+                                    CanUse = !PoliceAndThief.jewel12BeingStealed;
+                                    break;
+                                case "jewel13":
+                                    PoliceAndThief.thiefplayer06JewelId = 13;
+                                    CanUse = !PoliceAndThief.jewel13BeingStealed;
+                                    break;
+                                case "jewel14":
+                                    PoliceAndThief.thiefplayer06JewelId = 14;
+                                    CanUse = !PoliceAndThief.jewel14BeingStealed;
+                                    break;
+                                case "jewel15":
+                                    PoliceAndThief.thiefplayer06JewelId = 15;
+                                    CanUse = !PoliceAndThief.jewel15BeingStealed;
+                                    break;
+                            }
+                        }
+                        else if ((PoliceAndThief.jewelbuttontwo != null && Vector2.Distance(PlayerControl.LocalPlayer.transform.position, PoliceAndThief.jewelbuttontwo.transform.position) < 0.5f || PoliceAndThief.jewelbutton != null && Vector2.Distance(PlayerControl.LocalPlayer.transform.position, PoliceAndThief.jewelbutton.transform.position) < 0.5f) && PoliceAndThief.thiefplayer06IsStealing)
+                        {
+                            CanUse = true;
                         }
                     }
-                    else if (((Jewelbuttontwo != null && Vector2.Distance(PlayerControl.LocalPlayer.transform.position, Jewelbuttontwo.transform.position) < 0.5f) || (Jewelbutton != null && Vector2.Distance(PlayerControl.LocalPlayer.transform.position, Jewelbutton.transform.position) < 0.5f)) && Thiefplayer06IsStealing) canUse = true;
-                }
-            }
 
-            return canUse && PlayerControl.LocalPlayer.CanMove && !Thiefplayer06IsReviving && !PlayerControl.LocalPlayer.Data.IsDead;
-        }, () => { _thiefplayer06TakeDeliverJewelButton.Timer = _thiefplayer06TakeDeliverJewelButton.MaxTimer; }, AssetLoader.PoliceAndThiefTakeJewelButton, ButtonPosition.Layout, __instance, __instance.UseButton, AbilitySlot.CommonAbilityPrimary, false, Tr.Get(TrKey.DeliverButton));
+                }
+                return CanUse && PlayerControl.LocalPlayer.CanMove && !PoliceAndThief.thiefplayer06IsReviving && !PlayerControl.LocalPlayer.Data.IsDead;
+            },
+            () => { thiefplayer06TakeDeliverJewelButton.Timer = thiefplayer06TakeDeliverJewelButton.MaxTimer; },
+            AssetLoader.PoliceAndThiefTakeJewelButton,
+            ButtonPosition.Layout,
+            __instance,
+            __instance.UseButton,
+            AbilitySlot.CommonAbilityPrimary,
+            false,
+            Tr.Get(TrKey.DeliverButton)
+        );
 
         // Thiefplayer07 Kill
-        _thiefplayer07KillButton = new(() =>
-        {
-            var targetId = Thiefplayer07CurrentTarget.PlayerId;
-            var sourceId = Thiefplayer07.PlayerId;
-            var killWriter = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.GamemodeKills, SendOption.Reliable);
-            killWriter.Write(targetId);
-            killWriter.Write(sourceId);
-            AmongUsClient.Instance.FinishRpcImmediately(killWriter);
-            RPCProcedure.GamemodeKills(targetId, sourceId);
-            _thiefplayer07KillButton.Timer = _thiefplayer07KillButton.MaxTimer;
-            Thiefplayer07CurrentTarget = null;
-        }, () => { return Thiefplayer07 != null && Thiefplayer07 == PlayerControl.LocalPlayer && WhoCanThiefsKill != 2; }, () =>
-        {
-            var canUse = false;
-            switch (WhoCanThiefsKill)
+        thiefplayer07KillButton = new CustomButton(
+            () =>
             {
-                case 0:
-                    if ((Policeplayer02 != null && Thiefplayer07CurrentTarget == Policeplayer02) || (Policeplayer04 != null && Thiefplayer07CurrentTarget == Policeplayer04)) canUse = true;
-                    break;
-                case 1:
-                    canUse = true;
-                    break;
-            }
-
-            return canUse && Thiefplayer07CurrentTarget && PlayerControl.LocalPlayer.CanMove && !Thiefplayer07IsReviving && !PlayerControl.LocalPlayer.Data.IsDead && !Thiefplayer07IsStealing;
-        }, () => { _thiefplayer07KillButton.Timer = _thiefplayer07KillButton.MaxTimer; }, __instance.KillButton.graphic.sprite, ButtonPosition.Layout, __instance, __instance.KillButton, AbilitySlot.CrewmateAbilityPrimary, false, TranslationController.Instance.GetString(StringNames.KillLabel));
+                byte targetId = PoliceAndThief.thiefplayer07currentTarget.PlayerId;
+                byte sourceId = PoliceAndThief.thiefplayer07.PlayerId;
+                MessageWriter killWriter = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.GamemodeKills, Hazel.SendOption.Reliable, -1);
+                killWriter.Write(targetId);
+                killWriter.Write(sourceId);
+                AmongUsClient.Instance.FinishRpcImmediately(killWriter);
+                RPCProcedure.gamemodeKills(targetId, sourceId);
+                thiefplayer07KillButton.Timer = thiefplayer07KillButton.MaxTimer;
+                PoliceAndThief.thiefplayer07currentTarget = null;
+            },
+            () => { return PoliceAndThief.thiefplayer07 != null && PoliceAndThief.thiefplayer07 == PlayerControl.LocalPlayer && PoliceAndThief.whoCanThiefsKill != 2; },
+            () =>
+            {
+                bool canUse = false;
+                switch (PoliceAndThief.whoCanThiefsKill)
+                {
+                    case 0:
+                        if (PoliceAndThief.policeplayer02 != null && PoliceAndThief.thiefplayer07currentTarget == PoliceAndThief.policeplayer02 || PoliceAndThief.policeplayer04 != null && PoliceAndThief.thiefplayer07currentTarget == PoliceAndThief.policeplayer04)
+                        {
+                            canUse = true;
+                        }
+                        break;
+                    case 1:
+                        canUse = true;
+                        break;
+                }
+                return canUse && PoliceAndThief.thiefplayer07currentTarget && PlayerControl.LocalPlayer.CanMove && !PoliceAndThief.thiefplayer07IsReviving && !PlayerControl.LocalPlayer.Data.IsDead && !PoliceAndThief.thiefplayer07IsStealing;
+            },
+            () => { thiefplayer07KillButton.Timer = thiefplayer07KillButton.MaxTimer; },
+            __instance.KillButton.graphic.sprite,
+            ButtonPosition.Layout,
+            __instance,
+            __instance.KillButton,
+            AbilitySlot.CrewmateAbilityPrimary,
+            false,
+            TranslationController.Instance.GetString(StringNames.KillLabel)
+        );
 
         // Thiefplayer07 FreeThief Button
-        _thiefplayer07FreeThiefButton = new(() =>
-        {
-            var thiefFree = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.PoliceandThiefFreeThief, SendOption.Reliable);
-            AmongUsClient.Instance.FinishRpcImmediately(thiefFree);
-            RPCProcedure.PoliceandThiefFreeThief();
-            _thiefplayer07FreeThiefButton.Timer = _thiefplayer07FreeThiefButton.MaxTimer;
-        }, () => { return Thiefplayer07 != null && Thiefplayer07 == PlayerControl.LocalPlayer; }, () =>
-        {
-            if (LocalThiefReleaseArrow.Count != 0)
+        thiefplayer07FreeThiefButton = new CustomButton(
+            () =>
             {
-                LocalThiefReleaseArrow[0].Update(Cellbutton.transform.position);
-                if (GameOptionsManager.Instance.currentGameOptions.MapId == 6) LocalThiefReleaseArrow[1].Update(Cellbuttontwo.transform.position);
-            }
-
-            if (LocalThiefDeliverArrow.Count != 0)
+                MessageWriter thiefFree = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.PoliceandThiefFreeThief, Hazel.SendOption.Reliable, -1);
+                AmongUsClient.Instance.FinishRpcImmediately(thiefFree);
+                RPCProcedure.policeandThiefFreeThief();
+                thiefplayer07FreeThiefButton.Timer = thiefplayer07FreeThiefButton.MaxTimer;
+            },
+            () => { return PoliceAndThief.thiefplayer07 != null && PoliceAndThief.thiefplayer07 == PlayerControl.LocalPlayer; },
+            () =>
             {
-                LocalThiefDeliverArrow[0].Update(Jewelbutton.transform.position);
-                if (GameOptionsManager.Instance.currentGameOptions.MapId == 6) LocalThiefDeliverArrow[1].Update(Jewelbuttontwo.transform.position);
-            }
+                if (PoliceAndThief.localThiefReleaseArrow.Count != 0)
+                {
+                    PoliceAndThief.localThiefReleaseArrow[0].Update(PoliceAndThief.cellbutton.transform.position);
+                    if (GameOptionsManager.Instance.currentGameOptions.MapId == 6)
+                    {
+                        PoliceAndThief.localThiefReleaseArrow[1].Update(PoliceAndThief.cellbuttontwo.transform.position);
+                    }
+                }
+                if (PoliceAndThief.localThiefDeliverArrow.Count != 0)
+                {
+                    PoliceAndThief.localThiefDeliverArrow[0].Update(PoliceAndThief.jewelbutton.transform.position);
+                    if (GameOptionsManager.Instance.currentGameOptions.MapId == 6)
+                    {
+                        PoliceAndThief.localThiefDeliverArrow[1].Update(PoliceAndThief.jewelbuttontwo.transform.position);
+                    }
+                }
 
-            var canUse = false;
-            if (CurrentThiefsCaptured > 0)
-            {
-                if (((Cellbuttontwo != null && Vector2.Distance(Thiefplayer07.transform.position, Cellbuttontwo.transform.position) < 0.4f) || Vector2.Distance(Thiefplayer07.transform.position, Cellbutton.transform.position) < 0.4f) && !Thiefplayer07.Data.IsDead)
-                    canUse = true;
-            }
-
-            return canUse && PlayerControl.LocalPlayer.CanMove && !Thiefplayer07IsReviving && !PlayerControl.LocalPlayer.Data.IsDead;
-        }, () => { _thiefplayer07FreeThiefButton.Timer = _thiefplayer07FreeThiefButton.MaxTimer; }, AssetLoader.PoliceAndThiefFreeButton, ButtonPosition.Layout, __instance, __instance.UseButton, AbilitySlot.CrewmateAbilitySecondary, false, Tr.Get(TrKey.ReleaseButton));
+                bool CanUse = false;
+                if (PoliceAndThief.currentThiefsCaptured > 0)
+                {
+                    if ((PoliceAndThief.cellbuttontwo != null && Vector2.Distance(PoliceAndThief.thiefplayer07.transform.position, PoliceAndThief.cellbuttontwo.transform.position) < 0.4f || Vector2.Distance(PoliceAndThief.thiefplayer07.transform.position, PoliceAndThief.cellbutton.transform.position) < 0.4f) && !PoliceAndThief.thiefplayer07.Data.IsDead)
+                    {
+                        CanUse = true;
+                    }
+                }
+                return CanUse && PlayerControl.LocalPlayer.CanMove && !PoliceAndThief.thiefplayer07IsReviving && !PlayerControl.LocalPlayer.Data.IsDead;
+            },
+            () => { thiefplayer07FreeThiefButton.Timer = thiefplayer07FreeThiefButton.MaxTimer; },
+            AssetLoader.PoliceAndThiefFreeButton,
+            ButtonPosition.Layout,
+            __instance,
+            __instance.UseButton,
+            AbilitySlot.CrewmateAbilitySecondary,
+            false,
+            Tr.Get(TrKey.ReleaseButton)
+        );
 
         // Thiefplayer07 Take/Deliver Jewel Button
-        _thiefplayer07TakeDeliverJewelButton = new(() =>
-        {
-            if (Thiefplayer07IsStealing)
+        thiefplayer07TakeDeliverJewelButton = new CustomButton(
+            () =>
             {
-                var targetId = PlayerControl.LocalPlayer.PlayerId;
-                var jewelId = Thiefplayer07JewelId;
-                var thiefScore = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.PoliceandThiefDeliverJewel, SendOption.Reliable);
-                thiefScore.Write(targetId);
-                thiefScore.Write(jewelId);
-                AmongUsClient.Instance.FinishRpcImmediately(thiefScore);
-                RPCProcedure.PoliceandThiefDeliverJewel(targetId, jewelId);
-            }
-            else
-            {
-                var targetId = PlayerControl.LocalPlayer.PlayerId;
-                var jewelId = Thiefplayer07JewelId;
-                var thiefWhoTookATreasure = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.PoliceandThiefTakeJewel, SendOption.Reliable);
-                thiefWhoTookATreasure.Write(targetId);
-                thiefWhoTookATreasure.Write(jewelId);
-                AmongUsClient.Instance.FinishRpcImmediately(thiefWhoTookATreasure);
-                RPCProcedure.PoliceandThiefTakeJewel(targetId, jewelId);
-            }
-
-            _thiefplayer07TakeDeliverJewelButton.Timer = _thiefplayer07TakeDeliverJewelButton.MaxTimer;
-        }, () => { return Thiefplayer07 != null && Thiefplayer07 == PlayerControl.LocalPlayer; }, () =>
-        {
-            if (Thiefplayer07IsStealing)
-                _thiefplayer07TakeDeliverJewelButton.ActionButton.graphic.sprite = AssetLoader.PoliceAndThiefDeliverJewelButton;
-            else
-                _thiefplayer07TakeDeliverJewelButton.ActionButton.graphic.sprite = AssetLoader.PoliceAndThiefTakeJewelButton;
-            var canUse = false;
-            if (ThiefTreasures.Count != 0)
-            {
-                foreach (var jewel in ThiefTreasures)
+                if (PoliceAndThief.thiefplayer07IsStealing)
                 {
-                    if (jewel != null && Vector2.Distance(PlayerControl.LocalPlayer.transform.position, jewel.transform.position) < 0.5f && !Thiefplayer07IsStealing)
+                    byte targetId = PlayerControl.LocalPlayer.PlayerId;
+                    byte jewelId = PoliceAndThief.thiefplayer07JewelId;
+                    MessageWriter thiefScore = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.PoliceandThiefDeliverJewel, Hazel.SendOption.Reliable, -1);
+                    thiefScore.Write(targetId);
+                    thiefScore.Write(jewelId);
+                    AmongUsClient.Instance.FinishRpcImmediately(thiefScore);
+                    RPCProcedure.policeandThiefDeliverJewel(targetId, jewelId);
+                }
+                else
+                {
+                    byte targetId = PlayerControl.LocalPlayer.PlayerId;
+                    byte jewelId = PoliceAndThief.thiefplayer07JewelId;
+                    MessageWriter thiefWhoTookATreasure = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.PoliceandThiefTakeJewel, Hazel.SendOption.Reliable, -1);
+                    thiefWhoTookATreasure.Write(targetId);
+                    thiefWhoTookATreasure.Write(jewelId);
+                    AmongUsClient.Instance.FinishRpcImmediately(thiefWhoTookATreasure);
+                    RPCProcedure.policeandThiefTakeJewel(targetId, jewelId);
+                }
+                thiefplayer07TakeDeliverJewelButton.Timer = thiefplayer07TakeDeliverJewelButton.MaxTimer;
+            },
+            () => { return PoliceAndThief.thiefplayer07 != null && PoliceAndThief.thiefplayer07 == PlayerControl.LocalPlayer; },
+            () =>
+            {
+                if (PoliceAndThief.thiefplayer07IsStealing)
+                    thiefplayer07TakeDeliverJewelButton.ActionButton.graphic.sprite = AssetLoader.PoliceAndThiefDeliverJewelButton;
+                else
+                    thiefplayer07TakeDeliverJewelButton.ActionButton.graphic.sprite = AssetLoader.PoliceAndThiefTakeJewelButton;
+                bool CanUse = false;
+                if (PoliceAndThief.thiefTreasures.Count != 0)
+                {
+                    foreach (GameObject jewel in PoliceAndThief.thiefTreasures)
                     {
-                        switch (jewel.name)
+                        if (jewel != null && Vector2.Distance(PlayerControl.LocalPlayer.transform.position, jewel.transform.position) < 0.5f && !PoliceAndThief.thiefplayer07IsStealing)
                         {
-                            case "jewel01":
-                                Thiefplayer07JewelId = 1;
-                                canUse = !Jewel01BeingStealed;
-                                break;
-                            case "jewel02":
-                                Thiefplayer07JewelId = 2;
-                                canUse = !Jewel02BeingStealed;
-                                break;
-                            case "jewel03":
-                                Thiefplayer07JewelId = 3;
-                                canUse = !Jewel03BeingStealed;
-                                break;
-                            case "jewel04":
-                                Thiefplayer07JewelId = 4;
-                                canUse = !Jewel04BeingStealed;
-                                break;
-                            case "jewel05":
-                                Thiefplayer07JewelId = 5;
-                                canUse = !Jewel05BeingStealed;
-                                break;
-                            case "jewel06":
-                                Thiefplayer07JewelId = 6;
-                                canUse = !Jewel06BeingStealed;
-                                break;
-                            case "jewel07":
-                                Thiefplayer07JewelId = 7;
-                                canUse = !Jewel07BeingStealed;
-                                break;
-                            case "jewel08":
-                                Thiefplayer07JewelId = 8;
-                                canUse = !Jewel08BeingStealed;
-                                break;
-                            case "jewel09":
-                                Thiefplayer07JewelId = 9;
-                                canUse = !Jewel09BeingStealed;
-                                break;
-                            case "jewel10":
-                                Thiefplayer07JewelId = 10;
-                                canUse = !Jewel10BeingStealed;
-                                break;
-                            case "jewel11":
-                                Thiefplayer07JewelId = 11;
-                                canUse = !Jewel11BeingStealed;
-                                break;
-                            case "jewel12":
-                                Thiefplayer07JewelId = 12;
-                                canUse = !Jewel12BeingStealed;
-                                break;
-                            case "jewel13":
-                                Thiefplayer07JewelId = 13;
-                                canUse = !Jewel13BeingStealed;
-                                break;
-                            case "jewel14":
-                                Thiefplayer07JewelId = 14;
-                                canUse = !Jewel14BeingStealed;
-                                break;
-                            case "jewel15":
-                                Thiefplayer07JewelId = 15;
-                                canUse = !Jewel15BeingStealed;
-                                break;
+                            switch (jewel.name)
+                            {
+                                case "jewel01":
+                                    PoliceAndThief.thiefplayer07JewelId = 1;
+                                    CanUse = !PoliceAndThief.jewel01BeingStealed;
+                                    break;
+                                case "jewel02":
+                                    PoliceAndThief.thiefplayer07JewelId = 2;
+                                    CanUse = !PoliceAndThief.jewel02BeingStealed;
+                                    break;
+                                case "jewel03":
+                                    PoliceAndThief.thiefplayer07JewelId = 3;
+                                    CanUse = !PoliceAndThief.jewel03BeingStealed;
+                                    break;
+                                case "jewel04":
+                                    PoliceAndThief.thiefplayer07JewelId = 4;
+                                    CanUse = !PoliceAndThief.jewel04BeingStealed;
+                                    break;
+                                case "jewel05":
+                                    PoliceAndThief.thiefplayer07JewelId = 5;
+                                    CanUse = !PoliceAndThief.jewel05BeingStealed;
+                                    break;
+                                case "jewel06":
+                                    PoliceAndThief.thiefplayer07JewelId = 6;
+                                    CanUse = !PoliceAndThief.jewel06BeingStealed;
+                                    break;
+                                case "jewel07":
+                                    PoliceAndThief.thiefplayer07JewelId = 7;
+                                    CanUse = !PoliceAndThief.jewel07BeingStealed;
+                                    break;
+                                case "jewel08":
+                                    PoliceAndThief.thiefplayer07JewelId = 8;
+                                    CanUse = !PoliceAndThief.jewel08BeingStealed;
+                                    break;
+                                case "jewel09":
+                                    PoliceAndThief.thiefplayer07JewelId = 9;
+                                    CanUse = !PoliceAndThief.jewel09BeingStealed;
+                                    break;
+                                case "jewel10":
+                                    PoliceAndThief.thiefplayer07JewelId = 10;
+                                    CanUse = !PoliceAndThief.jewel10BeingStealed;
+                                    break;
+                                case "jewel11":
+                                    PoliceAndThief.thiefplayer07JewelId = 11;
+                                    CanUse = !PoliceAndThief.jewel11BeingStealed;
+                                    break;
+                                case "jewel12":
+                                    PoliceAndThief.thiefplayer07JewelId = 12;
+                                    CanUse = !PoliceAndThief.jewel12BeingStealed;
+                                    break;
+                                case "jewel13":
+                                    PoliceAndThief.thiefplayer07JewelId = 13;
+                                    CanUse = !PoliceAndThief.jewel13BeingStealed;
+                                    break;
+                                case "jewel14":
+                                    PoliceAndThief.thiefplayer07JewelId = 14;
+                                    CanUse = !PoliceAndThief.jewel14BeingStealed;
+                                    break;
+                                case "jewel15":
+                                    PoliceAndThief.thiefplayer07JewelId = 15;
+                                    CanUse = !PoliceAndThief.jewel15BeingStealed;
+                                    break;
+                            }
+                        }
+                        else if ((PoliceAndThief.jewelbuttontwo != null && Vector2.Distance(PlayerControl.LocalPlayer.transform.position, PoliceAndThief.jewelbuttontwo.transform.position) < 0.5f || PoliceAndThief.jewelbutton != null && Vector2.Distance(PlayerControl.LocalPlayer.transform.position, PoliceAndThief.jewelbutton.transform.position) < 0.5f) && PoliceAndThief.thiefplayer07IsStealing)
+                        {
+                            CanUse = true;
                         }
                     }
-                    else if (((Jewelbuttontwo != null && Vector2.Distance(PlayerControl.LocalPlayer.transform.position, Jewelbuttontwo.transform.position) < 0.5f) || (Jewelbutton != null && Vector2.Distance(PlayerControl.LocalPlayer.transform.position, Jewelbutton.transform.position) < 0.5f)) && Thiefplayer07IsStealing) canUse = true;
-                }
-            }
 
-            return canUse && PlayerControl.LocalPlayer.CanMove && !Thiefplayer07IsReviving && !PlayerControl.LocalPlayer.Data.IsDead;
-        }, () => { _thiefplayer07TakeDeliverJewelButton.Timer = _thiefplayer07TakeDeliverJewelButton.MaxTimer; }, AssetLoader.PoliceAndThiefTakeJewelButton, ButtonPosition.Layout, __instance, __instance.UseButton, AbilitySlot.CommonAbilityPrimary, false, Tr.Get(TrKey.DeliverButton));
+                }
+                return CanUse && PlayerControl.LocalPlayer.CanMove && !PoliceAndThief.thiefplayer07IsReviving && !PlayerControl.LocalPlayer.Data.IsDead;
+            },
+            () => { thiefplayer07TakeDeliverJewelButton.Timer = thiefplayer07TakeDeliverJewelButton.MaxTimer; },
+            AssetLoader.PoliceAndThiefTakeJewelButton,
+            ButtonPosition.Layout,
+            __instance,
+            __instance.UseButton,
+            AbilitySlot.CommonAbilityPrimary,
+            false,
+            Tr.Get(TrKey.DeliverButton)
+        );
 
         // Thiefplayer08 Kill
-        _thiefplayer08KillButton = new(() =>
-        {
-            var targetId = Thiefplayer08CurrentTarget.PlayerId;
-            var sourceId = Thiefplayer08.PlayerId;
-            var killWriter = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.GamemodeKills, SendOption.Reliable);
-            killWriter.Write(targetId);
-            killWriter.Write(sourceId);
-            AmongUsClient.Instance.FinishRpcImmediately(killWriter);
-            RPCProcedure.GamemodeKills(targetId, sourceId);
-            _thiefplayer08KillButton.Timer = _thiefplayer08KillButton.MaxTimer;
-            Thiefplayer08CurrentTarget = null;
-        }, () => { return Thiefplayer08 != null && Thiefplayer08 == PlayerControl.LocalPlayer && WhoCanThiefsKill != 2; }, () =>
-        {
-            var canUse = false;
-            switch (WhoCanThiefsKill)
+        thiefplayer08KillButton = new CustomButton(
+            () =>
             {
-                case 0:
-                    if ((Policeplayer02 != null && Thiefplayer08CurrentTarget == Policeplayer02) || (Policeplayer04 != null && Thiefplayer08CurrentTarget == Policeplayer04)) canUse = true;
-                    break;
-                case 1:
-                    canUse = true;
-                    break;
-            }
-
-            return canUse && Thiefplayer08CurrentTarget && PlayerControl.LocalPlayer.CanMove && !Thiefplayer08IsReviving && !PlayerControl.LocalPlayer.Data.IsDead && !Thiefplayer08IsStealing;
-        }, () => { _thiefplayer08KillButton.Timer = _thiefplayer08KillButton.MaxTimer; }, __instance.KillButton.graphic.sprite, ButtonPosition.Layout, __instance, __instance.KillButton, AbilitySlot.CrewmateAbilityPrimary, false, TranslationController.Instance.GetString(StringNames.KillLabel));
+                byte targetId = PoliceAndThief.thiefplayer08currentTarget.PlayerId;
+                byte sourceId = PoliceAndThief.thiefplayer08.PlayerId;
+                MessageWriter killWriter = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.GamemodeKills, Hazel.SendOption.Reliable, -1);
+                killWriter.Write(targetId);
+                killWriter.Write(sourceId);
+                AmongUsClient.Instance.FinishRpcImmediately(killWriter);
+                RPCProcedure.gamemodeKills(targetId, sourceId);
+                thiefplayer08KillButton.Timer = thiefplayer08KillButton.MaxTimer;
+                PoliceAndThief.thiefplayer08currentTarget = null;
+            },
+            () => { return PoliceAndThief.thiefplayer08 != null && PoliceAndThief.thiefplayer08 == PlayerControl.LocalPlayer && PoliceAndThief.whoCanThiefsKill != 2; },
+            () =>
+            {
+                bool canUse = false;
+                switch (PoliceAndThief.whoCanThiefsKill)
+                {
+                    case 0:
+                        if (PoliceAndThief.policeplayer02 != null && PoliceAndThief.thiefplayer08currentTarget == PoliceAndThief.policeplayer02 || PoliceAndThief.policeplayer04 != null && PoliceAndThief.thiefplayer08currentTarget == PoliceAndThief.policeplayer04)
+                        {
+                            canUse = true;
+                        }
+                        break;
+                    case 1:
+                        canUse = true;
+                        break;
+                }
+                return canUse && PoliceAndThief.thiefplayer08currentTarget && PlayerControl.LocalPlayer.CanMove && !PoliceAndThief.thiefplayer08IsReviving && !PlayerControl.LocalPlayer.Data.IsDead && !PoliceAndThief.thiefplayer08IsStealing;
+            },
+            () => { thiefplayer08KillButton.Timer = thiefplayer08KillButton.MaxTimer; },
+            __instance.KillButton.graphic.sprite,
+            ButtonPosition.Layout,
+            __instance,
+            __instance.KillButton,
+            AbilitySlot.CrewmateAbilityPrimary,
+            false,
+            TranslationController.Instance.GetString(StringNames.KillLabel)
+        );
 
         // Thiefplayer08 FreeThief Button
-        _thiefplayer08FreeThiefButton = new(() =>
-        {
-            var thiefFree = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.PoliceandThiefFreeThief, SendOption.Reliable);
-            AmongUsClient.Instance.FinishRpcImmediately(thiefFree);
-            RPCProcedure.PoliceandThiefFreeThief();
-            _thiefplayer08FreeThiefButton.Timer = _thiefplayer08FreeThiefButton.MaxTimer;
-        }, () => { return Thiefplayer08 != null && Thiefplayer08 == PlayerControl.LocalPlayer; }, () =>
-        {
-            if (LocalThiefReleaseArrow.Count != 0)
+        thiefplayer08FreeThiefButton = new CustomButton(
+            () =>
             {
-                LocalThiefReleaseArrow[0].Update(Cellbutton.transform.position);
-                if (GameOptionsManager.Instance.currentGameOptions.MapId == 6) LocalThiefReleaseArrow[1].Update(Cellbuttontwo.transform.position);
-            }
-
-            if (LocalThiefDeliverArrow.Count != 0)
+                MessageWriter thiefFree = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.PoliceandThiefFreeThief, Hazel.SendOption.Reliable, -1);
+                AmongUsClient.Instance.FinishRpcImmediately(thiefFree);
+                RPCProcedure.policeandThiefFreeThief();
+                thiefplayer08FreeThiefButton.Timer = thiefplayer08FreeThiefButton.MaxTimer;
+            },
+            () => { return PoliceAndThief.thiefplayer08 != null && PoliceAndThief.thiefplayer08 == PlayerControl.LocalPlayer; },
+            () =>
             {
-                LocalThiefDeliverArrow[0].Update(Jewelbutton.transform.position);
-                if (GameOptionsManager.Instance.currentGameOptions.MapId == 6) LocalThiefDeliverArrow[1].Update(Jewelbuttontwo.transform.position);
-            }
+                if (PoliceAndThief.localThiefReleaseArrow.Count != 0)
+                {
+                    PoliceAndThief.localThiefReleaseArrow[0].Update(PoliceAndThief.cellbutton.transform.position);
+                    if (GameOptionsManager.Instance.currentGameOptions.MapId == 6)
+                    {
+                        PoliceAndThief.localThiefReleaseArrow[1].Update(PoliceAndThief.cellbuttontwo.transform.position);
+                    }
+                }
+                if (PoliceAndThief.localThiefDeliverArrow.Count != 0)
+                {
+                    PoliceAndThief.localThiefDeliverArrow[0].Update(PoliceAndThief.jewelbutton.transform.position);
+                    if (GameOptionsManager.Instance.currentGameOptions.MapId == 6)
+                    {
+                        PoliceAndThief.localThiefDeliverArrow[1].Update(PoliceAndThief.jewelbuttontwo.transform.position);
+                    }
+                }
 
-            var canUse = false;
-            if (CurrentThiefsCaptured > 0)
-            {
-                if (((Cellbuttontwo != null && Vector2.Distance(Thiefplayer08.transform.position, Cellbuttontwo.transform.position) < 0.4f) || Vector2.Distance(Thiefplayer08.transform.position, Cellbutton.transform.position) < 0.4f) && !Thiefplayer08.Data.IsDead)
-                    canUse = true;
-            }
-
-            return canUse && PlayerControl.LocalPlayer.CanMove && !Thiefplayer08IsReviving && !PlayerControl.LocalPlayer.Data.IsDead;
-        }, () => { _thiefplayer08FreeThiefButton.Timer = _thiefplayer08FreeThiefButton.MaxTimer; }, AssetLoader.PoliceAndThiefFreeButton, ButtonPosition.Layout, __instance, __instance.UseButton, AbilitySlot.CrewmateAbilitySecondary, false, Tr.Get(TrKey.ReleaseButton));
+                bool CanUse = false;
+                if (PoliceAndThief.currentThiefsCaptured > 0)
+                {
+                    if ((PoliceAndThief.cellbuttontwo != null && Vector2.Distance(PoliceAndThief.thiefplayer08.transform.position, PoliceAndThief.cellbuttontwo.transform.position) < 0.4f || Vector2.Distance(PoliceAndThief.thiefplayer08.transform.position, PoliceAndThief.cellbutton.transform.position) < 0.4f) && !PoliceAndThief.thiefplayer08.Data.IsDead)
+                    {
+                        CanUse = true;
+                    }
+                }
+                return CanUse && PlayerControl.LocalPlayer.CanMove && !PoliceAndThief.thiefplayer08IsReviving && !PlayerControl.LocalPlayer.Data.IsDead;
+            },
+            () => { thiefplayer08FreeThiefButton.Timer = thiefplayer08FreeThiefButton.MaxTimer; },
+            AssetLoader.PoliceAndThiefFreeButton,
+            ButtonPosition.Layout,
+            __instance,
+            __instance.UseButton,
+            AbilitySlot.CrewmateAbilitySecondary,
+            false,
+            Tr.Get(TrKey.ReleaseButton)
+        );
 
         // Thiefplayer08 Take/Deliver Jewel Button
-        _thiefplayer08TakeDeliverJewelButton = new(() =>
-        {
-            if (Thiefplayer08IsStealing)
+        thiefplayer08TakeDeliverJewelButton = new CustomButton(
+            () =>
             {
-                var targetId = PlayerControl.LocalPlayer.PlayerId;
-                var jewelId = Thiefplayer08JewelId;
-                var thiefScore = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.PoliceandThiefDeliverJewel, SendOption.Reliable);
-                thiefScore.Write(targetId);
-                thiefScore.Write(jewelId);
-                AmongUsClient.Instance.FinishRpcImmediately(thiefScore);
-                RPCProcedure.PoliceandThiefDeliverJewel(targetId, jewelId);
-            }
-            else
-            {
-                var targetId = PlayerControl.LocalPlayer.PlayerId;
-                var jewelId = Thiefplayer08JewelId;
-                var thiefWhoTookATreasure = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.PoliceandThiefTakeJewel, SendOption.Reliable);
-                thiefWhoTookATreasure.Write(targetId);
-                thiefWhoTookATreasure.Write(jewelId);
-                AmongUsClient.Instance.FinishRpcImmediately(thiefWhoTookATreasure);
-                RPCProcedure.PoliceandThiefTakeJewel(targetId, jewelId);
-            }
-
-            _thiefplayer08TakeDeliverJewelButton.Timer = _thiefplayer08TakeDeliverJewelButton.MaxTimer;
-        }, () => { return Thiefplayer08 != null && Thiefplayer08 == PlayerControl.LocalPlayer; }, () =>
-        {
-            if (Thiefplayer08IsStealing)
-                _thiefplayer08TakeDeliverJewelButton.ActionButton.graphic.sprite = AssetLoader.PoliceAndThiefDeliverJewelButton;
-            else
-                _thiefplayer08TakeDeliverJewelButton.ActionButton.graphic.sprite = AssetLoader.PoliceAndThiefTakeJewelButton;
-            var canUse = false;
-            if (ThiefTreasures.Count != 0)
-            {
-                foreach (var jewel in ThiefTreasures)
+                if (PoliceAndThief.thiefplayer08IsStealing)
                 {
-                    if (jewel != null && Vector2.Distance(PlayerControl.LocalPlayer.transform.position, jewel.transform.position) < 0.5f && !Thiefplayer08IsStealing)
+                    byte targetId = PlayerControl.LocalPlayer.PlayerId;
+                    byte jewelId = PoliceAndThief.thiefplayer08JewelId;
+                    MessageWriter thiefScore = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.PoliceandThiefDeliverJewel, Hazel.SendOption.Reliable, -1);
+                    thiefScore.Write(targetId);
+                    thiefScore.Write(jewelId);
+                    AmongUsClient.Instance.FinishRpcImmediately(thiefScore);
+                    RPCProcedure.policeandThiefDeliverJewel(targetId, jewelId);
+                }
+                else
+                {
+                    byte targetId = PlayerControl.LocalPlayer.PlayerId;
+                    byte jewelId = PoliceAndThief.thiefplayer08JewelId;
+                    MessageWriter thiefWhoTookATreasure = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.PoliceandThiefTakeJewel, Hazel.SendOption.Reliable, -1);
+                    thiefWhoTookATreasure.Write(targetId);
+                    thiefWhoTookATreasure.Write(jewelId);
+                    AmongUsClient.Instance.FinishRpcImmediately(thiefWhoTookATreasure);
+                    RPCProcedure.policeandThiefTakeJewel(targetId, jewelId);
+                }
+                thiefplayer08TakeDeliverJewelButton.Timer = thiefplayer08TakeDeliverJewelButton.MaxTimer;
+            },
+            () => { return PoliceAndThief.thiefplayer08 != null && PoliceAndThief.thiefplayer08 == PlayerControl.LocalPlayer; },
+            () =>
+            {
+                if (PoliceAndThief.thiefplayer08IsStealing)
+                    thiefplayer08TakeDeliverJewelButton.ActionButton.graphic.sprite = AssetLoader.PoliceAndThiefDeliverJewelButton;
+                else
+                    thiefplayer08TakeDeliverJewelButton.ActionButton.graphic.sprite = AssetLoader.PoliceAndThiefTakeJewelButton;
+                bool CanUse = false;
+                if (PoliceAndThief.thiefTreasures.Count != 0)
+                {
+                    foreach (GameObject jewel in PoliceAndThief.thiefTreasures)
                     {
-                        switch (jewel.name)
+                        if (jewel != null && Vector2.Distance(PlayerControl.LocalPlayer.transform.position, jewel.transform.position) < 0.5f && !PoliceAndThief.thiefplayer08IsStealing)
                         {
-                            case "jewel01":
-                                Thiefplayer08JewelId = 1;
-                                canUse = !Jewel01BeingStealed;
-                                break;
-                            case "jewel02":
-                                Thiefplayer08JewelId = 2;
-                                canUse = !Jewel02BeingStealed;
-                                break;
-                            case "jewel03":
-                                Thiefplayer08JewelId = 3;
-                                canUse = !Jewel03BeingStealed;
-                                break;
-                            case "jewel04":
-                                Thiefplayer08JewelId = 4;
-                                canUse = !Jewel04BeingStealed;
-                                break;
-                            case "jewel05":
-                                Thiefplayer08JewelId = 5;
-                                canUse = !Jewel05BeingStealed;
-                                break;
-                            case "jewel06":
-                                Thiefplayer08JewelId = 6;
-                                canUse = !Jewel06BeingStealed;
-                                break;
-                            case "jewel07":
-                                Thiefplayer08JewelId = 7;
-                                canUse = !Jewel07BeingStealed;
-                                break;
-                            case "jewel08":
-                                Thiefplayer08JewelId = 8;
-                                canUse = !Jewel08BeingStealed;
-                                break;
-                            case "jewel09":
-                                Thiefplayer08JewelId = 9;
-                                canUse = !Jewel09BeingStealed;
-                                break;
-                            case "jewel10":
-                                Thiefplayer08JewelId = 10;
-                                canUse = !Jewel10BeingStealed;
-                                break;
-                            case "jewel11":
-                                Thiefplayer08JewelId = 11;
-                                canUse = !Jewel11BeingStealed;
-                                break;
-                            case "jewel12":
-                                Thiefplayer08JewelId = 12;
-                                canUse = !Jewel12BeingStealed;
-                                break;
-                            case "jewel13":
-                                Thiefplayer08JewelId = 13;
-                                canUse = !Jewel13BeingStealed;
-                                break;
-                            case "jewel14":
-                                Thiefplayer08JewelId = 14;
-                                canUse = !Jewel14BeingStealed;
-                                break;
-                            case "jewel15":
-                                Thiefplayer08JewelId = 15;
-                                canUse = !Jewel15BeingStealed;
-                                break;
+                            switch (jewel.name)
+                            {
+                                case "jewel01":
+                                    PoliceAndThief.thiefplayer08JewelId = 1;
+                                    CanUse = !PoliceAndThief.jewel01BeingStealed;
+                                    break;
+                                case "jewel02":
+                                    PoliceAndThief.thiefplayer08JewelId = 2;
+                                    CanUse = !PoliceAndThief.jewel02BeingStealed;
+                                    break;
+                                case "jewel03":
+                                    PoliceAndThief.thiefplayer08JewelId = 3;
+                                    CanUse = !PoliceAndThief.jewel03BeingStealed;
+                                    break;
+                                case "jewel04":
+                                    PoliceAndThief.thiefplayer08JewelId = 4;
+                                    CanUse = !PoliceAndThief.jewel04BeingStealed;
+                                    break;
+                                case "jewel05":
+                                    PoliceAndThief.thiefplayer08JewelId = 5;
+                                    CanUse = !PoliceAndThief.jewel05BeingStealed;
+                                    break;
+                                case "jewel06":
+                                    PoliceAndThief.thiefplayer08JewelId = 6;
+                                    CanUse = !PoliceAndThief.jewel06BeingStealed;
+                                    break;
+                                case "jewel07":
+                                    PoliceAndThief.thiefplayer08JewelId = 7;
+                                    CanUse = !PoliceAndThief.jewel07BeingStealed;
+                                    break;
+                                case "jewel08":
+                                    PoliceAndThief.thiefplayer08JewelId = 8;
+                                    CanUse = !PoliceAndThief.jewel08BeingStealed;
+                                    break;
+                                case "jewel09":
+                                    PoliceAndThief.thiefplayer08JewelId = 9;
+                                    CanUse = !PoliceAndThief.jewel09BeingStealed;
+                                    break;
+                                case "jewel10":
+                                    PoliceAndThief.thiefplayer08JewelId = 10;
+                                    CanUse = !PoliceAndThief.jewel10BeingStealed;
+                                    break;
+                                case "jewel11":
+                                    PoliceAndThief.thiefplayer08JewelId = 11;
+                                    CanUse = !PoliceAndThief.jewel11BeingStealed;
+                                    break;
+                                case "jewel12":
+                                    PoliceAndThief.thiefplayer08JewelId = 12;
+                                    CanUse = !PoliceAndThief.jewel12BeingStealed;
+                                    break;
+                                case "jewel13":
+                                    PoliceAndThief.thiefplayer08JewelId = 13;
+                                    CanUse = !PoliceAndThief.jewel13BeingStealed;
+                                    break;
+                                case "jewel14":
+                                    PoliceAndThief.thiefplayer08JewelId = 14;
+                                    CanUse = !PoliceAndThief.jewel14BeingStealed;
+                                    break;
+                                case "jewel15":
+                                    PoliceAndThief.thiefplayer08JewelId = 15;
+                                    CanUse = !PoliceAndThief.jewel15BeingStealed;
+                                    break;
+                            }
+                        }
+                        else if ((PoliceAndThief.jewelbuttontwo != null && Vector2.Distance(PlayerControl.LocalPlayer.transform.position, PoliceAndThief.jewelbuttontwo.transform.position) < 0.5f || PoliceAndThief.jewelbutton != null && Vector2.Distance(PlayerControl.LocalPlayer.transform.position, PoliceAndThief.jewelbutton.transform.position) < 0.5f) && PoliceAndThief.thiefplayer08IsStealing)
+                        {
+                            CanUse = true;
                         }
                     }
-                    else if (((Jewelbuttontwo != null && Vector2.Distance(PlayerControl.LocalPlayer.transform.position, Jewelbuttontwo.transform.position) < 0.5f) || (Jewelbutton != null && Vector2.Distance(PlayerControl.LocalPlayer.transform.position, Jewelbutton.transform.position) < 0.5f)) && Thiefplayer08IsStealing) canUse = true;
-                }
-            }
 
-            return canUse && PlayerControl.LocalPlayer.CanMove && !Thiefplayer08IsReviving && !PlayerControl.LocalPlayer.Data.IsDead;
-        }, () => { _thiefplayer08TakeDeliverJewelButton.Timer = _thiefplayer08TakeDeliverJewelButton.MaxTimer; }, AssetLoader.PoliceAndThiefTakeJewelButton, ButtonPosition.Layout, __instance, __instance.UseButton, AbilitySlot.CommonAbilityPrimary, false, Tr.Get(TrKey.DeliverButton));
+                }
+                return CanUse && PlayerControl.LocalPlayer.CanMove && !PoliceAndThief.thiefplayer08IsReviving && !PlayerControl.LocalPlayer.Data.IsDead;
+            },
+            () => { thiefplayer08TakeDeliverJewelButton.Timer = thiefplayer08TakeDeliverJewelButton.MaxTimer; },
+            AssetLoader.PoliceAndThiefTakeJewelButton,
+            ButtonPosition.Layout,
+            __instance,
+            __instance.UseButton,
+            AbilitySlot.CommonAbilityPrimary,
+            false,
+            Tr.Get(TrKey.DeliverButton)
+        );
 
         // Thiefplayer09 Kill
-        _thiefplayer09KillButton = new(() =>
-        {
-            var targetId = Thiefplayer09CurrentTarget.PlayerId;
-            var sourceId = Thiefplayer09.PlayerId;
-            var killWriter = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.GamemodeKills, SendOption.Reliable);
-            killWriter.Write(targetId);
-            killWriter.Write(sourceId);
-            AmongUsClient.Instance.FinishRpcImmediately(killWriter);
-            RPCProcedure.GamemodeKills(targetId, sourceId);
-            _thiefplayer09KillButton.Timer = _thiefplayer09KillButton.MaxTimer;
-            Thiefplayer09CurrentTarget = null;
-        }, () => { return Thiefplayer09 != null && Thiefplayer09 == PlayerControl.LocalPlayer && WhoCanThiefsKill != 2; }, () =>
-        {
-            var canUse = false;
-            switch (WhoCanThiefsKill)
+        thiefplayer09KillButton = new CustomButton(
+            () =>
             {
-                case 0:
-                    if ((Policeplayer02 != null && Thiefplayer09CurrentTarget == Policeplayer02) || (Policeplayer04 != null && Thiefplayer09CurrentTarget == Policeplayer04)) canUse = true;
-                    break;
-                case 1:
-                    canUse = true;
-                    break;
-            }
-
-            return canUse && Thiefplayer09CurrentTarget && PlayerControl.LocalPlayer.CanMove && !Thiefplayer09IsReviving && !PlayerControl.LocalPlayer.Data.IsDead && !Thiefplayer09IsStealing;
-        }, () => { _thiefplayer09KillButton.Timer = _thiefplayer09KillButton.MaxTimer; }, __instance.KillButton.graphic.sprite, ButtonPosition.Layout, __instance, __instance.KillButton, AbilitySlot.CrewmateAbilityPrimary, false, TranslationController.Instance.GetString(StringNames.KillLabel));
+                byte targetId = PoliceAndThief.thiefplayer09currentTarget.PlayerId;
+                byte sourceId = PoliceAndThief.thiefplayer09.PlayerId;
+                MessageWriter killWriter = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.GamemodeKills, Hazel.SendOption.Reliable, -1);
+                killWriter.Write(targetId);
+                killWriter.Write(sourceId);
+                AmongUsClient.Instance.FinishRpcImmediately(killWriter);
+                RPCProcedure.gamemodeKills(targetId, sourceId);
+                thiefplayer09KillButton.Timer = thiefplayer09KillButton.MaxTimer;
+                PoliceAndThief.thiefplayer09currentTarget = null;
+            },
+            () => { return PoliceAndThief.thiefplayer09 != null && PoliceAndThief.thiefplayer09 == PlayerControl.LocalPlayer && PoliceAndThief.whoCanThiefsKill != 2; },
+            () =>
+            {
+                bool canUse = false;
+                switch (PoliceAndThief.whoCanThiefsKill)
+                {
+                    case 0:
+                        if (PoliceAndThief.policeplayer02 != null && PoliceAndThief.thiefplayer09currentTarget == PoliceAndThief.policeplayer02 || PoliceAndThief.policeplayer04 != null && PoliceAndThief.thiefplayer09currentTarget == PoliceAndThief.policeplayer04)
+                        {
+                            canUse = true;
+                        }
+                        break;
+                    case 1:
+                        canUse = true;
+                        break;
+                }
+                return canUse && PoliceAndThief.thiefplayer09currentTarget && PlayerControl.LocalPlayer.CanMove && !PoliceAndThief.thiefplayer09IsReviving && !PlayerControl.LocalPlayer.Data.IsDead && !PoliceAndThief.thiefplayer09IsStealing;
+            },
+            () => { thiefplayer09KillButton.Timer = thiefplayer09KillButton.MaxTimer; },
+            __instance.KillButton.graphic.sprite,
+            ButtonPosition.Layout,
+            __instance,
+            __instance.KillButton,
+            AbilitySlot.CrewmateAbilityPrimary,
+            false,
+            TranslationController.Instance.GetString(StringNames.KillLabel)
+        );
 
         // Thiefplayer09 FreeThief Button
-        _thiefplayer09FreeThiefButton = new(() =>
-        {
-            var thiefFree = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.PoliceandThiefFreeThief, SendOption.Reliable);
-            AmongUsClient.Instance.FinishRpcImmediately(thiefFree);
-            RPCProcedure.PoliceandThiefFreeThief();
-            _thiefplayer09FreeThiefButton.Timer = _thiefplayer09FreeThiefButton.MaxTimer;
-        }, () => { return Thiefplayer09 != null && Thiefplayer09 == PlayerControl.LocalPlayer; }, () =>
-        {
-            if (LocalThiefReleaseArrow.Count != 0)
+        thiefplayer09FreeThiefButton = new CustomButton(
+            () =>
             {
-                LocalThiefReleaseArrow[0].Update(Cellbutton.transform.position);
-                if (GameOptionsManager.Instance.currentGameOptions.MapId == 6) LocalThiefReleaseArrow[1].Update(Cellbuttontwo.transform.position);
-            }
-
-            if (LocalThiefDeliverArrow.Count != 0)
+                MessageWriter thiefFree = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.PoliceandThiefFreeThief, Hazel.SendOption.Reliable, -1);
+                AmongUsClient.Instance.FinishRpcImmediately(thiefFree);
+                RPCProcedure.policeandThiefFreeThief();
+                thiefplayer09FreeThiefButton.Timer = thiefplayer09FreeThiefButton.MaxTimer;
+            },
+            () => { return PoliceAndThief.thiefplayer09 != null && PoliceAndThief.thiefplayer09 == PlayerControl.LocalPlayer; },
+            () =>
             {
-                LocalThiefDeliverArrow[0].Update(Jewelbutton.transform.position);
-                if (GameOptionsManager.Instance.currentGameOptions.MapId == 6) LocalThiefDeliverArrow[1].Update(Jewelbuttontwo.transform.position);
-            }
+                if (PoliceAndThief.localThiefReleaseArrow.Count != 0)
+                {
+                    PoliceAndThief.localThiefReleaseArrow[0].Update(PoliceAndThief.cellbutton.transform.position);
+                    if (GameOptionsManager.Instance.currentGameOptions.MapId == 6)
+                    {
+                        PoliceAndThief.localThiefReleaseArrow[1].Update(PoliceAndThief.cellbuttontwo.transform.position);
+                    }
+                }
+                if (PoliceAndThief.localThiefDeliverArrow.Count != 0)
+                {
+                    PoliceAndThief.localThiefDeliverArrow[0].Update(PoliceAndThief.jewelbutton.transform.position);
+                    if (GameOptionsManager.Instance.currentGameOptions.MapId == 6)
+                    {
+                        PoliceAndThief.localThiefDeliverArrow[1].Update(PoliceAndThief.jewelbuttontwo.transform.position);
+                    }
+                }
 
-            var canUse = false;
-            if (CurrentThiefsCaptured > 0)
-            {
-                if (((Cellbuttontwo != null && Vector2.Distance(Thiefplayer09.transform.position, Cellbuttontwo.transform.position) < 0.4f) || Vector2.Distance(Thiefplayer09.transform.position, Cellbutton.transform.position) < 0.4f) && !Thiefplayer09.Data.IsDead)
-                    canUse = true;
-            }
-
-            return canUse && PlayerControl.LocalPlayer.CanMove && !Thiefplayer09IsReviving && !PlayerControl.LocalPlayer.Data.IsDead;
-        }, () => { _thiefplayer09FreeThiefButton.Timer = _thiefplayer09FreeThiefButton.MaxTimer; }, AssetLoader.PoliceAndThiefFreeButton, ButtonPosition.Layout, __instance, __instance.UseButton, AbilitySlot.CrewmateAbilitySecondary, false, Tr.Get(TrKey.ReleaseButton));
+                bool CanUse = false;
+                if (PoliceAndThief.currentThiefsCaptured > 0)
+                {
+                    if ((PoliceAndThief.cellbuttontwo != null && Vector2.Distance(PoliceAndThief.thiefplayer09.transform.position, PoliceAndThief.cellbuttontwo.transform.position) < 0.4f || Vector2.Distance(PoliceAndThief.thiefplayer09.transform.position, PoliceAndThief.cellbutton.transform.position) < 0.4f) && !PoliceAndThief.thiefplayer09.Data.IsDead)
+                    {
+                        CanUse = true;
+                    }
+                }
+                return CanUse && PlayerControl.LocalPlayer.CanMove && !PoliceAndThief.thiefplayer09IsReviving && !PlayerControl.LocalPlayer.Data.IsDead;
+            },
+            () => { thiefplayer09FreeThiefButton.Timer = thiefplayer09FreeThiefButton.MaxTimer; },
+            AssetLoader.PoliceAndThiefFreeButton,
+            ButtonPosition.Layout,
+            __instance,
+            __instance.UseButton,
+            AbilitySlot.CrewmateAbilitySecondary,
+            false,
+            Tr.Get(TrKey.ReleaseButton)
+        );
 
         // Thiefplayer09 Take/Deliver Jewel Button
-        _thiefplayer09TakeDeliverJewelButton = new(() =>
-        {
-            if (Thiefplayer09IsStealing)
+        thiefplayer09TakeDeliverJewelButton = new CustomButton(
+            () =>
             {
-                var targetId = PlayerControl.LocalPlayer.PlayerId;
-                var jewelId = Thiefplayer09JewelId;
-                var thiefScore = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.PoliceandThiefDeliverJewel, SendOption.Reliable);
-                thiefScore.Write(targetId);
-                thiefScore.Write(jewelId);
-                AmongUsClient.Instance.FinishRpcImmediately(thiefScore);
-                RPCProcedure.PoliceandThiefDeliverJewel(targetId, jewelId);
-            }
-            else
-            {
-                var targetId = PlayerControl.LocalPlayer.PlayerId;
-                var jewelId = Thiefplayer09JewelId;
-                var thiefWhoTookATreasure = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.PoliceandThiefTakeJewel, SendOption.Reliable);
-                thiefWhoTookATreasure.Write(targetId);
-                thiefWhoTookATreasure.Write(jewelId);
-                AmongUsClient.Instance.FinishRpcImmediately(thiefWhoTookATreasure);
-                RPCProcedure.PoliceandThiefTakeJewel(targetId, jewelId);
-            }
-
-            _thiefplayer09TakeDeliverJewelButton.Timer = _thiefplayer09TakeDeliverJewelButton.MaxTimer;
-        }, () => { return Thiefplayer09 != null && Thiefplayer09 == PlayerControl.LocalPlayer; }, () =>
-        {
-            if (Thiefplayer09IsStealing)
-                _thiefplayer09TakeDeliverJewelButton.ActionButton.graphic.sprite = AssetLoader.PoliceAndThiefDeliverJewelButton;
-            else
-                _thiefplayer09TakeDeliverJewelButton.ActionButton.graphic.sprite = AssetLoader.PoliceAndThiefTakeJewelButton;
-            var canUse = false;
-            if (ThiefTreasures.Count != 0)
-            {
-                foreach (var jewel in ThiefTreasures)
+                if (PoliceAndThief.thiefplayer09IsStealing)
                 {
-                    if (jewel != null && Vector2.Distance(PlayerControl.LocalPlayer.transform.position, jewel.transform.position) < 0.5f && !Thiefplayer09IsStealing)
+                    byte targetId = PlayerControl.LocalPlayer.PlayerId;
+                    byte jewelId = PoliceAndThief.thiefplayer09JewelId;
+                    MessageWriter thiefScore = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.PoliceandThiefDeliverJewel, Hazel.SendOption.Reliable, -1);
+                    thiefScore.Write(targetId);
+                    thiefScore.Write(jewelId);
+                    AmongUsClient.Instance.FinishRpcImmediately(thiefScore);
+                    RPCProcedure.policeandThiefDeliverJewel(targetId, jewelId);
+                }
+                else
+                {
+                    byte targetId = PlayerControl.LocalPlayer.PlayerId;
+                    byte jewelId = PoliceAndThief.thiefplayer09JewelId;
+                    MessageWriter thiefWhoTookATreasure = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.PoliceandThiefTakeJewel, Hazel.SendOption.Reliable, -1);
+                    thiefWhoTookATreasure.Write(targetId);
+                    thiefWhoTookATreasure.Write(jewelId);
+                    AmongUsClient.Instance.FinishRpcImmediately(thiefWhoTookATreasure);
+                    RPCProcedure.policeandThiefTakeJewel(targetId, jewelId);
+                }
+                thiefplayer09TakeDeliverJewelButton.Timer = thiefplayer09TakeDeliverJewelButton.MaxTimer;
+            },
+            () => { return PoliceAndThief.thiefplayer09 != null && PoliceAndThief.thiefplayer09 == PlayerControl.LocalPlayer; },
+            () =>
+            {
+                if (PoliceAndThief.thiefplayer09IsStealing)
+                    thiefplayer09TakeDeliverJewelButton.ActionButton.graphic.sprite = AssetLoader.PoliceAndThiefDeliverJewelButton;
+                else
+                    thiefplayer09TakeDeliverJewelButton.ActionButton.graphic.sprite = AssetLoader.PoliceAndThiefTakeJewelButton;
+                bool CanUse = false;
+                if (PoliceAndThief.thiefTreasures.Count != 0)
+                {
+                    foreach (GameObject jewel in PoliceAndThief.thiefTreasures)
                     {
-                        switch (jewel.name)
+                        if (jewel != null && Vector2.Distance(PlayerControl.LocalPlayer.transform.position, jewel.transform.position) < 0.5f && !PoliceAndThief.thiefplayer09IsStealing)
                         {
-                            case "jewel01":
-                                Thiefplayer09JewelId = 1;
-                                canUse = !Jewel01BeingStealed;
-                                break;
-                            case "jewel02":
-                                Thiefplayer09JewelId = 2;
-                                canUse = !Jewel02BeingStealed;
-                                break;
-                            case "jewel03":
-                                Thiefplayer09JewelId = 3;
-                                canUse = !Jewel03BeingStealed;
-                                break;
-                            case "jewel04":
-                                Thiefplayer09JewelId = 4;
-                                canUse = !Jewel04BeingStealed;
-                                break;
-                            case "jewel05":
-                                Thiefplayer09JewelId = 5;
-                                canUse = !Jewel05BeingStealed;
-                                break;
-                            case "jewel06":
-                                Thiefplayer09JewelId = 6;
-                                canUse = !Jewel06BeingStealed;
-                                break;
-                            case "jewel07":
-                                Thiefplayer09JewelId = 7;
-                                canUse = !Jewel07BeingStealed;
-                                break;
-                            case "jewel08":
-                                Thiefplayer09JewelId = 8;
-                                canUse = !Jewel08BeingStealed;
-                                break;
-                            case "jewel09":
-                                Thiefplayer09JewelId = 9;
-                                canUse = !Jewel09BeingStealed;
-                                break;
-                            case "jewel10":
-                                Thiefplayer09JewelId = 10;
-                                canUse = !Jewel10BeingStealed;
-                                break;
-                            case "jewel11":
-                                Thiefplayer09JewelId = 11;
-                                canUse = !Jewel11BeingStealed;
-                                break;
-                            case "jewel12":
-                                Thiefplayer09JewelId = 12;
-                                canUse = !Jewel12BeingStealed;
-                                break;
-                            case "jewel13":
-                                Thiefplayer09JewelId = 13;
-                                canUse = !Jewel13BeingStealed;
-                                break;
-                            case "jewel14":
-                                Thiefplayer09JewelId = 14;
-                                canUse = !Jewel14BeingStealed;
-                                break;
-                            case "jewel15":
-                                Thiefplayer09JewelId = 15;
-                                canUse = !Jewel15BeingStealed;
-                                break;
+                            switch (jewel.name)
+                            {
+                                case "jewel01":
+                                    PoliceAndThief.thiefplayer09JewelId = 1;
+                                    CanUse = !PoliceAndThief.jewel01BeingStealed;
+                                    break;
+                                case "jewel02":
+                                    PoliceAndThief.thiefplayer09JewelId = 2;
+                                    CanUse = !PoliceAndThief.jewel02BeingStealed;
+                                    break;
+                                case "jewel03":
+                                    PoliceAndThief.thiefplayer09JewelId = 3;
+                                    CanUse = !PoliceAndThief.jewel03BeingStealed;
+                                    break;
+                                case "jewel04":
+                                    PoliceAndThief.thiefplayer09JewelId = 4;
+                                    CanUse = !PoliceAndThief.jewel04BeingStealed;
+                                    break;
+                                case "jewel05":
+                                    PoliceAndThief.thiefplayer09JewelId = 5;
+                                    CanUse = !PoliceAndThief.jewel05BeingStealed;
+                                    break;
+                                case "jewel06":
+                                    PoliceAndThief.thiefplayer09JewelId = 6;
+                                    CanUse = !PoliceAndThief.jewel06BeingStealed;
+                                    break;
+                                case "jewel07":
+                                    PoliceAndThief.thiefplayer09JewelId = 7;
+                                    CanUse = !PoliceAndThief.jewel07BeingStealed;
+                                    break;
+                                case "jewel08":
+                                    PoliceAndThief.thiefplayer09JewelId = 8;
+                                    CanUse = !PoliceAndThief.jewel08BeingStealed;
+                                    break;
+                                case "jewel09":
+                                    PoliceAndThief.thiefplayer09JewelId = 9;
+                                    CanUse = !PoliceAndThief.jewel09BeingStealed;
+                                    break;
+                                case "jewel10":
+                                    PoliceAndThief.thiefplayer09JewelId = 10;
+                                    CanUse = !PoliceAndThief.jewel10BeingStealed;
+                                    break;
+                                case "jewel11":
+                                    PoliceAndThief.thiefplayer09JewelId = 11;
+                                    CanUse = !PoliceAndThief.jewel11BeingStealed;
+                                    break;
+                                case "jewel12":
+                                    PoliceAndThief.thiefplayer09JewelId = 12;
+                                    CanUse = !PoliceAndThief.jewel12BeingStealed;
+                                    break;
+                                case "jewel13":
+                                    PoliceAndThief.thiefplayer09JewelId = 13;
+                                    CanUse = !PoliceAndThief.jewel13BeingStealed;
+                                    break;
+                                case "jewel14":
+                                    PoliceAndThief.thiefplayer09JewelId = 14;
+                                    CanUse = !PoliceAndThief.jewel14BeingStealed;
+                                    break;
+                                case "jewel15":
+                                    PoliceAndThief.thiefplayer09JewelId = 15;
+                                    CanUse = !PoliceAndThief.jewel15BeingStealed;
+                                    break;
+                            }
+                        }
+                        else if ((PoliceAndThief.jewelbuttontwo != null && Vector2.Distance(PlayerControl.LocalPlayer.transform.position, PoliceAndThief.jewelbuttontwo.transform.position) < 0.5f || PoliceAndThief.jewelbutton != null && Vector2.Distance(PlayerControl.LocalPlayer.transform.position, PoliceAndThief.jewelbutton.transform.position) < 0.5f) && PoliceAndThief.thiefplayer09IsStealing)
+                        {
+                            CanUse = true;
                         }
                     }
-                    else if (((Jewelbuttontwo != null && Vector2.Distance(PlayerControl.LocalPlayer.transform.position, Jewelbuttontwo.transform.position) < 0.5f) || (Jewelbutton != null && Vector2.Distance(PlayerControl.LocalPlayer.transform.position, Jewelbutton.transform.position) < 0.5f)) && Thiefplayer09IsStealing) canUse = true;
-                }
-            }
 
-            return canUse && PlayerControl.LocalPlayer.CanMove && !Thiefplayer09IsReviving && !PlayerControl.LocalPlayer.Data.IsDead;
-        }, () => { _thiefplayer09TakeDeliverJewelButton.Timer = _thiefplayer09TakeDeliverJewelButton.MaxTimer; }, AssetLoader.PoliceAndThiefTakeJewelButton, ButtonPosition.Layout, __instance, __instance.UseButton, AbilitySlot.CommonAbilityPrimary, false, Tr.Get(TrKey.DeliverButton));
+                }
+                return CanUse && PlayerControl.LocalPlayer.CanMove && !PoliceAndThief.thiefplayer09IsReviving && !PlayerControl.LocalPlayer.Data.IsDead;
+            },
+            () => { thiefplayer09TakeDeliverJewelButton.Timer = thiefplayer09TakeDeliverJewelButton.MaxTimer; },
+            AssetLoader.PoliceAndThiefTakeJewelButton,
+            ButtonPosition.Layout,
+            __instance,
+            __instance.UseButton,
+            AbilitySlot.CommonAbilityPrimary,
+            false,
+            Tr.Get(TrKey.DeliverButton)
+        );
     }
 }

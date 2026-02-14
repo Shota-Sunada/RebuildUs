@@ -12,7 +12,6 @@ public static class OptionsMenuBehaviourPatch
             KeyBindingMenu.Update();
             return false;
         }
-
         return true;
     }
 

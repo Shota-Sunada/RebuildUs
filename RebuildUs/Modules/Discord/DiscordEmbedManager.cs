@@ -5,7 +5,7 @@ namespace RebuildUs.Modules.Discord;
 
 public static class DiscordEmbedManager
 {
-    private static ulong? _statusMessageId;
+    private static ulong? _statusMessageId = null;
 
     public static async void UpdateStatus()
     {
@@ -20,29 +20,39 @@ public static class DiscordEmbedManager
             4 => TranslationController.Instance.GetString(StringNames.MapNameAirship),
             5 => TranslationController.Instance.GetString(StringNames.MapNameFungle),
             6 => SubmergedCompatibility.SUBMERGED_GUID,
-            _ => "Unknown",
+            _ => "Unknown"
         };
         var roomId = GameCode.IntToGameName(AmongUsClient.Instance.GameId) ?? "---";
         var count = PlayerControl.AllPlayerControls.Count;
 
-        var desc = DiscordModManager.CurrentGameState switch
+        string desc = DiscordModManager.CurrentGameState switch
         {
             "ドロップシップ" => "ゲーム開始を待機中",
             "行動中" => "各自タスクやキルを行う",
             "追放中" => string.IsNullOrEmpty(DiscordModManager.ExiledPlayerName) ? "誰かが追放された" : $"{DiscordModManager.ExiledPlayerName}が追放された",
             "会議中" => "話し合いをしている",
-            _ => "",
+            _ => ""
         };
 
         var embed = new
         {
             Title = "Among Us ルーム情報",
             Color = 3447003,
-            Fields = new[] { new { name = "マップ名", value = mapName, inline = true }, new { name = "ルームID", value = roomId, inline = true }, new { name = "状態", value = DiscordModManager.CurrentGameState, inline = true }, new { name = "状態の説明", value = desc, inline = false }, new { name = "部屋人数", value = $"{count}/{Helpers.GetOption(Int32OptionNames.MaxPlayers)}", inline = true } },
-            Description = GetPlayerListString(),
+            Fields = new[] {
+                new { name = "マップ名", value = mapName, inline = true },
+                new { name = "ルームID", value = roomId, inline = true },
+                new { name = "状態", value = DiscordModManager.CurrentGameState, inline = true },
+                new { name = "状態の説明", value = desc, inline = false },
+                new { name = "部屋人数", value = $"{count}/{Helpers.GetOption(Int32OptionNames.MaxPlayers)}", inline = true }
+            },
+            Description = GetPlayerListString()
         };
 
-        var components = new[] { new { Type = 1, Components = new[] { new { type = 2, Style = 1, Label = "アカウント連携", Custom_id = "start_link" } } } };
+        var components = new[] {
+            new { Type = 1, Components = new[] {
+                new { type = 2, Style = 1, Label = "アカウント連携", Custom_id = "start_link" }
+            } }
+        };
 
         var body = new { Embeds = new[] { embed }, components };
         var url = $"https://discord.com/api/v10/channels/{RebuildUs.StatusChannelId.Value}/messages" + (_statusMessageId == null ? "" : $"/{_statusMessageId}");
@@ -67,7 +77,6 @@ public static class DiscordEmbedManager
             if (id != null && DiscordModManager.PlayerMappings.ContainsKey(id)) linked.Add($":white_check_mark: {name}");
             else unlinked.Add($":x: {name}");
         }
-
         var sb = new StringBuilder("**プレイヤー名一覧:**\n");
         foreach (var s in linked) sb.AppendLine(s);
         foreach (var s in unlinked) sb.AppendLine(s);
@@ -87,7 +96,7 @@ public static class DiscordEmbedManager
         }
 
         var logs = new StringBuilder();
-        foreach (var d in GameHistory.DEAD_PLAYERS)
+        foreach (var d in GameHistory.DeadPlayers)
         {
             var time = d.TimeOfDeath.AddHours(9).ToString("HH:mm:ss");
             var victimName = d.Player.Data.PlayerName;
@@ -101,29 +110,41 @@ public static class DiscordEmbedManager
                 killerName = d.KillerIfExisting.Data.PlayerName;
                 killerRole = RoleInfo.GetRolesString(d.KillerIfExisting, false, true, null, true, " + ");
             }
-            else if (d.DeathReason == DeathReason.Exile) killerName = "投票";
+            else if (d.DeathReason == DeathReason.Exile)
+            {
+                killerName = "投票";
+            }
 
             var reason = d.DeathReason switch
             {
                 DeathReason.Exile => "追放",
                 DeathReason.Kill => "キル",
-                _ => d.DeathReason.ToString(),
+                _ => d.DeathReason.ToString()
             };
 
             logs.Append(time).Append(' ');
             if (d.DeathReason == DeathReason.Exile)
+            {
                 logs.Append("投票 => ").Append(victimName).Append(" (").Append(victimRole).Append(") [").Append(reason).Append("]");
+            }
             else
             {
                 logs.Append(killerName);
                 if (!string.IsNullOrEmpty(killerRole)) logs.Append(" (").Append(killerRole).Append(")");
                 logs.Append(" => ").Append(victimName).Append(" (").Append(victimRole).Append(") [").Append(reason).Append("]");
             }
-
             logs.AppendLine();
         }
 
-        var embed = new { title = "試合結果", color = 15105570, fields = new[] { new { Name = "役職一覧", value = sb.Length > 0 ? sb.ToString() : "なし", inline = false }, new { Name = "キル記録", value = logs.Length > 0 ? logs.ToString() : "なし", inline = false } } };
+        var embed = new
+        {
+            title = "試合結果",
+            color = 15105570,
+            fields = new[] {
+                new { Name = "役職一覧", value = sb.Length > 0 ? sb.ToString() : "なし", inline = false },
+                new { Name = "キル記録", value = logs.Length > 0 ? logs.ToString() : "なし", inline = false }
+            }
+        };
 
         var body = new { embeds = new[] { embed } };
         await DiscordModManager.SendRequest("POST", $"https://discord.com/api/v10/channels/{RebuildUs.ResultChannelId.Value}/messages", body);

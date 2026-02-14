@@ -4,6 +4,14 @@ namespace RebuildUs.Roles.Crewmate;
 public class Detective : RoleBase<Detective>
 {
     public static Color NameColor = new Color32(45, 106, 165, byte.MaxValue);
+    public override Color RoleColor => NameColor;
+
+    // write configs here
+    public static bool AnonymousFootprints { get { return CustomOptionHolder.DetectiveAnonymousFootprints.GetBool(); } }
+    public static float FootprintInterval { get { return CustomOptionHolder.DetectiveFootprintInterval.GetFloat(); } }
+    public static float FootprintDuration { get { return CustomOptionHolder.DetectiveFootprintDuration.GetFloat(); } }
+    public static float ReportNameDuration { get { return CustomOptionHolder.DetectiveReportNameDuration.GetFloat(); } }
+    public static float ReportColorDuration { get { return CustomOptionHolder.DetectiveReportColorDuration.GetFloat(); } }
     public float Timer = 6.2f;
 
     public Detective()
@@ -12,41 +20,9 @@ public class Detective : RoleBase<Detective>
         StaticRoleType = CurrentRoleType = RoleType.Detective;
     }
 
-    public override Color RoleColor
-    {
-        get => NameColor;
-    }
-
-    // write configs here
-    public static bool AnonymousFootprints
-    {
-        get => CustomOptionHolder.DetectiveAnonymousFootprints.GetBool();
-    }
-
-    public static float FootprintInterval
-    {
-        get => CustomOptionHolder.DetectiveFootprintInterval.GetFloat();
-    }
-
-    public static float FootprintDuration
-    {
-        get => CustomOptionHolder.DetectiveFootprintDuration.GetFloat();
-    }
-
-    public static float ReportNameDuration
-    {
-        get => CustomOptionHolder.DetectiveReportNameDuration.GetFloat();
-    }
-
-    public static float ReportColorDuration
-    {
-        get => CustomOptionHolder.DetectiveReportColorDuration.GetFloat();
-    }
-
     public override void OnMeetingStart() { }
     public override void OnMeetingEnd() { }
     public override void OnIntroEnd() { }
-
     public override void FixedUpdate()
     {
         if (!Exists || !PlayerControl.LocalPlayer.IsRole(RoleType.Detective)) return;
@@ -57,12 +33,13 @@ public class Detective : RoleBase<Detective>
             Timer = FootprintInterval;
             foreach (var player in PlayerControl.AllPlayerControls.GetFastEnumerator())
             {
-                if (player != null && player != PlayerControl.LocalPlayer && !player.Data.IsDead && !player.inVent && !player.IsGm())
+                if (player != null && player != PlayerControl.LocalPlayer && !player.Data.IsDead && !player.inVent && !player.IsGM())
+                {
                     FootprintHolder.Instance.MakeFootprint(player);
+                }
             }
         }
     }
-
     public override void OnKill(PlayerControl target) { }
     public override void OnDeath(PlayerControl killer = null) { }
     public override void OnFinishShipStatusBegin() { }

@@ -7,7 +7,7 @@ public static class MapBehaviourPatch
     [HarmonyPatch(typeof(MapBehaviour), nameof(MapBehaviour.FixedUpdate))]
     public static bool FixedUpdatePrefix(MapBehaviour __instance)
     {
-        if (!MeetingHud.Instance) return true; // Only run in meetings, and then set the Position of the HerePoint to the Position before the Meeting!
+        if (!MeetingHud.Instance) return true;  // Only run in meetings, and then set the Position of the HerePoint to the Position before the Meeting!
         Map.UpdatePrefix(__instance);
         return false;
     }
@@ -23,7 +23,7 @@ public static class MapBehaviourPatch
     [HarmonyPatch(typeof(MapBehaviour), nameof(MapBehaviour.ShowNormalMap))]
     public static bool ShowNormalMapPrefix(MapBehaviour __instance)
     {
-        if (!MeetingHud.Instance || __instance.IsOpen) return true; // Only run in meetings and when the map is closed
+        if (!MeetingHud.Instance || __instance.IsOpen) return true;  // Only run in meetings and when the map is closed
 
         return Map.ShowNormalMap(__instance);
     }

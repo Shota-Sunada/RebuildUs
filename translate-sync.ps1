@@ -7,33 +7,27 @@ $ErrorActionPreference = "Stop"
 Write-Host "Reading Translations.csv..."
 
 $csvPath = "Translations.csv"
-if (-not (Test-Path $csvPath))
-{
+if (-not (Test-Path $csvPath)) {
     Write-Error "Error: Translations.csv not found"
     exit 1
 }
 
 $csvContent = Import-Csv -Path $csvPath -Encoding UTF8
 
-$translations = [ordered]@{ }
+$translations = [ordered]@{}
 $keys = @()
 
-foreach ($row in $csvContent)
-{
+foreach ($row in $csvContent) {
     $key = $row.Key.Trim()
 
-    if ( [string]::IsNullOrWhiteSpace($key))
-    {
+    if ([string]::IsNullOrWhiteSpace($key)) {
         continue
     }
 
     # Handle duplicates
-    if ( $translations.Contains($key))
-    {
+    if ($translations.Contains($key)) {
         Write-Warning "Warning: Duplicate key found: $key. Using the latest entry."
-    }
-    else
-    {
+    } else {
         $keys += $key
     }
 
@@ -42,8 +36,8 @@ foreach ($row in $csvContent)
     $japanese = $row.Japanese -replace '\\n', "`n"
 
     $translations[$key] = @{
-        Key = $key
-        English = $english
+        Key      = $key
+        English  = $english
         Japanese = $japanese
     }
 }
@@ -51,11 +45,10 @@ foreach ($row in $csvContent)
 # Sort keys to maintain stable output
 $keys = $keys | Sort-Object
 
-Write-Host "Found $( $keys.Count ) translation keys"
+Write-Host "Found $($keys.Count) translation keys"
 
 # 2. Generate JSON Files
-function Generate-JSON
-{
+function Generate-JSON {
     param (
         [string]$Path,
         [array]$Keys,
@@ -63,12 +56,10 @@ function Generate-JSON
         [string]$Language
     )
 
-    $data = [ordered]@{ }
-    foreach ($k in $Keys)
-    {
+    $data = [ordered]@{}
+    foreach ($k in $Keys) {
         $val = $Translations[$k][$Language]
-        if (-not [string]::IsNullOrWhiteSpace($val))
-        {
+        if (-not [string]::IsNullOrWhiteSpace($val)) {
             $data[$k] = $val
         }
     }
@@ -78,8 +69,7 @@ function Generate-JSON
 
     # Ensure directory exists
     $dir = Split-Path -Parent $Path
-    if (-not (Test-Path $dir))
-    {
+    if (-not (Test-Path $dir)) {
         New-Item -ItemType Directory -Path $dir -Force | Out-Null
     }
 
@@ -104,8 +94,7 @@ $sb = New-Object System.Text.StringBuilder
 [void]$sb.AppendLine("{")
 [void]$sb.AppendLine("    None,")
 
-foreach ($k in $keys)
-{
+foreach ($k in $keys) {
     [void]$sb.AppendLine("    $k,")
 }
 
@@ -113,13 +102,12 @@ foreach ($k in $keys)
 
 $enumPath = "RebuildUs/Localization/TranslateKey.cs"
 $enumDir = Split-Path -Parent $enumPath
-if (-not (Test-Path $enumDir))
-{
+if (-not (Test-Path $enumDir)) {
     New-Item -ItemType Directory -Path $enumDir -Force | Out-Null
 }
 
 $utf8NoBom = New-Object System.Text.UTF8Encoding $false
-[System.IO.File]::WriteAllText($enumPath,$sb.ToString(), $utf8NoBom)
+[System.IO.File]::WriteAllText($enumPath, $sb.ToString(), $utf8NoBom)
 
 Write-Host "Generated $enumPath"
 Write-Host ""

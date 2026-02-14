@@ -6,7 +6,7 @@ public static class AbilityButtonPatch
     [HarmonyPatch(typeof(AbilityButton), nameof(AbilityButton.DoClick))]
     public static bool DoClickPrefix(AbilityButton __instance)
     {
-        if (MapSettings.GameMode is not CustomGameMode.Roles && !HotPotato.HotPotatoObject) return false;
+        if (MapSettings.GameMode is not CustomGameMode.Roles && !HotPotato.hotPotato) return false;
 
         return true;
     }
@@ -15,7 +15,10 @@ public static class AbilityButtonPatch
     [HarmonyPatch(typeof(AbilityButton), nameof(AbilityButton.Update))]
     public static void Postfix()
     {
-        if (MapSettings.GameMode is not CustomGameMode.Roles && !HotPotato.HotPotatoObject)
+
+        if (MapSettings.GameMode is not CustomGameMode.Roles && !HotPotato.hotPotato)
+        {
             HudManager.Instance.AbilityButton.Hide();
+        }
     }
 }

@@ -1,25 +1,23 @@
-using Submerged.KillAnimation.Patches;
 using Submerged.Systems.Oxygen;
-using Object = UnityEngine.Object;
+using Submerged.KillAnimation.Patches;
 
 namespace RebuildUs.Modules;
 
-internal static class EndGameMain
+public static class EndGameMain
 {
-    internal static bool IsO2Win;
-
-    internal static TMP_Text TextRenderer;
-    private static readonly int ColorID = Shader.PropertyToID("_Color");
-
-    internal static bool CrewmateCantWinByTaskWithoutLivingPlayer(ref bool __result)
+    public static bool CrewmateCantWinByTaskWithoutLivingPlayer(ref bool __result)
     {
-        if (CustomOptionHolder.CanWinByTaskWithoutLivingPlayer.GetBool() || Helpers.IsCrewmateAlive()) return true;
-
-        __result = false;
-        return false;
+        if (!CustomOptionHolder.CanWinByTaskWithoutLivingPlayer.GetBool() && !Helpers.IsCrewmateAlive())
+        {
+            __result = false;
+            return false;
+        }
+        return true;
     }
 
-    internal static void OnGameEndPrefix(ref EndGameResult endGameResult)
+    public static bool IsO2Win;
+
+    public static void OnGameEndPrefix(ref EndGameResult endGameResult)
     {
         Camouflager.ResetCamouflage();
         Morphing.ResetMorph();
@@ -28,7 +26,7 @@ internal static class EndGameMain
         if ((int)endGameResult.GameOverReason >= 10) endGameResult.GameOverReason = GameOverReason.ImpostorsByKill;
     }
 
-    internal static void OnGameEndPostfix(AmongUsClient __instance, [HarmonyArgument(0)] ref EndGameResult endGameResult)
+    public static void OnGameEndPostfix(AmongUsClient __instance, [HarmonyArgument(0)] ref EndGameResult endGameResult)
     {
         Logger.LogInfo("Game ended.");
 
@@ -42,21 +40,17 @@ internal static class EndGameMain
             var (tasksCompleted, tasksTotal) = TasksHandler.TaskInfo(player.Data);
 
             var isOxygenDeath = SubmergedCompatibility.Loaded && SubmarineOxygenSystem.Instance != null && (OxygenDeathAnimationPatches.IsOxygenDeath || IsO2Win);
-            var finalStatus = GameHistory.FINAL_STATUSES[player.PlayerId] = player.Data.Disconnected
-                ? FinalStatus.Disconnected
-                : GameHistory.FINAL_STATUSES.TryGetValue(player.PlayerId, out var value)
-                    ? value
-                    : player.Data.IsDead
-                        ? FinalStatus.Dead
-                        : isOxygenDeath && !SubmarineOxygenSystem.Instance.playersWithMask.Contains(player.PlayerId)
-                            ? FinalStatus.LackOfOxygen
-                            : gameOverReason == GameOverReason.ImpostorsBySabotage && !player.Data.Role.IsImpostor
-                                ? IsO2Win ? FinalStatus.LackOfOxygen : FinalStatus.Sabotage
-                                : FinalStatus.Alive;
+            var finalStatus = GameHistory.FinalStatuses[player.PlayerId] =
+                player.Data.Disconnected == true ? FinalStatus.Disconnected :
+                GameHistory.FinalStatuses.ContainsKey(player.PlayerId) ? GameHistory.FinalStatuses[player.PlayerId] :
+                player.Data.IsDead == true ? FinalStatus.Dead :
+                (isOxygenDeath && !SubmarineOxygenSystem.Instance.playersWithMask.Contains(player.PlayerId)) ? FinalStatus.LackOfOxygen :
+                gameOverReason == GameOverReason.ImpostorsBySabotage && !player.Data.Role.IsImpostor ? (IsO2Win ? FinalStatus.LackOfOxygen : FinalStatus.Sabotage) :
+                FinalStatus.Alive;
 
             if (gameOverReason == GameOverReason.CrewmatesByTask && player.IsTeamCrewmate()) tasksCompleted = tasksTotal;
 
-            AdditionalTempData.PlayerRoles.Add(new()
+            AdditionalTempData.PlayerRoles.Add(new PlayerRoleInfo()
             {
                 PlayerName = player.Data.PlayerName,
                 PlayerId = player.PlayerId,
@@ -107,21 +101,58 @@ internal static class EndGameMain
 
         var everyoneDead = true;
         var playerRoles = AdditionalTempData.PlayerRoles;
-        foreach (var t in playerRoles)
+        for (int i = 0; i < playerRoles.Count; i++)
         {
-            if (t.Status != FinalStatus.Alive) continue;
-            everyoneDead = false;
-            break;
+            if (playerRoles[i].Status == FinalStatus.Alive)
+            {
+                everyoneDead = false;
+                break;
+            }
         }
-
         var forceEnd = gameOverReason == (GameOverReason)CustomGameOverReason.ForceEnd;
+
+        if (impostorWin)
+        {
+            EndGameResult.CachedWinners = new Il2CppSystem.Collections.Generic.List<CachedPlayerData>();
+            foreach (var p in PlayerControl.AllPlayerControls.GetFastEnumerator())
+            {
+                if (p.IsTeamImpostor() ||
+                    p.HasModifier(ModifierType.Madmate) ||
+                    p.IsRole(RoleType.Madmate) ||
+                    p.IsRole(RoleType.Suicider) ||
+                    p.HasModifier(ModifierType.CreatedMadmate))
+                {
+                    var wpd = new CachedPlayerData(p.Data);
+                    EndGameResult.CachedWinners.Add(wpd);
+                }
+            }
+        }
+        else if (crewmateWin)
+        {
+            EndGameResult.CachedWinners = new Il2CppSystem.Collections.Generic.List<CachedPlayerData>();
+            foreach (var p in PlayerControl.AllPlayerControls.GetFastEnumerator())
+            {
+                if (p.IsTeamCrewmate() &&
+                    !p.HasModifier(ModifierType.Madmate) &&
+                    !p.IsRole(RoleType.Madmate) &&
+                    !p.IsRole(RoleType.Suicider) &&
+                    !p.HasModifier(ModifierType.CreatedMadmate))
+                {
+                    var wpd = new CachedPlayerData(p.Data);
+                    EndGameResult.CachedWinners.Add(wpd);
+                }
+            }
+        }
 
         // 勝利画面から不要なキャラを追放する
         var notWinnerNames = new HashSet<string>();
-        foreach (var t in notWinners) notWinnerNames.Add(t.Data.PlayerName);
+        for (int i = 0; i < notWinners.Count; i++)
+        {
+            notWinnerNames.Add(notWinners[i].Data.PlayerName);
+        }
 
         var cachedWinners = EndGameResult.CachedWinners;
-        for (var i = 0; i < cachedWinners.Count; i++)
+        for (int i = cachedWinners.Count - 1; i >= 0; i--)
         {
             if (notWinnerNames.Contains(cachedWinners[i].PlayerName))
             {
@@ -129,68 +160,57 @@ internal static class EndGameMain
             }
         }
 
-        if (impostorWin || sabotageWin)
+        if (everyoneDead)
         {
-            EndGameResult.CachedWinners = new();
-            foreach (var p in PlayerControl.AllPlayerControls.GetFastEnumerator())
-            {
-                if (!p.IsTeamImpostor()
-                    && !p.HasModifier(ModifierType.Madmate)
-                    && !p.IsRole(RoleType.Madmate)
-                    && !p.IsRole(RoleType.Suicider)
-                    && !p.HasModifier(ModifierType.CreatedMadmate)) continue;
-
-                var wpd = new CachedPlayerData(p.Data);
-                EndGameResult.CachedWinners.Add(wpd);
-            }
-        }
-        else if (crewmateWin)
-        {
-            EndGameResult.CachedWinners = new();
-            foreach (var p in PlayerControl.AllPlayerControls.GetFastEnumerator())
-            {
-                if (!p.IsTeamCrewmate()
-                    || p.HasModifier(ModifierType.Madmate)
-                    || p.IsRole(RoleType.Madmate)
-                    || p.IsRole(RoleType.Suicider)
-                    || p.HasModifier(ModifierType.CreatedMadmate)) continue;
-
-                var wpd = new CachedPlayerData(p.Data);
-                EndGameResult.CachedWinners.Add(wpd);
-            }
+            EndGameResult.CachedWinners = new Il2CppSystem.Collections.Generic.List<CachedPlayerData>();
+            AdditionalTempData.WinCondition = WinCondition.EveryoneDied;
         }
         else if (jesterWin)
         {
-            EndGameResult.CachedWinners = new();
+            EndGameResult.CachedWinners = new Il2CppSystem.Collections.Generic.List<CachedPlayerData>();
             foreach (var jester in Jester.Players)
             {
                 jester.Player.Data.IsDead = true;
-                EndGameResult.CachedWinners.Add(new(jester.Player.Data) { IsDead = true });
+                EndGameResult.CachedWinners.Add(new(jester.Player.Data));
             }
-
             AdditionalTempData.WinCondition = WinCondition.JesterWin;
         }
         else if (arsonistWin)
         {
-            EndGameResult.CachedWinners = new();
-            foreach (var arsonist in Arsonist.Players) EndGameResult.CachedWinners.Add(new(arsonist.Player.Data));
+            EndGameResult.CachedWinners = new Il2CppSystem.Collections.Generic.List<CachedPlayerData>();
+            foreach (var arsonist in Arsonist.Players)
+            {
+                EndGameResult.CachedWinners.Add(new(arsonist.Player.Data));
+            }
             AdditionalTempData.WinCondition = WinCondition.ArsonistWin;
         }
         else if (vultureWin)
         {
-            EndGameResult.CachedWinners = new();
-            foreach (var vulture in Vulture.Players) EndGameResult.CachedWinners.Add(new(vulture.Player.Data));
+            EndGameResult.CachedWinners = new Il2CppSystem.Collections.Generic.List<CachedPlayerData>();
+            foreach (var vulture in Vulture.Players)
+            {
+                EndGameResult.CachedWinners.Add(new(vulture.Player.Data));
+            }
             AdditionalTempData.WinCondition = WinCondition.VultureWin;
         }
         else if (teamJackalWin)
         {
             // Jackal wins if nobody except jackal is alive
             AdditionalTempData.WinCondition = WinCondition.JackalWin;
-            EndGameResult.CachedWinners = new();
-            foreach (var jackal in Jackal.AllPlayers) EndGameResult.CachedWinners.Add(new(jackal.Data) { IsImpostor = false });
+            EndGameResult.CachedWinners = new Il2CppSystem.Collections.Generic.List<CachedPlayerData>();
+            foreach (var jackal in Jackal.AllPlayers)
+            {
+                EndGameResult.CachedWinners.Add(new(jackal.Data) { IsImpostor = false });
+            }
             // If there is a sidekick. The sidekick also wins
-            foreach (var sidekick in Sidekick.AllPlayers) EndGameResult.CachedWinners.Add(new(sidekick.Data) { IsImpostor = false });
-            foreach (var jackal in Jackal.FormerJackals) EndGameResult.CachedWinners.Add(new(jackal.Data) { IsImpostor = false });
+            foreach (var sidekick in Sidekick.AllPlayers)
+            {
+                EndGameResult.CachedWinners.Add(new(sidekick.Data) { IsImpostor = false });
+            }
+            foreach (var jackal in Jackal.FormerJackals)
+            {
+                EndGameResult.CachedWinners.Add(new(jackal.Data) { IsImpostor = false });
+            }
         }
         // Lovers win conditions
         else if (loversWin)
@@ -205,19 +225,21 @@ internal static class EndGameMain
             else
             {
                 AdditionalTempData.WinCondition = WinCondition.LoversSoloWin;
-                EndGameResult.CachedWinners = new();
+                EndGameResult.CachedWinners = new Il2CppSystem.Collections.Generic.List<CachedPlayerData>();
 
                 foreach (var couple in Lovers.Couples)
                 {
-                    if (!couple.ExistingAndAlive) continue;
-                    EndGameResult.CachedWinners.Add(new(couple.Lover1.Data));
-                    EndGameResult.CachedWinners.Add(new(couple.Lover2.Data));
+                    if (couple.ExistingAndAlive)
+                    {
+                        EndGameResult.CachedWinners.Add(new(couple.Lover1.Data));
+                        EndGameResult.CachedWinners.Add(new(couple.Lover2.Data));
+                    }
                 }
             }
         }
         else if (everyoneDead)
         {
-            EndGameResult.CachedWinners = new();
+            EndGameResult.CachedWinners = new Il2CppSystem.Collections.Generic.List<CachedPlayerData>();
             AdditionalTempData.WinCondition = WinCondition.EveryoneDied;
         }
 
@@ -225,22 +247,31 @@ internal static class EndGameMain
         // Draw
         else if (drawTeamWin)
         {
-            EndGameResult.CachedWinners = new();
-            foreach (var player in PlayerControl.AllPlayerControls.GetFastEnumerator()) EndGameResult.CachedWinners.Add(new(player.Data));
+            EndGameResult.CachedWinners = new Il2CppSystem.Collections.Generic.List<CachedPlayerData>();
+            foreach (PlayerControl player in PlayerControl.AllPlayerControls.GetFastEnumerator())
+            {
+                EndGameResult.CachedWinners.Add(new(player.Data));
+            }
             AdditionalTempData.WinCondition = WinCondition.DrawTeamWin;
         }
         // Red Team Win
         else if (redTeamFlagWin)
         {
-            EndGameResult.CachedWinners = new();
-            foreach (var player in CaptureTheFlag.RedteamFlag) EndGameResult.CachedWinners.Add(new(player.Data));
+            EndGameResult.CachedWinners = new Il2CppSystem.Collections.Generic.List<CachedPlayerData>();
+            foreach (PlayerControl player in CaptureTheFlag.redteamFlag)
+            {
+                EndGameResult.CachedWinners.Add(new(player.Data));
+            }
             AdditionalTempData.WinCondition = WinCondition.RedTeamFlagWin;
         }
         // Blue Team Win
         else if (blueTeamFlagWin)
         {
-            EndGameResult.CachedWinners = new();
-            foreach (var player in CaptureTheFlag.BlueteamFlag) EndGameResult.CachedWinners.Add(new(player.Data));
+            EndGameResult.CachedWinners = new Il2CppSystem.Collections.Generic.List<CachedPlayerData>();
+            foreach (PlayerControl player in CaptureTheFlag.blueteamFlag)
+            {
+                EndGameResult.CachedWinners.Add(new(player.Data));
+            }
             AdditionalTempData.WinCondition = WinCondition.BlueTeamFlagWin;
         }
 
@@ -248,101 +279,120 @@ internal static class EndGameMain
         // Thief Team Win
         else if (thiefModeThiefWin)
         {
-            EndGameResult.CachedWinners = new();
-            foreach (var player in PoliceAndThief.ThiefTeam) EndGameResult.CachedWinners.Add(new(player.Data));
+            EndGameResult.CachedWinners = new Il2CppSystem.Collections.Generic.List<CachedPlayerData>();
+            foreach (PlayerControl player in PoliceAndThief.thiefTeam)
+            {
+                EndGameResult.CachedWinners.Add(new(player.Data));
+            }
             AdditionalTempData.WinCondition = WinCondition.ThiefModeThiefWin;
         }
         // Police Team Win
         else if (thiefModePoliceWin)
         {
-            EndGameResult.CachedWinners = new();
-            foreach (var player in PoliceAndThief.PoliceTeam) EndGameResult.CachedWinners.Add(new(player.Data));
+            EndGameResult.CachedWinners = new Il2CppSystem.Collections.Generic.List<CachedPlayerData>();
+            foreach (PlayerControl player in PoliceAndThief.policeTeam)
+            {
+                EndGameResult.CachedWinners.Add(new(player.Data));
+            }
             AdditionalTempData.WinCondition = WinCondition.ThiefModePoliceWin;
         }
 
         // Hot Potato Game Mode Win
         else if (hotPotatoEnd)
         {
-            EndGameResult.CachedWinners = new();
-            foreach (var player in HotPotato.NOT_POTATO_TEAM_ALIVE) EndGameResult.CachedWinners.Add(new(player.Data));
+            EndGameResult.CachedWinners = new Il2CppSystem.Collections.Generic.List<CachedPlayerData>();
+            foreach (PlayerControl player in HotPotato.notPotatoTeamAlive)
+            {
+                EndGameResult.CachedWinners.Add(new(player.Data));
+            }
             AdditionalTempData.WinCondition = WinCondition.HotPotatoEnd;
         }
 
         // BattleRoyale Win
         else if (battleRoyaleSoloWin)
         {
-            EndGameResult.CachedWinners = new();
-            foreach (var player in BattleRoyale.SoloPlayerTeam)
+            EndGameResult.CachedWinners = new Il2CppSystem.Collections.Generic.List<CachedPlayerData>();
+            foreach (PlayerControl player in BattleRoyale.soloPlayerTeam)
             {
-                if (!player.Data.IsDead) EndGameResult.CachedWinners.Add(new(player.Data));
+                if (!player.Data.IsDead)
+                {
+                    EndGameResult.CachedWinners.Add(new(player.Data));
+                }
             }
-
             AdditionalTempData.WinCondition = WinCondition.BattleRoyaleSoloWin;
         }
         // BattleRoyale Time Win
         else if (battleRoyaleTimeWin)
         {
-            EndGameResult.CachedWinners = new();
-            if (BattleRoyale.MatchType == 0)
+            EndGameResult.CachedWinners = new Il2CppSystem.Collections.Generic.List<CachedPlayerData>();
+            if (BattleRoyale.matchType == 0)
             {
-                foreach (var player in BattleRoyale.SoloPlayerTeam)
+                foreach (PlayerControl player in BattleRoyale.soloPlayerTeam)
                 {
-                    if (!player.Data.IsDead) EndGameResult.CachedWinners.Add(new(player.Data));
+                    if (!player.Data.IsDead)
+                    {
+                        EndGameResult.CachedWinners.Add(new(player.Data));
+                    }
                 }
             }
             else
             {
-                foreach (var player in PlayerControl.AllPlayerControls.GetFastEnumerator())
+                foreach (PlayerControl player in PlayerControl.AllPlayerControls.GetFastEnumerator())
                 {
-                    if (!player.Data.IsDead) EndGameResult.CachedWinners.Add(new(player.Data));
+                    if (!player.Data.IsDead)
+                    {
+                        EndGameResult.CachedWinners.Add(new(player.Data));
+                    }
                 }
             }
-
             AdditionalTempData.WinCondition = WinCondition.BattleRoyaleTimeWin;
         }
         // BattleRoyale Lime Team Win
         else if (battleRoyaleLimeTeamWin)
         {
-            EndGameResult.CachedWinners = new();
-            foreach (var player in BattleRoyale.LimeTeam) EndGameResult.CachedWinners.Add(new(player.Data));
+            EndGameResult.CachedWinners = new Il2CppSystem.Collections.Generic.List<CachedPlayerData>();
+            foreach (PlayerControl player in BattleRoyale.limeTeam)
+            {
+                EndGameResult.CachedWinners.Add(new(player.Data));
+            }
             AdditionalTempData.WinCondition = WinCondition.BattleRoyaleLimeTeamWin;
         }
         // BattleRoyale Pink Team Win
         else if (battleRoyalePinkTeamWin)
         {
-            EndGameResult.CachedWinners = new();
-            foreach (var player in BattleRoyale.PinkTeam) EndGameResult.CachedWinners.Add(new(player.Data));
+            EndGameResult.CachedWinners = new Il2CppSystem.Collections.Generic.List<CachedPlayerData>();
+            foreach (PlayerControl player in BattleRoyale.pinkTeam)
+            {
+                EndGameResult.CachedWinners.Add(new(player.Data));
+            }
             AdditionalTempData.WinCondition = WinCondition.BattleRoyalePinkTeamWin;
         }
         // BattleRoyale Serial Killer Win
         else if (battleRoyaleSerialKillerWin)
         {
-            EndGameResult.CachedWinners = new();
-            EndGameResult.CachedWinners.Add(new(BattleRoyale.SerialKiller.Data));
+            EndGameResult.CachedWinners = new Il2CppSystem.Collections.Generic.List<CachedPlayerData>();
+            EndGameResult.CachedWinners.Add(new(BattleRoyale.serialKiller.Data));
             AdditionalTempData.WinCondition = WinCondition.BattleRoyaleSerialKillerWin;
         }
         // BattleRoyale Draw
         else if (battleRoyaleDraw)
         {
-            EndGameResult.CachedWinners = new();
-            foreach (var player in PlayerControl.AllPlayerControls.GetFastEnumerator())
+            EndGameResult.CachedWinners = new Il2CppSystem.Collections.Generic.List<CachedPlayerData>();
+            foreach (PlayerControl player in PlayerControl.AllPlayerControls.GetFastEnumerator())
             {
-                player.Data.IsDead = false;
-                EndGameResult.CachedWinners.Add(new(player.Data) { IsDead = false });
+                EndGameResult.CachedWinners.Add(new(player.Data));
             }
-
             AdditionalTempData.WinCondition = WinCondition.BattleRoyaleDraw;
         }
 
         if (forceEnd)
         {
-            EndGameResult.CachedWinners = new();
+            EndGameResult.CachedWinners = new Il2CppSystem.Collections.Generic.List<CachedPlayerData>();
             foreach (var player in PlayerControl.AllPlayerControls.GetFastEnumerator())
             {
                 player.Data.IsDead = false;
-                EndGameResult.CachedWinners.Add(new(player.Data) { IsDead = false });
+                EndGameResult.CachedWinners.Add(new(player.Data));
             }
-
             AdditionalTempData.WinCondition = WinCondition.ForceEnd;
         }
 
@@ -351,14 +401,16 @@ internal static class EndGameMain
             var isDead = wpd.IsDead;
             if (!isDead)
             {
-                foreach (var pr in playerRoles)
+                for (int i = 0; i < playerRoles.Count; i++)
                 {
-                    if (pr.PlayerName != wpd.PlayerName || pr.Status == FinalStatus.Alive) continue;
-                    isDead = true;
-                    break;
+                    var pr = playerRoles[i];
+                    if (pr.PlayerName == wpd.PlayerName && pr.Status != FinalStatus.Alive)
+                    {
+                        isDead = true;
+                        break;
+                    }
                 }
             }
-
             wpd.IsDead = isDead;
         }
 
@@ -366,38 +418,46 @@ internal static class EndGameMain
         RPCProcedure.ResetVariables();
     }
 
+    public static TMP_Text TextRenderer;
+
     public static void SetupEndGameScreen(EndGameManager __instance)
     {
         // Delete and readd PoolablePlayers always showing the name and role of the player
-        foreach (var pb in __instance.transform.GetComponentsInChildren<PoolablePlayer>()) Object.Destroy(pb.gameObject);
-        var num = Mathf.CeilToInt(7.5f);
+        foreach (PoolablePlayer pb in __instance.transform.GetComponentsInChildren<PoolablePlayer>())
+        {
+            UnityEngine.Object.Destroy(pb.gameObject);
+        }
+        int num = Mathf.CeilToInt(7.5f);
 
         var list = new List<CachedPlayerData>();
         var cachedWinners = EndGameResult.CachedWinners;
-        foreach (var t in cachedWinners) list.Add(t);
-
+        for (int i = 0; i < cachedWinners.Count; i++)
+        {
+            list.Add(cachedWinners[i]);
+        }
         list.Sort((a, b) => (a.IsYou ? -1 : 0).CompareTo(b.IsYou ? -1 : 0));
 
         var playerRolesDict = new Dictionary<string, PlayerRoleInfo>();
         var playerRoles = AdditionalTempData.PlayerRoles;
-        foreach (var pr in playerRoles)
+        for (int i = 0; i < playerRoles.Count; i++)
         {
+            var pr = playerRoles[i];
             if (pr != null) playerRolesDict[pr.PlayerName] = pr;
         }
 
-        for (var i = 0; i < list.Count; i++)
+        for (int i = 0; i < list.Count; i++)
         {
             var cachedPlayerData2 = list[i];
-            var num2 = i % 2 == 0 ? -1 : 1;
+            var num2 = (i % 2 == 0) ? -1 : 1;
             var num3 = (i + 1) / 2;
             var num4 = num3 / (float)num;
             var num5 = Mathf.Lerp(1f, 0.75f, num4);
-            var num6 = (float)(i == 0 ? -8 : -1);
+            var num6 = (float)((i == 0) ? -8 : -1);
             var num7 = Mathf.Lerp(1f, 0.65f, num4) * 0.9f;
             var vector = new Vector3(num7, num7, 1f);
 
-            var poolablePlayer = Object.Instantiate(__instance.PlayerPrefab, __instance.transform);
-            poolablePlayer.transform.localPosition = new Vector3(1f * num2 * num3 * num5, FloatRange.SpreadToEdges(-1.125f, 0f, num3, num), num6 + (num3 * 0.01f)) * 0.9f;
+            var poolablePlayer = UnityEngine.Object.Instantiate(__instance.PlayerPrefab, __instance.transform);
+            poolablePlayer.transform.localPosition = new Vector3(1f * num2 * num3 * num5, FloatRange.SpreadToEdges(-1.125f, 0f, num3, num), num6 + num3 * 0.01f) * 0.9f;
             poolablePlayer.transform.localScale = vector;
             if (cachedPlayerData2.IsDead)
             {
@@ -408,13 +468,12 @@ internal static class EndGameMain
             {
                 poolablePlayer.SetFlipX(i % 2 == 0);
             }
-
             poolablePlayer.UpdateFromPlayerOutfit(cachedPlayerData2.Outfit, PlayerMaterial.MaskType.None, cachedPlayerData2.IsDead, true);
 
             poolablePlayer.cosmetics.nameText.color = Color.white;
             poolablePlayer.cosmetics.nameText.lineSpacing *= 0.7f;
-            poolablePlayer.cosmetics.nameText.transform.localScale = new(1f / vector.x, 1f / vector.y, 1f / vector.z);
-            poolablePlayer.cosmetics.nameText.transform.localPosition = new(poolablePlayer.cosmetics.nameText.transform.localPosition.x, poolablePlayer.cosmetics.nameText.transform.localPosition.y - 0.7f, -15f);
+            poolablePlayer.cosmetics.nameText.transform.localScale = new Vector3(1f / vector.x, 1f / vector.y, 1f / vector.z);
+            poolablePlayer.cosmetics.nameText.transform.localPosition = new Vector3(poolablePlayer.cosmetics.nameText.transform.localPosition.x, poolablePlayer.cosmetics.nameText.transform.localPosition.y - 0.7f, -15f);
 
             if (playerRolesDict.TryGetValue(cachedPlayerData2.PlayerName, out var data))
             {
@@ -427,18 +486,19 @@ internal static class EndGameMain
         }
 
         // Additional code
-        var bonusTextObject = Object.Instantiate(__instance.WinText.gameObject);
-        bonusTextObject.transform.position = new(__instance.WinText.transform.position.x, __instance.WinText.transform.position.y - 0.8f, __instance.WinText.transform.position.z);
-        bonusTextObject.transform.localScale = new(0.7f, 0.7f, 1f);
+        var bonusTextObject = UnityEngine.Object.Instantiate(__instance.WinText.gameObject);
+        bonusTextObject.transform.position = new Vector3(__instance.WinText.transform.position.x, __instance.WinText.transform.position.y - 0.8f, __instance.WinText.transform.position.z);
+        bonusTextObject.transform.localScale = new Vector3(0.7f, 0.7f, 1f);
         TextRenderer = bonusTextObject.GetComponent<TMP_Text>();
         TextRenderer.text = "";
 
-        if (AdditionalTempData.IsGm)
+        if (AdditionalTempData.IsGM)
         {
             __instance.WinText.text = Tr.Get(TrKey.GmGameOver);
             // __instance.WinText.color = GM.color;
         }
 
+        string bonusText = "";
         var bonus = TrKey.None;
         var extra = TrKey.None;
 
@@ -448,145 +508,142 @@ internal static class EndGameMain
                 bonus = TrKey.JesterWin;
                 extra = TrKey.JesterWinExtra;
                 TextRenderer.color = Jester.NameColor;
-                __instance.BackgroundBar.material.SetColor(ColorID, Jester.NameColor);
+                __instance.BackgroundBar.material.SetColor("_Color", Jester.NameColor);
                 break;
             case WinCondition.ArsonistWin:
                 bonus = TrKey.ArsonistWin;
                 extra = TrKey.ArsonistWinExtra;
                 TextRenderer.color = Arsonist.NameColor;
-                __instance.BackgroundBar.material.SetColor(ColorID, Arsonist.NameColor);
+                __instance.BackgroundBar.material.SetColor("_Color", Arsonist.NameColor);
                 break;
             case WinCondition.VultureWin:
                 bonus = TrKey.VultureWin;
                 extra = TrKey.VultureWinExtra;
                 TextRenderer.color = Vulture.NameColor;
-                __instance.BackgroundBar.material.SetColor(ColorID, Vulture.NameColor);
+                __instance.BackgroundBar.material.SetColor("_Color", Vulture.NameColor);
                 break;
             case WinCondition.JackalWin:
                 bonus = TrKey.JackalWin;
                 extra = TrKey.JackalWinExtra;
                 TextRenderer.color = Jackal.NameColor;
-                __instance.BackgroundBar.material.SetColor(ColorID, Jackal.NameColor);
+                __instance.BackgroundBar.material.SetColor("_Color", Jackal.NameColor);
                 break;
             case WinCondition.MiniLose:
                 bonus = TrKey.MiniDied;
                 extra = TrKey.MiniDiedExtra;
                 TextRenderer.color = Mini.NameColor;
-                __instance.BackgroundBar.material.SetColor(ColorID, Palette.DisabledGrey);
+                __instance.BackgroundBar.material.SetColor("_Color", Palette.DisabledGrey);
                 break;
             case WinCondition.LoversTeamWin:
                 bonus = TrKey.CrewmateWin;
                 extra = TrKey.CrewmateWinExtra;
                 TextRenderer.color = Lovers.Color;
-                __instance.BackgroundBar.material.SetColor(ColorID, Lovers.Color);
+                __instance.BackgroundBar.material.SetColor("_Color", Lovers.Color);
                 break;
             case WinCondition.LoversSoloWin:
                 bonus = TrKey.LoversWin;
                 extra = TrKey.LoversWinExtra;
                 TextRenderer.color = Lovers.Color;
-                __instance.BackgroundBar.material.SetColor(ColorID, Lovers.Color);
+                __instance.BackgroundBar.material.SetColor("_Color", Lovers.Color);
                 break;
             case WinCondition.EveryoneDied:
                 bonus = TrKey.EveryoneDied;
                 extra = TrKey.EveryoneDiedExtra;
                 TextRenderer.color = Palette.DisabledGrey;
-                __instance.BackgroundBar.material.SetColor(ColorID, Palette.DisabledGrey);
+                __instance.BackgroundBar.material.SetColor("_Color", Palette.DisabledGrey);
                 break;
             case WinCondition.ForceEnd:
                 bonus = TrKey.ForceEnd;
                 extra = TrKey.ForceEndExtra;
                 TextRenderer.color = Palette.DisabledGrey;
-                __instance.BackgroundBar.material.SetColor(ColorID, Palette.DisabledGrey);
+                __instance.BackgroundBar.material.SetColor("_Color", Palette.DisabledGrey);
                 break;
             case WinCondition.DrawTeamWin:
             case WinCondition.BattleRoyaleDraw:
                 bonus = TrKey.Draw;
                 extra = TrKey.DrawExtra;
                 TextRenderer.color = new Color32(255, 128, 0, byte.MaxValue);
-                __instance.BackgroundBar.material.SetColor(ColorID, Palette.DisabledGrey);
+                __instance.BackgroundBar.material.SetColor("_Color", Palette.DisabledGrey);
                 break;
             case WinCondition.RedTeamFlagWin:
                 bonus = TrKey.RedTeamFlagWin;
                 extra = TrKey.RedTeamFlagWinExtra;
                 TextRenderer.color = Color.red;
-                __instance.BackgroundBar.material.SetColor(ColorID, Color.red);
+                __instance.BackgroundBar.material.SetColor("_Color", Color.red);
                 break;
             case WinCondition.BlueTeamFlagWin:
                 bonus = TrKey.BlueTeamFlagWin;
                 extra = TrKey.BlueTeamFlagWinExtra;
                 TextRenderer.color = Color.blue;
-                __instance.BackgroundBar.material.SetColor(ColorID, Color.blue);
+                __instance.BackgroundBar.material.SetColor("_Color", Color.blue);
                 break;
             case WinCondition.ThiefModePoliceWin:
                 bonus = TrKey.ThiefModePoliceWin;
                 extra = TrKey.ThiefModePoliceWinExtra;
                 TextRenderer.color = PoliceAndThief.PolicePlayerColor;
-                __instance.BackgroundBar.material.SetColor(ColorID, PoliceAndThief.PolicePlayerColor);
+                __instance.BackgroundBar.material.SetColor("_Color", PoliceAndThief.PolicePlayerColor);
                 break;
             case WinCondition.ThiefModeThiefWin:
                 bonus = TrKey.ThiefModeThiefWin;
                 extra = TrKey.ThiefModeThiefWinExtra;
                 TextRenderer.color = PoliceAndThief.ThiefPlayerColor;
-                __instance.BackgroundBar.material.SetColor(ColorID, PoliceAndThief.ThiefPlayerColor);
+                __instance.BackgroundBar.material.SetColor("_Color", PoliceAndThief.ThiefPlayerColor);
                 break;
             case WinCondition.HotPotatoEnd:
                 bonus = TrKey.HotPotatoEnd;
                 extra = TrKey.HotPotatoEndExtra;
                 TextRenderer.color = Color.cyan;
-                __instance.BackgroundBar.material.SetColor(ColorID, Color.cyan);
+                __instance.BackgroundBar.material.SetColor("_Color", Color.cyan);
                 break;
             case WinCondition.BattleRoyaleSoloWin:
                 bonus = TrKey.BattleRoyaleSoloWin;
                 extra = TrKey.BattleRoyaleSoloWinExtra;
                 TextRenderer.color = BattleRoyale.IntroColor;
-                __instance.BackgroundBar.material.SetColor(ColorID, BattleRoyale.IntroColor);
+                __instance.BackgroundBar.material.SetColor("_Color", BattleRoyale.IntroColor);
                 break;
             case WinCondition.BattleRoyaleTimeWin:
                 bonus = TrKey.BattleRoyaleTimeWin;
                 extra = TrKey.BattleRoyaleTimeWinExtra;
                 TextRenderer.color = BattleRoyale.IntroColor;
-                __instance.BackgroundBar.material.SetColor(ColorID, BattleRoyale.IntroColor);
+                __instance.BackgroundBar.material.SetColor("_Color", BattleRoyale.IntroColor);
                 break;
             case WinCondition.BattleRoyaleLimeTeamWin:
                 bonus = TrKey.BattleRoyaleLimeTeamWin;
                 extra = TrKey.BattleRoyaleLimeTeamWinExtra;
                 TextRenderer.color = BattleRoyale.LimeTeamColor;
-                __instance.BackgroundBar.material.SetColor(ColorID, BattleRoyale.LimeTeamColor);
+                __instance.BackgroundBar.material.SetColor("_Color",BattleRoyale.LimeTeamColor);
                 break;
             case WinCondition.BattleRoyalePinkTeamWin:
                 bonus = TrKey.BattleRoyalePinkTeamWin;
                 extra = TrKey.BattleRoyalePinkTeamWinExtra;
                 TextRenderer.color = BattleRoyale.PinkTeamColor;
-                __instance.BackgroundBar.material.SetColor(ColorID, BattleRoyale.PinkTeamColor);
+                __instance.BackgroundBar.material.SetColor("_Color", BattleRoyale.PinkTeamColor);
                 break;
             case WinCondition.BattleRoyaleSerialKillerWin:
                 bonus = TrKey.BattleRoyaleSerialKillerWin;
                 extra = TrKey.BattleRoyaleSerialKillerWinExtra;
                 TextRenderer.color = BattleRoyale.SerialKillerColor;
-                __instance.BackgroundBar.material.SetColor(ColorID, BattleRoyale.SerialKillerColor);
+                __instance.BackgroundBar.material.SetColor("_Color", BattleRoyale.SerialKillerColor);
                 break;
             default:
                 switch (AdditionalTempData.GameOverReason)
                 {
                     case GameOverReason.CrewmatesByVote:
                     case GameOverReason.CrewmatesByTask:
-                        bonus = TrKey.CrewmateWin;
-                        extra = TrKey.CrewmateWinExtra;
+                        bonusText = "CrewmateWin";
                         TextRenderer.color = Palette.CrewmateBlue;
                         break;
                     case GameOverReason.ImpostorsByVote:
                     case GameOverReason.ImpostorsBySabotage:
                     case GameOverReason.ImpostorsByKill:
-                        bonus = TrKey.ImpostorWin;
-                        extra = TrKey.ImpostorWinExtra;
+                        bonusText = "ImpostorWin";
                         TextRenderer.color = Palette.ImpostorRed;
                         break;
                 }
-
                 break;
         }
 
-        var extraText = new StringBuilder();
+        string extraText = "";
         foreach (var w in AdditionalTempData.AdditionalWinConditions)
         {
             switch (w)
@@ -595,21 +652,25 @@ internal static class EndGameMain
                 //     extraText += Tr.Get(TranslateKey.opportunistExtra);
                 //     break;
                 case WinCondition.LoversTeamWin:
-                    extraText.Append(Tr.Get(TrKey.LoversExtra));
+                    extraText += Tr.Get(TrKey.LoversExtra);
+                    break;
+                default:
                     break;
             }
         }
 
-        TextRenderer.text = extraText.Length > 0 ? string.Format(Tr.Get(extra), extraText) : Tr.Get(bonus);
+        TextRenderer.text = extraText.Length > 0
+            ? string.Format(Tr.GetDynamic(bonusText + "Extra"), extraText)
+            : Tr.GetDynamic(bonusText);
 
         if (MapSettings.ShowRoleSummary)
         {
             if (Camera.main != null)
             {
-                var position = Camera.main.ViewportToWorldPoint(new(0f, 1f, Camera.main.nearClipPlane));
-                var roleSummary = Object.Instantiate(__instance.WinText.gameObject);
-                roleSummary.transform.position = new(__instance.Navigation.ExitButton.transform.position.x + 0.1f, position.y - 0.1f, -14f);
-                roleSummary.transform.localScale = new(1f, 1f, 1f);
+                var position = Camera.main.ViewportToWorldPoint(new Vector3(0f, 1f, Camera.main.nearClipPlane));
+                GameObject roleSummary = UnityEngine.Object.Instantiate(__instance.WinText.gameObject);
+                roleSummary.transform.position = new Vector3(__instance.Navigation.ExitButton.transform.position.x + 0.1f, position.y - 0.1f, -14f);
+                roleSummary.transform.localScale = new Vector3(1f, 1f, 1f);
 
                 var roleSummaryText = new StringBuilder();
                 roleSummaryText.AppendLine(Tr.Get(TrKey.RoleSummaryText));
@@ -617,15 +678,15 @@ internal static class EndGameMain
                 {
                     var roleX = x.Roles.Count > 0 ? x.Roles[0] : null;
                     var roleY = y.Roles.Count > 0 ? y.Roles[0] : null;
-                    var idX = roleX?.RoleType ?? RoleType.NoRole;
-                    var idY = roleY?.RoleType ?? RoleType.NoRole;
+                    var idX = roleX == null ? RoleType.NoRole : roleX.RoleType;
+                    var idY = roleY == null ? RoleType.NoRole : roleY.RoleType;
 
                     if (x.Status == y.Status)
                     {
-                        return idX == idY ? string.Compare(x.PlayerName, y.PlayerName, StringComparison.Ordinal) : idX.CompareTo(idY);
+                        return idX == idY ? x.PlayerName.CompareTo(y.PlayerName) : idX.CompareTo(idY);
                     }
-
                     return x.Status.CompareTo(y.Status);
+
                 });
                 Logger.LogInfo(TextRenderer.text, "Result");
                 Logger.LogInfo("----------Game Result-----------", "Result");
@@ -638,7 +699,6 @@ internal static class EndGameMain
                     roleSummaryText.AppendLine(result);
                     Logger.LogInfo(result, "Result");
                 }
-
                 Logger.LogInfo("--------------------------------", "Result");
 
                 var roleSummaryTextMesh = roleSummary.GetComponent<TMP_Text>();
@@ -650,7 +710,7 @@ internal static class EndGameMain
                 roleSummaryTextMesh.fontSize = 1.25f;
 
                 var roleSummaryTextMeshRectTransform = roleSummaryTextMesh.GetComponent<RectTransform>();
-                roleSummaryTextMeshRectTransform.anchoredPosition = new(position.x + 3.5f, position.y - 0.1f);
+                roleSummaryTextMeshRectTransform.anchoredPosition = new Vector2(position.x + 3.5f, position.y - 0.1f);
                 roleSummaryTextMesh.text = roleSummaryText.ToString();
             }
 
@@ -683,7 +743,6 @@ internal static class EndGameMain
             //     Webhook.post(msg, bonusText, extraText);
             // }
         }
-
         AdditionalTempData.Clear();
     }
 
@@ -699,23 +758,32 @@ internal static class EndGameMain
 
     public static bool CheckAndEndGameForJesterWin()
     {
-        if (!Jester.TriggerJesterWin) return false;
-        UncheckedEndGame(CustomGameOverReason.JesterWin);
-        return true;
+        if (Jester.TriggerJesterWin)
+        {
+            UncheckedEndGame(CustomGameOverReason.JesterWin);
+            return true;
+        }
+        return false;
     }
 
     public static bool CheckAndEndGameForArsonistWin()
     {
-        if (!Arsonist.TriggerArsonistWin) return false;
-        UncheckedEndGame(CustomGameOverReason.ArsonistWin);
-        return true;
+        if (Arsonist.TriggerArsonistWin)
+        {
+            UncheckedEndGame(CustomGameOverReason.ArsonistWin);
+            return true;
+        }
+        return false;
     }
 
     public static bool CheckAndEndGameForVultureWin()
     {
-        if (!Vulture.TriggerVultureWin) return false;
-        UncheckedEndGame(CustomGameOverReason.VultureWin);
-        return true;
+        if (Vulture.TriggerVultureWin)
+        {
+            UncheckedEndGame(CustomGameOverReason.VultureWin);
+            return true;
+        }
+        return false;
     }
 
     public static bool CheckAndEndGameForSabotageWin()
@@ -725,68 +793,86 @@ internal static class EndGameMain
         if (systems.TryGetValue(SystemTypes.LifeSupp, out var systemType) && systemType != null)
         {
             var lifeSuppSystemType = systemType.TryCast<LifeSuppSystemType>();
-            if (lifeSuppSystemType is { Countdown: < 0f })
+            if (lifeSuppSystemType != null && lifeSuppSystemType.Countdown < 0f)
             {
                 IsO2Win = true;
-                EndGameForO2Sabotage();
+                EndGameForSabotage();
                 lifeSuppSystemType.Countdown = 10000f;
                 return true;
             }
         }
-
-        if ((!systems.TryGetValue(SystemTypes.Reactor, out var reactor) && !systems.TryGetValue(SystemTypes.Laboratory, out reactor)) || reactor == null) return false;
-        var criticalSystem = reactor.TryCast<ICriticalSabotage>();
-        if (criticalSystem is not { Countdown: < 0f }) return false;
-        EndGameForSabotage();
-        criticalSystem.ClearSabotage();
-        return true;
+        if ((systems.TryGetValue(SystemTypes.Reactor, out var reactor) || systems.TryGetValue(SystemTypes.Laboratory, out reactor)) && reactor != null)
+        {
+            var criticalSystem = reactor.TryCast<ICriticalSabotage>();
+            if (criticalSystem != null && criticalSystem.Countdown < 0f)
+            {
+                EndGameForSabotage();
+                criticalSystem.ClearSabotage();
+                return true;
+            }
+        }
+        return false;
     }
 
     public static bool CheckAndEndGameForLoverWin(PlayerStatistics statistics)
     {
-        if (statistics.CouplesAlive != 1 || statistics.TotalAlive > 3) return false;
-        UncheckedEndGame(CustomGameOverReason.LoversWin);
-        return true;
+        if (statistics.CouplesAlive == 1 && statistics.TotalAlive <= 3)
+        {
+            UncheckedEndGame(CustomGameOverReason.LoversWin);
+            return true;
+        }
+        return false;
     }
 
     public static bool CheckAndEndGameForJackalWin(PlayerStatistics statistics)
     {
-        if (statistics.TeamJackalAlive < statistics.TotalAlive - statistics.TeamJackalAlive || statistics.TeamImpostorsAlive != 0 || (statistics.TeamJackalLovers != 0 && statistics.TeamJackalLovers < statistics.CouplesAlive * 2)) return false;
-        UncheckedEndGame(CustomGameOverReason.TeamJackalWin);
-        return true;
+        if (statistics.TeamJackalAlive >= statistics.TotalAlive - statistics.TeamJackalAlive &&
+            statistics.TeamImpostorsAlive == 0 &&
+            (statistics.TeamJackalLovers == 0 || statistics.TeamJackalLovers >= statistics.CouplesAlive * 2)
+        )
+        {
+            UncheckedEndGame(CustomGameOverReason.TeamJackalWin);
+            return true;
+        }
+        return false;
     }
 
     public static bool CheckAndEndGameForImpostorWin(PlayerStatistics statistics)
     {
-        if (statistics.TeamImpostorsAlive < statistics.TotalAlive - statistics.TeamImpostorsAlive || statistics.TeamJackalAlive != 0 || (statistics.TeamImpostorLovers != 0 && statistics.TeamImpostorLovers < statistics.CouplesAlive * 2)) return false;
-        var endReason = GameData.LastDeathReason switch
+        if (statistics.TeamImpostorsAlive >= statistics.TotalAlive - statistics.TeamImpostorsAlive &&
+            statistics.TeamJackalAlive == 0 &&
+            (statistics.TeamImpostorLovers == 0 || statistics.TeamImpostorLovers >= statistics.CouplesAlive * 2)
+        )
         {
-            DeathReason.Exile => GameOverReason.ImpostorsByVote,
-            DeathReason.Kill => GameOverReason.ImpostorsByKill,
-            _ => GameOverReason.ImpostorsByVote,
-        };
-        UncheckedEndGame(endReason);
-        return true;
+            var endReason = GameData.LastDeathReason switch
+            {
+                DeathReason.Exile => GameOverReason.ImpostorsByVote,
+                DeathReason.Kill => GameOverReason.ImpostorsByKill,
+                _ => GameOverReason.ImpostorsByVote,
+            };
+            UncheckedEndGame(endReason);
+            return true;
+        }
+        return false;
     }
 
     public static bool CheckAndEndGameForCrewmateWin(PlayerStatistics statistics)
     {
-        if (statistics.TeamCrew <= 0 || statistics.TeamImpostorsAlive != 0 || statistics.TeamJackalAlive != 0) return false;
-        UncheckedEndGame(GameOverReason.CrewmatesByVote);
-        return true;
+        if (statistics.TeamCrew > 0 && statistics.TeamImpostorsAlive == 0 && statistics.TeamJackalAlive == 0)
+        {
+            UncheckedEndGame(GameOverReason.CrewmatesByVote);
+            return true;
+        }
+        return false;
     }
 
-    private static void EndGameForSabotage()
+    public static void EndGameForSabotage()
     {
         UncheckedEndGame(GameOverReason.ImpostorsBySabotage);
+        return;
     }
 
-    private static void EndGameForO2Sabotage()
-    {
-        UncheckedEndGame(CustomGameOverReason.O2SabotageEnd);
-    }
-
-    private static void UncheckedEndGame(GameOverReason reason)
+    public static void UncheckedEndGame(GameOverReason reason)
     {
         GameManager.Instance.RpcEndGame(reason, false);
         using var sender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.UncheckedEndGame);
@@ -795,92 +881,128 @@ internal static class EndGameMain
         RPCProcedure.UncheckedEndGame((byte)reason, IsO2Win);
     }
 
-    private static void UncheckedEndGame(CustomGameOverReason reason)
+    public static void UncheckedEndGame(CustomGameOverReason reason)
     {
         UncheckedEndGame((GameOverReason)reason);
     }
 
     public static bool CheckAndEndGameForDrawFlagWin()
     {
-        if (!CaptureTheFlag.TriggerDrawWin) return false;
-        UncheckedEndGame(CustomGameOverReason.DrawTeamWin);
-        return true;
+        if (CaptureTheFlag.triggerDrawWin)
+        {
+            UncheckedEndGame(CustomGameOverReason.DrawTeamWin);
+            return true;
+        }
+        return false;
     }
 
     public static bool CheckAndEndGameForRedTeamFlagWin()
     {
-        if (!CaptureTheFlag.TriggerRedTeamWin) return false;
-        UncheckedEndGame(CustomGameOverReason.RedTeamFlagWin);
-        return true;
+        if (CaptureTheFlag.triggerRedTeamWin)
+        {
+            UncheckedEndGame(CustomGameOverReason.RedTeamFlagWin);
+            return true;
+        }
+        return false;
     }
 
     public static bool CheckAndEndGameForBlueTeamFlagWin()
     {
-        if (!CaptureTheFlag.TriggerBlueTeamWin) return false;
-        UncheckedEndGame(CustomGameOverReason.BlueTeamFlagWin);
-        return true;
+        if (CaptureTheFlag.triggerBlueTeamWin)
+        {
+            UncheckedEndGame(CustomGameOverReason.BlueTeamFlagWin);
+            return true;
+        }
+        return false;
     }
 
     public static bool CheckAndEndGameForThiefModeThiefWin()
     {
-        if (!PoliceAndThief.TriggerThiefWin) return false;
-        UncheckedEndGame(CustomGameOverReason.ThiefModeThiefWin);
-        return true;
+        if (PoliceAndThief.triggerThiefWin)
+        {
+            UncheckedEndGame(CustomGameOverReason.ThiefModeThiefWin);
+            return true;
+        }
+        return false;
     }
 
     public static bool CheckAndEndGameForThiefModePoliceWin()
     {
-        if (!PoliceAndThief.TriggerPoliceWin) return false;
-        UncheckedEndGame(CustomGameOverReason.ThiefModePoliceWin);
-        return true;
+        if (PoliceAndThief.triggerPoliceWin)
+        {
+            UncheckedEndGame(CustomGameOverReason.ThiefModePoliceWin);
+            return true;
+        }
+        return false;
     }
 
     public static bool CheckAndEndGameForHotPotatoEnd()
     {
-        if (!HotPotato.TriggerHotPotatoEnd) return false;
-        UncheckedEndGame(CustomGameOverReason.HotPotatoEnd);
-        return true;
+        if (HotPotato.triggerHotPotatoEnd)
+        {
+            UncheckedEndGame(CustomGameOverReason.HotPotatoEnd);
+            return true;
+        }
+        return false;
     }
 
     public static bool CheckAndEndGameForBattleRoyaleSoloWin()
     {
-        if (!BattleRoyale.TriggerSoloWin) return false;
-        UncheckedEndGame(CustomGameOverReason.BattleRoyaleSoloWin);
-        return true;
+        if (BattleRoyale.triggerSoloWin)
+        {
+            UncheckedEndGame(CustomGameOverReason.BattleRoyaleSoloWin);
+            return true;
+        }
+        return false;
     }
 
     public static bool CheckAndEndGameForBattleRoyaleTimeWin()
     {
-        if (!BattleRoyale.TriggerTimeWin) return false;
-        UncheckedEndGame(CustomGameOverReason.BattleRoyaleTimeWin);
-        return true;
+        if (BattleRoyale.triggerTimeWin)
+        {
+            UncheckedEndGame(CustomGameOverReason.BattleRoyaleTimeWin);
+            return true;
+        }
+        return false;
     }
 
     public static bool CheckAndEndGameForBattleRoyaleDraw()
     {
-        if (!BattleRoyale.TriggerDrawWin) return false;
-        UncheckedEndGame(CustomGameOverReason.BattleRoyaleDraw);
-        return true;
+        if (BattleRoyale.triggerDrawWin)
+        {
+            UncheckedEndGame(CustomGameOverReason.BattleRoyaleDraw);
+            return true;
+        }
+        return false;
     }
 
     public static bool CheckAndEndGameForBattleRoyaleLimeTeamWin()
     {
-        if (!BattleRoyale.TriggerLimeTeamWin) return false;
-        UncheckedEndGame(CustomGameOverReason.BattleRoyaleLimeTeamWin);
-        return true;
+        if (BattleRoyale.triggerLimeTeamWin)
+        {
+            UncheckedEndGame(CustomGameOverReason.BattleRoyaleLimeTeamWin);
+            return true;
+        }
+        return false;
     }
 
     public static bool CheckAndEndGameForBattleRoyalePinkTeamWin()
     {
-        if (!BattleRoyale.TriggerPinkTeamWin) return false;
-        UncheckedEndGame(CustomGameOverReason.BattleRoyalePinkTeamWin);
-        return true;
+        if (BattleRoyale.triggerPinkTeamWin)
+        {
+            UncheckedEndGame(CustomGameOverReason.BattleRoyalePinkTeamWin);
+            return true;
+        }
+        return false;
     }
 
     public static bool CheckAndEndGameForBattleRoyaleSerialKillerWin()
     {
-        if (!BattleRoyale.TriggerSerialKillerWin) return false;
-        UncheckedEndGame(CustomGameOverReason.BattleRoyaleSerialKillerWin);
-        return true;
+        if (BattleRoyale.triggerSerialKillerWin)
+        {
+            UncheckedEndGame(CustomGameOverReason.BattleRoyaleSerialKillerWin);
+            return true;
+        }
+        return false;
     }
 }

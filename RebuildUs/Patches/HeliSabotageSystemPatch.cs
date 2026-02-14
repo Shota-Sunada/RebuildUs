@@ -7,12 +7,17 @@ public static class HeliSabotageSystemPatch
     [HarmonyPatch(typeof(HeliSabotageSystem), nameof(HeliSabotageSystem.Deteriorate))]
     public static void DeterioratePrefix(HeliSabotageSystem __instance)
     {
-        if (!__instance.IsActive) return;
+        if (!__instance.IsActive)
+        {
+            return;
+        }
 
         if (MapUtilities.CachedShipStatus != null)
         {
             if (__instance.Countdown >= CustomOptionHolder.AirshipReactorDuration.GetFloat())
+            {
                 __instance.Countdown = CustomOptionHolder.AirshipReactorDuration.GetFloat();
+            }
         }
     }
 }

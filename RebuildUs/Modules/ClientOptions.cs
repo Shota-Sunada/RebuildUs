@@ -1,18 +1,28 @@
-using Object = UnityEngine.Object;
+using UnityEngine.UI;
 
 namespace RebuildUs.Modules;
 
 public static class ClientOptions
 {
-    private static readonly SelectionBehaviour[] ALL_OPTIONS = [new("GhostsSeeTasks", () => MapSettings.GhostsSeeInformation = RebuildUs.GhostsSeeInformation.Value = !RebuildUs.GhostsSeeInformation.Value, RebuildUs.GhostsSeeInformation.Value), new("GhostsSeeVotes", () => MapSettings.GhostsSeeVotes = RebuildUs.GhostsSeeVotes.Value = !RebuildUs.GhostsSeeVotes.Value, RebuildUs.GhostsSeeVotes.Value), new("GhostsSeeRoles", () => MapSettings.GhostsSeeRoles = RebuildUs.GhostsSeeRoles.Value = !RebuildUs.GhostsSeeRoles.Value, RebuildUs.GhostsSeeRoles.Value), new("ShowRoleSummary", () => MapSettings.ShowRoleSummary = RebuildUs.ShowRoleSummary.Value = !RebuildUs.ShowRoleSummary.Value, RebuildUs.ShowRoleSummary.Value), new("ShowLighterDarker", () => MapSettings.ShowLighterDarker = RebuildUs.ShowLighterDarker.Value = !RebuildUs.ShowLighterDarker.Value, RebuildUs.ShowLighterDarker.Value), new("BetterSabotageMap", () => MapSettings.BetterSabotageMap = RebuildUs.BetterSabotageMap.Value = !RebuildUs.BetterSabotageMap.Value, RebuildUs.BetterSabotageMap.Value), new("ForceNormalSabotageMap", () => MapSettings.ForceNormalSabotageMap = RebuildUs.ForceNormalSabotageMap.Value = !RebuildUs.ForceNormalSabotageMap.Value, RebuildUs.ForceNormalSabotageMap.Value), new("TransparentMap", () => MapSettings.TransparentMap = RebuildUs.TransparentMap.Value = !RebuildUs.TransparentMap.Value, RebuildUs.TransparentMap.Value), new("HideFakeTasks", () => MapSettings.HideFakeTasks = RebuildUs.HideFakeTasks.Value = !RebuildUs.HideFakeTasks.Value, RebuildUs.HideFakeTasks.Value)];
+    private static readonly SelectionBehaviour[] AllOptions = [
+        new SelectionBehaviour("GhostsSeeTasks", () => MapSettings.GhostsSeeInformation = RebuildUs.GhostsSeeInformation.Value = !RebuildUs.GhostsSeeInformation.Value, RebuildUs.GhostsSeeInformation.Value),
+        new SelectionBehaviour("GhostsSeeVotes", () => MapSettings.GhostsSeeVotes = RebuildUs.GhostsSeeVotes.Value = !RebuildUs.GhostsSeeVotes.Value, RebuildUs.GhostsSeeVotes.Value),
+        new SelectionBehaviour("GhostsSeeRoles", () => MapSettings.GhostsSeeRoles = RebuildUs.GhostsSeeRoles.Value = !RebuildUs.GhostsSeeRoles.Value, RebuildUs.GhostsSeeRoles.Value),
+        new SelectionBehaviour("ShowRoleSummary", () => MapSettings.ShowRoleSummary = RebuildUs.ShowRoleSummary.Value = !RebuildUs.ShowRoleSummary.Value, RebuildUs.ShowRoleSummary.Value),
+        new SelectionBehaviour("ShowLighterDarker", () => MapSettings.ShowLighterDarker = RebuildUs.ShowLighterDarker.Value = !RebuildUs.ShowLighterDarker.Value, RebuildUs.ShowLighterDarker.Value),
+        new SelectionBehaviour("BetterSabotageMap", () => MapSettings.BetterSabotageMap = RebuildUs.BetterSabotageMap.Value = !RebuildUs.BetterSabotageMap.Value, RebuildUs.BetterSabotageMap.Value),
+        new SelectionBehaviour("ForceNormalSabotageMap", () => MapSettings.ForceNormalSabotageMap = RebuildUs.ForceNormalSabotageMap.Value = !RebuildUs.ForceNormalSabotageMap.Value, RebuildUs.ForceNormalSabotageMap.Value),
+        new SelectionBehaviour("TransparentMap", () => MapSettings.TransparentMap = RebuildUs.TransparentMap.Value = !RebuildUs.TransparentMap.Value, RebuildUs.TransparentMap.Value),
+        new SelectionBehaviour("HideFakeTasks", () => MapSettings.HideFakeTasks = RebuildUs.HideFakeTasks.Value = !RebuildUs.HideFakeTasks.Value, RebuildUs.HideFakeTasks.Value),
+    ];
 
-    private static GameObject _popUp;
-    private static TextMeshPro _titleText;
+    private static GameObject PopUp;
+    private static TextMeshPro TitleText;
 
-    private static List<ToggleButtonBehaviour> _modButtons = [];
+    private static List<ToggleButtonBehaviour> ModButtons = [];
 
-    private static ToggleButtonBehaviour _buttonPrefab;
-    private static int _page = 1;
+    private static ToggleButtonBehaviour ButtonPrefab;
+    private static int Page = 1;
 
     public static void Start(MainMenuManager __instance)
     {
@@ -22,23 +32,26 @@ public static class ClientOptions
         tmp.fontSize = 4;
         tmp.alignment = TextAlignmentOptions.Center;
         tmp.transform.localPosition += Vector3.left * 0.2f;
-        _titleText = Object.Instantiate(tmp);
-        _titleText.gameObject.SetActive(false);
-        Object.DontDestroyOnLoad(_titleText);
+        TitleText = UnityEngine.Object.Instantiate(tmp);
+        TitleText.gameObject.SetActive(false);
+        UnityEngine.Object.DontDestroyOnLoad(TitleText);
     }
 
     public static void Start(OptionsMenuBehaviour __instance)
     {
         if (!__instance.CensorChatButton) return;
 
-        if (!_popUp) CreateCustom(__instance);
-
-        if (!_buttonPrefab)
+        if (!PopUp)
         {
-            _buttonPrefab = Object.Instantiate(__instance.CensorChatButton);
-            Object.DontDestroyOnLoad(_buttonPrefab);
-            _buttonPrefab.name = "CensorChatPrefab";
-            _buttonPrefab.gameObject.SetActive(false);
+            CreateCustom(__instance);
+        }
+
+        if (!ButtonPrefab)
+        {
+            ButtonPrefab = UnityEngine.Object.Instantiate(__instance.CensorChatButton);
+            UnityEngine.Object.DontDestroyOnLoad(ButtonPrefab);
+            ButtonPrefab.name = "CensorChatPrefab";
+            ButtonPrefab.gameObject.SetActive(false);
         }
 
         SetUpOptions();
@@ -47,46 +60,49 @@ public static class ClientOptions
 
     private static void CreateCustom(OptionsMenuBehaviour prefab)
     {
-        _popUp = Object.Instantiate(prefab.gameObject);
-        Object.DontDestroyOnLoad(_popUp);
-        var transform = _popUp.transform;
+        PopUp = UnityEngine.Object.Instantiate(prefab.gameObject);
+        UnityEngine.Object.DontDestroyOnLoad(PopUp);
+        var transform = PopUp.transform;
         var pos = transform.localPosition;
         pos.z = -810f;
         transform.localPosition = pos;
 
-        Object.Destroy(_popUp.GetComponent<OptionsMenuBehaviour>());
-        for (var i = transform.childCount - 1; i >= 0; i--)
+        UnityEngine.Object.Destroy(PopUp.GetComponent<OptionsMenuBehaviour>());
+        for (int i = transform.childCount - 1; i >= 0; i--)
         {
             var obj = transform.GetChild(i).gameObject;
-            if (obj.name is not "Background" and not "CloseButton") Object.Destroy(obj);
+            if (obj.name is not "Background" and not "CloseButton")
+            {
+                UnityEngine.Object.Destroy(obj);
+            }
         }
 
-        _popUp.SetActive(false);
+        PopUp.SetActive(false);
     }
 
     private static void InitializeMoreButton(OptionsMenuBehaviour __instance)
     {
-        var moreOptions = Object.Instantiate(_buttonPrefab, __instance.CensorChatButton.transform.parent);
-        moreOptions.transform.localPosition = __instance.CensorChatButton.transform.localPosition + (Vector3.down * 1.0f);
+        var moreOptions = UnityEngine.Object.Instantiate(ButtonPrefab, __instance.CensorChatButton.transform.parent);
+        moreOptions.transform.localPosition = __instance.CensorChatButton.transform.localPosition + Vector3.down * 1.0f;
         moreOptions.gameObject.SetActive(true);
         moreOptions.Text.text = Tr.Get(TrKey.ModOptionsText);
         var moreOptionsButton = moreOptions.GetComponent<PassiveButton>();
-        moreOptionsButton.OnClick = new();
+        moreOptionsButton.OnClick = new Button.ButtonClickedEvent();
         moreOptionsButton.OnClick.AddListener((Action)(() =>
         {
-            var closeUnderlying = false;
-            if (!_popUp) return;
+            bool closeUnderlying = false;
+            if (!PopUp) return;
 
             if (__instance.transform.parent && __instance.transform.parent == FastDestroyableSingleton<HudManager>.Instance.transform)
             {
-                _popUp.transform.SetParent(FastDestroyableSingleton<HudManager>.Instance.transform);
-                _popUp.transform.localPosition = new(0, 0, -800f);
+                PopUp.transform.SetParent(FastDestroyableSingleton<HudManager>.Instance.transform);
+                PopUp.transform.localPosition = new Vector3(0, 0, -800f);
                 closeUnderlying = true;
             }
             else
             {
-                _popUp.transform.SetParent(null);
-                Object.DontDestroyOnLoad(_popUp);
+                PopUp.transform.SetParent(null);
+                UnityEngine.Object.DontDestroyOnLoad(PopUp);
             }
 
             CheckSetTitle();
@@ -108,16 +124,16 @@ public static class ClientOptions
 
     private static void RefreshOpen()
     {
-        _popUp.gameObject.SetActive(false);
-        _popUp.gameObject.SetActive(true);
+        PopUp.gameObject.SetActive(false);
+        PopUp.gameObject.SetActive(true);
         SetUpOptions();
     }
 
     private static void CheckSetTitle()
     {
-        if (!_popUp || _popUp.GetComponentInChildren<TextMeshPro>() || !_titleText) return;
+        if (!PopUp || PopUp.GetComponentInChildren<TextMeshPro>() || !TitleText) return;
 
-        var title = Object.Instantiate(_titleText, _popUp.transform);
+        var title = UnityEngine.Object.Instantiate(TitleText, PopUp.transform);
         title.GetComponent<RectTransform>().localPosition = Vector3.up * 2.3f;
         title.gameObject.SetActive(true);
         title.text = Tr.Get(TrKey.MoreOptionsText);
@@ -126,23 +142,22 @@ public static class ClientOptions
 
     private static void SetUpOptions()
     {
-        if (_popUp.transform.GetComponentInChildren<ToggleButtonBehaviour>()) return;
+        if (PopUp.transform.GetComponentInChildren<ToggleButtonBehaviour>()) return;
 
-        foreach (var button in _modButtons)
+        foreach (var button in ModButtons)
         {
-            if (button != null)
-                Object.Destroy(button.gameObject);
+            if (button != null) UnityEngine.Object.Destroy(button.gameObject);
         }
 
-        _modButtons = [];
-        var length = _page * 10 < ALL_OPTIONS.Length ? _page * 10 : ALL_OPTIONS.Length;
+        ModButtons = [];
+        int length = (Page * 10) < AllOptions.Length ? Page * 10 : AllOptions.Length;
 
-        for (var i = 0; i + ((_page - 1) * 10) < length; i++)
+        for (var i = 0; i + ((Page - 1) * 10) < length; i++)
         {
-            var info = ALL_OPTIONS[i + ((_page - 1) * 10)];
+            var info = AllOptions[i + ((Page - 1) * 10)];
 
-            var button = Object.Instantiate(_buttonPrefab, _popUp.transform);
-            var pos = new Vector3(i % 2 == 0 ? -1.17f : 1.17f, 1.3f - ((i / 2) * 0.8f), -.5f);
+            var button = UnityEngine.Object.Instantiate(ButtonPrefab, PopUp.transform);
+            var pos = new Vector3(i % 2 == 0 ? -1.17f : 1.17f, 1.3f - i / 2 * 0.8f, -.5f);
 
             var transform = button.transform;
             transform.localPosition = pos;
@@ -152,8 +167,8 @@ public static class ClientOptions
 
             button.Text.text = Tr.GetDynamic(info.Title);
             button.Text.fontSizeMin = button.Text.fontSizeMax = 2.2f;
-            button.Text.font = Object.Instantiate(_titleText.font);
-            button.Text.GetComponent<RectTransform>().sizeDelta = new(2, 2);
+            button.Text.font = UnityEngine.Object.Instantiate(TitleText.font);
+            button.Text.GetComponent<RectTransform>().sizeDelta = new Vector2(2, 2);
 
             button.name = info.Title.Replace(" ", "") + "Toggle";
             button.gameObject.SetActive(true);
@@ -161,11 +176,11 @@ public static class ClientOptions
             var passiveButton = button.GetComponent<PassiveButton>();
             var colliderButton = button.GetComponent<BoxCollider2D>();
 
-            colliderButton.size = new(2.2f, .7f);
+            colliderButton.size = new Vector2(2.2f, .7f);
 
-            passiveButton.OnClick = new();
-            passiveButton.OnMouseOut = new();
-            passiveButton.OnMouseOver = new();
+            passiveButton.OnClick = new Button.ButtonClickedEvent();
+            passiveButton.OnMouseOut = new UnityEngine.Events.UnityEvent();
+            passiveButton.OnMouseOver = new UnityEngine.Events.UnityEvent();
 
             passiveButton.OnClick.AddListener((Action)(() =>
             {
@@ -177,68 +192,66 @@ public static class ClientOptions
             passiveButton.OnMouseOut.AddListener((Action)(() => button.Background.color = button.onState ? Color.green : Palette.ImpostorRed));
 
             foreach (var spr in button.gameObject.GetComponentsInChildren<SpriteRenderer>())
-                spr.size = new(2.2f, .7f);
+                spr.size = new Vector2(2.2f, .7f);
 
-            _modButtons.Add(button);
+            ModButtons.Add(button);
         }
-
         // ページ移動ボタンを追加
-        if (_page * 10 < ALL_OPTIONS.Length)
+        if (Page * 10 < AllOptions.Length)
         {
-            var button = Object.Instantiate(_buttonPrefab, _popUp.transform);
+            var button = UnityEngine.Object.Instantiate(ButtonPrefab, PopUp.transform);
             var pos = new Vector3(1.2f, -2.5f, -0.5f);
             var transform = button.transform;
             transform.localPosition = pos;
             button.Text.text = Tr.Get(TrKey.Next);
             button.Text.fontSizeMin = button.Text.fontSizeMax = 2.2f;
-            button.Text.font = Object.Instantiate(_titleText.font);
-            button.Text.GetComponent<RectTransform>().sizeDelta = new(2, 2);
+            button.Text.font = UnityEngine.Object.Instantiate(TitleText.font);
+            button.Text.GetComponent<RectTransform>().sizeDelta = new Vector2(2, 2);
             button.gameObject.SetActive(true);
             var passiveButton = button.GetComponent<PassiveButton>();
             var colliderButton = button.GetComponent<BoxCollider2D>();
-            colliderButton.size = new(2.2f, .7f);
-            passiveButton.OnClick = new();
-            passiveButton.OnMouseOut = new();
-            passiveButton.OnMouseOver = new();
+            colliderButton.size = new Vector2(2.2f, .7f);
+            passiveButton.OnClick = new Button.ButtonClickedEvent();
+            passiveButton.OnMouseOut = new UnityEngine.Events.UnityEvent();
+            passiveButton.OnMouseOver = new UnityEngine.Events.UnityEvent();
             passiveButton.OnClick.AddListener((Action)(() =>
             {
-                _page += 1;
+                Page += 1;
                 SetUpOptions();
             }));
-            _modButtons.Add(button);
+            ModButtons.Add(button);
         }
-
-        if (_page > 1)
+        if (Page > 1)
         {
-            var button = Object.Instantiate(_buttonPrefab, _popUp.transform);
+            var button = UnityEngine.Object.Instantiate(ButtonPrefab, PopUp.transform);
             var pos = new Vector3(-1.2f, -2.5f, -0.5f);
             var transform = button.transform;
             transform.localPosition = pos;
             button.Text.text = Tr.Get(TrKey.Previous);
             button.Text.fontSizeMin = button.Text.fontSizeMax = 2.2f;
-            button.Text.font = Object.Instantiate(_titleText.font);
-            button.Text.GetComponent<RectTransform>().sizeDelta = new(2, 2);
+            button.Text.font = UnityEngine.Object.Instantiate(TitleText.font);
+            button.Text.GetComponent<RectTransform>().sizeDelta = new Vector2(2, 2);
             button.gameObject.SetActive(true);
             var passiveButton = button.GetComponent<PassiveButton>();
             var colliderButton = button.GetComponent<BoxCollider2D>();
-            colliderButton.size = new(2.2f, .7f);
-            passiveButton.OnClick = new();
-            passiveButton.OnMouseOut = new();
-            passiveButton.OnMouseOver = new();
+            colliderButton.size = new Vector2(2.2f, .7f);
+            passiveButton.OnClick = new Button.ButtonClickedEvent();
+            passiveButton.OnMouseOut = new UnityEngine.Events.UnityEvent();
+            passiveButton.OnMouseOver = new UnityEngine.Events.UnityEvent();
             passiveButton.OnClick.AddListener((Action)(() =>
             {
-                _page -= 1;
+                Page -= 1;
                 SetUpOptions();
             }));
-            _modButtons.Add(button);
+            ModButtons.Add(button);
         }
     }
 
     private class SelectionBehaviour
     {
-        public readonly bool DefaultValue;
-        public readonly Func<bool> OnClick;
-        public readonly string Title;
+        public string Title;
+        public Func<bool> OnClick;
+        public bool DefaultValue;
 
         public SelectionBehaviour(string title, Func<bool> onClick, bool defaultValue)
         {

@@ -4,11 +4,11 @@ namespace RebuildUs.Patches;
 public static class TransportationToolPatches
 {
     /*
-	 * Moving Plattform / Zipline / Ladders move the player out of bounds, thus we want to disable functions of the mod if the player is currently using one of these.
-	 * Save the players anti tp position before using it.
-	 *
-	 * Zipline can also break camo, fix that one too.
-	 */
+     * Moving Plattform / Zipline / Ladders move the player out of bounds, thus we want to disable functions of the mod if the player is currently using one of these.
+     * Save the players anti tp position before using it.
+     *
+     * Zipline can also break camo, fix that one too.
+     */
 
     public static bool IsUsingTransportation(PlayerControl pc)
     {
@@ -17,18 +17,18 @@ public static class TransportationToolPatches
 
     // Zipline:
     [HarmonyPrefix]
-    [HarmonyPatch(typeof(ZiplineBehaviour), nameof(ZiplineBehaviour.Use), typeof(PlayerControl), typeof(bool))]
+    [HarmonyPatch(typeof(ZiplineBehaviour), nameof(ZiplineBehaviour.Use), [typeof(PlayerControl), typeof(bool)])]
     public static void Prefix3(ZiplineBehaviour __instance, PlayerControl player, bool fromTop)
     {
         AntiTeleport.Position = PlayerControl.LocalPlayer.transform.position;
     }
 
     [HarmonyPostfix]
-    [HarmonyPatch(typeof(ZiplineBehaviour), nameof(ZiplineBehaviour.Use), typeof(PlayerControl), typeof(bool))]
+    [HarmonyPatch(typeof(ZiplineBehaviour), nameof(ZiplineBehaviour.Use), [typeof(PlayerControl), typeof(bool)])]
     public static void Postfix(ZiplineBehaviour __instance, PlayerControl player, bool fromTop)
     {
         // Fix camo:
-        __instance.StartCoroutine(Effects.Lerp(fromTop ? __instance.downTravelTime : __instance.upTravelTime, new Action<float>(p =>
+        __instance.StartCoroutine(Effects.Lerp(fromTop ? __instance.downTravelTime : __instance.upTravelTime, new Action<float>((p) =>
         {
             HandZiplinePoolable hand;
             __instance.playerIdHands.TryGetValue(player.PlayerId, out hand);
@@ -43,10 +43,14 @@ public static class TransportationToolPatches
                         player.RawSetHat(Morphing.MorphTarget.Data.DefaultOutfit.HatId, Morphing.MorphTarget.Data.DefaultOutfit.ColorId);
                     }
                     else
+                    {
                         hand.SetPlayerColor(player.CurrentOutfit, PlayerMaterial.MaskType.None, 1f);
+                    }
                 }
                 else
+                {
                     PlayerMaterial.SetColors(6, hand.handRenderer);
+                }
             }
         })));
     }
@@ -65,9 +69,12 @@ public static class TransportationToolPatches
     {
         // Fix camo:
         var player = __instance.myPlayer;
-        __instance.StartCoroutine(Effects.Lerp(5.0f, new Action<float>(p =>
+        __instance.StartCoroutine(Effects.Lerp(5.0f, new Action<float>((p) =>
         {
-            if (Camouflager.CamouflageTimer <= 0 && !Helpers.MushroomSabotageActive() && player.IsRole(RoleType.Morphing) && Morphing.MorphTimer > 0.1f) player.RawSetHat(Morphing.MorphTarget.Data.DefaultOutfit.HatId, Morphing.MorphTarget.Data.DefaultOutfit.ColorId);
+            if (Camouflager.CamouflageTimer <= 0 && !Helpers.MushroomSabotageActive() && player.IsRole(RoleType.Morphing) && Morphing.MorphTimer > 0.1f)
+            {
+                player.RawSetHat(Morphing.MorphTarget.Data.DefaultOutfit.HatId, Morphing.MorphTarget.Data.DefaultOutfit.ColorId);
+            }
         })));
     }
 

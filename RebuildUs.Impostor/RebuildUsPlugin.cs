@@ -18,7 +18,9 @@ public class RebuildUsPlugin(ILogger<RebuildUsPlugin> logger, IGameCodeManager m
     {
         logger.LogInformation("RebuildUs plugin is being enabled.");
         var sum = manager.FourCharCodes + manager.SixCharCodes;
-        logger.LogInformation("RebuildUs.Codes: loaded {FourCharCodes} 4-char codes and {SixCharCodes} 6-char codes [{Total} total] from {Path}!", manager.FourCharCodes, manager.SixCharCodes, sum, manager.Path);
+        logger.LogInformation(
+            "RebuildUs.Codes: loaded {FourCharCodes} 4-char codes and {SixCharCodes} 6-char codes [{Total} total] from {Path}!",
+            manager.FourCharCodes, manager.SixCharCodes, sum, manager.Path);
 
         await discordService.StartAsync();
     }

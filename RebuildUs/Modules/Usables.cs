@@ -2,33 +2,33 @@ namespace RebuildUs.Modules;
 
 public static class Usables
 {
-    private static Sprite _defaultVentSprite;
-    private static Minigame _alignTelescopeMinigame;
-
-    private static readonly StringBuilder EMERGENCY_STRING_BUILDER = new();
+    private static Sprite DefaultVentSprite = null;
+    private static Minigame AlignTelescopeMinigame = null;
 
     public static bool OnConsoleUse(Console __instance)
     {
-        if (IsBlocked(__instance, PlayerControl.LocalPlayer)) return false;
+        if (IsBlocked(__instance, PlayerControl.LocalPlayer))
+        {
+            return false;
+        }
 
         if (CustomOptionHolder.AirshipReplaceSafeTask.GetBool())
         {
             var playerTask = __instance.FindTask(PlayerControl.LocalPlayer);
             if (playerTask != null && playerTask.MinigamePrefab.name == "SafeGame")
             {
-                if (_alignTelescopeMinigame == null)
+                if (AlignTelescopeMinigame == null)
                 {
                     foreach (var task in MapData.PolusShip.ShortTasks)
                     {
                         if (task.name == "AlignTelescope")
                         {
-                            _alignTelescopeMinigame = task.MinigamePrefab;
+                            AlignTelescopeMinigame = task.MinigamePrefab;
                             break;
                         }
                     }
                 }
-
-                playerTask.MinigamePrefab = _alignTelescopeMinigame;
+                playerTask.MinigamePrefab = AlignTelescopeMinigame;
             }
         }
 
@@ -37,11 +37,11 @@ public static class Usables
 
     public static bool VentCanUse(Vent __instance, ref float __result, NetworkedPlayerInfo pc, out bool canUse, out bool couldUse)
     {
-        var num = float.MaxValue;
-        var @object = pc.Object;
+        float num = float.MaxValue;
+        PlayerControl @object = pc.Object;
 
-        var roleCouldUse = @object.CanUseVents();
-        var name = __instance.name;
+        bool roleCouldUse = @object.CanUseVents();
+        string name = __instance.name;
 
         if (name.StartsWith("SealedVent_"))
         {
@@ -59,10 +59,9 @@ public static class Usables
                 canUse = couldUse = false;
                 return false;
             }
-
             switch (__instance.Id)
             {
-                case 9: // Cannot enter vent 9 (Engine Room Exit Only Vent)!
+                case 9:  // Cannot enter vent 9 (Engine Room Exit Only Vent)!
                     if (PlayerControl.LocalPlayer.inVent) break;
                     __result = float.MaxValue;
                     canUse = couldUse = false;
@@ -73,12 +72,11 @@ public static class Usables
                     canUse = couldUse;
                     if (canUse)
                     {
-                        var center = @object.Collider.bounds.center;
-                        var position = __instance.transform.position;
+                        Vector3 center = @object.Collider.bounds.center;
+                        Vector3 position = __instance.transform.position;
                         __result = Vector2.Distance(center, position);
                         canUse &= __result <= __instance.UsableDistance;
                     }
-
                     return false;
             }
         }
@@ -87,7 +85,7 @@ public static class Usables
         if (name.StartsWith("JackInTheBoxVent_"))
         {
             var lp = PlayerControl.LocalPlayer;
-            if (lp != null && !lp.IsRole(RoleType.Trickster) && !lp.IsGm())
+            if (lp != null && !lp.IsRole(RoleType.Trickster) && !lp.IsGM())
             {
                 // Only the Trickster can use the Jack-In-The-Boxes!
                 canUse = false;
@@ -95,22 +93,23 @@ public static class Usables
                 __result = num;
                 return false;
             }
-
-            // Reduce the usable distance to reduce the risk of gettings stuck while trying to jump into the box if it's placed near objects
-            usableDistance = 0.4f;
+            else
+            {
+                // Reduce the usable distance to reduce the risk of gettings stuck while trying to jump into the box if it's placed near objects
+                usableDistance = 0.4f;
+            }
         }
 
         couldUse = (@object.inVent || roleCouldUse) && !pc.IsDead && (@object.CanMove || @object.inVent);
         canUse = couldUse;
         if (canUse)
         {
-            var truePosition = @object.GetTruePosition();
-            var position = __instance.transform.position;
+            Vector2 truePosition = @object.GetTruePosition();
+            Vector3 position = __instance.transform.position;
             num = Vector2.Distance(truePosition, position);
 
             canUse &= num <= usableDistance && !PhysicsHelpers.AnythingBetween(truePosition, position, Constants.ShipOnlyMask, false);
         }
-
         __result = num;
         return false;
     }
@@ -120,11 +119,11 @@ public static class Usables
         var lp = PlayerControl.LocalPlayer;
         if (lp == null) return false;
 
-        __instance.CanUse(lp.Data, out var canUse, out var couldUse);
-        var canMoveInVents = !lp.IsRole(RoleType.Spy) && !lp.HasModifier(ModifierType.Madmate) && !lp.IsRole(RoleType.Madmate) && !lp.IsRole(RoleType.Suicider) && !lp.HasModifier(ModifierType.CreatedMadmate);
+        __instance.CanUse(lp.Data, out bool canUse, out bool couldUse);
+        bool canMoveInVents = !lp.IsRole(RoleType.Spy) && !lp.HasModifier(ModifierType.Madmate) && !lp.IsRole(RoleType.Madmate) && !lp.IsRole(RoleType.Suicider) && !lp.HasModifier(ModifierType.CreatedMadmate);
         if (!canUse) return false; // No need to execute the native method as using is disallowed anyways
 
-        var isEnter = !lp.inVent;
+        bool isEnter = !lp.inVent;
 
         if (__instance.name.StartsWith("JackInTheBoxVent_"))
         {
@@ -140,12 +139,18 @@ public static class Usables
         }
 
         if (isEnter)
+        {
             lp.MyPhysics.RpcEnterVent(__instance.Id);
+        }
         else
+        {
             lp.MyPhysics.RpcExitVent(__instance.Id);
+        }
         __instance.SetButtons(isEnter && canMoveInVents);
         return false;
     }
+
+    private static readonly StringBuilder EmergencyStringBuilder = new();
 
     public static void FixedUpdate(PlayerControl __instance)
     {
@@ -155,7 +160,10 @@ public static class Usables
             hudManager.ImpostorVentButton.Hide();
             hudManager.SabotageButton.Hide();
 
-            if (__instance.CanUseVents()) hudManager.ImpostorVentButton.Show();
+            if (__instance.CanUseVents())
+            {
+                hudManager.ImpostorVentButton.Show();
+            }
 
             if (__instance.CanSabotage())
             {
@@ -171,31 +179,43 @@ public static class Usables
         if (localPlayer == null) return;
 
         // Mafia disable sabotage button for Janitor and sometimes for Mafioso
-        var blockSabotageJanitor = localPlayer.IsRole(RoleType.Janitor);
-        var blockSabotageMafioso = localPlayer.IsRole(RoleType.Mafioso) && !Mafia.IsGodfatherDead;
-        if (blockSabotageJanitor || blockSabotageMafioso || MapSettings.GameMode is not CustomGameMode.Roles) FastDestroyableSingleton<HudManager>.Instance.SabotageButton.SetDisabled();
+        bool blockSabotageJanitor = localPlayer.IsRole(RoleType.Janitor);
+        bool blockSabotageMafioso = localPlayer.IsRole(RoleType.Mafioso) && !Mafia.IsGodfatherDead;
+        if (blockSabotageJanitor || blockSabotageMafioso || MapSettings.GameMode is not CustomGameMode.Roles)
+        {
+            FastDestroyableSingleton<HudManager>.Instance.SabotageButton.SetDisabled();
+        }
     }
 
     public static bool KillButtonDoClick(KillButton __instance)
     {
         var lp = PlayerControl.LocalPlayer;
         if (!__instance.isActiveAndEnabled || !__instance.currentTarget || __instance.isCoolingDown || lp.Data.IsDead || !lp.CanMove) return false;
-        var showAnimation = true;
+        bool showAnimation = true;
 
         // Use an unchecked kill command, to allow shorter kill cooldowns etc. without getting kicked
         var res = Helpers.CheckMurderAttemptAndKill(lp, __instance.currentTarget, showAnimation: showAnimation);
         // Handle blank kill
         if (res == MurderAttemptResult.BlankKill)
         {
-            var cooldown = Helpers.GetOption(FloatOptionNames.KillCooldown);
+            float cooldown = Helpers.GetOption(FloatOptionNames.KillCooldown);
             lp.SetKillTimer(cooldown);
             if (lp.IsRole(RoleType.Cleaner))
+            {
                 lp.killTimer = Cleaner.CleanerCleanButton.Timer = Cleaner.CleanerCleanButton.MaxTimer;
+            }
             else if (lp.IsRole(RoleType.Warlock))
+            {
                 lp.killTimer = Warlock.WarlockCurseButton.Timer = Warlock.WarlockCurseButton.MaxTimer;
+            }
             else if (lp.HasModifier(ModifierType.Mini) && lp.Data.Role.IsImpostor)
+            {
                 lp.SetKillTimer(cooldown * (Mini.IsGrownUp(lp) ? 0.66f : 2f));
-            else if (lp.IsRole(RoleType.Witch)) lp.killTimer = Witch.WitchSpellButton.Timer = Witch.WitchSpellButton.MaxTimer;
+            }
+            else if (lp.IsRole(RoleType.Witch))
+            {
+                lp.killTimer = Witch.WitchSpellButton.Timer = Witch.WitchSpellButton.MaxTimer;
+            }
         }
 
         __instance.SetTarget(null);
@@ -228,9 +248,9 @@ public static class Usables
         var lp = PlayerControl.LocalPlayer;
         if (lp.IsRole(RoleType.Trickster))
         {
-            if (_defaultVentSprite == null) _defaultVentSprite = __instance.graphic.sprite;
-            var isSpecialVent = __instance.currentTarget != null && __instance.currentTarget.gameObject != null && __instance.currentTarget.gameObject.name.StartsWith("JackInTheBoxVent_");
-            __instance.graphic.sprite = isSpecialVent ? AssetLoader.TricksterVentButton : _defaultVentSprite;
+            if (DefaultVentSprite == null) DefaultVentSprite = __instance.graphic.sprite;
+            bool isSpecialVent = __instance.currentTarget != null && __instance.currentTarget.gameObject != null && __instance.currentTarget.gameObject.name.StartsWith("JackInTheBoxVent_");
+            __instance.graphic.sprite = isSpecialVent ? AssetLoader.TricksterVentButton : DefaultVentSprite;
             __instance.buttonLabelText.enabled = !isSpecialVent;
         }
     }
@@ -252,45 +272,75 @@ public static class Usables
         if (task == null || pc == null || pc != PlayerControl.LocalPlayer) return false;
 
         var taskType = task.TaskType;
-        var isLights = taskType == TaskTypes.FixLights;
-        var isComms = taskType == TaskTypes.FixComms;
-        var isReactor = taskType is TaskTypes.StopCharles or TaskTypes.ResetSeismic or TaskTypes.ResetReactor;
-        var isO2 = taskType == TaskTypes.RestoreOxy;
+        bool isLights = taskType == TaskTypes.FixLights;
+        bool isComms = taskType == TaskTypes.FixComms;
+        bool isReactor = taskType is TaskTypes.StopCharles or TaskTypes.ResetSeismic or TaskTypes.ResetReactor;
+        bool isO2 = taskType == TaskTypes.RestoreOxy;
 
-        if (pc.IsRole(RoleType.NiceSwapper) && (isLights || isComms)) return true;
+        if (pc.IsRole(RoleType.NiceSwapper) && (isLights || isComms))
+        {
+            return true;
+        }
 
-        if (pc.HasModifier(ModifierType.Madmate) && (isLights || (isComms && !Madmate.CanFixComm))) return true;
+        if (pc.HasModifier(ModifierType.Madmate) && (isLights || (isComms && !Madmate.CanFixComm)))
+        {
+            return true;
+        }
 
-        if (pc.IsRole(RoleType.Madmate) && (isLights || (isComms && !MadmateRole.CanFixComm))) return true;
+        if (pc.IsRole(RoleType.Madmate) && (isLights || (isComms && !MadmateRole.CanFixComm)))
+        {
+            return true;
+        }
 
-        if (pc.IsRole(RoleType.Suicider) && (isLights || (isComms && !Suicider.CanFixComm))) return true;
+        if (pc.IsRole(RoleType.Suicider) && (isLights || (isComms && !Suicider.CanFixComm)))
+        {
+            return true;
+        }
 
-        if (pc.HasModifier(ModifierType.CreatedMadmate) && (isLights || (isComms && !CreatedMadmate.CanFixComm))) return true;
+        if (pc.HasModifier(ModifierType.CreatedMadmate) && (isLights || (isComms && !CreatedMadmate.CanFixComm)))
+        {
+            return true;
+        }
 
-        if (pc.IsGm() && (isLights || isComms || isReactor || isO2)) return true;
+        if (pc.IsGM() && (isLights || isComms || isReactor || isO2))
+        {
+            return true;
+        }
 
-        if (pc.IsRole(RoleType.Mafioso) && !Mafia.Mafioso.CanRepair && (isLights || isComms)) return true;
+        if (pc.IsRole(RoleType.Mafioso) && !Mafia.Mafioso.CanRepair && (isLights || isComms))
+        {
+            return true;
+        }
 
-        if (pc.IsRole(RoleType.Janitor) && !Mafia.Janitor.CanRepair && (isLights || isComms)) return true;
+        if (pc.IsRole(RoleType.Janitor) && !Mafia.Janitor.CanRepair && (isLights || isComms))
+        {
+            return true;
+        }
 
         return false;
     }
 
     public static bool IsBlocked(Console console, PlayerControl pc)
     {
-        if (console == null || pc == null || pc != PlayerControl.LocalPlayer) return false;
+        if (console == null || pc == null || pc != PlayerControl.LocalPlayer)
+        {
+            return false;
+        }
 
-        var task = console.FindTask(pc);
+        PlayerTask task = console.FindTask(pc);
         return IsBlocked(task, pc);
     }
 
     public static bool IsBlocked(SystemConsole console, PlayerControl pc)
     {
-        if (console == null || pc == null || pc != PlayerControl.LocalPlayer) return false;
+        if (console == null || pc == null || pc != PlayerControl.LocalPlayer)
+        {
+            return false;
+        }
 
-        var name = console.name;
-        var isSecurity = name is "task_cams" or "Surv_Panel" or "SurvLogConsole" or "SurvConsole";
-        var isVitals = name == "panel_vitals";
+        string name = console.name;
+        bool isSecurity = name is "task_cams" or "Surv_Panel" or "SurvLogConsole" or "SurvConsole";
+        bool isVitals = name == "panel_vitals";
 
         if ((isSecurity && !MapSettings.CanUseCameras) || (isVitals && !MapSettings.CanUseVitals)) return true;
         return false;
@@ -351,23 +401,24 @@ public static class Usables
         // Handle max number of meetings
         if (__instance.state == 1)
         {
-            var localRemaining = lp.RemainingEmergencies;
-            var teamRemaining = Mathf.Max(0, MapSettings.MaxNumberOfMeetings - MapSettings.MeetingsCount);
-            var remaining = Mathf.Min(localRemaining, lp.IsRole(RoleType.Mayor) ? 1 : teamRemaining);
+            int localRemaining = lp.RemainingEmergencies;
+            int teamRemaining = Mathf.Max(0, MapSettings.MaxNumberOfMeetings - MapSettings.MeetingsCount);
+            int remaining = Mathf.Min(localRemaining, lp.IsRole(RoleType.Mayor) ? 1 : teamRemaining);
 
-            EMERGENCY_STRING_BUILDER.Clear();
-            EMERGENCY_STRING_BUILDER.Append("<size=100%> ");
-            EMERGENCY_STRING_BUILDER.Append(string.Format(Tr.Get(TrKey.MeetingStatus), lp.name));
-            EMERGENCY_STRING_BUILDER.Append("</size>");
-            __instance.StatusText.text = EMERGENCY_STRING_BUILDER.ToString();
+            EmergencyStringBuilder.Clear();
+            EmergencyStringBuilder.Append("<size=100%> ");
+            EmergencyStringBuilder.Append(string.Format(Tr.Get(TrKey.MeetingStatus), lp.name));
+            EmergencyStringBuilder.Append("</size>");
+            __instance.StatusText.text = EmergencyStringBuilder.ToString();
 
-            EMERGENCY_STRING_BUILDER.Clear();
-            EMERGENCY_STRING_BUILDER.Append(string.Format(Tr.Get(TrKey.MeetingCount), localRemaining.ToString(), teamRemaining.ToString()));
-            __instance.NumberText.text = EMERGENCY_STRING_BUILDER.ToString();
+            EmergencyStringBuilder.Clear();
+            EmergencyStringBuilder.Append(string.Format(Tr.Get(TrKey.MeetingCount), localRemaining.ToString(), teamRemaining.ToString()));
+            __instance.NumberText.text = EmergencyStringBuilder.ToString();
 
             __instance.ButtonActive = remaining > 0;
             __instance.ClosedLid.gameObject.SetActive(!__instance.ButtonActive);
             __instance.OpenLid.gameObject.SetActive(__instance.ButtonActive);
+            return;
         }
     }
 }

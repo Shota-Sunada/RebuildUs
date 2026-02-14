@@ -1,53 +1,53 @@
-using Submerged.KillAnimation.Patches;
-
 namespace RebuildUs;
 
-public sealed class DeadPlayer(PlayerControl player,
-                               DateTime timeOfDeath,
-                               DeathReason deathReason,
-                               PlayerControl killerIfExisting)
+public class DeadPlayer(PlayerControl player, DateTime timeOfDeath, DeathReason deathReason, PlayerControl killerIfExisting)
 {
-    internal readonly DeathReason DeathReason = deathReason;
-    internal readonly PlayerControl KillerIfExisting = killerIfExisting;
-    internal readonly PlayerControl Player = player;
-    internal DateTime TimeOfDeath = timeOfDeath;
+    public PlayerControl Player = player;
+    public DateTime TimeOfDeath = timeOfDeath;
+    public DeathReason DeathReason = deathReason;
+    public PlayerControl KillerIfExisting = killerIfExisting;
 }
 
-internal static class GameHistory
+static class GameHistory
 {
-    public static readonly List<Tuple<Vector3, bool>> LOCAL_PLAYER_POSITIONS = [];
-    public static readonly List<DeadPlayer> DEAD_PLAYERS = [];
-    public static readonly Dictionary<int, FinalStatus> FINAL_STATUSES = [];
-
-    private static bool _resetToCrewmate;
-    private static bool _resetToDead;
+    public static List<Tuple<Vector3, bool>> LocalPlayerPositions = [];
+    public static List<DeadPlayer> DeadPlayers = [];
+    public static Dictionary<int, FinalStatus> FinalStatuses = [];
 
     public static DeadPlayer GetDeadPlayer(byte playerId)
     {
-        foreach (var deadPlayer in DEAD_PLAYERS)
+        foreach (var deadPlayer in DeadPlayers)
         {
-            if (deadPlayer.Player.PlayerId == playerId) return deadPlayer;
+            if (deadPlayer.Player.PlayerId == playerId)
+            {
+                return deadPlayer;
+            }
         }
-
         return null;
     }
 
     public static void ClearGameHistory()
     {
-        LOCAL_PLAYER_POSITIONS.Clear();
-        DEAD_PLAYERS.Clear();
-        FINAL_STATUSES.Clear();
+        LocalPlayerPositions.Clear();
+        DeadPlayers.Clear();
+        FinalStatuses.Clear();
     }
+
+    private static bool ResetToCrewmate = false;
+    private static bool ResetToDead = false;
 
     public static void OnMurderPlayerPrefix(PlayerControl killer, PlayerControl target)
     {
         // Allow everyone to murder players
-        _resetToCrewmate = !killer.Data.Role.IsImpostor;
-        _resetToDead = killer.Data.IsDead;
+        ResetToCrewmate = !killer.Data.Role.IsImpostor;
+        ResetToDead = killer.Data.IsDead;
         killer.Data.Role.TeamType = RoleTeamTypes.Impostor;
         killer.Data.IsDead = false;
 
-        if (Morphing.Exists && target.IsRole(RoleType.Morphing)) Morphing.ResetMorph();
+        if (Morphing.Exists && target.IsRole(RoleType.Morphing))
+        {
+            Morphing.ResetMorph();
+        }
 
         target.ResetMorph();
     }
@@ -62,20 +62,21 @@ internal static class GameHistory
 
         // Collect dead player info
         var deadPlayer = new DeadPlayer(target, DateTime.UtcNow, DeathReason.Kill, killer);
-        DEAD_PLAYERS.Add(deadPlayer);
+        DeadPlayers.Add(deadPlayer);
 
-        if (killer.PlayerId == target.PlayerId
-            && SubmergedCompatibility.Loaded
-            && OxygenDeathAnimationPatches.IsOxygenDeath)
+        if (killer.PlayerId == target.PlayerId && SubmergedCompatibility.Loaded && Submerged.KillAnimation.Patches.OxygenDeathAnimationPatches.IsOxygenDeath)
         {
-            FINAL_STATUSES[target.PlayerId] = FinalStatus.LackOfOxygen;
+            FinalStatuses[target.PlayerId] = FinalStatus.LackOfOxygen;
         }
 
         // Reset killer to crewmate if resetToCrewmate
-        if (_resetToCrewmate) killer.Data.Role.TeamType = RoleTeamTypes.Crewmate;
-        if (_resetToDead) killer.Data.IsDead = true;
+        if (ResetToCrewmate) killer.Data.Role.TeamType = RoleTeamTypes.Crewmate;
+        if (ResetToDead) killer.Data.IsDead = true;
 
-        if (MeetingHud.Instance) DiscordAutoMuteManager.UpdatePlayerMute(target);
+        if (MeetingHud.Instance)
+        {
+            DiscordAutoMuteManager.UpdatePlayerMute(target);
+        }
 
         return deadPlayer;
     }
@@ -84,15 +85,21 @@ internal static class GameHistory
     {
         // Collect dead player info
         var deadPlayer = new DeadPlayer(player, DateTime.UtcNow, DeathReason.Exile, null);
-        DEAD_PLAYERS.Add(deadPlayer);
-        FINAL_STATUSES[player.PlayerId] = FinalStatus.Exiled;
+        DeadPlayers.Add(deadPlayer);
+        FinalStatuses[player.PlayerId] = FinalStatus.Exiled;
 
         // Remove fake tasks when player dies
-        if (player.HasFakeTasks()) player.ClearAllTasks();
+        if (player.HasFakeTasks())
+        {
+            player.ClearAllTasks();
+        }
 
-        player.OnDeath(null);
+        player.OnDeath(killer: null);
 
         // impostor promote to last impostor
-        if (player.IsTeamImpostor() && AmongUsClient.Instance.AmHost) LastImpostor.PromoteToLastImpostor();
+        if (player.IsTeamImpostor() && AmongUsClient.Instance.AmHost)
+        {
+            LastImpostor.PromoteToLastImpostor();
+        }
     }
 }
