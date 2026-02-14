@@ -1,7 +1,5 @@
 $ErrorActionPreference = 'Stop'
 
-& "$PSScriptRoot\taskkill.ps1"
-
 $gamePath = Get-Content -Path "$PSScriptRoot\debugenv.txt" -Raw
 $gamePath = $gamePath.Trim()
 
