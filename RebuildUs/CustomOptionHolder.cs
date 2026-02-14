@@ -6,31 +6,31 @@ public static class CustomOptionHolder
 
     public static readonly string[] PRESETS = [Tr.Get(TrKey.Preset1), Tr.Get(TrKey.Preset2), Tr.Get(TrKey.Preset3), Tr.Get(TrKey.Preset4), Tr.Get(TrKey.Preset5)];
 
-    #region SKELD OPTIONS
+#region SKELD OPTIONS
 
     public static CustomOption CustomSkeldMap;
 
-    #endregion
+#endregion
 
     internal static Dictionary<byte, byte[]> BlockedRolePairings = [];
 
     public static void Load()
     {
-        #region MOD OPTIONS
+#region MOD OPTIONS
 
         PresetSelection = CustomOption.Header(0, CustomOptionType.General, TrKey.Preset, PRESETS, TrKey.Preset);
         ActivateRoles = CustomOption.Normal(1, CustomOptionType.General, TrKey.ActivateRoles, true);
         EnableRandomRandomNumberAlgorithm = CustomOption.Normal(2, CustomOptionType.General, TrKey.RandomRandomNumberAlgorithm, false);
-        RandomNumberAlgorithm = CustomOption.Normal(3, CustomOptionType.General, TrKey.RandomNumberAlgorithm, [Tr.Get(TrKey.RndDotnet), Tr.Get(TrKey.RndMT), Tr.Get(TrKey.RndXoshiro256), Tr.Get(TrKey.RndXoshiro256Ss), Tr.Get(TrKey.RndPcg64)], EnableRandomRandomNumberAlgorithm, 0, 0, 0, 0, true);
+        RandomNumberAlgorithm = CustomOption.Normal(3, CustomOptionType.General, TrKey.RandomNumberAlgorithm, [Tr.Get(TrKey.RND_Dotnet), Tr.Get(TrKey.RND_MT), Tr.Get(TrKey.RND_XOSHIRO256), Tr.Get(TrKey.RND_XOSHIRO256SS), Tr.Get(TrKey.RND_PCG64)], EnableRandomRandomNumberAlgorithm, 0, 0, 0, 0, true);
         EnableRandomRandomNumberAlgorithmDotnet = CustomOption.Normal(4, CustomOptionType.General, TrKey.EnableRandomRandomNumberAlgorithmDotnet, true, EnableRandomRandomNumberAlgorithm);
         EnableRandomRandomNumberAlgorithmMT = CustomOption.Normal(5, CustomOptionType.General, TrKey.EnableRandomRandomNumberAlgorithmMT, true, EnableRandomRandomNumberAlgorithm);
-        EnableRandomRandomNumberAlgorithmXorshiro256Pp = CustomOption.Normal(6, CustomOptionType.General, TrKey.EnableRandomRandomNumberAlgorithmXorshiro256Pp, true, EnableRandomRandomNumberAlgorithm);
-        EnableRandomRandomNumberAlgorithmXorshiro256Ss = CustomOption.Normal(7, CustomOptionType.General, TrKey.EnableRandomRandomNumberAlgorithmXorshiro256Ss, true, EnableRandomRandomNumberAlgorithm);
+        EnableRandomRandomNumberAlgorithmXorshiro256Pp = CustomOption.Normal(6, CustomOptionType.General, TrKey.EnableRandomRandomNumberAlgorithmXorshiro256PP, true, EnableRandomRandomNumberAlgorithm);
+        EnableRandomRandomNumberAlgorithmXorshiro256Ss = CustomOption.Normal(7, CustomOptionType.General, TrKey.EnableRandomRandomNumberAlgorithmXorshiro256SS, true, EnableRandomRandomNumberAlgorithm);
         EnableRandomRandomNumberAlgorithmPcg64 = CustomOption.Normal(8, CustomOptionType.General, TrKey.EnableRandomRandomNumberAlgorithmPcg64, true, EnableRandomRandomNumberAlgorithm);
 
-        #endregion
+#endregion
 
-        #region GAME MODE
+#region GAME MODE
 
         GameMode = CustomOption.Normal(500, CustomOptionType.General, TrKey.GameMode, [Tr.Get(TrKey.GameModeRoles), Tr.Get(TrKey.GameModeCaptureTheFlag), Tr.Get(TrKey.GameModePoliceAndThief), Tr.Get(TrKey.GameModeHotPotato), Tr.Get(TrKey.GameModeBattleRoyale)]);
 
@@ -62,9 +62,9 @@ public static class CustomOptionHolder
         BattleRoyaleLifes = CustomOption.Normal(552, CustomOptionType.General, TrKey.BattleRoyaleFighterLives, 3f, 3f, 10f, 1f, GamemodeSettings);
         BattleRoyaleScoreNeeded = CustomOption.Normal(553, CustomOptionType.General, TrKey.BattleRoyaleScoreNumber, 200f, 100f, 300f, 10f, GamemodeSettings);
 
-        #endregion
+#endregion
 
-        #region GENERAL OPTIONS
+#region GENERAL OPTIONS
 
         CrewmateRolesCountMin = CustomOption.Header(10, CustomOptionType.General, TrKey.CrewmateRolesCountMin, 0f, 0f, 15f, 1f, TrKey.RolesGeneral);
         CrewmateRolesCountMax = CustomOption.Normal(11, CustomOptionType.General, TrKey.CrewmateRolesCountMax, 0f, 0f, 15f, 1f);
@@ -75,9 +75,9 @@ public static class CustomOptionHolder
         ModifiersCountMin = CustomOption.Normal(16, CustomOptionType.General, TrKey.ModifiersCountMin, 0f, 0f, 15f, 1f);
         ModifiersCountMax = CustomOption.Normal(17, CustomOptionType.General, TrKey.ModifiersCountMax, 0f, 0f, 15f, 1f);
 
-        #endregion
+#endregion
 
-        #region GAME OPTIONS
+#region GAME OPTIONS
 
         GameOptions = CustomOption.Header(19, CustomOptionType.General, TrKey.GameOptions, true, TrKey.GameOptions);
         MaxNumberOfMeetings = CustomOption.Normal(20, CustomOptionType.General, TrKey.MaxNumberOfMeetings, 10, 0, 15, 1);
@@ -111,30 +111,30 @@ public static class CustomOptionHolder
         RestrictVitalsTime = CustomOption.Normal(68, CustomOptionType.General, TrKey.RestrictVitalsTime, 30f, 0f, 600f, 1f, RestrictVitals);
         RestrictVitalsText = CustomOption.Normal(69, CustomOptionType.General, TrKey.RestrictVitalsText, true, RestrictVitals);
 
-        #endregion
+#endregion
 
-        #region DISCORD OPTIONS
+#region DISCORD OPTIONS
 
         EnableDiscordAutoMute = CustomOption.Header(110, CustomOptionType.General, TrKey.EnableDiscordAutoMute, false, TrKey.DiscordOptions);
         EnableDiscordEmbed = CustomOption.Normal(111, CustomOptionType.General, TrKey.EnableDiscordEmbed, false);
 
-        #endregion
+#endregion
 
-        #region SKELD OPTIONS
+#region SKELD OPTIONS
 
-        CustomSkeldMap = CustomOption.Header(120, CustomOptionType.General, TrKey.CustomSkeldMap, [Tr.Get(TrKey.Normal), Tr.Get(TrKey.Dleks), Tr.Get(TrKey.Sensei)], TrKey.SkeldOptions);
+        CustomSkeldMap = CustomOption.Header(120, CustomOptionType.General, TrKey.CustomSkeldMap, [Tr.Get(TrKey.Normal), Tr.Get(TrKey.Dleks)], TrKey.SkeldOptions);
 
-        #endregion
+#endregion
 
-        #region POLUS OPTIONS
+#region POLUS OPTIONS
 
         PolusAdditionalVents = CustomOption.Header(70, CustomOptionType.General, TrKey.PolusAdditionalVents, true, TrKey.PolusOptions);
         PolusSpecimenVital = CustomOption.Normal(71, CustomOptionType.General, TrKey.PolusSpecimenVital, true);
         PolusRandomSpawn = CustomOption.Normal(72, CustomOptionType.General, TrKey.PolusRandomSpawn, true);
 
-        #endregion
+#endregion
 
-        #region AIRSHIP OPTIONS
+#region AIRSHIP OPTIONS
 
         AirshipOptimize = CustomOption.Header(80, CustomOptionType.General, TrKey.AirshipOptimize, false, TrKey.AirshipOptions);
         AirshipEnableWallCheck = CustomOption.Normal(81, CustomOptionType.General, TrKey.AirshipEnableWallCheck, true);
@@ -154,21 +154,21 @@ public static class CustomOptionHolder
         AirshipReplaceSafeTask = CustomOption.Normal(95, CustomOptionType.General, TrKey.AirshipReplaceSafeTask, false);
         AirshipAdditionalWireTask = CustomOption.Normal(96, CustomOptionType.General, TrKey.AirshipAdditionalWireTask, false);
 
-        #endregion
+#endregion
 
-        #region MAP OPTIONS
+#region MAP OPTIONS
 
         RandomMap = CustomOption.Header(100, CustomOptionType.General, TrKey.RandomMap, false, TrKey.RandomMap);
         RandomMapEnableSkeld = CustomOption.Normal(101, CustomOptionType.General, TrKey.RandomMapEnableSkeld, true, RandomMap);
-        RandomMapEnableMiraHq = CustomOption.Normal(102, CustomOptionType.General, TrKey.RandomMapEnableMiraHq, true, RandomMap);
+        RandomMapEnableMiraHq = CustomOption.Normal(102, CustomOptionType.General, TrKey.RandomMapEnableMiraHQ, true, RandomMap);
         RandomMapEnablePolus = CustomOption.Normal(103, CustomOptionType.General, TrKey.RandomMapEnablePolus, true, RandomMap);
         RandomMapEnableAirShip = CustomOption.Normal(104, CustomOptionType.General, TrKey.RandomMapEnableAirShip, true, RandomMap);
         RandomMapEnableFungle = CustomOption.Normal(105, CustomOptionType.General, TrKey.RandomMapEnableFungle, true, RandomMap);
         RandomMapEnableSubmerged = CustomOption.Normal(106, CustomOptionType.General, TrKey.RandomMapEnableSubmerged, true, RandomMap);
 
-        #endregion
+#endregion
 
-        #region ROLES CREWMATE
+#region ROLES CREWMATE
 
         MayorSpawnRate = new(1000, CustomOptionType.Crewmate, RoleType.Mayor, Mayor.NameColor);
         MayorNumVotes = CustomOption.Normal(1001, CustomOptionType.Crewmate, TrKey.MayorNumVotes, 2f, 2f, 10f, 1f, MayorSpawnRate);
@@ -293,9 +293,9 @@ public static class CustomOptionHolder
         SuiciderCanKnowImpostorAfterFinishTasks = CustomOption.Normal(1195, CustomOptionType.Crewmate, TrKey.SuiciderCanKnowImpostorAfterFinishTasks, false, SuiciderSpawnRate);
         SuiciderTasks = new((1196, 1197, 1198), CustomOptionType.Crewmate, (3, 2, 3), SuiciderCanKnowImpostorAfterFinishTasks);
 
-        #endregion
+#endregion
 
-        #region ROLES IMPOSTOR
+#region ROLES IMPOSTOR
 
         BountyHunterSpawnRate = new(2000, CustomOptionType.Impostor, RoleType.BountyHunter, BountyHunter.NameColor, 1);
         BountyHunterBountyDuration = CustomOption.Normal(2001, CustomOptionType.Impostor, TrKey.BountyHunterBountyDuration, 60f, 10f, 180f, 10f, BountyHunterSpawnRate);
@@ -376,9 +376,9 @@ public static class CustomOptionHolder
         VampireCooldown = CustomOption.Normal(2122, CustomOptionType.Impostor, TrKey.VampireCooldown, 30f, 2.5f, 60f, 2.5f, VampireSpawnRate, format: "unitSeconds");
         VampireCanKillNearGarlics = CustomOption.Normal(2123, CustomOptionType.Impostor, TrKey.VampireCanKillNearGarlics, true, VampireSpawnRate);
 
-        #endregion
+#endregion
 
-        #region ROLES NEUTRAL
+#region ROLES NEUTRAL
 
         JesterSpawnRate = new(3000, CustomOptionType.Neutral, RoleType.Jester, Jester.NameColor, 1);
         JesterCanCallEmergency = CustomOption.Normal(3001, CustomOptionType.Neutral, TrKey.JesterCanCallEmergency, true, JesterSpawnRate);
@@ -421,9 +421,9 @@ public static class CustomOptionHolder
         GuesserKillsThroughShield = CustomOption.Normal(3057, CustomOptionType.Neutral, TrKey.GuesserPierceShield, true, GuesserSpawnRate);
         GuesserEvilCanKillSpy = CustomOption.Normal(3058, CustomOptionType.Neutral, TrKey.GuesserEvilCanKillSpy, true, GuesserSpawnRate);
 
-        #endregion
+#endregion
 
-        #region MODIFIERS
+#region MODIFIERS
 
         MadmateSpawnRate = new(4000, CustomOptionType.Modifier, ModifierType.Madmate, Madmate.NameColor);
         MadmateType = CustomOption.Normal(4001, CustomOptionType.Modifier, TrKey.MadmateType, [Tr.Get(TrKey.MadmateDefault), Tr.Get(TrKey.MadmateWithRole), Tr.Get(TrKey.MadmateRandom)], MadmateSpawnRate);
@@ -457,13 +457,13 @@ public static class CustomOptionHolder
 
         AntiTeleportSpawnRate = new(4030, CustomOptionType.Modifier, ModifierType.AntiTeleport, AntiTeleport.NameColor);
 
-        #endregion
+#endregion
 
         BlockedRolePairings.Add((byte)RoleType.Vulture, [(byte)RoleType.Cleaner]);
         BlockedRolePairings.Add((byte)RoleType.Cleaner, [(byte)RoleType.Vulture]);
     }
 
-    #region MOD OPTIONS
+#region MOD OPTIONS
 
     public static CustomOption PresetSelection;
     public static CustomOption ActivateRoles;
@@ -475,9 +475,9 @@ public static class CustomOptionHolder
     public static CustomOption EnableRandomRandomNumberAlgorithmXorshiro256Ss;
     public static CustomOption EnableRandomRandomNumberAlgorithmPcg64;
 
-    #endregion
+#endregion
 
-    #region GAME MODE
+#region GAME MODE
 
     public static CustomOption GameMode;
 
@@ -509,9 +509,9 @@ public static class CustomOptionHolder
     public static CustomOption BattleRoyaleLifes;
     public static CustomOption BattleRoyaleScoreNeeded;
 
-    #endregion
+#endregion
 
-    #region GENERAL OPTIONS
+#region GENERAL OPTIONS
 
     public static CustomOption CrewmateRolesCountMin;
     public static CustomOption CrewmateRolesCountMax;
@@ -522,9 +522,9 @@ public static class CustomOptionHolder
     public static CustomOption ModifiersCountMin;
     public static CustomOption ModifiersCountMax;
 
-    #endregion
+#endregion
 
-    #region GAME OPTIONS
+#region GAME OPTIONS
 
     public static CustomOption GameOptions;
     public static CustomOption MaxNumberOfMeetings;
@@ -560,24 +560,24 @@ public static class CustomOptionHolder
     public static CustomOption RestrictVitalsTime;
     public static CustomOption RestrictVitalsText;
 
-    #endregion
+#endregion
 
-    #region DISCORD OPTIONS
+#region DISCORD OPTIONS
 
     public static CustomOption EnableDiscordAutoMute;
     public static CustomOption EnableDiscordEmbed;
 
-    #endregion
+#endregion
 
-    #region POLUS OPTIONS
+#region POLUS OPTIONS
 
     public static CustomOption PolusAdditionalVents;
     public static CustomOption PolusSpecimenVital;
     public static CustomOption PolusRandomSpawn;
 
-    #endregion
+#endregion
 
-    #region AIRSHIP OPTIONS
+#region AIRSHIP OPTIONS
 
     public static CustomOption AirshipOptimize;
     public static CustomOption AirshipEnableWallCheck;
@@ -597,9 +597,9 @@ public static class CustomOptionHolder
     public static CustomOption AirshipReplaceSafeTask;
     public static CustomOption AirshipAdditionalWireTask;
 
-    #endregion
+#endregion
 
-    #region MAP OPTIONS
+#region MAP OPTIONS
 
     public static CustomOption RandomMap;
     public static CustomOption RandomMapEnableSkeld;
@@ -609,9 +609,9 @@ public static class CustomOptionHolder
     public static CustomOption RandomMapEnableFungle;
     public static CustomOption RandomMapEnableSubmerged;
 
-    #endregion
+#endregion
 
-    #region ROLES CREWMATE
+#region ROLES CREWMATE
 
     public static CustomRoleOption MayorSpawnRate;
     public static CustomOption MayorNumVotes;
@@ -736,9 +736,9 @@ public static class CustomOptionHolder
     public static CustomOption SuiciderCanKnowImpostorAfterFinishTasks;
     public static CustomTasksOption SuiciderTasks;
 
-    #endregion
+#endregion
 
-    #region ROLES IMPOSTOR
+#region ROLES IMPOSTOR
 
     public static CustomRoleOption BountyHunterSpawnRate;
     public static CustomOption BountyHunterBountyDuration;
@@ -819,9 +819,9 @@ public static class CustomOptionHolder
     public static CustomOption VampireCooldown;
     public static CustomOption VampireCanKillNearGarlics;
 
-    #endregion
+#endregion
 
-    #region ROLES NEUTRAL
+#region ROLES NEUTRAL
 
     public static CustomRoleOption JesterSpawnRate;
     public static CustomOption JesterCanCallEmergency;
@@ -864,9 +864,9 @@ public static class CustomOptionHolder
     public static CustomOption GuesserEvilCanKillSpy;
     public static CustomOption GuesserSpawnBothRate;
 
-    #endregion
+#endregion
 
-    #region MODIFIERS
+#region MODIFIERS
 
     public static CustomModifierOption MadmateSpawnRate;
     public static CustomOption MadmateCanDieToSheriff;
@@ -900,5 +900,5 @@ public static class CustomOptionHolder
 
     public static CustomModifierOption AntiTeleportSpawnRate;
 
-    #endregion
+#endregion
 }

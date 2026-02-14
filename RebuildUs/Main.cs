@@ -108,37 +108,37 @@ public class RebuildUs : BasePlugin
     {
         Logger.Initialize(Log);
         Instance = this;
+        Tr.Initialize();
 
-        GhostsSeeInformation = Config.Bind("Custom", "Ghosts See Remaining Tasks", true);
-        GhostsSeeRoles = Config.Bind("Custom", "Ghosts See Roles", true);
-        GhostsSeeModifier = Config.Bind("Custom", "Ghosts See Modifier", true);
-        GhostsSeeVotes = Config.Bind("Custom", "Ghosts See Votes", true);
-        ShowRoleSummary = Config.Bind("Custom", "Show Role Summary", true);
-        ShowLighterDarker = Config.Bind("Custom", "Show Lighter / Darker", false);
-        ShowVentsOnMap = Config.Bind("Custom", "Show vent positions on minimap", false);
-        ShowChatNotifications = Config.Bind("Custom", "Show Chat Notifications", true);
-        ForceNormalSabotageMap = Config.Bind("Custom", "Force Normal Sabotage Map", false);
-        BetterSabotageMap = Config.Bind("Custom", "Better Sabotage Map", false);
-        TransparentMap = Config.Bind("Custom", "Transparent Map", false);
-        HideFakeTasks = Config.Bind("Custom", "Hide Fake Tasks", false);
+        GhostsSeeInformation = Config.Bind("Custom", "Ghosts See Remaining Tasks", true, Tr.Get(TrKey.GhostsSeeTasks));
+        GhostsSeeRoles = Config.Bind("Custom", "Ghosts See Roles", true, Tr.Get(TrKey.GhostsSeeRoles));
+        // GhostsSeeModifier = Config.Bind("Custom", "Ghosts See Modifier", true);
+        GhostsSeeVotes = Config.Bind("Custom", "Ghosts See Votes", true, Tr.Get(TrKey.GhostsSeeVotes));
+        ShowRoleSummary = Config.Bind("Custom", "Show Role Summary", true, Tr.Get(TrKey.ShowRoleSummary));
+        ShowLighterDarker = Config.Bind("Custom", "Show Lighter / Darker", false, Tr.Get(TrKey.ShowLighterDarker));
+        // ShowVentsOnMap = Config.Bind("Custom", "Show vent positions on minimap", false, Tr.Get(TrKey.GhostsSeeTasks));
+        // ShowChatNotifications = Config.Bind("Custom", "Show Chat Notifications", true);
+        ForceNormalSabotageMap = Config.Bind("Custom", "Force Normal Sabotage Map", false, Tr.Get(TrKey.ForceNormalSabotageMap));
+        BetterSabotageMap = Config.Bind("Custom", "Better Sabotage Map", false, Tr.Get(TrKey.BetterSabotageMap));
+        TransparentMap = Config.Bind("Custom", "Transparent Map", false, Tr.Get(TrKey.TransparentMap));
+        HideFakeTasks = Config.Bind("Custom", "Hide Fake Tasks", false, Tr.Get(TrKey.HideFakeTasks));
 
-        DiscordBotToken = Config.Bind("Discord", "Bot Token", "");
-        DiscordBotToken2 = Config.Bind("Discord", "Bot Token 2", "");
-        DiscordBotToken3 = Config.Bind("Discord", "Bot Token 3", "");
-        DiscordGuildId = Config.Bind("Discord", "Guild ID", "");
-        DiscordVcId = Config.Bind("Discord", "Voice Channel ID", "");
-        StatusChannelId = Config.Bind("Discord", "Status Channel ID", "");
-        ResultChannelId = Config.Bind("Discord", "Result Channel ID", "");
+        DiscordBotToken = Config.Bind("Discord", "Bot Token", "", Tr.Get(TrKey.BotToken));
+        DiscordBotToken2 = Config.Bind("Discord", "Bot Token 2", "", Tr.Get(TrKey.BotToken2));
+        DiscordBotToken3 = Config.Bind("Discord", "Bot Token 3", "", Tr.Get(TrKey.BotToken3));
+        DiscordGuildId = Config.Bind("Discord", "Guild ID", "", Tr.Get(TrKey.GuildID));
+        DiscordVcId = Config.Bind("Discord", "Voice Channel ID", "", Tr.Get(TrKey.VoiceChannelID));
+        StatusChannelId = Config.Bind("Discord", "Status Channel ID", "", Tr.Get(TrKey.StatusChannelID));
+        ResultChannelId = Config.Bind("Discord", "Result Channel ID", "", Tr.Get(TrKey.ResultChannelID));
 
         KeyBindingManager.Initialize(Config);
 
-        Ip = Config.Bind("Custom", "Custom Server IP", "127.0.0.1");
-        Port = Config.Bind("Custom", "Custom Server Port", (ushort)22023);
+        Ip = Config.Bind("Custom", "Custom Server IP", "127.0.0.1", Tr.Get(TrKey.CustomServerIP));
+        Port = Config.Bind("Custom", "Custom Server Port", (ushort)22023, Tr.Get(TrKey.CustomServerPort));
         DefaultRegions = ServerManager.DefaultRegions;
 
         AssetLoader.LoadAssets();
 
-        Tr.Initialize();
         RoleInfo.Load();
         CustomColors.Load();
         UpdateRegions();

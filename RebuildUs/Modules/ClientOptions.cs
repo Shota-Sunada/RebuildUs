@@ -4,7 +4,18 @@ namespace RebuildUs.Modules;
 
 public static class ClientOptions
 {
-    private static readonly SelectionBehaviour[] ALL_OPTIONS = [new("GhostsSeeTasks", () => MapSettings.GhostsSeeInformation = RebuildUs.GhostsSeeInformation.Value = !RebuildUs.GhostsSeeInformation.Value, RebuildUs.GhostsSeeInformation.Value), new("GhostsSeeVotes", () => MapSettings.GhostsSeeVotes = RebuildUs.GhostsSeeVotes.Value = !RebuildUs.GhostsSeeVotes.Value, RebuildUs.GhostsSeeVotes.Value), new("GhostsSeeRoles", () => MapSettings.GhostsSeeRoles = RebuildUs.GhostsSeeRoles.Value = !RebuildUs.GhostsSeeRoles.Value, RebuildUs.GhostsSeeRoles.Value), new("ShowRoleSummary", () => MapSettings.ShowRoleSummary = RebuildUs.ShowRoleSummary.Value = !RebuildUs.ShowRoleSummary.Value, RebuildUs.ShowRoleSummary.Value), new("ShowLighterDarker", () => MapSettings.ShowLighterDarker = RebuildUs.ShowLighterDarker.Value = !RebuildUs.ShowLighterDarker.Value, RebuildUs.ShowLighterDarker.Value), new("BetterSabotageMap", () => MapSettings.BetterSabotageMap = RebuildUs.BetterSabotageMap.Value = !RebuildUs.BetterSabotageMap.Value, RebuildUs.BetterSabotageMap.Value), new("ForceNormalSabotageMap", () => MapSettings.ForceNormalSabotageMap = RebuildUs.ForceNormalSabotageMap.Value = !RebuildUs.ForceNormalSabotageMap.Value, RebuildUs.ForceNormalSabotageMap.Value), new("TransparentMap", () => MapSettings.TransparentMap = RebuildUs.TransparentMap.Value = !RebuildUs.TransparentMap.Value, RebuildUs.TransparentMap.Value), new("HideFakeTasks", () => MapSettings.HideFakeTasks = RebuildUs.HideFakeTasks.Value = !RebuildUs.HideFakeTasks.Value, RebuildUs.HideFakeTasks.Value)];
+    private static readonly SelectionBehaviour[] AllOptions =
+    [
+        new("GhostsSeeTasks", () => MapSettings.GhostsSeeInformation = RebuildUs.GhostsSeeInformation.Value = !RebuildUs.GhostsSeeInformation.Value, RebuildUs.GhostsSeeInformation.Value),
+        new("GhostsSeeVotes", () => MapSettings.GhostsSeeVotes = RebuildUs.GhostsSeeVotes.Value = !RebuildUs.GhostsSeeVotes.Value, RebuildUs.GhostsSeeVotes.Value),
+        new("GhostsSeeRoles", () => MapSettings.GhostsSeeRoles = RebuildUs.GhostsSeeRoles.Value = !RebuildUs.GhostsSeeRoles.Value, RebuildUs.GhostsSeeRoles.Value),
+        new("ShowRoleSummary", () => MapSettings.ShowRoleSummary = RebuildUs.ShowRoleSummary.Value = !RebuildUs.ShowRoleSummary.Value, RebuildUs.ShowRoleSummary.Value),
+        new("ShowLighterDarker", () => MapSettings.ShowLighterDarker = RebuildUs.ShowLighterDarker.Value = !RebuildUs.ShowLighterDarker.Value, RebuildUs.ShowLighterDarker.Value),
+        new("BetterSabotageMap", () => MapSettings.BetterSabotageMap = RebuildUs.BetterSabotageMap.Value = !RebuildUs.BetterSabotageMap.Value, RebuildUs.BetterSabotageMap.Value),
+        new("ForceNormalSabotageMap", () => MapSettings.ForceNormalSabotageMap = RebuildUs.ForceNormalSabotageMap.Value = !RebuildUs.ForceNormalSabotageMap.Value, RebuildUs.ForceNormalSabotageMap.Value),
+        new("TransparentMap", () => MapSettings.TransparentMap = RebuildUs.TransparentMap.Value = !RebuildUs.TransparentMap.Value, RebuildUs.TransparentMap.Value),
+        new("HideFakeTasks", () => MapSettings.HideFakeTasks = RebuildUs.HideFakeTasks.Value = !RebuildUs.HideFakeTasks.Value, RebuildUs.HideFakeTasks.Value)
+    ];
 
     private static GameObject _popUp;
     private static TextMeshPro _titleText;
@@ -135,11 +146,11 @@ public static class ClientOptions
         }
 
         _modButtons = [];
-        var length = _page * 10 < ALL_OPTIONS.Length ? _page * 10 : ALL_OPTIONS.Length;
+        var length = _page * 10 < AllOptions.Length ? _page * 10 : AllOptions.Length;
 
         for (var i = 0; i + ((_page - 1) * 10) < length; i++)
         {
-            var info = ALL_OPTIONS[i + ((_page - 1) * 10)];
+            var info = AllOptions[i + ((_page - 1) * 10)];
 
             var button = Object.Instantiate(_buttonPrefab, _popUp.transform);
             var pos = new Vector3(i % 2 == 0 ? -1.17f : 1.17f, 1.3f - ((i / 2) * 0.8f), -.5f);
@@ -183,7 +194,7 @@ public static class ClientOptions
         }
 
         // ページ移動ボタンを追加
-        if (_page * 10 < ALL_OPTIONS.Length)
+        if (_page * 10 < AllOptions.Length)
         {
             var button = Object.Instantiate(_buttonPrefab, _popUp.transform);
             var pos = new Vector3(1.2f, -2.5f, -0.5f);
