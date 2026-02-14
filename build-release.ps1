@@ -1,6 +1,7 @@
 $AmongUs = $env:AMONG_US
 
 $PluginsFolder = $AmongUs + "\BepInEx\plugins"
+$ScriptsFolder = $AmongUs + "\BepInEx\reload"
 
 $PluginDllFolder = ".\RebuildUs\bin\Release\net6.0"
 $PluginDllFile = $PluginDllFolder + "\RebuildUs.dll"
@@ -79,11 +80,21 @@ if (!(Test-Path $PluginsFolder))
 {
     New-Item -ItemType Directory -Path $PluginsFolder -Force | Out-Null
 }
+if (!(Test-Path $ScriptsFolder))
+{
+    New-Item -ItemType Directory -Path $ScriptsFolder -Force | Out-Null
+}
 try {
     Copy-Item $PluginDllFile $PluginsFolder
     Write-Host "Copied to PluginsFolder successfully." -ForegroundColor Green
 } catch {
     Write-Host "Failed to copy to PluginsFolder, skipping." -ForegroundColor Yellow
+}
+try {
+    Copy-Item $PluginDllFile $ScriptsFolder
+    Write-Host "Copied to ScriptsFolder successfully." -ForegroundColor Green
+} catch {
+    Write-Host "Failed to copy to ScriptsFolder, skipping." -ForegroundColor Yellow
 }
 Copy-Item ".\SDK\Submerged.dll" $PluginsFolder
 Copy-Item ".\SDK\Reactor.dll" $PluginsFolder
