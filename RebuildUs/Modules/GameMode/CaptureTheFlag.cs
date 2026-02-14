@@ -166,7 +166,17 @@ public static partial class CaptureTheFlag
         {
             // Skeld / Custom Skeld
             case 0:
-                if (RebuildUs.ActivatedDleks)
+                if (RebuildUs.ActivatedSensei)
+                {
+                    stealerPlayerPos = new(-3.65f, 5f, PlayerControl.LocalPlayer.transform.position.z);
+                    redTeamPos = new(-17.5f, -1.15f, PlayerControl.LocalPlayer.transform.position.z);
+                    blueTeamPos = new(7.7f, -0.95f, PlayerControl.LocalPlayer.transform.position.z);
+                    redFlagPos = new(-17.5f, -1.35f, 0.5f);
+                    redFlagBasePos = new(-17.5f, -1.4f, 1f);
+                    blueFlagPos = new(7.7f, -1.15f, 0.5f);
+                    blueFlagBasePos = new(7.7f, -1.2f, 1f);
+                }
+                else if (RebuildUs.ActivatedDleks)
                 {
                     stealerPlayerPos = new(-6.35f, -7.5f, PlayerControl.LocalPlayer.transform.position.z);
                     redTeamPos = new(20.5f, -5.15f, PlayerControl.LocalPlayer.transform.position.z);
@@ -577,7 +587,9 @@ public static partial class CaptureTheFlag
             {
                 // Skeld
                 case 0:
-                    if (RebuildUs.ActivatedDleks)
+                    if (RebuildUs.ActivatedSensei)
+                        Blueflag.transform.position = new(7.7f, -1.15f, 0.5f);
+                    else if (RebuildUs.ActivatedDleks)
                         Blueflag.transform.position = new(-16.5f, -4.65f, 0.5f);
                     else
                         Blueflag.transform.position = new(16.5f, -4.65f, 0.5f);
@@ -619,7 +631,9 @@ public static partial class CaptureTheFlag
             {
                 // Skeld
                 case 0:
-                    if (RebuildUs.ActivatedDleks)
+                    if (RebuildUs.ActivatedSensei)
+                        Redflag.transform.position = new(-17.5f, -1.35f, 0.5f);
+                    else if (RebuildUs.ActivatedDleks)
                         Redflag.transform.position = new(20.5f, -5.35f, 0.5f);
                     else
                         Redflag.transform.position = new(-20.5f, -5.35f, 0.5f);
@@ -677,7 +691,9 @@ public static partial class CaptureTheFlag
                     {
                         // Skeld
                         case 0:
-                            if (RebuildUs.ActivatedDleks)
+                            if (RebuildUs.ActivatedSensei)
+                                StealerPlayer.transform.position = new(-3.65f, 5f, StealerPlayer.transform.position.z);
+                            else if (RebuildUs.ActivatedDleks)
                                 StealerPlayer.transform.position = new(-6.35f, -7.5f, StealerPlayer.transform.position.z);
                             else
                                 StealerPlayer.transform.position = new(6.35f, -7.5f, StealerPlayer.transform.position.z);
@@ -768,7 +784,9 @@ public static partial class CaptureTheFlag
                         {
                             // Skeld
                             case 0:
-                                if (RebuildUs.ActivatedDleks)
+                                if (RebuildUs.ActivatedSensei)
+                                    player.transform.position = new(-17.5f, -1.15f, player.transform.position.z);
+                                else if (RebuildUs.ActivatedDleks)
                                     player.transform.position = new(20.5f, -5.15f, player.transform.position.z);
                                 else
                                     player.transform.position = new(-20.5f, -5.15f, player.transform.position.z);
@@ -860,7 +878,9 @@ public static partial class CaptureTheFlag
                         {
                             // Skeld
                             case 0:
-                                if (RebuildUs.ActivatedDleks)
+                                if (RebuildUs.ActivatedSensei)
+                                    player.transform.position = new(7.7f, -0.95f, player.transform.position.z);
+                                else if (RebuildUs.ActivatedDleks)
                                     player.transform.position = new(-16.5f, -4.45f, player.transform.position.z);
                                 else
                                     player.transform.position = new(16.5f, -4.45f, player.transform.position.z);
@@ -914,7 +934,9 @@ public static partial class CaptureTheFlag
             {
                 // Skeld
                 case 0:
-                    if (RebuildUs.ActivatedDleks)
+                    if (RebuildUs.ActivatedSensei)
+                        Blueflag.transform.position = new(7.7f, -1.15f, 0.5f);
+                    else if (RebuildUs.ActivatedDleks)
                         Blueflag.transform.position = new(-16.5f, -4.65f, 0.5f);
                     else
                         Blueflag.transform.position = new(16.5f, -4.65f, 0.5f);
@@ -956,7 +978,9 @@ public static partial class CaptureTheFlag
             {
                 // Skeld
                 case 0:
-                    if (RebuildUs.ActivatedDleks)
+                    if (RebuildUs.ActivatedSensei)
+                        Redflag.transform.position = new(-17.5f, -1.35f, 0.5f);
+                    else if (RebuildUs.ActivatedDleks)
                         Redflag.transform.position = new(20.5f, -5.35f, 0.5f);
                     else
                         Redflag.transform.position = new(-20.5f, -5.35f, 0.5f);

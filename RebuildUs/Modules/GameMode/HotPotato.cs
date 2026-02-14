@@ -130,7 +130,12 @@ internal static partial class HotPotato
         {
             // Skeld / Custom Skeld
             case 0:
-                if (RebuildUs.ActivatedDleks)
+                if (RebuildUs.ActivatedSensei)
+                {
+                    hotPotatoPlayerPos = new(-6.5f, -2.25f, PlayerControl.LocalPlayer.transform.position.z);
+                    notPotatoTeamPos = new(12.5f, -0.25f, PlayerControl.LocalPlayer.transform.position.z);
+                }
+                else if (RebuildUs.ActivatedDleks)
                 {
                     hotPotatoPlayerPos = new(0.75f, -7f, PlayerControl.LocalPlayer.transform.position.z);
                     notPotatoTeamPos = new(-6.25f, -3.5f, PlayerControl.LocalPlayer.transform.position.z);

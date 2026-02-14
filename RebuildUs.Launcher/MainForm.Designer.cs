@@ -40,15 +40,15 @@ sealed partial class MainForm
     /// </summary>
     private void InitializeComponent()
     {
-        Components = new System.ComponentModel.Container();
+        components = new System.ComponentModel.Container();
         LblStatus = new System.Windows.Forms.Label();
         LblVersion = new System.Windows.Forms.Label();
         LblUrl = new System.Windows.Forms.Label();
         CmbVersions = new System.Windows.Forms.ComboBox();
         BtnAction = new System.Windows.Forms.Button();
         BtnUninstall = new System.Windows.Forms.Button();
-        NotifyIcon = new System.Windows.Forms.NotifyIcon(Components);
-        TrayMenu = new System.Windows.Forms.ContextMenuStrip(Components);
+        NotifyIcon = new System.Windows.Forms.NotifyIcon(components);
+        TrayMenu = new System.Windows.Forms.ContextMenuStrip(components);
         MenuShow = new System.Windows.Forms.ToolStripMenuItem();
         MenuExit = new System.Windows.Forms.ToolStripMenuItem();
         TrayMenu.SuspendLayout();

@@ -92,6 +92,26 @@ public static class Admin
 
     public static bool Update(MapCountOverlay __instance)
     {
+        if (RebuildUs.ActivatedSensei && GameOptionsManager.Instance.currentGameOptions.MapId == 0 && !RebuildUs.UpdatedSenseiAdminmap)
+        {
+            var myAdminIcons = GameObject.Find("Main Camera/Hud/ShipMap(Clone)/CountOverlay");
+            myAdminIcons.transform.GetChild(0).transform.position = myAdminIcons.transform.GetChild(0).transform.position + new Vector3(0, -0.2f, 0); // upper engine
+            myAdminIcons.transform.GetChild(1).transform.position = myAdminIcons.transform.GetChild(1).transform.position + new Vector3(0, 0.3f, 0); // lower engine
+            myAdminIcons.transform.GetChild(2).transform.position = myAdminIcons.transform.GetChild(2).transform.position + new Vector3(0.5f, 0, 0); // Reactor
+            myAdminIcons.transform.GetChild(3).transform.position = myAdminIcons.transform.GetChild(3).transform.position + new Vector3(1.6f, 2.3f, 0); // security
+            myAdminIcons.transform.GetChild(4).transform.position = myAdminIcons.transform.GetChild(4).transform.position + new Vector3(0.7f, -0.95f, 0); // medbey
+            myAdminIcons.transform.GetChild(5).transform.position = myAdminIcons.transform.GetChild(5).transform.position + new Vector3(0.5f, -1f, 0); // Cafeter�a
+            myAdminIcons.transform.GetChild(6).transform.position = myAdminIcons.transform.GetChild(6).transform.position + new Vector3(0.80f, -1, 0); // weapons
+            myAdminIcons.transform.GetChild(7).transform.position = myAdminIcons.transform.GetChild(7).transform.position + new Vector3(-1.5f, -2.6f, 0); // nav
+            myAdminIcons.transform.GetChild(8).transform.position = myAdminIcons.transform.GetChild(8).transform.position + new Vector3(0f, 1.5f, 0); // shields
+            myAdminIcons.transform.GetChild(9).transform.position = myAdminIcons.transform.GetChild(9).transform.position + new Vector3(0.9f, 3f, 0); // cooms
+            myAdminIcons.transform.GetChild(10).transform.position = myAdminIcons.transform.GetChild(10).transform.position + new Vector3(-1.7f, -0.3f, 0); // storage
+            myAdminIcons.transform.GetChild(11).transform.position = myAdminIcons.transform.GetChild(11).transform.position + new Vector3(0.20f, -0.5f, 0); // Admin
+            myAdminIcons.transform.GetChild(12).transform.position = myAdminIcons.transform.GetChild(12).transform.position + new Vector3(0.5f, -1.2f, 0); // elec
+            myAdminIcons.transform.GetChild(13).transform.position = myAdminIcons.transform.GetChild(13).transform.position + new Vector3(-2.9f, 0, 0); // o2
+            RebuildUs.UpdatedSenseiAdminmap = true;
+        }
+
         _adminTimer += Time.deltaTime;
         if (_adminTimer > 0.1f)
             UseAdminTime();

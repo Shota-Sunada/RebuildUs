@@ -450,11 +450,12 @@ internal static partial class RPCProcedure
     public static void TimeMasterShield()
     {
         TimeMaster.ShieldActive = true;
-        FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(TimeMaster.ShieldDuration, new Action<float>(p =>
-        {
-            if (p == 1f)
-                TimeMaster.ShieldActive = false;
-        })));
+        FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(TimeMaster.ShieldDuration,
+                                                                         new Action<float>(p =>
+                                                                         {
+                                                                             if (p == 1f)
+                                                                                 TimeMaster.ShieldActive = false;
+                                                                         })));
     }
 
     public static void GuesserShoot(byte killerId, byte dyingTargetId, byte guessedTargetId, byte guessedRoleType)
@@ -472,9 +473,11 @@ internal static partial class RPCProcedure
         if (FastDestroyableSingleton<HudManager>.Instance != null && killer != null)
         {
             if (PlayerControl.LocalPlayer == dyingTarget)
-                FastDestroyableSingleton<HudManager>.Instance.KillOverlay.ShowKillAnimation(killer.Data, dyingTarget.Data);
+                FastDestroyableSingleton<HudManager>.Instance.KillOverlay.ShowKillAnimation(killer.Data,
+                    dyingTarget.Data);
             else if (dyingLoverPartner != null && PlayerControl.LocalPlayer == dyingLoverPartner)
-                FastDestroyableSingleton<HudManager>.Instance.KillOverlay.ShowKillAnimation(dyingLoverPartner.Data, dyingLoverPartner.Data);
+                FastDestroyableSingleton<HudManager>.Instance.KillOverlay.ShowKillAnimation(dyingLoverPartner.Data,
+                    dyingLoverPartner.Data);
         }
 
         var guessedTarget = Helpers.PlayerById(guessedTargetId);
@@ -835,7 +838,13 @@ internal static partial class RPCProcedure
         Shifter.FutureShift = null;
 
         // Suicide (exile) when impostor or impostor variants
-        if (!Shifter.IsNeutral && (player.Data.Role.IsImpostor || player.IsNeutral() || player.HasModifier(ModifierType.Madmate) || player.IsRole(RoleType.Madmate) || player.IsRole(RoleType.Suicider) || player.HasModifier(ModifierType.CreatedMadmate)))
+        if (!Shifter.IsNeutral
+            && (player.Data.Role.IsImpostor
+                || player.IsNeutral()
+                || player.HasModifier(ModifierType.Madmate)
+                || player.IsRole(RoleType.Madmate)
+                || player.IsRole(RoleType.Suicider)
+                || player.HasModifier(ModifierType.CreatedMadmate)))
         {
             oldShifterPlayer.Exiled();
             GameHistory.FINAL_STATUSES[oldShifterPlayer.PlayerId] = FinalStatus.Suicide;
@@ -945,138 +954,182 @@ internal static partial class RPCProcedure
             case CustomGameMode.CaptureTheFlag:
                 if (CaptureTheFlag.StealerPlayer != null && sourceId == CaptureTheFlag.StealerPlayer.PlayerId)
                 {
-                    if (CaptureTheFlag.RedPlayerWhoHasBlueFlag != null && murdered.PlayerId == CaptureTheFlag.RedPlayerWhoHasBlueFlag.PlayerId)
+                    if (CaptureTheFlag.RedPlayerWhoHasBlueFlag != null
+                        && murdered.PlayerId == CaptureTheFlag.RedPlayerWhoHasBlueFlag.PlayerId)
                     {
                         Helpers.ShowGamemodesPopUp(1, Helpers.PlayerById(CaptureTheFlag.StealerPlayer.PlayerId));
-                        if (CaptureTheFlag.Redplayer01 != null && CaptureTheFlag.Redplayer01 == CaptureTheFlag.RedPlayerWhoHasBlueFlag)
+                        if (CaptureTheFlag.Redplayer01 != null
+                            && CaptureTheFlag.Redplayer01 == CaptureTheFlag.RedPlayerWhoHasBlueFlag)
                         {
                             CaptureTheFlag.RedteamFlag.Remove(CaptureTheFlag.Redplayer01);
                             CaptureTheFlag.Redplayer01 = CaptureTheFlag.StealerPlayer;
                             CaptureTheFlag.RedteamFlag.Add(CaptureTheFlag.StealerPlayer);
                             CaptureTheFlag.StealerPlayer = murdered;
                             CaptureTheFlag.Redplayer01.MyPhysics.SetBodyType(PlayerBodyTypes.Normal);
-                            CaptureTheFlag.Redplayer01.MurderPlayer(CaptureTheFlag.StealerPlayer, MurderResultFlags.Succeeded | MurderResultFlags.DecisionByHost);
+                            CaptureTheFlag.Redplayer01.MurderPlayer(CaptureTheFlag.StealerPlayer,
+                                                                    MurderResultFlags.Succeeded
+                                                                    | MurderResultFlags.DecisionByHost);
                         }
-                        else if (CaptureTheFlag.Redplayer02 != null && CaptureTheFlag.Redplayer02 == CaptureTheFlag.RedPlayerWhoHasBlueFlag)
+                        else if (CaptureTheFlag.Redplayer02 != null
+                                 && CaptureTheFlag.Redplayer02 == CaptureTheFlag.RedPlayerWhoHasBlueFlag)
                         {
                             CaptureTheFlag.RedteamFlag.Remove(CaptureTheFlag.Redplayer02);
                             CaptureTheFlag.Redplayer02 = CaptureTheFlag.StealerPlayer;
                             CaptureTheFlag.RedteamFlag.Add(CaptureTheFlag.StealerPlayer);
                             CaptureTheFlag.StealerPlayer = murdered;
                             CaptureTheFlag.Redplayer02.MyPhysics.SetBodyType(PlayerBodyTypes.Normal);
-                            CaptureTheFlag.Redplayer02.MurderPlayer(CaptureTheFlag.StealerPlayer, MurderResultFlags.Succeeded | MurderResultFlags.DecisionByHost);
+                            CaptureTheFlag.Redplayer02.MurderPlayer(CaptureTheFlag.StealerPlayer,
+                                                                    MurderResultFlags.Succeeded
+                                                                    | MurderResultFlags.DecisionByHost);
                         }
-                        else if (CaptureTheFlag.Redplayer03 != null && CaptureTheFlag.Redplayer03 == CaptureTheFlag.RedPlayerWhoHasBlueFlag)
+                        else if (CaptureTheFlag.Redplayer03 != null
+                                 && CaptureTheFlag.Redplayer03 == CaptureTheFlag.RedPlayerWhoHasBlueFlag)
                         {
                             CaptureTheFlag.RedteamFlag.Remove(CaptureTheFlag.Redplayer03);
                             CaptureTheFlag.Redplayer03 = CaptureTheFlag.StealerPlayer;
                             CaptureTheFlag.RedteamFlag.Add(CaptureTheFlag.StealerPlayer);
                             CaptureTheFlag.StealerPlayer = murdered;
                             CaptureTheFlag.Redplayer03.MyPhysics.SetBodyType(PlayerBodyTypes.Normal);
-                            CaptureTheFlag.Redplayer03.MurderPlayer(CaptureTheFlag.StealerPlayer, MurderResultFlags.Succeeded | MurderResultFlags.DecisionByHost);
+                            CaptureTheFlag.Redplayer03.MurderPlayer(CaptureTheFlag.StealerPlayer,
+                                                                    MurderResultFlags.Succeeded
+                                                                    | MurderResultFlags.DecisionByHost);
                         }
-                        else if (CaptureTheFlag.Redplayer04 != null && CaptureTheFlag.Redplayer04 == CaptureTheFlag.RedPlayerWhoHasBlueFlag)
+                        else if (CaptureTheFlag.Redplayer04 != null
+                                 && CaptureTheFlag.Redplayer04 == CaptureTheFlag.RedPlayerWhoHasBlueFlag)
                         {
                             CaptureTheFlag.RedteamFlag.Remove(CaptureTheFlag.Redplayer04);
                             CaptureTheFlag.Redplayer04 = CaptureTheFlag.StealerPlayer;
                             CaptureTheFlag.RedteamFlag.Add(CaptureTheFlag.StealerPlayer);
                             CaptureTheFlag.StealerPlayer = murdered;
                             CaptureTheFlag.Redplayer04.MyPhysics.SetBodyType(PlayerBodyTypes.Normal);
-                            CaptureTheFlag.Redplayer04.MurderPlayer(CaptureTheFlag.StealerPlayer, MurderResultFlags.Succeeded | MurderResultFlags.DecisionByHost);
+                            CaptureTheFlag.Redplayer04.MurderPlayer(CaptureTheFlag.StealerPlayer,
+                                                                    MurderResultFlags.Succeeded
+                                                                    | MurderResultFlags.DecisionByHost);
                         }
-                        else if (CaptureTheFlag.Redplayer05 != null && CaptureTheFlag.Redplayer05 == CaptureTheFlag.RedPlayerWhoHasBlueFlag)
+                        else if (CaptureTheFlag.Redplayer05 != null
+                                 && CaptureTheFlag.Redplayer05 == CaptureTheFlag.RedPlayerWhoHasBlueFlag)
                         {
                             CaptureTheFlag.RedteamFlag.Remove(CaptureTheFlag.Redplayer05);
                             CaptureTheFlag.Redplayer05 = CaptureTheFlag.StealerPlayer;
                             CaptureTheFlag.RedteamFlag.Add(CaptureTheFlag.StealerPlayer);
                             CaptureTheFlag.StealerPlayer = murdered;
                             CaptureTheFlag.Redplayer05.MyPhysics.SetBodyType(PlayerBodyTypes.Normal);
-                            CaptureTheFlag.Redplayer05.MurderPlayer(CaptureTheFlag.StealerPlayer, MurderResultFlags.Succeeded | MurderResultFlags.DecisionByHost);
+                            CaptureTheFlag.Redplayer05.MurderPlayer(CaptureTheFlag.StealerPlayer,
+                                                                    MurderResultFlags.Succeeded
+                                                                    | MurderResultFlags.DecisionByHost);
                         }
-                        else if (CaptureTheFlag.Redplayer06 != null && CaptureTheFlag.Redplayer06 == CaptureTheFlag.RedPlayerWhoHasBlueFlag)
+                        else if (CaptureTheFlag.Redplayer06 != null
+                                 && CaptureTheFlag.Redplayer06 == CaptureTheFlag.RedPlayerWhoHasBlueFlag)
                         {
                             CaptureTheFlag.RedteamFlag.Remove(CaptureTheFlag.Redplayer06);
                             CaptureTheFlag.Redplayer06 = CaptureTheFlag.StealerPlayer;
                             CaptureTheFlag.RedteamFlag.Add(CaptureTheFlag.StealerPlayer);
                             CaptureTheFlag.StealerPlayer = murdered;
                             CaptureTheFlag.Redplayer06.MyPhysics.SetBodyType(PlayerBodyTypes.Normal);
-                            CaptureTheFlag.Redplayer06.MurderPlayer(CaptureTheFlag.StealerPlayer, MurderResultFlags.Succeeded | MurderResultFlags.DecisionByHost);
+                            CaptureTheFlag.Redplayer06.MurderPlayer(CaptureTheFlag.StealerPlayer,
+                                                                    MurderResultFlags.Succeeded
+                                                                    | MurderResultFlags.DecisionByHost);
                         }
-                        else if (CaptureTheFlag.Redplayer07 != null && CaptureTheFlag.Redplayer07 == CaptureTheFlag.RedPlayerWhoHasBlueFlag)
+                        else if (CaptureTheFlag.Redplayer07 != null
+                                 && CaptureTheFlag.Redplayer07 == CaptureTheFlag.RedPlayerWhoHasBlueFlag)
                         {
                             CaptureTheFlag.RedteamFlag.Remove(CaptureTheFlag.Redplayer07);
                             CaptureTheFlag.Redplayer07 = CaptureTheFlag.StealerPlayer;
                             CaptureTheFlag.RedteamFlag.Add(CaptureTheFlag.StealerPlayer);
                             CaptureTheFlag.StealerPlayer = murdered;
                             CaptureTheFlag.Redplayer07.MyPhysics.SetBodyType(PlayerBodyTypes.Normal);
-                            CaptureTheFlag.Redplayer07.MurderPlayer(CaptureTheFlag.StealerPlayer, MurderResultFlags.Succeeded | MurderResultFlags.DecisionByHost);
+                            CaptureTheFlag.Redplayer07.MurderPlayer(CaptureTheFlag.StealerPlayer,
+                                                                    MurderResultFlags.Succeeded
+                                                                    | MurderResultFlags.DecisionByHost);
                         }
                     }
-                    else if (CaptureTheFlag.BluePlayerWhoHasRedFlag != null && murdered.PlayerId == CaptureTheFlag.BluePlayerWhoHasRedFlag.PlayerId)
+                    else if (CaptureTheFlag.BluePlayerWhoHasRedFlag != null
+                             && murdered.PlayerId == CaptureTheFlag.BluePlayerWhoHasRedFlag.PlayerId)
                     {
                         Helpers.ShowGamemodesPopUp(2, Helpers.PlayerById(CaptureTheFlag.StealerPlayer.PlayerId));
-                        if (CaptureTheFlag.Blueplayer01 != null && CaptureTheFlag.Blueplayer01 == CaptureTheFlag.BluePlayerWhoHasRedFlag)
+                        if (CaptureTheFlag.Blueplayer01 != null
+                            && CaptureTheFlag.Blueplayer01 == CaptureTheFlag.BluePlayerWhoHasRedFlag)
                         {
                             CaptureTheFlag.BlueteamFlag.Remove(CaptureTheFlag.Blueplayer01);
                             CaptureTheFlag.Blueplayer01 = CaptureTheFlag.StealerPlayer;
                             CaptureTheFlag.BlueteamFlag.Add(CaptureTheFlag.StealerPlayer);
                             CaptureTheFlag.StealerPlayer = murdered;
                             CaptureTheFlag.Blueplayer01.MyPhysics.SetBodyType(PlayerBodyTypes.Normal);
-                            CaptureTheFlag.Blueplayer01.MurderPlayer(CaptureTheFlag.StealerPlayer, MurderResultFlags.Succeeded | MurderResultFlags.DecisionByHost);
+                            CaptureTheFlag.Blueplayer01.MurderPlayer(CaptureTheFlag.StealerPlayer,
+                                                                     MurderResultFlags.Succeeded
+                                                                     | MurderResultFlags.DecisionByHost);
                         }
-                        else if (CaptureTheFlag.Blueplayer02 != null && CaptureTheFlag.Blueplayer02 == CaptureTheFlag.BluePlayerWhoHasRedFlag)
+                        else if (CaptureTheFlag.Blueplayer02 != null
+                                 && CaptureTheFlag.Blueplayer02 == CaptureTheFlag.BluePlayerWhoHasRedFlag)
                         {
                             CaptureTheFlag.BlueteamFlag.Remove(CaptureTheFlag.Blueplayer02);
                             CaptureTheFlag.Blueplayer02 = CaptureTheFlag.StealerPlayer;
                             CaptureTheFlag.BlueteamFlag.Add(CaptureTheFlag.StealerPlayer);
                             CaptureTheFlag.StealerPlayer = murdered;
                             CaptureTheFlag.Blueplayer02.MyPhysics.SetBodyType(PlayerBodyTypes.Normal);
-                            CaptureTheFlag.Blueplayer02.MurderPlayer(CaptureTheFlag.StealerPlayer, MurderResultFlags.Succeeded | MurderResultFlags.DecisionByHost);
+                            CaptureTheFlag.Blueplayer02.MurderPlayer(CaptureTheFlag.StealerPlayer,
+                                                                     MurderResultFlags.Succeeded
+                                                                     | MurderResultFlags.DecisionByHost);
                         }
-                        else if (CaptureTheFlag.Blueplayer03 != null && CaptureTheFlag.Blueplayer03 == CaptureTheFlag.BluePlayerWhoHasRedFlag)
+                        else if (CaptureTheFlag.Blueplayer03 != null
+                                 && CaptureTheFlag.Blueplayer03 == CaptureTheFlag.BluePlayerWhoHasRedFlag)
                         {
                             CaptureTheFlag.BlueteamFlag.Remove(CaptureTheFlag.Blueplayer03);
                             CaptureTheFlag.Blueplayer03 = CaptureTheFlag.StealerPlayer;
                             CaptureTheFlag.BlueteamFlag.Add(CaptureTheFlag.StealerPlayer);
                             CaptureTheFlag.StealerPlayer = murdered;
                             CaptureTheFlag.Blueplayer03.MyPhysics.SetBodyType(PlayerBodyTypes.Normal);
-                            CaptureTheFlag.Blueplayer03.MurderPlayer(CaptureTheFlag.StealerPlayer, MurderResultFlags.Succeeded | MurderResultFlags.DecisionByHost);
+                            CaptureTheFlag.Blueplayer03.MurderPlayer(CaptureTheFlag.StealerPlayer,
+                                                                     MurderResultFlags.Succeeded
+                                                                     | MurderResultFlags.DecisionByHost);
                         }
-                        else if (CaptureTheFlag.Blueplayer04 != null && CaptureTheFlag.Blueplayer04 == CaptureTheFlag.BluePlayerWhoHasRedFlag)
+                        else if (CaptureTheFlag.Blueplayer04 != null
+                                 && CaptureTheFlag.Blueplayer04 == CaptureTheFlag.BluePlayerWhoHasRedFlag)
                         {
                             CaptureTheFlag.BlueteamFlag.Remove(CaptureTheFlag.Blueplayer04);
                             CaptureTheFlag.Blueplayer04 = CaptureTheFlag.StealerPlayer;
                             CaptureTheFlag.BlueteamFlag.Add(CaptureTheFlag.StealerPlayer);
                             CaptureTheFlag.StealerPlayer = murdered;
                             CaptureTheFlag.Blueplayer04.MyPhysics.SetBodyType(PlayerBodyTypes.Normal);
-                            CaptureTheFlag.Blueplayer04.MurderPlayer(CaptureTheFlag.StealerPlayer, MurderResultFlags.Succeeded | MurderResultFlags.DecisionByHost);
+                            CaptureTheFlag.Blueplayer04.MurderPlayer(CaptureTheFlag.StealerPlayer,
+                                                                     MurderResultFlags.Succeeded
+                                                                     | MurderResultFlags.DecisionByHost);
                         }
-                        else if (CaptureTheFlag.Blueplayer05 != null && CaptureTheFlag.Blueplayer05 == CaptureTheFlag.BluePlayerWhoHasRedFlag)
+                        else if (CaptureTheFlag.Blueplayer05 != null
+                                 && CaptureTheFlag.Blueplayer05 == CaptureTheFlag.BluePlayerWhoHasRedFlag)
                         {
                             CaptureTheFlag.BlueteamFlag.Remove(CaptureTheFlag.Blueplayer05);
                             CaptureTheFlag.Blueplayer05 = CaptureTheFlag.StealerPlayer;
                             CaptureTheFlag.BlueteamFlag.Add(CaptureTheFlag.StealerPlayer);
                             CaptureTheFlag.StealerPlayer = murdered;
                             CaptureTheFlag.Blueplayer05.MyPhysics.SetBodyType(PlayerBodyTypes.Normal);
-                            CaptureTheFlag.Blueplayer05.MurderPlayer(CaptureTheFlag.StealerPlayer, MurderResultFlags.Succeeded | MurderResultFlags.DecisionByHost);
+                            CaptureTheFlag.Blueplayer05.MurderPlayer(CaptureTheFlag.StealerPlayer,
+                                                                     MurderResultFlags.Succeeded
+                                                                     | MurderResultFlags.DecisionByHost);
                         }
-                        else if (CaptureTheFlag.Blueplayer06 != null && CaptureTheFlag.Blueplayer06 == CaptureTheFlag.BluePlayerWhoHasRedFlag)
+                        else if (CaptureTheFlag.Blueplayer06 != null
+                                 && CaptureTheFlag.Blueplayer06 == CaptureTheFlag.BluePlayerWhoHasRedFlag)
                         {
                             CaptureTheFlag.BlueteamFlag.Remove(CaptureTheFlag.Blueplayer06);
                             CaptureTheFlag.Blueplayer06 = CaptureTheFlag.StealerPlayer;
                             CaptureTheFlag.BlueteamFlag.Add(CaptureTheFlag.StealerPlayer);
                             CaptureTheFlag.StealerPlayer = murdered;
                             CaptureTheFlag.Blueplayer06.MyPhysics.SetBodyType(PlayerBodyTypes.Normal);
-                            CaptureTheFlag.Blueplayer06.MurderPlayer(CaptureTheFlag.StealerPlayer, MurderResultFlags.Succeeded | MurderResultFlags.DecisionByHost);
+                            CaptureTheFlag.Blueplayer06.MurderPlayer(CaptureTheFlag.StealerPlayer,
+                                                                     MurderResultFlags.Succeeded
+                                                                     | MurderResultFlags.DecisionByHost);
                         }
-                        else if (CaptureTheFlag.Blueplayer07 != null && CaptureTheFlag.Blueplayer07 == CaptureTheFlag.BluePlayerWhoHasRedFlag)
+                        else if (CaptureTheFlag.Blueplayer07 != null
+                                 && CaptureTheFlag.Blueplayer07 == CaptureTheFlag.BluePlayerWhoHasRedFlag)
                         {
                             CaptureTheFlag.BlueteamFlag.Remove(CaptureTheFlag.Blueplayer07);
                             CaptureTheFlag.Blueplayer07 = CaptureTheFlag.StealerPlayer;
                             CaptureTheFlag.BlueteamFlag.Add(CaptureTheFlag.StealerPlayer);
                             CaptureTheFlag.StealerPlayer = murdered;
                             CaptureTheFlag.Blueplayer07.MyPhysics.SetBodyType(PlayerBodyTypes.Normal);
-                            CaptureTheFlag.Blueplayer07.MurderPlayer(CaptureTheFlag.StealerPlayer, MurderResultFlags.Succeeded | MurderResultFlags.DecisionByHost);
+                            CaptureTheFlag.Blueplayer07.MurderPlayer(CaptureTheFlag.StealerPlayer,
+                                                                     MurderResultFlags.Succeeded
+                                                                     | MurderResultFlags.DecisionByHost);
                         }
                     }
                     else
@@ -1275,7 +1328,8 @@ internal static partial class RPCProcedure
                                     Helpers.ShowGamemodesPopUp(1, Helpers.PlayerById(targetId));
                                     break;
                                 case 2:
-                                    if (BattleRoyale.SerialKiller != null && sourceId == BattleRoyale.SerialKiller.PlayerId)
+                                    if (BattleRoyale.SerialKiller != null
+                                        && sourceId == BattleRoyale.SerialKiller.PlayerId)
                                     {
                                         BattleRoyaleScoreCheck(3, 1);
                                         Helpers.ShowGamemodesPopUp(3, Helpers.PlayerById(targetId));
@@ -1304,7 +1358,8 @@ internal static partial class RPCProcedure
                                     Helpers.ShowGamemodesPopUp(1, Helpers.PlayerById(targetId));
                                     break;
                                 case 2:
-                                    if (BattleRoyale.SerialKiller != null && sourceId == BattleRoyale.SerialKiller.PlayerId)
+                                    if (BattleRoyale.SerialKiller != null
+                                        && sourceId == BattleRoyale.SerialKiller.PlayerId)
                                     {
                                         BattleRoyaleScoreCheck(3, 1);
                                         Helpers.ShowGamemodesPopUp(3, Helpers.PlayerById(targetId));
@@ -1333,7 +1388,8 @@ internal static partial class RPCProcedure
                                     Helpers.ShowGamemodesPopUp(1, Helpers.PlayerById(targetId));
                                     break;
                                 case 2:
-                                    if (BattleRoyale.SerialKiller != null && sourceId == BattleRoyale.SerialKiller.PlayerId)
+                                    if (BattleRoyale.SerialKiller != null
+                                        && sourceId == BattleRoyale.SerialKiller.PlayerId)
                                     {
                                         BattleRoyaleScoreCheck(3, 1);
                                         Helpers.ShowGamemodesPopUp(3, Helpers.PlayerById(targetId));
@@ -1362,7 +1418,8 @@ internal static partial class RPCProcedure
                                     Helpers.ShowGamemodesPopUp(1, Helpers.PlayerById(targetId));
                                     break;
                                 case 2:
-                                    if (BattleRoyale.SerialKiller != null && sourceId == BattleRoyale.SerialKiller.PlayerId)
+                                    if (BattleRoyale.SerialKiller != null
+                                        && sourceId == BattleRoyale.SerialKiller.PlayerId)
                                     {
                                         BattleRoyaleScoreCheck(3, 1);
                                         Helpers.ShowGamemodesPopUp(3, Helpers.PlayerById(targetId));
@@ -1391,7 +1448,8 @@ internal static partial class RPCProcedure
                                     Helpers.ShowGamemodesPopUp(1, Helpers.PlayerById(targetId));
                                     break;
                                 case 2:
-                                    if (BattleRoyale.SerialKiller != null && sourceId == BattleRoyale.SerialKiller.PlayerId)
+                                    if (BattleRoyale.SerialKiller != null
+                                        && sourceId == BattleRoyale.SerialKiller.PlayerId)
                                     {
                                         BattleRoyaleScoreCheck(3, 1);
                                         Helpers.ShowGamemodesPopUp(3, Helpers.PlayerById(targetId));
@@ -1420,7 +1478,8 @@ internal static partial class RPCProcedure
                                     Helpers.ShowGamemodesPopUp(1, Helpers.PlayerById(targetId));
                                     break;
                                 case 2:
-                                    if (BattleRoyale.SerialKiller != null && sourceId == BattleRoyale.SerialKiller.PlayerId)
+                                    if (BattleRoyale.SerialKiller != null
+                                        && sourceId == BattleRoyale.SerialKiller.PlayerId)
                                     {
                                         BattleRoyaleScoreCheck(3, 1);
                                         Helpers.ShowGamemodesPopUp(3, Helpers.PlayerById(targetId));
@@ -1449,7 +1508,8 @@ internal static partial class RPCProcedure
                                     Helpers.ShowGamemodesPopUp(1, Helpers.PlayerById(targetId));
                                     break;
                                 case 2:
-                                    if (BattleRoyale.SerialKiller != null && sourceId == BattleRoyale.SerialKiller.PlayerId)
+                                    if (BattleRoyale.SerialKiller != null
+                                        && sourceId == BattleRoyale.SerialKiller.PlayerId)
                                     {
                                         BattleRoyaleScoreCheck(3, 1);
                                         Helpers.ShowGamemodesPopUp(3, Helpers.PlayerById(targetId));
@@ -1478,7 +1538,8 @@ internal static partial class RPCProcedure
                                     Helpers.ShowGamemodesPopUp(2, Helpers.PlayerById(targetId));
                                     break;
                                 case 2:
-                                    if (BattleRoyale.SerialKiller != null && sourceId == BattleRoyale.SerialKiller.PlayerId)
+                                    if (BattleRoyale.SerialKiller != null
+                                        && sourceId == BattleRoyale.SerialKiller.PlayerId)
                                     {
                                         BattleRoyaleScoreCheck(3, 1);
                                         Helpers.ShowGamemodesPopUp(3, Helpers.PlayerById(targetId));
@@ -1507,7 +1568,8 @@ internal static partial class RPCProcedure
                                     Helpers.ShowGamemodesPopUp(2, Helpers.PlayerById(targetId));
                                     break;
                                 case 2:
-                                    if (BattleRoyale.SerialKiller != null && sourceId == BattleRoyale.SerialKiller.PlayerId)
+                                    if (BattleRoyale.SerialKiller != null
+                                        && sourceId == BattleRoyale.SerialKiller.PlayerId)
                                     {
                                         BattleRoyaleScoreCheck(3, 1);
                                         Helpers.ShowGamemodesPopUp(3, Helpers.PlayerById(targetId));
@@ -1536,7 +1598,8 @@ internal static partial class RPCProcedure
                                     Helpers.ShowGamemodesPopUp(2, Helpers.PlayerById(targetId));
                                     break;
                                 case 2:
-                                    if (BattleRoyale.SerialKiller != null && sourceId == BattleRoyale.SerialKiller.PlayerId)
+                                    if (BattleRoyale.SerialKiller != null
+                                        && sourceId == BattleRoyale.SerialKiller.PlayerId)
                                     {
                                         BattleRoyaleScoreCheck(3, 1);
                                         Helpers.ShowGamemodesPopUp(3, Helpers.PlayerById(targetId));
@@ -1565,7 +1628,8 @@ internal static partial class RPCProcedure
                                     Helpers.ShowGamemodesPopUp(2, Helpers.PlayerById(targetId));
                                     break;
                                 case 2:
-                                    if (BattleRoyale.SerialKiller != null && sourceId == BattleRoyale.SerialKiller.PlayerId)
+                                    if (BattleRoyale.SerialKiller != null
+                                        && sourceId == BattleRoyale.SerialKiller.PlayerId)
                                     {
                                         BattleRoyaleScoreCheck(3, 1);
                                         Helpers.ShowGamemodesPopUp(3, Helpers.PlayerById(targetId));
@@ -1594,7 +1658,8 @@ internal static partial class RPCProcedure
                                     Helpers.ShowGamemodesPopUp(2, Helpers.PlayerById(targetId));
                                     break;
                                 case 2:
-                                    if (BattleRoyale.SerialKiller != null && sourceId == BattleRoyale.SerialKiller.PlayerId)
+                                    if (BattleRoyale.SerialKiller != null
+                                        && sourceId == BattleRoyale.SerialKiller.PlayerId)
                                     {
                                         BattleRoyaleScoreCheck(3, 1);
                                         Helpers.ShowGamemodesPopUp(3, Helpers.PlayerById(targetId));
@@ -1623,7 +1688,8 @@ internal static partial class RPCProcedure
                                     Helpers.ShowGamemodesPopUp(2, Helpers.PlayerById(targetId));
                                     break;
                                 case 2:
-                                    if (BattleRoyale.SerialKiller != null && sourceId == BattleRoyale.SerialKiller.PlayerId)
+                                    if (BattleRoyale.SerialKiller != null
+                                        && sourceId == BattleRoyale.SerialKiller.PlayerId)
                                     {
                                         BattleRoyaleScoreCheck(3, 1);
                                         Helpers.ShowGamemodesPopUp(3, Helpers.PlayerById(targetId));
@@ -1652,7 +1718,8 @@ internal static partial class RPCProcedure
                                     Helpers.ShowGamemodesPopUp(2, Helpers.PlayerById(targetId));
                                     break;
                                 case 2:
-                                    if (BattleRoyale.SerialKiller != null && sourceId == BattleRoyale.SerialKiller.PlayerId)
+                                    if (BattleRoyale.SerialKiller != null
+                                        && sourceId == BattleRoyale.SerialKiller.PlayerId)
                                     {
                                         BattleRoyaleScoreCheck(3, 1);
                                         Helpers.ShowGamemodesPopUp(3, Helpers.PlayerById(targetId));
@@ -1681,13 +1748,20 @@ internal static partial class RPCProcedure
                                     Helpers.ShowGamemodesPopUp(3, Helpers.PlayerById(targetId));
                                     break;
                                 case 2:
-                                    if ((BattleRoyale.LimePlayer01 != null && sourceId == BattleRoyale.LimePlayer01.PlayerId)
-                                        || (BattleRoyale.LimePlayer02 != null && sourceId == BattleRoyale.LimePlayer02.PlayerId)
-                                        || (BattleRoyale.LimePlayer03 != null && sourceId == BattleRoyale.LimePlayer03.PlayerId)
-                                        || (BattleRoyale.LimePlayer04 != null && sourceId == BattleRoyale.LimePlayer04.PlayerId)
-                                        || (BattleRoyale.LimePlayer05 != null && sourceId == BattleRoyale.LimePlayer05.PlayerId)
-                                        || (BattleRoyale.LimePlayer06 != null && sourceId == BattleRoyale.LimePlayer06.PlayerId)
-                                        || (BattleRoyale.LimePlayer07 != null && sourceId == BattleRoyale.LimePlayer07.PlayerId))
+                                    if ((BattleRoyale.LimePlayer01 != null
+                                         && sourceId == BattleRoyale.LimePlayer01.PlayerId)
+                                        || (BattleRoyale.LimePlayer02 != null
+                                            && sourceId == BattleRoyale.LimePlayer02.PlayerId)
+                                        || (BattleRoyale.LimePlayer03 != null
+                                            && sourceId == BattleRoyale.LimePlayer03.PlayerId)
+                                        || (BattleRoyale.LimePlayer04 != null
+                                            && sourceId == BattleRoyale.LimePlayer04.PlayerId)
+                                        || (BattleRoyale.LimePlayer05 != null
+                                            && sourceId == BattleRoyale.LimePlayer05.PlayerId)
+                                        || (BattleRoyale.LimePlayer06 != null
+                                            && sourceId == BattleRoyale.LimePlayer06.PlayerId)
+                                        || (BattleRoyale.LimePlayer07 != null
+                                            && sourceId == BattleRoyale.LimePlayer07.PlayerId))
                                     {
                                         BattleRoyaleScoreCheck(1, 3);
                                         Helpers.ShowGamemodesPopUp(1, Helpers.PlayerById(targetId));
@@ -1749,7 +1823,9 @@ internal static partial class RPCProcedure
             {
                 // Skeld
                 case 0:
-                    if (RebuildUs.ActivatedDleks)
+                    if (RebuildUs.ActivatedSensei)
+                        CaptureTheFlag.Blueflag.transform.position = new(7.7f, -1.15f, 0.5f);
+                    else if (RebuildUs.ActivatedDleks)
                         CaptureTheFlag.Blueflag.transform.position = new(-16.5f, -4.65f, 0.5f);
                     else
                         CaptureTheFlag.Blueflag.transform.position = new(16.5f, -4.65f, 0.5f);
@@ -1781,7 +1857,12 @@ internal static partial class RPCProcedure
             }
 
             CaptureTheFlag.CurrentRedTeamPoints += 1;
-            CaptureTheFlag.FlagpointCounter = new StringBuilder(Tr.Get(TrKey.Score)).Append("<color=#FF0000FF>").Append(CaptureTheFlag.CurrentRedTeamPoints).Append("</color> - <color=#0000FFFF>").Append(CaptureTheFlag.CurrentBlueTeamPoints).Append("</color>").ToString();
+            CaptureTheFlag.FlagpointCounter = new StringBuilder(Tr.Get(TrKey.Score)).Append("<color=#FF0000FF>")
+                .Append(CaptureTheFlag.CurrentRedTeamPoints)
+                .Append("</color> - <color=#0000FFFF>")
+                .Append(CaptureTheFlag.CurrentBlueTeamPoints)
+                .Append("</color>")
+                .ToString();
             if (CaptureTheFlag.CurrentRedTeamPoints >= CaptureTheFlag.RequiredFlags)
             {
                 CaptureTheFlag.TriggerRedTeamWin = true;
@@ -1800,7 +1881,9 @@ internal static partial class RPCProcedure
             {
                 // Skeld
                 case 0:
-                    if (RebuildUs.ActivatedDleks)
+                    if (RebuildUs.ActivatedSensei)
+                        CaptureTheFlag.Redflag.transform.position = new(-17.5f, -1.35f, 0.5f);
+                    else if (RebuildUs.ActivatedDleks)
                         CaptureTheFlag.Redflag.transform.position = new(20.5f, -5.35f, 0.5f);
                     else
                         CaptureTheFlag.Redflag.transform.position = new(-20.5f, -5.35f, 0.5f);
@@ -1832,7 +1915,12 @@ internal static partial class RPCProcedure
             }
 
             CaptureTheFlag.CurrentBlueTeamPoints += 1;
-            CaptureTheFlag.FlagpointCounter = new StringBuilder(Tr.Get(TrKey.Score)).Append("<color=#FF0000FF>").Append(CaptureTheFlag.CurrentRedTeamPoints).Append("</color> - <color=#0000FFFF>").Append(CaptureTheFlag.CurrentBlueTeamPoints).Append("</color>").ToString();
+            CaptureTheFlag.FlagpointCounter = new StringBuilder(Tr.Get(TrKey.Score)).Append("<color=#FF0000FF>")
+                .Append(CaptureTheFlag.CurrentRedTeamPoints)
+                .Append("</color> - <color=#0000FFFF>")
+                .Append(CaptureTheFlag.CurrentBlueTeamPoints)
+                .Append("</color>")
+                .ToString();
             ;
             if (CaptureTheFlag.CurrentBlueTeamPoints >= CaptureTheFlag.RequiredFlags)
             {
@@ -1914,7 +2002,9 @@ internal static partial class RPCProcedure
         {
             // Skeld
             case 0:
-                if (RebuildUs.ActivatedDleks)
+                if (RebuildUs.ActivatedSensei)
+                    capturedThief.transform.position = new(-12f, 7.15f, capturedThief.transform.position.z);
+                else if (RebuildUs.ActivatedDleks)
                     capturedThief.transform.position = new(10.2f, 3.6f, capturedThief.transform.position.z);
                 else
                     capturedThief.transform.position = new(-10.2f, 3.6f, capturedThief.transform.position.z);
@@ -1950,7 +2040,18 @@ internal static partial class RPCProcedure
 
         PoliceAndThief.CurrentThiefsCaptured += 1;
         Helpers.ShowGamemodesPopUp(1, Helpers.PlayerById(capturedThief.PlayerId));
-        PoliceAndThief.ThiefpointCounter = new StringBuilder(Tr.Get(TrKey.StolenJewels)).Append("<color=#00F7FFFF>").Append(PoliceAndThief.CurrentJewelsStoled).Append(" / ").Append(PoliceAndThief.RequiredJewels).Append("</color> | ").Append(Tr.Get(TrKey.CapturedThieves)).Append("<color=#928B55FF>").Append(PoliceAndThief.CurrentThiefsCaptured).Append(" / ").Append(PoliceAndThief.ThiefTeam.Count).Append("</color>").ToString();
+        PoliceAndThief.ThiefpointCounter = new StringBuilder(Tr.Get(TrKey.StolenJewels)).Append("<color=#00F7FFFF>")
+            .Append(PoliceAndThief.CurrentJewelsStoled)
+            .Append(" / ")
+            .Append(PoliceAndThief.RequiredJewels)
+            .Append("</color> | ")
+            .Append(Tr.Get(TrKey.CapturedThieves))
+            .Append("<color=#928B55FF>")
+            .Append(PoliceAndThief.CurrentThiefsCaptured)
+            .Append(" / ")
+            .Append(PoliceAndThief.ThiefTeam.Count)
+            .Append("</color>")
+            .ToString();
         if (PoliceAndThief.CurrentThiefsCaptured == PoliceAndThief.ThiefTeam.Count)
         {
             PoliceAndThief.TriggerPoliceWin = true;
@@ -1964,37 +2065,55 @@ internal static partial class RPCProcedure
         {
             // Skeld
             case 0:
-                if (RebuildUs.ActivatedDleks)
-                    PoliceAndThief.ThiefArrested[0].transform.position = new(1.31f, -16.25f, PoliceAndThief.ThiefArrested[0].transform.position.z);
+                if (RebuildUs.ActivatedSensei)
+                    PoliceAndThief.ThiefArrested[0].transform.position = new(13.75f, -0.2f,
+                                                                             PoliceAndThief.ThiefArrested[0].transform
+                                                                                 .position.z);
+                else if (RebuildUs.ActivatedDleks)
+                    PoliceAndThief.ThiefArrested[0].transform.position = new(1.31f, -16.25f,
+                                                                             PoliceAndThief.ThiefArrested[0].transform
+                                                                                 .position.z);
                 else
-                    PoliceAndThief.ThiefArrested[0].transform.position = new(-1.31f, -16.25f, PoliceAndThief.ThiefArrested[0].transform.position.z);
+                    PoliceAndThief.ThiefArrested[0].transform.position = new(-1.31f, -16.25f,
+                                                                             PoliceAndThief.ThiefArrested[0].transform
+                                                                                 .position.z);
+
                 break;
             // MiraHQ
             case 1:
-                PoliceAndThief.ThiefArrested[0].transform.position = new(17.75f, 11.5f, PoliceAndThief.ThiefArrested[0].transform.position.z);
+                PoliceAndThief.ThiefArrested[0].transform.position =
+                    new(17.75f, 11.5f, PoliceAndThief.ThiefArrested[0].transform.position.z);
                 break;
             // Polus
             case 2:
-                PoliceAndThief.ThiefArrested[0].transform.position = new(30f, -15.75f, PoliceAndThief.ThiefArrested[0].transform.position.z);
+                PoliceAndThief.ThiefArrested[0].transform.position =
+                    new(30f, -15.75f, PoliceAndThief.ThiefArrested[0].transform.position.z);
                 break;
             // Dleks
             case 3:
-                PoliceAndThief.ThiefArrested[0].transform.position = new(1.31f, -16.25f, PoliceAndThief.ThiefArrested[0].transform.position.z);
+                PoliceAndThief.ThiefArrested[0].transform.position = new(1.31f, -16.25f,
+                                                                         PoliceAndThief.ThiefArrested[0].transform
+                                                                             .position.z);
                 break;
             // Airship
             case 4:
-                PoliceAndThief.ThiefArrested[0].transform.position = new(7.15f, -14.5f, PoliceAndThief.ThiefArrested[0].transform.position.z);
+                PoliceAndThief.ThiefArrested[0].transform.position =
+                    new(7.15f, -14.5f, PoliceAndThief.ThiefArrested[0].transform.position.z);
                 break;
             // Fungle
             case 5:
-                PoliceAndThief.ThiefArrested[0].transform.position = new(20f, 11f, PoliceAndThief.ThiefArrested[0].transform.position.z);
+                PoliceAndThief.ThiefArrested[0].transform.position =
+                    new(20f, 11f, PoliceAndThief.ThiefArrested[0].transform.position.z);
                 break;
             // Submerged
             case 6:
                 if (PoliceAndThief.ThiefArrested[0].transform.position.y > 0)
-                    PoliceAndThief.ThiefArrested[0].transform.position = new(1f, 10f, PoliceAndThief.ThiefArrested[0].transform.position.z);
+                    PoliceAndThief.ThiefArrested[0].transform.position =
+                        new(1f, 10f, PoliceAndThief.ThiefArrested[0].transform.position.z);
                 else
-                    PoliceAndThief.ThiefArrested[0].transform.position = new(12.5f, -31.75f, PoliceAndThief.ThiefArrested[0].transform.position.z);
+                    PoliceAndThief.ThiefArrested[0].transform.position = new(12.5f, -31.75f,
+                                                                             PoliceAndThief.ThiefArrested[0].transform
+                                                                                 .position.z);
 
                 break;
         }
@@ -2002,7 +2121,18 @@ internal static partial class RPCProcedure
         Helpers.ShowGamemodesPopUp(2, Helpers.PlayerById(PoliceAndThief.ThiefArrested[0].PlayerId));
         PoliceAndThief.ThiefArrested.RemoveAt(0);
         PoliceAndThief.CurrentThiefsCaptured = PoliceAndThief.CurrentThiefsCaptured - 1;
-        PoliceAndThief.ThiefpointCounter = new StringBuilder(Tr.Get(TrKey.StolenJewels)).Append("<color=#00F7FFFF>").Append(PoliceAndThief.CurrentJewelsStoled).Append(" / ").Append(PoliceAndThief.RequiredJewels).Append("</color> | ").Append(Tr.Get(TrKey.CapturedThieves)).Append("<color=#928B55FF>").Append(PoliceAndThief.CurrentThiefsCaptured).Append(" / ").Append(PoliceAndThief.ThiefTeam.Count).Append("</color>").ToString();
+        PoliceAndThief.ThiefpointCounter = new StringBuilder(Tr.Get(TrKey.StolenJewels)).Append("<color=#00F7FFFF>")
+            .Append(PoliceAndThief.CurrentJewelsStoled)
+            .Append(" / ")
+            .Append(PoliceAndThief.RequiredJewels)
+            .Append("</color> | ")
+            .Append(Tr.Get(TrKey.CapturedThieves))
+            .Append("<color=#928B55FF>")
+            .Append(PoliceAndThief.CurrentThiefsCaptured)
+            .Append(" / ")
+            .Append(PoliceAndThief.ThiefTeam.Count)
+            .Append("</color>")
+            .ToString();
         ;
     }
 
@@ -2256,7 +2386,14 @@ internal static partial class RPCProcedure
         {
             // Skeld
             case 0:
-                if (RebuildUs.ActivatedDleks)
+                if (RebuildUs.ActivatedSensei)
+                {
+                    if (isDiamond)
+                        myJewel.transform.position = new(15.25f, -0.33f, thiefDeliverJewel.transform.position.z);
+                    else
+                        myJewel.transform.position = new(15.7f, -0.33f, thiefDeliverJewel.transform.position.z);
+                }
+                else if (RebuildUs.ActivatedDleks)
                 {
                     if (isDiamond)
                         myJewel.transform.position = new(0f, -19.4f, thiefDeliverJewel.transform.position.z);
@@ -2330,7 +2467,18 @@ internal static partial class RPCProcedure
         myJewel.transform.SetParent(null);
         PoliceAndThief.CurrentJewelsStoled += 1;
         Helpers.ShowGamemodesPopUp(3, Helpers.PlayerById(thiefDeliverJewel.PlayerId));
-        PoliceAndThief.ThiefpointCounter = new StringBuilder(Tr.Get(TrKey.StolenJewels)).Append("<color=#00F7FFFF>").Append(PoliceAndThief.CurrentJewelsStoled).Append(" / ").Append(PoliceAndThief.RequiredJewels).Append("</color> | ").Append(Tr.Get(TrKey.CapturedThieves)).Append("<color=#928B55FF>").Append(PoliceAndThief.CurrentThiefsCaptured).Append(" / ").Append(PoliceAndThief.ThiefTeam.Count).Append("</color>").ToString();
+        PoliceAndThief.ThiefpointCounter = new StringBuilder(Tr.Get(TrKey.StolenJewels)).Append("<color=#00F7FFFF>")
+            .Append(PoliceAndThief.CurrentJewelsStoled)
+            .Append(" / ")
+            .Append(PoliceAndThief.RequiredJewels)
+            .Append("</color> | ")
+            .Append(Tr.Get(TrKey.CapturedThieves))
+            .Append("<color=#928B55FF>")
+            .Append(PoliceAndThief.CurrentThiefsCaptured)
+            .Append(" / ")
+            .Append(PoliceAndThief.ThiefTeam.Count)
+            .Append("</color>")
+            .ToString();
         if (PoliceAndThief.CurrentJewelsStoled >= PoliceAndThief.RequiredJewels)
         {
             PoliceAndThief.TriggerThiefWin = true;
@@ -2390,7 +2538,88 @@ internal static partial class RPCProcedure
         {
             // Skeld
             case 0:
-                if (RebuildUs.ActivatedDleks)
+                if (RebuildUs.ActivatedSensei)
+                {
+                    switch (jewelRevertedId)
+                    {
+                        case 1:
+                            PoliceAndThief.Jewel01.transform.SetParent(null);
+                            PoliceAndThief.Jewel01.transform.position = new(6.95f, 4.95f, 1f);
+                            PoliceAndThief.Jewel01BeingStealed = null;
+                            break;
+                        case 2:
+                            PoliceAndThief.Jewel02.transform.SetParent(null);
+                            PoliceAndThief.Jewel02.transform.position = new(-3.75f, 5.35f, 1f);
+                            PoliceAndThief.Jewel02BeingStealed = null;
+                            break;
+                        case 3:
+                            PoliceAndThief.Jewel03.transform.SetParent(null);
+                            PoliceAndThief.Jewel03.transform.position = new(-7.7f, 11.3f, 1f);
+                            PoliceAndThief.Jewel03BeingStealed = null;
+                            break;
+                        case 4:
+                            PoliceAndThief.Jewel04.transform.SetParent(null);
+                            PoliceAndThief.Jewel04.transform.position = new(-19.65f, 5.3f, 1f);
+                            PoliceAndThief.Jewel04BeingStealed = null;
+                            break;
+                        case 5:
+                            PoliceAndThief.Jewel05.transform.SetParent(null);
+                            PoliceAndThief.Jewel05.transform.position = new(-19.65f, -8, 1f);
+                            PoliceAndThief.Jewel05BeingStealed = null;
+                            break;
+                        case 6:
+                            PoliceAndThief.Jewel06.transform.SetParent(null);
+                            PoliceAndThief.Jewel06.transform.position = new(-5.45f, -13f, 1f);
+                            PoliceAndThief.Jewel06BeingStealed = null;
+                            break;
+                        case 7:
+                            PoliceAndThief.Jewel07.transform.SetParent(null);
+                            PoliceAndThief.Jewel07.transform.position = new(-7.65f, -4.2f, 1f);
+                            PoliceAndThief.Jewel07BeingStealed = null;
+                            break;
+                        case 8:
+                            PoliceAndThief.Jewel08.transform.SetParent(null);
+                            PoliceAndThief.Jewel08.transform.position = new(2f, -6.75f, 1f);
+                            PoliceAndThief.Jewel08BeingStealed = null;
+                            break;
+                        case 9:
+                            PoliceAndThief.Jewel09.transform.SetParent(null);
+                            PoliceAndThief.Jewel09.transform.position = new(8.9f, 1.45f, 1f);
+                            PoliceAndThief.Jewel09BeingStealed = null;
+                            break;
+                        case 10:
+                            PoliceAndThief.Jewel10.transform.SetParent(null);
+                            PoliceAndThief.Jewel10.transform.position = new(4.6f, -2.25f, 1f);
+                            PoliceAndThief.Jewel10BeingStealed = null;
+                            break;
+                        case 11:
+                            PoliceAndThief.Jewel11.transform.SetParent(null);
+                            PoliceAndThief.Jewel11.transform.position = new(-5.05f, -0.88f, 1f);
+                            PoliceAndThief.Jewel11BeingStealed = null;
+                            break;
+                        case 12:
+                            PoliceAndThief.Jewel12.transform.SetParent(null);
+                            PoliceAndThief.Jewel12.transform.position = new(-8.25f, -0.45f, 1f);
+                            PoliceAndThief.Jewel12BeingStealed = null;
+                            break;
+                        case 13:
+                            PoliceAndThief.Jewel13.transform.SetParent(null);
+                            PoliceAndThief.Jewel13.transform.position = new(-19.75f, -1.55f, 1f);
+                            PoliceAndThief.Jewel13BeingStealed = null;
+                            break;
+                        case 14:
+                            PoliceAndThief.Jewel14.transform.SetParent(null);
+                            PoliceAndThief.Jewel14.transform.position = new(-12.1f, -13.15f, 1f);
+                            PoliceAndThief.Jewel14BeingStealed = null;
+                            break;
+                        case 15:
+                            PoliceAndThief.Jewel15.transform.SetParent(null);
+                            PoliceAndThief.Jewel15.transform.position = new(7.15f, -14.45f, 1f);
+                            PoliceAndThief.Jewel15BeingStealed = null;
+                            break;
+                    }
+                }
+                else if (RebuildUs.ActivatedDleks)
                 {
                     switch (jewelRevertedId)
                     {
@@ -3049,7 +3278,12 @@ internal static partial class RPCProcedure
         }
 
         // if police can't see jewels, hide it after jailing a player
-        if (PlayerControl.LocalPlayer == PoliceAndThief.Policeplayer01 || PlayerControl.LocalPlayer == PoliceAndThief.Policeplayer02 || PlayerControl.LocalPlayer == PoliceAndThief.Policeplayer03 || PlayerControl.LocalPlayer == PoliceAndThief.Policeplayer04 || PlayerControl.LocalPlayer == PoliceAndThief.Policeplayer05 || PlayerControl.LocalPlayer == PoliceAndThief.Policeplayer06)
+        if (PlayerControl.LocalPlayer == PoliceAndThief.Policeplayer01
+            || PlayerControl.LocalPlayer == PoliceAndThief.Policeplayer02
+            || PlayerControl.LocalPlayer == PoliceAndThief.Policeplayer03
+            || PlayerControl.LocalPlayer == PoliceAndThief.Policeplayer04
+            || PlayerControl.LocalPlayer == PoliceAndThief.Policeplayer05
+            || PlayerControl.LocalPlayer == PoliceAndThief.Policeplayer06)
         {
             if (!PoliceAndThief.PoliceCanSeeJewels)
             {
@@ -3257,7 +3491,8 @@ internal static partial class RPCProcedure
             HotPotato.HotPotatoPlayer.NetTransform.Halt();
             HotPotato.HotPotatoPlayer.moveable = false;
             HotPotato.HotPotatoPlayer.MyPhysics.SetBodyType(PlayerBodyTypes.Seeker);
-            HotPotato.HotPotatoObject.transform.position = HotPotato.HotPotatoPlayer.transform.position + new Vector3(0, 0.5f, -0.25f);
+            HotPotato.HotPotatoObject.transform.position = HotPotato.HotPotatoPlayer.transform.position
+                                                           + new Vector3(0, 0.5f, -0.25f);
             HotPotato.HotPotatoObject.transform.parent = HotPotato.HotPotatoPlayer.transform;
 
             HudManager.Instance.StartCoroutine(Effects.Lerp(3, new Action<float>(p =>
@@ -3279,7 +3514,15 @@ internal static partial class RPCProcedure
 
             Helpers.ShowGamemodesPopUp(1, Helpers.PlayerById(HotPotato.HotPotatoPlayer.PlayerId));
 
-            HotPotato.HotpotatopointCounter = new StringBuilder(Tr.Get(TrKey.HotPotatoStatus)).Append("<color=#808080FF>").Append(HotPotato.HotPotatoPlayer.name).Append("</color> | ").Append(Tr.Get(TrKey.ColdPotatoes)).Append("<color=#00F7FFFF>").Append(HotPotato.NOT_POTATO_TEAM.Count).Append("</color>").ToString();
+            HotPotato.HotpotatopointCounter = new StringBuilder(Tr.Get(TrKey.HotPotatoStatus))
+                                              .Append("<color=#808080FF>")
+                                              .Append(HotPotato.HotPotatoPlayer.name)
+                                              .Append("</color> | ")
+                                              .Append(Tr.Get(TrKey.ColdPotatoes))
+                                              .Append("<color=#00F7FFFF>")
+                                              .Append(HotPotato.NOT_POTATO_TEAM.Count)
+                                              .Append("</color>")
+                                              .ToString();
 
             // Set custom cooldown to the hotpotato button
             HotPotato.HotPotatoButton.Timer = HotPotato.TransferCooldown;
@@ -3291,7 +3534,8 @@ internal static partial class RPCProcedure
     public static void HotPotatoExploded()
     {
         HotPotato.HotPotatoPlayer.MyPhysics.SetBodyType(PlayerBodyTypes.Normal);
-        HotPotato.HotPotatoPlayer.MurderPlayer(HotPotato.HotPotatoPlayer, MurderResultFlags.Succeeded | MurderResultFlags.DecisionByHost);
+        HotPotato.HotPotatoPlayer.MurderPlayer(HotPotato.HotPotatoPlayer,
+                                               MurderResultFlags.Succeeded | MurderResultFlags.DecisionByHost);
         HudManager.Instance.DangerMeter.gameObject.SetActive(!PlayerControl.LocalPlayer.Data.IsDead);
     }
 
@@ -3312,7 +3556,11 @@ internal static partial class RPCProcedure
                     soloPlayersAlives += 1;
             }
 
-            BattleRoyale.BattleRoyalePointCounter = new StringBuilder(Tr.Get(TrKey.BattleRoyaleFighters)).Append("<color=#009F57FF>").Append(soloPlayersAlives).Append("</color>").ToString();
+            BattleRoyale.BattleRoyalePointCounter = new StringBuilder(Tr.Get(TrKey.BattleRoyaleFighters))
+                                                    .Append("<color=#009F57FF>")
+                                                    .Append(soloPlayersAlives)
+                                                    .Append("</color>")
+                                                    .ToString();
 
             if (soloPlayersAlives <= 1)
             {
@@ -3343,12 +3591,14 @@ internal static partial class RPCProcedure
                 if (limePlayersAlive <= 0)
                 {
                     BattleRoyale.TriggerPinkTeamWin = true;
-                    GameManager.Instance.RpcEndGame((GameOverReason)CustomGameOverReason.BattleRoyalePinkTeamWin, false);
+                    GameManager.Instance.RpcEndGame((GameOverReason)CustomGameOverReason.BattleRoyalePinkTeamWin,
+                                                    false);
                 }
                 else if (pinkPlayersAlive <= 0)
                 {
                     BattleRoyale.TriggerLimeTeamWin = true;
-                    GameManager.Instance.RpcEndGame((GameOverReason)CustomGameOverReason.BattleRoyaleLimeTeamWin, false);
+                    GameManager.Instance.RpcEndGame((GameOverReason)CustomGameOverReason.BattleRoyaleLimeTeamWin,
+                                                    false);
                 }
             }
 
@@ -3362,35 +3612,60 @@ internal static partial class RPCProcedure
                         serialKillerAlive += 1;
                 }
 
-                BattleRoyale.BattleRoyalePointCounter = new StringBuilder(Tr.Get(TrKey.BattleRoyaleLimeTeam)).Append("<color=#39FF14FF>").Append(limePlayersAlive).Append("</color> | ").Append(Tr.Get(TrKey.BattleRoyalePinkTeam)).Append(" <color=#F2BEFFFF>").Append(pinkPlayersAlive).Append("</color> | ").Append(Tr.Get(TrKey.BattleRoyaleSerialKiller)).Append("<color=#808080FF>").Append(serialKillerAlive).Append("</color>").ToString();
+                BattleRoyale.BattleRoyalePointCounter = new StringBuilder(Tr.Get(TrKey.BattleRoyaleLimeTeam))
+                                                        .Append("<color=#39FF14FF>")
+                                                        .Append(limePlayersAlive)
+                                                        .Append("</color> | ")
+                                                        .Append(Tr.Get(TrKey.BattleRoyalePinkTeam))
+                                                        .Append(" <color=#F2BEFFFF>")
+                                                        .Append(pinkPlayersAlive)
+                                                        .Append("</color> | ")
+                                                        .Append(Tr.Get(TrKey.BattleRoyaleSerialKiller))
+                                                        .Append("<color=#808080FF>")
+                                                        .Append(serialKillerAlive)
+                                                        .Append("</color>")
+                                                        .ToString();
                 if (limePlayersAlive <= 0 && pinkPlayersAlive <= 0 && !BattleRoyale.SerialKiller.Data.IsDead)
                 {
                     BattleRoyale.TriggerSerialKillerWin = true;
-                    GameManager.Instance.RpcEndGame((GameOverReason)CustomGameOverReason.BattleRoyaleSerialKillerWin, false);
+                    GameManager.Instance.RpcEndGame((GameOverReason)CustomGameOverReason.BattleRoyaleSerialKillerWin,
+                                                    false);
                 }
                 else if (pinkPlayersAlive <= 0 && BattleRoyale.SerialKiller.Data.IsDead)
                 {
                     BattleRoyale.TriggerLimeTeamWin = true;
-                    GameManager.Instance.RpcEndGame((GameOverReason)CustomGameOverReason.BattleRoyaleLimeTeamWin, false);
+                    GameManager.Instance.RpcEndGame((GameOverReason)CustomGameOverReason.BattleRoyaleLimeTeamWin,
+                                                    false);
                 }
                 else if (limePlayersAlive <= 0 && BattleRoyale.SerialKiller.Data.IsDead)
                 {
                     BattleRoyale.TriggerPinkTeamWin = true;
-                    GameManager.Instance.RpcEndGame((GameOverReason)CustomGameOverReason.BattleRoyalePinkTeamWin, false);
+                    GameManager.Instance.RpcEndGame((GameOverReason)CustomGameOverReason.BattleRoyalePinkTeamWin,
+                                                    false);
                 }
             }
             else
             {
-                BattleRoyale.BattleRoyalePointCounter = new StringBuilder(Tr.Get(TrKey.BattleRoyaleLimeTeam)).Append("<color=#39FF14FF>").Append(limePlayersAlive).Append("</color> | ").Append(Tr.Get(TrKey.BattleRoyalePinkTeam)).Append(" <color=#F2BEFFFF>").Append(pinkPlayersAlive).Append("</color>").ToString();
+                BattleRoyale.BattleRoyalePointCounter = new StringBuilder(Tr.Get(TrKey.BattleRoyaleLimeTeam))
+                                                        .Append("<color=#39FF14FF>")
+                                                        .Append(limePlayersAlive)
+                                                        .Append("</color> | ")
+                                                        .Append(Tr.Get(TrKey.BattleRoyalePinkTeam))
+                                                        .Append(" <color=#F2BEFFFF>")
+                                                        .Append(pinkPlayersAlive)
+                                                        .Append("</color>")
+                                                        .ToString();
                 if (pinkPlayersAlive <= 0)
                 {
                     BattleRoyale.TriggerLimeTeamWin = true;
-                    GameManager.Instance.RpcEndGame((GameOverReason)CustomGameOverReason.BattleRoyaleLimeTeamWin, false);
+                    GameManager.Instance.RpcEndGame((GameOverReason)CustomGameOverReason.BattleRoyaleLimeTeamWin,
+                                                    false);
                 }
                 else if (limePlayersAlive <= 0)
                 {
                     BattleRoyale.TriggerPinkTeamWin = true;
-                    GameManager.Instance.RpcEndGame((GameOverReason)CustomGameOverReason.BattleRoyalePinkTeamWin, false);
+                    GameManager.Instance.RpcEndGame((GameOverReason)CustomGameOverReason.BattleRoyalePinkTeamWin,
+                                                    false);
                 }
             }
         }
@@ -3412,9 +3687,30 @@ internal static partial class RPCProcedure
         }
 
         if (BattleRoyale.SerialKiller != null)
-            BattleRoyale.BattleRoyalePointCounter = new StringBuilder(Tr.Get(TrKey.BattleRoyaleGoal)).Append(BattleRoyale.RequiredScore).Append(" | <color=#39FF14FF>").Append(Tr.Get(TrKey.BattleRoyaleLimeTeam)).Append(BattleRoyale.LimePoints).Append("</color> | <color=#F2BEFFFF>").Append(Tr.Get(TrKey.BattleRoyalePinkTeam)).Append(BattleRoyale.PinkPoints).Append("</color> | <color=#808080FF>").Append(Tr.Get(TrKey.BattleRoyaleSerialKillerPoints)).Append(BattleRoyale.SerialKillerPoints).Append("</color>").ToString();
+            BattleRoyale.BattleRoyalePointCounter = new StringBuilder(Tr.Get(TrKey.BattleRoyaleGoal))
+                                                    .Append(BattleRoyale.RequiredScore)
+                                                    .Append(" | <color=#39FF14FF>")
+                                                    .Append(Tr.Get(TrKey.BattleRoyaleLimeTeam))
+                                                    .Append(BattleRoyale.LimePoints)
+                                                    .Append("</color> | <color=#F2BEFFFF>")
+                                                    .Append(Tr.Get(TrKey.BattleRoyalePinkTeam))
+                                                    .Append(BattleRoyale.PinkPoints)
+                                                    .Append("</color> | <color=#808080FF>")
+                                                    .Append(Tr.Get(TrKey.BattleRoyaleSerialKillerPoints))
+                                                    .Append(BattleRoyale.SerialKillerPoints)
+                                                    .Append("</color>")
+                                                    .ToString();
         else
-            BattleRoyale.BattleRoyalePointCounter = new StringBuilder(Tr.Get(TrKey.BattleRoyaleGoal)).Append(BattleRoyale.RequiredScore).Append(" | <color=#39FF14FF>").Append(Tr.Get(TrKey.BattleRoyaleLimeTeam)).Append(BattleRoyale.LimePoints).Append("</color> | <color=#F2BEFFFF>").Append(Tr.Get(TrKey.BattleRoyalePinkTeam)).Append(BattleRoyale.PinkPoints).Append("</color>").ToString();
+            BattleRoyale.BattleRoyalePointCounter = new StringBuilder(Tr.Get(TrKey.BattleRoyaleGoal))
+                                                    .Append(BattleRoyale.RequiredScore)
+                                                    .Append(" | <color=#39FF14FF>")
+                                                    .Append(Tr.Get(TrKey.BattleRoyaleLimeTeam))
+                                                    .Append(BattleRoyale.LimePoints)
+                                                    .Append("</color> | <color=#F2BEFFFF>")
+                                                    .Append(Tr.Get(TrKey.BattleRoyalePinkTeam))
+                                                    .Append(BattleRoyale.PinkPoints)
+                                                    .Append("</color>")
+                                                    .ToString();
 
         if (BattleRoyale.LimePoints >= BattleRoyale.RequiredScore)
         {
