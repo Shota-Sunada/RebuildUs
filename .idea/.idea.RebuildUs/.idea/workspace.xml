@@ -8,7 +8,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="99b7ef31-959d-4b08-a721-c78fdab6f71c" name="変更" comment="" />
+    <list default="true" id="99b7ef31-959d-4b08-a721-c78fdab6f71c" name="変更" comment="">
+      <change afterPath="$PROJECT_DIR$/RebuildUs.sln.DotSettings" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/RebuildUs.sln.DotSettings.user" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/add-translations.ps1" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.RebuildUs/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.RebuildUs/.idea/workspace.xml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -67,7 +72,6 @@
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/8bdea7cd6fc1c76ef696473f3620afb6188f44aee7f79ea4f785d106ee92c9a/BasePlugin.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/9d6190453d1514cb25655fc55293497e6b87d0c1dfd7fc39f3378ae5835099e8/Paths.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Reactor/global.json" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/RebuildUs/Enums/MessageType.cs" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="KubernetesApiPersistence">{}</component>
   <component name="KubernetesApiProvider">{
@@ -137,17 +141,13 @@
     "nodejs_package_manager_path": "npm",
     "rider.code.cleanup.on.save": "true",
     "rider.code.cleanup.on.save.profile": "Built-in: Reformat Code",
-    "settings.editor.selected.configurable": "preferences.keymap",
+    "settings.editor.selected.configurable": "preferences.sourceCode.C#",
     "to.speed.mode.migration.done": "true",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
-  <component name="RunManager" selected="PowerShell.Start Debug AmongUs">
+  <component name="RunManager" selected="PowerShell.Build RebuildUs.Impostor">
     <configuration name="Add Translations" type="PowerShellRunType" factoryName="PowerShell" scriptUrl=".\add-translations.ps1" workingDirectory="$SolutionDir$" executablePath="powershell">
-      <envs />
-      <method v="2" />
-    </configuration>
-    <configuration name="Build Custom Impostor" type="PowerShellRunType" factoryName="PowerShell" scriptUrl=".\build-impostor-cake.ps1" workingDirectory="$SolutionDir$" executablePath="powershell">
       <envs />
       <method v="2" />
     </configuration>
@@ -233,7 +233,6 @@
       <item itemvalue="PowerShell.Build Reactor Release" />
       <item itemvalue="PowerShell.Build Submerged Release" />
       <item itemvalue="PowerShell..NET Format" />
-      <item itemvalue="PowerShell.Build Custom Impostor" />
       <item itemvalue="PowerShell.Build RebuildUs.Impostor" />
       <item itemvalue="PowerShell.Build Launcher" />
       <item itemvalue="PowerShell.Build RebuildUs Debug" />
@@ -264,6 +263,7 @@
       <workItem from="1770715771537" duration="3611000" />
       <workItem from="1771027695353" duration="17438000" />
       <workItem from="1771062633627" duration="1728000" />
+      <workItem from="1771064669422" duration="336000" />
     </task>
     <task id="LOCAL-00001" summary="一旦ゲームモードを追加 (from LasMonjas)">
       <option name="closed" value="true" />
@@ -377,7 +377,23 @@
       <option name="project" value="LOCAL" />
       <updated>1771043166023</updated>
     </task>
-    <option name="localTasksCounter" value="15" />
+    <task id="LOCAL-00015" summary="Revert &quot;一旦ゲームモードを追加 (from LasMonjas)&quot;&#10;&#10;This reverts commit ef1a674c">
+      <option name="closed" value="true" />
+      <created>1771064738543</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1771064738543</updated>
+    </task>
+    <task id="LOCAL-00016" summary="管理外コミット">
+      <option name="closed" value="true" />
+      <created>1771064893125</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1771064893125</updated>
+    </task>
+    <option name="localTasksCounter" value="17" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -427,7 +443,9 @@
     <MESSAGE value="ちょい修正" />
     <MESSAGE value="ホットリロード準備" />
     <MESSAGE value="ホットリロード諦め" />
-    <option name="LAST_COMMIT_MESSAGE" value="ホットリロード諦め" />
+    <MESSAGE value="Revert &quot;一旦ゲームモードを追加 (from LasMonjas)&quot;&#10;&#10;This reverts commit ef1a674c" />
+    <MESSAGE value="管理外コミット" />
+    <option name="LAST_COMMIT_MESSAGE" value="管理外コミット" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
