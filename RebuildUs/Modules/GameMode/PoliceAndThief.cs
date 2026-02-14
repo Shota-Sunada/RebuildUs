@@ -350,31 +350,7 @@ public static partial class PoliceAndThief
         {
             // Skeld / Custom Skeld
             case 0:
-                if (RebuildUs.ActivatedSensei)
-                {
-                    policeTeamPos = new(-12f, 5f, PlayerControl.LocalPlayer.transform.position.z);
-                    thiefTeamPos = new(13.75f, -0.2f, PlayerControl.LocalPlayer.transform.position.z);
-                    cellPos = new(-12f, 7.2f, 0.5f);
-                    cellButtonPos = new(-12f, 4.7f, 0.5f);
-                    jewelButtonPos = new(13.75f, -0.42f, 0.5f);
-                    thiefSpaceShipPos = new(17f, 0f, 0.6f);
-                    jewel01Pos = new(6.95f, 4.95f, 1f);
-                    jewel02Pos = new(-3.75f, 5.35f, 1f);
-                    jewel03Pos = new(-7.7f, 11.3f, 1f);
-                    jewel04Pos = new(-19.65f, 5.3f, 1f);
-                    jewel05Pos = new(-19.65f, -8, 1f);
-                    jewel06Pos = new(-5.45f, -13f, 1f);
-                    jewel07Pos = new(-7.65f, -4.2f, 1f);
-                    jewel08Pos = new(2f, -6.75f, 1f);
-                    jewel09Pos = new(8.9f, 1.45f, 1f);
-                    jewel10Pos = new(4.6f, -2.25f, 1f);
-                    jewel11Pos = new(-5.05f, -0.88f, 1f);
-                    jewel12Pos = new(-8.25f, -0.45f, 1f);
-                    jewel13Pos = new(-19.75f, -1.55f, 1f);
-                    jewel14Pos = new(-12.1f, -13.15f, 1f);
-                    jewel15Pos = new(7.15f, -14.45f, 1f);
-                }
-                else if (RebuildUs.ActivatedDleks)
+                if (RebuildUs.ActivatedDleks)
                 {
                     policeTeamPos = new(10.2f, 1.18f, PlayerControl.LocalPlayer.transform.position.z);
                     thiefTeamPos = new(1.31f, -16.25f, PlayerControl.LocalPlayer.transform.position.z);
@@ -584,7 +560,7 @@ public static partial class PoliceAndThief
                 celltwo.gameObject.layer = 9;
                 celltwo.transform.GetChild(0).gameObject.layer = 9;
                 Celltwo = celltwo;
-                var cellbuttontwo = GameObject.Instantiate(AssetLoader.Freethiefbutton, PlayerControl.LocalPlayer.transform.parent);
+                var cellbuttontwo = GameObject.Instantiate(AssetLoader.FreeThiefButton, PlayerControl.LocalPlayer.transform.parent);
                 cellbuttontwo.name = "cellbuttontwo";
                 cellbuttontwo.transform.position = new(-11f, -39.35f, -0.01f);
                 Cellbuttontwo = cellbuttontwo;
@@ -641,7 +617,7 @@ public static partial class PoliceAndThief
             cell.gameObject.layer = 9;
             cell.transform.GetChild(0).gameObject.layer = 9;
             Cell = cell;
-            var cellbutton = GameObject.Instantiate(AssetLoader.Freethiefbutton, PlayerControl.LocalPlayer.transform.parent);
+            var cellbutton = GameObject.Instantiate(AssetLoader.FreeThiefButton, PlayerControl.LocalPlayer.transform.parent);
             cellbutton.name = "cellbutton";
             cellbutton.transform.position = cellButtonPos;
             Cellbutton = cellbutton;
@@ -947,9 +923,7 @@ public static partial class PoliceAndThief
                         {
                             // Skeld
                             case 0:
-                                if (RebuildUs.ActivatedSensei)
-                                    player.transform.position = new(-12f, 5f, player.transform.position.z);
-                                else if (RebuildUs.ActivatedDleks)
+                                if (RebuildUs.ActivatedDleks)
                                     player.transform.position = new(10.2f, 1.18f, player.transform.position.z);
                                 else
                                     player.transform.position = new(-10.2f, 1.18f, player.transform.position.z);
@@ -1078,9 +1052,7 @@ public static partial class PoliceAndThief
                         {
                             // Skeld
                             case 0:
-                                if (RebuildUs.ActivatedSensei)
-                                    player.transform.position = new(13.75f, -0.2f, player.transform.position.z);
-                                else if (RebuildUs.ActivatedDleks)
+                                if (RebuildUs.ActivatedDleks)
                                     player.transform.position = new(1.31f, -16.25f, player.transform.position.z);
                                 else
                                     player.transform.position = new(-1.31f, -16.25f, player.transform.position.z);

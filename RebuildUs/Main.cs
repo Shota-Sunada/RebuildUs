@@ -60,7 +60,6 @@ public class RebuildUs : BasePlugin
     internal static int OptionsPage = 0;
     public static IRegionInfo[] DefaultRegions;
 
-    internal static bool ActivatedSensei;
     internal static bool ActivatedDleks;
     internal static bool UpdatedSenseiMinimap;
     internal static bool UpdatedSenseiAdminmap;
@@ -212,7 +211,6 @@ public class RebuildUs : BasePlugin
 
         Update.ActivatedReportButtonAfterCustomMode = false;
 
-        ActivatedSensei = false;
         UpdatedSenseiMinimap = false;
         UpdatedSenseiAdminmap = false;
         ActivatedDleks = false;
@@ -352,8 +350,7 @@ public class RebuildUs : BasePlugin
 
         IRegionInfo[] regions =
         [
-            new DnsRegionInfo(Ip.Value, "Custom", StringNames.NoTranslation, Ip.Value, Port.Value, false)
-                .CastFast<IRegionInfo>()
+            new DnsRegionInfo(Ip.Value, "Custom", StringNames.NoTranslation, Ip.Value, Port.Value, false).CastFast<IRegionInfo>()
         ];
 #nullable enable
         var currentRegion = serverManager.CurrentRegion;

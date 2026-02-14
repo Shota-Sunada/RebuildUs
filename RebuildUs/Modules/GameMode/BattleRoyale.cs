@@ -804,15 +804,7 @@ public static partial class BattleRoyale
         {
             // Skeld / Custom Skeld
             case 0:
-                if (RebuildUs.ActivatedSensei)
-                {
-                    serialKillerPos = new(-3.65f, 5f, PlayerControl.LocalPlayer.transform.position.z);
-                    limeTeamPos = new(-17.5f, -1.15f, PlayerControl.LocalPlayer.transform.position.z);
-                    pinkTeamPos = new(7.7f, -0.95f, PlayerControl.LocalPlayer.transform.position.z);
-                    limeTeamFloorPos = new(-17.5f, -1.15f, 0.5f);
-                    pinkTeamFloorPos = new(7.7f, -0.95f, 0.5f);
-                }
-                else if (RebuildUs.ActivatedDleks)
+                if (RebuildUs.ActivatedDleks)
                 {
                     serialKillerPos = new(-6.35f, -7.5f, PlayerControl.LocalPlayer.transform.position.z);
                     limeTeamPos = new(17f, -5.5f, PlayerControl.LocalPlayer.transform.position.z);
@@ -963,9 +955,7 @@ public static partial class BattleRoyale
                         {
                             // Skeld
                             case 0:
-                                if (RebuildUs.ActivatedSensei)
-                                    SerialKiller.transform.position = new(-3.65f, 5f, PlayerControl.LocalPlayer.transform.position.z);
-                                else if (RebuildUs.ActivatedDleks)
+                                if (RebuildUs.ActivatedDleks)
                                     SerialKiller.transform.position = new(-6.35f, -7.5f, PlayerControl.LocalPlayer.transform.position.z);
                                 else
                                     SerialKiller.transform.position = new(6.35f, -7.5f, PlayerControl.LocalPlayer.transform.position.z);
@@ -1080,9 +1070,7 @@ public static partial class BattleRoyale
                             {
                                 // Skeld
                                 case 0:
-                                    if (RebuildUs.ActivatedSensei)
-                                        player.transform.position = new(-17.5f, -1.15f, player.transform.position.z);
-                                    else if (RebuildUs.ActivatedDleks)
+                                    if (RebuildUs.ActivatedDleks)
                                         player.transform.position = new(17f, -5.5f, player.transform.position.z);
                                     else
                                         player.transform.position = new(-17f, -5.5f, player.transform.position.z);
@@ -1199,9 +1187,7 @@ public static partial class BattleRoyale
                             {
                                 // Skeld
                                 case 0:
-                                    if (RebuildUs.ActivatedSensei)
-                                        player.transform.position = new(7.7f, -0.95f, player.transform.position.z);
-                                    else if (RebuildUs.ActivatedDleks)
+                                    if (RebuildUs.ActivatedDleks)
                                         player.transform.position = new(-12f, -4.75f, player.transform.position.z);
                                     else
                                         player.transform.position = new(12f, -4.75f, player.transform.position.z);
