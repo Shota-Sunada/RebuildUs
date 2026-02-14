@@ -1,0 +1,45 @@
+namespace RebuildUs.Roles.Crewmate;
+
+[HarmonyPatch]
+public class Spy : RoleBase<Spy>
+{
+    public static Color NameColor = Palette.ImpostorRed;
+    public override Color RoleColor => NameColor;
+
+    // write configs here
+    public static bool ImpostorsCanKillAnyone { get { return CustomOptionHolder.SpyImpostorsCanKillAnyone.GetBool(); } }
+    public static bool CanEnterVents { get { return CustomOptionHolder.SpyCanEnterVents.GetBool(); } }
+    public static bool HasImpostorVision { get { return CustomOptionHolder.SpyHasImpostorVision.GetBool(); } }
+
+    public Spy()
+    {
+        // write value init here
+        StaticRoleType = CurrentRoleType = RoleType.Spy;
+    }
+
+    public override void OnUpdateNameColors()
+    {
+        var localPlayer = PlayerControl.LocalPlayer;
+        if (localPlayer != null && localPlayer.IsTeamImpostor())
+        {
+            Update.SetPlayerNameColor(Player, NameColor);
+        }
+    }
+
+    public override void OnMeetingStart() { }
+    public override void OnMeetingEnd() { }
+    public override void OnIntroEnd() { }
+    public override void FixedUpdate() { }
+    public override void OnKill(PlayerControl target) { }
+    public override void OnDeath(PlayerControl killer = null) { }
+    public override void OnFinishShipStatusBegin() { }
+    public override void HandleDisconnect(PlayerControl player, DisconnectReasons reason) { }
+
+    // write functions here
+
+    public static void Clear()
+    {
+        // reset configs here
+        Players.Clear();
+    }
+}

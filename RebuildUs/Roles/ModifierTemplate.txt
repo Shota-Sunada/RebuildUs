@@ -1,0 +1,34 @@
+namespace RebuildUs.Roles.Modifier;
+
+[HarmonyPatch]
+public class Modifier : ModifierBase<Modifier>
+{
+    public static Color ModifierColor = Palette.CrewmateBlue;
+
+    // write configs here
+
+    public Modifier()
+    {
+        // write value init here
+        StaticModifierType = CurrentModifierType = ModifierType.[CHANGE HERE];
+    }
+
+    public override void OnMeetingStart() { }
+    public override void OnMeetingEnd() { }
+    public override void OnIntroEnd() { }
+    public override void FixedUpdate() { }
+    public override void OnKill(PlayerControl target) { }
+    public override void OnDeath(PlayerControl killer = null) { }
+    public override void OnFinishShipStatusBegin() { }
+    public override void HandleDisconnect(PlayerControl player, DisconnectReasons reason) { }
+    public override void MakeButtons(HudManager hm) { }
+    public override void SetButtonCooldowns() { }
+
+    // write functions here
+
+    public override void Clear()
+    {
+        // reset configs here
+        Players.Clear();
+    }
+}

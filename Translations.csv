@@ -1,0 +1,685 @@
+Key,English,Japanese
+ActivateRoles,Enable Mod Roles And Block Vanilla Roles,Mod役職を有効化
+AdditionalEmergencyCooldown,Additional Emergency Cooldown Until Several Players Are Dead,誰かが死ぬまで緊急会議のクールダウンを増加
+AdditionalEmergencyCooldownTime,Additional Cooldown Time,追加クールダウン
+AdminRanOut,Admin: ran out of time,アドミン: 時間切れ
+AdminText,Admin: {0} sec remaining,アドミン: 残り{0}秒
+AirshipAdditionalLadder,Additional Ladder (AirShip),昇降機右にはしごを追加 (AirShip)
+AirshipAdditionalSpawn,Additional Spawn Point (AirShip),追加スポーンポイント (AirShip)
+AirshipAdditionalWireTask,Additional Wiring Task (AirShip),追加配線タスク (AirShip)
+AirshipDisableGapSwitchBoard,Disable Gap SwitchBoard (AirShip),昇降機の配電盤を無効化 (AirShip)
+AirshipDisableMovingPlatform,Disable Moving Lift (AirShip),ぬーんを無効化 (AirShip)
+AirshipEnableWallCheck,Enable Wall Check On Tasks (AirShip),壁チェックを有効化 (AirShip)
+AirshipInitialDoorCooldown,Initial Door Sabotage Cooldown (AirShip),初期ドアクールダウンを是正 (AirShip)
+AirshipInitialSabotageCooldown,Initial Sabotage Cooldown (AirShip),初期サボタージュクールダウンを是正 (AirShip)
+AirshipOldAdmin,Old Admin (AirShip),旧アドミン (AirShip)
+AirshipOneWayLadder,Gap One Way Ladder (AirShip),昇降機左のはしごを一方通行化 (AirShip)
+AirshipOptimize,Optimize Airship,Airshipを最適化
+AirshipOptions,Enable Airship Options,Airshipの設定を有効化
+AirshipRandomSpawn,Enable Random Spawn (AirShip),ランダムスポーンを有効化 (AirShip)
+AirshipReactorDuration,Reactor Duration (AirShip),リアクター制限時間 (AirShip)
+AirshipReplaceSafeTask,Replace Safe Task To Another Task (AirShip),金庫タスクを別のものに変更 (AirShip)
+AirshipRestrictedAdmin,Restrict Admin Area (AirShip),アドミンのエリアを制限 (AirShip)
+AirshipSetOriginalCooldown,Set Original Cooldown On First Spawn (AirShip),初期クールダウンを是正 (AirShip)
+AirshipSynchronizedSpawning,Enable Synchronized Spawning (AirShip),同時スポーン (AirShip)
+AirshipWait,Waiting Other Players,他のプレイヤーを待機中...
+Alive,Alive,生存
+AllowParallelMedBayScans,Allow Parallel MedBay Scans,医務室タスクの並行を許可
+AmongUsSettings,AmongUs Settings,AmongUs 設定
+AntiTeleport,Anti Teleport,アンチテレポート
+AntiTeleportPostfix,AT,AT
+Army,Army,アーミー
+Arsonist,Arsonist,アーソニスト
+ArsonistCanBeLovers,Can Be Lovers,ラバーズになることができる
+ArsonistCooldown,Douse Cooldown,燃料塗りクールダウン
+ArsonistDuration,Douse Duration,燃料塗りに必要な時間
+ArsonistFullDesc,"The Arsonist does not have any tasks, they have to win the game solo.\nThe Arsonist can douse other players by pressing the douse button and remaining next to the player for a few seconds.\nIf the player that the Arsonist douses walks out of range, the cooldown will reset to 0.\nAfter dousing everyone alive the Arsonist can ignite all the players which results in an Arsonist win.",アーソニストは、他のクルーメイト全員に油を塗って、放火することで船全体を炎の海と化すことを目的とする第三陣営である。\n油を塗るには一定時間ターゲットに近づく必要がある。\n死亡したプレイヤーは油を塗る対象ではない。
+ArsonistIntroDesc,Let them burn,燃やせ
+ArsonistShortDesc,Let them burn,燃やせ
+ArsonistWin,Arsonist Win,アーソニスト 勝利
+ArsonistWinExtra,Arsonist & {0} Win,アーソニスト & {0}勝利
+Bait,Bait,ベイト
+BaitFullDesc,"The Bait is a Crewmate that if killed, forces the killer to self report the body (you can configure a delay in the options).\nAdditionally, the Bait can see if someone is inside a vent (depending on the options the exact vent gets an outline or all vents do).",ベイトは、キルされた直後、もしくは数秒後に殺害者自身で強制的に通報させることができるクルーメイトである。\nまた、誰かがベントを使用しているときに、ベントが青く光る。
+BaitHighlightAllVents,Highlight All Vents If A Vent Is Occupied,ベント使用時、全てのベントが黄色く光る
+BaitIntroDesc,Bait your enemies,敵を罠にはめよう
+BaitReportDelay,Bait Report Delay,通報遅延
+BaitShortDesc,Bait your enemies,敵を罠にはめよう
+BaitShowKillFlash,Warn The Killer With A Flash,死亡時、犯人に警告する
+BaitWarning,You killed a Bait!!,ベイトを殺しちゃった!!
+BetterSabotageMap,Better Sabotage Map,改良版サボタージュマップ
+BlockSkippingInEmergencyMeetings,Block Skipping in Meetings,ミーティングでスキップを無効化
+Blurple,Blurple,ブラープル
+BountyHunter,Bounty Hunter,バウンティハンター
+BountyHunterArrowUpdateInterval,Arrow Update Interval,矢印更新間隔
+BountyHunterBountyDuration,Duration After Which Bounty Changes,標的が切り替わる時間
+BountyHunterFullDesc,"The Bounty Hunter is an Impostor, that continuously get bounties (the targeted player doesn't get notified).\nThe target of the Bounty Hunter swaps after every meeting and after a configurable amount of time.\nIf the Bounty Hunter kills their target, their kill cooldown will be a lot less than usual.\nKilling a player that's not their current target results in an increased kill cooldown.\nDepending on the options, there'll be an arrow pointing towards the current target.",バウンティハンターは標的を持つインポスターである。\n標的を殺すと、キルクールが大幅に短くなる一方、標的以外を殺すと、キルクールが大幅に長くなる。\n標的は、会議後や一定時間経過後に自動的に変化する。
+BountyHunterIntroDesc,Hunt your Bounty down,標的を確実に仕留めよう
+BountyHunterPunishmentTime,Additional Cooldown After Killing Others,標的以外を殺害した後のキルクール
+BountyHunterReducedCooldown,Cooldown After Killing Bounty,標的を殺害した後のキルクール
+BountyHunterShortDesc,Hunt your Bounty down,標的を確実に仕留めよう
+BountyHunterShowArrow,Show Arrow Pointing Towards The Bounty,標的に矢印を表示
+ButtonBlocked,BLOCKED,使用禁止
+CamerasRanOut,Cameras: ran out of time,カメラ: 時間切れ
+CamerasText,Cameras: {0} sec remaining,カメラ: 残り{0}秒
+CamoText,[BLANK],カモフラージュ
+Camouflager,Camouflager,カモフラージャー
+CamouflagerCooldown,Camouflage Cooldown,カモフラージュクールダウン
+CamouflagerDuration,Camouflage Duration,カモフラージュ効果時間
+CamouflagerFullDesc,"The Camouflager is an Impostor which can additionally activate a camouflage mode.\nWhile it is active, all player names/pets/hats are hidden and all players have the same color.",カモフラージャーは、一定時間すべてのクルーを同じ色に変身させる能力を持つインポスターである。
+CamouflagerIntroDesc,Camouflage and kill the Crewmates,人混みに隠れよう
+CamouflagerRandomColors,Enable Random Colors,ランダムカラーを有効化
+CamouflagerShortDesc,Hide among others,人混みに隠れよう
+CanWinByTaskLivingPlayer,Living Crewmates Can Win By Task,生存クルーメイトがタスクで勝利できる
+ChangePage,"Use ""<"" and "">"" to switch pages",「<」と「>」でページを切り替え
+CleanText,[BLANK],消去
+Cleaner,Cleaner,クリーナー
+CleanerCooldown,Clean Cooldown,死体消しクールダウン
+CleanerFullDesc,The Cleaner is an Impostor who has the ability to clean up dead bodies.,クリーナーは、死体を消すことができるインポスターである。
+CleanerIntroDesc,Kill everyone and leave no traces,クルーを殺して死体を隠そう
+CleanerShortDesc,Clean up dead bodies,死体を隠そう
+CloseVentText,[BLANK],封鎖
+CommonAbilityPrimary,Common Ability Primary,共通能力など
+CommonAbilitySecondary,Common Ability Secondary,その他能力など
+CreatedMadmateCanDieToSheriff,Madmate Can Die To Sheriff,マッドメイトはシェリフに殺される
+CreatedMadmateCanEnterVents,Madmate Can Enter Vents ,マッドメイトはベントに入れる
+CreatedMadmateCanFixComm,Madmate Can Fix Communication Sabotage,マッドメイトが通信サボタージュを復旧できる
+CreatedMadmateCanSabotage,Madmate Can Sabotage,マッドメイトがサボタージュできる
+CreatedMadmateExileCrewmate,Exile A Crewmate When Madmate Is Exiled,マッドメイトが追放された時、クルーメイトを道連れにする
+CreatedMadmateHasImpostorVision,Madmate Has Impostor Vision,マッドメイトはインポスターの視界を持つ
+CreatedMadmateNumTasks,Number Of Tasks,タスク数
+Crewmate,Crewmate,クルーメイト
+CrewmateAbilityPrimary,Crewmate Ability Primary,クルーメイト第一能力
+CrewmateAbilitySecondary,Crewmate Ability Secondary,クルーメイト第二能力
+CrewmateFullDesc,You are a regular Crewmate.,あなたは、普通のクルーメイトだ。
+CrewmateIntroDesc,Do Tasks and Find the <color=#FF1919FF>Impostors</color>,タスクをして<color=#FF1919FF>インポスター</color>を探し出そう
+CrewmateRoles,Crewmate Roles,クルーメイト役職
+CrewmateRolesCountMax,Maximum Crewmate Roles,最大クルーメイト役職出現数
+CrewmateRolesCountMin,Minimum Crewmate Roles,最小クルーメイト役職出現数
+CrewmateSettings,This is crewmate roles settings of RebuildUs.,RebuildUsのクルー役職の設定です。
+CrewmateSettingsButton,Crewmate Roles,クルーメイト役職
+CrewmateShortDesc,Find the Impostors,インポスターを探し出そう
+CrewmateWin,Crewmate Win,クルーメイト 勝利
+CrewmateWinExtra,Crewmate & {0} Win,クルーメイト & {0}勝利
+CurrentPage,Current Page,現在のページ
+CurseKillText,[BLANK],呪い殺す
+CurseText,Curse,呪う
+Darkness,Darkness,ダークネス
+Dead,Dead,死亡
+DelayBeforeMeeting,Delay Time Before Meeting,ミーティング開始前の遅延
+Detective,Detective,ディテクティブ
+DetectiveAnonymousFootprints,Anonymous Footprints,足跡が無色
+DetectiveColorDark,darker,暗い
+DetectiveColorLight,lighter,明るい
+DetectiveDarkLabel,D,暗
+DetectiveFootprintDuration,Footprint Duration,足跡の持続時間
+DetectiveFootprintInterval,Footprint Interval,足跡の間隔
+DetectiveFullDesc,The Detective can see footprints that other players leave behind.\nThe Detective's other feature shows when they report a corpse: they receive clues about the killer's identity. The type of information they get is based on the time it took them to find the corpse.,探偵は、外のプレイヤーの足跡を見ることができるクルーメイトである。\nまた、自分で死体を通保すると、時間経過に応じて情報を得ることができる。\n情報は発見が早いほど詳しく得ることができる。\n情報は、次のミーティング中にチャットに表示される。
+DetectiveIntroDesc,Find the <color=#FF1919FF>Impostors</color> by examining footprints,足跡をたどって<color=#FF1919FF>インポスター</color>を見つけよう
+DetectiveLightLabel,L,明
+DetectiveReportColor,Body Report: The killer appears to be a {0} color!,死体報告: 犯人の色は{0}ようだ!
+DetectiveReportColorDuration,Time Where Detective Reports Will Have Color Type,死体発見時、犯人の色の種類がわかる時間
+DetectiveReportName,Body Report: The killer appears to be {0}!,死体報告: 犯人は{0}のようだ!
+DetectiveReportNameDuration,Time Where Detective Reports Will Have Name,死体発見時、犯人の名前がわかる時間
+DetectiveReportNone,Body Report: The corpse is too old to gain information from!,死体報告: 死体が古すぎて、情報が得られない!
+DetectiveShortDesc,Examine footprints,足跡をたどろう
+DisableVentAnimation,Disable Vent Animation,ベントアニメーションを無効化
+Disconnected,Disconnected,切断
+DiscordOptions,Discord Options,Discord設定
+DivineCrew,Crewmate,クルーメイト
+DivineImpostor,Impostor,インポスター
+DivineMessageRole,{0}'s role is {1},{0}は{1}
+DivineNeutral,Neutral,第三陣営
+DouseText,Douse,塗る
+EnableDiscordAutoMute,Enable Auto Mute (Account Link & Settings Required),自動ミュートを有効 (要設定&連携)
+EnableDiscordEmbed,Enable To Send Embed To Guild (Settings Required & Required To Link Account),サーバーにステータスを送信 (要設定&連携)
+EnableHawkMode,Enable Hawk Mode On Death,死亡時にホークモードを有効化
+Engineer,Engineer,エンジニア
+EngineerFullDesc,"The Engineer (if alive) can fix one sabotage per game from anywhere on the map.\nThe Engineer can use vents. If the Engineer is inside a vent, the Impostors will see a\nblue outline around all vents on the map (in order to warn them).\nBecause of the vents the Engineer might not be able to start some tasks using the\n""Use"" button, you can double click on the tasks instead.",エンジニアはベントに入ることができるクルーメイトである。\nまた、サボタージュを直す能力を持つ。\nエンジニアがベントに入っているとき、インポスターやジャッカルにバレる場合がある。
+EngineerHighlightForImpostors,Impostors See Vents Highlighted,ベントの中にいる時、インポスターに強調表示する
+EngineerHighlightForTeamJackal,Team Jackal See Vents Highlighted,ベントの中にいる時、ジャッカル陣営に強調表示する
+EngineerIntroDesc,Maintain important systems on the ship,お船のメンテは忘れずに
+EngineerNumberOfFixes,Number Of Sabotage Fixes,サボタージュ修復可能回数
+EngineerShortDesc,Repair the ship,お船のメンテは忘れずに
+Eraser,Eraser,イレイサー
+EraserCanEraseAnyone,Can Erase Anyone,全員の役職を削除できる
+EraserCooldown,Erase Cooldown,ロール削除クールダウン
+EraserCooldownIncrease,Erase Cooldown Penalty,ロール削除毎に追加するクールダウン
+EraserFullDesc,"The Eraser is an Impostor that can erase the role of every player.\nThe targeted players will lose their role after the meeting right before a player is exiled.\nAfter every erase, the cooldown increases by 10 seconds.\nThe erase will be performed, even if the Eraser or their target die before the next meeting.\nBy default the Eraser can erase everyone but the Spy and other Impostors. Depending on the options you can also erase them (Impostors will lose their special Impostor ability).",イレイサーは他人の役職を消去するインポスターである。\n能力を使用すると、ターゲットの役職をミーティング後に消去する。\nただし、能力を使用するたびにクールダウンが増加する。\n能力を使っておけば、追放されても役職の消去は実行される。
+EraserIntroDesc,Kill the Crewmates and erase their roles,クルーのロールを削除しよう
+EraserShortDesc,Erase the roles of your enemies,クルーのロールを削除しよう
+EraserText,[BLANK],消去
+EveryoneDied,Everyone Died,そして誰もいなくなった
+EveryoneDiedExtra,Everyone Died,そして誰もいなくなった
+EvilGuesser,Evil Guesser,イビルゲッサー
+EvilGuesserFullDesc,"The Guesser can be a Crewmate or an Impostor (depending on the settings).\nThe Guesser can shoot a player during the meeting, by guessing its role.\nIf the guess is wrong, the Guesser dies instead.\nYou can select how many players can be shot per meeting and how many players can be shot per game.\nThe guesses Impostor and Crewmate are only right, if the player is part of the corresponding team and has no special role.\nYou can only shoot during the voting time.",イビルゲッサーは、会議画面で他人の役職を推測して当てることで、その人を殺害することができるクルーメイトである。\nただし、失敗した場合は自身が死亡する。
+EvilGuesserIntroDesc,Guess and shoot,推測して撃ち抜けよう
+EvilGuesserShortDesc,Guess and shoot,推測して撃ち抜けよう
+EvilHacker,Evil Hacker,イビルハッカー
+EvilHackerCanCreateMadmate,Can Create Madmate,マッドメイトを作れる
+EvilHackerCanCreateMadmateFromJackal,Can Create Madmate From Team Jackal,マッドメイトはジャッカル陣営から作成できる
+EvilHackerCanHasBetterAdmin,Can Has Better Admin,改良版アドミンを使用することができる
+EvilHackerCanInheritAbility,Succeed Ability To Remaining Impostor,残ったインポスターに能力を継承することができる
+EvilHackerCanMoveEvenIfUsesAdmin,Can Move Even If Uses Admin,アドミン使用時に移動できる
+EvilHackerCanSeeDoorStatus,Can See Door Status,ドアの状態が見える
+EvilHackerFullDesc,The EvilHacker is an Impostor.\nThe EvilHacker (if allowed by the options) can select another player to be Madmate.,
+EvilHackerIntroDesc,Hack systems and kill the Crewmates,システムをハッキングしてクルーを殺そう
+EvilHackerShortDesc,Hack to kill the Crewmates,ハッキングしてクルーを殺そう
+EvilSwapper,Evil Swapper,イビルスワッパー
+EvilSwapperFullDesc,"During meetings the Swapper can exchange votes that two people get (i.e. all votes that player A got will be given to player B and vice versa).\nBecause of the Swappers strength in meetings, they might not start emergency meetings and can't fix lights and comms.",イビルスワッパーは、投票先を入れ替えることができるクルーメイトである。\n全員の投票が終了した後、投票先の入れ替えが行われる。
+EvilTracker,Evil tracker,イビルトラッカー
+EvilTrackerCanSeeDeathFlash,Can See Death Flash,死亡時にフラッシュを表示
+EvilTrackerCanSeeTargetOnMeeting,Can Set Target On Meeting,
+EvilTrackerCanSeeTargetPosition,Can See Target Position,マップでターゲットの位置を確認できる
+EvilTrackerCanSeeTargetTask,Can See Target Task,会議中にターゲットのタスク数を見ることができる
+EvilTrackerCanSetTargetOnMeeting,,ミーティングでターゲットを指定できる
+EvilTrackerCooldown,Track Cooldown,追跡クールダウン
+EvilTrackerFullDesc,,イビルハッカーは、どこでもアドミンを見ることができるインポスターである。設定次第で、マッドメイトを作成することができる。
+EvilTrackerIntroDesc,track players,プレイヤーを追跡しろ
+EvilTrackerResetTargetAfterMeeting,Reset Target After Meeting,ミーティング後にターゲットをリセット
+EvilTrackerShortDesc,track players,プレイヤーを追跡しろ
+Exiled,Exiled,追放
+ForceEnd,Force End,強制終了
+ForceEndExtra,Force End,強制終了
+ForceNormalSabotageMap,Force Normal Sabotage Map,通常サボタージュマップを強制
+FortuneTeller,Fortune Teller,占い師
+FortuneTellerIntroDesc,May your divination reveal your enemies,占いの力を使用して人外を炙り出そう
+FortuneTellerResultCrew,Crew Or Not,クルーかどうか
+FortuneTellerResultRole,Role,役職
+FortuneTellerResultTeam,Team,陣営
+FortuneTellerResults,Divination Results,占い結果
+FortuneTellerShortDesc,May your divination reveal your enemies,占いの力を使用して人外を炙り出そう
+Fuchsia,Fuchsia,フチシア
+GM,GM,GM
+GMIntroDesc,You're the Game Master,ゲームマスターだ
+GMShortDesc,You're the Game Master,ゲームマスターだ
+GameModeText,RebuildUs Settings,RebuildUs設定
+GameOptions,Game Options,ゲーム設定
+GarlicText,[BLANK],ニンニク
+GeneralSettings,This is general settings of RebuildUs.,RebuildUsの総合設定です。
+GeneralSettingsButton,RebuildUs Settings,RebuildUs設定
+GhostsSeeRoles,Ghosts See Roles,幽霊時、全員の役職を見れる
+GhostsSeeTasks,Ghosts See Task,幽霊時、全員のタスクを見れる
+GhostsSeeVotes,Ghosts See Votes,幽霊時、全員の投票先を見れる
+Godfather,Godfather,ゴッドファーザー
+GodfatherFullDesc,The Mafia are a group of three Impostors.\nThe Godfather works like a normal Impostor.,マフィアは3人組のインポスターである。\nゴッドファーザーは普通のインポスターとして動作する。\nゴッドファーザーが死亡したら、手下であるマフィオーソがキル能力を引き継ぎ、ジャニターは終始死体消しに徹する。\nジャニターのみ生き残っている場合は、インポスター陣営の敗北となる。
+GodfatherIntroDesc,Kill all Crewmates,クルーを全滅させよう
+GodfatherShortDesc,Kill all Crewmates,クルーを全滅させよう
+Guesser,Guesser,ゲッサー
+GuesserEvilCanKillSpy,Evil Guesser Can Guess The Spy,イビルゲッサーがスパイを狙撃できる
+GuesserGuessChat,Guesser guessed the role {0} for {1}!,ゲッサーは{1}が{0}だと推測した！
+GuesserGuessesLeft,Guesses Left: {0},残りゲッサー回数: {0}回
+GuesserHasMultipleShotsPerMeeting,Can Shoot Multiple Times Per Meeting,同一会議で複数回狙撃可能
+GuesserIsImpGuesserRate,Chance Guesser Is Impostor,イビルゲッサーになる確率
+GuesserNumberOfShots,Max Number Of Shots,最大狙撃数
+GuesserOnlyAvailableRoles,Show Only Available Roles,有効な役職のみ表示
+GuesserPierceShield,Guesses Ignore The Medic Shield,メディックのシールドを無視
+GuesserSpawnBothRate,Both Guesser Spawn Rate,両方の陣営に出現する確率
+GuesserToGhostChat,Guesses Visible In Ghost Chat,幽霊チャットでゲッサーの結果を表示
+Hacker,Hacker,ハッカー
+HackerChargesText,Charges {0}/{1},チャージ {0}/{1}
+HackerCooldown,Hack Cooldown,ハッキングクールダウン
+HackerFullDesc,"If the Hacker activates the ""Hacker mode"", the Hacker gets more information than others from the admin table and vitals for a set duration.\nOtherwise they see the same information as everyone else.\nAdmin table: The Hacker can see the colors (or color types) of the players on the table.\nVitals: The Hacker can see how long dead players have been dead for.",ハッカーは、アドミンなどのデバイスをハッキングすることができるクルーメイトである。\nハッキング中は、アドミンに色がついたり、バイタルに死亡から何秒経過したかが表示される。\nまた、遠隔デバイスを持ち、このデバイスはタスクをこなすことで閲覧回数をチャージすることができる。
+HackerHackingDuration,Hack Duration,ハッキング持続時間
+HackerIntroDesc,Hack systems to find the <color=#FF1919FF>Impostors</color>,特別装置をハッキングして<color=#FF1919FF>インポスター</color>を探そう
+HackerNoMove,Can't Move During Mobile Gadget Duration,携帯装置使用時、移動不能
+HackerOnlyColorType,Only Sees Color Type,色の種類だけ見れる
+HackerRechargeTasksNumber,Number Of Tasks Needed For Recharging,チャージに必要なタスク数
+HackerShortDesc,Hack to find the Impostors,ハッキングしてインポスターを探そう
+HackerText,[BLANK],ハッキング
+HackerToolsNumber,Max Mobile Gadget Charges,最大チャージ数
+HideFakeTasks,Hide Fake Tasks,フェイクタスクを隠す
+HideOutOfSightNametags,Hide Out-Of-Sight Nametags,視界外のネームタグを非表示
+HidePlayerNames,Hide Player Names,プレイヤー名を隠す
+Host,Host,部屋主
+HotPink,Hot Pink,ホットピンク
+Ice,Ice,アイス
+IgniteText,Ignite,放火
+Impostor,Impostor,インポスター
+ImpostorAbilityPrimary,Impostor Ability Primary,インポスター第一能力
+ImpostorAbilitySecondary,Impostor Ability Secondary,インポスター第二能力
+ImpostorCanIgnoreCommSabotage,Impostor Can Ignore Communication Sabotage,インポスターが通信サボタージュの影響を受けない
+ImpostorFullDesc,You are regular Impostor.,あなたは、普通のインポスターだ。
+ImpostorIntroDesc,Sabotage and Kill everyone,サボタージュを行い、全員を殺そう
+ImpostorRoles,Impostor Roles,インポスター役職
+ImpostorRolesCountMax,Maximum Impostor Roles,最大インポスター役職出現数
+ImpostorRolesCountMin,Minimum Impostor Roles,最小インポスター役職出現数
+ImpostorSettings,This is impostor roles settings of RebuildUs.,RebuildUsのインポスター役職の設定です。
+ImpostorSettingsButton,Impostor Roles,インポスター役職
+ImpostorShortDesc,Sabotage and Kill everyone,サボタージュを行い、全員を殺そう
+ImpostorWin,Impostor Win,インポスター 勝利
+ImpostorWinExtra,Impostor & {0} Win,インポスター & {0} 勝利
+Jackal,Jackal,ジャッカル
+JackalCanCreateSidekick,Can Create A Sidekick,サイドキックを作ることができる
+JackalCanCreateSidekickFromImpostor,Can Make An Impostor To His Sidekick,インポスターをサイドキックできる
+JackalCanSabotageLights,Can Sabotage Lights,停電を起こすことができる
+JackalCanUseVents,Can Use Vents,ベントを使用できる
+JackalCreateSidekickCooldown,Sidekick Cooldown,サイドキッククールダウン
+JackalFullDesc,"The Jackal is part of an extra team, that tries to eliminate all the other players.\nThe Jackal has no tasks and can kill Impostors, Crewmates and Neutrals.\nThe Jackal (if allowed by the options) can select another player to be their Sidekick.\nCreating a Sidekick removes all tasks of the Sidekick and adds them to the team Jackal. The Sidekick loses their current role (except if they're a Lover, then they play in two teams).\nThe ""Create Sidekick Action"" may only be used once per Jackal or once per game (depending on the options).\nThe Jackal can also promote Impostors to be their Sidekick, but depending on the options the Impostor will either really turn into the Sidekick and leave the team Impostors or they will just look like the Sidekick to the Jackal an remain as they were.",ジャッカルは、インポスターとはまた違う、キル可能な第三陣営である。\nベントには入ることができるが、停電以外のサボタージュが制限され、自分たちの陣営以外のキル陣営が存在しなくなるまで他のクルーメイトを殺すことで勝利することができる。\nまた、サイドキックを作成することができ、ジャッカルが死亡したときにサイドキックがジャッカルに昇格することができる。\nさらに、設定次第でサイドキックから昇格したジャッカルがサイドキックを作ることができる。
+JackalHasImpostorVision,Has Impostor Vision,インポスターの視界を持つ
+JackalIntroDesc,Kill all Crewmates and <color=#FF1919FF>Impostors</color> to win,みんなをぶち殺そう
+JackalKillCooldown,Kill Cooldown,キルクールダウン
+JackalPromotedFromSidekickCanCreateSidekick,Jackals Promoted From Sidekick Can Create A Sidekick,サイドキックが昇格した後、サイドキックを作ることができる
+JackalShortDesc,Kill everyone,みんなをぶち殺そう
+JackalWin,Jackal Win,ジャッカル 勝利
+JackalWinExtra,Jackal & {0} Win,ジャッカル & {0}勝利
+Janitor,Janitor,ジャニター
+JanitorCanRepair,Janitor Can Repair Lights/Comms,ジャニターが停電と通信サボタージュを修復できる
+JanitorCanSabotage,Janitor Can Sabotage,ジャニターがサボタージュできる
+JanitorCanVent,Janitor Can Vent,ジャニターがベントに入れる
+JanitorCooldown,Janitor Clean Cooldown,ジャニターの死体消しクールダウン
+JanitorFullDesc,"The Mafia are a group of three Impostors.\nThe Janitor is an Impostor who cannot kill nor sabotage, but they can hide dead bodies instead.",マフィアは3人組のインポスターである。\nゴッドファーザーは普通のインポスターとして動作する。\nゴッドファーザーが死亡したら、手下であるマフィオーソがキル能力を引き継ぎ、ジャニターは終始死体消しに徹する。\nジャニターのみ生き残っている場合は、インポスター陣営の敗北となる。
+JanitorIntroDesc,Work with the <color=#FF1919FF>Mafia</color> by hiding dead bodies,<color=#FF1919FF>マフィア</color>と協力して死体を隠そう
+JanitorShortDesc,Hide dead bodies,死体を隠そう
+Jester,Jester,ジェスター
+JesterCanCallEmergency,Can Call Emergency Meetings,緊急会議を開催できる
+JesterCanSabotage,Can Sabotage,サボタージュできる
+JesterFullDesc,The Jester does not have any tasks.\nThey win the game as a solo if they get voted out during a meeting.,通称「てるてる」\n会議で吊られることで勝利することができる。\nそれ以外の方法では勝利できない。\nまた、設定されない限り特に特別な能力を持つこともない。
+JesterHasImpostorVision,Has Impostor Vision,インポスターの視界を持つ
+JesterIntroDesc,Get voted out,追放されよう
+JesterMeetingButton,The Jester can't call meetings.,ジェスターは会議を開催できない
+JesterShortDesc,Get voted out,追放されよう
+JesterWin,Jester Win,ジェスター 勝利
+JesterWinExtra,Jester & {0} Win,ジェスター & {0}勝利
+KeyBindings,Key Bindings,キー設定
+LackOfOxygen,Oxygen,酸欠
+LastImpostor,Last Impostor,ラストインポスター
+LastImpostorDivine,Divine,占い
+LastImpostorEnable,Enable Last Impostor,ラストインポスターを有効化
+LastImpostorFunctions,Last Impostor Ability,ラストインポスターの能力
+LastImpostorGuesser,Guesser,ゲッサー
+LastImpostorNumKills,Number Of Kills To Activate Ability,能力を発揮するために必要なキル
+LastImpostorNumShots,Number Of Guesser Shots,役職狙撃回数
+LastImpostorPostfix,LI,LI
+Lavender,Lavender,ラベンダー
+Lemon,Lemon,レモン
+Lighter,Lighter,ライター
+LighterCooldown,Light Cooldown,ライトクールダウン
+LighterDuration,Light Duration,ライト持続時間
+LighterFullDesc,"The Lighter can turn on their Lighter every now and then, which increases their vision by a customizable amount.",ライターは一定時間だけ視界を大幅に広げる事ができるクルーメイトである。\n能力使用中は停電やトリックスターの強制停電中でも視界を広く保つことができる。
+LighterIntroDesc,Your light never goes out,いつでもどこでも明るい
+LighterModeLightsOffVision,"Vision On, Lights Off",ライト中、停電時視野
+LighterModeLightsOnVision,"Vision On, Lights On",ライト中、通常時視野
+LighterShortDesc,Your light never goes out,いつでもどこでも明るい
+LighterText,[BLANK],ライト
+LightsOutText,[BLANK],停電
+Lovers,Lovers,ラバーズ
+LoversBothDie,Both Lovers Die,両方のラバーズが同時に死亡する
+LoversCanHaveAnotherRole,Can Have Another Role,役職を掛け持ちできる
+LoversEnableChat,Enable Lover Chat,ラバーズチャットを有効化
+LoversExtra,<color=#e839b9ff>Lovers</color>,<color=#e839b9ff>ラバーズ</color>
+LoversFlavorIntroDesc,♥ You fell in love with {0}. ♥,♥ {0}に恋に落ちた ♥
+LoversImpLoverRate,Chance One Lover Is Impostor,片方がインポスターの確率
+LoversIntroDesc,You are in love,恋に落ちてしまった
+LoversNumCouples,Number Of Couples,カップルの数
+LoversSeparateTeam,Lovers Are A Separate Team,単独陣営扱い
+LoversShortDesc,You are in love,恋に落ちてしまった
+LoversTasksCount,Tasks Are Counted While Alive,生存時、タスクがカウントされる
+LoversWin,Lovers Win,ラバーズ 勝利
+LoversWinExtra,Lovers & {0} Win,ラバーズ & {0}勝利
+Madmate,Madmate,マッドメイト
+MadmateAbility,Madmate Ability,マッドメイトの能力
+MadmateCanDieToSheriff,Can Die To Sheriff,マッドメイトはシェリフに殺される
+MadmateCanEnterVents,Can Enter Vents,マッドメイトはベントに入れる
+MadmateCanFixComm,Can Fix Communication Sabotage,マッドメイトが通信サボタージュを復旧できる
+MadmateCanKnowImpostorAfterFinishTasks,Can Know Impostor After Finish Tasks,タスク終了後にインポスターが判明する
+MadmateCanSabotage,Can Sabotage,マッドメイトはサボタージュできる
+MadmateDefault,Default,デフォルト
+MadmateExileCrewmate,Exile A Crewmate When Madmate Is Exiled,マッドメイトが追放された時、クルーメイトを道連れにする
+MadmateFanatic,Fanatic,狂信者
+MadmateFixedRole,Fixed Role,役職を固定
+MadmateFullDesc,The Madmate is an Crewmate that can help Impostors.,マッドメイトはインポスターを助けるクルーメイトである。\nインポスター陣営とともに勝利する。
+MadmateHasImpostorVision,Has Impostor Vision,マッドメイトはインポスターの視界を持つ
+MadmateIntroDesc,Help the <color=#FF1919FF>Impostors</color>,<color=#FF1919FF>インポスター</color>の援助をしよう
+MadmateNone,None,無し
+MadmatePrefix,Mad,マッド
+MadmateRandom,Random,ランダム
+MadmateShortDesc,Help the Impostors,インポスターの援助をしよう
+MadmateType,Madmate Type,マッドメイトの種類
+MadmateWithRole,With Role,役職あり
+Mafia,Mafia,マフィア
+MafiaG,G,ゴ
+MafiaJ,J,ジ
+MafiaM,M,マ
+Mafioso,Mafioso,マフィオソ
+MafiosoCanRepair,Mafioso Can Repair Lights/Comms,マフィオーソが停電と通信サボタージュを修復できる
+MafiosoCanSabotage,Mafioso Can Sabotage,マフィオーソがサボタージュできる
+MafiosoCanVent,Mafioso Can Vent,マフィオーソがベントに入れる
+MafiosoFullDesc,The Mafia are a group of three Impostors.\nThe Mafioso is an Impostor who cannot kill nor sabotage until the Godfather is dead.,マフィアは3人組のインポスターである。\nゴッドファーザーは普通のインポスターとして動作する。\nゴッドファーザーが死亡したら、手下であるマフィオーソがキル能力を引き継ぎ、ジャニターは終始死体消しに徹する。\nジャニターのみ生き残っている場合は、インポスター陣営の敗北となる。
+MafiosoIntroDesc,Work with the <color=#FF1919FF>Mafia</color> to kill the Crewmates,<color=#FF1919FF>マフィア</color>と協力してクルーを全滅させよう
+MafiosoShortDesc,Kill all Crewmates,クルーを全滅させよう
+MaxNumberOfMeetings,Total Meetings (excluding Mayor's),会議数の上限 (メイヤーを除く)
+Mayor,Mayor,メイヤー
+MayorCanSeeVoteColors,Can See Vote Colors,投票先を開示
+MayorFullDesc,"The Mayor leads the Crewmates by having a vote that counts twice.\nThe Mayor can always use their meeting, even if the maximum number of meetings\nwas reached.",メイヤーは複数の票を会議で投票することができる。
+MayorIntroDesc,Your vote counts multiple times,自分の票が何倍もの力を持っている
+MayorMaxRemoteMeetings,Max Number Of Remote Meeting,遠隔ミーティング回数
+MayorMeetingButton,Has Remote Meeting Button,遠隔でミーティングを開始できる
+MayorNumVotes,Number Of Votes,票数
+MayorShortDesc,Your vote counts multiple times,自分の票が何倍もの力を持っている
+MayorTasksNeededToSeeVoteColors,Number Of Tasks To See Vote Colors,投票先を見るために必要な票の数
+Medic,Medic,メディック
+MedicFullDesc,"The Medic can shield (highlighted by an outline around the player) one player per game,which makes the player unkillable.\nThe shielded player can still be voted out and might also be an Impostor.\nIf set in the options, the shielded player will get a red flash on their screen if someone (Impostor, Sheriff, ...) tried to murder them.\nIf the Medic dies, the shield disappears with them.\nThe Sheriff will not die if they try to kill a shielded Crewmate and won't perform a kill if they try to kill a shielded Impostor.\nThe Medic's other feature shows when they report a corpse: they will see how long ago the player died.",メディックは、誰かをシールドすることができる。\nシールドしたプレイヤーは試合終了まで殺されることはない。ただし、会議で追放はされる。\nまた、シールドされた状態でキルされた場合、設定によりフラッシュが発生する。
+MedicIntroDesc,Protect someone with your shield,シールドを張って味方を守ろう
+MedicReport,Body Report: Killed {0}s ago!,死体報告: {0}秒前のキル!
+MedicSeesMurderAttempt,Medic Sees Murder Attempt On Shielded Player,攻撃されたら、メディックに知らせる
+MedicSetShieldAfterMeeting,Shield Will Be Set After The Next Meeting,シールドをミーティング後に適用する
+MedicShortDesc,Protect other players,味方を守ろう
+MedicShowAttemptToShielded,Shielded Player Sees Murder Attempt,攻撃されたら、対象者に知らせる
+MedicShowShielded,Can See Shield,シールドが見える人
+MedicShowShieldedAll,Everyone,全員
+MedicShowShieldedBoth,Shielded + Medic,対象者＆メディック
+MedicShowShieldedMedic,Medic,メディックのみ
+Medium,Medium,ミディアム
+MediumCooldown,Questioning Cooldown,霊能力クールダウン
+MediumDuration,Questioning Duration,霊能力使用時間
+MediumFullDesc,"The Medium is a crewmate who can ask the souls of dead players for information.\nLike the Seer, it sees the places where the players have died (after the next meeting) and can question them. It then gets random information about the soul or the killer in the chat. The souls only stay for one round, i.e. until the next meeting.\nDepending on the options, the souls can only be questioned once and then disappear.",ミーティアムは、死亡者の魂から情報を得ることができる。\n死体が発生した次のターンに魂から情報を得ると、次のミーティング中にチャットに情報が表示される。
+MediumIntroDesc,Question the souls of the dead to gain information,取り残された魂から情報を聞き出そう
+MediumOneTimeUse,Each Soul Can Only Be Questioned Once,魂一つにつき、一回のみ質問できる
+MediumQuestion1,What is your role? My role is {0}.,あなたの役職は何? 私の役職は{0}だよ。
+MediumQuestion2,What is your killer's color type? My killer is a {0} color.,犯人の色の明暗はどうだった? 私を殺したのは{0}色の人だったよ。
+MediumQuestion3,When did you die? I died {0}s before the meeting started.,いつ死んだの? 会議が始まる{0}秒前だね。
+MediumQuestion4,What is your killer's role? My killer is {0}.,犯人の役職って分かる? {0}だったよ。
+MediumShortDesc,Question the souls,魂から情報を聞き出そう
+MediumText,[BLANK],質問
+Meeting,Meeting: {0}x,緊急会議: {0}回
+MeetingCount,{0} and the ship has {1},{0}回 とクルー全体が {1}回
+MeetingStatus,CREWMEMBER {0} HAS\n\n\nEMERGENCY MEETINGS LEFT,船員 {0} が残り\n\n\n緊急招集できる
+Mini,Mini,ミニ
+MiniDied,Mini Died,ミニ死亡
+MiniDiedExtra,Mini Died,ミニ死亡
+MiniGrowingUpDuration,Growing Up Duration,成長速度
+MiniPostfix,Mini,ミニ
+Mint,Mint,ミント
+Misfire,Misfire,誤爆
+ModOptionsText,Mod Options,Modオプション
+ModifierSettings,This is modifiers settings of RebuildUs.,RebuildUsの属性の設定です。
+ModifierSettingsButton,Modifier Settings,属性
+Modifiers,Modifiers,属性
+ModifiersCountMax,Maximum Modifier,最大属性出現数
+ModifiersCountMin,Minimum Modifier,最小属性出現数
+MoreOptionsText,More Options...,さらなるオプション...
+MorphText,[BLANK],モーフィング
+Morphing,Morphing,モーフィング
+MorphingCooldown,Morph Cooldown,変装クールダウン
+MorphingDuration,Morph Duration,変装効果時間
+MorphingFullDesc,The Morphing is an Impostor which can additionally scan the appearance of a player. After an arbitrary time they can take on that appearance.,モーフィングは姿を変えることができるクルーメイトである。\nクルーメイトの姿をスキャンして、一定時間その姿に変えることができる。
+MorphingIntroDesc,Change your look to not get caught,捕まらないために姿を変えよう
+MorphingShortDesc,Change your look,姿を変えよう
+Navy,Navy,ネイビー
+NeutralAbilityPrimary,Neutral Ability Primary,第三陣営第一能力
+NeutralAbilitySecondary,Neutral Ability Secondary,第三陣営第二能力
+NeutralRoles,Neutral Roles,第三陣営役職
+NeutralRolesCountMax,Maximum Neutral Roles,最大第三陣営役職出現数
+NeutralRolesCountMin,Minimum Neutral Roles,最小第三陣営役職出現数
+NeutralSettings,This is neutral roles settings of RebuildUs.,RebuildUsの第三陣営役職の設定です。
+NeutralSettingsButton,Neutral Roles,第三陣営役職
+Next,Next,次
+NiceGuesser,Nice Guesser,ナイスゲッサー
+NiceGuesserFullDesc,"The Guesser can be a Crewmate or an Impostor (depending on the settings).\nThe Guesser can shoot a player during the meeting, by guessing its role.\nIf the guess is wrong, the Guesser dies instead.\nYou can select how many players can be shot per meeting and how many players can be shot per game.\nThe guesses Impostor and Crewmate are only right, if the player is part of the corresponding team and has no special role.\nYou can only shoot during the voting time.",ナイスゲッサーは、会議画面で他人の役職を推測して当てることで、その人を殺害することができるクルーメイトである。\nただし、失敗した場合は自身が死亡する。
+NiceGuesserIntroDesc,Guess and shoot,推測して撃ち抜けよう
+NiceGuesserShortDesc,Guess and shoot,推測して撃ち抜けよう
+NiceSwapper,Nice Swapper,ナイススワッパー
+NiceSwapperFullDesc,"During meetings the Swapper can exchange votes that two people get (i.e. all votes that player A got will be given to player B and vice versa).\nBecause of the Swappers strength in meetings, they might not start emergency\n meetings and can't fix lights and comms.",ナイススワッパーは、投票先を入れ替えることができるクルーメイトである。\n全員の投票が終了した後、投票先の入れ替えが行われる。
+NoRole,No Role,役職なし
+NoVoteIsSelfVote,No Vote Is Self Vote,無投票は自投票とみなす
+Nougat,Nougat,ヌガー
+NumCommonTask,Common Tasks,共通タスク
+NumLongTask,Long Tasks,ロングタスク
+NumShortTask,Short Tasks,ショートタスク
+NumWireTask,Number Of Wiring Task,配線タスクの数
+NumberOfRole,Max Number Of Role Spawning,役職最大出現数
+Ocean,Ocean,オーシャン
+Off,Off,オフ
+Olive,Olive,オリーブ
+On,On,オン
+Opportunist,Opportunist,オポチュニスト
+OpportunistIntroDesc,Do whatever it takes to survive,とにかく生き残りましょう
+OpportunistShortDesc,Do whatever it takes to survive,とにかく生き残りましょう
+Others,Others,その他
+PathfindText,[BLANK],探す
+Peach,Peach,ピーチ
+Petrol,Petrol Blue,ペトロールブルー
+PlaceCameraText,[BLANK],設置
+PlaceJackInTheBoxText,[BLANK],設置
+PlagueDoctor,Plague Doctor,ペスト医師
+PlagueDoctorIntroDesc,Spread disease to wipe out the crew,みんなに病を振り撒こう
+PlagueDoctorShortDesc,Spread disease to wipe out the crew,みんなに病を振り撒こう
+PolusAdditionalVents,Additional Vents (Polus),追加ベント
+PolusOptions,Enable Polus Options,Polusの設定を有効化
+PolusRandomSpawn,Enable Random Spawn (Polus),ランダムスポーンを有効化 (Polus)
+PolusSpecimenVital,Move Vital To Specimen (Polus),標本室にバイタルを移動 (Polus)
+Preset,Preset,プリセット
+Preset1,Preset 1,プリセット1
+Preset2,Preset 2,プリセット2
+Preset3,Preset 3,プリセット3
+Preset4,Preset 4,プリセット4
+Preset5,Preset 5,プリセット5
+PressAnyKey,< Press Any Key >,< キーを押してください >
+Previous,Previous,前
+RandomMap,Enable Random Map,ランダムマップを有効化
+RandomMapEnableAirShip,Enable AirShip,AirShipを有効化
+RandomMapEnableDleks,Enable Dleks,Dleksを有効化
+RandomMapEnableFungle,Enable Fungle,Fungleを有効化
+RandomMapEnableMiraHQ,Enable MiraHQ,MiraHQを有効化
+RandomMapEnablePolus,Enable Polus,Polusを有効化
+RandomMapEnableSkeld,Enable Skeld,Skeldを有効化
+RandomMapEnableSubmerged,Enable Submerged,Submergedを有効化
+RandomWireTask,Random Wiring Task,配線タスクのランダム化
+RefundVotesOnDeath,Refund Votes On Death,会議中に死んだ時、投票を取り消し
+RepairText,[BLANK],修復
+RestrictAdmin,Restrict Admin Table,アドミンを制限
+RestrictAdminText,Show Remaining Time Of Admin,アドミンの残り時間を表示
+RestrictAdminTime,Restrict Admin Table Time,アドミンの閲覧時間を制限
+RestrictCameras,Restrict Security Camera,監視カメラを制限
+RestrictCamerasText,Show Remaining Time Of Camera,監視カメラの残り時間を表示
+RestrictCamerasTime,Restrict Security Camera Time,監視カメラの閲覧時間を制限
+RestrictDevices,Restrict Special Devices,デバイスを制限
+RestrictOutOfTime,Out Of Time,時間切れ
+RestrictPerGame,Time Per Game,ゲーム毎
+RestrictPerTurn,Time Per Round,ターン毎
+RestrictVitals,Restrict Vitals,バイタルを制限
+RestrictVitalsText,Show Remaining Time Of Vitals,バイタルの残り時間を表示
+RestrictVitalsTime,Restrict Vitals Time,バイタルの閲覧時間を制限
+RoleSummaryText,Players and roles at the end of the game:,最終結果:
+RolesGeneral,Roles General,ロール総合
+RoyalGreen,Royal Green,ロイヤルグリーン
+Sabotage,Sabotage,サボ
+SampleText,[BLANK],サンプル
+SecurityGuard,Security Guard,警備員
+SecurityGuardCamDuration,Camera Duration,携帯カメラ使用可能時間
+SecurityGuardCamMaxCharges,Max Mobile Gadget Charges,最大チャージ数
+SecurityGuardCamPrice,Screws Per Cam,カメラ設置に必要なネジ
+SecurityGuardCamRechargeTasksNumber,Number Of Tasks Needed For Recharging,チャージに必要なタスク数
+SecurityGuardCooldown,Cooldown,クールダウン
+SecurityGuardFullDesc,"The Security Guard is a Crewmate that has a certain amount of screws that they can use for either sealing vents or for placing new cameras.\nPlacing a new camera and sealing vents takes a configurable amount of screws.\nThe total number of screws that a Security Guard has can also be configured.\nThe new camera will be visible after the next meeting and accessible by everyone.\nThe vents will be sealed after the next meeting, players can't enter or exit sealed vents, but they can still ""move to them"" underground.\nNOTE:\n- Tickster boxes can't be sealed\n- The Security Guard can't place Cameras on MiraHQ\n- The remaining number of screws can be seen above their special button\n- On Skeld the four cameras will be replaced every 3 seconds (with the next four cameras).\nYou can also navigate manually using the arrow keys.",警備員は、ベントの封鎖やカメラの設置など、船のセキュリティ向上のために尽力するクルーメイトである。\n警備員はネジを消費することでベントを封鎖したり、カメラを設置することができる。\nこれらの変更は会議後に適用される。\nまた、ネジを使い切った後は、カメラをリモートで閲覧することができるようになる。\n注意点として、塞いだベントは出入りが禁じられるだけであり、下を通過することは可能である。
+SecurityGuardIntroDesc,Seal vents and place cameras,ベントを封鎖して新しいカメラを設置しよう
+SecurityGuardNoMove,Can't Move During Camera Duration,携帯カメラ使用時、移動不能
+SecurityGuardScrews,Screws: {0},残りネジ: {0}本
+SecurityGuardShortDesc,Seal vents and place cameras,インポスターの妨害をしよう
+SecurityGuardTotalScrews,Total Screws,ネジの合計数
+SecurityGuardVentPrice,Screws Per Vent,ベントを閉じるのに必要なネジ
+Seer,Seer,シーア
+SeerFullDesc,"The Seer has two abilities (one can activate one of them or both in the options).\nThe Seer sees the souls of players that died a round earlier, the souls slowy fade away.\nThe Seer gets a blue flash on their screen, if a player dies somewhere on the map.",シーアは、誰かが死亡した瞬間をフラッシュとして見ることができるクルーメイトである。\nまた、設定次第で会議終了後一定時間だけ死亡者の魂を見ることができる。\n魂は、被害者が死亡した場所で見ることができる。
+SeerIntroDesc,You will see players die,他人の死んだ瞬間がわかる
+SeerLimitSoulDuration,Limit Soul Duration,時間経過で幽霊が消える
+SeerMode,Mode,モード
+SeerModeBoth,Show Death Flash + Souls,フラッシュと魂
+SeerModeFlash,Show Death Flash,フラッシュ
+SeerModeSouls,Show Souls,魂
+SeerShortDesc,You will see players die,他人の死んだ瞬間がわかる
+SeerSoulDuration,Soul Duration,消えるまでの時間
+SerialKiller,Serial Killer,シリアルキラー
+SerialKillerIntroDesc,You crave blood,殺人衝動が抑えられない
+SerialKillerShortDesc,You crave blood,殺人衝動が抑えられない
+Sheriff,Sheriff,シェリフ
+SheriffCanKillNeutrals,Can Kill Neutrals,第三陣営をキルできる
+SheriffCanKillNoDeadBody,Can Kill On No Dead Body,死体未発生時にキルできる
+SheriffCooldown,Kill Cooldown,キルクール
+SheriffFullDesc,"The Sheriff has the ability to kill Impostors.\nIf they try to kill a Crewmate, they die instead.",シェリフは、インポスターやジャッカルなどの人外(クルーメイトの敵)を殺すことができるクルーメイトである。ただし、クルーを殺そうとすると、自分が死亡する。
+SheriffIntroDesc,Shoot the <color=#FF1919FF>Impostors</color>,<color=#FF1919FF>人外</color>を撃ち抜け
+SheriffMisfireKillsTarget,Misfire Kills Target,誤爆時にターゲットを道連れにする
+SheriffNumShots,Number Of Shots,最大狙撃数
+SheriffShortDesc,Shoot the Impostors,人外を撃ち抜け
+SheriffShots,Shots: {0},残り: {0}発
+ShieldText,[BLANK],シールド
+ShiftText,[BLANK],シフト
+Shifter,Shifter,シフター
+ShifterFullDesc,"The Shifter can take over the role of another Crewmate, the other player will transform into a Crewmate.\nThe Shift will always be performed at the end of the next meeting right before a player is exiled. The target needs to be chosen during the round.\nEven if the Shifter or the target dies before the meeting, the Shift will still be performed.\nSwapping roles with an Impostor or Neutral fails and the Shifter commits suicide after the next meeting (there won't be any body).\nThe Shifter aims to save roles from leaving the game, by e.g. taking over a Sheriff or\nMedic that is known to the Impostors.\nThis works especially well against the Eraser, but also gives the Eraser the possibility to act like a Shifter.",シフターは、誰かの役職を奪うことができるクルーメイトである。\n役職の交換はミーティング終了後に行われる。\n奪った役職は自分のものとなり、シフターは消滅する。\n奪われた相手はクルーメイトに変わる。\nただし、インポスターを奪おうとした場合、自身が死亡する。
+ShifterIntroDesc,Shift your role,ロールを奪おう
+ShifterIsNeutralRate,Chance Is Neutral,第三陣営になる確率
+ShifterPastShifters,Can Shift Former Shifters,以前シフターだった相手にシフトできる
+ShifterShiftsModifiers,Shifts Modifiers,属性をシフトする
+ShifterShortDesc,Shift your role,ロールを奪おう
+ShifterTargetInfo,Shift Target: {0},シフト対象: {0}
+ShowLighterDarker,Show Lighter&Darker,色の明暗を表示
+ShowRoleSummary,Show Role Summary,最終結果を表示
+Sidekick,Sidekick,サイドキック
+SidekickCanKill,Sidekick Can Kill,サイドキックがキルできる
+SidekickCanSabotageLights,Sidekick Can Sabotage Lights,サイドキックが停電を起こすことができる
+SidekickCanUseVents,Sidekick Can Use Vents,サイドキックがベントを使える
+SidekickFullDesc,"Gets assigned to a player during the game by the ""Create Sidekick Action"" of the Jackal and joins the Jackal in their quest to eliminate all other players.\nUpon the death of the Jackal (depending on the options), they might get promoted to Jackal themselves and potentially even assign a Sidekick of their own.",サイドキックは、ジャッカルによって指名された人物がなることができる第三陣営である。あなたはジャッカルに指名された。\nあなたは元々の陣営を捨て、現在のジャッカルが死亡したあと、ジャッカルとして活動を開始する。\nジャッカルに昇格後、この説明文も更新される。
+SidekickHasImpostorVision,Sidekick Has Impostor Vision,サイドキックはインポスターの視界を持つ
+SidekickIntroDesc,Help your Jackal to kill everyone,ジャッカルの援助をしよう
+SidekickPromotesToJackal,Sidekick Gets Promoted To Jackal On Jackal Death,ジャッカル死亡時、サイドキックがジャッカルに昇格する
+SidekickShortDesc,Help your Jackal to kill everyone,ジャッカルの援助をしよう
+SidekickText,Sidekick,サイドキック
+SignalOrange,Signal Orange,シグナルオレンジ
+Slime,Slime,スライム
+Snitch,Snitch,スニッチ
+SnitchFullDesc,"When the Snitch finishes all the tasks, arrows will appear (only visible to the Snitch) that point to the Impostors (depending on the options also to members of team Jackal).\nWhen the Snitch has one task left (configurable) the Snitch will be revealed to the Impostors (depending on the options also to members of team Jackal) with an arrow pointing to the Snitch.",スニッチは、タスクを完了させることでインポスターなどの人外を暴くことができるクルーメイトである。\nただし、タスクの残量が少なくなると、人外側からスニッチの位置が分かるようになるので、注意する必要がある。
+SnitchIncludeTeamJackal,Include Team Jackal,ジャッカル陣営にもバレる
+SnitchIntroDesc,Finish your tasks to find the <color=#FF1919FF>Impostors</color>,タスクを早く済ませて<color=#FF1919FF>インポスター</color>を暴こう
+SnitchLeftTasksForReveal,Task Count Where The Snitch Will Be Revealed,敵陣営にバレるタスク残量
+SnitchShortDesc,Finish your tasks,タスクを早く済ませよう
+SnitchTeamJackalUseDifferentArrowColor,Use Different Arrow Color For Team Jackal,ジャッカル陣営には別の矢印を表示する
+SpawnChance,Spawn Chance,スポーン確率
+Spelled,Spelled,呪殺
+Spy,Spy,スパイ
+SpyCanDieToSheriff,Can Die To Sheriff,シェリフに殺される
+SpyCanEnterVents,Can Enter Vents,ベントに入れる
+SpyFullDesc,"The Spy is a Crewmate, which has no special abilities.\nThe Spy looks like an additional Impostor to the Impostors, they can't tell the difference.\nThere are two possibilities (depending on the set options):\n- The Impostors can't kill the Spy (because otherwise their kill button would reveal who the Spy is)\n- The Impostors can kill the Spy but they can also kill their Impostor partner (if they mistake another Impostor for the Spy)\nYou can set whether the Sheriff can kill the Spy or not (in order to keep the lie alive).",スパイは、インポスターのフリをするクルーメイトである。\nインポスター側からは普通のインポスターとして映るが、実際はクルーメイトであるため、タスクを行う必要がある。\nまた、スパイが存在するときは、インポスターが他のインポスターを殺害することが可能になる。
+SpyHasImpostorVision,Has Impostor Vision,インポスターの視界を持つ
+SpyImpostorsCanKillAnyone,Impostors Can Kill Anyone If There Is A Spy,スパイがいれば、インポスターは誰でも殺せる
+SpyIntroDesc,Confuse the <color=#FF1919FF>Impostors</color>,<color=#FF1919FF>インポスター</color>を混乱させよう
+SpyShortDesc,Confuse the Impostors,インポスターを混乱させよう
+StopCooldownOnFixingElecSabotage,Stop Cooldown On Fixing Electric Emergency,停電サボタージュを修復中にクールダウンの減少を停止
+Suicide,Suicide,自殺
+SuicideText,Suicide,自殺
+Suicider,Suicider,スーサイダー
+SuiciderCanDieToSheriff,Can Die To Sheriff,シェリフに殺される
+SuiciderCanEnterVents,Can Enter Vents,ベントに入れる
+SuiciderCanFixComm,Can Fix Communication Sabotage,通信サボタージュを直せる
+SuiciderCanKnowImpostorAfterFinishTasks,Can Know Impostor After Finish Tasks,タスク終了後にインポスターが判明する
+SuiciderFullDesc,The Suicider is an Madmate that can commit suicide.,スーサイダーは、自殺をすることができるマッドメイトである。\n原則として自殺以外にすることはない。
+SuiciderHasImpostorVision,Has Impostor Vision,インポスターの視界を持つ
+SuiciderIntroDesc,,死ね
+SuiciderShortDesc,,死ね
+Sundown,Sundown,サンダウン
+Sunrise,Sunrise,サンライズ
+Swapper,Swapper,スワッパー
+SwapperCanCallEmergency,Can Call Emergency Meetings,緊急会議を開催できる
+SwapperCanOnlySwapOthers,Can Only Swap Others,他人のみスワップできる
+SwapperConfirm,Confirm,確定
+SwapperIntroDesc,Swap votes to exile the <color=#FF1919FF>Impostors</color>,投票先を入れ替えて<color=#FF1919FF>インポスター</color>を追放しよう
+SwapperIsImpRate,Chance Swapper Is Impostor,イビルスワッパーになる確率
+SwapperMeetingButton,The Swapper can't call meetings.,スワッパーは会議を開催できない
+SwapperNumSwaps,Number Of Swaps,最大スワップ数
+SwapperShortDesc,Swap votes,投票先を入れ替えよう
+SwapperSwapping,Swapping!,スワップします!
+SwapperSwapsLeft,Swaps Left: {0},残りスワップ回数: {0}回
+TabCrewmate,Crewmate,クルーメイト
+TabGeneral,Mod General,Mod総合
+TabImpostor,Impostor,インポスター
+TabModifiers,Modifiers,属性
+TabNeutral,Neutral,第三陣営
+TabRolesOverview,Roles Overview,役職一覧
+Tamarind,Tamarind,タマリンド
+Teal,Teal,ティール
+TimeMaster,Time Master,タイムマスター
+TimeMasterCooldown,Shield Cooldown,シールドクールダウン
+TimeMasterFullDesc,"The Time Master has a time shield which they can activate.\nThe time shield remains active for a configurable amount of time.\nIf a player tries to kill the Time Master while the time shield is active,the kill won't happen and the time will rewind for a set amount of time.\nThe kill cooldown of the killer won't be reset, so the Time Master has to make sure that the game won't result in the same situation.\nThe Time Master won't be affected by the rewind.",タイムマスターは、自分にシールドを貼ることができる。\nシールド中にキルされると、自分以外のプレイヤー全員の直近の動きが巻き戻される。\nキルは実行されない。
+TimeMasterIntroDesc,Save yourself with your time shield,タイムシールドを使って生き延びよう
+TimeMasterRewindTime,Rewind Time,巻き戻す時間
+TimeMasterShieldDuration,Shield Duration,シールド持続時間
+TimeMasterShortDesc,Use your time shield,タイムシールドを使おう
+TimeRemaining,Remaining: {0},残り: {0}
+TimeShieldText,[BLANK],タイムシールド
+Torched,Torched,放火
+Tracker,Tracker,トラッカー
+TrackerCorpseCooldown,Corpses Tracking Cooldown,死体トラッキングクールダウン
+TrackerCorpseDuration,Corpses Tracking Duration,死体トラッキング持続時間
+TrackerFullDesc,The Tracker can select one player to track.\nDepending on the options the Tracker can track a different person after each meeting or the Tracker tracks the same person for the whole game.\nAn arrow points to the last tracked position of the player.\nThe arrow updates it's position every few seconds (configurable).,トラッカーは他のクルーメイトを追跡することができるクルーメイトである。\n追跡対象は設定次第でどこかのタイミングでリセットされる。\nまた、設定次第で死体の位置を検索することができる。
+TrackerIntroDesc,Track the <color=#FF1919FF>Impostors</color> down,<color=#FF1919FF>インポスター</color>を追いかけよう
+TrackerResetTargetAfterMeeting,Reset Target After Meeting,ミーティング後にターゲットをリセット
+TrackerShortDesc,Track the Impostors down,インポスターを追いかけよう
+TrackerText,[BLANK],トラッキング
+TrackerTrackCorpses,Tracker Can Track Corpses,死体をトラッキングできる
+TrackerUpdateInterval,Update Interval,更新間隔
+TransparentMap,Transparent Map,透過マップ
+Trickster,Trickster,トリックスター
+TricksterFullDesc,"The Trickster is an Impostor that can place 3 jack-in-the-boxes that are invisible at first to other players.\nIf the Trickster has placed all of their boxes they will be converted into a vent network usable only by the Trickster themselves, but the boxes are revealed to the others.\nIf the boxes are converted to a vent network, the Trickster gains a new ability ""Lights out"" to limit the visibility of Non-Impostors, that cannot be fixed by other players. Lights are automatically restored after a while.",トリックスターは3つのびっくり箱を設置することができるインポスターである。\nびっくり箱をすべて設置すると、びっくり箱がベントとして動作するようになる。\nまた、びっくり箱設置後は、一定時間クルーの視界が大幅に狭くなる「強制停電」を使用することができるようになり、クルーはこれを修復することはできない。
+TricksterIntroDesc,Use your jack-in-the-boxes to surprise others,びっくり箱を使ってみんなを驚かせよう
+TricksterLightsOutCooldown,Lights Out Cooldown,強制停電クールダウン
+TricksterLightsOutDuration,Lights Out Duration,強制停電の長さ
+TricksterLightsOutText,Lights Are Out,強制停電中
+TricksterPlaceBoxCooldown,Place Box Cooldown,びっくり箱設置クールダウン
+TricksterShortDesc,Surprise your enemies,みんなを驚かせよう
+Turquoise,Turquoise,ターコイズ
+Vampire,Vampire,ヴァンパイア
+VampireCanKillNearGarlics,Can Kill Near Garlic,ニンニクの近くでキルできる
+VampireCooldown,Kill Cooldown,キルクール
+VampireFullDesc,"The Vampire is an Impostor, that can bite other player. Bitten players die after a configurable amount of time.\nIf the Vampire spawn chance is greater 0 (even if there is no Vampire in the game), all players can place one garlic.\nIf a victim is near a garlic, the ""Bite Button"" turns into the default ""Kill Button"" and the Vampire can only perform a normal kill.",ヴァンパイアは、他のプレイヤーに噛みついて時間差で殺害するインポスターである。\nヴァンパイアが存在するときは、全員「ニンニク」を一つ配置することができ、ニンニクの中ではヴァンパイアは噛みつくことができない。\n一度噛みつけば、時間が来ていなくても緊急会議が始まればターゲットは死亡する。
+VampireIntroDesc,Kill the Crewmates with your bites,クルーを噛んで全滅させよう
+VampireKillDelay,Kill Delay,キル遅延秒数
+VampireShortDesc,Bite your enemies,クルーを噛んで全滅させよう
+VampireText,[BLANK],噛みつく
+VitalsRanOut,Vitals: ran out of time,バイタル: 時間切れ
+VitalsText,Vitals: {0} sec remaining,バイタル: 残り{0}秒
+Vulture,Vulture,ヴァルチャー
+VultureCanUseVents,Can Use Vents,ベントを使用できる
+VultureCooldown,Eat Cooldown,食べるクールダウン
+VultureCorpses,Remaining: {0},残り死体: {0}体
+VultureFullDesc,"The Vulture does not have any tasks, he has to win the game as a solo.\nThe Vulture is a neutral role that must eat a specified number of corpses (depending on the options) in order to win.\nDepending on the options, when a player dies, the Vulture gets an arrow pointing to the corpse.",ヴァルチャーは、一定数死体を食べることで勝利する第三陣営である。
+VultureIntroDesc,Eat corpses to win,死骸を喰らおう
+VultureNumberToWin,Number Of Corpses Required,勝利に必要な死体の数
+VultureShortDesc,Eat dead bodies,死骸を喰らおう
+VultureShowArrows,Show Arrows Pointing Towards Corpses,死体に矢印を表示する
+VultureText,Eat,食べる
+VultureWin,Vulture Win,ヴァルチャー 勝利
+VultureWinExtra,Vulture & {0} Win,ヴァルチャー & {0}勝利
+Warlock,Warlock,ウォーロック
+WarlockCooldown,Curse Cooldown,呪いクールダウン
+WarlockFullDesc,"The Warlock is an Impostor, that can curse another player (the cursed player doesn't get notified).\nIf the cursed person stands next to another player, the Warlock is able to kill that player (no matter how far away they are).\nPerforming a kill with the help of a cursed player, will lift the curse and it will result in the Warlock being unable to move for a configurable amount of time.\nThe Warlock can still perform normal kills, but the two buttons share the same cooldown.",ウォーロックは、クルーメイトを呪うことができるインポスターである。\n呪ったプレイヤーは誰かに近づいたとき、ウォーロックの判断で呪ったクルーメイトにキルを実行させることができる。
+WarlockIntroDesc,Curse other players and kill everyone,みんなを呪い殺そう
+WarlockRootTime,Root Time,呪殺後、移動不能時間
+WarlockShortDesc,Curse and kill everyone,みんなを呪い殺そう
+Wasabi,Wasabi,ワサビ
+Watcher,Watcher,ウォッチャー
+WatcherIntroDesc,Watch everyone votes,みんなの票を観察しよう
+WatcherShortDesc,Watch everyone votes,みんなの票を観察しよう
+Witch,Witch,魔女
+WitchAdditionalCooldown,Additional Cooldown,魔術使用時に追加されるクールダウン
+WitchCanSpellAnyone,Can Spell Anyone,全員に魔術を使用できる
+WitchFullDesc,"The Witch is an Impostor who has the ability to cast a spell on other players.\nDuring the next meeting, the spellbound player will be highlighted and they'll die\nright after the meeting.",魔女は、クルーメイトを呪うことができるインポスターである。\n呪いがかけられたクルーメイトは、次の会議中に魔女を吊らなければ死亡する。\n会議終了までに魔女が死亡すれば、呪いは解除される。
+WitchIntroDesc,Cast a spell upon your foes,敵に魔術をかけよう
+WitchSaveTargets,Voting The Witch Saves All The Targets,魔女を吊ると被害者全員が助かる
+WitchShortDesc,Cast a spell upon your foes,敵に魔術をかけよう
+WitchSpellCooldown,Spell Casting Cooldown,魔術クールダウン
+WitchSpellDuration,Casting Duration,魔術をかけるのに必要な時間
+WitchText,Spell,魔術
+WitchTriggerBoth,Trigger Both Cooldowns,魔術とキルクールを同期
+GmGameOver,GAME OVER,ゲームオーバー
+JackalWithSidekick,Let's make a sidekick,サイドキックを作ろう
+Emergency,Meeting,会議
+RandomNumberAlgorithm,Random Number Generation Algorithm,乱数生成アルゴリズム
+RND_Dotnet,".NET Legacy (Deprecated)",".NET Legacy (非推奨)"
+RND_MT,"Mersenne Twister","Mersenne Twister"
+RND_XOSHIRO256,"Xoshiro256++","Xoshiro256++"
+RND_XOSHIRO256SS,"Xoshiro256**","Xoshiro256**"
+RND_PCG64,"PCG64","PCG64"
+RandomRandomNumberAlgorithm,Randomly Choose A Random Number Generation Algorithm,乱数生成アルゴリズムをランダムに選ぶ
+EnableRandomRandomNumberAlgorithmDotnet,Enable .NET Legacy (Depricated),.NET Legacy (非推奨) を有効
+EnableRandomRandomNumberAlgorithmMT,Enable Mersenne Twister,Mersenne Twister を有効
+EnableRandomRandomNumberAlgorithmXorshiro256PP,Enable Xorshiro256++,Xorshiro256++ を有効
+EnableRandomRandomNumberAlgorithmXorshiro256SS,Enable Xorshiro256**,Xorshiro256** を有効
+EnableRandomRandomNumberAlgorithmPcg64,Enable PCG64,PCG64 を有効
