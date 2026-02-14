@@ -11,8 +11,6 @@ public static class Tr
     private const string NO_VALUE = "[NO VALUE]";
     private const string ERROR = "[ERROR]";
 
-    private const string LANGUAGE_FOLDER = "Languages";
-
     private static readonly Dictionary<SupportedLangs, Dictionary<string, string>> INTERNAL_TRANSLATIONS = [];
     private static readonly Dictionary<SupportedLangs, Dictionary<string, string>> CUSTOM_TRANSLATIONS = [];
     private static readonly HashSet<string> MISSING_KEYS = [];
@@ -64,19 +62,21 @@ public static class Tr
     private static void LoadCustomTranslations()
     {
         CUSTOM_TRANSLATIONS.Clear();
+        var modDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+        var langDir = Path.Combine(modDir, "Language");
 
-        if (!Directory.Exists(LANGUAGE_FOLDER))
+        if (!Directory.Exists(langDir))
         {
             try
             {
-                Directory.CreateDirectory(LANGUAGE_FOLDER);
+                Directory.CreateDirectory(langDir);
             }
             catch { }
 
             return;
         }
 
-        foreach (var file in Directory.GetFiles(LANGUAGE_FOLDER, "*.json"))
+        foreach (var file in Directory.GetFiles(langDir, "*.json"))
         {
             var fileName = Path.GetFileNameWithoutExtension(file);
             if (Enum.TryParse<SupportedLangs>(fileName, true, out var lang))

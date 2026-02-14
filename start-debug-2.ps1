@@ -1,5 +1,7 @@
 $ErrorActionPreference = 'Stop'
 
+& "$PSScriptRoot\taskkill.ps1"
+
 Write-Host "Building project..." -ForegroundColor Cyan
 & "$PSScriptRoot\build-debug.ps1"
 if ($LASTEXITCODE -ne 0)
