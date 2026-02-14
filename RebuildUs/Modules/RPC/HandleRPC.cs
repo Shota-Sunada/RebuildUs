@@ -231,57 +231,6 @@ public static partial class RPCProcedure
             case CustomRPC.SheriffKillRequest:
                 SheriffKillRequest(reader.ReadByte(), reader.ReadByte());
                 break;
-            case CustomRPC.GamemodeKills:
-                byte gamemodeTarget = reader.ReadByte();
-                byte gamemodeSource = reader.ReadByte();
-                RPCProcedure.gamemodeKills(gamemodeTarget, gamemodeSource);
-                break;
-            case CustomRPC.CaptureTheFlagWhoTookTheFlag:
-                byte bluePlayerWhoHasRedFlag = reader.ReadByte();
-                byte redorblue = reader.ReadByte();
-                RPCProcedure.captureTheFlagWhoTookTheFlag(bluePlayerWhoHasRedFlag, redorblue);
-                break;
-            case CustomRPC.CaptureTheFlagWhichTeamScored:
-                byte whichteam = reader.ReadByte();
-                RPCProcedure.captureTheFlagWhichTeamScored(whichteam);
-                break;
-            case CustomRPC.PoliceandThiefJail:
-                byte thiefId = reader.ReadByte();
-                RPCProcedure.policeandThiefJail(thiefId);
-                break;
-            case CustomRPC.PoliceandThiefFreeThief:
-                RPCProcedure.policeandThiefFreeThief();
-                break;
-            case CustomRPC.PoliceandThiefTakeJewel:
-                byte thiefwhotookjewel = reader.ReadByte();
-                byte jewelTakeId = reader.ReadByte();
-                RPCProcedure.policeandThiefTakeJewel(thiefwhotookjewel, jewelTakeId);
-                break;
-            case CustomRPC.PoliceandThiefDeliverJewel:
-                byte thiefwhodeliverjewel = reader.ReadByte();
-                byte jewelDeliverId = reader.ReadByte();
-                RPCProcedure.policeandThiefDeliverJewel(thiefwhodeliverjewel, jewelDeliverId);
-                break;
-            case CustomRPC.PoliceandThiefRevertedJewelPosition:
-                byte thiefWhoLostJewel = reader.ReadByte();
-                byte jewelRevertedId = reader.ReadByte();
-                RPCProcedure.policeandThiefRevertedJewelPosition(thiefWhoLostJewel, jewelRevertedId);
-                break;
-            case CustomRPC.PoliceandThiefsTased:
-                RPCProcedure.policeandThiefsTased(reader.ReadByte());
-                break;
-            case CustomRPC.HotPotatoTransfer:
-                RPCProcedure.hotPotatoTransfer(reader.ReadByte());
-                break;
-            case CustomRPC.HotPotatoExploded:
-                RPCProcedure.hotPotatoExploded();
-                break;
-            case CustomRPC.BattleRoyaleShowShoots:
-                byte playerWhoShot = reader.ReadByte();
-                byte color = reader.ReadByte();
-                float angle = reader.ReadSingle();
-                RPCProcedure.battleRoyaleShowShoots(playerWhoShot, color, angle);
-                break;
             default:
                 break;
         }

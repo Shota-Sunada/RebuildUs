@@ -35,14 +35,14 @@ public class CustomColors
             /* Custom Colors, starting with id (for ORDER) 18 */
             new CustomColor
             {
-                NameKey = TrKey.Tamarind, //18
+                NameKey = TranslateKey.Tamarind, //18
                 Color = new Color32(48, 28, 34, byte.MaxValue),
                 Shadow = new Color32(30, 11, 16, byte.MaxValue),
                 IsLighterColor = true
             },
             new CustomColor
             {
-                NameKey = TrKey.Army, // 19
+                NameKey = TranslateKey.Army, // 19
                 Color = new Color32(39, 45, 31, byte.MaxValue),
                 Shadow = new Color32(11, 30, 24, byte.MaxValue),
                 IsLighterColor = false
@@ -50,35 +50,35 @@ public class CustomColors
             // 20
             new CustomColor
             {
-                NameKey = TrKey.Olive,
+                NameKey = TranslateKey.Olive,
                 Color = new Color32(154, 140, 61, byte.MaxValue),
                 Shadow = new Color32(104, 95, 40, byte.MaxValue),
                 IsLighterColor = true
             },
             new CustomColor
             {
-                NameKey = TrKey.Turquoise,
+                NameKey = TranslateKey.Turquoise,
                 Color = new Color32(22, 132, 176, byte.MaxValue),
                 Shadow = new Color32(15, 89, 117, byte.MaxValue),
                 IsLighterColor = false
             },
             new CustomColor
             {
-                NameKey = TrKey.Mint,
+                NameKey = TranslateKey.Mint,
                 Color = new Color32(111, 192, 156, byte.MaxValue),
                 Shadow = new Color32(65, 148, 111, byte.MaxValue),
                 IsLighterColor = true
             },
             new CustomColor
             {
-                NameKey = TrKey.Lavender,
+                NameKey = TranslateKey.Lavender,
                 Color = new Color32(173, 126, 201, byte.MaxValue),
                 Shadow = new Color32(131, 58, 203, byte.MaxValue),
                 IsLighterColor = true
             },
             new CustomColor
             {
-                NameKey = TrKey.Nougat,
+                NameKey = TranslateKey.Nougat,
                 Color = new Color32(160, 101, 56, byte.MaxValue),
                 Shadow = new Color32(115, 15, 78, byte.MaxValue),
                 IsLighterColor = false
@@ -86,35 +86,35 @@ public class CustomColors
             // 25
             new CustomColor
             {
-                NameKey = TrKey.Peach,
+                NameKey = TranslateKey.Peach,
                 Color = new Color32(255, 164, 119, byte.MaxValue),
                 Shadow = new Color32(238, 128, 100, byte.MaxValue),
                 IsLighterColor = true
             },
             new CustomColor
             {
-                NameKey = TrKey.Wasabi,
+                NameKey = TranslateKey.Wasabi,
                 Color = new Color32(112, 143, 46, byte.MaxValue),
                 Shadow = new Color32(72, 92, 29, byte.MaxValue),
                 IsLighterColor = false
             },
             new CustomColor
             {
-                NameKey = TrKey.HotPink,
+                NameKey = TranslateKey.HotPink,
                 Color = new Color32(255, 51, 102, byte.MaxValue),
                 Shadow = new Color32(232, 0, 58, byte.MaxValue),
                 IsLighterColor = true
             },
             new CustomColor
             {
-                NameKey = TrKey.Petrol,
+                NameKey = TranslateKey.Petrol,
                 Color = new Color32(0, 99, 105, byte.MaxValue),
                 Shadow = new Color32(0, 61, 54, byte.MaxValue),
                 IsLighterColor = false
             },
             new CustomColor
             {
-                NameKey = TrKey.Lemon,
+                NameKey = TranslateKey.Lemon,
                 Color = new Color32(0xDB, 0xFD, 0x2F, byte.MaxValue),
                 Shadow = new Color32(0x74, 0xE5, 0x10, byte.MaxValue),
                 IsLighterColor = true
@@ -122,35 +122,35 @@ public class CustomColors
             // 30
             new CustomColor
             {
-                NameKey = TrKey.SignalOrange,
+                NameKey = TranslateKey.SignalOrange,
                 Color = new Color32(0xF7, 0x44, 0x17, byte.MaxValue),
                 Shadow = new Color32(0x9B, 0x2E, 0x0F, byte.MaxValue),
                 IsLighterColor = true
             },
             new CustomColor
             {
-                NameKey = TrKey.Teal,
+                NameKey = TranslateKey.Teal,
                 Color = new Color32(0x25, 0xB8, 0xBF, byte.MaxValue),
                 Shadow = new Color32(0x12, 0x89, 0x86, byte.MaxValue),
                 IsLighterColor = true
             },
             new CustomColor
             {
-                NameKey = TrKey.Blurple,
+                NameKey = TranslateKey.Blurple,
                 Color = new Color32(61, 44, 142, byte.MaxValue),
                 Shadow = new Color32(25, 14, 90, byte.MaxValue),
                 IsLighterColor = false
             },
             new CustomColor
             {
-                NameKey = TrKey.Sunrise,
+                NameKey = TranslateKey.Sunrise,
                 Color = new Color32(0xFF, 0xCA, 0x19, byte.MaxValue),
                 Shadow = new Color32(0xDB, 0x44, 0x42, byte.MaxValue),
                 IsLighterColor = true
             },
             new CustomColor
             {
-                NameKey = TrKey.Ice,
+                NameKey = TranslateKey.Ice,
                 Color = new Color32(0xA8, 0xDF, 0xFF, byte.MaxValue),
                 Shadow = new Color32(0x59, 0x9F, 0xC8, byte.MaxValue),
                 IsLighterColor = true
@@ -158,49 +158,49 @@ public class CustomColors
             // 35
             new CustomColor
             {
-                NameKey = TrKey.Fuchsia, //35 Color Credit: LaikosVK
+                NameKey = TranslateKey.Fuchsia, //35 Color Credit: LaikosVK
                 Color = new Color32(164, 17, 129, byte.MaxValue),
                 Shadow = new Color32(104, 3, 79, byte.MaxValue),
                 IsLighterColor = false
             },
             new CustomColor
             {
-                NameKey = TrKey.RoyalGreen, //36
+                NameKey = TranslateKey.RoyalGreen, //36
                 Color = new Color32(9, 82, 33, byte.MaxValue),
                 Shadow = new Color32(0, 46, 8, byte.MaxValue),
                 IsLighterColor = false
             },
             new CustomColor
             {
-                NameKey = TrKey.Slime,
+                NameKey = TranslateKey.Slime,
                 Color = new Color32(244, 255, 188, byte.MaxValue),
                 Shadow = new Color32(167, 239, 112, byte.MaxValue),
                 IsLighterColor = false
             },
             new CustomColor
             {
-                NameKey = TrKey.Navy, //38
+                NameKey = TranslateKey.Navy, //38
                 Color = new Color32(9, 43, 119, byte.MaxValue),
                 Shadow = new Color32(0, 13, 56, byte.MaxValue),
                 IsLighterColor = false
             },
             new CustomColor
             {
-                NameKey = TrKey.Darkness, //39
+                NameKey = TranslateKey.Darkness, //39
                 Color = new Color32(36, 39, 40, byte.MaxValue),
                 Shadow = new Color32(10, 10, 10, byte.MaxValue),
                 IsLighterColor = false
             },
             new CustomColor
             {
-                NameKey = TrKey.Ocean, //40
+                NameKey = TranslateKey.Ocean, //40
                 Color = new Color32(55, 159, 218, byte.MaxValue),
                 Shadow = new Color32(62, 92, 158, byte.MaxValue),
                 IsLighterColor = false
             },
             new CustomColor
             {
-                NameKey = TrKey.Sundown, // 41
+                NameKey = TranslateKey.Sundown, // 41
                 Color = new Color32(252, 194, 100, byte.MaxValue),
                 Shadow = new Color32(197, 98, 54, byte.MaxValue),
                 IsLighterColor = false
@@ -230,7 +230,7 @@ public class CustomColors
 
     protected internal struct CustomColor
     {
-        public TrKey NameKey;
+        public TranslateKey NameKey;
         public Color32 Color;
         public Color32 Shadow;
         public bool IsLighterColor;

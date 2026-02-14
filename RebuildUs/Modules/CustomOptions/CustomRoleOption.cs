@@ -11,7 +11,7 @@ public class CustomRoleOption : CustomOption
     public (int rate, int count) Data { get { return (Rate, Count); } }
 
     public CustomRoleOption(int baseId, CustomOptionType type, RoleType roleType, Color color, int max = 15, bool roleEnabled = true) :
-    base(baseId, type, Enum.TryParse<TrKey>(Enum.GetName(roleType), out var key) ? key : TrKey.None, CustomOptionHolder.RATES, 0, null, false, "", color)
+    base(baseId, type, Enum.TryParse<TranslateKey>(Enum.GetName(roleType), out var key) ? key : TranslateKey.None, CustomOptionHolder.RATES, 0, null, false, "", color)
     {
         IsRoleEnabled = roleEnabled;
         IsHeader = true;
@@ -24,11 +24,11 @@ public class CustomRoleOption : CustomOption
 
         if (max > 1)
         {
-            NumberOfRoleOption = Normal(baseId + 10000, type, TrKey.NumberOfRole, 1f, 1f, 15f, 1f, this);
+            NumberOfRoleOption = Normal(baseId + 10000, type, TranslateKey.NumberOfRole, 1f, 1f, 15f, 1f, this);
         }
     }
 
-    public CustomRoleOption(int baseId, CustomOptionType type, TrKey nameKey, Color color, int max = 15, bool roleEnabled = true) :
+    public CustomRoleOption(int baseId, CustomOptionType type, TranslateKey nameKey, Color color, int max = 15, bool roleEnabled = true) :
     base(baseId, type, nameKey, CustomOptionHolder.RATES, 0, null, false, "", color)
     {
         IsRoleEnabled = roleEnabled;
@@ -42,7 +42,7 @@ public class CustomRoleOption : CustomOption
 
         if (max > 1)
         {
-            NumberOfRoleOption = Normal(baseId + 10000, type, TrKey.NumberOfRole, 1f, 1f, 15f, 1f, this);
+            NumberOfRoleOption = Normal(baseId + 10000, type, TranslateKey.NumberOfRole, 1f, 1f, 15f, 1f, this);
         }
     }
 }

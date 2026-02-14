@@ -80,7 +80,7 @@ public class Hacker : RoleBase<Hacker>
             0f,
             () => { HackerButton.Timer = HackerButton.MaxTimer; },
             false,
-            Tr.Get(TrKey.HackerText)
+            Tr.Get(TranslateKey.HackerText)
         );
 
         HackerAdminTableButton = new CustomButton(
@@ -101,7 +101,7 @@ public class Hacker : RoleBase<Hacker>
             {
                 if (HackerAdminTableChargesText != null || HackerVitalsChargesText != null)
                 {
-                    string format = Tr.Get(TrKey.HackerChargesText);
+                    string format = Tr.Get(TranslateKey.HackerChargesText);
                     string text = string.Format(format, Local.ChargesAdminTable, ToolsNumber);
                     HackerAdminTableChargesText?.text = text;
                     HackerVitalsChargesText?.text = text;
@@ -196,7 +196,7 @@ public class Hacker : RoleBase<Hacker>
             () => { return PlayerControl.LocalPlayer.IsRole(RoleType.Hacker) && MapSettings.CouldUseVitals && PlayerControl.LocalPlayer.IsAlive() && Helpers.GetOption(ByteOptionNames.MapId) != 0 && Helpers.GetOption(ByteOptionNames.MapId) != 3; },
             () =>
             {
-                HackerVitalsChargesText?.text = string.Format(Tr.Get(TrKey.HackerChargesText), Local.ChargesVitals, ToolsNumber);
+                HackerVitalsChargesText?.text = string.Format(Tr.Get(TranslateKey.HackerChargesText), Local.ChargesVitals, ToolsNumber);
                 HackerVitalsButton.ActionButton.graphic.sprite = Helpers.IsMiraHQ ? FastDestroyableSingleton<HudManager>.Instance.UseButton.fastUseSettings[ImageNames.DoorLogsButton].Image : FastDestroyableSingleton<HudManager>.Instance.UseButton.fastUseSettings[ImageNames.VitalsButton].Image;
                 HackerVitalsButton.ActionButton.OverrideText(Helpers.IsMiraHQ ? TranslationController.Instance.GetString(StringNames.DoorlogLabel) : TranslationController.Instance.GetString(StringNames.VitalsLabel));
                 return Local.ChargesVitals > 0 && MapSettings.CanUseVitals;

@@ -519,7 +519,7 @@ public static class Map
             {
                 bool isAlive = EvilTracker.Target.IsAlive();
                 if (TargetHerePoint.gameObject.activeSelf != isAlive) TargetHerePoint.gameObject.SetActive(isAlive);
-                NetworkedPlayerInfo PlayerById = GameData.Instance.GetPlayerById(EvilTracker.Target.PlayerId);
+                NetworkedPlayerInfo playerById = GameData.Instance.GetPlayerById(EvilTracker.Target.PlayerId);
                 PlayerControl.LocalPlayer.SetPlayerMaterialColors(TargetHerePoint);
                 var pos = EvilTracker.Target.transform.position;
                 pos.x /= shipStatus.MapScale;

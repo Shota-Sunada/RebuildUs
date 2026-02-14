@@ -24,14 +24,14 @@ public class LastImpostor : ModifierBase<LastImpostor>
     {
         get
         {
-            return Tr.Get(TrKey.LastImpostorPostfix);
+            return Tr.Get(TranslateKey.LastImpostorPostfix);
         }
     }
     public static string FullName
     {
         get
         {
-            return Tr.Get(TrKey.LastImpostor);
+            return Tr.Get(TranslateKey.LastImpostor);
         }
     }
 
@@ -260,17 +260,17 @@ public class LastImpostor : ModifierBase<LastImpostor>
             msgBase = "DivineMessageTeam";
             if (p.IsTeamCrewmate())
             {
-                msgInfo = Tr.Get(TrKey.DivineCrew);
+                msgInfo = Tr.Get(TranslateKey.DivineCrew);
                 color = Color.white;
             }
             else if (p.IsNeutral())
             {
-                msgInfo = Tr.Get(TrKey.DivineNeutral);
+                msgInfo = Tr.Get(TranslateKey.DivineNeutral);
                 color = Color.yellow;
             }
             else
             {
-                msgInfo = Tr.Get(TrKey.DivineImpostor);
+                msgInfo = Tr.Get(TranslateKey.DivineImpostor);
                 color = Palette.ImpostorRed;
             }
         }

@@ -151,7 +151,7 @@ public class Witch : RoleBase<Witch>
                 SpellCastingTarget = null;
             },
             false,
-            Tr.Get(TrKey.WitchText)
+            Tr.Get(TranslateKey.WitchText)
         );
     }
     public static void SetButtonCooldowns()

@@ -22,7 +22,6 @@ global using RebuildUs.Modules.CustomOptions;
 global using RebuildUs.Modules.Discord;
 global using RebuildUs.Modules.EndGame;
 global using RebuildUs.Modules.GameEvents.Events;
-global using RebuildUs.Modules.GameMode;
 global using RebuildUs.Modules.Random;
 global using RebuildUs.Modules.RPC;
 global using RebuildUs.Objects;
@@ -48,7 +47,7 @@ public class RebuildUs : BasePlugin
 {
     public const string MOD_ID = "com.shota-sunada.rebuild-us";
     public const string MOD_NAME = "Rebuild Us";
-    public const string MOD_VERSION = "2.0.0";
+    public const string MOD_VERSION = "1.2.3";
     public const string MOD_DEVELOPER = "Shota Sunada";
 
     public const string REACTOR_GUID = "gg.reactor-sunada.api";
@@ -91,15 +90,6 @@ public class RebuildUs : BasePlugin
     {
         RandomMain.RefreshRnd(seed);
     }
-
-    public static bool activatedSensei = false;
-    public static bool activatedDleks = false;
-    public static bool updatedSenseiMinimap = false;
-    public static bool updatedSenseiAdminmap = false;
-
-    public static GameObject progress = null;
-    public static float progressStart = 0;
-    public static float progressEnd = 0;
 
     public override void Load()
     {
@@ -207,13 +197,6 @@ public class RebuildUs : BasePlugin
 
         PlayerRole.ClearAll();
         PlayerModifier.ClearAll();
-
-        Update.activatedReportButtonAfterCustomMode = false;
-
-        activatedSensei = false;
-        updatedSenseiMinimap = false;
-        updatedSenseiAdminmap = false;
-        activatedDleks = false;
     }
 
     public static void FixedUpdate(PlayerControl player)

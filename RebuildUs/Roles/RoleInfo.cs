@@ -1,6 +1,6 @@
 namespace RebuildUs.Roles;
 
-public partial class RoleInfo(TrKey nameKey, Color color, CustomOption baseOption, RoleType roleType)
+public partial class RoleInfo(TranslateKey nameKey, Color color, CustomOption baseOption, RoleType roleType)
 {
     public Color Color = color;
     public virtual string Name { get { return Tr.Get(NameKey); } }
@@ -11,7 +11,7 @@ public partial class RoleInfo(TrKey nameKey, Color color, CustomOption baseOptio
     public virtual string RoleOptions { get { return CustomOption.OptionsToString(BaseOption); } }
     public bool Enabled { get { return Helpers.RolesEnabled && (BaseOption == null || BaseOption.Enabled); } }
 
-    public TrKey NameKey = nameKey;
+    public TranslateKey NameKey = nameKey;
     public RoleType RoleType = roleType;
     private readonly CustomOption BaseOption = baseOption;
     public static List<RoleInfo> AllRoleInfos = [];
@@ -165,12 +165,12 @@ public partial class RoleInfo(TrKey nameKey, Color color, CustomOption baseOptio
 
         foreach (var reg in RoleData.Roles)
         {
-            var info = new RoleInfo(Enum.TryParse<TrKey>(Enum.GetName(reg.roleType), out var key) ? key : TrKey.None, reg.getColor(), reg.getOption(), reg.roleType);
+            var info = new RoleInfo(Enum.TryParse<TranslateKey>(Enum.GetName(reg.roleType), out var key) ? key : TranslateKey.None, reg.getColor(), reg.getOption(), reg.roleType);
             RoleDict[reg.roleType] = info;
             AllRoleInfos.Add(info);
         }
 
-        RoleDict[RoleType.Crewmate] = new(TrKey.Crewmate, Palette.CrewmateBlue, null, RoleType.Crewmate);
-        RoleDict[RoleType.Impostor] = new(TrKey.Impostor, Palette.ImpostorRed, null, RoleType.Impostor);
+        RoleDict[RoleType.Crewmate] = new(TranslateKey.Crewmate, Palette.CrewmateBlue, null, RoleType.Crewmate);
+        RoleDict[RoleType.Impostor] = new(TranslateKey.Impostor, Palette.ImpostorRed, null, RoleType.Impostor);
     }
 }

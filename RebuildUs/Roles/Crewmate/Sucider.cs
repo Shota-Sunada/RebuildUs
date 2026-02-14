@@ -74,7 +74,7 @@ public class Suicider : RoleBase<Suicider>
             0f,
             null,
             false,
-            Tr.Get(TrKey.Suicide)
+            Tr.Get(TranslateKey.Suicide)
         );
     }
 

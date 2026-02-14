@@ -83,10 +83,6 @@ public static class PlayerControlPatch
             Update.PlayerSizeUpdate(__instance);
 
             Garlic.UpdateAll();
-
-            CaptureTheFlag.setTarget();
-            PoliceAndThief.policeandThiefSetTarget();
-            HotPotato.hotPotatoSetTarget();
         }
 
         RebuildUs.FixedUpdate(__instance);
@@ -207,30 +203,7 @@ public static class PlayerControlPatch
         }
         // ORIGINAL MURDER_PLAYER
 
-        var deadPlayer = GameHistory.OnMurderPlayerPostfix(__instance, target);
-
-        switch (MapSettings.GameMode)
-        {
-            case CustomGameMode.Roles:
-                AllPlayers.OnKill(__instance, target, deadPlayer);
-
-                __instance.OnKill(target);
-                target.OnDeath(__instance);
-                break;
-            case CustomGameMode.CaptureTheFlag:
-                CaptureTheFlag.OnMurderPlayerPostfix(__instance, target);
-                break;
-            case CustomGameMode.PoliceAndThieves:
-                PoliceAndThief.OnMurderPlayerPostfix(__instance, target);
-                break;
-            case CustomGameMode.HotPotato:
-                HotPotato.OnMurderPlayerPostfix(__instance, target);
-                break;
-            case CustomGameMode.BattleRoyale:
-                BattleRoyale.OnMurderPlayerPostfix(__instance, target);
-                break;
-        }
-
+        GameHistory.OnMurderPlayerPostfix(__instance, target);
         return false;
     }
 

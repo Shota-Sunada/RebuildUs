@@ -207,22 +207,22 @@ public static class Meeting
             for (int j = 0; j < states.Length; j++)
             {
                 var state = states[j];
-                var PlayerById = GameData.Instance.GetPlayerById(state.VoterId);
+                var playerById = GameData.Instance.GetPlayerById(state.VoterId);
                 var voter = playersById.ContainsKey(state.VoterId) ? playersById[state.VoterId] : null;
                 if (voter == null) continue;
 
-                if (PlayerById == null)
+                if (playerById == null)
                 {
                     Logger.LogError(new StringBuilder("Couldn't find player info for voter: ").Append(state.VoterId).ToString());
                 }
-                else if (i == 0 && state.SkippedVote && !PlayerById.IsDead)
+                else if (i == 0 && state.SkippedVote && !playerById.IsDead)
                 {
-                    __instance.BloopAVoteIcon(PlayerById, num, __instance.SkippedVoting.transform);
+                    __instance.BloopAVoteIcon(playerById, num, __instance.SkippedVoting.transform);
                     num++;
                 }
-                else if (state.VotedForId == targetPlayerId && !PlayerById.IsDead)
+                else if (state.VotedForId == targetPlayerId && !playerById.IsDead)
                 {
-                    __instance.BloopAVoteIcon(PlayerById, num2, playerVoteArea.transform);
+                    __instance.BloopAVoteIcon(playerById, num2, playerVoteArea.transform);
                     num2++;
                 }
 
@@ -320,7 +320,7 @@ public static class Meeting
             {
                 Selections[i] = true;
                 renderer.color = Color.green;
-                MeetingExtraButtonLabel.text = Helpers.Cs(Color.green, Tr.Get(TrKey.SwapperConfirm));
+                MeetingExtraButtonLabel.text = Helpers.Cs(Color.green, Tr.Get(TranslateKey.SwapperConfirm));
             }
         }
         else if (selectedCount == 2)
@@ -329,7 +329,7 @@ public static class Meeting
             {
                 renderer.color = Color.red;
                 Selections[i] = false;
-                MeetingExtraButtonLabel.text = Helpers.Cs(Color.red, Tr.Get(TrKey.SwapperConfirm));
+                MeetingExtraButtonLabel.text = Helpers.Cs(Color.red, Tr.Get(TranslateKey.SwapperConfirm));
             }
         }
     }
@@ -373,9 +373,9 @@ public static class Meeting
                 RPCProcedure.SwapperSwap(firstPlayer.TargetPlayerId, secondPlayer.TargetPlayerId);
             }
 
-            MeetingExtraButtonLabel.text = Helpers.Cs(Color.green, Tr.Get(TrKey.SwapperSwapping));
+            MeetingExtraButtonLabel.text = Helpers.Cs(Color.green, Tr.Get(TranslateKey.SwapperSwapping));
             Swapper.RemainSwaps--;
-            MeetingExtraButtonText.text = Tr.Get(TrKey.SwapperSwapsLeft, Swapper.RemainSwaps);
+            MeetingExtraButtonText.text = Tr.Get(TranslateKey.SwapperSwapsLeft, Swapper.RemainSwaps);
         }
     }
 
@@ -417,8 +417,8 @@ public static class Meeting
             SwapperButtonList[i].OnClick.RemoveAllListeners();
             SwapperButtonList[i].OnClick.AddListener((Action)(() => SwapperOnClick(copyI, __instance)));
         }
-        MeetingExtraButtonText.text = Tr.Get(TrKey.SwapperSwapsLeft, Swapper.RemainSwaps);
-        MeetingExtraButtonLabel.text = Helpers.Cs(Color.red, Tr.Get(TrKey.SwapperConfirm));
+        MeetingExtraButtonText.text = Tr.Get(TranslateKey.SwapperSwapsLeft, Swapper.RemainSwaps);
+        MeetingExtraButtonLabel.text = Helpers.Cs(Color.red, Tr.Get(TranslateKey.SwapperConfirm));
     }
 
     public static GameObject GuesserUI;
@@ -626,7 +626,7 @@ public static class Meeting
             Transform infoTransform = __instance.playerStates[0].NameText.transform.parent.FindChild("Info");
             TextMeshPro meetingInfo = infoTransform?.GetComponent<TextMeshPro>();
             MeetingExtraButtonText = UnityEngine.Object.Instantiate(__instance.playerStates[0].NameText, meetingExtraButtonParent);
-            MeetingExtraButtonText.text = addSwapperButtons ? Tr.Get(TrKey.SwapperSwapsLeft, Swapper.RemainSwaps) : "";
+            MeetingExtraButtonText.text = addSwapperButtons ? Tr.Get(TranslateKey.SwapperSwapsLeft, Swapper.RemainSwaps) : "";
             MeetingExtraButtonText.alignment = TextAlignmentOptions.Right;
             MeetingExtraButtonText.enableWordWrapping = false;
             MeetingExtraButtonText.transform.localScale = Vector3.one * 1.7f;
@@ -641,7 +641,7 @@ public static class Meeting
             MeetingExtraButtonLabel.alignment = TMPro.TextAlignmentOptions.Center;
             MeetingExtraButtonLabel.transform.localPosition = new Vector3(0, 0, MeetingExtraButtonLabel.transform.localPosition.z);
             MeetingExtraButtonLabel.transform.localScale *= 1.7f;
-            MeetingExtraButtonLabel.text = Helpers.Cs(Color.red, Tr.Get(TrKey.SwapperConfirm));
+            MeetingExtraButtonLabel.text = Helpers.Cs(Color.red, Tr.Get(TranslateKey.SwapperConfirm));
 
             PassiveButton passiveButton = meetingExtraButton.GetComponent<PassiveButton>();
             passiveButton.OnClick.RemoveAllListeners();
@@ -790,13 +790,13 @@ public static class Meeting
                 int numGuesses = Guesser.RemainingShots(lp);
                 if ((Guesser.IsGuesser(lp.PlayerId) || lp.HasModifier(ModifierType.LastImpostor)) && lp.IsAlive() && numGuesses > 0)
                 {
-                    InfoStringBuilder.AppendFormat(Tr.Get(TrKey.GuesserGuessesLeft), numGuesses);
+                    InfoStringBuilder.AppendFormat(Tr.Get(TranslateKey.GuesserGuessesLeft), numGuesses);
                     InfoStringBuilder.AppendLine();
                 }
 
                 if (Shifter.Exists && lp.IsRole(RoleType.Shifter) && Shifter.FutureShift != null)
                 {
-                    InfoStringBuilder.AppendFormat(Tr.Get(TrKey.ShifterTargetInfo), Shifter.FutureShift.Data.PlayerName);
+                    InfoStringBuilder.AppendFormat(Tr.Get(TranslateKey.ShifterTargetInfo), Shifter.FutureShift.Data.PlayerName);
                     InfoStringBuilder.AppendLine();
                 }
             }
@@ -1039,24 +1039,24 @@ public static class Meeting
                 var sb = new StringBuilder();
                 if (isMedicReport)
                 {
-                    sb.AppendFormat(Tr.Get(TrKey.MedicReport), (int)Math.Round(timeSinceDeath / 1000));
+                    sb.AppendFormat(Tr.Get(TranslateKey.MedicReport), (int)Math.Round(timeSinceDeath / 1000));
                 }
                 else if (isDetectiveReport)
                 {
                     if (timeSinceDeath < Detective.ReportNameDuration * 1000)
                     {
-                        sb.AppendFormat(Tr.Get(TrKey.DetectiveReportName), deadPlayer.KillerIfExisting.Data.PlayerName);
+                        sb.AppendFormat(Tr.Get(TranslateKey.DetectiveReportName), deadPlayer.KillerIfExisting.Data.PlayerName);
                     }
                     else if (timeSinceDeath < Detective.ReportColorDuration * 1000)
                     {
                         var typeOfColor = Helpers.IsLighterColor(deadPlayer.KillerIfExisting.Data.DefaultOutfit.ColorId) ?
-                            Tr.Get(TrKey.DetectiveColorLight) :
-                            Tr.Get(TrKey.DetectiveColorDark);
-                        sb.AppendFormat(Tr.Get(TrKey.DetectiveReportColor), typeOfColor);
+                            Tr.Get(TranslateKey.DetectiveColorLight) :
+                            Tr.Get(TranslateKey.DetectiveColorDark);
+                        sb.AppendFormat(Tr.Get(TranslateKey.DetectiveReportColor), typeOfColor);
                     }
                     else
                     {
-                        sb.Append(Tr.Get(TrKey.DetectiveReportNone));
+                        sb.Append(Tr.Get(TranslateKey.DetectiveReportNone));
                     }
                 }
 

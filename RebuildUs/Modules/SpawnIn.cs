@@ -270,7 +270,7 @@ public static class SpawnIn
         if (!CustomOptionHolder.AirshipSynchronizedSpawning.GetBool() || CustomOptionHolder.AirshipRandomSpawn.GetBool()) return;
         if (Selected != null)
         {
-            __instance.__4__this.Text.text = Tr.Get(TrKey.AirshipWait);
+            __instance.__4__this.Text.text = Tr.Get(TranslateKey.AirshipWait);
         }
     }
 }

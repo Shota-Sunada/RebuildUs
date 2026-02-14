@@ -160,15 +160,18 @@ public static class Usables
             hudManager.ImpostorVentButton.Hide();
             hudManager.SabotageButton.Hide();
 
-            if (__instance.CanUseVents())
+            if (Helpers.ShowButtons)
             {
-                hudManager.ImpostorVentButton.Show();
-            }
+                if (__instance.CanUseVents())
+                {
+                    hudManager.ImpostorVentButton.Show();
+                }
 
-            if (__instance.CanSabotage())
-            {
-                hudManager.SabotageButton.Show();
-                hudManager.SabotageButton.gameObject.SetActive(true);
+                if (__instance.CanSabotage())
+                {
+                    hudManager.SabotageButton.Show();
+                    hudManager.SabotageButton.gameObject.SetActive(true);
+                }
             }
         }
     }
@@ -181,7 +184,7 @@ public static class Usables
         // Mafia disable sabotage button for Janitor and sometimes for Mafioso
         bool blockSabotageJanitor = localPlayer.IsRole(RoleType.Janitor);
         bool blockSabotageMafioso = localPlayer.IsRole(RoleType.Mafioso) && !Mafia.IsGodfatherDead;
-        if (blockSabotageJanitor || blockSabotageMafioso || MapSettings.GameMode is not CustomGameMode.Roles)
+        if (blockSabotageJanitor || blockSabotageMafioso)
         {
             FastDestroyableSingleton<HudManager>.Instance.SabotageButton.SetDisabled();
         }
@@ -231,7 +234,7 @@ public static class Usables
         if (IsBlocked(target, pc))
         {
             __instance.currentTarget = null;
-            __instance.buttonLabelText.text = Tr.Get(TrKey.ButtonBlocked);
+            __instance.buttonLabelText.text = Tr.Get(TranslateKey.ButtonBlocked);
             __instance.enabled = false;
             __instance.graphic.color = Palette.DisabledClear;
             __instance.graphic.material.SetFloat("_Desat", 0f);
@@ -368,29 +371,23 @@ public static class Usables
         if (lp == null) return;
 
         var roleCanCallEmergency = true;
-        var statusTextKey = TrKey.None;
-
-        if (MapSettings.GameMode is not CustomGameMode.Roles)
-        {
-            roleCanCallEmergency = false;
-            statusTextKey = TrKey.CantUseEmergencyButton;
-        }
+        var statusTextKey = "";
 
         if (lp.IsRole(RoleType.Jester) && !Jester.CanCallEmergency)
         {
             roleCanCallEmergency = false;
-            statusTextKey = TrKey.JesterMeetingButton;
+            statusTextKey = "JesterMeetingButton";
         }
 
         if (lp.IsRole(RoleType.NiceSwapper) && !Swapper.CanCallEmergency)
         {
             roleCanCallEmergency = false;
-            statusTextKey = TrKey.SwapperMeetingButton;
+            statusTextKey = "SwapperMeetingButton";
         }
 
         if (!roleCanCallEmergency)
         {
-            __instance.StatusText.text = Tr.Get(statusTextKey);
+            __instance.StatusText.text = Tr.GetDynamic(statusTextKey);
             __instance.NumberText.text = string.Empty;
             __instance.ClosedLid.gameObject.SetActive(true);
             __instance.OpenLid.gameObject.SetActive(false);
@@ -407,12 +404,12 @@ public static class Usables
 
             EmergencyStringBuilder.Clear();
             EmergencyStringBuilder.Append("<size=100%> ");
-            EmergencyStringBuilder.Append(string.Format(Tr.Get(TrKey.MeetingStatus), lp.name));
+            EmergencyStringBuilder.Append(string.Format(Tr.Get(TranslateKey.MeetingStatus), lp.name));
             EmergencyStringBuilder.Append("</size>");
             __instance.StatusText.text = EmergencyStringBuilder.ToString();
 
             EmergencyStringBuilder.Clear();
-            EmergencyStringBuilder.Append(string.Format(Tr.Get(TrKey.MeetingCount), localRemaining.ToString(), teamRemaining.ToString()));
+            EmergencyStringBuilder.Append(string.Format(Tr.Get(TranslateKey.MeetingCount), localRemaining.ToString(), teamRemaining.ToString()));
             __instance.NumberText.text = EmergencyStringBuilder.ToString();
 
             __instance.ButtonActive = remaining > 0;

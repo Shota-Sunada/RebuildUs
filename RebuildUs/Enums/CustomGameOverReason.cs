@@ -8,18 +8,5 @@ public enum CustomGameOverReason
     TeamJackalWin,
     MiniLose,
     LoversWin,
-    ForceEnd,
-
-    DrawTeamWin,
-    RedTeamFlagWin,
-    BlueTeamFlagWin,
-    ThiefModeThiefWin,
-    ThiefModePoliceWin,
-    HotPotatoEnd,
-    BattleRoyaleSoloWin,
-    BattleRoyaleTimeWin,
-    BattleRoyaleDraw,
-    BattleRoyaleLimeTeamWin,
-    BattleRoyalePinkTeamWin,
-    BattleRoyaleSerialKillerWin,
+    ForceEnd
 }

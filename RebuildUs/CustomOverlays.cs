@@ -116,7 +116,7 @@ public class CustomOverlays
 
         int currentPageNumber = (RebuildUs.OptionsPage / 2) + 1;
         int totalPagesNumber = (MaxOptionsPage + 1) / 2;
-        InfoOverlayTitle?.text = new StringBuilder(Tr.Get(TrKey.GameOptions)).Append(" <size=80%>").Append(Tr.Get(TrKey.CurrentPage)).Append(" (").Append(currentPageNumber).Append('/').Append(totalPagesNumber).Append(")\n").Append(Tr.Get(TrKey.ChangePage)).Append("</size>").ToString();
+        InfoOverlayTitle?.text = new StringBuilder(Tr.Get(TranslateKey.GameOptions)).Append(" <size=80%>").Append(Tr.Get(TranslateKey.CurrentPage)).Append(" (").Append(currentPageNumber).Append('/').Append(totalPagesNumber).Append(")\n").Append(Tr.Get(TranslateKey.ChangePage)).Append("</size>").ToString();
 
         var sb = new StringBuilder();
         sb.Append(OptionsData[RebuildUs.OptionsPage]);
@@ -234,17 +234,17 @@ public class CustomOverlays
 
             // Part 1: Among Us Settings
             int votingTime = Helpers.GetOption(Int32OptionNames.VotingTime);
-            sb.Append("<size=120%>").Append(Tr.Get(TrKey.AmongUsSettings)).Append("</size>\n\n")
+            sb.Append("<size=120%>").Append(Tr.Get(TranslateKey.AmongUsSettings)).Append("</size>\n\n")
               .Append(tr.GetString(StringNames.GameNumImpostors)).Append(": ").Append(Helpers.GetOption(Int32OptionNames.NumImpostors)).Append('\n')
-              .Append(tr.GetString(StringNames.GameConfirmImpostor)).Append(": ").Append(Helpers.GetOption(BoolOptionNames.ConfirmImpostor) ? Tr.Get(TrKey.On) : Tr.Get(TrKey.Off)).Append('\n')
+              .Append(tr.GetString(StringNames.GameConfirmImpostor)).Append(": ").Append(Helpers.GetOption(BoolOptionNames.ConfirmImpostor) ? Tr.Get(TranslateKey.On) : Tr.Get(TranslateKey.Off)).Append('\n')
               .Append(tr.GetString(StringNames.GameNumMeetings)).Append(": ").Append(Helpers.GetOption(Int32OptionNames.NumEmergencyMeetings)).Append('\n')
-              .Append(tr.GetString(StringNames.GameAnonymousVotes)).Append(": ").Append(Helpers.GetOption(BoolOptionNames.AnonymousVotes) ? Tr.Get(TrKey.On) : Tr.Get(TrKey.Off)).Append('\n')
+              .Append(tr.GetString(StringNames.GameAnonymousVotes)).Append(": ").Append(Helpers.GetOption(BoolOptionNames.AnonymousVotes) ? Tr.Get(TranslateKey.On) : Tr.Get(TranslateKey.Off)).Append('\n')
               .Append(tr.GetString(StringNames.GameEmergencyCooldown)).Append(": ").Append(tr.GetString(StringNames.GameSecondsAbbrev, Helpers.GetOption(Int32OptionNames.EmergencyCooldown))).Append('\n')
               .Append(tr.GetString(StringNames.GameDiscussTime)).Append(": ").Append(tr.GetString(StringNames.GameSecondsAbbrev, Helpers.GetOption(Int32OptionNames.EmergencyCooldown))).Append('\n')
               .Append(tr.GetString(StringNames.GameVotingTime)).Append(": ").Append(tr.GetString(StringNames.GameSecondsAbbrev, votingTime > 0 ? votingTime : "∞")).Append('\n')
               .Append(tr.GetString(StringNames.GamePlayerSpeed)).Append(": ").Append(Helpers.GetOption(FloatOptionNames.PlayerSpeedMod)).Append('\n')
               .Append(tr.GetString(StringNames.GameTaskBarMode)).Append(": ").Append(tr.GetString((StringNames)(277 + Helpers.GetOption(Int32OptionNames.TaskBarMode)))).Append('\n')
-              .Append(tr.GetString(StringNames.GameVisualTasks)).Append(": ").Append(Helpers.GetOption(BoolOptionNames.VisualTasks) ? Tr.Get(TrKey.On) : Tr.Get(TrKey.Off)).Append('\n')
+              .Append(tr.GetString(StringNames.GameVisualTasks)).Append(": ").Append(Helpers.GetOption(BoolOptionNames.VisualTasks) ? Tr.Get(TranslateKey.On) : Tr.Get(TranslateKey.Off)).Append('\n')
               .Append(tr.GetString(StringNames.GameCrewLight)).Append(": ").Append(Helpers.GetOption(FloatOptionNames.CrewLightMod)).Append('x').Append('\n')
               .Append(tr.GetString(StringNames.GameImpostorLight)).Append(": ").Append(Helpers.GetOption(FloatOptionNames.ImpostorLightMod)).Append('x').Append('\n')
               .Append(tr.GetString(StringNames.GameKillCooldown)).Append(": ").Append(tr.GetString(StringNames.GameSecondsAbbrev, Helpers.GetOption(FloatOptionNames.KillCooldown))).Append('\n')

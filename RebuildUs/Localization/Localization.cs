@@ -97,7 +97,7 @@ public static class Tr
         }
     }
 
-    public static string Get(TrKey key, params object[] args)
+    public static string Get(TranslateKey key, params object[] args)
     {
         string keyStr = key.ToString();
         var lang = TranslationController.InstanceExists ? FastDestroyableSingleton<TranslationController>.Instance.currentLanguage.languageID : SupportedLangs.English;
@@ -139,7 +139,7 @@ public static class Tr
     /// </summary>
     public static string GetDynamic(string keyStr, params object[] args)
     {
-        if (Enum.TryParse<TrKey>(keyStr, out var key))
+        if (Enum.TryParse<TranslateKey>(keyStr, out var key))
         {
             return Get(key, args);
         }

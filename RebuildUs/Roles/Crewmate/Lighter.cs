@@ -71,7 +71,7 @@ public class Lighter : RoleBase<Lighter>
                 LighterButton.Timer = LighterButton.MaxTimer;
             },
             false,
-            Tr.Get(TrKey.LighterText)
+            Tr.Get(TranslateKey.LighterText)
         );
     }
     public static void SetButtonCooldowns()

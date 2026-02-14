@@ -83,20 +83,6 @@ public enum CustomRPC : byte
     SheriffKill = 145,
     SheriffKillRequest = 146,
 
-
-    GamemodeKills,
-    CaptureTheFlagWhoTookTheFlag,
-    CaptureTheFlagWhichTeamScored,
-    PoliceandThiefJail,
-    PoliceandThiefFreeThief,
-    PoliceandThiefTakeJewel,
-    PoliceandThiefDeliverJewel,
-    PoliceandThiefRevertedJewelPosition,
-    PoliceandThiefsTased,
-    HotPotatoTransfer,
-    HotPotatoExploded,
-    BattleRoyaleShowShoots,
-
     SUBMERGED_SetCustomData = 210,
     SUBMERGED_RequestChangeFloor = 211,
     SUBMERGED_EngineVent = 213,

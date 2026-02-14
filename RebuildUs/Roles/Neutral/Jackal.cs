@@ -165,7 +165,7 @@ public class Jackal : RoleBase<Jackal>
             hm.KillButton,
             AbilitySlot.NeutralAbilitySecondary,
             false,
-            Tr.Get(TrKey.SidekickText)
+            Tr.Get(TranslateKey.SidekickText)
         );
 
         JackalSabotageLightsButton = new CustomButton(

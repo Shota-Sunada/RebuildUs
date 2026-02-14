@@ -59,7 +59,7 @@ public class Madmate : ModifierBase<Madmate>
     {
         get
         {
-            return Tr.Get(TrKey.MadmatePrefix);
+            return Tr.Get(TranslateKey.MadmatePrefix);
         }
     }
 
@@ -67,7 +67,7 @@ public class Madmate : ModifierBase<Madmate>
     {
         get
         {
-            return Tr.Get(TrKey.Madmate);
+            return Tr.Get(TranslateKey.Madmate);
         }
     }
 
