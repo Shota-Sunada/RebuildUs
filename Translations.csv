@@ -730,6 +730,7 @@ CantUseEmergencyButton,Can't use the emergency button!,
 CustomSkeldMap,Custom Skeld Map,
 Normal,Normal,
 Dleks,Dleks,
+Sensei,Sensei,
 SkeldOptions,Skeld Options,
 StealButton,[BLANK],
 HotPotatoButton,[BLANK],
@@ -786,12 +787,3 @@ Score,"Score: ",
 "BattleRoyaleAllVsAll","All vs All",""
 "BattleRoyaleTeamBattle","Team Battle",""
 "BattleRoyaleScoreBattle","Score Battle",""
-"BotToken","Bot Token",""
-"BotToken2","Bot Token 2",""
-"BotToken3","Bot Token 3",""
-"GuildID","Guild ID",""
-"VoiceChannelID","Voice Channel ID",""
-"StatusChannelID","Status Channel ID",""
-"ResultChannelID","Result Channel ID",""
-"CustomServerIP","Custom Server IP",""
-"CustomServerPort","Custom Server Port",""
