@@ -83,7 +83,7 @@ public static class Vitals
 
             string timeString = VitalsStringBuilder.ToString();
             VitalsStringBuilder.Clear();
-            VitalsStringBuilder.Append(string.Format(Tr.Get(TranslateKey.TimeRemaining), timeString));
+            VitalsStringBuilder.Append(string.Format(Tr.Get(TrKey.TimeRemaining), timeString));
             TimeRemaining.text = VitalsStringBuilder.ToString();
             TimeRemaining.gameObject.SetActive(true);
         }

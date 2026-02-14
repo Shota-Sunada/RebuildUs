@@ -190,7 +190,7 @@ public static class Helpers
             InfoStringBuilder.Append(roleInfo.Name).Append(": ");
             if (roleInfo.RoleType == RoleType.Jackal)
             {
-                InfoStringBuilder.Append(Jackal.CanCreateSidekick ? Tr.Get(TranslateKey.JackalWithSidekick) : Tr.Get(TranslateKey.JackalShortDesc));
+                InfoStringBuilder.Append(Jackal.CanCreateSidekick ? Tr.Get(TrKey.JackalWithSidekick) : Tr.Get(TrKey.JackalShortDesc));
             }
             else
             {
@@ -207,7 +207,7 @@ public static class Helpers
             task.transform.SetParent(player.transform, false);
 
             InfoStringBuilder.Clear();
-            InfoStringBuilder.Append(Madmate.FullName).Append(": ").Append(Tr.Get(TranslateKey.MadmateShortDesc));
+            InfoStringBuilder.Append(Madmate.FullName).Append(": ").Append(Tr.Get(TrKey.MadmateShortDesc));
             task.Text = Cs(Madmate.NameColor, InfoStringBuilder.ToString());
             player.myTasks.Insert(0, task);
         }

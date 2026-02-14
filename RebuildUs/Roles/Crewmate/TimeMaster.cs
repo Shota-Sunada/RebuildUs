@@ -114,7 +114,7 @@ public class TimeMaster : RoleBase<TimeMaster>
             ShieldDuration,
             () => { TimeMasterShieldButton.Timer = TimeMasterShieldButton.MaxTimer; },
             false,
-            Tr.Get(TranslateKey.TimeShieldText)
+            Tr.Get(TrKey.TimeShieldText)
         );
     }
     public static void SetButtonCooldowns()

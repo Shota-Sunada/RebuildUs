@@ -180,7 +180,7 @@ public static class MapSettings
                 y += 0.2f;
             }
             AdminTimerText.transform.localPosition = new Vector3(-3.5f, y, 0);
-            AdminTimerText.text = RestrictAdminTime > 0 ? string.Format(Tr.Get(TranslateKey.AdminText), RestrictAdminTime.ToString("0.00")) : Tr.Get(TranslateKey.AdminRanOut);
+            AdminTimerText.text = RestrictAdminTime > 0 ? string.Format(Tr.Get(TrKey.AdminText), RestrictAdminTime.ToString("0.00")) : Tr.Get(TrKey.AdminRanOut);
             AdminTimerText.gameObject.SetActive(true);
         }
 
@@ -195,8 +195,8 @@ public static class MapSettings
             }
             CamerasTimerText.transform.localPosition = new Vector3(-3.5f, y, 0);
             CamerasTimerText.text = RestrictCamerasTime > 0
-                ? string.Format(Tr.Get(TranslateKey.CamerasText), RestrictCamerasTime.ToString("0.00"))
-                : Tr.Get(TranslateKey.CamerasRanOut);
+                ? string.Format(Tr.Get(TrKey.CamerasText), RestrictCamerasTime.ToString("0.00"))
+                : Tr.Get(TrKey.CamerasRanOut);
             CamerasTimerText.gameObject.SetActive(true);
         }
 
@@ -206,8 +206,8 @@ public static class MapSettings
             VitalsTimerText = UnityEngine.Object.Instantiate(FastDestroyableSingleton<HudManager>.Instance.TaskPanel.taskText, FastDestroyableSingleton<HudManager>.Instance.transform);
             VitalsTimerText.transform.localPosition = new Vector3(-3.5f, -4.0f, 0);
             VitalsTimerText.text = RestrictVitalsTime > 0
-                ? string.Format(Tr.Get(TranslateKey.VitalsText), RestrictVitalsTime.ToString("0.00"))
-                : Tr.Get(TranslateKey.VitalsRanOut);
+                ? string.Format(Tr.Get(TrKey.VitalsText), RestrictVitalsTime.ToString("0.00"))
+                : Tr.Get(TrKey.VitalsRanOut);
             VitalsTimerText.gameObject.SetActive(true);
         }
     }

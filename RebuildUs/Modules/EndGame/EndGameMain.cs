@@ -339,7 +339,7 @@ public static class EndGameMain
 
         if (AdditionalTempData.IsGM)
         {
-            __instance.WinText.text = Tr.Get(TranslateKey.GmGameOver);
+            __instance.WinText.text = Tr.Get(TrKey.GmGameOver);
             // __instance.WinText.color = GM.color;
         }
 
@@ -422,7 +422,7 @@ public static class EndGameMain
                 //     extraText += Tr.Get(TranslateKey.opportunistExtra);
                 //     break;
                 case WinCondition.LoversTeamWin:
-                    extraText += Tr.Get(TranslateKey.LoversExtra);
+                    extraText += Tr.Get(TrKey.LoversExtra);
                     break;
                 default:
                     break;
@@ -441,7 +441,7 @@ public static class EndGameMain
             roleSummary.transform.localScale = new Vector3(1f, 1f, 1f);
 
             var roleSummaryText = new StringBuilder();
-            roleSummaryText.AppendLine(Tr.Get(TranslateKey.RoleSummaryText));
+            roleSummaryText.AppendLine(Tr.Get(TrKey.RoleSummaryText));
             AdditionalTempData.PlayerRoles.Sort((x, y) =>
             {
                 var roleX = x.Roles.Count > 0 ? x.Roles[0] : null;

@@ -153,7 +153,7 @@ public static class Update
                 if (MapSettings.ShowLighterDarker && meetingShow)
                 {
                     TagStringBuilder.Append(" (")
-                        .Append(Helpers.IsLighterColor(target.Data.DefaultOutfit.ColorId) ? Tr.Get(TranslateKey.DetectiveLightLabel) : Tr.Get(TranslateKey.DetectiveDarkLabel))
+                        .Append(Helpers.IsLighterColor(target.Data.DefaultOutfit.ColorId) ? Tr.Get(TrKey.DetectiveLightLabel) : Tr.Get(TrKey.DetectiveDarkLabel))
                         .Append(')');
                 }
 

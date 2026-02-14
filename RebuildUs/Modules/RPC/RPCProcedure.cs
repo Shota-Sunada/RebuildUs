@@ -523,7 +523,7 @@ public static partial class RPCProcedure
             }
             if (roleInfo != null)
             {
-                string msg = string.Format(Tr.Get(TranslateKey.GuesserGuessChat), roleInfo.Name, guessedTarget.Data.PlayerName);
+                string msg = string.Format(Tr.Get(TrKey.GuesserGuessChat), roleInfo.Name, guessedTarget.Data.PlayerName);
                 if (AmongUsClient.Instance.AmClient && FastDestroyableSingleton<HudManager>.Instance)
                 {
                     FastDestroyableSingleton<HudManager>.Instance.Chat.AddChat(killer, msg);

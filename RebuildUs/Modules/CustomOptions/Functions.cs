@@ -66,23 +66,23 @@ public partial class CustomOption
                     break;
                 case OptionPage.GeneralSettings:
                     GeneralTab.gameObject.SetActive(true);
-                    __instance.MenuDescriptionText.text = Tr.Get(TranslateKey.GeneralSettings);
+                    __instance.MenuDescriptionText.text = Tr.Get(TrKey.GeneralSettings);
                     break;
                 case OptionPage.ImpostorSettings:
                     ImpostorTab.gameObject.SetActive(true);
-                    __instance.MenuDescriptionText.text = Tr.Get(TranslateKey.ImpostorSettings);
+                    __instance.MenuDescriptionText.text = Tr.Get(TrKey.ImpostorSettings);
                     break;
                 case OptionPage.CrewmateSettings:
                     CrewmateTab.gameObject.SetActive(true);
-                    __instance.MenuDescriptionText.text = Tr.Get(TranslateKey.CrewmateSettings);
+                    __instance.MenuDescriptionText.text = Tr.Get(TrKey.CrewmateSettings);
                     break;
                 case OptionPage.NeutralSettings:
                     NeutralTab.gameObject.SetActive(true);
-                    __instance.MenuDescriptionText.text = Tr.Get(TranslateKey.NeutralSettings);
+                    __instance.MenuDescriptionText.text = Tr.Get(TrKey.NeutralSettings);
                     break;
                 case OptionPage.ModifierSettings:
                     ModifierTab.gameObject.SetActive(true);
-                    __instance.MenuDescriptionText.text = Tr.Get(TranslateKey.ModifierSettings);
+                    __instance.MenuDescriptionText.text = Tr.Get(TrKey.ModifierSettings);
                     break;
                 default:
                     Logger.LogWarn($"Invalid Option Page ID in ChangeTabPrefix: {tabNum}");
@@ -204,21 +204,21 @@ public partial class CustomOption
         // Game Settings
         gameSettingsButton.transform.localPosition = new(gameSettingsButton.transform.localPosition.x - 0.2f, gameSettingsButton.transform.localPosition.y + 1.65f, gameSettingsButton.transform.localPosition.z);
         gameSettingsButton.transform.localScale *= Vector2.one * 0.75f;
-        __instance.StartCoroutine(Effects.Lerp(2f, new Action<float>(p => { gameSettingsButton.transform.FindChild("FontPlacer").GetComponentInChildren<TextMeshPro>().text = Tr.Get(TranslateKey.AmongUsSettings); })));
+        __instance.StartCoroutine(Effects.Lerp(2f, new Action<float>(p => { gameSettingsButton.transform.FindChild("FontPlacer").GetComponentInChildren<TextMeshPro>().text = Tr.Get(TrKey.AmongUsSettings); })));
         gameSettingsButton.OnMouseOut.RemoveAllListeners();
         gameSettingsButton.OnMouseOver.RemoveAllListeners();
         gameSettingsButton.SelectButton(false);
 
         // Mod General Settings
-        GeneralButton = CreateSettingButton(__instance, "RUGeneralSettingsButton", Tr.Get(TranslateKey.GeneralSettingsButton), OptionPage.GeneralSettings);
+        GeneralButton = CreateSettingButton(__instance, "RUGeneralSettingsButton", Tr.Get(TrKey.GeneralSettingsButton), OptionPage.GeneralSettings);
         GeneralTab = CreateSettingTab(__instance, "RUGeneralSettingsTab", CustomOptionType.General);
-        ImpostorButton = CreateSettingButton(__instance, "RUImpostorSettingsButton", Tr.Get(TranslateKey.ImpostorSettingsButton), OptionPage.ImpostorSettings);
+        ImpostorButton = CreateSettingButton(__instance, "RUImpostorSettingsButton", Tr.Get(TrKey.ImpostorSettingsButton), OptionPage.ImpostorSettings);
         ImpostorTab = CreateSettingTab(__instance, "RUGeneralImpostorTab", CustomOptionType.Impostor);
-        CrewmateButton = CreateSettingButton(__instance, "RUCrewmateSettingsButton", Tr.Get(TranslateKey.CrewmateSettingsButton), OptionPage.CrewmateSettings);
+        CrewmateButton = CreateSettingButton(__instance, "RUCrewmateSettingsButton", Tr.Get(TrKey.CrewmateSettingsButton), OptionPage.CrewmateSettings);
         CrewmateTab = CreateSettingTab(__instance, "RUCrewmateSettingsTab", CustomOptionType.Crewmate);
-        NeutralButton = CreateSettingButton(__instance, "RUNeutralSettingsButton", Tr.Get(TranslateKey.NeutralSettingsButton), OptionPage.NeutralSettings);
+        NeutralButton = CreateSettingButton(__instance, "RUNeutralSettingsButton", Tr.Get(TrKey.NeutralSettingsButton), OptionPage.NeutralSettings);
         NeutralTab = CreateSettingTab(__instance, "RUNeutralSettingsTab", CustomOptionType.Neutral);
-        ModifierButton = CreateSettingButton(__instance, "RUModifierSettingsButton", Tr.Get(TranslateKey.ModifierSettingsButton), OptionPage.ModifierSettings);
+        ModifierButton = CreateSettingButton(__instance, "RUModifierSettingsButton", Tr.Get(TrKey.ModifierSettingsButton), OptionPage.ModifierSettings);
         ModifierTab = CreateSettingTab(__instance, "RUModifierSettingsTab", CustomOptionType.Modifier);
 
         __instance.GameSettingsButton.SelectButton(true);
@@ -279,7 +279,7 @@ public partial class CustomOption
             {
                 var categoryHeaderMasked = UnityEngine.Object.Instantiate(menu.categoryHeaderOrigin, Vector3.zero, Quaternion.identity, menu.settingsContainer);
                 categoryHeaderMasked.SetHeader(StringNames.ImpostorsCategory, 20);
-                categoryHeaderMasked.Title.text = Helpers.Cs(option.Color, option.HeaderKey != TranslateKey.None ? Tr.Get(option.HeaderKey) : Tr.Get(option.NameKey));
+                categoryHeaderMasked.Title.text = Helpers.Cs(option.Color, option.HeaderKey != TrKey.None ? Tr.Get(option.HeaderKey) : Tr.Get(option.NameKey));
                 categoryHeaderMasked.Title.outlineColor = Color.white;
                 categoryHeaderMasked.Title.outlineWidth = 0.1f;
                 categoryHeaderMasked.transform.localScale = Vector3.one * 0.63f;
@@ -325,7 +325,7 @@ public partial class CustomOption
                 && (option.Type is CustomOptionType.Neutral or CustomOptionType.Crewmate or CustomOptionType.Impostor or CustomOptionType.Modifier)
             )
             {
-                so.TitleText.text = Tr.Get(TranslateKey.SpawnChance);
+                so.TitleText.text = Tr.Get(TrKey.SpawnChance);
             }
 
             if (so.TitleText.text.Length > 25)

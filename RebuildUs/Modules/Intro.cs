@@ -415,22 +415,22 @@ public static class Intro
         {
             if (roleInfo == RoleInfo.Crewmate)
             {
-                __instance.RoleText.text = Tr.Get(TranslateKey.Madmate);
+                __instance.RoleText.text = Tr.Get(TrKey.Madmate);
             }
             else
             {
-                __instance.RoleText.text = Tr.Get(TranslateKey.MadmatePrefix) + __instance.RoleText.text;
+                __instance.RoleText.text = Tr.Get(TrKey.MadmatePrefix) + __instance.RoleText.text;
             }
             __instance.YouAreText.color = Madmate.NameColor;
             __instance.RoleText.color = Madmate.NameColor;
-            __instance.RoleBlurbText.text = Tr.Get(TranslateKey.MadmateIntroDesc);
+            __instance.RoleBlurbText.text = Tr.Get(TrKey.MadmateIntroDesc);
             __instance.RoleBlurbText.color = Madmate.NameColor;
         }
 
         if (infos.Any(info => info.RoleType == RoleType.Lovers))
         {
             PlayerControl otherLover = PlayerControl.LocalPlayer.GetPartner();
-            __instance.RoleBlurbText.text += "\n" + Helpers.Cs(Lovers.Color, string.Format(Tr.Get(TranslateKey.LoversFlavorIntroDesc), otherLover?.Data?.PlayerName ?? ""));
+            __instance.RoleBlurbText.text += "\n" + Helpers.Cs(Lovers.Color, string.Format(Tr.Get(TrKey.LoversFlavorIntroDesc), otherLover?.Data?.PlayerName ?? ""));
         }
 
         // 従来処理

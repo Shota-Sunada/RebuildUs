@@ -72,7 +72,7 @@ public class Cleaner : RoleBase<Cleaner>
             hm.KillButton,
             AbilitySlot.ImpostorAbilityPrimary,
             false,
-            Tr.Get(TranslateKey.CleanText)
+            Tr.Get(TrKey.CleanText)
         );
     }
     public static void SetButtonCooldowns()

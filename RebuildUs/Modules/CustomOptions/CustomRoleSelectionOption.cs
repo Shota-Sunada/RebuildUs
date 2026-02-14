@@ -11,7 +11,7 @@ public class CustomRoleSelectionOption : CustomOption
         }
     }
 
-    public CustomRoleSelectionOption(int id, CustomOptionType type, TranslateKey nameKey, RoleType[] roleTypes = null, CustomOption parent = null)
+    public CustomRoleSelectionOption(int id, CustomOptionType type, TrKey nameKey, RoleType[] roleTypes = null, CustomOption parent = null)
     {
         if (roleTypes == null)
         {
@@ -28,7 +28,7 @@ public class CustomRoleSelectionOption : CustomOption
         for (int i = 0; i < roleTypes.Length; i++)
         {
             var x = roleTypes[i];
-            strings[i] = x == RoleType.NoRole ? Tr.Get(TranslateKey.NoRole) : Tr.GetDynamic("" + x.ToString());
+            strings[i] = x == RoleType.NoRole ? Tr.Get(TrKey.NoRole) : Tr.GetDynamic("" + x.ToString());
         }
 
         var opt = Normal(id, type, nameKey, strings, parent);

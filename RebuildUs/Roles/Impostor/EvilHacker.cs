@@ -103,7 +103,7 @@ public class EvilHacker : RoleBase<EvilHacker>
             hm.KillButton,
             AbilitySlot.ImpostorAbilitySecondary,
             false,
-            Tr.Get(TranslateKey.Madmate)
+            Tr.Get(TrKey.Madmate)
         );
     }
     public static void SetButtonCooldowns()

@@ -101,7 +101,7 @@ public static class SecurityCamera
 
             string timeString = SecurityStringBuilder.ToString();
             SecurityStringBuilder.Clear();
-            SecurityStringBuilder.Append(string.Format(Tr.Get(TranslateKey.TimeRemaining), timeString));
+            SecurityStringBuilder.Append(string.Format(Tr.Get(TrKey.TimeRemaining), timeString));
             TimeRemaining.text = SecurityStringBuilder.ToString();
             TimeRemaining.gameObject.SetActive(true);
         }
@@ -144,7 +144,7 @@ public static class SecurityCamera
 
             string timeString = SecurityStringBuilder.ToString();
             SecurityStringBuilder.Clear();
-            SecurityStringBuilder.Append(string.Format(Tr.Get(TranslateKey.TimeRemaining), timeString));
+            SecurityStringBuilder.Append(string.Format(Tr.Get(TrKey.TimeRemaining), timeString));
             TimeRemaining.text = SecurityStringBuilder.ToString();
             TimeRemaining.gameObject.SetActive(true);
         }
@@ -219,7 +219,7 @@ public static class SecurityCamera
             }
 
             string timeString = TimeSpan.FromSeconds(MapSettings.RestrictCamerasTime).ToString(@"mm\:ss\.ff");
-            TimeRemaining.text = string.Format(Tr.Get(TranslateKey.TimeRemaining), timeString);
+            TimeRemaining.text = string.Format(Tr.Get(TrKey.TimeRemaining), timeString);
             TimeRemaining.gameObject.SetActive(true);
         }
 
