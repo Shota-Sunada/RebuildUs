@@ -146,7 +146,7 @@
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
-  <component name="RunManager" selected="PowerShell.Build RebuildUs.Impostor">
+  <component name="RunManager" selected="PowerShell.Build RebuildUs Debug">
     <configuration name="Add Translations" type="PowerShellRunType" factoryName="PowerShell" scriptUrl=".\add-translations.ps1" workingDirectory="$SolutionDir$" executablePath="powershell">
       <envs />
       <method v="2" />

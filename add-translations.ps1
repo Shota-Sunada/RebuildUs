@@ -4,7 +4,7 @@
 $ErrorActionPreference = "Stop"
 
 $csvPath = "Translations.csv"
-$enumPath = "RebuildUs/Localization/TranslateKey.cs"
+$enumPath = "RebuildUs/Localization/TrKey.cs"
 
 function Update-Enum
 {

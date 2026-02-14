@@ -111,7 +111,7 @@ foreach ($k in $keys)
 
 [void]$sb.AppendLine("}")
 
-$enumPath = "RebuildUs/Localization/TranslateKey.cs"
+$enumPath = "RebuildUs/Localization/TrKey.cs"
 $enumDir = Split-Path -Parent $enumPath
 if (-not (Test-Path $enumDir))
 {
