@@ -3,9 +3,9 @@ namespace RebuildUs;
 internal static class CustomOptionHolder
 {
     internal static readonly object[] Rates = ["0%", "10%", "20%", "30%", "40%", "50%", "60%", "70%", "80%", "90%", "100%"];
-    internal static readonly string[] Presets = [Tr.Get(TrKey.Preset1), Tr.Get(TrKey.Preset2), Tr.Get(TrKey.Preset3), Tr.Get(TrKey.Preset4), Tr.Get(TrKey.Preset5)];
+    private static readonly string[] Presets = [Tr.Get(TrKey.Preset1), Tr.Get(TrKey.Preset2), Tr.Get(TrKey.Preset3), Tr.Get(TrKey.Preset4), Tr.Get(TrKey.Preset5)];
 
-    internal static Dictionary<byte, byte[]> BlockedRolePairings = [];
+    internal static readonly Dictionary<byte, byte[]> BlockedRolePairings = [];
 
     internal static void Load()
     {
@@ -69,13 +69,6 @@ internal static class CustomOptionHolder
         RestrictVitals = CustomOption.Normal(67, CustomOptionType.General, TrKey.RestrictVitals, true, RestrictDevices);
         RestrictVitalsTime = CustomOption.Normal(68, CustomOptionType.General, TrKey.RestrictVitalsTime, 30f, 0f, 600f, 1f, RestrictVitals);
         RestrictVitalsText = CustomOption.Normal(69, CustomOptionType.General, TrKey.RestrictVitalsText, true, RestrictVitals);
-
-#endregion
-
-#region DISCORD OPTIONS
-
-        EnableDiscordAutoMute = CustomOption.Header(110, CustomOptionType.General, TrKey.EnableDiscordAutoMute, false, TrKey.DiscordOptions);
-        EnableDiscordEmbed = CustomOption.Normal(111, CustomOptionType.General, TrKey.EnableDiscordEmbed, false);
 
 #endregion
 
@@ -482,13 +475,6 @@ internal static class CustomOptionHolder
 
 #endregion
 
-#region DISCORD OPTIONS
-
-    internal static CustomOption EnableDiscordAutoMute;
-    internal static CustomOption EnableDiscordEmbed;
-
-#endregion
-
 #region POLUS OPTIONS
 
     internal static CustomOption PolusAdditionalVents;
@@ -605,7 +591,6 @@ internal static class CustomOptionHolder
     internal static CustomOption LighterModeLightsOffVision;
     internal static CustomOption LighterCooldown;
     internal static CustomOption LighterDuration;
-    internal static CustomOption LighterCanSeeNinja;
 
     internal static CustomRoleOption SecurityGuardSpawnRate;
     internal static CustomOption SecurityGuardCooldown;

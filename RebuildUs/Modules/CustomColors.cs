@@ -2,13 +2,13 @@ using AmongUs.Data.Legacy;
 
 namespace RebuildUs.Modules;
 
-internal abstract class CustomColors
+internal static class CustomColors
 {
-    internal const int COLOR_BASE_ID_NUMBER = 50000;
+    private const int COLOR_BASE_ID_NUMBER = 50000;
 
-    protected static Dictionary<int, string> ColorStrings = [];
-    internal static List<int> LighterColors = [3, 4, 5, 7, 10, 11, 13, 14, 17];
-    internal static uint PickableColors = (uint)Palette.ColorNames.Length;
+    private static readonly Dictionary<int, string> ColorStrings = [];
+    internal static readonly List<int> LighterColors = [3, 4, 5, 7, 10, 11, 13, 14, 17];
+    private static uint _pickableColors = (uint)Palette.ColorNames.Length;
 
     private static readonly int[] Order =
     [
@@ -26,13 +26,13 @@ internal abstract class CustomColors
 
     internal static void Load()
     {
-        List<StringNames> longList = new();
+        List<StringNames> longList = [];
         foreach (StringNames name in Palette.ColorNames) longList.Add(name);
 
-        List<Color32> colorList = new();
+        List<Color32> colorList = [];
         foreach (Color32 color in Palette.PlayerColors) colorList.Add(color);
 
-        List<Color32> shadowList = new();
+        List<Color32> shadowList = [];
         foreach (Color32 shadow in Palette.ShadowColors) shadowList.Add(shadow);
 
         List<CustomColor> colors =
@@ -40,19 +40,18 @@ internal abstract class CustomColors
             /* Custom Colors, starting with id (for ORDER) 18 */
             new()
             {
-                NameKey = TrKey.Tamarind, //18
+                NameKey = TrKey.Tamarind,
                 Color = new(48, 28, 34, byte.MaxValue),
                 Shadow = new(30, 11, 16, byte.MaxValue),
                 IsLighterColor = true,
             },
             new()
             {
-                NameKey = TrKey.Army, // 19
+                NameKey = TrKey.Army,
                 Color = new(39, 45, 31, byte.MaxValue),
                 Shadow = new(11, 30, 24, byte.MaxValue),
                 IsLighterColor = false,
             },
-            // 20
             new()
             {
                 NameKey = TrKey.Olive,
@@ -88,7 +87,6 @@ internal abstract class CustomColors
                 Shadow = new(115, 15, 78, byte.MaxValue),
                 IsLighterColor = false,
             },
-            // 25
             new()
             {
                 NameKey = TrKey.Peach,
@@ -124,7 +122,6 @@ internal abstract class CustomColors
                 Shadow = new(0x74, 0xE5, 0x10, byte.MaxValue),
                 IsLighterColor = true,
             },
-            // 30
             new()
             {
                 NameKey = TrKey.SignalOrange,
@@ -160,17 +157,16 @@ internal abstract class CustomColors
                 Shadow = new(0x59, 0x9F, 0xC8, byte.MaxValue),
                 IsLighterColor = true,
             },
-            // 35
             new()
             {
-                NameKey = TrKey.Fuchsia, //35 Color Credit: LaikosVK
+                NameKey = TrKey.Fuchsia,
                 Color = new(164, 17, 129, byte.MaxValue),
                 Shadow = new(104, 3, 79, byte.MaxValue),
                 IsLighterColor = false,
             },
             new()
             {
-                NameKey = TrKey.RoyalGreen, //36
+                NameKey = TrKey.RoyalGreen,
                 Color = new(9, 82, 33, byte.MaxValue),
                 Shadow = new(0, 46, 8, byte.MaxValue),
                 IsLighterColor = false,
@@ -184,37 +180,37 @@ internal abstract class CustomColors
             },
             new()
             {
-                NameKey = TrKey.Navy, //38
+                NameKey = TrKey.Navy,
                 Color = new(9, 43, 119, byte.MaxValue),
                 Shadow = new(0, 13, 56, byte.MaxValue),
                 IsLighterColor = false,
             },
             new()
             {
-                NameKey = TrKey.Darkness, //39
+                NameKey = TrKey.Darkness,
                 Color = new(36, 39, 40, byte.MaxValue),
                 Shadow = new(10, 10, 10, byte.MaxValue),
                 IsLighterColor = false,
             },
             new()
             {
-                NameKey = TrKey.Ocean, //40
+                NameKey = TrKey.Ocean,
                 Color = new(55, 159, 218, byte.MaxValue),
                 Shadow = new(62, 92, 158, byte.MaxValue),
                 IsLighterColor = false,
             },
             new()
             {
-                NameKey = TrKey.Sundown, // 41
+                NameKey = TrKey.Sundown,
                 Color = new(252, 194, 100, byte.MaxValue),
                 Shadow = new(197, 98, 54, byte.MaxValue),
                 IsLighterColor = false,
             },
         ];
-        PickableColors += (uint)colors.Count; // Colors to show in Tab
+        _pickableColors += (uint)colors.Count; // Colors to show in Tab
 
         int id = COLOR_BASE_ID_NUMBER;
-        foreach (CustomColor cc in colors)
+        foreach (var cc in colors)
         {
             longList.Add((StringNames)id);
             ColorStrings[id++] = Tr.Get(cc.NameKey);
@@ -268,8 +264,7 @@ internal abstract class CustomColors
 
         ColorStringBuilder.Clear();
         ColorStringBuilder.Append("<color=#").Append(str).Append('>');
-        if (string.IsNullOrEmpty(sender.Data.PlayerName)) ColorStringBuilder.Append("...");
-        else ColorStringBuilder.Append(sender.Data.PlayerName);
+        ColorStringBuilder.Append(string.IsNullOrEmpty(sender.Data.PlayerName) ? "..." : sender.Data.PlayerName);
 
         string playerName = ColorStringBuilder.ToString();
         if (__instance.playerNameText.text != playerName) __instance.playerNameText.text = playerName;
@@ -314,7 +309,7 @@ internal abstract class CustomColors
     internal static void LoadPlayerPrefsPostfix()
     {
         if (!_needsPatch) return;
-        LegacySaveManager.colorConfig %= PickableColors;
+        LegacySaveManager.colorConfig %= _pickableColors;
         _needsPatch = false;
     }
 
@@ -336,7 +331,7 @@ internal abstract class CustomColors
         if (IsTaken(__instance, color) || color >= Palette.PlayerColors.Length)
         {
             int num = 0;
-            while (num++ < 50 && (color >= PickableColors || IsTaken(__instance, color))) color = (color + 1) % PickableColors;
+            while (num++ < 50 && (color >= _pickableColors || IsTaken(__instance, color))) color = (color + 1) % _pickableColors;
         }
 
         __instance.RpcSetColor((byte)color);

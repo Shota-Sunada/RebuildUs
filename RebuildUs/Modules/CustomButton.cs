@@ -37,20 +37,22 @@ internal sealed class CustomButton
     private readonly Func<bool> _hasButton;
     private readonly KeyCode? _hotkey;
     private readonly HudManager _hudManager;
-    private readonly SpriteRenderer _keyBackground;
+    private SpriteRenderer _keyBackground;
 
-    private readonly SpriteRenderer _keyGuide;
+    private SpriteRenderer _keyGuide;
     private readonly bool _mirror;
     private readonly Action _onClick;
     private readonly Action _onEffectEnds;
     private readonly Action _onMeetingEnds;
     private readonly AbilitySlot? _slot;
     private readonly bool _useLayout;
-    internal readonly ActionButton ActionButton;
+    internal ActionButton ActionButton;
 
     private string _lastButtonText;
 
     private bool _lastIsActive;
+    private bool _isInitialized;
+    private readonly ActionButton _textTemplate;
     internal string ButtonText;
     internal float EffectDuration;
     internal bool HasEffect;
@@ -137,9 +139,18 @@ internal sealed class CustomButton
         _slot = slot;
         ButtonText = buttonText;
         _useLayout = position.UseLayout;
+        _textTemplate = textTemplate;
         Timer = 16.2f;
+        LocalScale = hudManager.KillButton.transform.localScale;
         Buttons.Add(this);
-        ActionButton = Object.Instantiate(hudManager.KillButton, hudManager.KillButton.transform.parent);
+    }
+
+    private void CreateActionButton()
+    {
+        if (_isInitialized || _hudManager == null || _hudManager.KillButton == null) return;
+        _isInitialized = true;
+
+        ActionButton = Object.Instantiate(_hudManager.KillButton, _hudManager.KillButton.transform.parent);
         ActionButton.gameObject.name = "CustomButton";
 
         // Add Key Bind Guide
@@ -173,11 +184,10 @@ internal sealed class CustomButton
 
         if (ActionButton.GetComponent<TextTranslatorTMP>()) ActionButton.GetComponent<TextTranslatorTMP>().Destroy();
 
-        LocalScale = ActionButton.transform.localScale;
-        if (textTemplate)
+        if (_textTemplate)
         {
             Object.Destroy(ActionButton.buttonLabelText);
-            ActionButton.buttonLabelText = Object.Instantiate(textTemplate.buttonLabelText, ActionButton.transform);
+            ActionButton.buttonLabelText = Object.Instantiate(_textTemplate.buttonLabelText, ActionButton.transform);
         }
 
         if (ActionButton.buttonLabelText.GetComponent<TextTranslatorTMP>()) ActionButton.buttonLabelText.GetComponent<TextTranslatorTMP>().Destroy();
@@ -185,9 +195,11 @@ internal sealed class CustomButton
         ActionButton.OverrideText(ButtonText);
         _lastButtonText = ButtonText;
 
-        if (_useLayout) ActionButton.transform.SetParent(hudManager.AbilityButton.transform.parent, false);
+        if (_useLayout) ActionButton.transform.SetParent(_hudManager.AbilityButton.transform.parent, false);
 
-        SetActive(false);
+        _lastIsActive = false;
+        ActionButton.gameObject.SetActive(false);
+        ActionButton.graphic.enabled = false;
     }
 
 #nullable enable
@@ -197,12 +209,12 @@ internal sealed class CustomButton
     private void OnClickEvent()
     {
         if ((!HasEffect || !IsEffectActive || !EFFECT_CANCELLABLE) && (!(Timer < 0f) || !_hasButton() || !_couldUse())) return;
-        ActionButton.graphic.color = new(1f, 1f, 1f, 0.3f);
+        if (ActionButton != null && ActionButton.graphic != null) ActionButton.graphic.color = new(1f, 1f, 1f, 0.3f);
         _onClick();
 
         if (!HasEffect || IsEffectActive) return;
         Timer = EffectDuration;
-        ActionButton.cooldownTimerText.color = new(0F, 0.8F, 0F);
+        if (ActionButton != null && ActionButton.cooldownTimerText != null) ActionButton.cooldownTimerText.color = new(0F, 0.8F, 0F);
         IsEffectActive = true;
     }
 
@@ -210,7 +222,7 @@ internal sealed class CustomButton
     {
         for (int i = Buttons.Count - 1; i >= 0; i--)
         {
-            if (Buttons[i].ActionButton == null)
+            if (Buttons[i]._isInitialized && Buttons[i].ActionButton == null)
             {
                 Buttons.RemoveAt(i);
                 continue;
@@ -231,7 +243,7 @@ internal sealed class CustomButton
     {
         for (int i = Buttons.Count - 1; i >= 0; i--)
         {
-            if (Buttons[i].ActionButton == null)
+            if (Buttons[i]._isInitialized && Buttons[i].ActionButton == null)
             {
                 Buttons.RemoveAt(i);
                 continue;
@@ -285,20 +297,23 @@ internal sealed class CustomButton
             return;
         }
 
+        CreateActionButton();
+        if (ActionButton == null) return;
+
         bool useActive = _hudManager?.UseButton != null && _hudManager.UseButton.isActiveAndEnabled;
         bool petActive = _hudManager?.PetButton != null && _hudManager.PetButton.isActiveAndEnabled;
         SetActive(useActive || petActive);
 
-        if (ActionButton?.graphic != null && ActionButton.graphic.sprite != Sprite) ActionButton.graphic.sprite = Sprite;
-        if (SHOW_BUTTON_TEXT && _lastButtonText != ButtonText && ActionButton != null)
+        if (ActionButton.graphic != null && ActionButton.graphic.sprite != Sprite) ActionButton.graphic.sprite = Sprite;
+        if (SHOW_BUTTON_TEXT && _lastButtonText != ButtonText)
         {
             ActionButton.OverrideText(ButtonText);
             _lastButtonText = ButtonText;
         }
 
-        if (ActionButton?.buttonLabelText != null) ActionButton.buttonLabelText.enabled = SHOW_BUTTON_TEXT;
+        if (ActionButton.buttonLabelText != null) ActionButton.buttonLabelText.enabled = SHOW_BUTTON_TEXT;
 
-        if (_hudManager?.UseButton != null && ActionButton != null)
+        if (_hudManager?.UseButton != null)
         {
             if (!_useLayout)
             {
@@ -308,8 +323,8 @@ internal sealed class CustomButton
                 {
                     float aspect = Camera.main != null ? Camera.main.aspect : 1.77f;
                     float safeOrthographicSize = Camera.main != null ? CameraSafeArea.GetSafeOrthographicSize(Camera.main) : 3f;
-                    float xpos = 0.05f - (safeOrthographicSize * aspect * 1.70f);
-                    pos = new(xpos, pos.y, pos.z);
+                    float xPos = 0.05f - (safeOrthographicSize * aspect * 1.70f);
+                    pos = new(xPos, pos.y, pos.z);
                 }
 
                 ActionButton.transform.localPosition = pos + PositionOffset;
@@ -322,7 +337,7 @@ internal sealed class CustomButton
         Color targetColor = couldUse ? Palette.EnabledColor : Palette.DisabledClear;
         float targetDesat = couldUse ? 0f : 1f;
 
-        if (ActionButton?.graphic != null)
+        if (ActionButton.graphic != null)
         {
             if (ActionButton.graphic.color != targetColor)
             {
@@ -344,15 +359,15 @@ internal sealed class CustomButton
         if (Timer <= 0 && HasEffect && IsEffectActive)
         {
             IsEffectActive = false;
-            if (ActionButton?.cooldownTimerText != null) ActionButton.cooldownTimerText.color = Palette.EnabledColor;
+            if (ActionButton.cooldownTimerText != null) ActionButton.cooldownTimerText.color = Palette.EnabledColor;
             _onEffectEnds?.Invoke();
         }
 
-        ActionButton?.SetCoolDown(Timer, HasEffect && IsEffectActive ? EffectDuration : MaxTimer);
+        ActionButton.SetCoolDown(Timer, HasEffect && IsEffectActive ? EffectDuration : MaxTimer);
 
         // Update Key Guide
         KeyCode? activeKey = _hotkey ?? (_slot.HasValue ? KeyBindingManager.GetKey(_slot.Value) : null);
-        if (activeKey.HasValue && activeKey.Value != KeyCode.None)
+        if (activeKey.HasValue && activeKey.Value != KeyCode.None && _keyBackground != null && _keyGuide != null)
         {
             _keyBackground.gameObject.SetActive(true);
             _keyGuide.sprite = KeyBindingManager.GetKeySprite(activeKey.Value);
@@ -360,8 +375,10 @@ internal sealed class CustomButton
             _keyBackground.color = targetColor;
             _keyGuide.color = targetColor;
         }
-        else
-            _keyBackground?.gameObject.SetActive(false);
+        else if (_keyBackground != null)
+        {
+            _keyBackground.gameObject.SetActive(false);
+        }
 
         // Trigger OnClickEvent if the hotkey is being pressed down
         if (_hotkey.HasValue && Input.GetKeyDown(_hotkey.Value)) OnClickEvent();
