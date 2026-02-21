@@ -12,15 +12,11 @@ internal static class AmongUsClientPatch
     internal static void OnGameJoinedPostfix()
     {
         GameStart.VersionSent = false;
-        DiscordEmbedManager.UpdateStatus();
     }
 
     [HarmonyPrefix]
     [HarmonyPatch(typeof(AmongUsClient), nameof(AmongUsClient.ExitGame))]
-    internal static void ExitGamePrefix()
-    {
-        DiscordModManager.OnQuitGame();
-    }
+    internal static void ExitGamePrefix() { }
 
     [HarmonyPrefix]
     [HarmonyPatch(typeof(AmongUsClient), nameof(AmongUsClient.OnGameEnd))]
@@ -35,7 +31,6 @@ internal static class AmongUsClientPatch
     {
         GameStart.PlayerVersions.Clear();
         EndGameMain.OnGameEndPostfix(__instance, ref endGameResult);
-        DiscordModManager.OnGameEnd();
     }
 
     [HarmonyPrefix]
@@ -51,22 +46,9 @@ internal static class AmongUsClientPatch
     internal static void OnPlayerJoinedPostfix(AmongUsClient __instance, ClientData data)
     {
         GameStart.OnPlayerJoined();
-        DiscordEmbedManager.UpdateStatus();
     }
 
     [HarmonyPostfix]
     [HarmonyPatch(typeof(AmongUsClient), nameof(AmongUsClient.OnPlayerLeft))]
-    internal static void OnPlayerLeftPostfix(AmongUsClient __instance, ClientData data)
-    {
-        if (data != null)
-        {
-            GameStart.OnPlayerLeft(data.Id);
-            PlayerControl player = PlayerControl.AllPlayerControls.GetFastEnumerator().ToArray().FirstOrDefault(p => p.OwnerId == data.Id);
-            if (player == null) return;
-            string id = DiscordModManager.GetIdentifier(player);
-            if (id != null) DiscordModManager.OnPlayerLeft(id);
-        }
-        else
-            DiscordEmbedManager.UpdateStatus();
-    }
+    internal static void OnPlayerLeftPostfix(AmongUsClient __instance, ClientData data) { }
 }

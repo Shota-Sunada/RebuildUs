@@ -8,7 +8,6 @@ internal static class GameStartManagerPatch
     internal static void StartPostfix(GameStartManager __instance)
     {
         GameStart.Start(__instance);
-        DiscordEmbedManager.UpdateStatus();
     }
 
     [HarmonyPrefix]

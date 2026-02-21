@@ -5,7 +5,6 @@ internal class Mayor : RoleBase<Mayor>
 {
     internal static Color NameColor = new Color32(32, 77, 66, byte.MaxValue);
 
-    private static Minigame _emergency = null;
     private static CustomButton _mayorMeetingButton;
 
     // write configs here

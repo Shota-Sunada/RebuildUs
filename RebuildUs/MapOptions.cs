@@ -124,8 +124,6 @@ internal static class MapSettings
 
         EnableDiscordAutoMute = CustomOptionHolder.EnableDiscordAutoMute.GetBool();
         EnableDiscordEmbed = CustomOptionHolder.EnableDiscordEmbed.GetBool();
-
-        DiscordModManager.Initialize();
     }
 
     internal static void ResetDeviceTimes()

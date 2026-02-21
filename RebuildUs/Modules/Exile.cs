@@ -13,7 +13,6 @@ internal static class Exile
         LastExiled = player;
         if (player != null)
         {
-            DiscordModManager.OnExile(player.PlayerName, player.PlayerId);
             GameHistory.FinalStatuses[player.PlayerId] = FinalStatus.Exiled;
         }
 

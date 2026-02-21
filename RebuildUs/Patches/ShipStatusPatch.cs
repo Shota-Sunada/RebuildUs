@@ -12,10 +12,7 @@ internal static class ShipStatusPatch
 
     [HarmonyPostfix]
     [HarmonyPatch(typeof(ShipStatus), nameof(ShipStatus.OnEnable))]
-    internal static void OnEnablePostfix()
-    {
-        DiscordModManager.OnGameStart();
-    }
+    internal static void OnEnablePostfix() { }
 
     [HarmonyPrefix]
     [HarmonyPatch(typeof(ShipStatus), nameof(ShipStatus.CalculateLightRadius))]

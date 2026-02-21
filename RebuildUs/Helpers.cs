@@ -1003,23 +1003,6 @@ internal static class Helpers
         return Lovers.ExistingAndAlive(player) && Lovers.ExistingWithKiller(player) && player != null && player.IsLovers();
     }
 
-    internal static void UpdateMute(this PlayerControl player)
-    {
-        DiscordAutoMuteManager.UpdatePlayerMute(player);
-    }
-
-    internal static void Mute(this PlayerControl player)
-    {
-        if (player == null || player.Data == null || string.IsNullOrEmpty(player.FriendCode)) return;
-        if (DiscordModManager.TryGetDiscordId(player.FriendCode, out ulong did)) DiscordAutoMuteManager.SetMute(did, true, true);
-    }
-
-    internal static void Unmute(this PlayerControl player)
-    {
-        if (player == null || player.Data == null || string.IsNullOrEmpty(player.FriendCode)) return;
-        if (DiscordModManager.TryGetDiscordId(player.FriendCode, out ulong did)) DiscordAutoMuteManager.SetMute(did, false, false);
-    }
-
     internal static bool IsDead(this PlayerControl player)
     {
         if (player == null) return true;

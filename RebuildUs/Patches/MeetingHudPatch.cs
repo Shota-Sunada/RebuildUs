@@ -67,15 +67,11 @@ internal static class MeetingHudPatch
     internal static void StartPostfix(MeetingHud __instance)
     {
         ShowHost.Setup(__instance);
-        DiscordModManager.OnMeetingStart();
     }
 
     [HarmonyPostfix]
     [HarmonyPatch(typeof(MeetingHud), nameof(MeetingHud.OnDestroy))]
-    internal static void OnDestroyPostfix()
-    {
-        DiscordModManager.OnMeetingEnd();
-    }
+    internal static void OnDestroyPostfix() { }
 
     [HarmonyPostfix]
     [HarmonyPatch(typeof(MeetingHud), nameof(MeetingHud.Close))]

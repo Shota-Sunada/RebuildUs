@@ -66,8 +66,6 @@ internal static class GameHistory
         if (_resetToCrewmate) killer.Data.Role.TeamType = RoleTeamTypes.Crewmate;
         if (_resetToDead) killer.Data.IsDead = true;
 
-        if (MeetingHud.Instance) DiscordAutoMuteManager.UpdatePlayerMute(target);
-
         AllPlayers.OnKill(killer, target, deadPlayer);
 
         killer.OnKill(target);

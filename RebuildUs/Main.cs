@@ -18,7 +18,6 @@ global using RebuildUs.Localization;
 global using RebuildUs.Modules;
 global using RebuildUs.Modules.Consoles;
 global using RebuildUs.Modules.CustomOptions;
-global using RebuildUs.Modules.Discord;
 global using RebuildUs.Modules.EndGame;
 global using RebuildUs.Modules.GameEvents.Events;
 global using RebuildUs.Modules.Random;
@@ -138,8 +137,6 @@ internal abstract class RebuildUs : BasePlugin
 
         RefreshRnd((int)DateTime.Now.Ticks);
 
-        DiscordModManager.Initialize();
-
         Harmony.PatchAll();
 
         SubmergedCompatibility.Initialize();
@@ -216,11 +213,9 @@ internal abstract class RebuildUs : BasePlugin
         // GM.resetZoom();
         FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(3f, new Action<float>(p =>
         {
-            if (p == 1)
-            {
-                Camouflager.ResetCamouflage();
-                Morphing.ResetMorph();
-            }
+            if (!Mathf.Approximately(p, 1)) return;
+            Camouflager.ResetCamouflage();
+            Morphing.ResetMorph();
         })));
     }
 
