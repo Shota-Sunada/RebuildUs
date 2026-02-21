@@ -218,9 +218,17 @@ internal static class CustomHatManager
         string filePath = Path.Combine(HatsDirectory, resFile);
         if (resHash == null || !File.Exists(filePath)) return true;
 
+        byte[] hashBytes = new byte[16];
+        if (NativeMethods.calculate_md5_hash(filePath, hashBytes))
+        {
+            string hash = BitConverter.ToString(hashBytes).Replace("-", string.Empty).ToLowerInvariant();
+            return !resHash.Equals(hash);
+        }
+
+        // Fallback to C# implementation if native fails
         using FileStream stream = File.OpenRead(filePath);
-        string hash = BitConverter.ToString(algorithm.ComputeHash(stream)).Replace("-", string.Empty).ToLowerInvariant();
-        return !resHash.Equals(hash);
+        string csHash = BitConverter.ToString(algorithm.ComputeHash(stream)).Replace("-", string.Empty).ToLowerInvariant();
+        return !resHash.Equals(csHash);
     }
 
     internal static List<string> GenerateDownloadList(List<CustomHat> hats)

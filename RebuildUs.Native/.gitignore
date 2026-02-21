@@ -1,0 +1,11 @@
+# Rust build artifacts
+/target/
+
+# Cargo.lock should be committed for binaries, ignored for libraries
+# Since this appears to be a library (rebuild_us_native.dll), we keep Cargo.lock tracked
+# Uncomment the line below if you want to ignore Cargo.lock:
+# Cargo.lock
+
+# Backup files
+**/*.rs.bk
+**/*.pdb
