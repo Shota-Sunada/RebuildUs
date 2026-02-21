@@ -104,10 +104,10 @@ internal static partial class RPCProcedure
                 EngineerUsedRepair(reader.ReadByte());
                 break;
             case CustomRPC.ArsonistDouse:
-                ArsonistDouse(reader.ReadByte(), reader.ReadByte());
+                ArsonistDouse(reader.ReadByte());
                 break;
             case CustomRPC.ArsonistWin:
-                ArsonistWin(reader.ReadByte());
+                ArsonistWin();
                 break;
             case CustomRPC.CleanBody:
                 CleanBody(reader.ReadByte());
@@ -116,16 +116,16 @@ internal static partial class RPCProcedure
                 VultureWin();
                 break;
             case CustomRPC.VultureEat:
-                VultureEat(reader.ReadByte(), reader.ReadByte());
+                VultureEat(reader.ReadByte());
                 break;
             case CustomRPC.ErasePlayerRoles:
                 ErasePlayerRoles(reader.ReadByte());
                 break;
             case CustomRPC.JackalCreatesSidekick:
-                JackalCreatesSidekick(reader.ReadByte(), reader.ReadByte());
+                JackalCreatesSidekick(reader.ReadByte());
                 break;
             case CustomRPC.SidekickPromotes:
-                SidekickPromotes(reader.ReadByte());
+                SidekickPromotes();
                 break;
             case CustomRPC.MedicSetShielded:
                 MedicSetShielded(reader.ReadByte());
@@ -182,10 +182,10 @@ internal static partial class RPCProcedure
                 Synchronize(reader.ReadByte(), reader.ReadInt32());
                 break;
             case CustomRPC.PlaceCamera:
-                PlaceCamera(reader.ReadSingle(), reader.ReadSingle(), reader.ReadByte(), reader.ReadByte());
+                PlaceCamera(reader.ReadSingle(), reader.ReadSingle(), reader.ReadByte());
                 break;
             case CustomRPC.SealVent:
-                SealVent(reader.ReadPackedInt32(), reader.ReadByte());
+                SealVent(reader.ReadPackedInt32());
                 break;
             case CustomRPC.MorphingMorph:
                 MorphingMorph(reader.ReadByte(), reader.ReadByte());

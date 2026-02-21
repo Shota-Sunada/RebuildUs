@@ -4,7 +4,7 @@ using Object = UnityEngine.Object;
 namespace RebuildUs.Roles.Crewmate;
 
 [HarmonyPatch]
-internal class Medium : RoleBase<Medium>
+internal class Medium : MultiRoleBase<Medium>
 {
     internal static Color NameColor = new Color32(98, 120, 115, byte.MaxValue);
 
@@ -44,7 +44,8 @@ internal class Medium : RoleBase<Medium>
         if (_souls != null)
         {
             foreach (var t in _souls)
-                if (t != null && t.gameObject != null) Object.Destroy(t.gameObject);
+                if (t != null && t.gameObject != null)
+                    Object.Destroy(t.gameObject);
 
             _souls.Clear();
         }

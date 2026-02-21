@@ -15,8 +15,8 @@ internal static class ChatBubblePatch
         {
             if (sourcePlayer.Data == null || !sourcePlayer.Data.PlayerName.Equals(playerName)) continue;
             if (sourcePlayer.IsRole(RoleType.Spy)
-                || (sourcePlayer.IsRole(RoleType.Sidekick) && Sidekick.GetRole(sourcePlayer)?.WasTeamRed == true)
-                || (sourcePlayer.IsRole(RoleType.Jackal) && Jackal.GetRole(sourcePlayer)?.WasTeamRed == true))
+                || (sourcePlayer.IsRole(RoleType.Sidekick) && Sidekick.Instance.WasTeamRed)
+                || (sourcePlayer.IsRole(RoleType.Jackal) && Jackal.Instance.WasTeamRed))
                 __instance.NameText.color = Palette.ImpostorRed;
 
             break;

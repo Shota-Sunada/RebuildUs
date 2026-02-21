@@ -179,19 +179,19 @@ internal abstract class RebuildUs : BasePlugin
         Madmate.Clear();
         Mini.Clear();
 
-        PlayerRole.ClearAll();
+        ModRoleManager.ClearAll();
         PlayerModifier.ClearAll();
     }
 
     internal static void FixedUpdate(PlayerControl player)
     {
-        PlayerRole.AllRoles.DoIf(x => x.Player == player, x => x.FixedUpdate());
+        ModRoleManager.AllRoles.DoIf(x => x.Player == player, x => x.FixedUpdate());
         PlayerModifier.AllModifiers.DoIf(x => x.Player == player, x => x.FixedUpdate());
     }
 
     internal static void OnMeetingStart()
     {
-        PlayerRole.AllRoles.Do(x => x.OnMeetingStart());
+        ModRoleManager.AllRoles.Do(x => x.OnMeetingStart());
         PlayerModifier.AllModifiers.Do(x => x.OnMeetingStart());
 
         // GM.resetZoom();
@@ -205,7 +205,7 @@ internal abstract class RebuildUs : BasePlugin
 
     internal static void OnMeetingEnd()
     {
-        PlayerRole.AllRoles.Do(x => x.OnMeetingEnd());
+        ModRoleManager.AllRoles.Do(x => x.OnMeetingEnd());
         PlayerModifier.AllModifiers.Do(x => x.OnMeetingEnd());
 
         CustomOverlays.HideInfoOverlay();
@@ -214,7 +214,7 @@ internal abstract class RebuildUs : BasePlugin
 
     internal static void OnIntroEnd()
     {
-        PlayerRole.AllRoles.Do(x => x.OnIntroEnd());
+        ModRoleManager.AllRoles.Do(x => x.OnIntroEnd());
         PlayerModifier.AllModifiers.Do(x => x.OnIntroEnd());
     }
 
@@ -222,7 +222,7 @@ internal abstract class RebuildUs : BasePlugin
     {
         if (AmongUsClient.Instance.GameState == InnerNetClient.GameStates.Started)
         {
-            PlayerRole.AllRoles.Do(x => x.HandleDisconnect(player, reason));
+            ModRoleManager.AllRoles.Do(x => x.HandleDisconnect(player, reason));
             PlayerModifier.AllModifiers.Do(x => x.HandleDisconnect(player, reason));
 
             Lovers.HandleDisconnect(player, reason);

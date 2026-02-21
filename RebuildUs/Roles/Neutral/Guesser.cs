@@ -2,8 +2,8 @@ namespace RebuildUs.Roles.Neutral;
 
 internal static class Guesser
 {
-    internal static int RemainingShotsNiceGuesser;
-    internal static int RemainingShotsEvilGuesser;
+    private static int _remainingShotsNiceGuesser;
+    private static int _remainingShotsEvilGuesser;
     internal static bool OnlyAvailableRoles { get => CustomOptionHolder.GuesserOnlyAvailableRoles.GetBool(); }
     internal static bool HasMultipleShotsPerMeeting { get => CustomOptionHolder.GuesserHasMultipleShotsPerMeeting.GetBool(); }
     internal static bool ShowInfoInGhostChat { get => CustomOptionHolder.GuesserShowInfoInGhostChat.GetBool(); }
@@ -12,8 +12,8 @@ internal static class Guesser
 
     internal static void ClearAndReload()
     {
-        RemainingShotsNiceGuesser = Mathf.RoundToInt(CustomOptionHolder.GuesserNumberOfShots.GetFloat());
-        RemainingShotsEvilGuesser = Mathf.RoundToInt(CustomOptionHolder.GuesserNumberOfShots.GetFloat());
+        _remainingShotsNiceGuesser = Mathf.RoundToInt(CustomOptionHolder.GuesserNumberOfShots.GetFloat());
+        _remainingShotsEvilGuesser = Mathf.RoundToInt(CustomOptionHolder.GuesserNumberOfShots.GetFloat());
         NiceGuesser.Clear();
         EvilGuesser.Clear();
     }
@@ -31,21 +31,23 @@ internal static class Guesser
         int remainingShots = 0;
         if (player.IsRole(RoleType.NiceGuesser))
         {
-            remainingShots = RemainingShotsNiceGuesser;
-            if (shoot) RemainingShotsNiceGuesser = Mathf.Max(0, RemainingShotsNiceGuesser - 1);
+            remainingShots = _remainingShotsNiceGuesser;
+            if (shoot) _remainingShotsNiceGuesser = Mathf.Max(0, _remainingShotsNiceGuesser - 1);
         }
         else if (player.IsRole(RoleType.EvilGuesser))
         {
-            remainingShots = RemainingShotsEvilGuesser;
+            remainingShots = _remainingShotsEvilGuesser;
             if (player.HasModifier(ModifierType.LastImpostor) && LastImpostor.CanGuess()) remainingShots += LastImpostor.RemainingShots;
 
-            if (shoot)
+            if (!shoot) return remainingShots;
+            // ラストインポスターの弾数を優先的に消費させる
+            if (player.HasModifier(ModifierType.LastImpostor) && LastImpostor.CanGuess())
             {
-                // ラストインポスターの弾数を優先的に消費させる
-                if (player.HasModifier(ModifierType.LastImpostor) && LastImpostor.CanGuess())
-                    LastImpostor.RemainingShots = Mathf.Max(0, LastImpostor.RemainingShots - 1);
-                else
-                    RemainingShotsEvilGuesser = Mathf.Max(0, RemainingShotsEvilGuesser - 1);
+                LastImpostor.RemainingShots = Mathf.Max(0, LastImpostor.RemainingShots - 1);
+            }
+            else
+            {
+                _remainingShotsEvilGuesser = Mathf.Max(0, _remainingShotsEvilGuesser - 1);
             }
         }
         else if (player.HasModifier(ModifierType.LastImpostor) && LastImpostor.CanGuess())
@@ -58,7 +60,7 @@ internal static class Guesser
     }
 
     [HarmonyPatch]
-    internal class NiceGuesser : RoleBase<NiceGuesser>
+    internal class NiceGuesser : SingleRoleBase<NiceGuesser>
     {
         internal static Color NameColor = new Color32(255, 255, 0, byte.MaxValue);
 
@@ -88,13 +90,13 @@ internal static class Guesser
 
         internal static void Clear()
         {
-            // reset configs here
-            Players.Clear();
+            ModRoleManager.RemoveRole(Instance);
+            Instance = null;
         }
     }
 
     [HarmonyPatch]
-    internal class EvilGuesser : RoleBase<EvilGuesser>
+    internal class EvilGuesser : SingleRoleBase<EvilGuesser>
     {
         internal static Color NameColor = Palette.ImpostorRed;
 
@@ -124,8 +126,8 @@ internal static class Guesser
 
         internal static void Clear()
         {
-            // reset configs here
-            Players.Clear();
+            ModRoleManager.RemoveRole(Instance);
+            Instance = null;
         }
     }
 }

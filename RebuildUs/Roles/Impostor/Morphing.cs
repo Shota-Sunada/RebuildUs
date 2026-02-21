@@ -1,13 +1,13 @@
 namespace RebuildUs.Roles.Impostor;
 
 [HarmonyPatch]
-internal class Morphing : RoleBase<Morphing>
+internal class Morphing : MultiRoleBase<Morphing>
 {
     internal static Color NameColor = Palette.ImpostorRed;
 
     private static CustomButton _morphingButton;
-    internal static PlayerControl CurrentTarget;
-    internal static PlayerControl SampledTarget;
+    private static PlayerControl _currentTarget;
+    private static PlayerControl _sampledTarget;
     internal static PlayerControl MorphTarget;
     internal static float MorphTimer;
 
@@ -23,8 +23,8 @@ internal class Morphing : RoleBase<Morphing>
     }
 
     // write configs here
-    internal static float Cooldown { get => CustomOptionHolder.MorphingCooldown.GetFloat(); }
-    internal static float Duration { get => CustomOptionHolder.MorphingDuration.GetFloat(); }
+    private static float Cooldown { get => CustomOptionHolder.MorphingCooldown.GetFloat(); }
+    private static float Duration { get => CustomOptionHolder.MorphingDuration.GetFloat(); }
 
     internal override void OnMeetingStart() { }
     internal override void OnMeetingEnd() { }
@@ -38,8 +38,8 @@ internal class Morphing : RoleBase<Morphing>
     {
         Morphing local = Local;
         if (local == null) return;
-        CurrentTarget = Helpers.SetTarget();
-        Helpers.SetPlayerOutline(CurrentTarget, RoleColor);
+        _currentTarget = Helpers.SetTarget();
+        Helpers.SetPlayerOutline(_currentTarget, RoleColor);
     }
 
     internal override void OnKill(PlayerControl target) { }
@@ -51,35 +51,35 @@ internal class Morphing : RoleBase<Morphing>
     {
         _morphingButton = new(() =>
         {
-            if (SampledTarget != null)
+            if (_sampledTarget != null)
             {
                 {
                     using RPCSender sender = new(PlayerControl.LocalPlayer.NetId, CustomRPC.MorphingMorph);
-                    sender.Write(SampledTarget.PlayerId);
+                    sender.Write(_sampledTarget.PlayerId);
                     sender.Write(Local.Player.PlayerId);
                 }
-                RPCProcedure.MorphingMorph(SampledTarget.PlayerId, Local.Player.PlayerId);
-                SampledTarget = null;
+                RPCProcedure.MorphingMorph(_sampledTarget.PlayerId, Local.Player.PlayerId);
+                _sampledTarget = null;
                 _morphingButton.EffectDuration = Duration;
             }
-            else if (CurrentTarget != null)
+            else if (_currentTarget != null)
             {
-                SampledTarget = CurrentTarget;
+                _sampledTarget = _currentTarget;
                 _morphingButton.Sprite = AssetLoader.MorphButton;
                 _morphingButton.ButtonText = Tr.Get(TrKey.MorphText);
                 _morphingButton.EffectDuration = 1f;
             }
-        }, () => { return PlayerControl.LocalPlayer.IsRole(RoleType.Morphing) && PlayerControl.LocalPlayer.IsAlive(); }, () => { return (CurrentTarget || SampledTarget) && PlayerControl.LocalPlayer.CanMove; }, () =>
+        }, () => { return PlayerControl.LocalPlayer.IsRole(RoleType.Morphing) && PlayerControl.LocalPlayer.IsAlive(); }, () => { return (_currentTarget || _sampledTarget) && PlayerControl.LocalPlayer.CanMove; }, () =>
         {
             _morphingButton.Timer = _morphingButton.MaxTimer;
             _morphingButton.Sprite = AssetLoader.SampleButton;
             _morphingButton.ButtonText = Tr.Get(TrKey.SampleText);
             _morphingButton.IsEffectActive = false;
             _morphingButton.ActionButton.cooldownTimerText.color = Palette.EnabledColor;
-            SampledTarget = null;
+            _sampledTarget = null;
         }, AssetLoader.SampleButton, ButtonPosition.Layout, hm, hm.KillButton, AbilitySlot.ImpostorAbilityPrimary, true, Duration, () =>
         {
-            if (SampledTarget == null)
+            if (_sampledTarget == null)
             {
                 _morphingButton.Timer = _morphingButton.MaxTimer;
                 _morphingButton.Sprite = AssetLoader.SampleButton;
@@ -118,15 +118,15 @@ internal class Morphing : RoleBase<Morphing>
     {
         MorphTarget = null;
         MorphTimer = 0f;
-        for (int i = 0; i < Players.Count; i++) Players[i].HandleMorphing();
+        foreach (var t in Players) t.HandleMorphing();
     }
 
     internal static void Clear()
     {
         // reset configs here
         Players.Clear();
-        CurrentTarget = null;
-        SampledTarget = null;
+        _currentTarget = null;
+        _sampledTarget = null;
         MorphTarget = null;
         MorphTimer = 0;
     }

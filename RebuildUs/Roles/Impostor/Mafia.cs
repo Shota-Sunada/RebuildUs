@@ -21,7 +21,7 @@ internal static class Mafia
     }
 
     [HarmonyPatch]
-    internal class Godfather : RoleBase<Godfather>
+    internal class Godfather : SingleRoleBase<Godfather>
     {
         public Godfather()
         {
@@ -57,13 +57,13 @@ internal static class Mafia
 
         internal static void Clear()
         {
-            // reset configs here
-            Players.Clear();
+            ModRoleManager.RemoveRole(Instance);
+            Instance = null;
         }
     }
 
     [HarmonyPatch]
-    internal class Mafioso : RoleBase<Mafioso>
+    internal class Mafioso : SingleRoleBase<Mafioso>
     {
         public Mafioso()
         {
@@ -106,13 +106,13 @@ internal static class Mafia
 
         internal static void Clear()
         {
-            // reset configs here
-            Players.Clear();
+            ModRoleManager.RemoveRole(Instance);
+            Instance = null;
         }
     }
 
     [HarmonyPatch]
-    internal class Janitor : RoleBase<Janitor>
+    internal class Janitor : SingleRoleBase<Janitor>
     {
         // write configs here
         private static CustomButton _janitorCleanButton;
@@ -128,7 +128,7 @@ internal static class Mafia
             get => NameColor;
         }
 
-        internal static float Cooldown { get => CustomOptionHolder.JanitorCooldown.GetFloat(); }
+        private static float Cooldown { get => CustomOptionHolder.JanitorCooldown.GetFloat(); }
         internal static bool CanSabotage { get => CustomOptionHolder.JanitorCanSabotage.GetBool(); }
         internal static bool CanRepair { get => CustomOptionHolder.JanitorCanRepair.GetBool(); }
         internal static bool CanVent { get => CustomOptionHolder.JanitorCanVent.GetBool(); }
@@ -155,33 +155,29 @@ internal static class Mafia
         internal static void MakeButtons(HudManager hm)
         {
             _janitorCleanButton = new(() =>
-            {
-                Il2CppArrayBase<DeadBody> bodies = Object.FindObjectsOfType<DeadBody>();
-                PlayerControl local = PlayerControl.LocalPlayer;
-                Vector2 truePosition = local.GetTruePosition();
-                float maxDist = local.MaxReportDistance;
+                                      {
+                                          Il2CppArrayBase<DeadBody> bodies = Object.FindObjectsOfType<DeadBody>();
+                                          PlayerControl local = PlayerControl.LocalPlayer;
+                                          Vector2 truePosition = local.GetTruePosition();
+                                          float maxDist = local.MaxReportDistance;
 
-                for (int i = 0; i < bodies.Count; i++)
-                {
-                    DeadBody body = bodies[i];
-                    if (body == null || body.Reported) continue;
+                                          foreach (var body in bodies)
+                                          {
+                                              if (body == null || body.Reported) continue;
 
-                    Vector2 bodyPos = body.TruePosition;
-                    if (Vector2.Distance(bodyPos, truePosition) <= maxDist && local.CanMove && !PhysicsHelpers.AnythingBetween(truePosition, bodyPos, Constants.ShipAndObjectsMask, false))
-                    {
-                        NetworkedPlayerInfo playerInfo = GameData.Instance.GetPlayerById(body.ParentId);
-                        if (playerInfo != null)
-                        {
-                            using RPCSender sender = new(local.NetId, CustomRPC.CleanBody);
-                            sender.Write(playerInfo.PlayerId);
-                            RPCProcedure.CleanBody(playerInfo.PlayerId);
+                                              Vector2 bodyPos = body.TruePosition;
+                                              if (!(Vector2.Distance(bodyPos, truePosition) <= maxDist) || !local.CanMove || PhysicsHelpers.AnythingBetween(truePosition, bodyPos, Constants.ShipAndObjectsMask, false)) continue;
+                                              NetworkedPlayerInfo playerInfo = GameData.Instance.GetPlayerById(body.ParentId);
+                                              if (playerInfo == null) continue;
+                                              using RPCSender sender = new(local.NetId, CustomRPC.CleanBody);
+                                              sender.Write(playerInfo.PlayerId);
+                                              RPCProcedure.CleanBody(playerInfo.PlayerId);
 
-                            _janitorCleanButton.Timer = _janitorCleanButton.MaxTimer;
-                            break;
-                        }
-                    }
-                }
-            }, () => { return PlayerControl.LocalPlayer.IsRole(RoleType.Janitor) && PlayerControl.LocalPlayer.IsAlive(); }, () => { return hm.ReportButton.graphic.color == Palette.EnabledColor && PlayerControl.LocalPlayer.CanMove; }, () => { _janitorCleanButton.Timer = _janitorCleanButton.MaxTimer; }, AssetLoader.CleanButton, ButtonPosition.Layout, hm, hm.KillButton, AbilitySlot.ImpostorAbilityPrimary, false, Tr.Get(TrKey.CleanText));
+                                              _janitorCleanButton.Timer = _janitorCleanButton.MaxTimer;
+                                              break;
+                                          }
+                                      }, () => PlayerControl.LocalPlayer.IsRole(RoleType.Janitor) && PlayerControl.LocalPlayer.IsAlive(),
+                                      () => hm.ReportButton.graphic.color == Palette.EnabledColor && PlayerControl.LocalPlayer.CanMove, () => { _janitorCleanButton.Timer = _janitorCleanButton.MaxTimer; }, AssetLoader.CleanButton, ButtonPosition.Layout, hm, hm.KillButton, AbilitySlot.ImpostorAbilityPrimary, false, Tr.Get(TrKey.CleanText));
         }
 
         internal static void SetButtonCooldowns()
@@ -193,8 +189,8 @@ internal static class Mafia
 
         internal static void Clear()
         {
-            // reset configs here
-            Players.Clear();
+            ModRoleManager.RemoveRole(Instance);
+            Instance = null;
         }
     }
 }

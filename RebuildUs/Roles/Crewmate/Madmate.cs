@@ -1,7 +1,7 @@
 namespace RebuildUs.Roles.Crewmate;
 
 [HarmonyPatch]
-internal class MadmateRole : RoleBase<MadmateRole>
+internal class MadmateRole : MultiRoleBase<MadmateRole>
 {
     internal static Color NameColor = Palette.ImpostorRed;
 
@@ -35,8 +35,8 @@ internal class MadmateRole : RoleBase<MadmateRole>
         {
             if (p.IsTeamImpostor()
                 || p.IsRole(RoleType.Spy)
-                || (p.IsRole(RoleType.Jackal) && Jackal.GetRole(p).WasTeamRed)
-                || (p.IsRole(RoleType.Sidekick) && Sidekick.GetRole(p).WasTeamRed))
+                || (p.IsRole(RoleType.Jackal) && Jackal.Instance.WasTeamRed)
+                || (p.IsRole(RoleType.Sidekick) && Sidekick.Instance.WasTeamRed))
                 HudManagerPatch.SetPlayerNameColor(p, Palette.ImpostorRed);
         }
     }
@@ -63,7 +63,8 @@ internal class MadmateRole : RoleBase<MadmateRole>
         int totalTasks = NumCommonTasks + NumLongTasks + NumShortTasks;
         if (totalTasks == 0) return true;
         foreach (NetworkedPlayerInfo.TaskInfo task in player.Data.Tasks)
-            if (task.Complete) counter++;
+            if (task.Complete)
+                counter++;
 
         return counter == totalTasks;
     }

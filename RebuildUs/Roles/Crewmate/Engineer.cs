@@ -1,7 +1,7 @@
 namespace RebuildUs.Roles.Crewmate;
 
 [HarmonyPatch]
-internal class Engineer : RoleBase<Engineer>
+internal class Engineer : MultiRoleBase<Engineer>
 {
     internal static Color NameColor = new Color32(0, 40, 245, byte.MaxValue);
 

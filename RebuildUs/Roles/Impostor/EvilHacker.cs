@@ -1,14 +1,14 @@
 namespace RebuildUs.Roles.Impostor;
 
 [HarmonyPatch]
-internal class EvilHacker : RoleBase<EvilHacker>
+internal class EvilHacker : MultiRoleBase<EvilHacker>
 {
     internal static Color NameColor = Palette.ImpostorRed;
     private static CustomButton _evilHackerButton;
     private static CustomButton _evilHackerCreatesMadmateButton;
     internal bool CanCreateMadmate;
 
-    internal PlayerControl CurrentTarget;
+    private PlayerControl _currentTarget;
     internal PlayerControl FakeMadmate;
 
     public EvilHacker()
@@ -48,8 +48,8 @@ internal class EvilHacker : RoleBase<EvilHacker>
         EvilHacker local = Local;
         if (local != null)
         {
-            CurrentTarget = Helpers.SetTarget(true);
-            Helpers.SetPlayerOutline(CurrentTarget, RoleColor);
+            _currentTarget = Helpers.SetTarget(true);
+            Helpers.SetPlayerOutline(_currentTarget, RoleColor);
         }
     }
 
@@ -79,12 +79,12 @@ internal class EvilHacker : RoleBase<EvilHacker>
         _evilHackerCreatesMadmateButton = new(() =>
         {
             using RPCSender sender = new(PlayerControl.LocalPlayer.NetId, CustomRPC.EvilHackerCreatesMadmate);
-            sender.Write(Local.CurrentTarget.PlayerId);
-            RPCProcedure.EvilHackerCreatesMadmate(Local.CurrentTarget.PlayerId, Local.Player.PlayerId);
+            sender.Write(Local._currentTarget.PlayerId);
+            RPCProcedure.EvilHackerCreatesMadmate(Local._currentTarget.PlayerId, Local.Player.PlayerId);
         }, () =>
         {
             return PlayerControl.LocalPlayer.IsRole(RoleType.EvilHacker) && Local.CanCreateMadmate && PlayerControl.LocalPlayer.IsAlive();
-        }, () => { return Local.CurrentTarget && PlayerControl.LocalPlayer.CanMove; }, () => { }, AssetLoader.SidekickButton, ButtonPosition.Layout, hm, hm.KillButton, AbilitySlot.ImpostorAbilitySecondary, false, Tr.Get(TrKey.Madmate));
+        }, () => { return Local._currentTarget && PlayerControl.LocalPlayer.CanMove; }, () => { }, AssetLoader.SidekickButton, ButtonPosition.Layout, hm, hm.KillButton, AbilitySlot.ImpostorAbilitySecondary, false, Tr.Get(TrKey.Madmate));
     }
 
     internal static void SetButtonCooldowns()

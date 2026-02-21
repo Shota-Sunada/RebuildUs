@@ -1,7 +1,7 @@
 namespace RebuildUs.Roles.Crewmate;
 
 [HarmonyPatch]
-internal class Detective : RoleBase<Detective>
+internal class Detective : MultiRoleBase<Detective>
 {
     internal static Color NameColor = new Color32(45, 106, 165, byte.MaxValue);
     private float _timer = 6.2f;

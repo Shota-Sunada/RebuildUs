@@ -1,7 +1,7 @@
 namespace RebuildUs.Roles.Crewmate;
 
 [HarmonyPatch]
-internal class TimeMaster : RoleBase<TimeMaster>
+internal class TimeMaster : SingleRoleBase<TimeMaster>
 {
     internal static Color NameColor = new Color32(112, 142, 239, byte.MaxValue);
 
@@ -121,7 +121,7 @@ internal class TimeMaster : RoleBase<TimeMaster>
 
     internal static void Clear()
     {
-        // reset configs here
-        Players.Clear();
+        ModRoleManager.RemoveRole(Instance);
+        Instance = null;
     }
 }

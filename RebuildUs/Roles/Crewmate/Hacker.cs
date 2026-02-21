@@ -3,7 +3,7 @@ using Object = UnityEngine.Object;
 namespace RebuildUs.Roles.Crewmate;
 
 [HarmonyPatch]
-internal class Hacker : RoleBase<Hacker>
+internal class Hacker : MultiRoleBase<Hacker>
 {
     internal static Color NameColor = new Color32(117, 250, 76, byte.MaxValue);
 

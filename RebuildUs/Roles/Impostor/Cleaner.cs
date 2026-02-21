@@ -3,7 +3,7 @@ using Object = UnityEngine.Object;
 namespace RebuildUs.Roles.Impostor;
 
 [HarmonyPatch]
-internal class Cleaner : RoleBase<Cleaner>
+internal class Cleaner : MultiRoleBase<Cleaner>
 {
     internal static Color NameColor = Palette.ImpostorRed;
 
@@ -21,7 +21,7 @@ internal class Cleaner : RoleBase<Cleaner>
     }
 
     // write configs here
-    internal static float Cooldown { get => CustomOptionHolder.CleanerCooldown.GetFloat(); }
+    private static float Cooldown { get => CustomOptionHolder.CleanerCooldown.GetFloat(); }
 
     internal override void OnMeetingStart() { }
     internal override void OnMeetingEnd() { }
@@ -40,35 +40,36 @@ internal class Cleaner : RoleBase<Cleaner>
     internal static void MakeButtons(HudManager hm)
     {
         CleanerCleanButton = new(() =>
-        {
-            Vector2 truePosition = PlayerControl.LocalPlayer.GetTruePosition();
-            float maxDist = PlayerControl.LocalPlayer.MaxReportDistance;
-            Il2CppArrayBase<DeadBody> bodies = Object.FindObjectsOfType<DeadBody>();
+                                 {
+                                     Vector2 truePosition = PlayerControl.LocalPlayer.GetTruePosition();
+                                     float maxDist = PlayerControl.LocalPlayer.MaxReportDistance;
+                                     Il2CppArrayBase<DeadBody> bodies = Object.FindObjectsOfType<DeadBody>();
 
-            for (int i = 0; i < bodies.Length; i++)
-            {
-                DeadBody body = bodies[i];
-                if (body == null || body.Reported) continue;
+                                     foreach (var body in bodies)
+                                     {
+                                         if (body == null || body.Reported) continue;
 
-                Vector2 bodyPosition = body.TruePosition;
-                float dist = Vector2.Distance(truePosition, bodyPosition);
+                                         Vector2 bodyPosition = body.TruePosition;
+                                         float dist = Vector2.Distance(truePosition, bodyPosition);
 
-                if (dist <= maxDist && PlayerControl.LocalPlayer.CanMove && !PhysicsHelpers.AnythingBetween(truePosition, bodyPosition, Constants.ShipAndObjectsMask, false))
-                {
-                    NetworkedPlayerInfo playerInfo = GameData.Instance.GetPlayerById(body.ParentId);
-                    if (playerInfo == null) continue;
+                                         if (dist <= maxDist && PlayerControl.LocalPlayer.CanMove && !PhysicsHelpers.AnythingBetween(truePosition, bodyPosition, Constants.ShipAndObjectsMask, false))
+                                         {
+                                             NetworkedPlayerInfo playerInfo = GameData.Instance.GetPlayerById(body.ParentId);
+                                             if (playerInfo == null) continue;
 
-                    {
-                        using RPCSender sender = new(PlayerControl.LocalPlayer.NetId, CustomRPC.CleanBody);
-                        sender.Write(playerInfo.PlayerId);
-                    }
-                    RPCProcedure.CleanBody(playerInfo.PlayerId);
+                                             {
+                                                 using RPCSender sender = new(PlayerControl.LocalPlayer.NetId, CustomRPC.CleanBody);
+                                                 sender.Write(playerInfo.PlayerId);
+                                             }
+                                             RPCProcedure.CleanBody(playerInfo.PlayerId);
 
-                    Local.Player.killTimer = CleanerCleanButton.Timer = CleanerCleanButton.MaxTimer;
-                    break;
-                }
-            }
-        }, () => { return Local != null && PlayerControl.LocalPlayer.IsAlive(); }, () => { return hm.ReportButton.graphic.color == Palette.EnabledColor && PlayerControl.LocalPlayer.CanMove; }, () => { CleanerCleanButton.Timer = CleanerCleanButton.MaxTimer; }, AssetLoader.CleanButton, ButtonPosition.Layout, hm, hm.KillButton, AbilitySlot.ImpostorAbilityPrimary, false, Tr.Get(TrKey.CleanText));
+                                             Local.Player.killTimer = CleanerCleanButton.Timer = CleanerCleanButton.MaxTimer;
+                                             break;
+                                         }
+                                     }
+                                 }, () => Local != null && PlayerControl.LocalPlayer.IsAlive(), () => hm.ReportButton.graphic.color == Palette.EnabledColor && PlayerControl.LocalPlayer.CanMove,
+                                 () => { CleanerCleanButton.Timer = CleanerCleanButton.MaxTimer; },
+                                 AssetLoader.CleanButton, ButtonPosition.Layout, hm, hm.KillButton, AbilitySlot.ImpostorAbilityPrimary, false, Tr.Get(TrKey.CleanText));
     }
 
     internal static void SetButtonCooldowns()

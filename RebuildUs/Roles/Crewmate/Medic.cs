@@ -3,7 +3,7 @@ namespace RebuildUs.Roles.Crewmate;
 // 保護対象が志望したときにリセットする処理を書いていないので、もしかしたらバグるかも？
 
 [HarmonyPatch]
-internal class Medic : RoleBase<Medic>
+internal class Medic : SingleRoleBase<Medic>
 {
     internal static Color NameColor = new Color32(126, 251, 194, byte.MaxValue);
 
@@ -90,8 +90,9 @@ internal class Medic : RoleBase<Medic>
 
     internal static void Clear()
     {
-        // reset configs here
-        Players.Clear();
+        ModRoleManager.RemoveRole(Instance);
+        Instance = null;
+
         Shielded = null;
         FutureShielded = null;
         UsedShield = false;

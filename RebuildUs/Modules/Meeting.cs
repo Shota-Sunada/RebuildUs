@@ -68,7 +68,7 @@ internal static class Meeting
         }
 
         // Swapper swap votes
-        if (!Swapper.Exists || Swapper.LivingPlayers.Count == 0) return dictionary;
+        if (!Swapper.Exists || Swapper.PlayerControl.IsDead()) return dictionary;
         {
             _swapped1 = null;
             _swapped2 = null;
@@ -172,7 +172,7 @@ internal static class Meeting
             if (playerVoteArea.TargetPlayerId == Swapper.PlayerId2) _swapped2 = playerVoteArea;
         }
 
-        bool doSwap = _swapped1 != null && _swapped2 != null && Swapper.Exists && Swapper.LivingPlayers.Count != 0;
+        bool doSwap = _swapped1 != null && _swapped2 != null && Swapper.Exists && Swapper.PlayerControl.IsAlive();
         if (doSwap)
         {
             __instance.StartCoroutine(Effects.Slide3D(_swapped1.transform, _swapped1.transform.localPosition, _swapped2.transform.localPosition, 1.5f));
@@ -548,7 +548,7 @@ internal static class Meeting
         if (__instance == null || __instance.playerStates == null || __instance.playerStates.Length == 0) return;
 
         // Add Swapper Buttons
-        bool addSwapperButtons = Swapper.Exists && PlayerControl.LocalPlayer.IsRole(RoleType.NiceSwapper) && Swapper.LivingPlayers.Count != 0;
+        bool addSwapperButtons = Swapper.Exists && PlayerControl.LocalPlayer.IsRole(RoleType.NiceSwapper) && Swapper.PlayerControl.IsAlive();
         if (addSwapperButtons)
         {
             _selections = new bool[__instance.playerStates.Length];

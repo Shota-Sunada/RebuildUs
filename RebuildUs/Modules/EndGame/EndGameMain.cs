@@ -71,13 +71,15 @@ internal static class EndGameMain
 
         // AdditionalTempData.IsGM = CustomOptionHolder.GmEnabled.GetBool() && PlayerControl.LocalPlayer.IsGM();
 
-        List<PlayerControl> notWinners = new();
-        notWinners.AddRange(Jester.AllPlayers);
-        notWinners.AddRange(Arsonist.AllPlayers);
-        notWinners.AddRange(Vulture.AllPlayers);
-        notWinners.AddRange(Jackal.AllPlayers);
-        notWinners.AddRange(Sidekick.AllPlayers);
+        List<PlayerControl> notWinners = [];
+
         notWinners.AddRange(Jackal.FormerJackals);
+
+        notWinners.Add(Jester.PlayerControl);
+        notWinners.Add(Arsonist.PlayerControl);
+        notWinners.Add(Vulture.PlayerControl);
+        notWinners.Add(Jackal.PlayerControl);
+        notWinners.Add(Sidekick.PlayerControl);
 
         bool sabotageWin = gameOverReason is GameOverReason.ImpostorsBySabotage;
         bool impostorWin = gameOverReason is GameOverReason.ImpostorsByVote or GameOverReason.ImpostorsByKill or GameOverReason.ImpostorDisconnect;
@@ -143,7 +145,9 @@ internal static class EndGameMain
         for (int i = cachedWinners.Count - 1; i >= 0; i--)
         {
             if (notWinnerNames.Contains(cachedWinners[i].PlayerName))
+            {
                 cachedWinners.RemoveAt(i);
+            }
         }
 
         if (everyoneDead)
@@ -154,26 +158,20 @@ internal static class EndGameMain
         else if (jesterWin)
         {
             EndGameResult.CachedWinners = new();
-            foreach (Jester jester in Jester.Players)
-            {
-                jester.Player.Data.IsDead = true;
-                EndGameResult.CachedWinners.Add(new(jester.Player.Data));
-            }
-
+            Jester.PlayerControl.Data.IsDead = true;
+            EndGameResult.CachedWinners.Add(new(Jester.PlayerControl.Data));
             AdditionalTempData.WinCondition = WinCondition.JesterWin;
         }
         else if (arsonistWin)
         {
             EndGameResult.CachedWinners = new();
-            foreach (Arsonist arsonist in Arsonist.Players) EndGameResult.CachedWinners.Add(new(arsonist.Player.Data));
-
+            EndGameResult.CachedWinners.Add(new(Arsonist.PlayerControl.Data));
             AdditionalTempData.WinCondition = WinCondition.ArsonistWin;
         }
         else if (vultureWin)
         {
             EndGameResult.CachedWinners = new();
-            foreach (Vulture vulture in Vulture.Players) EndGameResult.CachedWinners.Add(new(vulture.Player.Data));
-
+            EndGameResult.CachedWinners.Add(new(Vulture.PlayerControl.Data));
             AdditionalTempData.WinCondition = WinCondition.VultureWin;
         }
         else if (teamJackalWin)
@@ -181,12 +179,15 @@ internal static class EndGameMain
             // Jackal wins if nobody except jackal is alive
             AdditionalTempData.WinCondition = WinCondition.JackalWin;
             EndGameResult.CachedWinners = new();
-            foreach (PlayerControl jackal in Jackal.AllPlayers) EndGameResult.CachedWinners.Add(new(jackal.Data) { IsImpostor = false });
+            EndGameResult.CachedWinners.Add(new(Jackal.PlayerControl.Data) { IsImpostor = false });
 
             // If there is a sidekick. The sidekick also wins
-            foreach (PlayerControl sidekick in Sidekick.AllPlayers) EndGameResult.CachedWinners.Add(new(sidekick.Data) { IsImpostor = false });
+            EndGameResult.CachedWinners.Add(new(Sidekick.PlayerControl.Data) { IsImpostor = false });
 
-            foreach (PlayerControl jackal in Jackal.FormerJackals) EndGameResult.CachedWinners.Add(new(jackal.Data) { IsImpostor = false });
+            foreach (PlayerControl jackal in Jackal.FormerJackals)
+            {
+                EndGameResult.CachedWinners.Add(new(jackal.Data) { IsImpostor = false });
+            }
         }
         // Lovers win conditions
         else if (loversWin)
@@ -289,7 +290,9 @@ internal static class EndGameMain
                 poolablePlayer.SetDeadFlipX(i % 2 == 0);
             }
             else
+            {
                 poolablePlayer.SetFlipX(i % 2 == 0);
+            }
 
             poolablePlayer.UpdateFromPlayerOutfit(cachedPlayerData2.Outfit, PlayerMaterial.MaskType.None, cachedPlayerData2.IsDead, true);
 
@@ -299,9 +302,13 @@ internal static class EndGameMain
             poolablePlayer.cosmetics.nameText.transform.localPosition = new(poolablePlayer.cosmetics.nameText.transform.localPosition.x, poolablePlayer.cosmetics.nameText.transform.localPosition.y - 0.7f, -15f);
 
             if (playerRolesDict.TryGetValue(cachedPlayerData2.PlayerName, out PlayerRoleInfo data))
+            {
                 poolablePlayer.cosmetics.nameText.text = cachedPlayerData2.PlayerName + data.NameSuffix + $"\n<size=80%>{data.RoleNames}</size>";
+            }
             else
+            {
                 poolablePlayer.cosmetics.nameText.text = cachedPlayerData2.PlayerName;
+            }
         }
 
         // Additional code

@@ -234,25 +234,21 @@ internal static class PlayerControlPatch
 
         bool specialTeamRedExists = false;
         if (Spy.Exists)
+        {
             specialTeamRedExists = true;
+        }
         else
         {
-            foreach (Sidekick sk in Sidekick.Players)
+            if (Sidekick.Exists && Sidekick.Instance.WasTeamRed)
             {
-                if (sk.WasTeamRed)
-                {
-                    specialTeamRedExists = true;
-                    break;
-                }
+                specialTeamRedExists = true;
             }
 
             if (!specialTeamRedExists)
             {
-                foreach (Jackal jk in Jackal.Players)
+                if (Jackal.Exists && Jackal.Instance.WasTeamRed)
                 {
-                    if (!jk.WasTeamRed) continue;
                     specialTeamRedExists = true;
-                    break;
                 }
             }
         }
@@ -261,27 +257,35 @@ internal static class PlayerControlPatch
         if (specialTeamRedExists)
         {
             if (Spy.ImpostorsCanKillAnyone)
+            {
                 target = Helpers.SetTarget(false, true);
+            }
             else
             {
-                List<PlayerControl> listP = [.. Spy.AllPlayers];
-                foreach (Sidekick sidekick in Sidekick.Players)
+                List<PlayerControl> listP = [];
+
+                if (Spy.Exists)
                 {
-                    if (sidekick.WasTeamRed)
-                        listP.Add(sidekick.Player);
+                    listP.Add(Spy.PlayerControl);
                 }
 
-                foreach (Jackal jackal in Jackal.Players)
+                if (Sidekick.Exists && Sidekick.Instance.WasTeamRed)
                 {
-                    if (jackal.WasTeamRed)
-                        listP.Add(jackal.Player);
+                    listP.Add(Sidekick.PlayerControl);
+                }
+
+                if (Jackal.Exists && Jackal.Instance.WasTeamRed)
+                {
+                    listP.Add(Jackal.PlayerControl);
                 }
 
                 target = Helpers.SetTarget(true, true, listP);
             }
         }
         else
+        {
             target = Helpers.SetTarget(true, true);
+        }
 
         FastDestroyableSingleton<HudManager>.Instance.KillButton.SetTarget(target);
     }

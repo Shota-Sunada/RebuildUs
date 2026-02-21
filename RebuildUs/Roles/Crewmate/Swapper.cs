@@ -1,7 +1,7 @@
 namespace RebuildUs.Roles.Crewmate;
 
 [HarmonyPatch]
-internal class Swapper : RoleBase<Swapper>
+internal class Swapper : SingleRoleBase<Swapper>
 {
     internal static int RemainSwaps = 2;
 
@@ -48,8 +48,9 @@ internal class Swapper : RoleBase<Swapper>
 
     internal static void Clear()
     {
-        // reset configs here
-        Players.Clear();
+        ModRoleManager.RemoveRole(Instance);
+        Instance = null;
+
         PlayerId1 = byte.MaxValue;
         PlayerId2 = byte.MaxValue;
         RemainSwaps = 2;

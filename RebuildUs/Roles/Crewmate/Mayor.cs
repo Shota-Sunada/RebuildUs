@@ -1,7 +1,7 @@
 namespace RebuildUs.Roles.Crewmate;
 
 [HarmonyPatch]
-internal class Mayor : RoleBase<Mayor>
+internal class Mayor : MultiRoleBase<Mayor>
 {
     internal static Color NameColor = new Color32(32, 77, 66, byte.MaxValue);
 

@@ -3,7 +3,7 @@ using Object = UnityEngine.Object;
 namespace RebuildUs.Roles.Crewmate;
 
 [HarmonyPatch]
-internal class SecurityGuard : RoleBase<SecurityGuard>
+internal class SecurityGuard : SingleRoleBase<SecurityGuard>
 {
     internal static Color NameColor = new Color32(195, 178, 95, byte.MaxValue);
 
@@ -16,12 +16,12 @@ internal class SecurityGuard : RoleBase<SecurityGuard>
     private static SystemConsole _taskCamsConsole;
     private static SystemConsole _doorLogConsole;
     private int _charges = 1;
-    private Minigame Minigame;
+    private Minigame _minigame;
     internal int PlacedCameras;
 
     private int _rechargedTasks = 3;
     internal int RemainingScrews = 7;
-    private Vent VentTarget;
+    private Vent _ventTarget;
 
     public SecurityGuard()
     {
@@ -70,7 +70,7 @@ internal class SecurityGuard : RoleBase<SecurityGuard>
             }
         }
 
-        VentTarget = target;
+        _ventTarget = target;
 
         if (Player.Data.IsDead) return;
         (int playerCompleted, _) = TasksHandler.TaskInfo(Player.Data);
@@ -90,14 +90,13 @@ internal class SecurityGuard : RoleBase<SecurityGuard>
     {
         _securityGuardButton = new(() =>
         {
-            if (Local.VentTarget != null)
+            if (Local._ventTarget != null)
             {
                 // Seal vent
                 using RPCSender sender = new(PlayerControl.LocalPlayer.NetId, CustomRPC.SealVent);
-                sender.WritePacked(Local.VentTarget.Id);
-                sender.Write(Local.Player.PlayerId);
-                RPCProcedure.SealVent(Local.VentTarget.Id, Local.Player.PlayerId);
-                Local.VentTarget = null;
+                sender.WritePacked(Local._ventTarget.Id);
+                RPCProcedure.SealVent(Local._ventTarget.Id);
+                Local._ventTarget = null;
             }
             else if (Helpers.GetOption(ByteOptionNames.MapId) != 1 && MapSettings.CouldUseCameras && !SubmergedCompatibility.IsSubmerged)
             {
@@ -119,16 +118,15 @@ internal class SecurityGuard : RoleBase<SecurityGuard>
                     sender.Write(pos.x);
                     sender.Write(pos.y);
                     sender.Write(roomId);
-                    sender.Write(Local.Player.PlayerId);
                 }
 
-                RPCProcedure.PlaceCamera(pos.x, pos.y, roomId, Local.Player.PlayerId);
+                RPCProcedure.PlaceCamera(pos.x, pos.y, roomId);
             }
 
             _securityGuardButton.Timer = _securityGuardButton.MaxTimer;
         }, () => { return PlayerControl.LocalPlayer.IsRole(RoleType.SecurityGuard) && PlayerControl.LocalPlayer.IsAlive() && Local.RemainingScrews >= Mathf.Min(VentPrice, CamPrice); }, () =>
         {
-            if (Local.VentTarget == null && Helpers.GetOption(ByteOptionNames.MapId) != 1 && !SubmergedCompatibility.IsSubmerged)
+            if (Local._ventTarget == null && Helpers.GetOption(ByteOptionNames.MapId) != 1 && !SubmergedCompatibility.IsSubmerged)
             {
                 _securityGuardButton.ButtonText = Tr.Get(TrKey.PlaceCameraText);
                 _securityGuardButton.Sprite = AssetLoader.PlaceCameraButton;
@@ -141,7 +139,7 @@ internal class SecurityGuard : RoleBase<SecurityGuard>
 
             _securityGuardButtonScrewsText?.text = string.Format(Tr.Get(TrKey.SecurityGuardScrews), Local.RemainingScrews);
 
-            return Local.VentTarget != null ? Local.RemainingScrews >= VentPrice && PlayerControl.LocalPlayer.CanMove : Helpers.GetOption(ByteOptionNames.MapId) != 1 && !SubmergedCompatibility.IsSubmerged && MapSettings.CouldUseCameras && Local.RemainingScrews >= CamPrice && PlayerControl.LocalPlayer.CanMove;
+            return Local._ventTarget != null ? Local.RemainingScrews >= VentPrice && PlayerControl.LocalPlayer.CanMove : Helpers.GetOption(ByteOptionNames.MapId) != 1 && !SubmergedCompatibility.IsSubmerged && MapSettings.CouldUseCameras && Local.RemainingScrews >= CamPrice && PlayerControl.LocalPlayer.CanMove;
         }, () => { _securityGuardButton.Timer = _securityGuardButton.MaxTimer; }, AssetLoader.PlaceCameraButton, ButtonPosition.Layout, hm, hm.UseButton, AbilitySlot.CrewmateAbilityPrimary, false, Tr.Get(TrKey.PlaceCameraText));
 
         _securityGuardButtonScrewsText = Object.Instantiate(_securityGuardButton.ActionButton.cooldownTimerText, _securityGuardButton.ActionButton.cooldownTimerText.transform.parent);
@@ -154,7 +152,7 @@ internal class SecurityGuard : RoleBase<SecurityGuard>
         {
             if (Helpers.GetOption(ByteOptionNames.MapId) != 1)
             {
-                if (Local.Minigame == null)
+                if (Local._minigame == null)
                 {
                     byte mapId = GameOptionsManager.Instance.CurrentGameOptions.MapId;
                     SystemConsole targetConsole = null;
@@ -212,16 +210,16 @@ internal class SecurityGuard : RoleBase<SecurityGuard>
                     }
 
                     if (targetConsole == null || Camera.main == null) return;
-                    Local.Minigame = Object.Instantiate(targetConsole.MinigamePrefab, Camera.main.transform, false);
+                    Local._minigame = Object.Instantiate(targetConsole.MinigamePrefab, Camera.main.transform, false);
                 }
 
-                Local.Minigame.transform.SetParent(Camera.main.transform, false);
-                Local.Minigame.transform.localPosition = new(0.0f, 0.0f, -50f);
-                Local.Minigame.Begin(null);
+                Local._minigame.transform.SetParent(Camera.main.transform, false);
+                Local._minigame.transform.localPosition = new(0.0f, 0.0f, -50f);
+                Local._minigame.Begin(null);
             }
             else
             {
-                if (Local.Minigame == null)
+                if (Local._minigame == null)
                 {
                     if (_doorLogConsole == null)
                     {
@@ -237,12 +235,12 @@ internal class SecurityGuard : RoleBase<SecurityGuard>
                     }
 
                     if (_doorLogConsole == null || Camera.main == null) return;
-                    Local.Minigame = Object.Instantiate(_doorLogConsole.MinigamePrefab, Camera.main.transform, false);
+                    Local._minigame = Object.Instantiate(_doorLogConsole.MinigamePrefab, Camera.main.transform, false);
                 }
 
-                Local.Minigame.transform.SetParent(Camera.main.transform, false);
-                Local.Minigame.transform.localPosition = new(0.0f, 0.0f, -50f);
-                Local.Minigame.Begin(null);
+                Local._minigame.transform.SetParent(Camera.main.transform, false);
+                Local._minigame.transform.localPosition = new(0.0f, 0.0f, -50f);
+                Local._minigame.Begin(null);
             }
 
             Local._charges--;
@@ -263,7 +261,7 @@ internal class SecurityGuard : RoleBase<SecurityGuard>
         }, FastDestroyableSingleton<HudManager>.Instance.UseButton.fastUseSettings[ImageNames.CamsButton].Image, ButtonPosition.Layout, hm, hm.UseButton, AbilitySlot.CrewmateAbilityPrimary, true, 0f, () =>
         {
             SecurityGuardCamButton.Timer = SecurityGuardCamButton.MaxTimer;
-            if (Minigame.Instance) Local.Minigame.ForceClose();
+            if (Minigame.Instance) Local._minigame.ForceClose();
 
             PlayerControl.LocalPlayer.moveable = true;
         }, false, Helpers.IsMiraHq ? TranslationController.Instance.GetString(StringNames.SecurityLogsSystem) : TranslationController.Instance.GetString(StringNames.SecurityCamsSystem));
@@ -293,7 +291,7 @@ internal class SecurityGuard : RoleBase<SecurityGuard>
 
     internal static void Clear()
     {
-        // reset configs here
-        Players.Clear();
+        ModRoleManager.RemoveRole(Instance);
+        Instance = null;
     }
 }

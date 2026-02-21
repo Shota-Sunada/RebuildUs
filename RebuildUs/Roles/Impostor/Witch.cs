@@ -1,15 +1,15 @@
 namespace RebuildUs.Roles.Impostor;
 
 [HarmonyPatch]
-internal class Witch : RoleBase<Witch>
+internal class Witch : MultiRoleBase<Witch>
 {
     internal static Color NameColor = Palette.ImpostorRed;
 
     internal static CustomButton WitchSpellButton;
 
     internal static List<PlayerControl> FutureSpelled = [];
-    internal static PlayerControl CurrentTarget;
-    internal static PlayerControl SpellCastingTarget;
+    private static PlayerControl _currentTarget;
+    private static PlayerControl _spellCastingTarget;
 
     public Witch()
     {
@@ -23,11 +23,11 @@ internal class Witch : RoleBase<Witch>
     }
 
     // write configs here
-    internal static float Cooldown { get => CustomOptionHolder.WitchCooldown.GetFloat(); }
-    internal static float AdditionalCooldown { get => CustomOptionHolder.WitchAdditionalCooldown.GetFloat(); }
-    internal static bool CanSpellAnyone { get => CustomOptionHolder.WitchCanSpellAnyone.GetBool(); }
-    internal static float SpellCastingDuration { get => CustomOptionHolder.WitchSpellCastingDuration.GetFloat(); }
-    internal static bool TriggerBothCooldowns { get => CustomOptionHolder.WitchTriggerBothCooldowns.GetBool(); }
+    private static float Cooldown { get => CustomOptionHolder.WitchCooldown.GetFloat(); }
+    private static float AdditionalCooldown { get => CustomOptionHolder.WitchAdditionalCooldown.GetFloat(); }
+    private static bool CanSpellAnyone { get => CustomOptionHolder.WitchCanSpellAnyone.GetBool(); }
+    private static float SpellCastingDuration { get => CustomOptionHolder.WitchSpellCastingDuration.GetFloat(); }
+    private static bool TriggerBothCooldowns { get => CustomOptionHolder.WitchTriggerBothCooldowns.GetBool(); }
     internal static bool VoteSavesTargets { get => CustomOptionHolder.WitchVoteSavesTargets.GetBool(); }
 
     internal override void OnMeetingStart() { }
@@ -39,11 +39,11 @@ internal class Witch : RoleBase<Witch>
         Witch local = Local;
         if (local == null) return;
         List<PlayerControl> untargetables = [];
-        if (SpellCastingTarget != null)
+        if (_spellCastingTarget != null)
         {
             foreach (PlayerControl p in PlayerControl.AllPlayerControls.GetFastEnumerator())
             {
-                if (p.PlayerId != SpellCastingTarget.PlayerId)
+                if (p.PlayerId != _spellCastingTarget.PlayerId)
                     untargetables.Add(p);
             }
         }
@@ -52,27 +52,22 @@ internal class Witch : RoleBase<Witch>
             // Also target players that have already been spelled, to hide spells that were blanks/blocked by shields
             if (Spy.Exists && !CanSpellAnyone)
             {
-                List<PlayerControl> spyPlayers = Spy.AllPlayers;
-                for (int i = 0; i < spyPlayers.Count; i++) untargetables.Add(spyPlayers[i]);
+                untargetables.Add(Spy.PlayerControl);
             }
 
-            List<Sidekick> sidekickPlayers = Sidekick.Players;
-            for (int i = 0; i < sidekickPlayers.Count; i++)
+            if (Sidekick.Exists && Sidekick.Instance.WasTeamRed && !CanSpellAnyone)
             {
-                Sidekick sidekick = sidekickPlayers[i];
-                if (sidekick.WasTeamRed && !CanSpellAnyone) untargetables.Add(sidekick.Player);
+                untargetables.Add(Sidekick.PlayerControl);
             }
 
-            List<Jackal> jackalPlayers = Jackal.Players;
-            for (int i = 0; i < jackalPlayers.Count; i++)
+            if (Jackal.Exists && Jackal.Instance.WasTeamRed && !CanSpellAnyone)
             {
-                Jackal jackal = jackalPlayers[i];
-                if (jackal.WasTeamRed && !CanSpellAnyone) untargetables.Add(jackal.Player);
+                untargetables.Add(Jackal.PlayerControl);
             }
         }
 
-        CurrentTarget = Helpers.SetTarget(!CanSpellAnyone, untargetablePlayers: untargetables);
-        Helpers.SetPlayerOutline(CurrentTarget, RoleColor);
+        _currentTarget = Helpers.SetTarget(!CanSpellAnyone, untargetablePlayers: untargetables);
+        Helpers.SetPlayerOutline(_currentTarget, RoleColor);
     }
 
     internal override void OnKill(PlayerControl target)
@@ -88,36 +83,34 @@ internal class Witch : RoleBase<Witch>
     {
         WitchSpellButton = new(() =>
         {
-            if (CurrentTarget != null) SpellCastingTarget = CurrentTarget;
-        }, () => { return PlayerControl.LocalPlayer.IsRole(RoleType.Witch) && PlayerControl.LocalPlayer.IsAlive(); }, () =>
+            if (_currentTarget != null) _spellCastingTarget = _currentTarget;
+        }, () => PlayerControl.LocalPlayer.IsRole(RoleType.Witch) && PlayerControl.LocalPlayer.IsAlive(), () =>
         {
-            if (WitchSpellButton.IsEffectActive && SpellCastingTarget != CurrentTarget)
-            {
-                SpellCastingTarget = null;
-                WitchSpellButton.Timer = 0f;
-                WitchSpellButton.IsEffectActive = false;
-            }
+            if (!WitchSpellButton.IsEffectActive || _spellCastingTarget == _currentTarget) return PlayerControl.LocalPlayer.CanMove && _currentTarget != null;
+            _spellCastingTarget = null;
+            WitchSpellButton.Timer = 0f;
+            WitchSpellButton.IsEffectActive = false;
 
-            return PlayerControl.LocalPlayer.CanMove && CurrentTarget != null;
+            return PlayerControl.LocalPlayer.CanMove && _currentTarget != null;
         }, () =>
         {
             WitchSpellButton.Timer = WitchSpellButton.MaxTimer;
             WitchSpellButton.IsEffectActive = false;
-            SpellCastingTarget = null;
+            _spellCastingTarget = null;
         }, AssetLoader.SpellButton, ButtonPosition.Layout, hm, hm.KillButton, AbilitySlot.ImpostorAbilityPrimary, true, SpellCastingDuration, () =>
         {
-            if (SpellCastingTarget == null) return;
+            if (_spellCastingTarget == null) return;
 
             KillAnimationPatch.AvoidNextKillMovement = true;
 
-            MurderAttemptResult attempt = Helpers.CheckMurderAttempt(Local.Player, SpellCastingTarget);
+            MurderAttemptResult attempt = Helpers.CheckMurderAttempt(Local.Player, _spellCastingTarget);
             if (attempt == MurderAttemptResult.PerformKill)
             {
                 {
                     using RPCSender sender = new(PlayerControl.LocalPlayer.NetId, CustomRPC.SetFutureSpelled);
-                    sender.Write(CurrentTarget.PlayerId);
+                    sender.Write(_currentTarget.PlayerId);
                 }
-                RPCProcedure.SetFutureSpelled(CurrentTarget.PlayerId);
+                RPCProcedure.SetFutureSpelled(_currentTarget.PlayerId);
             }
 
             if (attempt is MurderAttemptResult.BlankKill or MurderAttemptResult.PerformKill)
@@ -129,7 +122,7 @@ internal class Witch : RoleBase<Witch>
             else
                 WitchSpellButton.Timer = 0f;
 
-            SpellCastingTarget = null;
+            _spellCastingTarget = null;
         }, false, Tr.Get(TrKey.WitchText));
     }
 
@@ -146,7 +139,7 @@ internal class Witch : RoleBase<Witch>
         // reset configs here
         Players.Clear();
         FutureSpelled = [];
-        CurrentTarget = null;
-        SpellCastingTarget = null;
+        _currentTarget = null;
+        _spellCastingTarget = null;
     }
 }

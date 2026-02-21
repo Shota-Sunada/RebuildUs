@@ -1,13 +1,13 @@
 namespace RebuildUs.Roles.Impostor;
 
 [HarmonyPatch]
-internal class Camouflager : RoleBase<Camouflager>
+internal class Camouflager : SingleRoleBase<Camouflager>
 {
     internal static Color NameColor = Palette.ImpostorRed;
 
     private static CustomButton _camouflagerButton;
     internal static float CamouflageTimer;
-    internal static NetworkedPlayerInfo.PlayerOutfit Data;
+    private static NetworkedPlayerInfo.PlayerOutfit _data;
 
     public Camouflager()
     {
@@ -15,7 +15,7 @@ internal class Camouflager : RoleBase<Camouflager>
         StaticRoleType = CurrentRoleType = RoleType.Camouflager;
         CamouflageTimer = 0f;
 
-        Data = new()
+        _data = new()
         {
             PlayerName = "",
             HatId = "",
@@ -33,9 +33,9 @@ internal class Camouflager : RoleBase<Camouflager>
     }
 
     // write configs here
-    internal static float Cooldown { get => CustomOptionHolder.CamouflagerCooldown.GetFloat(); }
-    internal static float Duration { get => CustomOptionHolder.CamouflagerDuration.GetFloat(); }
-    internal static bool RandomColors { get => CustomOptionHolder.CamouflagerRandomColors.GetBool(); }
+    private static float Cooldown { get => CustomOptionHolder.CamouflagerCooldown.GetFloat(); }
+    private static float Duration { get => CustomOptionHolder.CamouflagerDuration.GetFloat(); }
+    private static bool RandomColors { get => CustomOptionHolder.CamouflagerRandomColors.GetBool(); }
 
     internal override void OnMeetingStart() { }
     internal override void OnMeetingEnd() { }
@@ -54,17 +54,18 @@ internal class Camouflager : RoleBase<Camouflager>
     internal static void MakeButtons(HudManager hm)
     {
         _camouflagerButton = new(() =>
-        {
-            {
-                using RPCSender sender = new(PlayerControl.LocalPlayer.NetId, CustomRPC.CamouflagerCamouflage);
-            }
-            RPCProcedure.CamouflagerCamouflage();
-        }, () => { return PlayerControl.LocalPlayer.IsRole(RoleType.Camouflager) && PlayerControl.LocalPlayer.IsAlive(); }, () => { return PlayerControl.LocalPlayer.CanMove; }, () =>
-        {
-            _camouflagerButton.Timer = _camouflagerButton.MaxTimer;
-            _camouflagerButton.IsEffectActive = false;
-            _camouflagerButton.ActionButton.cooldownTimerText.color = Palette.EnabledColor;
-        }, AssetLoader.CamouflageButton, ButtonPosition.Layout, hm, hm.KillButton, AbilitySlot.ImpostorAbilityPrimary, true, Duration, () => { _camouflagerButton.Timer = _camouflagerButton.MaxTimer; }, false, Tr.Get(TrKey.CamoText));
+                                 {
+                                     {
+                                         using RPCSender sender = new(PlayerControl.LocalPlayer.NetId, CustomRPC.CamouflagerCamouflage);
+                                     }
+                                     RPCProcedure.CamouflagerCamouflage();
+                                 }, () => PlayerControl.LocalPlayer.IsRole(RoleType.Camouflager) && PlayerControl.LocalPlayer.IsAlive(),
+                                 () => PlayerControl.LocalPlayer.CanMove, () =>
+                                 {
+                                     _camouflagerButton.Timer = _camouflagerButton.MaxTimer;
+                                     _camouflagerButton.IsEffectActive = false;
+                                     _camouflagerButton.ActionButton.cooldownTimerText.color = Palette.EnabledColor;
+                                 }, AssetLoader.CamouflageButton, ButtonPosition.Layout, hm, hm.KillButton, AbilitySlot.ImpostorAbilityPrimary, true, Duration, () => { _camouflagerButton.Timer = _camouflagerButton.MaxTimer; }, false, Tr.Get(TrKey.CamoText));
     }
 
     internal static void SetButtonCooldowns()
@@ -78,12 +79,12 @@ internal class Camouflager : RoleBase<Camouflager>
     {
         CamouflageTimer = Duration;
 
-        Data.ColorId = RandomColors ? (byte)RebuildUs.Rnd.Next(0, Palette.PlayerColors.Length) : 6;
+        _data.ColorId = RandomColors ? (byte)RebuildUs.Rnd.Next(0, Palette.PlayerColors.Length) : 6;
 
         foreach (PlayerControl p in PlayerControl.AllPlayerControls.GetFastEnumerator())
         {
             if (p == null) continue;
-            p.SetOutfit(Data, false);
+            p.SetOutfit(_data, false);
         }
     }
 
@@ -108,7 +109,7 @@ internal class Camouflager : RoleBase<Camouflager>
 
     internal static void Clear()
     {
-        // reset configs here
-        Players.Clear();
+        ModRoleManager.RemoveRole(Instance);
+        Instance = null;
     }
 }

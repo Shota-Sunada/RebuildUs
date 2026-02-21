@@ -248,17 +248,15 @@ internal static partial class RPCProcedure
         if (engineer != null) engineer.RemainingFixes--;
     }
 
-    internal static void ArsonistDouse(byte playerId, byte arsonistId)
+    internal static void ArsonistDouse(byte playerId)
     {
-        PlayerControl arsonistPlayer = Helpers.PlayerById(arsonistId);
-        if (arsonistPlayer == null) return;
-        Arsonist arsonist = Arsonist.GetRole(arsonistPlayer);
+        var arsonist = Arsonist.Instance;
         if (arsonist == null) return;
         PlayerControl target = Helpers.PlayerById(playerId);
         if (target != null) arsonist.DousedPlayers.Add(target);
     }
 
-    internal static void ArsonistWin(byte arsonistId)
+    internal static void ArsonistWin()
     {
         Arsonist.TriggerArsonistWin = true;
         foreach (PlayerControl p in PlayerControl.AllPlayerControls.GetFastEnumerator())
@@ -272,19 +270,17 @@ internal static partial class RPCProcedure
     internal static void CleanBody(byte playerId)
     {
         DeadBody[] array = Object.FindObjectsOfType<DeadBody>();
-        for (int i = 0; i < array.Length; i++)
+        foreach (var t in array)
         {
-            NetworkedPlayerInfo info = GameData.Instance.GetPlayerById(array[i].ParentId);
-            if (info != null && info.PlayerId == playerId) Object.Destroy(array[i].gameObject);
+            NetworkedPlayerInfo info = GameData.Instance.GetPlayerById(t.ParentId);
+            if (info != null && info.PlayerId == playerId) Object.Destroy(t.gameObject);
         }
     }
 
-    internal static void VultureEat(byte playerId, byte vultureId)
+    internal static void VultureEat(byte playerId)
     {
         CleanBody(playerId);
-        PlayerControl vulturePlayer = Helpers.PlayerById(vultureId);
-        if (vulturePlayer == null) return;
-        Vulture vulture = Vulture.GetRole(vulturePlayer);
+        var vulture = Vulture.Instance;
         if (vulture != null) vulture.EatenBodies++;
     }
 
@@ -311,11 +307,10 @@ internal static partial class RPCProcedure
         }
     }
 
-    internal static void JackalCreatesSidekick(byte targetId, byte jackalId)
+    internal static void JackalCreatesSidekick(byte targetId)
     {
         PlayerControl target = Helpers.PlayerById(targetId);
-        PlayerControl jackalPlayer = Helpers.PlayerById(jackalId);
-        Jackal jackal = Jackal.GetRole(jackalPlayer);
+        var jackal = Jackal.Instance;
         if (target == null) return;
 
         if (!Jackal.CanCreateSidekickFromImpostor && target.Data.Role.IsImpostor)
@@ -328,7 +323,7 @@ internal static partial class RPCProcedure
             ErasePlayerRoles(target.PlayerId, true);
             if (target.SetRole(RoleType.Sidekick))
             {
-                Sidekick sidekick = Sidekick.GetRole(target);
+                var sidekick = Sidekick.Instance;
                 if (sidekick != null)
                 {
                     if (wasSpy || wasImpostor) sidekick.WasTeamRed = true;
@@ -347,22 +342,20 @@ internal static partial class RPCProcedure
         }
     }
 
-    internal static void SidekickPromotes(byte sidekickId)
+    internal static void SidekickPromotes()
     {
-        PlayerControl sidekickPlayer = Helpers.PlayerById(sidekickId);
-        if (sidekickPlayer == null) return;
-        Sidekick sidekick = Sidekick.GetRole(sidekickPlayer);
+        var sidekick = Sidekick.Instance;
         if (sidekick == null) return;
 
         bool wasTeamRed = sidekick.WasTeamRed;
         bool wasImpostor = sidekick.WasImpostor;
         bool wasSpy = sidekick.WasSpy;
         Jackal.RemoveCurrentJackal();
-        FastDestroyableSingleton<RoleManager>.Instance.SetRole(sidekickPlayer, RoleTypes.Crewmate);
-        ErasePlayerRoles(sidekickPlayer.PlayerId, true);
-        if (sidekickPlayer.SetRole(RoleType.Jackal))
+        FastDestroyableSingleton<RoleManager>.Instance.SetRole(sidekick.Player, RoleTypes.Crewmate);
+        ErasePlayerRoles(sidekick.Player.PlayerId, true);
+        if (sidekick.Player.SetRole(RoleType.Jackal))
         {
-            Jackal newJackal = Jackal.GetRole(sidekickPlayer);
+            var newJackal = Jackal.Instance;
             if (newJackal != null)
             {
                 newJackal.CanSidekick = Jackal.JackalPromotedFromSidekickCanCreateSidekick;
@@ -624,10 +617,9 @@ internal static partial class RPCProcedure
         SpawnIn.SynchronizeData.Synchronize((SynchronizeTag)tag, playerId);
     }
 
-    internal static void PlaceCamera(float x, float y, byte roomId, byte sgId)
+    internal static void PlaceCamera(float x, float y, byte roomId)
     {
-        PlayerControl player = Helpers.PlayerById(sgId);
-        SecurityGuard sg = SecurityGuard.GetRole(player);
+        SecurityGuard sg = SecurityGuard.Instance;
 
         SurvCamera referenceCamera = Object.FindObjectOfType<SurvCamera>();
         if (referenceCamera == null) return; // Mira HQ
@@ -694,21 +686,22 @@ internal static partial class RPCProcedure
         };
         if (Helpers.GetOption(ByteOptionNames.MapId) is 2 or 4) camera.transform.localRotation = new(0, 0, 1, 1); // Polus and Airship
 
-        if (PlayerControl.LocalPlayer.PlayerId == sgId)
+        if (PlayerControl.LocalPlayer.IsRole(RoleType.SecurityGuard))
         {
             camera.gameObject.SetActive(true);
             camera.gameObject.GetComponent<SpriteRenderer>().color = new(1f, 1f, 1f, 0.5f);
         }
         else
+        {
             camera.gameObject.SetActive(false);
+        }
 
         MapSettings.CamerasToAdd.Add(camera);
     }
 
-    internal static void SealVent(int ventId, byte sgId)
+    internal static void SealVent(int ventId)
     {
-        PlayerControl player = Helpers.PlayerById(sgId);
-        SecurityGuard sg = SecurityGuard.GetRole(player);
+        SecurityGuard sg = SecurityGuard.Instance;
 
         Vent vent = null;
         Il2CppReferenceArray<Vent> allVents = MapUtilities.CachedShipStatus.AllVents;
@@ -722,7 +715,7 @@ internal static partial class RPCProcedure
         if (vent == null) return;
 
         sg.RemainingScrews -= SecurityGuard.VentPrice;
-        if (PlayerControl.LocalPlayer.PlayerId == sgId)
+        if (PlayerControl.LocalPlayer.IsRole(RoleType.SecurityGuard))
         {
             SpriteAnim animator = vent.GetComponent<SpriteAnim>();
             animator?.Stop();

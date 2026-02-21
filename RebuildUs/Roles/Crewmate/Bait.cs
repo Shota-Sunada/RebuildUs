@@ -1,7 +1,7 @@
 namespace RebuildUs.Roles.Crewmate;
 
 [HarmonyPatch]
-internal class Bait : RoleBase<Bait>
+internal class Bait : MultiRoleBase<Bait>
 {
     internal static Color NameColor = new Color32(0, 247, 255, byte.MaxValue);
     private float _delay;

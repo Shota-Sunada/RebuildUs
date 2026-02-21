@@ -3,7 +3,7 @@ using Object = UnityEngine.Object;
 namespace RebuildUs.Roles.Crewmate;
 
 [HarmonyPatch]
-internal class Sheriff : RoleBase<Sheriff>
+internal class Sheriff : MultiRoleBase<Sheriff>
 {
     internal static Color NameColor = new Color32(248, 205, 70, byte.MaxValue);
 

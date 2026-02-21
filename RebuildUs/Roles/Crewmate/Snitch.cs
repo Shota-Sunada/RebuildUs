@@ -3,7 +3,7 @@ using Object = UnityEngine.Object;
 namespace RebuildUs.Roles.Crewmate;
 
 [HarmonyPatch]
-internal class Snitch : RoleBase<Snitch>
+internal class Snitch : SingleRoleBase<Snitch>
 {
     internal static Color NameColor = new Color32(184, 251, 79, byte.MaxValue);
 
@@ -90,8 +90,8 @@ internal class Snitch : RoleBase<Snitch>
 
     internal static void Clear()
     {
-        // reset configs here
-        Players.Clear();
+        ModRoleManager.RemoveRole(Instance);
+        Instance = null;
 
         if (LocalArrows != null)
         {

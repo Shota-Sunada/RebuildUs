@@ -17,7 +17,7 @@ internal static class ExileControllerPatch
         if (player != null) GameHistory.FinalStatuses[player.PlayerId] = FinalStatus.Exiled;
 
         // Medic shield
-        if (Medic.Exists && AmongUsClient.Instance.AmHost && Medic.FutureShielded != null && Medic.LivingPlayers.Count != 0)
+        if (Medic.Exists && AmongUsClient.Instance.AmHost && Medic.FutureShielded != null && Medic.PlayerControl.IsAlive())
         {
             // We need to send the RPC from the host here, to make sure that the order of shifting and setting the shield is correct(for that reason the futureShifted and futureShielded are being synced)
             using RPCSender sender = new(PlayerControl.LocalPlayer.NetId, CustomRPC.MedicSetShielded);

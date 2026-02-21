@@ -3,7 +3,7 @@ using Object = UnityEngine.Object;
 namespace RebuildUs.Roles.Crewmate;
 
 [HarmonyPatch]
-internal class Tracker : RoleBase<Tracker>
+internal class Tracker : MultiRoleBase<Tracker>
 {
     internal static Color NameColor = new Color32(100, 58, 220, byte.MaxValue);
 

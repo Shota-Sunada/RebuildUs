@@ -147,8 +147,13 @@ internal class Madmate : ModifierBase<Madmate>
             {
                 foreach (PlayerControl p in PlayerControl.AllPlayerControls.GetFastEnumerator())
                 {
-                    if (p.IsTeamImpostor() || p.IsRole(RoleType.Spy) || (p.IsRole(RoleType.Jackal) && Jackal.GetRole(p).WasTeamRed) || (p.IsRole(RoleType.Sidekick) && Sidekick.GetRole(p).WasTeamRed))
+                    if (p.IsTeamImpostor()
+                        || p.IsRole(RoleType.Spy)
+                        || (p.IsRole(RoleType.Jackal) && Jackal.Instance.WasTeamRed)
+                        || (p.IsRole(RoleType.Sidekick) && Sidekick.Instance.WasTeamRed))
+                    {
                         HudManagerPatch.SetPlayerNameColor(p, Palette.ImpostorRed);
+                    }
                 }
             }
         }

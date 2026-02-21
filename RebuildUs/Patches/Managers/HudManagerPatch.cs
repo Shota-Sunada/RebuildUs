@@ -89,13 +89,13 @@ internal static class HudManagerPatch
         if (lp == null) return;
 
         // 1. Set Local Player Color
-        PlayerRole roleInstance = PlayerRole.GetRole(lp);
+        PlayerRole roleInstance = ModRoleManager.GetRole(lp);
         if (roleInstance != null) SetPlayerNameColor(lp, roleInstance.RoleColor);
 
         foreach (PlayerModifier mod in PlayerModifier.GetModifiers(lp)) SetPlayerNameColor(lp, mod.ModifierColor);
 
         // 2. Process logic-heavy vision (Jackal seeing Sidekick, Spy seeing Impostors, etc.)
-        foreach (PlayerRole r in PlayerRole.AllRoles) r.OnUpdateNameColors();
+        foreach (PlayerRole r in ModRoleManager.AllRoles) r.OnUpdateNameColors();
         foreach (PlayerModifier m in PlayerModifier.AllModifiers) m.OnUpdateNameColors();
 
         // 3. Update Player Instances
@@ -122,7 +122,7 @@ internal static class HudManagerPatch
             if (!string.IsNullOrEmpty(finalName))
             {
                 // Role Tags
-                PlayerRole r = PlayerRole.GetRole(player);
+                PlayerRole r = ModRoleManager.GetRole(player);
                 if (r != null)
                 {
                     if (!string.IsNullOrEmpty(r.NameTag)) TagStringBuilder.Append(r.NameTag);
@@ -168,7 +168,7 @@ internal static class HudManagerPatch
                 TagStringBuilder.Append(baseName);
 
                 // Role Tags (Meeting Only)
-                PlayerRole r = PlayerRole.GetRole(target);
+                PlayerRole r = ModRoleManager.GetRole(target);
                 if (r != null && !string.IsNullOrEmpty(r.NameTag)) TagStringBuilder.Append(r.NameTag);
 
                 // Detective / Hacker

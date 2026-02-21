@@ -1,7 +1,7 @@
 namespace RebuildUs.Roles.Neutral;
 
 [HarmonyPatch]
-internal class Jester : RoleBase<Jester>
+internal class Jester : SingleRoleBase<Jester>
 {
     internal static Color NameColor = new Color32(236, 98, 165, byte.MaxValue);
 
@@ -37,6 +37,8 @@ internal class Jester : RoleBase<Jester>
     {
         // reset configs here
         TriggerJesterWin = false;
-        Players.Clear();
+
+        ModRoleManager.RemoveRole(Instance);
+        Instance = null;
     }
 }

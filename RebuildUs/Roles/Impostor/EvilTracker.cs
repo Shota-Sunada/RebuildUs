@@ -3,7 +3,7 @@ using Object = UnityEngine.Object;
 namespace RebuildUs.Roles.Impostor;
 
 [HarmonyPatch]
-internal class EvilTracker : RoleBase<EvilTracker>
+internal class EvilTracker : MultiRoleBase<EvilTracker>
 {
     internal static Color NameColor = Palette.ImpostorRed;
     internal static PlayerControl Target;

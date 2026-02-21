@@ -3,7 +3,7 @@ using Object = UnityEngine.Object;
 namespace RebuildUs.Roles.Crewmate;
 
 [HarmonyPatch]
-internal class Seer : RoleBase<Seer>
+internal class Seer : MultiRoleBase<Seer>
 {
     internal static Color NameColor = new Color32(97, 178, 108, byte.MaxValue);
 

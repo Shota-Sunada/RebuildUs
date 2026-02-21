@@ -617,7 +617,7 @@ internal static class Helpers
                 {
                     if (p.IsRole(RoleType.Arsonist))
                     {
-                        Arsonist role = Arsonist.GetRole(p);
+                        var role = Arsonist.Instance;
                         if (role != null)
                         {
                             int dousedSurvivors = 0;
@@ -639,7 +639,7 @@ internal static class Helpers
                     }
                     else if (p.IsRole(RoleType.Vulture))
                     {
-                        Vulture role = Vulture.GetRole(p);
+                        var role = Vulture.Instance;
                         if (role != null) statusText = Cs(Vulture.NameColor, $" ({role.EatenBodies}/{Vulture.NumberToWin})");
                     }
                 }
@@ -816,9 +816,17 @@ internal static class Helpers
         }
 
         if (!MapSettings.HidePlayerNames) return false;
-        if (source.IsTeamImpostor() && (target.IsTeamImpostor() || target.IsRole(RoleType.Spy) || (target.IsRole(RoleType.Sidekick) && Sidekick.GetRole(target).WasTeamRed) || (target.IsRole(RoleType.Jackal) && Jackal.GetRole(target).WasTeamRed))) return false;
+        if (source.IsTeamImpostor()
+            && (target.IsTeamImpostor()
+                || target.IsRole(RoleType.Spy)
+                || (target.IsRole(RoleType.Sidekick) && Sidekick.Instance.WasTeamRed)
+                || (target.IsRole(RoleType.Jackal) && Jackal.Instance.WasTeamRed))) return false;
         if (source.GetPartner() == target) return false;
-        if ((source.IsRole(RoleType.Jackal) || source.IsRole(RoleType.Sidekick)) && (target.IsRole(RoleType.Jackal) || target.IsRole(RoleType.Sidekick) || target == Jackal.GetRole(target).FakeSidekick)) return false;
+        if ((source.IsRole(RoleType.Jackal)
+             || source.IsRole(RoleType.Sidekick))
+            && (target.IsRole(RoleType.Jackal)
+                || target.IsRole(RoleType.Sidekick)
+                || target == Jackal.Instance.FakeSidekick)) return false;
 
         return true;
     }

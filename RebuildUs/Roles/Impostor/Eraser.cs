@@ -1,7 +1,7 @@
 namespace RebuildUs.Roles.Impostor;
 
 [HarmonyPatch]
-internal class Eraser : RoleBase<Eraser>
+internal class Eraser : MultiRoleBase<Eraser>
 {
     internal static Color NameColor = Palette.ImpostorRed;
 
@@ -38,28 +38,17 @@ internal class Eraser : RoleBase<Eraser>
             List<PlayerControl> untargetables = [];
             if (Spy.Exists)
             {
-                List<PlayerControl> spyPlayers = Spy.AllPlayers;
-                for (int i = 0; i < spyPlayers.Count; i++) untargetables.Add(spyPlayers[i]);
+                untargetables.Add(Spy.PlayerControl);
             }
 
-            if (Sidekick.Exists)
+            if (Sidekick.Exists && Sidekick.Instance.WasTeamRed)
             {
-                List<Sidekick> sidekickPlayers = Sidekick.Players;
-                for (int i = 0; i < sidekickPlayers.Count; i++)
-                {
-                    Sidekick sidekick = sidekickPlayers[i];
-                    if (sidekick.WasTeamRed) untargetables.Add(sidekick.Player);
-                }
+                untargetables.Add(Sidekick.PlayerControl);
             }
 
-            if (Jackal.Exists)
+            if (Jackal.Exists && Jackal.Instance.WasTeamRed)
             {
-                List<Jackal> jackalPlayers = Jackal.Players;
-                for (int i = 0; i < jackalPlayers.Count; i++)
-                {
-                    Jackal jackal = jackalPlayers[i];
-                    if (jackal.WasTeamRed) untargetables.Add(jackal.Player);
-                }
+                untargetables.Add(Jackal.PlayerControl);
             }
 
             CurrentTarget = Helpers.SetTarget(!CanEraseAnyone, untargetablePlayers: CanEraseAnyone ? [] : untargetables);

@@ -1,7 +1,7 @@
 namespace RebuildUs.Roles.Impostor;
 
 [HarmonyPatch]
-internal class Vampire : RoleBase<Vampire>
+internal class Vampire : MultiRoleBase<Vampire>
 {
     internal static Color NameColor = Palette.ImpostorRed;
 

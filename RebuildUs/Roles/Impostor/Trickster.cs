@@ -1,7 +1,7 @@
 namespace RebuildUs.Roles.Impostor;
 
 [HarmonyPatch]
-internal class Trickster : RoleBase<Trickster>
+internal class Trickster : SingleRoleBase<Trickster>
 {
     internal static Color NameColor = Palette.ImpostorRed;
 
@@ -21,8 +21,8 @@ internal class Trickster : RoleBase<Trickster>
     }
 
     // write configs here
-    internal static float PlaceBoxCooldown { get => CustomOptionHolder.TricksterPlaceBoxCooldown.GetFloat(); }
-    internal static float LightsOutCooldown { get => CustomOptionHolder.TricksterLightsOutCooldown.GetFloat(); }
+    private static float PlaceBoxCooldown { get => CustomOptionHolder.TricksterPlaceBoxCooldown.GetFloat(); }
+    private static float LightsOutCooldown { get => CustomOptionHolder.TricksterLightsOutCooldown.GetFloat(); }
     internal static float LightsOutDuration { get => CustomOptionHolder.TricksterLightsOutDuration.GetFloat(); }
 
     internal override void OnMeetingStart() { }
@@ -75,6 +75,8 @@ internal class Trickster : RoleBase<Trickster>
     {
         // reset configs here
         LightsOutTimer = 0f;
-        Players.Clear();
+
+        ModRoleManager.RemoveRole(Instance);
+        Instance = null;
     }
 }

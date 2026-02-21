@@ -1,7 +1,7 @@
 namespace RebuildUs.Roles.Crewmate;
 
 [HarmonyPatch]
-internal class Spy : RoleBase<Spy>
+internal class Spy : SingleRoleBase<Spy>
 {
     internal static Color NameColor = Palette.ImpostorRed;
 
@@ -40,7 +40,7 @@ internal class Spy : RoleBase<Spy>
 
     internal static void Clear()
     {
-        // reset configs here
-        Players.Clear();
+        ModRoleManager.RemoveRole(Instance);
+        Instance = null;
     }
 }
