@@ -11,10 +11,10 @@ internal static class CustomOptionHolder
     {
 #region MOD OPTIONS
 
-        PresetSelection = CustomOption.Header(0, CustomOptionType.General, TrKey.Preset, Presets, TrKey.Preset);
+        PresetSelection = CustomOption.Header(0, CustomOptionType.General, TrKey.Preset, Presets, 0, TrKey.Preset);
         ActivateRoles = CustomOption.Normal(1, CustomOptionType.General, TrKey.ActivateRoles, true);
         EnableRandomRandomNumberAlgorithm = CustomOption.Normal(2, CustomOptionType.General, TrKey.RandomRandomNumberAlgorithm, false);
-        RandomNumberAlgorithm = CustomOption.Normal(3, CustomOptionType.General, TrKey.RandomNumberAlgorithm, [Tr.Get(TrKey.RndDotnet), Tr.Get(TrKey.RndMT), Tr.Get(TrKey.RndXoshiro256), Tr.Get(TrKey.RndXoshiro256Ss), Tr.Get(TrKey.RndPcg64)], EnableRandomRandomNumberAlgorithm, 0, 0, 0, 0, true);
+        RandomNumberAlgorithm = CustomOption.Normal(3, CustomOptionType.General, TrKey.RandomNumberAlgorithm, [Tr.Get(TrKey.RndDotnet), Tr.Get(TrKey.RndMT), Tr.Get(TrKey.RndXoshiro256), Tr.Get(TrKey.RndXoshiro256Ss), Tr.Get(TrKey.RndPcg64)], 0, EnableRandomRandomNumberAlgorithm);
         EnableRandomRandomNumberAlgorithmDotnet = CustomOption.Normal(4, CustomOptionType.General, TrKey.EnableRandomRandomNumberAlgorithmDotnet, true, EnableRandomRandomNumberAlgorithm);
         EnableRandomRandomNumberAlgorithmMT = CustomOption.Normal(5, CustomOptionType.General, TrKey.EnableRandomRandomNumberAlgorithmMT, true, EnableRandomRandomNumberAlgorithm);
         EnableRandomRandomNumberAlgorithmXorshiro256Pp = CustomOption.Normal(6, CustomOptionType.General, TrKey.EnableRandomRandomNumberAlgorithmXorshiro256Pp, true, EnableRandomRandomNumberAlgorithm);
@@ -59,7 +59,7 @@ internal static class CustomOptionHolder
         AdditionalEmergencyCooldown = CustomOption.Normal(55, CustomOptionType.General, TrKey.AdditionalEmergencyCooldown, 0f, 0f, 15f, 1f);
         AdditionalEmergencyCooldownTime = CustomOption.Normal(56, CustomOptionType.General, TrKey.AdditionalEmergencyCooldownTime, 10f, 0f, 60f, 1f, AdditionalEmergencyCooldown);
 
-        RestrictDevices = CustomOption.Normal(60, CustomOptionType.General, TrKey.RestrictDevices, [Tr.Get(TrKey.Off), Tr.Get(TrKey.RestrictPerTurn), Tr.Get(TrKey.RestrictPerGame)]);
+        RestrictDevices = CustomOption.Normal(60, CustomOptionType.General, TrKey.RestrictDevices, [Tr.Get(TrKey.Off), Tr.Get(TrKey.RestrictPerTurn), Tr.Get(TrKey.RestrictPerGame)], 0);
         RestrictAdmin = CustomOption.Normal(61, CustomOptionType.General, TrKey.RestrictAdmin, true, RestrictDevices);
         RestrictAdminTime = CustomOption.Normal(62, CustomOptionType.General, TrKey.RestrictAdminTime, 30f, 0f, 600f, 1f, RestrictAdmin);
         RestrictAdminText = CustomOption.Normal(63, CustomOptionType.General, TrKey.RestrictAdminText, true, RestrictAdmin);
@@ -136,13 +136,13 @@ internal static class CustomOptionHolder
         SpyHasImpostorVision = CustomOption.Normal(1024, CustomOptionType.Crewmate, TrKey.SpyHasImpostorVision, false, SpySpawnRate);
 
         MedicSpawnRate = new(1030, CustomOptionType.Crewmate, RoleType.Medic, Medic.NameColor, 1);
-        MedicShowShielded = CustomOption.Normal(1031, CustomOptionType.Crewmate, TrKey.MedicShowShielded, [Tr.Get(TrKey.MedicShowShieldedAll), Tr.Get(TrKey.MedicShowShieldedBoth), Tr.Get(TrKey.MedicShowShieldedMedic)], MedicSpawnRate);
+        MedicShowShielded = CustomOption.Normal(1031, CustomOptionType.Crewmate, TrKey.MedicShowShielded, [Tr.Get(TrKey.MedicShowShieldedAll), Tr.Get(TrKey.MedicShowShieldedBoth), Tr.Get(TrKey.MedicShowShieldedMedic)], 0, MedicSpawnRate);
         MedicShowAttemptToShielded = CustomOption.Normal(1032, CustomOptionType.Crewmate, TrKey.MedicShowAttemptToShielded, false, MedicSpawnRate);
         MedicSetShieldAfterMeeting = CustomOption.Normal(1033, CustomOptionType.Crewmate, TrKey.MedicSetShieldAfterMeeting, false, MedicSpawnRate);
         MedicShowAttemptToMedic = CustomOption.Normal(1034, CustomOptionType.Crewmate, TrKey.MedicSeesMurderAttempt, false, MedicSpawnRate);
 
         SeerSpawnRate = new(1040, CustomOptionType.Crewmate, RoleType.Seer, Seer.NameColor, 1);
-        SeerMode = CustomOption.Normal(1041, CustomOptionType.Crewmate, TrKey.SeerMode, [Tr.Get(TrKey.SeerModeBoth), Tr.Get(TrKey.SeerModeFlash), Tr.Get(TrKey.SeerModeSouls)], SeerSpawnRate);
+        SeerMode = CustomOption.Normal(1041, CustomOptionType.Crewmate, TrKey.SeerMode, [Tr.Get(TrKey.SeerModeBoth), Tr.Get(TrKey.SeerModeFlash), Tr.Get(TrKey.SeerModeSouls)], 0, SeerSpawnRate);
         SeerLimitSoulDuration = CustomOption.Normal(1042, CustomOptionType.Crewmate, TrKey.SeerLimitSoulDuration, false, SeerSpawnRate);
         SeerSoulDuration = CustomOption.Normal(1043, CustomOptionType.Crewmate, TrKey.SeerSoulDuration, 15f, 0f, 120f, 5f, SeerLimitSoulDuration);
 
@@ -277,7 +277,7 @@ internal static class CustomOptionHolder
         CreatedMadmateHasImpostorVision = CustomOption.Normal(2039, CustomOptionType.Impostor, TrKey.CreatedMadmateHasImpostorVision, false, EvilHackerCanCreateMadmate);
         CreatedMadmateCanSabotage = CustomOption.Normal(2040, CustomOptionType.Impostor, TrKey.CreatedMadmateCanSabotage, false, EvilHackerCanCreateMadmate);
         CreatedMadmateCanFixComm = CustomOption.Normal(2041, CustomOptionType.Impostor, TrKey.CreatedMadmateCanFixComm, true, EvilHackerCanCreateMadmate);
-        CreatedMadmateAbility = CustomOption.Normal(2042, CustomOptionType.Impostor, TrKey.MadmateAbility, [Tr.Get(TrKey.MadmateNone), Tr.Get(TrKey.MadmateFanatic)], EvilHackerCanCreateMadmate);
+        CreatedMadmateAbility = CustomOption.Normal(2042, CustomOptionType.Impostor, TrKey.MadmateAbility, [Tr.Get(TrKey.MadmateNone), Tr.Get(TrKey.MadmateFanatic)], 0, EvilHackerCanCreateMadmate);
         CreatedMadmateNumTasks = CustomOption.Normal(2043, CustomOptionType.Impostor, TrKey.CreatedMadmateNumTasks, 4f, 1f, 20f, 1f, CreatedMadmateAbility);
         CreatedMadmateExileCrewmate = CustomOption.Normal(2044, CustomOptionType.Impostor, TrKey.CreatedMadmateExileCrewmate, false, EvilHackerCanCreateMadmate);
 
@@ -373,9 +373,9 @@ internal static class CustomOptionHolder
 #region MODIFIERS
 
         MadmateSpawnRate = new(4000, CustomOptionType.Modifier, ModifierType.Madmate, Madmate.NameColor);
-        MadmateType = CustomOption.Normal(4001, CustomOptionType.Modifier, TrKey.MadmateType, [Tr.Get(TrKey.MadmateDefault), Tr.Get(TrKey.MadmateWithRole), Tr.Get(TrKey.MadmateRandom)], MadmateSpawnRate);
+        MadmateType = CustomOption.Normal(4001, CustomOptionType.Modifier, TrKey.MadmateType, [Tr.Get(TrKey.MadmateDefault), Tr.Get(TrKey.MadmateWithRole), Tr.Get(TrKey.MadmateRandom)], 0, MadmateSpawnRate);
         MadmateFixedRole = new(4002, CustomOptionType.Modifier, TrKey.MadmateFixedRole, Madmate.ValidRoles, MadmateType);
-        MadmateAbility = CustomOption.Normal(4003, CustomOptionType.Modifier, TrKey.MadmateAbility, [Tr.Get(TrKey.MadmateNone), Tr.Get(TrKey.MadmateFanatic)], MadmateSpawnRate);
+        MadmateAbility = CustomOption.Normal(4003, CustomOptionType.Modifier, TrKey.MadmateAbility, [Tr.Get(TrKey.MadmateNone), Tr.Get(TrKey.MadmateFanatic)], 0, MadmateSpawnRate);
         MadmateTasks = new((4004, 4005, 4006), CustomOptionType.Modifier, (1, 1, 3), MadmateAbility);
         MadmateCanDieToSheriff = CustomOption.Normal(4007, CustomOptionType.Modifier, TrKey.MadmateCanDieToSheriff, false, MadmateSpawnRate);
         MadmateCanEnterVents = CustomOption.Normal(4008, CustomOptionType.Modifier, TrKey.MadmateCanEnterVents, false, MadmateSpawnRate);
@@ -385,9 +385,9 @@ internal static class CustomOptionHolder
         MadmateExilePlayer = CustomOption.Normal(4012, CustomOptionType.Modifier, TrKey.MadmateExileCrewmate, false, MadmateSpawnRate);
 
         LastImpostorEnable = CustomOption.Header(4010, CustomOptionType.Modifier, TrKey.LastImpostorEnable, true, TrKey.LastImpostor);
-        LastImpostorFunctions = CustomOption.Normal(4011, CustomOptionType.Modifier, TrKey.LastImpostorFunctions, [Tr.Get(TrKey.LastImpostorDivine), Tr.Get(TrKey.LastImpostorGuesser)], LastImpostorEnable);
+        LastImpostorFunctions = CustomOption.Normal(4011, CustomOptionType.Modifier, TrKey.LastImpostorFunctions, [Tr.Get(TrKey.LastImpostorDivine), Tr.Get(TrKey.LastImpostorGuesser)], 0, LastImpostorEnable);
         LastImpostorNumKills = CustomOption.Normal(4012, CustomOptionType.Modifier, TrKey.LastImpostorNumKills, 3f, 0f, 10f, 1f, LastImpostorEnable);
-        LastImpostorResults = CustomOption.Normal(4013, CustomOptionType.Modifier, TrKey.FortuneTellerResults, [Tr.Get(TrKey.FortuneTellerResultCrew), Tr.Get(TrKey.FortuneTellerResultTeam), Tr.Get(TrKey.FortuneTellerResultRole)], LastImpostorEnable);
+        LastImpostorResults = CustomOption.Normal(4013, CustomOptionType.Modifier, TrKey.FortuneTellerResults, [Tr.Get(TrKey.FortuneTellerResultCrew), Tr.Get(TrKey.FortuneTellerResultTeam), Tr.Get(TrKey.FortuneTellerResultRole)], 0, LastImpostorEnable);
         LastImpostorNumShots = CustomOption.Normal(4014, CustomOptionType.Modifier, TrKey.LastImpostorNumShots, 1f, 1f, 15f, 1f, LastImpostorEnable);
 
         LoversSpawnRate = new(4020, CustomOptionType.Modifier, RoleType.Lovers, Lovers.Color, 1);

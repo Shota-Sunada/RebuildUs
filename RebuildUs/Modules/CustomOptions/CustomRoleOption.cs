@@ -1,6 +1,6 @@
 namespace RebuildUs.Modules.CustomOptions;
 
-internal class CustomRoleOption : CustomOption
+internal class CustomRoleOption : CustomOption<string>
 {
     internal bool IsRoleEnabled;
     internal CustomOption NumberOfRoleOption;
@@ -11,7 +11,10 @@ internal class CustomRoleOption : CustomOption
                               Color color,
                               int max = 15,
                               bool roleEnabled = true)
-        : base(baseId, type, Enum.TryParse<TrKey>(Enum.GetName(roleType), out TrKey key) ? key : TrKey.None, CustomOptionHolder.Rates, 0, null, false, "", color)
+        : base(baseId, type, Enum.TryParse<TrKey>(Enum.GetName(roleType), out TrKey key) ? key : TrKey.None,
+               System.Linq.Enumerable.Cast<string>(CustomOptionHolder.Rates).ToArray(),
+               System.Linq.Enumerable.Cast<string>(CustomOptionHolder.Rates).FirstOrDefault() ?? string.Empty,
+               null, false, "", color)
     {
         IsRoleEnabled = roleEnabled;
         IsHeader = true;
@@ -28,7 +31,10 @@ internal class CustomRoleOption : CustomOption
                               Color color,
                               int max = 15,
                               bool roleEnabled = true)
-        : base(baseId, type, nameKey, CustomOptionHolder.Rates, 0, null, false, "", color)
+        : base(baseId, type, nameKey,
+               System.Linq.Enumerable.Cast<string>(CustomOptionHolder.Rates).ToArray(),
+               System.Linq.Enumerable.Cast<string>(CustomOptionHolder.Rates).FirstOrDefault() ?? string.Empty,
+               null, false, "", color)
     {
         IsRoleEnabled = roleEnabled;
         IsHeader = true;
@@ -39,8 +45,8 @@ internal class CustomRoleOption : CustomOption
         if (max > 1) NumberOfRoleOption = Normal(baseId + 10000, type, TrKey.NumberOfRole, 1f, 1f, 15f, 1f, this);
     }
 
-    internal override bool Enabled { get => Helpers.RolesEnabled && IsRoleEnabled && Selection > 0; }
-    internal int Rate { get => Enabled ? Selection : 0; }
+    internal override bool Enabled { get => Helpers.RolesEnabled && IsRoleEnabled && GetSelectionIndex() > 0; }
+    internal int Rate { get => Enabled ? GetSelectionIndex() : 0; }
     internal int Count { get => !Enabled ? 0 : NumberOfRoleOption != null ? Mathf.RoundToInt(NumberOfRoleOption.GetFloat()) : 1; }
     internal (int rate, int count) Data { get => (Rate, Count); }
 }

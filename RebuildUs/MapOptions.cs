@@ -41,9 +41,6 @@ internal static class MapSettings
     internal static bool ShowChatNotifications = true;
     internal static CustomGamemode GameMode = CustomGamemode.Classic;
 
-    internal static bool EnableDiscordAutoMute = true;
-    internal static bool EnableDiscordEmbed = true;
-
     // Updating values
     internal static int MeetingsCount;
     internal static List<SurvCamera> CamerasToAdd = [];
@@ -120,9 +117,6 @@ internal static class MapSettings
         ShowLighterDarker = RebuildUs.ShowLighterDarker.Value;
         ShowVentsOnMap = RebuildUs.ShowVentsOnMap.Value;
         ShowChatNotifications = RebuildUs.ShowChatNotifications.Value;
-
-        EnableDiscordAutoMute = CustomOptionHolder.EnableDiscordAutoMute.GetBool();
-        EnableDiscordEmbed = CustomOptionHolder.EnableDiscordEmbed.GetBool();
     }
 
     internal static void ResetDeviceTimes()

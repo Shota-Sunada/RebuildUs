@@ -286,9 +286,9 @@ internal partial class CustomOption
                 categoryHeaderMasked.transform.localPosition = new(-0.903f, num, -2f);
                 num -= 0.63f;
             }
-            else if (option.Parent != null && ((option.Parent.Selection == 0 && !option._hideIfParentEnabled) || (option.Parent.Parent != null && option.Parent.Parent.Selection == 0 && !option.Parent._hideIfParentEnabled)))
+            else if (option.Parent != null && ((option.Parent.GetSelectionIndex() == 0 && !option.HideIfParentEnabled) || (option.Parent.Parent != null && option.Parent.Parent.GetSelectionIndex() == 0 && !option.Parent.HideIfParentEnabled)))
                 continue; // Hides options, for which the parent is disabled!
-            else if (option.Parent != null && option.Parent.Selection != 0 && option._hideIfParentEnabled) continue;
+            else if (option.Parent != null && option.Parent.GetSelectionIndex() != 0 && option.HideIfParentEnabled) continue;
 
             StringOption ob = Object.Instantiate(menu.stringOptionOrigin, Vector3.zero, Quaternion.identity, menu.settingsContainer);
             ob.transform.localPosition = new(0.952f, num, -2f);
@@ -313,8 +313,8 @@ internal partial class CustomOption
 
             if (so.TitleText.text.Length > 40) so.TitleText.fontSize = 2f;
 
-            so.Value = so.oldValue = option.Selection;
-            so.ValueText.text = option.Selections[option.Selection].ToString();
+            so.Value = so.oldValue = option.GetSelectionIndex();
+            so.ValueText.text = option.GetValue()?.ToString() ?? string.Empty;
             option._optionBehavior = so;
             OptionsByBehaviour[so] = option;
 
@@ -355,8 +355,8 @@ internal partial class CustomOption
 
         __instance.OnValueChanged = new Action<OptionBehaviour>(o => { });
         // __instance.TitleText.text = option.name;
-        __instance.Value = __instance.oldValue = option.Selection;
-        __instance.ValueText.text = option.Selections[option.Selection].ToString();
+        __instance.Value = __instance.oldValue = option.GetSelectionIndex();
+        __instance.ValueText.text = option.GetValue()?.ToString() ?? string.Empty;
 
         return false;
     }
@@ -364,14 +364,14 @@ internal partial class CustomOption
     internal static bool StringOptionIncrease(StringOption __instance)
     {
         if (!OptionsByBehaviour.TryGetValue(__instance, out CustomOption option)) return true;
-        option.UpdateSelection(option.Selection + 1, option.GetOptionIcon());
+        option.UpdateSelection(option.GetSelectionIndex() + 1, option.GetOptionIcon());
         return false;
     }
 
     internal static bool StringOptionDecrease(StringOption __instance)
     {
         if (!OptionsByBehaviour.TryGetValue(__instance, out CustomOption option)) return true;
-        option.UpdateSelection(option.Selection - 1, option.GetOptionIcon());
+        option.UpdateSelection(option.GetSelectionIndex() - 1, option.GetOptionIcon());
         return false;
     }
 
@@ -379,7 +379,7 @@ internal partial class CustomOption
     {
         if (PlayerControl.LocalPlayer == null || !AmongUsClient.Instance.AmHost) return;
         // Save all custom option selections to config at game start
-        foreach (CustomOption option in AllOptions) option.Entry?.Value = option.Selection;
+        foreach (CustomOption option in AllOptions) option.Entry?.Value = option.GetSelectionIndex();
 
         GameManager.Instance.LogicOptions.SyncOptions();
         ShareOptionSelections();

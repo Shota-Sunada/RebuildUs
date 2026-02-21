@@ -19,66 +19,45 @@ internal partial class CustomOption
     internal static readonly Dictionary<int, CustomOption> AllOptionsById = [];
     private static readonly Dictionary<CustomOptionType, List<CustomOption>> OptionsByType = [];
     private static readonly Dictionary<OptionBehaviour, CustomOption> OptionsByBehaviour = [];
-    private static int _preset;
-    private readonly bool _hideIfParentEnabled;
-    internal readonly List<CustomOption> Children;
-    private OptionBehaviour _optionBehavior;
+    protected static int Preset;
+
+    internal readonly int Id;
+    internal readonly CustomOptionType Type;
+    internal readonly TrKey NameKey;
     internal Color Color;
-
-    internal int DefaultSelection;
-    internal ConfigEntry<int> Entry;
-    internal string Format;
-    internal TrKey HeaderKey;
-
-    internal int Id;
+    internal readonly CustomOption Parent;
     internal bool IsHeader;
-    internal TrKey NameKey;
-    internal CustomOption Parent;
-    internal int Selection;
-    internal object[] Selections;
-    internal CustomOptionType Type;
+    internal TrKey HeaderKey;
+    internal string Format;
+    internal readonly bool HideIfParentEnabled;
+    internal readonly List<CustomOption> Children = [];
 
-    // Option creation
-    internal CustomOption(int id,
-                          CustomOptionType type,
-                          TrKey nameKey,
-                          object[] selections,
-                          object defaultValue,
-                          CustomOption parent,
-                          bool hideIfParentEnabled,
-                          string format,
-                          Color color)
+    private OptionBehaviour _optionBehavior;
+    internal ConfigEntry<int> Entry;
+    internal int DefaultSelection;
+
+    protected CustomOption(int id,
+                           CustomOptionType type,
+                           TrKey nameKey,
+                           CustomOption parent,
+                           bool hideIfParentEnabled,
+                           string format,
+                           Color color)
     {
         Id = id;
-        NameKey = nameKey;
-        Color = color;
-        Selections = selections;
-        int index = Array.IndexOf(selections, defaultValue);
-        DefaultSelection = index >= 0 ? index : 0;
-        Parent = parent;
         Type = type;
-        Children = [];
-        parent?.Children.Add(this);
-        _hideIfParentEnabled = hideIfParentEnabled;
+        NameKey = nameKey;
+        Parent = parent;
+        HideIfParentEnabled = hideIfParentEnabled;
         Format = format;
-        Selection = 0;
+        Color = color;
+
+        parent?.Children.Add(this);
+
         if (id != 0)
         {
-            Entry = Instance.Config.Bind($"Preset{_preset}", id.ToString(), DefaultSelection);
-            Selection = Mathf.Clamp(Entry.Value, 0, selections.Length - 1);
-
-#if DEBUG
-            if (AllOptionsById.ContainsKey(id)) Logger.LogDebug($"CustomOption id {id} is used in multiple places.");
-#endif
+            AllOptionsById[id] = this;
         }
-        else
-        {
-            Entry = Instance.Config.Bind("General", "Selected Preset", DefaultSelection);
-            Selection = Mathf.Clamp(Entry.Value, 0, selections.Length - 1);
-            _preset = Selection;
-        }
-
-        AllOptionsById[id] = this;
 
         if (!OptionsByType.TryGetValue(type, out List<CustomOption> list))
         {
@@ -98,107 +77,136 @@ internal partial class CustomOption
         get => Helpers.RolesEnabled && GetBool();
     }
 
-    internal static CustomOption Normal(int id,
-                                        CustomOptionType type,
-                                        TrKey nameKey,
-                                        object[] selections,
-                                        CustomOption parent = null,
-                                        byte r = byte.MaxValue,
-                                        byte g = byte.MaxValue,
-                                        byte b = byte.MaxValue,
-                                        byte a = byte.MaxValue,
-                                        bool hideIfParentEnabled = false,
-                                        string format = "")
+    protected virtual object GetValue()
     {
-        return new(id, type, nameKey, selections, "", parent, hideIfParentEnabled, format, new Color32(r, g, b, a));
+        return null;
     }
 
-    internal static CustomOption Header(int id,
-                                        CustomOptionType type,
-                                        TrKey nameKey,
-                                        object[] selections,
-                                        TrKey headerKey,
-                                        byte r = byte.MaxValue,
-                                        byte g = byte.MaxValue,
-                                        byte b = byte.MaxValue,
-                                        byte a = byte.MaxValue,
-                                        string format = "")
+    protected virtual int GetSelectionIndex()
     {
-        CustomOption opt = new(id, type, nameKey, selections, "", null, false, format, new Color32(r, g, b, a));
+        return 0;
+    }
+
+    protected virtual void SetSelectionIndex(int index) { }
+
+    protected virtual object[] GetSelections()
+    {
+        return [];
+    }
+
+    // Factory methods
+    internal static CustomOption<bool> Normal(int id,
+                                              CustomOptionType type,
+                                              TrKey nameKey,
+                                              bool defaultValue,
+                                              CustomOption parent = null,
+                                              Color? color = null,
+                                              bool hideIfParentEnabled = false,
+                                              string format = "")
+    {
+        return new(id, type, nameKey, [false, true], defaultValue, parent, hideIfParentEnabled, format, color ?? Color.white);
+    }
+
+    internal static CustomOption<bool> Header(int id,
+                                              CustomOptionType type,
+                                              TrKey nameKey,
+                                              bool defaultValue,
+                                              TrKey headerKey,
+                                              Color? color = null,
+                                              string format = "")
+    {
+        CustomOption<bool> opt = new(id, type, nameKey, [false, true], defaultValue, null, false, format, color ?? Color.white);
         opt.SetHeader(headerKey);
         return opt;
     }
 
-    internal static CustomOption Normal(int id,
-                                        CustomOptionType type,
-                                        TrKey nameKey,
-                                        float defaultValue,
-                                        float min,
-                                        float max,
-                                        float step,
-                                        CustomOption parent = null,
-                                        byte r = byte.MaxValue,
-                                        byte g = byte.MaxValue,
-                                        byte b = byte.MaxValue,
-                                        byte a = byte.MaxValue,
-                                        bool hideIfParentEnabled = false,
-                                        string format = "")
+    internal static CustomOption<float> Normal(int id,
+                                               CustomOptionType type,
+                                               TrKey nameKey,
+                                               float defaultValue,
+                                               float min,
+                                               float max,
+                                               float step,
+                                               CustomOption parent = null,
+                                               Color? color = null,
+                                               bool hideIfParentEnabled = false,
+                                               string format = "")
     {
-        List<object> selections = [];
+        List<float> selections = [];
         for (float s = min; s <= max; s += step) selections.Add(s);
 
-        return new(id, type, nameKey, [.. selections], defaultValue, parent, hideIfParentEnabled, format, new Color32(r, g, b, a));
+        return new(id, type, nameKey, [.. selections], defaultValue, parent, hideIfParentEnabled, format, color ?? Color.white);
     }
 
-    internal static CustomOption Header(int id,
-                                        CustomOptionType type,
-                                        TrKey nameKey,
-                                        float defaultValue,
-                                        float min,
-                                        float max,
-                                        float step,
-                                        TrKey headerKey,
-                                        byte r = byte.MaxValue,
-                                        byte g = byte.MaxValue,
-                                        byte b = byte.MaxValue,
-                                        byte a = byte.MaxValue,
-                                        string format = "")
+    internal static CustomOption<float> Header(int id,
+                                               CustomOptionType type,
+                                               TrKey nameKey,
+                                               float defaultValue,
+                                               float min,
+                                               float max,
+                                               float step,
+                                               TrKey headerKey,
+                                               Color? color = null,
+                                               string format = "")
     {
-        List<object> selections = [];
+        List<float> selections = [];
         for (float s = min; s <= max; s += step) selections.Add(s);
 
-        CustomOption opt = new(id, type, nameKey, [.. selections], defaultValue, null, false, format, new Color32(r, g, b, a));
+        CustomOption<float> opt = new(id, type, nameKey, [.. selections], defaultValue, null, false, format, color ?? Color.white);
         opt.SetHeader(headerKey);
         return opt;
     }
 
-    internal static CustomOption Normal(int id,
-                                        CustomOptionType type,
-                                        TrKey nameKey,
-                                        bool defaultValue,
-                                        CustomOption parent = null,
-                                        byte r = byte.MaxValue,
-                                        byte g = byte.MaxValue,
-                                        byte b = byte.MaxValue,
-                                        byte a = byte.MaxValue,
-                                        bool hideIfParentEnabled = false,
-                                        string format = "")
+    internal static CustomOption<T> Normal<T>(int id,
+                                              CustomOptionType type,
+                                              TrKey nameKey,
+                                              T[] selections,
+                                              T defaultValue,
+                                              CustomOption parent = null,
+                                              Color? color = null,
+                                              bool hideIfParentEnabled = false,
+                                              string format = "")
     {
-        return new(id, type, nameKey, [Tr.Get(TrKey.Off), Tr.Get(TrKey.On)], defaultValue ? Tr.Get(TrKey.On) : Tr.Get(TrKey.Off), parent, hideIfParentEnabled, format, new Color32(r, g, b, a));
+        return new(id, type, nameKey, selections, defaultValue, parent, hideIfParentEnabled, format, color ?? Color.white);
     }
 
-    internal static CustomOption Header(int id,
-                                        CustomOptionType type,
-                                        TrKey nameKey,
-                                        bool defaultValue,
-                                        TrKey headerKey,
-                                        byte r = byte.MaxValue,
-                                        byte g = byte.MaxValue,
-                                        byte b = byte.MaxValue,
-                                        byte a = byte.MaxValue,
-                                        string format = "")
+    internal static CustomOption<string> Normal(int id,
+                                                   CustomOptionType type,
+                                                   TrKey nameKey,
+                                                   string[] selections,
+                                                   int defaultSelection,
+                                                   CustomOption parent = null,
+                                                   Color? color = null,
+                                                   bool hideIfParentEnabled = false,
+                                                   string format = "")
     {
-        CustomOption opt = new(id, type, nameKey, [Tr.Get(TrKey.Off), Tr.Get(TrKey.On)], defaultValue ? Tr.Get(TrKey.On) : Tr.Get(TrKey.Off), null, false, format, new Color32(r, g, b, a));
+        return new(id, type, nameKey, selections, defaultSelection, parent, hideIfParentEnabled, format, color ?? Color.white);
+    }
+
+    internal static CustomOption<T> Header<T>(int id,
+                                              CustomOptionType type,
+                                              TrKey nameKey,
+                                              T[] selections,
+                                              T defaultValue,
+                                              TrKey headerKey,
+                                              Color? color = null,
+                                              string format = "")
+    {
+        CustomOption<T> opt = new(id, type, nameKey, selections, defaultValue, null, false, format, color ?? Color.white);
+        opt.SetHeader(headerKey);
+        return opt;
+    }
+
+    internal static CustomOption<string> Header(int id,
+                                                CustomOptionType type,
+                                                TrKey nameKey,
+                                                string[] selections,
+                                                int defaultSelection,
+                                                TrKey headerKey,
+                                                Color? color = null,
+                                                string format = "")
+    {
+        CustomOption<string> opt = new(id, type, nameKey, selections, defaultSelection, null, false, format, color ?? Color.white);
         opt.SetHeader(headerKey);
         return opt;
     }
@@ -212,16 +220,16 @@ internal partial class CustomOption
     // Static behavior
     private static void SwitchPreset(int newPreset)
     {
-        _preset = newPreset;
+        Preset = newPreset;
         foreach (CustomOption option in AllOptions)
         {
             if (option.Id == 0) continue;
 
-            option.Entry = Instance.Config.Bind($"Preset{_preset}", option.Id.ToString(), option.DefaultSelection);
-            option.Selection = Mathf.Clamp(option.Entry.Value, 0, option.Selections.Length - 1);
+            option.Entry = Instance.Config.Bind($"Preset{Preset}", option.Id.ToString(), option.DefaultSelection);
+            option.SetSelectionIndex(Mathf.Clamp(option.Entry.Value, 0, option.GetSelections().Length - 1));
             if (option._optionBehavior == null || option._optionBehavior is not StringOption stringOption) continue;
-            stringOption.oldValue = stringOption.Value = option.Selection;
-            stringOption.ValueText.text = option.Selections[option.Selection].ToString();
+            stringOption.oldValue = stringOption.Value = option.GetSelectionIndex();
+            stringOption.ValueText.text = option.GetValue().ToString();
         }
 
         // make sure to reload all tabs, even the ones in the background, because they might have changed when the preset was switched!
@@ -239,7 +247,7 @@ internal partial class CustomOption
         using RPCSender sender = new(PlayerControl.LocalPlayer.NetId, CustomRPC.ShareOptions);
         sender.Write((byte)1);
         sender.WritePacked((uint)option.Id);
-        sender.WritePacked(Convert.ToUInt32(option.Selection));
+        sender.WritePacked(Convert.ToUInt32(option.GetSelectionIndex()));
     }
 
     private static void ShareOptionSelections()
@@ -258,7 +266,7 @@ internal partial class CustomOption
             {
                 CustomOption option = AllOptions[currentIndex++];
                 sender.WritePacked((uint)option.Id);
-                sender.WritePacked(Convert.ToUInt32(option.Selection));
+                sender.WritePacked(Convert.ToUInt32(option.GetSelectionIndex()));
             }
         }
     }
@@ -266,27 +274,34 @@ internal partial class CustomOption
     // Getter
     internal int GetSelection()
     {
-        return Selection;
+        return GetSelectionIndex();
     }
 
     internal bool GetBool()
     {
-        return Selection > 0;
+        return GetSelectionIndex() > 0;
     }
 
     internal float GetFloat()
     {
-        return (float)Selections[Selection];
+        object val = GetValue();
+        return val switch
+        {
+            float f => f,
+            int i => i,
+            byte b => b,
+            _ => 0f,
+        };
     }
 
     internal int GetQuantity()
     {
-        return Selection + 1;
+        return GetSelectionIndex() + 1;
     }
 
     internal string GetString()
     {
-        string sel = Selections[Selection].ToString();
+        string sel = GetValue()?.ToString() ?? "";
 
         return sel switch
         {
@@ -296,20 +311,22 @@ internal partial class CustomOption
         };
     }
 
-    public string GetName()
+    private string GetName()
     {
         return Helpers.Cs(Color, Tr.Get(NameKey));
     }
 
-    internal virtual void UpdateSelection(int newSelection, RoleTypes icon, bool notifyUsers = true)
+    internal void UpdateSelection(int newSelection, RoleTypes icon, bool notifyUsers = true)
     {
-        newSelection = Mathf.Clamp((newSelection + Selections.Length) % Selections.Length, 0, Selections.Length - 1);
-        if (AmongUsClient.Instance?.AmClient == true && notifyUsers && Selection != newSelection)
+        object[] selections = GetSelections();
+        int currentIndex = GetSelectionIndex();
+        newSelection = Mathf.Clamp((newSelection + selections.Length) % selections.Length, 0, selections.Length - 1);
+        if (AmongUsClient.Instance?.AmClient == true && notifyUsers && currentIndex != newSelection)
         {
-            DestroyableSingleton<HudManager>.Instance.Notifier.AddSettingsChangeMessage((StringNames)(Id + CUSTOM_OPTION_PRE_ID), Selections[newSelection].ToString(), false, icon);
+            DestroyableSingleton<HudManager>.Instance.Notifier.AddSettingsChangeMessage((StringNames)(Id + CUSTOM_OPTION_PRE_ID), selections[newSelection].ToString(), false, icon);
             try
             {
-                Selection = newSelection;
+                SetSelectionIndex(newSelection);
                 if (GameStartManager.Instance != null
                     && GameStartManager.Instance.LobbyInfoPane != null
                     && GameStartManager.Instance.LobbyInfoPane.LobbyViewSettingsPane != null
@@ -322,23 +339,23 @@ internal partial class CustomOption
             }
         }
 
-        Selection = newSelection;
+        SetSelectionIndex(newSelection);
 
         if (_optionBehavior != null && _optionBehavior is StringOption stringOption)
         {
-            stringOption.oldValue = stringOption.Value = Selection;
-            stringOption.ValueText.text = Selections[Selection].ToString();
+            stringOption.oldValue = stringOption.Value = GetSelectionIndex();
+            stringOption.ValueText.text = GetValue().ToString();
         }
 
         if (AmongUsClient.Instance?.AmHost == true && PlayerControl.LocalPlayer)
         {
-            Entry?.Value = Selection;
+            Entry?.Value = GetSelectionIndex();
 
             if (Id == 0)
             {
-                if (Selection != _preset)
+                if (GetSelectionIndex() != Preset)
                 {
-                    SwitchPreset(Selection);
+                    SwitchPreset(GetSelectionIndex());
                     ShareOptionSelections();
                 }
             }
@@ -372,5 +389,74 @@ internal partial class CustomOption
             GameOptionsMenu tab = _modifierTab.GetComponent<GameOptionsMenu>();
             if (tab != null) UpdateGameOptionsMenu(CustomOptionType.Modifier, tab);
         }
+    }
+}
+
+internal class CustomOption<T> : CustomOption
+{
+    internal T[] Selections;
+    internal int Selection;
+
+    public T Value
+    {
+        get => Selections[Selection];
+    }
+
+    public CustomOption(int id,
+                        CustomOptionType type,
+                        TrKey nameKey,
+                        T[] selections,
+                        T defaultValue,
+                        CustomOption parent,
+                        bool hideIfParentEnabled,
+                        string format,
+                        Color color)
+        : this(id, type, nameKey, selections, Array.IndexOf(selections, defaultValue), parent, hideIfParentEnabled, format, color) { }
+
+    public CustomOption(int id,
+                        CustomOptionType type,
+                        TrKey nameKey,
+                        T[] selections,
+                        int defaultSelection,
+                        CustomOption parent,
+                        bool hideIfParentEnabled,
+                        string format,
+                        Color color)
+        : base(id, type, nameKey, parent, hideIfParentEnabled, format, color)
+    {
+        Selections = selections;
+        DefaultSelection = Mathf.Clamp(defaultSelection, 0, selections.Length - 1);
+
+        if (id != 0)
+        {
+            Entry = Instance.Config.Bind($"Preset{Preset}", id.ToString(), DefaultSelection);
+            Selection = Mathf.Clamp(Entry.Value, 0, selections.Length - 1);
+        }
+        else
+        {
+            Entry = Instance.Config.Bind("General", "Selected Preset", DefaultSelection);
+            Selection = Mathf.Clamp(Entry.Value, 0, selections.Length - 1);
+            Preset = Selection;
+        }
+    }
+
+    protected override object GetValue()
+    {
+        return Selections[Selection];
+    }
+
+    protected override int GetSelectionIndex()
+    {
+        return Selection;
+    }
+
+    protected override void SetSelectionIndex(int index)
+    {
+        Selection = Mathf.Clamp(index, 0, Selections.Length - 1);
+    }
+
+    protected override object[] GetSelections()
+    {
+        return Selections.Cast<object>().ToArray();
     }
 }

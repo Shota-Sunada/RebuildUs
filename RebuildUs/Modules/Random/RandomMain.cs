@@ -6,7 +6,7 @@ internal static class RandomMain
 
     internal static void RefreshRnd(int seed)
     {
-        Rnd = CustomOptionHolder.RandomNumberAlgorithm.Selection switch
+        Rnd = CustomOptionHolder.RandomNumberAlgorithm.GetSelection() switch
         {
             0 => new(seed),
             1 => new MersenneTwister(seed),

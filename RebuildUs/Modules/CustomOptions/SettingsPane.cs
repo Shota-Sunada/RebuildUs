@@ -121,7 +121,7 @@ internal partial class CustomOption
                 num -= 1.05f;
                 i = 0;
             }
-            else if (option.Parent != null && (option.Parent.Selection == 0 || (option.Parent.Parent != null && option.Parent.Parent.Selection == 0)))
+            else if (option.Parent != null && (option.Parent.GetSelectionIndex() == 0 || (option.Parent.Parent != null && option.Parent.Parent.GetSelectionIndex() == 0)))
             {
                 // Hides options, for which the parent is disabled!
                 continue;
@@ -139,12 +139,22 @@ internal partial class CustomOption
                 if (i > 0) num -= 0.85f;
             }
             else
+            {
                 num2 = -3f;
+            }
 
             viewSettingsInfoPanel.transform.localPosition = new(num2, num, -2f);
             int value = option.GetSelection();
-            (TrKey viewName, string viewValue) = HandleSpecialOptionsView(option, option.NameKey, option.Selections[value].ToString());
-            viewSettingsInfoPanel.SetInfo(StringNames.ImpostorsCategory, viewValue, 61);
+            (TrKey viewName, string viewValue) = HandleSpecialOptionsView(option, option.NameKey, (option.GetSelections().Length > value ? option.GetSelections()[value] : null)?.ToString() ?? string.Empty);
+            if (option is CustomOption<bool>)
+            {
+                viewSettingsInfoPanel.SetInfoCheckbox(StringNames.ImpostorsCategory, 61, option.GetBool());
+            }
+            else
+            {
+                viewSettingsInfoPanel.SetInfo(StringNames.ImpostorsCategory, viewValue, 61);
+            }
+
             viewSettingsInfoPanel.titleText.text = Tr.Get(viewName);
 
             if (option.IsHeader && option.Type is CustomOptionType.Neutral or CustomOptionType.Crewmate or CustomOptionType.Impostor or CustomOptionType.Modifier) viewSettingsInfoPanel.titleText.text = Tr.Get(TrKey.SpawnChance);
@@ -220,8 +230,16 @@ internal partial class CustomOption
 
             viewSettingsInfoPanel.transform.localPosition = new(num2, num, -2f);
             int value = option.GetSelection();
-            (TrKey optName, string optValue) = HandleSpecialOptionsView(option, option.NameKey, option.Selections[value].ToString());
-            viewSettingsInfoPanel.SetInfo(StringNames.ImpostorsCategory, optValue, 61);
+            (TrKey optName, string optValue) = HandleSpecialOptionsView(option, option.NameKey, (option.GetSelections().Length > value ? option.GetSelections()[value] : null)?.ToString() ?? string.Empty);
+            if (option is CustomOption<bool>)
+            {
+                viewSettingsInfoPanel.SetInfoCheckbox(StringNames.ImpostorsCategory, 61, option.GetBool());
+            }
+            else
+            {
+                viewSettingsInfoPanel.SetInfo(StringNames.ImpostorsCategory, optValue, 61);
+            }
+
             viewSettingsInfoPanel.titleText.text = Helpers.Cs(option.Color, Tr.Get(optName));
             viewSettingsInfoPanel.titleText.outlineColor = Color.white;
             viewSettingsInfoPanel.titleText.outlineWidth = 0.1f;
