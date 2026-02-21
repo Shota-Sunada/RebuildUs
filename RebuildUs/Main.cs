@@ -32,7 +32,7 @@ global using RebuildUs.Roles.Modifier;
 global using RebuildUs.Utilities;
 global using Reactor.Networking;
 global using Reactor.Networking.Attributes;
-using InnerNet;
+global using InnerNet;
 using Random = System.Random;
 
 namespace RebuildUs;
