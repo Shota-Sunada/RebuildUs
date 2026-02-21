@@ -1,409 +1,30 @@
 namespace RebuildUs;
 
-public static class CustomOptionHolder
+internal static class CustomOptionHolder
 {
-    public static readonly string[] RATES = ["0%", "10%", "20%", "30%", "40%", "50%", "60%", "70%", "80%", "90%", "100%"];
-    public static readonly string[] PRESETS = [Tr.Get(TrKey.Preset1), Tr.Get(TrKey.Preset2), Tr.Get(TrKey.Preset3), Tr.Get(TrKey.Preset4), Tr.Get(TrKey.Preset5)];
-
-    #region MOD OPTIONS
-    public static CustomOption PresetSelection;
-    public static CustomOption ActivateRoles;
-    public static CustomOption RandomNumberAlgorithm;
-    public static CustomOption EnableRandomRandomNumberAlgorithm;
-    public static CustomOption EnableRandomRandomNumberAlgorithmDotnet;
-    public static CustomOption EnableRandomRandomNumberAlgorithmMT;
-    public static CustomOption EnableRandomRandomNumberAlgorithmXorshiro256PP;
-    public static CustomOption EnableRandomRandomNumberAlgorithmXorshiro256SS;
-    public static CustomOption EnableRandomRandomNumberAlgorithmPcg64;
-    #endregion
-
-    #region GENERAL OPTIONS
-    public static CustomOption CrewmateRolesCountMin;
-    public static CustomOption CrewmateRolesCountMax;
-    public static CustomOption ImpostorRolesCountMin;
-    public static CustomOption ImpostorRolesCountMax;
-    public static CustomOption NeutralRolesCountMin;
-    public static CustomOption NeutralRolesCountMax;
-    public static CustomOption ModifiersCountMin;
-    public static CustomOption ModifiersCountMax;
-    #endregion
-
-    #region GAME OPTIONS
-    public static CustomOption GameOptions;
-    public static CustomOption MaxNumberOfMeetings;
-    public static CustomOption BlockSkippingInEmergencyMeetings;
-    public static CustomOption NoVoteIsSelfVote;
-    public static CustomOption HidePlayerNames;
-    public static CustomOption AllowParallelMedBayScans;
-    public static CustomOption HideOutOfSightNametags;
-    public static CustomOption RefundVotesOnDeath;
-    public static CustomOption DelayBeforeMeeting;
-    public static CustomOption DisableVentAnimation;
-    public static CustomOption StopCooldownOnFixingElecSabotage;
-    public static CustomOption EnableHawkMode;
-    public static CustomOption CanWinByTaskWithoutLivingPlayer;
-    // public static CustomOption DeadPlayerCanSeeCooldown;
-    public static CustomOption ImpostorCanIgnoreCommSabotage;
-    // public static CustomOption BlockSabotageFromDeadImpostors;
-    // public static CustomOption ShieldFirstKill;
-
-    public static CustomOption AdditionalEmergencyCooldown;
-    public static CustomOption AdditionalEmergencyCooldownTime;
-
-    public static CustomOption RestrictDevices;
-    public static CustomOption RestrictAdmin;
-    public static CustomOption RestrictAdminTime;
-    public static CustomOption RestrictAdminText;
-    public static CustomOption RestrictCameras;
-    public static CustomOption RestrictCamerasTime;
-    public static CustomOption RestrictCamerasText;
-    public static CustomOption RestrictVitals;
-    public static CustomOption RestrictVitalsTime;
-    public static CustomOption RestrictVitalsText;
-    #endregion
-
-    #region DISCORD OPTIONS
-    public static CustomOption EnableDiscordAutoMute;
-    public static CustomOption EnableDiscordEmbed;
-    #endregion
-
-    #region POLUS OPTIONS
-    public static CustomOption PolusAdditionalVents;
-    public static CustomOption PolusSpecimenVital;
-    public static CustomOption PolusRandomSpawn;
-    #endregion
-
-    #region AIRSHIP OPTIONS
-    public static CustomOption AirshipOptimize;
-    public static CustomOption AirshipEnableWallCheck;
-    public static CustomOption AirshipReactorDuration;
-    public static CustomOption AirshipRandomSpawn;
-    public static CustomOption AirshipAdditionalSpawn;
-    public static CustomOption AirshipSynchronizedSpawning;
-    public static CustomOption AirshipSetOriginalCooldown;
-    public static CustomOption AirshipInitialDoorCooldown;
-    public static CustomOption AirshipInitialSabotageCooldown;
-    public static CustomOption AirshipOldAdmin;
-    public static CustomOption AirshipRestrictedAdmin;
-    public static CustomOption AirshipDisableGapSwitchBoard;
-    public static CustomOption AirshipDisableMovingPlatform;
-    public static CustomOption AirshipAdditionalLadder;
-    public static CustomOption AirshipOneWayLadder;
-    public static CustomOption AirshipReplaceSafeTask;
-    public static CustomOption AirshipAdditionalWireTask;
-    #endregion
-
-    #region MAP OPTIONS
-    public static CustomOption RandomMap;
-    public static CustomOption RandomMapEnableSkeld;
-    public static CustomOption RandomMapEnableMiraHQ;
-    public static CustomOption RandomMapEnablePolus;
-    public static CustomOption RandomMapEnableDleks;
-    public static CustomOption RandomMapEnableAirShip;
-    public static CustomOption RandomMapEnableFungle;
-    public static CustomOption RandomMapEnableSubmerged;
-    #endregion
-
-    #region ROLES CREWMATE
-    public static CustomRoleOption MayorSpawnRate;
-    public static CustomOption MayorNumVotes;
-    public static CustomOption MayorCanSeeVoteColors;
-    public static CustomOption MayorTasksNeededToSeeVoteColors;
-    public static CustomOption MayorMeetingButton;
-    public static CustomOption MayorMaxRemoteMeetings;
-
-    public static CustomRoleOption EngineerSpawnRate;
-    public static CustomOption EngineerNumberOfFixes;
-    public static CustomOption EngineerHighlightForImpostors;
-    public static CustomOption EngineerHighlightForTeamJackal;
-
-    public static CustomRoleOption SpySpawnRate;
-    public static CustomOption SpyCanDieToSheriff;
-    public static CustomOption SpyImpostorsCanKillAnyone;
-    public static CustomOption SpyCanEnterVents;
-    public static CustomOption SpyHasImpostorVision;
-
-    public static CustomRoleOption MedicSpawnRate;
-    public static CustomOption MedicShowShielded;
-    public static CustomOption MedicShowAttemptToShielded;
-    public static CustomOption MedicSetShieldAfterMeeting;
-    public static CustomOption MedicShowAttemptToMedic;
-
-    public static CustomRoleOption SeerSpawnRate;
-    public static CustomOption SeerMode;
-    public static CustomOption SeerSoulDuration;
-    public static CustomOption SeerLimitSoulDuration;
-
-    public static CustomRoleOption TimeMasterSpawnRate;
-    public static CustomOption TimeMasterCooldown;
-    public static CustomOption TimeMasterRewindTime;
-    public static CustomOption TimeMasterShieldDuration;
-
-    public static CustomRoleOption DetectiveSpawnRate;
-    public static CustomOption DetectiveAnonymousFootprints;
-    public static CustomOption DetectiveFootprintInterval;
-    public static CustomOption DetectiveFootprintDuration;
-    public static CustomOption DetectiveReportNameDuration;
-    public static CustomOption DetectiveReportColorDuration;
-
-    public static CustomRoleOption MediumSpawnRate;
-    public static CustomOption MediumCooldown;
-    public static CustomOption MediumDuration;
-    public static CustomOption MediumOneTimeUse;
-
-    public static CustomRoleOption HackerSpawnRate;
-    public static CustomOption HackerCooldown;
-    public static CustomOption HackerHackingDuration;
-    public static CustomOption HackerOnlyColorType;
-    public static CustomOption HackerToolsNumber;
-    public static CustomOption HackerRechargeTasksNumber;
-    public static CustomOption HackerNoMove;
-
-    public static CustomRoleOption TrackerSpawnRate;
-    public static CustomOption TrackerUpdateInterval;
-    public static CustomOption TrackerResetTargetAfterMeeting;
-    public static CustomOption TrackerCanTrackCorpses;
-    public static CustomOption TrackerCorpsesTrackingCooldown;
-    public static CustomOption TrackerCorpsesTrackingDuration;
-
-    public static CustomRoleOption SnitchSpawnRate;
-    public static CustomOption SnitchLeftTasksForReveal;
-    public static CustomOption SnitchIncludeTeamJackal;
-    public static CustomOption SnitchTeamJackalUseDifferentArrowColor;
-
-    public static CustomRoleOption LighterSpawnRate;
-    public static CustomOption LighterModeLightsOnVision;
-    public static CustomOption LighterModeLightsOffVision;
-    public static CustomOption LighterCooldown;
-    public static CustomOption LighterDuration;
-    public static CustomOption LighterCanSeeNinja;
-
-    public static CustomRoleOption SecurityGuardSpawnRate;
-    public static CustomOption SecurityGuardCooldown;
-    public static CustomOption SecurityGuardTotalScrews;
-    public static CustomOption SecurityGuardCamPrice;
-    public static CustomOption SecurityGuardVentPrice;
-    public static CustomOption SecurityGuardCamDuration;
-    public static CustomOption SecurityGuardCamMaxCharges;
-    public static CustomOption SecurityGuardCamRechargeTasksNumber;
-    public static CustomOption SecurityGuardNoMove;
-
-    public static CustomRoleOption SwapperSpawnRate;
-    public static CustomOption SwapperIsImpRate;
-    public static CustomOption SwapperCanCallEmergency;
-    public static CustomOption SwapperCanOnlySwapOthers;
-    public static CustomOption SwapperNumSwaps;
-
-    public static CustomRoleOption BaitSpawnRate;
-    public static CustomOption BaitHighlightAllVents;
-    public static CustomOption BaitReportDelay;
-    public static CustomOption BaitShowKillFlash;
-
-    public static CustomRoleOption ShifterSpawnRate;
-    public static CustomOption ShifterIsNeutralRate;
-    public static CustomOption ShifterShiftsModifiers;
-    public static CustomOption ShifterPastShifters;
-
-    public static CustomRoleOption SheriffSpawnRate;
-    public static CustomOption SheriffCooldown;
-    public static CustomOption SheriffNumShots;
-    public static CustomOption SheriffCanKillNeutrals;
-    public static CustomOption SheriffMisfireKillsTarget;
-    public static CustomOption SheriffCanKillNoDeadBody;
-
-    public static CustomRoleOption MadmateRoleSpawnRate;
-    public static CustomOption MadmateRoleCanDieToSheriff;
-    public static CustomOption MadmateRoleCanEnterVents;
-    public static CustomOption MadmateRoleHasImpostorVision;
-    public static CustomOption MadmateRoleCanSabotage;
-    public static CustomOption MadmateRoleCanFixComm;
-    public static CustomOption MadmateRoleCanKnowImpostorAfterFinishTasks;
-    public static CustomTasksOption MadmateRoleTasks;
-
-    public static CustomRoleOption SuiciderSpawnRate;
-    public static CustomOption SuiciderCanDieToSheriff;
-    public static CustomOption SuiciderCanEnterVents;
-    public static CustomOption SuiciderHasImpostorVision;
-    public static CustomOption SuiciderCanFixComm;
-    public static CustomOption SuiciderCanKnowImpostorAfterFinishTasks;
-    public static CustomTasksOption SuiciderTasks;
-    #endregion
-
-    #region ROLES IMPOSTOR
-    public static CustomRoleOption BountyHunterSpawnRate;
-    public static CustomOption BountyHunterBountyDuration;
-    public static CustomOption BountyHunterReducedCooldown;
-    public static CustomOption BountyHunterPunishmentTime;
-    public static CustomOption BountyHunterShowArrow;
-    public static CustomOption BountyHunterArrowUpdateInterval;
-
-    public static CustomRoleOption MafiaSpawnRate;
-    public static CustomOption MafiosoCanSabotage;
-    public static CustomOption MafiosoCanRepair;
-    public static CustomOption MafiosoCanVent;
-    public static CustomOption JanitorCooldown;
-    public static CustomOption JanitorCanSabotage;
-    public static CustomOption JanitorCanRepair;
-    public static CustomOption JanitorCanVent;
-
-    public static CustomRoleOption TricksterSpawnRate;
-    public static CustomOption TricksterPlaceBoxCooldown;
-    public static CustomOption TricksterLightsOutCooldown;
-    public static CustomOption TricksterLightsOutDuration;
-
-    public static CustomRoleOption EvilHackerSpawnRate;
-    public static CustomOption EvilHackerCanHasBetterAdmin;
-    public static CustomOption EvilHackerCanCreateMadmate;
-    public static CustomOption EvilHackerCanCreateMadmateFromJackal;
-    public static CustomOption EvilHackerCanMoveEvenIfUsesAdmin;
-    public static CustomOption EvilHackerCanInheritAbility;
-    public static CustomOption EvilHackerCanSeeDoorStatus;
-    public static CustomOption CreatedMadmateCanDieToSheriff;
-    public static CustomOption CreatedMadmateCanEnterVents;
-    public static CustomOption CreatedMadmateHasImpostorVision;
-    public static CustomOption CreatedMadmateCanSabotage;
-    public static CustomOption CreatedMadmateCanFixComm;
-    public static CustomOption CreatedMadmateAbility;
-    public static CustomOption CreatedMadmateNumTasks;
-    public static CustomOption CreatedMadmateExileCrewmate;
-
-    public static CustomRoleOption EvilTrackerSpawnRate;
-    public static CustomOption EvilTrackerCooldown;
-    public static CustomOption EvilTrackerResetTargetAfterMeeting;
-    public static CustomOption EvilTrackerCanSeeDeathFlash;
-    public static CustomOption EvilTrackerCanSeeTargetTask;
-    public static CustomOption EvilTrackerCanSeeTargetPosition;
-    public static CustomOption EvilTrackerCanSetTargetOnMeeting;
-
-    public static CustomRoleOption EraserSpawnRate;
-    public static CustomOption EraserCooldown;
-    public static CustomOption EraserCooldownIncrease;
-    public static CustomOption EraserCanEraseAnyone;
-
-    public static CustomRoleOption MorphingSpawnRate;
-    public static CustomOption MorphingCooldown;
-    public static CustomOption MorphingDuration;
-
-    public static CustomRoleOption CamouflagerSpawnRate;
-    public static CustomOption CamouflagerCooldown;
-    public static CustomOption CamouflagerDuration;
-    public static CustomOption CamouflagerRandomColors;
-
-    public static CustomRoleOption CleanerSpawnRate;
-    public static CustomOption CleanerCooldown;
-
-    public static CustomRoleOption WarlockSpawnRate;
-    public static CustomOption WarlockCooldown;
-    public static CustomOption WarlockRootTime;
-
-    public static CustomRoleOption WitchSpawnRate;
-    public static CustomOption WitchCooldown;
-    public static CustomOption WitchAdditionalCooldown;
-    public static CustomOption WitchCanSpellAnyone;
-    public static CustomOption WitchSpellCastingDuration;
-    public static CustomOption WitchTriggerBothCooldowns;
-    public static CustomOption WitchVoteSavesTargets;
-
-    public static CustomRoleOption VampireSpawnRate;
-    public static CustomOption VampireKillDelay;
-    public static CustomOption VampireCooldown;
-    public static CustomOption VampireCanKillNearGarlics;
-    #endregion
-
-    #region ROLES NEUTRAL
-    public static CustomRoleOption JesterSpawnRate;
-    public static CustomOption JesterCanCallEmergency;
-    public static CustomOption JesterCanSabotage;
-    public static CustomOption JesterHasImpostorVision;
-
-    public static CustomRoleOption ArsonistSpawnRate;
-    public static CustomOption ArsonistCooldown;
-    public static CustomOption ArsonistDuration;
-    public static CustomOption ArsonistCanBeLovers;
-
-    public static CustomRoleOption VultureSpawnRate;
-    public static CustomOption VultureCooldown;
-    public static CustomOption VultureNumberToWin;
-    public static CustomOption VultureCanUseVents;
-    public static CustomOption VultureShowArrows;
-
-    public static CustomRoleOption JackalSpawnRate;
-    public static CustomOption JackalKillCooldown;
-    public static CustomOption JackalCreateSidekickCooldown;
-    public static CustomOption JackalCanSabotageLights;
-    public static CustomOption JackalCanUseVents;
-    public static CustomOption JackalCanCreateSidekick;
-    public static CustomOption JackalHasImpostorVision;
-    public static CustomOption SidekickPromotesToJackal;
-    public static CustomOption SidekickCanKill;
-    public static CustomOption SidekickCanUseVents;
-    public static CustomOption SidekickCanSabotageLights;
-    public static CustomOption SidekickHasImpostorVision;
-    public static CustomOption JackalPromotedFromSidekickCanCreateSidekick;
-    public static CustomOption JackalCanCreateSidekickFromImpostor;
-
-    public static CustomRoleOption GuesserSpawnRate;
-    public static CustomOption GuesserIsImpGuesserRate;
-    public static CustomOption GuesserNumberOfShots;
-    public static CustomOption GuesserOnlyAvailableRoles;
-    public static CustomOption GuesserHasMultipleShotsPerMeeting;
-    public static CustomOption GuesserShowInfoInGhostChat;
-    public static CustomOption GuesserKillsThroughShield;
-    public static CustomOption GuesserEvilCanKillSpy;
-    public static CustomOption GuesserSpawnBothRate;
-    #endregion
-
-    #region MODIFIERS
-    public static CustomModifierOption MadmateSpawnRate;
-    public static CustomOption MadmateCanDieToSheriff;
-    public static CustomOption MadmateCanEnterVents;
-    public static CustomOption MadmateHasImpostorVision;
-    public static CustomOption MadmateCanSabotage;
-    public static CustomOption MadmateCanFixComm;
-    public static CustomOption MadmateType;
-    public static CustomRoleSelectionOption MadmateFixedRole;
-    public static CustomOption MadmateAbility;
-    public static CustomTasksOption MadmateTasks;
-    public static CustomOption MadmateExilePlayer;
-
-    public static CustomOption LastImpostorEnable;
-    public static CustomOption LastImpostorNumKills;
-    public static CustomOption LastImpostorFunctions;
-    public static CustomOption LastImpostorResults;
-    public static CustomOption LastImpostorNumShots;
-
-    public static CustomRoleOption LoversSpawnRate;
-    public static CustomOption LoversNumCouples;
-    public static CustomOption LoversImpLoverRate;
-    public static CustomOption LoversBothDie;
-    public static CustomOption LoversCanHaveAnotherRole;
-    public static CustomOption LoversSeparateTeam;
-    public static CustomOption LoversTasksCount;
-    public static CustomOption LoversEnableChat;
-
-    public static CustomModifierOption MiniSpawnRate;
-    public static CustomOption MiniGrowingUpDuration;
-
-    public static CustomModifierOption AntiTeleportSpawnRate;
-    #endregion
+    internal static readonly object[] Rates = ["0%", "10%", "20%", "30%", "40%", "50%", "60%", "70%", "80%", "90%", "100%"];
+    internal static readonly string[] Presets = [Tr.Get(TrKey.Preset1), Tr.Get(TrKey.Preset2), Tr.Get(TrKey.Preset3), Tr.Get(TrKey.Preset4), Tr.Get(TrKey.Preset5)];
 
     internal static Dictionary<byte, byte[]> BlockedRolePairings = [];
 
-    public static void Load()
+    internal static void Load()
     {
-        #region MOD OPTIONS
-        PresetSelection = CustomOption.Header(0, CustomOptionType.General, TrKey.Preset, PRESETS, TrKey.Preset);
+#region MOD OPTIONS
+
+        PresetSelection = CustomOption.Header(0, CustomOptionType.General, TrKey.Preset, Presets, TrKey.Preset);
         ActivateRoles = CustomOption.Normal(1, CustomOptionType.General, TrKey.ActivateRoles, true);
         EnableRandomRandomNumberAlgorithm = CustomOption.Normal(2, CustomOptionType.General, TrKey.RandomRandomNumberAlgorithm, false);
-        RandomNumberAlgorithm = CustomOption.Normal(3, CustomOptionType.General, TrKey.RandomNumberAlgorithm, [Tr.Get(TrKey.RND_Dotnet), Tr.Get(TrKey.RND_MT), Tr.Get(TrKey.RND_XOSHIRO256), Tr.Get(TrKey.RND_XOSHIRO256SS), Tr.Get(TrKey.RND_PCG64)], EnableRandomRandomNumberAlgorithm, 0, 0, 0, 0, true);
+        RandomNumberAlgorithm = CustomOption.Normal(3, CustomOptionType.General, TrKey.RandomNumberAlgorithm, [Tr.Get(TrKey.RndDotnet), Tr.Get(TrKey.RndMT), Tr.Get(TrKey.RndXoshiro256), Tr.Get(TrKey.RndXoshiro256Ss), Tr.Get(TrKey.RndPcg64)], EnableRandomRandomNumberAlgorithm, 0, 0, 0, 0, true);
         EnableRandomRandomNumberAlgorithmDotnet = CustomOption.Normal(4, CustomOptionType.General, TrKey.EnableRandomRandomNumberAlgorithmDotnet, true, EnableRandomRandomNumberAlgorithm);
         EnableRandomRandomNumberAlgorithmMT = CustomOption.Normal(5, CustomOptionType.General, TrKey.EnableRandomRandomNumberAlgorithmMT, true, EnableRandomRandomNumberAlgorithm);
-        EnableRandomRandomNumberAlgorithmXorshiro256PP = CustomOption.Normal(6, CustomOptionType.General, TrKey.EnableRandomRandomNumberAlgorithmXorshiro256PP, true, EnableRandomRandomNumberAlgorithm);
-        EnableRandomRandomNumberAlgorithmXorshiro256SS = CustomOption.Normal(7, CustomOptionType.General, TrKey.EnableRandomRandomNumberAlgorithmXorshiro256SS, true, EnableRandomRandomNumberAlgorithm);
+        EnableRandomRandomNumberAlgorithmXorshiro256Pp = CustomOption.Normal(6, CustomOptionType.General, TrKey.EnableRandomRandomNumberAlgorithmXorshiro256Pp, true, EnableRandomRandomNumberAlgorithm);
+        EnableRandomRandomNumberAlgorithmXorshiro256Ss = CustomOption.Normal(7, CustomOptionType.General, TrKey.EnableRandomRandomNumberAlgorithmXorshiro256Ss, true, EnableRandomRandomNumberAlgorithm);
         EnableRandomRandomNumberAlgorithmPcg64 = CustomOption.Normal(8, CustomOptionType.General, TrKey.EnableRandomRandomNumberAlgorithmPcg64, true, EnableRandomRandomNumberAlgorithm);
-        #endregion
 
-        #region GENERAL OPTIONS
+#endregion
+
+#region GENERAL OPTIONS
+
         CrewmateRolesCountMin = CustomOption.Header(10, CustomOptionType.General, TrKey.CrewmateRolesCountMin, 0f, 0f, 15f, 1f, TrKey.RolesGeneral);
         CrewmateRolesCountMax = CustomOption.Normal(11, CustomOptionType.General, TrKey.CrewmateRolesCountMax, 0f, 0f, 15f, 1f);
         ImpostorRolesCountMin = CustomOption.Normal(12, CustomOptionType.General, TrKey.ImpostorRolesCountMin, 0f, 0f, 15f, 1f);
@@ -412,9 +33,11 @@ public static class CustomOptionHolder
         NeutralRolesCountMax = CustomOption.Normal(15, CustomOptionType.General, TrKey.NeutralRolesCountMax, 0f, 0f, 15f, 1f);
         ModifiersCountMin = CustomOption.Normal(16, CustomOptionType.General, TrKey.ModifiersCountMin, 0f, 0f, 15f, 1f);
         ModifiersCountMax = CustomOption.Normal(17, CustomOptionType.General, TrKey.ModifiersCountMax, 0f, 0f, 15f, 1f);
-        #endregion
 
-        #region GAME OPTIONS
+#endregion
+
+#region GAME OPTIONS
+
         GameOptions = CustomOption.Header(19, CustomOptionType.General, TrKey.GameOptions, true, TrKey.GameOptions);
         MaxNumberOfMeetings = CustomOption.Normal(20, CustomOptionType.General, TrKey.MaxNumberOfMeetings, 10, 0, 15, 1);
         BlockSkippingInEmergencyMeetings = CustomOption.Normal(21, CustomOptionType.General, TrKey.BlockSkippingInEmergencyMeetings, false);
@@ -446,20 +69,26 @@ public static class CustomOptionHolder
         RestrictVitals = CustomOption.Normal(67, CustomOptionType.General, TrKey.RestrictVitals, true, RestrictDevices);
         RestrictVitalsTime = CustomOption.Normal(68, CustomOptionType.General, TrKey.RestrictVitalsTime, 30f, 0f, 600f, 1f, RestrictVitals);
         RestrictVitalsText = CustomOption.Normal(69, CustomOptionType.General, TrKey.RestrictVitalsText, true, RestrictVitals);
-        #endregion
 
-        #region DISCORD OPTIONS
+#endregion
+
+#region DISCORD OPTIONS
+
         EnableDiscordAutoMute = CustomOption.Header(110, CustomOptionType.General, TrKey.EnableDiscordAutoMute, false, TrKey.DiscordOptions);
         EnableDiscordEmbed = CustomOption.Normal(111, CustomOptionType.General, TrKey.EnableDiscordEmbed, false);
-        #endregion
 
-        #region POLUS OPTIONS
+#endregion
+
+#region POLUS OPTIONS
+
         PolusAdditionalVents = CustomOption.Header(70, CustomOptionType.General, TrKey.PolusAdditionalVents, true, TrKey.PolusOptions);
         PolusSpecimenVital = CustomOption.Normal(71, CustomOptionType.General, TrKey.PolusSpecimenVital, true);
         PolusRandomSpawn = CustomOption.Normal(72, CustomOptionType.General, TrKey.PolusRandomSpawn, true);
-        #endregion
 
-        #region AIRSHIP OPTIONS
+#endregion
+
+#region AIRSHIP OPTIONS
+
         AirshipOptimize = CustomOption.Header(80, CustomOptionType.General, TrKey.AirshipOptimize, false, TrKey.AirshipOptions);
         AirshipEnableWallCheck = CustomOption.Normal(81, CustomOptionType.General, TrKey.AirshipEnableWallCheck, true);
         AirshipReactorDuration = CustomOption.Normal(82, CustomOptionType.General, TrKey.AirshipReactorDuration, 60f, 0f, 600f, 1f);
@@ -477,20 +106,24 @@ public static class CustomOptionHolder
         AirshipOneWayLadder = CustomOption.Normal(94, CustomOptionType.General, TrKey.AirshipOneWayLadder, false);
         AirshipReplaceSafeTask = CustomOption.Normal(95, CustomOptionType.General, TrKey.AirshipReplaceSafeTask, false);
         AirshipAdditionalWireTask = CustomOption.Normal(96, CustomOptionType.General, TrKey.AirshipAdditionalWireTask, false);
-        #endregion
 
-        #region MAP OPTIONS
+#endregion
+
+#region MAP OPTIONS
+
         RandomMap = CustomOption.Header(100, CustomOptionType.General, TrKey.RandomMap, false, TrKey.RandomMap);
         RandomMapEnableSkeld = CustomOption.Normal(101, CustomOptionType.General, TrKey.RandomMapEnableSkeld, true, RandomMap);
-        RandomMapEnableMiraHQ = CustomOption.Normal(102, CustomOptionType.General, TrKey.RandomMapEnableMiraHQ, true, RandomMap);
+        RandomMapEnableMiraHq = CustomOption.Normal(102, CustomOptionType.General, TrKey.RandomMapEnableMiraHq, true, RandomMap);
         RandomMapEnablePolus = CustomOption.Normal(103, CustomOptionType.General, TrKey.RandomMapEnablePolus, true, RandomMap);
         RandomMapEnableDleks = CustomOption.Normal(104, CustomOptionType.General, TrKey.RandomMapEnableDleks, true, RandomMap);
         RandomMapEnableAirShip = CustomOption.Normal(105, CustomOptionType.General, TrKey.RandomMapEnableAirShip, true, RandomMap);
         RandomMapEnableFungle = CustomOption.Normal(106, CustomOptionType.General, TrKey.RandomMapEnableFungle, true, RandomMap);
         RandomMapEnableSubmerged = CustomOption.Normal(107, CustomOptionType.General, TrKey.RandomMapEnableSubmerged, true, RandomMap);
-        #endregion
 
-        #region ROLES CREWMATE
+#endregion
+
+#region ROLES CREWMATE
+
         MayorSpawnRate = new(1000, CustomOptionType.Crewmate, RoleType.Mayor, Mayor.NameColor);
         MayorNumVotes = CustomOption.Normal(1001, CustomOptionType.Crewmate, TrKey.MayorNumVotes, 2f, 2f, 10f, 1f, MayorSpawnRate);
         MayorCanSeeVoteColors = CustomOption.Normal(1002, CustomOptionType.Crewmate, TrKey.MayorCanSeeVoteColors, false, MayorSpawnRate);
@@ -557,7 +190,7 @@ public static class CustomOptionHolder
         SnitchIncludeTeamJackal = CustomOption.Normal(1102, CustomOptionType.Crewmate, TrKey.SnitchIncludeTeamJackal, false, SnitchSpawnRate);
         SnitchTeamJackalUseDifferentArrowColor = CustomOption.Normal(1103, CustomOptionType.Crewmate, TrKey.SnitchTeamJackalUseDifferentArrowColor, true, SnitchIncludeTeamJackal);
 
-        LighterSpawnRate = new(1110, CustomOptionType.Crewmate, RoleType.Lighter, Lighter.NameColor, 15);
+        LighterSpawnRate = new(1110, CustomOptionType.Crewmate, RoleType.Lighter, Lighter.NameColor);
         LighterModeLightsOnVision = CustomOption.Normal(1111, CustomOptionType.Crewmate, TrKey.LighterModeLightsOnVision, 2f, 0.25f, 5f, 0.25f, LighterSpawnRate);
         LighterModeLightsOffVision = CustomOption.Normal(1112, CustomOptionType.Crewmate, TrKey.LighterModeLightsOffVision, 0.75f, 0.25f, 5f, 0.25f, LighterSpawnRate);
         LighterCooldown = CustomOption.Normal(1113, CustomOptionType.Crewmate, TrKey.LighterCooldown, 30f, 5f, 120f, 5f, LighterSpawnRate);
@@ -575,7 +208,7 @@ public static class CustomOptionHolder
         SecurityGuardNoMove = CustomOption.Normal(1128, CustomOptionType.Crewmate, TrKey.SecurityGuardNoMove, true, SecurityGuardSpawnRate);
 
         SwapperSpawnRate = new(1130, CustomOptionType.Neutral, TrKey.Swapper, Swapper.NameColor, 1);
-        SwapperIsImpRate = CustomOption.Normal(1131, CustomOptionType.Neutral, TrKey.SwapperIsImpRate, RATES, SwapperSpawnRate);
+        SwapperIsImpRate = CustomOption.Normal(1131, CustomOptionType.Neutral, TrKey.SwapperIsImpRate, Rates, SwapperSpawnRate);
         SwapperNumSwaps = CustomOption.Normal(1132, CustomOptionType.Neutral, TrKey.SwapperNumSwaps, 2f, 1f, 15f, 1f, SwapperSpawnRate);
         SwapperCanCallEmergency = CustomOption.Normal(1133, CustomOptionType.Neutral, TrKey.SwapperCanCallEmergency, false, SwapperSpawnRate);
         SwapperCanOnlySwapOthers = CustomOption.Normal(1134, CustomOptionType.Neutral, TrKey.SwapperCanOnlySwapOthers, false, SwapperSpawnRate);
@@ -586,11 +219,11 @@ public static class CustomOptionHolder
         BaitShowKillFlash = CustomOption.Normal(1143, CustomOptionType.Crewmate, TrKey.BaitShowKillFlash, true, BaitSpawnRate);
 
         ShifterSpawnRate = new(1150, CustomOptionType.Neutral, RoleType.Shifter, Shifter.NameColor, 1);
-        ShifterIsNeutralRate = CustomOption.Normal(1151, CustomOptionType.Neutral, TrKey.ShifterIsNeutralRate, RATES, ShifterSpawnRate);
+        ShifterIsNeutralRate = CustomOption.Normal(1151, CustomOptionType.Neutral, TrKey.ShifterIsNeutralRate, Rates, ShifterSpawnRate);
         ShifterShiftsModifiers = CustomOption.Normal(1152, CustomOptionType.Neutral, TrKey.ShifterShiftsModifiers, false, ShifterSpawnRate);
         ShifterPastShifters = CustomOption.Normal(1153, CustomOptionType.Neutral, TrKey.ShifterPastShifters, false, ShifterSpawnRate);
 
-        SheriffSpawnRate = new(1160, CustomOptionType.Crewmate, RoleType.Sheriff, Sheriff.NameColor, 15);
+        SheriffSpawnRate = new(1160, CustomOptionType.Crewmate, RoleType.Sheriff, Sheriff.NameColor);
         SheriffCooldown = CustomOption.Normal(1161, CustomOptionType.Crewmate, TrKey.SheriffCooldown, 30f, 2.5f, 60f, 2.5f, SheriffSpawnRate, format: "unitSeconds");
         SheriffNumShots = CustomOption.Normal(1162, CustomOptionType.Crewmate, TrKey.SheriffNumShots, 2f, 1f, 15f, 1f, SheriffSpawnRate, format: "unitShots");
         SheriffMisfireKillsTarget = CustomOption.Normal(1163, CustomOptionType.Crewmate, TrKey.SheriffMisfireKillsTarget, false, SheriffSpawnRate);
@@ -613,9 +246,11 @@ public static class CustomOptionHolder
         SuiciderCanFixComm = CustomOption.Normal(1194, CustomOptionType.Crewmate, TrKey.SuiciderCanFixComm, false, SuiciderSpawnRate);
         SuiciderCanKnowImpostorAfterFinishTasks = CustomOption.Normal(1195, CustomOptionType.Crewmate, TrKey.SuiciderCanKnowImpostorAfterFinishTasks, false, SuiciderSpawnRate);
         SuiciderTasks = new((1196, 1197, 1198), CustomOptionType.Crewmate, (3, 2, 3), SuiciderCanKnowImpostorAfterFinishTasks);
-        #endregion
 
-        #region ROLES IMPOSTOR
+#endregion
+
+#region ROLES IMPOSTOR
+
         BountyHunterSpawnRate = new(2000, CustomOptionType.Impostor, RoleType.BountyHunter, BountyHunter.NameColor, 1);
         BountyHunterBountyDuration = CustomOption.Normal(2001, CustomOptionType.Impostor, TrKey.BountyHunterBountyDuration, 60f, 10f, 180f, 10f, BountyHunterSpawnRate);
         BountyHunterReducedCooldown = CustomOption.Normal(20002, CustomOptionType.Impostor, TrKey.BountyHunterReducedCooldown, 2.5f, 2.5f, 30f, 2.5f, BountyHunterSpawnRate);
@@ -637,7 +272,7 @@ public static class CustomOptionHolder
         TricksterLightsOutCooldown = CustomOption.Normal(2022, CustomOptionType.Impostor, TrKey.TricksterLightsOutCooldown, 30f, 5f, 60f, 5f, TricksterSpawnRate);
         TricksterLightsOutDuration = CustomOption.Normal(2023, CustomOptionType.Impostor, TrKey.TricksterLightsOutDuration, 15f, 5f, 60f, 2.5f, TricksterSpawnRate);
 
-        EvilHackerSpawnRate = new CustomRoleOption(2030, CustomOptionType.Impostor, RoleType.EvilHacker, EvilHacker.NameColor, 1);
+        EvilHackerSpawnRate = new(2030, CustomOptionType.Impostor, RoleType.EvilHacker, EvilHacker.NameColor, 1);
         EvilHackerCanHasBetterAdmin = CustomOption.Normal(2031, CustomOptionType.Impostor, TrKey.EvilHackerCanHasBetterAdmin, false, EvilHackerSpawnRate);
         EvilHackerCanMoveEvenIfUsesAdmin = CustomOption.Normal(2032, CustomOptionType.Impostor, TrKey.EvilHackerCanMoveEvenIfUsesAdmin, true, EvilHackerSpawnRate);
         EvilHackerCanInheritAbility = CustomOption.Normal(2033, CustomOptionType.Impostor, TrKey.EvilHackerCanInheritAbility, false, EvilHackerSpawnRate);
@@ -694,9 +329,11 @@ public static class CustomOptionHolder
         VampireKillDelay = CustomOption.Normal(2121, CustomOptionType.Impostor, TrKey.VampireKillDelay, 10f, 1f, 20f, 1f, VampireSpawnRate, format: "unitSeconds");
         VampireCooldown = CustomOption.Normal(2122, CustomOptionType.Impostor, TrKey.VampireCooldown, 30f, 2.5f, 60f, 2.5f, VampireSpawnRate, format: "unitSeconds");
         VampireCanKillNearGarlics = CustomOption.Normal(2123, CustomOptionType.Impostor, TrKey.VampireCanKillNearGarlics, true, VampireSpawnRate);
-        #endregion
 
-        #region ROLES NEUTRAL
+#endregion
+
+#region ROLES NEUTRAL
+
         JesterSpawnRate = new(3000, CustomOptionType.Neutral, RoleType.Jester, Jester.NameColor, 1);
         JesterCanCallEmergency = CustomOption.Normal(3001, CustomOptionType.Neutral, TrKey.JesterCanCallEmergency, true, JesterSpawnRate);
         JesterCanSabotage = CustomOption.Normal(3002, CustomOptionType.Neutral, TrKey.JesterCanSabotage, true, JesterSpawnRate);
@@ -729,20 +366,22 @@ public static class CustomOptionHolder
         JackalCanCreateSidekickFromImpostor = CustomOption.Normal(3043, CustomOptionType.Neutral, TrKey.JackalCanCreateSidekickFromImpostor, false, JackalCanCreateSidekick);
 
         GuesserSpawnRate = new(3050, CustomOptionType.Neutral, TrKey.Guesser, Guesser.NiceGuesser.NameColor, 1);
-        GuesserIsImpGuesserRate = CustomOption.Normal(3051, CustomOptionType.Neutral, TrKey.GuesserIsImpGuesserRate, RATES, GuesserSpawnRate);
-        GuesserSpawnBothRate = CustomOption.Normal(3052, CustomOptionType.Neutral, TrKey.GuesserSpawnBothRate, RATES, GuesserSpawnRate);
+        GuesserIsImpGuesserRate = CustomOption.Normal(3051, CustomOptionType.Neutral, TrKey.GuesserIsImpGuesserRate, Rates, GuesserSpawnRate);
+        GuesserSpawnBothRate = CustomOption.Normal(3052, CustomOptionType.Neutral, TrKey.GuesserSpawnBothRate, Rates, GuesserSpawnRate);
         GuesserNumberOfShots = CustomOption.Normal(3053, CustomOptionType.Neutral, TrKey.GuesserNumberOfShots, 2f, 1f, 15f, 1f, GuesserSpawnRate);
         GuesserOnlyAvailableRoles = CustomOption.Normal(3054, CustomOptionType.Neutral, TrKey.GuesserOnlyAvailableRoles, true, GuesserSpawnRate);
         GuesserHasMultipleShotsPerMeeting = CustomOption.Normal(3055, CustomOptionType.Neutral, TrKey.GuesserHasMultipleShotsPerMeeting, false, GuesserSpawnRate);
         GuesserShowInfoInGhostChat = CustomOption.Normal(3056, CustomOptionType.Neutral, TrKey.GuesserToGhostChat, true, GuesserSpawnRate);
         GuesserKillsThroughShield = CustomOption.Normal(3057, CustomOptionType.Neutral, TrKey.GuesserPierceShield, true, GuesserSpawnRate);
         GuesserEvilCanKillSpy = CustomOption.Normal(3058, CustomOptionType.Neutral, TrKey.GuesserEvilCanKillSpy, true, GuesserSpawnRate);
-        #endregion
 
-        #region MODIFIERS
+#endregion
+
+#region MODIFIERS
+
         MadmateSpawnRate = new(4000, CustomOptionType.Modifier, ModifierType.Madmate, Madmate.NameColor);
         MadmateType = CustomOption.Normal(4001, CustomOptionType.Modifier, TrKey.MadmateType, [Tr.Get(TrKey.MadmateDefault), Tr.Get(TrKey.MadmateWithRole), Tr.Get(TrKey.MadmateRandom)], MadmateSpawnRate);
-        MadmateFixedRole = new CustomRoleSelectionOption(4002, CustomOptionType.Modifier, TrKey.MadmateFixedRole, Madmate.ValidRoles, MadmateType);
+        MadmateFixedRole = new(4002, CustomOptionType.Modifier, TrKey.MadmateFixedRole, Madmate.ValidRoles, MadmateType);
         MadmateAbility = CustomOption.Normal(4003, CustomOptionType.Modifier, TrKey.MadmateAbility, [Tr.Get(TrKey.MadmateNone), Tr.Get(TrKey.MadmateFanatic)], MadmateSpawnRate);
         MadmateTasks = new((4004, 4005, 4006), CustomOptionType.Modifier, (1, 1, 3), MadmateAbility);
         MadmateCanDieToSheriff = CustomOption.Normal(4007, CustomOptionType.Modifier, TrKey.MadmateCanDieToSheriff, false, MadmateSpawnRate);
@@ -759,7 +398,7 @@ public static class CustomOptionHolder
         LastImpostorNumShots = CustomOption.Normal(4014, CustomOptionType.Modifier, TrKey.LastImpostorNumShots, 1f, 1f, 15f, 1f, LastImpostorEnable);
 
         LoversSpawnRate = new(4020, CustomOptionType.Modifier, RoleType.Lovers, Lovers.Color, 1);
-        LoversImpLoverRate = CustomOption.Normal(4021, CustomOptionType.Modifier, TrKey.LoversImpLoverRate, RATES, LoversSpawnRate);
+        LoversImpLoverRate = CustomOption.Normal(4021, CustomOptionType.Modifier, TrKey.LoversImpLoverRate, Rates, LoversSpawnRate);
         LoversNumCouples = CustomOption.Normal(4022, CustomOptionType.Modifier, TrKey.LoversNumCouples, 1f, 1f, 7f, 1f, LoversSpawnRate, format: "unitCouples");
         LoversBothDie = CustomOption.Normal(4023, CustomOptionType.Modifier, TrKey.LoversBothDie, true, LoversSpawnRate);
         LoversCanHaveAnotherRole = CustomOption.Normal(4024, CustomOptionType.Modifier, TrKey.LoversCanHaveAnotherRole, true, LoversSpawnRate);
@@ -767,14 +406,420 @@ public static class CustomOptionHolder
         LoversTasksCount = CustomOption.Normal(4026, CustomOptionType.Modifier, TrKey.LoversTasksCount, false, LoversSpawnRate);
         LoversEnableChat = CustomOption.Normal(4027, CustomOptionType.Modifier, TrKey.LoversEnableChat, true, LoversSpawnRate);
 
-        MiniSpawnRate = new(180, CustomOptionType.Modifier, ModifierType.Mini, Mini.NameColor, 15);
+        MiniSpawnRate = new(180, CustomOptionType.Modifier, ModifierType.Mini, Mini.NameColor);
         MiniGrowingUpDuration = CustomOption.Normal(181, CustomOptionType.Modifier, TrKey.MiniGrowingUpDuration, 400f, 100f, 1500f, 100f, MiniSpawnRate, format: "unitSeconds");
 
-        AntiTeleportSpawnRate = new(4030, CustomOptionType.Modifier, ModifierType.AntiTeleport, AntiTeleport.NameColor, 15);
+        AntiTeleportSpawnRate = new(4030, CustomOptionType.Modifier, ModifierType.AntiTeleport, AntiTeleport.NameColor);
 
-        #endregion
+#endregion
 
         BlockedRolePairings.Add((byte)RoleType.Vulture, [(byte)RoleType.Cleaner]);
         BlockedRolePairings.Add((byte)RoleType.Cleaner, [(byte)RoleType.Vulture]);
     }
+
+#region MOD OPTIONS
+
+    internal static CustomOption PresetSelection;
+    internal static CustomOption ActivateRoles;
+    internal static CustomOption RandomNumberAlgorithm;
+    internal static CustomOption EnableRandomRandomNumberAlgorithm;
+    internal static CustomOption EnableRandomRandomNumberAlgorithmDotnet;
+    internal static CustomOption EnableRandomRandomNumberAlgorithmMT;
+    internal static CustomOption EnableRandomRandomNumberAlgorithmXorshiro256Pp;
+    internal static CustomOption EnableRandomRandomNumberAlgorithmXorshiro256Ss;
+    internal static CustomOption EnableRandomRandomNumberAlgorithmPcg64;
+
+#endregion
+
+#region GENERAL OPTIONS
+
+    internal static CustomOption CrewmateRolesCountMin;
+    internal static CustomOption CrewmateRolesCountMax;
+    internal static CustomOption ImpostorRolesCountMin;
+    internal static CustomOption ImpostorRolesCountMax;
+    internal static CustomOption NeutralRolesCountMin;
+    internal static CustomOption NeutralRolesCountMax;
+    internal static CustomOption ModifiersCountMin;
+    internal static CustomOption ModifiersCountMax;
+
+#endregion
+
+#region GAME OPTIONS
+
+    internal static CustomOption GameOptions;
+    internal static CustomOption MaxNumberOfMeetings;
+    internal static CustomOption BlockSkippingInEmergencyMeetings;
+    internal static CustomOption NoVoteIsSelfVote;
+    internal static CustomOption HidePlayerNames;
+    internal static CustomOption AllowParallelMedBayScans;
+    internal static CustomOption HideOutOfSightNametags;
+    internal static CustomOption RefundVotesOnDeath;
+    internal static CustomOption DelayBeforeMeeting;
+    internal static CustomOption DisableVentAnimation;
+    internal static CustomOption StopCooldownOnFixingElecSabotage;
+    internal static CustomOption EnableHawkMode;
+
+    internal static CustomOption CanWinByTaskWithoutLivingPlayer;
+
+    // internal static CustomOption DeadPlayerCanSeeCooldown;
+    internal static CustomOption ImpostorCanIgnoreCommSabotage;
+    // internal static CustomOption BlockSabotageFromDeadImpostors;
+    // internal static CustomOption ShieldFirstKill;
+
+    internal static CustomOption AdditionalEmergencyCooldown;
+    internal static CustomOption AdditionalEmergencyCooldownTime;
+
+    internal static CustomOption RestrictDevices;
+    internal static CustomOption RestrictAdmin;
+    internal static CustomOption RestrictAdminTime;
+    internal static CustomOption RestrictAdminText;
+    internal static CustomOption RestrictCameras;
+    internal static CustomOption RestrictCamerasTime;
+    internal static CustomOption RestrictCamerasText;
+    internal static CustomOption RestrictVitals;
+    internal static CustomOption RestrictVitalsTime;
+    internal static CustomOption RestrictVitalsText;
+
+#endregion
+
+#region DISCORD OPTIONS
+
+    internal static CustomOption EnableDiscordAutoMute;
+    internal static CustomOption EnableDiscordEmbed;
+
+#endregion
+
+#region POLUS OPTIONS
+
+    internal static CustomOption PolusAdditionalVents;
+    internal static CustomOption PolusSpecimenVital;
+    internal static CustomOption PolusRandomSpawn;
+
+#endregion
+
+#region AIRSHIP OPTIONS
+
+    internal static CustomOption AirshipOptimize;
+    internal static CustomOption AirshipEnableWallCheck;
+    internal static CustomOption AirshipReactorDuration;
+    internal static CustomOption AirshipRandomSpawn;
+    internal static CustomOption AirshipAdditionalSpawn;
+    internal static CustomOption AirshipSynchronizedSpawning;
+    internal static CustomOption AirshipSetOriginalCooldown;
+    internal static CustomOption AirshipInitialDoorCooldown;
+    internal static CustomOption AirshipInitialSabotageCooldown;
+    internal static CustomOption AirshipOldAdmin;
+    internal static CustomOption AirshipRestrictedAdmin;
+    internal static CustomOption AirshipDisableGapSwitchBoard;
+    internal static CustomOption AirshipDisableMovingPlatform;
+    internal static CustomOption AirshipAdditionalLadder;
+    internal static CustomOption AirshipOneWayLadder;
+    internal static CustomOption AirshipReplaceSafeTask;
+    internal static CustomOption AirshipAdditionalWireTask;
+
+#endregion
+
+#region MAP OPTIONS
+
+    internal static CustomOption RandomMap;
+    internal static CustomOption RandomMapEnableSkeld;
+    internal static CustomOption RandomMapEnableMiraHq;
+    internal static CustomOption RandomMapEnablePolus;
+    internal static CustomOption RandomMapEnableDleks;
+    internal static CustomOption RandomMapEnableAirShip;
+    internal static CustomOption RandomMapEnableFungle;
+    internal static CustomOption RandomMapEnableSubmerged;
+
+#endregion
+
+#region ROLES CREWMATE
+
+    internal static CustomRoleOption MayorSpawnRate;
+    internal static CustomOption MayorNumVotes;
+    internal static CustomOption MayorCanSeeVoteColors;
+    internal static CustomOption MayorTasksNeededToSeeVoteColors;
+    internal static CustomOption MayorMeetingButton;
+    internal static CustomOption MayorMaxRemoteMeetings;
+
+    internal static CustomRoleOption EngineerSpawnRate;
+    internal static CustomOption EngineerNumberOfFixes;
+    internal static CustomOption EngineerHighlightForImpostors;
+    internal static CustomOption EngineerHighlightForTeamJackal;
+
+    internal static CustomRoleOption SpySpawnRate;
+    internal static CustomOption SpyCanDieToSheriff;
+    internal static CustomOption SpyImpostorsCanKillAnyone;
+    internal static CustomOption SpyCanEnterVents;
+    internal static CustomOption SpyHasImpostorVision;
+
+    internal static CustomRoleOption MedicSpawnRate;
+    internal static CustomOption MedicShowShielded;
+    internal static CustomOption MedicShowAttemptToShielded;
+    internal static CustomOption MedicSetShieldAfterMeeting;
+    internal static CustomOption MedicShowAttemptToMedic;
+
+    internal static CustomRoleOption SeerSpawnRate;
+    internal static CustomOption SeerMode;
+    internal static CustomOption SeerSoulDuration;
+    internal static CustomOption SeerLimitSoulDuration;
+
+    internal static CustomRoleOption TimeMasterSpawnRate;
+    internal static CustomOption TimeMasterCooldown;
+    internal static CustomOption TimeMasterRewindTime;
+    internal static CustomOption TimeMasterShieldDuration;
+
+    internal static CustomRoleOption DetectiveSpawnRate;
+    internal static CustomOption DetectiveAnonymousFootprints;
+    internal static CustomOption DetectiveFootprintInterval;
+    internal static CustomOption DetectiveFootprintDuration;
+    internal static CustomOption DetectiveReportNameDuration;
+    internal static CustomOption DetectiveReportColorDuration;
+
+    internal static CustomRoleOption MediumSpawnRate;
+    internal static CustomOption MediumCooldown;
+    internal static CustomOption MediumDuration;
+    internal static CustomOption MediumOneTimeUse;
+
+    internal static CustomRoleOption HackerSpawnRate;
+    internal static CustomOption HackerCooldown;
+    internal static CustomOption HackerHackingDuration;
+    internal static CustomOption HackerOnlyColorType;
+    internal static CustomOption HackerToolsNumber;
+    internal static CustomOption HackerRechargeTasksNumber;
+    internal static CustomOption HackerNoMove;
+
+    internal static CustomRoleOption TrackerSpawnRate;
+    internal static CustomOption TrackerUpdateInterval;
+    internal static CustomOption TrackerResetTargetAfterMeeting;
+    internal static CustomOption TrackerCanTrackCorpses;
+    internal static CustomOption TrackerCorpsesTrackingCooldown;
+    internal static CustomOption TrackerCorpsesTrackingDuration;
+
+    internal static CustomRoleOption SnitchSpawnRate;
+    internal static CustomOption SnitchLeftTasksForReveal;
+    internal static CustomOption SnitchIncludeTeamJackal;
+    internal static CustomOption SnitchTeamJackalUseDifferentArrowColor;
+
+    internal static CustomRoleOption LighterSpawnRate;
+    internal static CustomOption LighterModeLightsOnVision;
+    internal static CustomOption LighterModeLightsOffVision;
+    internal static CustomOption LighterCooldown;
+    internal static CustomOption LighterDuration;
+    internal static CustomOption LighterCanSeeNinja;
+
+    internal static CustomRoleOption SecurityGuardSpawnRate;
+    internal static CustomOption SecurityGuardCooldown;
+    internal static CustomOption SecurityGuardTotalScrews;
+    internal static CustomOption SecurityGuardCamPrice;
+    internal static CustomOption SecurityGuardVentPrice;
+    internal static CustomOption SecurityGuardCamDuration;
+    internal static CustomOption SecurityGuardCamMaxCharges;
+    internal static CustomOption SecurityGuardCamRechargeTasksNumber;
+    internal static CustomOption SecurityGuardNoMove;
+
+    internal static CustomRoleOption SwapperSpawnRate;
+    internal static CustomOption SwapperIsImpRate;
+    internal static CustomOption SwapperCanCallEmergency;
+    internal static CustomOption SwapperCanOnlySwapOthers;
+    internal static CustomOption SwapperNumSwaps;
+
+    internal static CustomRoleOption BaitSpawnRate;
+    internal static CustomOption BaitHighlightAllVents;
+    internal static CustomOption BaitReportDelay;
+    internal static CustomOption BaitShowKillFlash;
+
+    internal static CustomRoleOption ShifterSpawnRate;
+    internal static CustomOption ShifterIsNeutralRate;
+    internal static CustomOption ShifterShiftsModifiers;
+    internal static CustomOption ShifterPastShifters;
+
+    internal static CustomRoleOption SheriffSpawnRate;
+    internal static CustomOption SheriffCooldown;
+    internal static CustomOption SheriffNumShots;
+    internal static CustomOption SheriffCanKillNeutrals;
+    internal static CustomOption SheriffMisfireKillsTarget;
+    internal static CustomOption SheriffCanKillNoDeadBody;
+
+    internal static CustomRoleOption MadmateRoleSpawnRate;
+    internal static CustomOption MadmateRoleCanDieToSheriff;
+    internal static CustomOption MadmateRoleCanEnterVents;
+    internal static CustomOption MadmateRoleHasImpostorVision;
+    internal static CustomOption MadmateRoleCanSabotage;
+    internal static CustomOption MadmateRoleCanFixComm;
+    internal static CustomOption MadmateRoleCanKnowImpostorAfterFinishTasks;
+    internal static CustomTasksOption MadmateRoleTasks;
+
+    internal static CustomRoleOption SuiciderSpawnRate;
+    internal static CustomOption SuiciderCanDieToSheriff;
+    internal static CustomOption SuiciderCanEnterVents;
+    internal static CustomOption SuiciderHasImpostorVision;
+    internal static CustomOption SuiciderCanFixComm;
+    internal static CustomOption SuiciderCanKnowImpostorAfterFinishTasks;
+    internal static CustomTasksOption SuiciderTasks;
+
+#endregion
+
+#region ROLES IMPOSTOR
+
+    internal static CustomRoleOption BountyHunterSpawnRate;
+    internal static CustomOption BountyHunterBountyDuration;
+    internal static CustomOption BountyHunterReducedCooldown;
+    internal static CustomOption BountyHunterPunishmentTime;
+    internal static CustomOption BountyHunterShowArrow;
+    internal static CustomOption BountyHunterArrowUpdateInterval;
+
+    internal static CustomRoleOption MafiaSpawnRate;
+    internal static CustomOption MafiosoCanSabotage;
+    internal static CustomOption MafiosoCanRepair;
+    internal static CustomOption MafiosoCanVent;
+    internal static CustomOption JanitorCooldown;
+    internal static CustomOption JanitorCanSabotage;
+    internal static CustomOption JanitorCanRepair;
+    internal static CustomOption JanitorCanVent;
+
+    internal static CustomRoleOption TricksterSpawnRate;
+    internal static CustomOption TricksterPlaceBoxCooldown;
+    internal static CustomOption TricksterLightsOutCooldown;
+    internal static CustomOption TricksterLightsOutDuration;
+
+    internal static CustomRoleOption EvilHackerSpawnRate;
+    internal static CustomOption EvilHackerCanHasBetterAdmin;
+    internal static CustomOption EvilHackerCanCreateMadmate;
+    internal static CustomOption EvilHackerCanCreateMadmateFromJackal;
+    internal static CustomOption EvilHackerCanMoveEvenIfUsesAdmin;
+    internal static CustomOption EvilHackerCanInheritAbility;
+    internal static CustomOption EvilHackerCanSeeDoorStatus;
+    internal static CustomOption CreatedMadmateCanDieToSheriff;
+    internal static CustomOption CreatedMadmateCanEnterVents;
+    internal static CustomOption CreatedMadmateHasImpostorVision;
+    internal static CustomOption CreatedMadmateCanSabotage;
+    internal static CustomOption CreatedMadmateCanFixComm;
+    internal static CustomOption CreatedMadmateAbility;
+    internal static CustomOption CreatedMadmateNumTasks;
+    internal static CustomOption CreatedMadmateExileCrewmate;
+
+    internal static CustomRoleOption EvilTrackerSpawnRate;
+    internal static CustomOption EvilTrackerCooldown;
+    internal static CustomOption EvilTrackerResetTargetAfterMeeting;
+    internal static CustomOption EvilTrackerCanSeeDeathFlash;
+    internal static CustomOption EvilTrackerCanSeeTargetTask;
+    internal static CustomOption EvilTrackerCanSeeTargetPosition;
+    internal static CustomOption EvilTrackerCanSetTargetOnMeeting;
+
+    internal static CustomRoleOption EraserSpawnRate;
+    internal static CustomOption EraserCooldown;
+    internal static CustomOption EraserCooldownIncrease;
+    internal static CustomOption EraserCanEraseAnyone;
+
+    internal static CustomRoleOption MorphingSpawnRate;
+    internal static CustomOption MorphingCooldown;
+    internal static CustomOption MorphingDuration;
+
+    internal static CustomRoleOption CamouflagerSpawnRate;
+    internal static CustomOption CamouflagerCooldown;
+    internal static CustomOption CamouflagerDuration;
+    internal static CustomOption CamouflagerRandomColors;
+
+    internal static CustomRoleOption CleanerSpawnRate;
+    internal static CustomOption CleanerCooldown;
+
+    internal static CustomRoleOption WarlockSpawnRate;
+    internal static CustomOption WarlockCooldown;
+    internal static CustomOption WarlockRootTime;
+
+    internal static CustomRoleOption WitchSpawnRate;
+    internal static CustomOption WitchCooldown;
+    internal static CustomOption WitchAdditionalCooldown;
+    internal static CustomOption WitchCanSpellAnyone;
+    internal static CustomOption WitchSpellCastingDuration;
+    internal static CustomOption WitchTriggerBothCooldowns;
+    internal static CustomOption WitchVoteSavesTargets;
+
+    internal static CustomRoleOption VampireSpawnRate;
+    internal static CustomOption VampireKillDelay;
+    internal static CustomOption VampireCooldown;
+    internal static CustomOption VampireCanKillNearGarlics;
+
+#endregion
+
+#region ROLES NEUTRAL
+
+    internal static CustomRoleOption JesterSpawnRate;
+    internal static CustomOption JesterCanCallEmergency;
+    internal static CustomOption JesterCanSabotage;
+    internal static CustomOption JesterHasImpostorVision;
+
+    internal static CustomRoleOption ArsonistSpawnRate;
+    internal static CustomOption ArsonistCooldown;
+    internal static CustomOption ArsonistDuration;
+    internal static CustomOption ArsonistCanBeLovers;
+
+    internal static CustomRoleOption VultureSpawnRate;
+    internal static CustomOption VultureCooldown;
+    internal static CustomOption VultureNumberToWin;
+    internal static CustomOption VultureCanUseVents;
+    internal static CustomOption VultureShowArrows;
+
+    internal static CustomRoleOption JackalSpawnRate;
+    internal static CustomOption JackalKillCooldown;
+    internal static CustomOption JackalCreateSidekickCooldown;
+    internal static CustomOption JackalCanSabotageLights;
+    internal static CustomOption JackalCanUseVents;
+    internal static CustomOption JackalCanCreateSidekick;
+    internal static CustomOption JackalHasImpostorVision;
+    internal static CustomOption SidekickPromotesToJackal;
+    internal static CustomOption SidekickCanKill;
+    internal static CustomOption SidekickCanUseVents;
+    internal static CustomOption SidekickCanSabotageLights;
+    internal static CustomOption SidekickHasImpostorVision;
+    internal static CustomOption JackalPromotedFromSidekickCanCreateSidekick;
+    internal static CustomOption JackalCanCreateSidekickFromImpostor;
+
+    internal static CustomRoleOption GuesserSpawnRate;
+    internal static CustomOption GuesserIsImpGuesserRate;
+    internal static CustomOption GuesserNumberOfShots;
+    internal static CustomOption GuesserOnlyAvailableRoles;
+    internal static CustomOption GuesserHasMultipleShotsPerMeeting;
+    internal static CustomOption GuesserShowInfoInGhostChat;
+    internal static CustomOption GuesserKillsThroughShield;
+    internal static CustomOption GuesserEvilCanKillSpy;
+    internal static CustomOption GuesserSpawnBothRate;
+
+#endregion
+
+#region MODIFIERS
+
+    internal static CustomModifierOption MadmateSpawnRate;
+    internal static CustomOption MadmateCanDieToSheriff;
+    internal static CustomOption MadmateCanEnterVents;
+    internal static CustomOption MadmateHasImpostorVision;
+    internal static CustomOption MadmateCanSabotage;
+    internal static CustomOption MadmateCanFixComm;
+    internal static CustomOption MadmateType;
+    internal static CustomRoleSelectionOption MadmateFixedRole;
+    internal static CustomOption MadmateAbility;
+    internal static CustomTasksOption MadmateTasks;
+    internal static CustomOption MadmateExilePlayer;
+
+    internal static CustomOption LastImpostorEnable;
+    internal static CustomOption LastImpostorNumKills;
+    internal static CustomOption LastImpostorFunctions;
+    internal static CustomOption LastImpostorResults;
+    internal static CustomOption LastImpostorNumShots;
+
+    internal static CustomRoleOption LoversSpawnRate;
+    internal static CustomOption LoversNumCouples;
+    internal static CustomOption LoversImpLoverRate;
+    internal static CustomOption LoversBothDie;
+    internal static CustomOption LoversCanHaveAnotherRole;
+    internal static CustomOption LoversSeparateTeam;
+    internal static CustomOption LoversTasksCount;
+    internal static CustomOption LoversEnableChat;
+
+    internal static CustomModifierOption MiniSpawnRate;
+    internal static CustomOption MiniGrowingUpDuration;
+
+    internal static CustomModifierOption AntiTeleportSpawnRate;
+
+#endregion
 }

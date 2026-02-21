@@ -1,15 +1,15 @@
 namespace RebuildUs.Modules.EndGame;
 
-public class AdditionalTempData
+internal abstract class AdditionalTempData
 {
-    public static WinCondition WinCondition = WinCondition.Default;
-    public static List<WinCondition> AdditionalWinConditions = [];
-    public static List<PlayerRoleInfo> PlayerRoles = [];
-    public static bool IsGM = false;
-    public static GameOverReason GameOverReason;
-    public static float Timer = 0;
+    internal static WinCondition WinCondition = WinCondition.Default;
+    internal static readonly List<WinCondition> AdditionalWinConditions = [];
+    internal static readonly List<PlayerRoleInfo> PlayerRoles = [];
+    internal static readonly bool IsGm = false;
+    internal static GameOverReason GameOverReason;
+    internal static float Timer;
 
-    public static void Clear()
+    internal static void Clear()
     {
         PlayerRoles.Clear();
         AdditionalWinConditions.Clear();

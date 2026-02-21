@@ -1,15 +1,13 @@
 namespace RebuildUs.Patches;
 
-public static class MedScanMinigamePatch
+internal static class MedScanMinigamePatch
 {
     [HarmonyPrefix]
     [HarmonyPatch(typeof(MedScanMinigame), nameof(MedScanMinigame.FixedUpdate))]
-    public static void Prefix(MedScanMinigame __instance)
+    internal static void Prefix(MedScanMinigame __instance)
     {
-        if (MapSettings.AllowParallelMedBayScans)
-        {
-            __instance.medscan.CurrentUser = PlayerControl.LocalPlayer.PlayerId;
-            __instance.medscan.UsersList.Clear();
-        }
+        if (!MapSettings.AllowParallelMedBayScans) return;
+        __instance.medscan.CurrentUser = PlayerControl.LocalPlayer.PlayerId;
+        __instance.medscan.UsersList.Clear();
     }
 }

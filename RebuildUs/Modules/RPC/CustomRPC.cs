@@ -1,6 +1,6 @@
 namespace RebuildUs.Modules.RPC;
 
-public enum CustomRPC : byte
+internal enum CustomRPC : byte
 {
     // Systems
     ResetVariables = 70,
@@ -65,26 +65,26 @@ public enum CustomRPC : byte
     SetFutureSpelled,
     WitchSpellCast,
     PlaceGarlic,
-    SUBMERGED_SubmarineOxygenSystem = 130,
+    SubmergedSubmarineOxygenSystem = 130,
     ImpostorPromotesToLastImpostor,
     ShifterShift,
     SetFutureShifted,
     SetShifterType,
     FortuneTellerUsedDivine,
-    SUBMERGED_SubmarineElevatorSystemHallwayLeft = 136,
-    SUBMERGED_SubmarineElevatorSystemHallwayRight = 137,
-    SUBMERGED_SubmarineElevatorSystemLobbyLeft = 138,
-    SUBMERGED_SubmarineElevatorSystemLobbyRight = 139,
-    SUBMERGED_SubmarineElevatorSystemService = 140,
-    SUBMERGED_SubmarinePlayerFloorSystem = 141,
-    SUBMERGED_SubmarineSecuritySabotageSystem = 142,
-    SUBMERGED_SubmarineSpawnInSystem = 143,
-    SUBMERGED_SubmarineBoxCatSystem = 144,
+    SubmergedSubmarineElevatorSystemHallwayLeft = 136,
+    SubmergedSubmarineElevatorSystemHallwayRight = 137,
+    SubmergedSubmarineElevatorSystemLobbyLeft = 138,
+    SubmergedSubmarineElevatorSystemLobbyRight = 139,
+    SubmergedSubmarineElevatorSystemService = 140,
+    SubmergedSubmarinePlayerFloorSystem = 141,
+    SubmergedSubmarineSecuritySabotageSystem = 142,
+    SubmergedSubmarineSpawnInSystem = 143,
+    SubmergedSubmarineBoxCatSystem = 144,
     SheriffKill = 145,
     SheriffKillRequest = 146,
 
-    SUBMERGED_SetCustomData = 210,
-    SUBMERGED_RequestChangeFloor = 211,
-    SUBMERGED_EngineVent = 213,
-    SUBMERGED_OxygenDeath = 214,
+    SubmergedSetCustomData = 210,
+    SubmergedRequestChangeFloor = 211,
+    SubmergedEngineVent = 213,
+    SubmergedOxygenDeath = 214,
 }

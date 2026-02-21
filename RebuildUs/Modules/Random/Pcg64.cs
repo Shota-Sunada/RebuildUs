@@ -1,18 +1,16 @@
 namespace RebuildUs.Modules.Random;
 
-public class Pcg64 : System.Random
+internal sealed class Pcg64 : System.Random
 {
-    private ulong _state;
     private ulong _inc;
+    private ulong _state;
 
-    public Pcg64(int seed)
+    internal Pcg64(int seed)
     {
         Seed(seed);
     }
 
-    public Pcg64() : this((int)DateTime.Now.Ticks)
-    {
-    }
+    internal Pcg64() : this((int)DateTime.Now.Ticks) { }
 
     private void Seed(int seed)
     {
@@ -23,17 +21,17 @@ public class Pcg64 : System.Random
         NextUInt64();
     }
 
-    public ulong NextUInt64()
+    private ulong NextUInt64()
     {
         ulong oldstate = _state;
-        _state = oldstate * 6364136223846793005UL + _inc;
+        _state = (oldstate * 6364136223846793005UL) + _inc;
 
         // RXS-M-XS output function
         ulong word = ((oldstate >> (int)((oldstate >> 59) + 5)) ^ oldstate) * 12605985483714317049UL;
         return (word >> 43) ^ word;
     }
 
-    public uint NextUInt32()
+    internal uint NextUInt32()
     {
         return (uint)(NextUInt64() >> 32);
     }

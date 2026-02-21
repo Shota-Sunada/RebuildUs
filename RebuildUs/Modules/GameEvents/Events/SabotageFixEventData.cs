@@ -1,7 +1,7 @@
 namespace RebuildUs.Modules.GameEvents.Events;
 
-public class SabotageFixEventData : GameEventData
+internal abstract class SabotageFixEventData : GameEventData
 {
-    public PlayerControl Player { get; set; }
-    public string SabotageType { get; set; }
+    internal PlayerControl Player { get; set; }
+    internal string SabotageType { get; set; }
 }

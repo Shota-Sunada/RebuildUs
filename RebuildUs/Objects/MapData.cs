@@ -3,33 +3,33 @@ using UnityEngine.ResourceManagement.AsyncOperations;
 
 namespace RebuildUs.Objects;
 
-public class MapData
+internal abstract class MapData
 {
-    public static ShipStatus AirShip;
-    public static ShipStatus SkeldShip;
-    public static ShipStatus MiraHQ;
-    public static ShipStatus PolusShip;
+    private static ShipStatus _airShip;
+    private static ShipStatus _skeldShip;
+    private static ShipStatus _miraHq;
+    internal static ShipStatus PolusShip;
 
-    public static void LoadAssets(AmongUsClient __instance)
+    internal static void LoadAssets(AmongUsClient __instance)
     {
         AssetReference assetReference;
         AsyncOperationHandle<GameObject> asset;
         // Skeld
-        if (!SkeldShip)
+        if (!_skeldShip)
         {
             assetReference = __instance.ShipPrefabs[0];
             asset = assetReference.LoadAsset<GameObject>();
             asset.WaitForCompletion();
-            SkeldShip = assetReference.Asset.Cast<GameObject>().GetComponent<ShipStatus>();
+            _skeldShip = assetReference.Asset.Cast<GameObject>().GetComponent<ShipStatus>();
         }
 
         // Mira
-        if (!MiraHQ)
+        if (!_miraHq)
         {
             assetReference = __instance.ShipPrefabs[1];
             asset = assetReference.LoadAsset<GameObject>();
             asset.WaitForCompletion();
-            MiraHQ = assetReference.Asset.Cast<GameObject>().GetComponent<ShipStatus>();
+            _miraHq = assetReference.Asset.Cast<GameObject>().GetComponent<ShipStatus>();
         }
 
         // Polus
@@ -42,12 +42,12 @@ public class MapData
         }
 
         // AirShip
-        if (!AirShip)
+        if (!_airShip)
         {
             assetReference = __instance.ShipPrefabs[4];
             asset = assetReference.LoadAsset<GameObject>();
             asset.WaitForCompletion();
-            AirShip = assetReference.Asset.Cast<GameObject>().GetComponent<ShipStatus>();
+            _airShip = assetReference.Asset.Cast<GameObject>().GetComponent<ShipStatus>();
         }
     }
 }

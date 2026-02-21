@@ -1,28 +1,28 @@
 namespace RebuildUs.Modules.EndGame;
 
-public class PlayerStatistics
+internal sealed class PlayerStatistics
 {
-    public int TeamImpostorsAlive { get; set; }
-    public int TeamJackalAlive { get; set; }
-    public int TeamLoversAlive { get; set; }
-    public int CouplesAlive { get; set; }
-    public int TeamCrew { get; set; }
-    public int NeutralAlive { get; set; }
-    public int TotalAlive { get; set; }
-    public int TeamImpostorLovers { get; set; }
-    public int TeamJackalLovers { get; set; }
-
-    public PlayerStatistics()
+    internal PlayerStatistics()
     {
         GetPlayerCounts();
     }
 
+    internal int TeamImpostorsAlive { get; set; }
+    internal int TeamJackalAlive { get; set; }
+    internal int TeamLoversAlive { get; set; }
+    internal int CouplesAlive { get; set; }
+    internal int TeamCrew { get; set; }
+    internal int NeutralAlive { get; set; }
+    internal int TotalAlive { get; set; }
+    internal int TeamImpostorLovers { get; set; }
+    internal int TeamJackalLovers { get; set; }
+
     private bool IsLover(NetworkedPlayerInfo p)
     {
-        foreach (var couple in Lovers.Couples)
-        {
-            if (p.PlayerId == couple.Lover1.PlayerId || p.PlayerId == couple.Lover2.PlayerId) return true;
-        }
+        foreach (Couple couple in Lovers.Couples)
+            if (p.PlayerId == couple.Lover1.PlayerId || p.PlayerId == couple.Lover2.PlayerId)
+                return true;
+
         return false;
     }
 
@@ -39,62 +39,48 @@ public class PlayerStatistics
         int impLovers = 0;
         int jackalLovers = 0;
 
-        var loversId = new HashSet<byte>();
-        var couples = Lovers.Couples;
-        for (int i = 0; i < couples.Count; i++)
+        HashSet<byte> loversId = new();
+        List<Couple> couples = Lovers.Couples;
+        foreach (Couple couple in couples)
         {
-            var couple = couples[i];
             if (couple == null) continue;
             loversId.Add(couple.Lover1.PlayerId);
             loversId.Add(couple.Lover2.PlayerId);
             if (couple.Alive) numCouplesAlive++;
         }
 
-        foreach (var playerInfo in GameData.Instance.AllPlayers.GetFastEnumerator())
+        foreach (NetworkedPlayerInfo playerInfo in GameData.Instance.AllPlayers.GetFastEnumerator())
         {
             if (playerInfo == null) continue;
-            var obj = playerInfo.Object;
+            PlayerControl obj = playerInfo.Object;
 
-            if (!playerInfo.Disconnected)
+            if (playerInfo.Disconnected) continue;
+            if (obj != null && obj.IsTeamCrewmate()) numCrewmate++;
+            if (playerInfo.IsDead || (obj != null && obj.IsGm())) continue;
+            numTotalAlive++;
+
+            bool lover = loversId.Contains(playerInfo.PlayerId);
+            if (lover) numLoversAlive++;
+
+            if (playerInfo.Role.IsImpostor)
             {
-                if (obj != null && obj.IsTeamCrewmate()) numCrewmate++;
-                if (!playerInfo.IsDead && (obj == null || !obj.IsGM()))
-                {
-                    numTotalAlive++;
-
-                    bool lover = loversId.Contains(playerInfo.PlayerId);
-                    if (lover) numLoversAlive++;
-
-                    if (playerInfo.Role.IsImpostor)
-                    {
-                        numImpostorsAlive++;
-                        if (lover) impLovers++;
-                    }
-                    if (obj != null)
-                    {
-                        if (Jackal.Exists && obj.IsRole(RoleType.Jackal))
-                        {
-                            numJackalAlive++;
-                            if (lover) jackalLovers++;
-                        }
-                        else if (Sidekick.Exists && obj.IsRole(RoleType.Sidekick))
-                        {
-                            numJackalAlive++;
-                            if (lover) jackalLovers++;
-                        }
-
-                        if (obj.IsNeutral()) numNeutralAlive++;
-                    }
-                }
+                numImpostorsAlive++;
+                if (lover) impLovers++;
             }
+
+            if (obj == null) continue;
+            if ((Jackal.Exists && obj.IsRole(RoleType.Jackal)) || (Sidekick.Exists && obj.IsRole(RoleType.Sidekick)))
+            {
+                numJackalAlive++;
+                if (lover) jackalLovers++;
+            }
+
+            if (obj.IsNeutral()) numNeutralAlive++;
         }
 
         // In the special case of Mafia being enabled, but only the janitor's left alive,
         // count it as zero impostors alive bc they can't actually do anything.
-        if (Mafia.IsGodfatherDead && Mafia.IsMafiosoDead && !Mafia.IsJanitorDead)
-        {
-            numImpostorsAlive = 0;
-        }
+        if (Mafia.IsGodfatherDead && Mafia.IsMafiosoDead && !Mafia.IsJanitorDead) numImpostorsAlive = 0;
 
         TeamCrew = numCrewmate;
         TeamJackalAlive = numJackalAlive;

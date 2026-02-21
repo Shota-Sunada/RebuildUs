@@ -1,25 +1,22 @@
 namespace RebuildUs.Modules;
 
-public static class ShortcutCommands
+internal static class ShortcutCommands
 {
-    public static void HostCommands()
+    internal static void HostCommands()
     {
         if (!AmongUsClient.Instance.AmHost) return;
 
-        if (Helpers.GetKeysDown(KeyCode.LeftControl, KeyCode.F5) || Helpers.GetKeysDown(KeyCode.RightControl, KeyCode.F5))
-        {
-            GameManager.Instance.RpcEndGame((GameOverReason)CustomGameOverReason.ForceEnd, false);
-        }
+        if (Helpers.GetKeysDown(KeyCode.LeftControl, KeyCode.F5) || Helpers.GetKeysDown(KeyCode.RightControl, KeyCode.F5)) GameManager.Instance.RpcEndGame((GameOverReason)CustomGameOverReason.ForceEnd, false);
 
         if (Helpers.GetKeysDown(KeyCode.LeftShift, KeyCode.F3) || Helpers.GetKeysDown(KeyCode.RightShift, KeyCode.F3))
         {
-            var linked = new List<string>();
-            var unlinked = new List<string>();
-            foreach (var p in PlayerControl.AllPlayerControls.GetFastEnumerator())
+            List<string> linked = new();
+            List<string> unlinked = new();
+            foreach (PlayerControl p in PlayerControl.AllPlayerControls.GetFastEnumerator())
             {
                 if (p.Data == null) continue;
-                var name = p.Data.PlayerName;
-                var id = DiscordModManager.GetIdentifier(p);
+                string name = p.Data.PlayerName;
+                string id = DiscordModManager.GetIdentifier(p);
                 if (id != null && DiscordModManager.PlayerMappings.ContainsKey(id)) linked.Add(name);
                 else unlinked.Add(name);
             }
@@ -32,22 +29,16 @@ public static class ShortcutCommands
             }
         }
 
-        if ((Helpers.GetKeysDown(KeyCode.LeftControl, KeyCode.F6) || Helpers.GetKeysDown(KeyCode.RightControl, KeyCode.F6)) && MeetingHud.Instance && Helpers.GameStarted)
-        {
-            MeetingHud.Instance.RpcClose();
-        }
+        if ((Helpers.GetKeysDown(KeyCode.LeftControl, KeyCode.F6) || Helpers.GetKeysDown(KeyCode.RightControl, KeyCode.F6)) && MeetingHud.Instance && Helpers.GameStarted) MeetingHud.Instance.RpcClose();
 
-        if ((Helpers.GetKeysDown(KeyCode.LeftControl, KeyCode.F7) || Helpers.GetKeysDown(KeyCode.RightControl, KeyCode.F7)) && !MeetingHud.Instance && Helpers.GameStarted)
-        {
-            MapUtilities.CachedShipStatus.StartMeeting(PlayerControl.LocalPlayer, PlayerControl.LocalPlayer.Data);
-        }
+        if ((Helpers.GetKeysDown(KeyCode.LeftControl, KeyCode.F7) || Helpers.GetKeysDown(KeyCode.RightControl, KeyCode.F7)) && !MeetingHud.Instance && Helpers.GameStarted) MapUtilities.CachedShipStatus.StartMeeting(PlayerControl.LocalPlayer, PlayerControl.LocalPlayer.Data);
 
         if ((Input.GetKeyDown(KeyCode.LeftShift) || Input.GetKeyDown(KeyCode.RightShift)) && Helpers.IsCountdown)
         {
             GameStartManager.Instance.countDownTimer = 0;
             SoundManager.Instance.StopSound(GameStartManager.Instance.gameStartSound);
             {
-                using var sender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.StopStart);
+                using RPCSender sender = new(PlayerControl.LocalPlayer.NetId, CustomRPC.StopStart);
             }
         }
 
@@ -55,7 +46,7 @@ public static class ShortcutCommands
         if (Helpers.GetKeysDown(KeyCode.LeftControl, KeyCode.F4) || Helpers.GetKeysDown(KeyCode.RightControl, KeyCode.F4))
         {
             HudManager.Instance.Chat.AddChat(PlayerControl.LocalPlayer, "Reloaded Random Number Generation Algorithm.");
-            RebuildUs.Instance.RefreshRnd((int)DateTime.Now.Ticks);
+            RebuildUs.RefreshRnd((int)DateTime.Now.Ticks);
         }
 
         if (Helpers.GetKeysDown(KeyCode.LeftControl, KeyCode.F8) || Helpers.GetKeysDown(KeyCode.RightControl, KeyCode.F8))
@@ -66,7 +57,7 @@ public static class ShortcutCommands
 #endif
     }
 
-    public static void OpenAirshipToilet()
+    internal static void OpenAirshipToilet()
     {
         if (Input.GetKeyDown(KeyCode.P))
         {

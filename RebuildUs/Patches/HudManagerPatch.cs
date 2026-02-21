@@ -1,13 +1,15 @@
+using InnerNet;
+
 namespace RebuildUs.Patches;
 
 [HarmonyPatch]
-public static class HudManagerPatch
+internal static class HudManagerPatch
 {
     [HarmonyPostfix]
     [HarmonyPatch(typeof(HudManager), nameof(HudManager.Update))]
-    public static void UpdatePostfix(HudManager __instance)
+    internal static void UpdatePostfix(HudManager __instance)
     {
-        if (AmongUsClient.Instance?.GameState != InnerNet.InnerNetClient.GameStates.Started) return;
+        if (AmongUsClient.Instance?.GameState != InnerNetClient.GameStates.Started) return;
 
         try
         {
@@ -32,21 +34,21 @@ public static class HudManagerPatch
 
     [HarmonyPostfix]
     [HarmonyPatch(typeof(HudManager), nameof(HudManager.SetHudActive), typeof(PlayerControl), typeof(RoleBehaviour), typeof(bool))]
-    public static void SetHudActivePostfix(HudManager __instance)
+    internal static void SetHudActivePostfix(HudManager __instance)
     {
         __instance.TaskPanel.gameObject.SetActive(true);
     }
 
     [HarmonyPrefix]
     [HarmonyPatch(typeof(HudManager), nameof(HudManager.OpenMeetingRoom))]
-    public static void Prefix(HudManager __instance)
+    internal static void Prefix(HudManager __instance)
     {
         Meeting.StartMeetingClear();
     }
 
     [HarmonyPostfix]
     [HarmonyPatch(typeof(HudManager), nameof(HudManager.Start))]
-    public static void StartPostfix(HudManager __instance)
+    internal static void StartPostfix(HudManager __instance)
     {
         Debug.CreateDebugManager(__instance);
         RebuildUs.MakeButtons(__instance);

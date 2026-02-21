@@ -1,6 +1,6 @@
 namespace RebuildUs.Enums;
 
-public enum CustomGameOverReason
+internal enum CustomGameOverReason
 {
     JesterWin = 10,
     ArsonistWin,
@@ -8,5 +8,5 @@ public enum CustomGameOverReason
     TeamJackalWin,
     MiniLose,
     LoversWin,
-    ForceEnd
+    ForceEnd,
 }

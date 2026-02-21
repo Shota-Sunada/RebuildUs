@@ -1,8 +1,8 @@
 namespace RebuildUs.Modules;
 
-public static class ModStamp
+internal static class ModStamp
 {
-    public static void Show()
+    internal static void Show()
     {
         ModManager.Instance.ShowModStamp();
     }

@@ -1,7 +1,7 @@
 namespace RebuildUs.Modules.GameEvents.Events;
 
-public class KillEventData : GameEventData
+internal abstract class KillEventData : GameEventData
 {
-    public PlayerControl Killer { get; set; }
-    public PlayerControl Victim { get; set; }
+    internal PlayerControl Killer { get; set; }
+    internal PlayerControl Victim { get; set; }
 }

@@ -1,66 +1,133 @@
 namespace RebuildUs.Roles;
 
-public abstract class PlayerRole
+internal abstract class PlayerRole
 {
-    public static List<PlayerRole> AllRoles = [];
+    internal static readonly List<PlayerRole> AllRoles = [];
     private static readonly Dictionary<byte, PlayerRole> PlayerRoleCache = [];
-    public PlayerControl Player;
-    public RoleType CurrentRoleType;
-    public virtual Color RoleColor => Color.white;
-    public virtual string NameTag => "";
+    internal RoleType CurrentRoleType;
+    internal PlayerControl Player;
 
-    public virtual void OnUpdateNameColors() { }
-    public virtual void OnUpdateNameTags() { }
+    internal virtual Color RoleColor
+    {
+        get => Color.white;
+    }
 
-    public abstract void OnMeetingStart();
-    public abstract void OnMeetingEnd();
-    public abstract void OnIntroEnd();
-    public abstract void FixedUpdate();
-    public abstract void OnKill(PlayerControl target);
-    public abstract void OnDeath(PlayerControl killer = null);
-    public abstract void OnFinishShipStatusBegin();
-    public abstract void HandleDisconnect(PlayerControl player, DisconnectReasons reason);
+    internal virtual string NameTag
+    {
+        get => "";
+    }
 
-    public virtual void ResetRole() { }
-    public virtual void PostInit() { }
-    public virtual string ModifyNameText(string nameText) { return nameText; }
-    public virtual string MeetingInfoText() { return ""; }
+    internal virtual void OnUpdateNameColors() { }
+    internal virtual void OnUpdateNameTags() { }
 
-    public static void ClearAll()
+    internal abstract void OnMeetingStart();
+    internal abstract void OnMeetingEnd();
+    internal abstract void OnIntroEnd();
+    internal abstract void FixedUpdate();
+    internal abstract void OnKill(PlayerControl target);
+    internal abstract void OnDeath(PlayerControl killer = null);
+    internal abstract void OnFinishShipStatusBegin();
+    internal abstract void HandleDisconnect(PlayerControl player, DisconnectReasons reason);
+
+    internal virtual void ResetRole() { }
+    internal virtual void PostInit() { }
+    internal virtual string ModifyNameText(string nameText) { return nameText; }
+    internal virtual string MeetingInfoText() { return ""; }
+
+    internal static void ClearAll()
     {
         AllRoles.Clear();
         PlayerRoleCache.Clear();
     }
 
-    public static void RemoveFromCache(byte playerId)
+    internal static void RemoveFromCache(byte playerId)
     {
         PlayerRoleCache.Remove(playerId);
     }
 
-    public static PlayerRole GetRole(PlayerControl player)
+    internal static PlayerRole GetRole(PlayerControl player)
     {
         if (player == null) return null;
-        if (PlayerRoleCache.TryGetValue(player.PlayerId, out var role)) return role;
+        if (PlayerRoleCache.TryGetValue(player.PlayerId, out PlayerRole role)) return role;
 
-        for (int i = 0; i < AllRoles.Count; i++)
+        foreach (PlayerRole t in AllRoles)
         {
-            if (AllRoles[i].Player == player)
-            {
-                PlayerRoleCache[player.PlayerId] = AllRoles[i];
-                return AllRoles[i];
-            }
+            if (t.Player != player) continue;
+            PlayerRoleCache[player.PlayerId] = t;
+            return t;
         }
+
         return null;
     }
 }
 
 [HarmonyPatch]
-public abstract class RoleBase<T> : PlayerRole where T : RoleBase<T>, new()
+internal abstract class RoleBase<T> : PlayerRole where T : RoleBase<T>, new()
 {
-    public static List<T> Players = [];
-    public static RoleType StaticRoleType;
+    internal static readonly List<T> Players = [];
+    internal static RoleType StaticRoleType;
 
-    public void Init(PlayerControl player)
+    internal static T Local
+    {
+        get
+        {
+            PlayerControl local = PlayerControl.LocalPlayer;
+            if (local == null) return null;
+            foreach (T t in Players)
+                if (t.Player == local)
+                    return t;
+
+            return null;
+        }
+    }
+
+    internal static List<PlayerControl> AllPlayers
+    {
+        get
+        {
+            List<PlayerControl> list = new(Players.Count);
+            foreach (T t in Players) list.Add(t.Player);
+
+            return list;
+        }
+    }
+
+    internal static List<PlayerControl> LivingPlayers
+    {
+        get
+        {
+            List<PlayerControl> list = new(Players.Count);
+            foreach (T t in Players)
+            {
+                PlayerControl p = t.Player;
+                if (p.IsAlive()) list.Add(p);
+            }
+
+            return list;
+        }
+    }
+
+    internal static List<PlayerControl> DeadPlayers
+    {
+        get
+        {
+            List<PlayerControl> list = new(Players.Count);
+            foreach (T t in Players)
+            {
+                PlayerControl p = t.Player;
+                if (!p.IsAlive()) list.Add(p);
+            }
+
+            return list;
+        }
+    }
+
+    internal static bool Exists
+    {
+        get => Helpers.RolesEnabled && Players.Count > 0;
+    }
+
+    private void Init(PlayerControl player)
     {
         Player = player;
         Players.Add((T)this);
@@ -68,113 +135,51 @@ public abstract class RoleBase<T> : PlayerRole where T : RoleBase<T>, new()
         RemoveFromCache(player.PlayerId);
     }
 
-    public static T Local
-    {
-        get
-        {
-            var local = PlayerControl.LocalPlayer;
-            if (local == null) return null;
-            for (int i = 0; i < Players.Count; i++)
-            {
-                if (Players[i].Player == local) return Players[i];
-            }
-            return null;
-        }
-    }
-
-    public static List<PlayerControl> AllPlayers
-    {
-        get
-        {
-            var list = new List<PlayerControl>(Players.Count);
-            for (int i = 0; i < Players.Count; i++) list.Add(Players[i].Player);
-            return list;
-        }
-    }
-
-    public static List<PlayerControl> LivingPlayers
-    {
-        get
-        {
-            var list = new List<PlayerControl>(Players.Count);
-            for (int i = 0; i < Players.Count; i++)
-            {
-                var p = Players[i].Player;
-                if (p.IsAlive()) list.Add(p);
-            }
-            return list;
-        }
-    }
-
-    public static List<PlayerControl> DeadPlayers
-    {
-        get
-        {
-            var list = new List<PlayerControl>(Players.Count);
-            for (int i = 0; i < Players.Count; i++)
-            {
-                var p = Players[i].Player;
-                if (!p.IsAlive()) list.Add(p);
-            }
-            return list;
-        }
-    }
-
-    public static bool Exists
-    {
-        get { return Helpers.RolesEnabled && Players.Count > 0; }
-    }
-
-    public static new T GetRole(PlayerControl player = null)
+    internal new static T GetRole(PlayerControl player = null)
     {
         player ??= PlayerControl.LocalPlayer;
         if (player == null) return null;
-        for (int i = 0; i < Players.Count; i++)
-        {
-            if (Players[i].Player == player) return Players[i];
-        }
+        foreach (T t in Players)
+            if (t.Player == player)
+                return t;
+
         return null;
     }
 
+    // ReSharper disable once MemberCanBeProtected.Global
     public static bool IsRole(PlayerControl player)
     {
         if (player == null) return false;
         for (int i = 0; i < Players.Count; i++)
-        {
-            if (Players[i].Player == player) return true;
-        }
+            if (Players[i].Player == player)
+                return true;
+
         return false;
     }
 
     public static void SetRole(PlayerControl player)
     {
-        if (player != null && !IsRole(player))
-        {
-            T role = new();
-            role.Init(player);
-        }
+        if (player == null || IsRole(player)) return;
+        T role = new();
+        role.Init(player);
     }
 
     public static void EraseRole(PlayerControl player)
     {
         if (player == null) return;
         RemoveFromCache(player.PlayerId);
-        for (int i = Players.Count - 1; i >= 0; i--)
+        for (int i = 0; i < Players.Count; i++)
         {
-            var x = Players[i];
-            if (x.Player == player && x.CurrentRoleType == StaticRoleType)
-            {
-                x.ResetRole();
-                Players.RemoveAt(i);
-            }
+            T x = Players[i];
+            if (x.Player != player || x.CurrentRoleType != StaticRoleType) continue;
+            x.ResetRole();
+            Players.RemoveAt(i);
         }
-        for (int i = AllRoles.Count - 1; i >= 0; i--)
+
+        for (int i = 0; i < AllRoles.Count; i++)
         {
-            var x = AllRoles[i];
-            if (x.Player == player && x.CurrentRoleType == StaticRoleType)
-            {
-                AllRoles.RemoveAt(i);
-            }
+            PlayerRole x = AllRoles[i];
+            if (x.Player == player && x.CurrentRoleType == StaticRoleType) AllRoles.RemoveAt(i);
         }
     }
 
@@ -186,13 +191,8 @@ public abstract class RoleBase<T> : PlayerRole where T : RoleBase<T>, new()
         for (int i = 0; i < Players.Count; i++)
         {
             if (Players[i].Player == p1)
-            {
                 Players[i].Player = p2;
-            }
-            else if (Players[i].Player == p2)
-            {
-                Players[i].Player = p1;
-            }
+            else if (Players[i].Player == p2) Players[i].Player = p1;
         }
     }
 }

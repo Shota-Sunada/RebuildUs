@@ -1,60 +1,62 @@
+using InnerNet;
+using Object = UnityEngine.Object;
+
 namespace RebuildUs.Objects;
 
-public class AdditionalVents
+internal sealed class AdditionalVents
 {
-    public Vent Vent;
-    public static List<AdditionalVents> AllVents = [];
-    public static bool Flag = false;
-    public AdditionalVents(Vector3 p)
+    private static List<AdditionalVents> _allVents = [];
+    private static bool _flag;
+    private readonly Vent _vent;
+
+    private AdditionalVents(Vector3 p)
     {
         // Create the vent
-        var referenceVent = UnityEngine.Object.FindObjectOfType<Vent>();
-        Vent = UnityEngine.Object.Instantiate(referenceVent);
-        Vent.transform.position = p;
-        Vent.Left = null;
-        Vent.Right = null;
-        Vent.Center = null;
+        Vent referenceVent = Object.FindObjectOfType<Vent>();
+        _vent = Object.Instantiate(referenceVent);
+        _vent.transform.position = p;
+        _vent.Left = null;
+        _vent.Right = null;
+        _vent.Center = null;
         Vent tmp = MapUtilities.CachedShipStatus.AllVents[0];
-        Vent.EnterVentAnim = tmp.EnterVentAnim;
-        Vent.ExitVentAnim = tmp.ExitVentAnim;
-        Vent.Offset = new Vector3(0f, 0.25f, 0f);
+        _vent.EnterVentAnim = tmp.EnterVentAnim;
+        _vent.ExitVentAnim = tmp.ExitVentAnim;
+        _vent.Offset = new(0f, 0.25f, 0f);
 
         int maxId = -1;
-        var allVents = MapUtilities.CachedShipStatus.AllVents;
+        Il2CppReferenceArray<Vent> allVents = MapUtilities.CachedShipStatus.AllVents;
         for (int i = 0; i < allVents.Length; i++)
-        {
-            if (allVents[i].Id > maxId) maxId = allVents[i].Id;
-        }
-        Vent.Id = maxId + 1; // Make sure we have a unique id
+            if (allVents[i].Id > maxId)
+                maxId = allVents[i].Id;
 
-        var newVents = new Vent[allVents.Length + 1];
+        _vent.Id = maxId + 1; // Make sure we have a unique id
+
+        Vent[] newVents = new Vent[allVents.Length + 1];
         for (int i = 0; i < allVents.Length; i++) newVents[i] = allVents[i];
-        newVents[newVents.Length - 1] = Vent;
+        newVents[^1] = _vent;
         MapUtilities.CachedShipStatus.AllVents = newVents;
 
-        Vent.gameObject.SetActive(true);
-        Vent.name = "AdditionalVent_" + Vent.Id;
-        AllVents.Add(this);
+        _vent.gameObject.SetActive(true);
+        _vent.name = "AdditionalVent_" + _vent.Id;
+        _allVents.Add(this);
     }
 
-    public static void AddAdditionalVents()
+    internal static void AddAdditionalVents()
     {
-        if (AdditionalVents.Flag) return;
-        AdditionalVents.Flag = true;
-        if (AmongUsClient.Instance.GameState != InnerNet.InnerNetClient.GameStates.Started) return;
+        if (_flag) return;
+        _flag = true;
+        if (AmongUsClient.Instance.GameState != InnerNetClient.GameStates.Started) return;
         Logger.LogMessage("AddAdditionalVents");
 
         // Polusにベントを追加する
-        if (Helpers.IsPolus && CustomOptionHolder.PolusAdditionalVents.GetBool())
-        {
-            AdditionalVents vents1 = new(new Vector3(36.54f, -21.77f, PlayerControl.LocalPlayer.transform.position.z + 1f)); // Specimen
-            AdditionalVents vents2 = new(new Vector3(16.64f, -2.46f, PlayerControl.LocalPlayer.transform.position.z + 1f)); // InitialSpawn
-            AdditionalVents vents3 = new(new Vector3(26.67f, -17.54f, PlayerControl.LocalPlayer.transform.position.z + 1f)); // Vital
-            vents1.Vent.Left = vents3.Vent; // Specimen - Vital
-            vents2.Vent.Center = vents3.Vent; // InitialSpawn - Vital
-            vents3.Vent.Right = vents1.Vent; // Vital - Specimen
-            vents3.Vent.Left = vents2.Vent; // Vital - InitialSpawn
-        }
+        if (!Helpers.IsPolus || !CustomOptionHolder.PolusAdditionalVents.GetBool()) return;
+        AdditionalVents vents1 = new(new(36.54f, -21.77f, PlayerControl.LocalPlayer.transform.position.z + 1f)); // Specimen
+        AdditionalVents vents2 = new(new(16.64f, -2.46f, PlayerControl.LocalPlayer.transform.position.z + 1f)); // InitialSpawn
+        AdditionalVents vents3 = new(new(26.67f, -17.54f, PlayerControl.LocalPlayer.transform.position.z + 1f)); // Vital
+        vents1._vent.Left = vents3._vent; // Specimen - Vital
+        vents2._vent.Center = vents3._vent; // InitialSpawn - Vital
+        vents3._vent.Right = vents1._vent; // Vital - Specimen
+        vents3._vent.Left = vents2._vent; // Vital - InitialSpawn
 
         // AirShipにベントを追加する
         // if(PlayerControl.GameOptions.MapId == 4 && CustomOptionHolder.additionalVents.getBool()){
@@ -65,10 +67,10 @@ public class AdditionalVents
         // }
     }
 
-    public static void ClearAndReload()
+    internal static void ClearAndReload()
     {
         Logger.LogMessage("additionalVentsClearAndReload");
-        Flag = false;
-        AllVents = [];
+        _flag = false;
+        _allVents = [];
     }
 }

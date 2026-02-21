@@ -1,40 +1,40 @@
 namespace RebuildUs.Objects;
 
-public class Arrow
+internal sealed class Arrow
 {
-    public float Perc = 0.925f;
-    public SpriteRenderer Image;
-    public GameObject ArrowObject;
-    private Vector3 OldTarget;
-    private readonly ArrowBehaviour ArrowBehaviour;
+    private readonly ArrowBehaviour _arrowBehaviour;
+    internal readonly GameObject ArrowObject;
+    internal readonly SpriteRenderer Image;
+    private Vector3 _oldTarget;
+    internal float Perc = 0.925f;
 
-    public Arrow(Color color)
+    internal Arrow(Color color)
     {
-        ArrowObject = new GameObject("Arrow")
+        ArrowObject = new("Arrow")
         {
-            layer = 5
+            layer = 5,
         };
         Image = ArrowObject.AddComponent<SpriteRenderer>();
         Image.sprite = AssetLoader.Arrow;
         Image.color = color;
-        ArrowBehaviour = ArrowObject.AddComponent<ArrowBehaviour>();
-        ArrowBehaviour.image = Image;
+        _arrowBehaviour = ArrowObject.AddComponent<ArrowBehaviour>();
+        _arrowBehaviour.image = Image;
     }
 
-    public void Update()
+    internal void Update()
     {
-        var target = OldTarget;
+        Vector3 target = _oldTarget;
         Update(target);
     }
 
-    public void Update(Vector3 target, Color? color = null)
+    internal void Update(Vector3 target, Color? color = null)
     {
         if (ArrowObject == null) return;
-        OldTarget = target;
+        _oldTarget = target;
 
         if (color.HasValue) Image.color = color.Value;
 
-        ArrowBehaviour.target = target;
-        ArrowBehaviour.Update();
+        _arrowBehaviour.target = target;
+        _arrowBehaviour.Update();
     }
 }

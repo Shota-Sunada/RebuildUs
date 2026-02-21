@@ -1,7 +1,7 @@
 namespace RebuildUs.Modules.GameEvents.Events;
 
-public class PlayerStateChangeEventData : GameEventData
+internal abstract class PlayerStateChangeEventData : GameEventData
 {
-    public PlayerControl Player { get; set; }
-    public FinalStatus FinalStatus { get; set; }
+    internal PlayerControl Player { get; set; }
+    internal FinalStatus FinalStatus { get; set; }
 }

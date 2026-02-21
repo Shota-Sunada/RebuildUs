@@ -1,6 +1,6 @@
 namespace RebuildUs.Enums;
 
-public enum GameEventType
+internal enum GameEventType
 {
     Kill,
     MeetingStart,
@@ -17,5 +17,5 @@ public enum GameEventType
     SabotageFix,
     PlayerStateChange,
     GameSettings,
-    AccidentalDeath
+    AccidentalDeath,
 }

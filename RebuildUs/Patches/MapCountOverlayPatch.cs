@@ -1,11 +1,11 @@
 namespace RebuildUs.Patches;
 
 [HarmonyPatch]
-public static class MapCountOverlayPatch
+internal static class MapCountOverlayPatch
 {
     [HarmonyPrefix]
     [HarmonyPatch(typeof(MapCountOverlay), nameof(MapCountOverlay.OnEnable))]
-    public static bool OnEnablePrefix(MapCountOverlay __instance)
+    internal static bool OnEnablePrefix(MapCountOverlay __instance)
     {
         Admin.OnEnable(__instance);
 
@@ -14,7 +14,7 @@ public static class MapCountOverlayPatch
 
     [HarmonyPrefix]
     [HarmonyPatch(typeof(MapCountOverlay), nameof(MapCountOverlay.Update))]
-    public static bool UpdatePrefix(MapCountOverlay __instance)
+    internal static bool UpdatePrefix(MapCountOverlay __instance)
     {
         Admin.Update(__instance);
 
@@ -23,7 +23,7 @@ public static class MapCountOverlayPatch
 
     [HarmonyPrefix]
     [HarmonyPatch(typeof(MapCountOverlay), nameof(MapCountOverlay.OnDisable))]
-    static void OnDisablePrefix(MapCountOverlay __instance)
+    private static void OnDisablePrefix(MapCountOverlay __instance)
     {
         Admin.OnDisable();
     }

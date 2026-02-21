@@ -39,75 +39,45 @@ internal static class HatParentPatches
     [HarmonyPrefix]
     private static bool UpdateMaterialPrefix(HatParent __instance)
     {
-        if (!__instance.TryGetCached(out var asset)) return true;
-        var extend = HatDataExtensions.GetHatExtension(__instance.Hat);
-        if (asset && extend != null && extend.Adaptive)
+        if (!__instance.TryGetCached(out HatViewData asset)) return true;
+        HatExtension extend = __instance.Hat.GetHatExtension();
+        if (asset && extend is { Adaptive: true })
         {
             __instance.FrontLayer.sharedMaterial = DestroyableSingleton<HatManager>.Instance.PlayerMaterial;
-            if (__instance.BackLayer)
-            {
-                __instance.BackLayer.sharedMaterial = DestroyableSingleton<HatManager>.Instance.PlayerMaterial;
-            }
+            if (__instance.BackLayer) __instance.BackLayer.sharedMaterial = DestroyableSingleton<HatManager>.Instance.PlayerMaterial;
         }
         else
         {
             __instance.FrontLayer.sharedMaterial = DestroyableSingleton<HatManager>.Instance.DefaultShader;
-            if (__instance.BackLayer)
-            {
-                __instance.BackLayer.sharedMaterial = DestroyableSingleton<HatManager>.Instance.DefaultShader;
-            }
+            if (__instance.BackLayer) __instance.BackLayer.sharedMaterial = DestroyableSingleton<HatManager>.Instance.DefaultShader;
         }
 
-        var colorId = __instance.matProperties.ColorId;
+        int colorId = __instance.matProperties.ColorId;
         PlayerMaterial.SetColors(colorId, __instance.FrontLayer);
-        if (__instance.BackLayer)
-        {
-            PlayerMaterial.SetColors(colorId, __instance.BackLayer);
-        }
+        if (__instance.BackLayer) PlayerMaterial.SetColors(colorId, __instance.BackLayer);
 
         __instance.FrontLayer.material.SetInt(PlayerMaterial.MaskLayer, __instance.matProperties.MaskLayer);
-        if (__instance.BackLayer)
-        {
-            __instance.BackLayer.material.SetInt(PlayerMaterial.MaskLayer, __instance.matProperties.MaskLayer);
-        }
+        if (__instance.BackLayer) __instance.BackLayer.material.SetInt(PlayerMaterial.MaskLayer, __instance.matProperties.MaskLayer);
 
-        var maskType = __instance.matProperties.MaskType;
+        PlayerMaterial.MaskType maskType = __instance.matProperties.MaskType;
         switch (maskType)
         {
             case PlayerMaterial.MaskType.ScrollingUI:
-                if (__instance.FrontLayer)
-                {
-                    __instance.FrontLayer.maskInteraction = SpriteMaskInteraction.VisibleInsideMask;
-                }
+                if (__instance.FrontLayer) __instance.FrontLayer.maskInteraction = SpriteMaskInteraction.VisibleInsideMask;
 
-                if (__instance.BackLayer)
-                {
-                    __instance.BackLayer.maskInteraction = SpriteMaskInteraction.VisibleInsideMask;
-                }
+                if (__instance.BackLayer) __instance.BackLayer.maskInteraction = SpriteMaskInteraction.VisibleInsideMask;
 
                 break;
             case PlayerMaterial.MaskType.Exile:
-                if (__instance.FrontLayer)
-                {
-                    __instance.FrontLayer.maskInteraction = SpriteMaskInteraction.VisibleOutsideMask;
-                }
+                if (__instance.FrontLayer) __instance.FrontLayer.maskInteraction = SpriteMaskInteraction.VisibleOutsideMask;
 
-                if (__instance.BackLayer)
-                {
-                    __instance.BackLayer.maskInteraction = SpriteMaskInteraction.VisibleOutsideMask;
-                }
+                if (__instance.BackLayer) __instance.BackLayer.maskInteraction = SpriteMaskInteraction.VisibleOutsideMask;
 
                 break;
             default:
-                if (__instance.FrontLayer)
-                {
-                    __instance.FrontLayer.maskInteraction = SpriteMaskInteraction.None;
-                }
+                if (__instance.FrontLayer) __instance.FrontLayer.maskInteraction = SpriteMaskInteraction.None;
 
-                if (__instance.BackLayer)
-                {
-                    __instance.BackLayer.maskInteraction = SpriteMaskInteraction.None;
-                }
+                if (__instance.BackLayer) __instance.BackLayer.maskInteraction = SpriteMaskInteraction.None;
 
                 break;
         }
@@ -125,38 +95,24 @@ internal static class HatParentPatches
     private static bool LateUpdatePrefix(HatParent __instance)
     {
         if (!__instance.Parent || !__instance.Hat) return false;
-        if (!__instance.TryGetCached(out var hatViewData)) return true;
-        if (__instance.FrontLayer.sprite != hatViewData.ClimbImage &&
-            __instance.FrontLayer.sprite != hatViewData.FloorImage)
+        if (!__instance.TryGetCached(out HatViewData hatViewData)) return true;
+        if (__instance.FrontLayer.sprite != hatViewData.ClimbImage && __instance.FrontLayer.sprite != hatViewData.FloorImage)
         {
-            if ((__instance.Hat.InFront || hatViewData.BackImage) && hatViewData.LeftMainImage)
-            {
-                __instance.FrontLayer.sprite =
-                    __instance.Parent.flipX ? hatViewData.LeftMainImage : hatViewData.MainImage;
-            }
+            if ((__instance.Hat.InFront || hatViewData.BackImage) && hatViewData.LeftMainImage) __instance.FrontLayer.sprite = __instance.Parent.flipX ? hatViewData.LeftMainImage : hatViewData.MainImage;
 
             if (hatViewData.BackImage && hatViewData.LeftBackImage)
             {
-                __instance.BackLayer.sprite =
-                    __instance.Parent.flipX ? hatViewData.LeftBackImage : hatViewData.BackImage;
+                __instance.BackLayer.sprite = __instance.Parent.flipX ? hatViewData.LeftBackImage : hatViewData.BackImage;
                 return false;
             }
 
-            if (!hatViewData.BackImage && !__instance.Hat.InFront && hatViewData.LeftMainImage)
-            {
-                __instance.BackLayer.sprite =
-                    __instance.Parent.flipX ? hatViewData.LeftMainImage : hatViewData.MainImage;
-                return false;
-            }
+            if (hatViewData.BackImage || __instance.Hat.InFront || !hatViewData.LeftMainImage) return false;
+            __instance.BackLayer.sprite = __instance.Parent.flipX ? hatViewData.LeftMainImage : hatViewData.MainImage;
         }
-        else if (__instance.FrontLayer.sprite == hatViewData.ClimbImage ||
-                 __instance.FrontLayer.sprite == hatViewData.LeftClimbImage)
+        else if (__instance.FrontLayer.sprite == hatViewData.ClimbImage || __instance.FrontLayer.sprite == hatViewData.LeftClimbImage)
         {
-            var spriteAnimNodeSync = __instance.SpriteSyncNode ?? __instance.GetComponent<SpriteAnimNodeSync>();
-            if (spriteAnimNodeSync)
-            {
-                spriteAnimNodeSync.NodeId = 0;
-            }
+            SpriteAnimNodeSync spriteAnimNodeSync = __instance.SpriteSyncNode ?? __instance.GetComponent<SpriteAnimNodeSync>();
+            if (spriteAnimNodeSync) spriteAnimNodeSync.NodeId = 0;
         }
 
         return false;
@@ -166,7 +122,7 @@ internal static class HatParentPatches
     [HarmonyPrefix]
     private static bool SetFloorAnimPrefix(HatParent __instance)
     {
-        if (!__instance.TryGetCached(out var hatViewData)) return true;
+        if (!__instance.TryGetCached(out HatViewData hatViewData)) return true;
         __instance.BackLayer.enabled = false;
         __instance.FrontLayer.enabled = true;
         __instance.FrontLayer.sprite = hatViewData.FloorImage;
@@ -189,7 +145,7 @@ internal static class HatParentPatches
     [HarmonyPrefix]
     private static bool SetClimbAnimPrefix(HatParent __instance)
     {
-        if (!__instance.TryGetCached(out var hatViewData)) return true;
+        if (!__instance.TryGetCached(out HatViewData hatViewData)) return true;
         if (!__instance.options.ShowForClimb) return false;
         __instance.BackLayer.enabled = false;
         __instance.FrontLayer.enabled = true;
@@ -201,16 +157,14 @@ internal static class HatParentPatches
     [HarmonyPrefix]
     private static bool PopulateFromHatViewDataPrefix(HatParent __instance)
     {
-        if (!__instance.TryGetCached(out var asset)) return true;
+        if (!__instance.TryGetCached(out HatViewData asset)) return true;
         __instance.UpdateMaterial();
 
-        var spriteAnimNodeSync = __instance.SpriteSyncNode
+        SpriteAnimNodeSync spriteAnimNodeSync = __instance.SpriteSyncNode
             ? __instance.SpriteSyncNode
             : __instance.GetComponent<SpriteAnimNodeSync>();
-        if (spriteAnimNodeSync)
-        {
-            spriteAnimNodeSync.NodeId = __instance.Hat.NoBounce ? 1 : 0;
-        }
+        if (spriteAnimNodeSync) spriteAnimNodeSync.NodeId = __instance.Hat.NoBounce ? 1 : 0;
+
         if (__instance.Hat.InFront)
         {
             __instance.BackLayer.enabled = false;
@@ -231,7 +185,8 @@ internal static class HatParentPatches
             __instance.FrontLayer.sprite = null;
             __instance.BackLayer.sprite = asset.MainImage;
         }
-        if (/*!__instance.options.Initialized ||*/ !__instance.HideHat()) return false;
+
+        if ( /*!__instance.options.Initialized ||*/ !__instance.HideHat()) return false;
         __instance.FrontLayer.enabled = false;
         __instance.BackLayer.enabled = false;
         return false;
@@ -239,12 +194,12 @@ internal static class HatParentPatches
 
     private static bool SetCustomHat(HatParent hatParent)
     {
-        var dirPath = Path.Combine(CustomHatManager.HatsDirectory, "Test");
+        string dirPath = Path.Combine(CustomHatManager.HatsDirectory, "Test");
         if (!Directory.Exists(dirPath)) Directory.CreateDirectory(dirPath);
         if (!DestroyableSingleton<TutorialManager>.InstanceExists) return true;
-        var d = new DirectoryInfo(dirPath);
-        var filePaths = d.GetFiles("*.png").Select(x => x.FullName).ToArray();
-        var hats = CustomHatManager.CreateHatDetailsFromFileNames(filePaths, true);
+        DirectoryInfo d = new(dirPath);
+        string[] filePaths = d.GetFiles("*.png").Select(x => x.FullName).ToArray();
+        List<CustomHat> hats = CustomHatManager.CreateHatDetailsFromFileNames(filePaths, true);
         if (hats.Count <= 0) return false;
         try
         {

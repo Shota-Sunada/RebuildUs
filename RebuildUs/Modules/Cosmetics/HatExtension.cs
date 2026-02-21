@@ -1,11 +1,11 @@
 namespace RebuildUs.Modules.Cosmetics;
 
-public class HatExtension
+internal sealed class HatExtension
 {
-    public string Author { get; set; }
-    public string Package { get; set; }
-    public string Condition { get; set; }
-    public Sprite FlipImage { get; set; }
-    public Sprite BackFlipImage { get; set; }
-    public bool Adaptive { get; set; }
+    internal string Author { get; set; }
+    internal string Package { get; set; }
+    internal string Condition { get; set; }
+    internal Sprite FlipImage { get; set; }
+    internal Sprite BackFlipImage { get; set; }
+    internal bool Adaptive { get; set; }
 }

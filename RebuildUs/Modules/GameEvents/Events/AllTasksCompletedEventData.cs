@@ -1,6 +1,6 @@
 namespace RebuildUs.Modules.GameEvents.Events;
 
-public class AllTasksCompletedEventData : GameEventData
+internal abstract class AllTasksCompletedEventData : GameEventData
 {
-    public PlayerControl Player { get; set; }
+    internal PlayerControl Player { get; set; }
 }

@@ -5,31 +5,29 @@ using Submerged.Floors;
 using Submerged.Map;
 using Submerged.Systems.Oxygen;
 using Submerged.Vents;
+using Version = SemanticVersioning.Version;
 
 namespace RebuildUs;
 
-public static class SubmergedCompatibility
+internal static class SubmergedCompatibility
 {
-    public static class Classes
-    {
-        public const string ElevatorMover = "ElevatorMover";
-    }
+    internal const string SUBMERGED_GUID = "Submerged";
+    internal const string SUBMERGED_VERSION = "2026.1.26";
+    internal const ShipStatus.MapType SUBMERGED_MAP_TYPE = (ShipStatus.MapType)6;
 
-    public const string SUBMERGED_GUID = "Submerged";
-    public const string SUBMERGED_VERSION = "2026.1.26";
-    public const ShipStatus.MapType SUBMERGED_MAP_TYPE = (ShipStatus.MapType)6;
+    internal static TaskTypes RetrieveOxygenMask;
 
-    public static SemanticVersioning.Version Version { get; private set; }
-    public static bool Loaded { get; private set; }
-    public static bool LoadedExternally { get; private set; }
-    public static BasePlugin Plugin { get; private set; }
-    public static Assembly Assembly { get; private set; }
+    internal static Version Version { get; private set; }
+    internal static bool Loaded { get; private set; }
+    internal static bool LoadedExternally { get; private set; }
+    internal static BasePlugin Plugin { get; private set; }
+    internal static Assembly Assembly { get; private set; }
 
-    public static SubmarineStatus SubmarineStatus { get; private set; }
+    internal static SubmarineStatus SubmarineStatus { get; private set; }
 
-    public static bool IsSubmerged { get; private set; }
+    internal static bool IsSubmerged { get; private set; }
 
-    public static void SetupMap(ShipStatus map)
+    internal static void SetupMap(ShipStatus map)
     {
         if (map == null)
         {
@@ -44,9 +42,7 @@ public static class SubmergedCompatibility
         SubmarineStatus = map.GetComponent<SubmarineStatus>();
     }
 
-    public static TaskTypes RetrieveOxygenMask;
-
-    public static void Initialize()
+    internal static void Initialize()
     {
         Loaded = IL2CPPChainloader.Instance.Plugins.TryGetValue(SUBMERGED_GUID, out PluginInfo plugin);
         if (!Loaded) return;
@@ -54,35 +50,35 @@ public static class SubmergedCompatibility
         LoadedExternally = true;
         Plugin = plugin!.Instance as BasePlugin;
         Version = plugin.Metadata.Version.BaseVersion();
-        Assembly = Plugin.GetType().Assembly;
+        if (Plugin != null) Assembly = Plugin.GetType().Assembly;
 
         RetrieveOxygenMask = CustomTaskTypes.RetrieveOxygenMask.taskType;
     }
 
-    public static MonoBehaviour AddSubmergedComponent(this GameObject obj, string typeName)
+    internal static MonoBehaviour AddSubmergedComponent(this GameObject obj, string typeName)
     {
         if (!Loaded) return obj.AddComponent<MissingSubmergedBehaviour>();
         bool validType = ComponentExtensions.RegisteredTypes.TryGetValue(typeName, out Type type);
         return validType ? obj.AddComponent(Il2CppType.From(type)).TryCast<MonoBehaviour>() : obj.AddComponent<MissingSubmergedBehaviour>();
     }
 
-    public static float GetSubmergedNeutralLightRadius(bool isImpostor)
+    internal static float GetSubmergedNeutralLightRadius(bool isImpostor)
     {
         return !Loaded || SubmarineStatus == null ? 0 : SubmarineStatus.CalculateLightRadius(null, true, isImpostor);
     }
 
-    public static void ChangeFloor(bool toUpper)
+    internal static void ChangeFloor(bool toUpper)
     {
         if (!Loaded) return;
         FloorHandler.GetFloorHandler(PlayerControl.LocalPlayer).RpcRequestChangeFloor(toUpper);
     }
 
-    public static bool GetInTransition()
+    internal static bool GetInTransition()
     {
         return Loaded && VentPatchData.InTransition;
     }
 
-    public static void RepairOxygen()
+    internal static void RepairOxygen()
     {
         if (!Loaded) return;
         try
@@ -95,10 +91,19 @@ public static class SubmergedCompatibility
             Logger.LogMessage("null reference in engineer oxygen fix");
         }
     }
+
+    internal static class Classes
+    {
+        internal const string ELEVATOR_MOVER = "ElevatorMover";
+    }
 }
 
-public class MissingSubmergedBehaviour : MonoBehaviour
+internal sealed class MissingSubmergedBehaviour : MonoBehaviour
 {
-    static MissingSubmergedBehaviour() => ClassInjector.RegisterTypeInIl2Cpp<MissingSubmergedBehaviour>();
-    public MissingSubmergedBehaviour(IntPtr ptr) : base(ptr) { }
+    static MissingSubmergedBehaviour()
+    {
+        ClassInjector.RegisterTypeInIl2Cpp<MissingSubmergedBehaviour>();
+    }
+
+    internal MissingSubmergedBehaviour(IntPtr ptr) : base(ptr) { }
 }

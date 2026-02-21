@@ -2,7 +2,7 @@ using System.Text.Json.Serialization;
 
 namespace RebuildUs.Modules.Cosmetics;
 
-public class SkinsConfigFile
+internal sealed class SkinsConfigFile
 {
-    [JsonPropertyName("hats")] public List<CustomHat> Hats { get; set; }
+    [JsonPropertyName("hats")] internal List<CustomHat> Hats { get; set; }
 }

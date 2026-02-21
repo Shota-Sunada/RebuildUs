@@ -1,18 +1,20 @@
+using StringBuilder = Il2CppSystem.Text.StringBuilder;
+
 namespace RebuildUs.Patches;
 
 [HarmonyPatch]
-public static class IGameOptionsExtensionsPatch
+internal static class GameOptionsExtensionsPatch
 {
     [HarmonyPrefix]
-    [HarmonyPatch(typeof(IGameOptionsExtensions), nameof(IGameOptionsExtensions.AppendItem), [typeof(Il2CppSystem.Text.StringBuilder), typeof(StringNames), typeof(string)])]
-    public static void AppendItemPrefix(ref StringNames stringName, ref string value)
+    [HarmonyPatch(typeof(IGameOptionsExtensions), nameof(IGameOptionsExtensions.AppendItem), typeof(StringBuilder), typeof(StringNames), typeof(string))]
+    internal static void AppendItemPrefix(ref StringNames stringName, ref string value)
     {
         CustomOption.AppendItem(ref stringName, ref value);
     }
 
     [HarmonyPostfix]
     [HarmonyPatch(typeof(IGameOptionsExtensions), nameof(IGameOptionsExtensions.GetAdjustedNumImpostors))]
-    public static void GetAdjustedNumImpostorsPostfix(ref int __result)
+    internal static void GetAdjustedNumImpostorsPostfix(ref int __result)
     {
         if (Helpers.IsNormal)
         {

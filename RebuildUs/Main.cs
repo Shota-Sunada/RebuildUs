@@ -2,7 +2,6 @@ global using Il2CppInterop.Runtime;
 global using Il2CppInterop.Runtime.InteropTypes;
 global using Il2CppInterop.Runtime.InteropTypes.Arrays;
 global using Il2CppInterop.Runtime.Injection;
-
 global using HarmonyLib;
 global using Hazel;
 global using BepInEx;
@@ -32,9 +31,10 @@ global using RebuildUs.Roles.Impostor;
 global using RebuildUs.Roles.Neutral;
 global using RebuildUs.Roles.Modifier;
 global using RebuildUs.Utilities;
-
 global using Reactor.Networking;
 global using Reactor.Networking.Attributes;
+using InnerNet;
+using Random = System.Random;
 
 namespace RebuildUs;
 
@@ -43,50 +43,53 @@ namespace RebuildUs;
 [BepInDependency(REACTOR_GUID, REACTOR_VERSION)]
 [BepInProcess("Among Us.exe")]
 [ReactorModFlags(ModFlags.RequireOnAllClients)]
-public class RebuildUs : BasePlugin
+internal abstract class RebuildUs : BasePlugin
 {
-    public const string MOD_ID = "com.shota-sunada.rebuild-us";
-    public const string MOD_NAME = "Rebuild Us";
-    public const string MOD_VERSION = "1.2.3";
-    public const string MOD_DEVELOPER = "Shota Sunada";
+    internal const string MOD_ID = "com.shota-sunada.rebuild-us";
+    internal const string MOD_NAME = "Rebuild Us";
+    internal const string MOD_VERSION = "1.2.3";
+    internal const string MOD_DEVELOPER = "Shota Sunada";
 
-    public const string REACTOR_GUID = "gg.reactor-sunada.api";
-    public const string REACTOR_VERSION = "3.3.4-SND";
+    internal const string REACTOR_GUID = "gg.reactor-sunada.api";
+    internal const string REACTOR_VERSION = "3.3.4-SND";
 
-    public static RebuildUs Instance;
-    public Harmony Harmony { get; } = new(MOD_ID);
-    public Version Version { get; } = Version.Parse(MOD_VERSION);
+    internal static RebuildUs Instance;
 
-    public static int OptionsPage = 0;
+    internal static int OptionsPage = 0;
+    internal static IRegionInfo[] DefaultRegions;
+    internal Harmony Harmony { get; } = new(MOD_ID);
+    internal Version Version { get; } = Version.Parse(MOD_VERSION);
 
-    public static ConfigEntry<bool> GhostsSeeInformation { get; set; }
-    public static ConfigEntry<bool> GhostsSeeRoles { get; set; }
-    public static ConfigEntry<bool> GhostsSeeModifier { get; set; }
-    public static ConfigEntry<bool> GhostsSeeVotes { get; set; }
-    public static ConfigEntry<bool> ShowRoleSummary { get; set; }
-    public static ConfigEntry<bool> ShowLighterDarker { get; set; }
-    public static ConfigEntry<bool> ShowVentsOnMap { get; set; }
-    public static ConfigEntry<bool> ShowChatNotifications { get; set; }
-    public static ConfigEntry<bool> ForceNormalSabotageMap { get; set; }
-    public static ConfigEntry<bool> BetterSabotageMap { get; set; }
-    public static ConfigEntry<bool> TransparentMap { get; set; }
-    public static ConfigEntry<bool> HideFakeTasks { get; set; }
+    internal static ConfigEntry<bool> GhostsSeeInformation { get; set; }
+    internal static ConfigEntry<bool> GhostsSeeRoles { get; set; }
+    internal static ConfigEntry<bool> GhostsSeeModifier { get; set; }
+    internal static ConfigEntry<bool> GhostsSeeVotes { get; set; }
+    internal static ConfigEntry<bool> ShowRoleSummary { get; set; }
+    internal static ConfigEntry<bool> ShowLighterDarker { get; set; }
+    internal static ConfigEntry<bool> ShowVentsOnMap { get; set; }
+    internal static ConfigEntry<bool> ShowChatNotifications { get; set; }
+    internal static ConfigEntry<bool> ForceNormalSabotageMap { get; set; }
+    internal static ConfigEntry<bool> BetterSabotageMap { get; set; }
+    internal static ConfigEntry<bool> TransparentMap { get; set; }
+    internal static ConfigEntry<bool> HideFakeTasks { get; set; }
 
-    public static ConfigEntry<string> DiscordBotToken { get; set; }
-    public static ConfigEntry<string> DiscordBotToken2 { get; set; }
-    public static ConfigEntry<string> DiscordBotToken3 { get; set; }
-    public static ConfigEntry<string> DiscordGuildId { get; set; }
-    public static ConfigEntry<string> DiscordVCId { get; set; }
-    public static ConfigEntry<string> StatusChannelId { get; set; }
-    public static ConfigEntry<string> ResultChannelId { get; set; }
+    internal static ConfigEntry<string> DiscordBotToken { get; set; }
+    internal static ConfigEntry<string> DiscordBotToken2 { get; set; }
+    internal static ConfigEntry<string> DiscordBotToken3 { get; set; }
+    internal static ConfigEntry<string> DiscordGuildId { get; set; }
+    internal static ConfigEntry<string> DiscordVcId { get; set; }
+    internal static ConfigEntry<string> StatusChannelId { get; set; }
+    internal static ConfigEntry<string> ResultChannelId { get; set; }
 
-    public static ConfigEntry<string> Ip { get; set; }
-    public static ConfigEntry<ushort> Port { get; set; }
-    public static IRegionInfo[] DefaultRegions;
+    internal static ConfigEntry<string> Ip { get; set; }
+    internal static ConfigEntry<ushort> Port { get; set; }
 
-    public System.Random Rnd => RandomMain.Rnd;
+    internal static Random Rnd
+    {
+        get => RandomMain.Rnd;
+    }
 
-    public void RefreshRnd(int seed)
+    internal static void RefreshRnd(int seed)
     {
         RandomMain.RefreshRnd(seed);
     }
@@ -115,7 +118,7 @@ public class RebuildUs : BasePlugin
         DiscordBotToken2 = Config.Bind("Discord", "Bot Token 2", "");
         DiscordBotToken3 = Config.Bind("Discord", "Bot Token 3", "");
         DiscordGuildId = Config.Bind("Discord", "Guild ID", "");
-        DiscordVCId = Config.Bind("Discord", "Voice Channel ID", "");
+        DiscordVcId = Config.Bind("Discord", "Voice Channel ID", "");
         StatusChannelId = Config.Bind("Discord", "Status Channel ID", "");
         ResultChannelId = Config.Bind("Discord", "Result Channel ID", "");
 
@@ -144,7 +147,7 @@ public class RebuildUs : BasePlugin
         Logger.LogMessage("\"Rebuild Us\" was completely loaded! Enjoy the modifications!");
     }
 
-    public static void ClearAndReloadRoles()
+    internal static void ClearAndReloadRoles()
     {
         // Crewmate
         Bait.Clear();
@@ -199,19 +202,19 @@ public class RebuildUs : BasePlugin
         PlayerModifier.ClearAll();
     }
 
-    public static void FixedUpdate(PlayerControl player)
+    internal static void FixedUpdate(PlayerControl player)
     {
         PlayerRole.AllRoles.DoIf(x => x.Player == player, x => x.FixedUpdate());
         PlayerModifier.AllModifiers.DoIf(x => x.Player == player, x => x.FixedUpdate());
     }
 
-    public static void OnMeetingStart()
+    internal static void OnMeetingStart()
     {
         PlayerRole.AllRoles.Do(x => x.OnMeetingStart());
         PlayerModifier.AllModifiers.Do(x => x.OnMeetingStart());
 
         // GM.resetZoom();
-        FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(3f, new Action<float>((p) =>
+        FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(3f, new Action<float>(p =>
         {
             if (p == 1)
             {
@@ -221,24 +224,24 @@ public class RebuildUs : BasePlugin
         })));
     }
 
-    public static void OnMeetingEnd()
+    internal static void OnMeetingEnd()
     {
         PlayerRole.AllRoles.Do(x => x.OnMeetingEnd());
         PlayerModifier.AllModifiers.Do(x => x.OnMeetingEnd());
 
         CustomOverlays.HideInfoOverlay();
-        CustomOverlays.HideBlackBG();
+        CustomOverlays.HideBlackBg();
     }
 
-    public static void OnIntroEnd()
+    internal static void OnIntroEnd()
     {
         PlayerRole.AllRoles.Do(x => x.OnIntroEnd());
         PlayerModifier.AllModifiers.Do(x => x.OnIntroEnd());
     }
 
-    public static void HandleDisconnect(PlayerControl player, DisconnectReasons reason)
+    internal static void HandleDisconnect(PlayerControl player, DisconnectReasons reason)
     {
-        if (AmongUsClient.Instance.GameState == InnerNet.InnerNetClient.GameStates.Started)
+        if (AmongUsClient.Instance.GameState == InnerNetClient.GameStates.Started)
         {
             PlayerRole.AllRoles.Do(x => x.HandleDisconnect(player, reason));
             PlayerModifier.AllModifiers.Do(x => x.HandleDisconnect(player, reason));
@@ -250,7 +253,7 @@ public class RebuildUs : BasePlugin
         }
     }
 
-    public static void MakeButtons(HudManager hm)
+    internal static void MakeButtons(HudManager hm)
     {
         // Crewmate
         Engineer.MakeButtons(hm);
@@ -289,7 +292,7 @@ public class RebuildUs : BasePlugin
         LastImpostor.MakeButtons(hm);
     }
 
-    public static void SetButtonCooldowns()
+    internal static void SetButtonCooldowns()
     {
         // Crewmate
         Engineer.SetButtonCooldowns();
@@ -325,9 +328,9 @@ public class RebuildUs : BasePlugin
         Vulture.SetButtonCooldowns();
     }
 
-    public static void UpdateRegions()
+    internal static void UpdateRegions()
     {
-        var serverManager = FastDestroyableSingleton<ServerManager>.Instance;
+        ServerManager serverManager = FastDestroyableSingleton<ServerManager>.Instance;
 
         serverManager.AvailableRegions = ServerManager.DefaultRegions;
 
@@ -338,15 +341,11 @@ public class RebuildUs : BasePlugin
         foreach (IRegionInfo region in regions)
         {
             if (region == null)
-            {
                 Logger.LogError("Could not add region");
-            }
             else
             {
-                if (currentRegion != null && region.Name.Equals(currentRegion.Name, StringComparison.OrdinalIgnoreCase))
-                {
-                    currentRegion = region;
-                }
+                if (currentRegion != null && region.Name.Equals(currentRegion.Name, StringComparison.OrdinalIgnoreCase)) currentRegion = region;
+
                 serverManager.AddOrUpdateRegion(region);
             }
         }

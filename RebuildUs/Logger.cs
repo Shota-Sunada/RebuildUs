@@ -1,95 +1,107 @@
 namespace RebuildUs;
 
-public static class Logger
+internal static class Logger
 {
-    private static ManualLogSource LogSource;
+    private static ManualLogSource _logSource;
 
-    public static void Initialize(ManualLogSource log)
+    internal static void Initialize(ManualLogSource log)
     {
-        LogSource = log;
-    }
-
-    public static void LogInfo(string text, string[] args)
-    {
-        LogSource.LogInfo(string.Format(text, args));
-    }
-    public static void LogInfo(string text, string tag, string[] args)
-    {
-        LogSource.LogInfo(BuildLog(string.Format(text, args), tag));
-    }
-    public static void LogInfo(object obj, string tag = null)
-    {
-        LogSource.LogInfo(tag == null ? obj : BuildLog(obj, tag));
+        _logSource = log;
     }
 
-    public static void LogMessage(string text, string[] args)
+    internal static void LogInfo(string text, string[] args)
     {
-        LogSource.LogMessage(string.Format(text, args));
-    }
-    public static void LogMessage(string text, string tag, string[] args)
-    {
-        LogSource.LogMessage(BuildLog(string.Format(text, args), tag));
-    }
-    public static void LogMessage(object obj, string tag = null)
-    {
-        LogSource.LogMessage(tag == null ? obj : BuildLog(obj, tag));
+        _logSource.LogInfo(string.Format(text, args));
     }
 
-    public static void LogWarn(string text, string[] args)
+    internal static void LogInfo(string text, string tag, string[] args)
     {
-        LogSource.LogWarning(string.Format(text, args));
-    }
-    public static void LogWarn(string text, string tag, string[] args)
-    {
-        LogSource.LogWarning(BuildLog(string.Format(text, args), tag));
-    }
-    public static void LogWarn(object obj, string tag = null)
-    {
-        LogSource.LogWarning(tag == null ? obj : BuildLog(obj, tag));
+        _logSource.LogInfo(BuildLog(string.Format(text, args), tag));
     }
 
-    public static void LogError(string text, string[] args)
+    internal static void LogInfo(object obj, string tag = null)
     {
-        LogSource.LogError(string.Format(text, args));
-    }
-    public static void LogError(string text, string tag, string[] args)
-    {
-        LogSource.LogError(BuildLog(string.Format(text, args), tag));
-    }
-    public static void LogError(object obj, string tag = null)
-    {
-        LogSource.LogError(tag == null ? obj : BuildLog(obj, tag));
+        _logSource.LogInfo(tag == null ? obj : BuildLog(obj, tag));
     }
 
-    public static void LogFatal(string text, string[] args)
+    internal static void LogMessage(string text, string[] args)
     {
-        LogSource.LogFatal(string.Format(text, args));
-    }
-    public static void LogFatal(string text, string tag, string[] args)
-    {
-        LogSource.LogFatal(BuildLog(string.Format(text, args), tag));
-    }
-    public static void LogFatal(object obj, string tag = null)
-    {
-        LogSource.LogFatal(tag == null ? obj : BuildLog(obj, tag));
+        _logSource.LogMessage(string.Format(text, args));
     }
 
-    public static void LogDebug(string text, string[] args)
+    internal static void LogMessage(string text, string tag, string[] args)
     {
-        LogSource.LogDebug(string.Format(text, args));
-    }
-    public static void LogDebug(string text, string tag, string[] args)
-    {
-        LogSource.LogDebug(BuildLog(string.Format(text, args), tag));
-    }
-    public static void LogDebug(object obj, string tag = null)
-    {
-        LogSource.LogDebug(tag == null ? obj : BuildLog(obj, tag));
+        _logSource.LogMessage(BuildLog(string.Format(text, args), tag));
     }
 
-    public static string BuildLog(object text, string tag)
+    internal static void LogMessage(object obj, string tag = null)
     {
-        var sb = new StringBuilder();
+        _logSource.LogMessage(tag == null ? obj : BuildLog(obj, tag));
+    }
+
+    internal static void LogWarn(string text, string[] args)
+    {
+        _logSource.LogWarning(string.Format(text, args));
+    }
+
+    internal static void LogWarn(string text, string tag, string[] args)
+    {
+        _logSource.LogWarning(BuildLog(string.Format(text, args), tag));
+    }
+
+    internal static void LogWarn(object obj, string tag = null)
+    {
+        _logSource.LogWarning(tag == null ? obj : BuildLog(obj, tag));
+    }
+
+    internal static void LogError(string text, string[] args)
+    {
+        _logSource.LogError(string.Format(text, args));
+    }
+
+    internal static void LogError(string text, string tag, string[] args)
+    {
+        _logSource.LogError(BuildLog(string.Format(text, args), tag));
+    }
+
+    internal static void LogError(object obj, string tag = null)
+    {
+        _logSource.LogError(tag == null ? obj : BuildLog(obj, tag));
+    }
+
+    internal static void LogFatal(string text, string[] args)
+    {
+        _logSource.LogFatal(string.Format(text, args));
+    }
+
+    internal static void LogFatal(string text, string tag, string[] args)
+    {
+        _logSource.LogFatal(BuildLog(string.Format(text, args), tag));
+    }
+
+    internal static void LogFatal(object obj, string tag = null)
+    {
+        _logSource.LogFatal(tag == null ? obj : BuildLog(obj, tag));
+    }
+
+    internal static void LogDebug(string text, string[] args)
+    {
+        _logSource.LogDebug(string.Format(text, args));
+    }
+
+    internal static void LogDebug(string text, string tag, string[] args)
+    {
+        _logSource.LogDebug(BuildLog(string.Format(text, args), tag));
+    }
+
+    internal static void LogDebug(object obj, string tag = null)
+    {
+        _logSource.LogDebug(tag == null ? obj : BuildLog(obj, tag));
+    }
+
+    internal static string BuildLog(object text, string tag)
+    {
+        StringBuilder sb = new();
         sb.Append('[').Append(tag).Append("] ").Append(text);
         return sb.ToString();
     }

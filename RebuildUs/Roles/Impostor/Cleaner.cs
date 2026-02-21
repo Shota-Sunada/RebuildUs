@@ -1,14 +1,13 @@
+using Object = UnityEngine.Object;
+
 namespace RebuildUs.Roles.Impostor;
 
 [HarmonyPatch]
-public class Cleaner : RoleBase<Cleaner>
+internal class Cleaner : RoleBase<Cleaner>
 {
-    public static Color NameColor = Palette.ImpostorRed;
-    public override Color RoleColor => NameColor;
-    public static CustomButton CleanerCleanButton;
+    internal static Color NameColor = Palette.ImpostorRed;
 
-    // write configs here
-    public static float Cooldown { get { return CustomOptionHolder.CleanerCooldown.GetFloat(); } }
+    internal static CustomButton CleanerCleanButton;
 
     public Cleaner()
     {
@@ -16,73 +15,70 @@ public class Cleaner : RoleBase<Cleaner>
         StaticRoleType = CurrentRoleType = RoleType.Cleaner;
     }
 
-    public override void OnMeetingStart() { }
-    public override void OnMeetingEnd() { }
-    public override void OnIntroEnd() { }
-    public override void FixedUpdate() { }
-    public override void OnKill(PlayerControl target)
+    internal override Color RoleColor
     {
-        if (PlayerControl.LocalPlayer.IsRole(RoleType.Cleaner) && CleanerCleanButton != null)
+        get => NameColor;
+    }
+
+    // write configs here
+    internal static float Cooldown { get => CustomOptionHolder.CleanerCooldown.GetFloat(); }
+
+    internal override void OnMeetingStart() { }
+    internal override void OnMeetingEnd() { }
+    internal override void OnIntroEnd() { }
+    internal override void FixedUpdate() { }
+
+    internal override void OnKill(PlayerControl target)
+    {
+        if (PlayerControl.LocalPlayer.IsRole(RoleType.Cleaner) && CleanerCleanButton != null) CleanerCleanButton.Timer = Player.killTimer;
+    }
+
+    internal override void OnDeath(PlayerControl killer = null) { }
+    internal override void OnFinishShipStatusBegin() { }
+    internal override void HandleDisconnect(PlayerControl player, DisconnectReasons reason) { }
+
+    internal static void MakeButtons(HudManager hm)
+    {
+        CleanerCleanButton = new(() =>
         {
-            CleanerCleanButton.Timer = Player.killTimer;
-        }
-    }
-    public override void OnDeath(PlayerControl killer = null) { }
-    public override void OnFinishShipStatusBegin() { }
-    public override void HandleDisconnect(PlayerControl player, DisconnectReasons reason) { }
-    public static void MakeButtons(HudManager hm)
-    {
-        CleanerCleanButton = new CustomButton(
-            () =>
+            Vector2 truePosition = PlayerControl.LocalPlayer.GetTruePosition();
+            float maxDist = PlayerControl.LocalPlayer.MaxReportDistance;
+            Il2CppArrayBase<DeadBody> bodies = Object.FindObjectsOfType<DeadBody>();
+
+            for (int i = 0; i < bodies.Length; i++)
             {
-                var truePosition = PlayerControl.LocalPlayer.GetTruePosition();
-                var maxDist = PlayerControl.LocalPlayer.MaxReportDistance;
-                var bodies = UnityEngine.Object.FindObjectsOfType<DeadBody>();
+                DeadBody body = bodies[i];
+                if (body == null || body.Reported) continue;
 
-                for (int i = 0; i < bodies.Length; i++)
+                Vector2 bodyPosition = body.TruePosition;
+                float dist = Vector2.Distance(truePosition, bodyPosition);
+
+                if (dist <= maxDist && PlayerControl.LocalPlayer.CanMove && !PhysicsHelpers.AnythingBetween(truePosition, bodyPosition, Constants.ShipAndObjectsMask, false))
                 {
-                    var body = bodies[i];
-                    if (body == null || body.Reported) continue;
+                    NetworkedPlayerInfo playerInfo = GameData.Instance.GetPlayerById(body.ParentId);
+                    if (playerInfo == null) continue;
 
-                    var bodyPosition = body.TruePosition;
-                    var dist = Vector2.Distance(truePosition, bodyPosition);
-
-                    if (dist <= maxDist && PlayerControl.LocalPlayer.CanMove && !PhysicsHelpers.AnythingBetween(truePosition, bodyPosition, Constants.ShipAndObjectsMask, false))
                     {
-                        var playerInfo = GameData.Instance.GetPlayerById(body.ParentId);
-                        if (playerInfo == null) continue;
-
-                        {
-                            using var sender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.CleanBody);
-                            sender.Write(playerInfo.PlayerId);
-                        }
-                        RPCProcedure.CleanBody(playerInfo.PlayerId);
-
-                        Local.Player.killTimer = CleanerCleanButton.Timer = CleanerCleanButton.MaxTimer;
-                        break;
+                        using RPCSender sender = new(PlayerControl.LocalPlayer.NetId, CustomRPC.CleanBody);
+                        sender.Write(playerInfo.PlayerId);
                     }
+                    RPCProcedure.CleanBody(playerInfo.PlayerId);
+
+                    Local.Player.killTimer = CleanerCleanButton.Timer = CleanerCleanButton.MaxTimer;
+                    break;
                 }
-            },
-            () => { return Local != null && PlayerControl.LocalPlayer.IsAlive(); },
-            () => { return hm.ReportButton.graphic.color == Palette.EnabledColor && PlayerControl.LocalPlayer.CanMove; },
-            () => { CleanerCleanButton.Timer = CleanerCleanButton.MaxTimer; },
-            AssetLoader.CleanButton,
-            ButtonPosition.Layout,
-            hm,
-            hm.KillButton,
-            AbilitySlot.ImpostorAbilityPrimary,
-            false,
-            Tr.Get(TrKey.CleanText)
-        );
+            }
+        }, () => { return Local != null && PlayerControl.LocalPlayer.IsAlive(); }, () => { return hm.ReportButton.graphic.color == Palette.EnabledColor && PlayerControl.LocalPlayer.CanMove; }, () => { CleanerCleanButton.Timer = CleanerCleanButton.MaxTimer; }, AssetLoader.CleanButton, ButtonPosition.Layout, hm, hm.KillButton, AbilitySlot.ImpostorAbilityPrimary, false, Tr.Get(TrKey.CleanText));
     }
-    public static void SetButtonCooldowns()
+
+    internal static void SetButtonCooldowns()
     {
         CleanerCleanButton.MaxTimer = Cooldown;
     }
 
     // write functions here
 
-    public static void Clear()
+    internal static void Clear()
     {
         // reset configs here
         Players.Clear();

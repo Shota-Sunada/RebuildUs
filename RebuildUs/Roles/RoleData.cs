@@ -1,23 +1,15 @@
 namespace RebuildUs.Roles;
 
-public enum RoleTeam
+internal enum RoleTeam
 {
     Crewmate,
     Impostor,
-    Neutral
+    Neutral,
 }
 
-public static class RoleData
+internal static class RoleData
 {
-    public record RoleRegistration(
-        RoleType roleType,
-        RoleTeam roleTeam,
-        Type classType,
-        Func<Color> getColor,
-        Func<CustomOption> getOption
-    );
-
-    public static readonly RoleRegistration[] Roles =
+    internal static readonly RoleRegistration[] Roles =
     [
         // Crewmate
         new(RoleType.Mayor, RoleTeam.Crewmate, typeof(RoleBase<Mayor>), () => Mayor.NameColor, () => CustomOptionHolder.MayorSpawnRate),
@@ -68,4 +60,6 @@ public static class RoleData
         new(RoleType.NiceSwapper, RoleTeam.Crewmate, typeof(RoleBase<Swapper>), () => Swapper.NameColor, () => CustomOptionHolder.SwapperSpawnRate),
         new(RoleType.EvilSwapper, RoleTeam.Impostor, typeof(RoleBase<Swapper>), () => Palette.ImpostorRed, () => CustomOptionHolder.SwapperSpawnRate),
     ];
+
+    internal sealed record RoleRegistration(RoleType RoleType, RoleTeam RoleTeam, Type ClassType, Func<Color> GetColor, Func<CustomOption> GetOption);
 }

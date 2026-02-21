@@ -1,6 +1,6 @@
 namespace RebuildUs.Modules.GameEvents.Events;
 
-public class DisconnectEventData : GameEventData
+internal abstract class DisconnectEventData : GameEventData
 {
-    public PlayerControl Player { get; set; }
+    internal PlayerControl Player { get; set; }
 }

@@ -1,8 +1,8 @@
 namespace RebuildUs.Modules.GameEvents.Events;
 
-public class MeetingEndEventData : GameEventData
+internal abstract class MeetingEndEventData : GameEventData
 {
-    public MeetingResult Result { get; set; }
-    public PlayerControl ExiledPlayer { get; set; }
-    public Dictionary<PlayerControl, PlayerControl> Votes { get; set; } = [];
+    internal MeetingResult Result { get; set; }
+    internal PlayerControl ExiledPlayer { get; set; }
+    internal Dictionary<PlayerControl, PlayerControl> Votes { get; set; } = [];
 }

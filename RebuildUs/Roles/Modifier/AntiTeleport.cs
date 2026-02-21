@@ -1,41 +1,11 @@
 namespace RebuildUs.Roles.Modifier;
 
 [HarmonyPatch]
-public class AntiTeleport : ModifierBase<AntiTeleport>
+internal class AntiTeleport : ModifierBase<AntiTeleport>
 {
-    public static Color NameColor = Palette.Orange;
-    public override Color ModifierColor => NameColor;
-    public static Vector3 Position = new();
-    public static List<PlayerControl> Candidates
-    {
-        get
-        {
-            List<PlayerControl> validPlayers = [];
-            foreach (var player in PlayerControl.AllPlayerControls.GetFastEnumerator())
-            {
-                if (!player.HasModifier(ModifierType.AntiTeleport))
-                {
-                    validPlayers.Add(player);
-                }
-            }
+    internal static Color NameColor = Palette.Orange;
 
-            return validPlayers;
-        }
-    }
-    public static string Postfix
-    {
-        get
-        {
-            return Tr.Get(TrKey.AntiTeleportPostfix);
-        }
-    }
-    public static string FullName
-    {
-        get
-        {
-            return Tr.Get(TrKey.AntiTeleport);
-        }
-    }
+    internal static Vector3 Position;
 
     public AntiTeleport()
     {
@@ -43,21 +13,49 @@ public class AntiTeleport : ModifierBase<AntiTeleport>
         StaticModifierType = CurrentModifierType = ModifierType.AntiTeleport;
     }
 
-    public override void OnMeetingStart() { }
-    public override void OnMeetingEnd() { }
-    public override void OnIntroEnd() { }
-    public override void FixedUpdate() { }
-    public override void OnKill(PlayerControl target) { }
-    public override void OnDeath(PlayerControl killer = null) { }
-    public override void OnFinishShipStatusBegin() { }
-    public override void HandleDisconnect(PlayerControl player, DisconnectReasons reason) { }
+    internal override Color ModifierColor
+    {
+        get => NameColor;
+    }
+
+    internal static List<PlayerControl> Candidates
+    {
+        get
+        {
+            List<PlayerControl> validPlayers = [];
+            foreach (PlayerControl player in PlayerControl.AllPlayerControls.GetFastEnumerator())
+                if (!player.HasModifier(ModifierType.AntiTeleport))
+                    validPlayers.Add(player);
+
+            return validPlayers;
+        }
+    }
+
+    internal static string Postfix
+    {
+        get => Tr.Get(TrKey.AntiTeleportPostfix);
+    }
+
+    internal static string FullName
+    {
+        get => Tr.Get(TrKey.AntiTeleport);
+    }
+
+    internal override void OnMeetingStart() { }
+    internal override void OnMeetingEnd() { }
+    internal override void OnIntroEnd() { }
+    internal override void FixedUpdate() { }
+    internal override void OnKill(PlayerControl target) { }
+    internal override void OnDeath(PlayerControl killer = null) { }
+    internal override void OnFinishShipStatusBegin() { }
+    internal override void HandleDisconnect(PlayerControl player, DisconnectReasons reason) { }
 
     // write functions here
 
-    public static void Clear()
+    internal static void Clear()
     {
         // reset configs here
         Players.Clear();
-        Position = new Vector3();
+        Position = new();
     }
 }

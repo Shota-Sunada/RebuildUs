@@ -1,51 +1,49 @@
 namespace RebuildUs.Modules;
 
-public enum SynchronizeTag
+internal enum SynchronizeTag
 {
     PreSpawnMinigame,
 }
 
-public class SynchronizeData
+internal sealed class SynchronizeData
 {
-    private readonly Dictionary<SynchronizeTag, ulong> Dic;
+    private readonly Dictionary<SynchronizeTag, ulong> _dic;
 
-    public SynchronizeData()
+    internal SynchronizeData()
     {
-        Dic = [];
+        _dic = [];
     }
 
-    public void Synchronize(SynchronizeTag tag, byte playerId)
+    internal void Synchronize(SynchronizeTag tag, byte playerId)
     {
-        if (!Dic.ContainsKey(tag)) Dic[tag] = 0;
+        _dic.TryAdd(tag, 0);
 
-        Dic[tag] |= (ulong)1 << playerId;
+        _dic[tag] |= (ulong)1 << playerId;
     }
 
-    public bool Align(SynchronizeTag tag, bool withGhost, bool withSurvivor = true)
+    internal bool Align(SynchronizeTag tag, bool withGhost, bool withSurvivor = true)
     {
-        if (!Dic.TryGetValue(tag, out ulong value)) return false;
+        if (!_dic.TryGetValue(tag, out ulong value)) return false;
 
         foreach (PlayerControl pc in PlayerControl.AllPlayerControls.GetFastEnumerator())
         {
             if (pc == null || pc.Data == null || pc.Data.Disconnected) continue;
 
             bool shouldCheck = pc.Data.IsDead ? withGhost : withSurvivor;
-            if (shouldCheck)
-            {
-                if ((value & ((ulong)1 << pc.PlayerId)) == 0) return false;
-            }
+            if (!shouldCheck) continue;
+            if ((value & ((ulong)1 << pc.PlayerId)) == 0) return false;
         }
 
         return true;
     }
 
-    public void Reset(SynchronizeTag tag)
+    internal void Reset(SynchronizeTag tag)
     {
-        Dic[tag] = 0;
+        _dic[tag] = 0;
     }
 
-    public void Initialize()
+    internal void Initialize()
     {
-        Dic.Clear();
+        _dic.Clear();
     }
 }

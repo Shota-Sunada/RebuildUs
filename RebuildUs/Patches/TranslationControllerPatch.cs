@@ -1,28 +1,25 @@
+using Object = Il2CppSystem.Object;
+
 namespace RebuildUs.Patches;
 
 [HarmonyPatch]
-public static class TranslationControllerPatch
+internal static class TranslationControllerPatch
 {
     [HarmonyPrefix]
     [HarmonyPriority(Priority.Last)]
-    [HarmonyPatch(typeof(TranslationController), nameof(TranslationController.GetString), [typeof(StringNames), typeof(Il2CppReferenceArray<Il2CppSystem.Object>)])]
-    public static bool GetStringPrefix(ref string __result, StringNames id)
+    [HarmonyPatch(typeof(TranslationController), nameof(TranslationController.GetString), typeof(StringNames), typeof(Il2CppReferenceArray<Object>))]
+    internal static bool GetStringPrefix(ref string __result, StringNames id)
     {
-        if ((int)id < CustomOption.CUSTOM_OPTION_PRE_ID)
-        {
-            return true;
-        }
+        if ((int)id < CustomOption.CUSTOM_OPTION_PRE_ID) return true;
 
         // For now only do this in custom options.
         int idInt = (int)id - CustomOption.CUSTOM_OPTION_PRE_ID;
         CustomOption opt = null;
-        foreach (var o in CustomOption.AllOptions)
+        foreach (CustomOption o in CustomOption.AllOptions)
         {
-            if (o.Id == idInt)
-            {
-                opt = o;
-                break;
-            }
+            if (o.Id != idInt) continue;
+            opt = o;
+            break;
         }
 
         if (opt == null)
@@ -39,15 +36,15 @@ public static class TranslationControllerPatch
 
     [HarmonyPrefix]
     [HarmonyPriority(Priority.Last)]
-    [HarmonyPatch(typeof(TranslationController), nameof(TranslationController.GetString), [typeof(StringNames), typeof(Il2CppReferenceArray<Il2CppSystem.Object>)])]
-    public static bool GetColorNamePrefix(ref string __result, [HarmonyArgument(0)] StringNames name)
+    [HarmonyPatch(typeof(TranslationController), nameof(TranslationController.GetString), typeof(StringNames), typeof(Il2CppReferenceArray<Object>))]
+    internal static bool GetColorNamePrefix(ref string __result, [HarmonyArgument(0)] StringNames name)
     {
         return CustomColors.GetColorName(ref __result, name);
     }
 
     [HarmonyPostfix]
-    [HarmonyPatch(typeof(TranslationController), nameof(TranslationController.GetString), [typeof(StringNames), typeof(Il2CppReferenceArray<Il2CppSystem.Object>)])]
-    public static void GetStringPostfix(ref string __result, [HarmonyArgument(0)] StringNames id)
+    [HarmonyPatch(typeof(TranslationController), nameof(TranslationController.GetString), typeof(StringNames), typeof(Il2CppReferenceArray<Object>))]
+    internal static void GetStringPostfix(ref string __result, [HarmonyArgument(0)] StringNames id)
     {
         Exile.ExileMessage(ref __result, id);
     }

@@ -1,7 +1,7 @@
 namespace RebuildUs.Modules.GameEvents.Events;
 
-public class GameEndEventData : GameEventData
+internal abstract class GameEndEventData : GameEventData
 {
-    public string WinningTeam { get; set; }
-    public GameOverReason Reason { get; set; }
+    internal string WinningTeam { get; set; }
+    internal GameOverReason Reason { get; set; }
 }

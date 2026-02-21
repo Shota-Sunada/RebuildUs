@@ -1,15 +1,9 @@
 namespace RebuildUs.Roles.Crewmate;
 
 [HarmonyPatch]
-public class Spy : RoleBase<Spy>
+internal class Spy : RoleBase<Spy>
 {
-    public static Color NameColor = Palette.ImpostorRed;
-    public override Color RoleColor => NameColor;
-
-    // write configs here
-    public static bool ImpostorsCanKillAnyone { get { return CustomOptionHolder.SpyImpostorsCanKillAnyone.GetBool(); } }
-    public static bool CanEnterVents { get { return CustomOptionHolder.SpyCanEnterVents.GetBool(); } }
-    public static bool HasImpostorVision { get { return CustomOptionHolder.SpyHasImpostorVision.GetBool(); } }
+    internal static Color NameColor = Palette.ImpostorRed;
 
     public Spy()
     {
@@ -17,27 +11,34 @@ public class Spy : RoleBase<Spy>
         StaticRoleType = CurrentRoleType = RoleType.Spy;
     }
 
-    public override void OnUpdateNameColors()
+    internal override Color RoleColor
     {
-        var localPlayer = PlayerControl.LocalPlayer;
-        if (localPlayer != null && localPlayer.IsTeamImpostor())
-        {
-            Update.SetPlayerNameColor(Player, NameColor);
-        }
+        get => NameColor;
     }
 
-    public override void OnMeetingStart() { }
-    public override void OnMeetingEnd() { }
-    public override void OnIntroEnd() { }
-    public override void FixedUpdate() { }
-    public override void OnKill(PlayerControl target) { }
-    public override void OnDeath(PlayerControl killer = null) { }
-    public override void OnFinishShipStatusBegin() { }
-    public override void HandleDisconnect(PlayerControl player, DisconnectReasons reason) { }
+    // write configs here
+    internal static bool ImpostorsCanKillAnyone { get => CustomOptionHolder.SpyImpostorsCanKillAnyone.GetBool(); }
+    internal static bool CanEnterVents { get => CustomOptionHolder.SpyCanEnterVents.GetBool(); }
+    internal static bool HasImpostorVision { get => CustomOptionHolder.SpyHasImpostorVision.GetBool(); }
+
+    internal override void OnUpdateNameColors()
+    {
+        PlayerControl localPlayer = PlayerControl.LocalPlayer;
+        if (localPlayer != null && localPlayer.IsTeamImpostor()) Update.SetPlayerNameColor(Player, NameColor);
+    }
+
+    internal override void OnMeetingStart() { }
+    internal override void OnMeetingEnd() { }
+    internal override void OnIntroEnd() { }
+    internal override void FixedUpdate() { }
+    internal override void OnKill(PlayerControl target) { }
+    internal override void OnDeath(PlayerControl killer = null) { }
+    internal override void OnFinishShipStatusBegin() { }
+    internal override void HandleDisconnect(PlayerControl player, DisconnectReasons reason) { }
 
     // write functions here
 
-    public static void Clear()
+    internal static void Clear()
     {
         // reset configs here
         Players.Clear();

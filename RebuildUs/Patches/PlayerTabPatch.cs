@@ -1,11 +1,11 @@
 namespace RebuildUs.Patches;
 
 [HarmonyPatch]
-public static class PlayerTabPatch
+internal static class PlayerTabPatch
 {
     [HarmonyPostfix]
     [HarmonyPatch(typeof(PlayerTab), nameof(PlayerTab.OnEnable))]
-    public static void PlayerTabOnEnablePostfix(PlayerTab __instance)
+    internal static void PlayerTabOnEnablePostfix(PlayerTab __instance)
     {
         CustomColors.EnablePlayerTab(__instance);
     }

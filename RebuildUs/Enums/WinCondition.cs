@@ -1,6 +1,6 @@
 namespace RebuildUs.Enums;
 
-public enum WinCondition
+internal enum WinCondition
 {
     Default,
     JesterWin,

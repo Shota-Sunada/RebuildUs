@@ -1,17 +1,17 @@
 namespace RebuildUs.Patches;
 
 [HarmonyPatch]
-public static class LogicGameFlowNormalPatch
+internal static class LogicGameFlowNormalPatch
 {
     [HarmonyPrefix]
     [HarmonyPatch(typeof(LogicGameFlowNormal), nameof(LogicGameFlowNormal.CheckEndCriteria))]
-    public static bool CheckEndCriteriaPrefix()
+    internal static bool CheckEndCriteriaPrefix()
     {
         if (!GameData.Instance) return false;
         if (DestroyableSingleton<TutorialManager>.InstanceExists) return true; // InstanceExists | Don't check Custom Criteria when in Tutorial
         if (FastDestroyableSingleton<HudManager>.Instance.IsIntroDisplayed) return false;
 
-        var statistics = new PlayerStatistics();
+        PlayerStatistics statistics = new();
         if (EndGameMain.CheckAndEndGameForMiniLose()) return false;
         if (EndGameMain.CheckAndEndGameForJesterWin()) return false;
         if (EndGameMain.CheckAndEndGameForArsonistWin()) return false;
@@ -26,7 +26,7 @@ public static class LogicGameFlowNormalPatch
 
     [HarmonyPostfix]
     [HarmonyPatch(typeof(LogicGameFlowNormal), nameof(LogicGameFlowNormal.IsGameOverDueToDeath))]
-    public static void IsGameOverDueToDeathPostfix(ref bool __result)
+    internal static void IsGameOverDueToDeathPostfix(ref bool __result)
     {
         Ship.IsGameOverDueToDeath(ref __result);
     }

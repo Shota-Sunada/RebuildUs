@@ -1,11 +1,11 @@
 namespace RebuildUs.Patches;
 
 [HarmonyPatch]
-public static class VentButtonPatch
+internal static class VentButtonPatch
 {
     [HarmonyPostfix]
     [HarmonyPatch(typeof(VentButton), nameof(VentButton.SetTarget))]
-    public static void SetTargetPostfix(VentButton __instance)
+    internal static void SetTargetPostfix(VentButton __instance)
     {
         Usables.VentButtonSetTarget(__instance);
     }

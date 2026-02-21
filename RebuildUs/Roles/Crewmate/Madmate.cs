@@ -1,19 +1,9 @@
 namespace RebuildUs.Roles.Crewmate;
 
 [HarmonyPatch]
-public class MadmateRole : RoleBase<MadmateRole>
+internal class MadmateRole : RoleBase<MadmateRole>
 {
-    public static Color NameColor = Palette.ImpostorRed;
-    public override Color RoleColor => NameColor;
-
-    public static bool CanEnterVents { get { return CustomOptionHolder.MadmateRoleCanEnterVents.GetBool(); } }
-    public static bool HasImpostorVision { get { return CustomOptionHolder.MadmateRoleHasImpostorVision.GetBool(); } }
-    public static bool CanSabotage { get { return CustomOptionHolder.MadmateRoleCanSabotage.GetBool(); } }
-    public static bool CanFixComm { get { return CustomOptionHolder.MadmateRoleCanFixComm.GetBool(); } }
-    public static bool CanKnowImpostorAfterFinishTasks { get { return CustomOptionHolder.MadmateRoleCanKnowImpostorAfterFinishTasks.GetBool(); } }
-    public static int NumCommonTasks { get { return CustomOptionHolder.MadmateRoleTasks.CommonTasksNum; } }
-    public static int NumLongTasks { get { return CustomOptionHolder.MadmateRoleTasks.LongTasksNum; } }
-    public static int NumShortTasks { get { return CustomOptionHolder.MadmateRoleTasks.ShortTasksNum; } }
+    internal static Color NameColor = Palette.ImpostorRed;
 
     public MadmateRole()
     {
@@ -21,56 +11,71 @@ public class MadmateRole : RoleBase<MadmateRole>
         StaticRoleType = CurrentRoleType = RoleType.Madmate;
     }
 
-    public override void OnUpdateNameColors()
+    internal override Color RoleColor
     {
-        if (Player == PlayerControl.LocalPlayer)
-        {
-            Update.SetPlayerNameColor(Player, NameColor);
+        get => NameColor;
+    }
 
-            if (KnowsImpostors(Player))
+    internal static bool CanEnterVents { get => CustomOptionHolder.MadmateRoleCanEnterVents.GetBool(); }
+    internal static bool HasImpostorVision { get => CustomOptionHolder.MadmateRoleHasImpostorVision.GetBool(); }
+    internal static bool CanSabotage { get => CustomOptionHolder.MadmateRoleCanSabotage.GetBool(); }
+    internal static bool CanFixComm { get => CustomOptionHolder.MadmateRoleCanFixComm.GetBool(); }
+    internal static bool CanKnowImpostorAfterFinishTasks { get => CustomOptionHolder.MadmateRoleCanKnowImpostorAfterFinishTasks.GetBool(); }
+    private static int NumCommonTasks { get => CustomOptionHolder.MadmateRoleTasks.CommonTasksNum; }
+    private static int NumLongTasks { get => CustomOptionHolder.MadmateRoleTasks.LongTasksNum; }
+    private static int NumShortTasks { get => CustomOptionHolder.MadmateRoleTasks.ShortTasksNum; }
+
+    internal override void OnUpdateNameColors()
+    {
+        if (Player != PlayerControl.LocalPlayer) return;
+        Update.SetPlayerNameColor(Player, NameColor);
+
+        if (!KnowsImpostors(Player)) return;
+        foreach (PlayerControl p in PlayerControl.AllPlayerControls.GetFastEnumerator())
+        {
+            if (p.IsTeamImpostor()
+                || p.IsRole(RoleType.Spy)
+                || (p.IsRole(RoleType.Jackal) && Jackal.GetRole(p).WasTeamRed)
+                || (p.IsRole(RoleType.Sidekick) && Sidekick.GetRole(p).WasTeamRed))
             {
-                foreach (var p in PlayerControl.AllPlayerControls.GetFastEnumerator())
-                {
-                    if (p.IsTeamImpostor() || p.IsRole(RoleType.Spy) || (p.IsRole(RoleType.Jackal) && Jackal.GetRole(p).WasTeamRed) || (p.IsRole(RoleType.Sidekick) && Sidekick.GetRole(p).WasTeamRed))
-                    {
-                        Update.SetPlayerNameColor(p, Palette.ImpostorRed);
-                    }
-                }
+                Update.SetPlayerNameColor(p, Palette.ImpostorRed);
             }
         }
     }
-    public override void OnMeetingStart() { }
-    public override void OnMeetingEnd() { }
-    public override void OnIntroEnd() { }
-    public override void FixedUpdate() { }
-    public override void OnKill(PlayerControl target) { }
-    public override void OnDeath(PlayerControl killer = null) { }
-    public override void OnFinishShipStatusBegin() { }
-    public override void HandleDisconnect(PlayerControl player, DisconnectReasons reason) { }
 
-    public static bool KnowsImpostors(PlayerControl player)
+    internal override void OnMeetingStart() { }
+    internal override void OnMeetingEnd() { }
+    internal override void OnIntroEnd() { }
+    internal override void FixedUpdate() { }
+    internal override void OnKill(PlayerControl target) { }
+    internal override void OnDeath(PlayerControl killer = null) { }
+    internal override void OnFinishShipStatusBegin() { }
+    internal override void HandleDisconnect(PlayerControl player, DisconnectReasons reason) { }
+
+    private static bool KnowsImpostors(PlayerControl player)
     {
         return CanKnowImpostorAfterFinishTasks && IsRole(player) && TasksComplete(player);
     }
 
-    public static bool TasksComplete(PlayerControl player)
+    private static bool TasksComplete(PlayerControl player)
     {
         if (!CanKnowImpostorAfterFinishTasks) return false;
 
         int counter = 0;
         int totalTasks = NumCommonTasks + NumLongTasks + NumShortTasks;
         if (totalTasks == 0) return true;
-        foreach (var task in player.Data.Tasks)
+        foreach (NetworkedPlayerInfo.TaskInfo task in player.Data.Tasks)
         {
             if (task.Complete)
             {
                 counter++;
             }
         }
+
         return counter == totalTasks;
     }
 
-    public static void Clear()
+    internal static void Clear()
     {
         // reset configs here
         Players.Clear();

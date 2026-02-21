@@ -1,28 +1,12 @@
 namespace RebuildUs.Roles.Crewmate;
 
 [HarmonyPatch]
-public class Lighter : RoleBase<Lighter>
+internal class Lighter : RoleBase<Lighter>
 {
-    public static Color NameColor = new Color32(238, 229, 190, byte.MaxValue);
-    public override Color RoleColor => NameColor;
-    private static CustomButton LighterButton;
-    private bool LightActive = false;
+    internal static Color NameColor = new Color32(238, 229, 190, byte.MaxValue);
 
-    // write configs here
-    public static float ModeLightsOnVision { get { return CustomOptionHolder.LighterModeLightsOnVision.GetFloat(); } }
-    public static float ModeLightsOffVision { get { return CustomOptionHolder.LighterModeLightsOffVision.GetFloat(); } }
-    public static float Cooldown { get { return CustomOptionHolder.LighterCooldown.GetFloat(); } }
-    public static float Duration { get { return CustomOptionHolder.LighterDuration.GetFloat(); } }
-
-    public static bool IsLightActive(PlayerControl player)
-    {
-        if (IsRole(player) && player.IsAlive())
-        {
-            var r = GetRole(player);
-            return r.LightActive;
-        }
-        return false;
-    }
+    private static CustomButton _lighterButton;
+    private bool _lightActive;
 
     public Lighter()
     {
@@ -30,59 +14,64 @@ public class Lighter : RoleBase<Lighter>
         StaticRoleType = CurrentRoleType = RoleType.Lighter;
     }
 
-    public override void OnMeetingStart() { }
-    public override void OnMeetingEnd() { }
-    public override void OnIntroEnd() { }
-    public override void FixedUpdate() { }
-    public override void OnKill(PlayerControl target) { }
-    public override void OnDeath(PlayerControl killer = null) { }
-    public override void OnFinishShipStatusBegin() { }
-    public override void HandleDisconnect(PlayerControl player, DisconnectReasons reason) { }
-    public static void MakeButtons(HudManager hm)
+    internal override Color RoleColor
+    {
+        get => NameColor;
+    }
+
+    // write configs here
+    internal static float ModeLightsOnVision { get => CustomOptionHolder.LighterModeLightsOnVision.GetFloat(); }
+    internal static float ModeLightsOffVision { get => CustomOptionHolder.LighterModeLightsOffVision.GetFloat(); }
+    private static float Cooldown { get => CustomOptionHolder.LighterCooldown.GetFloat(); }
+    private static float Duration { get => CustomOptionHolder.LighterDuration.GetFloat(); }
+
+    internal static bool IsLightActive(PlayerControl player)
+    {
+        if (!IsRole(player) || !player.IsAlive()) return false;
+        Lighter r = GetRole(player);
+        return r._lightActive;
+    }
+
+    internal override void OnMeetingStart() { }
+    internal override void OnMeetingEnd() { }
+    internal override void OnIntroEnd() { }
+    internal override void FixedUpdate() { }
+    internal override void OnKill(PlayerControl target) { }
+    internal override void OnDeath(PlayerControl killer = null) { }
+    internal override void OnFinishShipStatusBegin() { }
+    internal override void HandleDisconnect(PlayerControl player, DisconnectReasons reason) { }
+
+    internal static void MakeButtons(HudManager hm)
     {
         // Lighter light
-        LighterButton = new CustomButton(
-            () =>
-            {
-                var local = Local;
-                local?.LightActive = true;
-            },
-            () => { return Local != null && PlayerControl.LocalPlayer?.Data?.IsDead == false; },
-            () => { return PlayerControl.LocalPlayer.CanMove; },
-            () =>
-            {
-                var local = Local;
-                local?.LightActive = false;
-                LighterButton.Timer = LighterButton.MaxTimer;
-                LighterButton.IsEffectActive = false;
-                LighterButton.ActionButton.graphic.color = Palette.EnabledColor;
-            },
-            AssetLoader.LighterButton,
-            ButtonPosition.Layout,
-            hm,
-            hm.UseButton,
-            AbilitySlot.CrewmateAbilityPrimary,
-            true,
-            Duration,
-            () =>
-            {
-                var local = Local;
-                local?.LightActive = false;
-                LighterButton.Timer = LighterButton.MaxTimer;
-            },
-            false,
-            Tr.Get(TrKey.LighterText)
-        );
+        _lighterButton = new(() =>
+        {
+            Lighter local = Local;
+            local?._lightActive = true;
+        }, () => Local != null && PlayerControl.LocalPlayer?.Data?.IsDead == false, () => PlayerControl.LocalPlayer.CanMove, () =>
+        {
+            Lighter local = Local;
+            local?._lightActive = false;
+            _lighterButton.Timer = _lighterButton.MaxTimer;
+            _lighterButton.IsEffectActive = false;
+            _lighterButton.ActionButton.graphic.color = Palette.EnabledColor;
+        }, AssetLoader.LighterButton, ButtonPosition.Layout, hm, hm.UseButton, AbilitySlot.CrewmateAbilityPrimary, true, Duration, () =>
+        {
+            Lighter local = Local;
+            local?._lightActive = false;
+            _lighterButton.Timer = _lighterButton.MaxTimer;
+        }, false, Tr.Get(TrKey.LighterText));
     }
-    public static void SetButtonCooldowns()
+
+    internal static void SetButtonCooldowns()
     {
-        LighterButton.MaxTimer = Cooldown;
-        LighterButton.EffectDuration = Duration;
+        _lighterButton.MaxTimer = Cooldown;
+        _lighterButton.EffectDuration = Duration;
     }
 
     // write functions here
 
-    public static void Clear()
+    internal static void Clear()
     {
         // reset configs here
         Players.Clear();

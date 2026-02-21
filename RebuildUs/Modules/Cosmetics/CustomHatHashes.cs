@@ -2,15 +2,15 @@ using System.Text.Json.Serialization;
 
 namespace RebuildUs.Modules.Cosmetics;
 
-public class CustomHatHashes
+internal class CustomHatHashes
 {
-    [JsonPropertyName("reshasha")] public string ResHashA { get; set; }
+    [JsonPropertyName("reshasha")] internal string ResHashA { get; set; }
 
-    [JsonPropertyName("reshashb")] public string ResHashB { get; set; }
+    [JsonPropertyName("reshashb")] internal string ResHashB { get; set; }
 
-    [JsonPropertyName("reshashbf")] public string ResHashBf { get; set; }
+    [JsonPropertyName("reshashbf")] internal string ResHashBf { get; set; }
 
-    [JsonPropertyName("reshashc")] public string ResHashC { get; set; }
+    [JsonPropertyName("reshashc")] internal string ResHashC { get; set; }
 
-    [JsonPropertyName("reshashf")] public string ResHashF { get; set; }
+    [JsonPropertyName("reshashf")] internal string ResHashF { get; set; }
 }

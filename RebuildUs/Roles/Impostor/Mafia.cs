@@ -1,14 +1,16 @@
+using Object = UnityEngine.Object;
+
 namespace RebuildUs.Roles.Impostor;
 
-public static class Mafia
+internal static class Mafia
 {
-    public static Color NameColor = Palette.ImpostorRed;
+    internal static Color NameColor = Palette.ImpostorRed;
 
-    public static bool IsGodfatherDead = false;
-    public static bool IsMafiosoDead = false;
-    public static bool IsJanitorDead = false;
+    internal static bool IsGodfatherDead;
+    internal static bool IsMafiosoDead;
+    internal static bool IsJanitorDead;
 
-    public static void ClearAndReload()
+    internal static void ClearAndReload()
     {
         IsGodfatherDead = false;
         IsMafiosoDead = false;
@@ -19,33 +21,41 @@ public static class Mafia
     }
 
     [HarmonyPatch]
-    public class Godfather : RoleBase<Godfather>
+    internal class Godfather : RoleBase<Godfather>
     {
-        public override Color RoleColor => NameColor;
-
         public Godfather()
         {
             // write value init here
             StaticRoleType = CurrentRoleType = RoleType.Godfather;
         }
 
-        public override string NameTag => (PlayerControl.LocalPlayer?.Data.Role.IsImpostor ?? false) ? $" ({Tr.Get(TrKey.MafiaG)})" : "";
+        internal override Color RoleColor
+        {
+            get => NameColor;
+        }
 
-        public override void OnMeetingStart() { }
-        public override void OnMeetingEnd() { }
-        public override void OnIntroEnd() { }
-        public override void FixedUpdate() { }
-        public override void OnKill(PlayerControl target) { }
-        public override void OnDeath(PlayerControl killer = null)
+        internal override string NameTag
+        {
+            get => PlayerControl.LocalPlayer?.Data.Role.IsImpostor ?? false ? $" ({Tr.Get(TrKey.MafiaG)})" : "";
+        }
+
+        internal override void OnMeetingStart() { }
+        internal override void OnMeetingEnd() { }
+        internal override void OnIntroEnd() { }
+        internal override void FixedUpdate() { }
+        internal override void OnKill(PlayerControl target) { }
+
+        internal override void OnDeath(PlayerControl killer = null)
         {
             IsGodfatherDead = true;
         }
-        public override void OnFinishShipStatusBegin() { }
-        public override void HandleDisconnect(PlayerControl player, DisconnectReasons reason) { }
+
+        internal override void OnFinishShipStatusBegin() { }
+        internal override void HandleDisconnect(PlayerControl player, DisconnectReasons reason) { }
 
         // write functions here
 
-        public static void Clear()
+        internal static void Clear()
         {
             // reset configs here
             Players.Clear();
@@ -53,40 +63,48 @@ public static class Mafia
     }
 
     [HarmonyPatch]
-    public class Mafioso : RoleBase<Mafioso>
+    internal class Mafioso : RoleBase<Mafioso>
     {
-        public override Color RoleColor => NameColor;
-
-        // write configs here
-
-        public static bool CanSabotage { get { return CanKill || CustomOptionHolder.MafiosoCanSabotage.GetBool(); } }
-        public static bool CanRepair { get { return CanKill || CustomOptionHolder.MafiosoCanRepair.GetBool(); } }
-        public static bool CanVent { get { return CanKill || CustomOptionHolder.MafiosoCanVent.GetBool(); } }
-        public static bool CanKill { get { return !Godfather.Exists || IsGodfatherDead; } }
-
         public Mafioso()
         {
             // write value init here
             StaticRoleType = CurrentRoleType = RoleType.Mafioso;
         }
 
-        public override string NameTag => (PlayerControl.LocalPlayer?.Data.Role.IsImpostor ?? false) ? $" ({Tr.Get(TrKey.MafiaM)})" : "";
+        internal override Color RoleColor
+        {
+            get => NameColor;
+        }
 
-        public override void OnMeetingStart() { }
-        public override void OnMeetingEnd() { }
-        public override void OnIntroEnd() { }
-        public override void FixedUpdate() { }
-        public override void OnKill(PlayerControl target) { }
-        public override void OnDeath(PlayerControl killer = null)
+        // write configs here
+
+        internal static bool CanSabotage { get => CanKill || CustomOptionHolder.MafiosoCanSabotage.GetBool(); }
+        internal static bool CanRepair { get => CanKill || CustomOptionHolder.MafiosoCanRepair.GetBool(); }
+        internal static bool CanVent { get => CanKill || CustomOptionHolder.MafiosoCanVent.GetBool(); }
+        internal static bool CanKill { get => !Godfather.Exists || IsGodfatherDead; }
+
+        internal override string NameTag
+        {
+            get => PlayerControl.LocalPlayer?.Data.Role.IsImpostor ?? false ? $" ({Tr.Get(TrKey.MafiaM)})" : "";
+        }
+
+        internal override void OnMeetingStart() { }
+        internal override void OnMeetingEnd() { }
+        internal override void OnIntroEnd() { }
+        internal override void FixedUpdate() { }
+        internal override void OnKill(PlayerControl target) { }
+
+        internal override void OnDeath(PlayerControl killer = null)
         {
             IsMafiosoDead = true;
         }
-        public override void OnFinishShipStatusBegin() { }
-        public override void HandleDisconnect(PlayerControl player, DisconnectReasons reason) { }
+
+        internal override void OnFinishShipStatusBegin() { }
+        internal override void HandleDisconnect(PlayerControl player, DisconnectReasons reason) { }
 
         // write functions here
 
-        public static void Clear()
+        internal static void Clear()
         {
             // reset configs here
             Players.Clear();
@@ -94,16 +112,10 @@ public static class Mafia
     }
 
     [HarmonyPatch]
-    public class Janitor : RoleBase<Janitor>
+    internal class Janitor : RoleBase<Janitor>
     {
-        public override Color RoleColor => NameColor;
-
         // write configs here
-        private static CustomButton JanitorCleanButton;
-        public static float Cooldown { get { return CustomOptionHolder.JanitorCooldown.GetFloat(); } }
-        public static bool CanSabotage { get { return CustomOptionHolder.JanitorCanSabotage.GetBool(); } }
-        public static bool CanRepair { get { return CustomOptionHolder.JanitorCanRepair.GetBool(); } }
-        public static bool CanVent { get { return CustomOptionHolder.JanitorCanVent.GetBool(); } }
+        private static CustomButton _janitorCleanButton;
 
         public Janitor()
         {
@@ -111,70 +123,75 @@ public static class Mafia
             StaticRoleType = CurrentRoleType = RoleType.Janitor;
         }
 
-        public override string NameTag => (PlayerControl.LocalPlayer?.Data.Role.IsImpostor ?? false) ? $" ({Tr.Get(TrKey.MafiaJ)})" : "";
+        internal override Color RoleColor
+        {
+            get => NameColor;
+        }
 
-        public override void OnMeetingStart() { }
-        public override void OnMeetingEnd() { }
-        public override void OnIntroEnd() { }
-        public override void FixedUpdate() { }
-        public override void OnKill(PlayerControl target) { }
-        public override void OnDeath(PlayerControl killer = null)
+        internal static float Cooldown { get => CustomOptionHolder.JanitorCooldown.GetFloat(); }
+        internal static bool CanSabotage { get => CustomOptionHolder.JanitorCanSabotage.GetBool(); }
+        internal static bool CanRepair { get => CustomOptionHolder.JanitorCanRepair.GetBool(); }
+        internal static bool CanVent { get => CustomOptionHolder.JanitorCanVent.GetBool(); }
+
+        internal override string NameTag
+        {
+            get => PlayerControl.LocalPlayer?.Data.Role.IsImpostor ?? false ? $" ({Tr.Get(TrKey.MafiaJ)})" : "";
+        }
+
+        internal override void OnMeetingStart() { }
+        internal override void OnMeetingEnd() { }
+        internal override void OnIntroEnd() { }
+        internal override void FixedUpdate() { }
+        internal override void OnKill(PlayerControl target) { }
+
+        internal override void OnDeath(PlayerControl killer = null)
         {
             IsJanitorDead = true;
         }
-        public override void OnFinishShipStatusBegin() { }
-        public override void HandleDisconnect(PlayerControl player, DisconnectReasons reason) { }
-        public static void MakeButtons(HudManager hm)
+
+        internal override void OnFinishShipStatusBegin() { }
+        internal override void HandleDisconnect(PlayerControl player, DisconnectReasons reason) { }
+
+        internal static void MakeButtons(HudManager hm)
         {
-            JanitorCleanButton = new CustomButton(
-                () =>
+            _janitorCleanButton = new(() =>
+            {
+                Il2CppArrayBase<DeadBody> bodies = Object.FindObjectsOfType<DeadBody>();
+                PlayerControl local = PlayerControl.LocalPlayer;
+                Vector2 truePosition = local.GetTruePosition();
+                float maxDist = local.MaxReportDistance;
+
+                for (int i = 0; i < bodies.Count; i++)
                 {
-                    var bodies = UnityEngine.Object.FindObjectsOfType<DeadBody>();
-                    var local = PlayerControl.LocalPlayer;
-                    var truePosition = local.GetTruePosition();
-                    var maxDist = local.MaxReportDistance;
+                    DeadBody body = bodies[i];
+                    if (body == null || body.Reported) continue;
 
-                    for (var i = 0; i < bodies.Count; i++)
+                    Vector2 bodyPos = body.TruePosition;
+                    if (Vector2.Distance(bodyPos, truePosition) <= maxDist && local.CanMove && !PhysicsHelpers.AnythingBetween(truePosition, bodyPos, Constants.ShipAndObjectsMask, false))
                     {
-                        var body = bodies[i];
-                        if (body == null || body.Reported) continue;
-
-                        var bodyPos = body.TruePosition;
-                        if (Vector2.Distance(bodyPos, truePosition) <= maxDist && local.CanMove && !PhysicsHelpers.AnythingBetween(truePosition, bodyPos, Constants.ShipAndObjectsMask, false))
+                        NetworkedPlayerInfo playerInfo = GameData.Instance.GetPlayerById(body.ParentId);
+                        if (playerInfo != null)
                         {
-                            var playerInfo = GameData.Instance.GetPlayerById(body.ParentId);
-                            if (playerInfo != null)
-                            {
-                                using var sender = new RPCSender(local.NetId, CustomRPC.CleanBody);
-                                sender.Write(playerInfo.PlayerId);
-                                RPCProcedure.CleanBody(playerInfo.PlayerId);
+                            using RPCSender sender = new(local.NetId, CustomRPC.CleanBody);
+                            sender.Write(playerInfo.PlayerId);
+                            RPCProcedure.CleanBody(playerInfo.PlayerId);
 
-                                JanitorCleanButton.Timer = JanitorCleanButton.MaxTimer;
-                                break;
-                            }
+                            _janitorCleanButton.Timer = _janitorCleanButton.MaxTimer;
+                            break;
                         }
                     }
-                },
-                () => { return PlayerControl.LocalPlayer.IsRole(RoleType.Janitor) && PlayerControl.LocalPlayer.IsAlive(); },
-                () => { return hm.ReportButton.graphic.color == Palette.EnabledColor && PlayerControl.LocalPlayer.CanMove; },
-                () => { JanitorCleanButton.Timer = JanitorCleanButton.MaxTimer; },
-                AssetLoader.CleanButton,
-                ButtonPosition.Layout,
-                hm,
-                hm.KillButton,
-                AbilitySlot.ImpostorAbilityPrimary,
-                false,
-                Tr.Get(TrKey.CleanText)
-            );
+                }
+            }, () => { return PlayerControl.LocalPlayer.IsRole(RoleType.Janitor) && PlayerControl.LocalPlayer.IsAlive(); }, () => { return hm.ReportButton.graphic.color == Palette.EnabledColor && PlayerControl.LocalPlayer.CanMove; }, () => { _janitorCleanButton.Timer = _janitorCleanButton.MaxTimer; }, AssetLoader.CleanButton, ButtonPosition.Layout, hm, hm.KillButton, AbilitySlot.ImpostorAbilityPrimary, false, Tr.Get(TrKey.CleanText));
         }
-        public static void SetButtonCooldowns()
+
+        internal static void SetButtonCooldowns()
         {
-            JanitorCleanButton.MaxTimer = Janitor.Cooldown;
+            _janitorCleanButton.MaxTimer = Cooldown;
         }
 
         // write functions here
 
-        public static void Clear()
+        internal static void Clear()
         {
             // reset configs here
             Players.Clear();

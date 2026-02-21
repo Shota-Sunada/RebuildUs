@@ -1,11 +1,11 @@
 namespace RebuildUs.Patches;
 
 [HarmonyPatch]
-public static class MainMenuManagerPatch
+internal static class MainMenuManagerPatch
 {
     [HarmonyPostfix]
     [HarmonyPatch(typeof(MainMenuManager), nameof(MainMenuManager.Start))]
-    public static void StartPostfix(MainMenuManager __instance)
+    internal static void StartPostfix(MainMenuManager __instance)
     {
         ModStamp.Show();
         Credits.EditMainMenu(__instance);

@@ -1,11 +1,11 @@
 namespace RebuildUs.Patches;
 
 [HarmonyPatch]
-public static class RoleOptionsCollectionV10Patch
+internal static class RoleOptionsCollectionV10Patch
 {
     [HarmonyPostfix]
     [HarmonyPatch(typeof(RoleOptionsCollectionV10), nameof(RoleOptionsCollectionV10.GetNumPerGame))]
-    public static void GetNumPerGamePostfix(ref int __result)
+    internal static void GetNumPerGamePostfix(ref int __result)
     {
         if (Helpers.IsNormal) __result = 0; // Deactivate Vanilla Roles if the mod roles are active
     }

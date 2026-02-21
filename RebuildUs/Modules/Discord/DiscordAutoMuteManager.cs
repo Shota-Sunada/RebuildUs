@@ -1,54 +1,47 @@
 namespace RebuildUs.Modules.Discord;
 
-public static class DiscordAutoMuteManager
+internal static class DiscordAutoMuteManager
 {
-    public static async void SetMute(ulong discordId, bool mute, bool deaf)
+    internal static async void SetMute(ulong discordId, bool mute, bool deaf)
     {
         if (!MapSettings.EnableDiscordAutoMute) return;
-        var guildId = RebuildUs.DiscordGuildId.Value;
+        string guildId = RebuildUs.DiscordGuildId.Value;
         if (string.IsNullOrEmpty(guildId)) return;
 
-        var targetVcId = RebuildUs.DiscordVCId.Value;
+        string targetVcId = RebuildUs.DiscordVcId.Value;
         if (!string.IsNullOrEmpty(targetVcId))
-        {
-            if (!DiscordModManager.PlayerVoiceStates.TryGetValue(discordId, out var currentVcId) || currentVcId != targetVcId)
-            {
+            if (!DiscordModManager.PlayerVoiceStates.TryGetValue(discordId, out string currentVcId) || currentVcId != targetVcId)
                 return;
-            }
-        }
 
         await DiscordModManager.SendRequest("PATCH", $"https://discord.com/api/v10/guilds/{guildId}/members/{discordId}", new { mute, deaf });
     }
 
-    public static void UnmuteEveryone()
+    internal static void UnmuteEveryone()
     {
-        foreach (var did in DiscordModManager.PlayerVoiceStates.Keys.ToArray())
-        {
-            SetMute(did, false, false);
-        }
+        foreach (ulong did in DiscordModManager.PlayerVoiceStates.Keys.ToArray()) SetMute(did, false, false);
     }
 
-    public static void MuteEveryone()
+    internal static void MuteEveryone()
     {
-        foreach (var p in PlayerControl.AllPlayerControls.GetFastEnumerator())
+        foreach (PlayerControl p in PlayerControl.AllPlayerControls.GetFastEnumerator())
         {
-            var id = DiscordModManager.GetIdentifier(p);
-            if (id != null && DiscordModManager.TryGetDiscordId(id, out var did))
+            string id = DiscordModManager.GetIdentifier(p);
+            if (id != null && DiscordModManager.TryGetDiscordId(id, out ulong did))
                 SetMute(did, true, true);
         }
     }
 
-    public static void OnPlayerLeft(string friendCode)
+    internal static void OnPlayerLeft(string friendCode)
     {
-        if (!string.IsNullOrEmpty(friendCode) && DiscordModManager.TryGetDiscordId(friendCode, out var did))
+        if (!string.IsNullOrEmpty(friendCode) && DiscordModManager.TryGetDiscordId(friendCode, out ulong did))
             SetMute(did, false, false);
     }
 
-    public static void UpdatePlayerMute(PlayerControl p)
+    internal static void UpdatePlayerMute(PlayerControl p)
     {
         if (!AmongUsClient.Instance.AmHost) return;
-        var id = DiscordModManager.GetIdentifier(p);
-        if (id == null || !DiscordModManager.TryGetDiscordId(id, out var did)) return;
+        string id = DiscordModManager.GetIdentifier(p);
+        if (id == null || !DiscordModManager.TryGetDiscordId(id, out ulong did)) return;
 
         bool mute = false;
         bool deaf = false;
@@ -57,12 +50,23 @@ public static class DiscordAutoMuteManager
         {
             case "行動中":
             case "追放中":
-                if (!p.Data.IsDead && p.PlayerId != DiscordModManager.ExiledPlayerId) { mute = true; deaf = true; }
-                else { mute = false; deaf = false; }
+                if (!p.Data.IsDead && p.PlayerId != DiscordModManager.ExiledPlayerId)
+                {
+                    mute = true;
+                    deaf = true;
+                }
+                else
+                {
+                    mute = false;
+                    deaf = false;
+                }
+
                 break;
             case "会議中":
-                if (!p.Data.IsDead) { mute = false; deaf = false; }
-                else { mute = true; deaf = false; }
+                mute = p.Data.IsDead;
+
+                deaf = false;
+
                 break;
             case "ドロップシップ":
                 mute = false;

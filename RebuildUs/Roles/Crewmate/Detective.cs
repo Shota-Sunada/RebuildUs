@@ -1,18 +1,10 @@
 namespace RebuildUs.Roles.Crewmate;
 
 [HarmonyPatch]
-public class Detective : RoleBase<Detective>
+internal class Detective : RoleBase<Detective>
 {
-    public static Color NameColor = new Color32(45, 106, 165, byte.MaxValue);
-    public override Color RoleColor => NameColor;
-
-    // write configs here
-    public static bool AnonymousFootprints { get { return CustomOptionHolder.DetectiveAnonymousFootprints.GetBool(); } }
-    public static float FootprintInterval { get { return CustomOptionHolder.DetectiveFootprintInterval.GetFloat(); } }
-    public static float FootprintDuration { get { return CustomOptionHolder.DetectiveFootprintDuration.GetFloat(); } }
-    public static float ReportNameDuration { get { return CustomOptionHolder.DetectiveReportNameDuration.GetFloat(); } }
-    public static float ReportColorDuration { get { return CustomOptionHolder.DetectiveReportColorDuration.GetFloat(); } }
-    public float Timer = 6.2f;
+    internal static Color NameColor = new Color32(45, 106, 165, byte.MaxValue);
+    private float _timer = 6.2f;
 
     public Detective()
     {
@@ -20,34 +12,42 @@ public class Detective : RoleBase<Detective>
         StaticRoleType = CurrentRoleType = RoleType.Detective;
     }
 
-    public override void OnMeetingStart() { }
-    public override void OnMeetingEnd() { }
-    public override void OnIntroEnd() { }
-    public override void FixedUpdate()
+    internal override Color RoleColor
+    {
+        get => NameColor;
+    }
+
+    // write configs here
+    internal static bool AnonymousFootprints { get => CustomOptionHolder.DetectiveAnonymousFootprints.GetBool(); }
+    private static float FootprintInterval { get => CustomOptionHolder.DetectiveFootprintInterval.GetFloat(); }
+    internal static float FootprintDuration { get => CustomOptionHolder.DetectiveFootprintDuration.GetFloat(); }
+    internal static float ReportNameDuration { get => CustomOptionHolder.DetectiveReportNameDuration.GetFloat(); }
+    internal static float ReportColorDuration { get => CustomOptionHolder.DetectiveReportColorDuration.GetFloat(); }
+
+    internal override void OnMeetingStart() { }
+    internal override void OnMeetingEnd() { }
+    internal override void OnIntroEnd() { }
+
+    internal override void FixedUpdate()
     {
         if (!Exists || !PlayerControl.LocalPlayer.IsRole(RoleType.Detective)) return;
 
-        Timer -= Time.fixedDeltaTime;
-        if (Timer <= 0f)
-        {
-            Timer = FootprintInterval;
-            foreach (var player in PlayerControl.AllPlayerControls.GetFastEnumerator())
-            {
-                if (player != null && player != PlayerControl.LocalPlayer && !player.Data.IsDead && !player.inVent && !player.IsGM())
-                {
-                    FootprintHolder.Instance.MakeFootprint(player);
-                }
-            }
-        }
+        _timer -= Time.fixedDeltaTime;
+        if (!(_timer <= 0f)) return;
+        _timer = FootprintInterval;
+        foreach (PlayerControl player in PlayerControl.AllPlayerControls.GetFastEnumerator())
+            if (player != null && player != PlayerControl.LocalPlayer && !player.Data.IsDead && !player.inVent && !player.IsGm())
+                FootprintHolder.Instance.MakeFootprint(player);
     }
-    public override void OnKill(PlayerControl target) { }
-    public override void OnDeath(PlayerControl killer = null) { }
-    public override void OnFinishShipStatusBegin() { }
-    public override void HandleDisconnect(PlayerControl player, DisconnectReasons reason) { }
+
+    internal override void OnKill(PlayerControl target) { }
+    internal override void OnDeath(PlayerControl killer = null) { }
+    internal override void OnFinishShipStatusBegin() { }
+    internal override void HandleDisconnect(PlayerControl player, DisconnectReasons reason) { }
 
     // write functions here
 
-    public static void Clear()
+    internal static void Clear()
     {
         // reset configs here
         Players.Clear();

@@ -1,8 +1,8 @@
 namespace RebuildUs.Modules.GameEvents.Events;
 
-public class GameSettingsEventData : GameEventData
+internal abstract class GameSettingsEventData : GameEventData
 {
-    public string Map { get; set; }
-    public int ImpostorCount { get; set; }
-    public int TaskCount { get; set; }
+    internal string Map { get; set; }
+    internal int ImpostorCount { get; set; }
+    internal int TaskCount { get; set; }
 }

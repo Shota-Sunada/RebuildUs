@@ -1,63 +1,64 @@
 using System.Collections;
 using System.Linq.Expressions;
+using System.Reflection;
+using Object = Il2CppSystem.Object;
 
 namespace RebuildUs.Utilities;
 
-public static class EnumerationHelpers
+internal static class EnumerationHelpers
 {
-    public static IEnumerable<T> GetFastEnumerator<T>(this Il2CppSystem.Collections.Generic.List<T> list) where T : Il2CppSystem.Object => new Il2CppListEnumerable<T>(list);
+    internal static IEnumerable<T> GetFastEnumerator<T>(this Il2CppSystem.Collections.Generic.List<T> list) where T : Object
+    {
+        return new Il2CppListEnumerable<T>(list);
+    }
 }
 
-public unsafe class Il2CppListEnumerable<T> : IEnumerable<T>, IEnumerator<T> where T : Il2CppSystem.Object
+internal sealed unsafe class Il2CppListEnumerable<T> : IEnumerable<T>, IEnumerator<T> where T : Object
 {
-    private struct Il2CppListStruct
-    {
-#pragma warning disable CS0169
-        private readonly IntPtr _unusedPtr1;
-        private readonly IntPtr _unusedPtr2;
-#pragma warning restore CS0169
-
-#pragma warning disable CS0649
-        public IntPtr _items;
-        public int _size;
-#pragma warning restore CS0649
-    }
-
-    private static readonly int _elemSize;
-    private static readonly int _offset;
-    private static readonly Func<IntPtr, T> _objFactory;
-
-    static Il2CppListEnumerable()
-    {
-        _elemSize = IntPtr.Size;
-        _offset = 4 * IntPtr.Size;
-
-        var constructor = typeof(T).GetConstructor([typeof(IntPtr)]);
-        var ptr = Expression.Parameter(typeof(IntPtr));
-        var create = Expression.New(constructor!, ptr);
-        var lambda = Expression.Lambda<Func<IntPtr, T>>(create, ptr);
-        _objFactory = lambda.Compile();
-    }
+    private static readonly int ElemSize;
+    private static readonly int Offset;
+    private static readonly Func<IntPtr, T> ObjFactory;
 
     private readonly IntPtr _arrayPointer;
     private readonly int _count;
     private int _index = -1;
 
-    public Il2CppListEnumerable(Il2CppSystem.Collections.Generic.List<T> list)
+    static Il2CppListEnumerable()
     {
-        var listStruct = (Il2CppListStruct*)list.Pointer;
-        _count = listStruct->_size;
-        _arrayPointer = listStruct->_items;
+        ElemSize = IntPtr.Size;
+        Offset = 4 * IntPtr.Size;
+
+        ConstructorInfo constructor = typeof(T).GetConstructor([typeof(IntPtr)]);
+        ParameterExpression ptr = Expression.Parameter(typeof(IntPtr));
+        NewExpression create = Expression.New(constructor!, ptr);
+        Expression<Func<IntPtr, T>> lambda = Expression.Lambda<Func<IntPtr, T>>(create, ptr);
+        ObjFactory = lambda.Compile();
     }
 
-    object IEnumerator.Current => Current;
+    internal Il2CppListEnumerable(Il2CppSystem.Collections.Generic.List<T> list)
+    {
+        Il2CppListStruct* listStruct = (Il2CppListStruct*)list.Pointer;
+        _count = listStruct->Size;
+        _arrayPointer = listStruct->Items;
+    }
+
     public T Current { get; private set; }
+
+    IEnumerator IEnumerable.GetEnumerator()
+    {
+        return this;
+    }
+
+    object IEnumerator.Current
+    {
+        get => Current;
+    }
 
     public bool MoveNext()
     {
         if (++_index >= _count) return false;
-        var refPtr = *(IntPtr*)IntPtr.Add(IntPtr.Add(_arrayPointer, _offset), _index * _elemSize);
-        Current = _objFactory(refPtr);
+        IntPtr refPtr = *(IntPtr*)IntPtr.Add(IntPtr.Add(_arrayPointer, Offset), _index * ElemSize);
+        Current = ObjFactory(refPtr);
         return true;
     }
 
@@ -71,12 +72,18 @@ public unsafe class Il2CppListEnumerable<T> : IEnumerable<T>, IEnumerator<T> whe
         return this;
     }
 
-    IEnumerator IEnumerable.GetEnumerator()
-    {
-        return this;
-    }
+    public void Dispose() { }
 
-    public void Dispose()
+    private struct Il2CppListStruct
     {
+#pragma warning disable CS0169
+        private readonly IntPtr _unusedPtr1;
+        private readonly IntPtr _unusedPtr2;
+#pragma warning restore CS0169
+
+#pragma warning disable CS0649
+        internal IntPtr Items;
+        internal int Size;
+#pragma warning restore CS0649
     }
 }

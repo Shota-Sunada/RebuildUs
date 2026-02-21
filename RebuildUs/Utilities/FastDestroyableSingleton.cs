@@ -1,29 +1,31 @@
 using System.Linq.Expressions;
+using System.Reflection;
 
 namespace RebuildUs.Utilities;
 
-public static unsafe class FastDestroyableSingleton<T> where T : MonoBehaviour
+internal static unsafe class FastDestroyableSingleton<T> where T : MonoBehaviour
 {
-    private static readonly IntPtr _fieldPtr;
-    private static readonly Func<IntPtr, T> _createObject;
+    private static readonly IntPtr FieldPtr;
+    private static readonly Func<IntPtr, T> CreateObject;
+
     static FastDestroyableSingleton()
     {
-        _fieldPtr = IL2CPP.GetIl2CppField(Il2CppClassPointerStore<DestroyableSingleton<T>>.NativeClassPtr, nameof(DestroyableSingleton<T>._instance));
-        var constructor = typeof(T).GetConstructor([typeof(IntPtr)]);
-        var ptr = Expression.Parameter(typeof(IntPtr));
-        var create = Expression.New(constructor!, ptr);
-        var lambda = Expression.Lambda<Func<IntPtr, T>>(create, ptr);
-        _createObject = lambda.Compile();
+        FieldPtr = IL2CPP.GetIl2CppField(Il2CppClassPointerStore<DestroyableSingleton<T>>.NativeClassPtr, nameof(DestroyableSingleton<T>._instance));
+        ConstructorInfo constructor = typeof(T).GetConstructor([typeof(IntPtr)]);
+        ParameterExpression ptr = Expression.Parameter(typeof(IntPtr));
+        NewExpression create = Expression.New(constructor!, ptr);
+        Expression<Func<IntPtr, T>> lambda = Expression.Lambda<Func<IntPtr, T>>(create, ptr);
+        CreateObject = lambda.Compile();
     }
 
-    public static T Instance
+    internal static T Instance
     {
         get
         {
             IntPtr objectPointer;
-            IL2CPP.il2cpp_field_static_get_value(_fieldPtr, &objectPointer);
+            IL2CPP.il2cpp_field_static_get_value(FieldPtr, &objectPointer);
             if (objectPointer == IntPtr.Zero) return DestroyableSingleton<T>.Instance;
-            return _createObject(objectPointer);
+            return CreateObject(objectPointer);
         }
     }
 }

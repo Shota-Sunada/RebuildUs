@@ -1,6 +1,6 @@
 namespace RebuildUs.Roles;
 
-public enum RoleType : byte
+internal enum RoleType : byte
 {
     // Crewmate
     Crewmate = 0,
@@ -49,16 +49,18 @@ public enum RoleType : byte
     Arsonist,
     Jackal,
     Sidekick,
+
     // Opportunist,
     Vulture,
+
     // PlagueDoctor,
     // Watcher,
     EvilTracker,
     EvilHacker,
 
     // Others
-    GM = 200,
+    Gm = 200,
 
     // don't put anything below this
-    NoRole = byte.MaxValue
+    NoRole = byte.MaxValue,
 }

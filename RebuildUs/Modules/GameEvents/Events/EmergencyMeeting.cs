@@ -1,6 +1,6 @@
 namespace RebuildUs.Modules.GameEvents.Events;
 
-public class EmergencyMeetingEventData : GameEventData
+internal abstract class EmergencyMeetingEventData : GameEventData
 {
-    public PlayerControl Caller { get; set; }
+    internal PlayerControl Caller { get; set; }
 }

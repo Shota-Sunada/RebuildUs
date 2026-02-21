@@ -1,15 +1,11 @@
 namespace RebuildUs.Roles.Neutral;
 
 [HarmonyPatch]
-public class Jester : RoleBase<Jester>
+internal class Jester : RoleBase<Jester>
 {
-    public static Color NameColor = new Color32(236, 98, 165, byte.MaxValue);
-    public override Color RoleColor => NameColor;
+    internal static Color NameColor = new Color32(236, 98, 165, byte.MaxValue);
 
-    public static bool TriggerJesterWin = false;
-    public static bool CanCallEmergency { get { return CustomOptionHolder.JesterCanCallEmergency.GetBool(); } }
-    public static bool CanSabotage { get { return CustomOptionHolder.JesterCanSabotage.GetBool(); } }
-    public static bool HasImpostorVision { get { return CustomOptionHolder.JesterHasImpostorVision.GetBool(); } }
+    internal static bool TriggerJesterWin;
 
     public Jester()
     {
@@ -17,18 +13,27 @@ public class Jester : RoleBase<Jester>
         StaticRoleType = CurrentRoleType = RoleType.Jester;
     }
 
-    public override void OnMeetingStart() { }
-    public override void OnMeetingEnd() { }
-    public override void OnIntroEnd() { }
-    public override void FixedUpdate() { }
-    public override void OnKill(PlayerControl target) { }
-    public override void OnDeath(PlayerControl killer = null) { }
-    public override void OnFinishShipStatusBegin() { }
-    public override void HandleDisconnect(PlayerControl player, DisconnectReasons reason) { }
+    internal override Color RoleColor
+    {
+        get => NameColor;
+    }
+
+    internal static bool CanCallEmergency { get => CustomOptionHolder.JesterCanCallEmergency.GetBool(); }
+    internal static bool CanSabotage { get => CustomOptionHolder.JesterCanSabotage.GetBool(); }
+    internal static bool HasImpostorVision { get => CustomOptionHolder.JesterHasImpostorVision.GetBool(); }
+
+    internal override void OnMeetingStart() { }
+    internal override void OnMeetingEnd() { }
+    internal override void OnIntroEnd() { }
+    internal override void FixedUpdate() { }
+    internal override void OnKill(PlayerControl target) { }
+    internal override void OnDeath(PlayerControl killer = null) { }
+    internal override void OnFinishShipStatusBegin() { }
+    internal override void HandleDisconnect(PlayerControl player, DisconnectReasons reason) { }
 
     // write functions here
 
-    public static void Clear()
+    internal static void Clear()
     {
         // reset configs here
         TriggerJesterWin = false;

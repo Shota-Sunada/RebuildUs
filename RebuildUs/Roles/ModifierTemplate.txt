@@ -1,32 +1,32 @@
 namespace RebuildUs.Roles.Modifier;
 
 [HarmonyPatch]
-public class Modifier : ModifierBase<Modifier>
+internal class Modifier : ModifierBase<Modifier>
 {
-    public static Color ModifierColor = Palette.CrewmateBlue;
+    internal static Color ModifierColor = Palette.CrewmateBlue;
 
     // write configs here
 
-    public Modifier()
+    internal Modifier()
     {
         // write value init here
         StaticModifierType = CurrentModifierType = ModifierType.[CHANGE HERE];
     }
 
-    public override void OnMeetingStart() { }
-    public override void OnMeetingEnd() { }
-    public override void OnIntroEnd() { }
-    public override void FixedUpdate() { }
-    public override void OnKill(PlayerControl target) { }
-    public override void OnDeath(PlayerControl killer = null) { }
-    public override void OnFinishShipStatusBegin() { }
-    public override void HandleDisconnect(PlayerControl player, DisconnectReasons reason) { }
-    public override void MakeButtons(HudManager hm) { }
-    public override void SetButtonCooldowns() { }
+    internal override void OnMeetingStart() { }
+    internal override void OnMeetingEnd() { }
+    internal override void OnIntroEnd() { }
+    internal override void FixedUpdate() { }
+    internal override void OnKill(PlayerControl target) { }
+    internal override void OnDeath(PlayerControl killer = null) { }
+    internal override void OnFinishShipStatusBegin() { }
+    internal override void HandleDisconnect(PlayerControl player, DisconnectReasons reason) { }
+    internal override void MakeButtons(HudManager hm) { }
+    internal override void SetButtonCooldowns() { }
 
     // write functions here
 
-    public override void Clear()
+    internal override void Clear()
     {
         // reset configs here
         Players.Clear();

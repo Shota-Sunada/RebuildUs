@@ -1,8 +1,8 @@
 namespace RebuildUs.Modules.GameEvents.Events;
 
-public class VentMoveEventData : GameEventData
+internal abstract class VentMoveEventData : GameEventData
 {
-    public PlayerControl Player { get; set; }
-    public Vent FromVent { get; set; }
-    public Vent ToVent { get; set; }
+    internal PlayerControl Player { get; set; }
+    internal Vent FromVent { get; set; }
+    internal Vent ToVent { get; set; }
 }

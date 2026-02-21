@@ -1,17 +1,15 @@
 namespace RebuildUs.Modules.Random;
 
-public class Xoshiro256StarStar : System.Random
+internal sealed class Xoshiro256StarStar : System.Random
 {
     private ulong _s0, _s1, _s2, _s3;
 
-    public Xoshiro256StarStar(int seed)
+    internal Xoshiro256StarStar(int seed)
     {
         Seed(seed);
     }
 
-    public Xoshiro256StarStar() : this((int)DateTime.Now.Ticks)
-    {
-    }
+    internal Xoshiro256StarStar() : this((int)DateTime.Now.Ticks) { }
 
     private void Seed(int seed)
     {
@@ -24,7 +22,7 @@ public class Xoshiro256StarStar : System.Random
 
     private static ulong SplitMix64(ref ulong x)
     {
-        ulong z = (x += 0x9e3779b97f4a7c15);
+        ulong z = x += 0x9e3779b97f4a7c15;
         z = (z ^ (z >> 30)) * 0xbf58476d1ce4e5b9;
         z = (z ^ (z >> 27)) * 0x94d049bb133111eb;
         return z ^ (z >> 31);
@@ -35,7 +33,7 @@ public class Xoshiro256StarStar : System.Random
         return (x << k) | (x >> (64 - k));
     }
 
-    public ulong NextUInt64()
+    private ulong NextUInt64()
     {
         ulong result = Rotl(_s1 * 5, 7) * 9;
 
@@ -53,7 +51,7 @@ public class Xoshiro256StarStar : System.Random
         return result;
     }
 
-    public uint NextUInt32()
+    internal uint NextUInt32()
     {
         return (uint)(NextUInt64() >> 32);
     }

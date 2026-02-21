@@ -1,11 +1,11 @@
 namespace RebuildUs.Patches;
 
 [HarmonyPatch]
-public static class MapConsolePatch
+internal static class MapConsolePatch
 {
     [HarmonyPrefix]
     [HarmonyPatch(typeof(MapConsole), nameof(MapConsole.CanUse))]
-    public static bool CanUsePrefix(ref float __result, MapConsole __instance, NetworkedPlayerInfo pc, out bool canUse, out bool couldUse)
+    internal static bool CanUsePrefix(ref float __result, MapConsole __instance, NetworkedPlayerInfo pc, out bool canUse, out bool couldUse)
     {
         canUse = couldUse = false;
         return true;
@@ -13,7 +13,7 @@ public static class MapConsolePatch
 
     [HarmonyPrefix]
     [HarmonyPatch(typeof(MapConsole), nameof(MapConsole.Use))]
-    public static bool UsePrefix(MapConsole __instance)
+    internal static bool UsePrefix(MapConsole __instance)
     {
         return MapSettings.CanUseAdmin;
     }

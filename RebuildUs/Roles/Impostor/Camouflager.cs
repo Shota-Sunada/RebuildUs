@@ -1,18 +1,13 @@
 namespace RebuildUs.Roles.Impostor;
 
 [HarmonyPatch]
-public class Camouflager : RoleBase<Camouflager>
+internal class Camouflager : RoleBase<Camouflager>
 {
-    public static Color NameColor = Palette.ImpostorRed;
-    public override Color RoleColor => NameColor;
-    private static CustomButton CamouflagerButton;
+    internal static Color NameColor = Palette.ImpostorRed;
 
-    // write configs here
-    public static float Cooldown { get { return CustomOptionHolder.CamouflagerCooldown.GetFloat(); } }
-    public static float Duration { get { return CustomOptionHolder.CamouflagerDuration.GetFloat(); } }
-    public static bool RandomColors { get { return CustomOptionHolder.CamouflagerRandomColors.GetBool(); } }
-    public static float CamouflageTimer = 0f;
-    public static NetworkedPlayerInfo.PlayerOutfit Data;
+    private static CustomButton _camouflagerButton;
+    internal static float CamouflageTimer;
+    internal static NetworkedPlayerInfo.PlayerOutfit Data;
 
     public Camouflager()
     {
@@ -28,93 +23,90 @@ public class Camouflager : RoleBase<Camouflager>
             SkinId = "",
             PetId = "",
             VisorId = "",
-            NamePlateId = ""
+            NamePlateId = "",
         };
     }
 
-    public override void OnMeetingStart() { }
-    public override void OnMeetingEnd() { }
-    public override void OnIntroEnd()
+    internal override Color RoleColor
+    {
+        get => NameColor;
+    }
+
+    // write configs here
+    internal static float Cooldown { get => CustomOptionHolder.CamouflagerCooldown.GetFloat(); }
+    internal static float Duration { get => CustomOptionHolder.CamouflagerDuration.GetFloat(); }
+    internal static bool RandomColors { get => CustomOptionHolder.CamouflagerRandomColors.GetBool(); }
+
+    internal override void OnMeetingStart() { }
+    internal override void OnMeetingEnd() { }
+
+    internal override void OnIntroEnd()
     {
         ResetCamouflage();
     }
-    public override void FixedUpdate() { }
-    public override void OnKill(PlayerControl target) { }
-    public override void OnDeath(PlayerControl killer = null) { }
-    public override void OnFinishShipStatusBegin() { }
-    public override void HandleDisconnect(PlayerControl player, DisconnectReasons reason) { }
-    public static void MakeButtons(HudManager hm)
+
+    internal override void FixedUpdate() { }
+    internal override void OnKill(PlayerControl target) { }
+    internal override void OnDeath(PlayerControl killer = null) { }
+    internal override void OnFinishShipStatusBegin() { }
+    internal override void HandleDisconnect(PlayerControl player, DisconnectReasons reason) { }
+
+    internal static void MakeButtons(HudManager hm)
     {
-        CamouflagerButton = new CustomButton(
-            () =>
+        _camouflagerButton = new(() =>
+        {
             {
-                {
-                    using var sender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.CamouflagerCamouflage);
-                }
-                RPCProcedure.CamouflagerCamouflage();
-            },
-            () => { return PlayerControl.LocalPlayer.IsRole(RoleType.Camouflager) && PlayerControl.LocalPlayer.IsAlive(); },
-            () => { return PlayerControl.LocalPlayer.CanMove; },
-            () =>
-            {
-                CamouflagerButton.Timer = CamouflagerButton.MaxTimer;
-                CamouflagerButton.IsEffectActive = false;
-                CamouflagerButton.ActionButton.cooldownTimerText.color = Palette.EnabledColor;
-            },
-            AssetLoader.CamouflageButton,
-            ButtonPosition.Layout,
-            hm,
-            hm.KillButton,
-            AbilitySlot.ImpostorAbilityPrimary,
-            true,
-            Camouflager.Duration,
-            () => { CamouflagerButton.Timer = CamouflagerButton.MaxTimer; },
-            false,
-            Tr.Get(TrKey.CamoText)
-        );
+                using RPCSender sender = new(PlayerControl.LocalPlayer.NetId, CustomRPC.CamouflagerCamouflage);
+            }
+            RPCProcedure.CamouflagerCamouflage();
+        }, () => { return PlayerControl.LocalPlayer.IsRole(RoleType.Camouflager) && PlayerControl.LocalPlayer.IsAlive(); }, () => { return PlayerControl.LocalPlayer.CanMove; }, () =>
+        {
+            _camouflagerButton.Timer = _camouflagerButton.MaxTimer;
+            _camouflagerButton.IsEffectActive = false;
+            _camouflagerButton.ActionButton.cooldownTimerText.color = Palette.EnabledColor;
+        }, AssetLoader.CamouflageButton, ButtonPosition.Layout, hm, hm.KillButton, AbilitySlot.ImpostorAbilityPrimary, true, Duration, () => { _camouflagerButton.Timer = _camouflagerButton.MaxTimer; }, false, Tr.Get(TrKey.CamoText));
     }
-    public static void SetButtonCooldowns()
+
+    internal static void SetButtonCooldowns()
     {
-        CamouflagerButton.MaxTimer = Camouflager.Cooldown;
-        CamouflagerButton.EffectDuration = Camouflager.Duration;
+        _camouflagerButton.MaxTimer = Cooldown;
+        _camouflagerButton.EffectDuration = Duration;
     }
 
     // write functions here
-    public static void StartCamouflage()
+    internal static void StartCamouflage()
     {
         CamouflageTimer = Duration;
 
-        Data.ColorId = RandomColors ? (byte)RebuildUs.Instance.Rnd.Next(0, Palette.PlayerColors.Length) : (byte)6;
+        Data.ColorId = RandomColors ? (byte)RebuildUs.Rnd.Next(0, Palette.PlayerColors.Length) : 6;
 
-        foreach (var p in PlayerControl.AllPlayerControls.GetFastEnumerator())
+        foreach (PlayerControl p in PlayerControl.AllPlayerControls.GetFastEnumerator())
         {
             if (p == null) continue;
-            p.SetOutfit(Data, visible: false);
+            p.SetOutfit(Data, false);
         }
     }
 
-    public static void ResetCamouflage()
+    internal static void ResetCamouflage()
     {
         CamouflageTimer = 0f;
-        var players = PlayerControl.AllPlayerControls.GetFastEnumerator();
-        foreach (var p in PlayerControl.AllPlayerControls.GetFastEnumerator())
+        IEnumerable<PlayerControl> players = PlayerControl.AllPlayerControls.GetFastEnumerator();
+        foreach (PlayerControl p in PlayerControl.AllPlayerControls.GetFastEnumerator())
         {
             if (p == null) continue;
 
             // special case for morphing
             if (p.IsRole(RoleType.Morphing))
             {
-                var morphRole = Morphing.GetRole(p);
+                Morphing morphRole = Morphing.GetRole(p);
                 morphRole?.HandleMorphing();
             }
             else
-            {
                 p.ResetMorph();
-            }
         }
     }
 
-    public static void Clear()
+    internal static void Clear()
     {
         // reset configs here
         Players.Clear();

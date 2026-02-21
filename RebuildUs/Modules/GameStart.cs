@@ -1,80 +1,36 @@
 using System.Reflection;
+using InnerNet;
+using Object = UnityEngine.Object;
 
 namespace RebuildUs.Modules;
 
-public static class GameStart
+internal static class GameStart
 {
-    public struct PlayerVersion
-    {
-        public int Major;
-        public int Minor;
-        public int Build;
-        public int Revision;
-        public Guid Guid;
+    internal static Dictionary<int, PlayerVersion> PlayerVersions = [];
+    internal static float KickingTimer;
+    internal static bool VersionSent;
+    internal static string LobbyCodeText = "";
 
-        public PlayerVersion(int major, int minor, int build, int revision, Guid guid)
-        {
-            Major = major;
-            Minor = minor;
-            Build = build;
-            Revision = revision;
-            Guid = guid;
-        }
+    internal static float StartingTimer;
+    internal static bool SendGamemode = true;
 
-        public override string ToString()
-        {
-            var sb = new StringBuilder();
-            sb.Append(Major);
-            sb.Append('.');
-            sb.Append(Minor);
-            sb.Append('.');
-            sb.Append(Build);
-            if (Revision >= 0)
-            {
-                sb.Append('.');
-                sb.Append(Revision);
-            }
-            return sb.ToString();
-        }
-
-        public bool Matches(Version version)
-        {
-            return Major == version.Major && Minor == version.Minor && Build == version.Build;
-        }
-
-        public bool GuidMatches(Guid guid)
-        {
-            return Guid == guid;
-        }
-    }
-
-    public static Dictionary<int, PlayerVersion> PlayerVersions = [];
-    public static float KickingTimer = 0f;
-    public static bool VersionSent = false;
-    public static string LobbyCodeText = "";
-
-    public static float StartingTimer = 0;
-    public static bool SendGamemode = true;
-
-    private static TextMeshPro WarningText;
-    private static TextMeshPro TimerText;
-    private static PassiveButton CancelButton;
-    private static float Timer = 600f;
+    private static TextMeshPro _warningText;
+    private static TextMeshPro _timerText;
+    private static PassiveButton _cancelButton;
+    private static float _timer = 600f;
 
     private static readonly StringBuilder InfoStringBuilder = new();
     private static string _lastCountDown = "";
     private static string _lastWarningMessage = "";
 
-    public static void OnPlayerJoined()
+    internal static void OnPlayerJoined()
     {
-        if (PlayerControl.LocalPlayer != null)
-        {
-            Helpers.ShareGameVersion();
-        }
+        if (PlayerControl.LocalPlayer != null) Helpers.ShareGameVersion();
+
         SendGamemode = true;
     }
 
-    public static void Start(GameStartManager __instance)
+    internal static void Start(GameStartManager __instance)
     {
         // Reset dictionaries and flags
         PlayerVersions.Clear();
@@ -82,55 +38,53 @@ public static class GameStart
         // Reset kicking timer
         KickingTimer = 0f;
 
-        WarningText = UnityEngine.Object.Instantiate(__instance.GameStartText, __instance.transform);
-        WarningText.name = "WarningText";
-        WarningText.transform.localPosition = new(0f, 0f - __instance.transform.localPosition.y, -1f);
-        WarningText.gameObject.SetActive(false);
+        _warningText = Object.Instantiate(__instance.GameStartText, __instance.transform);
+        _warningText.name = "WarningText";
+        _warningText.transform.localPosition = new(0f, 0f - __instance.transform.localPosition.y, -1f);
+        _warningText.gameObject.SetActive(false);
 
-        TimerText = UnityEngine.Object.Instantiate(__instance.PlayerCounter, __instance.PlayerCounter.transform.parent);
-        TimerText.autoSizeTextContainer = true;
-        TimerText.fontSize = 3.2f;
-        TimerText.name = "Timer";
-        TimerText.DestroyChildren();
-        TimerText.transform.localPosition += new Vector3(0.3f, -3.4f, 0f);
-        TimerText.gameObject.SetActive(AmongUsClient.Instance.NetworkMode == NetworkModes.OnlineGame && AmongUsClient.Instance.AmHost);
+        _timerText = Object.Instantiate(__instance.PlayerCounter, __instance.PlayerCounter.transform.parent);
+        _timerText.autoSizeTextContainer = true;
+        _timerText.fontSize = 3.2f;
+        _timerText.name = "Timer";
+        _timerText.DestroyChildren();
+        _timerText.transform.localPosition += new Vector3(0.3f, -3.4f, 0f);
+        _timerText.gameObject.SetActive(AmongUsClient.Instance.NetworkMode == NetworkModes.OnlineGame && AmongUsClient.Instance.AmHost);
 
-        CancelButton = UnityEngine.Object.Instantiate(__instance.StartButton, __instance.transform);
-        CancelButton.name = "CancelButton";
-        var cancelLabel = CancelButton.buttonText;
+        _cancelButton = Object.Instantiate(__instance.StartButton, __instance.transform);
+        _cancelButton.name = "CancelButton";
+        TextMeshPro cancelLabel = _cancelButton.buttonText;
         cancelLabel.GetComponent<TextTranslatorTMP>()?.Destroy();
         cancelLabel.text = "Cancel";
-        CancelButton.transform.localScale = new(0.5f, 0.5f, 1f);
-        var cancelButtonInactiveRenderer = CancelButton.inactiveSprites.GetComponent<SpriteRenderer>();
+        _cancelButton.transform.localScale = new(0.5f, 0.5f, 1f);
+        SpriteRenderer cancelButtonInactiveRenderer = _cancelButton.inactiveSprites.GetComponent<SpriteRenderer>();
         cancelButtonInactiveRenderer.color = new(0.8f, 0f, 0f, 1f);
-        var cancelButtonActiveRenderer = CancelButton.activeSprites.GetComponent<SpriteRenderer>();
+        SpriteRenderer cancelButtonActiveRenderer = _cancelButton.activeSprites.GetComponent<SpriteRenderer>();
         cancelButtonActiveRenderer.color = Color.red;
-        var cancelButtonInactiveShine = CancelButton.inactiveSprites.transform.Find("Shine");
-        if (cancelButtonInactiveShine)
-        {
-            cancelButtonInactiveShine.gameObject.SetActive(false);
-        }
-        CancelButton.activeTextColor = CancelButton.inactiveTextColor = Color.white;
-        CancelButton.transform.localPosition = new(2f, 0.13f, 0f);
-        CancelButton.OnClick = new();
-        CancelButton.OnClick.AddListener((Action)(() =>
+        Transform cancelButtonInactiveShine = _cancelButton.inactiveSprites.transform.Find("Shine");
+        if (cancelButtonInactiveShine) cancelButtonInactiveShine.gameObject.SetActive(false);
+
+        _cancelButton.activeTextColor = _cancelButton.inactiveTextColor = Color.white;
+        _cancelButton.transform.localPosition = new(2f, 0.13f, 0f);
+        _cancelButton.OnClick = new();
+        _cancelButton.OnClick.AddListener((Action)(() =>
         {
             __instance.ResetStartState();
             SoundManager.Instance.StopSound(GameStartManager.Instance.gameStartSound);
             {
-                using var sender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.StopStart);
+                using RPCSender sender = new(PlayerControl.LocalPlayer.NetId, CustomRPC.StopStart);
             }
         }));
-        CancelButton.gameObject.SetActive(false);
+        _cancelButton.gameObject.SetActive(false);
     }
 
-    public static void OnPlayerLeft(int clientId)
+    internal static void OnPlayerLeft(int clientId)
     {
         PlayerVersions.Remove(clientId);
         if (PlayerVersions.Count == 0) VersionSent = false;
     }
 
-    public static void UpdatePostfix(GameStartManager __instance)
+    internal static void UpdatePostfix(GameStartManager __instance)
     {
         if (PlayerControl.LocalPlayer != null && !VersionSent && AmongUsClient.Instance.ClientId >= 0)
         {
@@ -138,26 +92,20 @@ public static class GameStart
             Helpers.ShareGameVersion();
         }
 
-        // // Check version handshake infos
+        // Check version handshake infos
         bool versionMismatch = false;
         InfoStringBuilder.Clear();
 
-        var clients = AmongUsClient.Instance.allClients.ToArray();
-        foreach (var client in clients)
+        Il2CppArrayBase<ClientData> clients = AmongUsClient.Instance.allClients.ToArray();
+        foreach (ClientData client in clients)
         {
-            if (client == null || client.Character == null || client.Character.Data == null)
-            {
-                continue;
-            }
+            if (client == null || client.Character == null || client.Character.Data == null) continue;
 
             // Skip Dummies
-            var dummyComponent = client.Character.GetComponent<DummyBehaviour>();
-            if (dummyComponent != null && dummyComponent.enabled)
-            {
-                continue;
-            }
+            DummyBehaviour dummyComponent = client.Character.GetComponent<DummyBehaviour>();
+            if (dummyComponent != null && dummyComponent.enabled) continue;
 
-            if (!PlayerVersions.TryGetValue(client.Id, out var pV))
+            if (!PlayerVersions.TryGetValue(client.Id, out PlayerVersion pV))
             {
                 versionMismatch = true;
                 InfoStringBuilder.Append("<color=#FF0000FF>");
@@ -196,21 +144,22 @@ public static class GameStart
             {
                 if (_lastWarningMessage != message)
                 {
-                    WarningText.text = message;
+                    _warningText.text = message;
                     _lastWarningMessage = message;
                 }
-                WarningText.gameObject.SetActive(true);
+
+                _warningText.gameObject.SetActive(true);
             }
             else
             {
-                WarningText.gameObject.SetActive(false);
+                _warningText.gameObject.SetActive(false);
                 _lastWarningMessage = "";
             }
         }
         // Client update with handshake infos
         else
         {
-            if (!PlayerVersions.TryGetValue(AmongUsClient.Instance.HostId, out var hostVersion) || !hostVersion.Matches(RebuildUs.Instance.Version))
+            if (!PlayerVersions.TryGetValue(AmongUsClient.Instance.HostId, out PlayerVersion hostVersion) || !hostVersion.Matches(RebuildUs.Instance.Version))
             {
                 KickingTimer += Time.deltaTime;
                 if (KickingTimer > 10)
@@ -227,10 +176,11 @@ public static class GameStart
                 string warning = InfoStringBuilder.ToString();
                 if (_lastWarningMessage != warning)
                 {
-                    WarningText.text = warning;
+                    _warningText.text = warning;
                     _lastWarningMessage = warning;
                 }
-                WarningText.gameObject.SetActive(true);
+
+                _warningText.gameObject.SetActive(true);
             }
             else if (versionMismatch)
             {
@@ -240,39 +190,29 @@ public static class GameStart
                 string warning = InfoStringBuilder.ToString();
                 if (_lastWarningMessage != warning)
                 {
-                    WarningText.text = warning;
+                    _warningText.text = warning;
                     _lastWarningMessage = warning;
                 }
-                WarningText.gameObject.SetActive(true);
+
+                _warningText.gameObject.SetActive(true);
             }
             else
             {
-                WarningText.gameObject.SetActive(false);
+                _warningText.gameObject.SetActive(false);
                 _lastWarningMessage = "";
             }
         }
-        // Start Timer
-        if (StartingTimer > 0)
-        {
-            StartingTimer -= Time.deltaTime;
-        }
 
-        if (AmongUsClient.Instance.AmHost && CancelButton != null)
-        {
-            CancelButton.gameObject.SetActive(__instance.startState == GameStartManager.StartingStates.Countdown);
-        }
+        // Start Timer
+        if (StartingTimer > 0) StartingTimer -= Time.deltaTime;
+
+        if (AmongUsClient.Instance.AmHost && _cancelButton != null) _cancelButton.gameObject.SetActive(__instance.startState == GameStartManager.StartingStates.Countdown);
 
         // Lobby timer
-        if (
-            !AmongUsClient.Instance.AmHost ||
-            !GameData.Instance ||
-            AmongUsClient.Instance.NetworkMode != NetworkModes.OnlineGame)
-        {
-            return;
-        }
+        if (!AmongUsClient.Instance.AmHost || !GameData.Instance || AmongUsClient.Instance.NetworkMode != NetworkModes.OnlineGame) return;
 
-        Timer = Mathf.Max(0f, Timer - Time.deltaTime);
-        int totalSeconds = (int)Timer;
+        _timer = Mathf.Max(0f, _timer - Time.deltaTime);
+        int totalSeconds = (int)_timer;
         int minutes = totalSeconds / 60;
         int seconds = totalSeconds % 60;
 
@@ -284,11 +224,11 @@ public static class GameStart
         InfoStringBuilder.Append(seconds);
 
         string countDown = InfoStringBuilder.ToString();
-        if (Timer <= 60) countDown = Helpers.Cs(Color.red, countDown);
+        if (_timer <= 60) countDown = Helpers.Cs(Color.red, countDown);
 
         if (_lastCountDown != countDown)
         {
-            TimerText.text = countDown;
+            _timerText.text = countDown;
             _lastCountDown = countDown;
         }
 
@@ -296,122 +236,142 @@ public static class GameStart
 
         if (!AmongUsClient.Instance) return;
 
-        if (AmongUsClient.Instance.AmHost && SendGamemode && PlayerControl.LocalPlayer != null)
+        if (!AmongUsClient.Instance.AmHost || !SendGamemode || PlayerControl.LocalPlayer == null) return;
         {
-            {
-                using var sender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.ShareGamemode);
-                sender.Write((byte)MapSettings.GameMode);
-                RPCProcedure.ShareGamemode((byte)MapSettings.GameMode);
-            }
-            SendGamemode = false;
+            using RPCSender sender = new(PlayerControl.LocalPlayer.NetId, CustomRPC.ShareGamemode);
+            sender.Write((byte)MapSettings.GameMode);
+            RPCProcedure.ShareGamemode((byte)MapSettings.GameMode);
         }
+        SendGamemode = false;
     }
 
-    public static bool BeginGame(GameStartManager __instance)
+    internal static bool BeginGame(GameStartManager __instance)
     {
         // Block game start if not everyone has the same mod version
-        var continueStart = true;
+        bool continueStart = true;
 
-        if (AmongUsClient.Instance.AmHost)
+        if (!AmongUsClient.Instance.AmHost) return continueStart;
+        foreach (ClientData client in AmongUsClient.Instance.allClients.GetFastEnumerator())
         {
-            foreach (InnerNet.ClientData client in AmongUsClient.Instance.allClients.GetFastEnumerator())
+            if (client.Character == null) continue;
+            DummyBehaviour dummyComponent = client.Character.GetComponent<DummyBehaviour>();
+            if (dummyComponent != null && dummyComponent.enabled) continue;
+
+            if (PlayerVersions.TryGetValue(client.Id, out PlayerVersion pV) && pV.Matches(RebuildUs.Instance.Version)) continue;
+            continueStart = false;
+            break;
+        }
+
+        if (!continueStart)
+            __instance.ResetStartState();
+        else
+            CustomOption.CoSpawnSyncSettings();
+
+        if (!CustomOptionHolder.RandomMap.GetBool() || !continueStart) return continueStart;
+        // 0 = Skeld
+        // 1 = Mira HQ
+        // 2 = Polus
+        // 3 = Dleks - deactivated
+        // 4 = Airship
+        // 5 = Submerged
+        byte chosenMapId = 0;
+        float[] probabilities =
+        [
+            CustomOptionHolder.RandomMapEnableSkeld.GetSelection() / 10f,
+            CustomOptionHolder.RandomMapEnableMiraHq.GetSelection() / 10f,
+            CustomOptionHolder.RandomMapEnablePolus.GetSelection() / 10f,
+            CustomOptionHolder.RandomMapEnableAirShip.GetSelection() / 10f,
+            CustomOptionHolder.RandomMapEnableFungle.GetSelection() / 10f,
+            CustomOptionHolder.RandomMapEnableSubmerged.GetSelection() / 10f,
+        ];
+
+        // if any map is at 100%, remove all maps that are not!
+        bool hasEnsured = false;
+        foreach (float t in probabilities)
+        {
+            if (t >= 1.0f)
             {
-                if (client.Character == null) continue;
-                var dummyComponent = client.Character.GetComponent<DummyBehaviour>();
-                if (dummyComponent != null && dummyComponent.enabled)
-                {
-                    continue;
-                }
-
-                if (!PlayerVersions.TryGetValue(client.Id, out var pV))
-                {
-                    continueStart = false;
-                    break;
-                }
-
-                if (!pV.Matches(RebuildUs.Instance.Version))
-                {
-                    continueStart = false;
-                    break;
-                }
-            }
-
-            if (!continueStart)
-            {
-                __instance.ResetStartState();
-            }
-            else
-            {
-                CustomOption.CoSpawnSyncSettings();
-            }
-
-            if (CustomOptionHolder.RandomMap.GetBool() && continueStart)
-            {
-                // 0 = Skeld
-                // 1 = Mira HQ
-                // 2 = Polus
-                // 3 = Dleks - deactivated
-                // 4 = Airship
-                // 5 = Submerged
-                byte chosenMapId = 0;
-                float[] probabilities =
-                [
-                    CustomOptionHolder.RandomMapEnableSkeld.GetSelection() / 10f,
-                    CustomOptionHolder.RandomMapEnableMiraHQ.GetSelection() / 10f,
-                    CustomOptionHolder.RandomMapEnablePolus.GetSelection() / 10f,
-                    CustomOptionHolder.RandomMapEnableAirShip.GetSelection() / 10f,
-                    CustomOptionHolder.RandomMapEnableFungle.GetSelection() / 10f,
-                    CustomOptionHolder.RandomMapEnableSubmerged.GetSelection() / 10f,
-                ];
-
-                // if any map is at 100%, remove all maps that are not!
-                bool hasEnsured = false;
-                for (int i = 0; i < probabilities.Length; i++)
-                {
-                    if (probabilities[i] >= 1.0f)
-                    {
-                        hasEnsured = true;
-                        break;
-                    }
-                }
-
-                if (hasEnsured)
-                {
-                    for (int i = 0; i < probabilities.Length; i++)
-                    {
-                        if (probabilities[i] < 1.0f) probabilities[i] = 0;
-                    }
-                }
-
-                float sum = 0;
-                for (int i = 0; i < probabilities.Length; i++) sum += probabilities[i];
-
-                // All maps set to 0, why are you doing this???
-                if (sum <= 0) return continueStart;
-                for (int i = 0; i < probabilities.Length; i++)
-                {
-                    // Normalize to [0,1]
-                    probabilities[i] /= sum;
-                }
-                float selection = (float)RebuildUs.Instance.Rnd.NextDouble();
-                float cumSum = 0;
-                for (byte i = 0; i < (byte)probabilities.Length; i++)
-                {
-                    cumSum += probabilities[i];
-                    if (cumSum > selection)
-                    {
-                        chosenMapId = i;
-                        break;
-                    }
-                }
-
-                {
-                    using var sender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.DynamicMapOption);
-                    sender.Write(chosenMapId);
-                    RPCProcedure.DynamicMapOption(chosenMapId);
-                }
+                hasEnsured = true;
+                break;
             }
         }
-        return continueStart;
+
+        if (hasEnsured)
+        {
+            for (int i = 0; i < probabilities.Length; i++)
+                if (probabilities[i] < 1.0f)
+                    probabilities[i] = 0;
+        }
+
+        float sum = 0;
+        foreach (float t in probabilities)
+            sum += t;
+
+        // All maps set to 0, why are you doing this???
+        if (sum <= 0) return true;
+        for (int i = 0; i < probabilities.Length; i++)
+            // Normalize to [0,1]
+            probabilities[i] /= sum;
+
+        float selection = (float)RebuildUs.Rnd.NextDouble();
+        float cumSum = 0;
+        for (byte i = 0; i < (byte)probabilities.Length; i++)
+        {
+            cumSum += probabilities[i];
+            if (!(cumSum > selection)) continue;
+            chosenMapId = i;
+            break;
+        }
+
+        {
+            using RPCSender sender = new(PlayerControl.LocalPlayer.NetId, CustomRPC.DynamicMapOption);
+            sender.Write(chosenMapId);
+            RPCProcedure.DynamicMapOption(chosenMapId);
+        }
+
+        return true;
+    }
+
+    internal struct PlayerVersion
+    {
+        private readonly int _major;
+        private readonly int _minor;
+        private readonly int _build;
+        private readonly int _revision;
+        private readonly Guid _guid;
+
+        internal PlayerVersion(int major, int minor, int build, int revision, Guid guid)
+        {
+            _major = major;
+            _minor = minor;
+            _build = build;
+            _revision = revision;
+            _guid = guid;
+        }
+
+        public override string ToString()
+        {
+            StringBuilder sb = new();
+            sb.Append(_major);
+            sb.Append('.');
+            sb.Append(_minor);
+            sb.Append('.');
+            sb.Append(_build);
+            if (_revision < 0) return sb.ToString();
+            sb.Append('.');
+            sb.Append(_revision);
+
+            return sb.ToString();
+        }
+
+        internal bool Matches(Version version)
+        {
+            return _major == version.Major && _minor == version.Minor && _build == version.Build;
+        }
+
+        internal bool GuidMatches(Guid guid)
+        {
+            return _guid == guid;
+        }
     }
 }

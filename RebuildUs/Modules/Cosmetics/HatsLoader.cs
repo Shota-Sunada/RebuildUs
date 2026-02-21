@@ -1,24 +1,27 @@
 using System.Collections;
 using System.Collections.Concurrent;
-using System.Text.Json;
 using System.Security.Cryptography;
+using System.Text.Json;
 using BepInEx.Unity.IL2CPP.Utils;
 using Il2CppInterop.Runtime.Attributes;
 using static RebuildUs.Modules.Cosmetics.CustomHatManager;
 
 namespace RebuildUs.Modules.Cosmetics;
 
-public class HatsLoader : MonoBehaviour
+internal sealed class HatsLoader : MonoBehaviour
 {
-    public bool IsRunning { get; private set; }
     private static readonly HttpClient Client = new();
+
+    private static readonly JsonSerializerOptions JsonOptions = new() { AllowTrailingCommas = true };
 
     static HatsLoader()
     {
         Client.DefaultRequestHeaders.TryAddWithoutValidation("User-Agent", "RebuildUs-Mod");
     }
 
-    public void FetchHats()
+    internal bool IsRunning { get; private set; }
+
+    internal void FetchHats()
     {
         if (IsRunning) return;
         this.StartCoroutine(CoFetchHats());
@@ -33,12 +36,13 @@ public class HatsLoader : MonoBehaviour
         LoadScreen.Create();
 
         Logger.LogMessage("Downloading cosmetics...");
-        var downloadTask = DownloadAllHats(Repositories, HatsDirectory);
+        Task downloadTask = DownloadAllHats(Repositories, HatsDirectory);
         while (!downloadTask.IsCompleted)
         {
             LoadScreen.Update();
             yield return null;
         }
+
         Logger.LogMessage("Downloading finished.");
 
         UnregisteredHats.Clear();
@@ -48,38 +52,37 @@ public class HatsLoader : MonoBehaviour
         LoadScreen.Update();
         if (Directory.Exists(HatsDirectory))
         {
-            foreach (var dir in Directory.GetDirectories(HatsDirectory))
+            foreach (string dir in Directory.GetDirectories(HatsDirectory))
             {
-                var manifestPath = Path.Combine(dir, "CustomHats.json");
-                if (File.Exists(manifestPath))
+                string manifestPath = Path.Combine(dir, "CustomHats.json");
+                if (!File.Exists(manifestPath)) continue;
+                try
                 {
-                    try
+                    string text = File.ReadAllText(manifestPath);
+                    SkinsConfigFile response = JsonSerializer.Deserialize<SkinsConfigFile>(text, new JsonSerializerOptions
                     {
-                        var text = File.ReadAllText(manifestPath);
-                        var response = JsonSerializer.Deserialize<SkinsConfigFile>(text, new JsonSerializerOptions
-                        {
-                            AllowTrailingCommas = true
-                        });
+                        AllowTrailingCommas = true,
+                    });
 
-                        if (response?.Hats != null)
-                        {
-                            var dirName = Path.GetFileName(dir);
-                            foreach (var hat in response.Hats)
-                            {
-                                hat.Resource = SanitizeAndPrefix(hat.Resource, dirName);
-                                hat.BackResource = SanitizeAndPrefix(hat.BackResource, dirName);
-                                hat.ClimbResource = SanitizeAndPrefix(hat.ClimbResource, dirName);
-                                hat.FlipResource = SanitizeAndPrefix(hat.FlipResource, dirName);
-                                hat.BackFlipResource = SanitizeAndPrefix(hat.BackFlipResource, dirName);
-                            }
-                            UnregisteredHats.AddRange(response.Hats);
-                            Logger.LogMessage($"Loaded {response.Hats.Count} hats from {manifestPath}.");
-                        }
-                    }
-                    catch (Exception e)
+                    if (response?.Hats != null)
                     {
-                        Logger.LogError($"Failed to load hats from {manifestPath}: {e}");
+                        string dirName = Path.GetFileName(dir);
+                        foreach (CustomHat hat in response.Hats)
+                        {
+                            hat.Resource = SanitizeAndPrefix(hat.Resource, dirName);
+                            hat.BackResource = SanitizeAndPrefix(hat.BackResource, dirName);
+                            hat.ClimbResource = SanitizeAndPrefix(hat.ClimbResource, dirName);
+                            hat.FlipResource = SanitizeAndPrefix(hat.FlipResource, dirName);
+                            hat.BackFlipResource = SanitizeAndPrefix(hat.BackFlipResource, dirName);
+                        }
+
+                        UnregisteredHats.AddRange(response.Hats);
+                        Logger.LogMessage($"Loaded {response.Hats.Count} hats from {manifestPath}.");
                     }
+                }
+                catch (Exception e)
+                {
+                    Logger.LogError($"Failed to load hats from {manifestPath}: {e}");
                 }
             }
         }
@@ -90,93 +93,95 @@ public class HatsLoader : MonoBehaviour
         IsRunning = false;
     }
 
-    private static readonly JsonSerializerOptions JsonOptions = new() { AllowTrailingCommas = true };
-
-    private string SanitizeAndPrefix(string path, string prefix)
+    private static string SanitizeAndPrefix(string path, string prefix)
     {
         if (string.IsNullOrEmpty(path) || !path.EndsWith(".png")) return null;
-        return Path.Combine(prefix, CustomHatManager.SanitizeFileName(path));
+        return Path.Combine(prefix, SanitizeFileName(path));
     }
 
     [HideFromIl2Cpp]
-    private async Task DownloadAllHats(string[] repositories, string targetDir)
+    private async Task DownloadAllHats(IEnumerable<string> repositories, string targetDir)
     {
         try
         {
-            if (!Directory.Exists(targetDir)) Directory.CreateDirectory(targetDir);
+            if (!Directory.Exists(targetDir))
+                if (targetDir != null)
+                    Directory.CreateDirectory(targetDir);
 
             LoadScreen.Progress = 0;
             LoadScreen.ProgressDetailText = "";
-            var toDownload = new ConcurrentBag<(string url, string localPath, string expectedHash, string fileName)>();
+            ConcurrentBag<(string url, string localPath, string expectedHash, string fileName)> toDownload = new();
 
             LoadScreen.StatusText = "Checking repositories...";
 
-            var checkTasks = repositories.Select(async repoUrl =>
+            IEnumerable<Task> checkTasks = repositories.Select(async repoUrl =>
             {
                 repoUrl = repoUrl.Trim();
                 if (string.IsNullOrEmpty(repoUrl)) return;
 
-                var repoFolderName = GetRepoFolderName(repoUrl);
-                var repoDir = Path.Combine(targetDir, repoFolderName);
-                if (!Directory.Exists(repoDir)) Directory.CreateDirectory(repoDir);
-
-                var manifestURL = $"{repoUrl}/CustomHats.json";
-                var manifestPath = Path.Combine(repoDir, "CustomHats.json");
-
-                try
+                string repoFolderName = GetRepoFolderName(repoUrl);
+                if (targetDir != null)
                 {
-                    Logger.LogMessage($"Downloading manifest: {manifestURL}");
-                    var response = await Client.GetAsync(manifestURL);
-                    if (!response.IsSuccessStatusCode)
-                    {
-                        Logger.LogWarn($"Failed to download manifest from {manifestURL}: {response.StatusCode}");
-                        return;
-                    }
-                    var manifestData = await response.Content.ReadAsByteArrayAsync();
-                    await File.WriteAllBytesAsync(manifestPath, manifestData);
+                    string repoDir = Path.Combine(targetDir, repoFolderName);
+                    if (!Directory.Exists(repoDir)) Directory.CreateDirectory(repoDir);
 
-                    var config = JsonSerializer.Deserialize<SkinsConfigFile>(manifestData, JsonOptions);
-                    if (config == null || config.Hats == null) return;
+                    string manifestURL = $"{repoUrl}/CustomHats.json";
+                    string manifestPath = Path.Combine(repoDir, "CustomHats.json");
 
-                    foreach (var hat in config.Hats)
+                    try
                     {
-                        ProcessHatFile(repoUrl, repoDir, hat.Resource, hat.ResHashA, toDownload);
-                        ProcessHatFile(repoUrl, repoDir, hat.BackResource, hat.ResHashB, toDownload);
-                        ProcessHatFile(repoUrl, repoDir, hat.ClimbResource, hat.ResHashC, toDownload);
-                        ProcessHatFile(repoUrl, repoDir, hat.FlipResource, hat.ResHashF, toDownload);
-                        ProcessHatFile(repoUrl, repoDir, hat.BackFlipResource, hat.ResHashBf, toDownload);
+                        Logger.LogMessage($"Downloading manifest: {manifestURL}");
+                        HttpResponseMessage response = await Client.GetAsync(manifestURL);
+                        if (!response.IsSuccessStatusCode)
+                        {
+                            Logger.LogWarn($"Failed to download manifest from {manifestURL}: {response.StatusCode}");
+                            return;
+                        }
+
+                        byte[] manifestData = await response.Content.ReadAsByteArrayAsync();
+                        await File.WriteAllBytesAsync(manifestPath, manifestData);
+
+                        SkinsConfigFile config = JsonSerializer.Deserialize<SkinsConfigFile>(manifestData, JsonOptions);
+                        if (config?.Hats == null) return;
+
+                        foreach (CustomHat hat in config.Hats)
+                        {
+                            ProcessHatFile(repoUrl, repoDir, hat.Resource, hat.ResHashA, toDownload);
+                            ProcessHatFile(repoUrl, repoDir, hat.BackResource, hat.ResHashB, toDownload);
+                            ProcessHatFile(repoUrl, repoDir, hat.ClimbResource, hat.ResHashC, toDownload);
+                            ProcessHatFile(repoUrl, repoDir, hat.FlipResource, hat.ResHashF, toDownload);
+                            ProcessHatFile(repoUrl, repoDir, hat.BackFlipResource, hat.ResHashBf, toDownload);
+                        }
                     }
-                }
-                catch (Exception ex)
-                {
-                    Logger.LogWarn($"Failed to check repository {repoUrl}: {ex.Message}");
+                    catch (Exception ex)
+                    {
+                        Logger.LogWarn($"Failed to check repository {repoUrl}: {ex.Message}");
+                    }
                 }
             });
 
             await Task.WhenAll(checkTasks);
 
-            if (toDownload.Count > 0)
+            if (!toDownload.IsEmpty)
             {
                 int completed = 0;
                 int total = toDownload.Count;
-                var semaphore = new SemaphoreSlim(10); // Limit concurrent downloads
+                SemaphoreSlim semaphore = new(10); // Limit concurrent downloads
 
-                var tasks = toDownload.Select(async item =>
+                IEnumerable<Task> tasks = toDownload.Select(async item =>
                 {
                     await semaphore.WaitAsync();
                     try
                     {
                         LoadScreen.StatusText = $"Downloading {item.fileName}";
-                        var response = await Client.GetAsync(item.url);
+                        HttpResponseMessage response = await Client.GetAsync(item.url);
                         if (response.IsSuccessStatusCode)
                         {
-                            var fileData = await response.Content.ReadAsByteArrayAsync();
+                            byte[] fileData = await response.Content.ReadAsByteArrayAsync();
                             await File.WriteAllBytesAsync(item.localPath, fileData);
                         }
                         else
-                        {
                             Logger.LogWarn($"Failed to download {item.url}: {response.StatusCode}");
-                        }
                     }
                     catch (Exception ex)
                     {
@@ -185,14 +190,15 @@ public class HatsLoader : MonoBehaviour
                     finally
                     {
                         semaphore.Release();
-                        var done = Interlocked.Increment(ref completed);
+                        int done = Interlocked.Increment(ref completed);
                         LoadScreen.StatusText = $"Downloading {item.fileName} ({done} / {total})";
-                        LoadScreen.Progress = 0.2f + ((float)done / total * 0.8f);
+                        LoadScreen.Progress = 0.2f + (((float)done / total) * 0.8f);
                     }
                 });
 
                 await Task.WhenAll(tasks);
             }
+
             LoadScreen.Progress = 1.0f;
             LoadScreen.ProgressDetailText = "";
         }
@@ -208,44 +214,37 @@ public class HatsLoader : MonoBehaviour
     {
         if (string.IsNullOrEmpty(fileName)) return;
 
-        var safeName = CustomHatManager.SanitizeFileName(fileName);
+        string safeName = SanitizeFileName(fileName);
         if (string.IsNullOrEmpty(safeName)) return;
 
-        var localPath = Path.Combine(repoDir, safeName);
-        if (NeedsDownload(localPath, expectedHash))
-        {
-            var fileURL = $"{repoUrl}/hats/{fileName.Replace(" ", "%20")}";
-            toDownload.Add((fileURL, localPath, expectedHash, safeName));
-        }
+        string localPath = Path.Combine(repoDir, safeName);
+        if (!NeedsDownload(localPath, expectedHash)) return;
+        string fileURL = $"{repoUrl}/hats/{fileName.Replace(" ", "%20")}";
+        toDownload.Add((fileURL, localPath, expectedHash, safeName));
     }
 
-    private string SanitizeFileName(string path)
-    {
-        if (string.IsNullOrEmpty(path) || !path.ToLower().EndsWith(".png")) return "";
-        return CustomHatManager.SanitizeFileName(path);
-    }
-
-    private string GetRepoFolderName(string url)
+    private static string GetRepoFolderName(string url)
     {
         try
         {
-            var uri = new Uri(url);
-            var segments = uri.AbsolutePath.Split('/', StringSplitOptions.RemoveEmptyEntries);
-            if (segments.Length >= 2)
-            {
-                return $"{segments[0]}-{segments[1]}";
-            }
+            Uri uri = new(url);
+            string[] segments = uri.AbsolutePath.Split('/', StringSplitOptions.RemoveEmptyEntries);
+            if (segments.Length >= 2) return $"{segments[0]}-{segments[1]}";
         }
-        catch { }
-        return "unknown-repo-" + Guid.NewGuid().ToString("N").Substring(0, 8);
+        catch
+        {
+            // ignored
+        }
+
+        return string.Concat("unknown-repo-", Guid.NewGuid().ToString("N").AsSpan(0, 8));
     }
 
-    private bool NeedsDownload(string path, string expectedHash)
+    private static bool NeedsDownload(string path, string expectedHash)
     {
         if (string.IsNullOrEmpty(expectedHash) || !File.Exists(path)) return true;
-        using var md5 = MD5.Create();
-        using var stream = File.OpenRead(path);
-        var hash = BitConverter.ToString(md5.ComputeHash(stream)).Replace("-", "").ToLower();
+        using MD5 md5 = MD5.Create();
+        using FileStream stream = File.OpenRead(path);
+        string hash = BitConverter.ToString(md5.ComputeHash(stream)).Replace("-", "").ToLower();
         return !hash.Equals(expectedHash, StringComparison.OrdinalIgnoreCase);
     }
 }

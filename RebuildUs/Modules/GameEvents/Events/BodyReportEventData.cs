@@ -1,7 +1,7 @@
 namespace RebuildUs.Modules.GameEvents.Events;
 
-public class BodyReportEventData : GameEventData
+internal abstract class BodyReportEventData : GameEventData
 {
-    public PlayerControl Reporter { get; set; }
-    public PlayerControl DeadPlayer { get; set; }
+    internal PlayerControl Reporter { get; set; }
+    internal PlayerControl DeadPlayer { get; set; }
 }

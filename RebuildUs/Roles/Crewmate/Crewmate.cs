@@ -1,6 +1,3 @@
 namespace RebuildUs.Roles.Crewmate;
 
-public static class Crewmate
-{
-
-}
+internal static class Crewmate { }

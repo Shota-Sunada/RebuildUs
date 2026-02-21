@@ -1,14 +1,16 @@
 using System.Reflection;
+using Object = UnityEngine.Object;
 
 namespace RebuildUs.Modules;
 
-public static class AssetLoader
+internal static class AssetLoader
 {
-    private static bool IsLoaded = false;
-    public static void LoadAssets()
+    private static bool _isLoaded;
+
+    internal static void LoadAssets()
     {
-        if (IsLoaded) return;
-        IsLoaded = true;
+        if (_isLoaded) return;
+        _isLoaded = true;
 
         LoadButtonAssets();
         LoadAnimationAssets();
@@ -17,13 +19,42 @@ public static class AssetLoader
         LoadKeyBindAssets();
     }
 
-    #region Animations
-    public static List<Sprite> TricksterAnimations = [];
+    private static byte[] ReadFully(this Stream input)
+    {
+        using MemoryStream ms = new();
+        input.CopyTo(ms);
+        return ms.ToArray();
+    }
+
+#nullable enable
+    private static T? LoadAsset<T>(this AssetBundle assetBundle, string name) where T : Object
+    {
+        return assetBundle.LoadAsset(name, Il2CppType.Of<T>())?.Cast<T>() ?? throw new($"The asset was not found: {name}");
+    }
+#nullable disable
+
+    private static Sprite Resize(this Sprite sprite, float pixelsPerUnit)
+    {
+        if (Mathf.Approximately(pixelsPerUnit, 100f)) return sprite.DontUnload();
+
+        return sprite == null ? null : Sprite.Create(sprite.texture, sprite.rect, new(sprite.pivot.x / sprite.rect.width, sprite.pivot.y / sprite.rect.height), pixelsPerUnit, 0, SpriteMeshType.FullRect, sprite.border).DontUnload();
+    }
+
+    private static T DontUnload<T>(this T obj) where T : Object
+    {
+        obj.hideFlags |= HideFlags.DontUnloadUnusedAsset;
+
+        return obj;
+    }
+
+#region Animations
+
+    internal static readonly List<Sprite> TricksterAnimations = [];
 
     private static void LoadAnimationAssets()
     {
-        var resource = Assembly.GetExecutingAssembly().GetManifestResourceStream("RebuildUs.Resources.tricksteranimation");
-        var ab = AssetBundle.LoadFromMemory(resource.ReadFully());
+        Stream resource = Assembly.GetExecutingAssembly().GetManifestResourceStream("RebuildUs.Resources.tricksteranimation");
+        AssetBundle ab = AssetBundle.LoadFromMemory(resource.ReadFully());
 
         TricksterAnimations.Add(ab.LoadAsset<Sprite>("trickster_box_0001.png").Resize(175f));
         TricksterAnimations.Add(ab.LoadAsset<Sprite>("trickster_box_0002.png").Resize(175f));
@@ -44,45 +75,47 @@ public static class AssetLoader
         TricksterAnimations.Add(ab.LoadAsset<Sprite>("trickster_box_0017.png").Resize(175f));
         TricksterAnimations.Add(ab.LoadAsset<Sprite>("trickster_box_0018.png").Resize(175f));
     }
-    #endregion
 
-    #region Buttons
-    public static Sprite DouseButton;
-    public static Sprite EmergencyButton;
-    public static Sprite VultureButton;
-    public static Sprite SidekickButton;
-    public static Sprite IgniteButton;
-    public static Sprite HackerButton;
-    public static Sprite LighterButton;
-    public static Sprite ShieldButton;
-    public static Sprite MediumButton;
-    public static Sprite TimeShieldButton;
-    public static Sprite TrackerButton;
-    public static Sprite PathfindButton;
-    public static Sprite EraserButton;
-    public static Sprite CleanButton;
-    public static Sprite PlaceJackInTheBoxButton;
-    public static Sprite LightsOutButton;
-    public static Sprite PlaceCameraButton;
-    public static Sprite CloseVentButton;
-    public static Sprite CurseButton;
-    public static Sprite CurseKillButton;
-    public static Sprite MorphButton;
-    public static Sprite SampleButton;
-    public static Sprite SpellButton;
-    public static Sprite SpellButtonMeeting;
-    public static Sprite CamouflageButton;
-    public static Sprite SwapperCheck;
-    public static Sprite GarlicButton;
-    public static Sprite VampireButton;
-    public static Sprite ShiftButton;
-    public static Sprite TricksterVentButton;
-    public static Sprite RepairButton;
+#endregion
+
+#region Buttons
+
+    internal static Sprite DouseButton;
+    internal static Sprite EmergencyButton;
+    internal static Sprite VultureButton;
+    internal static Sprite SidekickButton;
+    internal static Sprite IgniteButton;
+    internal static Sprite HackerButton;
+    internal static Sprite LighterButton;
+    internal static Sprite ShieldButton;
+    internal static Sprite MediumButton;
+    internal static Sprite TimeShieldButton;
+    internal static Sprite TrackerButton;
+    internal static Sprite PathfindButton;
+    internal static Sprite EraserButton;
+    internal static Sprite CleanButton;
+    internal static Sprite PlaceJackInTheBoxButton;
+    internal static Sprite LightsOutButton;
+    internal static Sprite PlaceCameraButton;
+    internal static Sprite CloseVentButton;
+    internal static Sprite CurseButton;
+    internal static Sprite CurseKillButton;
+    internal static Sprite MorphButton;
+    internal static Sprite SampleButton;
+    internal static Sprite SpellButton;
+    internal static Sprite SpellButtonMeeting;
+    internal static Sprite CamouflageButton;
+    internal static Sprite SwapperCheck;
+    internal static Sprite GarlicButton;
+    internal static Sprite VampireButton;
+    internal static Sprite ShiftButton;
+    internal static Sprite TricksterVentButton;
+    internal static Sprite RepairButton;
 
     private static void LoadButtonAssets()
     {
-        var resource = Assembly.GetExecutingAssembly().GetManifestResourceStream("RebuildUs.Resources.buttons");
-        var ab = AssetBundle.LoadFromMemory(resource.ReadFully());
+        Stream resource = Assembly.GetExecutingAssembly().GetManifestResourceStream("RebuildUs.Resources.buttons");
+        AssetBundle ab = AssetBundle.LoadFromMemory(resource.ReadFully());
 
         DouseButton = ab.LoadAsset<Sprite>("DouseButton.png").Resize(115f);
         EmergencyButton = ab.LoadAsset<Sprite>("EmergencyButton.png").Resize(550f);
@@ -116,35 +149,37 @@ public static class AssetLoader
         TricksterVentButton = ab.LoadAsset<Sprite>("TricksterVentButton.png").Resize(115f);
         RepairButton = ab.LoadAsset<Sprite>("RepairButton.png").Resize(115f);
     }
-    #endregion
 
-    #region Sprites
-    public static Sprite Arrow;
-    public static Sprite Garlic;
-    public static Sprite GarlicBackground;
-    public static Sprite Ladder;
-    public static Sprite LadderBackground;
-    public static Sprite AirshipFence;
-    public static Sprite AirshipDownloadG;
-    public static Sprite CorpseIcon;
-    public static Sprite Cross;
-    public static Sprite AdminCockpit;
-    public static Sprite AdminRecords;
-    public static Sprite Footprint;
-    public static Sprite Soul;
-    public static Sprite AnimatedVentSealed;
-    public static Sprite AnimatedVentSealedSubmerged;
-    public static Sprite StaticVentSealed;
-    public static Sprite FungleVentSealed;
-    public static Sprite CentralUpperBlocked;
-    public static Sprite CentralLowerBlocked;
-    public static Sprite TargetIcon;
-    public static Sprite White;
+#endregion
+
+#region Sprites
+
+    internal static Sprite Arrow;
+    internal static Sprite Garlic;
+    internal static Sprite GarlicBackground;
+    internal static Sprite Ladder;
+    internal static Sprite LadderBackground;
+    internal static Sprite AirshipFence;
+    internal static Sprite AirshipDownloadG;
+    internal static Sprite CorpseIcon;
+    internal static Sprite Cross;
+    internal static Sprite AdminCockpit;
+    internal static Sprite AdminRecords;
+    internal static Sprite Footprint;
+    internal static Sprite Soul;
+    internal static Sprite AnimatedVentSealed;
+    internal static Sprite AnimatedVentSealedSubmerged;
+    internal static Sprite StaticVentSealed;
+    internal static Sprite FungleVentSealed;
+    internal static Sprite CentralUpperBlocked;
+    internal static Sprite CentralLowerBlocked;
+    internal static Sprite TargetIcon;
+    internal static Sprite White;
 
     private static void LoadSpriteAssets()
     {
-        var resource = Assembly.GetExecutingAssembly().GetManifestResourceStream("RebuildUs.Resources.sprites");
-        var ab = AssetBundle.LoadFromMemory(resource.ReadFully());
+        Stream resource = Assembly.GetExecutingAssembly().GetManifestResourceStream("RebuildUs.Resources.sprites");
+        AssetBundle ab = AssetBundle.LoadFromMemory(resource.ReadFully());
 
         Arrow = ab.LoadAsset<Sprite>("Arrow.png").Resize(200f);
         Garlic = ab.LoadAsset<Sprite>("Garlic.png").Resize(300f);
@@ -168,26 +203,28 @@ public static class AssetLoader
         TargetIcon = ab.LoadAsset<Sprite>("TargetIcon.png").Resize(150f);
         White = ab.LoadAsset<Sprite>("White.png").Resize(100f);
     }
-    #endregion
 
-    #region Locations
-    public static Sprite ArmoryButton;
-    public static Sprite CockpitButton;
-    public static Sprite CommunicationsButton;
-    public static Sprite ElectricalButton;
-    public static Sprite GapButton;
-    public static Sprite LoungeButton;
-    public static Sprite MedicalButton;
-    public static Sprite MeetingButton;
-    public static Sprite SecurityButton;
-    public static Sprite ShowersButton;
-    public static Sprite VaultButton;
-    public static Sprite ViewingButton;
+#endregion
+
+#region Locations
+
+    internal static Sprite ArmoryButton;
+    internal static Sprite CockpitButton;
+    internal static Sprite CommunicationsButton;
+    internal static Sprite ElectricalButton;
+    internal static Sprite GapButton;
+    internal static Sprite LoungeButton;
+    internal static Sprite MedicalButton;
+    internal static Sprite MeetingButton;
+    internal static Sprite SecurityButton;
+    internal static Sprite ShowersButton;
+    internal static Sprite VaultButton;
+    internal static Sprite ViewingButton;
 
     private static void LoadLocationAssets()
     {
-        var resource = Assembly.GetExecutingAssembly().GetManifestResourceStream("RebuildUs.Resources.locations");
-        var ab = AssetBundle.LoadFromMemory(resource.ReadFully());
+        Stream resource = Assembly.GetExecutingAssembly().GetManifestResourceStream("RebuildUs.Resources.locations");
+        AssetBundle ab = AssetBundle.LoadFromMemory(resource.ReadFully());
 
         ArmoryButton = ab.LoadAsset<Sprite>("ArmoryButton.png").Resize(100f);
         CockpitButton = ab.LoadAsset<Sprite>("CockpitButton.png").Resize(100f);
@@ -202,23 +239,24 @@ public static class AssetLoader
         VaultButton = ab.LoadAsset<Sprite>("VaultButton.png").Resize(100f);
         ViewingButton = ab.LoadAsset<Sprite>("ViewingButton.png").Resize(100f);
     }
-    #endregion
 
-    #region KeyBinds
+#endregion
+
+#region KeyBinds
+
     private static readonly Dictionary<string, Sprite> KeyBindSprites = [];
-    public static Sprite KeyBindBackground;
+    internal static Sprite KeyBindBackground;
 
-    public static Sprite GetKeyBindTexture(string address)
+    internal static Sprite GetKeyBindTexture(string address)
     {
-        if (KeyBindSprites.TryGetValue(address, out var sprite)) return sprite;
-        return null;
+        return KeyBindSprites.GetValueOrDefault(address);
     }
 
     private static void LoadKeyBindAssets()
     {
-        var resource = Assembly.GetExecutingAssembly().GetManifestResourceStream("RebuildUs.Resources.keybinds");
+        Stream resource = Assembly.GetExecutingAssembly().GetManifestResourceStream("RebuildUs.Resources.keybinds");
         if (resource == null) return;
-        var ab = AssetBundle.LoadFromMemory(resource.ReadFully());
+        AssetBundle ab = AssetBundle.LoadFromMemory(resource.ReadFully());
         if (ab == null) return;
 
         KeyBindSprites["KeyBindCharacters"] = ab.LoadAsset<Sprite>("KeyBindCharacters.png").DontUnload();
@@ -230,43 +268,6 @@ public static class AssetLoader
         KeyBindSprites["KeyBindCharacters5"] = ab.LoadAsset<Sprite>("KeyBindCharacters5.png").DontUnload();
         KeyBindBackground = ab.LoadAsset<Sprite>("KeyBindBackground.png").DontUnload();
     }
-    #endregion
 
-    public static byte[] ReadFully(this Stream input)
-    {
-        using var ms = new MemoryStream();
-        input.CopyTo(ms);
-        return ms.ToArray();
-    }
-
-#nullable enable
-    private static T? LoadAsset<T>(this AssetBundle assetBundle, string name) where T : UnityEngine.Object
-    {
-        return assetBundle.LoadAsset(name, Il2CppType.Of<T>())?.Cast<T>() ?? throw new Exception($"The asset was not found: {name}");
-    }
-#nullable disable
-
-    private static Sprite Resize(this Sprite sprite, float pixelsPerUnit)
-    {
-        if (pixelsPerUnit == 100f) return sprite.DontUnload();
-
-        return sprite == null
-            ? null
-            : Sprite.Create(
-            sprite.texture,
-            sprite.rect,
-            new Vector2(sprite.pivot.x / sprite.rect.width, sprite.pivot.y / sprite.rect.height),
-            pixelsPerUnit,
-            0,
-            SpriteMeshType.FullRect,
-            sprite.border
-        ).DontUnload();
-    }
-
-    private static T DontUnload<T>(this T obj) where T : UnityEngine.Object
-    {
-        obj.hideFlags |= HideFlags.DontUnloadUnusedAsset;
-
-        return obj;
-    }
+#endregion
 }

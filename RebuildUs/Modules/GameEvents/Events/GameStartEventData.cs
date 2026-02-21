@@ -2,9 +2,9 @@ using Iced.Intel;
 
 namespace RebuildUs.Modules.GameEvents.Events;
 
-public class GameStartEventData : GameEventData
+internal abstract class GameStartEventData : GameEventData
 {
-    public ByteArrayCodeReader MapId { get; set; }
-    public int PlayerCount { get; set; }
-    public Dictionary<PlayerControl, RoleType> RoleAssignments { get; set; } = [];
+    internal ByteArrayCodeReader MapId { get; set; }
+    internal int PlayerCount { get; set; }
+    internal Dictionary<PlayerControl, RoleType> RoleAssignments { get; set; } = [];
 }

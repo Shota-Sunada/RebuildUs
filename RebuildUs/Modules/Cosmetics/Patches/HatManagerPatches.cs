@@ -3,24 +3,24 @@ namespace RebuildUs.Modules.Cosmetics.Patches;
 [HarmonyPatch(typeof(HatManager))]
 internal static class HatManagerPatches
 {
-    private static bool IsRunning;
-    private static bool IsLoaded;
-    private static List<HatData> AllHats;
+    private static bool _isRunning;
+    private static bool _isLoaded;
+    private static List<HatData> _allHats;
 
     [HarmonyPatch(nameof(HatManager.GetHatById))]
     [HarmonyPrefix]
     private static void GetHatByIdPrefix(HatManager __instance)
     {
-        if (IsRunning || IsLoaded) return;
-        IsRunning = true;
+        if (_isRunning || _isLoaded) return;
+        _isRunning = true;
         // Maybe we can use lock keyword to ensure simultaneous list manipulations ?
-        AllHats = [.. __instance.allHats];
-        var cache = new List<CustomHat>(CustomHatManager.UnregisteredHats);
-        foreach (var hat in cache)
+        _allHats = [.. __instance.allHats];
+        List<CustomHat> cache = new(CustomHatManager.UnregisteredHats);
+        foreach (CustomHat hat in cache)
         {
             try
             {
-                AllHats.Add(CustomHatManager.CreateHatBehaviour(hat));
+                _allHats.Add(CustomHatManager.CreateHatBehaviour(hat));
                 CustomHatManager.UnregisteredHats.Remove(hat);
             }
             catch
@@ -28,17 +28,18 @@ internal static class HatManagerPatches
                 // This means the file has not been downloaded yet, do nothing...
             }
         }
+
         if (CustomHatManager.UnregisteredHats.Count == 0)
-            IsLoaded = true;
+            _isLoaded = true;
         cache.Clear();
 
-        __instance.allHats = new Il2CppReferenceArray<HatData>([.. AllHats]);
+        __instance.allHats = new([.. _allHats]);
     }
 
     [HarmonyPatch(nameof(HatManager.GetHatById))]
     [HarmonyPostfix]
     private static void GetHatByIdPostfix()
     {
-        IsRunning = false;
+        _isRunning = false;
     }
 }

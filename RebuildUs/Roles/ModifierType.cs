@@ -1,6 +1,6 @@
 namespace RebuildUs.Roles;
 
-public enum ModifierType : byte
+internal enum ModifierType : byte
 {
     Madmate = 0,
     CreatedMadmate,
@@ -9,5 +9,5 @@ public enum ModifierType : byte
     Mini,
     // Munou,
 
-    NoModifier = byte.MaxValue
+    NoModifier = byte.MaxValue,
 }

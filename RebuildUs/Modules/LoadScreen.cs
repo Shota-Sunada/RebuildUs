@@ -1,82 +1,78 @@
 using Il2CppInterop.Runtime.Attributes;
+using Object = UnityEngine.Object;
 
 namespace RebuildUs.Modules;
 
-public static class LoadScreen
+internal static class LoadScreen
 {
-    private static GameObject UIContainer;
-    private static TextMeshPro TitleTMPro;
-    private static TextMeshPro StatusTMPro;
+    private static GameObject _uiContainer;
+    private static TextMeshPro _titleTMPro;
+    private static TextMeshPro _statusTMPro;
 
-    public static string StatusText { get; set; } = "";
-    public static float Progress { get; set; }
-    public static string ProgressDetailText { get; set; } = "";
+    private static Sprite _whiteSprite;
 
-    private static Sprite WhiteSprite;
+    internal static string StatusText { get; set; } = "";
+    internal static float Progress { get; set; }
+    internal static string ProgressDetailText { get; set; } = "";
 
     [HideFromIl2Cpp]
-    public static void Create()
+    internal static void Create()
     {
-        if (UIContainer != null) return;
+        if (_uiContainer != null) return;
 
-        if (WhiteSprite == null)
+        if (_whiteSprite == null)
         {
-            var tex = new Texture2D(1, 1);
+            Texture2D tex = new(1, 1);
             tex.SetPixel(0, 0, Color.white);
             tex.Apply();
-            WhiteSprite = Sprite.Create(tex, new Rect(0, 0, 1, 1), new Vector2(0.5f, 0.5f));
+            _whiteSprite = Sprite.Create(tex, new(0, 0, 1, 1), new(0.5f, 0.5f));
         }
 
-        UIContainer = new GameObject("RebuildUsLoadScreen");
-        UnityEngine.Object.DontDestroyOnLoad(UIContainer);
+        _uiContainer = new("RebuildUsLoadScreen");
+        Object.DontDestroyOnLoad(_uiContainer);
 
         // Background
-        var bg = new GameObject("Background");
-        bg.transform.SetParent(UIContainer.transform);
-        var bgRenderer = bg.AddComponent<SpriteRenderer>();
-        bgRenderer.sprite = WhiteSprite;
-        bgRenderer.color = new Color(0.05f, 0.05f, 0.1f, 1f); // Dark Blue-ish Black
-        bg.transform.localScale = new Vector3(100f, 100f, 1f);
-        bg.transform.localPosition = new Vector3(0, 0, 20f);
+        GameObject bg = new("Background");
+        bg.transform.SetParent(_uiContainer.transform);
+        SpriteRenderer bgRenderer = bg.AddComponent<SpriteRenderer>();
+        bgRenderer.sprite = _whiteSprite;
+        bgRenderer.color = new(0.05f, 0.05f, 0.1f, 1f); // Dark Blue-ish Black
+        bg.transform.localScale = new(100f, 100f, 1f);
+        bg.transform.localPosition = new(0, 0, 20f);
 
         // Title
-        var titleObj = new GameObject("TitleText");
-        titleObj.transform.SetParent(UIContainer.transform);
-        TitleTMPro = titleObj.AddComponent<TextMeshPro>();
-        TitleTMPro.alignment = TextAlignmentOptions.Center;
-        TitleTMPro.fontSize = 5f;
-        TitleTMPro.text = "<size=70%>LOADING</size>\n<color=#1684B0>REBUILD US</color>";
-        TitleTMPro.fontStyle = FontStyles.Bold | FontStyles.Italic;
-        titleObj.transform.localPosition = new Vector3(0, 1.5f, 5f);
+        GameObject titleObj = new("TitleText");
+        titleObj.transform.SetParent(_uiContainer.transform);
+        _titleTMPro = titleObj.AddComponent<TextMeshPro>();
+        _titleTMPro.alignment = TextAlignmentOptions.Center;
+        _titleTMPro.fontSize = 5f;
+        _titleTMPro.text = "<size=70%>LOADING</size>\n<color=#1684B0>REBUILD US</color>";
+        _titleTMPro.fontStyle = FontStyles.Bold | FontStyles.Italic;
+        titleObj.transform.localPosition = new(0, 1.5f, 5f);
 
         // Status
-        var statusObj = new GameObject("StatusText");
-        statusObj.transform.SetParent(UIContainer.transform);
-        StatusTMPro = statusObj.AddComponent<TextMeshPro>();
-        StatusTMPro.alignment = TextAlignmentOptions.Center;
-        StatusTMPro.fontSize = 2f;
-        StatusTMPro.text = "Initializing...";
-        statusObj.transform.localPosition = new Vector3(0, 0.2f, 5f);
+        GameObject statusObj = new("StatusText");
+        statusObj.transform.SetParent(_uiContainer.transform);
+        _statusTMPro = statusObj.AddComponent<TextMeshPro>();
+        _statusTMPro.alignment = TextAlignmentOptions.Center;
+        _statusTMPro.fontSize = 2f;
+        _statusTMPro.text = "Initializing...";
+        statusObj.transform.localPosition = new(0, 0.2f, 5f);
 
-        UIContainer.transform.position = new Vector3(0, 0, -50f);
+        _uiContainer.transform.position = new(0, 0, -50f);
     }
 
     [HideFromIl2Cpp]
-    public static void Update()
+    internal static void Update()
     {
-        if (StatusTMPro != null && StatusTMPro.text != StatusText)
-        {
-            StatusTMPro.text = StatusText;
-        }
+        if (_statusTMPro != null && _statusTMPro.text != StatusText) _statusTMPro.text = StatusText;
     }
 
     [HideFromIl2Cpp]
-    public static void Destroy()
+    internal static void Destroy()
     {
-        if (UIContainer != null)
-        {
-            UnityEngine.Object.Destroy(UIContainer);
-            UIContainer = null;
-        }
+        if (_uiContainer == null) return;
+        Object.Destroy(_uiContainer);
+        _uiContainer = null;
     }
 }
