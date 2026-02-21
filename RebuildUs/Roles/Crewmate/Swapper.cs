@@ -32,7 +32,7 @@ internal class Swapper : RoleBase<Swapper>
 
     internal override void OnUpdateNameColors()
     {
-        if (Player == PlayerControl.LocalPlayer) Update.SetPlayerNameColor(Player, NameColor);
+        if (Player == PlayerControl.LocalPlayer) HudManagerPatch.SetPlayerNameColor(Player, NameColor);
     }
 
     internal override void OnMeetingStart() { }

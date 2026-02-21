@@ -28,8 +28,10 @@ internal class Mini : ModifierBase<Mini>
         {
             List<PlayerControl> validPlayers = [];
             foreach (PlayerControl player in PlayerControl.AllPlayerControls.GetFastEnumerator())
+            {
                 if (!player.HasModifier(ModifierType.Mini))
                     validPlayers.Add(player);
+            }
 
             return validPlayers;
         }

@@ -90,14 +90,18 @@ internal static class Meeting
     internal static bool CheckForEndVoting(MeetingHud __instance)
     {
         foreach (PlayerVoteArea ps in __instance.playerStates)
+        {
             if (!ps.AmDead && !ps.DidVote)
                 return false;
+        }
 
         if (_target == null && MapSettings.BlockSkippingInEmergencyMeetings && MapSettings.NoVoteIsSelfVote)
         {
             foreach (PlayerVoteArea playerVoteArea in __instance.playerStates)
+            {
                 if (playerVoteArea.VotedFor == byte.MaxValue - 1)
                     playerVoteArea.VotedFor = playerVoteArea.TargetPlayerId;
+            }
         }
 
         Dictionary<byte, int> self = CalculateVotes(__instance);
@@ -266,8 +270,10 @@ internal static class Meeting
         if (_selections == null) return 0;
         int count = 0;
         foreach (bool t in _selections)
+        {
             if (t)
                 count++;
+        }
 
         return count;
     }
@@ -766,8 +772,10 @@ internal static class Meeting
         {
             // Save AntiTeleport position, if the player is able to move (i.e. not on a ladder or a gap thingy)
             if (PlayerControl.LocalPlayer.MyPhysics.enabled && (PlayerControl.LocalPlayer.moveable || PlayerControl.LocalPlayer.inVent || Hacker.HackerVitalsButton.IsEffectActive || Hacker.HackerAdminTableButton.IsEffectActive || SecurityGuard.SecurityGuardCamButton.IsEffectActive))
+            {
                 if (!PlayerControl.LocalPlayer.inMovingPlat)
                     AntiTeleport.Position = PlayerControl.LocalPlayer.transform.position;
+            }
 
             // Reset vampire bitten
             Vampire.Bitten = null;

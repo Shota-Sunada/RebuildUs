@@ -165,8 +165,10 @@ internal static class Helpers
     internal static PlayerControl PlayerById(byte id)
     {
         foreach (PlayerControl player in PlayerControl.AllPlayerControls.GetFastEnumerator())
+        {
             if (player.PlayerId == id)
                 return player;
+        }
 
         return null;
     }
@@ -178,8 +180,10 @@ internal static class Helpers
         _lastCacheFrame = Time.frameCount;
         PlayerByIdCache.Clear();
         foreach (PlayerControl p in PlayerControl.AllPlayerControls.GetFastEnumerator())
+        {
             if (p != null)
                 PlayerByIdCache[p.PlayerId] = p;
+        }
 
         return PlayerByIdCache;
     }
@@ -269,8 +273,10 @@ internal static class Helpers
     internal static bool MushroomSabotageActive()
     {
         foreach (PlayerTask task in PlayerControl.LocalPlayer.myTasks)
+        {
             if (task.TaskType == TaskTypes.MushroomMixupSabotage)
                 return true;
+        }
 
         return false;
     }
@@ -341,8 +347,10 @@ internal static class Helpers
     internal static bool IsCrewmateAlive()
     {
         foreach (PlayerControl p in PlayerControl.AllPlayerControls.GetFastEnumerator())
+        {
             if (p.IsTeamCrewmate() && !p.HasModifier(ModifierType.Madmate) && !p.IsRole(RoleType.Madmate) && !p.IsRole(RoleType.Suicider) && p.IsAlive())
                 return true;
+        }
 
         return false;
     }
@@ -403,8 +411,10 @@ internal static class Helpers
         if (TimeMaster.Exists && TimeMaster.ShieldActive && target.IsRole(RoleType.TimeMaster))
         {
             if (!blockRewind)
+            {
                 using (new RPCSender(killer.NetId, CustomRPC.TimeMasterRewindTime))
                     RPCProcedure.TimeMasterRewindTime();
+            }
 
             return MurderAttemptResult.SuppressKill;
         }
@@ -612,13 +622,17 @@ internal static class Helpers
                         {
                             int dousedSurvivors = 0;
                             foreach (PlayerControl dousedPlayer in role.DousedPlayers)
+                            {
                                 if (dousedPlayer?.Data != null && !dousedPlayer.Data.IsDead && !dousedPlayer.Data.Disconnected)
                                     dousedSurvivors++;
+                            }
 
                             int totalSurvivors = 0;
                             foreach (PlayerControl targetPlayer in PlayerControl.AllPlayerControls.GetFastEnumerator())
+                            {
                                 if (targetPlayer?.Data != null && !targetPlayer.Data.IsDead && !targetPlayer.Data.Disconnected && !targetPlayer.IsRole(RoleType.Arsonist) && !targetPlayer.IsGm())
                                     totalSurvivors++;
+                            }
 
                             statusText = Cs(Arsonist.NameColor, $" ({dousedSurvivors}/{totalSurvivors})");
                         }
@@ -825,11 +839,9 @@ internal static class Helpers
         // submerged
         if (!SubmergedCompatibility.IsSubmerged) return;
 
-        if (name.Contains("ExileCutscene"))
-        {
-            ExileController controller = obj.GetComponent<ExileController>();
-            if (controller != null && controller.initData != null) Exile.WrapUpPostfix(controller.initData.networkedPlayer?.Object);
-        }
+        if (!name.Contains("ExileCutscene")) return;
+        ExileController controller = obj.GetComponent<ExileController>();
+        if (controller != null && controller.initData != null) ExileControllerPatch.WrapUpPostfix(controller.initData.networkedPlayer?.Object);
     }
 
     internal static void ShowFlash(Color color, float duration = 1f)
@@ -903,8 +915,10 @@ internal static class Helpers
             if (room.roomArea == null) continue;
             int hits = room.roomArea.OverlapCollider(filter, buffer);
             for (int i = 0; i < hits; i++)
+            {
                 if (buffer[i]?.gameObject == p.gameObject)
                     return room;
+            }
         }
 
         return null;
@@ -1164,5 +1178,69 @@ internal static class Helpers
     internal static void MurderPlayer(this PlayerControl player, PlayerControl target)
     {
         player.MurderPlayer(target, MurderResultFlags.Succeeded);
+    }
+
+    internal static bool IsBlocked(PlayerTask task, PlayerControl pc)
+    {
+        if (task == null || pc == null || pc != PlayerControl.LocalPlayer) return false;
+
+        TaskTypes taskType = task.TaskType;
+        bool isLights = taskType == TaskTypes.FixLights;
+        bool isComms = taskType == TaskTypes.FixComms;
+        bool isReactor = taskType is TaskTypes.StopCharles or TaskTypes.ResetSeismic or TaskTypes.ResetReactor;
+        bool isO2 = taskType == TaskTypes.RestoreOxy;
+
+        if (pc.IsRole(RoleType.NiceSwapper) && (isLights || isComms)) return true;
+
+        if (pc.HasModifier(ModifierType.Madmate) && (isLights || (isComms && !Madmate.CanFixComm))) return true;
+
+        if (pc.IsRole(RoleType.Madmate) && (isLights || (isComms && !MadmateRole.CanFixComm))) return true;
+
+        if (pc.IsRole(RoleType.Suicider) && (isLights || (isComms && !Suicider.CanFixComm))) return true;
+
+        if (pc.HasModifier(ModifierType.CreatedMadmate) && (isLights || (isComms && !CreatedMadmate.CanFixComm))) return true;
+
+        if (pc.IsGm() && (isLights || isComms || isReactor || isO2)) return true;
+
+        if (pc.IsRole(RoleType.Mafioso) && !Mafia.Mafioso.CanRepair && (isLights || isComms)) return true;
+
+        if (pc.IsRole(RoleType.Janitor) && !Mafia.Janitor.CanRepair && (isLights || isComms)) return true;
+
+        return false;
+    }
+
+    internal static bool IsBlocked(Console console, PlayerControl pc)
+    {
+        if (console == null || pc == null || pc != PlayerControl.LocalPlayer) return false;
+
+        PlayerTask task = console.FindTask(pc);
+        return IsBlocked(task, pc);
+    }
+
+    internal static bool IsBlocked(SystemConsole console, PlayerControl pc)
+    {
+        if (console == null || pc == null || pc != PlayerControl.LocalPlayer) return false;
+
+        string name = console.name;
+        bool isSecurity = name is "task_cams" or "Surv_Panel" or "SurvLogConsole" or "SurvConsole";
+        bool isVitals = name == "panel_vitals";
+
+        return (isSecurity && !MapSettings.CanUseCameras) || (isVitals && !MapSettings.CanUseVitals);
+    }
+
+    internal static bool IsBlocked(IUsable target, PlayerControl pc)
+    {
+        if (target == null) return false;
+
+        Console targetConsole = target.TryCast<Console>();
+        if (targetConsole != null) return IsBlocked(targetConsole, pc);
+
+        SystemConsole targetSysConsole = target.TryCast<SystemConsole>();
+        if (targetSysConsole != null) return IsBlocked(targetSysConsole, pc);
+
+        MapConsole targetMapConsole = target.TryCast<MapConsole>();
+        if (targetMapConsole != null) return !MapSettings.CanUseAdmin;
+
+        return false;
     }
 }

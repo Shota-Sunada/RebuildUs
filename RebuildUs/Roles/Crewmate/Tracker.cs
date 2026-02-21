@@ -106,8 +106,10 @@ internal class Tracker : RoleBase<Tracker>
             if (arrowsCountChanged)
             {
                 for (int i = 0; i < LocalArrows.Count; i++)
+                {
                     if (LocalArrows[i]?.ArrowObject != null)
                         Object.Destroy(LocalArrows[i].ArrowObject);
+                }
 
                 LocalArrows.Clear();
             }
@@ -130,8 +132,10 @@ internal class Tracker : RoleBase<Tracker>
         else if (LocalArrows.Count > 0)
         {
             for (int i = 0; i < LocalArrows.Count; i++)
+            {
                 if (LocalArrows[i]?.ArrowObject != null)
                     Object.Destroy(LocalArrows[i].ArrowObject);
+            }
 
             LocalArrows.Clear();
         }
@@ -191,8 +195,10 @@ internal class Tracker : RoleBase<Tracker>
             if (p.LocalArrows != null)
             {
                 foreach (Arrow arrow in p.LocalArrows)
+                {
                     if (arrow?.ArrowObject != null)
                         Object.Destroy(arrow.ArrowObject);
+                }
             }
         }
 

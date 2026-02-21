@@ -26,8 +26,10 @@ internal sealed class AdditionalVents
         int maxId = -1;
         Il2CppReferenceArray<Vent> allVents = MapUtilities.CachedShipStatus.AllVents;
         for (int i = 0; i < allVents.Length; i++)
+        {
             if (allVents[i].Id > maxId)
                 maxId = allVents[i].Id;
+        }
 
         _vent.Id = maxId + 1; // Make sure we have a unique id
 

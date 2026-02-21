@@ -75,18 +75,18 @@ internal static class PlayerControlPatch
                 Helpers.SetPetVisibility();
             }
 
-            Update.ImpostorSetTarget();
-            Update.PlayerSizeUpdate(__instance);
+            ImpostorSetTarget();
+            PlayerSizeUpdate(__instance);
 
             Garlic.UpdateAll();
         }
 
         RebuildUs.FixedUpdate(__instance);
 
-        AllPlayers.Update(__instance);
+        PlayersUpdate(__instance);
 
-        Usables.FixedUpdate(__instance);
-        Update.StopCooldown(__instance);
+        FixedUpdate(__instance);
+        StopCooldown(__instance);
     }
 
     [HarmonyPrefix]
@@ -214,5 +214,218 @@ internal static class PlayerControlPatch
     {
         __result = __instance.moveable && !Minigame.Instance && (!DestroyableSingleton<HudManager>.InstanceExists || (!FastDestroyableSingleton<HudManager>.Instance.Chat.IsOpenOrOpening && !FastDestroyableSingleton<HudManager>.Instance.KillOverlay.IsOpen && !FastDestroyableSingleton<HudManager>.Instance.GameMenu.IsOpen)) && (!MapBehaviour.Instance || !MapBehaviour.Instance.IsOpenStopped) && !MeetingHud.Instance && !ExileController.Instance && !IntroCutscene.Instance;
         return false;
+    }
+
+    private static void StopCooldown(PlayerControl __instance)
+    {
+        if (!CustomOptionHolder.StopCooldownOnFixingElecSabotage.GetBool()) return;
+        if (Helpers.IsOnElecTask()) __instance.SetKillTimer(__instance.killTimer + Time.fixedDeltaTime);
+    }
+
+    private static void ImpostorSetTarget()
+    {
+        PlayerControl localPlayer = PlayerControl.LocalPlayer;
+        if (localPlayer == null || !localPlayer.Data.Role.IsImpostor || !localPlayer.CanMove || localPlayer.Data.IsDead)
+        {
+            if (FastDestroyableSingleton<HudManager>.Instance) FastDestroyableSingleton<HudManager>.Instance.KillButton.SetTarget(null);
+
+            return;
+        }
+
+        bool specialTeamRedExists = false;
+        if (Spy.Exists)
+            specialTeamRedExists = true;
+        else
+        {
+            foreach (Sidekick sk in Sidekick.Players)
+            {
+                if (sk.WasTeamRed)
+                {
+                    specialTeamRedExists = true;
+                    break;
+                }
+            }
+
+            if (!specialTeamRedExists)
+            {
+                foreach (Jackal jk in Jackal.Players)
+                {
+                    if (!jk.WasTeamRed) continue;
+                    specialTeamRedExists = true;
+                    break;
+                }
+            }
+        }
+
+        PlayerControl target;
+        if (specialTeamRedExists)
+        {
+            if (Spy.ImpostorsCanKillAnyone)
+                target = Helpers.SetTarget(false, true);
+            else
+            {
+                List<PlayerControl> listP = [.. Spy.AllPlayers];
+                foreach (Sidekick sidekick in Sidekick.Players)
+                {
+                    if (sidekick.WasTeamRed)
+                        listP.Add(sidekick.Player);
+                }
+
+                foreach (Jackal jackal in Jackal.Players)
+                {
+                    if (jackal.WasTeamRed)
+                        listP.Add(jackal.Player);
+                }
+
+                target = Helpers.SetTarget(true, true, listP);
+            }
+        }
+        else
+            target = Helpers.SetTarget(true, true);
+
+        FastDestroyableSingleton<HudManager>.Instance.KillButton.SetTarget(target);
+    }
+
+    private static void FixedUpdate(PlayerControl __instance)
+    {
+        if (!__instance.AmOwner || !Helpers.ShowButtons) return;
+        HudManager hudManager = FastDestroyableSingleton<HudManager>.Instance;
+        hudManager.ImpostorVentButton.Hide();
+        hudManager.SabotageButton.Hide();
+
+        if (!Helpers.ShowButtons) return;
+        if (__instance.CanUseVents()) hudManager.ImpostorVentButton.Show();
+
+        if (!__instance.CanSabotage()) return;
+        hudManager.SabotageButton.Show();
+        hudManager.SabotageButton.gameObject.SetActive(true);
+    }
+
+    private static readonly int Outline = Shader.PropertyToID("_Outline");
+    private static readonly int OutlineColor = Shader.PropertyToID("_OutlineColor");
+    private static readonly int AddColor = Shader.PropertyToID("_AddColor");
+
+    private static void PlayersUpdate(PlayerControl __instance)
+    {
+        if (__instance == null || __instance != PlayerControl.LocalPlayer) return;
+
+        bool jackalHighlight = Engineer.HighlightForTeamJackal && (__instance.IsRole(RoleType.Jackal) || __instance.IsRole(RoleType.Sidekick));
+        bool impostorHighlight = Engineer.HighlightForImpostors && __instance.IsTeamImpostor();
+        bool isBait = __instance.IsRole(RoleType.Bait) && __instance.IsAlive();
+
+        ShipStatus shipStatus = MapUtilities.CachedShipStatus;
+        if (shipStatus == null || shipStatus.AllVents == null) return;
+        Il2CppReferenceArray<Vent> allVents = shipStatus.AllVents;
+
+        // Engineer check
+        bool anyEngineerInVent = false;
+        if (jackalHighlight || impostorHighlight)
+        {
+            List<PlayerControl> engineers = Engineer.AllPlayers;
+            foreach (PlayerControl t in engineers)
+            {
+                if (t.inVent) continue;
+                anyEngineerInVent = true;
+                break;
+            }
+        }
+
+        // Bait check
+        HashSet<int> ventsWithPlayers = [];
+        bool anyPlayerInVent = false;
+        if (isBait)
+        {
+            foreach (PlayerControl player in PlayerControl.AllPlayerControls.GetFastEnumerator())
+            {
+                if (player == null || !player.inVent) continue;
+
+                anyPlayerInVent = true;
+                Vector2 playerPos = player.GetTruePosition();
+                Vent closestVent = null;
+                float minDistance = float.MaxValue;
+                foreach (Vent v in allVents)
+                {
+                    if (v == null) continue;
+                    float dist = Vector2.Distance(v.transform.position, playerPos);
+                    if (!(dist < minDistance)) continue;
+                    minDistance = dist;
+                    closestVent = v;
+                }
+
+                if (closestVent != null) ventsWithPlayers.Add(closestVent.Id);
+            }
+        }
+
+        foreach (Vent vent in allVents)
+        {
+            if (vent == null || vent.myRend == null) continue;
+
+            Material mat = vent.myRend.material;
+            if (mat == null) continue;
+
+            bool highlight = false;
+            Color highlightColor = Color.white;
+
+            if ((jackalHighlight || impostorHighlight) && anyEngineerInVent)
+            {
+                highlight = true;
+                highlightColor = Engineer.NameColor;
+            }
+            else if (isBait)
+            {
+                if (Bait.HighlightAllVents)
+                {
+                    if (anyPlayerInVent)
+                    {
+                        highlight = true;
+                        highlightColor = Bait.NameColor;
+                    }
+                }
+                else if (ventsWithPlayers.Contains(vent.Id))
+                {
+                    highlight = true;
+                    highlightColor = Bait.NameColor;
+                }
+            }
+
+            if (highlight)
+            {
+                mat.SetFloat(Outline, 1f);
+                mat.SetColor(OutlineColor, highlightColor);
+            }
+            else
+            {
+                // Only remove outline if it's not being set by something else (Check alpha of AddColor as a proxy)
+                if (mat.HasProperty(AddColor) && mat.GetColor(AddColor).a == 0f) mat.SetFloat(Outline, 0f);
+            }
+        }
+    }
+
+    private static void PlayerSizeUpdate(PlayerControl p)
+    {
+        if (p == null) return;
+
+        CircleCollider2D collider = p.GetComponent<CircleCollider2D>();
+        if (collider == null) return;
+
+        p.transform.localScale = new(0.7f, 0.7f, 1f);
+        collider.radius = Mini.DEFAULT_COLLIDER_RADIUS;
+        collider.offset = Mini.DEFAULT_COLLIDER_OFFSET * Vector2.down;
+
+        // Set adapted player size to Mini and Morphing
+        if (Camouflager.CamouflageTimer > 0f) return;
+
+        Mini miniRole = null;
+        if (p.HasModifier(ModifierType.Mini))
+            miniRole = Mini.GetModifier(p);
+        else if (Morphing.Exists && p.IsRole(RoleType.Morphing) && Morphing.MorphTimer > 0f && Morphing.MorphTarget != null && Morphing.MorphTarget.HasModifier(ModifierType.Mini)) miniRole = Mini.GetModifier(Morphing.MorphTarget);
+
+        if (miniRole == null) return;
+        float growingProgress = miniRole.GrowingProgress();
+        float scale = (growingProgress * 0.35f) + 0.35f;
+        float correctedColliderRadius = (Mini.DEFAULT_COLLIDER_RADIUS * 0.7f) / scale;
+
+        p.transform.localScale = new(scale, scale, 1f);
+        collider.radius = correctedColliderRadius;
     }
 }

@@ -248,8 +248,10 @@ internal static class KeyBindingMenu
         }
 
         foreach (ToggleButtonBehaviour button in ModButtons)
+        {
             if (button != null)
                 Object.Destroy(button.gameObject);
+        }
 
         ModButtons.Clear();
 

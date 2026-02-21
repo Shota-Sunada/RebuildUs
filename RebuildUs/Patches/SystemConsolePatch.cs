@@ -9,13 +9,13 @@ internal static class SystemConsolePatch
     {
         canUse = couldUse = false;
         __result = float.MaxValue;
-        return !Usables.IsBlocked(__instance, pc.Object);
+        return !Helpers.IsBlocked(__instance, pc.Object);
     }
 
     [HarmonyPrefix]
     [HarmonyPatch(typeof(SystemConsole), nameof(SystemConsole.Use))]
     internal static bool UsePrefix(SystemConsole __instance)
     {
-        return !Usables.IsBlocked(__instance, PlayerControl.LocalPlayer);
+        return !Helpers.IsBlocked(__instance, PlayerControl.LocalPlayer);
     }
 }

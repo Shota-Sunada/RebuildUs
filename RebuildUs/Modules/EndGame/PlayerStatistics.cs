@@ -20,8 +20,10 @@ internal sealed class PlayerStatistics
     private bool IsLover(NetworkedPlayerInfo p)
     {
         foreach (Couple couple in Lovers.Couples)
+        {
             if (p.PlayerId == couple.Lover1.PlayerId || p.PlayerId == couple.Lover2.PlayerId)
                 return true;
+        }
 
         return false;
     }

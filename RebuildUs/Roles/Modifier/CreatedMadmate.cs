@@ -33,14 +33,16 @@ internal class CreatedMadmate : ModifierBase<CreatedMadmate>
     {
         if (Player == PlayerControl.LocalPlayer)
         {
-            Update.SetPlayerNameColor(Player, ModifierColor);
+            HudManagerPatch.SetPlayerNameColor(Player, ModifierColor);
 
             if (Madmate.KnowsImpostors(Player))
             {
                 IEnumerable<PlayerControl> allPlayers = PlayerControl.AllPlayerControls.GetFastEnumerator();
                 foreach (PlayerControl p in PlayerControl.AllPlayerControls.GetFastEnumerator())
+                {
                     if (p.IsTeamImpostor() || p.IsRole(RoleType.Spy) || (p.IsRole(RoleType.Jackal) && Jackal.GetRole(p).WasTeamRed) || (p.IsRole(RoleType.Sidekick) && Sidekick.GetRole(p).WasTeamRed))
-                        Update.SetPlayerNameColor(p, Palette.ImpostorRed);
+                        HudManagerPatch.SetPlayerNameColor(p, Palette.ImpostorRed);
+                }
             }
         }
     }

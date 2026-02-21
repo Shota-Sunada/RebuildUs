@@ -9,6 +9,7 @@ internal static class EndGameMain
     internal static bool IsO2Win;
 
     internal static TMP_Text TextRenderer;
+    private static readonly int Color = Shader.PropertyToID("_Color");
 
     internal static bool CrewmateCantWinByTaskWithoutLivingPlayer(ref bool __result)
     {
@@ -140,8 +141,10 @@ internal static class EndGameMain
 
         Il2CppSystem.Collections.Generic.List<CachedPlayerData> cachedWinners = EndGameResult.CachedWinners;
         for (int i = cachedWinners.Count - 1; i >= 0; i--)
+        {
             if (notWinnerNames.Contains(cachedWinners[i].PlayerName))
                 cachedWinners.RemoveAt(i);
+        }
 
         if (everyoneDead)
         {
@@ -261,8 +264,10 @@ internal static class EndGameMain
         Dictionary<string, PlayerRoleInfo> playerRolesDict = new();
         List<PlayerRoleInfo> playerRoles = AdditionalTempData.PlayerRoles;
         foreach (PlayerRoleInfo pr in playerRoles)
+        {
             if (pr != null)
                 playerRolesDict[pr.PlayerName] = pr;
+        }
 
         for (int i = 0; i < list.Count; i++)
         {
@@ -288,7 +293,7 @@ internal static class EndGameMain
 
             poolablePlayer.UpdateFromPlayerOutfit(cachedPlayerData2.Outfit, PlayerMaterial.MaskType.None, cachedPlayerData2.IsDead, true);
 
-            poolablePlayer.cosmetics.nameText.color = Color.white;
+            poolablePlayer.cosmetics.nameText.color = UnityEngine.Color.white;
             poolablePlayer.cosmetics.nameText.lineSpacing *= 0.7f;
             poolablePlayer.cosmetics.nameText.transform.localScale = new(1f / vector.x, 1f / vector.y, 1f / vector.z);
             poolablePlayer.cosmetics.nameText.transform.localPosition = new(poolablePlayer.cosmetics.nameText.transform.localPosition.x, poolablePlayer.cosmetics.nameText.transform.localPosition.y - 0.7f, -15f);
@@ -319,47 +324,47 @@ internal static class EndGameMain
             case WinCondition.JesterWin:
                 bonusText = "JesterWin";
                 TextRenderer.color = Jester.NameColor;
-                __instance.BackgroundBar.material.SetColor("_Color", Jester.NameColor);
+                __instance.BackgroundBar.material.SetColor(Color, Jester.NameColor);
                 break;
             case WinCondition.ArsonistWin:
                 bonusText = "ArsonistWin";
                 TextRenderer.color = Arsonist.NameColor;
-                __instance.BackgroundBar.material.SetColor("_Color", Arsonist.NameColor);
+                __instance.BackgroundBar.material.SetColor(Color, Arsonist.NameColor);
                 break;
             case WinCondition.VultureWin:
                 bonusText = "VultureWin";
                 TextRenderer.color = Vulture.NameColor;
-                __instance.BackgroundBar.material.SetColor("_Color", Vulture.NameColor);
+                __instance.BackgroundBar.material.SetColor(Color, Vulture.NameColor);
                 break;
             case WinCondition.JackalWin:
                 bonusText = "JackalWin";
                 TextRenderer.color = Jackal.NameColor;
-                __instance.BackgroundBar.material.SetColor("_Color", Jackal.NameColor);
+                __instance.BackgroundBar.material.SetColor(Color, Jackal.NameColor);
                 break;
             case WinCondition.MiniLose:
                 bonusText = "MiniDied";
                 TextRenderer.color = Mini.NameColor;
-                __instance.BackgroundBar.material.SetColor("_Color", Palette.DisabledGrey);
+                __instance.BackgroundBar.material.SetColor(Color, Palette.DisabledGrey);
                 break;
             case WinCondition.LoversTeamWin:
                 bonusText = "CrewmateWin";
                 TextRenderer.color = Lovers.Color;
-                __instance.BackgroundBar.material.SetColor("_Color", Lovers.Color);
+                __instance.BackgroundBar.material.SetColor(Color, Lovers.Color);
                 break;
             case WinCondition.LoversSoloWin:
                 bonusText = "LoversWin";
                 TextRenderer.color = Lovers.Color;
-                __instance.BackgroundBar.material.SetColor("_Color", Lovers.Color);
+                __instance.BackgroundBar.material.SetColor(Color, Lovers.Color);
                 break;
             case WinCondition.EveryoneDied:
                 bonusText = "EveryoneDied";
                 TextRenderer.color = Palette.DisabledGrey;
-                __instance.BackgroundBar.material.SetColor("_Color", Palette.DisabledGrey);
+                __instance.BackgroundBar.material.SetColor(Color, Palette.DisabledGrey);
                 break;
             case WinCondition.ForceEnd:
                 bonusText = "ForceEnd";
                 TextRenderer.color = Palette.DisabledGrey;
-                __instance.BackgroundBar.material.SetColor("_Color", Palette.DisabledGrey);
+                __instance.BackgroundBar.material.SetColor(Color, Palette.DisabledGrey);
                 break;
             case WinCondition.Default:
             default:
@@ -432,7 +437,7 @@ internal static class EndGameMain
 
                 TMP_Text roleSummaryTextMesh = roleSummary.GetComponent<TMP_Text>();
                 roleSummaryTextMesh.alignment = TextAlignmentOptions.TopLeft;
-                roleSummaryTextMesh.color = Color.white;
+                roleSummaryTextMesh.color = UnityEngine.Color.white;
                 roleSummaryTextMesh.outlineWidth *= 1.2f;
                 roleSummaryTextMesh.fontSizeMin = 1.25f;
                 roleSummaryTextMesh.fontSizeMax = 1.25f;

@@ -299,8 +299,10 @@ internal static class GameStart
         if (hasEnsured)
         {
             for (int i = 0; i < probabilities.Length; i++)
+            {
                 if (probabilities[i] < 1.0f)
                     probabilities[i] = 0;
+            }
         }
 
         float sum = 0;

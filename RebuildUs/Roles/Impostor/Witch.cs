@@ -42,8 +42,10 @@ internal class Witch : RoleBase<Witch>
         if (SpellCastingTarget != null)
         {
             foreach (PlayerControl p in PlayerControl.AllPlayerControls.GetFastEnumerator())
+            {
                 if (p.PlayerId != SpellCastingTarget.PlayerId)
                     untargetables.Add(p);
+            }
         }
         else
         {

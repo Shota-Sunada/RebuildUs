@@ -109,8 +109,10 @@ internal static class Vitals
         else
         {
             foreach (TextMeshPro text in _hackerTexts)
+            {
                 if (text != null && text.gameObject != null)
                     text.gameObject.SetActive(false);
+            }
         }
     }
 }

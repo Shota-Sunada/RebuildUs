@@ -138,8 +138,10 @@ internal static class ClientOptions
         if (_popUp.transform.GetComponentInChildren<ToggleButtonBehaviour>()) return;
 
         foreach (ToggleButtonBehaviour button in _modButtons)
+        {
             if (button != null)
                 Object.Destroy(button.gameObject);
+        }
 
         _modButtons = [];
         int length = _page * 10 < AllOptions.Length ? _page * 10 : AllOptions.Length;

@@ -22,8 +22,10 @@ internal static class GameHistory
     internal static DeadPlayer GetDeadPlayer(byte playerId)
     {
         foreach (DeadPlayer deadPlayer in DeadPlayers)
+        {
             if (deadPlayer.Player.PlayerId == playerId)
                 return deadPlayer;
+        }
 
         return null;
     }

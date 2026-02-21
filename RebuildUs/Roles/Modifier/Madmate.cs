@@ -141,13 +141,15 @@ internal class Madmate : ModifierBase<Madmate>
     {
         if (Player == PlayerControl.LocalPlayer)
         {
-            Update.SetPlayerNameColor(Player, NameColor);
+            HudManagerPatch.SetPlayerNameColor(Player, NameColor);
 
             if (KnowsImpostors(Player))
             {
                 foreach (PlayerControl p in PlayerControl.AllPlayerControls.GetFastEnumerator())
+                {
                     if (p.IsTeamImpostor() || p.IsRole(RoleType.Spy) || (p.IsRole(RoleType.Jackal) && Jackal.GetRole(p).WasTeamRed) || (p.IsRole(RoleType.Sidekick) && Sidekick.GetRole(p).WasTeamRed))
-                        Update.SetPlayerNameColor(p, Palette.ImpostorRed);
+                        HudManagerPatch.SetPlayerNameColor(p, Palette.ImpostorRed);
+                }
             }
         }
     }
@@ -186,8 +188,10 @@ internal class Madmate : ModifierBase<Madmate>
         int totalTasks = NumCommonTasks + NumLongTasks + NumShortTasks;
         if (totalTasks == 0) return true;
         foreach (NetworkedPlayerInfo.TaskInfo task in player.Data.Tasks)
+        {
             if (task.Complete)
                 counter++;
+        }
 
         return counter == totalTasks;
     }

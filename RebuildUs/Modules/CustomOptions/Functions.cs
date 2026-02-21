@@ -324,8 +324,10 @@ internal partial class CustomOption
         }
 
         foreach (OptionBehaviour ob in menu.Children)
+        {
             if (AmongUsClient.Instance && !AmongUsClient.Instance.AmHost)
                 ob.SetAsPlayer();
+        }
     }
 
     private static void UpdateGameOptionsMenu(CustomOptionType optionType, GameOptionsMenu menu)

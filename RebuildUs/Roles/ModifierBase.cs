@@ -51,8 +51,10 @@ internal abstract class PlayerModifier
         if (player == null) return null;
         List<PlayerModifier> list = GetModifiers(player);
         foreach (PlayerModifier t in list)
+        {
             if (t.CurrentModifierType == type)
                 return t;
+        }
 
         return null;
     }
@@ -64,8 +66,10 @@ internal abstract class PlayerModifier
 
         List<PlayerModifier> list = new();
         foreach (PlayerModifier t in AllModifiers)
+        {
             if (t.Player == player)
                 list.Add(t);
+        }
 
         PlayerModifierCache[player.PlayerId] = list;
         return list;
@@ -154,8 +158,10 @@ internal abstract class ModifierBase<T> : PlayerModifier where T : ModifierBase<
         player ??= PlayerControl.LocalPlayer;
         if (player == null) return null;
         foreach (T t in Players)
+        {
             if (t.Player == player)
                 return t;
+        }
 
         return null;
     }
@@ -165,8 +171,10 @@ internal abstract class ModifierBase<T> : PlayerModifier where T : ModifierBase<
     {
         if (player == null) return false;
         foreach (T t in Players)
+        {
             if (t.Player == player)
                 return true;
+        }
 
         return false;
     }

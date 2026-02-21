@@ -37,16 +37,20 @@ internal static class Admin
             case "Cockpit":
             {
                 for (int i = 0; i < FilterCockpitAdmin.Length; i++)
+                {
                     if (FilterCockpitAdmin[i] == type)
                         return true;
+                }
 
                 return false;
             }
             case "Records":
             {
                 for (int i = 0; i < FilterRecordsAdmin.Length; i++)
+                {
                     if (FilterRecordsAdmin[i] == type)
                         return true;
+                }
 
                 return false;
             }
@@ -139,8 +143,10 @@ internal static class Admin
 
         bool commsActive = false;
         foreach (PlayerTask task in PlayerControl.LocalPlayer.myTasks.GetFastEnumerator())
+        {
             if (task.TaskType == TaskTypes.FixComms)
                 commsActive = true;
+        }
 
         if (CustomOptionHolder.ImpostorCanIgnoreCommSabotage.GetBool() && PlayerControl.LocalPlayer.IsTeamImpostor()) commsActive = false;
 
@@ -247,8 +253,10 @@ internal static class Admin
         if (!_map) _map = DestroyableSingleton<MapBehaviour>.Instance.gameObject.GetComponentsInChildren<SpriteRenderer>().FirstOrDefault(x => x.name == "Background")?.gameObject;
 
         if (!_newMap)
+        {
             if (_map != null)
                 _newMap = Object.Instantiate(_map, _map.transform.parent);
+        }
 
         SpriteRenderer renderer = _newMap.GetComponent<SpriteRenderer>();
         switch (_room.name)

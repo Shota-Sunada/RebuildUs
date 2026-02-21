@@ -36,8 +36,10 @@ internal class Detective : RoleBase<Detective>
         if (!(_timer <= 0f)) return;
         _timer = FootprintInterval;
         foreach (PlayerControl player in PlayerControl.AllPlayerControls.GetFastEnumerator())
+        {
             if (player != null && player != PlayerControl.LocalPlayer && !player.Data.IsDead && !player.inVent && !player.IsGm())
                 FootprintHolder.Instance.MakeFootprint(player);
+        }
     }
 
     internal override void OnKill(PlayerControl target) { }

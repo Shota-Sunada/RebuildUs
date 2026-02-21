@@ -39,8 +39,10 @@ internal static class ModifierHelpers
 
             List<PlayerModifier> mods = PlayerModifier.GetModifiers(player);
             foreach (PlayerModifier t in mods)
+            {
                 if (t.CurrentModifierType == modType)
                     return true;
+            }
 
             return false;
         }

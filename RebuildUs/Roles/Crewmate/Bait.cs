@@ -66,8 +66,10 @@ internal class Bait : RoleBase<Bait>
         {
             List<PlayerControl> candidates = new();
             foreach (PlayerControl p in PlayerControl.AllPlayerControls.GetFastEnumerator())
+            {
                 if (p != null && p.IsAlive() && !p.IsTeamImpostor() && !p.isDummy)
                     candidates.Add(p);
+            }
 
             if (candidates.Count > 0)
             {

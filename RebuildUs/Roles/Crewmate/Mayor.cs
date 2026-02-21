@@ -60,9 +60,7 @@ internal class Mayor : RoleBase<Mayor>
                                      or TaskTypes.FixComms
                                      or TaskTypes.StopCharles
                     || (SubmergedCompatibility.IsSubmerged && task.TaskType == SubmergedCompatibility.RetrieveOxygenMask))
-                {
                     sabotageActive = true;
-                }
             }
 
             return !sabotageActive && PlayerControl.LocalPlayer.CanMove && Local._remoteMeetingsLeft > 0;

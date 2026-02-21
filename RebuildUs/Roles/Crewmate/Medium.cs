@@ -44,12 +44,7 @@ internal class Medium : RoleBase<Medium>
         if (_souls != null)
         {
             foreach (var t in _souls)
-            {
-                if (t != null && t.gameObject != null)
-                {
-                    Object.Destroy(t.gameObject);
-                }
-            }
+                if (t != null && t.gameObject != null) Object.Destroy(t.gameObject);
 
             _souls.Clear();
         }

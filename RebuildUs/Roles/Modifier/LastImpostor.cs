@@ -198,8 +198,10 @@ internal class LastImpostor : ModifierBase<LastImpostor>
 
         List<PlayerControl> impList = new();
         foreach (PlayerControl p in PlayerControl.AllPlayerControls.GetFastEnumerator())
+        {
             if (p.IsTeamImpostor() && p.IsAlive())
                 impList.Add(p);
+        }
 
         if (impList.Count == 1)
         {

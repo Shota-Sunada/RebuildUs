@@ -24,7 +24,7 @@ internal class Spy : RoleBase<Spy>
     internal override void OnUpdateNameColors()
     {
         PlayerControl localPlayer = PlayerControl.LocalPlayer;
-        if (localPlayer != null && localPlayer.IsTeamImpostor()) Update.SetPlayerNameColor(Player, NameColor);
+        if (localPlayer != null && localPlayer.IsTeamImpostor()) HudManagerPatch.SetPlayerNameColor(Player, NameColor);
     }
 
     internal override void OnMeetingStart() { }

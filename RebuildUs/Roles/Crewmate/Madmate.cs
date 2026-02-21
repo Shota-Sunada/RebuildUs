@@ -28,7 +28,7 @@ internal class MadmateRole : RoleBase<MadmateRole>
     internal override void OnUpdateNameColors()
     {
         if (Player != PlayerControl.LocalPlayer) return;
-        Update.SetPlayerNameColor(Player, NameColor);
+        HudManagerPatch.SetPlayerNameColor(Player, NameColor);
 
         if (!KnowsImpostors(Player)) return;
         foreach (PlayerControl p in PlayerControl.AllPlayerControls.GetFastEnumerator())
@@ -37,9 +37,7 @@ internal class MadmateRole : RoleBase<MadmateRole>
                 || p.IsRole(RoleType.Spy)
                 || (p.IsRole(RoleType.Jackal) && Jackal.GetRole(p).WasTeamRed)
                 || (p.IsRole(RoleType.Sidekick) && Sidekick.GetRole(p).WasTeamRed))
-            {
-                Update.SetPlayerNameColor(p, Palette.ImpostorRed);
-            }
+                HudManagerPatch.SetPlayerNameColor(p, Palette.ImpostorRed);
         }
     }
 
@@ -65,12 +63,7 @@ internal class MadmateRole : RoleBase<MadmateRole>
         int totalTasks = NumCommonTasks + NumLongTasks + NumShortTasks;
         if (totalTasks == 0) return true;
         foreach (NetworkedPlayerInfo.TaskInfo task in player.Data.Tasks)
-        {
-            if (task.Complete)
-            {
-                counter++;
-            }
-        }
+            if (task.Complete) counter++;
 
         return counter == totalTasks;
     }

@@ -165,8 +165,10 @@ internal partial class CustomOption
         foreach (CustomOptionType type in targetTypes)
         {
             foreach (CustomOption option in AllOptions)
+            {
                 if (option.IsHeader && option.Type == type)
                     options.Add(option);
+            }
         }
 
         float num = 1.44f;

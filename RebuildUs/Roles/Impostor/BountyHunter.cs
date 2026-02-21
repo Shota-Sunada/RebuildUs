@@ -75,8 +75,10 @@ internal class BountyHunter : RoleBase<BountyHunter>
                 Bounty = null;
                 _lastSecond = -1;
                 foreach (PoolablePlayer p in MapSettings.PlayerIcons.Values)
+                {
                     if (p != null && p.gameObject != null)
                         p.gameObject.SetActive(false);
+                }
 
                 return;
             }
@@ -108,8 +110,10 @@ internal class BountyHunter : RoleBase<BountyHunter>
                 if (FastDestroyableSingleton<HudManager>.Instance != null)
                 {
                     foreach (PoolablePlayer pp in MapSettings.PlayerIcons.Values)
+                    {
                         if (pp != null && pp.gameObject != null)
                             pp.gameObject.SetActive(false);
+                    }
 
                     if (MapSettings.PlayerIcons.TryGetValue(Bounty.PlayerId, out PoolablePlayer icon) && icon != null && icon.gameObject != null)
                     {
@@ -181,7 +185,9 @@ internal class BountyHunter : RoleBase<BountyHunter>
         if (CooldownText != null && CooldownText.gameObject != null) Object.Destroy(CooldownText.gameObject);
         CooldownText = null;
         foreach (PoolablePlayer p in MapSettings.PlayerIcons.Values)
+        {
             if (p != null && p.gameObject != null)
                 p.gameObject.SetActive(false);
+        }
     }
 }

@@ -78,8 +78,10 @@ internal class Arsonist : RoleBase<Arsonist>
             {
                 _untargetablesCache.Clear();
                 foreach (PlayerControl p in PlayerControl.AllPlayerControls.GetFastEnumerator())
+                {
                     if (p.PlayerId != DouseTarget.PlayerId)
                         _untargetablesCache.Add(p);
+                }
 
                 untargetables = _untargetablesCache;
             }
@@ -136,8 +138,10 @@ internal class Arsonist : RoleBase<Arsonist>
             ArsonistButton.Timer = Local.DousedEveryone ? 0 : ArsonistButton.MaxTimer;
 
             foreach (PlayerControl p in Local.DousedPlayers)
+            {
                 if (MapSettings.PlayerIcons.ContainsKey(p.PlayerId))
                     MapSettings.PlayerIcons[p.PlayerId].SetSemiTransparent(false);
+            }
         }, false, Tr.Get(TrKey.DouseText));
 
         ArsonistIgniteButton = new(() =>
@@ -209,7 +213,9 @@ internal class Arsonist : RoleBase<Arsonist>
         Players.Clear();
         TriggerArsonistWin = false;
         foreach (PoolablePlayer p in MapSettings.PlayerIcons.Values)
+        {
             if (p != null && p.gameObject != null)
                 p.gameObject.SetActive(false);
+        }
     }
 }

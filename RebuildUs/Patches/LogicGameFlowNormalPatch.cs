@@ -28,6 +28,6 @@ internal static class LogicGameFlowNormalPatch
     [HarmonyPatch(typeof(LogicGameFlowNormal), nameof(LogicGameFlowNormal.IsGameOverDueToDeath))]
     internal static void IsGameOverDueToDeathPostfix(ref bool __result)
     {
-        Ship.IsGameOverDueToDeath(ref __result);
+        __result = false;
     }
 }

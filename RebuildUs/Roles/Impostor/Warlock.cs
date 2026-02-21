@@ -60,8 +60,10 @@ internal class Warlock : RoleBase<Warlock>
     internal override void OnKill(PlayerControl target)
     {
         if (PlayerControl.LocalPlayer.IsRole(RoleType.Warlock) && WarlockCurseButton != null)
+        {
             if (Player.killTimer > WarlockCurseButton.Timer)
                 WarlockCurseButton.Timer = Player.killTimer;
+        }
     }
 
     internal override void OnDeath(PlayerControl killer = null) { }

@@ -105,8 +105,10 @@ internal sealed class HatsLoader : MonoBehaviour
         try
         {
             if (!Directory.Exists(targetDir))
+            {
                 if (targetDir != null)
                     Directory.CreateDirectory(targetDir);
+            }
 
             LoadScreen.Progress = 0;
             LoadScreen.ProgressDetailText = "";

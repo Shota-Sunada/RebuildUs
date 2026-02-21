@@ -7,7 +7,80 @@ internal static class VentPatch
     [HarmonyPatch(typeof(Vent), nameof(Vent.CanUse))]
     internal static bool CanUsePrefix(Vent __instance, ref float __result, [HarmonyArgument(0)] NetworkedPlayerInfo pc, [HarmonyArgument(1)] out bool canUse, [HarmonyArgument(2)] out bool couldUse)
     {
-        return Usables.VentCanUse(__instance, ref __result, pc, out canUse, out couldUse);
+        float num = float.MaxValue;
+        PlayerControl @object = pc.Object;
+
+        bool roleCouldUse = @object.CanUseVents();
+        string name = __instance.name;
+
+        if (name.StartsWith("SealedVent_"))
+        {
+            canUse = couldUse = false;
+            __result = num;
+            return false;
+        }
+
+        // Submerged Compatibility if needed:
+        if (SubmergedCompatibility.IsSubmerged)
+        {
+            if (SubmergedCompatibility.GetInTransition())
+            {
+                __result = float.MaxValue;
+                canUse = couldUse = false;
+                return false;
+            }
+
+            switch (__instance.Id)
+            {
+                case 9: // Cannot enter vent 9 (Engine Room Exit Only Vent)!
+                    if (PlayerControl.LocalPlayer.inVent) break;
+                    __result = float.MaxValue;
+                    canUse = couldUse = false;
+                    return false;
+                case 14: // Lower Central
+                    __result = float.MaxValue;
+                    couldUse = roleCouldUse && !pc.IsDead && (@object.CanMove || @object.inVent);
+                    canUse = couldUse;
+                    if (!canUse) return false;
+                    Vector3 center = @object.Collider.bounds.center;
+                    Vector3 position = __instance.transform.position;
+                    __result = Vector2.Distance(center, position);
+                    canUse &= __result <= __instance.UsableDistance;
+
+                    return false;
+            }
+        }
+
+        float usableDistance = __instance.UsableDistance;
+        if (name.StartsWith("JackInTheBoxVent_"))
+        {
+            PlayerControl lp = PlayerControl.LocalPlayer;
+            if (lp != null && !lp.IsRole(RoleType.Trickster) && !lp.IsGm())
+            {
+                // Only the Trickster can use the Jack-In-The-Boxes!
+                canUse = false;
+                couldUse = false;
+                __result = num;
+                return false;
+            }
+
+            // Reduce the usable distance to reduce the risk of gettings stuck while trying to jump into the box if it's placed near objects
+            usableDistance = 0.4f;
+        }
+
+        couldUse = (@object.inVent || roleCouldUse) && !pc.IsDead && (@object.CanMove || @object.inVent);
+        canUse = couldUse;
+        if (canUse)
+        {
+            Vector2 truePosition = @object.GetTruePosition();
+            Vector3 position = __instance.transform.position;
+            num = Vector2.Distance(truePosition, position);
+
+            canUse &= num <= usableDistance && !PhysicsHelpers.AnythingBetween(truePosition, position, Constants.ShipOnlyMask, false);
+        }
+
+        __result = num;
+        return false;
     }
 
     [HarmonyPrefix]
@@ -23,7 +96,39 @@ internal static class VentPatch
     [HarmonyPatch(typeof(Vent), nameof(Vent.Use))]
     internal static bool UsePrefix(Vent __instance)
     {
-        return Usables.VentUse(__instance);
+        PlayerControl lp = PlayerControl.LocalPlayer;
+        if (lp == null) return false;
+
+        __instance.CanUse(lp.Data, out bool canUse, out bool _);
+        bool canMoveInVents = !lp.IsRole(RoleType.Spy)
+                              && !lp.HasModifier(ModifierType.Madmate)
+                              && !lp.IsRole(RoleType.Madmate)
+                              && !lp.IsRole(RoleType.Suicider)
+                              && !lp.HasModifier(ModifierType.CreatedMadmate);
+        if (!canUse) return false; // No need to execute the native method as using is disallowed anyways
+
+        bool isEnter = !lp.inVent;
+
+        if (__instance.name.StartsWith("JackInTheBoxVent_"))
+        {
+            __instance.SetButtons(isEnter && canMoveInVents);
+            {
+                using RPCSender sender = new(lp.NetId, CustomRPC.UseUncheckedVent);
+                sender.WritePacked(__instance.Id);
+                sender.Write(lp.PlayerId);
+                sender.Write(isEnter ? byte.MaxValue : (byte)0);
+                RPCProcedure.UseUncheckedVent(__instance.Id, lp.PlayerId, isEnter ? byte.MaxValue : (byte)0);
+            }
+            return false;
+        }
+
+        if (isEnter)
+            lp.MyPhysics.RpcEnterVent(__instance.Id);
+        else
+            lp.MyPhysics.RpcExitVent(__instance.Id);
+
+        __instance.SetButtons(isEnter && canMoveInVents);
+        return false;
     }
 
     // disable vent animation

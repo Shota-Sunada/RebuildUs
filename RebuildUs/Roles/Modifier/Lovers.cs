@@ -141,8 +141,10 @@ internal static class Lovers
     internal static bool AnyAlive()
     {
         for (int i = 0; i < Couples.Count; i++)
+        {
             if (Couples[i].Alive)
                 return true;
+        }
 
         return false;
     }
@@ -150,8 +152,10 @@ internal static class Lovers
     internal static bool AnyNonKillingCouples()
     {
         for (int i = 0; i < Couples.Count; i++)
+        {
             if (!Couples[i].HasAliveKillingLover)
                 return true;
+        }
 
         return false;
     }

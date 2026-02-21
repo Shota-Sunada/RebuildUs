@@ -85,8 +85,10 @@ internal static class Intro
                     Console sabotageConsole = sabotage.GetComponent<Console>();
                     List<Console> newConsoles = new();
                     foreach (Console c in MapUtilities.CachedShipStatus.AllConsoles)
+                    {
                         if (c != sabotageConsole)
                             newConsoles.Add(c);
+                    }
 
                     MapUtilities.CachedShipStatus.AllConsoles = newConsoles.ToArray();
                 }
@@ -148,8 +150,10 @@ internal static class Intro
         fakeImpostorTeam.Add(PlayerControl.LocalPlayer);
 
         foreach (PlayerControl p in players)
+        {
             if (PlayerControl.LocalPlayer != p && (p.IsRole(RoleType.Spy) || p.Data.Role.IsImpostor))
                 fakeImpostorTeam.Add(p);
+        }
 
         yourTeam = fakeImpostorTeam;
     }
@@ -348,8 +352,10 @@ internal static class Intro
 
         Logger.LogInfo("--------Advance Settings--------", "Settings");
         foreach (CustomOption o in CustomOption.AllOptions)
+        {
             if (o.Parent == null ? !o.GetString().Equals("0%") : o.Parent.Enabled)
                 Logger.LogInfo($"{(o.Parent == null ? o.NameKey : $"┗ {o.NameKey}")}:{o.GetString().RemoveHtml()}", "Settings");
+        }
 
         Logger.LogInfo("--------------------------------", "Settings");
 

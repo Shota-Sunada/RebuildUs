@@ -33,18 +33,18 @@ internal class Sidekick : RoleBase<Sidekick>
         PlayerControl lp = PlayerControl.LocalPlayer;
         if (Player == lp)
         {
-            Update.SetPlayerNameColor(Player, RoleColor);
+            HudManagerPatch.SetPlayerNameColor(Player, RoleColor);
             if (Jackal.Exists)
             {
                 List<Jackal> jkPlayers = Jackal.Players;
                 if (jkPlayers.Count > 0)
                 {
                     Jackal jk = jkPlayers[0];
-                    if (jk != null) Update.SetPlayerNameColor(jk.Player, RoleColor);
+                    if (jk != null) HudManagerPatch.SetPlayerNameColor(jk.Player, RoleColor);
                 }
             }
         }
-        else if (lp.IsTeamImpostor() && WasTeamRed) Update.SetPlayerNameColor(Player, RoleColor);
+        else if (lp.IsTeamImpostor() && WasTeamRed) HudManagerPatch.SetPlayerNameColor(Player, RoleColor);
     }
 
     internal override void OnMeetingStart() { }

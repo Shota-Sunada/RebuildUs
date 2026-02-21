@@ -40,8 +40,10 @@ internal static partial class RPCProcedure
 
                 // If it's a new player to me, or I am host, send my version back
                 if (versionOwnerId != AmongUsClient.Instance.ClientId)
+                {
                     if (isNewToMe || AmongUsClient.Instance.AmHost)
                         Helpers.ShareGameVersion(versionOwnerId);
+                }
             }
                 break;
             case CustomRPC.UseUncheckedVent:

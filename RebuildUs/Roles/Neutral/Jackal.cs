@@ -45,20 +45,20 @@ internal class Jackal : RoleBase<Jackal>
         PlayerControl lp = PlayerControl.LocalPlayer;
         if (Player == lp)
         {
-            Update.SetPlayerNameColor(Player, RoleColor);
+            HudManagerPatch.SetPlayerNameColor(Player, RoleColor);
             if (Sidekick.Exists)
             {
                 List<Sidekick> skPlayers = Sidekick.Players;
                 if (skPlayers.Count > 0)
                 {
                     Sidekick sk = skPlayers[0];
-                    if (sk != null) Update.SetPlayerNameColor(sk.Player, RoleColor);
+                    if (sk != null) HudManagerPatch.SetPlayerNameColor(sk.Player, RoleColor);
                 }
             }
 
-            if (FakeSidekick != null) Update.SetPlayerNameColor(FakeSidekick, RoleColor);
+            if (FakeSidekick != null) HudManagerPatch.SetPlayerNameColor(FakeSidekick, RoleColor);
         }
-        else if (lp.IsTeamImpostor() && WasTeamRed) Update.SetPlayerNameColor(Player, RoleColor);
+        else if (lp.IsTeamImpostor() && WasTeamRed) HudManagerPatch.SetPlayerNameColor(Player, RoleColor);
     }
 
     internal override void OnMeetingStart() { }

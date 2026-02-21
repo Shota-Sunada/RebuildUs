@@ -74,8 +74,10 @@ internal abstract class RoleBase<T> : PlayerRole where T : RoleBase<T>, new()
             PlayerControl local = PlayerControl.LocalPlayer;
             if (local == null) return null;
             foreach (T t in Players)
+            {
                 if (t.Player == local)
                     return t;
+            }
 
             return null;
         }
@@ -140,8 +142,10 @@ internal abstract class RoleBase<T> : PlayerRole where T : RoleBase<T>, new()
         player ??= PlayerControl.LocalPlayer;
         if (player == null) return null;
         foreach (T t in Players)
+        {
             if (t.Player == player)
                 return t;
+        }
 
         return null;
     }
@@ -151,8 +155,10 @@ internal abstract class RoleBase<T> : PlayerRole where T : RoleBase<T>, new()
     {
         if (player == null) return false;
         for (int i = 0; i < Players.Count; i++)
+        {
             if (Players[i].Player == player)
                 return true;
+        }
 
         return false;
     }

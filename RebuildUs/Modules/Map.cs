@@ -24,8 +24,10 @@ internal static class Map
         if (_mapIcons != null)
         {
             foreach (SpriteRenderer r in _mapIcons.Values)
+            {
                 if (r != null && r.gameObject != null)
                     Object.Destroy(r.gameObject);
+            }
 
             _mapIcons.Clear();
             _mapIcons = null;
@@ -34,8 +36,10 @@ internal static class Map
         if (_corpseIcons != null)
         {
             foreach (SpriteRenderer r in _corpseIcons.Values)
+            {
                 if (r != null && r.gameObject != null)
                     Object.Destroy(r.gameObject);
+            }
 
             _corpseIcons.Clear();
             _corpseIcons = null;
@@ -46,8 +50,10 @@ internal static class Map
         if (_impostorHerePoint != null)
         {
             foreach (SpriteRenderer r in _impostorHerePoint.Values)
+            {
                 if (r != null && r.gameObject != null)
                     Object.Destroy(r.gameObject);
+            }
 
             _impostorHerePoint.Clear();
             _impostorHerePoint = null;
@@ -56,8 +62,10 @@ internal static class Map
         if (_doorMarks != null)
         {
             foreach (SpriteRenderer mark in _doorMarks.Values)
+            {
                 if (mark != null && mark.gameObject != null)
                     Object.Destroy(mark.gameObject);
+            }
 
             _doorMarks.Clear();
             _doorMarks = null;
@@ -253,8 +261,10 @@ internal static class Map
     {
         HudManager hm = FastDestroyableSingleton<HudManager>.Instance;
         if (PlayerControl.LocalPlayer.IsGm())
+        {
             if (hm != null && hm.UseButton != null)
                 hm.UseButton.transform.localPosition = _useButtonPos;
+        }
 
         if (hm == null || hm.transform == null) return;
         Transform taskDisplay = hm.transform.FindChild("TaskDisplay");
@@ -298,8 +308,10 @@ internal static class Map
         {
             if (_doorMarks == null) return;
             foreach (SpriteRenderer mark in _doorMarks.Values)
+            {
                 if (mark.gameObject.activeSelf)
                     mark.gameObject.SetActive(false);
+            }
 
             return;
         }

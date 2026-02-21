@@ -40,8 +40,10 @@ internal sealed class JackInTheBox
         int maxId = -1;
         Il2CppReferenceArray<Vent> allVents = MapUtilities.CachedShipStatus.AllVents;
         foreach (Vent t in allVents)
+        {
             if (t.Id > maxId)
                 maxId = t.Id;
+        }
 
         _vent.Id = maxId + 1; // Make sure we have a unique id
 

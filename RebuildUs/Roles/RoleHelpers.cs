@@ -128,12 +128,16 @@ internal static class RoleHelpers
         if (player == null || player.Data.Disconnected) return nameText;
 
         foreach (PlayerRole role in PlayerRole.AllRoles)
+        {
             if (role.Player == player)
                 nameText = role.ModifyNameText(nameText);
+        }
 
         foreach (PlayerModifier mod in PlayerModifier.AllModifiers)
+        {
             if (mod.Player == player)
                 nameText = mod.ModifyNameText(nameText);
+        }
 
         // nameText += Lovers.getIcon(player);
 
@@ -143,8 +147,10 @@ internal static class RoleHelpers
     internal static string ModifyRoleText(this PlayerControl player, string roleText, List<RoleInfo> roleInfo, bool useColors = true, bool includeHidden = false)
     {
         foreach (PlayerModifier mod in PlayerModifier.AllModifiers)
+        {
             if (mod.Player == player)
                 roleText = mod.ModifyRoleText(roleText, roleInfo, useColors, includeHidden);
+        }
 
         return roleText;
     }

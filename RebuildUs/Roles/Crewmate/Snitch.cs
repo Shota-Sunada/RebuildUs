@@ -96,8 +96,10 @@ internal class Snitch : RoleBase<Snitch>
         if (LocalArrows != null)
         {
             foreach (Arrow arrow in LocalArrows)
+            {
                 if (arrow?.ArrowObject != null)
                     Object.Destroy(arrow.ArrowObject);
+            }
         }
 
         LocalArrows = [];
