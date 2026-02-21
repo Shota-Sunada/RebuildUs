@@ -42,7 +42,9 @@ namespace RebuildUs;
 [BepInDependency(REACTOR_GUID, REACTOR_VERSION)]
 [BepInProcess("Among Us.exe")]
 [ReactorModFlags(ModFlags.RequireOnAllClients)]
-internal abstract class RebuildUs : BasePlugin
+// ReSharper disable once MemberCanBeInternal
+// ReSharper disable once ClassNeverInstantiated.Global
+public class RebuildUs : BasePlugin
 {
     private const string MOD_ID = "com.shota-sunada.rebuild-us";
     internal const string MOD_NAME = "Rebuild Us";
@@ -89,8 +91,6 @@ internal abstract class RebuildUs : BasePlugin
     {
         Logger.Initialize(Log);
         Instance = this;
-
-        Debug.Initialize();
 
         GhostsSeeInformation = Config.Bind("Custom", "Ghosts See Remaining Tasks", true);
         GhostsSeeRoles = Config.Bind("Custom", "Ghosts See Roles", true);
