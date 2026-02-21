@@ -248,7 +248,8 @@ internal static class ExileControllerPatch
 
         int deadPlayers = 0;
         foreach (PlayerControl p in PlayerControl.AllPlayerControls.GetFastEnumerator())
-            if (p.Data.IsDead) deadPlayers += 1;
+            if (p.Data.IsDead)
+                deadPlayers += 1;
 
         if (deadPlayers < (int)CustomOptionHolder.AdditionalEmergencyCooldown.GetFloat()) MapUtilities.CachedShipStatus.EmergencyCooldown = Helpers.GetOption(Int32OptionNames.EmergencyCooldown) + CustomOptionHolder.AdditionalEmergencyCooldownTime.GetFloat();
     }

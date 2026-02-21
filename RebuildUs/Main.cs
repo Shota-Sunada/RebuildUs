@@ -44,44 +44,36 @@ namespace RebuildUs;
 [ReactorModFlags(ModFlags.RequireOnAllClients)]
 internal abstract class RebuildUs : BasePlugin
 {
-    internal const string MOD_ID = "com.shota-sunada.rebuild-us";
+    private const string MOD_ID = "com.shota-sunada.rebuild-us";
     internal const string MOD_NAME = "Rebuild Us";
     internal const string MOD_VERSION = "1.2.3";
     internal const string MOD_DEVELOPER = "Shota Sunada";
 
-    internal const string REACTOR_GUID = "gg.reactor-sunada.api";
-    internal const string REACTOR_VERSION = "3.3.4-SND";
+    private const string REACTOR_GUID = "gg.reactor-sunada.api";
+    private const string REACTOR_VERSION = "3.3.4-SND";
 
     internal static RebuildUs Instance;
 
     internal static int OptionsPage = 0;
     internal static IRegionInfo[] DefaultRegions;
-    internal Harmony Harmony { get; } = new(MOD_ID);
+    private Harmony Harmony { get; } = new(MOD_ID);
     internal Version Version { get; } = Version.Parse(MOD_VERSION);
 
-    internal static ConfigEntry<bool> GhostsSeeInformation { get; set; }
-    internal static ConfigEntry<bool> GhostsSeeRoles { get; set; }
-    internal static ConfigEntry<bool> GhostsSeeModifier { get; set; }
-    internal static ConfigEntry<bool> GhostsSeeVotes { get; set; }
-    internal static ConfigEntry<bool> ShowRoleSummary { get; set; }
-    internal static ConfigEntry<bool> ShowLighterDarker { get; set; }
-    internal static ConfigEntry<bool> ShowVentsOnMap { get; set; }
-    internal static ConfigEntry<bool> ShowChatNotifications { get; set; }
-    internal static ConfigEntry<bool> ForceNormalSabotageMap { get; set; }
-    internal static ConfigEntry<bool> BetterSabotageMap { get; set; }
-    internal static ConfigEntry<bool> TransparentMap { get; set; }
-    internal static ConfigEntry<bool> HideFakeTasks { get; set; }
+    internal static ConfigEntry<bool> GhostsSeeInformation { get; private set; }
+    internal static ConfigEntry<bool> GhostsSeeRoles { get; private set; }
+    internal static ConfigEntry<bool> GhostsSeeModifier { get; private set; }
+    internal static ConfigEntry<bool> GhostsSeeVotes { get; private set; }
+    internal static ConfigEntry<bool> ShowRoleSummary { get; private set; }
+    internal static ConfigEntry<bool> ShowLighterDarker { get; private set; }
+    internal static ConfigEntry<bool> ShowVentsOnMap { get; private set; }
+    internal static ConfigEntry<bool> ShowChatNotifications { get; private set; }
+    internal static ConfigEntry<bool> ForceNormalSabotageMap { get; private set; }
+    internal static ConfigEntry<bool> BetterSabotageMap { get; private set; }
+    internal static ConfigEntry<bool> TransparentMap { get; private set; }
+    internal static ConfigEntry<bool> HideFakeTasks { get; private set; }
 
-    internal static ConfigEntry<string> DiscordBotToken { get; set; }
-    internal static ConfigEntry<string> DiscordBotToken2 { get; set; }
-    internal static ConfigEntry<string> DiscordBotToken3 { get; set; }
-    internal static ConfigEntry<string> DiscordGuildId { get; set; }
-    internal static ConfigEntry<string> DiscordVcId { get; set; }
-    internal static ConfigEntry<string> StatusChannelId { get; set; }
-    internal static ConfigEntry<string> ResultChannelId { get; set; }
-
-    internal static ConfigEntry<string> Ip { get; set; }
-    internal static ConfigEntry<ushort> Port { get; set; }
+    private static ConfigEntry<string> Ip { get; set; }
+    private static ConfigEntry<ushort> Port { get; set; }
 
     internal static Random Rnd
     {
@@ -112,14 +104,6 @@ internal abstract class RebuildUs : BasePlugin
         BetterSabotageMap = Config.Bind("Custom", "Better Sabotage Map", false);
         TransparentMap = Config.Bind("Custom", "Transparent Map", false);
         HideFakeTasks = Config.Bind("Custom", "Hide Fake Tasks", false);
-
-        DiscordBotToken = Config.Bind("Discord", "Bot Token", "");
-        DiscordBotToken2 = Config.Bind("Discord", "Bot Token 2", "");
-        DiscordBotToken3 = Config.Bind("Discord", "Bot Token 3", "");
-        DiscordGuildId = Config.Bind("Discord", "Guild ID", "");
-        DiscordVcId = Config.Bind("Discord", "Voice Channel ID", "");
-        StatusChannelId = Config.Bind("Discord", "Status Channel ID", "");
-        ResultChannelId = Config.Bind("Discord", "Result Channel ID", "");
 
         KeyBindingManager.Initialize(Config);
 
@@ -323,7 +307,7 @@ internal abstract class RebuildUs : BasePlugin
         Vulture.SetButtonCooldowns();
     }
 
-    internal static void UpdateRegions()
+    private static void UpdateRegions()
     {
         ServerManager serverManager = FastDestroyableSingleton<ServerManager>.Instance;
 

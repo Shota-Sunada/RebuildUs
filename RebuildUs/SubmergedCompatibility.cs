@@ -13,17 +13,17 @@ internal static class SubmergedCompatibility
 {
     internal const string SUBMERGED_GUID = "Submerged";
     internal const string SUBMERGED_VERSION = "2026.1.26";
-    internal const ShipStatus.MapType SUBMERGED_MAP_TYPE = (ShipStatus.MapType)6;
+    private const ShipStatus.MapType SUBMERGED_MAP_TYPE = (ShipStatus.MapType)6;
 
     internal static TaskTypes RetrieveOxygenMask;
 
     internal static Version Version { get; private set; }
     internal static bool Loaded { get; private set; }
     internal static bool LoadedExternally { get; private set; }
-    internal static BasePlugin Plugin { get; private set; }
+    private static BasePlugin Plugin { get; set; }
     internal static Assembly Assembly { get; private set; }
 
-    internal static SubmarineStatus SubmarineStatus { get; private set; }
+    private static SubmarineStatus SubmarineStatus { get; set; }
 
     internal static bool IsSubmerged { get; private set; }
 

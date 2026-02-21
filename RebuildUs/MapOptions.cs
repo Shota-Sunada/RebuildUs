@@ -90,7 +90,6 @@ internal static class MapSettings
         CamerasToAdd = [];
         VentsToSeal = [];
         PlayerIcons = [];
-        ;
 
         MaxNumberOfMeetings = Mathf.RoundToInt(CustomOptionHolder.MaxNumberOfMeetings.GetSelection());
         BlockSkippingInEmergencyMeetings = CustomOptionHolder.BlockSkippingInEmergencyMeetings.GetBool();
@@ -139,7 +138,7 @@ internal static class MapSettings
         UpdateTimerText();
     }
 
-    internal static void UpdateTimerText()
+    private static void UpdateTimerText()
     {
         if (RestrictDevices == 0 || (!_restrictAdminText && !_restrictCamerasText && !_restrictVitalsText)) return;
 

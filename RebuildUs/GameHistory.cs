@@ -5,16 +5,16 @@ namespace RebuildUs;
 internal sealed class DeadPlayer(PlayerControl player, DateTime timeOfDeath, DeathReason deathReason, PlayerControl killerIfExisting)
 {
     internal DeathReason DeathReason = deathReason;
-    internal PlayerControl KillerIfExisting = killerIfExisting;
-    internal PlayerControl Player = player;
+    internal readonly PlayerControl KillerIfExisting = killerIfExisting;
+    internal readonly PlayerControl Player = player;
     internal DateTime TimeOfDeath = timeOfDeath;
 }
 
 internal static class GameHistory
 {
-    internal static List<Tuple<Vector3, bool>> LocalPlayerPositions = [];
-    internal static List<DeadPlayer> DeadPlayers = [];
-    internal static Dictionary<int, FinalStatus> FinalStatuses = [];
+    internal static readonly List<Tuple<Vector3, bool>> LocalPlayerPositions = [];
+    internal static readonly List<DeadPlayer> DeadPlayers = [];
+    internal static readonly Dictionary<int, FinalStatus> FinalStatuses = [];
 
     private static bool _resetToCrewmate;
     private static bool _resetToDead;
