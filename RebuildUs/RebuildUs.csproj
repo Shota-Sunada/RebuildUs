@@ -30,11 +30,4 @@
     <EmbeddedResource Include="Resources\**"/>
   </ItemGroup>
 
-  <ItemGroup>
-    <Content Include="..\RebuildUs.Native\target\release\rebuild_us_native.dll">
-      <Link>rebuild_us_native.dll</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-
 </Project>

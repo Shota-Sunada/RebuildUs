@@ -1,21 +1,54 @@
-using RebuildUs.Utilities;
-
 namespace RebuildUs.Modules.Random;
 
-internal sealed class Xoshiro256StarStar : System.Random, IDisposable
+internal sealed class Xoshiro256StarStar : System.Random
 {
-    private IntPtr _nativeState;
+    private ulong _s0, _s1, _s2, _s3;
 
     internal Xoshiro256StarStar(int seed)
     {
-        _nativeState = NativeMethods.xoshiro256ss_new((ulong)seed);
+        Seed(seed);
     }
 
     internal Xoshiro256StarStar() : this((int)DateTime.Now.Ticks) { }
 
+    private void Seed(int seed)
+    {
+        ulong s = (ulong)seed;
+        _s0 = SplitMix64(ref s);
+        _s1 = SplitMix64(ref s);
+        _s2 = SplitMix64(ref s);
+        _s3 = SplitMix64(ref s);
+    }
+
+    private static ulong SplitMix64(ref ulong x)
+    {
+        ulong z = x += 0x9e3779b97f4a7c15;
+        z = (z ^ (z >> 30)) * 0xbf58476d1ce4e5b9;
+        z = (z ^ (z >> 27)) * 0x94d049bb133111eb;
+        return z ^ (z >> 31);
+    }
+
+    private static ulong Rotl(ulong x, int k)
+    {
+        return (x << k) | (x >> (64 - k));
+    }
+
     private ulong NextUInt64()
     {
-        return NativeMethods.xoshiro256ss_next(_nativeState);
+        ulong result = Rotl(_s1 * 5, 7) * 9;
+
+        ulong t = _s1 << 17;
+
+        _s2 ^= _s0;
+        _s3 ^= _s1;
+        _s1 ^= _s2;
+        _s0 ^= _s3;
+
+        _s2 ^= t;
+
+        _s3 = Rotl(_s3, 45);
+
+        return result;
     }
 
     internal uint NextUInt32()
@@ -60,19 +93,5 @@ internal sealed class Xoshiro256StarStar : System.Random, IDisposable
     public override double NextDouble()
     {
         return (NextUInt64() >> 11) * (1.0 / (1UL << 53));
-    }
-
-    public void Dispose()
-    {
-        if (_nativeState != IntPtr.Zero)
-        {
-            NativeMethods.xoshiro256ss_free(_nativeState);
-            _nativeState = IntPtr.Zero;
-        }
-    }
-
-    ~Xoshiro256StarStar()
-    {
-        Dispose();
     }
 }
