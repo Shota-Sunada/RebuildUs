@@ -15,8 +15,14 @@ internal static class RoleAssignment
     private static int _blockedAssignments;
     private static readonly List<Tuple<byte, byte>> PlayerRoleMap = [];
 
-    internal static IEnumerator CoStartGameHost(AmongUsClient __instance)
+    public static IEnumerator CoStartGameHost(AmongUsClient __instance)
     {
+        if (__instance == null)
+        {
+            Logger.LogError("CoStartGameHost aborted: AmongUsClient instance is null.");
+            yield break;
+        }
+
         if (LobbyBehaviour.Instance) LobbyBehaviour.Instance.Despawn();
 
         if (!ShipStatus.Instance)
@@ -44,11 +50,29 @@ internal static class RoleAssignment
                 Logger.LogError(__instance);
             }
 
+            if (__instance.ShipPrefabs == null || __instance.ShipPrefabs.Count <= index || __instance.ShipPrefabs[index] == null)
+            {
+                Logger.LogError($"CoStartGameHost aborted: invalid ship prefab index {index}.");
+                yield break;
+            }
+
             __instance.ShipLoadingAsyncHandle = __instance.ShipPrefabs[index].InstantiateAsync();
             yield return __instance.ShipLoadingAsyncHandle;
             GameObject result = __instance.ShipLoadingAsyncHandle.Result;
+            if (result == null)
+            {
+                Logger.LogError("CoStartGameHost aborted: ship loading result is null.");
+                yield break;
+            }
+
             __instance.ShipLoadingAsyncHandle = new();
             ShipStatus.Instance = result.GetComponent<ShipStatus>();
+            if (ShipStatus.Instance == null)
+            {
+                Logger.LogError("CoStartGameHost aborted: ShipStatus component was not found.");
+                yield break;
+            }
+
             __instance.Spawn(ShipStatus.Instance);
         }
 
@@ -78,8 +102,12 @@ internal static class RoleAssignment
 
             if (totalSeconds > 1.0 && totalSeconds < num)
             {
-                DestroyableSingleton<LoadingBarManager>.Instance.ToggleLoadingBar(true);
-                DestroyableSingleton<LoadingBarManager>.Instance.SetLoadingPercent((float)(((double)totalSeconds / num) * 100.0), StringNames.LoadingBarGameStartWaitingPlayers);
+                LoadingBarManager loadingBar = DestroyableSingleton<LoadingBarManager>.Instance;
+                if (loadingBar != null)
+                {
+                    loadingBar.ToggleLoadingBar(true);
+                    loadingBar.SetLoadingPercent((float)(((double)totalSeconds / num) * 100.0), StringNames.LoadingBarGameStartWaitingPlayers);
+                }
             }
 
             if (!flag)
@@ -88,10 +116,18 @@ internal static class RoleAssignment
                 break;
         }
 
-        DestroyableSingleton<LoadingBarManager>.Instance.ToggleLoadingBar(false);
-        DestroyableSingleton<RoleManager>.Instance.SelectRoles();
+        DestroyableSingleton<LoadingBarManager>.Instance?.ToggleLoadingBar(false);
+        DestroyableSingleton<RoleManager>.Instance?.SelectRoles();
 
         // 独自処理開始
+        yield return WaitForLocalPlayer().WrapToIl2Cpp();
+        if (PlayerControl.LocalPlayer == null)
+        {
+            Logger.LogError("Skip custom role assignment because PlayerControl.LocalPlayer is null.");
+            BeginShipAndSendClientReady(__instance);
+            yield break;
+        }
+
         CreateCheckList();
         {
             using RPCSender sender = new(PlayerControl.LocalPlayer.NetId, CustomRPC.ResetVariables);
@@ -101,7 +137,16 @@ internal static class RoleAssignment
 
         if (!DestroyableSingleton<TutorialManager>.InstanceExists && CustomOptionHolder.ActivateRoles.GetBool()) // Don't assign Roles in Tutorial or if deactivated
         {
-            AssignRoles();
+            try
+            {
+                AssignRoles();
+            }
+            catch (Exception ex)
+            {
+                Logger.LogError("AssignRoles failed in CoStartGameHost.");
+                Logger.LogError(ex);
+            }
+
             {
                 using RPCSender sender2 = new(PlayerControl.LocalPlayer.NetId, CustomRPC.FinishSetRole);
                 RPCProcedure.FinishSetRole();
@@ -109,13 +154,45 @@ internal static class RoleAssignment
         }
         // 独自処理終了
 
-        MapUtilities.CachedShipStatus.Begin();
-        __instance.SendClientReady();
+        BeginShipAndSendClientReady(__instance);
+    }
+
+    private static void BeginShipAndSendClientReady(AmongUsClient client)
+    {
+        ShipStatus ship = MapUtilities.CachedShipStatus ?? ShipStatus.Instance;
+        if (ship == null)
+        {
+            Logger.LogError("Cannot begin ship: both MapUtilities.CachedShipStatus and ShipStatus.Instance are null.");
+        }
+        else
+        {
+            ship.Begin();
+        }
+
+        client.SendClientReady();
+    }
+
+    private static IEnumerator WaitForLocalPlayer()
+    {
+        const int timeoutMs = 5000;
+        DateTime start = DateTime.UtcNow;
+        while (PlayerControl.LocalPlayer == null)
+        {
+            if ((DateTime.UtcNow - start).TotalMilliseconds > timeoutMs)
+            {
+                Logger.LogError($"Timeout({timeoutMs}ms): PlayerControl.LocalPlayer is null in CoStartGameHost");
+                yield break;
+            }
+
+            yield return new WaitForEndOfFrame();
+        }
     }
 
     private static void CreateCheckList()
     {
         CheckList = [];
+        if (PlayerControl.AllPlayerControls == null) return;
+
         foreach (PlayerControl player in PlayerControl.AllPlayerControls.GetFastEnumerator())
         {
             if (player.Data == null || player.Data.Disconnected) continue;
@@ -131,6 +208,12 @@ internal static class RoleAssignment
         DateTime startTime = DateTime.UtcNow;
         while (!check)
         {
+            if (CheckList == null)
+            {
+                Logger.LogError("CheckList is null in WaitResetVariables");
+                yield break;
+            }
+
             check = true;
             foreach (byte playerId in CheckList.Keys)
             {

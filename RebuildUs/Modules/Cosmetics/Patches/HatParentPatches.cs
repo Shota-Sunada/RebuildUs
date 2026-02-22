@@ -39,55 +39,62 @@ internal static class HatParentPatches
     [HarmonyPrefix]
     private static bool UpdateMaterialPrefix(HatParent __instance)
     {
-        if (!__instance.TryGetCached(out HatViewData asset)) return true;
-        HatExtension extend = __instance.Hat.GetHatExtension();
-        if (asset && extend is { Adaptive: true })
+        try
         {
-            __instance.FrontLayer.sharedMaterial = DestroyableSingleton<HatManager>.Instance.PlayerMaterial;
-            if (__instance.BackLayer) __instance.BackLayer.sharedMaterial = DestroyableSingleton<HatManager>.Instance.PlayerMaterial;
+            if (__instance == null || !__instance) return false;
+            if (!__instance.TryGetCached(out HatViewData asset)) return true;
+            if (__instance.FrontLayer == null || !__instance.FrontLayer) return false;
+
+            HatManager hatManager = DestroyableSingleton<HatManager>.Instance;
+            if (hatManager == null) return false;
+            if (__instance.Hat == null) return false;
+
+            HatExtension extend = __instance.Hat.GetHatExtension();
+            Material targetMaterial = asset && extend is { Adaptive: true } ? hatManager.PlayerMaterial : hatManager.DefaultShader;
+            if (targetMaterial == null) return false;
+
+            __instance.FrontLayer.sharedMaterial = targetMaterial;
+            if (__instance.BackLayer && __instance.BackLayer) __instance.BackLayer.sharedMaterial = targetMaterial;
+
+            int colorId = __instance.matProperties.ColorId;
+            PlayerMaterial.SetColors(colorId, __instance.FrontLayer);
+            if (__instance.BackLayer && __instance.BackLayer) PlayerMaterial.SetColors(colorId, __instance.BackLayer);
+
+            if (__instance.FrontLayer.material != null)
+                __instance.FrontLayer.material.SetInt(PlayerMaterial.MaskLayer, __instance.matProperties.MaskLayer);
+            if (__instance.BackLayer && __instance.BackLayer && __instance.BackLayer.material != null)
+                __instance.BackLayer.material.SetInt(PlayerMaterial.MaskLayer, __instance.matProperties.MaskLayer);
+
+            PlayerMaterial.MaskType maskType = __instance.matProperties.MaskType;
+            switch (maskType)
+            {
+                case PlayerMaterial.MaskType.ScrollingUI:
+                    if (__instance.FrontLayer && __instance.FrontLayer) __instance.FrontLayer.maskInteraction = SpriteMaskInteraction.VisibleInsideMask;
+                    if (__instance.BackLayer && __instance.BackLayer) __instance.BackLayer.maskInteraction = SpriteMaskInteraction.VisibleInsideMask;
+                    break;
+                case PlayerMaterial.MaskType.Exile:
+                    if (__instance.FrontLayer && __instance.FrontLayer) __instance.FrontLayer.maskInteraction = SpriteMaskInteraction.VisibleOutsideMask;
+                    if (__instance.BackLayer && __instance.BackLayer) __instance.BackLayer.maskInteraction = SpriteMaskInteraction.VisibleOutsideMask;
+                    break;
+                default:
+                    if (__instance.FrontLayer && __instance.FrontLayer) __instance.FrontLayer.maskInteraction = SpriteMaskInteraction.None;
+                    if (__instance.BackLayer && __instance.BackLayer) __instance.BackLayer.maskInteraction = SpriteMaskInteraction.None;
+                    break;
+            }
+
+            if (__instance.matProperties.MaskLayer > 0) return false;
+            PlayerMaterial.SetMaskLayerBasedOnLocalPlayer(__instance.FrontLayer, __instance.matProperties.IsLocalPlayer);
+            if (!__instance.BackLayer || !__instance.BackLayer) return false;
+            PlayerMaterial.SetMaskLayerBasedOnLocalPlayer(__instance.BackLayer, __instance.matProperties.IsLocalPlayer);
+
+            return false;
         }
-        else
+        catch (Exception ex)
         {
-            __instance.FrontLayer.sharedMaterial = DestroyableSingleton<HatManager>.Instance.DefaultShader;
-            if (__instance.BackLayer) __instance.BackLayer.sharedMaterial = DestroyableSingleton<HatManager>.Instance.DefaultShader;
+            Logger.LogError("HatParentPatches.UpdateMaterialPrefix failed.");
+            Logger.LogError(ex);
+            return false;
         }
-
-        int colorId = __instance.matProperties.ColorId;
-        PlayerMaterial.SetColors(colorId, __instance.FrontLayer);
-        if (__instance.BackLayer) PlayerMaterial.SetColors(colorId, __instance.BackLayer);
-
-        __instance.FrontLayer.material.SetInt(PlayerMaterial.MaskLayer, __instance.matProperties.MaskLayer);
-        if (__instance.BackLayer) __instance.BackLayer.material.SetInt(PlayerMaterial.MaskLayer, __instance.matProperties.MaskLayer);
-
-        PlayerMaterial.MaskType maskType = __instance.matProperties.MaskType;
-        switch (maskType)
-        {
-            case PlayerMaterial.MaskType.ScrollingUI:
-                if (__instance.FrontLayer) __instance.FrontLayer.maskInteraction = SpriteMaskInteraction.VisibleInsideMask;
-
-                if (__instance.BackLayer) __instance.BackLayer.maskInteraction = SpriteMaskInteraction.VisibleInsideMask;
-
-                break;
-            case PlayerMaterial.MaskType.Exile:
-                if (__instance.FrontLayer) __instance.FrontLayer.maskInteraction = SpriteMaskInteraction.VisibleOutsideMask;
-
-                if (__instance.BackLayer) __instance.BackLayer.maskInteraction = SpriteMaskInteraction.VisibleOutsideMask;
-
-                break;
-            default:
-                if (__instance.FrontLayer) __instance.FrontLayer.maskInteraction = SpriteMaskInteraction.None;
-
-                if (__instance.BackLayer) __instance.BackLayer.maskInteraction = SpriteMaskInteraction.None;
-
-                break;
-        }
-
-        if (__instance.matProperties.MaskLayer > 0) return false;
-        PlayerMaterial.SetMaskLayerBasedOnLocalPlayer(__instance.FrontLayer, __instance.matProperties.IsLocalPlayer);
-        if (!__instance.BackLayer) return false;
-        PlayerMaterial.SetMaskLayerBasedOnLocalPlayer(__instance.BackLayer, __instance.matProperties.IsLocalPlayer);
-
-        return false;
     }
 
     [HarmonyPatch(nameof(HatParent.LateUpdate))]

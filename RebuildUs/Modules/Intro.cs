@@ -7,127 +7,162 @@ namespace RebuildUs.Modules;
 
 internal static class Intro
 {
-    private static Vector3 _bottomLeft;
-
     internal static void GenerateMiniCrewIcons(IntroCutscene __instance)
     {
-        if (PlayerControl.LocalPlayer != null && FastDestroyableSingleton<HudManager>.Instance != null && __instance.PlayerPrefab != null)
+        try
         {
-            _bottomLeft = AspectPosition.ComputePosition(AspectPosition.EdgeAlignments.LeftBottom, new(0.9f, 0.7f, -10f));
+            if (__instance == null) return;
 
-            foreach (PlayerControl p in PlayerControl.AllPlayerControls.GetFastEnumerator())
+            HudManager hud = FastDestroyableSingleton<HudManager>.Instance;
+            ShipStatus ship = MapUtilities.CachedShipStatus ?? ShipStatus.Instance;
+            PlayerControl local = PlayerControl.LocalPlayer;
+
+            if (local != null && hud != null && __instance.PlayerPrefab != null && PlayerControl.AllPlayerControls != null)
             {
-                if (p.Data == null) continue; // Null check for p.Data
-                NetworkedPlayerInfo data = p.Data;
-                PoolablePlayer player = Object.Instantiate(__instance.PlayerPrefab, FastDestroyableSingleton<HudManager>.Instance.transform);
-                player.UpdateFromPlayerData(data, p.CurrentOutfitType, PlayerMaterial.MaskType.None, false);
-                player.cosmetics.nameText.text = data.PlayerName;
-                player.cosmetics.nameText.transform.localPosition = new(0f, -0.7f, -0.1f);
-                player.SetFlipX(true);
-                MapSettings.PlayerIcons[p.PlayerId] = player;
-                player.gameObject.SetActive(false);
+                var bottomLeft = AspectPosition.ComputePosition(AspectPosition.EdgeAlignments.LeftBottom, new(0.9f, 0.7f, -10f));
 
-                // UIレイヤーに設定
-                player.gameObject.layer = 5;
-                foreach (Transform child in player.GetComponentsInChildren<Transform>(true)) child.gameObject.layer = 5;
-
-                //  Allows the roles to have the correct position and scaling via their own UpdateIcons
-                player.transform.localPosition = _bottomLeft;
-                player.transform.localScale = Vector3.one * 0.3f;
-            }
-        }
-
-        RebuildUs.OnIntroEnd();
-
-        // インポスター視界の場合に昇降機右の影を無効化
-        if (Helpers.IsAirship && CustomOptionHolder.AirshipOptimize.GetBool() && Helpers.HasImpostorVision(PlayerControl.LocalPlayer) && MapUtilities.CachedShipStatus.FastRooms.ContainsKey(SystemTypes.GapRoom))
-        {
-            GameObject obj = MapUtilities.CachedShipStatus.FastRooms[SystemTypes.GapRoom].gameObject;
-            OneWayShadows oneWayShadow = obj.transform.FindChild("Shadow").FindChild("LedgeShadow").GetComponent<OneWayShadows>();
-            oneWayShadow.gameObject.SetActive(false);
-        }
-
-        // ベントを追加する
-        AdditionalVents.AddAdditionalVents();
-
-        // スペシメンにバイタルを移動する
-        SpecimenVital.MoveVital();
-
-        // アーカイブのアドミンを消す
-        if (Helpers.IsAirship && CustomOptionHolder.AirshipOldAdmin.GetBool())
-        {
-            GameObject records = MapUtilities.CachedShipStatus.FastRooms[SystemTypes.Records].gameObject;
-            foreach (MapConsole console in records.GetComponentsInChildren<MapConsole>())
-            {
-                if (console.name != "records_admin_map") continue;
-                console.gameObject.SetActive(false);
-                break;
-            }
-        }
-
-        if (MapUtilities.CachedShipStatus.FastRooms.ContainsKey(SystemTypes.GapRoom))
-        {
-            GameObject gapRoom = MapUtilities.CachedShipStatus.FastRooms[SystemTypes.GapRoom].gameObject;
-            // GapRoomの配電盤を消す
-            if (Helpers.IsAirship && CustomOptionHolder.AirshipDisableGapSwitchBoard.GetBool())
-            {
-                GameObject sabotage = null;
-                foreach (Console console in gapRoom.GetComponentsInChildren<Console>())
+                foreach (PlayerControl p in PlayerControl.AllPlayerControls.GetFastEnumerator())
                 {
-                    if (console.name != "task_lightssabotage (gap)") continue;
-                    sabotage = console.gameObject;
+                    if (p?.Data == null) continue;
+                    NetworkedPlayerInfo data = p.Data;
+                    PoolablePlayer player = Object.Instantiate(__instance.PlayerPrefab, hud.transform);
+                    if (player == null) continue;
+
+                    player.UpdateFromPlayerData(data, p.CurrentOutfitType, PlayerMaterial.MaskType.None, false);
+                    player.cosmetics.nameText.text = data.PlayerName;
+                    player.cosmetics.nameText.transform.localPosition = new(0f, -0.7f, -0.1f);
+                    player.SetFlipX(true);
+                    MapSettings.PlayerIcons[p.PlayerId] = player;
+                    player.gameObject.SetActive(false);
+
+                    // UIレイヤーに設定
+                    player.gameObject.layer = 5;
+                    foreach (Transform child in player.GetComponentsInChildren<Transform>(true)) child.gameObject.layer = 5;
+
+                    // Allows the roles to have the correct position and scaling via their own UpdateIcons
+                    player.transform.localPosition = bottomLeft;
+                    player.transform.localScale = Vector3.one * 0.3f;
+                }
+            }
+
+            RebuildUs.OnIntroEnd();
+
+            // インポスター視界の場合に昇降機右の影を無効化
+            if (Helpers.IsAirship
+                && local != null
+                && ship?.FastRooms != null
+                && CustomOptionHolder.AirshipOptimize.GetBool()
+                && Helpers.HasImpostorVision(local)
+                && ship.FastRooms.TryGetValue(SystemTypes.GapRoom, out PlainShipRoom gapRoomForShadow)
+                && gapRoomForShadow != null)
+            {
+                GameObject obj = gapRoomForShadow.gameObject;
+                Transform shadow = obj?.transform?.FindChild("Shadow");
+                OneWayShadows oneWayShadow = shadow?.FindChild("LedgeShadow")?.GetComponent<OneWayShadows>();
+                oneWayShadow?.gameObject.SetActive(false);
+            }
+
+            if (ship != null)
+            {
+                // ベントを追加する
+                AdditionalVents.AddAdditionalVents();
+
+                // スペシメンにバイタルを移動する
+                SpecimenVital.MoveVital();
+            }
+
+            // アーカイブのアドミンを消す
+            if (Helpers.IsAirship
+                && ship?.FastRooms != null
+                && CustomOptionHolder.AirshipOldAdmin.GetBool()
+                && ship.FastRooms.TryGetValue(SystemTypes.Records, out PlainShipRoom recordsRoom)
+                && recordsRoom != null)
+            {
+                GameObject records = recordsRoom.gameObject;
+                foreach (MapConsole console in records.GetComponentsInChildren<MapConsole>())
+                {
+                    if (console.name != "records_admin_map") continue;
+                    console.gameObject.SetActive(false);
                     break;
                 }
+            }
 
-                if (sabotage != null)
+            if (ship?.FastRooms != null && ship.FastRooms.TryGetValue(SystemTypes.GapRoom, out PlainShipRoom gapRoomData) && gapRoomData != null)
+            {
+                GameObject gapRoom = gapRoomData.gameObject;
+                // GapRoomの配電盤を消す
+                if (Helpers.IsAirship && CustomOptionHolder.AirshipDisableGapSwitchBoard.GetBool() && gapRoom != null)
                 {
-                    sabotage.SetActive(false);
-                    Console sabotageConsole = sabotage.GetComponent<Console>();
-                    List<Console> newConsoles = new();
-                    foreach (Console c in MapUtilities.CachedShipStatus.AllConsoles)
+                    GameObject sabotage = null;
+                    foreach (Console console in gapRoom.GetComponentsInChildren<Console>())
                     {
-                        if (c != sabotageConsole)
-                            newConsoles.Add(c);
+                        if (console.name != "task_lightssabotage (gap)") continue;
+                        sabotage = console.gameObject;
+                        break;
                     }
 
-                    MapUtilities.CachedShipStatus.AllConsoles = newConsoles.ToArray();
+                    if (sabotage != null)
+                    {
+                        sabotage.SetActive(false);
+                        Console sabotageConsole = sabotage.GetComponent<Console>();
+                        List<Console> newConsoles = new();
+                        if (ship.AllConsoles != null)
+                        {
+                            foreach (Console c in ship.AllConsoles)
+                            {
+                                if (c != sabotageConsole)
+                                    newConsoles.Add(c);
+                            }
+
+                            ship.AllConsoles = newConsoles.ToArray();
+                        }
+                    }
+                }
+
+                // ぬ～んを消す
+                if (Helpers.IsAirship && CustomOptionHolder.AirshipDisableMovingPlatform.GetBool() && gapRoom != null)
+                {
+                    MovingPlatformBehaviour movingPlatform = gapRoom.GetComponentInChildren<MovingPlatformBehaviour>();
+                    movingPlatform?.gameObject.SetActive(false);
+                    foreach (PlatformConsole obj in gapRoom.GetComponentsInChildren<PlatformConsole>()) obj.gameObject.SetActive(false);
                 }
             }
 
-            // ぬ～んを消す
-            if (Helpers.IsAirship && CustomOptionHolder.AirshipDisableMovingPlatform.GetBool())
+            // タスクバグ修正
+            if (Helpers.IsAirship && CustomOptionHolder.AirshipEnableWallCheck.GetBool())
             {
-                gapRoom.GetComponentInChildren<MovingPlatformBehaviour>().gameObject.SetActive(false);
-                foreach (PlatformConsole obj in gapRoom.GetComponentsInChildren<PlatformConsole>()) obj.gameObject.SetActive(false);
+                foreach (Console x in Object.FindObjectsOfType<Console>())
+                {
+                    if (x.name == "task_garbage1"
+                        || x.name == "task_garbage2"
+                        || x.name == "task_garbage3"
+                        || x.name == "task_garbage4"
+                        || x.name == "task_garbage5"
+                        || x.name == "task_shower"
+                        || x.name == "task_developphotos"
+                        || (x.name == "DivertRecieve" && x.Room is SystemTypes.Armory or SystemTypes.MainHall)) x.checkWalls = true;
+                }
             }
-        }
 
-        //タスクバグ修正
-        if (Helpers.IsAirship && CustomOptionHolder.AirshipEnableWallCheck.GetBool())
+            // 最初から一人の場合はLast Impostorになる
+            if (AmongUsClient.Instance?.AmHost == true) LastImpostor.PromoteToLastImpostor();
+
+            // タスクパネルの表示優先度を上げる
+            GameObject taskPanel = hud?.TaskStuff;
+            if (taskPanel != null)
+            {
+                Vector3 pos = taskPanel.transform.position;
+                taskPanel.transform.position = new(pos.x, pos.y, -20);
+            }
+
+            // マップデータのコピーを読み込み
+            if (CustomOptionHolder.AirshipReplaceSafeTask.GetBool() && AmongUsClient.Instance != null) MapData.LoadAssets(AmongUsClient.Instance);
+        }
+        catch (Exception ex)
         {
-            foreach (Console x in Object.FindObjectsOfType<Console>())
-            {
-                if (x.name == "task_garbage1"
-                    || x.name == "task_garbage2"
-                    || x.name == "task_garbage3"
-                    || x.name == "task_garbage4"
-                    || x.name == "task_garbage5"
-                    || x.name == "task_shower"
-                    || x.name == "task_developphotos"
-                    || (x.name == "DivertRecieve" && x.Room is SystemTypes.Armory or SystemTypes.MainHall)) x.checkWalls = true;
-            }
+            Logger.LogError("Intro.GenerateMiniCrewIcons failed");
+            Logger.LogError(ex);
         }
-
-        // 最初から一人の場合はLast Impostorになる
-        if (AmongUsClient.Instance.AmHost) LastImpostor.PromoteToLastImpostor();
-
-        // タスクパネルの表示優先度を上げる
-        GameObject taskPanel = FastDestroyableSingleton<HudManager>.Instance.TaskStuff;
-        Vector3 pos = taskPanel.transform.position;
-        taskPanel.transform.position = new(pos.x, pos.y, -20);
-
-        // マップデータのコピーを読み込み
-        if (CustomOptionHolder.AirshipReplaceSafeTask.GetBool()) MapData.LoadAssets(AmongUsClient.Instance);
     }
 
     internal static void SetupIntroTeamIcons(IntroCutscene __instance, ref Il2CppSystem.Collections.Generic.List<PlayerControl> yourTeam)
@@ -173,11 +208,24 @@ internal static class Intro
 
     internal static IEnumerator CoBegin(IntroCutscene __instance)
     {
+        if (__instance == null)
+        {
+            Logger.LogError("IntroCutscene :: CoBegin() aborted: __instance is null");
+            yield break;
+        }
+
         yield return WaitRoleAssign().WrapToIl2Cpp();
+        yield return WaitForIntroPrerequisites().WrapToIl2Cpp();
+        if (PlayerControl.LocalPlayer == null)
+        {
+            Logger.LogError("IntroCutscene :: CoBegin() aborted: LocalPlayer is null");
+            yield break;
+        }
+
         // yield return __instance.CoBegin();
 
         Logger.LogInfo("IntroCutscene :: CoBegin() :: Starting intro cutscene");
-        SoundManager.Instance.PlaySound(__instance.IntroStinger, false);
+        SoundManager.Instance?.PlaySound(__instance.IntroStinger, false);
 
         if (Helpers.IsNormal)
         {
@@ -189,13 +237,20 @@ internal static class Intro
             __instance.ImpostorName.gameObject.SetActive(false);
             __instance.ImpostorTitle.gameObject.SetActive(false);
             Il2CppSystem.Collections.Generic.List<PlayerControl> show = IntroCutscene.SelectTeamToShow((Func<NetworkedPlayerInfo, bool>)(pcd => !PlayerControl.LocalPlayer.IsTeamImpostor() || pcd.Role.TeamType == PlayerControl.LocalPlayer.Data.Role.TeamType));
-            if (show == null || show.Count < 1) Logger.LogError("IntroCutscene :: CoBegin() :: teamToShow is EMPTY or NULL");
+            if (show == null || show.Count < 1)
+            {
+                Logger.LogError("IntroCutscene :: CoBegin() :: teamToShow is EMPTY or NULL");
+                show = new();
+                show.Add(PlayerControl.LocalPlayer);
+            }
 
             if (PlayerControl.LocalPlayer.IsTeamImpostor())
                 __instance.ImpostorText.gameObject.SetActive(false);
             else
             {
-                int adjustedNumImpostors = GameManager.Instance.LogicOptions.GetAdjustedNumImpostors(GameData.Instance.PlayerCount);
+                int adjustedNumImpostors = 1;
+                if (GameManager.Instance?.LogicOptions != null && GameData.Instance != null)
+                    adjustedNumImpostors = GameManager.Instance.LogicOptions.GetAdjustedNumImpostors(GameData.Instance.PlayerCount);
                 __instance.ImpostorText.text = adjustedNumImpostors == 1 ? DestroyableSingleton<TranslationController>.Instance.GetString(StringNames.NumImpostorsS) : DestroyableSingleton<TranslationController>.Instance.GetString(StringNames.NumImpostorsP, adjustedNumImpostors);
                 __instance.ImpostorText.text = __instance.ImpostorText.text.Replace("[FF1919FF]", "<color=#FF1919FF>");
                 __instance.ImpostorText.text = __instance.ImpostorText.text.Replace("[]", "</color>");
@@ -222,20 +277,25 @@ internal static class Intro
             }
 
             Il2CppSystem.Collections.Generic.List<PlayerControl> show = IntroCutscene.SelectTeamToShow((Func<NetworkedPlayerInfo, bool>)(pcd => PlayerControl.LocalPlayer.IsTeamImpostor() != pcd.Role.IsImpostor));
-            if (show == null || show.Count < 1) Logger.LogError("IntroCutscene :: CoBegin() :: teamToShow is EMPTY or NULL");
+            if (show == null || show.Count < 1)
+            {
+                Logger.LogError("IntroCutscene :: CoBegin() :: teamToShow is EMPTY or NULL");
+                show = new();
+                show.Add(PlayerControl.LocalPlayer);
+            }
 
-            PlayerControl impostor = PlayerControl.AllPlayerControls.Find((Il2CppSystem.Predicate<PlayerControl>)(pc => pc.Data.Role.IsImpostor));
+            PlayerControl impostor = PlayerControl.AllPlayerControls.Find((Il2CppSystem.Predicate<PlayerControl>)(pc => pc != null && pc.Data != null && pc.Data.Role.IsImpostor));
             if (impostor == null) Logger.LogError("IntroCutscene :: CoBegin() :: impostor is NULL");
 
-            GameManager.Instance.SetSpecialCosmetics(impostor);
+            if (impostor != null) GameManager.Instance?.SetSpecialCosmetics(impostor);
             __instance.ImpostorName.gameObject.SetActive(true);
             __instance.ImpostorTitle.gameObject.SetActive(true);
             __instance.BackgroundBar.enabled = false;
             __instance.TeamTitle.gameObject.SetActive(false);
-            __instance.ImpostorName.text = impostor == null ? impostor.Data.PlayerName : "???";
+            __instance.ImpostorName.text = impostor != null ? impostor.Data.PlayerName : "???";
             yield return new WaitForSecondsRealtime(0.1f);
             PoolablePlayer playerSlot = null;
-            if (impostor == null)
+            if (impostor != null)
             {
                 playerSlot = __instance.CreatePlayer(1, 1, impostor.Data, false);
                 playerSlot.SetBodyType(PlayerBodyTypes.Normal);
@@ -244,7 +304,8 @@ internal static class Intro
                 playerSlot.transform.localScale = Vector3.one * __instance.impostorScale;
             }
 
-            yield return MapUtilities.CachedShipStatus.CosmeticsCache.PopulateFromPlayers();
+            if (MapUtilities.CachedShipStatus?.CosmeticsCache != null)
+                yield return MapUtilities.CachedShipStatus.CosmeticsCache.PopulateFromPlayers();
             yield return new WaitForSecondsRealtime(6f);
 
             playerSlot?.gameObject.SetActive(false);
@@ -303,16 +364,16 @@ internal static class Intro
             }
             else
             {
-                if (logicOptions != null) MapUtilities.CachedShipStatus.HideCountdown = logicOptions.GetCrewmateLeadTime();
+                if (logicOptions != null && MapUtilities.CachedShipStatus != null) MapUtilities.CachedShipStatus.HideCountdown = logicOptions.GetCrewmateLeadTime();
                 if (AprilFoolsMode.ShouldHorseAround())
                 {
-                    if (impostor == null) impostor.AnimateCustom(__instance.HnSSeekerSpawnHorseInGameAnim);
+                    if (impostor != null) impostor.AnimateCustom(__instance.HnSSeekerSpawnHorseInGameAnim);
                 }
                 else if (AprilFoolsMode.ShouldLongAround())
                 {
-                    if (impostor == null) impostor.AnimateCustom(__instance.HnSSeekerSpawnLongInGameAnim);
+                    if (impostor != null) impostor.AnimateCustom(__instance.HnSSeekerSpawnLongInGameAnim);
                 }
-                else if (impostor == null)
+                else if (impostor != null)
                 {
                     impostor.AnimateCustom(__instance.HnSSeekerSpawnAnim);
                     impostor.cosmetics.SetBodyCosmeticsVisible(false);
@@ -323,8 +384,24 @@ internal static class Intro
             playerSlot = null;
         }
 
-        MapUtilities.CachedShipStatus.StartSFX();
-        __instance.gameObject.Destroy();
+        MapUtilities.CachedShipStatus?.StartSFX();
+        __instance.gameObject?.Destroy();
+    }
+
+    private static IEnumerator WaitForIntroPrerequisites()
+    {
+        const int timeoutMs = 7000;
+        DateTime start = DateTime.UtcNow;
+        while (PlayerControl.LocalPlayer == null)
+        {
+            if ((DateTime.UtcNow - start).TotalMilliseconds > timeoutMs)
+            {
+                Logger.LogError($"IntroCutscene :: CoBegin() timeout({timeoutMs}ms): LocalPlayer is null");
+                yield break;
+            }
+
+            yield return null;
+        }
     }
 
     private static IEnumerator WaitRoleAssign()
@@ -336,6 +413,12 @@ internal static class Intro
 
     private static IEnumerator SetupRole(IntroCutscene __instance)
     {
+        if (__instance == null || PlayerControl.LocalPlayer == null || PlayerControl.LocalPlayer.Data == null)
+        {
+            Logger.LogError("SetupRole aborted: IntroCutscene or LocalPlayer is null.");
+            yield break;
+        }
+
         List<RoleInfo> infos = RoleInfo.GetRoleInfoForPlayer(PlayerControl.LocalPlayer, false, [RoleType.Lovers]);
         RoleInfo roleInfo = infos.FirstOrDefault();
 
@@ -400,7 +483,13 @@ internal static class Intro
 
         if (__instance.ourCrewmate == null)
         {
-            if (PlayerControl.LocalPlayer != null) __instance.ourCrewmate = __instance.CreatePlayer(0, 1, PlayerControl.LocalPlayer.Data, false);
+            __instance.ourCrewmate = __instance.CreatePlayer(0, 1, PlayerControl.LocalPlayer.Data, false);
+            if (__instance.ourCrewmate == null)
+            {
+                Logger.LogError("SetupRole aborted: failed to create intro player.");
+                yield break;
+            }
+
             __instance.ourCrewmate.gameObject.SetActive(false);
         }
 

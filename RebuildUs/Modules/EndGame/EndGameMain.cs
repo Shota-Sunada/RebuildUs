@@ -75,11 +75,11 @@ internal static class EndGameMain
 
         notWinners.AddRange(Jackal.FormerJackals);
 
-        notWinners.Add(Jester.PlayerControl);
-        notWinners.Add(Arsonist.PlayerControl);
-        notWinners.Add(Vulture.PlayerControl);
-        notWinners.Add(Jackal.PlayerControl);
-        notWinners.Add(Sidekick.PlayerControl);
+        if (Jester.Exists) notWinners.Add(Jester.PlayerControl);
+        if (Arsonist.Exists) notWinners.Add(Arsonist.PlayerControl);
+        if (Vulture.Exists) notWinners.Add(Vulture.PlayerControl);
+        if (Jackal.Exists) notWinners.Add(Jackal.PlayerControl);
+        if (Sidekick.Exists) notWinners.Add(Sidekick.PlayerControl);
 
         bool sabotageWin = gameOverReason is GameOverReason.ImpostorsBySabotage;
         bool impostorWin = gameOverReason is GameOverReason.ImpostorsByVote or GameOverReason.ImpostorsByKill or GameOverReason.ImpostorDisconnect;
