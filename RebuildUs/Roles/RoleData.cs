@@ -1,12 +1,5 @@
 namespace RebuildUs.Roles;
 
-internal enum RoleTeam
-{
-    Crewmate,
-    Impostor,
-    Neutral,
-}
-
 internal static class RoleData
 {
     internal static readonly RoleRegistration[] Roles =

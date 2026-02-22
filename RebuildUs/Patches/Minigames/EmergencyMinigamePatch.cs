@@ -13,23 +13,23 @@ internal static class EmergencyMinigamePatch
         if (lp == null) return;
 
         bool roleCanCallEmergency = true;
-        string statusTextKey = "";
+        TrKey statusTextKey = TrKey.None;
 
         if (lp.IsRole(RoleType.Jester) && !Jester.CanCallEmergency)
         {
             roleCanCallEmergency = false;
-            statusTextKey = "JesterMeetingButton";
+            statusTextKey = TrKey.JesterMeetingButton;
         }
 
         if (lp.IsRole(RoleType.NiceSwapper) && !Swapper.CanCallEmergency)
         {
             roleCanCallEmergency = false;
-            statusTextKey = "SwapperMeetingButton";
+            statusTextKey = TrKey.SwapperMeetingButton;
         }
 
         if (!roleCanCallEmergency)
         {
-            __instance.StatusText.text = Tr.GetDynamic(statusTextKey);
+            __instance.StatusText.text = Tr.Get(statusTextKey);
             __instance.NumberText.text = string.Empty;
             __instance.ClosedLid.gameObject.SetActive(true);
             __instance.OpenLid.gameObject.SetActive(false);

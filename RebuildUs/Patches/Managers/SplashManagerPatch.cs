@@ -4,13 +4,14 @@ using RebuildUs.Modules.Cosmetics;
 
 namespace RebuildUs.Patches;
 
-[HarmonyPatch(typeof(SplashManager), nameof(SplashManager.Update))]
+[HarmonyPatch]
 internal static class SplashManagerPatch
 {
     private static bool _isProcessing;
     private static bool _isDone;
 
     [HarmonyPrefix]
+    [HarmonyPatch(typeof(SplashManager), nameof(SplashManager.Update))]
     internal static bool Prefix(SplashManager __instance)
     {
         if (_isDone) return true;

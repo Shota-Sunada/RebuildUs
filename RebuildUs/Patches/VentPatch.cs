@@ -100,18 +100,13 @@ internal static class VentPatch
         if (lp == null) return false;
 
         __instance.CanUse(lp.Data, out bool canUse, out bool _);
-        bool canMoveInVents = !lp.IsRole(RoleType.Spy)
-                              && !lp.HasModifier(ModifierType.Madmate)
-                              && !lp.IsRole(RoleType.Madmate)
-                              && !lp.IsRole(RoleType.Suicider)
-                              && !lp.HasModifier(ModifierType.CreatedMadmate);
         if (!canUse) return false; // No need to execute the native method as using is disallowed anyways
 
         bool isEnter = !lp.inVent;
 
         if (__instance.name.StartsWith("JackInTheBoxVent_"))
         {
-            __instance.SetButtons(isEnter && canMoveInVents);
+            __instance.SetButtons(isEnter && lp.CanMoveInVents());
             {
                 using RPCSender sender = new(lp.NetId, CustomRPC.UseUncheckedVent);
                 sender.WritePacked(__instance.Id);
@@ -123,11 +118,15 @@ internal static class VentPatch
         }
 
         if (isEnter)
+        {
             lp.MyPhysics.RpcEnterVent(__instance.Id);
+        }
         else
+        {
             lp.MyPhysics.RpcExitVent(__instance.Id);
+        }
 
-        __instance.SetButtons(isEnter && canMoveInVents);
+        __instance.SetButtons(isEnter && lp.CanMoveInVents());
         return false;
     }
 

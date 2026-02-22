@@ -33,7 +33,10 @@ internal sealed class Garlic
 
     internal static void UpdateAll()
     {
-        for (int i = 0; i < Garlics.Count; i++) Garlics[i]?.Update();
+        foreach (var t in Garlics)
+        {
+            t?.Update();
+        }
     }
 
     private void Update()

@@ -64,18 +64,18 @@ internal static class PlayerControlPatch
 
         if (PlayerControl.LocalPlayer == __instance)
         {
-            Helpers.SetBasePlayerOutlines();
+            __instance.SetBasePlayerOutlines();
 
             _timer += Time.fixedDeltaTime;
             if (_timer >= 0.1f)
             {
                 _timer = 0f;
-                Helpers.RefreshRoleDescription(__instance);
-                Helpers.UpdatePlayerInfo();
-                Helpers.SetPetVisibility();
+                __instance.RefreshRoleDescription();
+                __instance.UpdatePlayerInfo();
+                __instance.SetPetVisibility();
             }
 
-            ImpostorSetTarget();
+            ImpostorSetTarget(__instance);
             PlayerSizeUpdate(__instance);
 
             Garlic.UpdateAll();
@@ -222,10 +222,9 @@ internal static class PlayerControlPatch
         if (Helpers.IsOnElecTask()) __instance.SetKillTimer(__instance.killTimer + Time.fixedDeltaTime);
     }
 
-    private static void ImpostorSetTarget()
+    private static void ImpostorSetTarget(PlayerControl __instance)
     {
-        PlayerControl localPlayer = PlayerControl.LocalPlayer;
-        if (localPlayer == null || !localPlayer.Data.Role.IsImpostor || !localPlayer.CanMove || localPlayer.Data.IsDead)
+        if (__instance == null || !__instance.Data.Role.IsImpostor || !__instance.CanMove || __instance.Data.IsDead)
         {
             if (FastDestroyableSingleton<HudManager>.Instance) FastDestroyableSingleton<HudManager>.Instance.KillButton.SetTarget(null);
 

@@ -6,14 +6,11 @@ namespace RebuildUs.Patches;
 [HarmonyPatch]
 internal static class ExileControllerPatch
 {
-    internal static NetworkedPlayerInfo LastExiled;
-
     [HarmonyPrefix]
     [HarmonyPriority(Priority.First)]
     [HarmonyPatch(typeof(ExileController), nameof(ExileController.BeginForGameplay))]
     internal static void BeginForGameplayPrefix(ExileController __instance, NetworkedPlayerInfo player, bool voteTie)
     {
-        LastExiled = player;
         if (player != null) GameHistory.FinalStatuses[player.PlayerId] = FinalStatus.Exiled;
 
         // Medic shield
