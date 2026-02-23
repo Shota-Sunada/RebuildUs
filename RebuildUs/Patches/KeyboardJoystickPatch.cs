@@ -11,5 +11,6 @@ internal static class KeyboardJoystickPatch
         ShortcutCommands.HostCommands();
         ShortcutCommands.DebugCommands();
         ShortcutCommands.OpenAirshipToilet();
+        TimerBarManager.TickCustomTimer(Time.deltaTime);
     }
 }

@@ -3,15 +3,31 @@ namespace RebuildUs.Patches.HideAndSeek;
 [HarmonyPatch(typeof(HideAndSeekTimerBar))]
 internal static class HideAndSeekTimerBarPatch
 {
-    [HarmonyPatch(typeof(HideAndSeekTimerBar), nameof(HideAndSeekTimerBar.Update))]
+    [HarmonyPrefix]
+    [HarmonyPatch(nameof(HideAndSeekTimerBar.Update))]
     internal static bool UpdatePrefix(HideAndSeekTimerBar __instance)
     {
-        return true;
+        return TimerBarManager.Update(__instance);
     }
 
-    [HarmonyPatch(typeof(HideAndSeekTimerBar), nameof(HideAndSeekTimerBar.UpdateTimer))]
+    [HarmonyPrefix]
+    [HarmonyPatch(nameof(HideAndSeekTimerBar.UpdateTimer))]
     internal static bool UpdateTimerPrefix(HideAndSeekTimerBar __instance, float time, float maxTime)
     {
-        return true;
+        return TimerBarManager.UpdateTimer(__instance, time, maxTime);
+    }
+
+    [HarmonyPrefix]
+    [HarmonyPatch(nameof(HideAndSeekTimerBar.StartFinalHide))]
+    internal static bool StartFinalHidePrefix(HideAndSeekTimerBar __instance)
+    {
+        return TimerBarManager.StartFinalHide(__instance);
+    }
+
+    [HarmonyPrefix]
+    [HarmonyPatch(nameof(HideAndSeekTimerBar.TaskComplete))]
+    internal static bool TaskCompletePrefix(HideAndSeekTimerBar __instance)
+    {
+        return TimerBarManager.TaskComplete(__instance);
     }
 }
