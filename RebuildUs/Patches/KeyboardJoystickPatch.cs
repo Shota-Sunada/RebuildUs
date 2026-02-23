@@ -9,6 +9,7 @@ internal static class KeyboardJoystickPatch
     {
         Tr.Update();
         ShortcutCommands.HostCommands();
+        ShortcutCommands.DebugCommands();
         ShortcutCommands.OpenAirshipToilet();
     }
 }

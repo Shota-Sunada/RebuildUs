@@ -801,7 +801,9 @@ internal static class Meeting
                 DataManager.Player.Stats.IncrementStat(StatID.EmergenciesCalled);
             }
             else
+            {
                 DataManager.Player.Stats.IncrementStat(StatID.BodiesReported);
+            }
         }
 
         return false;

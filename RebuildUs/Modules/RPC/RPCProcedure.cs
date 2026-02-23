@@ -22,6 +22,7 @@ internal static partial class RPCProcedure
         SecurityCamera.ResetData();
         Vitals.ResetData();
         Map.Reset();
+        DeathPopup.Reset();
         CustomOverlays.ResetOverlays();
         SpecimenVital.ClearAndReload();
         AdditionalVents.ClearAndReload();

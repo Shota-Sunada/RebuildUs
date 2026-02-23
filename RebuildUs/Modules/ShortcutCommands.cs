@@ -36,6 +36,38 @@ internal static class ShortcutCommands
 #endif
     }
 
+    internal static void DebugCommands()
+    {
+        bool trigger = Helpers.GetKeysDown(KeyCode.LeftControl, KeyCode.F9) || Helpers.GetKeysDown(KeyCode.RightControl, KeyCode.F9);
+        if (!trigger) return;
+
+        HudManager hud = HudManager.Instance;
+        PlayerControl localPlayer = PlayerControl.LocalPlayer;
+
+        if (localPlayer == null || hud?.Chat == null) return;
+        if (!Helpers.GameStarted)
+        {
+            Logger.LogInfo("DeathPopup debug failed: game is not started.");
+            return;
+        }
+
+        int result = DeathPopup.TryShow(localPlayer, out HideAndSeekDeathPopup popup);
+        string reason = DeathPopup.ExplainResult(result);
+        if (result != DeathPopup.RESULT_SUCCESS)
+        {
+            Logger.LogInfo($"DeathPopup debug result={result} ({reason})");
+            return;
+        }
+
+        if (popup == null)
+        {
+            Logger.LogInfo("DeathPopup debug success via fallback path (popup instance unavailable for text verification).");
+            return;
+        }
+
+        Logger.LogInfo("DeathPopup debug success.");
+    }
+
     internal static void OpenAirshipToilet()
     {
         if (!Input.GetKeyDown(KeyCode.P)) return;
