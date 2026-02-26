@@ -33,25 +33,25 @@ internal static class Admin
         switch (roomName)
         {
             case "Cockpit":
-            {
-                for (int i = 0; i < FilterCockpitAdmin.Length; i++)
                 {
-                    if (FilterCockpitAdmin[i] == type)
-                        return true;
-                }
+                    for (int i = 0; i < FilterCockpitAdmin.Length; i++)
+                    {
+                        if (FilterCockpitAdmin[i] == type)
+                            return true;
+                    }
 
-                return false;
-            }
+                    return false;
+                }
             case "Records":
-            {
-                for (int i = 0; i < FilterRecordsAdmin.Length; i++)
                 {
-                    if (FilterRecordsAdmin[i] == type)
-                        return true;
-                }
+                    for (int i = 0; i < FilterRecordsAdmin.Length; i++)
+                    {
+                        if (FilterRecordsAdmin[i] == type)
+                            return true;
+                    }
 
-                return false;
-            }
+                    return false;
+                }
             default:
                 return true;
         }
@@ -260,17 +260,17 @@ internal static class Admin
         switch (_room.name)
         {
             case "Cockpit":
-            {
-                renderer.sprite = AssetLoader.AdminCockpit;
-                if (_map != null) _newMap.transform.position = new(_map.transform.position.x + 0.5f, _map.transform.position.y, _map.transform.position.z - 0.1f);
-                break;
-            }
+                {
+                    renderer.sprite = AssetLoader.AdminCockpit;
+                    if (_map != null) _newMap.transform.position = new(_map.transform.position.x + 0.5f, _map.transform.position.y, _map.transform.position.z - 0.1f);
+                    break;
+                }
             case "Records":
-            {
-                renderer.sprite = AssetLoader.AdminRecords;
-                if (_map != null) _newMap.transform.position = new(_map.transform.position.x - 0.38f, _map.transform.position.y, _map.transform.position.z - 0.1f);
-                break;
-            }
+                {
+                    renderer.sprite = AssetLoader.AdminRecords;
+                    if (_map != null) _newMap.transform.position = new(_map.transform.position.x - 0.38f, _map.transform.position.y, _map.transform.position.z - 0.1f);
+                    break;
+                }
         }
 
         _newMap.SetActive(true);

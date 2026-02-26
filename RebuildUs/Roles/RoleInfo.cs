@@ -35,7 +35,7 @@ internal class RoleInfo(TrKey nameKey, Color color, CustomOption baseOption, Rol
 
     internal static List<RoleInfo> GetRoleInfoForPlayer(PlayerControl player, bool showModifier = true, RoleType[] excludeRoles = null)
     {
-        List<RoleInfo> infos = new();
+        List<RoleInfo> infos = [];
         if (player == null) return infos;
 
         if (showModifier)

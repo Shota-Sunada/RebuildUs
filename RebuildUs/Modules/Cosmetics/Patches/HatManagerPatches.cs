@@ -15,7 +15,7 @@ internal static class HatManagerPatches
         _isRunning = true;
         // Maybe we can use lock keyword to ensure simultaneous list manipulations ?
         _allHats = [.. __instance.allHats];
-        List<CustomHat> cache = new(CustomHatManager.UnregisteredHats);
+        List<CustomHat> cache = [.. CustomHatManager.UnregisteredHats];
         foreach (CustomHat hat in cache)
         {
             try

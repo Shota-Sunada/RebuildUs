@@ -12,7 +12,7 @@ internal class CustomRoleOption : CustomOption<string>
                               int max = 15,
                               bool roleEnabled = true)
         : base(baseId, type, Enum.TryParse<TrKey>(Enum.GetName(roleType), out TrKey key) ? key : TrKey.None,
-               System.Linq.Enumerable.Cast<string>(CustomOptionHolder.Rates).ToArray(),
+               [.. System.Linq.Enumerable.Cast<string>(CustomOptionHolder.Rates)],
                System.Linq.Enumerable.Cast<string>(CustomOptionHolder.Rates).FirstOrDefault() ?? string.Empty,
                null, false, "", color)
     {
@@ -32,7 +32,7 @@ internal class CustomRoleOption : CustomOption<string>
                               int max = 15,
                               bool roleEnabled = true)
         : base(baseId, type, nameKey,
-               System.Linq.Enumerable.Cast<string>(CustomOptionHolder.Rates).ToArray(),
+               [.. System.Linq.Enumerable.Cast<string>(CustomOptionHolder.Rates)],
                System.Linq.Enumerable.Cast<string>(CustomOptionHolder.Rates).FirstOrDefault() ?? string.Empty,
                null, false, "", color)
     {

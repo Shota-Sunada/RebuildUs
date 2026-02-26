@@ -137,7 +137,7 @@ internal static partial class EndGameMain
         }
 
         // 勝利画面から不要なキャラを追放する
-        HashSet<string> notWinnerNames = new();
+        HashSet<string> notWinnerNames = [];
         foreach (PlayerControl t in notWinners) notWinnerNames.Add(t.Data.PlayerName);
 
         Il2CppSystem.Collections.Generic.List<CachedPlayerData> cachedWinners = EndGameResult.CachedWinners;
@@ -255,13 +255,13 @@ internal static partial class EndGameMain
 
         int num = Mathf.CeilToInt(7.5f);
 
-        List<CachedPlayerData> list = new();
+        List<CachedPlayerData> list = [];
         Il2CppSystem.Collections.Generic.List<CachedPlayerData> cachedWinners = EndGameResult.CachedWinners;
         foreach (CachedPlayerData t in cachedWinners) list.Add(t);
 
         list.Sort((a, b) => (a.IsYou ? -1 : 0).CompareTo(b.IsYou ? -1 : 0));
 
-        Dictionary<string, PlayerRoleInfo> playerRolesDict = new();
+        Dictionary<string, PlayerRoleInfo> playerRolesDict = [];
         List<PlayerRoleInfo> playerRoles = AdditionalTempData.PlayerRoles;
         foreach (PlayerRoleInfo pr in playerRoles)
         {

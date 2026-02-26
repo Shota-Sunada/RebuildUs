@@ -418,16 +418,13 @@ internal static class PlayerControlExtensions
         Il2CppSystem.Collections.Generic.List<byte> tasks = new();
         Il2CppSystem.Collections.Generic.HashSet<TaskTypes> hashSet = new();
 
-        List<NormalPlayerTask> commonTasks = new();
-        foreach (NormalPlayerTask task in MapUtilities.CachedShipStatus.CommonTasks) commonTasks.Add(task);
+        List<NormalPlayerTask> commonTasks = [.. MapUtilities.CachedShipStatus.CommonTasks];
         commonTasks.Shuffle();
 
-        List<NormalPlayerTask> shortTasks = new();
-        foreach (NormalPlayerTask task in MapUtilities.CachedShipStatus.ShortTasks) shortTasks.Add(task);
+        List<NormalPlayerTask> shortTasks = [.. MapUtilities.CachedShipStatus.ShortTasks];
         shortTasks.Shuffle();
 
-        List<NormalPlayerTask> longTasks = new();
-        foreach (NormalPlayerTask task in MapUtilities.CachedShipStatus.LongTasks) longTasks.Add(task);
+        List<NormalPlayerTask> longTasks = [.. MapUtilities.CachedShipStatus.LongTasks];
         longTasks.Shuffle();
 
         int start = 0;

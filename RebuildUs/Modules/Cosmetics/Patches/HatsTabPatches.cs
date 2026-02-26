@@ -15,7 +15,7 @@ internal static class HatsTabPatches
 
         __instance.ColorChips = new();
         Il2CppReferenceArray<HatData> unlockedHats = DestroyableSingleton<HatManager>.Instance.GetUnlockedHats();
-        Dictionary<string, List<Tuple<HatData, HatExtension>>> packages = new();
+        Dictionary<string, List<Tuple<HatData, HatExtension>>> packages = [];
 
         foreach (HatData hatBehaviour in unlockedHats)
         {

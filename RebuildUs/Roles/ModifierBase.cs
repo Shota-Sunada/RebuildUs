@@ -64,7 +64,7 @@ internal abstract class PlayerModifier
         if (player == null) return [];
         if (PlayerModifierCache[player.PlayerId] != null) return PlayerModifierCache[player.PlayerId];
 
-        List<PlayerModifier> list = new();
+        List<PlayerModifier> list = [];
         foreach (PlayerModifier t in AllModifiers)
         {
             if (t.Player == player)

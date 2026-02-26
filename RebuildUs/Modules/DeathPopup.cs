@@ -128,7 +128,7 @@ internal static class DeathPopup
     {
         HudManager hud = hudManager ?? DestroyableSingleton<HudManager>.Instance;
         if (hud == null) return null;
-        return hud.transform.parent != null ? hud.transform.parent : hud.transform;
+        return hud.transform.parent ?? hud.transform;
     }
 
     private static HideAndSeekDeathPopup GetOrResolvePrefab()

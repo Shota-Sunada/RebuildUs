@@ -60,8 +60,7 @@ internal static class HatParentPatches
             PlayerMaterial.SetColors(colorId, __instance.FrontLayer);
             if (__instance.BackLayer && __instance.BackLayer) PlayerMaterial.SetColors(colorId, __instance.BackLayer);
 
-            if (__instance.FrontLayer.material != null)
-                __instance.FrontLayer.material.SetInt(PlayerMaterial.MaskLayer, __instance.matProperties.MaskLayer);
+            __instance.FrontLayer.material?.SetInt(PlayerMaterial.MaskLayer, __instance.matProperties.MaskLayer);
             if (__instance.BackLayer && __instance.BackLayer && __instance.BackLayer.material != null)
                 __instance.BackLayer.material.SetInt(PlayerMaterial.MaskLayer, __instance.matProperties.MaskLayer);
 
@@ -205,7 +204,7 @@ internal static class HatParentPatches
         if (!Directory.Exists(dirPath)) Directory.CreateDirectory(dirPath);
         if (!DestroyableSingleton<TutorialManager>.InstanceExists) return true;
         DirectoryInfo d = new(dirPath);
-        string[] filePaths = d.GetFiles("*.png").Select(x => x.FullName).ToArray();
+        string[] filePaths = [.. d.GetFiles("*.png").Select(x => x.FullName)];
         List<CustomHat> hats = CustomHatManager.CreateHatDetailsFromFileNames(filePaths, true);
         if (hats.Count <= 0) return false;
         try

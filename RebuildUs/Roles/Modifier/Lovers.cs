@@ -38,7 +38,7 @@ internal static class Lovers
 
     internal static void AddCouple(PlayerControl player1, PlayerControl player2)
     {
-        List<Color> availableColors = new(LoverIconColors);
+        List<Color> availableColors = [.. LoverIconColors];
         for (int i = 0; i < Couples.Count; i++)
         {
             Color color = Couples[i].Color;

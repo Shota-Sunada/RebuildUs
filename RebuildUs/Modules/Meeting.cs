@@ -53,7 +53,7 @@ internal static class Meeting
 
     private static Dictionary<byte, int> CalculateVotes(MeetingHud __instance)
     {
-        Dictionary<byte, int> dictionary = new();
+        Dictionary<byte, int> dictionary = [];
         foreach (PlayerVoteArea playerVoteArea in __instance.playerStates)
         {
             if (playerVoteArea.VotedFor is 252 or 255 or 254) continue;
@@ -302,16 +302,16 @@ internal static class Meeting
                 _meetingExtraButtonLabel.text = Helpers.Cs(Color.green, Tr.Get(TrKey.SwapperConfirm));
                 break;
             case 2:
-            {
-                if (_selections[i])
                 {
-                    renderer.color = Color.red;
-                    _selections[i] = false;
-                    _meetingExtraButtonLabel.text = Helpers.Cs(Color.red, Tr.Get(TrKey.SwapperConfirm));
-                }
+                    if (_selections[i])
+                    {
+                        renderer.color = Color.red;
+                        _selections[i] = false;
+                        _meetingExtraButtonLabel.text = Helpers.Cs(Color.red, Tr.Get(TrKey.SwapperConfirm));
+                    }
 
-                break;
-            }
+                    break;
+                }
         }
     }
 
@@ -439,7 +439,7 @@ internal static class Meeting
             UnityObject.Destroy(container.gameObject);
         }));
 
-        List<Transform> buttons = new();
+        List<Transform> buttons = [];
         Transform selectedButton = null;
 
         foreach (RoleInfo roleInfo in RoleInfo.AllRoleInfos)
@@ -886,7 +886,7 @@ internal static class Meeting
         // 既存処理の移植
         {
             Il2CppArrayBase<DeadBody> array = UnityObject.FindObjectsOfType<DeadBody>();
-            NetworkedPlayerInfo[] deadBodies = (from b in array select GameData.Instance.GetPlayerById(b.ParentId)).ToArray();
+            NetworkedPlayerInfo[] deadBodies = [.. (from b in array select GameData.Instance.GetPlayerById(b.ParentId))];
             foreach (DeadBody t in array)
             {
                 if (t != null && t.gameObject != null)
@@ -913,7 +913,7 @@ internal static class Meeting
         // 投票画面に人形遣いのダミーを表示させない
         // 会議に参加しないPlayerControlを持つRoleが増えたらこのListに追加
         // 特殊なplayerInfo.Role.Roleを設定することで自動的に無視できないか？もしくはフラグをplayerInfoのどこかに追加
-        List<PlayerControl> playerControlsToBeIgnored = new();
+        List<PlayerControl> playerControlsToBeIgnored = [];
         playerControlsToBeIgnored.RemoveAll(x => x == null);
         IEnumerable<byte> playerIdsToBeIgnored = playerControlsToBeIgnored.Select(x => x.PlayerId);
         // Generate PlayerVoteAreas

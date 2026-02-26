@@ -121,18 +121,18 @@ internal static class CustomHatManager
 
     internal static List<CustomHat> CreateHatDetailsFromFileNames(string[] fileNames, bool fromDisk = false)
     {
-        Dictionary<string, CustomHat> fronts = new();
-        Dictionary<string, string> backs = new();
-        Dictionary<string, string> flips = new();
-        Dictionary<string, string> backFlips = new();
-        Dictionary<string, string> climbs = new();
+        Dictionary<string, CustomHat> fronts = [];
+        Dictionary<string, string> backs = [];
+        Dictionary<string, string> flips = [];
+        Dictionary<string, string> backFlips = [];
+        Dictionary<string, string> climbs = [];
 
         foreach (string fileName in fileNames)
         {
             int index = fileName.LastIndexOf("\\", StringComparison.InvariantCulture) + 1;
             string s = fromDisk ? fileName[index..].Split('.')[0] : fileName.Split('.')[3];
             string[] p = s.Split('_');
-            HashSet<string> options = new(p);
+            HashSet<string> options = [.. p];
             if (options.Contains("back") && options.Contains("flip"))
                 backFlips[p[0]] = fileName;
             else if (options.Contains("climb"))
@@ -154,7 +154,7 @@ internal static class CustomHatManager
             }
         }
 
-        List<CustomHat> hats = new();
+        List<CustomHat> hats = [];
 
         foreach ((string k, CustomHat hat) in fronts)
         {
@@ -226,7 +226,7 @@ internal static class CustomHatManager
     internal static List<string> GenerateDownloadList(List<CustomHat> hats)
     {
         using MD5 algorithm = MD5.Create();
-        List<string> toDownload = new();
+        List<string> toDownload = [];
 
         foreach (CustomHat hat in hats)
         {

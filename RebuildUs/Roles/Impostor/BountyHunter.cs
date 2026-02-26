@@ -85,7 +85,7 @@ internal class BountyHunter : SingleRoleBase<BountyHunter>
             Bounty = null;
             _arrowUpdateTimer = 0f; // Force arrow to update
             _bountyUpdateTimer = BountyDuration;
-            List<PlayerControl> possibleTargets = new();
+            List<PlayerControl> possibleTargets = [];
             PlayerControl partner = Player.GetPartner();
 
             foreach (PlayerControl p in PlayerControl.AllPlayerControls.GetFastEnumerator())
