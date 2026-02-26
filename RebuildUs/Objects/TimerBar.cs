@@ -38,7 +38,7 @@ internal sealed class TimerBar
         _chunkTransform = ResolveChunkTransform(source);
         _chunkRenderer = ResolveChunkRenderer(_chunkTransform);
 
-        Transform root = source?.transform;
+        Transform root = source != null ? source.transform : null;
         _defaultLocalPosition = root != null ? root.localPosition : Vector3.zero;
         _defaultLocalScale = root != null ? root.localScale : Vector3.one;
         _defaultTimerLocalPosition = _timerTransform != null ? _timerTransform.localPosition : Vector3.zero;
@@ -72,7 +72,7 @@ internal sealed class TimerBar
 
     internal Transform RootTransform
     {
-        get => _source?.transform;
+        get => _source != null ? _source.transform : null;
     }
 
     internal Transform TimerTransform
@@ -257,7 +257,7 @@ internal sealed class TimerBar
         if (named != null) return named;
 
         MeshRenderer renderer = source.GetComponentInChildren<MeshRenderer>(true);
-        return renderer?.transform;
+        return renderer != null ? renderer.transform : null;
     }
 
     private static MeshRenderer ResolveTimerRenderer(HideAndSeekTimerBar source, Transform timerTransform)

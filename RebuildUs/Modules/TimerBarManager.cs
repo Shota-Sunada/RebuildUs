@@ -39,7 +39,7 @@ internal static class TimerBarManager
         HudManager hud = DestroyableSingleton<HudManager>.Instance;
         if (prefab == null || hud == null) return false;
 
-        Transform parent = hud.transform.parent ?? hud.transform;
+        Transform parent = hud.transform.parent != null ? hud.transform.parent : hud.transform;
         _standaloneBar = Object.Instantiate(prefab, parent);
         _standaloneFinalTriggered = false;
         return _standaloneBar != null;
@@ -47,7 +47,8 @@ internal static class TimerBarManager
 
     internal static void DestroyStandaloneBar()
     {
-        _standaloneBar?.gameObject.Destroy();
+        if (_standaloneBar != null)
+            _standaloneBar.gameObject.Destroy();
 
         _standaloneBar = null;
         _standaloneFinalTriggered = false;

@@ -91,11 +91,11 @@ internal class Engineer : MultiRoleBase<Engineer>
             switch (task.TaskType)
             {
                 case TaskTypes.FixLights:
-                    {
-                        using RPCSender sender2 = new(PlayerControl.LocalPlayer.NetId, CustomRPC.EngineerFixLights);
-                        RPCProcedure.EngineerFixLights();
-                        break;
-                    }
+                {
+                    using RPCSender sender2 = new(PlayerControl.LocalPlayer.NetId, CustomRPC.EngineerFixLights);
+                    RPCProcedure.EngineerFixLights();
+                    break;
+                }
                 case TaskTypes.RestoreOxy:
                     MapUtilities.CachedShipStatus.RpcUpdateSystem(SystemTypes.LifeSupp, 0 | 64);
                     MapUtilities.CachedShipStatus.RpcUpdateSystem(SystemTypes.LifeSupp, 1 | 64);
@@ -115,15 +115,15 @@ internal class Engineer : MultiRoleBase<Engineer>
                     MapUtilities.CachedShipStatus.RpcUpdateSystem(SystemTypes.Reactor, 1 | 16);
                     break;
                 default:
+                {
+                    if (SubmergedCompatibility.IsSubmerged && task.TaskType == SubmergedCompatibility.RetrieveOxygenMask)
                     {
-                        if (SubmergedCompatibility.IsSubmerged && task.TaskType == SubmergedCompatibility.RetrieveOxygenMask)
-                        {
-                            using RPCSender sender3 = new(PlayerControl.LocalPlayer.NetId, CustomRPC.EngineerFixSubmergedOxygen);
-                            RPCProcedure.EngineerFixSubmergedOxygen();
-                        }
-
-                        break;
+                        using RPCSender sender3 = new(PlayerControl.LocalPlayer.NetId, CustomRPC.EngineerFixSubmergedOxygen);
+                        RPCProcedure.EngineerFixSubmergedOxygen();
                     }
+
+                    break;
+                }
             }
         }
     }

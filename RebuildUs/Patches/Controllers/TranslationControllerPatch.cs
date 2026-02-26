@@ -58,24 +58,24 @@ internal static class TranslationControllerPatch
             {
                 // Exile role text
                 case StringNames.ExileTextPN or StringNames.ExileTextSN or StringNames.ExileTextPP or StringNames.ExileTextSP:
+                {
+                    ExileStringBuilder.Clear();
+                    ExileStringBuilder.Append(player.Data.PlayerName).Append(" was The ");
+                    List<RoleInfo> roleInfos = RoleInfo.GetRoleInfoForPlayer(player, false);
+                    for (int i = 0; i < roleInfos.Count; i++)
                     {
-                        ExileStringBuilder.Clear();
-                        ExileStringBuilder.Append(player.Data.PlayerName).Append(" was The ");
-                        List<RoleInfo> roleInfos = RoleInfo.GetRoleInfoForPlayer(player, false);
-                        for (int i = 0; i < roleInfos.Count; i++)
-                        {
-                            if (i > 0) ExileStringBuilder.Append(' ');
-                            ExileStringBuilder.Append(roleInfos[i].Name);
-                        }
+                        if (i > 0) ExileStringBuilder.Append(' ');
+                        ExileStringBuilder.Append(roleInfos[i].Name);
+                    }
 
-                        __result = ExileStringBuilder.ToString();
-                        break;
-                    }
+                    __result = ExileStringBuilder.ToString();
+                    break;
+                }
                 case StringNames.ImpostorsRemainP or StringNames.ImpostorsRemainS:
-                    {
-                        if (player.IsRole(RoleType.Jester)) __result = string.Empty;
-                        break;
-                    }
+                {
+                    if (player.IsRole(RoleType.Jester)) __result = string.Empty;
+                    break;
+                }
             }
         }
         catch (Exception ex)

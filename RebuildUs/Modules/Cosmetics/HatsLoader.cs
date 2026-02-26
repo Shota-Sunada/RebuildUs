@@ -111,7 +111,7 @@ internal sealed class HatsLoader : MonoBehaviour
 
             LoadScreen.Progress = 0;
             LoadScreen.ProgressDetailText = "";
-            ConcurrentBag<(string url, string localPath, string expectedHash, string fileName)> toDownload = [];
+            ConcurrentBag<(string url, string localPath, string expectedHash, string fileName)> toDownload = new();
 
             LoadScreen.StatusText = "Checking repositories...";
 

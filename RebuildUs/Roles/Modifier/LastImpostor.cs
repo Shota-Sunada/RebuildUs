@@ -194,7 +194,7 @@ internal class LastImpostor : ModifierBase<LastImpostor>
     {
         if (!IsEnable) return;
 
-        List<PlayerControl> impList = [];
+        List<PlayerControl> impList = new();
         foreach (PlayerControl p in PlayerControl.AllPlayerControls.GetFastEnumerator())
         {
             if (p.IsTeamImpostor() && p.IsAlive())

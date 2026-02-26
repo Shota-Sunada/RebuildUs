@@ -457,6 +457,6 @@ internal class CustomOption<T> : CustomOption
 
     protected override object[] GetSelections()
     {
-        return [.. Selections.Cast<object>()];
+        return Selections.Cast<object>().ToArray();
     }
 }

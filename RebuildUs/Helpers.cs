@@ -208,7 +208,7 @@ internal static class Helpers
         if (player == null) return;
 
         List<RoleInfo> infos = RoleInfo.GetRoleInfoForPlayer(player);
-        List<PlayerTask> toRemove = [];
+        List<PlayerTask> toRemove = new();
 
         foreach (PlayerTask t in player.myTasks.GetFastEnumerator())
         {
@@ -301,13 +301,16 @@ internal static class Helpers
         Il2CppSystem.Collections.Generic.List<byte> tasks = new();
         Il2CppSystem.Collections.Generic.HashSet<TaskTypes> hashSet = new();
 
-        List<NormalPlayerTask> commonTasks = [.. MapUtilities.CachedShipStatus.CommonTasks];
+        List<NormalPlayerTask> commonTasks = new();
+        foreach (NormalPlayerTask task in MapUtilities.CachedShipStatus.CommonTasks) commonTasks.Add(task);
         commonTasks.Shuffle();
 
-        List<NormalPlayerTask> shortTasks = [.. MapUtilities.CachedShipStatus.ShortTasks];
+        List<NormalPlayerTask> shortTasks = new();
+        foreach (NormalPlayerTask task in MapUtilities.CachedShipStatus.ShortTasks) shortTasks.Add(task);
         shortTasks.Shuffle();
 
-        List<NormalPlayerTask> longTasks = [.. MapUtilities.CachedShipStatus.LongTasks];
+        List<NormalPlayerTask> longTasks = new();
+        foreach (NormalPlayerTask task in MapUtilities.CachedShipStatus.LongTasks) longTasks.Add(task);
         longTasks.Shuffle();
 
         int start = 0;

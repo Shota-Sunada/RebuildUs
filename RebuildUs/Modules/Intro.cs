@@ -103,7 +103,7 @@ internal static class Intro
                     {
                         sabotage.SetActive(false);
                         Console sabotageConsole = sabotage.GetComponent<Console>();
-                        List<Console> newConsoles = [];
+                        List<Console> newConsoles = new();
                         if (ship.AllConsoles != null)
                         {
                             foreach (Console c in ship.AllConsoles)
@@ -175,7 +175,8 @@ internal static class Intro
 
         // Add the Spy to the Impostor team (for the Impostors)
         if (!Spy.Exists || !PlayerControl.LocalPlayer.IsTeamImpostor()) return;
-        List<PlayerControl> players = [.. PlayerControl.AllPlayerControls.GetFastEnumerator()];
+        List<PlayerControl> players = new();
+        foreach (PlayerControl p in PlayerControl.AllPlayerControls.GetFastEnumerator()) players.Add(p);
         players.Shuffle();
 
         Il2CppSystem.Collections.Generic.List<PlayerControl> fakeImpostorTeam = new(); // The local player always has to be the first one in the list (to be displayed in the center)
@@ -364,11 +365,11 @@ internal static class Intro
                 if (logicOptions != null && MapUtilities.CachedShipStatus != null) MapUtilities.CachedShipStatus.HideCountdown = logicOptions.GetCrewmateLeadTime();
                 if (AprilFoolsMode.ShouldHorseAround())
                 {
-                    impostor?.AnimateCustom(__instance.HnSSeekerSpawnHorseInGameAnim);
+                    if (impostor != null) impostor.AnimateCustom(__instance.HnSSeekerSpawnHorseInGameAnim);
                 }
                 else if (AprilFoolsMode.ShouldLongAround())
                 {
-                    impostor?.AnimateCustom(__instance.HnSSeekerSpawnLongInGameAnim);
+                    if (impostor != null) impostor.AnimateCustom(__instance.HnSSeekerSpawnLongInGameAnim);
                 }
                 else if (impostor != null)
                 {

@@ -168,8 +168,8 @@ internal partial class CustomOption
 
     private static void DrawOverviewTab(LobbyViewSettingsPane __instance)
     {
-        List<CustomOption> options = [];
-        CustomOptionType[] targetTypes = [CustomOptionType.Impostor, CustomOptionType.Crewmate, CustomOptionType.Neutral, CustomOptionType.Modifier];
+        List<CustomOption> options = new();
+        CustomOptionType[] targetTypes = new[] { CustomOptionType.Impostor, CustomOptionType.Crewmate, CustomOptionType.Neutral, CustomOptionType.Modifier };
         foreach (CustomOptionType type in targetTypes)
         {
             foreach (CustomOption option in AllOptions)

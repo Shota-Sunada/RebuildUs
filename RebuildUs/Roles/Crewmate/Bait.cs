@@ -64,7 +64,7 @@ internal class Bait : MultiRoleBase<Bait>
         byte reporter = baitDeadPlayer.KillerIfExisting.PlayerId;
         if (Player.HasModifier(ModifierType.Madmate))
         {
-            List<PlayerControl> candidates = [];
+            List<PlayerControl> candidates = new();
             foreach (PlayerControl p in PlayerControl.AllPlayerControls.GetFastEnumerator())
             {
                 if (p != null && p.IsAlive() && !p.IsTeamImpostor() && !p.isDummy)

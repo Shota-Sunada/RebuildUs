@@ -34,11 +34,11 @@ internal static class RoleAssignment
                         index = 3;
                         break;
                     case 3:
-                        {
-                            if (!AprilFoolsMode.ShouldFlipSkeld()) index = 0;
+                    {
+                        if (!AprilFoolsMode.ShouldFlipSkeld()) index = 0;
 
-                            break;
-                        }
+                        break;
+                    }
                 }
             }
             catch (Exception ex)

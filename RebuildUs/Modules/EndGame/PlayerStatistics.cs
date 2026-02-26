@@ -41,7 +41,7 @@ internal sealed class PlayerStatistics
         int impLovers = 0;
         int jackalLovers = 0;
 
-        HashSet<byte> loversId = [];
+        HashSet<byte> loversId = new();
         List<Couple> couples = Lovers.Couples;
         foreach (Couple couple in couples)
         {

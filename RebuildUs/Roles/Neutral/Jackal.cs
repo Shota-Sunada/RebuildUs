@@ -64,7 +64,7 @@ internal class Jackal : SingleRoleBase<Jackal>
     {
         Jackal local = Local;
         if (local == null) return;
-        List<PlayerControl> untargetablePlayers = [];
+        List<PlayerControl> untargetablePlayers = new();
         if (CanCreateSidekickFromImpostor)
         {
             // Only exclude sidekick from being targeted if the jackal can create sidekicks from impostors
