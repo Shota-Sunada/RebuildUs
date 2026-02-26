@@ -1,5 +1,3 @@
-using Object = UnityEngine.Object;
-
 namespace RebuildUs.Roles.Neutral;
 
 [HarmonyPatch]
@@ -47,7 +45,7 @@ internal class Vulture : SingleRoleBase<Vulture>
         if (Player.IsDead())
         {
             foreach (var t in _localArrows)
-                Object.Destroy(t.ArrowObject);
+                UnityObject.Destroy(t.ArrowObject);
 
             _localArrows.Clear();
             return;
@@ -57,13 +55,13 @@ internal class Vulture : SingleRoleBase<Vulture>
         if (_timeUntilUpdate > 0f) return;
         _timeUntilUpdate = 0.25f;
 
-        DeadBody[] deadBodies = Object.FindObjectsOfType<DeadBody>();
+        DeadBody[] deadBodies = UnityObject.FindObjectsOfType<DeadBody>();
         bool arrowUpdate = _localArrows.Count != deadBodies.Length;
 
         if (arrowUpdate)
         {
             foreach (var t in _localArrows)
-                Object.Destroy(t.ArrowObject);
+                UnityObject.Destroy(t.ArrowObject);
 
             _localArrows.Clear();
         }
@@ -90,7 +88,7 @@ internal class Vulture : SingleRoleBase<Vulture>
     {
         _vultureEatButton = new(() =>
                                 {
-                                    Il2CppArrayBase<DeadBody> bodies = Object.FindObjectsOfType<DeadBody>();
+                                    Il2CppArrayBase<DeadBody> bodies = UnityObject.FindObjectsOfType<DeadBody>();
                                     PlayerControl local = PlayerControl.LocalPlayer;
                                     Vector2 truePosition = local.GetTruePosition();
                                     float maxDist = local.MaxReportDistance;
@@ -123,7 +121,7 @@ internal class Vulture : SingleRoleBase<Vulture>
                                     return hm.ReportButton.graphic.color == Palette.EnabledColor && PlayerControl.LocalPlayer.CanMove;
                                 }, () => { _vultureEatButton.Timer = _vultureEatButton.MaxTimer; }, AssetLoader.VultureButton, ButtonPosition.Layout, hm, hm.KillButton, AbilitySlot.NeutralAbilityPrimary, false, Tr.Get(TrKey.VultureText));
 
-        _vultureNumCorpsesText = Object.Instantiate(_vultureEatButton.ActionButton.cooldownTimerText, _vultureEatButton.ActionButton.cooldownTimerText.transform.parent);
+        _vultureNumCorpsesText = UnityObject.Instantiate(_vultureEatButton.ActionButton.cooldownTimerText, _vultureEatButton.ActionButton.cooldownTimerText.transform.parent);
         _vultureNumCorpsesText.text = "";
         _vultureNumCorpsesText.enableWordWrapping = false;
         _vultureNumCorpsesText.transform.localScale = Vector3.one * 0.5f;
@@ -145,7 +143,7 @@ internal class Vulture : SingleRoleBase<Vulture>
             {
                 foreach (var arrow in Instance._localArrows)
                 {
-                    if (arrow?.ArrowObject != null) Object.Destroy(arrow.ArrowObject);
+                    if (arrow?.ArrowObject != null) UnityObject.Destroy(arrow.ArrowObject);
                 }
             }
 

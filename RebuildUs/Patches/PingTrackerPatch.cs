@@ -1,5 +1,3 @@
-using InnerNet;
-
 namespace RebuildUs.Patches;
 
 [HarmonyPatch]

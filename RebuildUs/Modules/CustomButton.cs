@@ -1,5 +1,4 @@
 using UnityEngine.Events;
-using Object = UnityEngine.Object;
 
 namespace RebuildUs.Modules;
 
@@ -139,7 +138,7 @@ internal sealed class CustomButton
         _useLayout = position.UseLayout;
         Timer = 16.2f;
         Buttons.Add(this);
-        ActionButton = Object.Instantiate(hudManager.KillButton, hudManager.KillButton.transform.parent);
+        ActionButton = UnityObject.Instantiate(hudManager.KillButton, hudManager.KillButton.transform.parent);
         ActionButton.gameObject.name = "CustomButton";
 
         // Add Key Bind Guide
@@ -176,8 +175,8 @@ internal sealed class CustomButton
         LocalScale = ActionButton.transform.localScale;
         if (textTemplate)
         {
-            Object.Destroy(ActionButton.buttonLabelText);
-            ActionButton.buttonLabelText = Object.Instantiate(textTemplate.buttonLabelText, ActionButton.transform);
+            UnityObject.Destroy(ActionButton.buttonLabelText);
+            ActionButton.buttonLabelText = UnityObject.Instantiate(textTemplate.buttonLabelText, ActionButton.transform);
         }
 
         if (ActionButton.buttonLabelText.GetComponent<TextTranslatorTMP>()) ActionButton.buttonLabelText.GetComponent<TextTranslatorTMP>().Destroy();

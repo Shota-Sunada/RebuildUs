@@ -1,5 +1,3 @@
-using Object = UnityEngine.Object;
-
 namespace RebuildUs.Modules;
 
 internal static class Map
@@ -26,7 +24,7 @@ internal static class Map
             foreach (SpriteRenderer r in _mapIcons.Values)
             {
                 if (r != null && r.gameObject != null)
-                    Object.Destroy(r.gameObject);
+                    UnityObject.Destroy(r.gameObject);
             }
 
             _mapIcons.Clear();
@@ -38,21 +36,21 @@ internal static class Map
             foreach (SpriteRenderer r in _corpseIcons.Values)
             {
                 if (r != null && r.gameObject != null)
-                    Object.Destroy(r.gameObject);
+                    UnityObject.Destroy(r.gameObject);
             }
 
             _corpseIcons.Clear();
             _corpseIcons = null;
         }
 
-        if (_targetHerePoint != null) Object.Destroy(_targetHerePoint.gameObject);
+        if (_targetHerePoint != null) UnityObject.Destroy(_targetHerePoint.gameObject);
 
         if (_impostorHerePoint != null)
         {
             foreach (SpriteRenderer r in _impostorHerePoint.Values)
             {
                 if (r != null && r.gameObject != null)
-                    Object.Destroy(r.gameObject);
+                    UnityObject.Destroy(r.gameObject);
             }
 
             _impostorHerePoint.Clear();
@@ -64,7 +62,7 @@ internal static class Map
             foreach (SpriteRenderer mark in _doorMarks.Values)
             {
                 if (mark != null && mark.gameObject != null)
-                    Object.Destroy(mark.gameObject);
+                    UnityObject.Destroy(mark.gameObject);
             }
 
             _doorMarks.Clear();
@@ -93,10 +91,10 @@ internal static class Map
             if (!p || p.IsGm()) continue;
 
             byte id = p.PlayerId;
-            _mapIcons[id] = Object.Instantiate(__instance.HerePoint, __instance.HerePoint.transform.parent);
+            _mapIcons[id] = UnityObject.Instantiate(__instance.HerePoint, __instance.HerePoint.transform.parent);
             p.SetPlayerMaterialColors(_mapIcons[id]);
 
-            _corpseIcons[id] = Object.Instantiate(__instance.HerePoint, __instance.HerePoint.transform.parent);
+            _corpseIcons[id] = UnityObject.Instantiate(__instance.HerePoint, __instance.HerePoint.transform.parent);
             _corpseIcons[id].sprite = AssetLoader.CorpseIcon;
             _corpseIcons[id].transform.localScale = Vector3.one * 0.20f;
             p.SetPlayerMaterialColors(_corpseIcons[id]);
@@ -165,7 +163,7 @@ internal static class Map
         if (Time.time - _lastBodySearchTime > 0.5f)
         {
             _lastBodySearchTime = Time.time;
-            _cachedBodies = Object.FindObjectsOfType<DeadBody>();
+            _cachedBodies = UnityObject.FindObjectsOfType<DeadBody>();
         }
 
         if (_cachedBodies == null || _corpseIcons == null) return;
@@ -247,7 +245,7 @@ internal static class Map
 
         if (_corpseIcons == null) return;
 
-        foreach (DeadBody b in Object.FindObjectsOfType<DeadBody>())
+        foreach (DeadBody b in UnityObject.FindObjectsOfType<DeadBody>())
         {
             byte id = b.ParentId;
             PlayerControl p = Helpers.PlayerById(id);
@@ -324,7 +322,7 @@ internal static class Map
             if (door == null) continue;
             if (!_doorMarks.TryGetValue(door, out SpriteRenderer mark))
             {
-                mark = Object.Instantiate(__instance.HerePoint, __instance.HerePoint.transform.parent);
+                mark = UnityObject.Instantiate(__instance.HerePoint, __instance.HerePoint.transform.parent);
                 _doorMarks.Add(door, mark);
             }
 
@@ -491,7 +489,7 @@ internal static class Map
         // ターゲットの位置をマップに表示
         if (EvilTracker.Target != null)
         {
-            if (_targetHerePoint == null && __instance.HerePoint && __instance.HerePoint.transform.parent) _targetHerePoint = Object.Instantiate(__instance.HerePoint, __instance.HerePoint.transform.parent);
+            if (_targetHerePoint == null && __instance.HerePoint && __instance.HerePoint.transform.parent) _targetHerePoint = UnityObject.Instantiate(__instance.HerePoint, __instance.HerePoint.transform.parent);
 
             if (_targetHerePoint != null)
             {
@@ -521,7 +519,7 @@ internal static class Map
             {
                 if (__instance.HerePoint && __instance.HerePoint.transform.parent)
                 {
-                    icon = Object.Instantiate(__instance.HerePoint, __instance.HerePoint.transform.parent);
+                    icon = UnityObject.Instantiate(__instance.HerePoint, __instance.HerePoint.transform.parent);
                     _impostorHerePoint[p.PlayerId] = icon;
                 }
             }
@@ -590,7 +588,7 @@ internal static class Map
         //     return false;
         // }
         __instance.specialInputHandler?.disableVirtualCursor = true;
-        _plainDoors = Object.FindObjectsOfType<PlainDoor>();
+        _plainDoors = UnityObject.FindObjectsOfType<PlainDoor>();
         PlayerControl.LocalPlayer.SetPlayerMaterialColors(__instance.HerePoint);
         __instance.GenericShow();
         __instance.gameObject.SetActive(true);

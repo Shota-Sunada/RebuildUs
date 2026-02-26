@@ -1,5 +1,3 @@
-using Object = UnityEngine.Object;
-
 namespace RebuildUs.Roles.Impostor;
 
 [HarmonyPatch]
@@ -100,7 +98,7 @@ internal class EvilTracker : MultiRoleBase<EvilTracker>
                 if (arrow != null && arrow.ArrowObject != null)
                 {
                     arrow.ArrowObject.SetActive(false);
-                    Object.Destroy(arrow.ArrowObject);
+                    UnityObject.Destroy(arrow.ArrowObject);
                 }
             }
 
@@ -130,8 +128,8 @@ internal class EvilTracker : MultiRoleBase<EvilTracker>
                     {
                         RoomTracker roomTracker = FastDestroyableSingleton<HudManager>.Instance?.roomTracker;
                         if (roomTracker == null) return;
-                        GameObject gameObject = Object.Instantiate(roomTracker.gameObject);
-                        Object.DestroyImmediate(gameObject.GetComponent<RoomTracker>());
+                        GameObject gameObject = UnityObject.Instantiate(roomTracker.gameObject);
+                        UnityObject.DestroyImmediate(gameObject.GetComponent<RoomTracker>());
                         gameObject.transform.SetParent(FastDestroyableSingleton<HudManager>.Instance.transform);
                         gameObject.transform.localPosition = new(0, -2.0f + (0.25f * count), gameObject.transform.localPosition.z);
                         gameObject.transform.localScale = Vector3.one * 1.0f;
@@ -168,8 +166,8 @@ internal class EvilTracker : MultiRoleBase<EvilTracker>
                 {
                     RoomTracker roomTracker = FastDestroyableSingleton<HudManager>.Instance?.roomTracker;
                     if (roomTracker == null) return;
-                    GameObject gameObject = Object.Instantiate(roomTracker.gameObject);
-                    Object.DestroyImmediate(gameObject.GetComponent<RoomTracker>());
+                    GameObject gameObject = UnityObject.Instantiate(roomTracker.gameObject);
+                    UnityObject.DestroyImmediate(gameObject.GetComponent<RoomTracker>());
                     gameObject.transform.SetParent(FastDestroyableSingleton<HudManager>.Instance.transform);
                     gameObject.transform.localPosition = new(0, -2.0f, gameObject.transform.localPosition.z);
                     gameObject.transform.localScale = Vector3.one * 1.0f;

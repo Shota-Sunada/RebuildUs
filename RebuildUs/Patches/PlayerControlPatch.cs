@@ -1,7 +1,5 @@
-using AmongUs.Data;
 using Assets.CoreScripts;
 using BepInEx.Unity.IL2CPP.Utils.Collections;
-using InnerNet;
 
 namespace RebuildUs.Patches;
 

@@ -1,13 +1,11 @@
-using Object = UnityEngine.Object;
-
 namespace RebuildUs.Utilities;
 
 internal static class MapUtilities
 {
-    private static readonly Dictionary<SystemTypes, Object> PrivateSystems = [];
+    private static readonly Dictionary<SystemTypes, UnityObject> PrivateSystems = [];
     internal static ShipStatus CachedShipStatus { get; private set; } = ShipStatus.Instance;
 
-    internal static Dictionary<SystemTypes, Object> Systems
+    internal static Dictionary<SystemTypes, UnityObject> Systems
     {
         get
         {
@@ -32,7 +30,7 @@ internal static class MapUtilities
         foreach (SystemTypes systemTypes in SystemTypeHelpers.AllTypes)
         {
             if (!systems.ContainsKey(systemTypes)) continue;
-            PrivateSystems[systemTypes] = systems[systemTypes].TryCast<Object>();
+            PrivateSystems[systemTypes] = systems[systemTypes].TryCast<UnityObject>();
         }
     }
 

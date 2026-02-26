@@ -1,5 +1,3 @@
-using Object = UnityEngine.Object;
-
 namespace RebuildUs;
 
 internal static class MapSettings
@@ -141,7 +139,7 @@ internal static class MapSettings
         // Admin
         if (_restrictAdminText)
         {
-            _adminTimerText = Object.Instantiate(FastDestroyableSingleton<HudManager>.Instance.TaskPanel.taskText, FastDestroyableSingleton<HudManager>.Instance.transform);
+            _adminTimerText = UnityObject.Instantiate(FastDestroyableSingleton<HudManager>.Instance.TaskPanel.taskText, FastDestroyableSingleton<HudManager>.Instance.transform);
             float y = -4.0f;
             if (_restrictCamerasText) y += 0.2f;
 
@@ -155,7 +153,7 @@ internal static class MapSettings
         // Cameras
         if (_restrictCamerasText)
         {
-            _camerasTimerText = Object.Instantiate(FastDestroyableSingleton<HudManager>.Instance.TaskPanel.taskText, FastDestroyableSingleton<HudManager>.Instance.transform);
+            _camerasTimerText = UnityObject.Instantiate(FastDestroyableSingleton<HudManager>.Instance.TaskPanel.taskText, FastDestroyableSingleton<HudManager>.Instance.transform);
             float y = -4.0f;
             if (_restrictVitalsText) y += 0.2f;
 
@@ -167,7 +165,7 @@ internal static class MapSettings
         // Vitals
         if (_restrictVitalsText)
         {
-            _vitalsTimerText = Object.Instantiate(FastDestroyableSingleton<HudManager>.Instance.TaskPanel.taskText, FastDestroyableSingleton<HudManager>.Instance.transform);
+            _vitalsTimerText = UnityObject.Instantiate(FastDestroyableSingleton<HudManager>.Instance.TaskPanel.taskText, FastDestroyableSingleton<HudManager>.Instance.transform);
             _vitalsTimerText.transform.localPosition = new(-3.5f, -4.0f, 0);
             _vitalsTimerText.text = RestrictVitalsTime > 0 ? string.Format(Tr.Get(TrKey.VitalsText), RestrictVitalsTime.ToString("0.00")) : Tr.Get(TrKey.VitalsRanOut);
             _vitalsTimerText.gameObject.SetActive(true);
@@ -176,13 +174,13 @@ internal static class MapSettings
 
     private static void ClearTimerText()
     {
-        if (_adminTimerText != null) Object.Destroy(_adminTimerText);
+        if (_adminTimerText != null) UnityObject.Destroy(_adminTimerText);
 
         _adminTimerText = null;
-        if (_camerasTimerText != null) Object.Destroy(_camerasTimerText);
+        if (_camerasTimerText != null) UnityObject.Destroy(_camerasTimerText);
 
         _camerasTimerText = null;
-        if (_vitalsTimerText != null) Object.Destroy(_vitalsTimerText);
+        if (_vitalsTimerText != null) UnityObject.Destroy(_vitalsTimerText);
 
         _vitalsTimerText = null;
     }

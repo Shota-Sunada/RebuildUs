@@ -1,5 +1,3 @@
-using Object = UnityEngine.Object;
-
 namespace RebuildUs.Roles.Crewmate;
 
 [HarmonyPatch]
@@ -52,7 +50,7 @@ internal class Seer : MultiRoleBase<Seer>
                             rend.color = tmp;
                         }
 
-                        if (p == 1f && rend != null && rend.gameObject != null) Object.Destroy(rend.gameObject);
+                        if (p == 1f && rend != null && rend.gameObject != null) UnityObject.Destroy(rend.gameObject);
                     })));
                 }
             }

@@ -1,5 +1,3 @@
-using Object = UnityEngine.Object;
-
 namespace RebuildUs.Roles.Impostor;
 
 [HarmonyPatch]
@@ -47,7 +45,7 @@ internal class BountyHunter : SingleRoleBase<BountyHunter>
         if (!PlayerControl.LocalPlayer.IsRole(RoleType.BountyHunter)) return;
         _bountyUpdateTimer = 0f;
         if (FastDestroyableSingleton<HudManager>.Instance == null) return;
-        CooldownText = Object.Instantiate(FastDestroyableSingleton<HudManager>.Instance.KillButton.cooldownTimerText, FastDestroyableSingleton<HudManager>.Instance.transform);
+        CooldownText = UnityObject.Instantiate(FastDestroyableSingleton<HudManager>.Instance.KillButton.cooldownTimerText, FastDestroyableSingleton<HudManager>.Instance.transform);
         CooldownText.alignment = TextAlignmentOptions.Center;
         Vector3 bottomLeft = AspectPosition.ComputePosition(AspectPosition.EdgeAlignments.LeftBottom, new(0.9f, 0.7f, -10f));
         CooldownText.transform.localPosition = bottomLeft + new Vector3(0f, -0.35f, -0.1f);
@@ -63,9 +61,9 @@ internal class BountyHunter : SingleRoleBase<BountyHunter>
         if (Local == null) return;
         if (Player.IsDead())
         {
-            if (_arrow != null && _arrow.ArrowObject != null) Object.Destroy(_arrow.ArrowObject);
+            if (_arrow != null && _arrow.ArrowObject != null) UnityObject.Destroy(_arrow.ArrowObject);
             _arrow = null;
-            if (CooldownText != null && CooldownText.gameObject != null) Object.Destroy(CooldownText.gameObject);
+            if (CooldownText != null && CooldownText.gameObject != null) UnityObject.Destroy(CooldownText.gameObject);
             CooldownText = null;
             Bounty = null;
             _lastSecond = -1;
@@ -182,7 +180,7 @@ internal class BountyHunter : SingleRoleBase<BountyHunter>
 
         Bounty = null;
         _arrow = null;
-        if (CooldownText != null && CooldownText.gameObject != null) Object.Destroy(CooldownText.gameObject);
+        if (CooldownText != null && CooldownText.gameObject != null) UnityObject.Destroy(CooldownText.gameObject);
         CooldownText = null;
         foreach (PoolablePlayer p in MapSettings.PlayerIcons.Values)
         {

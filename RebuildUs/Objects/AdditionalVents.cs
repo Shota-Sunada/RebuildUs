@@ -1,6 +1,3 @@
-using InnerNet;
-using Object = UnityEngine.Object;
-
 namespace RebuildUs.Objects;
 
 internal sealed class AdditionalVents
@@ -12,8 +9,8 @@ internal sealed class AdditionalVents
     private AdditionalVents(Vector3 p)
     {
         // Create the vent
-        Vent referenceVent = Object.FindObjectOfType<Vent>();
-        _vent = Object.Instantiate(referenceVent);
+        Vent referenceVent = UnityObject.FindObjectOfType<Vent>();
+        _vent = UnityObject.Instantiate(referenceVent);
         _vent.transform.position = p;
         _vent.Left = null;
         _vent.Right = null;

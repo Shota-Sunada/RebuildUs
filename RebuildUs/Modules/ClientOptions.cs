@@ -1,5 +1,3 @@
-using Object = UnityEngine.Object;
-
 namespace RebuildUs.Modules;
 
 internal static class ClientOptions
@@ -33,9 +31,9 @@ internal static class ClientOptions
         tmp.fontSize = 4;
         tmp.alignment = TextAlignmentOptions.Center;
         tmp.transform.localPosition += Vector3.left * 0.2f;
-        _titleText = Object.Instantiate(tmp);
+        _titleText = UnityObject.Instantiate(tmp);
         _titleText.gameObject.SetActive(false);
-        Object.DontDestroyOnLoad(_titleText);
+        UnityObject.DontDestroyOnLoad(_titleText);
     }
 
     internal static void Start(OptionsMenuBehaviour __instance)
@@ -46,8 +44,8 @@ internal static class ClientOptions
 
         if (!_buttonPrefab)
         {
-            _buttonPrefab = Object.Instantiate(__instance.CensorChatButton);
-            Object.DontDestroyOnLoad(_buttonPrefab);
+            _buttonPrefab = UnityObject.Instantiate(__instance.CensorChatButton);
+            UnityObject.DontDestroyOnLoad(_buttonPrefab);
             _buttonPrefab.name = "CensorChatPrefab";
             _buttonPrefab.gameObject.SetActive(false);
         }
@@ -58,18 +56,18 @@ internal static class ClientOptions
 
     private static void CreateCustom(Component prefab)
     {
-        _popUp = Object.Instantiate(prefab.gameObject);
-        Object.DontDestroyOnLoad(_popUp);
+        _popUp = UnityObject.Instantiate(prefab.gameObject);
+        UnityObject.DontDestroyOnLoad(_popUp);
         Transform transform = _popUp.transform;
         Vector3 pos = transform.localPosition;
         pos.z = -810f;
         transform.localPosition = pos;
 
-        Object.Destroy(_popUp.GetComponent<OptionsMenuBehaviour>());
+        UnityObject.Destroy(_popUp.GetComponent<OptionsMenuBehaviour>());
         for (int i = transform.childCount - 1; i >= 0; i--)
         {
             GameObject obj = transform.GetChild(i).gameObject;
-            if (obj.name is not "Background" and not "CloseButton") Object.Destroy(obj);
+            if (obj.name is not "Background" and not "CloseButton") UnityObject.Destroy(obj);
         }
 
         _popUp.SetActive(false);
@@ -77,7 +75,7 @@ internal static class ClientOptions
 
     private static void InitializeMoreButton(OptionsMenuBehaviour __instance)
     {
-        ToggleButtonBehaviour moreOptions = Object.Instantiate(_buttonPrefab, __instance.CensorChatButton.transform.parent);
+        ToggleButtonBehaviour moreOptions = UnityObject.Instantiate(_buttonPrefab, __instance.CensorChatButton.transform.parent);
         moreOptions.transform.localPosition = __instance.CensorChatButton.transform.localPosition + (Vector3.down * 1.0f);
         moreOptions.gameObject.SetActive(true);
         moreOptions.Text.text = Tr.Get(TrKey.ModOptionsText);
@@ -97,7 +95,7 @@ internal static class ClientOptions
             else
             {
                 _popUp.transform.SetParent(null);
-                Object.DontDestroyOnLoad(_popUp);
+                UnityObject.DontDestroyOnLoad(_popUp);
             }
 
             CheckSetTitle();
@@ -126,7 +124,7 @@ internal static class ClientOptions
     {
         if (!_popUp || _popUp.GetComponentInChildren<TextMeshPro>() || !_titleText) return;
 
-        TextMeshPro title = Object.Instantiate(_titleText, _popUp.transform);
+        TextMeshPro title = UnityObject.Instantiate(_titleText, _popUp.transform);
         title.GetComponent<RectTransform>().localPosition = Vector3.up * 2.3f;
         title.gameObject.SetActive(true);
         title.text = Tr.Get(TrKey.MoreOptionsText);
@@ -140,7 +138,7 @@ internal static class ClientOptions
         foreach (ToggleButtonBehaviour button in _modButtons)
         {
             if (button != null)
-                Object.Destroy(button.gameObject);
+                UnityObject.Destroy(button.gameObject);
         }
 
         _modButtons = [];
@@ -150,7 +148,7 @@ internal static class ClientOptions
         {
             SelectionBehaviour info = AllOptions[i + ((_page - 1) * 10)];
 
-            ToggleButtonBehaviour button = Object.Instantiate(_buttonPrefab, _popUp.transform);
+            ToggleButtonBehaviour button = UnityObject.Instantiate(_buttonPrefab, _popUp.transform);
             Vector3 pos = new(i % 2 == 0 ? -1.17f : 1.17f, 1.3f - ((i / 2) * 0.8f), -.5f);
 
             Transform transform = button.transform;
@@ -161,7 +159,7 @@ internal static class ClientOptions
 
             button.Text.text = Tr.GetDynamic(info.Title);
             button.Text.fontSizeMin = button.Text.fontSizeMax = 2.2f;
-            button.Text.font = Object.Instantiate(_titleText.font);
+            button.Text.font = UnityObject.Instantiate(_titleText.font);
             button.Text.GetComponent<RectTransform>().sizeDelta = new(2, 2);
 
             button.name = info.Title.Replace(" ", "") + "Toggle";
@@ -194,13 +192,13 @@ internal static class ClientOptions
         // ページ移動ボタンを追加
         if (_page * 10 < AllOptions.Length)
         {
-            ToggleButtonBehaviour button = Object.Instantiate(_buttonPrefab, _popUp.transform);
+            ToggleButtonBehaviour button = UnityObject.Instantiate(_buttonPrefab, _popUp.transform);
             Vector3 pos = new(1.2f, -2.5f, -0.5f);
             Transform transform = button.transform;
             transform.localPosition = pos;
             button.Text.text = Tr.Get(TrKey.Next);
             button.Text.fontSizeMin = button.Text.fontSizeMax = 2.2f;
-            button.Text.font = Object.Instantiate(_titleText.font);
+            button.Text.font = UnityObject.Instantiate(_titleText.font);
             button.Text.GetComponent<RectTransform>().sizeDelta = new(2, 2);
             button.gameObject.SetActive(true);
             PassiveButton passiveButton = button.GetComponent<PassiveButton>();
@@ -219,13 +217,13 @@ internal static class ClientOptions
 
         if (_page > 1)
         {
-            ToggleButtonBehaviour button = Object.Instantiate(_buttonPrefab, _popUp.transform);
+            ToggleButtonBehaviour button = UnityObject.Instantiate(_buttonPrefab, _popUp.transform);
             Vector3 pos = new(-1.2f, -2.5f, -0.5f);
             Transform transform = button.transform;
             transform.localPosition = pos;
             button.Text.text = Tr.Get(TrKey.Previous);
             button.Text.fontSizeMin = button.Text.fontSizeMax = 2.2f;
-            button.Text.font = Object.Instantiate(_titleText.font);
+            button.Text.font = UnityObject.Instantiate(_titleText.font);
             button.Text.GetComponent<RectTransform>().sizeDelta = new(2, 2);
             button.gameObject.SetActive(true);
             PassiveButton passiveButton = button.GetComponent<PassiveButton>();

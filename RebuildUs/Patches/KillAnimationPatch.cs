@@ -1,6 +1,3 @@
-using System.Collections;
-using Object = UnityEngine.Object;
-
 namespace RebuildUs.Patches;
 
 [HarmonyPatch]
@@ -34,7 +31,7 @@ internal static class KillAnimationPatch
             source.isKilling = true;
         }
 
-        DeadBody deadBody = Object.Instantiate(GameManager.Instance.GetDeadBody(source.Data.Role));
+        DeadBody deadBody = UnityObject.Instantiate(GameManager.Instance.GetDeadBody(source.Data.Role));
         deadBody.enabled = false;
         deadBody.ParentId = target.PlayerId;
         foreach (SpriteRenderer b in deadBody.bodyRenderers) target.SetPlayerMaterialColors(b);

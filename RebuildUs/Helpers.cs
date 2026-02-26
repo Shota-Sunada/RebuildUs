@@ -1,8 +1,3 @@
-using System.Reflection;
-using System.Text.RegularExpressions;
-using InnerNet;
-using Object = UnityEngine.Object;
-
 namespace RebuildUs;
 
 internal enum MurderAttemptResult
@@ -93,16 +88,16 @@ internal static class Helpers
         get => GameStartManager.InstanceExists && GameStartManager.Instance.startState is GameStartManager.StartingStates.Countdown;
     }
 
-    internal static void DestroyList<T>(Il2CppSystem.Collections.Generic.List<T> items) where T : Object
+    internal static void DestroyList<T>(Il2CppSystem.Collections.Generic.List<T> items) where T : UnityObject
     {
         if (items == null) return;
-        foreach (T item in items) Object.Destroy(item);
+        foreach (T item in items) UnityObject.Destroy(item);
     }
 
-    internal static void DestroyList<T>(IEnumerable<T> items) where T : Object
+    internal static void DestroyList<T>(IEnumerable<T> items) where T : UnityObject
     {
         if (items == null) return;
-        foreach (T item in items) Object.Destroy(item);
+        foreach (T item in items) UnityObject.Destroy(item);
     }
 
     internal static void GenerateAndAssignTasks(this PlayerControl player, int numCommon, int numShort, int numLong)
@@ -234,7 +229,7 @@ internal static class Helpers
         {
             t.OnRemove();
             player.myTasks.Remove(t);
-            Object.Destroy(t.gameObject);
+            UnityObject.Destroy(t.gameObject);
         }
 
         foreach (RoleInfo roleInfo in infos)
@@ -337,7 +332,7 @@ internal static class Helpers
         foreach (PlayerTask t in player.myTasks)
         {
             t.OnRemove();
-            Object.Destroy(t.gameObject);
+            UnityObject.Destroy(t.gameObject);
         }
 
         player.myTasks.Clear();
@@ -471,7 +466,7 @@ internal static class Helpers
     {
         SabotageSystemType sabSystem = MapUtilities.Systems[SystemTypes.Sabotage].CastFast<SabotageSystemType>();
         IActivatable doors = null;
-        if (MapUtilities.Systems.TryGetValue(SystemTypes.Doors, out Object systemType)) doors = systemType.CastFast<IActivatable>();
+        if (MapUtilities.Systems.TryGetValue(SystemTypes.Doors, out UnityObject systemType)) doors = systemType.CastFast<IActivatable>();
 
         return GameManager.Instance.SabotagesEnabled() && sabSystem.Timer <= 0f && !sabSystem.AnyActive && !(doors != null && doors.IsActive);
     }
@@ -745,7 +740,7 @@ internal static class Helpers
 
         if (label == null)
         {
-            label = Object.Instantiate(source, source.transform.parent);
+            label = UnityObject.Instantiate(source, source.transform.parent);
             if (label == null) return null;
             label.transform.localPosition += Vector3.up * yOffset;
             label.fontSize *= fontScale;

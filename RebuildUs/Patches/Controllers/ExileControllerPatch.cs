@@ -1,5 +1,4 @@
 using PowerTools;
-using Object = UnityEngine.Object;
 
 namespace RebuildUs.Patches;
 
@@ -236,8 +235,8 @@ internal static class ExileControllerPatch
         }
 
         // Remove DeadBodies
-        Il2CppArrayBase<DeadBody> array = Object.FindObjectsOfType<DeadBody>();
-        foreach (DeadBody t in array) Object.Destroy(t.gameObject);
+        Il2CppArrayBase<DeadBody> array = UnityObject.FindObjectsOfType<DeadBody>();
+        foreach (DeadBody t in array) UnityObject.Destroy(t.gameObject);
 
         // ベントバグ対策
         VentilationSystem vs = FastDestroyableSingleton<ShipStatus>.Instance.Systems[SystemTypes.Ventilation].TryCast<VentilationSystem>();

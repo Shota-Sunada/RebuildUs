@@ -1,6 +1,4 @@
-using AmongUs.Data;
 using RebuildUs.Modules.Cosmetics.Extensions;
-using Object = UnityEngine.Object;
 
 namespace RebuildUs.Modules.Cosmetics.Patches;
 
@@ -13,7 +11,7 @@ internal static class HatsTabPatches
     [HarmonyPrefix]
     private static bool OnEnablePrefix(HatsTab __instance)
     {
-        for (int i = 0; i < __instance.scroller.Inner.childCount; i++) Object.Destroy(__instance.scroller.Inner.GetChild(i).gameObject);
+        for (int i = 0; i < __instance.scroller.Inner.childCount; i++) UnityObject.Destroy(__instance.scroller.Inner.GetChild(i).gameObject);
 
         __instance.ColorChips = new();
         Il2CppReferenceArray<HatData> unlockedHats = DestroyableSingleton<HatManager>.Instance.GetUnlockedHats();
@@ -64,7 +62,7 @@ internal static class HatsTabPatches
         float offset = yStart;
         if (_textTemplate != null)
         {
-            TextMeshPro title = Object.Instantiate(_textTemplate, hatsTab.scroller.Inner);
+            TextMeshPro title = UnityObject.Instantiate(_textTemplate, hatsTab.scroller.Inner);
             title.transform.localPosition = new(2.25f, yStart, -1f);
             title.transform.localScale = Vector3.one * 1.5f;
             title.fontSize *= 0.5f;
@@ -78,7 +76,7 @@ internal static class HatsTabPatches
             (HatData hat, HatExtension ext) = hats[i];
             float xPos = hatsTab.XRange.Lerp((i % hatsTab.NumPerRow) / (hatsTab.NumPerRow - 1f));
             float yPos = offset - ((i / hatsTab.NumPerRow) * (isDefaultPackage ? 1f : 1.5f) * hatsTab.YOffset);
-            ColorChip colorChip = Object.Instantiate(hatsTab.ColorTabPrefab, hatsTab.scroller.Inner);
+            ColorChip colorChip = UnityObject.Instantiate(hatsTab.ColorTabPrefab, hatsTab.scroller.Inner);
             if (ActiveInputManager.currentControlType == ActiveInputManager.InputType.Keyboard)
             {
                 colorChip.Button.OnMouseOver.AddListener((Action)(() => hatsTab.SelectHat(hat)));
@@ -106,7 +104,7 @@ internal static class HatsTabPatches
 
                 if (_textTemplate != null)
                 {
-                    TextMeshPro description = Object.Instantiate(_textTemplate, colorChip.transform);
+                    TextMeshPro description = UnityObject.Instantiate(_textTemplate, colorChip.transform);
                     description.transform.localPosition = new(0f, -0.65f, -1f);
                     description.alignment = TextAlignmentOptions.Center;
                     description.transform.localScale = Vector3.one * 0.65f;

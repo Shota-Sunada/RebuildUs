@@ -1,4 +1,3 @@
-using System.Collections;
 using BepInEx.Unity.IL2CPP.Utils.Collections;
 using RebuildUs.Modules.Cosmetics;
 

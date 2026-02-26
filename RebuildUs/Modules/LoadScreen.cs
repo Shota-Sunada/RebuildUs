@@ -1,5 +1,4 @@
 using Il2CppInterop.Runtime.Attributes;
-using Object = UnityEngine.Object;
 
 namespace RebuildUs.Modules;
 
@@ -29,7 +28,7 @@ internal static class LoadScreen
         }
 
         _uiContainer = new("RebuildUsLoadScreen");
-        Object.DontDestroyOnLoad(_uiContainer);
+        UnityObject.DontDestroyOnLoad(_uiContainer);
 
         // Background
         GameObject bg = new("Background");
@@ -72,7 +71,7 @@ internal static class LoadScreen
     internal static void Destroy()
     {
         if (_uiContainer == null) return;
-        Object.Destroy(_uiContainer);
+        UnityObject.Destroy(_uiContainer);
         _uiContainer = null;
     }
 }

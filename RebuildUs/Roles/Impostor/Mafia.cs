@@ -1,5 +1,3 @@
-using Object = UnityEngine.Object;
-
 namespace RebuildUs.Roles.Impostor;
 
 internal static class Mafia
@@ -156,7 +154,7 @@ internal static class Mafia
         {
             _janitorCleanButton = new(() =>
                                       {
-                                          Il2CppArrayBase<DeadBody> bodies = Object.FindObjectsOfType<DeadBody>();
+                                          Il2CppArrayBase<DeadBody> bodies = UnityObject.FindObjectsOfType<DeadBody>();
                                           PlayerControl local = PlayerControl.LocalPlayer;
                                           Vector2 truePosition = local.GetTruePosition();
                                           float maxDist = local.MaxReportDistance;

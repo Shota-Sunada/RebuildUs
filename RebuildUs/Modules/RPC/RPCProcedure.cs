@@ -1,8 +1,6 @@
 using Assets.CoreScripts;
-using InnerNet;
 using PowerTools;
 using Action = Il2CppSystem.Action;
-using Object = UnityEngine.Object;
 
 namespace RebuildUs.Modules.RPC;
 
@@ -269,11 +267,11 @@ internal static partial class RPCProcedure
 
     internal static void CleanBody(byte playerId)
     {
-        DeadBody[] array = Object.FindObjectsOfType<DeadBody>();
+        DeadBody[] array = UnityObject.FindObjectsOfType<DeadBody>();
         foreach (var t in array)
         {
             NetworkedPlayerInfo info = GameData.Instance.GetPlayerById(t.ParentId);
-            if (info != null && info.PlayerId == playerId) Object.Destroy(t.gameObject);
+            if (info != null && info.PlayerId == playerId) UnityObject.Destroy(t.gameObject);
         }
     }
 
@@ -621,7 +619,7 @@ internal static partial class RPCProcedure
     {
         SecurityGuard sg = SecurityGuard.Instance;
 
-        SurvCamera referenceCamera = Object.FindObjectOfType<SurvCamera>();
+        SurvCamera referenceCamera = UnityObject.FindObjectOfType<SurvCamera>();
         if (referenceCamera == null) return; // Mira HQ
 
         sg.RemainingScrews -= SecurityGuard.CamPrice;
@@ -631,7 +629,7 @@ internal static partial class RPCProcedure
 
         SystemTypes roomType = (SystemTypes)roomId;
 
-        SurvCamera camera = Object.Instantiate(referenceCamera);
+        SurvCamera camera = UnityObject.Instantiate(referenceCamera);
         camera.transform.position = new(position.x, position.y, referenceCamera.transform.position.z - 1f);
         camera.CamName = $"Security Camera {sg.PlacedCameras}";
         camera.Offset = new(0f, 0f, camera.Offset.z);

@@ -1,5 +1,3 @@
-using Object = UnityEngine.Object;
-
 namespace RebuildUs.Roles.Impostor;
 
 [HarmonyPatch]
@@ -43,7 +41,7 @@ internal class Cleaner : MultiRoleBase<Cleaner>
                                  {
                                      Vector2 truePosition = PlayerControl.LocalPlayer.GetTruePosition();
                                      float maxDist = PlayerControl.LocalPlayer.MaxReportDistance;
-                                     Il2CppArrayBase<DeadBody> bodies = Object.FindObjectsOfType<DeadBody>();
+                                     Il2CppArrayBase<DeadBody> bodies = UnityObject.FindObjectsOfType<DeadBody>();
 
                                      foreach (var body in bodies)
                                      {

@@ -1,7 +1,5 @@
 // TODO: 設定画面開いたときに説明文章が更新されない問題があります
 
-using Object = UnityEngine.Object;
-
 namespace RebuildUs.Modules.CustomOptions;
 
 internal enum OptionPage
@@ -234,7 +232,7 @@ internal partial class CustomOption
     private static GameObject CreateSettingButton(GameSettingMenu __instance, string name, string buttonText, OptionPage id)
     {
         GameObject template = __instance.GameSettingsButton.gameObject;
-        GameObject buttonObj = Object.Instantiate(template, template.transform.parent);
+        GameObject buttonObj = UnityObject.Instantiate(template, template.transform.parent);
         buttonObj.transform.localPosition += Vector3.down * 0.5f * ((int)id - 2); // 場所調整
         buttonObj.name = name;
         __instance.StartCoroutine(Effects.Lerp(2f, new Action<float>(p => { buttonObj.transform.FindChild("FontPlacer").GetComponentInChildren<TextMeshPro>().text = buttonText; })));
@@ -254,7 +252,7 @@ internal partial class CustomOption
     private static GameObject CreateSettingTab(GameSettingMenu __instance, string name, CustomOptionType optionType)
     {
         GameObject template = __instance.GameSettingsTab.gameObject;
-        GameObject tabObj = Object.Instantiate(template, template.transform.parent);
+        GameObject tabObj = UnityObject.Instantiate(template, template.transform.parent);
         tabObj.name = name;
 
         GameOptionsMenu gameOptionsMenu = tabObj.GetComponent<GameOptionsMenu>();
@@ -277,7 +275,7 @@ internal partial class CustomOption
         {
             if (option.IsHeader)
             {
-                CategoryHeaderMasked categoryHeaderMasked = Object.Instantiate(menu.categoryHeaderOrigin, Vector3.zero, Quaternion.identity, menu.settingsContainer);
+                CategoryHeaderMasked categoryHeaderMasked = UnityObject.Instantiate(menu.categoryHeaderOrigin, Vector3.zero, Quaternion.identity, menu.settingsContainer);
                 categoryHeaderMasked.SetHeader(StringNames.ImpostorsCategory, 20);
                 categoryHeaderMasked.Title.text = Helpers.Cs(option.Color, option.HeaderKey != TrKey.None ? Tr.Get(option.HeaderKey) : Tr.Get(option.NameKey));
                 categoryHeaderMasked.Title.outlineColor = Color.white;
@@ -290,7 +288,7 @@ internal partial class CustomOption
                 continue; // Hides options, for which the parent is disabled!
             else if (option.Parent != null && option.Parent.GetSelectionIndex() != 0 && option.HideIfParentEnabled) continue;
 
-            StringOption ob = Object.Instantiate(menu.stringOptionOrigin, Vector3.zero, Quaternion.identity, menu.settingsContainer);
+            StringOption ob = UnityObject.Instantiate(menu.stringOptionOrigin, Vector3.zero, Quaternion.identity, menu.settingsContainer);
             ob.transform.localPosition = new(0.952f, num, -2f);
             ob.SetClickMask(menu.ButtonClickMask);
 

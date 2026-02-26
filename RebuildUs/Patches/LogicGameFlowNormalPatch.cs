@@ -21,6 +21,7 @@ internal static class LogicGameFlowNormalPatch
         if (EndGameMain.CheckAndEndGameForJackalWin(statistics)) return false;
         if (EndGameMain.CheckAndEndGameForImpostorWin(statistics)) return false;
         if (EndGameMain.CheckAndEndGameForCrewmateWin(statistics)) return false;
+        if (EndGameMain.CheckAndEndGameForTaskWin()) return false;
         return false;
     }
 

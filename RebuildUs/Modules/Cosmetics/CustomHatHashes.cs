@@ -1,5 +1,3 @@
-using System.Text.Json.Serialization;
-
 namespace RebuildUs.Modules.Cosmetics;
 
 internal class CustomHatHashes

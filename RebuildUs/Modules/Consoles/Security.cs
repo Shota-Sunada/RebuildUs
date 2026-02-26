@@ -1,5 +1,3 @@
-using Object = UnityEngine.Object;
-
 namespace RebuildUs.Modules.Consoles;
 
 internal static class SecurityCamera
@@ -18,7 +16,7 @@ internal static class SecurityCamera
         _cameraTimer = 0f;
         if (_timeRemaining != null)
         {
-            Object.Destroy(_timeRemaining.gameObject);
+            UnityObject.Destroy(_timeRemaining.gameObject);
             _timeRemaining = null;
         }
 
@@ -62,7 +60,7 @@ internal static class SecurityCamera
             for (int i = 4; i < ship.AllCameras.Length; i++)
             {
                 SurvCamera surv = ship.AllCameras[i];
-                Camera camera = Object.Instantiate(__instance.CameraPrefab, __instance.transform, true);
+                Camera camera = UnityObject.Instantiate(__instance.CameraPrefab, __instance.transform, true);
                 camera.transform.position = new(surv.transform.position.x, surv.transform.position.y, 8f);
                 camera.orthographicSize = 2.35f;
                 RenderTexture temporary = RenderTexture.GetTemporary(256, 256, 16, (RenderTextureFormat)0);
@@ -81,7 +79,7 @@ internal static class SecurityCamera
         if (MapSettings.RestrictDevices <= 0 || !MapSettings.RestrictCameras) return true;
         if (_timeRemaining == null)
         {
-            _timeRemaining = Object.Instantiate(FastDestroyableSingleton<HudManager>.Instance.TaskPanel.taskText, __instance.transform);
+            _timeRemaining = UnityObject.Instantiate(FastDestroyableSingleton<HudManager>.Instance.TaskPanel.taskText, __instance.transform);
             _timeRemaining.alignment = TextAlignmentOptions.BottomRight;
             _timeRemaining.transform.position = Vector3.zero;
             _timeRemaining.transform.localPosition = new(0.95f, 4.45f);
@@ -118,7 +116,7 @@ internal static class SecurityCamera
         {
             if (_timeRemaining == null)
             {
-                _timeRemaining = Object.Instantiate(FastDestroyableSingleton<HudManager>.Instance.TaskPanel.taskText, __instance.transform);
+                _timeRemaining = UnityObject.Instantiate(FastDestroyableSingleton<HudManager>.Instance.TaskPanel.taskText, __instance.transform);
                 _timeRemaining.alignment = TextAlignmentOptions.Center;
                 _timeRemaining.transform.position = Vector3.zero;
                 _timeRemaining.transform.localPosition = new(0.0f, -1.7f);
@@ -199,7 +197,7 @@ internal static class SecurityCamera
         if (MapSettings.RestrictDevices <= 0) return true;
         if (_timeRemaining == null)
         {
-            _timeRemaining = Object.Instantiate(FastDestroyableSingleton<HudManager>.Instance.TaskPanel.taskText, __instance.transform);
+            _timeRemaining = UnityObject.Instantiate(FastDestroyableSingleton<HudManager>.Instance.TaskPanel.taskText, __instance.transform);
             _timeRemaining.alignment = TextAlignmentOptions.BottomRight;
             _timeRemaining.transform.position = Vector3.zero;
             _timeRemaining.transform.localPosition = new(1.0f, 4.25f);

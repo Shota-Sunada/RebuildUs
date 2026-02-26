@@ -1,5 +1,3 @@
-using Object = UnityEngine.Object;
-
 namespace RebuildUs.Modules.CustomOptions;
 
 internal enum PanePage
@@ -110,7 +108,7 @@ internal partial class CustomOption
                 if (i % 2 != 0) singles++;
                 headers++; // for header
 
-                CategoryHeaderMasked categoryHeaderMasked = Object.Instantiate(__instance.categoryHeaderOrigin, __instance.settingsContainer, true);
+                CategoryHeaderMasked categoryHeaderMasked = UnityObject.Instantiate(__instance.categoryHeaderOrigin, __instance.settingsContainer, true);
                 categoryHeaderMasked.SetHeader(StringNames.ImpostorsCategory, 61);
                 categoryHeaderMasked.Title.text = Helpers.Cs(option.Color, option.HeaderKey != TrKey.None ? Tr.Get(option.HeaderKey) : Tr.Get(option.NameKey));
                 categoryHeaderMasked.Title.outlineColor = Color.white;
@@ -129,7 +127,7 @@ internal partial class CustomOption
 
             if (option == CustomOptionHolder.CrewmateRolesCountMax || option == CustomOptionHolder.NeutralRolesCountMax || option == CustomOptionHolder.ImpostorRolesCountMax || option == CustomOptionHolder.ModifiersCountMax) continue;
 
-            ViewSettingsInfoPanel viewSettingsInfoPanel = Object.Instantiate(__instance.infoPanelOrigin, __instance.settingsContainer, true);
+            ViewSettingsInfoPanel viewSettingsInfoPanel = UnityObject.Instantiate(__instance.infoPanelOrigin, __instance.settingsContainer, true);
             viewSettingsInfoPanel.transform.localScale = Vector3.one;
             float num2;
             if (i % 2 == 0)
@@ -197,7 +195,7 @@ internal partial class CustomOption
 
                 if (i % 2 != 0) singles++;
                 headers++; // for header
-                CategoryHeaderMasked categoryHeaderMasked = Object.Instantiate(__instance.categoryHeaderOrigin, __instance.settingsContainer, true);
+                CategoryHeaderMasked categoryHeaderMasked = UnityObject.Instantiate(__instance.categoryHeaderOrigin, __instance.settingsContainer, true);
                 categoryHeaderMasked.SetHeader(StringNames.ImpostorsCategory, 61);
                 categoryHeaderMasked.Title.text = currentType switch
                 {
@@ -216,7 +214,7 @@ internal partial class CustomOption
                 i = 0;
             }
 
-            ViewSettingsInfoPanel viewSettingsInfoPanel = Object.Instantiate(__instance.infoPanelOrigin, __instance.settingsContainer, true);
+            ViewSettingsInfoPanel viewSettingsInfoPanel = UnityObject.Instantiate(__instance.infoPanelOrigin, __instance.settingsContainer, true);
             viewSettingsInfoPanel.transform.localScale = Vector3.one;
             float num2;
             if (i % 2 == 0)
@@ -277,7 +275,7 @@ internal partial class CustomOption
     private static GameObject CreateCustomButton(LobbyViewSettingsPane __instance, PanePage id, string buttonName, string buttonText, CustomOptionType optionType)
     {
         GameObject template = __instance.taskTabButton.gameObject;
-        GameObject buttonObj = Object.Instantiate(template, template.transform.parent);
+        GameObject buttonObj = UnityObject.Instantiate(template, template.transform.parent);
         buttonObj.transform.localPosition += Vector3.right * 1.75f * (int)(id - 1);
         buttonObj.name = buttonName;
         __instance.StartCoroutine(Effects.Lerp(2f, new Action<float>(_ => { buttonObj.transform.FindChild("FontPlacer").GetComponentInChildren<TextMeshPro>().text = buttonText; })));

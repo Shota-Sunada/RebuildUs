@@ -1,6 +1,5 @@
 using BepInEx.Unity.IL2CPP.Utils.Collections;
 using Il2CppSystem.Collections;
-using InnerNet;
 
 namespace RebuildUs.Patches;
 

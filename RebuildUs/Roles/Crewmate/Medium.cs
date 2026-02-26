@@ -1,6 +1,3 @@
-using AmongUs.Data;
-using Object = UnityEngine.Object;
-
 namespace RebuildUs.Roles.Crewmate;
 
 [HarmonyPatch]
@@ -45,7 +42,7 @@ internal class Medium : MultiRoleBase<Medium>
         {
             foreach (var t in _souls)
                 if (t != null && t.gameObject != null)
-                    Object.Destroy(t.gameObject);
+                    UnityObject.Destroy(t.gameObject);
 
             _souls.Clear();
         }
@@ -174,7 +171,7 @@ internal class Medium : MultiRoleBase<Medium>
                     target.color = tmp;
                 }
 
-                if (Mathf.Approximately(p, 1f) && target != null && target.gameObject != null) Object.Destroy(target.gameObject);
+                if (Mathf.Approximately(p, 1f) && target != null && target.gameObject != null) UnityObject.Destroy(target.gameObject);
             })));
 
             _souls.Remove(target);
