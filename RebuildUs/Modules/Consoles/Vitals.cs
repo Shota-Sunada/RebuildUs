@@ -1,5 +1,3 @@
-using Object = UnityEngine.Object;
-
 namespace RebuildUs.Modules.Consoles;
 
 internal static class Vitals
@@ -14,7 +12,7 @@ internal static class Vitals
     {
         _vitalsTimer = 0f;
         if (_timeRemaining == null) return;
-        Object.Destroy(_timeRemaining);
+        UnityObject.Destroy(_timeRemaining);
         _timeRemaining = null;
     }
 
@@ -39,9 +37,9 @@ internal static class Vitals
         _hackerTexts = [];
         foreach (VitalsPanel panel in __instance.vitals)
         {
-            TextMeshPro text = Object.Instantiate(__instance.SabText, panel.transform);
+            TextMeshPro text = UnityObject.Instantiate(__instance.SabText, panel.transform);
             _hackerTexts.Add(text);
-            Object.DestroyImmediate(text.GetComponent<AlphaBlink>());
+            UnityObject.DestroyImmediate(text.GetComponent<AlphaBlink>());
             text.gameObject.SetActive(false);
             text.transform.localScale = Vector3.one * 0.75f;
             text.transform.localPosition = new(-0.75f, -0.23f, 0f);
@@ -57,7 +55,7 @@ internal static class Vitals
         if (MapSettings.RestrictDevices <= 0 || !MapSettings.RestrictVitals) return true;
         if (_timeRemaining == null)
         {
-            _timeRemaining = Object.Instantiate(FastDestroyableSingleton<HudManager>.Instance.TaskPanel.taskText, __instance.transform);
+            _timeRemaining = UnityObject.Instantiate(FastDestroyableSingleton<HudManager>.Instance.TaskPanel.taskText, __instance.transform);
             _timeRemaining.alignment = TextAlignmentOptions.BottomRight;
             _timeRemaining.transform.position = Vector3.zero;
             _timeRemaining.transform.localPosition = new(1.7f, 4.45f);

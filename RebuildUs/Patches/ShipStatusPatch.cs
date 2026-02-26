@@ -1,5 +1,3 @@
-using Object = UnityEngine.Object;
-
 namespace RebuildUs.Patches;
 
 [HarmonyPatch]
@@ -79,7 +77,7 @@ internal static class ShipStatusPatch
                 // 梯子追加
                 if (ladder != null)
                 {
-                    GameObject newLadder = Object.Instantiate(ladder, ladder.transform.parent);
+                    GameObject newLadder = UnityObject.Instantiate(ladder, ladder.transform.parent);
                     Il2CppArrayBase<Ladder> ladders = newLadder.GetComponentsInChildren<Ladder>();
                     int id = 100;
                     foreach (Ladder l in ladders)
@@ -98,7 +96,7 @@ internal static class ShipStatusPatch
                 foreach (EdgeCollider2D x in gapRoom.GetComponentsInChildren<EdgeCollider2D>())
                 {
                     if (!(Math.Abs(x.points[0].x + 6.2984f) < 0.1)) continue;
-                    Object.Destroy(x);
+                    UnityObject.Destroy(x);
                     break;
                 }
 
@@ -125,7 +123,7 @@ internal static class ShipStatusPatch
                     for (int i = 0; i < 41; i++) points.Add(collider.points[i]);
 
                     newCollider2.SetPoints(points);
-                    Object.DestroyObject(collider);
+                    UnityObject.DestroyObject(collider);
                 }
 
                 // 梯子の背景を変更
@@ -139,7 +137,7 @@ internal static class ShipStatusPatch
 
                 if (side != null)
                 {
-                    SpriteRenderer bg = Object.Instantiate(side, side.transform.parent);
+                    SpriteRenderer bg = UnityObject.Instantiate(side, side.transform.parent);
                     bg.sprite = AssetLoader.LadderBackground;
                     bg.transform.localPosition = new(9.57f, -3.355f, 4.9f);
                 }

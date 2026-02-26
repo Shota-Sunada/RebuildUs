@@ -1,7 +1,3 @@
-using System.Reflection;
-using InnerNet;
-using Object = UnityEngine.Object;
-
 namespace RebuildUs.Modules;
 
 internal static class GameStart
@@ -38,12 +34,12 @@ internal static class GameStart
         // Reset kicking timer
         KickingTimer = 0f;
 
-        _warningText = Object.Instantiate(__instance.GameStartText, __instance.transform);
+        _warningText = UnityObject.Instantiate(__instance.GameStartText, __instance.transform);
         _warningText.name = "WarningText";
         _warningText.transform.localPosition = new(0f, 0f - __instance.transform.localPosition.y, -1f);
         _warningText.gameObject.SetActive(false);
 
-        _timerText = Object.Instantiate(__instance.PlayerCounter, __instance.PlayerCounter.transform.parent);
+        _timerText = UnityObject.Instantiate(__instance.PlayerCounter, __instance.PlayerCounter.transform.parent);
         _timerText.autoSizeTextContainer = true;
         _timerText.fontSize = 3.2f;
         _timerText.name = "Timer";
@@ -51,7 +47,7 @@ internal static class GameStart
         _timerText.transform.localPosition += new Vector3(0.3f, -3.4f, 0f);
         _timerText.gameObject.SetActive(AmongUsClient.Instance.NetworkMode == NetworkModes.OnlineGame && AmongUsClient.Instance.AmHost);
 
-        _cancelButton = Object.Instantiate(__instance.StartButton, __instance.transform);
+        _cancelButton = UnityObject.Instantiate(__instance.StartButton, __instance.transform);
         _cancelButton.name = "CancelButton";
         TextMeshPro cancelLabel = _cancelButton.buttonText;
         cancelLabel.GetComponent<TextTranslatorTMP>()?.Destroy();

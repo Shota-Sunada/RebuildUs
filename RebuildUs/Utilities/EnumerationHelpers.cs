@@ -1,19 +1,14 @@
-using System.Collections;
-using System.Linq.Expressions;
-using System.Reflection;
-using Object = Il2CppSystem.Object;
-
 namespace RebuildUs.Utilities;
 
 internal static class EnumerationHelpers
 {
-    internal static IEnumerable<T> GetFastEnumerator<T>(this Il2CppSystem.Collections.Generic.List<T> list) where T : Object
+    internal static IEnumerable<T> GetFastEnumerator<T>(this Il2CppSystem.Collections.Generic.List<T> list) where T : CppObject
     {
         return new Il2CppListEnumerable<T>(list);
     }
 }
 
-internal sealed unsafe class Il2CppListEnumerable<T> : IEnumerable<T>, IEnumerator<T> where T : Object
+internal sealed unsafe class Il2CppListEnumerable<T> : IEnumerable<T>, IEnumerator<T> where T : CppObject
 {
     private static readonly int ElemSize;
     private static readonly int Offset;

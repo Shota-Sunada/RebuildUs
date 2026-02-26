@@ -1,5 +1,3 @@
-using Object = UnityEngine.Object;
-
 namespace RebuildUs.Roles.Crewmate;
 
 [HarmonyPatch]
@@ -114,7 +112,7 @@ internal class Sheriff : MultiRoleBase<Sheriff>
             return Local.CurrentTarget && PlayerControl.LocalPlayer.CanMove;
         }, () => { _sheriffKillButton.Timer = _sheriffKillButton.MaxTimer; }, hm.KillButton.graphic.sprite, ButtonPosition.Layout, hm, hm.KillButton, AbilitySlot.CrewmateAbilityPrimary, false, FastDestroyableSingleton<TranslationController>.Instance.GetString(StringNames.KillLabel));
 
-        SheriffNumShotsText = Object.Instantiate(_sheriffKillButton.ActionButton.cooldownTimerText, _sheriffKillButton.ActionButton.cooldownTimerText.transform.parent);
+        SheriffNumShotsText = UnityObject.Instantiate(_sheriffKillButton.ActionButton.cooldownTimerText, _sheriffKillButton.ActionButton.cooldownTimerText.transform.parent);
         SheriffNumShotsText.text = "";
         SheriffNumShotsText.enableWordWrapping = false;
         SheriffNumShotsText.transform.localScale = Vector3.one * 0.5f;

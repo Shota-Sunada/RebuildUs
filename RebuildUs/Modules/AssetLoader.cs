@@ -1,6 +1,3 @@
-using System.Reflection;
-using Object = UnityEngine.Object;
-
 namespace RebuildUs.Modules;
 
 internal static class AssetLoader
@@ -27,7 +24,7 @@ internal static class AssetLoader
     }
 
 #nullable enable
-    private static T? LoadAsset<T>(this AssetBundle assetBundle, string name) where T : Object
+    private static T? LoadAsset<T>(this AssetBundle assetBundle, string name) where T : UnityObject
     {
         return assetBundle.LoadAsset(name, Il2CppType.Of<T>())?.Cast<T>() ?? throw new($"The asset was not found: {name}");
     }
@@ -40,7 +37,7 @@ internal static class AssetLoader
         return sprite == null ? null : Sprite.Create(sprite.texture, sprite.rect, new(sprite.pivot.x / sprite.rect.width, sprite.pivot.y / sprite.rect.height), pixelsPerUnit, 0, SpriteMeshType.FullRect, sprite.border).DontUnload();
     }
 
-    private static T DontUnload<T>(this T obj) where T : Object
+    private static T DontUnload<T>(this T obj) where T : UnityObject
     {
         obj.hideFlags |= HideFlags.DontUnloadUnusedAsset;
 

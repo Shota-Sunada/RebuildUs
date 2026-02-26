@@ -1,5 +1,3 @@
-using Object = UnityEngine.Object;
-
 namespace RebuildUs.Roles.Crewmate;
 
 [HarmonyPatch]
@@ -142,7 +140,7 @@ internal class SecurityGuard : SingleRoleBase<SecurityGuard>
             return Local._ventTarget != null ? Local.RemainingScrews >= VentPrice && PlayerControl.LocalPlayer.CanMove : Helpers.GetOption(ByteOptionNames.MapId) != 1 && !SubmergedCompatibility.IsSubmerged && MapSettings.CouldUseCameras && Local.RemainingScrews >= CamPrice && PlayerControl.LocalPlayer.CanMove;
         }, () => { _securityGuardButton.Timer = _securityGuardButton.MaxTimer; }, AssetLoader.PlaceCameraButton, ButtonPosition.Layout, hm, hm.UseButton, AbilitySlot.CrewmateAbilityPrimary, false, Tr.Get(TrKey.PlaceCameraText));
 
-        _securityGuardButtonScrewsText = Object.Instantiate(_securityGuardButton.ActionButton.cooldownTimerText, _securityGuardButton.ActionButton.cooldownTimerText.transform.parent);
+        _securityGuardButtonScrewsText = UnityObject.Instantiate(_securityGuardButton.ActionButton.cooldownTimerText, _securityGuardButton.ActionButton.cooldownTimerText.transform.parent);
         _securityGuardButtonScrewsText.text = "";
         _securityGuardButtonScrewsText.enableWordWrapping = false;
         _securityGuardButtonScrewsText.transform.localScale = Vector3.one * 0.5f;
@@ -161,12 +159,12 @@ internal class SecurityGuard : SingleRoleBase<SecurityGuard>
                     {
                         if (_survConsole == null)
                         {
-                            Il2CppArrayBase<SystemConsole> consoles = Object.FindObjectsOfType<SystemConsole>();
-                            for (int i = 0; i < consoles.Length; i++)
+                            Il2CppArrayBase<SystemConsole> consoles = UnityObject.FindObjectsOfType<SystemConsole>();
+                            foreach (var t in consoles)
                             {
-                                if (consoles[i].gameObject.name.Contains("SurvConsole"))
+                                if (t.gameObject.name.Contains("SurvConsole"))
                                 {
-                                    _survConsole = consoles[i];
+                                    _survConsole = t;
                                     break;
                                 }
                             }
@@ -178,7 +176,7 @@ internal class SecurityGuard : SingleRoleBase<SecurityGuard>
                     {
                         if (_taskCamsConsole == null)
                         {
-                            Il2CppArrayBase<SystemConsole> consoles = Object.FindObjectsOfType<SystemConsole>();
+                            Il2CppArrayBase<SystemConsole> consoles = UnityObject.FindObjectsOfType<SystemConsole>();
                             for (int i = 0; i < consoles.Length; i++)
                             {
                                 if (consoles[i].gameObject.name.Contains("task_cams"))
@@ -195,12 +193,12 @@ internal class SecurityGuard : SingleRoleBase<SecurityGuard>
                     {
                         if (_survPanelConsole == null)
                         {
-                            Il2CppArrayBase<SystemConsole> consoles = Object.FindObjectsOfType<SystemConsole>();
-                            for (int i = 0; i < consoles.Length; i++)
+                            Il2CppArrayBase<SystemConsole> consoles = UnityObject.FindObjectsOfType<SystemConsole>();
+                            foreach (var t in consoles)
                             {
-                                if (consoles[i].gameObject.name.Contains("Surv_Panel"))
+                                if (t.gameObject.name.Contains("Surv_Panel"))
                                 {
-                                    _survPanelConsole = consoles[i];
+                                    _survPanelConsole = t;
                                     break;
                                 }
                             }
@@ -210,10 +208,10 @@ internal class SecurityGuard : SingleRoleBase<SecurityGuard>
                     }
 
                     if (targetConsole == null || Camera.main == null) return;
-                    Local._minigame = Object.Instantiate(targetConsole.MinigamePrefab, Camera.main.transform, false);
+                    Local._minigame = UnityObject.Instantiate(targetConsole.MinigamePrefab, Camera.main.transform, false);
                 }
 
-                Local._minigame.transform.SetParent(Camera.main.transform, false);
+                if (Camera.main != null) Local._minigame.transform.SetParent(Camera.main.transform, false);
                 Local._minigame.transform.localPosition = new(0.0f, 0.0f, -50f);
                 Local._minigame.Begin(null);
             }
@@ -223,7 +221,7 @@ internal class SecurityGuard : SingleRoleBase<SecurityGuard>
                 {
                     if (_doorLogConsole == null)
                     {
-                        Il2CppArrayBase<SystemConsole> consoles = Object.FindObjectsOfType<SystemConsole>();
+                        Il2CppArrayBase<SystemConsole> consoles = UnityObject.FindObjectsOfType<SystemConsole>();
                         for (int i = 0; i < consoles.Length; i++)
                         {
                             if (consoles[i].gameObject.name.Contains("SurvLogConsole"))
@@ -235,10 +233,10 @@ internal class SecurityGuard : SingleRoleBase<SecurityGuard>
                     }
 
                     if (_doorLogConsole == null || Camera.main == null) return;
-                    Local._minigame = Object.Instantiate(_doorLogConsole.MinigamePrefab, Camera.main.transform, false);
+                    Local._minigame = UnityObject.Instantiate(_doorLogConsole.MinigamePrefab, Camera.main.transform, false);
                 }
 
-                Local._minigame.transform.SetParent(Camera.main.transform, false);
+                if (Camera.main != null) Local._minigame.transform.SetParent(Camera.main.transform, false);
                 Local._minigame.transform.localPosition = new(0.0f, 0.0f, -50f);
                 Local._minigame.Begin(null);
             }
@@ -267,7 +265,7 @@ internal class SecurityGuard : SingleRoleBase<SecurityGuard>
         }, false, Helpers.IsMiraHq ? TranslationController.Instance.GetString(StringNames.SecurityLogsSystem) : TranslationController.Instance.GetString(StringNames.SecurityCamsSystem));
 
         // Security Guard cam button charges
-        _securityGuardChargesText = Object.Instantiate(SecurityGuardCamButton.ActionButton.cooldownTimerText, SecurityGuardCamButton.ActionButton.cooldownTimerText.transform.parent);
+        _securityGuardChargesText = UnityObject.Instantiate(SecurityGuardCamButton.ActionButton.cooldownTimerText, SecurityGuardCamButton.ActionButton.cooldownTimerText.transform.parent);
         _securityGuardChargesText.text = "";
         _securityGuardChargesText.enableWordWrapping = false;
         _securityGuardChargesText.transform.localScale = Vector3.one * 0.5f;

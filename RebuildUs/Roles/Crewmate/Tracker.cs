@@ -1,5 +1,3 @@
-using Object = UnityEngine.Object;
-
 namespace RebuildUs.Roles.Crewmate;
 
 [HarmonyPatch]
@@ -68,13 +66,13 @@ internal class Tracker : MultiRoleBase<Tracker>
                     if (!trackedOnMap)
                     {
                         // Check for dead body
-                        Il2CppArrayBase<DeadBody> bodies = Object.FindObjectsOfType<DeadBody>();
-                        for (int i = 0; i < bodies.Length; i++)
+                        Il2CppArrayBase<DeadBody> bodies = UnityObject.FindObjectsOfType<DeadBody>();
+                        foreach (var t in bodies)
                         {
-                            if (bodies[i].ParentId == Tracked.PlayerId)
+                            if (t.ParentId == Tracked.PlayerId)
                             {
                                 trackedOnMap = true;
-                                position = bodies[i].transform.position;
+                                position = t.transform.position;
                                 break;
                             }
                         }
@@ -92,7 +90,7 @@ internal class Tracker : MultiRoleBase<Tracker>
         {
             if (Arrow?.ArrowObject != null)
             {
-                Object.Destroy(Arrow.ArrowObject);
+                UnityObject.Destroy(Arrow.ArrowObject);
                 Arrow = null;
             }
         }
@@ -108,7 +106,7 @@ internal class Tracker : MultiRoleBase<Tracker>
                 for (int i = 0; i < LocalArrows.Count; i++)
                 {
                     if (LocalArrows[i]?.ArrowObject != null)
-                        Object.Destroy(LocalArrows[i].ArrowObject);
+                        UnityObject.Destroy(LocalArrows[i].ArrowObject);
                 }
 
                 LocalArrows.Clear();
@@ -134,7 +132,7 @@ internal class Tracker : MultiRoleBase<Tracker>
             for (int i = 0; i < LocalArrows.Count; i++)
             {
                 if (LocalArrows[i]?.ArrowObject != null)
-                    Object.Destroy(LocalArrows[i].ArrowObject);
+                    UnityObject.Destroy(LocalArrows[i].ArrowObject);
             }
 
             LocalArrows.Clear();
@@ -181,7 +179,7 @@ internal class Tracker : MultiRoleBase<Tracker>
     {
         CurrentTarget = Tracked = null;
         UsedTracker = false;
-        if (Arrow?.ArrowObject != null) Object.Destroy(Arrow.ArrowObject);
+        if (Arrow?.ArrowObject != null) UnityObject.Destroy(Arrow.ArrowObject);
         Arrow = null;
     }
 
@@ -197,7 +195,7 @@ internal class Tracker : MultiRoleBase<Tracker>
                 foreach (Arrow arrow in p.LocalArrows)
                 {
                     if (arrow?.ArrowObject != null)
-                        Object.Destroy(arrow.ArrowObject);
+                        UnityObject.Destroy(arrow.ArrowObject);
                 }
             }
         }

@@ -1,5 +1,4 @@
 using PowerTools;
-using Object = UnityEngine.Object;
 
 namespace RebuildUs.Objects;
 
@@ -25,8 +24,8 @@ internal sealed class JackInTheBox
         _boxRenderer.sprite = GetBoxAnimationSprite(0);
 
         // Create the vent
-        Vent referenceVent = Object.FindObjectOfType<Vent>();
-        _vent = Object.Instantiate(referenceVent);
+        Vent referenceVent = UnityObject.FindObjectOfType<Vent>();
+        _vent = UnityObject.Instantiate(referenceVent);
         _vent.gameObject.AddSubmergedComponent(SubmergedCompatibility.Classes.ELEVATOR_MOVER);
         _vent.transform.position = _gameObject.transform.position;
         _vent.Left = null;

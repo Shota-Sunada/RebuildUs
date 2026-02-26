@@ -1,5 +1,3 @@
-using Object = UnityEngine.Object;
-
 namespace RebuildUs.Modules.Consoles;
 
 internal static class Admin
@@ -64,12 +62,12 @@ internal static class Admin
         _adminTimer = 0f;
         if (_timeRemaining != null)
         {
-            Object.Destroy(_timeRemaining.gameObject);
+            UnityObject.Destroy(_timeRemaining.gameObject);
             _timeRemaining = null;
         }
 
         if (_outOfTime == null) return;
-        Object.Destroy(_outOfTime.gameObject);
+        UnityObject.Destroy(_outOfTime.gameObject);
         _outOfTime = null;
     }
 
@@ -107,13 +105,13 @@ internal static class Admin
         {
             if (_outOfTime == null)
             {
-                _outOfTime = Object.Instantiate(__instance.SabotageText, __instance.SabotageText.transform.parent);
+                _outOfTime = UnityObject.Instantiate(__instance.SabotageText, __instance.SabotageText.transform.parent);
                 _outOfTime.text = Tr.Get(TrKey.RestrictOutOfTime);
             }
 
             if (_timeRemaining == null)
             {
-                _timeRemaining = Object.Instantiate(FastDestroyableSingleton<HudManager>.Instance.TaskPanel.taskText, __instance.transform);
+                _timeRemaining = UnityObject.Instantiate(FastDestroyableSingleton<HudManager>.Instance.TaskPanel.taskText, __instance.transform);
                 _timeRemaining.alignment = TextAlignmentOptions.BottomRight;
                 _timeRemaining.transform.position = Vector3.zero;
                 _timeRemaining.transform.localPosition = new(3.25f, 5.25f);
@@ -255,7 +253,7 @@ internal static class Admin
         if (!_newMap)
         {
             if (_map != null)
-                _newMap = Object.Instantiate(_map, _map.transform.parent);
+                _newMap = UnityObject.Instantiate(_map, _map.transform.parent);
         }
 
         SpriteRenderer renderer = _newMap.GetComponent<SpriteRenderer>();
@@ -308,7 +306,7 @@ internal static class Admin
 
             if (renderer == null) continue;
             if (_defaultMat == null) _defaultMat = renderer.material;
-            if (_newMat == null) _newMat = Object.Instantiate(_defaultMat);
+            if (_newMat == null) _newMat = UnityObject.Instantiate(_defaultMat);
             if (showHackerInfo && colors.Count > i)
             {
                 renderer.material = _newMat;

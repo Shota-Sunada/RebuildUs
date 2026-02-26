@@ -1,6 +1,5 @@
 using PowerTools;
 using UnityEngine.Events;
-using Object = Il2CppSystem.Object;
 
 namespace RebuildUs.Modules;
 
@@ -112,7 +111,7 @@ internal static class SpawnIn
             passiveButton.OnClick.AddListener((UnityAction)(() => SpawnAt(__instance, pt.Location)));
             passiveButton.GetComponent<SpriteAnim>().Stop();
             passiveButton.GetComponent<SpriteRenderer>().sprite = pt.Image;
-            passiveButton.GetComponentInChildren<TextMeshPro>().text = FastDestroyableSingleton<TranslationController>.Instance.GetString(pt.Name, new Il2CppReferenceArray<Object>(0));
+            passiveButton.GetComponentInChildren<TextMeshPro>().text = FastDestroyableSingleton<TranslationController>.Instance.GetString(pt.Name, new Il2CppReferenceArray<CppObject>(0));
             ButtonAnimRolloverHandler component = passiveButton.GetComponent<ButtonAnimRolloverHandler>();
             component.StaticOutImage = pt.Image;
             component.RolloverAnim = pt.Rollover;

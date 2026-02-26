@@ -1,5 +1,3 @@
-using Object = UnityEngine.Object;
-
 namespace RebuildUs.Roles.Crewmate;
 
 [HarmonyPatch]
@@ -111,7 +109,7 @@ internal class Hacker : MultiRoleBase<Hacker>
                                      FastDestroyableSingleton<TranslationController>.Instance.GetString(StringNames.Admin));
 
         // Hacker Admin Table Charges
-        _hackerAdminTableChargesText = Object.Instantiate(HackerAdminTableButton.ActionButton.cooldownTimerText, HackerAdminTableButton.ActionButton.cooldownTimerText.transform.parent);
+        _hackerAdminTableChargesText = UnityObject.Instantiate(HackerAdminTableButton.ActionButton.cooldownTimerText, HackerAdminTableButton.ActionButton.cooldownTimerText.transform.parent);
         _hackerAdminTableChargesText.text = "";
         _hackerAdminTableChargesText.enableWordWrapping = false;
         _hackerAdminTableChargesText.transform.localScale = Vector3.one * 0.5f;
@@ -126,7 +124,7 @@ internal class Hacker : MultiRoleBase<Hacker>
                                          {
                                              if (_vitalsConsole == null)
                                              {
-                                                 Il2CppArrayBase<SystemConsole> consoles = Object.FindObjectsOfType<SystemConsole>();
+                                                 Il2CppArrayBase<SystemConsole> consoles = UnityObject.FindObjectsOfType<SystemConsole>();
                                                  for (int i = 0; i < consoles.Length; i++)
                                                  {
                                                      if (consoles[i].gameObject.name.Contains("panel_vitals"))
@@ -138,10 +136,10 @@ internal class Hacker : MultiRoleBase<Hacker>
                                              }
 
                                              if (_vitalsConsole == null || Camera.main == null) return;
-                                             Local._vitals = Object.Instantiate(_vitalsConsole.MinigamePrefab, Camera.main.transform, false);
+                                             Local._vitals = UnityObject.Instantiate(_vitalsConsole.MinigamePrefab, Camera.main.transform, false);
                                          }
 
-                                         Local._vitals.transform.SetParent(Camera.main.transform, false);
+                                         if (Camera.main != null) Local._vitals.transform.SetParent(Camera.main.transform, false);
                                          Local._vitals.transform.localPosition = new(0.0f, 0.0f, -50f);
                                          Local._vitals.Begin(null);
                                      }
@@ -151,7 +149,7 @@ internal class Hacker : MultiRoleBase<Hacker>
                                          {
                                              if (_doorLogConsole == null)
                                              {
-                                                 Il2CppArrayBase<SystemConsole> consoles = Object.FindObjectsOfType<SystemConsole>();
+                                                 Il2CppArrayBase<SystemConsole> consoles = UnityObject.FindObjectsOfType<SystemConsole>();
                                                  for (int i = 0; i < consoles.Length; i++)
                                                  {
                                                      if (consoles[i].gameObject.name.Contains("SurvLogConsole"))
@@ -163,10 +161,10 @@ internal class Hacker : MultiRoleBase<Hacker>
                                              }
 
                                              if (_doorLogConsole == null || Camera.main == null) return;
-                                             Local._doorLog = Object.Instantiate(_doorLogConsole.MinigamePrefab, Camera.main.transform, false);
+                                             Local._doorLog = UnityObject.Instantiate(_doorLogConsole.MinigamePrefab, Camera.main.transform, false);
                                          }
 
-                                         Local._doorLog.transform.SetParent(Camera.main.transform, false);
+                                         if (Camera.main != null) Local._doorLog.transform.SetParent(Camera.main.transform, false);
                                          Local._doorLog.transform.localPosition = new(0.0f, 0.0f, -50f);
                                          Local._doorLog.Begin(null);
                                      }
@@ -206,7 +204,7 @@ internal class Hacker : MultiRoleBase<Hacker>
                                 );
 
         // Hacker Vitals Charges
-        _hackerVitalsChargesText = Object.Instantiate(HackerVitalsButton.ActionButton.cooldownTimerText, HackerVitalsButton.ActionButton.cooldownTimerText.transform.parent);
+        _hackerVitalsChargesText = UnityObject.Instantiate(HackerVitalsButton.ActionButton.cooldownTimerText, HackerVitalsButton.ActionButton.cooldownTimerText.transform.parent);
         _hackerVitalsChargesText.text = "";
         _hackerVitalsChargesText.enableWordWrapping = false;
         _hackerVitalsChargesText.transform.localScale = Vector3.one * 0.5f;

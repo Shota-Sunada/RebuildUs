@@ -1,6 +1,4 @@
 # EditorConfig is awesome: https://EditorConfig.org
-
-# top-most EditorConfig file
 root = true
 
 [*]
@@ -10,61 +8,138 @@ charset = utf-8
 trim_trailing_whitespace = true
 insert_final_newline = false
 
+###############################################
+# C# ファイル
+###############################################
 [*.cs]
-# インデント数: 4
+
 indent_size = 4
 
-# コードブロック
-# usingの配置: namespaceの外
+##################################################
+# あなたの元 EditorConfig の C# スタイル設定
+##################################################
+
+# usingの配置: namespace の外
 csharp_using_directive_placement = outside_namespace:suggestion
-# 中かっこの使用条件: 複数行の場合
+
+# ブレースの使用（複数行で必須）
 csharp_prefer_braces = when_multiline:suggestion
-# 単純なusingステートメントの使用
+
+# simple using
 csharp_prefer_simple_using_statement = true:suggestion
-# namespaceの宣言をファイルスコープに統一
+
+# namespace はファイルスコープ
 csharp_style_namespace_declarations = file_scoped:suggestion
-# オブジェクト初期化を使用
+
+# 初期化子など
 dotnet_style_object_initializer = true:suggestion
-# コレクション初期化子を使用
 dotnet_style_collection_initializer = true:warning
-# コレクション式を使用
 dotnet_style_prefer_collection_expression = true:warning
-# nullチェック簡略化
+
+# null 簡略化
 dotnet_style_coalesce_expression = true:warning
-# null条件演算子の使用
 dotnet_style_null_propagation = true:warning
-# 明示的に提供されたタプル名を使用
+
+# 推定名
 dotnet_style_explicit_tuple_names = true:suggestion
-# 推定メンバーの名前を使用
 dotnet_style_prefer_inferred_tuple_names = true:warning
-# is nullの使用
+
+# null チェック方法
 dotnet_style_prefer_is_null_check_over_reference_equality_method = true:warning
-# 代入に条件式を使用
+
+# 条件式の簡略化
 dotnet_style_prefer_conditional_expression_over_assignment = true:suggestion
-# 戻り値に条件式を使用
 dotnet_style_prefer_conditional_expression_over_return = true:suggestion
-# 複合代入の使用
+
+# 複合代入
 dotnet_style_prefer_compound_assignment = true:suggestion
-# 補間を簡略化
+
+# 文字列補間
 dotnet_style_prefer_simplified_interpolation = true:warning
-# 条件式を簡略化
+
+# boolean 簡略化
 dotnet_style_prefer_simplified_boolean_expressions = true:warning
-# this.とMe.
+
+# this. を省略
 dotnet_style_qualification_for_event = false:silent
 dotnet_style_qualification_for_field = false:silent
 dotnet_style_qualification_for_method = false:silent
 dotnet_style_qualification_for_property = false:silent
-# 型参照のためのフレームワーク型名の代わりに言語キーワードを使用
+
+# 型キーワード (int, string)
 dotnet_style_predefined_type_for_locals_parameters_members = true:silent
 dotnet_style_predefined_type_for_member_access = true:silent
-# UTF-8 文字列リテラルを優先
+
+# UTF-8 文字列リテラル
 csharp_style_prefer_utf8_string_literals = true:warning
-# readonlyの追加
+
+# readonly
 dotnet_style_readonly_field = true:warning
-# 明示的な型宣言を行うか
+
+# var 使用を禁止（元設定維持）
 csharp_style_var_elsewhere = false:silent
 csharp_style_var_for_built_in_types = false:silent
 csharp_style_var_when_type_is_apparent = false:silent
 
-[*.{csproj,xml,json,resx,yml,vue,ts}]
-indent_size = 2
+##################################################
+# DotSettings → 移行した ReSharper 拡張設定
+##################################################
+
+# 既存の改行・レイアウトを保持
+resharper_keep_existing_linebreaks = true
+resharper_keep_existing_arrangement_declaration_blocks = true
+resharper_keep_existing_arrangement_embedded_blocks = true
+resharper_keep_existing_arrangement_enums = true
+resharper_keep_existing_arrangement_expr_members = true
+resharper_keep_existing_arrangement_initializers = true
+resharper_keep_existing_arrangement_list_patterns = true
+resharper_keep_existing_arrangement_property_patterns = true
+resharper_keep_existing_arrangement_switch_expression = true
+
+# Wrap 設定
+resharper_wrap_lines = true
+resharper_wrap_limit = 600
+
+##################################################
+# DotSettings → Naming Rules の移植
+##################################################
+
+# 定数（private）
+dotnet_naming_symbols.constant_private.applicable_kinds = field
+dotnet_naming_symbols.constant_private.applicable_accessibilities = private
+dotnet_naming_symbols.constant_private.required_modifiers = const
+
+# 定数（public / protected / internal）
+dotnet_naming_symbols.constant_nonprivate.applicable_kinds = field
+dotnet_naming_symbols.constant_nonprivate.applicable_accessibilities = public, internal, protected, protected_internal, private_protected
+dotnet_naming_symbols.constant_nonprivate.required_modifiers = const
+
+# パラメータ
+dotnet_naming_symbols.parameters.applicable_kinds = parameter
+
+# スタイル: AA_BB
+dotnet_naming_style.AA_BB.capitalization = all_upper
+dotnet_naming_style.AA_BB.word_separator = _
+
+# スタイル: aaBb （camelCase）
+dotnet_naming_style.aaBb.capitalization = camel_case
+
+# ルール
+dotnet_naming_rule.constant_private.symbols = constant_private
+dotnet_naming_rule.constant_private.style = AA_BB
+dotnet_naming_rule.constant_private.severity = suggestion
+
+dotnet_naming_rule.constant_nonprivate.symbols = constant_nonprivate
+dotnet_naming_rule.constant_nonprivate.style = AA_BB
+dotnet_naming_rule.constant_nonprivate.severity = suggestion
+
+dotnet_naming_rule.parameters.symbols = parameters
+dotnet_naming_rule.parameters.style = aaBb
+dotnet_naming_rule.parameters.severity = suggestion
+
+##################################################
+# よく使われる ReSharper の一般スタイル
+##################################################
+resharper_space_within_single_line_array_initializer_braces = false
+resharper_space_before_method_parentheses = false
+resharper_space_within_method_call_parentheses = false

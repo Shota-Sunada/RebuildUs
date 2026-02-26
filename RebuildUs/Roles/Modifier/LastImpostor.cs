@@ -1,5 +1,3 @@
-using Object = UnityEngine.Object;
-
 namespace RebuildUs.Roles.Modifier;
 
 [HarmonyPatch]
@@ -292,7 +290,7 @@ internal class LastImpostor : ModifierBase<LastImpostor>
         {
             foreach (PlayerControl p in PlayerControl.AllPlayerControls.GetFastEnumerator())
             {
-                PoolablePlayer player = Object.Instantiate(__instance.PlayerPrefab, FastDestroyableSingleton<HudManager>.Instance.transform);
+                PoolablePlayer player = UnityObject.Instantiate(__instance.PlayerPrefab, FastDestroyableSingleton<HudManager>.Instance.transform);
                 player.UpdateFromPlayerOutfit(p.Data.DefaultOutfit, PlayerMaterial.MaskType.ComplexUI, p.Data.IsDead, true);
                 player.SetFlipX(true);
                 player.cosmetics.currentPet?.gameObject.SetActive(false);

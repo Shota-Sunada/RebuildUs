@@ -1,6 +1,3 @@
-using InnerNet;
-using Object = UnityEngine.Object;
-
 namespace RebuildUs;
 
 internal abstract class CustomOverlays
@@ -156,10 +153,10 @@ internal abstract class CustomOverlays
         HideBlackBg();
         HideInfoOverlay();
         // if (MeetingUnderlay != null) UnityEngine.Object.Destroy(MeetingUnderlay);
-        if (_infoUnderlay != null) Object.Destroy(_infoUnderlay);
-        if (_infoOverlayTitle != null) Object.Destroy(_infoOverlayTitle);
-        if (_infoOverlayRules != null) Object.Destroy(_infoOverlayRules);
-        if (_infoOverlayRulesRight != null) Object.Destroy(_infoOverlayRulesRight);
+        if (_infoUnderlay != null) UnityObject.Destroy(_infoUnderlay);
+        if (_infoOverlayTitle != null) UnityObject.Destroy(_infoOverlayTitle);
+        if (_infoOverlayRules != null) UnityObject.Destroy(_infoOverlayRules);
+        if (_infoOverlayRulesRight != null) UnityObject.Destroy(_infoOverlayRulesRight);
         // MeetingUnderlay = InfoUnderlay = null;
         _infoUnderlay = null;
         _infoOverlayTitle = null;
@@ -187,7 +184,7 @@ internal abstract class CustomOverlays
 
         if (_infoUnderlay == null)
         {
-            _infoUnderlay = Object.Instantiate(hudManager.FullScreen, hudManager.transform);
+            _infoUnderlay = UnityObject.Instantiate(hudManager.FullScreen, hudManager.transform);
             _infoUnderlay.name = "InfoUnderlay";
             _infoUnderlay.transform.localPosition = new(0f, 0f, UNDERLAY_Z);
             _infoUnderlay.gameObject.SetActive(true);
@@ -196,7 +193,7 @@ internal abstract class CustomOverlays
 
         if (_infoOverlayTitle == null)
         {
-            _infoOverlayTitle = Object.Instantiate(hudManager.TaskPanel.taskText, hudManager.transform);
+            _infoOverlayTitle = UnityObject.Instantiate(hudManager.TaskPanel.taskText, hudManager.transform);
             _infoOverlayTitle.name = "InfoOverlayTitle";
             _infoOverlayTitle.maxVisibleLines = MAX_LINES;
             _infoOverlayTitle.fontSize = _infoOverlayTitle.fontSizeMin = _infoOverlayTitle.fontSizeMax = 1.75f;
@@ -210,7 +207,7 @@ internal abstract class CustomOverlays
 
         if (_infoOverlayRules == null)
         {
-            _infoOverlayRules = Object.Instantiate(hudManager.TaskPanel.taskText, hudManager.transform);
+            _infoOverlayRules = UnityObject.Instantiate(hudManager.TaskPanel.taskText, hudManager.transform);
             _infoOverlayRules.name = "InfoOverlayRules";
             _infoOverlayRules.maxVisibleLines = MAX_LINES;
             _infoOverlayRules.fontSize = _infoOverlayRules.fontSizeMin = _infoOverlayRules.fontSizeMax = 1.20f;
@@ -224,7 +221,7 @@ internal abstract class CustomOverlays
 
         if (_infoOverlayRulesRight == null)
         {
-            _infoOverlayRulesRight = Object.Instantiate(_infoOverlayRules, hudManager.transform);
+            _infoOverlayRulesRight = UnityObject.Instantiate(_infoOverlayRules, hudManager.transform);
             _infoOverlayRulesRight.name = "InfoOverlayRulesRight";
             _infoOverlayRulesRight.transform.localPosition = new(RIGHT_COLUMN_X, TEXT_Y, TEXT_Z);
             _infoOverlayRulesRight.enabled = false;

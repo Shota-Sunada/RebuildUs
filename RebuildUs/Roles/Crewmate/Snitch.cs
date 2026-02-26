@@ -1,5 +1,3 @@
-using Object = UnityEngine.Object;
-
 namespace RebuildUs.Roles.Crewmate;
 
 [HarmonyPatch]
@@ -98,7 +96,7 @@ internal class Snitch : SingleRoleBase<Snitch>
             foreach (Arrow arrow in LocalArrows)
             {
                 if (arrow?.ArrowObject != null)
-                    Object.Destroy(arrow.ArrowObject);
+                    UnityObject.Destroy(arrow.ArrowObject);
             }
         }
 

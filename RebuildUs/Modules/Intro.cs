@@ -1,7 +1,5 @@
-using System.Collections;
 using BepInEx.Unity.IL2CPP.Utils.Collections;
 using PowerTools;
-using Object = UnityEngine.Object;
 
 namespace RebuildUs.Modules;
 
@@ -25,7 +23,7 @@ internal static class Intro
                 {
                     if (p?.Data == null) continue;
                     NetworkedPlayerInfo data = p.Data;
-                    PoolablePlayer player = Object.Instantiate(__instance.PlayerPrefab, hud.transform);
+                    PoolablePlayer player = UnityObject.Instantiate(__instance.PlayerPrefab, hud.transform);
                     if (player == null) continue;
 
                     player.UpdateFromPlayerData(data, p.CurrentOutfitType, PlayerMaterial.MaskType.None, false);
@@ -131,7 +129,7 @@ internal static class Intro
             // タスクバグ修正
             if (Helpers.IsAirship && CustomOptionHolder.AirshipEnableWallCheck.GetBool())
             {
-                foreach (Console x in Object.FindObjectsOfType<Console>())
+                foreach (Console x in UnityObject.FindObjectsOfType<Console>())
                 {
                     if (x.name == "task_garbage1"
                         || x.name == "task_garbage2"

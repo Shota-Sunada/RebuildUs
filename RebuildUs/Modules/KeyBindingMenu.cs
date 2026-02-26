@@ -1,5 +1,3 @@
-using Object = UnityEngine.Object;
-
 namespace RebuildUs.Modules;
 
 internal static class KeyBindingMenu
@@ -24,8 +22,8 @@ internal static class KeyBindingMenu
 
         if (!_buttonPrefab)
         {
-            _buttonPrefab = Object.Instantiate(__instance.CensorChatButton);
-            Object.DontDestroyOnLoad(_buttonPrefab);
+            _buttonPrefab = UnityObject.Instantiate(__instance.CensorChatButton);
+            UnityObject.DontDestroyOnLoad(_buttonPrefab);
             _buttonPrefab.name = "KeyBindPrefab";
 
             ToggleButtonBehaviour toggle = _buttonPrefab.GetComponent<ToggleButtonBehaviour>();
@@ -49,9 +47,9 @@ internal static class KeyBindingMenu
     private static void CreateCustom(Component prefab)
     {
         ModButtons.Clear();
-        _popUp = Object.Instantiate(prefab.gameObject);
+        _popUp = UnityObject.Instantiate(prefab.gameObject);
         _popUp.name = "KeyBindingMenu";
-        Object.DontDestroyOnLoad(_popUp);
+        UnityObject.DontDestroyOnLoad(_popUp);
         Transform transform = _popUp.transform;
 
         OptionsMenuBehaviour omb = _popUp.GetComponent<OptionsMenuBehaviour>();
@@ -93,12 +91,12 @@ internal static class KeyBindingMenu
 
         // Setup Waiting PopUp
         _waitingPopUp = new("KeyBindingWaitingPopUp");
-        Object.DontDestroyOnLoad(_waitingPopUp);
+        UnityObject.DontDestroyOnLoad(_waitingPopUp);
 
         GameObject bgObj = _popUp.transform.Find("Background")?.gameObject;
         if (bgObj)
         {
-            GameObject bg = Object.Instantiate(bgObj, _waitingPopUp.transform);
+            GameObject bg = UnityObject.Instantiate(bgObj, _waitingPopUp.transform);
             bg.transform.localPosition = Vector3.zero;
             bg.transform.localScale = new(0.7f, 0.4f, 1f);
         }
@@ -117,7 +115,7 @@ internal static class KeyBindingMenu
         for (int i = transform.childCount - 1; i >= 0; i--)
         {
             GameObject obj = transform.GetChild(i).gameObject;
-            if (obj.name is not "Background" and not "CloseButton") Object.Destroy(obj);
+            if (obj.name is not "Background" and not "CloseButton") UnityObject.Destroy(obj);
         }
 
         _popUp.SetActive(false);
@@ -130,13 +128,13 @@ internal static class KeyBindingMenu
         _activeInput = null;
         _popUp.SetActive(false);
         _popUp.transform.SetParent(null);
-        Object.DontDestroyOnLoad(_popUp);
+        UnityObject.DontDestroyOnLoad(_popUp);
 
         if (_waitingPopUp)
         {
             _waitingPopUp.SetActive(false);
             _waitingPopUp.transform.SetParent(null);
-            Object.DontDestroyOnLoad(_waitingPopUp);
+            UnityObject.DontDestroyOnLoad(_waitingPopUp);
         }
 
         if (ControllerManager.Instance) ControllerManager.Instance.CloseOverlayMenu("OptionsMenu");
@@ -147,7 +145,7 @@ internal static class KeyBindingMenu
         // Add a button to open this menu in the main options menu
         if (__instance.CensorChatButton.transform.parent.Find("KeyBindingMenuButton")) return;
 
-        ToggleButtonBehaviour openButton = Object.Instantiate(__instance.CensorChatButton, __instance.CensorChatButton.transform.parent);
+        ToggleButtonBehaviour openButton = UnityObject.Instantiate(__instance.CensorChatButton, __instance.CensorChatButton.transform.parent);
         openButton.name = "KeyBindingMenuButton";
 
         // Position it symmetrical to the Client Options button (which is at down * 1.0)
@@ -250,7 +248,7 @@ internal static class KeyBindingMenu
         foreach (ToggleButtonBehaviour button in ModButtons)
         {
             if (button != null)
-                Object.Destroy(button.gameObject);
+                UnityObject.Destroy(button.gameObject);
         }
 
         ModButtons.Clear();
@@ -262,7 +260,7 @@ internal static class KeyBindingMenu
         for (int i = 0; i < KeyBindingManager.AllInputs.Count; i++)
         {
             KeyBindingManager.RebuildUsInput input = KeyBindingManager.AllInputs[i];
-            ToggleButtonBehaviour button = Object.Instantiate(_buttonPrefab, _popUp.transform);
+            ToggleButtonBehaviour button = UnityObject.Instantiate(_buttonPrefab, _popUp.transform);
 
             float x = i % 2 == 0 ? -xOffset : xOffset;
             float y = startY - ((i / 2) * spacing);

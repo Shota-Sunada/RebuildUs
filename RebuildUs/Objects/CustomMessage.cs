@@ -1,5 +1,3 @@
-using Object = UnityEngine.Object;
-
 namespace RebuildUs.Objects;
 
 internal sealed class CustomMessage
@@ -13,9 +11,9 @@ internal sealed class CustomMessage
         RoomTracker roomTracker = FastDestroyableSingleton<HudManager>.Instance?.roomTracker;
         if (roomTracker != null)
         {
-            GameObject gameObject = Object.Instantiate(roomTracker.gameObject, FastDestroyableSingleton<HudManager>.Instance.transform, true);
+            GameObject gameObject = UnityObject.Instantiate(roomTracker.gameObject, FastDestroyableSingleton<HudManager>.Instance.transform, true);
 
-            Object.DestroyImmediate(gameObject.GetComponent<RoomTracker>());
+            UnityObject.DestroyImmediate(gameObject.GetComponent<RoomTracker>());
             TMP_Text text = gameObject.GetComponent<TMP_Text>();
             text.text = Tr.GetDynamic(message);
 
@@ -30,7 +28,7 @@ internal sealed class CustomMessage
                 text.color = even ? YellowColor : Color.red;
 
                 if (!Mathf.Approximately(p, 1f)) return;
-                Object.Destroy(text.gameObject);
+                UnityObject.Destroy(text.gameObject);
                 CustomMessages.Remove(this);
             })));
         }

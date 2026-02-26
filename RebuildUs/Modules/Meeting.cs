@@ -1,8 +1,5 @@
-using System.Collections;
-using AmongUs.Data;
 using Assets.CoreScripts;
 using BepInEx.Unity.IL2CPP.Utils.Collections;
-using Object = UnityEngine.Object;
 
 namespace RebuildUs.Modules;
 
@@ -39,7 +36,7 @@ internal static class Meeting
         // This fixes a bug with the original game where pressing the button and a kill happens simultaneously
         // results in bodies sometimes being created *after* the meeting starts, marking them as dead and
         // removing the corpses so there's no random corpses leftover afterwards
-        foreach (DeadBody deadBody in Object.FindObjectsOfType<DeadBody>())
+        foreach (DeadBody deadBody in UnityObject.FindObjectsOfType<DeadBody>())
         {
             if (deadBody == null) continue;
 
@@ -136,7 +133,7 @@ internal static class Meeting
 
     internal static bool BloopAVoteIcon(MeetingHud __instance, NetworkedPlayerInfo voterPlayer, int index, Transform parent)
     {
-        SpriteRenderer spriteRenderer = Object.Instantiate(__instance.PlayerVotePrefab);
+        SpriteRenderer spriteRenderer = UnityObject.Instantiate(__instance.PlayerVotePrefab);
         bool showVoteColors = !GameManager.Instance.LogicOptions.GetAnonymousVotes()
                               || (PlayerControl.LocalPlayer.IsDead()
                                   && MapSettings.GhostsSeeVotes
@@ -238,7 +235,7 @@ internal static class Meeting
 
         _meetingInfoText?.gameObject.SetActive(false);
 
-        foreach (DeadBody deadBody in Object.FindObjectsOfType<DeadBody>()) Object.Destroy(deadBody.gameObject);
+        foreach (DeadBody deadBody in UnityObject.FindObjectsOfType<DeadBody>()) UnityObject.Destroy(deadBody.gameObject);
 
         // // Lovers, Lawyer & Pursuer save next to be exiled, because RPC of ending game comes before RPC of exiled
         // Lovers.notAckedExiledIsLover = false;
@@ -409,8 +406,8 @@ internal static class Meeting
 
         __instance.playerStates.ToList().ForEach(x => x.gameObject.SetActive(false));
 
-        Transform phoneUI = Object.FindObjectsOfType<Transform>().FirstOrDefault(x => x.name == "PhoneUI");
-        Transform container = Object.Instantiate(phoneUI, __instance.transform);
+        Transform phoneUI = UnityObject.FindObjectsOfType<Transform>().FirstOrDefault(x => x.name == "PhoneUI");
+        Transform container = UnityObject.Instantiate(phoneUI, __instance.transform);
         container.transform.localPosition = new(0, 0, -5f);
         _guesserUI = container.gameObject;
 
@@ -422,8 +419,8 @@ internal static class Meeting
 
         Transform exitButtonParent = new GameObject().transform;
         exitButtonParent.SetParent(container);
-        Transform exitButton = Object.Instantiate(buttonTemplate.transform, exitButtonParent);
-        _ = Object.Instantiate(maskTemplate, exitButtonParent);
+        Transform exitButton = UnityObject.Instantiate(buttonTemplate.transform, exitButtonParent);
+        _ = UnityObject.Instantiate(maskTemplate, exitButtonParent);
         exitButton.gameObject.GetComponent<SpriteRenderer>().sprite = smallButtonTemplate.GetComponent<SpriteRenderer>().sprite;
         exitButtonParent.transform.localPosition = new(2.725f, 2.1f, -5);
         exitButtonParent.transform.localScale = new(0.217f, 0.9f, 1);
@@ -437,9 +434,9 @@ internal static class Meeting
                       .ForEach(x =>
                       {
                           x.gameObject.SetActive(true);
-                          if (PlayerControl.LocalPlayer.IsDead() && x.transform.FindChild("ShootButton") != null) Object.Destroy(x.transform.FindChild("ShootButton").gameObject);
+                          if (PlayerControl.LocalPlayer.IsDead() && x.transform.FindChild("ShootButton") != null) UnityObject.Destroy(x.transform.FindChild("ShootButton").gameObject);
                       });
-            Object.Destroy(container.gameObject);
+            UnityObject.Destroy(container.gameObject);
         }));
 
         List<Transform> buttons = new();
@@ -453,9 +450,9 @@ internal static class Meeting
 
             Transform buttonParent = new GameObject().transform;
             buttonParent.SetParent(container);
-            Transform button = Object.Instantiate(buttonTemplate, buttonParent);
-            _ = Object.Instantiate(maskTemplate, buttonParent);
-            TextMeshPro label = Object.Instantiate(textTemplate, button);
+            Transform button = UnityObject.Instantiate(buttonTemplate, buttonParent);
+            _ = UnityObject.Instantiate(maskTemplate, buttonParent);
+            TextMeshPro label = UnityObject.Instantiate(textTemplate, button);
             button.GetComponent<SpriteRenderer>().sprite = MapUtilities.CachedShipStatus.CosmeticsCache.GetNameplate("nameplate_NoPlate").Image;
             buttons.Add(button);
             int row = i / 5, col = i % 5;
@@ -488,7 +485,7 @@ internal static class Meeting
                               {
                                   // Depending on the options, shooting the shielded player will not allow the guess, notify everyone about the kill attempt and close the window
                                   __instance.playerStates.ToList().ForEach(x => x.gameObject.SetActive(true));
-                                  Object.Destroy(container.gameObject);
+                                  UnityObject.Destroy(container.gameObject);
 
                                   {
                                       using RPCSender sender = new(PlayerControl.LocalPlayer.NetId, CustomRPC.ShieldedMurderAttempt);
@@ -505,14 +502,14 @@ internal static class Meeting
 
                           // Reset the GUI
                           __instance.playerStates.ToList().ForEach(x => x.gameObject.SetActive(true));
-                          Object.Destroy(container.gameObject);
+                          UnityObject.Destroy(container.gameObject);
                           if (Guesser.HasMultipleShotsPerMeeting && Guesser.RemainingShots(PlayerControl.LocalPlayer) > 1 && dyingTarget != PlayerControl.LocalPlayer)
                           {
                               __instance.playerStates
                                         .ToList()
                                         .ForEach(x =>
                                         {
-                                            if (x.TargetPlayerId == dyingTarget.PlayerId && x.transform.FindChild("ShootButton") != null) Object.Destroy(x.transform.FindChild("ShootButton").gameObject);
+                                            if (x.TargetPlayerId == dyingTarget.PlayerId && x.transform.FindChild("ShootButton") != null) UnityObject.Destroy(x.transform.FindChild("ShootButton").gameObject);
                                         });
                           }
                           else
@@ -521,7 +518,7 @@ internal static class Meeting
                                         .ToList()
                                         .ForEach(x =>
                                         {
-                                            if (x.transform.FindChild("ShootButton") != null) Object.Destroy(x.transform.FindChild("ShootButton").gameObject);
+                                            if (x.transform.FindChild("ShootButton") != null) UnityObject.Destroy(x.transform.FindChild("ShootButton").gameObject);
                                         });
                           }
 
@@ -561,7 +558,7 @@ internal static class Meeting
                 if (playerVoteArea.AmDead || (Helpers.PlayerById(playerVoteArea.TargetPlayerId).IsRole(RoleType.NiceSwapper) && Swapper.CanOnlySwapOthers)) continue;
 
                 GameObject template = playerVoteArea.Buttons.transform.Find("CancelButton").gameObject;
-                GameObject checkbox = Object.Instantiate(template, playerVoteArea.transform, true);
+                GameObject checkbox = UnityObject.Instantiate(template, playerVoteArea.transform, true);
                 checkbox.transform.position = template.transform.position;
                 checkbox.transform.localPosition = new(-0.95f, 0.03f, -1.3f);
                 SpriteRenderer renderer = checkbox.GetComponent<SpriteRenderer>();
@@ -580,25 +577,25 @@ internal static class Meeting
                 _renderers[i] = renderer;
             }
 
-            Transform meetingUI = Object.FindObjectsOfType<Transform>().FirstOrDefault(x => x.name == "PhoneUI");
+            Transform meetingUI = UnityObject.FindObjectsOfType<Transform>().FirstOrDefault(x => x.name == "PhoneUI");
 
             Transform buttonTemplate = __instance.playerStates[0].transform.FindChild("votePlayerBase");
             Transform maskTemplate = __instance.playerStates[0].transform.FindChild("MaskArea");
             TextMeshPro textTemplate = __instance.playerStates[0].NameText;
             Transform meetingExtraButtonParent = new GameObject().transform;
             meetingExtraButtonParent.SetParent(meetingUI);
-            Transform meetingExtraButton = Object.Instantiate(buttonTemplate, meetingExtraButtonParent);
+            Transform meetingExtraButton = UnityObject.Instantiate(buttonTemplate, meetingExtraButtonParent);
 
             Transform infoTransform = __instance.playerStates[0].NameText.transform.parent.FindChild("Info");
-            _meetingExtraButtonText = Object.Instantiate(__instance.playerStates[0].NameText, meetingExtraButtonParent);
+            _meetingExtraButtonText = UnityObject.Instantiate(__instance.playerStates[0].NameText, meetingExtraButtonParent);
             _meetingExtraButtonText.text = Tr.Get(TrKey.SwapperSwapsLeft, Swapper.RemainSwaps);
             _meetingExtraButtonText.alignment = TextAlignmentOptions.Right;
             _meetingExtraButtonText.enableWordWrapping = false;
             _meetingExtraButtonText.transform.localScale = Vector3.one * 1.7f;
             _meetingExtraButtonText.transform.localPosition = new(-3.3f, 0f, 0f);
 
-            _ = Object.Instantiate(maskTemplate, meetingExtraButtonParent);
-            _meetingExtraButtonLabel = Object.Instantiate(textTemplate, meetingExtraButton);
+            _ = UnityObject.Instantiate(maskTemplate, meetingExtraButtonParent);
+            _meetingExtraButtonLabel = UnityObject.Instantiate(textTemplate, meetingExtraButton);
             meetingExtraButton.GetComponent<SpriteRenderer>().sprite = MapUtilities.CachedShipStatus.CosmeticsCache.GetNameplate("nameplate_NoPlate").Image;
 
             meetingExtraButtonParent.localPosition = new(0, -2.225f, -5);
@@ -644,7 +641,7 @@ internal static class Meeting
                 PlayerVoteArea playerVoteArea = __instance.playerStates[i];
                 if (playerVoteArea.AmDead || playerVoteArea.TargetPlayerId == PlayerControl.LocalPlayer.PlayerId) continue;
                 GameObject template = playerVoteArea.Buttons.transform.Find("CancelButton").gameObject;
-                GameObject targetBox = Object.Instantiate(template, playerVoteArea.transform);
+                GameObject targetBox = UnityObject.Instantiate(template, playerVoteArea.transform);
                 targetBox.name = "EvilTrackerButton";
                 targetBox.transform.localPosition = new(-0.95f, 0.03f, -1.3f);
                 SpriteRenderer renderer = targetBox.GetComponent<SpriteRenderer>();
@@ -663,13 +660,13 @@ internal static class Meeting
                               .ToList()
                               .ForEach(x =>
                               {
-                                  if (x.transform.FindChild("EvilTrackerButton") != null) Object.Destroy(x.transform.FindChild("EvilTrackerButton").gameObject);
+                                  if (x.transform.FindChild("EvilTrackerButton") != null) UnityObject.Destroy(x.transform.FindChild("EvilTrackerButton").gameObject);
                               });
-                    GameObject targetMark = Object.Instantiate(template, playerVoteArea.transform);
+                    GameObject targetMark = UnityObject.Instantiate(template, playerVoteArea.transform);
                     targetMark.name = "EvilTrackerMark";
                     PassiveButton passiveButton = targetMark.GetComponent<PassiveButton>();
                     targetMark.transform.localPosition = new(1.1f, 0.03f, -20f);
-                    Object.Destroy(passiveButton);
+                    UnityObject.Destroy(passiveButton);
                     SpriteRenderer spriteRenderer = targetMark.GetComponent<SpriteRenderer>();
                     spriteRenderer.sprite = AssetLoader.Arrow;
                     spriteRenderer.color = Palette.CrewmateBlue;
@@ -695,7 +692,7 @@ internal static class Meeting
             if (playerVoteArea.AmDead || playerVoteArea.TargetPlayerId == PlayerControl.LocalPlayer.PlayerId) continue;
 
             GameObject template = playerVoteArea.Buttons.transform.Find("CancelButton").gameObject;
-            GameObject targetBox = Object.Instantiate(template, playerVoteArea.transform);
+            GameObject targetBox = UnityObject.Instantiate(template, playerVoteArea.transform);
             targetBox.name = "ShootButton";
             targetBox.transform.localPosition = new(-0.95f, 0.03f, -1.3f);
             SpriteRenderer renderer = targetBox.GetComponent<SpriteRenderer>();
@@ -723,7 +720,7 @@ internal static class Meeting
         // Uses remaining text for guesser/swapper
         if (_meetingInfoText == null)
         {
-            _meetingInfoText = Object.Instantiate(FastDestroyableSingleton<HudManager>.Instance.TaskPanel.taskText, __instance.transform);
+            _meetingInfoText = UnityObject.Instantiate(FastDestroyableSingleton<HudManager>.Instance.TaskPanel.taskText, __instance.transform);
             _meetingInfoText.alignment = TextAlignmentOptions.BottomLeft;
             _meetingInfoText.transform.position = Vector3.zero;
             _meetingInfoText.transform.localPosition = new(3.0f, 3.33f, -20f);
@@ -838,8 +835,8 @@ internal static class Meeting
             // 見えては行けないものが見えるので暗転させる
             MeetingHud.Instance.state = MeetingHud.VoteStates.Animating; // ゲッサーのキル用meetingUpdateが呼ばれないようにするおまじない（呼ばれるとバグる）
             HudManager hudManager = FastDestroyableSingleton<HudManager>.Instance;
-            SpriteRenderer blackScreen = Object.Instantiate(hudManager.FullScreen, hudManager.transform);
-            SpriteRenderer greyScreen = Object.Instantiate(hudManager.FullScreen, hudManager.transform);
+            SpriteRenderer blackScreen = UnityObject.Instantiate(hudManager.FullScreen, hudManager.transform);
+            SpriteRenderer greyScreen = UnityObject.Instantiate(hudManager.FullScreen, hudManager.transform);
             blackScreen.color = Palette.Black;
             blackScreen.transform.position = Vector3.zero;
             blackScreen.transform.localPosition = new(0f, 0f, -910f);
@@ -856,8 +853,8 @@ internal static class Meeting
             RoomTracker roomTracker = FastDestroyableSingleton<HudManager>.Instance?.roomTracker;
             if (roomTracker != null)
             {
-                GameObject gameObject = Object.Instantiate(roomTracker.gameObject, FastDestroyableSingleton<HudManager>.Instance.transform, true);
-                Object.DestroyImmediate(gameObject.GetComponent<RoomTracker>());
+                GameObject gameObject = UnityObject.Instantiate(roomTracker.gameObject, FastDestroyableSingleton<HudManager>.Instance.transform, true);
+                UnityObject.DestroyImmediate(gameObject.GetComponent<RoomTracker>());
                 gameObject.transform.localPosition = new(0, 0, -930f);
                 gameObject.transform.localScale = Vector3.one * 5f;
                 text = gameObject.GetComponent<TMP_Text>();
@@ -875,9 +872,9 @@ internal static class Meeting
                 text?.color = Color.white;
             }));
             // yield return new WaitForSeconds(2f);
-            if (text != null) Object.Destroy(text.gameObject);
-            Object.Destroy(blackScreen);
-            Object.Destroy(greyScreen);
+            if (text != null) UnityObject.Destroy(text.gameObject);
+            UnityObject.Destroy(blackScreen);
+            UnityObject.Destroy(greyScreen);
 
             // ミーティング画面の並び替えを直す
             PopulateButtons(MeetingHud.Instance, reporter.Data.PlayerId);
@@ -888,21 +885,21 @@ internal static class Meeting
 
         // 既存処理の移植
         {
-            Il2CppArrayBase<DeadBody> array = Object.FindObjectsOfType<DeadBody>();
+            Il2CppArrayBase<DeadBody> array = UnityObject.FindObjectsOfType<DeadBody>();
             NetworkedPlayerInfo[] deadBodies = (from b in array select GameData.Instance.GetPlayerById(b.ParentId)).ToArray();
             foreach (DeadBody t in array)
             {
                 if (t != null && t.gameObject != null)
-                    Object.Destroy(t.gameObject);
+                    UnityObject.Destroy(t.gameObject);
                 else
                     Logger.LogError("Encountered a null Dead Body while destroying.");
             }
 
-            Il2CppArrayBase<ShapeshifterEvidence> array2 = Object.FindObjectsOfType<ShapeshifterEvidence>();
+            Il2CppArrayBase<ShapeshifterEvidence> array2 = UnityObject.FindObjectsOfType<ShapeshifterEvidence>();
             foreach (ShapeshifterEvidence t in array2)
             {
                 if (t != null && t.gameObject != null)
-                    Object.Destroy(t.gameObject);
+                    UnityObject.Destroy(t.gameObject);
                 else
                     Logger.LogError("Encountered a null Evidence while destroying.");
             }
