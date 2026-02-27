@@ -30,8 +30,16 @@ internal abstract class PlayerRole
 
     internal virtual void ResetRole() { }
     internal virtual void PostInit() { }
-    internal virtual string ModifyNameText(string nameText) { return nameText; }
-    internal virtual string MeetingInfoText() { return ""; }
+
+    internal virtual string ModifyNameText(string nameText)
+    {
+        return nameText;
+    }
+
+    internal virtual string MeetingInfoText()
+    {
+        return "";
+    }
 }
 
 // 役職のグローバルな管理（登録・検索など）を担当するクラス
@@ -43,7 +51,10 @@ internal static class ModRoleManager
     internal static void ClearAll()
     {
         AllRoles.Clear();
-        for (int i = 0; i < 256; i++) PlayerRoleCache[i] = null;
+        for (int i = 0; i < 256; i++)
+        {
+            PlayerRoleCache[i] = null;
+        }
     }
 
     internal static void RemoveFromCache(byte playerId)
@@ -53,13 +64,22 @@ internal static class ModRoleManager
 
     internal static PlayerRole GetRole(PlayerControl player)
     {
-        if (player == null) return null;
-        var cached = PlayerRoleCache[player.PlayerId];
-        if (cached != null) return cached;
+        if (player == null)
+        {
+            return null;
+        }
+        PlayerRole cached = PlayerRoleCache[player.PlayerId];
+        if (cached != null)
+        {
+            return cached;
+        }
 
         foreach (PlayerRole t in AllRoles)
         {
-            if (t.Player != player) continue;
+            if (t.Player != player)
+            {
+                continue;
+            }
             PlayerRoleCache[player.PlayerId] = t;
             return t;
         }
@@ -70,13 +90,22 @@ internal static class ModRoleManager
     internal static void AddRole(PlayerRole role)
     {
         AllRoles.Add(role);
-        if (role.Player != null) PlayerRoleCache[role.Player.PlayerId] = null;
+        if (role.Player != null)
+        {
+            PlayerRoleCache[role.Player.PlayerId] = null;
+        }
     }
 
     internal static void RemoveRole(PlayerRole role)
     {
-        if (role == null) return;
-        if (role.Player != null) PlayerRoleCache[role.Player.PlayerId] = null;
+        if (role == null)
+        {
+            return;
+        }
+        if (role.Player != null)
+        {
+            PlayerRoleCache[role.Player.PlayerId] = null;
+        }
         AllRoles.Remove(role);
     }
 }
@@ -122,8 +151,14 @@ internal abstract class SingleRoleBase<T> : PlayerRole where T : SingleRoleBase<
     // ReSharper disable once UnusedMember.Global
     public static void SetRole(PlayerControl player)
     {
-        if (player == null || IsRole(player)) return;
-        if (Instance != null) EraseRole(Instance.Player);
+        if (player == null || IsRole(player))
+        {
+            return;
+        }
+        if (Instance != null)
+        {
+            EraseRole(Instance.Player);
+        }
         T role = new();
         role.Init(player);
     }
@@ -132,7 +167,10 @@ internal abstract class SingleRoleBase<T> : PlayerRole where T : SingleRoleBase<
     // ReSharper disable once MemberCanBePrivate.Global
     public static void EraseRole(PlayerControl player)
     {
-        if (player == null || Instance == null || Instance.Player != player) return;
+        if (player == null || Instance == null || Instance.Player != player)
+        {
+            return;
+        }
         Instance.ResetRole();
         ModRoleManager.RemoveRole(Instance);
         Instance = null;
@@ -141,8 +179,14 @@ internal abstract class SingleRoleBase<T> : PlayerRole where T : SingleRoleBase<
     // ReSharper disable once UnusedMember.Global
     public static void SwapRole(PlayerControl p1, PlayerControl p2)
     {
-        if (p1 == null || p2 == null || Instance == null) return;
-        if (Instance.Player != p1 && Instance.Player != p2) return;
+        if (p1 == null || p2 == null || Instance == null)
+        {
+            return;
+        }
+        if (Instance.Player != p1 && Instance.Player != p2)
+        {
+            return;
+        }
 
         ModRoleManager.RemoveFromCache(p1.PlayerId);
         ModRoleManager.RemoveFromCache(p2.PlayerId);
@@ -165,11 +209,16 @@ internal abstract class MultiRoleBase<T> : PlayerRole where T : MultiRoleBase<T>
         get
         {
             PlayerControl local = PlayerControl.LocalPlayer;
-            if (local == null) return null;
+            if (local == null)
+            {
+                return null;
+            }
             foreach (T t in Players)
             {
                 if (t.Player == local)
+                {
                     return t;
+                }
             }
 
             return null;
@@ -181,7 +230,10 @@ internal abstract class MultiRoleBase<T> : PlayerRole where T : MultiRoleBase<T>
         get
         {
             List<PlayerControl> list = new(Players.Count);
-            foreach (T t in Players) list.Add(t.Player);
+            foreach (T t in Players)
+            {
+                list.Add(t.Player);
+            }
 
             return list;
         }
@@ -195,7 +247,10 @@ internal abstract class MultiRoleBase<T> : PlayerRole where T : MultiRoleBase<T>
             foreach (T t in Players)
             {
                 PlayerControl p = t.Player;
-                if (p.IsAlive()) list.Add(p);
+                if (p.IsAlive())
+                {
+                    list.Add(p);
+                }
             }
 
             return list;
@@ -210,7 +265,10 @@ internal abstract class MultiRoleBase<T> : PlayerRole where T : MultiRoleBase<T>
             foreach (T t in Players)
             {
                 PlayerControl p = t.Player;
-                if (!p.IsAlive()) list.Add(p);
+                if (!p.IsAlive())
+                {
+                    list.Add(p);
+                }
             }
 
             return list;
@@ -232,11 +290,16 @@ internal abstract class MultiRoleBase<T> : PlayerRole where T : MultiRoleBase<T>
     internal static T GetRole(PlayerControl player = null)
     {
         player ??= PlayerControl.LocalPlayer;
-        if (player == null) return null;
+        if (player == null)
+        {
+            return null;
+        }
         foreach (T t in Players)
         {
             if (t.Player == player)
+            {
                 return t;
+            }
         }
 
         return null;
@@ -245,11 +308,16 @@ internal abstract class MultiRoleBase<T> : PlayerRole where T : MultiRoleBase<T>
     // ReSharper disable once MemberCanBeProtected.Global
     public static bool IsRole(PlayerControl player)
     {
-        if (player == null) return false;
-        foreach (var t in Players)
+        if (player == null)
+        {
+            return false;
+        }
+        foreach (T t in Players)
         {
             if (t.Player == player)
+            {
                 return true;
+            }
         }
 
         return false;
@@ -258,7 +326,10 @@ internal abstract class MultiRoleBase<T> : PlayerRole where T : MultiRoleBase<T>
     // ReSharper disable once UnusedMember.Global
     public static void SetRole(PlayerControl player)
     {
-        if (player == null || IsRole(player)) return;
+        if (player == null || IsRole(player))
+        {
+            return;
+        }
         T role = new();
         role.Init(player);
     }
@@ -266,12 +337,18 @@ internal abstract class MultiRoleBase<T> : PlayerRole where T : MultiRoleBase<T>
     // ReSharper disable once UnusedMember.Global
     public static void EraseRole(PlayerControl player)
     {
-        if (player == null) return;
+        if (player == null)
+        {
+            return;
+        }
         ModRoleManager.RemoveFromCache(player.PlayerId);
         for (int i = 0; i < Players.Count; i++)
         {
             T x = Players[i];
-            if (x.Player != player || x.CurrentRoleType != StaticRoleType) continue;
+            if (x.Player != player || x.CurrentRoleType != StaticRoleType)
+            {
+                continue;
+            }
             x.ResetRole();
             ModRoleManager.RemoveRole(x);
             Players.RemoveAt(i);
@@ -282,14 +359,22 @@ internal abstract class MultiRoleBase<T> : PlayerRole where T : MultiRoleBase<T>
     // ReSharper disable once UnusedMember.Global
     public static void SwapRole(PlayerControl p1, PlayerControl p2)
     {
-        if (p1 == null || p2 == null) return;
+        if (p1 == null || p2 == null)
+        {
+            return;
+        }
         ModRoleManager.RemoveFromCache(p1.PlayerId);
         ModRoleManager.RemoveFromCache(p2.PlayerId);
-        foreach (var t in Players)
+        foreach (T t in Players)
         {
             if (t.Player == p1)
+            {
                 t.Player = p2;
-            else if (t.Player == p2) t.Player = p1;
+            }
+            else if (t.Player == p2)
+            {
+                t.Player = p1;
+            }
         }
     }
 }

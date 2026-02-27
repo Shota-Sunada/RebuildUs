@@ -30,7 +30,9 @@ internal class Mini : ModifierBase<Mini>
             foreach (PlayerControl player in PlayerControl.AllPlayerControls.GetFastEnumerator())
             {
                 if (!player.HasModifier(ModifierType.Mini))
+                {
                     validPlayers.Add(player);
+                }
             }
 
             return validPlayers;
@@ -58,7 +60,10 @@ internal class Mini : ModifierBase<Mini>
         for (int i = 0; i < Players.Count; i++)
         {
             Mini mini = Players[i];
-            if (mini.Player == player) return mini.GrowingProgress() == 1f;
+            if (mini.Player == player)
+            {
+                return mini.GrowingProgress() == 1f;
+            }
         }
 
         return true;

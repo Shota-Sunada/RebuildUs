@@ -21,16 +21,23 @@ internal sealed class CustomMessage
             gameObject.transform.localPosition = new(0, -1.8f, gameObject.transform.localPosition.z);
             CustomMessages.Add(this);
 
-            FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(duration, new Action<float>(p =>
-            {
-                if (text == null || text.gameObject == null) return;
-                bool even = (int)((p * duration) / 0.25f) % 2 == 0; // Bool flips every 0.25 seconds
-                text.color = even ? YellowColor : Color.red;
+            FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(duration,
+                new Action<float>(p =>
+                {
+                    if (text == null || text.gameObject == null)
+                    {
+                        return;
+                    }
+                    bool even = (int)(p * duration / 0.25f) % 2 == 0; // Bool flips every 0.25 seconds
+                    text.color = even ? YellowColor : Color.red;
 
-                if (!Mathf.Approximately(p, 1f)) return;
-                UnityObject.Destroy(text.gameObject);
-                CustomMessages.Remove(this);
-            })));
+                    if (!Mathf.Approximately(p, 1f))
+                    {
+                        return;
+                    }
+                    UnityObject.Destroy(text.gameObject);
+                    CustomMessages.Remove(this);
+                })));
         }
     }
 }

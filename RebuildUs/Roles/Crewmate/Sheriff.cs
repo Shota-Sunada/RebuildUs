@@ -27,16 +27,55 @@ internal class Sheriff : MultiRoleBase<Sheriff>
         get => NameColor;
     }
 
-    internal static float Cooldown { get => CustomOptionHolder.SheriffCooldown.GetFloat(); }
-    internal static int MaxShots { get => Mathf.RoundToInt(CustomOptionHolder.SheriffNumShots.GetFloat()); }
-    internal static bool CanKillNeutrals { get => CustomOptionHolder.SheriffCanKillNeutrals.GetBool(); }
-    internal static bool MisfireKillsTarget { get => CustomOptionHolder.SheriffMisfireKillsTarget.GetBool(); }
-    internal static bool SpyCanDieToSheriff { get => CustomOptionHolder.SpyCanDieToSheriff.GetBool(); }
-    internal static bool MadmateCanDieToSheriff { get => CustomOptionHolder.MadmateCanDieToSheriff.GetBool(); }
-    internal static bool MadmateRoleCanDieToSheriff { get => CustomOptionHolder.MadmateRoleCanDieToSheriff.GetBool(); }
-    internal static bool SuiciderCanDieToSheriff { get => CustomOptionHolder.SuiciderCanDieToSheriff.GetBool(); }
-    internal static bool CreatedMadmateCanDieToSheriff { get => CustomOptionHolder.CreatedMadmateCanDieToSheriff.GetBool(); }
-    internal static bool SheriffCanKillNoDeadBody { get => CustomOptionHolder.SheriffCanKillNoDeadBody.GetBool(); }
+    internal static float Cooldown
+    {
+        get => CustomOptionHolder.SheriffCooldown.GetFloat();
+    }
+
+    internal static int MaxShots
+    {
+        get => Mathf.RoundToInt(CustomOptionHolder.SheriffNumShots.GetFloat());
+    }
+
+    internal static bool CanKillNeutrals
+    {
+        get => CustomOptionHolder.SheriffCanKillNeutrals.GetBool();
+    }
+
+    internal static bool MisfireKillsTarget
+    {
+        get => CustomOptionHolder.SheriffMisfireKillsTarget.GetBool();
+    }
+
+    internal static bool SpyCanDieToSheriff
+    {
+        get => CustomOptionHolder.SpyCanDieToSheriff.GetBool();
+    }
+
+    internal static bool MadmateCanDieToSheriff
+    {
+        get => CustomOptionHolder.MadmateCanDieToSheriff.GetBool();
+    }
+
+    internal static bool MadmateRoleCanDieToSheriff
+    {
+        get => CustomOptionHolder.MadmateRoleCanDieToSheriff.GetBool();
+    }
+
+    internal static bool SuiciderCanDieToSheriff
+    {
+        get => CustomOptionHolder.SuiciderCanDieToSheriff.GetBool();
+    }
+
+    internal static bool CreatedMadmateCanDieToSheriff
+    {
+        get => CustomOptionHolder.CreatedMadmateCanDieToSheriff.GetBool();
+    }
+
+    internal static bool SheriffCanKillNoDeadBody
+    {
+        get => CustomOptionHolder.SheriffCanKillNoDeadBody.GetBool();
+    }
 
     internal override void OnMeetingStart() { }
 
@@ -75,44 +114,70 @@ internal class Sheriff : MultiRoleBase<Sheriff>
     {
         // Sheriff Kill
         _sheriffKillButton = new(() =>
-        {
-            if (Local.NumShots <= 0) return;
-
-            MurderAttemptResult murderAttemptResult = Helpers.CheckMurderAttempt(PlayerControl.LocalPlayer, Local.CurrentTarget);
-            if (murderAttemptResult == MurderAttemptResult.SuppressKill) return;
-
-            if (murderAttemptResult == MurderAttemptResult.PerformKill)
             {
-                byte targetId = Local.CurrentTarget.PlayerId;
-
-                if (AmongUsClient.Instance.AmHost)
+                if (Local.NumShots <= 0)
                 {
-                    bool misfire = CheckKill(Local.CurrentTarget);
+                    return;
+                }
+
+                MurderAttemptResult murderAttemptResult = Helpers.CheckMurderAttempt(PlayerControl.LocalPlayer, Local.CurrentTarget);
+                if (murderAttemptResult == MurderAttemptResult.SuppressKill)
+                {
+                    return;
+                }
+
+                if (murderAttemptResult == MurderAttemptResult.PerformKill)
+                {
+                    byte targetId = Local.CurrentTarget.PlayerId;
+
+                    if (AmongUsClient.Instance.AmHost)
                     {
-                        using RPCSender killSender = new(PlayerControl.LocalPlayer.NetId, CustomRPC.SheriffKill);
-                        killSender.Write(PlayerControl.LocalPlayer.Data.PlayerId);
-                        killSender.Write(targetId);
-                        killSender.Write(misfire);
+                        bool misfire = CheckKill(Local.CurrentTarget);
+                        {
+                            using RPCSender killSender = new(PlayerControl.LocalPlayer.NetId, CustomRPC.SheriffKill);
+                            killSender.Write(PlayerControl.LocalPlayer.Data.PlayerId);
+                            killSender.Write(targetId);
+                            killSender.Write(misfire);
+                        }
+                        RPCProcedure.SheriffKill(PlayerControl.LocalPlayer.Data.PlayerId, targetId, misfire);
                     }
-                    RPCProcedure.SheriffKill(PlayerControl.LocalPlayer.Data.PlayerId, targetId, misfire);
+                    else
+                    {
+                        using RPCSender requestSender = new(PlayerControl.LocalPlayer.NetId, CustomRPC.SheriffKillRequest);
+                        requestSender.Write(PlayerControl.LocalPlayer.Data.PlayerId);
+                        requestSender.Write(targetId);
+                    }
                 }
-                else
-                {
-                    using RPCSender requestSender = new(PlayerControl.LocalPlayer.NetId, CustomRPC.SheriffKillRequest);
-                    requestSender.Write(PlayerControl.LocalPlayer.Data.PlayerId);
-                    requestSender.Write(targetId);
-                }
-            }
 
-            _sheriffKillButton.Timer = _sheriffKillButton.MaxTimer;
-            Local.CurrentTarget = null;
-        }, () => { return PlayerControl.LocalPlayer.IsRole(RoleType.Sheriff) && Local.NumShots > 0 && PlayerControl.LocalPlayer?.Data?.IsDead == false && Local.CanKill; }, () =>
-        {
-            SheriffNumShotsText?.text = Local.NumShots > 0 ? string.Format(Tr.Get(TrKey.SheriffShots), Local.NumShots) : "";
-            return Local.CurrentTarget && PlayerControl.LocalPlayer.CanMove;
-        }, () => { _sheriffKillButton.Timer = _sheriffKillButton.MaxTimer; }, hm.KillButton.graphic.sprite, ButtonPosition.Layout, hm, hm.KillButton, AbilitySlot.CrewmateAbilityPrimary, false, FastDestroyableSingleton<TranslationController>.Instance.GetString(StringNames.KillLabel));
+                _sheriffKillButton.Timer = _sheriffKillButton.MaxTimer;
+                Local.CurrentTarget = null;
+            },
+            () =>
+            {
+                return PlayerControl.LocalPlayer.IsRole(RoleType.Sheriff)
+                       && Local.NumShots > 0
+                       && PlayerControl.LocalPlayer?.Data?.IsDead == false
+                       && Local.CanKill;
+            },
+            () =>
+            {
+                SheriffNumShotsText?.text = Local.NumShots > 0 ? string.Format(Tr.Get(TrKey.SheriffShots), Local.NumShots) : "";
+                return Local.CurrentTarget && PlayerControl.LocalPlayer.CanMove;
+            },
+            () =>
+            {
+                _sheriffKillButton.Timer = _sheriffKillButton.MaxTimer;
+            },
+            hm.KillButton.graphic.sprite,
+            ButtonPosition.Layout,
+            hm,
+            hm.KillButton,
+            AbilitySlot.CrewmateAbilityPrimary,
+            false,
+            FastDestroyableSingleton<TranslationController>.Instance.GetString(StringNames.KillLabel));
 
-        SheriffNumShotsText = UnityObject.Instantiate(_sheriffKillButton.ActionButton.cooldownTimerText, _sheriffKillButton.ActionButton.cooldownTimerText.transform.parent);
+        SheriffNumShotsText = UnityObject.Instantiate(_sheriffKillButton.ActionButton.cooldownTimerText,
+            _sheriffKillButton.ActionButton.cooldownTimerText.transform.parent);
         SheriffNumShotsText.text = "";
         SheriffNumShotsText.enableWordWrapping = false;
         SheriffNumShotsText.transform.localScale = Vector3.one * 0.5f;
@@ -126,9 +191,23 @@ internal class Sheriff : MultiRoleBase<Sheriff>
 
     internal static bool CheckKill(PlayerControl target)
     {
-        if (target == null) return true;
+        if (target == null)
+        {
+            return true;
+        }
 
-        if ((target.Data.Role.IsImpostor && (!target.HasModifier(ModifierType.Mini) || Mini.IsGrownUp(target))) || (SpyCanDieToSheriff && target.IsRole(RoleType.Spy)) || (MadmateCanDieToSheriff && target.HasModifier(ModifierType.Madmate)) || (MadmateRoleCanDieToSheriff && target.IsRole(RoleType.Madmate)) || (SuiciderCanDieToSheriff && target.IsRole(RoleType.Suicider)) || (CreatedMadmateCanDieToSheriff && target.HasModifier(ModifierType.CreatedMadmate)) || (CanKillNeutrals && target.IsNeutral()) || target.IsRole(RoleType.Jackal) || target.IsRole(RoleType.Sidekick)) return false;
+        if (target.Data.Role.IsImpostor && (!target.HasModifier(ModifierType.Mini) || Mini.IsGrownUp(target))
+            || SpyCanDieToSheriff && target.IsRole(RoleType.Spy)
+            || MadmateCanDieToSheriff && target.HasModifier(ModifierType.Madmate)
+            || MadmateRoleCanDieToSheriff && target.IsRole(RoleType.Madmate)
+            || SuiciderCanDieToSheriff && target.IsRole(RoleType.Suicider)
+            || CreatedMadmateCanDieToSheriff && target.HasModifier(ModifierType.CreatedMadmate)
+            || CanKillNeutrals && target.IsNeutral()
+            || target.IsRole(RoleType.Jackal)
+            || target.IsRole(RoleType.Sidekick))
+        {
+            return false;
+        }
 
         return true;
     }

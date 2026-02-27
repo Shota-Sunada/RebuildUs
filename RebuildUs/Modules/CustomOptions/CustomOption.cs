@@ -20,29 +20,23 @@ internal partial class CustomOption
     private static readonly Dictionary<CustomOptionType, List<CustomOption>> OptionsByType = [];
     private static readonly Dictionary<OptionBehaviour, CustomOption> OptionsByBehaviour = [];
     protected static int Preset;
+    internal readonly List<CustomOption> Children = [];
+    internal readonly bool HideIfParentEnabled;
 
     internal readonly int Id;
-    internal readonly CustomOptionType Type;
     internal readonly TrKey NameKey;
-    internal Color Color;
     internal readonly CustomOption Parent;
-    internal bool IsHeader;
-    internal TrKey HeaderKey;
-    internal string Format;
-    internal readonly bool HideIfParentEnabled;
-    internal readonly List<CustomOption> Children = [];
+    internal readonly CustomOptionType Type;
 
     private OptionBehaviour _optionBehavior;
-    internal ConfigEntry<int> Entry;
+    internal Color Color;
     internal int DefaultSelection;
+    internal ConfigEntry<int> Entry;
+    internal string Format;
+    internal TrKey HeaderKey;
+    internal bool IsHeader;
 
-    protected CustomOption(int id,
-                           CustomOptionType type,
-                           TrKey nameKey,
-                           CustomOption parent,
-                           bool hideIfParentEnabled,
-                           string format,
-                           Color color)
+    protected CustomOption(int id, CustomOptionType type, TrKey nameKey, CustomOption parent, bool hideIfParentEnabled, string format, Color color)
     {
         Id = id;
         Type = type;
@@ -133,7 +127,10 @@ internal partial class CustomOption
                                                string format = "")
     {
         List<float> selections = [];
-        for (float s = min; s <= max; s += step) selections.Add(s);
+        for (float s = min; s <= max; s += step)
+        {
+            selections.Add(s);
+        }
 
         return new(id, type, nameKey, [.. selections], defaultValue, parent, hideIfParentEnabled, format, color ?? Color.white);
     }
@@ -150,7 +147,10 @@ internal partial class CustomOption
                                                string format = "")
     {
         List<float> selections = [];
-        for (float s = min; s <= max; s += step) selections.Add(s);
+        for (float s = min; s <= max; s += step)
+        {
+            selections.Add(s);
+        }
 
         CustomOption<float> opt = new(id, type, nameKey, [.. selections], defaultValue, null, false, format, color ?? Color.white);
         opt.SetHeader(headerKey);
@@ -171,14 +171,14 @@ internal partial class CustomOption
     }
 
     internal static CustomOption<string> Normal(int id,
-                                                   CustomOptionType type,
-                                                   TrKey nameKey,
-                                                   string[] selections,
-                                                   int defaultSelection,
-                                                   CustomOption parent = null,
-                                                   Color? color = null,
-                                                   bool hideIfParentEnabled = false,
-                                                   string format = "")
+                                                CustomOptionType type,
+                                                TrKey nameKey,
+                                                string[] selections,
+                                                int defaultSelection,
+                                                CustomOption parent = null,
+                                                Color? color = null,
+                                                bool hideIfParentEnabled = false,
+                                                string format = "")
     {
         return new(id, type, nameKey, selections, defaultSelection, parent, hideIfParentEnabled, format, color ?? Color.white);
     }
@@ -223,17 +223,26 @@ internal partial class CustomOption
         Preset = newPreset;
         foreach (CustomOption option in AllOptions)
         {
-            if (option.Id == 0) continue;
+            if (option.Id == 0)
+            {
+                continue;
+            }
 
             option.Entry = Instance.Config.Bind($"Preset{Preset}", option.Id.ToString(), option.DefaultSelection);
             option.SetSelectionIndex(Mathf.Clamp(option.Entry.Value, 0, option.GetSelections().Length - 1));
-            if (option._optionBehavior == null || option._optionBehavior is not StringOption stringOption) continue;
+            if (option._optionBehavior == null || option._optionBehavior is not StringOption stringOption)
+            {
+                continue;
+            }
             stringOption.oldValue = stringOption.Value = option.GetSelectionIndex();
             stringOption.ValueText.text = option.GetValue().ToString();
         }
 
         // make sure to reload all tabs, even the ones in the background, because they might have changed when the preset was switched!
-        if (AmongUsClient.Instance?.AmHost != true) return;
+        if (AmongUsClient.Instance?.AmHost != true)
+        {
+            return;
+        }
         UpdateGameOptionsMenu(CustomOptionType.General, _generalTab.GetComponent<GameOptionsMenu>());
         UpdateGameOptionsMenu(CustomOptionType.Impostor, _impostorTab.GetComponent<GameOptionsMenu>());
         UpdateGameOptionsMenu(CustomOptionType.Crewmate, _crewmateTab.GetComponent<GameOptionsMenu>());
@@ -243,7 +252,10 @@ internal partial class CustomOption
 
     private static void ShareOptionChange(uint optionId)
     {
-        if (!AllOptionsById.TryGetValue((int)optionId, out CustomOption option)) return;
+        if (!AllOptionsById.TryGetValue((int)optionId, out CustomOption option))
+        {
+            return;
+        }
         using RPCSender sender = new(PlayerControl.LocalPlayer.NetId, CustomRPC.ShareOptions);
         sender.Write((byte)1);
         sender.WritePacked((uint)option.Id);
@@ -252,7 +264,10 @@ internal partial class CustomOption
 
     private static void ShareOptionSelections()
     {
-        if (PlayerControl.AllPlayerControls.Count <= 1 || (!AmongUsClient.Instance!.AmHost && PlayerControl.LocalPlayer == null)) return;
+        if (PlayerControl.AllPlayerControls.Count <= 1 || !AmongUsClient.Instance!.AmHost && PlayerControl.LocalPlayer == null)
+        {
+            return;
+        }
 
         int totalOptions = AllOptions.Count;
         int currentIndex = 0;
@@ -323,7 +338,10 @@ internal partial class CustomOption
         newSelection = Mathf.Clamp((newSelection + selections.Length) % selections.Length, 0, selections.Length - 1);
         if (AmongUsClient.Instance?.AmClient == true && notifyUsers && currentIndex != newSelection)
         {
-            DestroyableSingleton<HudManager>.Instance.Notifier.AddSettingsChangeMessage((StringNames)(Id + CUSTOM_OPTION_PRE_ID), selections[newSelection].ToString(), false, icon);
+            DestroyableSingleton<HudManager>.Instance.Notifier.AddSettingsChangeMessage((StringNames)(Id + CUSTOM_OPTION_PRE_ID),
+                selections[newSelection].ToString(),
+                false,
+                icon);
             try
             {
                 SetSelectionIndex(newSelection);
@@ -331,7 +349,10 @@ internal partial class CustomOption
                     && GameStartManager.Instance.LobbyInfoPane != null
                     && GameStartManager.Instance.LobbyInfoPane.LobbyViewSettingsPane != null
                     && GameStartManager.Instance.LobbyInfoPane.LobbyViewSettingsPane.gameObject.activeSelf)
-                    SettingsPaneChangeTab(GameStartManager.Instance.LobbyInfoPane.LobbyViewSettingsPane, (PanePage)GameStartManager.Instance.LobbyInfoPane.LobbyViewSettingsPane.currentTab);
+                {
+                    SettingsPaneChangeTab(GameStartManager.Instance.LobbyInfoPane.LobbyViewSettingsPane,
+                        (PanePage)GameStartManager.Instance.LobbyInfoPane.LobbyViewSettingsPane.currentTab);
+                }
             }
             catch
             {
@@ -360,47 +381,62 @@ internal partial class CustomOption
                 }
             }
             else
+            {
                 ShareOptionChange((uint)Id);
+            }
         }
 
-        if (AmongUsClient.Instance?.AmHost != true) return;
+        if (AmongUsClient.Instance?.AmHost != true)
+        {
+            return;
+        }
         if (_generalTab.active)
         {
             GameOptionsMenu tab = _generalTab.GetComponent<GameOptionsMenu>();
-            if (tab != null) UpdateGameOptionsMenu(CustomOptionType.General, tab);
+            if (tab != null)
+            {
+                UpdateGameOptionsMenu(CustomOptionType.General, tab);
+            }
         }
         else if (_impostorTab.active)
         {
             GameOptionsMenu tab = _impostorTab.GetComponent<GameOptionsMenu>();
-            if (tab != null) UpdateGameOptionsMenu(CustomOptionType.Impostor, tab);
+            if (tab != null)
+            {
+                UpdateGameOptionsMenu(CustomOptionType.Impostor, tab);
+            }
         }
         else if (_crewmateTab.active)
         {
             GameOptionsMenu tab = _crewmateTab.GetComponent<GameOptionsMenu>();
-            if (tab != null) UpdateGameOptionsMenu(CustomOptionType.Crewmate, tab);
+            if (tab != null)
+            {
+                UpdateGameOptionsMenu(CustomOptionType.Crewmate, tab);
+            }
         }
         else if (_neutralTab.active)
         {
             GameOptionsMenu tab = _neutralTab.GetComponent<GameOptionsMenu>();
-            if (tab != null) UpdateGameOptionsMenu(CustomOptionType.Neutral, tab);
+            if (tab != null)
+            {
+                UpdateGameOptionsMenu(CustomOptionType.Neutral, tab);
+            }
         }
         else if (_modifierTab.active)
         {
             GameOptionsMenu tab = _modifierTab.GetComponent<GameOptionsMenu>();
-            if (tab != null) UpdateGameOptionsMenu(CustomOptionType.Modifier, tab);
+            if (tab != null)
+            {
+                UpdateGameOptionsMenu(CustomOptionType.Modifier, tab);
+            }
         }
     }
 }
 
 internal class CustomOption<T> : CustomOption
 {
-    internal T[] Selections;
     internal int Selection;
-
-    public T Value
-    {
-        get => Selections[Selection];
-    }
+    internal T[] Selections;
 
     public CustomOption(int id,
                         CustomOptionType type,
@@ -410,8 +446,15 @@ internal class CustomOption<T> : CustomOption
                         CustomOption parent,
                         bool hideIfParentEnabled,
                         string format,
-                        Color color)
-        : this(id, type, nameKey, selections, Array.IndexOf(selections, defaultValue), parent, hideIfParentEnabled, format, color) { }
+                        Color color) : this(id,
+        type,
+        nameKey,
+        selections,
+        Array.IndexOf(selections, defaultValue),
+        parent,
+        hideIfParentEnabled,
+        format,
+        color) { }
 
     public CustomOption(int id,
                         CustomOptionType type,
@@ -421,8 +464,7 @@ internal class CustomOption<T> : CustomOption
                         CustomOption parent,
                         bool hideIfParentEnabled,
                         string format,
-                        Color color)
-        : base(id, type, nameKey, parent, hideIfParentEnabled, format, color)
+                        Color color) : base(id, type, nameKey, parent, hideIfParentEnabled, format, color)
     {
         Selections = selections;
         DefaultSelection = Mathf.Clamp(defaultSelection, 0, selections.Length - 1);
@@ -438,6 +480,11 @@ internal class CustomOption<T> : CustomOption
             Selection = Mathf.Clamp(Entry.Value, 0, selections.Length - 1);
             Preset = Selection;
         }
+    }
+
+    public T Value
+    {
+        get => Selections[Selection];
     }
 
     protected override object GetValue()
@@ -457,6 +504,6 @@ internal class CustomOption<T> : CustomOption
 
     protected override object[] GetSelections()
     {
-        return Selections.Cast<object>().ToArray();
+        return [.. Selections.Cast<object>()];
     }
 }

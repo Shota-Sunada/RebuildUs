@@ -18,11 +18,30 @@ internal class Detective : MultiRoleBase<Detective>
     }
 
     // write configs here
-    internal static bool AnonymousFootprints { get => CustomOptionHolder.DetectiveAnonymousFootprints.GetBool(); }
-    private static float FootprintInterval { get => CustomOptionHolder.DetectiveFootprintInterval.GetFloat(); }
-    internal static float FootprintDuration { get => CustomOptionHolder.DetectiveFootprintDuration.GetFloat(); }
-    internal static float ReportNameDuration { get => CustomOptionHolder.DetectiveReportNameDuration.GetFloat(); }
-    internal static float ReportColorDuration { get => CustomOptionHolder.DetectiveReportColorDuration.GetFloat(); }
+    internal static bool AnonymousFootprints
+    {
+        get => CustomOptionHolder.DetectiveAnonymousFootprints.GetBool();
+    }
+
+    private static float FootprintInterval
+    {
+        get => CustomOptionHolder.DetectiveFootprintInterval.GetFloat();
+    }
+
+    internal static float FootprintDuration
+    {
+        get => CustomOptionHolder.DetectiveFootprintDuration.GetFloat();
+    }
+
+    internal static float ReportNameDuration
+    {
+        get => CustomOptionHolder.DetectiveReportNameDuration.GetFloat();
+    }
+
+    internal static float ReportColorDuration
+    {
+        get => CustomOptionHolder.DetectiveReportColorDuration.GetFloat();
+    }
 
     internal override void OnMeetingStart() { }
     internal override void OnMeetingEnd() { }
@@ -30,15 +49,23 @@ internal class Detective : MultiRoleBase<Detective>
 
     internal override void FixedUpdate()
     {
-        if (!Exists || !PlayerControl.LocalPlayer.IsRole(RoleType.Detective)) return;
+        if (!Exists || !PlayerControl.LocalPlayer.IsRole(RoleType.Detective))
+        {
+            return;
+        }
 
         _timer -= Time.fixedDeltaTime;
-        if (!(_timer <= 0f)) return;
+        if (!(_timer <= 0f))
+        {
+            return;
+        }
         _timer = FootprintInterval;
         foreach (PlayerControl player in PlayerControl.AllPlayerControls.GetFastEnumerator())
         {
             if (player != null && player != PlayerControl.LocalPlayer && !player.Data.IsDead && !player.inVent && !player.IsGm())
+            {
                 FootprintHolder.Instance.MakeFootprint(player);
+            }
         }
     }
 

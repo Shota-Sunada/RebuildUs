@@ -15,10 +15,19 @@ internal static class KeyBindingMenu
 
     internal static void Start(OptionsMenuBehaviour __instance)
     {
-        if (__instance.name == "KeyBindingMenu") return;
-        if (!__instance.CensorChatButton) return;
+        if (__instance.name == "KeyBindingMenu")
+        {
+            return;
+        }
+        if (!__instance.CensorChatButton)
+        {
+            return;
+        }
 
-        if (!_popUp) CreateCustom(__instance);
+        if (!_popUp)
+        {
+            CreateCustom(__instance);
+        }
 
         if (!_buttonPrefab)
         {
@@ -27,10 +36,16 @@ internal static class KeyBindingMenu
             _buttonPrefab.name = "KeyBindPrefab";
 
             ToggleButtonBehaviour toggle = _buttonPrefab.GetComponent<ToggleButtonBehaviour>();
-            if (toggle) toggle.enabled = false;
+            if (toggle)
+            {
+                toggle.enabled = false;
+            }
 
             BoxCollider2D collider = _buttonPrefab.GetComponent<BoxCollider2D>();
-            if (collider) collider.size = new(2.5f, 0.7f);
+            if (collider)
+            {
+                collider.size = new(2.5f, 0.7f);
+            }
 
             _buttonPrefab.transform.localScale = new(1f, 2f, 1f);
             _buttonPrefab.Text.transform.localScale = new(1f, 0.5f, 1f);
@@ -86,7 +101,10 @@ internal static class KeyBindingMenu
                 Close();
             }));
 
-            if (omb) omb.BackButton = closeButton.GetComponent<UiElement>();
+            if (omb)
+            {
+                omb.BackButton = closeButton.GetComponent<UiElement>();
+            }
         }
 
         // Setup Waiting PopUp
@@ -115,7 +133,10 @@ internal static class KeyBindingMenu
         for (int i = transform.childCount - 1; i >= 0; i--)
         {
             GameObject obj = transform.GetChild(i).gameObject;
-            if (obj.name is not "Background" and not "CloseButton") UnityObject.Destroy(obj);
+            if (obj.name is not "Background" and not "CloseButton")
+            {
+                UnityObject.Destroy(obj);
+            }
         }
 
         _popUp.SetActive(false);
@@ -123,7 +144,10 @@ internal static class KeyBindingMenu
 
     private static void Close()
     {
-        if (!_popUp) return;
+        if (!_popUp)
+        {
+            return;
+        }
 
         _activeInput = null;
         _popUp.SetActive(false);
@@ -137,13 +161,19 @@ internal static class KeyBindingMenu
             UnityObject.DontDestroyOnLoad(_waitingPopUp);
         }
 
-        if (ControllerManager.Instance) ControllerManager.Instance.CloseOverlayMenu("OptionsMenu");
+        if (ControllerManager.Instance)
+        {
+            ControllerManager.Instance.CloseOverlayMenu("OptionsMenu");
+        }
     }
 
     private static void InitializeMenuButton(OptionsMenuBehaviour __instance)
     {
         // Add a button to open this menu in the main options menu
-        if (__instance.CensorChatButton.transform.parent.Find("KeyBindingMenuButton")) return;
+        if (__instance.CensorChatButton.transform.parent.Find("KeyBindingMenuButton"))
+        {
+            return;
+        }
 
         ToggleButtonBehaviour openButton = UnityObject.Instantiate(__instance.CensorChatButton, __instance.CensorChatButton.transform.parent);
         openButton.name = "KeyBindingMenuButton";
@@ -154,7 +184,10 @@ internal static class KeyBindingMenu
 
         // Adjust size to fit in the space
         BoxCollider2D collider = openButton.GetComponent<BoxCollider2D>();
-        if (collider) collider.size = new(1.5f, 0.7f);
+        if (collider)
+        {
+            collider.size = new(1.5f, 0.7f);
+        }
 
         openButton.gameObject.SetActive(true);
         openButton.Text.text = "Keys";
@@ -164,7 +197,10 @@ internal static class KeyBindingMenu
         passiveButton.OnClick = new();
         passiveButton.OnClick.AddListener((Action)(() =>
         {
-            if (!_popUp) CreateCustom(__instance);
+            if (!_popUp)
+            {
+                CreateCustom(__instance);
+            }
 
             _popUp.transform.SetParent(__instance.transform.parent);
             _popUp.transform.localPosition = new(0, 0, -900f);
@@ -174,9 +210,15 @@ internal static class KeyBindingMenu
 
             // Re-grab controller buttons for navigation
             OptionsMenuBehaviour omb = _popUp.GetComponent<OptionsMenuBehaviour>();
-            if (omb) ControllerManager.Instance.OpenOverlayMenu("OptionsMenu", omb.BackButton, omb.DefaultButtonSelected, omb.ControllerSelectable);
+            if (omb)
+            {
+                ControllerManager.Instance.OpenOverlayMenu("OptionsMenu", omb.BackButton, omb.DefaultButtonSelected, omb.ControllerSelectable);
+            }
 
-            if (__instance.transform.parent && __instance.transform.parent == FastDestroyableSingleton<HudManager>.Instance?.transform) __instance.Close();
+            if (__instance.transform.parent && __instance.transform.parent == FastDestroyableSingleton<HudManager>.Instance?.transform)
+            {
+                __instance.Close();
+            }
         }));
     }
 
@@ -186,24 +228,45 @@ internal static class KeyBindingMenu
         {
             if (_waitingPopUp)
             {
-                if (!_waitingPopUp.activeSelf) _waitingPopUp.SetActive(true);
+                if (!_waitingPopUp.activeSelf)
+                {
+                    _waitingPopUp.SetActive(true);
+                }
                 _waitingPopUp.transform.SetParent(_popUp.transform.parent);
                 _waitingPopUp.transform.localPosition = new(0, 0, -950f);
 
-                if (_waitingText && _activeInput != null) _waitingText.text = new StringBuilder(Tr.GetDynamic($"{_activeInput.Identifier}")).Append("\n").Append(Tr.Get(TrKey.PressAnyKey)).ToString();
+                if (_waitingText && _activeInput != null)
+                {
+                    _waitingText.text = new StringBuilder(Tr.GetDynamic($"{_activeInput.Identifier}"))
+                                        .Append("\n")
+                                        .Append(Tr.Get(TrKey.PressAnyKey))
+                                        .ToString();
+                }
             }
 
             if (!_waitingForKey)
             {
-                if (!Input.anyKey) _waitingForKey = true;
+                if (!Input.anyKey)
+                {
+                    _waitingForKey = true;
+                }
                 return;
             }
 
-            if (!Input.anyKeyDown) return;
+            if (!Input.anyKeyDown)
+            {
+                return;
+            }
             foreach (KeyCode key in AllKeyCodes)
             {
-                if (!Input.GetKeyDown(key)) continue;
-                if (key != KeyCode.Escape) _activeInput.ChangeKey(key);
+                if (!Input.GetKeyDown(key))
+                {
+                    continue;
+                }
+                if (key != KeyCode.Escape)
+                {
+                    _activeInput.ChangeKey(key);
+                }
 
                 _activeInput = null;
                 _waitingForKey = false;
@@ -214,14 +277,23 @@ internal static class KeyBindingMenu
             return;
         }
 
-        if (_waitingPopUp && _waitingPopUp.activeSelf) _waitingPopUp.SetActive(false);
+        if (_waitingPopUp && _waitingPopUp.activeSelf)
+        {
+            _waitingPopUp.SetActive(false);
+        }
 
-        if (Input.GetKeyUp(KeyCode.Escape)) Close();
+        if (Input.GetKeyUp(KeyCode.Escape))
+        {
+            Close();
+        }
     }
 
     private static void SetUpOptions()
     {
-        if (!_popUp) return;
+        if (!_popUp)
+        {
+            return;
+        }
 
         OptionsMenuBehaviour omb = _popUp.GetComponent<OptionsMenuBehaviour>();
 
@@ -248,7 +320,9 @@ internal static class KeyBindingMenu
         foreach (ToggleButtonBehaviour button in ModButtons)
         {
             if (button != null)
+            {
                 UnityObject.Destroy(button.gameObject);
+            }
         }
 
         ModButtons.Clear();
@@ -263,7 +337,7 @@ internal static class KeyBindingMenu
             ToggleButtonBehaviour button = UnityObject.Instantiate(_buttonPrefab, _popUp.transform);
 
             float x = i % 2 == 0 ? -xOffset : xOffset;
-            float y = startY - ((i / 2) * spacing);
+            float y = startY - i / 2 * spacing;
 
             button.transform.localPosition = new(x, y, -1f);
             button.gameObject.SetActive(true);
@@ -282,8 +356,14 @@ internal static class KeyBindingMenu
             if (omb)
             {
                 UiElement uiElement = button.GetComponent<UiElement>();
-                if (uiElement) omb.ControllerSelectable.Add(uiElement);
-                if (i == 0) omb.DefaultButtonSelected = uiElement;
+                if (uiElement)
+                {
+                    omb.ControllerSelectable.Add(uiElement);
+                }
+                if (i == 0)
+                {
+                    omb.DefaultButtonSelected = uiElement;
+                }
             }
 
             ModButtons.Add(button);

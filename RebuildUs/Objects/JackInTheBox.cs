@@ -14,9 +14,12 @@ internal sealed class JackInTheBox
 
     internal JackInTheBox(Vector2 p)
     {
-        _gameObject = new("JackInTheBox") { layer = 11 };
+        _gameObject = new("JackInTheBox")
+        {
+            layer = 11,
+        };
         _gameObject.AddSubmergedComponent(SubmergedCompatibility.Classes.ELEVATOR_MOVER);
-        Vector3 position = new(p.x, p.y, (p.y / 1000f) + 0.01f);
+        Vector3 position = new(p.x, p.y, p.y / 1000f + 0.01f);
         position += (Vector3)PlayerControl.LocalPlayer.Collider.offset; // Add collider offset that DoMove moves the player up at a valid position
         // Create the marker
         _gameObject.transform.position = position;
@@ -41,7 +44,9 @@ internal sealed class JackInTheBox
         foreach (Vent t in allVents)
         {
             if (t.Id > maxId)
+            {
                 maxId = t.Id;
+            }
         }
 
         _vent.Id = maxId + 1; // Make sure we have a unique id
@@ -51,7 +56,10 @@ internal sealed class JackInTheBox
         _vent.myRend = ventRenderer;
 
         Vent[] newVents = new Vent[allVents.Length + 1];
-        for (int i = 0; i < allVents.Length; i++) newVents[i] = allVents[i];
+        for (int i = 0; i < allVents.Length; i++)
+        {
+            newVents[i] = allVents[i];
+        }
         newVents[^1] = _vent;
         MapUtilities.CachedShipStatus.AllVents = newVents;
 
@@ -59,14 +67,20 @@ internal sealed class JackInTheBox
         _vent.name = "JackInTheBoxVent_" + _vent.Id;
 
         // Only render the box for the Trickster
-        if (!BoxesConvertedToVents && !PlayerControl.LocalPlayer.IsRole(RoleType.Trickster)) _gameObject.SetActive(false);
+        if (!BoxesConvertedToVents && !PlayerControl.LocalPlayer.IsRole(RoleType.Trickster))
+        {
+            _gameObject.SetActive(false);
+        }
 
         _allJackInTheBoxes.Add(this);
     }
 
     private static Sprite GetBoxAnimationSprite(int index)
     {
-        if (AssetLoader.TricksterAnimations == null || AssetLoader.TricksterAnimations.Count == 0) return null;
+        if (AssetLoader.TricksterAnimations == null || AssetLoader.TricksterAnimations.Count == 0)
+        {
+            return null;
+        }
         index = Mathf.Clamp(index, 0, AssetLoader.TricksterAnimations.Count - 1);
         return AssetLoader.TricksterAnimations[index];
     }
@@ -76,24 +90,40 @@ internal sealed class JackInTheBox
         JackInTheBox box = null;
         foreach (JackInTheBox b in _allJackInTheBoxes)
         {
-            if (b?._vent == null || b._vent.Id != ventId) continue;
+            if (b?._vent == null || b._vent.Id != ventId)
+            {
+                continue;
+            }
             box = b;
             break;
         }
 
-        if (box == null) return;
-
-        FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(0.6f, new Action<float>(p =>
+        if (box == null)
         {
-            if (box._boxRenderer == null) return;
-            box._boxRenderer.sprite = GetBoxAnimationSprite((int)(p * AssetLoader.TricksterAnimations.Count));
-            if (Mathf.Approximately(p, 1f)) box._boxRenderer.sprite = GetBoxAnimationSprite(0);
-        })));
+            return;
+        }
+
+        FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(0.6f,
+            new Action<float>(p =>
+            {
+                if (box._boxRenderer == null)
+                {
+                    return;
+                }
+                box._boxRenderer.sprite = GetBoxAnimationSprite((int)(p * AssetLoader.TricksterAnimations.Count));
+                if (Mathf.Approximately(p, 1f))
+                {
+                    box._boxRenderer.sprite = GetBoxAnimationSprite(0);
+                }
+            })));
     }
 
     internal static void UpdateStates()
     {
-        if (BoxesConvertedToVents) return;
+        if (BoxesConvertedToVents)
+        {
+            return;
+        }
         foreach (JackInTheBox box in _allJackInTheBoxes)
         {
             bool playerIsTrickster = PlayerControl.LocalPlayer.IsRole(RoleType.Trickster);
@@ -109,7 +139,10 @@ internal sealed class JackInTheBox
 
     internal static void ConvertToVents()
     {
-        foreach (JackInTheBox t in _allJackInTheBoxes) t.ConvertToVent();
+        foreach (JackInTheBox t in _allJackInTheBoxes)
+        {
+            t.ConvertToVent();
+        }
 
         ConnectVents();
         BoxesConvertedToVents = true;
@@ -131,7 +164,10 @@ internal sealed class JackInTheBox
         }
 
         // Connect first with last
-        if (_allJackInTheBoxes.Count <= 0) return;
+        if (_allJackInTheBoxes.Count <= 0)
+        {
+            return;
+        }
         JackInTheBox first = _allJackInTheBoxes[0];
         JackInTheBox last = _allJackInTheBoxes[^1];
         first._vent.Left = last._vent;

@@ -1,6 +1,3 @@
-using System.Reflection;
-using System.Text.RegularExpressions;
-using InnerNet;
 using Object = UnityEngine.Object;
 
 namespace RebuildUs;
@@ -35,7 +32,8 @@ internal static class Helpers
 
     internal static bool ShowMeetingText
     {
-        get => MeetingHud.Instance != null && MeetingHud.Instance.state is MeetingHud.VoteStates.Voted or MeetingHud.VoteStates.NotVoted or MeetingHud.VoteStates.Discussion;
+        get => MeetingHud.Instance != null
+               && MeetingHud.Instance.state is MeetingHud.VoteStates.Voted or MeetingHud.VoteStates.NotVoted or MeetingHud.VoteStates.Discussion;
     }
 
     internal static bool GameStarted
@@ -95,19 +93,34 @@ internal static class Helpers
 
     internal static void DestroyList<T>(Il2CppSystem.Collections.Generic.List<T> items) where T : Object
     {
-        if (items == null) return;
-        foreach (T item in items) Object.Destroy(item);
+        if (items == null)
+        {
+            return;
+        }
+        foreach (T item in items)
+        {
+            Object.Destroy(item);
+        }
     }
 
     internal static void DestroyList<T>(IEnumerable<T> items) where T : Object
     {
-        if (items == null) return;
-        foreach (T item in items) Object.Destroy(item);
+        if (items == null)
+        {
+            return;
+        }
+        foreach (T item in items)
+        {
+            Object.Destroy(item);
+        }
     }
 
     internal static void GenerateAndAssignTasks(this PlayerControl player, int numCommon, int numShort, int numLong)
     {
-        if (player == null) return;
+        if (player == null)
+        {
+            return;
+        }
 
         List<byte> taskTypeIds = GenerateTasks(numCommon, numShort, numLong);
         using RPCSender sender = new(PlayerControl.LocalPlayer.NetId, CustomRPC.UncheckedSetTasks);
@@ -124,7 +137,15 @@ internal static class Helpers
     internal static string Cs(Color c, string s)
     {
         ColorStringBuilder.Clear();
-        ColorStringBuilder.Append("<color=#").Append(ToByte(c.r).ToString("X2")).Append(ToByte(c.g).ToString("X2")).Append(ToByte(c.b).ToString("X2")).Append(ToByte(c.a).ToString("X2")).Append('>').Append(s).Append("</color>");
+        ColorStringBuilder
+            .Append("<color=#")
+            .Append(ToByte(c.r).ToString("X2"))
+            .Append(ToByte(c.g).ToString("X2"))
+            .Append(ToByte(c.b).ToString("X2"))
+            .Append(ToByte(c.a).ToString("X2"))
+            .Append('>')
+            .Append(s)
+            .Append("</color>");
         return ColorStringBuilder.ToString();
     }
 
@@ -140,7 +161,10 @@ internal static class Helpers
 
     internal static bool GetKeysDown(params KeyCode[] keys)
     {
-        if (keys.Length == 0) return false;
+        if (keys.Length == 0)
+        {
+            return false;
+        }
         bool allHeld = true;
         bool anyJustPressed = false;
         foreach (KeyCode key in keys)
@@ -151,7 +175,10 @@ internal static class Helpers
                 break;
             }
 
-            if (Input.GetKeyDown(key)) anyJustPressed = true;
+            if (Input.GetKeyDown(key))
+            {
+                anyJustPressed = true;
+            }
         }
 
         return allHeld && anyJustPressed;
@@ -159,7 +186,12 @@ internal static class Helpers
 
     internal static bool HasFakeTasks(this PlayerControl player)
     {
-        return (player.IsNeutral() && !player.NeutralHasTasks()) || (player.HasModifier(ModifierType.CreatedMadmate) && !CreatedMadmate.HasTasks) || (player.HasModifier(ModifierType.Madmate) && !Madmate.HasTasks) || (player.IsRole(RoleType.Madmate) && !MadmateRole.CanKnowImpostorAfterFinishTasks) || (player.IsRole(RoleType.Suicider) && !Suicider.CanKnowImpostorAfterFinishTasks) || (player.IsLovers() && Lovers.SeparateTeam && !Lovers.TasksCount);
+        return player.IsNeutral() && !player.NeutralHasTasks()
+               || player.HasModifier(ModifierType.CreatedMadmate) && !CreatedMadmate.HasTasks
+               || player.HasModifier(ModifierType.Madmate) && !Madmate.HasTasks
+               || player.IsRole(RoleType.Madmate) && !MadmateRole.CanKnowImpostorAfterFinishTasks
+               || player.IsRole(RoleType.Suicider) && !Suicider.CanKnowImpostorAfterFinishTasks
+               || player.IsLovers() && Lovers.SeparateTeam && !Lovers.TasksCount;
     }
 
     internal static PlayerControl PlayerById(byte id)
@@ -167,7 +199,9 @@ internal static class Helpers
         foreach (PlayerControl player in PlayerControl.AllPlayerControls.GetFastEnumerator())
         {
             if (player.PlayerId == id)
+            {
                 return player;
+            }
         }
 
         return null;
@@ -175,14 +209,19 @@ internal static class Helpers
 
     internal static Dictionary<byte, PlayerControl> AllPlayersById()
     {
-        if (Time.frameCount == _lastCacheFrame) return PlayerByIdCache;
+        if (Time.frameCount == _lastCacheFrame)
+        {
+            return PlayerByIdCache;
+        }
 
         _lastCacheFrame = Time.frameCount;
         PlayerByIdCache.Clear();
         foreach (PlayerControl p in PlayerControl.AllPlayerControls.GetFastEnumerator())
         {
             if (p != null)
+            {
                 PlayerByIdCache[p.PlayerId] = p;
+            }
         }
 
         return PlayerByIdCache;
@@ -192,7 +231,10 @@ internal static class Helpers
     {
         // Murder the bitten player and reset bitten (regardless whether the kill was successful or not)
         PlayerControl killer = Vampire.AllPlayers.FirstOrDefault();
-        if (killer != null && Vampire.Bitten != null) CheckMurderAttemptAndKill(killer, Vampire.Bitten, true, false);
+        if (killer != null && Vampire.Bitten != null)
+        {
+            CheckMurderAttemptAndKill(killer, Vampire.Bitten, true, false);
+        }
 
         using (RPCSender sender = new(PlayerControl.LocalPlayer.NetId, CustomRPC.VampireSetBitten))
         {
@@ -205,10 +247,13 @@ internal static class Helpers
 
     internal static void RefreshRoleDescription(PlayerControl player)
     {
-        if (player == null) return;
+        if (player == null)
+        {
+            return;
+        }
 
         List<RoleInfo> infos = RoleInfo.GetRoleInfoForPlayer(player);
-        List<PlayerTask> toRemove = new();
+        List<PlayerTask> toRemove = [];
 
         foreach (PlayerTask t in player.myTasks.GetFastEnumerator())
         {
@@ -226,7 +271,10 @@ internal static class Helpers
                     }
                 }
 
-                if (!found) toRemove.Add(t);
+                if (!found)
+                {
+                    toRemove.Add(t);
+                }
             }
         }
 
@@ -245,9 +293,13 @@ internal static class Helpers
             InfoStringBuilder.Clear();
             InfoStringBuilder.Append(roleInfo.Name).Append(": ");
             if (roleInfo.RoleType == RoleType.Jackal)
+            {
                 InfoStringBuilder.Append(Jackal.CanCreateSidekick ? Tr.Get(TrKey.JackalWithSidekick) : Tr.Get(TrKey.JackalShortDesc));
+            }
             else
+            {
                 InfoStringBuilder.Append(roleInfo.ShortDescription);
+            }
 
             task.Text = Cs(roleInfo.Color, InfoStringBuilder.ToString());
             player.myTasks.Insert(0, task);
@@ -275,7 +327,9 @@ internal static class Helpers
         foreach (PlayerTask task in PlayerControl.LocalPlayer.myTasks)
         {
             if (task.TaskType == TaskTypes.MushroomMixupSabotage)
+            {
                 return true;
+            }
         }
 
         return false;
@@ -296,36 +350,45 @@ internal static class Helpers
 
     internal static List<byte> GenerateTasks(int numCommon, int numShort, int numLong)
     {
-        if (numCommon + numShort + numLong <= 0) numShort = 1;
+        if (numCommon + numShort + numLong <= 0)
+        {
+            numShort = 1;
+        }
 
         Il2CppSystem.Collections.Generic.List<byte> tasks = new();
         Il2CppSystem.Collections.Generic.HashSet<TaskTypes> hashSet = new();
 
-        List<NormalPlayerTask> commonTasks = new();
-        foreach (NormalPlayerTask task in MapUtilities.CachedShipStatus.CommonTasks) commonTasks.Add(task);
+        List<NormalPlayerTask> commonTasks = [.. MapUtilities.CachedShipStatus.CommonTasks];
         commonTasks.Shuffle();
 
-        List<NormalPlayerTask> shortTasks = new();
-        foreach (NormalPlayerTask task in MapUtilities.CachedShipStatus.ShortTasks) shortTasks.Add(task);
+        List<NormalPlayerTask> shortTasks = [.. MapUtilities.CachedShipStatus.ShortTasks];
         shortTasks.Shuffle();
 
-        List<NormalPlayerTask> longTasks = new();
-        foreach (NormalPlayerTask task in MapUtilities.CachedShipStatus.LongTasks) longTasks.Add(task);
+        List<NormalPlayerTask> longTasks = [.. MapUtilities.CachedShipStatus.LongTasks];
         longTasks.Shuffle();
 
         int start = 0;
         Il2CppSystem.Collections.Generic.List<NormalPlayerTask> commonTasksIl2Cpp = new();
-        foreach (NormalPlayerTask t in commonTasks) commonTasksIl2Cpp.Add(t);
+        foreach (NormalPlayerTask t in commonTasks)
+        {
+            commonTasksIl2Cpp.Add(t);
+        }
         MapUtilities.CachedShipStatus.AddTasksFromList(ref start, numCommon, tasks, hashSet, commonTasksIl2Cpp);
 
         start = 0;
         Il2CppSystem.Collections.Generic.List<NormalPlayerTask> shortTasksIl2Cpp = new();
-        foreach (NormalPlayerTask t in shortTasks) shortTasksIl2Cpp.Add(t);
+        foreach (NormalPlayerTask t in shortTasks)
+        {
+            shortTasksIl2Cpp.Add(t);
+        }
         MapUtilities.CachedShipStatus.AddTasksFromList(ref start, numShort, tasks, hashSet, shortTasksIl2Cpp);
 
         start = 0;
         Il2CppSystem.Collections.Generic.List<NormalPlayerTask> longTasksIl2Cpp = new();
-        foreach (NormalPlayerTask t in longTasks) longTasksIl2Cpp.Add(t);
+        foreach (NormalPlayerTask t in longTasks)
+        {
+            longTasksIl2Cpp.Add(t);
+        }
         MapUtilities.CachedShipStatus.AddTasksFromList(ref start, numLong, tasks, hashSet, longTasksIl2Cpp);
 
         return [.. tasks];
@@ -333,7 +396,10 @@ internal static class Helpers
 
     internal static void ClearAllTasks(this PlayerControl player)
     {
-        if (player == null) return;
+        if (player == null)
+        {
+            return;
+        }
         foreach (PlayerTask t in player.myTasks)
         {
             t.OnRemove();
@@ -348,8 +414,14 @@ internal static class Helpers
     {
         foreach (PlayerControl p in PlayerControl.AllPlayerControls.GetFastEnumerator())
         {
-            if (p.IsTeamCrewmate() && !p.HasModifier(ModifierType.Madmate) && !p.IsRole(RoleType.Madmate) && !p.IsRole(RoleType.Suicider) && p.IsAlive())
+            if (p.IsTeamCrewmate()
+                && !p.HasModifier(ModifierType.Madmate)
+                && !p.IsRole(RoleType.Madmate)
+                && !p.IsRole(RoleType.Suicider)
+                && p.IsAlive())
+            {
                 return true;
+            }
         }
 
         return false;
@@ -357,7 +429,10 @@ internal static class Helpers
 
     internal static bool HasImpostorVision(PlayerControl player)
     {
-        if (player.IsTeamImpostor()) return true;
+        if (player.IsTeamImpostor())
+        {
+            return true;
+        }
 
         bool isFormerJackal = false;
         foreach (PlayerControl p in Jackal.FormerJackals)
@@ -369,7 +444,12 @@ internal static class Helpers
             }
         }
 
-        return ((player.IsRole(RoleType.Jackal) || isFormerJackal) && Jackal.HasImpostorVision) || (player.IsRole(RoleType.Sidekick) && Sidekick.HasImpostorVision) || (player.IsRole(RoleType.Spy) && Spy.HasImpostorVision) || (player.IsRole(RoleType.Madmate) && MadmateRole.HasImpostorVision) || (player.IsRole(RoleType.Suicider) && Suicider.HasImpostorVision) || (player.IsRole(RoleType.Jester) && Jester.HasImpostorVision);
+        return (player.IsRole(RoleType.Jackal) || isFormerJackal) && Jackal.HasImpostorVision
+               || player.IsRole(RoleType.Sidekick) && Sidekick.HasImpostorVision
+               || player.IsRole(RoleType.Spy) && Spy.HasImpostorVision
+               || player.IsRole(RoleType.Madmate) && MadmateRole.HasImpostorVision
+               || player.IsRole(RoleType.Suicider) && Suicider.HasImpostorVision
+               || player.IsRole(RoleType.Jester) && Jester.HasImpostorVision;
     }
 
     internal static KeyValuePair<byte, int> MaxPair(this Dictionary<byte, int> self, out bool tie)
@@ -386,18 +466,38 @@ internal static class Helpers
                 maxKey = pair.Key;
                 tie = false;
             }
-            else if (pair.Value == maxValue) tie = true;
+            else if (pair.Value == maxValue)
+            {
+                tie = true;
+            }
         }
 
         return new(maxKey, maxValue);
     }
 
-    internal static MurderAttemptResult CheckMurderAttempt(PlayerControl killer, PlayerControl target, bool blockRewind = false, bool ignoreBlank = false, bool ignoreIfKillerIsDead = false, bool ignoreMedic = false)
+    internal static MurderAttemptResult CheckMurderAttempt(PlayerControl killer,
+                                                           PlayerControl target,
+                                                           bool blockRewind = false,
+                                                           bool ignoreBlank = false,
+                                                           bool ignoreIfKillerIsDead = false,
+                                                           bool ignoreMedic = false)
     {
-        if (AmongUsClient.Instance.IsGameOver) return MurderAttemptResult.SuppressKill;
-        if (killer == null || killer.Data == null || (killer.Data.IsDead && !ignoreIfKillerIsDead) || killer.Data.Disconnected) return MurderAttemptResult.SuppressKill;
-        if (target == null || target.Data == null || target.Data.IsDead || target.Data.Disconnected) return MurderAttemptResult.SuppressKill;
-        if (IsHideNSeekMode) return MurderAttemptResult.PerformKill;
+        if (AmongUsClient.Instance.IsGameOver)
+        {
+            return MurderAttemptResult.SuppressKill;
+        }
+        if (killer == null || killer.Data == null || killer.Data.IsDead && !ignoreIfKillerIsDead || killer.Data.Disconnected)
+        {
+            return MurderAttemptResult.SuppressKill;
+        }
+        if (target == null || target.Data == null || target.Data.IsDead || target.Data.Disconnected)
+        {
+            return MurderAttemptResult.SuppressKill;
+        }
+        if (IsHideNSeekMode)
+        {
+            return MurderAttemptResult.PerformKill;
+        }
 
         if (Medic.Exists && !ignoreMedic && Medic.Shielded != null && Medic.Shielded == target)
         {
@@ -406,14 +506,16 @@ internal static class Helpers
             return MurderAttemptResult.SuppressKill;
         }
 
-        if (Mini.Exists && target.HasModifier(ModifierType.Mini) && !Mini.IsGrownUp(target)) return MurderAttemptResult.SuppressKill;
+        if (Mini.Exists && target.HasModifier(ModifierType.Mini) && !Mini.IsGrownUp(target))
+        {
+            return MurderAttemptResult.SuppressKill;
+        }
 
         if (TimeMaster.Exists && TimeMaster.ShieldActive && target.IsRole(RoleType.TimeMaster))
         {
             if (!blockRewind)
             {
-                using (new RPCSender(killer.NetId, CustomRPC.TimeMasterRewindTime))
-                    RPCProcedure.TimeMasterRewindTime();
+                using (new RPCSender(killer.NetId, CustomRPC.TimeMasterRewindTime)) RPCProcedure.TimeMasterRewindTime();
             }
 
             return MurderAttemptResult.SuppressKill;
@@ -434,24 +536,33 @@ internal static class Helpers
         RPCProcedure.UncheckedMurderPlayer(killer.PlayerId, target.PlayerId, showAnimation ? byte.MaxValue : (byte)0);
     }
 
-    internal static MurderAttemptResult CheckMurderAttemptAndKill(PlayerControl killer, PlayerControl target, bool isMeetingStart = false, bool showAnimation = true, bool ignoreBlank = false, bool ignoreIfKillerIsDead = false)
+    internal static MurderAttemptResult CheckMurderAttemptAndKill(PlayerControl killer,
+                                                                  PlayerControl target,
+                                                                  bool isMeetingStart = false,
+                                                                  bool showAnimation = true,
+                                                                  bool ignoreBlank = false,
+                                                                  bool ignoreIfKillerIsDead = false)
     {
         MurderAttemptResult murder = CheckMurderAttempt(killer, target, isMeetingStart, ignoreBlank, ignoreIfKillerIsDead);
         Logger.LogMessage(Enum.GetName(typeof(MurderAttemptResult), murder));
 
         if (murder == MurderAttemptResult.PerformKill)
+        {
             MurderPlayer(killer, target, showAnimation);
+        }
         else if (murder == MurderAttemptResult.DelayVampireKill)
         {
-            HudManager.Instance.StartCoroutine(Effects.Lerp(10f, new Action<float>(p =>
-            {
-                if (!TransportationToolPatches.IsUsingTransportation(target) && Vampire.Bitten != null)
+            HudManager.Instance.StartCoroutine(Effects.Lerp(10f,
+                new Action<float>(p =>
                 {
-                    using (new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.VampireSetBitten)) RPCProcedure.VampireSetBitten(byte.MaxValue, byte.MaxValue);
+                    if (!TransportationToolPatches.IsUsingTransportation(target) && Vampire.Bitten != null)
+                    {
+                        using (new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.VampireSetBitten))
+                            RPCProcedure.VampireSetBitten(byte.MaxValue, byte.MaxValue);
 
-                    MurderPlayer(killer, target, showAnimation);
-                }
-            })));
+                        MurderPlayer(killer, target, showAnimation);
+                    }
+                })));
         }
 
         return murder;
@@ -471,19 +582,34 @@ internal static class Helpers
     {
         SabotageSystemType sabSystem = MapUtilities.Systems[SystemTypes.Sabotage].CastFast<SabotageSystemType>();
         IActivatable doors = null;
-        if (MapUtilities.Systems.TryGetValue(SystemTypes.Doors, out Object systemType)) doors = systemType.CastFast<IActivatable>();
+        if (MapUtilities.Systems.TryGetValue(SystemTypes.Doors, out Object systemType))
+        {
+            doors = systemType.CastFast<IActivatable>();
+        }
 
         return GameManager.Instance.SabotagesEnabled() && sabSystem.Timer <= 0f && !sabSystem.AnyActive && !(doors != null && doors.IsActive);
     }
 
-    internal static PlayerControl SetTarget(bool onlyCrewmates = false, bool targetPlayersInVents = false, List<PlayerControl> untargetablePlayers = null, PlayerControl targetingPlayer = null, int killDistanceIdx = -1)
+    internal static PlayerControl SetTarget(bool onlyCrewmates = false,
+                                            bool targetPlayersInVents = false,
+                                            List<PlayerControl> untargetablePlayers = null,
+                                            PlayerControl targetingPlayer = null,
+                                            int killDistanceIdx = -1)
     {
-        if (!MapUtilities.CachedShipStatus) return null;
+        if (!MapUtilities.CachedShipStatus)
+        {
+            return null;
+        }
 
         targetingPlayer ??= PlayerControl.LocalPlayer;
-        if (targetingPlayer.Data.IsDead || targetingPlayer.inVent || targetingPlayer.IsGm()) return null;
+        if (targetingPlayer.Data.IsDead || targetingPlayer.inVent || targetingPlayer.IsGm())
+        {
+            return null;
+        }
 
-        float num = NormalGameOptionsV10.KillDistances[Mathf.Clamp(killDistanceIdx == -1 ? GetOption(Int32OptionNames.KillDistance) : killDistanceIdx, 0, 2)];
+        float num = NormalGameOptionsV10.KillDistances[Mathf.Clamp(killDistanceIdx == -1 ? GetOption(Int32OptionNames.KillDistance) : killDistanceIdx,
+            0,
+            2)];
         untargetablePlayers ??= [];
 
         Vector2 truePosition = targetingPlayer.GetTruePosition();
@@ -491,11 +617,20 @@ internal static class Helpers
 
         foreach (NetworkedPlayerInfo playerInfo in GameData.Instance.AllPlayers.GetFastEnumerator())
         {
-            if (playerInfo.Disconnected || playerInfo.PlayerId == targetingPlayer.PlayerId || playerInfo.IsDead) continue;
-            if (onlyCrewmates && playerInfo.Role.IsImpostor) continue;
+            if (playerInfo.Disconnected || playerInfo.PlayerId == targetingPlayer.PlayerId || playerInfo.IsDead)
+            {
+                continue;
+            }
+            if (onlyCrewmates && playerInfo.Role.IsImpostor)
+            {
+                continue;
+            }
 
             PlayerControl obj = playerInfo.Object;
-            if (obj == null || (obj.inVent && !targetPlayersInVents)) continue;
+            if (obj == null || obj.inVent && !targetPlayersInVents)
+            {
+                continue;
+            }
 
             bool untargetable = false;
             foreach (PlayerControl utp in untargetablePlayers)
@@ -507,7 +642,10 @@ internal static class Helpers
                 }
             }
 
-            if (untargetable) continue;
+            if (untargetable)
+            {
+                continue;
+            }
 
             Vector2 vector = obj.GetTruePosition() - truePosition;
             float magnitude = vector.magnitude;
@@ -523,7 +661,10 @@ internal static class Helpers
 
     internal static void SetPlayerOutline(PlayerControl target, Color color)
     {
-        if (target?.cosmetics?.currentBodySprite?.BodySprite == null) return;
+        if (target?.cosmetics?.currentBodySprite?.BodySprite == null)
+        {
+            return;
+        }
 
         Material mat = target.cosmetics.currentBodySprite.BodySprite.material;
         mat.SetFloat("_Outline", 1f);
@@ -535,11 +676,16 @@ internal static class Helpers
         PlayerControl localPlayer = PlayerControl.LocalPlayer;
         foreach (PlayerControl target in PlayerControl.AllPlayerControls.GetFastEnumerator())
         {
-            if (target?.cosmetics?.currentBodySprite?.BodySprite == null) continue;
+            if (target?.cosmetics?.currentBodySprite?.BodySprite == null)
+            {
+                continue;
+            }
 
             bool isMorphedMorphing = target.IsRole(RoleType.Morphing) && Morphing.MorphTarget != null && Morphing.MorphTimer > 0f;
             bool hasVisibleShield = false;
-            if (Camouflager.CamouflageTimer <= 0f && Medic.Shielded != null && ((target == Medic.Shielded && !isMorphedMorphing) || (isMorphedMorphing && Morphing.MorphTarget == Medic.Shielded)))
+            if (Camouflager.CamouflageTimer <= 0f
+                && Medic.Shielded != null
+                && (target == Medic.Shielded && !isMorphedMorphing || isMorphedMorphing && Morphing.MorphTarget == Medic.Shielded))
             {
                 hasVisibleShield = Medic.ShowShielded switch
                 {
@@ -557,14 +703,19 @@ internal static class Helpers
                 mat.SetColor("_OutlineColor", Medic.ShieldedColor);
             }
             else
+            {
                 mat.SetFloat("_Outline", 0f);
+            }
         }
     }
 
     internal static void UpdatePlayerInfo()
     {
         PlayerControl localPlayer = PlayerControl.LocalPlayer;
-        if (localPlayer?.Data == null) return;
+        if (localPlayer?.Data == null)
+        {
+            return;
+        }
 
         MeetingHud meeting = MeetingHud.Instance;
         bool hasMeeting = meeting?.playerStates != null;
@@ -574,16 +725,24 @@ internal static class Helpers
             foreach (PlayerVoteArea s in meeting.playerStates)
             {
                 if (s != null)
+                {
                     VoteAreaStates[s.TargetPlayerId] = s;
+                }
             }
         }
 
         foreach (PlayerControl p in PlayerControl.AllPlayerControls.GetFastEnumerator())
         {
-            if (p?.Data == null || p.cosmetics == null) continue;
+            if (p?.Data == null || p.cosmetics == null)
+            {
+                continue;
+            }
 
             PlayerVoteArea pva = null;
-            if (hasMeeting) VoteAreaStates.TryGetValue(p.PlayerId, out pva);
+            if (hasMeeting)
+            {
+                VoteAreaStates.TryGetValue(p.PlayerId, out pva);
+            }
 
             // Colorblind Text Handling
             if (pva?.ColorBlindName != null && pva.ColorBlindName.gameObject.active)
@@ -592,20 +751,29 @@ internal static class Helpers
                 pva.ColorBlindName.transform.localScale = ColorBlindMeetingScale;
             }
 
-            if (p.cosmetics.colorBlindText != null && p.cosmetics.showColorBlindText && p.cosmetics.colorBlindText.gameObject.active) p.cosmetics.colorBlindText.transform.localPosition = new(0, -0.25f, 0f);
+            if (p.cosmetics.colorBlindText != null && p.cosmetics.showColorBlindText && p.cosmetics.colorBlindText.gameObject.active)
+            {
+                p.cosmetics.colorBlindText.transform.localPosition = new(0, -0.25f, 0f);
+            }
 
             p.cosmetics.nameText?.transform.parent?.SetLocalZ(-0.0001f);
 
             if (p == localPlayer || localPlayer.Data.IsDead)
             {
                 TextMeshPro label = GetOrCreateLabel(p.cosmetics.nameText, "Info", 0.225f, 0.75f);
-                if (label == null) continue;
+                if (label == null)
+                {
+                    continue;
+                }
 
                 TextMeshPro meetingLabel = null;
                 if (pva != null)
                 {
                     meetingLabel = GetOrCreateLabel(pva.NameText, "Info", -0.2f, 0.60f);
-                    if (meetingLabel != null && pva.NameText != null) pva.NameText.transform.localPosition = new(0.3384f, 0.0311f, -0.1f);
+                    if (meetingLabel != null && pva.NameText != null)
+                    {
+                        pva.NameText.transform.localPosition = new(0.3384f, 0.0311f, -0.1f);
+                    }
                 }
 
                 (int completed, int total) = TasksHandler.TaskInfo(p.Data);
@@ -613,25 +781,33 @@ internal static class Helpers
                 string roleGhost = RoleInfo.GetRolesString(p, true, MapSettings.GhostsSeeModifier);
 
                 string statusText = "";
-                if (p == localPlayer || (localPlayer.Data.IsDead && MapSettings.GhostsSeeInformation))
+                if (p == localPlayer || localPlayer.Data.IsDead && MapSettings.GhostsSeeInformation)
                 {
                     if (p.IsRole(RoleType.Arsonist))
                     {
-                        var role = Arsonist.Instance;
+                        Arsonist role = Arsonist.Instance;
                         if (role != null)
                         {
                             int dousedSurvivors = 0;
                             foreach (PlayerControl dousedPlayer in role.DousedPlayers)
                             {
                                 if (dousedPlayer?.Data != null && !dousedPlayer.Data.IsDead && !dousedPlayer.Data.Disconnected)
+                                {
                                     dousedSurvivors++;
+                                }
                             }
 
                             int totalSurvivors = 0;
                             foreach (PlayerControl targetPlayer in PlayerControl.AllPlayerControls.GetFastEnumerator())
                             {
-                                if (targetPlayer?.Data != null && !targetPlayer.Data.IsDead && !targetPlayer.Data.Disconnected && !targetPlayer.IsRole(RoleType.Arsonist) && !targetPlayer.IsGm())
+                                if (targetPlayer?.Data != null
+                                    && !targetPlayer.Data.IsDead
+                                    && !targetPlayer.Data.Disconnected
+                                    && !targetPlayer.IsRole(RoleType.Arsonist)
+                                    && !targetPlayer.IsGm())
+                                {
                                     totalSurvivors++;
+                                }
                             }
 
                             statusText = Cs(Arsonist.NameColor, $" ({dousedSurvivors}/{totalSurvivors})");
@@ -639,8 +815,11 @@ internal static class Helpers
                     }
                     else if (p.IsRole(RoleType.Vulture))
                     {
-                        var role = Vulture.Instance;
-                        if (role != null) statusText = Cs(Vulture.NameColor, $" ({role.EatenBodies}/{Vulture.NumberToWin})");
+                        Vulture role = Vulture.Instance;
+                        if (role != null)
+                        {
+                            statusText = Cs(Vulture.NameColor, $" ({role.EatenBodies}/{Vulture.NumberToWin})");
+                        }
                     }
                 }
 
@@ -650,18 +829,30 @@ internal static class Helpers
                     InfoStringBuilder.Clear();
 
                     bool commsActive = false;
-                    if (MapUtilities.CachedShipStatus != null && MapUtilities.Systems.TryGetValue(SystemTypes.Comms, out var comms))
+                    if (MapUtilities.CachedShipStatus != null && MapUtilities.Systems.TryGetValue(SystemTypes.Comms, out UnityObject comms))
                     {
-                        var activatable = comms.TryCast<IActivatable>();
-                        if (activatable != null) commsActive = activatable.IsActive;
+                        IActivatable activatable = comms.TryCast<IActivatable>();
+                        if (activatable != null)
+                        {
+                            commsActive = activatable.IsActive;
+                        }
                     }
 
                     if (commsActive)
+                    {
                         InfoStringBuilder.Append("<color=#808080FF>(?/?)</color>");
+                    }
                     else
                     {
                         string color = completed == total ? "#00FF00FF" : "#FAD934FF";
-                        InfoStringBuilder.Append("<color=").Append(color).Append(">(").Append(completed).Append('/').Append(total).Append(")</color>");
+                        InfoStringBuilder
+                            .Append("<color=")
+                            .Append(color)
+                            .Append(">(")
+                            .Append(completed)
+                            .Append('/')
+                            .Append(total)
+                            .Append(")</color>");
                     }
 
                     taskText = InfoStringBuilder.ToString();
@@ -687,7 +878,9 @@ internal static class Helpers
                             pInfo = InfoStringBuilder.ToString();
                         }
                         else
+                        {
                             pInfo = roles;
+                        }
                     }
 
                     if (HudManager.Instance?.TaskPanel?.tab != null)
@@ -738,7 +931,10 @@ internal static class Helpers
 
     private static TextMeshPro GetOrCreateLabel(TextMeshPro source, string name, float yOffset, float fontScale)
     {
-        if (source?.transform?.parent == null) return null;
+        if (source?.transform?.parent == null)
+        {
+            return null;
+        }
 
         Transform labelTransform = source.transform.parent.Find(name);
         TextMeshPro label = labelTransform?.GetComponent<TextMeshPro>();
@@ -746,7 +942,10 @@ internal static class Helpers
         if (label == null)
         {
             label = Object.Instantiate(source, source.transform.parent);
-            if (label == null) return null;
+            if (label == null)
+            {
+                return null;
+            }
             label.transform.localPosition += Vector3.up * yOffset;
             label.fontSize *= fontScale;
             label.gameObject.name = name;
@@ -759,12 +958,18 @@ internal static class Helpers
     internal static void SetPetVisibility()
     {
         bool localDead = PlayerControl.LocalPlayer.Data.IsDead;
-        foreach (PlayerControl p in PlayerControl.AllPlayerControls.GetFastEnumerator()) p.cosmetics.SetPetVisible((localDead && !p.Data.IsDead) || !localDead);
+        foreach (PlayerControl p in PlayerControl.AllPlayerControls.GetFastEnumerator())
+        {
+            p.cosmetics.SetPetVisible(localDead && !p.Data.IsDead || !localDead);
+        }
     }
 
     internal static void ShareGameVersion(int targetId = -1)
     {
-        if (AmongUsClient.Instance.ClientId < 0) return;
+        if (AmongUsClient.Instance.ClientId < 0)
+        {
+            return;
+        }
 
         Version ver = RebuildUs.Instance.Version;
         using (RPCSender sender = new(PlayerControl.LocalPlayer.NetId, CustomRPC.VersionHandshake, targetId))
@@ -777,14 +982,25 @@ internal static class Helpers
             sender.Write(Assembly.GetExecutingAssembly().ManifestModule.ModuleVersionId.ToByteArray());
         }
 
-        if (targetId == -1 || targetId == AmongUsClient.Instance.ClientId) RPCProcedure.VersionHandshake(ver.Major, ver.Minor, ver.Build, ver.Revision, AmongUsClient.Instance.ClientId, Assembly.GetExecutingAssembly().ManifestModule.ModuleVersionId);
+        if (targetId == -1 || targetId == AmongUsClient.Instance.ClientId)
+        {
+            RPCProcedure.VersionHandshake(ver.Major,
+                ver.Minor,
+                ver.Build,
+                ver.Revision,
+                AmongUsClient.Instance.ClientId,
+                Assembly.GetExecutingAssembly().ManifestModule.ModuleVersionId);
+        }
     }
 
     internal static string PadRightV2(this object text, int num)
     {
         int bc = 0;
         string t = text.ToString();
-        foreach (char c in t) bc += Encoding.UTF8.GetByteCount(c.ToString()) == 1 ? 1 : 2;
+        foreach (char c in t)
+        {
+            bc += Encoding.UTF8.GetByteCount(c.ToString()) == 1 ? 1 : 2;
+        }
         return t?.PadRight(num - (bc - t.Length));
     }
 
@@ -800,11 +1016,26 @@ internal static class Helpers
 
     internal static bool HidePlayerName(PlayerControl source, PlayerControl target)
     {
-        if (source == target) return false;
-        if (source == null || target == null) return true;
-        if (source.IsDead()) return false;
-        if (target.IsDead()) return true;
-        if (Camouflager.CamouflageTimer > 0f) return true;
+        if (source == target)
+        {
+            return false;
+        }
+        if (source == null || target == null)
+        {
+            return true;
+        }
+        if (source.IsDead())
+        {
+            return false;
+        }
+        if (target.IsDead())
+        {
+            return true;
+        }
+        if (Camouflager.CamouflageTimer > 0f)
+        {
+            return true;
+        }
 
         if (MapSettings.HideOutOfSightNametags && GameStarted && MapUtilities.CachedShipStatus != null)
         {
@@ -812,30 +1043,48 @@ internal static class Helpers
             float distance = Vector3.Distance(source.transform.position, target.transform.position);
             bool blocked = PhysicsHelpers.AnythingBetween(source.GetTruePosition(), target.GetTruePosition(), Constants.ShadowMask, false);
 
-            if (distance > MapUtilities.CachedShipStatus.CalculateLightRadius(source.Data) * distMod || blocked) return true;
+            if (distance > MapUtilities.CachedShipStatus.CalculateLightRadius(source.Data) * distMod || blocked)
+            {
+                return true;
+            }
         }
 
-        if (!MapSettings.HidePlayerNames) return false;
+        if (!MapSettings.HidePlayerNames)
+        {
+            return false;
+        }
         if (source.IsTeamImpostor()
             && (target.IsTeamImpostor()
                 || target.IsRole(RoleType.Spy)
-                || (target.IsRole(RoleType.Sidekick) && Sidekick.Instance.WasTeamRed)
-                || (target.IsRole(RoleType.Jackal) && Jackal.Instance.WasTeamRed))) return false;
-        if (source.GetPartner() == target) return false;
-        if ((source.IsRole(RoleType.Jackal)
-             || source.IsRole(RoleType.Sidekick))
-            && (target.IsRole(RoleType.Jackal)
-                || target.IsRole(RoleType.Sidekick)
-                || target == Jackal.Instance.FakeSidekick)) return false;
+                || target.IsRole(RoleType.Sidekick) && Sidekick.Instance.WasTeamRed
+                || target.IsRole(RoleType.Jackal) && Jackal.Instance.WasTeamRed))
+        {
+            return false;
+        }
+        if (source.GetPartner() == target)
+        {
+            return false;
+        }
+        if ((source.IsRole(RoleType.Jackal) || source.IsRole(RoleType.Sidekick))
+            && (target.IsRole(RoleType.Jackal) || target.IsRole(RoleType.Sidekick) || target == Jackal.Instance.FakeSidekick))
+        {
+            return false;
+        }
 
         return true;
     }
 
     internal static void OnObjectDestroy(GameObject obj)
     {
-        if (obj == null) return;
+        if (obj == null)
+        {
+            return;
+        }
         string name = obj.name;
-        if (name == null) return;
+        if (name == null)
+        {
+            return;
+        }
 
         // night vision
         if (name.Contains("FungleSecurity"))
@@ -845,44 +1094,63 @@ internal static class Helpers
         }
 
         // submerged
-        if (!SubmergedCompatibility.IsSubmerged) return;
+        if (!SubmergedCompatibility.IsSubmerged)
+        {
+            return;
+        }
 
-        if (!name.Contains("ExileCutscene")) return;
+        if (!name.Contains("ExileCutscene"))
+        {
+            return;
+        }
         ExileController controller = obj.GetComponent<ExileController>();
-        if (controller != null && controller.initData != null) ExileControllerPatch.WrapUpPostfix(controller.initData.networkedPlayer?.Object);
+        if (controller != null && controller.initData != null)
+        {
+            ExileControllerPatch.WrapUpPostfix(controller.initData.networkedPlayer?.Object);
+        }
     }
 
     internal static void ShowFlash(Color color, float duration = 1f)
     {
         HudManager hud = FastDestroyableSingleton<HudManager>.Instance;
-        if (hud?.FullScreen == null) return;
+        if (hud?.FullScreen == null)
+        {
+            return;
+        }
 
         hud.FullScreen.gameObject.SetActive(true);
         hud.FullScreen.enabled = true;
-        hud.StartCoroutine(Effects.Lerp(duration, new Action<float>(p =>
-        {
-            SpriteRenderer renderer = hud.FullScreen;
-            if (renderer == null) return;
-
-            float alpha = p < 0.5f ? p * 2f * 0.75f : (1f - p) * 2f * 0.75f;
-            renderer.color = new(color.r, color.g, color.b, Mathf.Clamp01(alpha));
-
-            if (p == 1f)
+        hud.StartCoroutine(Effects.Lerp(duration,
+            new Action<float>(p =>
             {
-                bool reactorActive = false;
-                foreach (PlayerTask task in PlayerControl.LocalPlayer.myTasks.GetFastEnumerator())
+                SpriteRenderer renderer = hud.FullScreen;
+                if (renderer == null)
                 {
-                    if (task.TaskType == TaskTypes.StopCharles)
-                    {
-                        reactorActive = true;
-                        break;
-                    }
+                    return;
                 }
 
-                if (!reactorActive && IsAirship) renderer.color = Color.black;
-                renderer.gameObject.SetActive(false);
-            }
-        })));
+                float alpha = p < 0.5f ? p * 2f * 0.75f : (1f - p) * 2f * 0.75f;
+                renderer.color = new(color.r, color.g, color.b, Mathf.Clamp01(alpha));
+
+                if (p == 1f)
+                {
+                    bool reactorActive = false;
+                    foreach (PlayerTask task in PlayerControl.LocalPlayer.myTasks.GetFastEnumerator())
+                    {
+                        if (task.TaskType == TaskTypes.StopCharles)
+                        {
+                            reactorActive = true;
+                            break;
+                        }
+                    }
+
+                    if (!reactorActive && IsAirship)
+                    {
+                        renderer.color = Color.black;
+                    }
+                    renderer.gameObject.SetActive(false);
+                }
+            })));
     }
 
     internal static List<T> ToSystemList<T>(this Il2CppSystem.Collections.Generic.List<T> iList)
@@ -897,7 +1165,10 @@ internal static class Helpers
 
     internal static void SetKillTimerUnchecked(this PlayerControl player, float time, float max = float.NegativeInfinity)
     {
-        if (max == float.NegativeInfinity) max = time;
+        if (max == float.NegativeInfinity)
+        {
+            max = time;
+        }
         player.killTimer = time;
         FastDestroyableSingleton<HudManager>.Instance.KillButton.SetCoolDown(time, max);
     }
@@ -914,18 +1185,31 @@ internal static class Helpers
     internal static PlainShipRoom GetPlainShipRoom(PlayerControl p)
     {
         Collider2D[] buffer = new Collider2D[10];
-        ContactFilter2D filter = new() { layerMask = Constants.PlayersOnlyMask, useLayerMask = true, useTriggers = false };
+        ContactFilter2D filter = new()
+        {
+            layerMask = Constants.PlayersOnlyMask,
+            useLayerMask = true,
+            useTriggers = false,
+        };
         Il2CppReferenceArray<PlainShipRoom> rooms = MapUtilities.CachedShipStatus?.AllRooms;
-        if (rooms == null) return null;
+        if (rooms == null)
+        {
+            return null;
+        }
 
         foreach (PlainShipRoom room in rooms)
         {
-            if (room.roomArea == null) continue;
+            if (room.roomArea == null)
+            {
+                continue;
+            }
             int hits = room.roomArea.OverlapCollider(filter, buffer);
             for (int i = 0; i < hits; i++)
             {
                 if (buffer[i]?.gameObject == p.gameObject)
+                {
                     return room;
+                }
             }
         }
 
@@ -1027,11 +1311,19 @@ internal static class Helpers
 
     internal static bool IsDead(this PlayerControl player)
     {
-        if (player == null) return true;
+        if (player == null)
+        {
+            return true;
+        }
         NetworkedPlayerInfo data = player.Data;
-        if (data == null || data.IsDead || data.Disconnected) return true;
+        if (data == null || data.IsDead || data.Disconnected)
+        {
+            return true;
+        }
 
-        return GameHistory.FinalStatuses != null && GameHistory.FinalStatuses.TryGetValue(player.PlayerId, out FinalStatus status) && status != FinalStatus.Alive;
+        return GameHistory.FinalStatuses != null
+               && GameHistory.FinalStatuses.TryGetValue(player.PlayerId, out FinalStatus status)
+               && status != FinalStatus.Alive;
     }
 
     internal static bool IsAlive(this PlayerControl player)
@@ -1050,7 +1342,7 @@ internal static class Helpers
                    ||
                    // player.IsRole(RoleType.Opportunist) ||
                    player.IsRole(RoleType.Vulture)
-                   || (player.IsRole(RoleType.Shifter) && Shifter.IsNeutral));
+                   || player.IsRole(RoleType.Shifter) && Shifter.IsNeutral);
     }
 
     internal static bool IsTeamCrewmate(this PlayerControl player)
@@ -1093,31 +1385,55 @@ internal static class Helpers
     {
         bool roleCouldUse = false;
         if (player.IsRole(RoleType.Engineer))
+        {
             roleCouldUse = true;
+        }
         else if (Jackal.CanUseVents && player.IsRole(RoleType.Jackal))
+        {
             roleCouldUse = true;
+        }
         else if (Sidekick.CanUseVents && player.IsRole(RoleType.Sidekick))
+        {
             roleCouldUse = true;
+        }
         else if (Spy.CanEnterVents && player.IsRole(RoleType.Spy))
+        {
             roleCouldUse = true;
+        }
         else if (Madmate.CanEnterVents && player.HasModifier(ModifierType.Madmate))
+        {
             roleCouldUse = true;
+        }
         else if (MadmateRole.CanEnterVents && player.IsRole(RoleType.Madmate))
+        {
             roleCouldUse = true;
+        }
         else if (Suicider.CanEnterVents && player.IsRole(RoleType.Suicider))
+        {
             roleCouldUse = true;
+        }
         else if (CreatedMadmate.CanEnterVents && player.HasModifier(ModifierType.CreatedMadmate))
+        {
             roleCouldUse = true;
+        }
         else if (Vulture.CanUseVents && player.IsRole(RoleType.Vulture))
+        {
             roleCouldUse = true;
+        }
         else if (player.Data?.Role != null && player.Data.Role.CanVent)
         {
             if (!Mafia.Janitor.CanVent && player.IsRole(RoleType.Janitor))
+            {
                 roleCouldUse = false;
+            }
             else if (!Mafia.Mafioso.CanVent && player.IsRole(RoleType.Mafioso))
+            {
                 roleCouldUse = false;
+            }
             else
+            {
                 roleCouldUse = true;
+            }
         }
 
         return roleCouldUse;
@@ -1127,30 +1443,51 @@ internal static class Helpers
     {
         bool roleCouldUse = false;
         if (Madmate.CanSabotage && player.HasModifier(ModifierType.Madmate))
+        {
             roleCouldUse = true;
+        }
         else if (MadmateRole.CanSabotage && player.IsRole(RoleType.Madmate))
+        {
             roleCouldUse = true;
+        }
         else if (CreatedMadmate.CanSabotage && player.HasModifier(ModifierType.CreatedMadmate))
+        {
             roleCouldUse = true;
+        }
         else if (Jester.CanSabotage && player.IsRole(RoleType.Jester))
+        {
             roleCouldUse = true;
+        }
         else if (!Mafia.Mafioso.CanSabotage && player.IsRole(RoleType.Mafioso))
+        {
             roleCouldUse = false;
+        }
         else if (!Mafia.Janitor.CanSabotage && player.IsRole(RoleType.Janitor))
+        {
             roleCouldUse = false;
-        else if (player.Data?.Role != null && player.Data.Role.IsImpostor) roleCouldUse = true;
+        }
+        else if (player.Data?.Role != null && player.Data.Role.IsImpostor)
+        {
+            roleCouldUse = true;
+        }
 
         return roleCouldUse;
     }
 
     internal static ClientData GetClient(this PlayerControl player)
     {
-        if (player == null) return null;
+        if (player == null)
+        {
+            return null;
+        }
         Il2CppSystem.Collections.Generic.List<ClientData> allClients = AmongUsClient.Instance.allClients;
         for (int i = 0; i < allClients.Count; i++)
         {
             ClientData cd = allClients[i];
-            if (cd?.Character != null && cd.Character.PlayerId == player.PlayerId) return cd;
+            if (cd?.Character != null && cd.Character.PlayerId == player.PlayerId)
+            {
+                return cd;
+            }
         }
 
         return null;
@@ -1169,15 +1506,23 @@ internal static class Helpers
 
     internal static string GetNameWithRole(this PlayerControl player)
     {
-        if (player == null || player.Data == null) return "";
+        if (player == null || player.Data == null)
+        {
+            return "";
+        }
         RoleStringBuilder.Clear();
         string name = player.Data.PlayerName;
         if (Camouflager.CamouflageTimer > 0f)
         {
             if (string.IsNullOrEmpty(name))
+            {
                 name = player.Data.DefaultOutfit.PlayerName;
+            }
         }
-        else if (player.CurrentOutfitType == PlayerOutfitType.Shapeshifted) name = $"{player.CurrentOutfit.PlayerName} ({player.Data.DefaultOutfit.PlayerName})";
+        else if (player.CurrentOutfitType == PlayerOutfitType.Shapeshifted)
+        {
+            name = $"{player.CurrentOutfit.PlayerName} ({player.Data.DefaultOutfit.PlayerName})";
+        }
 
         RoleStringBuilder.Append(name).Append(" (").Append(player.GetRoleName()).Append(')');
         return RoleStringBuilder.ToString();
@@ -1190,7 +1535,10 @@ internal static class Helpers
 
     internal static bool IsBlocked(PlayerTask task, PlayerControl pc)
     {
-        if (task == null || pc == null || pc != PlayerControl.LocalPlayer) return false;
+        if (task == null || pc == null || pc != PlayerControl.LocalPlayer)
+        {
+            return false;
+        }
 
         TaskTypes taskType = task.TaskType;
         bool isLights = taskType == TaskTypes.FixLights;
@@ -1198,28 +1546,55 @@ internal static class Helpers
         bool isReactor = taskType is TaskTypes.StopCharles or TaskTypes.ResetSeismic or TaskTypes.ResetReactor;
         bool isO2 = taskType == TaskTypes.RestoreOxy;
 
-        if (pc.IsRole(RoleType.NiceSwapper) && (isLights || isComms)) return true;
+        if (pc.IsRole(RoleType.NiceSwapper) && (isLights || isComms))
+        {
+            return true;
+        }
 
-        if (pc.HasModifier(ModifierType.Madmate) && (isLights || (isComms && !Madmate.CanFixComm))) return true;
+        if (pc.HasModifier(ModifierType.Madmate) && (isLights || isComms && !Madmate.CanFixComm))
+        {
+            return true;
+        }
 
-        if (pc.IsRole(RoleType.Madmate) && (isLights || (isComms && !MadmateRole.CanFixComm))) return true;
+        if (pc.IsRole(RoleType.Madmate) && (isLights || isComms && !MadmateRole.CanFixComm))
+        {
+            return true;
+        }
 
-        if (pc.IsRole(RoleType.Suicider) && (isLights || (isComms && !Suicider.CanFixComm))) return true;
+        if (pc.IsRole(RoleType.Suicider) && (isLights || isComms && !Suicider.CanFixComm))
+        {
+            return true;
+        }
 
-        if (pc.HasModifier(ModifierType.CreatedMadmate) && (isLights || (isComms && !CreatedMadmate.CanFixComm))) return true;
+        if (pc.HasModifier(ModifierType.CreatedMadmate) && (isLights || isComms && !CreatedMadmate.CanFixComm))
+        {
+            return true;
+        }
 
-        if (pc.IsGm() && (isLights || isComms || isReactor || isO2)) return true;
+        if (pc.IsGm() && (isLights || isComms || isReactor || isO2))
+        {
+            return true;
+        }
 
-        if (pc.IsRole(RoleType.Mafioso) && !Mafia.Mafioso.CanRepair && (isLights || isComms)) return true;
+        if (pc.IsRole(RoleType.Mafioso) && !Mafia.Mafioso.CanRepair && (isLights || isComms))
+        {
+            return true;
+        }
 
-        if (pc.IsRole(RoleType.Janitor) && !Mafia.Janitor.CanRepair && (isLights || isComms)) return true;
+        if (pc.IsRole(RoleType.Janitor) && !Mafia.Janitor.CanRepair && (isLights || isComms))
+        {
+            return true;
+        }
 
         return false;
     }
 
     internal static bool IsBlocked(Console console, PlayerControl pc)
     {
-        if (console == null || pc == null || pc != PlayerControl.LocalPlayer) return false;
+        if (console == null || pc == null || pc != PlayerControl.LocalPlayer)
+        {
+            return false;
+        }
 
         PlayerTask task = console.FindTask(pc);
         return IsBlocked(task, pc);
@@ -1227,27 +1602,42 @@ internal static class Helpers
 
     internal static bool IsBlocked(SystemConsole console, PlayerControl pc)
     {
-        if (console == null || pc == null || pc != PlayerControl.LocalPlayer) return false;
+        if (console == null || pc == null || pc != PlayerControl.LocalPlayer)
+        {
+            return false;
+        }
 
         string name = console.name;
         bool isSecurity = name is "task_cams" or "Surv_Panel" or "SurvLogConsole" or "SurvConsole";
         bool isVitals = name == "panel_vitals";
 
-        return (isSecurity && !MapSettings.CanUseCameras) || (isVitals && !MapSettings.CanUseVitals);
+        return isSecurity && !MapSettings.CanUseCameras || isVitals && !MapSettings.CanUseVitals;
     }
 
     internal static bool IsBlocked(IUsable target, PlayerControl pc)
     {
-        if (target == null) return false;
+        if (target == null)
+        {
+            return false;
+        }
 
         Console targetConsole = target.TryCast<Console>();
-        if (targetConsole != null) return IsBlocked(targetConsole, pc);
+        if (targetConsole != null)
+        {
+            return IsBlocked(targetConsole, pc);
+        }
 
         SystemConsole targetSysConsole = target.TryCast<SystemConsole>();
-        if (targetSysConsole != null) return IsBlocked(targetSysConsole, pc);
+        if (targetSysConsole != null)
+        {
+            return IsBlocked(targetSysConsole, pc);
+        }
 
         MapConsole targetMapConsole = target.TryCast<MapConsole>();
-        if (targetMapConsole != null) return !MapSettings.CanUseAdmin;
+        if (targetMapConsole != null)
+        {
+            return !MapSettings.CanUseAdmin;
+        }
 
         return false;
     }

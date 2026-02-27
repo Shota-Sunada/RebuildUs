@@ -11,7 +11,10 @@ internal sealed class HatsLoader : MonoBehaviour
 {
     private static readonly HttpClient Client = new();
 
-    private static readonly JsonSerializerOptions JsonOptions = new() { AllowTrailingCommas = true };
+    private static readonly JsonSerializerOptions JsonOptions = new()
+    {
+        AllowTrailingCommas = true,
+    };
 
     static HatsLoader()
     {
@@ -22,14 +25,20 @@ internal sealed class HatsLoader : MonoBehaviour
 
     internal void FetchHats()
     {
-        if (IsRunning) return;
+        if (IsRunning)
+        {
+            return;
+        }
         this.StartCoroutine(CoFetchHats());
     }
 
     [HideFromIl2Cpp]
     private IEnumerator CoFetchHats()
     {
-        while (Camera.main == null) yield return null;
+        while (Camera.main == null)
+        {
+            yield return null;
+        }
 
         IsRunning = true;
         LoadScreen.Create();
@@ -54,14 +63,18 @@ internal sealed class HatsLoader : MonoBehaviour
             foreach (string dir in Directory.GetDirectories(HatsDirectory))
             {
                 string manifestPath = Path.Combine(dir, "CustomHats.json");
-                if (!File.Exists(manifestPath)) continue;
+                if (!File.Exists(manifestPath))
+                {
+                    continue;
+                }
                 try
                 {
                     string text = File.ReadAllText(manifestPath);
-                    SkinsConfigFile response = JsonSerializer.Deserialize<SkinsConfigFile>(text, new JsonSerializerOptions
-                    {
-                        AllowTrailingCommas = true,
-                    });
+                    SkinsConfigFile response = JsonSerializer.Deserialize<SkinsConfigFile>(text,
+                        new JsonSerializerOptions
+                        {
+                            AllowTrailingCommas = true,
+                        });
 
                     if (response?.Hats != null)
                     {
@@ -94,7 +107,10 @@ internal sealed class HatsLoader : MonoBehaviour
 
     private static string SanitizeAndPrefix(string path, string prefix)
     {
-        if (string.IsNullOrEmpty(path) || !path.EndsWith(".png")) return null;
+        if (string.IsNullOrEmpty(path) || !path.EndsWith(".png"))
+        {
+            return null;
+        }
         return Path.Combine(prefix, SanitizeFileName(path));
     }
 
@@ -106,25 +122,33 @@ internal sealed class HatsLoader : MonoBehaviour
             if (!Directory.Exists(targetDir))
             {
                 if (targetDir != null)
+                {
                     Directory.CreateDirectory(targetDir);
+                }
             }
 
             LoadScreen.Progress = 0;
             LoadScreen.ProgressDetailText = "";
-            ConcurrentBag<(string url, string localPath, string expectedHash, string fileName)> toDownload = new();
+            ConcurrentBag<(string url, string localPath, string expectedHash, string fileName)> toDownload = [];
 
             LoadScreen.StatusText = "Checking repositories...";
 
             IEnumerable<Task> checkTasks = repositories.Select(async repoUrl =>
             {
                 repoUrl = repoUrl.Trim();
-                if (string.IsNullOrEmpty(repoUrl)) return;
+                if (string.IsNullOrEmpty(repoUrl))
+                {
+                    return;
+                }
 
                 string repoFolderName = GetRepoFolderName(repoUrl);
                 if (targetDir != null)
                 {
                     string repoDir = Path.Combine(targetDir, repoFolderName);
-                    if (!Directory.Exists(repoDir)) Directory.CreateDirectory(repoDir);
+                    if (!Directory.Exists(repoDir))
+                    {
+                        Directory.CreateDirectory(repoDir);
+                    }
 
                     string manifestURL = $"{repoUrl}/CustomHats.json";
                     string manifestPath = Path.Combine(repoDir, "CustomHats.json");
@@ -143,7 +167,10 @@ internal sealed class HatsLoader : MonoBehaviour
                         await File.WriteAllBytesAsync(manifestPath, manifestData);
 
                         SkinsConfigFile config = JsonSerializer.Deserialize<SkinsConfigFile>(manifestData, JsonOptions);
-                        if (config?.Hats == null) return;
+                        if (config?.Hats == null)
+                        {
+                            return;
+                        }
 
                         foreach (CustomHat hat in config.Hats)
                         {
@@ -182,7 +209,9 @@ internal sealed class HatsLoader : MonoBehaviour
                             await File.WriteAllBytesAsync(item.localPath, fileData);
                         }
                         else
+                        {
                             Logger.LogWarn($"Failed to download {item.url}: {response.StatusCode}");
+                        }
                     }
                     catch (Exception ex)
                     {
@@ -193,7 +222,7 @@ internal sealed class HatsLoader : MonoBehaviour
                         semaphore.Release();
                         int done = Interlocked.Increment(ref completed);
                         LoadScreen.StatusText = $"Downloading {item.fileName} ({done} / {total})";
-                        LoadScreen.Progress = 0.2f + (((float)done / total) * 0.8f);
+                        LoadScreen.Progress = 0.2f + (float)done / total * 0.8f;
                     }
                 });
 
@@ -211,15 +240,28 @@ internal sealed class HatsLoader : MonoBehaviour
         }
     }
 
-    private void ProcessHatFile(string repoUrl, string repoDir, string fileName, string expectedHash, ConcurrentBag<(string url, string localPath, string expectedHash, string fileName)> toDownload)
+    private void ProcessHatFile(string repoUrl,
+                                string repoDir,
+                                string fileName,
+                                string expectedHash,
+                                ConcurrentBag<(string url, string localPath, string expectedHash, string fileName)> toDownload)
     {
-        if (string.IsNullOrEmpty(fileName)) return;
+        if (string.IsNullOrEmpty(fileName))
+        {
+            return;
+        }
 
         string safeName = SanitizeFileName(fileName);
-        if (string.IsNullOrEmpty(safeName)) return;
+        if (string.IsNullOrEmpty(safeName))
+        {
+            return;
+        }
 
         string localPath = Path.Combine(repoDir, safeName);
-        if (!NeedsDownload(localPath, expectedHash)) return;
+        if (!NeedsDownload(localPath, expectedHash))
+        {
+            return;
+        }
         string fileURL = $"{repoUrl}/hats/{fileName.Replace(" ", "%20")}";
         toDownload.Add((fileURL, localPath, expectedHash, safeName));
     }
@@ -230,7 +272,10 @@ internal sealed class HatsLoader : MonoBehaviour
         {
             Uri uri = new(url);
             string[] segments = uri.AbsolutePath.Split('/', StringSplitOptions.RemoveEmptyEntries);
-            if (segments.Length >= 2) return $"{segments[0]}-{segments[1]}";
+            if (segments.Length >= 2)
+            {
+                return $"{segments[0]}-{segments[1]}";
+            }
         }
         catch
         {
@@ -242,7 +287,10 @@ internal sealed class HatsLoader : MonoBehaviour
 
     private static bool NeedsDownload(string path, string expectedHash)
     {
-        if (string.IsNullOrEmpty(expectedHash) || !File.Exists(path)) return true;
+        if (string.IsNullOrEmpty(expectedHash) || !File.Exists(path))
+        {
+            return true;
+        }
         using MD5 md5 = MD5.Create();
         using FileStream stream = File.OpenRead(path);
         string hash = BitConverter.ToString(md5.ComputeHash(stream)).Replace("-", "").ToLower();

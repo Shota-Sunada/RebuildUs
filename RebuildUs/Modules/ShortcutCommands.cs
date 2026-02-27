@@ -12,13 +12,29 @@ internal static class ShortcutCommands
 
     internal static void HostCommands()
     {
-        if (!AmongUsClient.Instance.AmHost) return;
+        if (!AmongUsClient.Instance.AmHost)
+        {
+            return;
+        }
 
-        if (Helpers.GetKeysDown(KeyCode.LeftControl, KeyCode.F5) || Helpers.GetKeysDown(KeyCode.RightControl, KeyCode.F5)) GameManager.Instance.RpcEndGame((GameOverReason)CustomGameOverReason.ForceEnd, false);
+        if (Helpers.GetKeysDown(KeyCode.LeftControl, KeyCode.F5) || Helpers.GetKeysDown(KeyCode.RightControl, KeyCode.F5))
+        {
+            GameManager.Instance.RpcEndGame((GameOverReason)CustomGameOverReason.ForceEnd, false);
+        }
 
-        if ((Helpers.GetKeysDown(KeyCode.LeftControl, KeyCode.F6) || Helpers.GetKeysDown(KeyCode.RightControl, KeyCode.F6)) && MeetingHud.Instance && Helpers.GameStarted) MeetingHud.Instance.RpcClose();
+        if ((Helpers.GetKeysDown(KeyCode.LeftControl, KeyCode.F6) || Helpers.GetKeysDown(KeyCode.RightControl, KeyCode.F6))
+            && MeetingHud.Instance
+            && Helpers.GameStarted)
+        {
+            MeetingHud.Instance.RpcClose();
+        }
 
-        if ((Helpers.GetKeysDown(KeyCode.LeftControl, KeyCode.F7) || Helpers.GetKeysDown(KeyCode.RightControl, KeyCode.F7)) && !MeetingHud.Instance && Helpers.GameStarted) MapUtilities.CachedShipStatus.StartMeeting(PlayerControl.LocalPlayer, PlayerControl.LocalPlayer.Data);
+        if ((Helpers.GetKeysDown(KeyCode.LeftControl, KeyCode.F7) || Helpers.GetKeysDown(KeyCode.RightControl, KeyCode.F7))
+            && !MeetingHud.Instance
+            && Helpers.GameStarted)
+        {
+            MapUtilities.CachedShipStatus.StartMeeting(PlayerControl.LocalPlayer, PlayerControl.LocalPlayer.Data);
+        }
 
         if ((Input.GetKeyDown(KeyCode.LeftShift) || Input.GetKeyDown(KeyCode.RightShift)) && Helpers.IsCountdown)
         {
@@ -47,21 +63,33 @@ internal static class ShortcutCommands
     internal static void DebugCommands()
     {
         if (Helpers.GetKeysDown(KeyCode.LeftControl, KeyCode.F10) || Helpers.GetKeysDown(KeyCode.RightControl, KeyCode.F10))
+        {
             ToggleTimerBarDebug();
+        }
 
         if (Helpers.GetKeysDown(KeyCode.LeftControl, KeyCode.F11) || Helpers.GetKeysDown(KeyCode.RightControl, KeyCode.F11))
+        {
             DumpTimerBarDebugStats();
+        }
 
         if (Helpers.GetKeysDown(KeyCode.LeftControl, KeyCode.F12) || Helpers.GetKeysDown(KeyCode.RightControl, KeyCode.F12))
+        {
             DecreaseTimerBarDebugValue();
+        }
 
         bool triggerDeathPopup = Helpers.GetKeysDown(KeyCode.LeftControl, KeyCode.F9) || Helpers.GetKeysDown(KeyCode.RightControl, KeyCode.F9);
-        if (!triggerDeathPopup) return;
+        if (!triggerDeathPopup)
+        {
+            return;
+        }
 
         HudManager hud = HudManager.Instance;
         PlayerControl localPlayer = PlayerControl.LocalPlayer;
 
-        if (localPlayer == null || hud?.Chat == null) return;
+        if (localPlayer == null || hud?.Chat == null)
+        {
+            return;
+        }
         if (!Helpers.GameStarted)
         {
             Logger.LogInfo("DeathPopup debug failed: game is not started.");
@@ -87,7 +115,10 @@ internal static class ShortcutCommands
 
     internal static void OpenAirshipToilet()
     {
-        if (!Input.GetKeyDown(KeyCode.P)) return;
+        if (!Input.GetKeyDown(KeyCode.P))
+        {
+            return;
+        }
         MapUtilities.CachedShipStatus.RpcUpdateSystem(SystemTypes.Doors, 79);
         MapUtilities.CachedShipStatus.RpcUpdateSystem(SystemTypes.Doors, 80);
         MapUtilities.CachedShipStatus.RpcUpdateSystem(SystemTypes.Doors, 81);
@@ -139,7 +170,7 @@ internal static class ShortcutCommands
             TimerBarManager.CustomTimer.OnMinReached = ctx =>
             {
                 Logger.LogInfo(
-                               $"TimerBar custom timer reached min. current={ctx.CurrentValue:F2}, min={ctx.MinValue:F2}, max={ctx.MaxValue:F2}, isFinal={ctx.IsFinalCountdown}, behavior={TimerBarManager.CustomTimer.MinReachedBehavior}");
+                    $"TimerBar custom timer reached min. current={ctx.CurrentValue:F2}, min={ctx.MinValue:F2}, max={ctx.MaxValue:F2}, isFinal={ctx.IsFinalCountdown}, behavior={TimerBarManager.CustomTimer.MinReachedBehavior}");
             };
 
             TimerBarManager.StartCustomTimer();
@@ -156,14 +187,17 @@ internal static class ShortcutCommands
     private static void DumpTimerBarDebugStats()
     {
         Logger.LogInfo(
-                       $"TimerBar stats create={_timerBarCreateCount}, update={_timerBarUpdateCount}, updateTimer={_timerBarUpdateTimerCount}, finalHide={_timerBarFinalHideCount}, taskComplete={_timerBarTaskCompleteCount}, debugEnabled={_timerBarDebugEnabled}");
+            $"TimerBar stats create={_timerBarCreateCount}, update={_timerBarUpdateCount}, updateTimer={_timerBarUpdateTimerCount}, finalHide={_timerBarFinalHideCount}, taskComplete={_timerBarTaskCompleteCount}, debugEnabled={_timerBarDebugEnabled}");
         Logger.LogInfo(
-                       $"TimerBar custom settings min={TimerBarManager.CustomTimer.MinValue}, max={TimerBarManager.CustomTimer.MaxValue}, finalAtMin={TimerBarManager.CustomTimer.FinalStartsAtMinValue}, finalMin={TimerBarManager.CustomTimer.FinalBarMinValue}, finalMax={TimerBarManager.CustomTimer.FinalBarMaxValue}, decreasePerSec={TimerBarManager.CustomTimer.DecreasePerSecond}, minBehavior={TimerBarManager.CustomTimer.MinReachedBehavior}");
+            $"TimerBar custom settings min={TimerBarManager.CustomTimer.MinValue}, max={TimerBarManager.CustomTimer.MaxValue}, finalAtMin={TimerBarManager.CustomTimer.FinalStartsAtMinValue}, finalMin={TimerBarManager.CustomTimer.FinalBarMinValue}, finalMax={TimerBarManager.CustomTimer.FinalBarMaxValue}, decreasePerSec={TimerBarManager.CustomTimer.DecreasePerSecond}, minBehavior={TimerBarManager.CustomTimer.MinReachedBehavior}");
     }
 
     private static void EnsureTimerBarDebugHooks()
     {
-        if (_timerBarDebugHooksInstalled) return;
+        if (_timerBarDebugHooksInstalled)
+        {
+            return;
+        }
         _timerBarDebugHooksInstalled = true;
 
         TimerBarManager.BarCreated += _ => _timerBarCreateCount++;
@@ -183,7 +217,13 @@ internal static class ShortcutCommands
 
         const float debugDecreaseValue = 5f;
         bool ok = TimerBarManager.DecreaseCustomTimer(debugDecreaseValue);
-        if (ok) Logger.LogInfo($"TimerBar debug value decreased by {debugDecreaseValue} (Ctrl+F12).");
-        else Logger.LogInfo("TimerBar debug value decrease skipped: custom timer is not running.");
+        if (ok)
+        {
+            Logger.LogInfo($"TimerBar debug value decreased by {debugDecreaseValue} (Ctrl+F12).");
+        }
+        else
+        {
+            Logger.LogInfo("TimerBar debug value decrease skipped: custom timer is not running.");
+        }
     }
 }

@@ -10,19 +10,24 @@ internal static class TasksHandler
         if (pInfo.Disconnected
             || pInfo.Tasks == null
             || !pInfo.Object
-            || (!Helpers.GetOption(BoolOptionNames.GhostsDoTasks) && pInfo.IsDead)
+            || !Helpers.GetOption(BoolOptionNames.GhostsDoTasks) && pInfo.IsDead
             || !pInfo.Role
             || !pInfo.Role.TasksCountTowardProgress
             || pInfo.Object.IsTeamImpostor()
             || pInfo.Object.IsNeutral()
-            || (pInfo.Object.IsLovers() && !Lovers.HasTasks)
+            || pInfo.Object.IsLovers() && !Lovers.HasTasks
             || pInfo.Object.HasFakeTasks())
+        {
             return (completed, total);
+        }
 
         foreach (NetworkedPlayerInfo.TaskInfo playerInfoTask in pInfo.Tasks.GetFastEnumerator())
         {
             total++;
-            if (playerInfoTask.Complete) completed++;
+            if (playerInfoTask.Complete)
+            {
+                completed++;
+            }
         }
 
         return (completed, total);
@@ -35,14 +40,14 @@ internal static class TasksHandler
         foreach (NetworkedPlayerInfo pInfo in GameData.Instance.AllPlayers.GetFastEnumerator())
         {
             if (pInfo.Object
-                && ((pInfo.Object?.IsLovers() == true && !Lovers.TasksCount)
-                    || (Madmate.HasTasks && pInfo.Object?.HasModifier(ModifierType.Madmate) == true)
-                    || (CreatedMadmate.HasTasks && pInfo.Object?.HasModifier(ModifierType.CreatedMadmate) == true)
-                    || (MadmateRole.CanKnowImpostorAfterFinishTasks && pInfo.Object.IsRole(RoleType.Madmate))
-                    || (Suicider.CanKnowImpostorAfterFinishTasks && pInfo.Object.IsRole(RoleType.Suicider))
-                )
-               )
+                && (pInfo.Object.IsLovers() && !Lovers.TasksCount
+                    || Madmate.HasTasks && pInfo.Object?.HasModifier(ModifierType.Madmate) == true
+                    || CreatedMadmate.HasTasks && pInfo.Object?.HasModifier(ModifierType.CreatedMadmate) == true
+                    || MadmateRole.CanKnowImpostorAfterFinishTasks && pInfo.Object.IsRole(RoleType.Madmate)
+                    || Suicider.CanKnowImpostorAfterFinishTasks && pInfo.Object.IsRole(RoleType.Suicider)))
+            {
                 continue;
+            }
 
             (int playerCompleted, int playerTotal) = TaskInfo(pInfo);
             __instance.TotalTasks += playerTotal;

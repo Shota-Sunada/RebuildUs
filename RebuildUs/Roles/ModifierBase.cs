@@ -31,14 +31,29 @@ internal abstract class PlayerModifier
 
     internal virtual void ResetRole() { }
     internal virtual void PostInit() { }
-    internal virtual string ModifyNameText(string nameText) { return nameText; }
-    internal virtual string ModifyRoleText(string roleText, List<RoleInfo> roleInfo, bool useColors = true, bool includeHidden = false) { return roleText; }
-    internal virtual string MeetingInfoText() { return ""; }
+
+    internal virtual string ModifyNameText(string nameText)
+    {
+        return nameText;
+    }
+
+    internal virtual string ModifyRoleText(string roleText, List<RoleInfo> roleInfo, bool useColors = true, bool includeHidden = false)
+    {
+        return roleText;
+    }
+
+    internal virtual string MeetingInfoText()
+    {
+        return "";
+    }
 
     internal static void ClearAll()
     {
         AllModifiers.Clear();
-        for (int i = 0; i < 256; i++) PlayerModifierCache[i] = null;
+        for (int i = 0; i < 256; i++)
+        {
+            PlayerModifierCache[i] = null;
+        }
     }
 
     internal static void RemoveFromCache(byte playerId)
@@ -48,12 +63,17 @@ internal abstract class PlayerModifier
 
     internal static PlayerModifier GetModifier(PlayerControl player, ModifierType type)
     {
-        if (player == null) return null;
+        if (player == null)
+        {
+            return null;
+        }
         List<PlayerModifier> list = GetModifiers(player);
         foreach (PlayerModifier t in list)
         {
             if (t.CurrentModifierType == type)
+            {
                 return t;
+            }
         }
 
         return null;
@@ -61,14 +81,22 @@ internal abstract class PlayerModifier
 
     internal static List<PlayerModifier> GetModifiers(PlayerControl player)
     {
-        if (player == null) return [];
-        if (PlayerModifierCache[player.PlayerId] != null) return PlayerModifierCache[player.PlayerId];
+        if (player == null)
+        {
+            return [];
+        }
+        if (PlayerModifierCache[player.PlayerId] != null)
+        {
+            return PlayerModifierCache[player.PlayerId];
+        }
 
-        List<PlayerModifier> list = new();
+        List<PlayerModifier> list = [];
         foreach (PlayerModifier t in AllModifiers)
         {
             if (t.Player == player)
+            {
                 list.Add(t);
+            }
         }
 
         PlayerModifierCache[player.PlayerId] = list;
@@ -87,11 +115,16 @@ internal abstract class ModifierBase<T> : PlayerModifier where T : ModifierBase<
         get
         {
             PlayerControl local = PlayerControl.LocalPlayer;
-            if (local == null) return null;
+            if (local == null)
+            {
+                return null;
+            }
             foreach (T t in Players)
             {
                 if (t.Player == local)
+                {
                     return t;
+                }
             }
 
             return null;
@@ -104,7 +137,9 @@ internal abstract class ModifierBase<T> : PlayerModifier where T : ModifierBase<
         {
             List<PlayerControl> list = new(Players.Count);
             foreach (T t in Players)
+            {
                 list.Add(t.Player);
+            }
 
             return list;
         }
@@ -118,7 +153,10 @@ internal abstract class ModifierBase<T> : PlayerModifier where T : ModifierBase<
             foreach (T t in Players)
             {
                 PlayerControl p = t.Player;
-                if (p.IsAlive()) list.Add(p);
+                if (p.IsAlive())
+                {
+                    list.Add(p);
+                }
             }
 
             return list;
@@ -133,7 +171,10 @@ internal abstract class ModifierBase<T> : PlayerModifier where T : ModifierBase<
             foreach (T t in Players)
             {
                 PlayerControl p = t.Player;
-                if (!p.IsAlive()) list.Add(p);
+                if (!p.IsAlive())
+                {
+                    list.Add(p);
+                }
             }
 
             return list;
@@ -156,11 +197,16 @@ internal abstract class ModifierBase<T> : PlayerModifier where T : ModifierBase<
     internal static T GetModifier(PlayerControl player = null)
     {
         player ??= PlayerControl.LocalPlayer;
-        if (player == null) return null;
+        if (player == null)
+        {
+            return null;
+        }
         foreach (T t in Players)
         {
             if (t.Player == player)
+            {
                 return t;
+            }
         }
 
         return null;
@@ -169,11 +215,16 @@ internal abstract class ModifierBase<T> : PlayerModifier where T : ModifierBase<
     // ReSharper disable once MemberCanBeProtected.Global
     public static bool HasModifier(PlayerControl player)
     {
-        if (player == null) return false;
+        if (player == null)
+        {
+            return false;
+        }
         foreach (T t in Players)
         {
             if (t.Player == player)
+            {
                 return true;
+            }
         }
 
         return false;
@@ -181,7 +232,10 @@ internal abstract class ModifierBase<T> : PlayerModifier where T : ModifierBase<
 
     public static T AddModifier(PlayerControl player)
     {
-        if (player == null) return null;
+        if (player == null)
+        {
+            return null;
+        }
         T mod = new();
         mod.Init(player);
         return mod;
@@ -189,13 +243,19 @@ internal abstract class ModifierBase<T> : PlayerModifier where T : ModifierBase<
 
     public static void EraseModifier(PlayerControl player)
     {
-        if (player == null) return;
+        if (player == null)
+        {
+            return;
+        }
         RemoveFromCache(player.PlayerId);
 
         for (int i = Players.Count - 1; i >= 0; i--)
         {
             T x = Players[i];
-            if (x.Player != player || x.CurrentModifierType != StaticModifierType) continue;
+            if (x.Player != player || x.CurrentModifierType != StaticModifierType)
+            {
+                continue;
+            }
             x.ResetRole(); // Assuming ResetRole exists from PlayerModifier
             Players.RemoveAt(i);
         }
@@ -203,20 +263,31 @@ internal abstract class ModifierBase<T> : PlayerModifier where T : ModifierBase<
         for (int i = AllModifiers.Count - 1; i >= 0; i--)
         {
             PlayerModifier x = AllModifiers[i];
-            if (x.Player == player && x.CurrentModifierType == StaticModifierType) AllModifiers.RemoveAt(i);
+            if (x.Player == player && x.CurrentModifierType == StaticModifierType)
+            {
+                AllModifiers.RemoveAt(i);
+            }
         }
     }
 
     public static void SwapModifier(PlayerControl p1, PlayerControl p2)
     {
-        if (p1 == null || p2 == null) return;
+        if (p1 == null || p2 == null)
+        {
+            return;
+        }
         RemoveFromCache(p1.PlayerId);
         RemoveFromCache(p2.PlayerId);
         foreach (T t in Players)
         {
             if (t.Player == p1)
+            {
                 t.Player = p2;
-            else if (t.Player == p2) t.Player = p1;
+            }
+            else if (t.Player == p2)
+            {
+                t.Player = p1;
+            }
         }
     }
 }

@@ -20,14 +20,32 @@ internal class Lighter : MultiRoleBase<Lighter>
     }
 
     // write configs here
-    internal static float ModeLightsOnVision { get => CustomOptionHolder.LighterModeLightsOnVision.GetFloat(); }
-    internal static float ModeLightsOffVision { get => CustomOptionHolder.LighterModeLightsOffVision.GetFloat(); }
-    private static float Cooldown { get => CustomOptionHolder.LighterCooldown.GetFloat(); }
-    private static float Duration { get => CustomOptionHolder.LighterDuration.GetFloat(); }
+    internal static float ModeLightsOnVision
+    {
+        get => CustomOptionHolder.LighterModeLightsOnVision.GetFloat();
+    }
+
+    internal static float ModeLightsOffVision
+    {
+        get => CustomOptionHolder.LighterModeLightsOffVision.GetFloat();
+    }
+
+    private static float Cooldown
+    {
+        get => CustomOptionHolder.LighterCooldown.GetFloat();
+    }
+
+    private static float Duration
+    {
+        get => CustomOptionHolder.LighterDuration.GetFloat();
+    }
 
     internal static bool IsLightActive(PlayerControl player)
     {
-        if (!IsRole(player) || !player.IsAlive()) return false;
+        if (!IsRole(player) || !player.IsAlive())
+        {
+            return false;
+        }
         Lighter r = GetRole(player);
         return r._lightActive;
     }
@@ -45,22 +63,35 @@ internal class Lighter : MultiRoleBase<Lighter>
     {
         // Lighter light
         _lighterButton = new(() =>
-        {
-            Lighter local = Local;
-            local?._lightActive = true;
-        }, () => Local != null && PlayerControl.LocalPlayer?.Data?.IsDead == false, () => PlayerControl.LocalPlayer.CanMove, () =>
-        {
-            Lighter local = Local;
-            local?._lightActive = false;
-            _lighterButton.Timer = _lighterButton.MaxTimer;
-            _lighterButton.IsEffectActive = false;
-            _lighterButton.ActionButton.graphic.color = Palette.EnabledColor;
-        }, AssetLoader.LighterButton, ButtonPosition.Layout, hm, hm.UseButton, AbilitySlot.CrewmateAbilityPrimary, true, Duration, () =>
-        {
-            Lighter local = Local;
-            local?._lightActive = false;
-            _lighterButton.Timer = _lighterButton.MaxTimer;
-        }, false, Tr.Get(TrKey.LighterText));
+            {
+                Lighter local = Local;
+                local?._lightActive = true;
+            },
+            () => Local != null && PlayerControl.LocalPlayer?.Data?.IsDead == false,
+            () => PlayerControl.LocalPlayer.CanMove,
+            () =>
+            {
+                Lighter local = Local;
+                local?._lightActive = false;
+                _lighterButton.Timer = _lighterButton.MaxTimer;
+                _lighterButton.IsEffectActive = false;
+                _lighterButton.ActionButton.graphic.color = Palette.EnabledColor;
+            },
+            AssetLoader.LighterButton,
+            ButtonPosition.Layout,
+            hm,
+            hm.UseButton,
+            AbilitySlot.CrewmateAbilityPrimary,
+            true,
+            Duration,
+            () =>
+            {
+                Lighter local = Local;
+                local?._lightActive = false;
+                _lighterButton.Timer = _lighterButton.MaxTimer;
+            },
+            false,
+            Tr.Get(TrKey.LighterText));
     }
 
     internal static void SetButtonCooldowns()

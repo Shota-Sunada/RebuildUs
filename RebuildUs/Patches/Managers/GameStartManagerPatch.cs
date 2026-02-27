@@ -14,7 +14,10 @@ internal static class GameStartManagerPatch
     [HarmonyPatch(typeof(GameStartManager), nameof(GameStartManager.Update))]
     internal static void UpdatePrefix(GameStartManager __instance)
     {
-        if (!GameData.Instance) return; // No instance
+        if (!GameData.Instance)
+        {
+            return; // No instance
+        }
         __instance.MinPlayers = 1;
     }
 

@@ -6,7 +6,10 @@ internal static class AssetLoader
 
     internal static void LoadAssets()
     {
-        if (_isLoaded) return;
+        if (_isLoaded)
+        {
+            return;
+        }
         _isLoaded = true;
 
         LoadButtonAssets();
@@ -32,9 +35,22 @@ internal static class AssetLoader
 
     private static Sprite Resize(this Sprite sprite, float pixelsPerUnit)
     {
-        if (Mathf.Approximately(pixelsPerUnit, 100f)) return sprite.DontUnload();
+        if (Mathf.Approximately(pixelsPerUnit, 100f))
+        {
+            return sprite.DontUnload();
+        }
 
-        return sprite == null ? null : Sprite.Create(sprite.texture, sprite.rect, new(sprite.pivot.x / sprite.rect.width, sprite.pivot.y / sprite.rect.height), pixelsPerUnit, 0, SpriteMeshType.FullRect, sprite.border).DontUnload();
+        return sprite == null
+            ? null
+            : Sprite
+              .Create(sprite.texture,
+                  sprite.rect,
+                  new(sprite.pivot.x / sprite.rect.width, sprite.pivot.y / sprite.rect.height),
+                  pixelsPerUnit,
+                  0,
+                  SpriteMeshType.FullRect,
+                  sprite.border)
+              .DontUnload();
     }
 
     private static T DontUnload<T>(this T obj) where T : UnityObject
@@ -252,9 +268,15 @@ internal static class AssetLoader
     private static void LoadKeyBindAssets()
     {
         Stream resource = Assembly.GetExecutingAssembly().GetManifestResourceStream("RebuildUs.Resources.keybinds");
-        if (resource == null) return;
+        if (resource == null)
+        {
+            return;
+        }
         AssetBundle ab = AssetBundle.LoadFromMemory(resource.ReadFully());
-        if (ab == null) return;
+        if (ab == null)
+        {
+            return;
+        }
 
         KeyBindSprites["KeyBindCharacters"] = ab.LoadAsset<Sprite>("KeyBindCharacters.png").DontUnload();
         KeyBindSprites["KeyBindCharacters0"] = ab.LoadAsset<Sprite>("KeyBindCharacters0.png").DontUnload();

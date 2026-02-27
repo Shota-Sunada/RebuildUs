@@ -9,7 +9,10 @@ internal static class MapUtilities
     {
         get
         {
-            if (PrivateSystems.Count == 0) GetSystems();
+            if (PrivateSystems.Count == 0)
+            {
+                GetSystems();
+            }
             return PrivateSystems;
         }
     }
@@ -22,14 +25,23 @@ internal static class MapUtilities
 
     private static void GetSystems()
     {
-        if (!CachedShipStatus) return;
+        if (!CachedShipStatus)
+        {
+            return;
+        }
 
         Il2CppSystem.Collections.Generic.Dictionary<SystemTypes, ISystemType> systems = CachedShipStatus.Systems;
-        if (systems.Count <= 0) return;
+        if (systems.Count <= 0)
+        {
+            return;
+        }
 
         foreach (SystemTypes systemTypes in SystemTypeHelpers.AllTypes)
         {
-            if (!systems.ContainsKey(systemTypes)) continue;
+            if (!systems.ContainsKey(systemTypes))
+            {
+                continue;
+            }
             PrivateSystems[systemTypes] = systems[systemTypes].TryCast<UnityObject>();
         }
     }

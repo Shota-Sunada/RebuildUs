@@ -13,10 +13,21 @@ internal static class SplashManagerPatch
     [HarmonyPatch(typeof(SplashManager), nameof(SplashManager.Update))]
     internal static bool Prefix(SplashManager __instance)
     {
-        if (_isDone) return true;
+        if (_isDone)
+        {
+            return true;
+        }
 
-        if (!__instance.doneLoadingRefdata || __instance.startedSceneLoad || !(Time.time - __instance.startTime > __instance.minimumSecondsBeforeSceneChange)) return true;
-        if (_isProcessing) return false;
+        if (!__instance.doneLoadingRefdata
+            || __instance.startedSceneLoad
+            || !(Time.time - __instance.startTime > __instance.minimumSecondsBeforeSceneChange))
+        {
+            return true;
+        }
+        if (_isProcessing)
+        {
+            return false;
+        }
         _isProcessing = true;
         __instance.StartCoroutine(CoProcess(__instance).WrapToIl2Cpp());
 
@@ -27,7 +38,10 @@ internal static class SplashManagerPatch
     {
         CustomHatManager.LoadHats();
 
-        while (CustomHatManager.Loader.IsRunning) yield return null;
+        while (CustomHatManager.Loader.IsRunning)
+        {
+            yield return null;
+        }
 
         _isDone = true;
     }

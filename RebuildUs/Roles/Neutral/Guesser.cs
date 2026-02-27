@@ -4,11 +4,31 @@ internal static class Guesser
 {
     private static int _remainingShotsNiceGuesser;
     private static int _remainingShotsEvilGuesser;
-    internal static bool OnlyAvailableRoles { get => CustomOptionHolder.GuesserOnlyAvailableRoles.GetBool(); }
-    internal static bool HasMultipleShotsPerMeeting { get => CustomOptionHolder.GuesserHasMultipleShotsPerMeeting.GetBool(); }
-    internal static bool ShowInfoInGhostChat { get => CustomOptionHolder.GuesserShowInfoInGhostChat.GetBool(); }
-    internal static bool KillsThroughShield { get => CustomOptionHolder.GuesserKillsThroughShield.GetBool(); }
-    internal static bool EvilCanKillSpy { get => CustomOptionHolder.GuesserEvilCanKillSpy.GetBool(); }
+
+    internal static bool OnlyAvailableRoles
+    {
+        get => CustomOptionHolder.GuesserOnlyAvailableRoles.GetBool();
+    }
+
+    internal static bool HasMultipleShotsPerMeeting
+    {
+        get => CustomOptionHolder.GuesserHasMultipleShotsPerMeeting.GetBool();
+    }
+
+    internal static bool ShowInfoInGhostChat
+    {
+        get => CustomOptionHolder.GuesserShowInfoInGhostChat.GetBool();
+    }
+
+    internal static bool KillsThroughShield
+    {
+        get => CustomOptionHolder.GuesserKillsThroughShield.GetBool();
+    }
+
+    internal static bool EvilCanKillSpy
+    {
+        get => CustomOptionHolder.GuesserEvilCanKillSpy.GetBool();
+    }
 
     internal static void ClearAndReload()
     {
@@ -20,7 +40,10 @@ internal static class Guesser
 
     internal static bool IsGuesser(byte playerId)
     {
-        if (!EvilGuesser.Exists && !NiceGuesser.Exists) return false;
+        if (!EvilGuesser.Exists && !NiceGuesser.Exists)
+        {
+            return false;
+        }
 
         PlayerControl player = Helpers.PlayerById(playerId);
         return player.IsRole(RoleType.EvilGuesser) || player.IsRole(RoleType.NiceGuesser);
@@ -32,14 +55,23 @@ internal static class Guesser
         if (player.IsRole(RoleType.NiceGuesser))
         {
             remainingShots = _remainingShotsNiceGuesser;
-            if (shoot) _remainingShotsNiceGuesser = Mathf.Max(0, _remainingShotsNiceGuesser - 1);
+            if (shoot)
+            {
+                _remainingShotsNiceGuesser = Mathf.Max(0, _remainingShotsNiceGuesser - 1);
+            }
         }
         else if (player.IsRole(RoleType.EvilGuesser))
         {
             remainingShots = _remainingShotsEvilGuesser;
-            if (player.HasModifier(ModifierType.LastImpostor) && LastImpostor.CanGuess()) remainingShots += LastImpostor.RemainingShots;
+            if (player.HasModifier(ModifierType.LastImpostor) && LastImpostor.CanGuess())
+            {
+                remainingShots += LastImpostor.RemainingShots;
+            }
 
-            if (!shoot) return remainingShots;
+            if (!shoot)
+            {
+                return remainingShots;
+            }
             // ラストインポスターの弾数を優先的に消費させる
             if (player.HasModifier(ModifierType.LastImpostor) && LastImpostor.CanGuess())
             {
@@ -53,7 +85,10 @@ internal static class Guesser
         else if (player.HasModifier(ModifierType.LastImpostor) && LastImpostor.CanGuess())
         {
             remainingShots = LastImpostor.RemainingShots;
-            if (shoot) LastImpostor.RemainingShots = Mathf.Max(0, LastImpostor.RemainingShots - 1);
+            if (shoot)
+            {
+                LastImpostor.RemainingShots = Mathf.Max(0, LastImpostor.RemainingShots - 1);
+            }
         }
 
         return remainingShots;

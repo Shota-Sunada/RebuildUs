@@ -23,17 +23,25 @@ internal sealed class RPCSender(uint netId, CustomRPC callId, int targetId = -1)
     internal void Write(uint value, bool isPacked = false)
     {
         if (isPacked)
+        {
             _writer.WritePacked(value);
+        }
         else
+        {
             _writer.Write(value);
+        }
     }
 
     internal void Write(int value, bool isPacked = false)
     {
         if (isPacked)
+        {
             _writer.WritePacked(value);
+        }
         else
+        {
             _writer.Write(value);
+        }
     }
 
     internal void Write(float value)

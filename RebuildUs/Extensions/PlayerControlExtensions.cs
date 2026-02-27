@@ -11,11 +11,86 @@ internal static class PlayerControlExtensions
     private static readonly Vector3 ColorBlindMeetingPos = new(0.3384f, 0.23334f, -0.11f);
     private static readonly Vector3 ColorBlindMeetingScale = new(0.72f, 0.8f, 0.8f);
 
+    private static List<byte> GenerateTasks(int numCommon, int numShort, int numLong)
+    {
+        if (numCommon + numShort + numLong <= 0)
+        {
+            numShort = 1;
+        }
+
+        Il2CppSystem.Collections.Generic.List<byte> tasks = new();
+        Il2CppSystem.Collections.Generic.HashSet<TaskTypes> hashSet = new();
+
+        List<NormalPlayerTask> commonTasks = [.. MapUtilities.CachedShipStatus.CommonTasks];
+        commonTasks.Shuffle();
+
+        List<NormalPlayerTask> shortTasks = [.. MapUtilities.CachedShipStatus.ShortTasks];
+        shortTasks.Shuffle();
+
+        List<NormalPlayerTask> longTasks = [.. MapUtilities.CachedShipStatus.LongTasks];
+        longTasks.Shuffle();
+
+        int start = 0;
+        Il2CppSystem.Collections.Generic.List<NormalPlayerTask> commonTasksIl2Cpp = new();
+        foreach (NormalPlayerTask t in commonTasks)
+        {
+            commonTasksIl2Cpp.Add(t);
+        }
+        MapUtilities.CachedShipStatus.AddTasksFromList(ref start, numCommon, tasks, hashSet, commonTasksIl2Cpp);
+
+        start = 0;
+        Il2CppSystem.Collections.Generic.List<NormalPlayerTask> shortTasksIl2Cpp = new();
+        foreach (NormalPlayerTask t in shortTasks)
+        {
+            shortTasksIl2Cpp.Add(t);
+        }
+        MapUtilities.CachedShipStatus.AddTasksFromList(ref start, numShort, tasks, hashSet, shortTasksIl2Cpp);
+
+        start = 0;
+        Il2CppSystem.Collections.Generic.List<NormalPlayerTask> longTasksIl2Cpp = new();
+        foreach (NormalPlayerTask t in longTasks)
+        {
+            longTasksIl2Cpp.Add(t);
+        }
+        MapUtilities.CachedShipStatus.AddTasksFromList(ref start, numLong, tasks, hashSet, longTasksIl2Cpp);
+
+        return [.. tasks];
+    }
+
+    private static TextMeshPro GetOrCreateLabel(TextMeshPro source, string name, float yOffset, float fontScale)
+    {
+        if (source?.transform?.parent == null)
+        {
+            return null;
+        }
+
+        Transform labelTransform = source.transform.parent.Find(name);
+        TextMeshPro label = labelTransform?.GetComponent<TextMeshPro>();
+
+        if (label == null)
+        {
+            label = Object.Instantiate(source, source.transform.parent);
+            if (label == null)
+            {
+                return null;
+            }
+            label.transform.localPosition += Vector3.up * yOffset;
+            label.fontSize *= fontScale;
+            label.gameObject.name = name;
+            label.color = label.color.SetAlpha(1f);
+        }
+
+        return label;
+    }
+
     extension(PlayerControl player)
     {
         internal void UpdatePlayerInfo()
         {
-            if (player?.Data == null) return;
+            if (player?.Data == null)
+            {
+                return;
+            }
 
             MeetingHud meeting = MeetingHud.Instance;
             bool hasMeeting = meeting?.playerStates != null;
@@ -31,12 +106,18 @@ internal static class PlayerControlExtensions
                 }
             }
 
-            foreach (var p in PlayerControl.AllPlayerControls.GetFastEnumerator())
+            foreach (PlayerControl p in PlayerControl.AllPlayerControls.GetFastEnumerator())
             {
-                if (p?.Data == null || p.cosmetics == null) continue;
+                if (p?.Data == null || p.cosmetics == null)
+                {
+                    continue;
+                }
 
                 PlayerVoteArea pva = null;
-                if (hasMeeting) VoteAreaStates.TryGetValue(p.PlayerId, out pva);
+                if (hasMeeting)
+                {
+                    VoteAreaStates.TryGetValue(p.PlayerId, out pva);
+                }
 
                 // Colorblind Text Handling
                 if (pva?.ColorBlindName != null && pva.ColorBlindName.gameObject.active)
@@ -45,20 +126,29 @@ internal static class PlayerControlExtensions
                     pva.ColorBlindName.transform.localScale = ColorBlindMeetingScale;
                 }
 
-                if (p.cosmetics.colorBlindText != null && p.cosmetics.showColorBlindText && p.cosmetics.colorBlindText.gameObject.active) p.cosmetics.colorBlindText.transform.localPosition = new(0, -0.25f, 0f);
+                if (p.cosmetics.colorBlindText != null && p.cosmetics.showColorBlindText && p.cosmetics.colorBlindText.gameObject.active)
+                {
+                    p.cosmetics.colorBlindText.transform.localPosition = new(0, -0.25f, 0f);
+                }
 
                 p.cosmetics.nameText?.transform.parent?.SetLocalZ(-0.0001f);
 
                 if (p == player || player.Data.IsDead)
                 {
                     TextMeshPro label = GetOrCreateLabel(p.cosmetics.nameText, "Info", 0.225f, 0.75f);
-                    if (label == null) continue;
+                    if (label == null)
+                    {
+                        continue;
+                    }
 
                     TextMeshPro meetingLabel = null;
                     if (pva != null)
                     {
                         meetingLabel = GetOrCreateLabel(pva.NameText, "Info", -0.2f, 0.60f);
-                        if (meetingLabel != null && pva.NameText != null) pva.NameText.transform.localPosition = new(0.3384f, 0.0311f, -0.1f);
+                        if (meetingLabel != null && pva.NameText != null)
+                        {
+                            pva.NameText.transform.localPosition = new(0.3384f, 0.0311f, -0.1f);
+                        }
                     }
 
                     (int completed, int total) = TasksHandler.TaskInfo(p.Data);
@@ -66,25 +156,33 @@ internal static class PlayerControlExtensions
                     string roleGhost = RoleInfo.GetRolesString(p, true, MapSettings.GhostsSeeModifier);
 
                     string statusText = "";
-                    if (p == player || (player.Data.IsDead && MapSettings.GhostsSeeInformation))
+                    if (p == player || player.Data.IsDead && MapSettings.GhostsSeeInformation)
                     {
                         if (p.IsRole(RoleType.Arsonist))
                         {
-                            var role = Arsonist.Instance;
+                            Arsonist role = Arsonist.Instance;
                             if (role != null)
                             {
                                 int dousedSurvivors = 0;
                                 foreach (PlayerControl dousedPlayer in role.DousedPlayers)
                                 {
                                     if (dousedPlayer?.Data != null && !dousedPlayer.Data.IsDead && !dousedPlayer.Data.Disconnected)
+                                    {
                                         dousedSurvivors++;
+                                    }
                                 }
 
                                 int totalSurvivors = 0;
                                 foreach (PlayerControl targetPlayer in PlayerControl.AllPlayerControls.GetFastEnumerator())
                                 {
-                                    if (targetPlayer?.Data != null && !targetPlayer.Data.IsDead && !targetPlayer.Data.Disconnected && !targetPlayer.IsRole(RoleType.Arsonist) && !targetPlayer.IsGm())
+                                    if (targetPlayer?.Data != null
+                                        && !targetPlayer.Data.IsDead
+                                        && !targetPlayer.Data.Disconnected
+                                        && !targetPlayer.IsRole(RoleType.Arsonist)
+                                        && !targetPlayer.IsGm())
+                                    {
                                         totalSurvivors++;
+                                    }
                                 }
 
                                 statusText = Helpers.Cs(Arsonist.NameColor, $" ({dousedSurvivors}/{totalSurvivors})");
@@ -92,8 +190,11 @@ internal static class PlayerControlExtensions
                         }
                         else if (p.IsRole(RoleType.Vulture))
                         {
-                            var role = Vulture.Instance;
-                            if (role != null) statusText = Helpers.Cs(Vulture.NameColor, $" ({role.EatenBodies}/{Vulture.NumberToWin})");
+                            Vulture role = Vulture.Instance;
+                            if (role != null)
+                            {
+                                statusText = Helpers.Cs(Vulture.NameColor, $" ({role.EatenBodies}/{Vulture.NumberToWin})");
+                            }
                         }
                     }
 
@@ -103,18 +204,30 @@ internal static class PlayerControlExtensions
                         InfoStringBuilder.Clear();
 
                         bool commsActive = false;
-                        if (MapUtilities.CachedShipStatus != null && MapUtilities.Systems.TryGetValue(SystemTypes.Comms, out var comms))
+                        if (MapUtilities.CachedShipStatus != null && MapUtilities.Systems.TryGetValue(SystemTypes.Comms, out UnityObject comms))
                         {
-                            var activatable = comms.TryCast<IActivatable>();
-                            if (activatable != null) commsActive = activatable.IsActive;
+                            IActivatable activatable = comms.TryCast<IActivatable>();
+                            if (activatable != null)
+                            {
+                                commsActive = activatable.IsActive;
+                            }
                         }
 
                         if (commsActive)
+                        {
                             InfoStringBuilder.Append("<color=#808080FF>(?/?)</color>");
+                        }
                         else
                         {
                             string color = completed == total ? "#00FF00FF" : "#FAD934FF";
-                            InfoStringBuilder.Append("<color=").Append(color).Append(">(").Append(completed).Append('/').Append(total).Append(")</color>");
+                            InfoStringBuilder
+                                .Append("<color=")
+                                .Append(color)
+                                .Append(">(")
+                                .Append(completed)
+                                .Append('/')
+                                .Append(total)
+                                .Append(")</color>");
                         }
 
                         taskText = InfoStringBuilder.ToString();
@@ -140,7 +253,9 @@ internal static class PlayerControlExtensions
                                 pInfo = InfoStringBuilder.ToString();
                             }
                             else
+                            {
                                 pInfo = roles;
+                            }
                         }
 
                         if (HudManager.Instance?.TaskPanel?.tab != null)
@@ -152,7 +267,10 @@ internal static class PlayerControlExtensions
                                 if (tabText != null)
                                 {
                                     InfoStringBuilder.Clear();
-                                    InfoStringBuilder.Append(TranslationController.Instance.GetString(StringNames.Tasks)).Append(' ').Append(taskText);
+                                    InfoStringBuilder
+                                        .Append(TranslationController.Instance.GetString(StringNames.Tasks))
+                                        .Append(' ')
+                                        .Append(taskText);
                                     tabText.SetText(InfoStringBuilder.ToString());
                                 }
                             }
@@ -191,7 +309,10 @@ internal static class PlayerControlExtensions
 
         internal void RefreshRoleDescription()
         {
-            if (player == null) return;
+            if (player == null)
+            {
+                return;
+            }
 
             List<RoleInfo> infos = RoleInfo.GetRoleInfoForPlayer(player);
             List<PlayerTask> toRemove = [];
@@ -199,27 +320,36 @@ internal static class PlayerControlExtensions
             foreach (PlayerTask t in player.myTasks.GetFastEnumerator())
             {
                 ImportantTextTask textTask = t.TryCast<ImportantTextTask>();
-                if (textTask == null) continue;
+                if (textTask == null)
+                {
+                    continue;
+                }
                 bool found = false;
                 for (int i = 0; i < infos.Count; i++)
                 {
-                    if (!textTask.Text.StartsWith(infos[i].Name)) continue;
+                    if (!textTask.Text.StartsWith(infos[i].Name))
+                    {
+                        continue;
+                    }
                     infos.RemoveAt(i);
                     found = true;
                     break;
                 }
 
-                if (!found) toRemove.Add(t);
+                if (!found)
+                {
+                    toRemove.Add(t);
+                }
             }
 
-            foreach (var t in toRemove)
+            foreach (PlayerTask t in toRemove)
             {
                 t.OnRemove();
                 player.myTasks.Remove(t);
                 Object.Destroy(t.gameObject);
             }
 
-            foreach (var roleInfo in infos)
+            foreach (RoleInfo roleInfo in infos)
             {
                 ImportantTextTask task = new GameObject("RoleTask").AddComponent<ImportantTextTask>();
                 task.transform.SetParent(player.transform, false);
@@ -227,9 +357,13 @@ internal static class PlayerControlExtensions
                 InfoStringBuilder.Clear();
                 InfoStringBuilder.Append(roleInfo.Name).Append(": ");
                 if (roleInfo.RoleType == RoleType.Jackal)
+                {
                     InfoStringBuilder.Append(Jackal.CanCreateSidekick ? Tr.Get(TrKey.JackalWithSidekick) : Tr.Get(TrKey.JackalShortDesc));
+                }
                 else
+                {
                     InfoStringBuilder.Append(roleInfo.ShortDescription);
+                }
 
                 task.Text = Helpers.Cs(roleInfo.Color, InfoStringBuilder.ToString());
                 player.myTasks.Insert(0, task);
@@ -252,13 +386,16 @@ internal static class PlayerControlExtensions
             bool localDead = player.Data.IsDead;
             foreach (PlayerControl p in PlayerControl.AllPlayerControls.GetFastEnumerator())
             {
-                p.cosmetics.SetPetVisible((localDead && !p.Data.IsDead) || !localDead);
+                p.cosmetics.SetPetVisible(localDead && !p.Data.IsDead || !localDead);
             }
         }
 
         internal void GenerateAndAssignTasks(int numCommon, int numShort, int numLong)
         {
-            if (player == null) return;
+            if (player == null)
+            {
+                return;
+            }
 
             List<byte> taskTypeIds = GenerateTasks(numCommon, numShort, numLong);
             using RPCSender sender = new(PlayerControl.LocalPlayer.NetId, CustomRPC.UncheckedSetTasks);
@@ -269,7 +406,10 @@ internal static class PlayerControlExtensions
 
         internal void ClearAllTasks()
         {
-            if (player == null) return;
+            if (player == null)
+            {
+                return;
+            }
             foreach (PlayerTask t in player.myTasks)
             {
                 t.OnRemove();
@@ -282,7 +422,10 @@ internal static class PlayerControlExtensions
 
         internal void SetKillTimerUnchecked(float time, float max = float.NegativeInfinity)
         {
-            if (float.IsNegativeInfinity(max)) max = time;
+            if (float.IsNegativeInfinity(max))
+            {
+                max = time;
+            }
             player.killTimer = time;
             FastDestroyableSingleton<HudManager>.Instance.KillButton.SetCoolDown(time, max);
         }
@@ -294,11 +437,19 @@ internal static class PlayerControlExtensions
 
         internal bool IsDead()
         {
-            if (player == null) return true;
+            if (player == null)
+            {
+                return true;
+            }
             NetworkedPlayerInfo data = player.Data;
-            if (data == null || data.IsDead || data.Disconnected) return true;
+            if (data == null || data.IsDead || data.Disconnected)
+            {
+                return true;
+            }
 
-            return GameHistory.FinalStatuses != null && GameHistory.FinalStatuses.TryGetValue(player.PlayerId, out FinalStatus status) && status != FinalStatus.Alive;
+            return GameHistory.FinalStatuses != null
+                   && GameHistory.FinalStatuses.TryGetValue(player.PlayerId, out FinalStatus status)
+                   && status != FinalStatus.Alive;
         }
 
         internal bool IsAlive()
@@ -339,10 +490,16 @@ internal static class PlayerControlExtensions
 
         internal ClientData GetClient()
         {
-            if (player == null) return null;
-            foreach (var cd in AmongUsClient.Instance.allClients.GetFastEnumerator())
+            if (player == null)
             {
-                if (cd?.Character != null && cd.Character.PlayerId == player.PlayerId) return cd;
+                return null;
+            }
+            foreach (ClientData cd in AmongUsClient.Instance.allClients.GetFastEnumerator())
+            {
+                if (cd?.Character != null && cd.Character.PlayerId == player.PlayerId)
+                {
+                    return cd;
+                }
             }
 
             return null;
@@ -361,15 +518,23 @@ internal static class PlayerControlExtensions
 
         internal string GetNameWithRole()
         {
-            if (player == null || player.Data == null) return "";
+            if (player == null || player.Data == null)
+            {
+                return "";
+            }
             RoleStringBuilder.Clear();
             string name = player.Data.PlayerName;
             if (Camouflager.CamouflageTimer > 0f)
             {
                 if (string.IsNullOrEmpty(name))
+                {
                     name = player.Data.DefaultOutfit.PlayerName;
+                }
             }
-            else if (player.CurrentOutfitType == PlayerOutfitType.Shapeshifted) name = $"{player.CurrentOutfit.PlayerName} ({player.Data.DefaultOutfit.PlayerName})";
+            else if (player.CurrentOutfitType == PlayerOutfitType.Shapeshifted)
+            {
+                name = $"{player.CurrentOutfit.PlayerName} ({player.Data.DefaultOutfit.PlayerName})";
+            }
 
             RoleStringBuilder.Append(name).Append(" (").Append(player.GetRoleName()).Append(')');
             return RoleStringBuilder.ToString();
@@ -384,11 +549,16 @@ internal static class PlayerControlExtensions
         {
             foreach (PlayerControl target in PlayerControl.AllPlayerControls.GetFastEnumerator())
             {
-                if (target?.cosmetics?.currentBodySprite?.BodySprite == null) continue;
+                if (target?.cosmetics?.currentBodySprite?.BodySprite == null)
+                {
+                    continue;
+                }
 
                 bool isMorphedMorphing = target.IsRole(RoleType.Morphing) && Morphing.MorphTarget != null && Morphing.MorphTimer > 0f;
                 bool hasVisibleShield = false;
-                if (Camouflager.CamouflageTimer <= 0f && Medic.Shielded != null && ((target == Medic.Shielded && !isMorphedMorphing) || (isMorphedMorphing && Morphing.MorphTarget == Medic.Shielded)))
+                if (Camouflager.CamouflageTimer <= 0f
+                    && Medic.Shielded != null
+                    && (target == Medic.Shielded && !isMorphedMorphing || isMorphedMorphing && Morphing.MorphTarget == Medic.Shielded))
                 {
                     hasVisibleShield = Medic.ShowShielded switch
                     {
@@ -406,65 +576,10 @@ internal static class PlayerControlExtensions
                     mat.SetColor("_OutlineColor", Medic.ShieldedColor);
                 }
                 else
+                {
                     mat.SetFloat("_Outline", 0f);
+                }
             }
         }
-    }
-
-    private static List<byte> GenerateTasks(int numCommon, int numShort, int numLong)
-    {
-        if (numCommon + numShort + numLong <= 0) numShort = 1;
-
-        Il2CppSystem.Collections.Generic.List<byte> tasks = new();
-        Il2CppSystem.Collections.Generic.HashSet<TaskTypes> hashSet = new();
-
-        List<NormalPlayerTask> commonTasks = new();
-        foreach (NormalPlayerTask task in MapUtilities.CachedShipStatus.CommonTasks) commonTasks.Add(task);
-        commonTasks.Shuffle();
-
-        List<NormalPlayerTask> shortTasks = new();
-        foreach (NormalPlayerTask task in MapUtilities.CachedShipStatus.ShortTasks) shortTasks.Add(task);
-        shortTasks.Shuffle();
-
-        List<NormalPlayerTask> longTasks = new();
-        foreach (NormalPlayerTask task in MapUtilities.CachedShipStatus.LongTasks) longTasks.Add(task);
-        longTasks.Shuffle();
-
-        int start = 0;
-        Il2CppSystem.Collections.Generic.List<NormalPlayerTask> commonTasksIl2Cpp = new();
-        foreach (NormalPlayerTask t in commonTasks) commonTasksIl2Cpp.Add(t);
-        MapUtilities.CachedShipStatus.AddTasksFromList(ref start, numCommon, tasks, hashSet, commonTasksIl2Cpp);
-
-        start = 0;
-        Il2CppSystem.Collections.Generic.List<NormalPlayerTask> shortTasksIl2Cpp = new();
-        foreach (NormalPlayerTask t in shortTasks) shortTasksIl2Cpp.Add(t);
-        MapUtilities.CachedShipStatus.AddTasksFromList(ref start, numShort, tasks, hashSet, shortTasksIl2Cpp);
-
-        start = 0;
-        Il2CppSystem.Collections.Generic.List<NormalPlayerTask> longTasksIl2Cpp = new();
-        foreach (NormalPlayerTask t in longTasks) longTasksIl2Cpp.Add(t);
-        MapUtilities.CachedShipStatus.AddTasksFromList(ref start, numLong, tasks, hashSet, longTasksIl2Cpp);
-
-        return [.. tasks];
-    }
-
-    private static TextMeshPro GetOrCreateLabel(TextMeshPro source, string name, float yOffset, float fontScale)
-    {
-        if (source?.transform?.parent == null) return null;
-
-        Transform labelTransform = source.transform.parent.Find(name);
-        TextMeshPro label = labelTransform?.GetComponent<TextMeshPro>();
-
-        if (label == null)
-        {
-            label = Object.Instantiate(source, source.transform.parent);
-            if (label == null) return null;
-            label.transform.localPosition += Vector3.up * yOffset;
-            label.fontSize *= fontScale;
-            label.gameObject.name = name;
-            label.color = label.color.SetAlpha(1f);
-        }
-
-        return label;
     }
 }

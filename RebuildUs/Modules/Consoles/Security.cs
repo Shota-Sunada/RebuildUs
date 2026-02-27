@@ -54,7 +54,10 @@ internal static class SecurityCamera
             int oldLen = __instance.textures.Length;
             int newLen = ship.AllCameras.Length;
             RenderTexture[] newTextures = new RenderTexture[newLen];
-            for (int i = 0; i < oldLen; i++) newTextures[i] = __instance.textures[i];
+            for (int i = 0; i < oldLen; i++)
+            {
+                newTextures[i] = __instance.textures[i];
+            }
             __instance.textures = newTextures;
 
             for (int i = 4; i < ship.AllCameras.Length; i++)
@@ -74,9 +77,14 @@ internal static class SecurityCamera
     {
         _cameraTimer += Time.deltaTime;
         if (_cameraTimer > 0.1f)
+        {
             UseCameraTime();
+        }
 
-        if (MapSettings.RestrictDevices <= 0 || !MapSettings.RestrictCameras) return true;
+        if (MapSettings.RestrictDevices <= 0 || !MapSettings.RestrictCameras)
+        {
+            return true;
+        }
         if (_timeRemaining == null)
         {
             _timeRemaining = UnityObject.Instantiate(FastDestroyableSingleton<HudManager>.Instance.TaskPanel.taskText, __instance.transform);
@@ -95,8 +103,16 @@ internal static class SecurityCamera
 
         SecurityStringBuilder.Clear();
         TimeSpan ts = TimeSpan.FromSeconds(MapSettings.RestrictCamerasTime);
-        if (ts.TotalHours >= 1) SecurityStringBuilder.Append((int)ts.TotalHours).Append(':');
-        SecurityStringBuilder.Append(ts.Minutes.ToString("D2")).Append(':').Append(ts.Seconds.ToString("D2")).Append('.').Append((ts.Milliseconds / 10).ToString("D2"));
+        if (ts.TotalHours >= 1)
+        {
+            SecurityStringBuilder.Append((int)ts.TotalHours).Append(':');
+        }
+        SecurityStringBuilder
+            .Append(ts.Minutes.ToString("D2"))
+            .Append(':')
+            .Append(ts.Seconds.ToString("D2"))
+            .Append('.')
+            .Append((ts.Milliseconds / 10).ToString("D2"));
 
         string timeString = SecurityStringBuilder.ToString();
         SecurityStringBuilder.Clear();
@@ -110,7 +126,10 @@ internal static class SecurityCamera
     internal static bool Update(SurveillanceMinigame __instance)
     {
         _cameraTimer += Time.deltaTime;
-        if (_cameraTimer > 0.1f) UseCameraTime();
+        if (_cameraTimer > 0.1f)
+        {
+            UseCameraTime();
+        }
 
         if (MapSettings.RestrictDevices > 0 && MapSettings.RestrictCameras)
         {
@@ -132,8 +151,16 @@ internal static class SecurityCamera
 
             SecurityStringBuilder.Clear();
             TimeSpan ts = TimeSpan.FromSeconds(MapSettings.RestrictCamerasTime);
-            if (ts.TotalHours >= 1) SecurityStringBuilder.Append((int)ts.TotalHours).Append(':');
-            SecurityStringBuilder.Append(ts.Minutes.ToString("D2")).Append(':').Append(ts.Seconds.ToString("D2")).Append('.').Append((ts.Milliseconds / 10).ToString("D2"));
+            if (ts.TotalHours >= 1)
+            {
+                SecurityStringBuilder.Append((int)ts.TotalHours).Append(':');
+            }
+            SecurityStringBuilder
+                .Append(ts.Minutes.ToString("D2"))
+                .Append(':')
+                .Append(ts.Seconds.ToString("D2"))
+                .Append('.')
+                .Append((ts.Milliseconds / 10).ToString("D2"));
 
             string timeString = SecurityStringBuilder.ToString();
             SecurityStringBuilder.Clear();
@@ -156,23 +183,30 @@ internal static class SecurityCamera
         }
         else if (Input.GetKeyDown(KeyCode.LeftArrow))
         {
-            _page = ((_page + numberOfPages) - 1) % numberOfPages;
+            _page = (_page + numberOfPages - 1) % numberOfPages;
             update = true;
             _timer = 0f;
         }
 
         if (__instance.isStatic || update)
         {
-            if (PlayerTask.PlayerHasTaskOfType<IHudOverrideTask>(PlayerControl.LocalPlayer)) return false;
+            if (PlayerTask.PlayerHasTaskOfType<IHudOverrideTask>(PlayerControl.LocalPlayer))
+            {
+                return false;
+            }
             __instance.isStatic = false;
             for (int i = 0; i < __instance.ViewPorts.Length; i++)
             {
                 __instance.ViewPorts[i].sharedMaterial = __instance.DefaultMaterial;
                 __instance.SabText[i].gameObject.SetActive(false);
-                if ((_page * 4) + i < __instance.textures.Length)
-                    __instance.ViewPorts[i].material.SetTexture(MainTex, __instance.textures[(_page * 4) + i]);
+                if (_page * 4 + i < __instance.textures.Length)
+                {
+                    __instance.ViewPorts[i].material.SetTexture(MainTex, __instance.textures[_page * 4 + i]);
+                }
                 else
+                {
                     __instance.ViewPorts[i].sharedMaterial = __instance.StaticMaterial;
+                }
             }
         }
         else if (!__instance.isStatic && PlayerTask.PlayerHasTaskOfType<HudOverrideTask>(PlayerControl.LocalPlayer))
@@ -192,9 +226,14 @@ internal static class SecurityCamera
     {
         _cameraTimer += Time.deltaTime;
         if (_cameraTimer > 0.05f)
+        {
             UseCameraTime();
+        }
 
-        if (MapSettings.RestrictDevices <= 0) return true;
+        if (MapSettings.RestrictDevices <= 0)
+        {
+            return true;
+        }
         if (_timeRemaining == null)
         {
             _timeRemaining = UnityObject.Instantiate(FastDestroyableSingleton<HudManager>.Instance.TaskPanel.taskText, __instance.transform);

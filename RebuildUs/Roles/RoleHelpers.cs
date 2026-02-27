@@ -2,31 +2,42 @@ namespace RebuildUs.Roles;
 
 internal static class RoleHelpers
 {
-    private static readonly Dictionary<RoleType, (MethodInfo exists, MethodInfo isRole, MethodInfo setRole, MethodInfo eraseRole, MethodInfo swapRole)> MethodCache = [];
+    private static readonly
+        Dictionary<RoleType, (MethodInfo exists, MethodInfo isRole, MethodInfo setRole, MethodInfo eraseRole, MethodInfo swapRole)> MethodCache = [];
 
     private static (MethodInfo exists, MethodInfo isRole, MethodInfo setRole, MethodInfo eraseRole, MethodInfo swapRole) GetMethods(RoleType roleType)
     {
-        if (MethodCache.TryGetValue(roleType, out (MethodInfo exists, MethodInfo isRole, MethodInfo setRole, MethodInfo eraseRole, MethodInfo swapRole) cached)) return cached;
+        if (MethodCache.TryGetValue(roleType,
+                out (MethodInfo exists, MethodInfo isRole, MethodInfo setRole, MethodInfo eraseRole, MethodInfo swapRole) cached))
+        {
+            return cached;
+        }
 
         foreach (RoleData.RoleRegistration reg in RoleData.Roles)
         {
             if (reg.RoleType == roleType)
             {
                 Type type = reg.ClassType;
-                if (type == null) break;
+                if (type == null)
+                {
+                    break;
+                }
 
-                (MethodInfo GetMethod, MethodInfo, MethodInfo, MethodInfo, MethodInfo) methods = (type.GetProperty("Exists", BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy)?.GetMethod,
-                                                                                                  type.GetMethod("IsRole", BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy),
-                                                                                                  type.GetMethod("SetRole", BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy),
-                                                                                                  type.GetMethod("EraseRole", BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy),
-                                                                                                  type.GetMethod("SwapRole", BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy));
+                (MethodInfo GetMethod, MethodInfo, MethodInfo, MethodInfo, MethodInfo) methods = (
+                    type.GetProperty("Exists", BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy)?.GetMethod,
+                    type.GetMethod("IsRole", BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy),
+                    type.GetMethod("SetRole", BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy),
+                    type.GetMethod("EraseRole", BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy),
+                    type.GetMethod("SwapRole", BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy));
                 MethodCache[roleType] = methods;
                 return methods;
             }
         }
 
         if (roleType != RoleType.NoRole && roleType != RoleType.Crewmate && roleType != RoleType.Impostor && roleType != RoleType.Lovers)
+        {
             Logger.LogWarn($"There is no role type registration for: {roleType}", "GetMethods");
+        }
         (MethodInfo, MethodInfo, MethodInfo, MethodInfo, MethodInfo) nullMethods = (null, null, null, null, null);
         MethodCache[roleType] = nullMethods;
         return nullMethods;
@@ -36,10 +47,16 @@ internal static class RoleHelpers
     {
         internal bool IsRole(RoleType roleType)
         {
-            if (player == null || roleType == RoleType.NoRole) return false;
+            if (player == null || roleType == RoleType.NoRole)
+            {
+                return false;
+            }
 
             PlayerRole role = ModRoleManager.GetRole(player);
-            if (role != null && role.CurrentRoleType == roleType) return true;
+            if (role != null && role.CurrentRoleType == roleType)
+            {
+                return true;
+            }
 
             return roleType switch
             {
@@ -52,16 +69,27 @@ internal static class RoleHelpers
 
         internal bool SetRole(RoleType roleType)
         {
-            if (player == null || roleType == RoleType.NoRole) return false;
+            if (player == null || roleType == RoleType.NoRole)
+            {
+                return false;
+            }
 
             Logger.LogInfo($"{player.Data?.PlayerName}({player.PlayerId}): {Enum.GetName(typeof(RoleType), roleType)}");
 
             if (roleType != RoleType.Lovers)
+            {
                 player.EraseAllRoles();
+            }
 
-            if (roleType is RoleType.Crewmate or RoleType.Impostor) return true;
+            if (roleType is RoleType.Crewmate or RoleType.Impostor)
+            {
+                return true;
+            }
 
-            if (roleType == RoleType.Lovers) return true;
+            if (roleType == RoleType.Lovers)
+            {
+                return true;
+            }
 
             (MethodInfo exists, MethodInfo isRole, MethodInfo setRole, MethodInfo eraseRole, MethodInfo swapRole) methods = GetMethods(roleType);
             if (methods.setRole != null)
@@ -76,7 +104,10 @@ internal static class RoleHelpers
 
         internal void EraseRole(RoleType roleType)
         {
-            if (player == null || roleType == RoleType.NoRole) return;
+            if (player == null || roleType == RoleType.NoRole)
+            {
+                return;
+            }
 
             if (roleType == RoleType.Lovers)
             {
@@ -99,42 +130,63 @@ internal static class RoleHelpers
 
         internal void EraseAllRoles()
         {
-            if (player == null) return;
+            if (player == null)
+            {
+                return;
+            }
 
             foreach (RoleData.RoleRegistration reg in RoleData.Roles)
             {
-                if (reg.ClassType == null) continue;
-                (MethodInfo exists, MethodInfo isRole, MethodInfo setRole, MethodInfo eraseRole, MethodInfo swapRole) methods = GetMethods(reg.RoleType);
+                if (reg.ClassType == null)
+                {
+                    continue;
+                }
+                (MethodInfo exists, MethodInfo isRole, MethodInfo setRole, MethodInfo eraseRole, MethodInfo swapRole) methods =
+                    GetMethods(reg.RoleType);
                 methods.eraseRole?.Invoke(null, [player]);
             }
         }
 
         internal void SwapRoles(PlayerControl target)
         {
-            if (player == null || target == null) return;
+            if (player == null || target == null)
+            {
+                return;
+            }
 
             foreach (RoleData.RoleRegistration reg in RoleData.Roles)
             {
-                if (reg.ClassType == null || (!player.IsRole(reg.RoleType) && !target.IsRole(reg.RoleType))) continue;
-                (MethodInfo exists, MethodInfo isRole, MethodInfo setRole, MethodInfo eraseRole, MethodInfo swapRole) methods = GetMethods(reg.RoleType);
+                if (reg.ClassType == null || !player.IsRole(reg.RoleType) && !target.IsRole(reg.RoleType))
+                {
+                    continue;
+                }
+                (MethodInfo exists, MethodInfo isRole, MethodInfo setRole, MethodInfo eraseRole, MethodInfo swapRole) methods =
+                    GetMethods(reg.RoleType);
                 methods.swapRole?.Invoke(null, [player, target]);
             }
         }
 
         internal string ModifyNameText(string nameText)
         {
-            if (player == null || player.Data.Disconnected) return nameText;
+            if (player == null || player.Data.Disconnected)
+            {
+                return nameText;
+            }
 
             foreach (PlayerRole role in ModRoleManager.AllRoles)
             {
                 if (role.Player == player)
+                {
                     nameText = role.ModifyNameText(nameText);
+                }
             }
 
             foreach (PlayerModifier mod in PlayerModifier.AllModifiers)
             {
                 if (mod.Player == player)
+                {
                     nameText = mod.ModifyNameText(nameText);
+                }
             }
 
             // nameText += Lovers.getIcon(player);
@@ -147,7 +199,9 @@ internal static class RoleHelpers
             foreach (PlayerModifier mod in PlayerModifier.AllModifiers)
             {
                 if (mod.Player == player)
+                {
                     roleText = mod.ModifyRoleText(roleText, roleInfo, useColors, includeHidden);
+                }
             }
 
             return roleText;
@@ -168,17 +222,24 @@ internal static class RoleHelpers
             // if (player.isLovers())
             //     Lovers.killLovers(player, killer);
 
-            if (MeetingHud.Instance?.state != MeetingHud.VoteStates.Animating) RPCProcedure.UpdateMeeting(player.PlayerId);
+            if (MeetingHud.Instance?.state != MeetingHud.VoteStates.Animating)
+            {
+                RPCProcedure.UpdateMeeting(player.PlayerId);
+            }
         }
 
         internal void OnFinishShipStatusBegin()
         {
-            HudManager.Instance.StartCoroutine(Effects.Lerp(1f, new Action<float>(p =>
-            {
-                if (!Mathf.Approximately(p, 1f)) return;
-                ModRoleManager.AllRoles.DoIf(x => x.Player == player, x => x.OnFinishShipStatusBegin());
-                PlayerModifier.AllModifiers.DoIf(x => x.Player == player, x => x.OnFinishShipStatusBegin());
-            })));
+            HudManager.Instance.StartCoroutine(Effects.Lerp(1f,
+                new Action<float>(p =>
+                {
+                    if (!Mathf.Approximately(p, 1f))
+                    {
+                        return;
+                    }
+                    ModRoleManager.AllRoles.DoIf(x => x.Player == player, x => x.OnFinishShipStatusBegin());
+                    PlayerModifier.AllModifiers.DoIf(x => x.Player == player, x => x.OnFinishShipStatusBegin());
+                })));
         }
     }
 }

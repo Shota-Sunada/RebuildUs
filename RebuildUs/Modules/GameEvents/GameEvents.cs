@@ -13,7 +13,12 @@ internal static class GameEventManager
 
     internal static void Add(GameEventType type, GameEventData data)
     {
-        Events.Add(new() { Type = type, Timestamp = DateTime.Now, Data = data });
+        Events.Add(new()
+        {
+            Type = type,
+            Timestamp = DateTime.Now,
+            Data = data,
+        });
     }
 
     internal static List<GameEvent> GetEvents()
@@ -49,13 +54,15 @@ internal static class GameEventManager
                 return $"[{time}] {GetPlayerName(discData?.Player)} disconnected";
             case GameEventType.VentMove:
                 VentMoveEventData ventData = e.Data as VentMoveEventData;
-                return $"[{time}] {GetPlayerName(ventData?.Player)} moved from vent {ventData?.FromVent?.name ?? "Unknown"} to {ventData?.ToVent?.name ?? "Unknown"}";
+                return
+                    $"[{time}] {GetPlayerName(ventData?.Player)} moved from vent {ventData?.FromVent?.name ?? "Unknown"} to {ventData?.ToVent?.name ?? "Unknown"}";
             case GameEventType.GameStart:
                 GameStartEventData startData = e.Data as GameStartEventData;
                 return $"[{time}] Game started - Map: {startData?.MapId.ToString() ?? "Unknown"}, Players: {startData?.PlayerCount ?? 0}";
             case GameEventType.GameEnd:
                 GameEndEventData gameEndData = e.Data as GameEndEventData;
-                return $"[{time}] Game ended - Winner: {gameEndData?.WinningTeam ?? "Unknown"}, Reason: {gameEndData?.Reason.ToString() ?? "Unknown"}";
+                return
+                    $"[{time}] Game ended - Winner: {gameEndData?.WinningTeam ?? "Unknown"}, Reason: {gameEndData?.Reason.ToString() ?? "Unknown"}";
             case GameEventType.AllTasksCompleted:
                 AllTasksCompletedEventData taskData = e.Data as AllTasksCompletedEventData;
                 return $"[{time}] {GetPlayerName(taskData?.Player)} completed all task.";
@@ -76,7 +83,8 @@ internal static class GameEventManager
                 return $"[{time}] {GetPlayerName(stateData?.Player)} state changed to {stateData?.FinalStatus.ToString() ?? "Unknown"}";
             case GameEventType.GameSettings:
                 GameSettingsEventData settingsData = e.Data as GameSettingsEventData;
-                return $"[{time}] Game settings - Map: {settingsData?.Map ?? "Unknown"}, Impostors: {settingsData?.ImpostorCount ?? 0}, Tasks: {settingsData?.TaskCount ?? 0}";
+                return
+                    $"[{time}] Game settings - Map: {settingsData?.Map ?? "Unknown"}, Impostors: {settingsData?.ImpostorCount ?? 0}, Tasks: {settingsData?.TaskCount ?? 0}";
             case GameEventType.AccidentalDeath:
                 AccidentalDeathEventData deathData = e.Data as AccidentalDeathEventData;
                 return $"[{time}] {GetPlayerName(deathData?.Victim)} died accidentally due to {deathData?.Cause ?? "Unknown cause"}";
@@ -95,7 +103,10 @@ internal static class GameEventManager
         StringBuilder sb = new();
         foreach (GameEvent e in Events)
         {
-            if (sb.Length > 0) sb.Append('\n');
+            if (sb.Length > 0)
+            {
+                sb.Append('\n');
+            }
             sb.Append(FormatEvent(e));
         }
 

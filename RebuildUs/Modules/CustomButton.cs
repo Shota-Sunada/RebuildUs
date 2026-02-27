@@ -15,7 +15,10 @@ internal struct ButtonPosition
 
     internal static ButtonPosition Layout
     {
-        get => new() { UseLayout = true };
+        get => new()
+        {
+            UseLayout = true,
+        };
     }
 
     public static implicit operator ButtonPosition(Vector3 offset)
@@ -73,8 +76,21 @@ internal sealed class CustomButton
                          float effectDuration,
                          Action onEffectEnds,
                          bool mirror = false,
-                         string buttonText = "")
-        : this(onClick, hasButton, couldUse, onMeetingEnds, sprite, position, hudManager, textTemplate, hotkey, null, hasEffect, effectDuration, onEffectEnds, mirror, buttonText) { }
+                         string buttonText = "") : this(onClick,
+        hasButton,
+        couldUse,
+        onMeetingEnds,
+        sprite,
+        position,
+        hudManager,
+        textTemplate,
+        hotkey,
+        null,
+        hasEffect,
+        effectDuration,
+        onEffectEnds,
+        mirror,
+        buttonText) { }
 
     internal CustomButton(Action onClick,
                           Func<bool> hasButton,
@@ -89,8 +105,21 @@ internal sealed class CustomButton
                           float effectDuration,
                           Action onEffectEnds,
                           bool mirror = false,
-                          string buttonText = "")
-        : this(onClick, hasButton, couldUse, onMeetingEnds, sprite, position, hudManager, textTemplate, null, slot, hasEffect, effectDuration, onEffectEnds, mirror, buttonText) { }
+                          string buttonText = "") : this(onClick,
+        hasButton,
+        couldUse,
+        onMeetingEnds,
+        sprite,
+        position,
+        hudManager,
+        textTemplate,
+        null,
+        slot,
+        hasEffect,
+        effectDuration,
+        onEffectEnds,
+        mirror,
+        buttonText) { }
 
     internal CustomButton(Action onClick,
                           Func<bool> hasButton,
@@ -102,8 +131,21 @@ internal sealed class CustomButton
                           ActionButton textTemplate,
                           AbilitySlot? slot,
                           bool mirror = false,
-                          string buttonText = "")
-        : this(onClick, hasButton, couldUse, onMeetingEnds, sprite, position, hudManager, textTemplate, null, slot, false, 0f, () => { }, mirror, buttonText) { }
+                          string buttonText = "") : this(onClick,
+        hasButton,
+        couldUse,
+        onMeetingEnds,
+        sprite,
+        position,
+        hudManager,
+        textTemplate,
+        null,
+        slot,
+        false,
+        0f,
+        () => { },
+        mirror,
+        buttonText) { }
 
     private CustomButton(Action onClick,
                          Func<bool> hasButton,
@@ -170,7 +212,10 @@ internal sealed class CustomButton
         button.OnClick = new();
         button.OnClick.AddListener((UnityAction)OnClickEvent);
 
-        if (ActionButton.GetComponent<TextTranslatorTMP>()) ActionButton.GetComponent<TextTranslatorTMP>().Destroy();
+        if (ActionButton.GetComponent<TextTranslatorTMP>())
+        {
+            ActionButton.GetComponent<TextTranslatorTMP>().Destroy();
+        }
 
         LocalScale = ActionButton.transform.localScale;
         if (textTemplate)
@@ -179,27 +224,62 @@ internal sealed class CustomButton
             ActionButton.buttonLabelText = UnityObject.Instantiate(textTemplate.buttonLabelText, ActionButton.transform);
         }
 
-        if (ActionButton.buttonLabelText.GetComponent<TextTranslatorTMP>()) ActionButton.buttonLabelText.GetComponent<TextTranslatorTMP>().Destroy();
+        if (ActionButton.buttonLabelText.GetComponent<TextTranslatorTMP>())
+        {
+            ActionButton.buttonLabelText.GetComponent<TextTranslatorTMP>().Destroy();
+        }
 
         ActionButton.OverrideText(ButtonText);
         _lastButtonText = ButtonText;
 
-        if (_useLayout) ActionButton.transform.SetParent(hudManager.AbilityButton.transform.parent, false);
+        if (_useLayout)
+        {
+            ActionButton.transform.SetParent(hudManager.AbilityButton.transform.parent, false);
+        }
 
         SetActive(false);
     }
 
 #nullable enable
-    internal CustomButton(Action onClick, Func<bool> hasButton, Func<bool> couldUse, Action onMeetingEnds, Sprite sprite, ButtonPosition position, HudManager hudManager, ActionButton? textTemplate, KeyCode? hotkey, bool mirror = false, string buttonText = "") : this(onClick, hasButton, couldUse, onMeetingEnds, sprite, position, hudManager, textTemplate, hotkey, false, 0f, () => { }, mirror, buttonText) { }
+    internal CustomButton(Action onClick,
+                          Func<bool> hasButton,
+                          Func<bool> couldUse,
+                          Action onMeetingEnds,
+                          Sprite sprite,
+                          ButtonPosition position,
+                          HudManager hudManager,
+                          ActionButton? textTemplate,
+                          KeyCode? hotkey,
+                          bool mirror = false,
+                          string buttonText = "") : this(onClick,
+        hasButton,
+        couldUse,
+        onMeetingEnds,
+        sprite,
+        position,
+        hudManager,
+        textTemplate,
+        hotkey,
+        false,
+        0f,
+        () => { },
+        mirror,
+        buttonText) { }
 #nullable disable
 
     private void OnClickEvent()
     {
-        if ((!HasEffect || !IsEffectActive || !EFFECT_CANCELLABLE) && (!(Timer < 0f) || !_hasButton() || !_couldUse())) return;
+        if ((!HasEffect || !IsEffectActive || !EFFECT_CANCELLABLE) && (!(Timer < 0f) || !_hasButton() || !_couldUse()))
+        {
+            return;
+        }
         ActionButton.graphic.color = new(1f, 1f, 1f, 0.3f);
         _onClick();
 
-        if (!HasEffect || IsEffectActive) return;
+        if (!HasEffect || IsEffectActive)
+        {
+            return;
+        }
         Timer = EffectDuration;
         ActionButton.cooldownTimerText.color = new(0F, 0.8F, 0F);
         IsEffectActive = true;
@@ -238,7 +318,10 @@ internal sealed class CustomButton
 
             try
             {
-                if (Buttons[i]._hasButton != null && Buttons[i]._hasButton()) Buttons[i]._onMeetingEnds?.Invoke();
+                if (Buttons[i]._hasButton != null && Buttons[i]._hasButton())
+                {
+                    Buttons[i]._onMeetingEnds?.Invoke();
+                }
 
                 Buttons[i].Update();
             }
@@ -267,7 +350,10 @@ internal sealed class CustomButton
 
     internal void SetActive(bool isActive)
     {
-        if (_lastIsActive == isActive) return;
+        if (_lastIsActive == isActive)
+        {
+            return;
+        }
         _lastIsActive = isActive;
         if (ActionButton != null && ActionButton.gameObject != null)
         {
@@ -288,14 +374,20 @@ internal sealed class CustomButton
         bool petActive = _hudManager?.PetButton != null && _hudManager.PetButton.isActiveAndEnabled;
         SetActive(useActive || petActive);
 
-        if (ActionButton?.graphic != null && ActionButton.graphic.sprite != Sprite) ActionButton.graphic.sprite = Sprite;
+        if (ActionButton?.graphic != null && ActionButton.graphic.sprite != Sprite)
+        {
+            ActionButton.graphic.sprite = Sprite;
+        }
         if (SHOW_BUTTON_TEXT && _lastButtonText != ButtonText && ActionButton != null)
         {
             ActionButton.OverrideText(ButtonText);
             _lastButtonText = ButtonText;
         }
 
-        if (ActionButton?.buttonLabelText != null) ActionButton.buttonLabelText.enabled = SHOW_BUTTON_TEXT;
+        if (ActionButton?.buttonLabelText != null)
+        {
+            ActionButton.buttonLabelText.enabled = SHOW_BUTTON_TEXT;
+        }
 
         if (_hudManager?.UseButton != null && ActionButton != null)
         {
@@ -307,7 +399,7 @@ internal sealed class CustomButton
                 {
                     float aspect = Camera.main != null ? Camera.main.aspect : 1.77f;
                     float safeOrthographicSize = Camera.main != null ? CameraSafeArea.GetSafeOrthographicSize(Camera.main) : 3f;
-                    float xpos = 0.05f - (safeOrthographicSize * aspect * 1.70f);
+                    float xpos = 0.05f - safeOrthographicSize * aspect * 1.70f;
                     pos = new(xpos, pos.y, pos.z);
                 }
 
@@ -329,21 +421,34 @@ internal sealed class CustomButton
                 ActionButton.buttonLabelText?.color = targetColor;
             }
 
-            if (ActionButton.graphic.material != null && ActionButton.graphic.material.HasProperty(Desat) && !Mathf.Approximately(ActionButton.graphic.material.GetFloat(Desat), targetDesat)) ActionButton.graphic.material.SetFloat(Desat, targetDesat);
+            if (ActionButton.graphic.material != null
+                && ActionButton.graphic.material.HasProperty(Desat)
+                && !Mathf.Approximately(ActionButton.graphic.material.GetFloat(Desat), targetDesat))
+            {
+                ActionButton.graphic.material.SetFloat(Desat, targetDesat);
+            }
         }
 
         if (Timer >= 0 && !StopCountdown)
         {
             // Make sure role draft has finished or isn't running
             if (HasEffect && IsEffectActive)
+            {
                 Timer -= Time.deltaTime;
-            else if (PlayerControl.LocalPlayer != null && !PlayerControl.LocalPlayer.inVent && PlayerControl.LocalPlayer.moveable) Timer -= Time.deltaTime;
+            }
+            else if (PlayerControl.LocalPlayer != null && !PlayerControl.LocalPlayer.inVent && PlayerControl.LocalPlayer.moveable)
+            {
+                Timer -= Time.deltaTime;
+            }
         }
 
         if (Timer <= 0 && HasEffect && IsEffectActive)
         {
             IsEffectActive = false;
-            if (ActionButton?.cooldownTimerText != null) ActionButton.cooldownTimerText.color = Palette.EnabledColor;
+            if (ActionButton?.cooldownTimerText != null)
+            {
+                ActionButton.cooldownTimerText.color = Palette.EnabledColor;
+            }
             _onEffectEnds?.Invoke();
         }
 
@@ -360,10 +465,18 @@ internal sealed class CustomButton
             _keyGuide.color = targetColor;
         }
         else
+        {
             _keyBackground?.gameObject.SetActive(false);
+        }
 
         // Trigger OnClickEvent if the hotkey is being pressed down
-        if (_hotkey.HasValue && Input.GetKeyDown(_hotkey.Value)) OnClickEvent();
-        if (_slot.HasValue && Input.GetKeyDown(KeyBindingManager.GetKey(_slot.Value))) OnClickEvent();
+        if (_hotkey.HasValue && Input.GetKeyDown(_hotkey.Value))
+        {
+            OnClickEvent();
+        }
+        if (_slot.HasValue && Input.GetKeyDown(KeyBindingManager.GetKey(_slot.Value)))
+        {
+            OnClickEvent();
+        }
     }
 }

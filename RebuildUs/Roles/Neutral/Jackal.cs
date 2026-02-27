@@ -9,8 +9,8 @@ internal class Jackal : SingleRoleBase<Jackal>
     private static CustomButton _jackalSidekickButton;
     private static CustomButton _jackalSabotageLightsButton;
     internal static List<PlayerControl> FormerJackals = [];
-    internal bool CanSidekick;
     private PlayerControl _currentTarget;
+    internal bool CanSidekick;
 
     internal PlayerControl FakeSidekick;
     internal PlayerControl MySidekick;
@@ -31,14 +31,45 @@ internal class Jackal : SingleRoleBase<Jackal>
     }
 
     // write configs here
-    internal static float KillCooldown { get => CustomOptionHolder.JackalKillCooldown.GetFloat(); }
-    private static bool CanSabotageLights { get => CustomOptionHolder.JackalCanSabotageLights.GetBool(); }
-    internal static bool CanUseVents { get => CustomOptionHolder.JackalCanUseVents.GetBool(); }
-    internal static bool HasImpostorVision { get => CustomOptionHolder.JackalHasImpostorVision.GetBool(); }
-    internal static bool CanCreateSidekick { get => CustomOptionHolder.JackalCanCreateSidekick.GetBool(); }
-    private static float CreateSidekickCooldown { get => CustomOptionHolder.JackalCreateSidekickCooldown.GetFloat(); }
-    internal static bool JackalPromotedFromSidekickCanCreateSidekick { get => CustomOptionHolder.JackalPromotedFromSidekickCanCreateSidekick.GetBool(); }
-    internal static bool CanCreateSidekickFromImpostor { get => CustomOptionHolder.JackalCanCreateSidekickFromImpostor.GetBool(); }
+    internal static float KillCooldown
+    {
+        get => CustomOptionHolder.JackalKillCooldown.GetFloat();
+    }
+
+    private static bool CanSabotageLights
+    {
+        get => CustomOptionHolder.JackalCanSabotageLights.GetBool();
+    }
+
+    internal static bool CanUseVents
+    {
+        get => CustomOptionHolder.JackalCanUseVents.GetBool();
+    }
+
+    internal static bool HasImpostorVision
+    {
+        get => CustomOptionHolder.JackalHasImpostorVision.GetBool();
+    }
+
+    internal static bool CanCreateSidekick
+    {
+        get => CustomOptionHolder.JackalCanCreateSidekick.GetBool();
+    }
+
+    private static float CreateSidekickCooldown
+    {
+        get => CustomOptionHolder.JackalCreateSidekickCooldown.GetFloat();
+    }
+
+    internal static bool JackalPromotedFromSidekickCanCreateSidekick
+    {
+        get => CustomOptionHolder.JackalPromotedFromSidekickCanCreateSidekick.GetBool();
+    }
+
+    internal static bool CanCreateSidekickFromImpostor
+    {
+        get => CustomOptionHolder.JackalCanCreateSidekickFromImpostor.GetBool();
+    }
 
     internal override void OnUpdateNameColors()
     {
@@ -51,9 +82,15 @@ internal class Jackal : SingleRoleBase<Jackal>
                 HudManagerPatch.SetPlayerNameColor(Sidekick.PlayerControl, RoleColor);
             }
 
-            if (FakeSidekick != null) HudManagerPatch.SetPlayerNameColor(FakeSidekick, RoleColor);
+            if (FakeSidekick != null)
+            {
+                HudManagerPatch.SetPlayerNameColor(FakeSidekick, RoleColor);
+            }
         }
-        else if (lp.IsTeamImpostor() && WasTeamRed) HudManagerPatch.SetPlayerNameColor(Player, RoleColor);
+        else if (lp.IsTeamImpostor() && WasTeamRed)
+        {
+            HudManagerPatch.SetPlayerNameColor(Player, RoleColor);
+        }
     }
 
     internal override void OnMeetingStart() { }
@@ -63,8 +100,11 @@ internal class Jackal : SingleRoleBase<Jackal>
     internal override void FixedUpdate()
     {
         Jackal local = Local;
-        if (local == null) return;
-        List<PlayerControl> untargetablePlayers = new();
+        if (local == null)
+        {
+            return;
+        }
+        List<PlayerControl> untargetablePlayers = [];
         if (CanCreateSidekickFromImpostor)
         {
             // Only exclude sidekick from being targeted if the jackal can create sidekicks from impostors
@@ -75,9 +115,12 @@ internal class Jackal : SingleRoleBase<Jackal>
         }
 
         List<Mini> miniPlayers = Mini.Players;
-        foreach (var mini in miniPlayers)
+        foreach (Mini mini in miniPlayers)
         {
-            if (!Mini.IsGrownUp(mini.Player)) untargetablePlayers.Add(mini.Player);
+            if (!Mini.IsGrownUp(mini.Player))
+            {
+                untargetablePlayers.Add(mini.Player);
+            }
         }
 
         _currentTarget = Helpers.SetTarget(untargetablePlayers: untargetablePlayers);
@@ -89,7 +132,10 @@ internal class Jackal : SingleRoleBase<Jackal>
     internal override void OnDeath(PlayerControl killer = null)
     {
         // If LocalPlayer is Sidekick, the Jackal is disconnected and Sidekick promotion is enabled, then trigger promotion
-        if (!Sidekick.PromotesToJackal || MySidekick == null || !MySidekick.IsAlive()) return;
+        if (!Sidekick.PromotesToJackal || MySidekick == null || !MySidekick.IsAlive())
+        {
+            return;
+        }
         using RPCSender sender = new(PlayerControl.LocalPlayer.NetId, CustomRPC.SidekickPromotes);
         RPCProcedure.SidekickPromotes();
     }
@@ -100,57 +146,106 @@ internal class Jackal : SingleRoleBase<Jackal>
     internal static void MakeButtons(HudManager hm)
     {
         _jackalKillButton = new(() =>
-                                {
-                                    Jackal local = Local;
-                                    if (local == null) return;
-                                    if (Helpers.CheckMurderAttemptAndKill(local.Player, local._currentTarget) == MurderAttemptResult.SuppressKill) return;
+            {
+                Jackal local = Local;
+                if (local == null)
+                {
+                    return;
+                }
+                if (Helpers.CheckMurderAttemptAndKill(local.Player, local._currentTarget) == MurderAttemptResult.SuppressKill)
+                {
+                    return;
+                }
 
-                                    _jackalKillButton?.Timer = _jackalKillButton.MaxTimer;
-                                    local._currentTarget = null;
-                                },
-                                () => PlayerControl.LocalPlayer != null && PlayerControl.LocalPlayer.IsRole(RoleType.Jackal) && PlayerControl.LocalPlayer.IsAlive(),
-                                () =>
-                                {
-                                    Jackal local = Local;
-                                    return local != null && local._currentTarget != null && PlayerControl.LocalPlayer.CanMove;
-                                }, () => { _jackalKillButton?.Timer = _jackalKillButton.MaxTimer; }, hm.KillButton.graphic.sprite, ButtonPosition.Layout, hm, hm.KillButton, AbilitySlot.NeutralAbilityPrimary, false, FastDestroyableSingleton<TranslationController>.Instance.GetString(StringNames.KillLabel));
+                _jackalKillButton?.Timer = _jackalKillButton.MaxTimer;
+                local._currentTarget = null;
+            },
+            () => PlayerControl.LocalPlayer != null && PlayerControl.LocalPlayer.IsRole(RoleType.Jackal) && PlayerControl.LocalPlayer.IsAlive(),
+            () =>
+            {
+                Jackal local = Local;
+                return local != null && local._currentTarget != null && PlayerControl.LocalPlayer.CanMove;
+            },
+            () =>
+            {
+                _jackalKillButton?.Timer = _jackalKillButton.MaxTimer;
+            },
+            hm.KillButton.graphic.sprite,
+            ButtonPosition.Layout,
+            hm,
+            hm.KillButton,
+            AbilitySlot.NeutralAbilityPrimary,
+            false,
+            FastDestroyableSingleton<TranslationController>.Instance.GetString(StringNames.KillLabel));
 
         // Jackal Sidekick Button
         _jackalSidekickButton = new(() =>
-        {
-            Jackal local = Local;
-            if (local == null || local._currentTarget == null) return;
+            {
+                Jackal local = Local;
+                if (local == null || local._currentTarget == null)
+                {
+                    return;
+                }
 
-            using RPCSender sender = new(PlayerControl.LocalPlayer.NetId, CustomRPC.JackalCreatesSidekick);
-            sender.Write(local._currentTarget.PlayerId);
-            RPCProcedure.JackalCreatesSidekick(local._currentTarget.PlayerId);
-        }, () =>
-        {
-            Jackal local = Local;
-            return local != null && local.CanSidekick && PlayerControl.LocalPlayer.IsRole(RoleType.Jackal) && PlayerControl.LocalPlayer.IsAlive();
-        }, () =>
-        {
-            Jackal local = Local;
-            return local != null && local.CanSidekick && local._currentTarget != null && PlayerControl.LocalPlayer.CanMove;
-        }, () => { _jackalSidekickButton?.Timer = _jackalSidekickButton.MaxTimer; }, AssetLoader.SidekickButton, ButtonPosition.Layout, hm, hm.KillButton, AbilitySlot.NeutralAbilitySecondary, false, Tr.Get(TrKey.SidekickText));
+                using RPCSender sender = new(PlayerControl.LocalPlayer.NetId, CustomRPC.JackalCreatesSidekick);
+                sender.Write(local._currentTarget.PlayerId);
+                RPCProcedure.JackalCreatesSidekick(local._currentTarget.PlayerId);
+            },
+            () =>
+            {
+                Jackal local = Local;
+                return local != null && local.CanSidekick && PlayerControl.LocalPlayer.IsRole(RoleType.Jackal) && PlayerControl.LocalPlayer.IsAlive();
+            },
+            () =>
+            {
+                Jackal local = Local;
+                return local != null && local.CanSidekick && local._currentTarget != null && PlayerControl.LocalPlayer.CanMove;
+            },
+            () =>
+            {
+                _jackalSidekickButton?.Timer = _jackalSidekickButton.MaxTimer;
+            },
+            AssetLoader.SidekickButton,
+            ButtonPosition.Layout,
+            hm,
+            hm.KillButton,
+            AbilitySlot.NeutralAbilitySecondary,
+            false,
+            Tr.Get(TrKey.SidekickText));
 
         _jackalSabotageLightsButton = new(() =>
-        {
-            MapUtilities.CachedShipStatus?.RpcUpdateSystem(SystemTypes.Sabotage, (byte)SystemTypes.Electrical);
-        }, () => PlayerControl.LocalPlayer != null && PlayerControl.LocalPlayer.IsRole(RoleType.Jackal) && CanSabotageLights && PlayerControl.LocalPlayer.IsAlive(), () =>
-        {
-            if (_jackalSabotageLightsButton == null) return false;
-            if (Helpers.SabotageTimer() > _jackalSabotageLightsButton.Timer || Helpers.SabotageActive())
             {
-                // this will give imps time to do another sabotage.
-                _jackalSabotageLightsButton.Timer = Helpers.SabotageTimer() + 5f;
-            }
+                MapUtilities.CachedShipStatus?.RpcUpdateSystem(SystemTypes.Sabotage, (byte)SystemTypes.Electrical);
+            },
+            () => PlayerControl.LocalPlayer != null
+                  && PlayerControl.LocalPlayer.IsRole(RoleType.Jackal)
+                  && CanSabotageLights
+                  && PlayerControl.LocalPlayer.IsAlive(),
+            () =>
+            {
+                if (_jackalSabotageLightsButton == null)
+                {
+                    return false;
+                }
+                if (Helpers.SabotageTimer() > _jackalSabotageLightsButton.Timer || Helpers.SabotageActive())
+                {
+                    // this will give imps time to do another sabotage.
+                    _jackalSabotageLightsButton.Timer = Helpers.SabotageTimer() + 5f;
+                }
 
-            return Helpers.CanUseSabotage();
-        }, () =>
-        {
-            _jackalSabotageLightsButton?.Timer = Helpers.SabotageTimer() + 5f;
-        }, AssetLoader.LightsOutButton, ButtonPosition.Layout, hm, hm.AbilityButton, AbilitySlot.CommonAbilitySecondary, false, FastDestroyableSingleton<TranslationController>.Instance.GetString(StringNames.FixLights));
+                return Helpers.CanUseSabotage();
+            },
+            () =>
+            {
+                _jackalSabotageLightsButton?.Timer = Helpers.SabotageTimer() + 5f;
+            },
+            AssetLoader.LightsOutButton,
+            ButtonPosition.Layout,
+            hm,
+            hm.AbilityButton,
+            AbilitySlot.CommonAbilitySecondary,
+            false,
+            FastDestroyableSingleton<TranslationController>.Instance.GetString(StringNames.FixLights));
     }
 
     internal static void SetButtonCooldowns()
@@ -162,17 +257,26 @@ internal class Jackal : SingleRoleBase<Jackal>
     // write functions here
     internal static void RemoveCurrentJackal()
     {
-        if (Instance == null) return;
+        if (Instance == null)
+        {
+            return;
+        }
 
         bool alreadyFormer = false;
-        foreach (var t in FormerJackals)
+        foreach (PlayerControl t in FormerJackals)
         {
-            if (t.PlayerId != Instance.Player.PlayerId) continue;
+            if (t.PlayerId != Instance.Player.PlayerId)
+            {
+                continue;
+            }
             alreadyFormer = true;
             break;
         }
 
-        if (!alreadyFormer) FormerJackals.Add(Instance.Player);
+        if (!alreadyFormer)
+        {
+            FormerJackals.Add(Instance.Player);
+        }
         Instance.Player.EraseRole(RoleType.Jackal);
     }
 

@@ -15,7 +15,10 @@ internal static class Airship
         bool hasWiringText = false;
         foreach (TaskTypes taskType in console.TaskTypes)
         {
-            if (taskType != TaskTypes.FixWiring) continue;
+            if (taskType != TaskTypes.FixWiring)
+            {
+                continue;
+            }
             hasWiringText = true;
             break;
         }
@@ -23,7 +26,10 @@ internal static class Airship
         if (!hasWiringText)
         {
             TaskTypes[] newTasks = new TaskTypes[console.TaskTypes.Length + 1];
-            for (int i = 0; i < console.TaskTypes.Length; i++) newTasks[i] = console.TaskTypes[i];
+            for (int i = 0; i < console.TaskTypes.Length; i++)
+            {
+                newTasks[i] = console.TaskTypes[i];
+            }
             newTasks[console.TaskTypes.Length] = TaskTypes.FixWiring;
             console.TaskTypes = newTasks;
         }
@@ -55,7 +61,10 @@ internal static class Airship
 
             Il2CppReferenceArray<Console> oldConsoles = MapUtilities.CachedShipStatus.AllConsoles;
             Il2CppReferenceArray<Console> newConsoles = new(oldConsoles.Length + 1);
-            for (int i = 0; i < oldConsoles.Length; i++) newConsoles[i] = oldConsoles[i];
+            for (int i = 0; i < oldConsoles.Length; i++)
+            {
+                newConsoles[i] = oldConsoles[i];
+            }
             newConsoles[oldConsoles.Length] = console;
             MapUtilities.CachedShipStatus.AllConsoles = newConsoles;
         }
@@ -75,7 +84,10 @@ internal static class Airship
             button.CachedZ = 0.1f;
         }
 
-        if (collider) return console;
+        if (collider)
+        {
+            return console;
+        }
         collider = obj.AddComponent<CircleCollider2D>();
         collider.radius = 0.4f;
         collider.isTrigger = true;

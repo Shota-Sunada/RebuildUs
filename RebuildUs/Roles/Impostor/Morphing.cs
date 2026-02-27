@@ -23,8 +23,15 @@ internal class Morphing : MultiRoleBase<Morphing>
     }
 
     // write configs here
-    private static float Cooldown { get => CustomOptionHolder.MorphingCooldown.GetFloat(); }
-    private static float Duration { get => CustomOptionHolder.MorphingDuration.GetFloat(); }
+    private static float Cooldown
+    {
+        get => CustomOptionHolder.MorphingCooldown.GetFloat();
+    }
+
+    private static float Duration
+    {
+        get => CustomOptionHolder.MorphingDuration.GetFloat();
+    }
 
     internal override void OnMeetingStart() { }
     internal override void OnMeetingEnd() { }
@@ -37,7 +44,10 @@ internal class Morphing : MultiRoleBase<Morphing>
     internal override void FixedUpdate()
     {
         Morphing local = Local;
-        if (local == null) return;
+        if (local == null)
+        {
+            return;
+        }
         _currentTarget = Helpers.SetTarget();
         Helpers.SetPlayerOutline(_currentTarget, RoleColor);
     }
@@ -50,42 +60,61 @@ internal class Morphing : MultiRoleBase<Morphing>
     internal static void MakeButtons(HudManager hm)
     {
         _morphingButton = new(() =>
-        {
-            if (_sampledTarget != null)
             {
+                if (_sampledTarget != null)
                 {
-                    using RPCSender sender = new(PlayerControl.LocalPlayer.NetId, CustomRPC.MorphingMorph);
-                    sender.Write(_sampledTarget.PlayerId);
-                    sender.Write(Local.Player.PlayerId);
+                    {
+                        using RPCSender sender = new(PlayerControl.LocalPlayer.NetId, CustomRPC.MorphingMorph);
+                        sender.Write(_sampledTarget.PlayerId);
+                        sender.Write(Local.Player.PlayerId);
+                    }
+                    RPCProcedure.MorphingMorph(_sampledTarget.PlayerId, Local.Player.PlayerId);
+                    _sampledTarget = null;
+                    _morphingButton.EffectDuration = Duration;
                 }
-                RPCProcedure.MorphingMorph(_sampledTarget.PlayerId, Local.Player.PlayerId);
-                _sampledTarget = null;
-                _morphingButton.EffectDuration = Duration;
-            }
-            else if (_currentTarget != null)
+                else if (_currentTarget != null)
+                {
+                    _sampledTarget = _currentTarget;
+                    _morphingButton.Sprite = AssetLoader.MorphButton;
+                    _morphingButton.ButtonText = Tr.Get(TrKey.MorphText);
+                    _morphingButton.EffectDuration = 1f;
+                }
+            },
+            () =>
             {
-                _sampledTarget = _currentTarget;
-                _morphingButton.Sprite = AssetLoader.MorphButton;
-                _morphingButton.ButtonText = Tr.Get(TrKey.MorphText);
-                _morphingButton.EffectDuration = 1f;
-            }
-        }, () => { return PlayerControl.LocalPlayer.IsRole(RoleType.Morphing) && PlayerControl.LocalPlayer.IsAlive(); }, () => { return (_currentTarget || _sampledTarget) && PlayerControl.LocalPlayer.CanMove; }, () =>
-        {
-            _morphingButton.Timer = _morphingButton.MaxTimer;
-            _morphingButton.Sprite = AssetLoader.SampleButton;
-            _morphingButton.ButtonText = Tr.Get(TrKey.SampleText);
-            _morphingButton.IsEffectActive = false;
-            _morphingButton.ActionButton.cooldownTimerText.color = Palette.EnabledColor;
-            _sampledTarget = null;
-        }, AssetLoader.SampleButton, ButtonPosition.Layout, hm, hm.KillButton, AbilitySlot.ImpostorAbilityPrimary, true, Duration, () =>
-        {
-            if (_sampledTarget == null)
+                return PlayerControl.LocalPlayer.IsRole(RoleType.Morphing) && PlayerControl.LocalPlayer.IsAlive();
+            },
+            () =>
+            {
+                return (_currentTarget || _sampledTarget) && PlayerControl.LocalPlayer.CanMove;
+            },
+            () =>
             {
                 _morphingButton.Timer = _morphingButton.MaxTimer;
                 _morphingButton.Sprite = AssetLoader.SampleButton;
                 _morphingButton.ButtonText = Tr.Get(TrKey.SampleText);
-            }
-        }, false, Tr.Get(TrKey.SampleText));
+                _morphingButton.IsEffectActive = false;
+                _morphingButton.ActionButton.cooldownTimerText.color = Palette.EnabledColor;
+                _sampledTarget = null;
+            },
+            AssetLoader.SampleButton,
+            ButtonPosition.Layout,
+            hm,
+            hm.KillButton,
+            AbilitySlot.ImpostorAbilityPrimary,
+            true,
+            Duration,
+            () =>
+            {
+                if (_sampledTarget == null)
+                {
+                    _morphingButton.Timer = _morphingButton.MaxTimer;
+                    _morphingButton.Sprite = AssetLoader.SampleButton;
+                    _morphingButton.ButtonText = Tr.Get(TrKey.SampleText);
+                }
+            },
+            false,
+            Tr.Get(TrKey.SampleText));
     }
 
     internal static void SetButtonCooldowns()
@@ -98,13 +127,20 @@ internal class Morphing : MultiRoleBase<Morphing>
     internal void HandleMorphing()
     {
         // first, if camouflager is active, don't do anything
-        if (Camouflager.Exists && Camouflager.CamouflageTimer > 0f) return;
+        if (Camouflager.Exists && Camouflager.CamouflageTimer > 0f)
+        {
+            return;
+        }
 
         // next, if we're currently morphed, set our skin to the target
         if (MorphTimer > 0f && MorphTarget != null)
+        {
             Player.MorphToPlayer(MorphTarget);
+        }
         else
+        {
             Player.ResetMorph();
+        }
     }
 
     internal void StartMorph(PlayerControl target)
@@ -118,7 +154,10 @@ internal class Morphing : MultiRoleBase<Morphing>
     {
         MorphTarget = null;
         MorphTimer = 0f;
-        foreach (var t in Players) t.HandleMorphing();
+        foreach (Morphing t in Players)
+        {
+            t.HandleMorphing();
+        }
     }
 
     internal static void Clear()

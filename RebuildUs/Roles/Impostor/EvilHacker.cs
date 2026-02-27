@@ -6,9 +6,9 @@ internal class EvilHacker : MultiRoleBase<EvilHacker>
     internal static Color NameColor = Palette.ImpostorRed;
     private static CustomButton _evilHackerButton;
     private static CustomButton _evilHackerCreatesMadmateButton;
-    internal bool CanCreateMadmate;
 
     private PlayerControl _currentTarget;
+    internal bool CanCreateMadmate;
     internal PlayerControl FakeMadmate;
 
     public EvilHacker()
@@ -25,19 +25,70 @@ internal class EvilHacker : MultiRoleBase<EvilHacker>
 
     // write configs here
 
-    internal static bool CanHasBetterAdmin { get => CustomOptionHolder.EvilHackerCanHasBetterAdmin.GetBool(); }
-    internal static bool CanMoveEvenIfUsesAdmin { get => CustomOptionHolder.EvilHackerCanMoveEvenIfUsesAdmin.GetBool(); }
-    internal static bool CanInheritAbility { get => CustomOptionHolder.EvilHackerCanInheritAbility.GetBool(); }
-    internal static bool CanSeeDoorStatus { get => CustomOptionHolder.EvilHackerCanSeeDoorStatus.GetBool(); }
-    internal static bool CreatedMadmateCanDieToSheriff { get => CustomOptionHolder.CreatedMadmateCanDieToSheriff.GetBool(); }
-    internal static bool CreatedMadmateCanEnterVents { get => CustomOptionHolder.CreatedMadmateCanEnterVents.GetBool(); }
-    internal static bool CanCreateMadmateFromJackal { get => CustomOptionHolder.EvilHackerCanCreateMadmateFromJackal.GetBool(); }
-    internal static bool CreatedMadmateHasImpostorVision { get => CustomOptionHolder.CreatedMadmateHasImpostorVision.GetBool(); }
-    internal static bool CreatedMadmateCanSabotage { get => CustomOptionHolder.CreatedMadmateCanSabotage.GetBool(); }
-    internal static bool CreatedMadmateCanFixComm { get => CustomOptionHolder.CreatedMadmateCanFixComm.GetBool(); }
-    internal static int CreatedMadmateAbility { get => CustomOptionHolder.CreatedMadmateAbility.GetSelection(); }
-    internal static float CreatedMadmateNumTasks { get => CustomOptionHolder.CreatedMadmateNumTasks.GetFloat(); }
-    internal static bool CreatedMadmateExileCrewmate { get => CustomOptionHolder.CreatedMadmateExileCrewmate.GetBool(); }
+    internal static bool CanHasBetterAdmin
+    {
+        get => CustomOptionHolder.EvilHackerCanHasBetterAdmin.GetBool();
+    }
+
+    internal static bool CanMoveEvenIfUsesAdmin
+    {
+        get => CustomOptionHolder.EvilHackerCanMoveEvenIfUsesAdmin.GetBool();
+    }
+
+    internal static bool CanInheritAbility
+    {
+        get => CustomOptionHolder.EvilHackerCanInheritAbility.GetBool();
+    }
+
+    internal static bool CanSeeDoorStatus
+    {
+        get => CustomOptionHolder.EvilHackerCanSeeDoorStatus.GetBool();
+    }
+
+    internal static bool CreatedMadmateCanDieToSheriff
+    {
+        get => CustomOptionHolder.CreatedMadmateCanDieToSheriff.GetBool();
+    }
+
+    internal static bool CreatedMadmateCanEnterVents
+    {
+        get => CustomOptionHolder.CreatedMadmateCanEnterVents.GetBool();
+    }
+
+    internal static bool CanCreateMadmateFromJackal
+    {
+        get => CustomOptionHolder.EvilHackerCanCreateMadmateFromJackal.GetBool();
+    }
+
+    internal static bool CreatedMadmateHasImpostorVision
+    {
+        get => CustomOptionHolder.CreatedMadmateHasImpostorVision.GetBool();
+    }
+
+    internal static bool CreatedMadmateCanSabotage
+    {
+        get => CustomOptionHolder.CreatedMadmateCanSabotage.GetBool();
+    }
+
+    internal static bool CreatedMadmateCanFixComm
+    {
+        get => CustomOptionHolder.CreatedMadmateCanFixComm.GetBool();
+    }
+
+    internal static int CreatedMadmateAbility
+    {
+        get => CustomOptionHolder.CreatedMadmateAbility.GetSelection();
+    }
+
+    internal static float CreatedMadmateNumTasks
+    {
+        get => CustomOptionHolder.CreatedMadmateNumTasks.GetFloat();
+    }
+
+    internal static bool CreatedMadmateExileCrewmate
+    {
+        get => CustomOptionHolder.CreatedMadmateExileCrewmate.GetBool();
+    }
 
     internal override void OnMeetingStart() { }
     internal override void OnMeetingEnd() { }
@@ -61,30 +112,61 @@ internal class EvilHacker : MultiRoleBase<EvilHacker>
     internal static void MakeButtons(HudManager hm)
     {
         _evilHackerButton = new(() =>
-        {
-            PlayerControl.LocalPlayer.NetTransform.Halt();
-            Admin.IsEvilHackerAdmin = true;
-            HudManager.Instance.ToggleMapVisible(new()
             {
-                Mode = MapOptions.Modes.CountOverlay,
-                AllowMovementWhileMapOpen = CanMoveEvenIfUsesAdmin,
-                ShowLivePlayerPosition = true,
-                IncludeDeadBodies = true,
-            });
-        }, () =>
-        {
-            return ((PlayerControl.LocalPlayer.IsRole(RoleType.EvilHacker) && PlayerControl.LocalPlayer.IsAlive()) || (IsInherited() && PlayerControl.LocalPlayer.IsTeamImpostor())) && !RebuildUs.BetterSabotageMap.Value;
-        }, () => { return PlayerControl.LocalPlayer.CanMove; }, () => { }, Hacker.GetAdminSprite(), ButtonPosition.Layout, hm, hm.KillButton, AbilitySlot.ImpostorAbilityPrimary, false, 0f, () => { }, Helpers.GetOption(ByteOptionNames.MapId) == 3, FastDestroyableSingleton<TranslationController>.Instance.GetString(StringNames.Admin));
+                PlayerControl.LocalPlayer.NetTransform.Halt();
+                Admin.IsEvilHackerAdmin = true;
+                HudManager.Instance.ToggleMapVisible(new()
+                {
+                    Mode = MapOptions.Modes.CountOverlay,
+                    AllowMovementWhileMapOpen = CanMoveEvenIfUsesAdmin,
+                    ShowLivePlayerPosition = true,
+                    IncludeDeadBodies = true,
+                });
+            },
+            () =>
+            {
+                return (PlayerControl.LocalPlayer.IsRole(RoleType.EvilHacker) && PlayerControl.LocalPlayer.IsAlive()
+                        || IsInherited() && PlayerControl.LocalPlayer.IsTeamImpostor())
+                       && !RebuildUs.BetterSabotageMap.Value;
+            },
+            () =>
+            {
+                return PlayerControl.LocalPlayer.CanMove;
+            },
+            () => { },
+            Hacker.GetAdminSprite(),
+            ButtonPosition.Layout,
+            hm,
+            hm.KillButton,
+            AbilitySlot.ImpostorAbilityPrimary,
+            false,
+            0f,
+            () => { },
+            Helpers.GetOption(ByteOptionNames.MapId) == 3,
+            FastDestroyableSingleton<TranslationController>.Instance.GetString(StringNames.Admin));
 
         _evilHackerCreatesMadmateButton = new(() =>
-        {
-            using RPCSender sender = new(PlayerControl.LocalPlayer.NetId, CustomRPC.EvilHackerCreatesMadmate);
-            sender.Write(Local._currentTarget.PlayerId);
-            RPCProcedure.EvilHackerCreatesMadmate(Local._currentTarget.PlayerId, Local.Player.PlayerId);
-        }, () =>
-        {
-            return PlayerControl.LocalPlayer.IsRole(RoleType.EvilHacker) && Local.CanCreateMadmate && PlayerControl.LocalPlayer.IsAlive();
-        }, () => { return Local._currentTarget && PlayerControl.LocalPlayer.CanMove; }, () => { }, AssetLoader.SidekickButton, ButtonPosition.Layout, hm, hm.KillButton, AbilitySlot.ImpostorAbilitySecondary, false, Tr.Get(TrKey.Madmate));
+            {
+                using RPCSender sender = new(PlayerControl.LocalPlayer.NetId, CustomRPC.EvilHackerCreatesMadmate);
+                sender.Write(Local._currentTarget.PlayerId);
+                RPCProcedure.EvilHackerCreatesMadmate(Local._currentTarget.PlayerId, Local.Player.PlayerId);
+            },
+            () =>
+            {
+                return PlayerControl.LocalPlayer.IsRole(RoleType.EvilHacker) && Local.CanCreateMadmate && PlayerControl.LocalPlayer.IsAlive();
+            },
+            () =>
+            {
+                return Local._currentTarget && PlayerControl.LocalPlayer.CanMove;
+            },
+            () => { },
+            AssetLoader.SidekickButton,
+            ButtonPosition.Layout,
+            hm,
+            hm.KillButton,
+            AbilitySlot.ImpostorAbilitySecondary,
+            false,
+            Tr.Get(TrKey.Madmate));
     }
 
     internal static void SetButtonCooldowns()

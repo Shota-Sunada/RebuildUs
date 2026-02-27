@@ -36,7 +36,10 @@ internal static class SubmergedCompatibility
         }
 
         IsSubmerged = map.Type == SUBMERGED_MAP_TYPE;
-        if (!IsSubmerged) return;
+        if (!IsSubmerged)
+        {
+            return;
+        }
 
         SubmarineStatus = map.GetComponent<SubmarineStatus>();
     }
@@ -44,19 +47,28 @@ internal static class SubmergedCompatibility
     internal static void Initialize()
     {
         Loaded = IL2CPPChainloader.Instance.Plugins.TryGetValue(SUBMERGED_GUID, out PluginInfo plugin);
-        if (!Loaded) return;
+        if (!Loaded)
+        {
+            return;
+        }
 
         LoadedExternally = true;
         Plugin = plugin!.Instance as BasePlugin;
         Version = plugin.Metadata.Version.BaseVersion();
-        if (Plugin != null) Assembly = Plugin.GetType().Assembly;
+        if (Plugin != null)
+        {
+            Assembly = Plugin.GetType().Assembly;
+        }
 
         RetrieveOxygenMask = CustomTaskTypes.RetrieveOxygenMask.taskType;
     }
 
     internal static MonoBehaviour AddSubmergedComponent(this GameObject obj, string typeName)
     {
-        if (!Loaded) return obj.AddComponent<MissingSubmergedBehaviour>();
+        if (!Loaded)
+        {
+            return obj.AddComponent<MissingSubmergedBehaviour>();
+        }
         bool validType = ComponentExtensions.RegisteredTypes.TryGetValue(typeName, out Type type);
         return validType ? obj.AddComponent(Il2CppType.From(type)).TryCast<MonoBehaviour>() : obj.AddComponent<MissingSubmergedBehaviour>();
     }
@@ -68,7 +80,10 @@ internal static class SubmergedCompatibility
 
     internal static void ChangeFloor(bool toUpper)
     {
-        if (!Loaded) return;
+        if (!Loaded)
+        {
+            return;
+        }
         FloorHandler.GetFloorHandler(PlayerControl.LocalPlayer).RpcRequestChangeFloor(toUpper);
     }
 
@@ -79,7 +94,10 @@ internal static class SubmergedCompatibility
 
     internal static void RepairOxygen()
     {
-        if (!Loaded) return;
+        if (!Loaded)
+        {
+            return;
+        }
         try
         {
             MapUtilities.CachedShipStatus.RpcUpdateSystem((SystemTypes)130, 64);

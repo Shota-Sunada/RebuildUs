@@ -127,11 +127,17 @@ internal sealed class MersenneTwister : System.Random
     /// <param name="initKey">The array for initializing keys.</param>
     internal MersenneTwister(int[] initKey)
     {
-        if (initKey == null) throw new ArgumentNullException(nameof(initKey));
+        if (initKey == null)
+        {
+            throw new ArgumentNullException(nameof(initKey));
+        }
 
         uint[] initArray = new uint[initKey.Length];
 
-        for (int i = 0; i < initKey.Length; ++i) initArray[i] = (uint)initKey[i];
+        for (int i = 0; i < initKey.Length; ++i)
+        {
+            initArray[i] = (uint)initKey[i];
+        }
 
         Init(initArray);
     }
@@ -178,9 +184,12 @@ internal sealed class MersenneTwister : System.Random
     /// [CLSCompliant(false)]
     internal uint NextUInt32(uint minValue, uint maxValue) /* throws ArgumentOutOfRangeException */
     {
-        if (minValue >= maxValue) throw new ArgumentOutOfRangeException();
+        if (minValue >= maxValue)
+        {
+            throw new ArgumentOutOfRangeException();
+        }
 
-        return (uint)((GenerateUInt32() / ((double)uint.MaxValue / (maxValue - minValue))) + minValue);
+        return (uint)(GenerateUInt32() / ((double)uint.MaxValue / (maxValue - minValue)) + minValue);
     }
 
     /// <summary>
@@ -206,7 +215,10 @@ internal sealed class MersenneTwister : System.Random
     // THERE IS A PROBLEM WITH RANGES in this implementation of MT FIXME
     public override int Next(int maxValue)
     {
-        if (maxValue > 1) return (int)(NextDouble() * maxValue);
+        if (maxValue > 1)
+        {
+            return (int)(NextDouble() * maxValue);
+        }
         return maxValue < 0 ? throw new ArgumentOutOfRangeException() : 0;
 
         // DR: I changed THIS:
@@ -233,9 +245,15 @@ internal sealed class MersenneTwister : System.Random
     /// </exception>
     public override int Next(int minValue, int maxValue)
     {
-        if (maxValue <= minValue) throw new ArgumentOutOfRangeException();
+        if (maxValue <= minValue)
+        {
+            throw new ArgumentOutOfRangeException();
+        }
 
-        if (maxValue == minValue) return minValue;
+        if (maxValue == minValue)
+        {
+            return minValue;
+        }
 
         return Next(maxValue - minValue) + minValue;
     }
@@ -250,11 +268,17 @@ internal sealed class MersenneTwister : System.Random
     public override void NextBytes(byte[] buffer)
     {
         // [codekaizen: corrected this to check null before checking length.]
-        if (buffer == null) throw new ArgumentNullException();
+        if (buffer == null)
+        {
+            throw new ArgumentNullException();
+        }
 
         int bufLen = buffer.Length;
 
-        for (int idx = 0; idx < bufLen; ++idx) buffer[idx] = (byte)Next(256);
+        for (int idx = 0; idx < bufLen; ++idx)
+        {
+            buffer[idx] = (byte)Next(256);
+        }
     }
 
     /// <summary>
@@ -381,18 +405,18 @@ internal sealed class MersenneTwister : System.Random
 
             for (; kk < N - M; ++kk)
             {
-                y = (_mt[kk] & UPPER_MASK) | (_mt[kk + 1] & LOWER_MASK);
-                _mt[kk] = _mt[kk + M] ^ (y >> 1) ^ Mag01[y & 0x1];
+                y = _mt[kk] & UPPER_MASK | _mt[kk + 1] & LOWER_MASK;
+                _mt[kk] = _mt[kk + M] ^ y >> 1 ^ Mag01[y & 0x1];
             }
 
             for (; kk < N - 1; ++kk)
             {
-                y = (_mt[kk] & UPPER_MASK) | (_mt[kk + 1] & LOWER_MASK);
-                _mt[kk] = _mt[kk + (M - N)] ^ (y >> 1) ^ Mag01[y & 0x1];
+                y = _mt[kk] & UPPER_MASK | _mt[kk + 1] & LOWER_MASK;
+                _mt[kk] = _mt[kk + (M - N)] ^ y >> 1 ^ Mag01[y & 0x1];
             }
 
-            y = (_mt[N - 1] & UPPER_MASK) | (_mt[0] & LOWER_MASK);
-            _mt[N - 1] = _mt[M - 1] ^ (y >> 1) ^ Mag01[y & 0x1];
+            y = _mt[N - 1] & UPPER_MASK | _mt[0] & LOWER_MASK;
+            _mt[N - 1] = _mt[M - 1] ^ y >> 1 ^ Mag01[y & 0x1];
 
             _mti = 0;
         }
@@ -432,7 +456,7 @@ internal sealed class MersenneTwister : System.Random
 
         for (_mti = 1; _mti < N; _mti++)
         {
-            _mt[_mti] = (uint)((1812433253U * (_mt[_mti - 1] ^ (_mt[_mti - 1] >> 30))) + _mti);
+            _mt[_mti] = (uint)(1812433253U * (_mt[_mti - 1] ^ _mt[_mti - 1] >> 30) + _mti);
             // See Knuth TAOCP Vol2. 3rd Ed. P.106 for multiplier.
             // In the previous versions, MSBs of the seed affect
             // only MSBs of the array _mt[].
@@ -453,7 +477,7 @@ internal sealed class MersenneTwister : System.Random
 
         for (; k > 0; k--)
         {
-            _mt[i] = (uint)((_mt[i] ^ ((_mt[i - 1] ^ (_mt[i - 1] >> 30)) * 1664525U)) + key[j] + j); /* non linear */
+            _mt[i] = (uint)((_mt[i] ^ (_mt[i - 1] ^ _mt[i - 1] >> 30) * 1664525U) + key[j] + j); /* non linear */
             _mt[i] &= 0xffffffffU; // for WORDSIZE > 32 machines
             i++;
             j++;
@@ -463,16 +487,22 @@ internal sealed class MersenneTwister : System.Random
                 i = 1;
             }
 
-            if (j >= keyLength) j = 0;
+            if (j >= keyLength)
+            {
+                j = 0;
+            }
         }
 
         for (k = N - 1; k > 0; k--)
         {
-            _mt[i] = (uint)((_mt[i] ^ ((_mt[i - 1] ^ (_mt[i - 1] >> 30)) * 1566083941U)) - i); /* non linear */
+            _mt[i] = (uint)((_mt[i] ^ (_mt[i - 1] ^ _mt[i - 1] >> 30) * 1566083941U) - i); /* non linear */
             _mt[i] &= 0xffffffffU; // for WORDSIZE > 32 machines
             i++;
 
-            if (i < N) continue;
+            if (i < N)
+            {
+                continue;
+            }
 
             _mt[0] = _mt[N - 1];
             i = 1;
@@ -490,7 +520,7 @@ internal sealed class MersenneTwister : System.Random
 
         // shift the 27 pseudo-random bits (a) over by 26 bits (* 67108864.0) and
         // add another pseudo-random 26 bits (+ b).
-        return ((a * 67108864.0) + b + translate) * scale;
+        return (a * 67108864.0 + b + translate) * scale;
 
         // What about the following instead of the above? Is the multiply better?
         // Why? (Is it the FMUL instruction? Does this count in .Net? Will the JITter notice?)

@@ -22,9 +22,20 @@ internal class TimeMaster : SingleRoleBase<TimeMaster>
     }
 
     // write configs here
-    internal static float Cooldown { get => CustomOptionHolder.TimeMasterCooldown.GetFloat(); }
-    internal static float RewindTime { get => CustomOptionHolder.TimeMasterRewindTime.GetFloat(); }
-    internal static float ShieldDuration { get => CustomOptionHolder.TimeMasterShieldDuration.GetFloat(); }
+    internal static float Cooldown
+    {
+        get => CustomOptionHolder.TimeMasterCooldown.GetFloat();
+    }
+
+    internal static float RewindTime
+    {
+        get => CustomOptionHolder.TimeMasterRewindTime.GetFloat();
+    }
+
+    internal static float ShieldDuration
+    {
+        get => CustomOptionHolder.TimeMasterShieldDuration.GetFloat();
+    }
 
     internal override void OnMeetingStart() { }
     internal override void OnMeetingEnd() { }
@@ -59,9 +70,15 @@ internal class TimeMaster : SingleRoleBase<TimeMaster>
                     // Set position
                     PlayerControl.LocalPlayer.transform.position = next.Item1;
                 }
-                else if (GameHistory.LocalPlayerPositions.Any(x => x.Item2)) PlayerControl.LocalPlayer.transform.position = next.Item1;
+                else if (GameHistory.LocalPlayerPositions.Any(x => x.Item2))
+                {
+                    PlayerControl.LocalPlayer.transform.position = next.Item1;
+                }
 
-                if (SubmergedCompatibility.IsSubmerged) SubmergedCompatibility.ChangeFloor(next.Item1.y > -7);
+                if (SubmergedCompatibility.IsSubmerged)
+                {
+                    SubmergedCompatibility.ChangeFloor(next.Item1.y > -7);
+                }
 
                 GameHistory.LocalPlayerPositions.RemoveAt(0);
 
@@ -79,9 +96,13 @@ internal class TimeMaster : SingleRoleBase<TimeMaster>
         }
         else
         {
-            while (GameHistory.LocalPlayerPositions.Count >= Mathf.Round(RewindTime / Time.fixedDeltaTime)) GameHistory.LocalPlayerPositions.RemoveAt(GameHistory.LocalPlayerPositions.Count - 1);
+            while (GameHistory.LocalPlayerPositions.Count >= Mathf.Round(RewindTime / Time.fixedDeltaTime))
+            {
+                GameHistory.LocalPlayerPositions.RemoveAt(GameHistory.LocalPlayerPositions.Count - 1);
+            }
 
-            GameHistory.LocalPlayerPositions.Insert(0, new(PlayerControl.LocalPlayer.transform.position, PlayerControl.LocalPlayer.CanMove)); // CanMove = CanMove
+            GameHistory.LocalPlayerPositions.Insert(0,
+                new(PlayerControl.LocalPlayer.transform.position, PlayerControl.LocalPlayer.CanMove)); // CanMove = CanMove
         }
     }
 
@@ -93,15 +114,37 @@ internal class TimeMaster : SingleRoleBase<TimeMaster>
     internal static void MakeButtons(HudManager hm)
     {
         _timeMasterShieldButton = new(() =>
-        {
-            using RPCSender sender = new(PlayerControl.LocalPlayer.NetId, CustomRPC.TimeMasterShield);
-            RPCProcedure.TimeMasterShield();
-        }, () => { return PlayerControl.LocalPlayer.IsRole(RoleType.TimeMaster) && PlayerControl.LocalPlayer.IsAlive(); }, () => { return PlayerControl.LocalPlayer.CanMove; }, () =>
-        {
-            _timeMasterShieldButton.Timer = _timeMasterShieldButton.MaxTimer;
-            _timeMasterShieldButton.IsEffectActive = false;
-            _timeMasterShieldButton.ActionButton.cooldownTimerText.color = Palette.EnabledColor;
-        }, AssetLoader.TimeShieldButton, ButtonPosition.Layout, hm, hm.UseButton, AbilitySlot.CrewmateAbilityPrimary, true, ShieldDuration, () => { _timeMasterShieldButton.Timer = _timeMasterShieldButton.MaxTimer; }, false, Tr.Get(TrKey.TimeShieldText));
+            {
+                using RPCSender sender = new(PlayerControl.LocalPlayer.NetId, CustomRPC.TimeMasterShield);
+                RPCProcedure.TimeMasterShield();
+            },
+            () =>
+            {
+                return PlayerControl.LocalPlayer.IsRole(RoleType.TimeMaster) && PlayerControl.LocalPlayer.IsAlive();
+            },
+            () =>
+            {
+                return PlayerControl.LocalPlayer.CanMove;
+            },
+            () =>
+            {
+                _timeMasterShieldButton.Timer = _timeMasterShieldButton.MaxTimer;
+                _timeMasterShieldButton.IsEffectActive = false;
+                _timeMasterShieldButton.ActionButton.cooldownTimerText.color = Palette.EnabledColor;
+            },
+            AssetLoader.TimeShieldButton,
+            ButtonPosition.Layout,
+            hm,
+            hm.UseButton,
+            AbilitySlot.CrewmateAbilityPrimary,
+            true,
+            ShieldDuration,
+            () =>
+            {
+                _timeMasterShieldButton.Timer = _timeMasterShieldButton.MaxTimer;
+            },
+            false,
+            Tr.Get(TrKey.TimeShieldText));
     }
 
     internal static void SetButtonCooldowns()

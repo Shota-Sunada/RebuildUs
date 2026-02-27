@@ -1,5 +1,3 @@
-using System.Reflection;
-
 namespace RebuildUs.Objects;
 
 internal sealed class TimerBar
@@ -9,60 +7,46 @@ internal sealed class TimerBar
     private static readonly FieldInfo TimerBarRendererField = AccessTools.Field(typeof(HideAndSeekTimerBar), "timerBarRenderer");
     private static readonly FieldInfo ChunkBarField = AccessTools.Field(typeof(HideAndSeekTimerBar), "chunkBar");
     private static readonly int ColorId = Shader.PropertyToID("_Color");
-
-    private readonly HideAndSeekTimerBar _source;
-    private readonly TextMeshPro _timeText;
-    private readonly Transform _timerTransform;
-    private readonly MeshRenderer _timerRenderer;
-    private readonly Transform _chunkTransform;
-    private readonly MeshRenderer _chunkRenderer;
+    private readonly Vector3 _defaultChunkLocalPosition;
+    private readonly Vector3 _defaultChunkLocalScale;
     private readonly Vector3 _defaultLocalPosition;
     private readonly Vector3 _defaultLocalScale;
     private readonly Vector3 _defaultTimerLocalPosition;
     private readonly Vector3 _defaultTimerLocalScale;
-    private readonly Vector3 _defaultChunkLocalPosition;
-    private readonly Vector3 _defaultChunkLocalScale;
+
+    private Material _chunkMaterial;
+    private float _freezeChunkUntil;
+    private float _targetBarSize;
 
     private Material _timerMaterial;
-    private Material _chunkMaterial;
-    private float _targetBarSize;
-    private float _freezeChunkUntil;
-    private bool _isFinalCountdown;
 
     internal TimerBar(HideAndSeekTimerBar source)
     {
-        _source = source;
-        _timeText = ResolveTimeText(source);
-        _timerTransform = ResolveTimerTransform(source);
-        _timerRenderer = ResolveTimerRenderer(source, _timerTransform);
-        _chunkTransform = ResolveChunkTransform(source);
-        _chunkRenderer = ResolveChunkRenderer(_chunkTransform);
+        Source = source;
+        TimeText = ResolveTimeText(source);
+        TimerTransform = ResolveTimerTransform(source);
+        TimerRenderer = ResolveTimerRenderer(source, TimerTransform);
+        ChunkTransform = ResolveChunkTransform(source);
+        ChunkRenderer = ResolveChunkRenderer(ChunkTransform);
 
-        Transform root = source != null ? source.transform : null;
+        Transform root = source?.transform;
         _defaultLocalPosition = root != null ? root.localPosition : Vector3.zero;
         _defaultLocalScale = root != null ? root.localScale : Vector3.one;
-        _defaultTimerLocalPosition = _timerTransform != null ? _timerTransform.localPosition : Vector3.zero;
-        _defaultTimerLocalScale = _timerTransform != null ? _timerTransform.localScale : Vector3.one;
-        _defaultChunkLocalPosition = _chunkTransform != null ? _chunkTransform.localPosition : Vector3.zero;
-        _defaultChunkLocalScale = _chunkTransform != null ? _chunkTransform.localScale : Vector3.one;
-        _targetBarSize = _timerTransform != null ? _timerTransform.localScale.x : 1f;
+        _defaultTimerLocalPosition = TimerTransform != null ? TimerTransform.localPosition : Vector3.zero;
+        _defaultTimerLocalScale = TimerTransform != null ? TimerTransform.localScale : Vector3.one;
+        _defaultChunkLocalPosition = ChunkTransform != null ? ChunkTransform.localPosition : Vector3.zero;
+        _defaultChunkLocalScale = ChunkTransform != null ? ChunkTransform.localScale : Vector3.one;
+        _targetBarSize = TimerTransform != null ? TimerTransform.localScale.x : 1f;
     }
 
-    internal HideAndSeekTimerBar Source
-    {
-        get => _source;
-    }
+    internal HideAndSeekTimerBar Source { get; }
 
     internal bool IsAlive
     {
-        get => _source != null;
+        get => Source != null;
     }
 
-    internal bool IsFinalCountdown
-    {
-        get => _isFinalCountdown;
-        set => _isFinalCountdown = value;
-    }
+    internal bool IsFinalCountdown { get; set; }
 
     internal float TargetBarSize
     {
@@ -72,65 +56,58 @@ internal sealed class TimerBar
 
     internal Transform RootTransform
     {
-        get => _source != null ? _source.transform : null;
+        get => Source?.transform;
     }
 
-    internal Transform TimerTransform
-    {
-        get => _timerTransform;
-    }
+    internal Transform TimerTransform { get; }
 
-    internal Transform ChunkTransform
-    {
-        get => _chunkTransform;
-    }
+    internal Transform ChunkTransform { get; }
 
-    internal TextMeshPro TimeText
-    {
-        get => _timeText;
-    }
+    internal TextMeshPro TimeText { get; }
 
-    internal MeshRenderer TimerRenderer
-    {
-        get => _timerRenderer;
-    }
+    internal MeshRenderer TimerRenderer { get; }
 
-    internal MeshRenderer ChunkRenderer
-    {
-        get => _chunkRenderer;
-    }
+    internal MeshRenderer ChunkRenderer { get; }
 
     internal bool CustomUpdate(TimerBarSettings settings)
     {
-        if (_source == null) return false;
-        if (_timerTransform == null && _chunkTransform == null) return false;
+        if (Source == null)
+        {
+            return false;
+        }
+        if (TimerTransform == null && ChunkTransform == null)
+        {
+            return false;
+        }
 
         ApplyRootTransform(settings);
         ApplyCustomColors(settings);
 
         float lerp = Mathf.Clamp01(Time.deltaTime * Mathf.Max(0f, settings.LerpSpeed));
-        if (_timerTransform != null)
+        if (TimerTransform != null)
         {
-            Vector3 timerScale = _timerTransform.localScale;
+            Vector3 timerScale = TimerTransform.localScale;
             float targetScaleX = _defaultTimerLocalScale.x * _targetBarSize;
             timerScale.x = Mathf.Lerp(timerScale.x, targetScaleX, lerp);
-            _timerTransform.localScale = timerScale;
-            ApplyRightToLeftShrink(_timerTransform, _defaultTimerLocalPosition, _defaultTimerLocalScale, timerScale, settings);
+            TimerTransform.localScale = timerScale;
+            ApplyRightToLeftShrink(TimerTransform, _defaultTimerLocalPosition, _defaultTimerLocalScale, timerScale, settings);
         }
 
-        if (_chunkTransform != null && Time.time >= _freezeChunkUntil)
+        if (ChunkTransform != null && Time.time >= _freezeChunkUntil)
         {
-            Vector3 chunkScale = _chunkTransform.localScale;
+            Vector3 chunkScale = ChunkTransform.localScale;
             float targetScaleX = _defaultChunkLocalScale.x * _targetBarSize;
             chunkScale.x = Mathf.Lerp(chunkScale.x, targetScaleX, lerp);
-            _chunkTransform.localScale = chunkScale;
+            ChunkTransform.localScale = chunkScale;
             if (settings.ShrinkChunkFromRightToLeft)
-                ApplyRightToLeftShrink(_chunkTransform, _defaultChunkLocalPosition, _defaultChunkLocalScale, chunkScale, settings);
+            {
+                ApplyRightToLeftShrink(ChunkTransform, _defaultChunkLocalPosition, _defaultChunkLocalScale, chunkScale, settings);
+            }
         }
 
-        if (_chunkTransform != null && settings.AlignChunkWithTimerX && _timerTransform != null)
+        if (ChunkTransform != null && settings.AlignChunkWithTimerX && TimerTransform != null)
         {
-            AlignChunkLeftEdgeWithTimer(_chunkTransform, _timerTransform);
+            AlignChunkLeftEdgeWithTimer(ChunkTransform, TimerTransform);
         }
 
         return true;
@@ -138,18 +115,32 @@ internal sealed class TimerBar
 
     internal bool CustomUpdateTimer(float time, float maxTime, TimerBarSettings settings)
     {
-        if (_source == null) return false;
-        if (_timeText == null && _timerTransform == null && _chunkTransform == null) return false;
+        if (Source == null)
+        {
+            return false;
+        }
+        if (TimeText == null && TimerTransform == null && ChunkTransform == null)
+        {
+            return false;
+        }
 
-        float progress = settings.ProgressResolver?.Invoke(time, maxTime, _isFinalCountdown) ?? TimerBarSettings.DefaultProgressResolver(time, maxTime, _isFinalCountdown);
-        if (float.IsNaN(progress) || float.IsInfinity(progress)) progress = 0f;
+        float progress = settings.ProgressResolver?.Invoke(time, maxTime, IsFinalCountdown)
+                         ?? TimerBarSettings.DefaultProgressResolver(time, maxTime, IsFinalCountdown);
+        if (float.IsNaN(progress) || float.IsInfinity(progress))
+        {
+            progress = 0f;
+        }
         _targetBarSize = Mathf.Clamp01(progress);
 
-        if (_timeText != null)
+        if (TimeText != null)
         {
-            string text = settings.TimeFormatter?.Invoke(time, maxTime, _isFinalCountdown) ?? TimerBarSettings.DefaultTimeFormatter(time, maxTime, _isFinalCountdown);
-            _timeText.text = text;
-            if (settings.TimeTextColor.HasValue) _timeText.color = settings.TimeTextColor.Value;
+            string text = settings.TimeFormatter?.Invoke(time, maxTime, IsFinalCountdown)
+                          ?? TimerBarSettings.DefaultTimeFormatter(time, maxTime, IsFinalCountdown);
+            TimeText.text = text;
+            if (settings.TimeTextColor.HasValue)
+            {
+                TimeText.color = settings.TimeTextColor.Value;
+            }
         }
 
         return true;
@@ -157,21 +148,24 @@ internal sealed class TimerBar
 
     internal bool CustomStartFinalHide(TimerBarSettings settings)
     {
-        if (_source == null) return false;
+        if (Source == null)
+        {
+            return false;
+        }
 
-        _isFinalCountdown = true;
+        IsFinalCountdown = true;
         _freezeChunkUntil = 0f;
 
         bool handled = false;
-        if (_chunkTransform != null && settings.HideChunkOnFinal)
+        if (ChunkTransform != null && settings.HideChunkOnFinal)
         {
-            _chunkTransform.gameObject.SetActive(false);
+            ChunkTransform.gameObject.SetActive(false);
             handled = true;
         }
 
-        if (_timerRenderer != null && settings.FinalBarColor.HasValue)
+        if (TimerRenderer != null && settings.FinalBarColor.HasValue)
         {
-            ApplyColorOverride(_timerRenderer, ref _timerMaterial, settings.FinalBarColor.Value);
+            ApplyColorOverride(TimerRenderer, ref _timerMaterial, settings.FinalBarColor.Value);
             handled = true;
         }
 
@@ -180,13 +174,21 @@ internal sealed class TimerBar
 
     internal bool CustomTaskComplete(TimerBarSettings settings)
     {
-        if (_source == null || _chunkTransform == null) return false;
-
-        if (!_isFinalCountdown || !settings.HideChunkOnFinal)
+        if (Source == null || ChunkTransform == null)
         {
-            if (!_chunkTransform.gameObject.activeSelf) _chunkTransform.gameObject.SetActive(true);
-            if (settings.AlignChunkWithTimerX && _timerTransform != null)
-                AlignChunkLeftEdgeWithTimer(_chunkTransform, _timerTransform);
+            return false;
+        }
+
+        if (!IsFinalCountdown || !settings.HideChunkOnFinal)
+        {
+            if (!ChunkTransform.gameObject.activeSelf)
+            {
+                ChunkTransform.gameObject.SetActive(true);
+            }
+            if (settings.AlignChunkWithTimerX && TimerTransform != null)
+            {
+                AlignChunkLeftEdgeWithTimer(ChunkTransform, TimerTransform);
+            }
         }
 
         _freezeChunkUntil = Time.time + Mathf.Max(0f, settings.ChunkFreezeSeconds);
@@ -196,7 +198,10 @@ internal sealed class TimerBar
     private void ApplyRootTransform(TimerBarSettings settings)
     {
         Transform root = RootTransform;
-        if (root == null) return;
+        if (root == null)
+        {
+            return;
+        }
 
         root.localPosition = _defaultLocalPosition + settings.RootOffset;
         root.localScale = Vector3.Scale(_defaultLocalScale, settings.RootScaleMultiplier);
@@ -204,32 +209,51 @@ internal sealed class TimerBar
 
     private void ApplyCustomColors(TimerBarSettings settings)
     {
-        if (_timerRenderer != null)
+        if (TimerRenderer != null)
         {
-            Color? barColor = _isFinalCountdown ? settings.FinalBarColor : settings.NormalBarColor;
-            if (barColor.HasValue) ApplyColorOverride(_timerRenderer, ref _timerMaterial, barColor.Value);
+            Color? barColor = IsFinalCountdown ? settings.FinalBarColor : settings.NormalBarColor;
+            if (barColor.HasValue)
+            {
+                ApplyColorOverride(TimerRenderer, ref _timerMaterial, barColor.Value);
+            }
         }
 
-        if (_chunkRenderer != null && settings.ChunkBarColor.HasValue)
-            ApplyColorOverride(_chunkRenderer, ref _chunkMaterial, settings.ChunkBarColor.Value);
+        if (ChunkRenderer != null && settings.ChunkBarColor.HasValue)
+        {
+            ApplyColorOverride(ChunkRenderer, ref _chunkMaterial, settings.ChunkBarColor.Value);
+        }
 
-        if (_timeText != null && settings.TimeTextColor.HasValue)
-            _timeText.color = settings.TimeTextColor.Value;
+        if (TimeText != null && settings.TimeTextColor.HasValue)
+        {
+            TimeText.color = settings.TimeTextColor.Value;
+        }
     }
 
     private static void ApplyColorOverride(MeshRenderer renderer, ref Material runtimeMaterial, Color color)
     {
-        if (renderer == null) return;
+        if (renderer == null)
+        {
+            return;
+        }
         runtimeMaterial ??= CreateRuntimeMaterial(renderer);
-        if (runtimeMaterial == null) return;
+        if (runtimeMaterial == null)
+        {
+            return;
+        }
         runtimeMaterial.SetColor(ColorId, color);
     }
 
     private static Material CreateRuntimeMaterial(MeshRenderer renderer)
     {
-        if (renderer == null) return null;
+        if (renderer == null)
+        {
+            return null;
+        }
         Material sourceMaterial = renderer.sharedMaterial;
-        if (sourceMaterial == null) return null;
+        if (sourceMaterial == null)
+        {
+            return null;
+        }
 
         Material runtimeMaterial = new(sourceMaterial);
         renderer.material = runtimeMaterial;
@@ -238,7 +262,10 @@ internal sealed class TimerBar
 
     private static T ResolveField<T>(FieldInfo field, HideAndSeekTimerBar source) where T : class
     {
-        if (field == null || source == null) return null;
+        if (field == null || source == null)
+        {
+            return null;
+        }
         return field.GetValue(source) as T;
     }
 
@@ -250,36 +277,63 @@ internal sealed class TimerBar
     private static Transform ResolveTimerTransform(HideAndSeekTimerBar source)
     {
         Transform fromField = ResolveField<Transform>(TimerBarField, source);
-        if (fromField != null) return fromField;
-        if (source == null) return null;
+        if (fromField != null)
+        {
+            return fromField;
+        }
+        if (source == null)
+        {
+            return null;
+        }
 
         Transform named = source.transform.Find("TimerBar");
-        if (named != null) return named;
+        if (named != null)
+        {
+            return named;
+        }
 
         MeshRenderer renderer = source.GetComponentInChildren<MeshRenderer>(true);
-        return renderer != null ? renderer.transform : null;
+        return renderer?.transform;
     }
 
     private static MeshRenderer ResolveTimerRenderer(HideAndSeekTimerBar source, Transform timerTransform)
     {
         MeshRenderer fromField = ResolveField<MeshRenderer>(TimerBarRendererField, source);
-        if (fromField != null) return fromField;
-        if (timerTransform == null) return source?.GetComponentInChildren<MeshRenderer>(true);
+        if (fromField != null)
+        {
+            return fromField;
+        }
+        if (timerTransform == null)
+        {
+            return source?.GetComponentInChildren<MeshRenderer>(true);
+        }
         return timerTransform.GetComponent<MeshRenderer>() ?? timerTransform.GetComponentInChildren<MeshRenderer>(true);
     }
 
     private static Transform ResolveChunkTransform(HideAndSeekTimerBar source)
     {
         Transform fromField = ResolveField<Transform>(ChunkBarField, source);
-        if (fromField != null) return fromField;
-        if (source == null) return null;
+        if (fromField != null)
+        {
+            return fromField;
+        }
+        if (source == null)
+        {
+            return null;
+        }
 
         Transform named = source.transform.Find("ChunkBar");
-        if (named != null) return named;
+        if (named != null)
+        {
+            return named;
+        }
 
         foreach (Transform child in source.transform.GetComponentsInChildren<Transform>(true))
         {
-            if (child.name.IndexOf("chunk", StringComparison.OrdinalIgnoreCase) >= 0) return child;
+            if (child.name.IndexOf("chunk", StringComparison.OrdinalIgnoreCase) >= 0)
+            {
+                return child;
+            }
         }
 
         return null;
@@ -287,14 +341,27 @@ internal sealed class TimerBar
 
     private static MeshRenderer ResolveChunkRenderer(Transform chunkTransform)
     {
-        if (chunkTransform == null) return null;
+        if (chunkTransform == null)
+        {
+            return null;
+        }
         return chunkTransform.GetComponent<MeshRenderer>() ?? chunkTransform.GetComponentInChildren<MeshRenderer>(true);
     }
 
-    private static void ApplyRightToLeftShrink(Transform target, Vector3 defaultPos, Vector3 defaultScale, Vector3 currentScale, TimerBarSettings settings)
+    private static void ApplyRightToLeftShrink(Transform target,
+                                               Vector3 defaultPos,
+                                               Vector3 defaultScale,
+                                               Vector3 currentScale,
+                                               TimerBarSettings settings)
     {
-        if (target == null || !settings.ShrinkFromRightToLeft) return;
-        if (Mathf.Approximately(defaultScale.x, 0f)) return;
+        if (target == null || !settings.ShrinkFromRightToLeft)
+        {
+            return;
+        }
+        if (Mathf.Approximately(defaultScale.x, 0f))
+        {
+            return;
+        }
 
         Vector3 pos = defaultPos;
         pos.x = defaultPos.x + (currentScale.x - defaultScale.x) * 0.5f;
@@ -306,9 +373,9 @@ internal sealed class TimerBar
         Vector3 timerScale = timer.localScale;
         Vector3 chunkScale = chunk.localScale;
 
-        float timerLeft = timer.localPosition.x - (timerScale.x * 0.5f);
+        float timerLeft = timer.localPosition.x - timerScale.x * 0.5f;
         Vector3 chunkPos = chunk.localPosition;
-        chunkPos.x = timerLeft + (chunkScale.x * 0.5f);
+        chunkPos.x = timerLeft + chunkScale.x * 0.5f;
         chunk.localPosition = chunkPos;
     }
 }
@@ -368,7 +435,10 @@ internal sealed class TimerBarSettings
 
     internal static float DefaultProgressResolver(float time, float maxTime, bool _)
     {
-        if (maxTime <= 0f) return 0f;
+        if (maxTime <= 0f)
+        {
+            return 0f;
+        }
         return Mathf.Clamp01(time / maxTime);
     }
 

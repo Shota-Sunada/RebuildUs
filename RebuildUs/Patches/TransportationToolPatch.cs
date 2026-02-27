@@ -28,25 +28,33 @@ internal static class TransportationToolPatches
     internal static void Postfix(ZiplineBehaviour __instance, PlayerControl player, bool fromTop)
     {
         // Fix camo:
-        __instance.StartCoroutine(Effects.Lerp(fromTop ? __instance.downTravelTime : __instance.upTravelTime, new Action<float>(p =>
-        {
-            HandZiplinePoolable hand;
-            __instance.playerIdHands.TryGetValue(player.PlayerId, out hand);
-            if (hand == null) return;
-            if (Camouflager.CamouflageTimer <= 0 && !Helpers.MushroomSabotageActive())
+        __instance.StartCoroutine(Effects.Lerp(fromTop ? __instance.downTravelTime : __instance.upTravelTime,
+            new Action<float>(p =>
             {
-                if (player.IsRole(RoleType.Morphing) && Morphing.MorphTimer > 0)
+                HandZiplinePoolable hand;
+                __instance.playerIdHands.TryGetValue(player.PlayerId, out hand);
+                if (hand == null)
                 {
-                    hand.SetPlayerColor(Morphing.MorphTarget.CurrentOutfit, PlayerMaterial.MaskType.None, 1f);
-                    // Also set hat color, cause the line destroys it...
-                    player.RawSetHat(Morphing.MorphTarget.Data.DefaultOutfit.HatId, Morphing.MorphTarget.Data.DefaultOutfit.ColorId);
+                    return;
+                }
+                if (Camouflager.CamouflageTimer <= 0 && !Helpers.MushroomSabotageActive())
+                {
+                    if (player.IsRole(RoleType.Morphing) && Morphing.MorphTimer > 0)
+                    {
+                        hand.SetPlayerColor(Morphing.MorphTarget.CurrentOutfit, PlayerMaterial.MaskType.None, 1f);
+                        // Also set hat color, cause the line destroys it...
+                        player.RawSetHat(Morphing.MorphTarget.Data.DefaultOutfit.HatId, Morphing.MorphTarget.Data.DefaultOutfit.ColorId);
+                    }
+                    else
+                    {
+                        hand.SetPlayerColor(player.CurrentOutfit, PlayerMaterial.MaskType.None, 1f);
+                    }
                 }
                 else
-                    hand.SetPlayerColor(player.CurrentOutfit, PlayerMaterial.MaskType.None, 1f);
-            }
-            else
-                PlayerMaterial.SetColors(6, hand.handRenderer);
-        })));
+                {
+                    PlayerMaterial.SetColors(6, hand.handRenderer);
+                }
+            })));
     }
 
     // Save the position of the player prior to starting the climb / gap platform
@@ -63,10 +71,17 @@ internal static class TransportationToolPatches
     {
         // Fix camo:
         PlayerControl player = __instance.myPlayer;
-        __instance.StartCoroutine(Effects.Lerp(5.0f, new Action<float>(p =>
-        {
-            if (Camouflager.CamouflageTimer <= 0 && !Helpers.MushroomSabotageActive() && player.IsRole(RoleType.Morphing) && Morphing.MorphTimer > 0.1f) player.RawSetHat(Morphing.MorphTarget.Data.DefaultOutfit.HatId, Morphing.MorphTarget.Data.DefaultOutfit.ColorId);
-        })));
+        __instance.StartCoroutine(Effects.Lerp(5.0f,
+            new Action<float>(p =>
+            {
+                if (Camouflager.CamouflageTimer <= 0
+                    && !Helpers.MushroomSabotageActive()
+                    && player.IsRole(RoleType.Morphing)
+                    && Morphing.MorphTimer > 0.1f)
+                {
+                    player.RawSetHat(Morphing.MorphTarget.Data.DefaultOutfit.HatId, Morphing.MorphTarget.Data.DefaultOutfit.ColorId);
+                }
+            })));
     }
 
     [HarmonyPrefix]

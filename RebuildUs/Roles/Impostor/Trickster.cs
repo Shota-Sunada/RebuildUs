@@ -21,9 +21,20 @@ internal class Trickster : SingleRoleBase<Trickster>
     }
 
     // write configs here
-    private static float PlaceBoxCooldown { get => CustomOptionHolder.TricksterPlaceBoxCooldown.GetFloat(); }
-    private static float LightsOutCooldown { get => CustomOptionHolder.TricksterLightsOutCooldown.GetFloat(); }
-    internal static float LightsOutDuration { get => CustomOptionHolder.TricksterLightsOutDuration.GetFloat(); }
+    private static float PlaceBoxCooldown
+    {
+        get => CustomOptionHolder.TricksterPlaceBoxCooldown.GetFloat();
+    }
+
+    private static float LightsOutCooldown
+    {
+        get => CustomOptionHolder.TricksterLightsOutCooldown.GetFloat();
+    }
+
+    internal static float LightsOutDuration
+    {
+        get => CustomOptionHolder.TricksterLightsOutDuration.GetFloat();
+    }
 
     internal override void OnMeetingStart() { }
     internal override void OnMeetingEnd() { }
@@ -37,29 +48,75 @@ internal class Trickster : SingleRoleBase<Trickster>
     internal static void MakeButtons(HudManager hm)
     {
         _placeJackInTheBoxButton = new(() =>
-        {
-            _placeJackInTheBoxButton.Timer = _placeJackInTheBoxButton.MaxTimer;
+            {
+                _placeJackInTheBoxButton.Timer = _placeJackInTheBoxButton.MaxTimer;
 
-            Vector3 pos = PlayerControl.LocalPlayer.transform.position;
-            byte[] buff = new byte[sizeof(float) * 2];
-            Buffer.BlockCopy(BitConverter.GetBytes(pos.x), 0, buff, 0 * sizeof(float), sizeof(float));
-            Buffer.BlockCopy(BitConverter.GetBytes(pos.y), 0, buff, 1 * sizeof(float), sizeof(float));
+                Vector3 pos = PlayerControl.LocalPlayer.transform.position;
+                byte[] buff = new byte[sizeof(float) * 2];
+                Buffer.BlockCopy(BitConverter.GetBytes(pos.x), 0, buff, 0 * sizeof(float), sizeof(float));
+                Buffer.BlockCopy(BitConverter.GetBytes(pos.y), 0, buff, 1 * sizeof(float), sizeof(float));
 
-            using RPCSender sender = new(PlayerControl.LocalPlayer.NetId, CustomRPC.PlaceJackInTheBox);
-            sender.WriteBytesAndSize(buff);
-            RPCProcedure.PlaceJackInTheBox(buff);
-        }, () => { return PlayerControl.LocalPlayer.IsRole(RoleType.Trickster) && PlayerControl.LocalPlayer.IsAlive() && !JackInTheBox.HasJackInTheBoxLimitReached(); }, () => { return PlayerControl.LocalPlayer.CanMove && !JackInTheBox.HasJackInTheBoxLimitReached(); }, () => { _placeJackInTheBoxButton.Timer = _placeJackInTheBoxButton.MaxTimer; }, AssetLoader.PlaceJackInTheBoxButton, ButtonPosition.Layout, hm, hm.KillButton, AbilitySlot.ImpostorAbilityPrimary, false, Tr.Get(TrKey.PlaceJackInTheBoxText));
+                using RPCSender sender = new(PlayerControl.LocalPlayer.NetId, CustomRPC.PlaceJackInTheBox);
+                sender.WriteBytesAndSize(buff);
+                RPCProcedure.PlaceJackInTheBox(buff);
+            },
+            () =>
+            {
+                return PlayerControl.LocalPlayer.IsRole(RoleType.Trickster)
+                       && PlayerControl.LocalPlayer.IsAlive()
+                       && !JackInTheBox.HasJackInTheBoxLimitReached();
+            },
+            () =>
+            {
+                return PlayerControl.LocalPlayer.CanMove && !JackInTheBox.HasJackInTheBoxLimitReached();
+            },
+            () =>
+            {
+                _placeJackInTheBoxButton.Timer = _placeJackInTheBoxButton.MaxTimer;
+            },
+            AssetLoader.PlaceJackInTheBoxButton,
+            ButtonPosition.Layout,
+            hm,
+            hm.KillButton,
+            AbilitySlot.ImpostorAbilityPrimary,
+            false,
+            Tr.Get(TrKey.PlaceJackInTheBoxText));
 
         _lightsOutButton = new(() =>
-        {
-            using RPCSender sender = new(PlayerControl.LocalPlayer.NetId, CustomRPC.LightsOut);
-            RPCProcedure.LightsOut();
-        }, () => { return PlayerControl.LocalPlayer.IsRole(RoleType.Trickster) && PlayerControl.LocalPlayer.IsAlive() && JackInTheBox.HasJackInTheBoxLimitReached() && JackInTheBox.BoxesConvertedToVents; }, () => { return PlayerControl.LocalPlayer.CanMove && JackInTheBox.HasJackInTheBoxLimitReached() && JackInTheBox.BoxesConvertedToVents; }, () =>
-        {
-            _lightsOutButton.Timer = _lightsOutButton.MaxTimer;
-            _lightsOutButton.IsEffectActive = false;
-            _lightsOutButton.ActionButton.graphic.color = Palette.EnabledColor;
-        }, AssetLoader.LightsOutButton, ButtonPosition.Layout, hm, hm.KillButton, AbilitySlot.ImpostorAbilityPrimary, true, LightsOutDuration, () => { _lightsOutButton.Timer = _lightsOutButton.MaxTimer; }, false, Tr.Get(TrKey.LightsOutText));
+            {
+                using RPCSender sender = new(PlayerControl.LocalPlayer.NetId, CustomRPC.LightsOut);
+                RPCProcedure.LightsOut();
+            },
+            () =>
+            {
+                return PlayerControl.LocalPlayer.IsRole(RoleType.Trickster)
+                       && PlayerControl.LocalPlayer.IsAlive()
+                       && JackInTheBox.HasJackInTheBoxLimitReached()
+                       && JackInTheBox.BoxesConvertedToVents;
+            },
+            () =>
+            {
+                return PlayerControl.LocalPlayer.CanMove && JackInTheBox.HasJackInTheBoxLimitReached() && JackInTheBox.BoxesConvertedToVents;
+            },
+            () =>
+            {
+                _lightsOutButton.Timer = _lightsOutButton.MaxTimer;
+                _lightsOutButton.IsEffectActive = false;
+                _lightsOutButton.ActionButton.graphic.color = Palette.EnabledColor;
+            },
+            AssetLoader.LightsOutButton,
+            ButtonPosition.Layout,
+            hm,
+            hm.KillButton,
+            AbilitySlot.ImpostorAbilityPrimary,
+            true,
+            LightsOutDuration,
+            () =>
+            {
+                _lightsOutButton.Timer = _lightsOutButton.MaxTimer;
+            },
+            false,
+            Tr.Get(TrKey.LightsOutText));
     }
 
     internal static void SetButtonCooldowns()

@@ -4,15 +4,33 @@ internal static class ClientOptions
 {
     private static readonly SelectionBehaviour[] AllOptions =
     [
-        new("GhostsSeeTasks", () => MapSettings.GhostsSeeInformation = RebuildUs.GhostsSeeInformation.Value = !RebuildUs.GhostsSeeInformation.Value, RebuildUs.GhostsSeeInformation.Value),
-        new("GhostsSeeVotes", () => MapSettings.GhostsSeeVotes = RebuildUs.GhostsSeeVotes.Value = !RebuildUs.GhostsSeeVotes.Value, RebuildUs.GhostsSeeVotes.Value),
-        new("GhostsSeeRoles", () => MapSettings.GhostsSeeRoles = RebuildUs.GhostsSeeRoles.Value = !RebuildUs.GhostsSeeRoles.Value, RebuildUs.GhostsSeeRoles.Value),
-        new("ShowRoleSummary", () => MapSettings.ShowRoleSummary = RebuildUs.ShowRoleSummary.Value = !RebuildUs.ShowRoleSummary.Value, RebuildUs.ShowRoleSummary.Value),
-        new("ShowLighterDarker", () => MapSettings.ShowLighterDarker = RebuildUs.ShowLighterDarker.Value = !RebuildUs.ShowLighterDarker.Value, RebuildUs.ShowLighterDarker.Value),
-        new("BetterSabotageMap", () => MapSettings.BetterSabotageMap = RebuildUs.BetterSabotageMap.Value = !RebuildUs.BetterSabotageMap.Value, RebuildUs.BetterSabotageMap.Value),
-        new("ForceNormalSabotageMap", () => MapSettings.ForceNormalSabotageMap = RebuildUs.ForceNormalSabotageMap.Value = !RebuildUs.ForceNormalSabotageMap.Value, RebuildUs.ForceNormalSabotageMap.Value),
-        new("TransparentMap", () => MapSettings.TransparentMap = RebuildUs.TransparentMap.Value = !RebuildUs.TransparentMap.Value, RebuildUs.TransparentMap.Value),
-        new("HideFakeTasks", () => MapSettings.HideFakeTasks = RebuildUs.HideFakeTasks.Value = !RebuildUs.HideFakeTasks.Value, RebuildUs.HideFakeTasks.Value),
+        new("GhostsSeeTasks",
+            () => MapSettings.GhostsSeeInformation = RebuildUs.GhostsSeeInformation.Value = !RebuildUs.GhostsSeeInformation.Value,
+            RebuildUs.GhostsSeeInformation.Value),
+        new("GhostsSeeVotes",
+            () => MapSettings.GhostsSeeVotes = RebuildUs.GhostsSeeVotes.Value = !RebuildUs.GhostsSeeVotes.Value,
+            RebuildUs.GhostsSeeVotes.Value),
+        new("GhostsSeeRoles",
+            () => MapSettings.GhostsSeeRoles = RebuildUs.GhostsSeeRoles.Value = !RebuildUs.GhostsSeeRoles.Value,
+            RebuildUs.GhostsSeeRoles.Value),
+        new("ShowRoleSummary",
+            () => MapSettings.ShowRoleSummary = RebuildUs.ShowRoleSummary.Value = !RebuildUs.ShowRoleSummary.Value,
+            RebuildUs.ShowRoleSummary.Value),
+        new("ShowLighterDarker",
+            () => MapSettings.ShowLighterDarker = RebuildUs.ShowLighterDarker.Value = !RebuildUs.ShowLighterDarker.Value,
+            RebuildUs.ShowLighterDarker.Value),
+        new("BetterSabotageMap",
+            () => MapSettings.BetterSabotageMap = RebuildUs.BetterSabotageMap.Value = !RebuildUs.BetterSabotageMap.Value,
+            RebuildUs.BetterSabotageMap.Value),
+        new("ForceNormalSabotageMap",
+            () => MapSettings.ForceNormalSabotageMap = RebuildUs.ForceNormalSabotageMap.Value = !RebuildUs.ForceNormalSabotageMap.Value,
+            RebuildUs.ForceNormalSabotageMap.Value),
+        new("TransparentMap",
+            () => MapSettings.TransparentMap = RebuildUs.TransparentMap.Value = !RebuildUs.TransparentMap.Value,
+            RebuildUs.TransparentMap.Value),
+        new("HideFakeTasks",
+            () => MapSettings.HideFakeTasks = RebuildUs.HideFakeTasks.Value = !RebuildUs.HideFakeTasks.Value,
+            RebuildUs.HideFakeTasks.Value),
     ];
 
     private static GameObject _popUp;
@@ -38,9 +56,15 @@ internal static class ClientOptions
 
     internal static void Start(OptionsMenuBehaviour __instance)
     {
-        if (!__instance.CensorChatButton) return;
+        if (!__instance.CensorChatButton)
+        {
+            return;
+        }
 
-        if (!_popUp) CreateCustom(__instance);
+        if (!_popUp)
+        {
+            CreateCustom(__instance);
+        }
 
         if (!_buttonPrefab)
         {
@@ -67,7 +91,10 @@ internal static class ClientOptions
         for (int i = transform.childCount - 1; i >= 0; i--)
         {
             GameObject obj = transform.GetChild(i).gameObject;
-            if (obj.name is not "Background" and not "CloseButton") UnityObject.Destroy(obj);
+            if (obj.name is not "Background" and not "CloseButton")
+            {
+                UnityObject.Destroy(obj);
+            }
         }
 
         _popUp.SetActive(false);
@@ -76,7 +103,7 @@ internal static class ClientOptions
     private static void InitializeMoreButton(OptionsMenuBehaviour __instance)
     {
         ToggleButtonBehaviour moreOptions = UnityObject.Instantiate(_buttonPrefab, __instance.CensorChatButton.transform.parent);
-        moreOptions.transform.localPosition = __instance.CensorChatButton.transform.localPosition + (Vector3.down * 1.0f);
+        moreOptions.transform.localPosition = __instance.CensorChatButton.transform.localPosition + Vector3.down * 1.0f;
         moreOptions.gameObject.SetActive(true);
         moreOptions.Text.text = Tr.Get(TrKey.ModOptionsText);
         PassiveButton moreOptionsButton = moreOptions.GetComponent<PassiveButton>();
@@ -84,7 +111,10 @@ internal static class ClientOptions
         moreOptionsButton.OnClick.AddListener((Action)(() =>
         {
             bool closeUnderlying = false;
-            if (!_popUp) return;
+            if (!_popUp)
+            {
+                return;
+            }
 
             if (__instance.transform.parent && __instance.transform.parent == FastDestroyableSingleton<HudManager>.Instance.transform)
             {
@@ -101,16 +131,24 @@ internal static class ClientOptions
             CheckSetTitle();
             RefreshOpen();
 
-            if (closeUnderlying) __instance.Close();
+            if (closeUnderlying)
+            {
+                __instance.Close();
+            }
         }));
 
         GameObject returnToGameButton = GameObject.Find("ReturnToGameButton");
         GameObject leaveGameButton = GameObject.Find("LeaveGameButton");
 
-        if (!returnToGameButton || !leaveGameButton) return;
+        if (!returnToGameButton || !leaveGameButton)
+        {
+            return;
+        }
         returnToGameButton.transform.localPosition += Vector3.left * 1.3f;
         leaveGameButton.transform.localPosition += Vector3.right * 1.3f;
-        leaveGameButton.transform.localPosition = new(leaveGameButton.transform.localPosition.x, returnToGameButton.transform.localPosition.y, leaveGameButton.transform.localPosition.z);
+        leaveGameButton.transform.localPosition = new(leaveGameButton.transform.localPosition.x,
+            returnToGameButton.transform.localPosition.y,
+            leaveGameButton.transform.localPosition.z);
     }
 
     private static void RefreshOpen()
@@ -122,7 +160,10 @@ internal static class ClientOptions
 
     private static void CheckSetTitle()
     {
-        if (!_popUp || _popUp.GetComponentInChildren<TextMeshPro>() || !_titleText) return;
+        if (!_popUp || _popUp.GetComponentInChildren<TextMeshPro>() || !_titleText)
+        {
+            return;
+        }
 
         TextMeshPro title = UnityObject.Instantiate(_titleText, _popUp.transform);
         title.GetComponent<RectTransform>().localPosition = Vector3.up * 2.3f;
@@ -133,23 +174,28 @@ internal static class ClientOptions
 
     private static void SetUpOptions()
     {
-        if (_popUp.transform.GetComponentInChildren<ToggleButtonBehaviour>()) return;
+        if (_popUp.transform.GetComponentInChildren<ToggleButtonBehaviour>())
+        {
+            return;
+        }
 
         foreach (ToggleButtonBehaviour button in _modButtons)
         {
             if (button != null)
+            {
                 UnityObject.Destroy(button.gameObject);
+            }
         }
 
         _modButtons = [];
         int length = _page * 10 < AllOptions.Length ? _page * 10 : AllOptions.Length;
 
-        for (int i = 0; i + ((_page - 1) * 10) < length; i++)
+        for (int i = 0; i + (_page - 1) * 10 < length; i++)
         {
-            SelectionBehaviour info = AllOptions[i + ((_page - 1) * 10)];
+            SelectionBehaviour info = AllOptions[i + (_page - 1) * 10];
 
             ToggleButtonBehaviour button = UnityObject.Instantiate(_buttonPrefab, _popUp.transform);
-            Vector3 pos = new(i % 2 == 0 ? -1.17f : 1.17f, 1.3f - ((i / 2) * 0.8f), -.5f);
+            Vector3 pos = new(i % 2 == 0 ? -1.17f : 1.17f, 1.3f - i / 2 * 0.8f, -.5f);
 
             Transform transform = button.transform;
             transform.localPosition = pos;
@@ -184,7 +230,9 @@ internal static class ClientOptions
             passiveButton.OnMouseOut.AddListener((Action)(() => button.Background.color = button.onState ? Color.green : Palette.ImpostorRed));
 
             foreach (SpriteRenderer spr in button.gameObject.GetComponentsInChildren<SpriteRenderer>())
+            {
                 spr.size = new(2.2f, .7f);
+            }
 
             _modButtons.Add(button);
         }

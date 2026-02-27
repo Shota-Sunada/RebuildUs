@@ -22,9 +22,20 @@ internal class Engineer : MultiRoleBase<Engineer>
         get => NameColor;
     }
 
-    private static int NumberOfFixes { get => (int)CustomOptionHolder.EngineerNumberOfFixes.GetFloat(); }
-    internal static bool HighlightForImpostors { get => CustomOptionHolder.EngineerHighlightForImpostors.GetBool(); }
-    internal static bool HighlightForTeamJackal { get => CustomOptionHolder.EngineerHighlightForTeamJackal.GetBool(); }
+    private static int NumberOfFixes
+    {
+        get => (int)CustomOptionHolder.EngineerNumberOfFixes.GetFloat();
+    }
+
+    internal static bool HighlightForImpostors
+    {
+        get => CustomOptionHolder.EngineerHighlightForImpostors.GetBool();
+    }
+
+    internal static bool HighlightForTeamJackal
+    {
+        get => CustomOptionHolder.EngineerHighlightForTeamJackal.GetBool();
+    }
 
     internal override void OnMeetingStart() { }
     internal override void OnMeetingEnd() { }
@@ -38,17 +49,16 @@ internal class Engineer : MultiRoleBase<Engineer>
     internal static void MakeButtons(HudManager hm)
     {
         _engineerRepairButton = new(OnClick,
-                                    HasButton,
-                                    CouldUse,
-                                    () => { },
-                                    AssetLoader.RepairButton,
-                                    ButtonPosition.Layout,
-                                    hm,
-                                    hm.UseButton,
-                                    AbilitySlot.CrewmateAbilityPrimary,
-                                    false,
-                                    Tr.Get(TrKey.RepairText)
-                                   );
+            HasButton,
+            CouldUse,
+            () => { },
+            AssetLoader.RepairButton,
+            ButtonPosition.Layout,
+            hm,
+            hm.UseButton,
+            AbilitySlot.CrewmateAbilityPrimary,
+            false,
+            Tr.Get(TrKey.RepairText));
     }
 
     private static bool CouldUse()
@@ -62,9 +72,10 @@ internal class Engineer : MultiRoleBase<Engineer>
                                       or TaskTypes.ResetSeismic
                                       or TaskTypes.FixComms
                                       or TaskTypes.StopCharles)
-                && (!SubmergedCompatibility.IsSubmerged || task.TaskType != SubmergedCompatibility.RetrieveOxygenMask)
-               )
+                && (!SubmergedCompatibility.IsSubmerged || task.TaskType != SubmergedCompatibility.RetrieveOxygenMask))
+            {
                 continue;
+            }
 
             sabotageActive = true;
             break;
@@ -91,11 +102,11 @@ internal class Engineer : MultiRoleBase<Engineer>
             switch (task.TaskType)
             {
                 case TaskTypes.FixLights:
-                {
-                    using RPCSender sender2 = new(PlayerControl.LocalPlayer.NetId, CustomRPC.EngineerFixLights);
-                    RPCProcedure.EngineerFixLights();
-                    break;
-                }
+                    {
+                        using RPCSender sender2 = new(PlayerControl.LocalPlayer.NetId, CustomRPC.EngineerFixLights);
+                        RPCProcedure.EngineerFixLights();
+                        break;
+                    }
                 case TaskTypes.RestoreOxy:
                     MapUtilities.CachedShipStatus.RpcUpdateSystem(SystemTypes.LifeSupp, 0 | 64);
                     MapUtilities.CachedShipStatus.RpcUpdateSystem(SystemTypes.LifeSupp, 1 | 64);
@@ -115,15 +126,15 @@ internal class Engineer : MultiRoleBase<Engineer>
                     MapUtilities.CachedShipStatus.RpcUpdateSystem(SystemTypes.Reactor, 1 | 16);
                     break;
                 default:
-                {
-                    if (SubmergedCompatibility.IsSubmerged && task.TaskType == SubmergedCompatibility.RetrieveOxygenMask)
                     {
-                        using RPCSender sender3 = new(PlayerControl.LocalPlayer.NetId, CustomRPC.EngineerFixSubmergedOxygen);
-                        RPCProcedure.EngineerFixSubmergedOxygen();
-                    }
+                        if (SubmergedCompatibility.IsSubmerged && task.TaskType == SubmergedCompatibility.RetrieveOxygenMask)
+                        {
+                            using RPCSender sender3 = new(PlayerControl.LocalPlayer.NetId, CustomRPC.EngineerFixSubmergedOxygen);
+                            RPCProcedure.EngineerFixSubmergedOxygen();
+                        }
 
-                    break;
-                }
+                        break;
+                    }
             }
         }
     }

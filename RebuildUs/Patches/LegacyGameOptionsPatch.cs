@@ -14,7 +14,10 @@ internal static class LegacyGameOptionsPatch
     [HarmonyPatch(typeof(LegacyGameOptions), nameof(LegacyGameOptions.Validate))]
     internal static void ValidatePostfix(LegacyGameOptions __instance)
     {
-        if (!Helpers.IsNormal) return;
+        if (!Helpers.IsNormal)
+        {
+            return;
+        }
         __instance.NumImpostors = Helpers.GetOption(Int32OptionNames.NumImpostors);
     }
 }

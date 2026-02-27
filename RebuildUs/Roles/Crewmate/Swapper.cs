@@ -26,13 +26,27 @@ internal class Swapper : SingleRoleBase<Swapper>
     }
 
     // write configs here
-    internal static int NumSwaps { get => Mathf.RoundToInt(CustomOptionHolder.SwapperNumSwaps.GetFloat()); }
-    internal static bool CanCallEmergency { get => CustomOptionHolder.SwapperCanCallEmergency.GetBool(); }
-    internal static bool CanOnlySwapOthers { get => CustomOptionHolder.SwapperCanOnlySwapOthers.GetBool(); }
+    internal static int NumSwaps
+    {
+        get => Mathf.RoundToInt(CustomOptionHolder.SwapperNumSwaps.GetFloat());
+    }
+
+    internal static bool CanCallEmergency
+    {
+        get => CustomOptionHolder.SwapperCanCallEmergency.GetBool();
+    }
+
+    internal static bool CanOnlySwapOthers
+    {
+        get => CustomOptionHolder.SwapperCanOnlySwapOthers.GetBool();
+    }
 
     internal override void OnUpdateNameColors()
     {
-        if (Player == PlayerControl.LocalPlayer) HudManagerPatch.SetPlayerNameColor(Player, NameColor);
+        if (Player == PlayerControl.LocalPlayer)
+        {
+            HudManagerPatch.SetPlayerNameColor(Player, NameColor);
+        }
     }
 
     internal override void OnMeetingStart() { }

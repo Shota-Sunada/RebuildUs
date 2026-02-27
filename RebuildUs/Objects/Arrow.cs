@@ -29,10 +29,16 @@ internal sealed class Arrow
 
     internal void Update(Vector3 target, Color? color = null)
     {
-        if (ArrowObject == null) return;
+        if (ArrowObject == null)
+        {
+            return;
+        }
         _oldTarget = target;
 
-        if (color.HasValue) Image.color = color.Value;
+        if (color.HasValue)
+        {
+            Image.color = color.Value;
+        }
 
         _arrowBehaviour.target = target;
         _arrowBehaviour.Update();

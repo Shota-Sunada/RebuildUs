@@ -15,7 +15,8 @@ internal static class MorphHandler
 #if DEBUG
         StackFrame stack1 = new(1);
         StackFrame stack2 = new(2);
-        Logger.LogInfo($"{morphing?.GetNameWithRole()} => {outfit?.PlayerName} at {stack1.GetMethod().Name} at {stack2.GetMethod().Name}", "setOutfit");
+        Logger.LogInfo($"{morphing?.GetNameWithRole()} => {outfit?.PlayerName} at {stack1.GetMethod().Name} at {stack2.GetMethod().Name}",
+            "setOutfit");
 #endif
 
         morphing.Data.Outfits[PlayerOutfitType.Shapeshifted] = outfit;
@@ -27,8 +28,14 @@ internal static class MorphHandler
         morphing.RawSetName(outfit.PlayerName);
 
         SkinViewData nextSkin = null;
-        try { nextSkin = MapUtilities.CachedShipStatus.CosmeticsCache.GetSkin(outfit.SkinId); }
-        catch { return; }
+        try
+        {
+            nextSkin = MapUtilities.CachedShipStatus.CosmeticsCache.GetSkin(outfit.SkinId);
+        }
+        catch
+        {
+            return;
+        }
 
         PlayerPhysics phys = morphing.MyPhysics;
         PlayerAnimationGroup group = phys.Animations.group;

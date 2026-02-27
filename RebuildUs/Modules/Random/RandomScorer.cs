@@ -4,12 +4,18 @@ internal static class RandomScorer
 {
     internal static string MeasureQuality(System.Random random, int sampleCount = 100000)
     {
-        if (random == null) return "Random instance is null.";
+        if (random == null)
+        {
+            return "Random instance is null.";
+        }
 
         int[] frequencies = new int[10];
         long start = DateTime.Now.Ticks;
 
-        for (int i = 0; i < sampleCount; i++) frequencies[random.Next(0, 10)]++;
+        for (int i = 0; i < sampleCount; i++)
+        {
+            frequencies[random.Next(0, 10)]++;
+        }
 
         long end = DateTime.Now.Ticks;
         double durationSeconds = TimeSpan.FromTicks(end - start).TotalSeconds;
@@ -20,7 +26,7 @@ internal static class RandomScorer
         for (int i = 0; i < 10; i++)
         {
             double diff = frequencies[i] - expected;
-            chiSquare += (diff * diff) / expected;
+            chiSquare += diff * diff / expected;
         }
 
         StringBuilder sb = new();
@@ -50,7 +56,10 @@ internal static class RandomScorer
         for (int i = 0; i < 10; i++)
         {
             sb.Append(frequencies[i]);
-            if (i < 9) sb.Append(", ");
+            if (i < 9)
+            {
+                sb.Append(", ");
+            }
         }
 
         sb.Append(']');

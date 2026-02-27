@@ -18,13 +18,40 @@ internal class Suicider : MultiRoleBase<Suicider>
         get => NameColor;
     }
 
-    internal static bool CanEnterVents { get => CustomOptionHolder.SuiciderCanEnterVents.GetBool(); }
-    internal static bool HasImpostorVision { get => CustomOptionHolder.SuiciderHasImpostorVision.GetBool(); }
-    internal static bool CanFixComm { get => CustomOptionHolder.SuiciderCanFixComm.GetBool(); }
-    internal static bool CanKnowImpostorAfterFinishTasks { get => CustomOptionHolder.SuiciderCanKnowImpostorAfterFinishTasks.GetBool(); }
-    internal static int NumCommonTasks { get => CustomOptionHolder.SuiciderTasks.CommonTasksNum; }
-    internal static int NumLongTasks { get => CustomOptionHolder.SuiciderTasks.LongTasksNum; }
-    internal static int NumShortTasks { get => CustomOptionHolder.SuiciderTasks.ShortTasksNum; }
+    internal static bool CanEnterVents
+    {
+        get => CustomOptionHolder.SuiciderCanEnterVents.GetBool();
+    }
+
+    internal static bool HasImpostorVision
+    {
+        get => CustomOptionHolder.SuiciderHasImpostorVision.GetBool();
+    }
+
+    internal static bool CanFixComm
+    {
+        get => CustomOptionHolder.SuiciderCanFixComm.GetBool();
+    }
+
+    internal static bool CanKnowImpostorAfterFinishTasks
+    {
+        get => CustomOptionHolder.SuiciderCanKnowImpostorAfterFinishTasks.GetBool();
+    }
+
+    internal static int NumCommonTasks
+    {
+        get => CustomOptionHolder.SuiciderTasks.CommonTasksNum;
+    }
+
+    internal static int NumLongTasks
+    {
+        get => CustomOptionHolder.SuiciderTasks.LongTasksNum;
+    }
+
+    internal static int NumShortTasks
+    {
+        get => CustomOptionHolder.SuiciderTasks.ShortTasksNum;
+    }
 
     internal override void OnUpdateNameColors()
     {
@@ -38,8 +65,8 @@ internal class Suicider : MultiRoleBase<Suicider>
                 {
                     if (p.IsTeamImpostor()
                         || p.IsRole(RoleType.Spy)
-                        || (p.IsRole(RoleType.Jackal) && Jackal.Instance.WasTeamRed)
-                        || (p.IsRole(RoleType.Sidekick) && Sidekick.Instance.WasTeamRed))
+                        || p.IsRole(RoleType.Jackal) && Jackal.Instance.WasTeamRed
+                        || p.IsRole(RoleType.Sidekick) && Sidekick.Instance.WasTeamRed)
                     {
                         HudManagerPatch.SetPlayerNameColor(p, Palette.ImpostorRed);
                     }
@@ -60,15 +87,37 @@ internal class Suicider : MultiRoleBase<Suicider>
     internal static void MakeButtons(HudManager hm)
     {
         _suicideButton = new(() =>
-        {
             {
-                using RPCSender sender = new(PlayerControl.LocalPlayer.NetId, CustomRPC.UncheckedMurderPlayer);
-                sender.Write(PlayerControl.LocalPlayer.PlayerId); // source
-                sender.Write(PlayerControl.LocalPlayer.PlayerId); // target
-                sender.Write((byte)1); // showAnimation
-            }
-            RPCProcedure.UncheckedMurderPlayer(PlayerControl.LocalPlayer.PlayerId, PlayerControl.LocalPlayer.PlayerId, 1);
-        }, () => { return PlayerControl.LocalPlayer.IsRole(RoleType.Suicider) && PlayerControl.LocalPlayer?.Data?.IsDead == false; }, () => { return PlayerControl.LocalPlayer.CanMove; }, () => { _suicideButton.Timer = _suicideButton.MaxTimer; }, hm.KillButton.graphic.sprite, ButtonPosition.Layout, hm, hm.KillButton, AbilitySlot.CrewmateAbilityPrimary, false, 0f, null, false, Tr.Get(TrKey.Suicide));
+                {
+                    using RPCSender sender = new(PlayerControl.LocalPlayer.NetId, CustomRPC.UncheckedMurderPlayer);
+                    sender.Write(PlayerControl.LocalPlayer.PlayerId); // source
+                    sender.Write(PlayerControl.LocalPlayer.PlayerId); // target
+                    sender.Write((byte)1); // showAnimation
+                }
+                RPCProcedure.UncheckedMurderPlayer(PlayerControl.LocalPlayer.PlayerId, PlayerControl.LocalPlayer.PlayerId, 1);
+            },
+            () =>
+            {
+                return PlayerControl.LocalPlayer.IsRole(RoleType.Suicider) && PlayerControl.LocalPlayer?.Data?.IsDead == false;
+            },
+            () =>
+            {
+                return PlayerControl.LocalPlayer.CanMove;
+            },
+            () =>
+            {
+                _suicideButton.Timer = _suicideButton.MaxTimer;
+            },
+            hm.KillButton.graphic.sprite,
+            ButtonPosition.Layout,
+            hm,
+            hm.KillButton,
+            AbilitySlot.CrewmateAbilityPrimary,
+            false,
+            0f,
+            null,
+            false,
+            Tr.Get(TrKey.Suicide));
     }
 
     internal static void SetButtonCooldowns()
@@ -83,15 +132,23 @@ internal class Suicider : MultiRoleBase<Suicider>
 
     internal static bool TasksComplete(PlayerControl player)
     {
-        if (!CanKnowImpostorAfterFinishTasks) return false;
+        if (!CanKnowImpostorAfterFinishTasks)
+        {
+            return false;
+        }
 
         int counter = 0;
         int totalTasks = NumCommonTasks + NumLongTasks + NumShortTasks;
-        if (totalTasks == 0) return true;
+        if (totalTasks == 0)
+        {
+            return true;
+        }
         foreach (NetworkedPlayerInfo.TaskInfo task in player.Data.Tasks)
         {
             if (task.Complete)
+            {
                 counter++;
+            }
         }
 
         return counter == totalTasks;

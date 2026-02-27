@@ -9,7 +9,10 @@ internal static class ChatNotificationPatch
     [HarmonyPatch(typeof(ChatNotification), nameof(ChatNotification.SetUp))]
     internal static bool ChatNotificationSetupPrefix(ChatNotification __instance, PlayerControl sender, string text)
     {
-        if (MapUtilities.CachedShipStatus && !MapSettings.ShowChatNotifications) return false;
+        if (MapUtilities.CachedShipStatus && !MapSettings.ShowChatNotifications)
+        {
+            return false;
+        }
 
         __instance.timeOnScreen = 5f;
         __instance.gameObject.SetActive(true);
@@ -33,11 +36,20 @@ internal static class ChatNotificationPatch
 
         ColorStringBuilder.Clear();
         ColorStringBuilder.Append("<color=#").Append(str).Append('>');
-        if (string.IsNullOrEmpty(sender.Data.PlayerName)) ColorStringBuilder.Append("...");
-        else ColorStringBuilder.Append(sender.Data.PlayerName);
+        if (string.IsNullOrEmpty(sender.Data.PlayerName))
+        {
+            ColorStringBuilder.Append("...");
+        }
+        else
+        {
+            ColorStringBuilder.Append(sender.Data.PlayerName);
+        }
 
         string playerName = ColorStringBuilder.ToString();
-        if (__instance.playerNameText.text != playerName) __instance.playerNameText.text = playerName;
+        if (__instance.playerNameText.text != playerName)
+        {
+            __instance.playerNameText.text = playerName;
+        }
         __instance.playerNameText.outlineColor = color;
         __instance.chatText.text = text;
         return false;

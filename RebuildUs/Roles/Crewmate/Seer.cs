@@ -19,9 +19,20 @@ internal class Seer : MultiRoleBase<Seer>
     }
 
     // write configs here
-    internal static int Mode { get => CustomOptionHolder.SeerMode.GetSelection(); }
-    internal static bool LimitSoulDuration { get => CustomOptionHolder.SeerLimitSoulDuration.GetBool(); }
-    internal static float SoulDuration { get => CustomOptionHolder.SeerSoulDuration.GetFloat(); }
+    internal static int Mode
+    {
+        get => CustomOptionHolder.SeerMode.GetSelection();
+    }
+
+    internal static bool LimitSoulDuration
+    {
+        get => CustomOptionHolder.SeerLimitSoulDuration.GetBool();
+    }
+
+    internal static float SoulDuration
+    {
+        get => CustomOptionHolder.SeerSoulDuration.GetFloat();
+    }
 
     internal override void OnMeetingStart() { }
 
@@ -33,7 +44,7 @@ internal class Seer : MultiRoleBase<Seer>
             {
                 Vector3 pos = DeadBodyPositions[i];
                 GameObject soul = new("Soul");
-                soul.transform.position = new(pos.x, pos.y, (pos.y / 1000f) - 1f);
+                soul.transform.position = new(pos.x, pos.y, pos.y / 1000f - 1f);
                 soul.layer = 5;
                 SpriteRenderer rend = soul.AddComponent<SpriteRenderer>();
                 soul.AddSubmergedComponent(SubmergedCompatibility.Classes.ELEVATOR_MOVER);
@@ -41,17 +52,21 @@ internal class Seer : MultiRoleBase<Seer>
 
                 if (LimitSoulDuration)
                 {
-                    FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(SoulDuration, new Action<float>(p =>
-                    {
-                        if (rend != null)
+                    FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(SoulDuration,
+                        new Action<float>(p =>
                         {
-                            Color tmp = rend.color;
-                            tmp.a = Mathf.Clamp01(1 - p);
-                            rend.color = tmp;
-                        }
+                            if (rend != null)
+                            {
+                                Color tmp = rend.color;
+                                tmp.a = Mathf.Clamp01(1 - p);
+                                rend.color = tmp;
+                            }
 
-                        if (p == 1f && rend != null && rend.gameObject != null) UnityObject.Destroy(rend.gameObject);
-                    })));
+                            if (p == 1f && rend != null && rend.gameObject != null)
+                            {
+                                UnityObject.Destroy(rend.gameObject);
+                            }
+                        })));
                 }
             }
 

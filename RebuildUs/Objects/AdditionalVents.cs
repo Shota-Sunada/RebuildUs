@@ -22,16 +22,21 @@ internal sealed class AdditionalVents
 
         int maxId = -1;
         Il2CppReferenceArray<Vent> allVents = MapUtilities.CachedShipStatus.AllVents;
-        for (int i = 0; i < allVents.Length; i++)
+        foreach (Vent t in allVents)
         {
-            if (allVents[i].Id > maxId)
-                maxId = allVents[i].Id;
+            if (t.Id > maxId)
+            {
+                maxId = t.Id;
+            }
         }
 
         _vent.Id = maxId + 1; // Make sure we have a unique id
 
         Vent[] newVents = new Vent[allVents.Length + 1];
-        for (int i = 0; i < allVents.Length; i++) newVents[i] = allVents[i];
+        for (int i = 0; i < allVents.Length; i++)
+        {
+            newVents[i] = allVents[i];
+        }
         newVents[^1] = _vent;
         MapUtilities.CachedShipStatus.AllVents = newVents;
 
@@ -42,13 +47,22 @@ internal sealed class AdditionalVents
 
     internal static void AddAdditionalVents()
     {
-        if (_flag) return;
+        if (_flag)
+        {
+            return;
+        }
         _flag = true;
-        if (AmongUsClient.Instance.GameState != InnerNetClient.GameStates.Started) return;
+        if (AmongUsClient.Instance.GameState != InnerNetClient.GameStates.Started)
+        {
+            return;
+        }
         Logger.LogMessage("AddAdditionalVents");
 
         // Polusにベントを追加する
-        if (!Helpers.IsPolus || !CustomOptionHolder.PolusAdditionalVents.GetBool()) return;
+        if (!Helpers.IsPolus || !CustomOptionHolder.PolusAdditionalVents.GetBool())
+        {
+            return;
+        }
         AdditionalVents vents1 = new(new(36.54f, -21.77f, PlayerControl.LocalPlayer.transform.position.z + 1f)); // Specimen
         AdditionalVents vents2 = new(new(16.64f, -2.46f, PlayerControl.LocalPlayer.transform.position.z + 1f)); // InitialSpawn
         AdditionalVents vents3 = new(new(26.67f, -17.54f, PlayerControl.LocalPlayer.transform.position.z + 1f)); // Vital

@@ -30,11 +30,30 @@ internal class Tracker : MultiRoleBase<Tracker>
     }
 
     // write configs here
-    internal static float UpdateInterval { get => CustomOptionHolder.TrackerUpdateInterval.GetFloat(); }
-    internal static bool ResetTargetAfterMeeting { get => CustomOptionHolder.TrackerResetTargetAfterMeeting.GetBool(); }
-    internal static bool CanTrackCorpses { get => CustomOptionHolder.TrackerCanTrackCorpses.GetBool(); }
-    internal static float CorpsesTrackingCooldown { get => CustomOptionHolder.TrackerCorpsesTrackingCooldown.GetFloat(); }
-    internal static float CorpsesTrackingDuration { get => CustomOptionHolder.TrackerCorpsesTrackingDuration.GetFloat(); }
+    internal static float UpdateInterval
+    {
+        get => CustomOptionHolder.TrackerUpdateInterval.GetFloat();
+    }
+
+    internal static bool ResetTargetAfterMeeting
+    {
+        get => CustomOptionHolder.TrackerResetTargetAfterMeeting.GetBool();
+    }
+
+    internal static bool CanTrackCorpses
+    {
+        get => CustomOptionHolder.TrackerCanTrackCorpses.GetBool();
+    }
+
+    internal static float CorpsesTrackingCooldown
+    {
+        get => CustomOptionHolder.TrackerCorpsesTrackingCooldown.GetFloat();
+    }
+
+    internal static float CorpsesTrackingDuration
+    {
+        get => CustomOptionHolder.TrackerCorpsesTrackingDuration.GetFloat();
+    }
 
     internal override void OnMeetingStart() { }
 
@@ -47,10 +66,16 @@ internal class Tracker : MultiRoleBase<Tracker>
 
     internal override void FixedUpdate()
     {
-        if (Player != PlayerControl.LocalPlayer) return;
+        if (Player != PlayerControl.LocalPlayer)
+        {
+            return;
+        }
 
         CurrentTarget = Helpers.SetTarget();
-        if (!UsedTracker) Helpers.SetPlayerOutline(CurrentTarget, RoleColor);
+        if (!UsedTracker)
+        {
+            Helpers.SetPlayerOutline(CurrentTarget, RoleColor);
+        }
 
         if (UsedTracker && Tracked != null && !Player.Data.IsDead)
         {
@@ -67,7 +92,7 @@ internal class Tracker : MultiRoleBase<Tracker>
                     {
                         // Check for dead body
                         Il2CppArrayBase<DeadBody> bodies = UnityObject.FindObjectsOfType<DeadBody>();
-                        foreach (var t in bodies)
+                        foreach (DeadBody t in bodies)
                         {
                             if (t.ParentId == Tracked.PlayerId)
                             {
@@ -83,7 +108,9 @@ internal class Tracker : MultiRoleBase<Tracker>
                     TimeUntilUpdate = UpdateInterval;
                 }
                 else
+                {
                     Arrow.Update();
+                }
             }
         }
         else
@@ -106,7 +133,9 @@ internal class Tracker : MultiRoleBase<Tracker>
                 for (int i = 0; i < LocalArrows.Count; i++)
                 {
                     if (LocalArrows[i]?.ArrowObject != null)
+                    {
                         UnityObject.Destroy(LocalArrows[i].ArrowObject);
+                    }
                 }
 
                 LocalArrows.Clear();
@@ -122,7 +151,10 @@ internal class Tracker : MultiRoleBase<Tracker>
                     LocalArrows.Add(a);
                 }
 
-                if (index < LocalArrows.Count) LocalArrows[index]?.Update(position);
+                if (index < LocalArrows.Count)
+                {
+                    LocalArrows[index]?.Update(position);
+                }
 
                 index++;
             }
@@ -132,7 +164,9 @@ internal class Tracker : MultiRoleBase<Tracker>
             for (int i = 0; i < LocalArrows.Count; i++)
             {
                 if (LocalArrows[i]?.ArrowObject != null)
+                {
                     UnityObject.Destroy(LocalArrows[i].ArrowObject);
+                }
             }
 
             LocalArrows.Clear();
@@ -147,24 +181,65 @@ internal class Tracker : MultiRoleBase<Tracker>
     internal static void MakeButtons(HudManager hm)
     {
         _trackerTrackPlayerButton = new(() =>
-        {
-            using RPCSender sender = new(PlayerControl.LocalPlayer.NetId, CustomRPC.TrackerUsedTracker);
-            sender.Write(Local.CurrentTarget.PlayerId);
-            RPCProcedure.TrackerUsedTracker(Local.CurrentTarget.PlayerId, Local.Player.PlayerId);
-        }, () => { return PlayerControl.LocalPlayer.IsRole(RoleType.Tracker) && PlayerControl.LocalPlayer.IsAlive(); }, () => { return PlayerControl.LocalPlayer.CanMove && Local.CurrentTarget != null && !Local.UsedTracker; }, () =>
-        {
-            if (ResetTargetAfterMeeting) Local.ResetTracked();
-        }, AssetLoader.TrackerButton, ButtonPosition.Layout, hm, hm.UseButton, AbilitySlot.CrewmateAbilityPrimary, false, Tr.Get(TrKey.TrackerText));
+            {
+                using RPCSender sender = new(PlayerControl.LocalPlayer.NetId, CustomRPC.TrackerUsedTracker);
+                sender.Write(Local.CurrentTarget.PlayerId);
+                RPCProcedure.TrackerUsedTracker(Local.CurrentTarget.PlayerId, Local.Player.PlayerId);
+            },
+            () =>
+            {
+                return PlayerControl.LocalPlayer.IsRole(RoleType.Tracker) && PlayerControl.LocalPlayer.IsAlive();
+            },
+            () =>
+            {
+                return PlayerControl.LocalPlayer.CanMove && Local.CurrentTarget != null && !Local.UsedTracker;
+            },
+            () =>
+            {
+                if (ResetTargetAfterMeeting)
+                {
+                    Local.ResetTracked();
+                }
+            },
+            AssetLoader.TrackerButton,
+            ButtonPosition.Layout,
+            hm,
+            hm.UseButton,
+            AbilitySlot.CrewmateAbilityPrimary,
+            false,
+            Tr.Get(TrKey.TrackerText));
 
-        _trackerTrackCorpsesButton = new(() => { CorpsesTrackingTimer = CorpsesTrackingDuration; }, () => { return PlayerControl.LocalPlayer.IsRole(RoleType.Tracker) && PlayerControl.LocalPlayer.IsAlive() && CanTrackCorpses; }, () => { return PlayerControl.LocalPlayer.CanMove; }, () =>
-        {
-            _trackerTrackCorpsesButton.Timer = _trackerTrackCorpsesButton.MaxTimer;
-            _trackerTrackCorpsesButton.IsEffectActive = false;
-            _trackerTrackCorpsesButton.ActionButton.cooldownTimerText.color = Palette.EnabledColor;
-        }, AssetLoader.PathfindButton, ButtonPosition.Layout, hm, hm.UseButton, AbilitySlot.CrewmateAbilitySecondary, true, CorpsesTrackingDuration, () =>
-        {
-            _trackerTrackCorpsesButton.Timer = _trackerTrackCorpsesButton.MaxTimer;
-        }, false, Tr.Get(TrKey.PathfindText));
+        _trackerTrackCorpsesButton = new(() =>
+            {
+                CorpsesTrackingTimer = CorpsesTrackingDuration;
+            },
+            () =>
+            {
+                return PlayerControl.LocalPlayer.IsRole(RoleType.Tracker) && PlayerControl.LocalPlayer.IsAlive() && CanTrackCorpses;
+            },
+            () =>
+            {
+                return PlayerControl.LocalPlayer.CanMove;
+            },
+            () =>
+            {
+                _trackerTrackCorpsesButton.Timer = _trackerTrackCorpsesButton.MaxTimer;
+                _trackerTrackCorpsesButton.IsEffectActive = false;
+                _trackerTrackCorpsesButton.ActionButton.cooldownTimerText.color = Palette.EnabledColor;
+            },
+            AssetLoader.PathfindButton,
+            ButtonPosition.Layout,
+            hm,
+            hm.UseButton,
+            AbilitySlot.CrewmateAbilitySecondary,
+            true,
+            CorpsesTrackingDuration,
+            () =>
+            {
+                _trackerTrackCorpsesButton.Timer = _trackerTrackCorpsesButton.MaxTimer;
+            },
+            false,
+            Tr.Get(TrKey.PathfindText));
     }
 
     internal static void SetButtonCooldowns()
@@ -179,7 +254,10 @@ internal class Tracker : MultiRoleBase<Tracker>
     {
         CurrentTarget = Tracked = null;
         UsedTracker = false;
-        if (Arrow?.ArrowObject != null) UnityObject.Destroy(Arrow.ArrowObject);
+        if (Arrow?.ArrowObject != null)
+        {
+            UnityObject.Destroy(Arrow.ArrowObject);
+        }
         Arrow = null;
     }
 
@@ -195,7 +273,9 @@ internal class Tracker : MultiRoleBase<Tracker>
                 foreach (Arrow arrow in p.LocalArrows)
                 {
                     if (arrow?.ArrowObject != null)
+                    {
                         UnityObject.Destroy(arrow.ArrowObject);
+                    }
                 }
             }
         }

@@ -27,10 +27,25 @@ internal class Medic : SingleRoleBase<Medic>
     }
 
     // write configs here
-    internal static int ShowShielded { get => CustomOptionHolder.MedicShowShielded.GetSelection(); }
-    internal static bool ShowAttemptToShielded { get => CustomOptionHolder.MedicShowAttemptToShielded.GetBool(); }
-    private static bool SetShieldAfterMeeting { get => CustomOptionHolder.MedicSetShieldAfterMeeting.GetBool(); }
-    internal static bool ShowAttemptToMedic { get => CustomOptionHolder.MedicShowAttemptToMedic.GetBool(); }
+    internal static int ShowShielded
+    {
+        get => CustomOptionHolder.MedicShowShielded.GetSelection();
+    }
+
+    internal static bool ShowAttemptToShielded
+    {
+        get => CustomOptionHolder.MedicShowAttemptToShielded.GetBool();
+    }
+
+    private static bool SetShieldAfterMeeting
+    {
+        get => CustomOptionHolder.MedicSetShieldAfterMeeting.GetBool();
+    }
+
+    internal static bool ShowAttemptToMedic
+    {
+        get => CustomOptionHolder.MedicShowAttemptToMedic.GetBool();
+    }
 
     internal override void OnMeetingStart() { }
     internal override void OnMeetingEnd() { }
@@ -38,7 +53,10 @@ internal class Medic : SingleRoleBase<Medic>
 
     internal override void FixedUpdate()
     {
-        if (UsedShield) return;
+        if (UsedShield)
+        {
+            return;
+        }
         _currentTarget = Helpers.SetTarget();
         Helpers.SetPlayerOutline(_currentTarget, ShieldedColor);
     }
@@ -56,29 +74,42 @@ internal class Medic : SingleRoleBase<Medic>
     internal static void MakeButtons(HudManager hm)
     {
         _medicShieldButton = new(() =>
-        {
-            Medic local = Local;
-            if (local == null) return;
-            _medicShieldButton.Timer = 0f;
             {
-                if (SetShieldAfterMeeting)
+                Medic local = Local;
+                if (local == null)
                 {
-                    using RPCSender sender = new(PlayerControl.LocalPlayer.NetId, CustomRPC.SetFutureShielded);
-                    sender.Write(local._currentTarget.PlayerId);
-                    RPCProcedure.SetFutureShielded(local._currentTarget.PlayerId);
+                    return;
                 }
-                else
+                _medicShieldButton.Timer = 0f;
                 {
-                    using RPCSender sender = new(PlayerControl.LocalPlayer.NetId, CustomRPC.MedicSetShielded);
-                    sender.Write(local._currentTarget.PlayerId);
-                    RPCProcedure.MedicSetShielded(local._currentTarget.PlayerId);
+                    if (SetShieldAfterMeeting)
+                    {
+                        using RPCSender sender = new(PlayerControl.LocalPlayer.NetId, CustomRPC.SetFutureShielded);
+                        sender.Write(local._currentTarget.PlayerId);
+                        RPCProcedure.SetFutureShielded(local._currentTarget.PlayerId);
+                    }
+                    else
+                    {
+                        using RPCSender sender = new(PlayerControl.LocalPlayer.NetId, CustomRPC.MedicSetShielded);
+                        sender.Write(local._currentTarget.PlayerId);
+                        RPCProcedure.MedicSetShielded(local._currentTarget.PlayerId);
+                    }
                 }
-            }
-        }, () => Local != null && !UsedShield && PlayerControl.LocalPlayer.IsAlive(), () =>
-        {
-            Medic local = Local;
-            return !UsedShield && local != null && local._currentTarget && PlayerControl.LocalPlayer.CanMove;
-        }, () => { }, AssetLoader.ShieldButton, ButtonPosition.Layout, hm, hm.UseButton, AbilitySlot.CrewmateAbilityPrimary, false, Tr.Get(TrKey.ShieldText));
+            },
+            () => Local != null && !UsedShield && PlayerControl.LocalPlayer.IsAlive(),
+            () =>
+            {
+                Medic local = Local;
+                return !UsedShield && local != null && local._currentTarget && PlayerControl.LocalPlayer.CanMove;
+            },
+            () => { },
+            AssetLoader.ShieldButton,
+            ButtonPosition.Layout,
+            hm,
+            hm.UseButton,
+            AbilitySlot.CrewmateAbilityPrimary,
+            false,
+            Tr.Get(TrKey.ShieldText));
     }
 
     internal static void SetButtonCooldowns()

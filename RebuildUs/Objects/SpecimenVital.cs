@@ -12,10 +12,19 @@ internal abstract class SpecimenVital
 
     internal static void MoveVital()
     {
-        if (_flag) return;
-        if (!Helpers.IsPolus || !CustomOptionHolder.PolusSpecimenVital.GetBool()) return;
+        if (_flag)
+        {
+            return;
+        }
+        if (!Helpers.IsPolus || !CustomOptionHolder.PolusSpecimenVital.GetBool())
+        {
+            return;
+        }
         GameObject panel = GameObject.Find("panel_vitals");
-        if (panel == null) return;
+        if (panel == null)
+        {
+            return;
+        }
         Transform transform = panel.GetComponent<Transform>();
         transform.SetPositionAndRotation(Pos, transform.rotation);
         _flag = true;

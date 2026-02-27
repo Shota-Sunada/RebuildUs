@@ -47,12 +47,15 @@ internal sealed class FootprintHolder : MonoBehaviour
     [HideFromIl2Cpp]
     internal void MakeFootprint(PlayerControl player)
     {
-        if (!_pool.TryTake(out Footprint print)) print = new();
+        if (!_pool.TryTake(out Footprint print))
+        {
+            print = new();
+        }
 
         print.Lifetime = FootprintDuration;
 
         Vector3 pos = player.transform.position;
-        pos.z = (pos.y / 1000f) + 0.001f;
+        pos.z = pos.y / 1000f + 0.001f;
         print.Transform.SetPositionAndRotation(pos, Quaternion.EulerRotation(0, 0, RebuildUs.Rnd.Next(0, 360)));
         print.GameObject.SetActive(true);
         print.Owner = player;
@@ -76,11 +79,20 @@ internal sealed class FootprintHolder : MonoBehaviour
 
             Color color;
             if (AnonymousFootprints || Camouflager.CamouflageTimer > 0 || Helpers.MushroomSabotageActive())
+            {
                 color = Palette.PlayerColors[6];
-            else if (activeFootprint.Owner.IsRole(RoleType.Morphing) && Morphing.MorphTimer > 0 && Morphing.MorphTarget && Morphing.MorphTarget.Data != null)
+            }
+            else if (activeFootprint.Owner.IsRole(RoleType.Morphing)
+                     && Morphing.MorphTimer > 0
+                     && Morphing.MorphTarget
+                     && Morphing.MorphTarget.Data != null)
+            {
                 color = Palette.PlayerColors[Morphing.MorphTarget.Data.DefaultOutfit.ColorId];
+            }
             else
+            {
                 color = Palette.PlayerColors[activeFootprint.Data.DefaultOutfit.ColorId];
+            }
 
             color.a = Math.Clamp(p, 0f, 1f);
             activeFootprint.Renderer.color = color;
@@ -107,7 +119,10 @@ internal sealed class FootprintHolder : MonoBehaviour
 
         internal Footprint()
         {
-            GameObject = new("Footprint") { layer = 8 };
+            GameObject = new("Footprint")
+            {
+                layer = 8,
+            };
             Transform = GameObject.transform;
             Renderer = GameObject.AddComponent<SpriteRenderer>();
             Renderer.sprite = AssetLoader.Footprint;

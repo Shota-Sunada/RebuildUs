@@ -5,7 +5,11 @@ internal static class VentPatch
 {
     [HarmonyPrefix]
     [HarmonyPatch(typeof(Vent), nameof(Vent.CanUse))]
-    internal static bool CanUsePrefix(Vent __instance, ref float __result, [HarmonyArgument(0)] NetworkedPlayerInfo pc, [HarmonyArgument(1)] out bool canUse, [HarmonyArgument(2)] out bool couldUse)
+    internal static bool CanUsePrefix(Vent __instance,
+                                      ref float __result,
+                                      [HarmonyArgument(0)] NetworkedPlayerInfo pc,
+                                      [HarmonyArgument(1)] out bool canUse,
+                                      [HarmonyArgument(2)] out bool couldUse)
     {
         float num = float.MaxValue;
         PlayerControl @object = pc.Object;
@@ -33,7 +37,10 @@ internal static class VentPatch
             switch (__instance.Id)
             {
                 case 9: // Cannot enter vent 9 (Engine Room Exit Only Vent)!
-                    if (PlayerControl.LocalPlayer.inVent) break;
+                    if (PlayerControl.LocalPlayer.inVent)
+                    {
+                        break;
+                    }
                     __result = float.MaxValue;
                     canUse = couldUse = false;
                     return false;
@@ -41,7 +48,10 @@ internal static class VentPatch
                     __result = float.MaxValue;
                     couldUse = roleCouldUse && !pc.IsDead && (@object.CanMove || @object.inVent);
                     canUse = couldUse;
-                    if (!canUse) return false;
+                    if (!canUse)
+                    {
+                        return false;
+                    }
                     Vector3 center = @object.Collider.bounds.center;
                     Vector3 position = __instance.transform.position;
                     __result = Vector2.Distance(center, position);
@@ -97,10 +107,16 @@ internal static class VentPatch
     internal static bool UsePrefix(Vent __instance)
     {
         PlayerControl lp = PlayerControl.LocalPlayer;
-        if (lp == null) return false;
+        if (lp == null)
+        {
+            return false;
+        }
 
         __instance.CanUse(lp.Data, out bool canUse, out bool _);
-        if (!canUse) return false; // No need to execute the native method as using is disallowed anyways
+        if (!canUse)
+        {
+            return false; // No need to execute the native method as using is disallowed anyways
+        }
 
         bool isEnter = !lp.inVent;
 

@@ -52,21 +52,65 @@ internal class Madmate : ModifierBase<Madmate>
     }
 
     // write configs here
-    internal static bool CanEnterVents { get => CustomOptionHolder.MadmateCanEnterVents.GetBool(); }
-    internal static bool HasImpostorVision { get => CustomOptionHolder.MadmateHasImpostorVision.GetBool(); }
-    internal static bool CanSabotage { get => CustomOptionHolder.MadmateCanSabotage.GetBool(); }
-    internal static bool CanFixComm { get => CustomOptionHolder.MadmateCanFixComm.GetBool(); }
+    internal static bool CanEnterVents
+    {
+        get => CustomOptionHolder.MadmateCanEnterVents.GetBool();
+    }
 
-    internal static MadmateType MadmateType { get => (MadmateType)CustomOptionHolder.MadmateType.GetSelection(); }
-    internal static MadmateAbility MadmateAbility { get => (MadmateAbility)CustomOptionHolder.MadmateAbility.GetSelection(); }
-    internal static RoleType FixedRole { get => CustomOptionHolder.MadmateFixedRole.Role; }
+    internal static bool HasImpostorVision
+    {
+        get => CustomOptionHolder.MadmateHasImpostorVision.GetBool();
+    }
 
-    internal static int NumCommonTasks { get => CustomOptionHolder.MadmateTasks.CommonTasksNum; }
-    internal static int NumLongTasks { get => CustomOptionHolder.MadmateTasks.LongTasksNum; }
-    internal static int NumShortTasks { get => CustomOptionHolder.MadmateTasks.ShortTasksNum; }
+    internal static bool CanSabotage
+    {
+        get => CustomOptionHolder.MadmateCanSabotage.GetBool();
+    }
 
-    internal static bool HasTasks { get => MadmateAbility == MadmateAbility.Fanatic; }
-    internal static bool ExileCrewmate { get => CustomOptionHolder.MadmateExilePlayer.GetBool(); }
+    internal static bool CanFixComm
+    {
+        get => CustomOptionHolder.MadmateCanFixComm.GetBool();
+    }
+
+    internal static MadmateType MadmateType
+    {
+        get => (MadmateType)CustomOptionHolder.MadmateType.GetSelection();
+    }
+
+    internal static MadmateAbility MadmateAbility
+    {
+        get => (MadmateAbility)CustomOptionHolder.MadmateAbility.GetSelection();
+    }
+
+    internal static RoleType FixedRole
+    {
+        get => CustomOptionHolder.MadmateFixedRole.Role;
+    }
+
+    internal static int NumCommonTasks
+    {
+        get => CustomOptionHolder.MadmateTasks.CommonTasksNum;
+    }
+
+    internal static int NumLongTasks
+    {
+        get => CustomOptionHolder.MadmateTasks.LongTasksNum;
+    }
+
+    internal static int NumShortTasks
+    {
+        get => CustomOptionHolder.MadmateTasks.ShortTasksNum;
+    }
+
+    internal static bool HasTasks
+    {
+        get => MadmateAbility == MadmateAbility.Fanatic;
+    }
+
+    internal static bool ExileCrewmate
+    {
+        get => CustomOptionHolder.MadmateExilePlayer.GetBool();
+    }
 
     internal static string Prefix
     {
@@ -101,8 +145,14 @@ internal class Madmate : ModifierBase<Madmate>
                     for (int j = 0; j < info.Count; j++)
                     {
                         RoleInfo ri = info[j];
-                        if (ri.RoleType == RoleType.Crewmate) isCrewmateOnly = true;
-                        if (ri.RoleType == RoleType.FortuneTeller) isFortuneTeller = true;
+                        if (ri.RoleType == RoleType.Crewmate)
+                        {
+                            isCrewmateOnly = true;
+                        }
+                        if (ri.RoleType == RoleType.FortuneTeller)
+                        {
+                            isFortuneTeller = true;
+                        }
 
                         for (int k = 0; k < ValidRoles.Length; k++)
                         {
@@ -113,7 +163,10 @@ internal class Madmate : ModifierBase<Madmate>
                             }
                         }
 
-                        if (ri.RoleType == FixedRole) hasFixedRole = true;
+                        if (ri.RoleType == FixedRole)
+                        {
+                            hasFixedRole = true;
+                        }
                     }
 
                     if (isCrewmateOnly && !isFortuneTeller)
@@ -123,16 +176,28 @@ internal class Madmate : ModifierBase<Madmate>
                     }
                     else if (hasValidRole)
                     {
-                        if (FixedRole == RoleType.NoRole || hasFixedRole) crewHasRole.Add(player);
+                        if (FixedRole == RoleType.NoRole || hasFixedRole)
+                        {
+                            crewHasRole.Add(player);
+                        }
 
                         validCrewmates.Add(player);
                     }
                 }
             }
 
-            if (MadmateType == MadmateType.Simple) return crewNoRole;
-            if (MadmateType == MadmateType.WithRole && crewHasRole.Count > 0) return crewHasRole;
-            if (MadmateType == MadmateType.Random) return validCrewmates;
+            if (MadmateType == MadmateType.Simple)
+            {
+                return crewNoRole;
+            }
+            if (MadmateType == MadmateType.WithRole && crewHasRole.Count > 0)
+            {
+                return crewHasRole;
+            }
+            if (MadmateType == MadmateType.Random)
+            {
+                return validCrewmates;
+            }
             return validCrewmates;
         }
     }
@@ -149,8 +214,8 @@ internal class Madmate : ModifierBase<Madmate>
                 {
                     if (p.IsTeamImpostor()
                         || p.IsRole(RoleType.Spy)
-                        || (p.IsRole(RoleType.Jackal) && Jackal.Instance.WasTeamRed)
-                        || (p.IsRole(RoleType.Sidekick) && Sidekick.Instance.WasTeamRed))
+                        || p.IsRole(RoleType.Jackal) && Jackal.Instance.WasTeamRed
+                        || p.IsRole(RoleType.Sidekick) && Sidekick.Instance.WasTeamRed)
                     {
                         HudManagerPatch.SetPlayerNameColor(p, Palette.ImpostorRed);
                     }
@@ -187,15 +252,23 @@ internal class Madmate : ModifierBase<Madmate>
 
     internal static bool TasksComplete(PlayerControl player)
     {
-        if (!HasTasks) return false;
+        if (!HasTasks)
+        {
+            return false;
+        }
 
         int counter = 0;
         int totalTasks = NumCommonTasks + NumLongTasks + NumShortTasks;
-        if (totalTasks == 0) return true;
+        if (totalTasks == 0)
+        {
+            return true;
+        }
         foreach (NetworkedPlayerInfo.TaskInfo task in player.Data.Tasks)
         {
             if (task.Complete)
+            {
                 counter++;
+            }
         }
 
         return counter == totalTasks;

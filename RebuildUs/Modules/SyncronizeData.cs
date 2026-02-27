@@ -23,15 +23,27 @@ internal sealed class SynchronizeData
 
     internal bool Align(SynchronizeTag tag, bool withGhost, bool withSurvivor = true)
     {
-        if (!_dic.TryGetValue(tag, out ulong value)) return false;
+        if (!_dic.TryGetValue(tag, out ulong value))
+        {
+            return false;
+        }
 
         foreach (PlayerControl pc in PlayerControl.AllPlayerControls.GetFastEnumerator())
         {
-            if (pc == null || pc.Data == null || pc.Data.Disconnected) continue;
+            if (pc == null || pc.Data == null || pc.Data.Disconnected)
+            {
+                continue;
+            }
 
             bool shouldCheck = pc.Data.IsDead ? withGhost : withSurvivor;
-            if (!shouldCheck) continue;
-            if ((value & ((ulong)1 << pc.PlayerId)) == 0) return false;
+            if (!shouldCheck)
+            {
+                continue;
+            }
+            if ((value & (ulong)1 << pc.PlayerId) == 0)
+            {
+                return false;
+            }
         }
 
         return true;

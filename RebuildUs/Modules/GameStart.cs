@@ -21,7 +21,10 @@ internal static class GameStart
 
     internal static void OnPlayerJoined()
     {
-        if (PlayerControl.LocalPlayer != null) Helpers.ShareGameVersion();
+        if (PlayerControl.LocalPlayer != null)
+        {
+            Helpers.ShareGameVersion();
+        }
 
         SendGamemode = true;
     }
@@ -58,7 +61,10 @@ internal static class GameStart
         SpriteRenderer cancelButtonActiveRenderer = _cancelButton.activeSprites.GetComponent<SpriteRenderer>();
         cancelButtonActiveRenderer.color = Color.red;
         Transform cancelButtonInactiveShine = _cancelButton.inactiveSprites.transform.Find("Shine");
-        if (cancelButtonInactiveShine) cancelButtonInactiveShine.gameObject.SetActive(false);
+        if (cancelButtonInactiveShine)
+        {
+            cancelButtonInactiveShine.gameObject.SetActive(false);
+        }
 
         _cancelButton.activeTextColor = _cancelButton.inactiveTextColor = Color.white;
         _cancelButton.transform.localPosition = new(2f, 0.13f, 0f);
@@ -77,7 +83,10 @@ internal static class GameStart
     internal static void OnPlayerLeft(int clientId)
     {
         PlayerVersions.Remove(clientId);
-        if (PlayerVersions.Count == 0) VersionSent = false;
+        if (PlayerVersions.Count == 0)
+        {
+            VersionSent = false;
+        }
     }
 
     internal static void UpdatePostfix(GameStartManager __instance)
@@ -95,11 +104,17 @@ internal static class GameStart
         Il2CppArrayBase<ClientData> clients = AmongUsClient.Instance.allClients.ToArray();
         foreach (ClientData client in clients)
         {
-            if (client == null || client.Character == null || client.Character.Data == null) continue;
+            if (client == null || client.Character == null || client.Character.Data == null)
+            {
+                continue;
+            }
 
             // Skip Dummies
             DummyBehaviour dummyComponent = client.Character.GetComponent<DummyBehaviour>();
-            if (dummyComponent != null && dummyComponent.enabled) continue;
+            if (dummyComponent != null && dummyComponent.enabled)
+            {
+                continue;
+            }
 
             if (!PlayerVersions.TryGetValue(client.Id, out PlayerVersion pV))
             {
@@ -155,7 +170,8 @@ internal static class GameStart
         // Client update with handshake infos
         else
         {
-            if (!PlayerVersions.TryGetValue(AmongUsClient.Instance.HostId, out PlayerVersion hostVersion) || !hostVersion.Matches(RebuildUs.Instance.Version))
+            if (!PlayerVersions.TryGetValue(AmongUsClient.Instance.HostId, out PlayerVersion hostVersion)
+                || !hostVersion.Matches(RebuildUs.Instance.Version))
             {
                 KickingTimer += Time.deltaTime;
                 if (KickingTimer > 10)
@@ -200,12 +216,21 @@ internal static class GameStart
         }
 
         // Start Timer
-        if (StartingTimer > 0) StartingTimer -= Time.deltaTime;
+        if (StartingTimer > 0)
+        {
+            StartingTimer -= Time.deltaTime;
+        }
 
-        if (AmongUsClient.Instance.AmHost && _cancelButton != null) _cancelButton.gameObject.SetActive(__instance.startState == GameStartManager.StartingStates.Countdown);
+        if (AmongUsClient.Instance.AmHost && _cancelButton != null)
+        {
+            _cancelButton.gameObject.SetActive(__instance.startState == GameStartManager.StartingStates.Countdown);
+        }
 
         // Lobby timer
-        if (!AmongUsClient.Instance.AmHost || !GameData.Instance || AmongUsClient.Instance.NetworkMode != NetworkModes.OnlineGame) return;
+        if (!AmongUsClient.Instance.AmHost || !GameData.Instance || AmongUsClient.Instance.NetworkMode != NetworkModes.OnlineGame)
+        {
+            return;
+        }
 
         _timer = Mathf.Max(0f, _timer - Time.deltaTime);
         int totalSeconds = (int)_timer;
@@ -213,14 +238,23 @@ internal static class GameStart
         int seconds = totalSeconds % 60;
 
         InfoStringBuilder.Clear();
-        if (minutes < 10) InfoStringBuilder.Append('0');
+        if (minutes < 10)
+        {
+            InfoStringBuilder.Append('0');
+        }
         InfoStringBuilder.Append(minutes);
         InfoStringBuilder.Append(':');
-        if (seconds < 10) InfoStringBuilder.Append('0');
+        if (seconds < 10)
+        {
+            InfoStringBuilder.Append('0');
+        }
         InfoStringBuilder.Append(seconds);
 
         string countDown = InfoStringBuilder.ToString();
-        if (_timer <= 60) countDown = Helpers.Cs(Color.red, countDown);
+        if (_timer <= 60)
+        {
+            countDown = Helpers.Cs(Color.red, countDown);
+        }
 
         if (_lastCountDown != countDown)
         {
@@ -228,11 +262,20 @@ internal static class GameStart
             _lastCountDown = countDown;
         }
 
-        if (!GameData.Instance || !__instance.PlayerCounter) return; // No instance
+        if (!GameData.Instance || !__instance.PlayerCounter)
+        {
+            return; // No instance
+        }
 
-        if (!AmongUsClient.Instance) return;
+        if (!AmongUsClient.Instance)
+        {
+            return;
+        }
 
-        if (!AmongUsClient.Instance.AmHost || !SendGamemode || PlayerControl.LocalPlayer == null) return;
+        if (!AmongUsClient.Instance.AmHost || !SendGamemode || PlayerControl.LocalPlayer == null)
+        {
+            return;
+        }
         {
             using RPCSender sender = new(PlayerControl.LocalPlayer.NetId, CustomRPC.ShareGamemode);
             sender.Write((byte)MapSettings.GameMode);
@@ -246,24 +289,43 @@ internal static class GameStart
         // Block game start if not everyone has the same mod version
         bool continueStart = true;
 
-        if (!AmongUsClient.Instance.AmHost) return continueStart;
+        if (!AmongUsClient.Instance.AmHost)
+        {
+            return continueStart;
+        }
         foreach (ClientData client in AmongUsClient.Instance.allClients.GetFastEnumerator())
         {
-            if (client.Character == null) continue;
+            if (client.Character == null)
+            {
+                continue;
+            }
             DummyBehaviour dummyComponent = client.Character.GetComponent<DummyBehaviour>();
-            if (dummyComponent != null && dummyComponent.enabled) continue;
+            if (dummyComponent != null && dummyComponent.enabled)
+            {
+                continue;
+            }
 
-            if (PlayerVersions.TryGetValue(client.Id, out PlayerVersion pV) && pV.Matches(RebuildUs.Instance.Version)) continue;
+            if (PlayerVersions.TryGetValue(client.Id, out PlayerVersion pV) && pV.Matches(RebuildUs.Instance.Version))
+            {
+                continue;
+            }
             continueStart = false;
             break;
         }
 
         if (!continueStart)
+        {
             __instance.ResetStartState();
+        }
         else
+        {
             CustomOption.CoSpawnSyncSettings();
+        }
 
-        if (!CustomOptionHolder.RandomMap.GetBool() || !continueStart) return continueStart;
+        if (!CustomOptionHolder.RandomMap.GetBool() || !continueStart)
+        {
+            return continueStart;
+        }
         // 0 = Skeld
         // 1 = Mira HQ
         // 2 = Polus
@@ -297,26 +359,38 @@ internal static class GameStart
             for (int i = 0; i < probabilities.Length; i++)
             {
                 if (probabilities[i] < 1.0f)
+                {
                     probabilities[i] = 0;
+                }
             }
         }
 
         float sum = 0;
         foreach (float t in probabilities)
+        {
             sum += t;
+        }
 
         // All maps set to 0, why are you doing this???
-        if (sum <= 0) return true;
+        if (sum <= 0)
+        {
+            return true;
+        }
         for (int i = 0; i < probabilities.Length; i++)
             // Normalize to [0,1]
+        {
             probabilities[i] /= sum;
+        }
 
         float selection = (float)RebuildUs.Rnd.NextDouble();
         float cumSum = 0;
         for (byte i = 0; i < (byte)probabilities.Length; i++)
         {
             cumSum += probabilities[i];
-            if (!(cumSum > selection)) continue;
+            if (!(cumSum > selection))
+            {
+                continue;
+            }
             chosenMapId = i;
             break;
         }
@@ -355,7 +429,10 @@ internal static class GameStart
             sb.Append(_minor);
             sb.Append('.');
             sb.Append(_build);
-            if (_revision < 0) return sb.ToString();
+            if (_revision < 0)
+            {
+                return sb.ToString();
+            }
             sb.Append('.');
             sb.Append(_revision);
 

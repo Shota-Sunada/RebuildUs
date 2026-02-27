@@ -22,11 +22,30 @@ internal class Sidekick : SingleRoleBase<Sidekick>
         get => Jackal.NameColor;
     }
 
-    private static bool CanKill { get => CustomOptionHolder.SidekickCanKill.GetBool(); }
-    internal static bool CanUseVents { get => CustomOptionHolder.SidekickCanUseVents.GetBool(); }
-    private static bool CanSabotageLights { get => CustomOptionHolder.SidekickCanSabotageLights.GetBool(); }
-    internal static bool HasImpostorVision { get => CustomOptionHolder.SidekickHasImpostorVision.GetBool(); }
-    internal static bool PromotesToJackal { get => CustomOptionHolder.SidekickPromotesToJackal.GetBool(); }
+    private static bool CanKill
+    {
+        get => CustomOptionHolder.SidekickCanKill.GetBool();
+    }
+
+    internal static bool CanUseVents
+    {
+        get => CustomOptionHolder.SidekickCanUseVents.GetBool();
+    }
+
+    private static bool CanSabotageLights
+    {
+        get => CustomOptionHolder.SidekickCanSabotageLights.GetBool();
+    }
+
+    internal static bool HasImpostorVision
+    {
+        get => CustomOptionHolder.SidekickHasImpostorVision.GetBool();
+    }
+
+    internal static bool PromotesToJackal
+    {
+        get => CustomOptionHolder.SidekickPromotesToJackal.GetBool();
+    }
 
     internal override void OnUpdateNameColors()
     {
@@ -34,11 +53,20 @@ internal class Sidekick : SingleRoleBase<Sidekick>
         if (Player == lp)
         {
             HudManagerPatch.SetPlayerNameColor(Player, RoleColor);
-            if (!Jackal.Exists) return;
+            if (!Jackal.Exists)
+            {
+                return;
+            }
 
-            if (Jackal.Local.Player) HudManagerPatch.SetPlayerNameColor(Jackal.Local.Player, RoleColor);
+            if (Jackal.Local.Player)
+            {
+                HudManagerPatch.SetPlayerNameColor(Jackal.Local.Player, RoleColor);
+            }
         }
-        else if (lp.IsTeamImpostor() && WasTeamRed) HudManagerPatch.SetPlayerNameColor(Player, RoleColor);
+        else if (lp.IsTeamImpostor() && WasTeamRed)
+        {
+            HudManagerPatch.SetPlayerNameColor(Player, RoleColor);
+        }
     }
 
     internal override void OnMeetingStart() { }
@@ -48,7 +76,10 @@ internal class Sidekick : SingleRoleBase<Sidekick>
     internal override void FixedUpdate()
     {
         Sidekick local = Local;
-        if (local == null) return;
+        if (local == null)
+        {
+            return;
+        }
         List<PlayerControl> untargetablePlayers = [];
         if (Jackal.Exists)
         {
@@ -56,13 +87,19 @@ internal class Sidekick : SingleRoleBase<Sidekick>
         }
 
         List<Mini> miniPlayers = Mini.Players;
-        foreach (var mini in miniPlayers)
+        foreach (Mini mini in miniPlayers)
         {
-            if (!Mini.IsGrownUp(mini.Player)) untargetablePlayers.Add(mini.Player);
+            if (!Mini.IsGrownUp(mini.Player))
+            {
+                untargetablePlayers.Add(mini.Player);
+            }
         }
 
         _currentTarget = Helpers.SetTarget(untargetablePlayers: untargetablePlayers);
-        if (CanKill) Helpers.SetPlayerOutline(_currentTarget, Palette.ImpostorRed);
+        if (CanKill)
+        {
+            Helpers.SetPlayerOutline(_currentTarget, Palette.ImpostorRed);
+        }
     }
 
     internal override void OnKill(PlayerControl target) { }
@@ -73,31 +110,54 @@ internal class Sidekick : SingleRoleBase<Sidekick>
     internal static void MakeButtons(HudManager hm)
     {
         _sidekickKillButton = new(() =>
-                                  {
-                                      if (Helpers.CheckMurderAttemptAndKill(Local.Player, Local._currentTarget) == MurderAttemptResult.SuppressKill) return;
-                                      _sidekickKillButton.Timer = _sidekickKillButton.MaxTimer;
-                                      Local._currentTarget = null;
-                                  },
-                                  () => CanKill && PlayerControl.LocalPlayer.IsRole(RoleType.Sidekick) && PlayerControl.LocalPlayer.IsAlive(),
-                                  () => Local._currentTarget && PlayerControl.LocalPlayer.CanMove, () => { _sidekickKillButton.Timer = _sidekickKillButton.MaxTimer; }, hm.KillButton.graphic.sprite, ButtonPosition.Layout, hm, hm.KillButton, AbilitySlot.NeutralAbilityPrimary, false, FastDestroyableSingleton<TranslationController>.Instance.GetString(StringNames.KillLabel));
+            {
+                if (Helpers.CheckMurderAttemptAndKill(Local.Player, Local._currentTarget) == MurderAttemptResult.SuppressKill)
+                {
+                    return;
+                }
+                _sidekickKillButton.Timer = _sidekickKillButton.MaxTimer;
+                Local._currentTarget = null;
+            },
+            () => CanKill && PlayerControl.LocalPlayer.IsRole(RoleType.Sidekick) && PlayerControl.LocalPlayer.IsAlive(),
+            () => Local._currentTarget && PlayerControl.LocalPlayer.CanMove,
+            () =>
+            {
+                _sidekickKillButton.Timer = _sidekickKillButton.MaxTimer;
+            },
+            hm.KillButton.graphic.sprite,
+            ButtonPosition.Layout,
+            hm,
+            hm.KillButton,
+            AbilitySlot.NeutralAbilityPrimary,
+            false,
+            FastDestroyableSingleton<TranslationController>.Instance.GetString(StringNames.KillLabel));
 
         _sidekickSabotageLightsButton = new(() =>
-                                            {
-                                                MapUtilities.CachedShipStatus.RpcUpdateSystem(SystemTypes.Sabotage, (byte)SystemTypes.Electrical);
-                                            },
-                                            () => PlayerControl.LocalPlayer.IsRole(RoleType.Sidekick) && CanSabotageLights && PlayerControl.LocalPlayer.IsAlive(), () =>
-                                            {
-                                                if (Helpers.SabotageTimer() > _sidekickSabotageLightsButton.Timer || Helpers.SabotageActive())
-                                                {
-                                                    // this will give imps time to do another sabotage.
-                                                    _sidekickSabotageLightsButton.Timer = Helpers.SabotageTimer() + 5f;
-                                                }
+            {
+                MapUtilities.CachedShipStatus.RpcUpdateSystem(SystemTypes.Sabotage, (byte)SystemTypes.Electrical);
+            },
+            () => PlayerControl.LocalPlayer.IsRole(RoleType.Sidekick) && CanSabotageLights && PlayerControl.LocalPlayer.IsAlive(),
+            () =>
+            {
+                if (Helpers.SabotageTimer() > _sidekickSabotageLightsButton.Timer || Helpers.SabotageActive())
+                {
+                    // this will give imps time to do another sabotage.
+                    _sidekickSabotageLightsButton.Timer = Helpers.SabotageTimer() + 5f;
+                }
 
-                                                return Helpers.CanUseSabotage();
-                                            }, () =>
-                                            {
-                                                _sidekickSabotageLightsButton.Timer = Helpers.SabotageTimer() + 5f;
-                                            }, AssetLoader.LightsOutButton, ButtonPosition.Layout, hm, hm.AbilityButton, AbilitySlot.CommonAbilitySecondary, false, FastDestroyableSingleton<TranslationController>.Instance.GetString(StringNames.FixLights));
+                return Helpers.CanUseSabotage();
+            },
+            () =>
+            {
+                _sidekickSabotageLightsButton.Timer = Helpers.SabotageTimer() + 5f;
+            },
+            AssetLoader.LightsOutButton,
+            ButtonPosition.Layout,
+            hm,
+            hm.AbilityButton,
+            AbilitySlot.CommonAbilitySecondary,
+            false,
+            FastDestroyableSingleton<TranslationController>.Instance.GetString(StringNames.FixLights));
     }
 
     internal static void SetButtonCooldowns()

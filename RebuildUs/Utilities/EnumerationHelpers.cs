@@ -37,12 +37,17 @@ internal sealed unsafe class Il2CppListEnumerable<T> : IEnumerable<T>, IEnumerat
         _arrayPointer = listStruct->Items;
     }
 
-    public T Current { get; private set; }
-
     IEnumerator IEnumerable.GetEnumerator()
     {
         return this;
     }
+
+    public IEnumerator<T> GetEnumerator()
+    {
+        return this;
+    }
+
+    public T Current { get; private set; }
 
     object IEnumerator.Current
     {
@@ -51,7 +56,10 @@ internal sealed unsafe class Il2CppListEnumerable<T> : IEnumerable<T>, IEnumerat
 
     public bool MoveNext()
     {
-        if (++_index >= _count) return false;
+        if (++_index >= _count)
+        {
+            return false;
+        }
         IntPtr refPtr = *(IntPtr*)IntPtr.Add(IntPtr.Add(_arrayPointer, Offset), _index * ElemSize);
         Current = ObjFactory(refPtr);
         return true;
@@ -60,11 +68,6 @@ internal sealed unsafe class Il2CppListEnumerable<T> : IEnumerable<T>, IEnumerat
     public void Reset()
     {
         _index = -1;
-    }
-
-    public IEnumerator<T> GetEnumerator()
-    {
-        return this;
     }
 
     public void Dispose() { }

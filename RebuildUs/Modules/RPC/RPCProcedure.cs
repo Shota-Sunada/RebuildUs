@@ -42,7 +42,10 @@ internal static partial class RPCProcedure
         {
             uint id = reader.ReadPackedUInt32();
             uint selection = reader.ReadPackedUInt32();
-            if (CustomOption.AllOptionsById.TryGetValue((int)id, out CustomOption option)) option.UpdateSelection((int)selection, option.GetOptionIcon());
+            if (CustomOption.AllOptionsById.TryGetValue((int)id, out CustomOption option))
+            {
+                option.UpdateSelection((int)selection, option.GetOptionIcon());
+            }
         }
     }
 
@@ -66,7 +69,10 @@ internal static partial class RPCProcedure
     internal static void SetRole(byte roleId, byte playerId)
     {
         PlayerControl player = Helpers.PlayerById(playerId);
-        if (player == null) return;
+        if (player == null)
+        {
+            return;
+        }
         Logger.LogInfo($"{player.Data.PlayerName}({playerId}): {Enum.GetName(typeof(RoleType), roleId)}", "setRole");
         player.SetRole((RoleType)roleId);
     }
@@ -88,7 +94,10 @@ internal static partial class RPCProcedure
 
     internal static void UpdateMeeting(byte targetId, bool dead = true)
     {
-        if (!MeetingHud.Instance) return;
+        if (!MeetingHud.Instance)
+        {
+            return;
+        }
         foreach (PlayerVoteArea pva in MeetingHud.Instance.playerStates)
         {
             if (pva.TargetPlayerId == targetId)
@@ -98,15 +107,27 @@ internal static partial class RPCProcedure
             }
 
             // Give players back their vote if target is shot dead
-            if (!Helpers.RefundVotes || !dead) continue;
-            if (pva.VotedFor != targetId) continue;
+            if (!Helpers.RefundVotes || !dead)
+            {
+                continue;
+            }
+            if (pva.VotedFor != targetId)
+            {
+                continue;
+            }
             pva.UnsetVote();
             PlayerControl voteAreaPlayer = Helpers.PlayerById(pva.TargetPlayerId);
-            if (!voteAreaPlayer.AmOwner) continue;
+            if (!voteAreaPlayer.AmOwner)
+            {
+                continue;
+            }
             MeetingHud.Instance.ClearVote();
         }
 
-        if (AmongUsClient.Instance.AmHost) MeetingHud.Instance.CheckForEndVoting();
+        if (AmongUsClient.Instance.AmHost)
+        {
+            MeetingHud.Instance.CheckForEndVoting();
+        }
     }
 
     internal static void UncheckedCmdReportDeadBody(byte sourceId, byte targetId)
@@ -119,11 +140,17 @@ internal static partial class RPCProcedure
     internal static void UseUncheckedVent(int ventId, byte playerId, byte isEnter)
     {
         PlayerControl player = Helpers.PlayerById(playerId);
-        if (player == null) return;
+        if (player == null)
+        {
+            return;
+        }
         // Fill dummy MessageReader and call MyPhysics.HandleRpc as the coroutines cannot be accessed
         MessageReader reader = new();
         byte[] bytes = BitConverter.GetBytes(ventId);
-        if (!BitConverter.IsLittleEndian) Array.Reverse(bytes);
+        if (!BitConverter.IsLittleEndian)
+        {
+            Array.Reverse(bytes);
+        }
 
         reader.Buffer = bytes;
         reader.Length = bytes.Length;
@@ -134,11 +161,20 @@ internal static partial class RPCProcedure
 
     internal static void UncheckedMurderPlayer(byte sourceId, byte targetId, byte showAnimation)
     {
-        if (AmongUsClient.Instance.GameState != InnerNetClient.GameStates.Started) return;
+        if (AmongUsClient.Instance.GameState != InnerNetClient.GameStates.Started)
+        {
+            return;
+        }
         PlayerControl source = Helpers.PlayerById(sourceId);
         PlayerControl target = Helpers.PlayerById(targetId);
-        if (source == null || target == null) return;
-        if (showAnimation == 0) KillAnimationPatch.HideNextAnimation = true;
+        if (source == null || target == null)
+        {
+            return;
+        }
+        if (showAnimation == 0)
+        {
+            KillAnimationPatch.HideNextAnimation = true;
+        }
         source.MurderPlayer(target);
     }
 
@@ -167,7 +203,10 @@ internal static partial class RPCProcedure
     private static void StopStart()
     {
         StopStartSound();
-        if (AmongUsClient.Instance.AmHost) GameStartManager.Instance.ResetStartState();
+        if (AmongUsClient.Instance.AmHost)
+        {
+            GameStartManager.Instance.ResetStartState();
+        }
     }
 
     private static void StopStartSound()
@@ -178,8 +217,14 @@ internal static partial class RPCProcedure
     private static void FinishResetVariables(byte playerId)
     {
         Dictionary<byte, bool> checkList = RoleAssignment.CheckList;
-        if (checkList == null) return;
-        if (checkList.ContainsKey(playerId)) checkList[playerId] = true;
+        if (checkList == null)
+        {
+            return;
+        }
+        if (checkList.ContainsKey(playerId))
+        {
+            checkList[playerId] = true;
+        }
     }
 
     internal static void SetLovers(byte playerId1, byte playerId2)
@@ -210,7 +255,10 @@ internal static partial class RPCProcedure
                 GameManager.Instance.ShouldCheckForGameEnd = false;
                 AmongUsClient.Instance.OnGameEnd(new((GameOverReason)reason, false));
 
-                if (AmongUsClient.Instance.AmHost) GameManager.Instance.RpcEndGame((GameOverReason)reason, false);
+                if (AmongUsClient.Instance.AmHost)
+                {
+                    GameManager.Instance.RpcEndGame((GameOverReason)reason, false);
+                }
             }));
         }
     }
@@ -242,17 +290,29 @@ internal static partial class RPCProcedure
     internal static void EngineerUsedRepair(byte engineerId)
     {
         PlayerControl engineerPlayer = Helpers.PlayerById(engineerId);
-        if (engineerPlayer == null) return;
+        if (engineerPlayer == null)
+        {
+            return;
+        }
         Engineer engineer = Engineer.GetRole(engineerPlayer);
-        if (engineer != null) engineer.RemainingFixes--;
+        if (engineer != null)
+        {
+            engineer.RemainingFixes--;
+        }
     }
 
     internal static void ArsonistDouse(byte playerId)
     {
-        var arsonist = Arsonist.Instance;
-        if (arsonist == null) return;
+        Arsonist arsonist = Arsonist.Instance;
+        if (arsonist == null)
+        {
+            return;
+        }
         PlayerControl target = Helpers.PlayerById(playerId);
-        if (target != null) arsonist.DousedPlayers.Add(target);
+        if (target != null)
+        {
+            arsonist.DousedPlayers.Add(target);
+        }
     }
 
     internal static void ArsonistWin()
@@ -260,7 +320,10 @@ internal static partial class RPCProcedure
         Arsonist.TriggerArsonistWin = true;
         foreach (PlayerControl p in PlayerControl.AllPlayerControls.GetFastEnumerator())
         {
-            if (p == null || !p.IsAlive() || p.IsRole(RoleType.Arsonist)) continue;
+            if (p == null || !p.IsAlive() || p.IsRole(RoleType.Arsonist))
+            {
+                continue;
+            }
             p.Exiled();
             GameHistory.FinalStatuses[p.PlayerId] = FinalStatus.Torched;
         }
@@ -269,18 +332,24 @@ internal static partial class RPCProcedure
     internal static void CleanBody(byte playerId)
     {
         DeadBody[] array = UnityObject.FindObjectsOfType<DeadBody>();
-        foreach (var t in array)
+        foreach (DeadBody t in array)
         {
             NetworkedPlayerInfo info = GameData.Instance.GetPlayerById(t.ParentId);
-            if (info != null && info.PlayerId == playerId) UnityObject.Destroy(t.gameObject);
+            if (info != null && info.PlayerId == playerId)
+            {
+                UnityObject.Destroy(t.gameObject);
+            }
         }
     }
 
     internal static void VultureEat(byte playerId)
     {
         CleanBody(playerId);
-        var vulture = Vulture.Instance;
-        if (vulture != null) vulture.EatenBodies++;
+        Vulture vulture = Vulture.Instance;
+        if (vulture != null)
+        {
+            vulture.EatenBodies++;
+        }
     }
 
     internal static void VultureWin()
@@ -291,10 +360,16 @@ internal static partial class RPCProcedure
     internal static void ErasePlayerRoles(byte playerId, bool ignoreLovers = false, bool clearNeutralTasks = true)
     {
         PlayerControl player = Helpers.PlayerById(playerId);
-        if (player == null) return;
+        if (player == null)
+        {
+            return;
+        }
 
         // Don't give a former neutral role tasks because that destroys the balance.
-        if (player.IsNeutral() && clearNeutralTasks) player.ClearAllTasks();
+        if (player.IsNeutral() && clearNeutralTasks)
+        {
+            player.ClearAllTasks();
+        }
 
         player.EraseAllRoles();
         player.EraseAllModifiers();
@@ -309,11 +384,16 @@ internal static partial class RPCProcedure
     internal static void JackalCreatesSidekick(byte targetId)
     {
         PlayerControl target = Helpers.PlayerById(targetId);
-        var jackal = Jackal.Instance;
-        if (target == null) return;
+        Jackal jackal = Jackal.Instance;
+        if (target == null)
+        {
+            return;
+        }
 
         if (!Jackal.CanCreateSidekickFromImpostor && target.Data.Role.IsImpostor)
+        {
             jackal?.FakeSidekick = target;
+        }
         else
         {
             bool wasSpy = target.IsRole(RoleType.Spy);
@@ -322,16 +402,22 @@ internal static partial class RPCProcedure
             ErasePlayerRoles(target.PlayerId, true);
             if (target.SetRole(RoleType.Sidekick))
             {
-                var sidekick = Sidekick.Instance;
+                Sidekick sidekick = Sidekick.Instance;
                 if (sidekick != null)
                 {
-                    if (wasSpy || wasImpostor) sidekick.WasTeamRed = true;
+                    if (wasSpy || wasImpostor)
+                    {
+                        sidekick.WasTeamRed = true;
+                    }
                     sidekick.WasSpy = wasSpy;
                     sidekick.WasImpostor = wasImpostor;
                 }
             }
 
-            if (target.PlayerId == PlayerControl.LocalPlayer.PlayerId) PlayerControl.LocalPlayer.moveable = true;
+            if (target.PlayerId == PlayerControl.LocalPlayer.PlayerId)
+            {
+                PlayerControl.LocalPlayer.moveable = true;
+            }
         }
 
         if (jackal != null)
@@ -343,8 +429,11 @@ internal static partial class RPCProcedure
 
     internal static void SidekickPromotes()
     {
-        var sidekick = Sidekick.Instance;
-        if (sidekick == null) return;
+        Sidekick sidekick = Sidekick.Instance;
+        if (sidekick == null)
+        {
+            return;
+        }
 
         bool wasTeamRed = sidekick.WasTeamRed;
         bool wasImpostor = sidekick.WasImpostor;
@@ -354,7 +443,7 @@ internal static partial class RPCProcedure
         ErasePlayerRoles(sidekick.Player.PlayerId, true);
         if (sidekick.Player.SetRole(RoleType.Jackal))
         {
-            var newJackal = Jackal.Instance;
+            Jackal newJackal = Jackal.Instance;
             if (newJackal != null)
             {
                 newJackal.CanSidekick = Jackal.JackalPromotedFromSidekickCanCreateSidekick;
@@ -376,12 +465,18 @@ internal static partial class RPCProcedure
 
     internal static void ShieldedMurderAttempt()
     {
-        if (!Medic.Exists || Medic.Shielded == null) return;
+        if (!Medic.Exists || Medic.Shielded == null)
+        {
+            return;
+        }
 
         bool isShieldedAndShow = Medic.Shielded == PlayerControl.LocalPlayer && Medic.ShowAttemptToShielded;
         bool isMedicAndShow = PlayerControl.LocalPlayer.IsRole(RoleType.Medic) && Medic.ShowAttemptToMedic;
 
-        if ((!isShieldedAndShow && !isMedicAndShow) || FastDestroyableSingleton<HudManager>.Instance?.FullScreen == null) return;
+        if (!isShieldedAndShow && !isMedicAndShow || FastDestroyableSingleton<HudManager>.Instance?.FullScreen == null)
+        {
+            return;
+        }
         Color c = Palette.ImpostorRed;
         Helpers.ShowFlash(new(c.r, c.g, c.b));
     }
@@ -395,25 +490,44 @@ internal static partial class RPCProcedure
     internal static void TimeMasterRewindTime()
     {
         TimeMaster.ShieldActive = false; // Shield is no longer active when rewinding
-        if (PlayerControl.LocalPlayer.IsRole(RoleType.TimeMaster)) TimeMaster.ResetTimeMasterButton();
+        if (PlayerControl.LocalPlayer.IsRole(RoleType.TimeMaster))
+        {
+            TimeMaster.ResetTimeMasterButton();
+        }
 
         HudManager hm = FastDestroyableSingleton<HudManager>.Instance;
         hm.FullScreen.color = new(0f, 0.5f, 0.8f, 0.3f);
         hm.FullScreen.enabled = true;
         hm.FullScreen.gameObject.SetActive(true);
-        hm.StartCoroutine(Effects.Lerp(TimeMaster.RewindTime / 2, new Action<float>(p =>
-        {
-            if (Mathf.Approximately(p, 1f)) hm.FullScreen.enabled = false;
-        })));
+        hm.StartCoroutine(Effects.Lerp(TimeMaster.RewindTime / 2,
+            new Action<float>(p =>
+            {
+                if (Mathf.Approximately(p, 1f))
+                {
+                    hm.FullScreen.enabled = false;
+                }
+            })));
 
-        if (!TimeMaster.Exists || PlayerControl.LocalPlayer.IsRole(RoleType.TimeMaster)) return; // Time Master himself does not rewind
-        if (PlayerControl.LocalPlayer.IsGm()) return; // GM does not rewind
+        if (!TimeMaster.Exists || PlayerControl.LocalPlayer.IsRole(RoleType.TimeMaster))
+        {
+            return; // Time Master himself does not rewind
+        }
+        if (PlayerControl.LocalPlayer.IsGm())
+        {
+            return; // GM does not rewind
+        }
 
         TimeMaster.IsRewinding = true;
 
-        if (MapBehaviour.Instance) MapBehaviour.Instance.Close();
+        if (MapBehaviour.Instance)
+        {
+            MapBehaviour.Instance.Close();
+        }
 
-        if (Minigame.Instance) Minigame.Instance.ForceClose();
+        if (Minigame.Instance)
+        {
+            Minigame.Instance.ForceClose();
+        }
 
         PlayerControl.LocalPlayer.moveable = false;
     }
@@ -421,29 +535,47 @@ internal static partial class RPCProcedure
     internal static void TimeMasterShield()
     {
         TimeMaster.ShieldActive = true;
-        FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(TimeMaster.ShieldDuration, new Action<float>(p =>
-        {
-            if (Mathf.Approximately(p, 1f)) TimeMaster.ShieldActive = false;
-        })));
+        FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(TimeMaster.ShieldDuration,
+            new Action<float>(p =>
+            {
+                if (Mathf.Approximately(p, 1f))
+                {
+                    TimeMaster.ShieldActive = false;
+                }
+            })));
     }
 
     internal static void GuesserShoot(byte killerId, byte dyingTargetId, byte guessedTargetId, byte guessedRoleType)
     {
         PlayerControl killer = Helpers.PlayerById(killerId);
         PlayerControl dyingTarget = Helpers.PlayerById(dyingTargetId);
-        if (dyingTarget == null) return;
+        if (dyingTarget == null)
+        {
+            return;
+        }
         dyingTarget.Exiled();
         PlayerControl dyingLoverPartner = Lovers.BothDie ? dyingTarget.GetPartner() : null; // Lover check
 
-        if (killer != null) Guesser.RemainingShots(killer, true);
+        if (killer != null)
+        {
+            Guesser.RemainingShots(killer, true);
+        }
 
-        if (Constants.ShouldPlaySfx()) SoundManager.Instance.PlaySound(dyingTarget.KillSfx, false, 0.8f);
+        if (Constants.ShouldPlaySfx())
+        {
+            SoundManager.Instance.PlaySound(dyingTarget.KillSfx, false, 0.8f);
+        }
 
         if (FastDestroyableSingleton<HudManager>.Instance != null && killer != null)
         {
             if (PlayerControl.LocalPlayer == dyingTarget)
+            {
                 FastDestroyableSingleton<HudManager>.Instance.KillOverlay.ShowKillAnimation(killer.Data, dyingTarget.Data);
-            else if (dyingLoverPartner != null && PlayerControl.LocalPlayer == dyingLoverPartner) FastDestroyableSingleton<HudManager>.Instance.KillOverlay.ShowKillAnimation(dyingLoverPartner.Data, dyingLoverPartner.Data);
+            }
+            else if (dyingLoverPartner != null && PlayerControl.LocalPlayer == dyingLoverPartner)
+            {
+                FastDestroyableSingleton<HudManager>.Instance.KillOverlay.ShowKillAnimation(dyingLoverPartner.Data, dyingLoverPartner.Data);
+            }
         }
 
         PlayerControl guessedTarget = Helpers.PlayerById(guessedTargetId);
@@ -459,11 +591,20 @@ internal static partial class RPCProcedure
                 }
             }
 
-            if (roleInfo == null) return;
+            if (roleInfo == null)
+            {
+                return;
+            }
             string msg = string.Format(Tr.Get(TrKey.GuesserGuessChat), roleInfo.Name, guessedTarget.Data.PlayerName);
-            if (AmongUsClient.Instance.AmClient && FastDestroyableSingleton<HudManager>.Instance) FastDestroyableSingleton<HudManager>.Instance.Chat.AddChat(killer, msg);
+            if (AmongUsClient.Instance.AmClient && FastDestroyableSingleton<HudManager>.Instance)
+            {
+                FastDestroyableSingleton<HudManager>.Instance.Chat.AddChat(killer, msg);
+            }
 
-            if (msg.Contains("who", StringComparison.OrdinalIgnoreCase)) FastDestroyableSingleton<UnityTelemetry>.Instance.SendWho();
+            if (msg.Contains("who", StringComparison.OrdinalIgnoreCase))
+            {
+                FastDestroyableSingleton<UnityTelemetry>.Instance.SendWho();
+            }
         }
     }
 
@@ -479,18 +620,29 @@ internal static partial class RPCProcedure
     {
         Trickster.LightsOutTimer = Trickster.LightsOutDuration;
         // If the local player is impostor indicate lights out
-        if (Helpers.HasImpostorVision(PlayerControl.LocalPlayer)) _ = new CustomMessage("TricksterLightsOutText", Trickster.LightsOutDuration);
+        if (Helpers.HasImpostorVision(PlayerControl.LocalPlayer))
+        {
+            _ = new CustomMessage("TricksterLightsOutText", Trickster.LightsOutDuration);
+        }
     }
 
     internal static void EvilHackerCreatesMadmate(byte targetId, byte evilHackerId)
     {
         PlayerControl targetPlayer = Helpers.PlayerById(targetId);
         PlayerControl evilHackerPlayer = Helpers.PlayerById(evilHackerId);
-        if (targetPlayer == null || evilHackerPlayer == null) return;
+        if (targetPlayer == null || evilHackerPlayer == null)
+        {
+            return;
+        }
         EvilHacker evilHacker = EvilHacker.GetRole(evilHackerPlayer);
-        if (evilHacker == null) return;
+        if (evilHacker == null)
+        {
+            return;
+        }
         if (!EvilHacker.CanCreateMadmateFromJackal && targetPlayer.IsRole(RoleType.Jackal))
+        {
             evilHacker.FakeMadmate = targetPlayer;
+        }
         else
         {
             // Jackalバグ対応
@@ -536,9 +688,15 @@ internal static partial class RPCProcedure
     internal static void TrackerUsedTracker(byte targetId, byte trackerId)
     {
         PlayerControl trackerPlayer = Helpers.PlayerById(trackerId);
-        if (trackerPlayer == null) return;
+        if (trackerPlayer == null)
+        {
+            return;
+        }
         Tracker tracker = Tracker.GetRole(trackerPlayer);
-        if (tracker == null) return;
+        if (tracker == null)
+        {
+            return;
+        }
 
         tracker.UsedTracker = true;
         tracker.Tracked = Helpers.PlayerById(targetId);
@@ -548,7 +706,10 @@ internal static partial class RPCProcedure
     {
         PlayerControl player = Helpers.PlayerById(playerId);
         Eraser.FutureErased ??= [];
-        if (player != null) Eraser.FutureErased.Add(player);
+        if (player != null)
+        {
+            Eraser.FutureErased.Add(player);
+        }
     }
 
     internal static void VampireSetBitten(byte targetId, byte performReset)
@@ -559,9 +720,15 @@ internal static partial class RPCProcedure
             return;
         }
 
-        if (!Vampire.Exists) return;
+        if (!Vampire.Exists)
+        {
+            return;
+        }
         PlayerControl player = Helpers.PlayerById(targetId);
-        if (player != null && !player.Data.IsDead) Vampire.Bitten = player;
+        if (player != null && !player.Data.IsDead)
+        {
+            Vampire.Bitten = player;
+        }
     }
 
     private static void ShareRealTasks(MessageReader reader)
@@ -586,29 +753,33 @@ internal static partial class RPCProcedure
 
     internal static void PolusRandomSpawn(byte playerId, byte locId)
     {
-        FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(3f, new Action<float>(p =>
-        {
-            // Delayed action
-            if (!Mathf.Approximately(p, 1f)) return;
-            Vector2 initialSpawnCenter = new(16.64f, -2.46f);
-            Vector2 meetingSpawnCenter = new(17.4f, -16.286f);
-            Vector2 electricalSpawn = new(5.53f, -9.84f);
-            Vector2 o2Spawn = new(3.28f, -21.67f);
-            Vector2 specimenSpawn = new(36.54f, -20.84f);
-            Vector2 laboratorySpawn = new(34.91f, -6.50f);
-            Vector2 loc = locId switch
+        FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(3f,
+            new Action<float>(p =>
             {
-                0 => initialSpawnCenter,
-                1 => meetingSpawnCenter,
-                2 => electricalSpawn,
-                3 => o2Spawn,
-                4 => specimenSpawn,
-                5 => laboratorySpawn,
-                _ => initialSpawnCenter,
-            };
-            PlayerControl player = Helpers.PlayerById(playerId);
-            player?.transform.position = loc;
-        })));
+                // Delayed action
+                if (!Mathf.Approximately(p, 1f))
+                {
+                    return;
+                }
+                Vector2 initialSpawnCenter = new(16.64f, -2.46f);
+                Vector2 meetingSpawnCenter = new(17.4f, -16.286f);
+                Vector2 electricalSpawn = new(5.53f, -9.84f);
+                Vector2 o2Spawn = new(3.28f, -21.67f);
+                Vector2 specimenSpawn = new(36.54f, -20.84f);
+                Vector2 laboratorySpawn = new(34.91f, -6.50f);
+                Vector2 loc = locId switch
+                {
+                    0 => initialSpawnCenter,
+                    1 => meetingSpawnCenter,
+                    2 => electricalSpawn,
+                    3 => o2Spawn,
+                    4 => specimenSpawn,
+                    5 => laboratorySpawn,
+                    _ => initialSpawnCenter,
+                };
+                PlayerControl player = Helpers.PlayerById(playerId);
+                player?.transform.position = loc;
+            })));
     }
 
     internal static void Synchronize(byte playerId, int tag)
@@ -621,7 +792,10 @@ internal static partial class RPCProcedure
         SecurityGuard sg = SecurityGuard.Instance;
 
         SurvCamera referenceCamera = UnityObject.FindObjectOfType<SurvCamera>();
-        if (referenceCamera == null) return; // Mira HQ
+        if (referenceCamera == null)
+        {
+            return; // Mira HQ
+        }
 
         sg.RemainingScrews -= SecurityGuard.CamPrice;
         sg.PlacedCameras++;
@@ -683,7 +857,10 @@ internal static partial class RPCProcedure
             SystemTypes.Medical => StringNames.Medical,
             _ => StringNames.ExitButton,
         };
-        if (Helpers.GetOption(ByteOptionNames.MapId) is 2 or 4) camera.transform.localRotation = new(0, 0, 1, 1); // Polus and Airship
+        if (Helpers.GetOption(ByteOptionNames.MapId) is 2 or 4)
+        {
+            camera.transform.localRotation = new(0, 0, 1, 1); // Polus and Airship
+        }
 
         if (PlayerControl.LocalPlayer.IsRole(RoleType.SecurityGuard))
         {
@@ -706,12 +883,18 @@ internal static partial class RPCProcedure
         Il2CppReferenceArray<Vent> allVents = MapUtilities.CachedShipStatus.AllVents;
         foreach (Vent v in allVents)
         {
-            if (v == null || v.Id != ventId) continue;
+            if (v == null || v.Id != ventId)
+            {
+                continue;
+            }
             vent = v;
             break;
         }
 
-        if (vent == null) return;
+        if (vent == null)
+        {
+            return;
+        }
 
         sg.RemainingScrews -= SecurityGuard.VentPrice;
         if (PlayerControl.LocalPlayer.IsRole(RoleType.SecurityGuard))
@@ -720,8 +903,14 @@ internal static partial class RPCProcedure
             animator?.Stop();
             vent.EnterVentAnim = vent.ExitVentAnim = null;
             vent.myRend.sprite = animator == null ? AssetLoader.StaticVentSealed : AssetLoader.AnimatedVentSealed;
-            if (SubmergedCompatibility.IsSubmerged && vent.Id == 0) vent.myRend.sprite = AssetLoader.CentralUpperBlocked;
-            if (SubmergedCompatibility.IsSubmerged && vent.Id == 14) vent.myRend.sprite = AssetLoader.CentralLowerBlocked;
+            if (SubmergedCompatibility.IsSubmerged && vent.Id == 0)
+            {
+                vent.myRend.sprite = AssetLoader.CentralUpperBlocked;
+            }
+            if (SubmergedCompatibility.IsSubmerged && vent.Id == 14)
+            {
+                vent.myRend.sprite = AssetLoader.CentralLowerBlocked;
+            }
             vent.myRend.color = new(1f, 1f, 1f, 0.5f);
             vent.name = "FutureSealedVent_" + vent.name;
         }
@@ -733,19 +922,28 @@ internal static partial class RPCProcedure
     {
         PlayerControl morphPlayer = Helpers.PlayerById(morphId);
         PlayerControl target = Helpers.PlayerById(playerId);
-        if (morphPlayer == null || target == null) return;
+        if (morphPlayer == null || target == null)
+        {
+            return;
+        }
         Morphing.GetRole(morphPlayer).StartMorph(target);
     }
 
     internal static void CamouflagerCamouflage()
     {
-        if (!Camouflager.Exists) return;
+        if (!Camouflager.Exists)
+        {
+            return;
+        }
         Camouflager.StartCamouflage();
     }
 
     internal static void SwapperSwap(byte playerId1, byte playerId2)
     {
-        if (!MeetingHud.Instance) return;
+        if (!MeetingHud.Instance)
+        {
+            return;
+        }
         Swapper.PlayerId1 = playerId1;
         Swapper.PlayerId2 = playerId2;
     }
@@ -756,7 +954,10 @@ internal static partial class RPCProcedure
     {
         PlayerControl player = Helpers.PlayerById(playerId);
         Witch.FutureSpelled ??= [];
-        if (player != null) Witch.FutureSpelled.Add(player);
+        if (player != null)
+        {
+            Witch.FutureSpelled.Add(player);
+        }
     }
 
     internal static void WitchSpellCast(byte playerId)
@@ -778,10 +979,16 @@ internal static partial class RPCProcedure
 
     internal static void ShifterShift(byte targetId)
     {
-        if (Shifter.Players.Count == 0) return;
+        if (Shifter.Players.Count == 0)
+        {
+            return;
+        }
         Shifter oldShifter = Shifter.Players[0];
         PlayerControl player = Helpers.PlayerById(targetId);
-        if (player == null || oldShifter == null) return;
+        if (player == null || oldShifter == null)
+        {
+            return;
+        }
 
         PlayerControl oldShifterPlayer = oldShifter.Player;
         Shifter.FutureShift = null;
@@ -793,9 +1000,7 @@ internal static partial class RPCProcedure
                 || player.HasModifier(ModifierType.Madmate)
                 || player.IsRole(RoleType.Madmate)
                 || player.IsRole(RoleType.Suicider)
-                || player.HasModifier(ModifierType.CreatedMadmate)
-            )
-           )
+                || player.HasModifier(ModifierType.CreatedMadmate)))
         {
             oldShifterPlayer.Exiled();
             GameHistory.FinalStatuses[oldShifterPlayer.PlayerId] = FinalStatus.Suicide;
@@ -806,8 +1011,13 @@ internal static partial class RPCProcedure
         {
             // Switch shield
             if (Medic.Shielded != null && Medic.Shielded == player)
+            {
                 Medic.Shielded = oldShifterPlayer;
-            else if (Medic.Shielded != null && Medic.Shielded == oldShifterPlayer) Medic.Shielded = player;
+            }
+            else if (Medic.Shielded != null && Medic.Shielded == oldShifterPlayer)
+            {
+                Medic.Shielded = player;
+            }
 
             player.SwapModifiers(oldShifterPlayer);
             Lovers.SwapLovers(oldShifterPlayer, player);
@@ -833,13 +1043,18 @@ internal static partial class RPCProcedure
         }
 
         // Set cooldowns to max for both players
-        if (PlayerControl.LocalPlayer == oldShifterPlayer || PlayerControl.LocalPlayer == player) CustomButton.ResetAllCooldowns();
+        if (PlayerControl.LocalPlayer == oldShifterPlayer || PlayerControl.LocalPlayer == player)
+        {
+            CustomButton.ResetAllCooldowns();
+        }
     }
 
     internal static void SetFutureShifted(byte playerId)
     {
         if (Shifter.IsNeutral && !Shifter.ShiftPastShifters && Shifter.PastShifters.Contains(playerId))
+        {
             return;
+        }
         Shifter.FutureShift = Helpers.PlayerById(playerId);
     }
 
@@ -855,10 +1070,16 @@ internal static partial class RPCProcedure
 
     private static void SheriffKillRequest(byte sheriffId, byte targetId)
     {
-        if (!AmongUsClient.Instance.AmHost) return;
+        if (!AmongUsClient.Instance.AmHost)
+        {
+            return;
+        }
         PlayerControl sheriff = Helpers.PlayerById(sheriffId);
         PlayerControl target = Helpers.PlayerById(targetId);
-        if (sheriff == null || target == null) return;
+        if (sheriff == null || target == null)
+        {
+            return;
+        }
 
         bool misfire = Sheriff.CheckKill(target);
 
@@ -874,17 +1095,26 @@ internal static partial class RPCProcedure
     {
         PlayerControl sheriff = Helpers.PlayerById(sheriffId);
         PlayerControl target = Helpers.PlayerById(targetId);
-        if (sheriff == null || target == null) return;
+        if (sheriff == null || target == null)
+        {
+            return;
+        }
 
         Sheriff role = Sheriff.GetRole(sheriff);
-        if (role != null) role.NumShots--;
+        if (role != null)
+        {
+            role.NumShots--;
+        }
 
         if (misfire)
         {
             sheriff.MurderPlayer(sheriff);
             GameHistory.FinalStatuses[sheriffId] = FinalStatus.Misfire;
 
-            if (!Sheriff.MisfireKillsTarget) return;
+            if (!Sheriff.MisfireKillsTarget)
+            {
+                return;
+            }
             GameHistory.FinalStatuses[targetId] = FinalStatus.Misfire;
         }
 

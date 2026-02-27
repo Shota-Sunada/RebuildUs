@@ -10,7 +10,10 @@ internal static class EmergencyMinigamePatch
     internal static void UpdatePostfix(EmergencyMinigame __instance)
     {
         PlayerControl lp = PlayerControl.LocalPlayer;
-        if (lp == null) return;
+        if (lp == null)
+        {
+            return;
+        }
 
         bool roleCanCallEmergency = true;
         TrKey statusTextKey = TrKey.None;
@@ -38,7 +41,10 @@ internal static class EmergencyMinigamePatch
         }
 
         // Handle max number of meetings
-        if (__instance.state != 1) return;
+        if (__instance.state != 1)
+        {
+            return;
+        }
         int localRemaining = lp.RemainingEmergencies;
         int teamRemaining = Mathf.Max(0, MapSettings.MaxNumberOfMeetings - MapSettings.MeetingsCount);
         int remaining = Mathf.Min(localRemaining, lp.IsRole(RoleType.Mayor) ? 1 : teamRemaining);

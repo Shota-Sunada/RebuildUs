@@ -11,11 +11,14 @@ internal static class HatManagerPatches
     [HarmonyPrefix]
     private static void GetHatByIdPrefix(HatManager __instance)
     {
-        if (_isRunning || _isLoaded) return;
+        if (_isRunning || _isLoaded)
+        {
+            return;
+        }
         _isRunning = true;
         // Maybe we can use lock keyword to ensure simultaneous list manipulations ?
         _allHats = [.. __instance.allHats];
-        List<CustomHat> cache = new(CustomHatManager.UnregisteredHats);
+        List<CustomHat> cache = [.. CustomHatManager.UnregisteredHats];
         foreach (CustomHat hat in cache)
         {
             try
@@ -30,7 +33,9 @@ internal static class HatManagerPatches
         }
 
         if (CustomHatManager.UnregisteredHats.Count == 0)
+        {
             _isLoaded = true;
+        }
         cache.Clear();
 
         __instance.allHats = new([.. _allHats]);

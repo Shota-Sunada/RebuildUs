@@ -3,11 +3,21 @@ namespace RebuildUs.Patches;
 [HarmonyPatch]
 internal static class ShipStatusPatch
 {
+    private static SwitchSystem _cachedSwitchSystem;
+    private static ShipStatus _lastShipStatus;
+
+    private static int _originalNumCommonTasksOption;
+    private static int _originalNumShortTasksOption;
+    private static int _originalNumLongTasksOption;
+
     [HarmonyPostfix]
     [HarmonyPatch(typeof(ShipStatus), nameof(ShipStatus.Awake))]
     internal static void AwakePostfix(ShipStatus __instance)
     {
-        if (Helpers.GetOption(ByteOptionNames.MapId) != 4) return;
+        if (Helpers.GetOption(ByteOptionNames.MapId) != 4)
+        {
+            return;
+        }
 
         if (CustomOptionHolder.AirshipAdditionalWireTask.GetBool())
         {
@@ -27,7 +37,10 @@ internal static class ShipStatusPatch
             // 昇降機右に影を追加
             OneWayShadows oneWayShadow = obj.transform.FindChild("Shadow").FindChild("LedgeShadow").GetComponent<OneWayShadows>();
             oneWayShadow.enabled = false;
-            if (PlayerControl.LocalPlayer.IsTeamImpostor()) oneWayShadow.gameObject.SetActive(false);
+            if (PlayerControl.LocalPlayer.IsTeamImpostor())
+            {
+                oneWayShadow.gameObject.SetActive(false);
+            }
 
             GameObject fence = new("ModFence")
             {
@@ -38,7 +51,10 @@ internal static class ShipStatusPatch
             fence.transform.localScale = new(1f, 1f, 1f);
             fence.SetActive(true);
             EdgeCollider2D collider = fence.AddComponent<EdgeCollider2D>();
-            collider.points = new Vector2[] { new(1.5f, -0.2f), new(-1.5f, -0.2f), new(-1.5f, 1.5f) };
+            collider.points = new Vector2[]
+            {
+                new(1.5f, -0.2f), new(-1.5f, -0.2f), new(-1.5f, 1.5f),
+            };
             collider.enabled = true;
             SpriteRenderer renderer = fence.AddComponent<SpriteRenderer>();
             renderer.sprite = AssetLoader.AirshipFence;
@@ -67,7 +83,10 @@ internal static class ShipStatusPatch
             GameObject ladder = null;
             foreach (SpriteRenderer renderer in meetingRenderers)
             {
-                if (renderer.name != "ladder_meeting") continue;
+                if (renderer.name != "ladder_meeting")
+                {
+                    continue;
+                }
                 ladder = renderer.gameObject;
                 break;
             }
@@ -82,7 +101,10 @@ internal static class ShipStatusPatch
                     int id = 100;
                     foreach (Ladder l in ladders)
                     {
-                        if (l.name == "LadderBottom") l.gameObject.SetActive(false);
+                        if (l.name == "LadderBottom")
+                        {
+                            l.gameObject.SetActive(false);
+                        }
                         l.Id = (byte)id;
                         FastDestroyableSingleton<AirshipStatus>.Instance.Ladders.AddItem(l);
                         id++;
@@ -95,7 +117,10 @@ internal static class ShipStatusPatch
                 // 梯子の周りの影を消す
                 foreach (EdgeCollider2D x in gapRoom.GetComponentsInChildren<EdgeCollider2D>())
                 {
-                    if (!(Math.Abs(x.points[0].x + 6.2984f) < 0.1)) continue;
+                    if (!(Math.Abs(x.points[0].x + 6.2984f) < 0.1))
+                    {
+                        continue;
+                    }
                     UnityObject.Destroy(x);
                     break;
                 }
@@ -103,7 +128,10 @@ internal static class ShipStatusPatch
                 EdgeCollider2D collider = null;
                 foreach (EdgeCollider2D x in meetingRoom.GetComponentsInChildren<EdgeCollider2D>())
                 {
-                    if (x.pointCount != 46) continue;
+                    if (x.pointCount != 46)
+                    {
+                        continue;
+                    }
                     collider = x;
                     break;
                 }
@@ -120,7 +148,10 @@ internal static class ShipStatusPatch
                     points.Add(collider.points[41]);
                     newCollider.SetPoints(points);
                     points.Clear();
-                    for (int i = 0; i < 41; i++) points.Add(collider.points[i]);
+                    for (int i = 0; i < 41; i++)
+                    {
+                        points.Add(collider.points[i]);
+                    }
 
                     newCollider2.SetPoints(points);
                     UnityObject.DestroyObject(collider);
@@ -130,7 +161,10 @@ internal static class ShipStatusPatch
                 SpriteRenderer side = null;
                 foreach (SpriteRenderer r in meetingRenderers)
                 {
-                    if (r.name != "meeting_side") continue;
+                    if (r.name != "meeting_side")
+                    {
+                        continue;
+                    }
                     side = r;
                     break;
                 }
@@ -143,12 +177,21 @@ internal static class ShipStatusPatch
                 }
             }
 
-            if (!CustomOptionHolder.AirshipOneWayLadder.GetBool()) return;
+            if (!CustomOptionHolder.AirshipOneWayLadder.GetBool())
             {
-                if (ladder == null) return;
+                return;
+            }
+            {
+                if (ladder == null)
+                {
+                    return;
+                }
                 foreach (Ladder l in ladder.GetComponentsInChildren<Ladder>())
                 {
-                    if (l.name != "LadderTop") continue;
+                    if (l.name != "LadderTop")
+                    {
+                        continue;
+                    }
                     l.gameObject.SetActive(false);
                     break;
                 }
@@ -164,7 +207,10 @@ internal static class ShipStatusPatch
     [HarmonyPatch(typeof(ShipStatus), nameof(ShipStatus.CalculateLightRadius))]
     internal static bool CalculateLightRadiusPrefix(ref float __result, ShipStatus __instance, NetworkedPlayerInfo player)
     {
-        if ((!__instance.Systems.ContainsKey(SystemTypes.Electrical) && !Helpers.IsFungle) || Helpers.IsHideNSeekMode) return true;
+        if (!__instance.Systems.ContainsKey(SystemTypes.Electrical) && !Helpers.IsFungle || Helpers.IsHideNSeekMode)
+        {
+            return true;
+        }
 
         // If player is a role which has Impostor vision
         if (Helpers.HasImpostorVision(player.Object))
@@ -178,7 +224,9 @@ internal static class ShipStatusPatch
         if (PlayerControl.LocalPlayer.IsRole(RoleType.Lighter) && Lighter.IsLightActive(PlayerControl.LocalPlayer))
         {
             float unLerp = Mathf.InverseLerp(__instance.MinLightRadius, __instance.MaxLightRadius, GetNeutralLightRadius(__instance, true));
-            __result = Mathf.Lerp(__instance.MaxLightRadius * Lighter.ModeLightsOffVision, __instance.MaxLightRadius * Lighter.ModeLightsOnVision, unLerp);
+            __result = Mathf.Lerp(__instance.MaxLightRadius * Lighter.ModeLightsOffVision,
+                __instance.MaxLightRadius * Lighter.ModeLightsOnVision,
+                unLerp);
             return false;
         }
 
@@ -188,10 +236,16 @@ internal static class ShipStatusPatch
         {
             float lerpValue = 1f;
             if (Trickster.LightsOutDuration - Trickster.LightsOutTimer < 0.5f)
+            {
                 lerpValue = Mathf.Clamp01((Trickster.LightsOutDuration - Trickster.LightsOutTimer) * 2);
-            else if (Trickster.LightsOutTimer < 0.5) lerpValue = Mathf.Clamp01(Trickster.LightsOutTimer * 2);
+            }
+            else if (Trickster.LightsOutTimer < 0.5)
+            {
+                lerpValue = Mathf.Clamp01(Trickster.LightsOutTimer * 2);
+            }
 
-            __result = Mathf.Lerp(__instance.MinLightRadius, __instance.MaxLightRadius, 1 - lerpValue) * Helpers.GetOption(FloatOptionNames.CrewLightMod);
+            __result = Mathf.Lerp(__instance.MinLightRadius, __instance.MaxLightRadius, 1 - lerpValue)
+                       * Helpers.GetOption(FloatOptionNames.CrewLightMod);
             return false;
         }
 
@@ -202,33 +256,42 @@ internal static class ShipStatusPatch
         return false;
     }
 
-    private static SwitchSystem _cachedSwitchSystem;
-    private static ShipStatus _lastShipStatus;
-
     private static float GetNeutralLightRadius(ShipStatus shipStatus, bool isImpostor)
     {
-        if (SubmergedCompatibility.IsSubmerged) return SubmergedCompatibility.GetSubmergedNeutralLightRadius(isImpostor);
+        if (SubmergedCompatibility.IsSubmerged)
+        {
+            return SubmergedCompatibility.GetSubmergedNeutralLightRadius(isImpostor);
+        }
 
-        if (isImpostor) return shipStatus.MaxLightRadius * GameOptionsManager.Instance.currentNormalGameOptions.ImpostorLightMod;
+        if (isImpostor)
+        {
+            return shipStatus.MaxLightRadius * GameOptionsManager.Instance.currentNormalGameOptions.ImpostorLightMod;
+        }
 
         float lerpValue = 1.0f;
         UpdateCachedSystems(shipStatus);
-        if (_cachedSwitchSystem != null) lerpValue = _cachedSwitchSystem.Value / 255f;
+        if (_cachedSwitchSystem != null)
+        {
+            lerpValue = _cachedSwitchSystem.Value / 255f;
+        }
 
-        return Mathf.Lerp(shipStatus.MinLightRadius, shipStatus.MaxLightRadius, lerpValue) * GameOptionsManager.Instance.currentNormalGameOptions.CrewLightMod;
+        return Mathf.Lerp(shipStatus.MinLightRadius, shipStatus.MaxLightRadius, lerpValue)
+               * GameOptionsManager.Instance.currentNormalGameOptions.CrewLightMod;
     }
 
     private static void UpdateCachedSystems(ShipStatus instance)
     {
-        if (_lastShipStatus == instance && _cachedSwitchSystem != null) return;
+        if (_lastShipStatus == instance && _cachedSwitchSystem != null)
+        {
+            return;
+        }
         _lastShipStatus = instance;
         _cachedSwitchSystem = null;
-        if (instance != null && instance.Systems != null && instance.Systems.TryGetValue(SystemTypes.Electrical, out ISystemType system)) _cachedSwitchSystem = system.CastFast<SwitchSystem>();
+        if (instance != null && instance.Systems != null && instance.Systems.TryGetValue(SystemTypes.Electrical, out ISystemType system))
+        {
+            _cachedSwitchSystem = system.CastFast<SwitchSystem>();
+        }
     }
-
-    private static int _originalNumCommonTasksOption;
-    private static int _originalNumShortTasksOption;
-    private static int _originalNumLongTasksOption;
 
     [HarmonyPrefix]
     [HarmonyPatch(typeof(ShipStatus), nameof(ShipStatus.Begin))]
@@ -242,9 +305,18 @@ internal static class ShipStatusPatch
         _originalNumShortTasksOption = Helpers.GetOption(Int32OptionNames.NumShortTasks);
         _originalNumLongTasksOption = Helpers.GetOption(Int32OptionNames.NumLongTasks);
 
-        if (Helpers.GetOption(Int32OptionNames.NumCommonTasks) > commonTaskCount) Helpers.SetOption(Int32OptionNames.NumCommonTasks, commonTaskCount);
-        if (Helpers.GetOption(Int32OptionNames.NumShortTasks) > normalTaskCount) Helpers.SetOption(Int32OptionNames.NumShortTasks, normalTaskCount);
-        if (Helpers.GetOption(Int32OptionNames.NumLongTasks) > longTaskCount) Helpers.SetOption(Int32OptionNames.NumLongTasks, longTaskCount);
+        if (Helpers.GetOption(Int32OptionNames.NumCommonTasks) > commonTaskCount)
+        {
+            Helpers.SetOption(Int32OptionNames.NumCommonTasks, commonTaskCount);
+        }
+        if (Helpers.GetOption(Int32OptionNames.NumShortTasks) > normalTaskCount)
+        {
+            Helpers.SetOption(Int32OptionNames.NumShortTasks, normalTaskCount);
+        }
+        if (Helpers.GetOption(Int32OptionNames.NumLongTasks) > longTaskCount)
+        {
+            Helpers.SetOption(Int32OptionNames.NumLongTasks, longTaskCount);
+        }
 
         return true;
     }
@@ -267,9 +339,7 @@ internal static class ShipStatusPatch
 
     [HarmonyPostfix]
     [HarmonyPatch(typeof(ShipStatus), nameof(ShipStatus.Start))]
-    internal static void StartPostfix()
-    {
-    }
+    internal static void StartPostfix() { }
 
     [HarmonyPostfix]
     [HarmonyPatch(typeof(ShipStatus), nameof(ShipStatus.SpawnPlayer))]

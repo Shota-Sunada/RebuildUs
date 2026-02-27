@@ -26,16 +26,42 @@ internal class EvilTracker : MultiRoleBase<EvilTracker>
     }
 
     // write configs here
-    internal static float Cooldown { get => CustomOptionHolder.EvilTrackerCooldown.GetFloat(); }
-    internal static bool ResetTargetAfterMeeting { get => CustomOptionHolder.EvilTrackerResetTargetAfterMeeting.GetBool(); }
-    internal static bool CanSeeDeathFlash { get => CustomOptionHolder.EvilTrackerCanSeeDeathFlash.GetBool(); }
-    internal static bool CanSeeTargetTask { get => CustomOptionHolder.EvilTrackerCanSeeTargetTask.GetBool(); }
-    internal static bool CanSeeTargetPosition { get => CustomOptionHolder.EvilTrackerCanSeeTargetPosition.GetBool(); }
-    internal static bool CanSetTargetOnMeeting { get => CustomOptionHolder.EvilTrackerCanSetTargetOnMeeting.GetBool(); }
+    internal static float Cooldown
+    {
+        get => CustomOptionHolder.EvilTrackerCooldown.GetFloat();
+    }
+
+    internal static bool ResetTargetAfterMeeting
+    {
+        get => CustomOptionHolder.EvilTrackerResetTargetAfterMeeting.GetBool();
+    }
+
+    internal static bool CanSeeDeathFlash
+    {
+        get => CustomOptionHolder.EvilTrackerCanSeeDeathFlash.GetBool();
+    }
+
+    internal static bool CanSeeTargetTask
+    {
+        get => CustomOptionHolder.EvilTrackerCanSeeTargetTask.GetBool();
+    }
+
+    internal static bool CanSeeTargetPosition
+    {
+        get => CustomOptionHolder.EvilTrackerCanSeeTargetPosition.GetBool();
+    }
+
+    internal static bool CanSetTargetOnMeeting
+    {
+        get => CustomOptionHolder.EvilTrackerCanSetTargetOnMeeting.GetBool();
+    }
 
     internal override void OnMeetingStart()
     {
-        if (ResetTargetAfterMeeting) Target = null;
+        if (ResetTargetAfterMeeting)
+        {
+            Target = null;
+        }
     }
 
     internal override void OnMeetingEnd() { }
@@ -61,9 +87,28 @@ internal class EvilTracker : MultiRoleBase<EvilTracker>
     internal static void MakeButtons(HudManager hm)
     {
         TrackerButton = new(() =>
-        {
-            Target = CurrentTarget;
-        }, () => { return Target == null && PlayerControl.LocalPlayer.IsRole(RoleType.EvilTracker) && PlayerControl.LocalPlayer.IsAlive(); }, () => { return CurrentTarget != null && Target == null && PlayerControl.LocalPlayer.CanMove; }, () => { TrackerButton.Timer = TrackerButton.MaxTimer; }, AssetLoader.TrackerButton, ButtonPosition.Layout, hm, hm.KillButton, AbilitySlot.ImpostorAbilityPrimary, false, Tr.Get(TrKey.TrackerText));
+            {
+                Target = CurrentTarget;
+            },
+            () =>
+            {
+                return Target == null && PlayerControl.LocalPlayer.IsRole(RoleType.EvilTracker) && PlayerControl.LocalPlayer.IsAlive();
+            },
+            () =>
+            {
+                return CurrentTarget != null && Target == null && PlayerControl.LocalPlayer.CanMove;
+            },
+            () =>
+            {
+                TrackerButton.Timer = TrackerButton.MaxTimer;
+            },
+            AssetLoader.TrackerButton,
+            ButtonPosition.Layout,
+            hm,
+            hm.KillButton,
+            AbilitySlot.ImpostorAbilityPrimary,
+            false,
+            Tr.Get(TrKey.TrackerText));
     }
 
     internal static void SetButtonCooldowns()
@@ -112,7 +157,10 @@ internal class EvilTracker : MultiRoleBase<EvilTracker>
             {
                 if (p.Data.IsDead)
                 {
-                    if (p.IsTeamImpostor() && ImpostorPositionText.TryGetValue(p.name, out TMP_Text txt)) txt.text = "";
+                    if (p.IsTeamImpostor() && ImpostorPositionText.TryGetValue(p.name, out TMP_Text txt))
+                    {
+                        txt.text = "";
+                    }
 
                     continue;
                 }
@@ -127,11 +175,14 @@ internal class EvilTracker : MultiRoleBase<EvilTracker>
                     if (!ImpostorPositionText.TryGetValue(p.name, out TMP_Text positionText))
                     {
                         RoomTracker roomTracker = FastDestroyableSingleton<HudManager>.Instance?.roomTracker;
-                        if (roomTracker == null) return;
+                        if (roomTracker == null)
+                        {
+                            return;
+                        }
                         GameObject gameObject = UnityObject.Instantiate(roomTracker.gameObject);
                         UnityObject.DestroyImmediate(gameObject.GetComponent<RoomTracker>());
                         gameObject.transform.SetParent(FastDestroyableSingleton<HudManager>.Instance.transform);
-                        gameObject.transform.localPosition = new(0, -2.0f + (0.25f * count), gameObject.transform.localPosition.z);
+                        gameObject.transform.localPosition = new(0, -2.0f + 0.25f * count, gameObject.transform.localPosition.z);
                         gameObject.transform.localScale = Vector3.one * 1.0f;
                         positionText = gameObject.GetComponent<TMP_Text>();
                         positionText.alpha = 1.0f;
@@ -151,7 +202,9 @@ internal class EvilTracker : MultiRoleBase<EvilTracker>
                         positionText.text = sb.ToString();
                     }
                     else
+                    {
                         positionText.text = "";
+                    }
                 }
             }
 
@@ -165,7 +218,10 @@ internal class EvilTracker : MultiRoleBase<EvilTracker>
                 if (TargetPositionText == null)
                 {
                     RoomTracker roomTracker = FastDestroyableSingleton<HudManager>.Instance?.roomTracker;
-                    if (roomTracker == null) return;
+                    if (roomTracker == null)
+                    {
+                        return;
+                    }
                     GameObject gameObject = UnityObject.Instantiate(roomTracker.gameObject);
                     UnityObject.DestroyImmediate(gameObject.GetComponent<RoomTracker>());
                     gameObject.transform.SetParent(FastDestroyableSingleton<HudManager>.Instance.transform);
@@ -188,10 +244,14 @@ internal class EvilTracker : MultiRoleBase<EvilTracker>
                     TargetPositionText.text = sb.ToString();
                 }
                 else
+                {
                     TargetPositionText.text = "";
+                }
             }
             else
+            {
                 TargetPositionText?.text = "";
+            }
 
             // タイマーに時間をセット
             UpdateTimer = ArrowUpdateInterval;

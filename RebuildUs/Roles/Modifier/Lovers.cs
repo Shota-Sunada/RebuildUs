@@ -16,11 +16,30 @@ internal static class Lovers
         new Color32(255, 0, 0, 255), // red
     ];
 
-    internal static bool BothDie { get => CustomOptionHolder.LoversBothDie.GetBool(); }
-    internal static bool SeparateTeam { get => CustomOptionHolder.LoversSeparateTeam.GetBool(); }
-    internal static bool TasksCount { get => CustomOptionHolder.LoversTasksCount.GetBool(); }
-    internal static bool EnableChat { get => CustomOptionHolder.LoversEnableChat.GetBool(); }
-    internal static bool HasTasks { get => TasksCount; }
+    internal static bool BothDie
+    {
+        get => CustomOptionHolder.LoversBothDie.GetBool();
+    }
+
+    internal static bool SeparateTeam
+    {
+        get => CustomOptionHolder.LoversSeparateTeam.GetBool();
+    }
+
+    internal static bool TasksCount
+    {
+        get => CustomOptionHolder.LoversTasksCount.GetBool();
+    }
+
+    internal static bool EnableChat
+    {
+        get => CustomOptionHolder.LoversEnableChat.GetBool();
+    }
+
+    internal static bool HasTasks
+    {
+        get => TasksCount;
+    }
 
     internal static string GetIcon(PlayerControl player)
     {
@@ -29,7 +48,10 @@ internal static class Lovers
             for (int i = 0; i < Couples.Count; i++)
             {
                 Couple couple = Couples[i];
-                if (couple.Lover1 == player || couple.Lover2 == player) return couple.Icon;
+                if (couple.Lover1 == player || couple.Lover2 == player)
+                {
+                    return couple.Icon;
+                }
             }
         }
 
@@ -38,7 +60,7 @@ internal static class Lovers
 
     internal static void AddCouple(PlayerControl player1, PlayerControl player2)
     {
-        List<Color> availableColors = new(LoverIconColors);
+        List<Color> availableColors = [.. LoverIconColors];
         for (int i = 0; i < Couples.Count; i++)
         {
             Color color = Couples[i].Color;
@@ -52,7 +74,10 @@ internal static class Lovers
             }
         }
 
-        if (availableColors.Count > 0) Couples.Add(new(player1, player2, availableColors[0]));
+        if (availableColors.Count > 0)
+        {
+            Couples.Add(new(player1, player2, availableColors[0]));
+        }
     }
 
     internal static void EraseCouple(PlayerControl player)
@@ -66,28 +91,52 @@ internal static class Lovers
         int couple2 = Couples.FindIndex(x => x.Lover1 == player2 || x.Lover2 == player2);
 
         // trying to swap within the same couple, just ignore
-        if (couple1 == couple2) return;
+        if (couple1 == couple2)
+        {
+            return;
+        }
 
         if (couple1 >= 0)
         {
-            if (Couples[couple1].Lover1 == player1) Couples[couple1].Lover1 = player2;
-            if (Couples[couple1].Lover2 == player1) Couples[couple1].Lover2 = player2;
+            if (Couples[couple1].Lover1 == player1)
+            {
+                Couples[couple1].Lover1 = player2;
+            }
+            if (Couples[couple1].Lover2 == player1)
+            {
+                Couples[couple1].Lover2 = player2;
+            }
         }
 
         if (couple2 >= 0)
         {
-            if (Couples[couple2].Lover1 == player2) Couples[couple2].Lover1 = player1;
-            if (Couples[couple2].Lover2 == player2) Couples[couple2].Lover2 = player1;
+            if (Couples[couple2].Lover1 == player2)
+            {
+                Couples[couple2].Lover1 = player1;
+            }
+            if (Couples[couple2].Lover2 == player2)
+            {
+                Couples[couple2].Lover2 = player1;
+            }
         }
     }
 
     internal static void KillLovers(PlayerControl player, PlayerControl killer = null)
     {
-        if (!player.IsLovers()) return;
+        if (!player.IsLovers())
+        {
+            return;
+        }
 
-        if (SeparateTeam && TasksCount) player.ClearAllTasks();
+        if (SeparateTeam && TasksCount)
+        {
+            player.ClearAllTasks();
+        }
 
-        if (!BothDie) return;
+        if (!BothDie)
+        {
+            return;
+        }
 
         PlayerControl partner = GetPartner(player);
         if (partner != null)
@@ -95,21 +144,31 @@ internal static class Lovers
             if (!partner.Data.IsDead)
             {
                 if (killer != null)
+                {
                     partner.MurderPlayer(partner);
+                }
                 else
+                {
                     partner.Exiled();
+                }
 
                 GameHistory.FinalStatuses[partner.PlayerId] = FinalStatus.Suicide;
             }
 
-            if (SeparateTeam && TasksCount) partner.ClearAllTasks();
+            if (SeparateTeam && TasksCount)
+            {
+                partner.ClearAllTasks();
+            }
         }
     }
 
     internal static PlayerControl GetPartner(PlayerControl player)
     {
         Couple couple = GetCouple(player);
-        if (couple != null) return player?.PlayerId == couple.Lover1?.PlayerId ? couple.Lover2 : couple.Lover1;
+        if (couple != null)
+        {
+            return player?.PlayerId == couple.Lover1?.PlayerId ? couple.Lover2 : couple.Lover1;
+        }
 
         return null;
     }
@@ -123,11 +182,17 @@ internal static class Lovers
 
     internal static Couple GetCouple(PlayerControl player)
     {
-        if (player == null) return null;
+        if (player == null)
+        {
+            return null;
+        }
         for (int i = 0; i < Couples.Count; i++)
         {
             Couple pair = Couples[i];
-            if (pair.Lover1?.PlayerId == player.PlayerId || pair.Lover2?.PlayerId == player.PlayerId) return pair;
+            if (pair.Lover1?.PlayerId == player.PlayerId || pair.Lover2?.PlayerId == player.PlayerId)
+            {
+                return pair;
+            }
         }
 
         return null;
@@ -143,7 +208,9 @@ internal static class Lovers
         for (int i = 0; i < Couples.Count; i++)
         {
             if (Couples[i].Alive)
+            {
                 return true;
+            }
         }
 
         return false;
@@ -154,7 +221,9 @@ internal static class Lovers
         for (int i = 0; i < Couples.Count; i++)
         {
             if (!Couples[i].HasAliveKillingLover)
+            {
                 return true;
+            }
         }
 
         return false;

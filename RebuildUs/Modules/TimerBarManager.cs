@@ -1,5 +1,3 @@
-using RebuildUs.Objects;
-using System.Reflection;
 using Object = UnityEngine.Object;
 
 namespace RebuildUs.Modules;
@@ -33,13 +31,19 @@ internal static class TimerBarManager
 
     internal static bool EnsureStandaloneBar()
     {
-        if (_standaloneBar != null) return true;
+        if (_standaloneBar != null)
+        {
+            return true;
+        }
 
         HideAndSeekTimerBar prefab = ResolveTimerBarPrefab();
         HudManager hud = DestroyableSingleton<HudManager>.Instance;
-        if (prefab == null || hud == null) return false;
+        if (prefab == null || hud == null)
+        {
+            return false;
+        }
 
-        Transform parent = hud.transform.parent != null ? hud.transform.parent : hud.transform;
+        Transform parent = hud.transform.parent ?? hud.transform;
         _standaloneBar = Object.Instantiate(prefab, parent);
         _standaloneFinalTriggered = false;
         return _standaloneBar != null;
@@ -47,8 +51,7 @@ internal static class TimerBarManager
 
     internal static void DestroyStandaloneBar()
     {
-        if (_standaloneBar != null)
-            _standaloneBar.gameObject.Destroy();
+        _standaloneBar?.gameObject.Destroy();
 
         _standaloneBar = null;
         _standaloneFinalTriggered = false;
@@ -56,9 +59,15 @@ internal static class TimerBarManager
 
     internal static bool UpdateStandalone(float time, float maxTime, bool isFinalCountdown, bool pulseTaskComplete)
     {
-        if (!EnsureStandaloneBar()) return false;
+        if (!EnsureStandaloneBar())
+        {
+            return false;
+        }
 
-        if (pulseTaskComplete) TaskComplete(_standaloneBar);
+        if (pulseTaskComplete)
+        {
+            TaskComplete(_standaloneBar);
+        }
 
         if (isFinalCountdown && !_standaloneFinalTriggered)
         {
@@ -83,13 +92,19 @@ internal static class TimerBarManager
 
         bool isFinal = EvaluateFinalState(_customTimerValue);
         CustomTimer.OnStarted?.Invoke(new(_customTimerValue, CustomTimer.MinValue, CustomTimer.MaxValue, isFinal, _customTimerRunning));
-        RenderCustomTimer(isFinal, pulseTaskComplete: false);
+        RenderCustomTimer(isFinal, false);
     }
 
     internal static bool DecreaseCustomTimer(float amount)
     {
-        if (amount <= 0f) return false;
-        if (!_customTimerRunning) return false;
+        if (amount <= 0f)
+        {
+            return false;
+        }
+        if (!_customTimerRunning)
+        {
+            return false;
+        }
 
         _customTimerValue = Mathf.Clamp(_customTimerValue - amount, CustomTimer.MinValue, CustomTimer.MaxValue);
         bool isFinal = EvaluateFinalState(_customTimerValue);
@@ -106,7 +121,7 @@ internal static class TimerBarManager
             _customTimerReachedMin = false;
         }
 
-        RenderCustomTimer(isFinal, pulseTaskComplete: true);
+        RenderCustomTimer(isFinal, true);
         CustomTimer.OnTick?.Invoke(new(_customTimerValue, CustomTimer.MinValue, CustomTimer.MaxValue, isFinal, _customTimerRunning));
         return true;
     }
@@ -116,15 +131,30 @@ internal static class TimerBarManager
         _customTimerRunning = false;
         _customTimerReachedMin = false;
         _customTimerPulseElapsed = 0f;
-        if (hideBar) DestroyStandaloneBar();
+        if (hideBar)
+        {
+            DestroyStandaloneBar();
+        }
     }
 
     internal static void TickCustomTimer(float deltaTime)
     {
-        if (!_customTimerRunning) return;
-        if (!Helpers.GameStarted) return;
-        if (!CustomTimer.RunInHideAndSeek && Helpers.IsHideNSeekMode) return;
-        if (!CustomTimer.RunInNormalMode && !Helpers.IsHideNSeekMode) return;
+        if (!_customTimerRunning)
+        {
+            return;
+        }
+        if (!Helpers.GameStarted)
+        {
+            return;
+        }
+        if (!CustomTimer.RunInHideAndSeek && Helpers.IsHideNSeekMode)
+        {
+            return;
+        }
+        if (!CustomTimer.RunInNormalMode && !Helpers.IsHideNSeekMode)
+        {
+            return;
+        }
 
         _customTimerValue -= Mathf.Max(0f, CustomTimer.DecreasePerSecond) * Mathf.Max(0f, deltaTime);
         _customTimerValue = Mathf.Clamp(_customTimerValue, CustomTimer.MinValue, CustomTimer.MaxValue);
@@ -157,8 +187,14 @@ internal static class TimerBarManager
 
     internal static bool Update(HideAndSeekTimerBar instance)
     {
-        if (!Settings.Enabled || !Settings.OverrideUpdate) return true;
-        if (!TryGetBar(instance, out TimerBar timerBar)) return true;
+        if (!Settings.Enabled || !Settings.OverrideUpdate)
+        {
+            return true;
+        }
+        if (!TryGetBar(instance, out TimerBar timerBar))
+        {
+            return true;
+        }
 
         try
         {
@@ -174,8 +210,14 @@ internal static class TimerBarManager
 
     internal static bool UpdateTimer(HideAndSeekTimerBar instance, float time, float maxTime)
     {
-        if (!Settings.Enabled || !Settings.OverrideUpdateTimer) return true;
-        if (!TryGetBar(instance, out TimerBar timerBar)) return true;
+        if (!Settings.Enabled || !Settings.OverrideUpdateTimer)
+        {
+            return true;
+        }
+        if (!TryGetBar(instance, out TimerBar timerBar))
+        {
+            return true;
+        }
 
         try
         {
@@ -191,8 +233,14 @@ internal static class TimerBarManager
 
     internal static bool StartFinalHide(HideAndSeekTimerBar instance)
     {
-        if (!Settings.Enabled || !Settings.OverrideStartFinalHide) return true;
-        if (!TryGetBar(instance, out TimerBar timerBar)) return true;
+        if (!Settings.Enabled || !Settings.OverrideStartFinalHide)
+        {
+            return true;
+        }
+        if (!TryGetBar(instance, out TimerBar timerBar))
+        {
+            return true;
+        }
 
         try
         {
@@ -208,8 +256,14 @@ internal static class TimerBarManager
 
     internal static bool TaskComplete(HideAndSeekTimerBar instance)
     {
-        if (!Settings.Enabled || !Settings.OverrideTaskComplete) return true;
-        if (!TryGetBar(instance, out TimerBar timerBar)) return true;
+        if (!Settings.Enabled || !Settings.OverrideTaskComplete)
+        {
+            return true;
+        }
+        if (!TryGetBar(instance, out TimerBar timerBar))
+        {
+            return true;
+        }
 
         try
         {
@@ -226,12 +280,18 @@ internal static class TimerBarManager
     private static bool TryGetBar(HideAndSeekTimerBar instance, out TimerBar timerBar)
     {
         timerBar = null;
-        if (instance == null) return false;
+        if (instance == null)
+        {
+            return false;
+        }
 
         PruneDeadBars();
 
         int instanceId = instance.GetInstanceID();
-        if (ActiveBars.TryGetValue(instanceId, out timerBar)) return true;
+        if (ActiveBars.TryGetValue(instanceId, out timerBar))
+        {
+            return true;
+        }
 
         timerBar = new(instance);
         ActiveBars[instanceId] = timerBar;
@@ -241,18 +301,30 @@ internal static class TimerBarManager
 
     private static void PruneDeadBars()
     {
-        if (ActiveBars.Count == 0) return;
+        if (ActiveBars.Count == 0)
+        {
+            return;
+        }
 
         List<int> deadKeys = null;
         foreach (KeyValuePair<int, TimerBar> pair in ActiveBars)
         {
-            if (pair.Value != null && pair.Value.IsAlive) continue;
+            if (pair.Value != null && pair.Value.IsAlive)
+            {
+                continue;
+            }
             deadKeys ??= [];
             deadKeys.Add(pair.Key);
         }
 
-        if (deadKeys == null) return;
-        foreach (int key in deadKeys) ActiveBars.Remove(key);
+        if (deadKeys == null)
+        {
+            return;
+        }
+        foreach (int key in deadKeys)
+        {
+            ActiveBars.Remove(key);
+        }
     }
 
     private static void HandleCustomTimerMinReached(bool isFinal)
@@ -282,9 +354,15 @@ internal static class TimerBarManager
     private static bool EvaluateFinalState(float currentValue)
     {
         if (CustomTimer.FinalStartsAtMinValue)
+        {
             return currentValue <= CustomTimer.MinValue;
+        }
 
-        return CustomTimer.FinalCondition?.Invoke(currentValue, CustomTimer.MinValue, CustomTimer.MaxValue) ?? CustomTimerSettings.DefaultFinalCondition(currentValue, CustomTimer.MinValue, CustomTimer.MaxValue, CustomTimer.FinalStartThreshold);
+        return CustomTimer.FinalCondition?.Invoke(currentValue, CustomTimer.MinValue, CustomTimer.MaxValue)
+               ?? CustomTimerSettings.DefaultFinalCondition(currentValue,
+                   CustomTimer.MinValue,
+                   CustomTimer.MaxValue,
+                   CustomTimer.FinalStartThreshold);
     }
 
     private static void RenderCustomTimer(bool isFinal, bool pulseTaskComplete)
@@ -297,7 +375,10 @@ internal static class TimerBarManager
             maxValue = CustomTimer.FinalBarMaxValue;
         }
 
-        if (maxValue < minValue) (minValue, maxValue) = (maxValue, minValue);
+        if (maxValue < minValue)
+        {
+            (minValue, maxValue) = (maxValue, minValue);
+        }
 
         float maxSpan = Mathf.Max(0.0001f, maxValue - minValue);
         float displayValue = Mathf.Clamp(_customTimerValue - minValue, 0f, maxSpan);
@@ -310,21 +391,30 @@ internal static class TimerBarManager
         if (fromCurrent != null && TimerBarPrefabField != null)
         {
             HideAndSeekTimerBar prefab = TimerBarPrefabField.GetValue(fromCurrent) as HideAndSeekTimerBar;
-            if (prefab != null) return prefab;
+            if (prefab != null)
+            {
+                return prefab;
+            }
         }
 
         HideAndSeekManager fromCreator = GameManagerCreator.Instance?.HideAndSeekManagerPrefab;
         if (fromCreator != null && TimerBarPrefabField != null)
         {
             HideAndSeekTimerBar prefab = TimerBarPrefabField.GetValue(fromCreator) as HideAndSeekTimerBar;
-            if (prefab != null) return prefab;
+            if (prefab != null)
+            {
+                return prefab;
+            }
         }
 
         Object[] allBars = Resources.FindObjectsOfTypeAll(Il2CppType.Of<HideAndSeekTimerBar>());
         foreach (Object obj in allBars)
         {
             HideAndSeekTimerBar found = obj.TryCast<HideAndSeekTimerBar>();
-            if (found != null) return found;
+            if (found != null)
+            {
+                return found;
+            }
         }
 
         return null;

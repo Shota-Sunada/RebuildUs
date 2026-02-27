@@ -205,12 +205,16 @@ public class RebuildUs : BasePlugin
         PlayerModifier.AllModifiers.Do(x => x.OnMeetingStart());
 
         // GM.resetZoom();
-        FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(3f, new Action<float>(p =>
-        {
-            if (!Mathf.Approximately(p, 1)) return;
-            Camouflager.ResetCamouflage();
-            Morphing.ResetMorph();
-        })));
+        FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(3f,
+            new Action<float>(p =>
+            {
+                if (!Mathf.Approximately(p, 1))
+                {
+                    return;
+                }
+                Camouflager.ResetCamouflage();
+                Morphing.ResetMorph();
+            })));
     }
 
     internal static void OnMeetingEnd()
@@ -323,17 +327,25 @@ public class RebuildUs : BasePlugin
 
         serverManager.AvailableRegions = ServerManager.DefaultRegions;
 
-        IRegionInfo[] regions = [new DnsRegionInfo(Ip.Value, "Custom", StringNames.NoTranslation, Ip.Value, Port.Value, false).CastFast<IRegionInfo>()];
+        IRegionInfo[] regions =
+        [
+            new DnsRegionInfo(Ip.Value, "Custom", StringNames.NoTranslation, Ip.Value, Port.Value, false).CastFast<IRegionInfo>(),
+        ];
 #nullable enable
         IRegionInfo? currentRegion = serverManager.CurrentRegion;
 #nullable disable
         foreach (IRegionInfo region in regions)
         {
             if (region == null)
+            {
                 Logger.LogError("Could not add region");
+            }
             else
             {
-                if (currentRegion != null && region.Name.Equals(currentRegion.Name, StringComparison.OrdinalIgnoreCase)) currentRegion = region;
+                if (currentRegion != null && region.Name.Equals(currentRegion.Name, StringComparison.OrdinalIgnoreCase))
+                {
+                    currentRegion = region;
+                }
 
                 serverManager.AddOrUpdateRegion(region);
             }

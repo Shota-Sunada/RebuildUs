@@ -18,9 +18,20 @@ internal class Jester : SingleRoleBase<Jester>
         get => NameColor;
     }
 
-    internal static bool CanCallEmergency { get => CustomOptionHolder.JesterCanCallEmergency.GetBool(); }
-    internal static bool CanSabotage { get => CustomOptionHolder.JesterCanSabotage.GetBool(); }
-    internal static bool HasImpostorVision { get => CustomOptionHolder.JesterHasImpostorVision.GetBool(); }
+    internal static bool CanCallEmergency
+    {
+        get => CustomOptionHolder.JesterCanCallEmergency.GetBool();
+    }
+
+    internal static bool CanSabotage
+    {
+        get => CustomOptionHolder.JesterCanSabotage.GetBool();
+    }
+
+    internal static bool HasImpostorVision
+    {
+        get => CustomOptionHolder.JesterHasImpostorVision.GetBool();
+    }
 
     internal override void OnMeetingStart() { }
     internal override void OnMeetingEnd() { }

@@ -9,11 +9,17 @@ internal sealed class Garlic
 
     internal Garlic(Vector2 p)
     {
-        GarlicObject = new("Garlic") { layer = 11 };
+        GarlicObject = new("Garlic")
+        {
+            layer = 11,
+        };
         GarlicObject.AddSubmergedComponent(SubmergedCompatibility.Classes.ELEVATOR_MOVER);
-        _background = new("Background") { layer = 11 };
+        _background = new("Background")
+        {
+            layer = 11,
+        };
         _background.transform.SetParent(GarlicObject.transform);
-        Vector3 position = new(p.x, p.y, (p.y / 1000) + 0.001f); // just behind player
+        Vector3 position = new(p.x, p.y, p.y / 1000 + 0.001f); // just behind player
         GarlicObject.transform.position = position;
         _background.transform.localPosition = new(0, 0, -1f); // before player
 
@@ -33,7 +39,7 @@ internal sealed class Garlic
 
     internal static void UpdateAll()
     {
-        foreach (var t in Garlics)
+        foreach (Garlic t in Garlics)
         {
             t?.Update();
         }

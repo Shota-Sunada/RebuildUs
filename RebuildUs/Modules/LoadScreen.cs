@@ -17,7 +17,10 @@ internal static class LoadScreen
     [HideFromIl2Cpp]
     internal static void Create()
     {
-        if (_uiContainer != null) return;
+        if (_uiContainer != null)
+        {
+            return;
+        }
 
         if (_whiteSprite == null)
         {
@@ -64,13 +67,19 @@ internal static class LoadScreen
     [HideFromIl2Cpp]
     internal static void Update()
     {
-        if (_statusTMPro != null && _statusTMPro.text != StatusText) _statusTMPro.text = StatusText;
+        if (_statusTMPro != null && _statusTMPro.text != StatusText)
+        {
+            _statusTMPro.text = StatusText;
+        }
     }
 
     [HideFromIl2Cpp]
     internal static void Destroy()
     {
-        if (_uiContainer == null) return;
+        if (_uiContainer == null)
+        {
+            return;
+        }
         UnityObject.Destroy(_uiContainer);
         _uiContainer = null;
     }

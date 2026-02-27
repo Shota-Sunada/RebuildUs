@@ -9,8 +9,16 @@ internal static class SpawnIn
     private static List<SpawnCandidate> _spawnCandidates;
     internal static readonly SynchronizeData SynchronizeData = new();
     private static bool _isFirstSpawn = true;
-    private static float InitialDoorCooldown { get => CustomOptionHolder.AirshipInitialDoorCooldown.GetFloat(); }
-    private static float InitialSabotageCooldown { get => CustomOptionHolder.AirshipInitialSabotageCooldown.GetFloat(); }
+
+    private static float InitialDoorCooldown
+    {
+        get => CustomOptionHolder.AirshipInitialDoorCooldown.GetFloat();
+    }
+
+    private static float InitialSabotageCooldown
+    {
+        get => CustomOptionHolder.AirshipInitialSabotageCooldown.GetFloat();
+    }
 
     internal static void Reset()
     {
@@ -21,7 +29,10 @@ internal static class SpawnIn
     private static void ResetSpawnCandidates()
     {
         _spawnCandidates = [];
-        if (!CustomOptionHolder.AirshipAdditionalSpawn.GetBool()) return;
+        if (!CustomOptionHolder.AirshipAdditionalSpawn.GetBool())
+        {
+            return;
+        }
         _spawnCandidates.Add(new(StringNames.VaultRoom, new(-8.8f, 8.6f), AssetLoader.VaultButton));
         _spawnCandidates.Add(new(StringNames.MeetingRoom, new(11.0f, 14.7f), AssetLoader.MeetingButton));
         _spawnCandidates.Add(new(StringNames.Cockpit, new(-22.0f, -1.2f), AssetLoader.CockpitButton));
@@ -43,12 +54,18 @@ internal static class SpawnIn
         if (CustomOptionHolder.AirshipSetOriginalCooldown.GetBool())
         {
             PlayerControl.LocalPlayer.SetKillTimerUnchecked(Helpers.GetOption(FloatOptionNames.KillCooldown));
-            foreach (CustomButton t in CustomButton.Buttons) t.Timer = t.MaxTimer;
+            foreach (CustomButton t in CustomButton.Buttons)
+            {
+                t.Timer = t.MaxTimer;
+            }
         }
         else
         {
             PlayerControl.LocalPlayer.SetKillTimerUnchecked(10f);
-            foreach (CustomButton t in CustomButton.Buttons) t.Timer = 10f;
+            foreach (CustomButton t in CustomButton.Buttons)
+            {
+                t.Timer = 10f;
+            }
         }
     }
 
@@ -60,7 +77,10 @@ internal static class SpawnIn
         __instance.MyNormTask = task as NormalPlayerTask;
         if (PlayerControl.LocalPlayer)
         {
-            if (MapBehaviour.Instance) MapBehaviour.Instance.Close();
+            if (MapBehaviour.Instance)
+            {
+                MapBehaviour.Instance.Close();
+            }
 
             PlayerControl.LocalPlayer.NetTransform.Halt();
         }
@@ -68,7 +88,10 @@ internal static class SpawnIn
         __instance.StartCoroutine(__instance.CoAnimateOpen());
 
         List<SpawnInMinigame.SpawnLocation> list = [];
-        foreach (SpawnInMinigame.SpawnLocation loc in __instance.Locations) list.Add(loc);
+        foreach (SpawnInMinigame.SpawnLocation loc in __instance.Locations)
+        {
+            list.Add(loc);
+        }
 
         foreach (SpawnCandidate spawnCandidate in _spawnCandidates)
         {
@@ -94,7 +117,10 @@ internal static class SpawnIn
         // Take と手動ソート
         int takeCount = Math.Min(list.Count, __instance.LocationButtons.Length);
         List<SpawnInMinigame.SpawnLocation> sortedList = [];
-        for (int i = 0; i < takeCount; i++) sortedList.Add(list[i]);
+        for (int i = 0; i < takeCount; i++)
+        {
+            sortedList.Add(list[i]);
+        }
 
         sortedList.Sort((a, b) =>
         {
@@ -111,7 +137,8 @@ internal static class SpawnIn
             passiveButton.OnClick.AddListener((UnityAction)(() => SpawnAt(__instance, pt.Location)));
             passiveButton.GetComponent<SpriteAnim>().Stop();
             passiveButton.GetComponent<SpriteRenderer>().sprite = pt.Image;
-            passiveButton.GetComponentInChildren<TextMeshPro>().text = FastDestroyableSingleton<TranslationController>.Instance.GetString(pt.Name, new Il2CppReferenceArray<CppObject>(0));
+            passiveButton.GetComponentInChildren<TextMeshPro>().text = FastDestroyableSingleton<TranslationController>.Instance.GetString(pt.Name,
+                new Il2CppReferenceArray<CppObject>(0));
             ButtonAnimRolloverHandler component = passiveButton.GetComponent<ButtonAnimRolloverHandler>();
             component.StaticOutImage = pt.Image;
             component.RolloverAnim = pt.Rollover;
@@ -121,9 +148,13 @@ internal static class SpawnIn
         PlayerControl.LocalPlayer.gameObject.SetActive(false);
         PlayerControl.LocalPlayer.NetTransform.RpcSnapTo(new(-25f, 40f));
         if (CustomOptionHolder.AirshipRandomSpawn.GetBool())
+        {
             __instance.LocationButtons.Random().ReceiveClickUp();
+        }
         else
+        {
             __instance.StartCoroutine(__instance.RunTimer());
+        }
 
         ControllerManager.Instance.OpenOverlayMenu(__instance.name, null, __instance.DefaultButtonSelected, __instance.ControllerSelectable);
         PlayerControl.HideCursorTemporarily();
@@ -135,14 +166,19 @@ internal static class SpawnIn
     {
         _selected = null;
 
-        if (!CustomOptionHolder.AirshipSynchronizedSpawning.GetBool() || CustomOptionHolder.AirshipRandomSpawn.GetBool()) return;
+        if (!CustomOptionHolder.AirshipSynchronizedSpawning.GetBool() || CustomOptionHolder.AirshipRandomSpawn.GetBool())
+        {
+            return;
+        }
 
         foreach (PassiveButton button in __instance.LocationButtons)
         {
             button.OnClick.AddListener((UnityAction)(() =>
             {
                 if (_selected == null)
+                {
                     _selected = button;
+                }
             }));
         }
     }
@@ -159,9 +195,15 @@ internal static class SpawnIn
     {
         if (!CustomOptionHolder.AirshipSynchronizedSpawning.GetBool() || CustomOptionHolder.AirshipRandomSpawn.GetBool())
         {
-            if (_isFirstSpawn) ResetButtons();
+            if (_isFirstSpawn)
+            {
+                ResetButtons();
+            }
             CustomButton.StopCountdown = false;
-            if (__instance.amClosing != Minigame.CloseState.None) return;
+            if (__instance.amClosing != Minigame.CloseState.None)
+            {
+                return;
+            }
 
             __instance.gotButton = true;
             PlayerControl.LocalPlayer.gameObject.SetActive(true);
@@ -173,83 +215,120 @@ internal static class SpawnIn
         else
         {
             Synchronize(SynchronizeTag.PreSpawnMinigame, PlayerControl.LocalPlayer.PlayerId);
-            if (__instance.amClosing != Minigame.CloseState.None) return;
+            if (__instance.amClosing != Minigame.CloseState.None)
+            {
+                return;
+            }
 
-            if (__instance.gotButton) return;
+            if (__instance.gotButton)
+            {
+                return;
+            }
 
             __instance.gotButton = true;
 
-            foreach (PassiveButton button in __instance.LocationButtons) button.enabled = false;
-
-            __instance.StartCoroutine(Effects.Lerp(10f, new Action<float>(p =>
+            foreach (PassiveButton button in __instance.LocationButtons)
             {
-                float time = p * 10f;
-                bool aligned = SynchronizeData.Align(SynchronizeTag.PreSpawnMinigame, false) || p == 1f;
+                button.enabled = false;
+            }
 
-                foreach (PassiveButton button in __instance.LocationButtons)
+            __instance.StartCoroutine(Effects.Lerp(10f,
+                new Action<float>(p =>
                 {
-                    if (_selected == button)
+                    float time = p * 10f;
+                    bool aligned = SynchronizeData.Align(SynchronizeTag.PreSpawnMinigame, false) || p == 1f;
+
+                    foreach (PassiveButton button in __instance.LocationButtons)
                     {
-                        if (!(time > 0.3f)) continue;
-                        Vector3 pos = button.transform.localPosition;
-                        float x = pos.x;
-                        switch (x)
+                        if (_selected == button)
                         {
-                            case < 0f:
-                                x += 10f * Time.deltaTime;
-                                break;
-                            case > 0f:
-                                x -= 10f * Time.deltaTime;
-                                break;
+                            if (!(time > 0.3f))
+                            {
+                                continue;
+                            }
+                            Vector3 pos = button.transform.localPosition;
+                            float x = pos.x;
+                            switch (x)
+                            {
+                                case < 0f:
+                                    x += 10f * Time.deltaTime;
+                                    break;
+                                case > 0f:
+                                    x -= 10f * Time.deltaTime;
+                                    break;
+                            }
+
+                            if (Mathf.Abs(x) < 10f * Time.deltaTime)
+                            {
+                                x = 0f;
+                            }
+                            button.transform.localPosition = new(x, pos.y, pos.z);
                         }
-
-                        if (Mathf.Abs(x) < 10f * Time.deltaTime) x = 0f;
-                        button.transform.localPosition = new(x, pos.y, pos.z);
+                        else
+                        {
+                            SpriteRenderer sr = button.GetComponent<SpriteRenderer>();
+                            Color color = sr.color;
+                            float a = color.a;
+                            if (a > 0f)
+                            {
+                                a -= 2f * Time.deltaTime;
+                            }
+                            if (a < 0f)
+                            {
+                                a = 0f;
+                            }
+                            sr.color = new(color.r, color.g, color.b, a);
+                            button.GetComponentInChildren<TextMeshPro>().color = new(1f, 1f, 1f, a);
+                        }
                     }
-                    else
+
+                    if (__instance.amClosing != Minigame.CloseState.None)
                     {
-                        SpriteRenderer sr = button.GetComponent<SpriteRenderer>();
-                        Color color = sr.color;
-                        float a = color.a;
-                        if (a > 0f) a -= 2f * Time.deltaTime;
-                        if (a < 0f) a = 0f;
-                        sr.color = new(color.r, color.g, color.b, a);
-                        button.GetComponentInChildren<TextMeshPro>().color = new(1f, 1f, 1f, a);
+                        return;
                     }
-                }
 
-                if (__instance.amClosing != Minigame.CloseState.None) return;
+                    if (!aligned)
+                    {
+                        return;
+                    }
+                    PlayerControl.LocalPlayer.gameObject.SetActive(true);
+                    __instance.StopAllCoroutines();
+                    PlayerControl.LocalPlayer.NetTransform.RpcSnapTo(spawnAt);
+                    FastDestroyableSingleton<HudManager>.Instance.PlayerCam.SnapToTarget();
+                    SynchronizeData.Reset(SynchronizeTag.PreSpawnMinigame);
+                    __instance.Close();
+                    CustomButton.StopCountdown = false;
+                    // サボタージュのクールダウンをリセット
+                    SabotageSystemType sabotageSystem = MapUtilities.Systems[SystemTypes.Sabotage].Cast<SabotageSystemType>();
+                    sabotageSystem.IsDirty = true;
+                    sabotageSystem.Timer = InitialSabotageCooldown;
+                    DoorsSystemType doorSystem = MapUtilities.Systems[SystemTypes.Doors].Cast<DoorsSystemType>();
+                    doorSystem.IsDirty = true;
+                    doorSystem.timers[SystemTypes.MainHall] = InitialDoorCooldown;
+                    doorSystem.timers[SystemTypes.Brig] = InitialDoorCooldown;
+                    doorSystem.timers[SystemTypes.Comms] = InitialDoorCooldown;
+                    doorSystem.timers[SystemTypes.Medical] = InitialDoorCooldown;
+                    doorSystem.timers[SystemTypes.Engine] = InitialDoorCooldown;
+                    doorSystem.timers[SystemTypes.Records] = InitialDoorCooldown;
+                    doorSystem.timers[SystemTypes.Kitchen] = InitialDoorCooldown;
 
-                if (!aligned) return;
-                PlayerControl.LocalPlayer.gameObject.SetActive(true);
-                __instance.StopAllCoroutines();
-                PlayerControl.LocalPlayer.NetTransform.RpcSnapTo(spawnAt);
-                FastDestroyableSingleton<HudManager>.Instance.PlayerCam.SnapToTarget();
-                SynchronizeData.Reset(SynchronizeTag.PreSpawnMinigame);
-                __instance.Close();
-                CustomButton.StopCountdown = false;
-                // サボタージュのクールダウンをリセット
-                SabotageSystemType sabotageSystem = MapUtilities.Systems[SystemTypes.Sabotage].Cast<SabotageSystemType>();
-                sabotageSystem.IsDirty = true;
-                sabotageSystem.Timer = InitialSabotageCooldown;
-                DoorsSystemType doorSystem = MapUtilities.Systems[SystemTypes.Doors].Cast<DoorsSystemType>();
-                doorSystem.IsDirty = true;
-                doorSystem.timers[SystemTypes.MainHall] = InitialDoorCooldown;
-                doorSystem.timers[SystemTypes.Brig] = InitialDoorCooldown;
-                doorSystem.timers[SystemTypes.Comms] = InitialDoorCooldown;
-                doorSystem.timers[SystemTypes.Medical] = InitialDoorCooldown;
-                doorSystem.timers[SystemTypes.Engine] = InitialDoorCooldown;
-                doorSystem.timers[SystemTypes.Records] = InitialDoorCooldown;
-                doorSystem.timers[SystemTypes.Kitchen] = InitialDoorCooldown;
-
-                if (_isFirstSpawn) ResetButtons();
-            })));
+                    if (_isFirstSpawn)
+                    {
+                        ResetButtons();
+                    }
+                })));
         }
     }
 
     internal static void MoveNextPostfix(SpawnInMinigame._RunTimer_d__10 __instance)
     {
-        if (!CustomOptionHolder.AirshipSynchronizedSpawning.GetBool() || CustomOptionHolder.AirshipRandomSpawn.GetBool()) return;
-        if (_selected != null) __instance.__4__this.Text.text = Tr.Get(TrKey.AirshipWait);
+        if (!CustomOptionHolder.AirshipSynchronizedSpawning.GetBool() || CustomOptionHolder.AirshipRandomSpawn.GetBool())
+        {
+            return;
+        }
+        if (_selected != null)
+        {
+            __instance.__4__this.Text.text = Tr.Get(TrKey.AirshipWait);
+        }
     }
 }

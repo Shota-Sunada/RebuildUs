@@ -4,14 +4,25 @@ internal sealed class CustomRoleSelectionOption : CustomOption<string>
 {
     private readonly RoleType[] _roleTypes;
 
-    internal CustomRoleSelectionOption(int id, CustomOptionType type, TrKey nameKey, RoleType[] roleTypes = null, CustomOption parent = null)
-        : base(id, type, nameKey, Array.Empty<string>(), string.Empty, parent, false, "", Color.white)
+    internal CustomRoleSelectionOption(int id, CustomOptionType type, TrKey nameKey, RoleType[] roleTypes = null, CustomOption parent = null) : base(
+        id,
+        type,
+        nameKey,
+        [],
+        string.Empty,
+        parent,
+        false,
+        "",
+        Color.white)
     {
         if (roleTypes == null)
         {
             Array values = Enum.GetValues(typeof(RoleType));
             roleTypes = new RoleType[values.Length];
-            for (int i = 0; i < values.Length; i++) roleTypes[i] = (RoleType)values.GetValue(i)!;
+            for (int i = 0; i < values.Length; i++)
+            {
+                roleTypes[i] = (RoleType)values.GetValue(i)!;
+            }
         }
 
         _roleTypes = roleTypes;
@@ -28,12 +39,12 @@ internal sealed class CustomRoleSelectionOption : CustomOption<string>
         DefaultSelection = index >= 0 ? index : 0;
         if (Id != 0)
         {
-            Entry = global::RebuildUs.RebuildUs.Instance.Config.Bind($"Preset{Preset}", Id.ToString(), DefaultSelection);
+            Entry = RebuildUs.Instance.Config.Bind($"Preset{Preset}", Id.ToString(), DefaultSelection);
             Selection = Mathf.Clamp(Entry.Value, 0, strings.Length - 1);
         }
         else
         {
-            Entry = global::RebuildUs.RebuildUs.Instance.Config.Bind("General", "Selected Preset", DefaultSelection);
+            Entry = RebuildUs.Instance.Config.Bind("General", "Selected Preset", DefaultSelection);
             Selection = Mathf.Clamp(Entry.Value, 0, strings.Length - 1);
             Preset = Selection;
         }

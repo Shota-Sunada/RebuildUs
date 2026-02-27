@@ -27,13 +27,22 @@ internal static class CustomColors
     internal static void Load()
     {
         List<StringNames> longList = [];
-        foreach (StringNames name in Palette.ColorNames) longList.Add(name);
+        foreach (StringNames name in Palette.ColorNames)
+        {
+            longList.Add(name);
+        }
 
         List<Color32> colorList = [];
-        foreach (Color32 color in Palette.PlayerColors) colorList.Add(color);
+        foreach (Color32 color in Palette.PlayerColors)
+        {
+            colorList.Add(color);
+        }
 
         List<Color32> shadowList = [];
-        foreach (Color32 shadow in Palette.ShadowColors) shadowList.Add(shadow);
+        foreach (Color32 shadow in Palette.ShadowColors)
+        {
+            shadowList.Add(shadow);
+        }
 
         List<CustomColor> colors =
         [
@@ -210,13 +219,16 @@ internal static class CustomColors
         _pickableColors += (uint)colors.Count; // Colors to show in Tab
 
         int id = COLOR_BASE_ID_NUMBER;
-        foreach (var cc in colors)
+        foreach (CustomColor cc in colors)
         {
             longList.Add((StringNames)id);
             ColorStrings[id++] = Tr.Get(cc.NameKey);
             colorList.Add(cc.Color);
             shadowList.Add(cc.Shadow);
-            if (cc.IsLighterColor) LighterColors.Add(colorList.Count - 1);
+            if (cc.IsLighterColor)
+            {
+                LighterColors.Add(colorList.Count - 1);
+            }
         }
 
         Palette.ColorNames = longList.ToArray();
@@ -240,7 +252,10 @@ internal static class CustomColors
 
     internal static bool ChatNotificationSetup(ChatNotification __instance, PlayerControl sender, string text)
     {
-        if (MapUtilities.CachedShipStatus && !MapSettings.ShowChatNotifications) return false;
+        if (MapUtilities.CachedShipStatus && !MapSettings.ShowChatNotifications)
+        {
+            return false;
+        }
 
         __instance.timeOnScreen = 5f;
         __instance.gameObject.SetActive(true);
@@ -267,7 +282,10 @@ internal static class CustomColors
         ColorStringBuilder.Append(string.IsNullOrEmpty(sender.Data.PlayerName) ? "..." : sender.Data.PlayerName);
 
         string playerName = ColorStringBuilder.ToString();
-        if (__instance.playerNameText.text != playerName) __instance.playerNameText.text = playerName;
+        if (__instance.playerNameText.text != playerName)
+        {
+            __instance.playerNameText.text = playerName;
+        }
         __instance.playerNameText.outlineColor = color;
         __instance.chatText.text = text;
         return false;
@@ -283,10 +301,12 @@ internal static class CustomColors
         {
             int pos = Order[i];
             if (pos < 0 || pos >= chips.Count)
+            {
                 continue;
+            }
             ColorChip chip = chips[pos];
             int row = i / cols, col = i % cols; // Dynamically do the positioning
-            chip.transform.localPosition = new(-0.975f + (col * 0.5f), 1.475f - (row * 0.5f), chip.transform.localPosition.z);
+            chip.transform.localPosition = new(-0.975f + col * 0.5f, 1.475f - row * 0.5f, chip.transform.localPosition.z);
             chip.transform.localScale *= 0.76f;
         }
 
@@ -303,12 +323,18 @@ internal static class CustomColors
 
     internal static void LoadPlayerPrefsPrefix([HarmonyArgument(0)] bool overrideLoad)
     {
-        if (!LegacySaveManager.loaded || overrideLoad) _needsPatch = true;
+        if (!LegacySaveManager.loaded || overrideLoad)
+        {
+            _needsPatch = true;
+        }
     }
 
     internal static void LoadPlayerPrefsPostfix()
     {
-        if (!_needsPatch) return;
+        if (!_needsPatch)
+        {
+            return;
+        }
         LegacySaveManager.colorConfig %= _pickableColors;
         _needsPatch = false;
     }
@@ -318,7 +344,9 @@ internal static class CustomColors
         foreach (NetworkedPlayerInfo p in GameData.Instance.AllPlayers.GetFastEnumerator())
         {
             if (!p.Disconnected && p.PlayerId != player.PlayerId && p.DefaultOutfit.ColorId == color)
+            {
                 return true;
+            }
         }
 
         return false;
@@ -331,7 +359,10 @@ internal static class CustomColors
         if (IsTaken(__instance, color) || color >= Palette.PlayerColors.Length)
         {
             int num = 0;
-            while (num++ < 50 && (color >= _pickableColors || IsTaken(__instance, color))) color = (color + 1) % _pickableColors;
+            while (num++ < 50 && (color >= _pickableColors || IsTaken(__instance, color)))
+            {
+                color = (color + 1) % _pickableColors;
+            }
         }
 
         __instance.RpcSetColor((byte)color);

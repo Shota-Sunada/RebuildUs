@@ -4,9 +4,9 @@ namespace RebuildUs;
 
 internal sealed class DeadPlayer(PlayerControl player, DateTime timeOfDeath, DeathReason deathReason, PlayerControl killerIfExisting)
 {
-    internal DeathReason DeathReason = deathReason;
     internal readonly PlayerControl KillerIfExisting = killerIfExisting;
     internal readonly PlayerControl Player = player;
+    internal DeathReason DeathReason = deathReason;
     internal DateTime TimeOfDeath = timeOfDeath;
 }
 
@@ -24,7 +24,9 @@ internal static class GameHistory
         foreach (DeadPlayer deadPlayer in DeadPlayers)
         {
             if (deadPlayer.Player.PlayerId == playerId)
+            {
                 return deadPlayer;
+            }
         }
 
         return null;
@@ -45,7 +47,10 @@ internal static class GameHistory
         killer.Data.Role.TeamType = RoleTeamTypes.Impostor;
         killer.Data.IsDead = false;
 
-        if (Morphing.Exists && target.IsRole(RoleType.Morphing)) Morphing.ResetMorph();
+        if (Morphing.Exists && target.IsRole(RoleType.Morphing))
+        {
+            Morphing.ResetMorph();
+        }
 
         target.ResetMorph();
     }
@@ -62,19 +67,37 @@ internal static class GameHistory
         DeadPlayer deadPlayer = new(target, DateTime.UtcNow, DeathReason.Kill, killer);
         DeadPlayers.Add(deadPlayer);
 
-        if (killer.PlayerId == target.PlayerId && SubmergedCompatibility.Loaded && OxygenDeathAnimationPatches.IsOxygenDeath) FinalStatuses[target.PlayerId] = FinalStatus.LackOfOxygen;
+        if (killer.PlayerId == target.PlayerId && SubmergedCompatibility.Loaded && OxygenDeathAnimationPatches.IsOxygenDeath)
+        {
+            FinalStatuses[target.PlayerId] = FinalStatus.LackOfOxygen;
+        }
 
         // Reset killer to crewmate if resetToCrewmate
-        if (_resetToCrewmate) killer.Data.Role.TeamType = RoleTeamTypes.Crewmate;
-        if (_resetToDead) killer.Data.IsDead = true;
+        if (_resetToCrewmate)
+        {
+            killer.Data.Role.TeamType = RoleTeamTypes.Crewmate;
+        }
+        if (_resetToDead)
+        {
+            killer.Data.IsDead = true;
+        }
 
         // Remove fake tasks when player dies
-        if (target.HasFakeTasks()) target.ClearAllTasks();
+        if (target.HasFakeTasks())
+        {
+            target.ClearAllTasks();
+        }
 
         // Seer show flash and add dead player position
         if (Seer.Exists)
         {
-            if (PlayerControl.LocalPlayer.IsRole(RoleType.Seer) && PlayerControl.LocalPlayer.IsAlive() && !target.IsRole(RoleType.Seer) && Seer.Mode <= 1) Helpers.ShowFlash(new(42f / 255f, 187f / 255f, 245f / 255f));
+            if (PlayerControl.LocalPlayer.IsRole(RoleType.Seer)
+                && PlayerControl.LocalPlayer.IsAlive()
+                && !target.IsRole(RoleType.Seer)
+                && Seer.Mode <= 1)
+            {
+                Helpers.ShowFlash(new(42f / 255f, 187f / 255f, 245f / 255f));
+            }
 
             Seer.DeadBodyPositions?.Add(target.transform.position);
         }
@@ -83,7 +106,10 @@ internal static class GameHistory
         Tracker.DeadBodyPositions?.Add(target.transform.position);
 
         // Medium add body
-        if (Medium.DeadBodies != null) Medium.FeatureDeadBodies.Add(new(deadPlayer, target.transform.position));
+        if (Medium.DeadBodies != null)
+        {
+            Medium.FeatureDeadBodies.Add(new(deadPlayer, target.transform.position));
+        }
 
         // // Mini set adapted kill cooldown
         // if (PlayerControl.LocalPlayer.hasModifier(ModifierType.Mini) && PlayerControl.LocalPlayer.Data.Role.IsImpostor && PlayerControl.LocalPlayer == __instance)
@@ -99,7 +125,10 @@ internal static class GameHistory
         }
 
         // // impostor promote to last impostor
-        if (target.IsTeamImpostor() && AmongUsClient.Instance.AmHost) LastImpostor.PromoteToLastImpostor();
+        if (target.IsTeamImpostor() && AmongUsClient.Instance.AmHost)
+        {
+            LastImpostor.PromoteToLastImpostor();
+        }
 
         killer.OnKill(target);
         target.OnDeath(killer);
@@ -113,11 +142,17 @@ internal static class GameHistory
         FinalStatuses[player.PlayerId] = FinalStatus.Exiled;
 
         // Remove fake tasks when player dies
-        if (player.HasFakeTasks()) player.ClearAllTasks();
+        if (player.HasFakeTasks())
+        {
+            player.ClearAllTasks();
+        }
 
         player.OnDeath(null);
 
         // impostor promote to last impostor
-        if (player.IsTeamImpostor() && AmongUsClient.Instance.AmHost) LastImpostor.PromoteToLastImpostor();
+        if (player.IsTeamImpostor() && AmongUsClient.Instance.AmHost)
+        {
+            LastImpostor.PromoteToLastImpostor();
+        }
     }
 }

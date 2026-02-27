@@ -24,8 +24,15 @@ internal class Shifter : MultiRoleBase<Shifter>
         get => NameColor;
     }
 
-    internal static bool ShiftsModifiers { get => CustomOptionHolder.ShifterShiftsModifiers.GetBool(); }
-    internal static bool ShiftPastShifters { get => CustomOptionHolder.ShifterPastShifters.GetBool(); }
+    internal static bool ShiftsModifiers
+    {
+        get => CustomOptionHolder.ShifterShiftsModifiers.GetBool();
+    }
+
+    internal static bool ShiftPastShifters
+    {
+        get => CustomOptionHolder.ShifterPastShifters.GetBool();
+    }
 
     internal override void OnMeetingStart() { }
     internal override void OnMeetingEnd() { }
@@ -33,7 +40,10 @@ internal class Shifter : MultiRoleBase<Shifter>
 
     internal override void FixedUpdate()
     {
-        if (!PlayerControl.LocalPlayer.IsRole(RoleType.Shifter)) return;
+        if (!PlayerControl.LocalPlayer.IsRole(RoleType.Shifter))
+        {
+            return;
+        }
 
         List<PlayerControl> blockShift = null;
         if (IsNeutral && !ShiftPastShifters)
@@ -42,12 +52,18 @@ internal class Shifter : MultiRoleBase<Shifter>
             for (int i = 0; i < PastShifters.Count; i++)
             {
                 PlayerControl p = Helpers.PlayerById((byte)PastShifters[i]);
-                if (p != null) blockShift.Add(p);
+                if (p != null)
+                {
+                    blockShift.Add(p);
+                }
             }
         }
 
         _currentTarget = Helpers.SetTarget(untargetablePlayers: blockShift);
-        if (FutureShift == null) Helpers.SetPlayerOutline(_currentTarget, RoleColor);
+        if (FutureShift == null)
+        {
+            Helpers.SetPlayerOutline(_currentTarget, RoleColor);
+        }
     }
 
     internal override void OnKill(PlayerControl target) { }
@@ -56,19 +72,38 @@ internal class Shifter : MultiRoleBase<Shifter>
 
     internal override void HandleDisconnect(PlayerControl player, DisconnectReasons reason)
     {
-        if (FutureShift == player) FutureShift = null;
+        if (FutureShift == player)
+        {
+            FutureShift = null;
+        }
     }
 
     internal static void MakeButtons(HudManager hm)
     {
         _shifterShiftButton = new(() =>
-        {
             {
-                using RPCSender sender = new(PlayerControl.LocalPlayer.NetId, CustomRPC.SetFutureShifted);
-                sender.Write(_currentTarget.PlayerId);
-            }
-            RPCProcedure.SetFutureShifted(_currentTarget.PlayerId);
-        }, () => { return PlayerControl.LocalPlayer.IsRole(RoleType.Shifter) && PlayerControl.LocalPlayer.IsAlive(); }, () => { return _currentTarget && FutureShift == null && PlayerControl.LocalPlayer.CanMove; }, () => { }, AssetLoader.ShiftButton, ButtonPosition.Layout, hm, hm.UseButton, AbilitySlot.CrewmateAbilityPrimary, false, Tr.Get(TrKey.ShiftText));
+                {
+                    using RPCSender sender = new(PlayerControl.LocalPlayer.NetId, CustomRPC.SetFutureShifted);
+                    sender.Write(_currentTarget.PlayerId);
+                }
+                RPCProcedure.SetFutureShifted(_currentTarget.PlayerId);
+            },
+            () =>
+            {
+                return PlayerControl.LocalPlayer.IsRole(RoleType.Shifter) && PlayerControl.LocalPlayer.IsAlive();
+            },
+            () =>
+            {
+                return _currentTarget && FutureShift == null && PlayerControl.LocalPlayer.CanMove;
+            },
+            () => { },
+            AssetLoader.ShiftButton,
+            ButtonPosition.Layout,
+            hm,
+            hm.UseButton,
+            AbilitySlot.CrewmateAbilityPrimary,
+            false,
+            Tr.Get(TrKey.ShiftText));
     }
 
     internal static void SetButtonCooldowns()

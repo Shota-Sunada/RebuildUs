@@ -8,12 +8,18 @@ internal static class SabotageButtonPatch
     internal static void RefreshPostfix()
     {
         PlayerControl localPlayer = PlayerControl.LocalPlayer;
-        if (localPlayer == null) return;
+        if (localPlayer == null)
+        {
+            return;
+        }
 
         // Mafia disable sabotage button for Janitor and sometimes for Mafioso
         bool blockSabotageJanitor = localPlayer.IsRole(RoleType.Janitor);
         bool blockSabotageMafioso = localPlayer.IsRole(RoleType.Mafioso) && !Mafia.IsGodfatherDead;
-        if (blockSabotageJanitor || blockSabotageMafioso) FastDestroyableSingleton<HudManager>.Instance.SabotageButton.SetDisabled();
+        if (blockSabotageJanitor || blockSabotageMafioso)
+        {
+            FastDestroyableSingleton<HudManager>.Instance.SabotageButton.SetDisabled();
+        }
     }
 
     [HarmonyPrefix]
@@ -21,9 +27,15 @@ internal static class SabotageButtonPatch
     internal static bool DoClickPrefix(SabotageButton __instance)
     {
         // The sabotage button behaves just fine if it's a regular impostor
-        if (PlayerControl.LocalPlayer?.Data?.Role?.TeamType == RoleTeamTypes.Impostor) return true;
+        if (PlayerControl.LocalPlayer?.Data?.Role?.TeamType == RoleTeamTypes.Impostor)
+        {
+            return true;
+        }
 
-        FastDestroyableSingleton<HudManager>.Instance.ToggleMapVisible(new() { Mode = MapOptions.Modes.Sabotage });
+        FastDestroyableSingleton<HudManager>.Instance.ToggleMapVisible(new()
+        {
+            Mode = MapOptions.Modes.Sabotage,
+        });
         return false;
     }
 }

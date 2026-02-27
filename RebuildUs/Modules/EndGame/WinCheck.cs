@@ -14,33 +14,48 @@ internal static partial class EndGameMain
 
     internal static bool CheckAndEndGameForJesterWin()
     {
-        if (!Jester.TriggerJesterWin) return false;
+        if (!Jester.TriggerJesterWin)
+        {
+            return false;
+        }
         UncheckedEndGame(CustomGameOverReason.JesterWin);
         return true;
     }
 
     internal static bool CheckAndEndGameForArsonistWin()
     {
-        if (!Arsonist.TriggerArsonistWin) return false;
+        if (!Arsonist.TriggerArsonistWin)
+        {
+            return false;
+        }
         UncheckedEndGame(CustomGameOverReason.ArsonistWin);
         return true;
     }
 
     internal static bool CheckAndEndGameForVultureWin()
     {
-        if (!Vulture.TriggerVultureWin) return false;
+        if (!Vulture.TriggerVultureWin)
+        {
+            return false;
+        }
         UncheckedEndGame(CustomGameOverReason.VultureWin);
         return true;
     }
 
     internal static bool CheckAndEndGameForSabotageWin()
     {
-        if (MapUtilities.Systems == null) return false;
+        if (MapUtilities.Systems == null)
+        {
+            return false;
+        }
         Dictionary<SystemTypes, UnityObject> systems = MapUtilities.Systems;
         if (systems.TryGetValue(SystemTypes.LifeSupp, out UnityObject systemType) && systemType != null)
         {
             LifeSuppSystemType lifeSuppSystemType = systemType.TryCast<LifeSuppSystemType>();
-            if (lifeSuppSystemType is { Countdown: < 0f })
+            if (lifeSuppSystemType is
+            {
+                Countdown: < 0f,
+            })
             {
                 IsO2Win = true;
                 EndGameForSabotage();
@@ -49,9 +64,19 @@ internal static partial class EndGameMain
             }
         }
 
-        if ((!systems.TryGetValue(SystemTypes.Reactor, out UnityObject reactor) && !systems.TryGetValue(SystemTypes.Laboratory, out reactor)) || reactor == null) return false;
+        if (!systems.TryGetValue(SystemTypes.Reactor, out UnityObject reactor) && !systems.TryGetValue(SystemTypes.Laboratory, out reactor)
+            || reactor == null)
+        {
+            return false;
+        }
         ICriticalSabotage criticalSystem = reactor.TryCast<ICriticalSabotage>();
-        if (criticalSystem is not { Countdown: < 0f }) return false;
+        if (criticalSystem is not
+        {
+            Countdown: < 0f,
+        })
+        {
+            return false;
+        }
         EndGameForSabotage();
         criticalSystem.ClearSabotage();
         return true;
@@ -59,7 +84,10 @@ internal static partial class EndGameMain
 
     internal static bool CheckAndEndGameForLoverWin(PlayerStatistics statistics)
     {
-        if (statistics.CouplesAlive != 1 || statistics.TotalAlive > 3) return false;
+        if (statistics.CouplesAlive != 1 || statistics.TotalAlive > 3)
+        {
+            return false;
+        }
         UncheckedEndGame(CustomGameOverReason.LoversWin);
         return true;
     }
@@ -68,7 +96,7 @@ internal static partial class EndGameMain
     {
         if (statistics.TeamJackalAlive < statistics.TotalAlive - statistics.TeamJackalAlive
             || statistics.TeamImpostorsAlive != 0
-            || (statistics.TeamJackalLovers != 0 && statistics.TeamJackalLovers < statistics.CouplesAlive * 2))
+            || statistics.TeamJackalLovers != 0 && statistics.TeamJackalLovers < statistics.CouplesAlive * 2)
         {
             return false;
         }
@@ -81,7 +109,7 @@ internal static partial class EndGameMain
     {
         if (statistics.TeamImpostorsAlive < statistics.TotalAlive - statistics.TeamImpostorsAlive
             || statistics.TeamJackalAlive != 0
-            || (statistics.TeamImpostorLovers != 0 && statistics.TeamImpostorLovers < statistics.CouplesAlive * 2))
+            || statistics.TeamImpostorLovers != 0 && statistics.TeamImpostorLovers < statistics.CouplesAlive * 2)
         {
             return false;
         }
@@ -98,9 +126,7 @@ internal static partial class EndGameMain
 
     internal static bool CheckAndEndGameForCrewmateWin(PlayerStatistics statistics)
     {
-        if (statistics.TeamCrew <= 0
-            || statistics.TeamImpostorsAlive != 0
-            || statistics.TeamJackalAlive != 0)
+        if (statistics.TeamCrew <= 0 || statistics.TeamImpostorsAlive != 0 || statistics.TeamJackalAlive != 0)
         {
             return false;
         }

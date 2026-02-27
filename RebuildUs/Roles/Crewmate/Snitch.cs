@@ -19,9 +19,20 @@ internal class Snitch : SingleRoleBase<Snitch>
         get => NameColor;
     }
 
-    internal static int LeftTasksForReveal { get => Mathf.RoundToInt(CustomOptionHolder.SnitchLeftTasksForReveal.GetFloat()); }
-    internal static bool IncludeTeamJackal { get => CustomOptionHolder.SnitchIncludeTeamJackal.GetBool(); }
-    internal static bool TeamJackalUseDifferentArrowColor { get => CustomOptionHolder.SnitchTeamJackalUseDifferentArrowColor.GetBool(); }
+    internal static int LeftTasksForReveal
+    {
+        get => Mathf.RoundToInt(CustomOptionHolder.SnitchLeftTasksForReveal.GetFloat());
+    }
+
+    internal static bool IncludeTeamJackal
+    {
+        get => CustomOptionHolder.SnitchIncludeTeamJackal.GetBool();
+    }
+
+    internal static bool TeamJackalUseDifferentArrowColor
+    {
+        get => CustomOptionHolder.SnitchTeamJackalUseDifferentArrowColor.GetBool();
+    }
 
     internal override void OnMeetingStart() { }
     internal override void OnMeetingEnd() { }
@@ -29,19 +40,33 @@ internal class Snitch : SingleRoleBase<Snitch>
 
     internal override void FixedUpdate()
     {
-        if (LocalArrows == null) return;
+        if (LocalArrows == null)
+        {
+            return;
+        }
 
-        for (int i = 0; i < LocalArrows.Count; i++) LocalArrows[i]?.ArrowObject.SetActive(false);
+        for (int i = 0; i < LocalArrows.Count; i++)
+        {
+            LocalArrows[i]?.ArrowObject.SetActive(false);
+        }
 
-        if (Player.Data.IsDead) return;
+        if (Player.Data.IsDead)
+        {
+            return;
+        }
 
         (int playerCompleted, int playerTotal) = TasksHandler.TaskInfo(Player.Data);
         int numberOfTasks = playerTotal - playerCompleted;
 
         PlayerControl localPlayer = PlayerControl.LocalPlayer;
-        if (numberOfTasks <= LeftTasksForReveal && (localPlayer.Data.Role.IsImpostor || (IncludeTeamJackal && (localPlayer.IsRole(RoleType.Jackal) || localPlayer.IsRole(RoleType.Sidekick)))))
+        if (numberOfTasks <= LeftTasksForReveal
+            && (localPlayer.Data.Role.IsImpostor
+                || IncludeTeamJackal && (localPlayer.IsRole(RoleType.Jackal) || localPlayer.IsRole(RoleType.Sidekick))))
         {
-            if (LocalArrows.Count == 0) LocalArrows.Add(new(Color.blue));
+            if (LocalArrows.Count == 0)
+            {
+                LocalArrows.Add(new(Color.blue));
+            }
             if (LocalArrows.Count != 0 && LocalArrows[0] != null)
             {
                 LocalArrows[0].ArrowObject.SetActive(true);
@@ -54,7 +79,10 @@ internal class Snitch : SingleRoleBase<Snitch>
             int arrowIndex = 0;
             foreach (PlayerControl p in PlayerControl.AllPlayerControls.GetFastEnumerator())
             {
-                if (p == null || p.Data == null) continue;
+                if (p == null || p.Data == null)
+                {
+                    continue;
+                }
 
                 bool arrowForImp = p.Data.Role.IsImpostor;
                 bool arrowForTeamJackal = IncludeTeamJackal && (p.IsRole(RoleType.Jackal) || p.IsRole(RoleType.Sidekick));
@@ -63,7 +91,10 @@ internal class Snitch : SingleRoleBase<Snitch>
                 {
                     Color c = arrowForTeamJackal ? Jackal.NameColor : Palette.ImpostorRed;
 
-                    if (arrowIndex >= LocalArrows.Count) LocalArrows.Add(new(c));
+                    if (arrowIndex >= LocalArrows.Count)
+                    {
+                        LocalArrows.Add(new(c));
+                    }
 
                     Arrow arrow = LocalArrows[arrowIndex];
                     if (arrow != null)
@@ -96,7 +127,9 @@ internal class Snitch : SingleRoleBase<Snitch>
             foreach (Arrow arrow in LocalArrows)
             {
                 if (arrow?.ArrowObject != null)
+                {
                     UnityObject.Destroy(arrow.ArrowObject);
+                }
             }
         }
 

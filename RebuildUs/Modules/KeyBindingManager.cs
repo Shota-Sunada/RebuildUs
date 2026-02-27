@@ -65,7 +65,10 @@ internal static class KeyBindingManager
     internal static void Load()
     {
         KeyInputTexture kit = new("KeyBindCharacters");
-        for (int i = 0; i < 10; i++) _ = new KeyCodeData(KeyCode.Alpha0 + i, i.ToString(), kit, i);
+        for (int i = 0; i < 10; i++)
+        {
+            _ = new KeyCodeData(KeyCode.Alpha0 + i, i.ToString(), kit, i);
+        }
 
         _ = new KeyCodeData(KeyCode.Mouse0, "Mouse Left", kit, 10);
         _ = new KeyCodeData(KeyCode.Mouse1, "Mouse Right", kit, 11);
@@ -85,10 +88,16 @@ internal static class KeyBindingManager
         _ = new KeyCodeData(KeyCode.Delete, "Del", kit, 7);
 
         kit = new("KeyBindCharacters1");
-        for (KeyCode key = KeyCode.A; key <= KeyCode.Z; key++) _ = new KeyCodeData(key, ((char)(('A' + key) - KeyCode.A)).ToString(), kit, key - KeyCode.A);
+        for (KeyCode key = KeyCode.A; key <= KeyCode.Z; key++)
+        {
+            _ = new KeyCodeData(key, ((char)('A' + key - KeyCode.A)).ToString(), kit, key - KeyCode.A);
+        }
 
         kit = new("KeyBindCharacters2");
-        for (int i = 0; i < 12; i++) _ = new KeyCodeData(KeyCode.F1 + i, "F" + (i + 1), kit, i);
+        for (int i = 0; i < 12; i++)
+        {
+            _ = new KeyCodeData(KeyCode.F1 + i, "F" + (i + 1), kit, i);
+        }
     }
 
     internal sealed class RebuildUsInput
@@ -110,7 +119,10 @@ internal static class KeyBindingManager
 
         internal void ChangeKey(KeyCode newKey)
         {
-            if (Key == newKey) return;
+            if (Key == newKey)
+            {
+                return;
+            }
             Key = newKey;
             _config.Value = newKey;
         }
@@ -137,7 +149,10 @@ internal static class KeyBindingManager
             {
                 // In RebuildUs, we use AssetLoader to get sprites/textures
                 Sprite sprite = AssetLoader.GetKeyBindTexture(_address);
-                if (sprite != null) _texture = sprite.texture;
+                if (sprite != null)
+                {
+                    _texture = sprite.texture;
+                }
             }
 
             return _texture;
@@ -165,9 +180,15 @@ internal static class KeyBindingManager
 
         internal Sprite GetSprite()
         {
-            if (_sprite != null && _sprite) return _sprite;
+            if (_sprite != null && _sprite)
+            {
+                return _sprite;
+            }
             Texture2D tex = Texture.GetTexture();
-            if (tex != null) _sprite = Sprite.Create(tex, new(0f, tex.height - (19f * (TextureNum + 1)), 18f, 19f), new(0.5f, 0.5f), 100f);
+            if (tex != null)
+            {
+                _sprite = Sprite.Create(tex, new(0f, tex.height - 19f * (TextureNum + 1), 18f, 19f), new(0.5f, 0.5f), 100f);
+            }
 
             return _sprite;
         }

@@ -16,18 +16,50 @@ internal class CreatedMadmate : ModifierBase<CreatedMadmate>
 
     // write configs here
 
-    internal static bool CanEnterVents { get => CustomOptionHolder.CreatedMadmateCanEnterVents.GetBool(); }
-    internal static bool HasImpostorVision { get => CustomOptionHolder.CreatedMadmateHasImpostorVision.GetBool(); }
-    internal static bool CanSabotage { get => CustomOptionHolder.CreatedMadmateCanSabotage.GetBool(); }
-    internal static bool CanFixComm { get => CustomOptionHolder.CreatedMadmateCanFixComm.GetBool(); }
+    internal static bool CanEnterVents
+    {
+        get => CustomOptionHolder.CreatedMadmateCanEnterVents.GetBool();
+    }
 
-    internal static CreatedMadmateType MadmateType { get => CreatedMadmateType.Simple; }
-    internal static CreatedMadmateAbility MadmateAbility { get => (CreatedMadmateAbility)CustomOptionHolder.CreatedMadmateAbility.GetSelection(); }
+    internal static bool HasImpostorVision
+    {
+        get => CustomOptionHolder.CreatedMadmateHasImpostorVision.GetBool();
+    }
 
-    internal static int NumTasks { get => (int)CustomOptionHolder.CreatedMadmateNumTasks.GetFloat(); }
+    internal static bool CanSabotage
+    {
+        get => CustomOptionHolder.CreatedMadmateCanSabotage.GetBool();
+    }
 
-    internal static bool HasTasks { get => MadmateAbility == CreatedMadmateAbility.Fanatic; }
-    internal static bool ExileCrewmate { get => CustomOptionHolder.CreatedMadmateExileCrewmate.GetBool(); }
+    internal static bool CanFixComm
+    {
+        get => CustomOptionHolder.CreatedMadmateCanFixComm.GetBool();
+    }
+
+    internal static CreatedMadmateType MadmateType
+    {
+        get => CreatedMadmateType.Simple;
+    }
+
+    internal static CreatedMadmateAbility MadmateAbility
+    {
+        get => (CreatedMadmateAbility)CustomOptionHolder.CreatedMadmateAbility.GetSelection();
+    }
+
+    internal static int NumTasks
+    {
+        get => (int)CustomOptionHolder.CreatedMadmateNumTasks.GetFloat();
+    }
+
+    internal static bool HasTasks
+    {
+        get => MadmateAbility == CreatedMadmateAbility.Fanatic;
+    }
+
+    internal static bool ExileCrewmate
+    {
+        get => CustomOptionHolder.CreatedMadmateExileCrewmate.GetBool();
+    }
 
     internal override void OnUpdateNameColors()
     {
@@ -42,8 +74,8 @@ internal class CreatedMadmate : ModifierBase<CreatedMadmate>
                 {
                     if (p.IsTeamImpostor()
                         || p.IsRole(RoleType.Spy)
-                        || (p.IsRole(RoleType.Jackal) && Jackal.Instance.WasTeamRed)
-                        || (p.IsRole(RoleType.Sidekick) && Sidekick.Instance.WasTeamRed))
+                        || p.IsRole(RoleType.Jackal) && Jackal.Instance.WasTeamRed
+                        || p.IsRole(RoleType.Sidekick) && Sidekick.Instance.WasTeamRed)
                     {
                         HudManagerPatch.SetPlayerNameColor(p, Palette.ImpostorRed);
                     }

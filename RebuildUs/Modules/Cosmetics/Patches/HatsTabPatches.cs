@@ -11,24 +11,33 @@ internal static class HatsTabPatches
     [HarmonyPrefix]
     private static bool OnEnablePrefix(HatsTab __instance)
     {
-        for (int i = 0; i < __instance.scroller.Inner.childCount; i++) UnityObject.Destroy(__instance.scroller.Inner.GetChild(i).gameObject);
+        for (int i = 0; i < __instance.scroller.Inner.childCount; i++)
+        {
+            UnityObject.Destroy(__instance.scroller.Inner.GetChild(i).gameObject);
+        }
 
         __instance.ColorChips = new();
         Il2CppReferenceArray<HatData> unlockedHats = DestroyableSingleton<HatManager>.Instance.GetUnlockedHats();
-        Dictionary<string, List<Tuple<HatData, HatExtension>>> packages = new();
+        Dictionary<string, List<Tuple<HatData, HatExtension>>> packages = [];
 
         foreach (HatData hatBehaviour in unlockedHats)
         {
             HatExtension ext = hatBehaviour.GetHatExtension();
             if (ext != null)
             {
-                if (!packages.ContainsKey(ext.Package)) packages[ext.Package] = [];
+                if (!packages.ContainsKey(ext.Package))
+                {
+                    packages[ext.Package] = [];
+                }
 
                 packages[ext.Package].Add(new(hatBehaviour, ext));
             }
             else
             {
-                if (!packages.ContainsKey(CustomHatManager.INNERSLOTH_PACKAGE_NAME)) packages[CustomHatManager.INNERSLOTH_PACKAGE_NAME] = [];
+                if (!packages.ContainsKey(CustomHatManager.INNERSLOTH_PACKAGE_NAME))
+                {
+                    packages[CustomHatManager.INNERSLOTH_PACKAGE_NAME] = [];
+                }
 
                 packages[CustomHatManager.INNERSLOTH_PACKAGE_NAME].Add(new(hatBehaviour, null));
             }
@@ -57,7 +66,10 @@ internal static class HatsTabPatches
     private static float CreateHatPackage(List<Tuple<HatData, HatExtension>> hats, string packageName, float yStart, HatsTab hatsTab)
     {
         bool isDefaultPackage = CustomHatManager.INNERSLOTH_PACKAGE_NAME == packageName;
-        if (!isDefaultPackage) hats = [.. hats.OrderBy(x => x.Item1.name)];
+        if (!isDefaultPackage)
+        {
+            hats = [.. hats.OrderBy(x => x.Item1.name)];
+        }
 
         float offset = yStart;
         if (_textTemplate != null)
@@ -67,24 +79,31 @@ internal static class HatsTabPatches
             title.transform.localScale = Vector3.one * 1.5f;
             title.fontSize *= 0.5f;
             title.enableAutoSizing = false;
-            hatsTab.StartCoroutine(Effects.Lerp(0.1f, new Action<float>(p => { title.SetText(packageName); })));
+            hatsTab.StartCoroutine(Effects.Lerp(0.1f,
+                new Action<float>(p =>
+                {
+                    title.SetText(packageName);
+                })));
             offset -= 0.8f * hatsTab.YOffset;
         }
 
         for (int i = 0; i < hats.Count; i++)
         {
             (HatData hat, HatExtension ext) = hats[i];
-            float xPos = hatsTab.XRange.Lerp((i % hatsTab.NumPerRow) / (hatsTab.NumPerRow - 1f));
-            float yPos = offset - ((i / hatsTab.NumPerRow) * (isDefaultPackage ? 1f : 1.5f) * hatsTab.YOffset);
+            float xPos = hatsTab.XRange.Lerp(i % hatsTab.NumPerRow / (hatsTab.NumPerRow - 1f));
+            float yPos = offset - i / hatsTab.NumPerRow * (isDefaultPackage ? 1f : 1.5f) * hatsTab.YOffset;
             ColorChip colorChip = UnityObject.Instantiate(hatsTab.ColorTabPrefab, hatsTab.scroller.Inner);
             if (ActiveInputManager.currentControlType == ActiveInputManager.InputType.Keyboard)
             {
                 colorChip.Button.OnMouseOver.AddListener((Action)(() => hatsTab.SelectHat(hat)));
-                colorChip.Button.OnMouseOut.AddListener((Action)(() => hatsTab.SelectHat(DestroyableSingleton<HatManager>.Instance.GetHatById(DataManager.Player.Customization.Hat))));
+                colorChip.Button.OnMouseOut.AddListener(
+                    (Action)(() => hatsTab.SelectHat(DestroyableSingleton<HatManager>.Instance.GetHatById(DataManager.Player.Customization.Hat))));
                 colorChip.Button.OnClick.AddListener((Action)hatsTab.ClickEquip);
             }
             else
+            {
                 colorChip.Button.OnClick.AddListener((Action)(() => hatsTab.SelectHat(hat)));
+            }
 
             colorChip.Button.ClickMask = hatsTab.scroller.Hitbox;
             colorChip.Inner.SetMaskType(PlayerMaterial.MaskType.SimpleUI);
@@ -108,18 +127,25 @@ internal static class HatsTabPatches
                     description.transform.localPosition = new(0f, -0.65f, -1f);
                     description.alignment = TextAlignmentOptions.Center;
                     description.transform.localScale = Vector3.one * 0.65f;
-                    hatsTab.StartCoroutine(Effects.Lerp(0.1f, new Action<float>(p => { description.SetText($"{hat.name}\nby {ext.Author}"); })));
+                    hatsTab.StartCoroutine(Effects.Lerp(0.1f,
+                        new Action<float>(p =>
+                        {
+                            description.SetText($"{hat.name}\nby {ext.Author}");
+                        })));
                 }
             }
 
             colorChip.transform.localPosition = new(xPos, yPos, -1f);
-            colorChip.Inner.SetHat(hat, hatsTab.HasLocalPlayer() ? PlayerControl.LocalPlayer.Data.DefaultOutfit.ColorId : DataManager.Player.Customization.Color);
+            colorChip.Inner.SetHat(hat,
+                hatsTab.HasLocalPlayer() ? PlayerControl.LocalPlayer.Data.DefaultOutfit.ColorId : DataManager.Player.Customization.Color);
             colorChip.Inner.transform.localPosition = hat.ChipOffset;
             colorChip.Tag = hat;
-            colorChip.SelectionHighlight.gameObject.SetActive(hat == DestroyableSingleton<HatManager>.Instance.GetHatById(DataManager.Player.Customization.Hat));
+            colorChip.SelectionHighlight.gameObject.SetActive(hat
+                                                              == DestroyableSingleton<HatManager>.Instance.GetHatById(DataManager.Player.Customization
+                                                                                                                                 .Hat));
             hatsTab.ColorChips.Add(colorChip);
         }
 
-        return offset - (((hats.Count - 1) / hatsTab.NumPerRow) * (isDefaultPackage ? 1f : 1.5f) * hatsTab.YOffset) - 1.75f;
+        return offset - (hats.Count - 1) / hatsTab.NumPerRow * (isDefaultPackage ? 1f : 1.5f) * hatsTab.YOffset - 1.75f;
     }
 }

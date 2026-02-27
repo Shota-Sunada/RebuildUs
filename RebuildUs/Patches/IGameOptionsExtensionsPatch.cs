@@ -6,7 +6,11 @@ namespace RebuildUs.Patches;
 internal static class GameOptionsExtensionsPatch
 {
     [HarmonyPrefix]
-    [HarmonyPatch(typeof(IGameOptionsExtensions), nameof(IGameOptionsExtensions.AppendItem), typeof(StringBuilder), typeof(StringNames), typeof(string))]
+    [HarmonyPatch(typeof(IGameOptionsExtensions),
+        nameof(IGameOptionsExtensions.AppendItem),
+        typeof(StringBuilder),
+        typeof(StringNames),
+        typeof(string))]
     internal static void AppendItemPrefix(ref StringNames stringName, ref string value)
     {
         CustomOption.AppendItem(ref stringName, ref value);

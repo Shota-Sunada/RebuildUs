@@ -7,7 +7,10 @@ internal static class ShowHost
 
     internal static void Setup(MeetingHud __instance)
     {
-        if (AmongUsClient.Instance.NetworkMode != NetworkModes.OnlineGame) return;
+        if (AmongUsClient.Instance.NetworkMode != NetworkModes.OnlineGame)
+        {
+            return;
+        }
 
         __instance.ProceedButton.gameObject.transform.localPosition = new(-2.5f, 2.2f, 0);
         __instance.ProceedButton.gameObject.GetComponent<SpriteRenderer>().enabled = false;
@@ -21,7 +24,10 @@ internal static class ShowHost
     {
         NetworkedPlayerInfo host = GameData.Instance.GetHost();
 
-        if (host == null || _text == null) return;
+        if (host == null || _text == null)
+        {
+            return;
+        }
         PlayerMaterial.SetColors(host.DefaultOutfit.ColorId, __instance.HostIcon);
 
         Sb.Clear();
@@ -30,6 +36,9 @@ internal static class ShowHost
         Sb.Append(host.PlayerName);
 
         string newText = Sb.ToString();
-        if (_text.text != newText) _text.text = newText;
+        if (_text.text != newText)
+        {
+            _text.text = newText;
+        }
     }
 }

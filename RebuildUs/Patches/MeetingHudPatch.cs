@@ -43,7 +43,10 @@ internal static class MeetingHudPatch
 
     [HarmonyPostfix]
     [HarmonyPatch(typeof(MeetingHud), nameof(MeetingHud.VotingComplete))]
-    internal static void VotingCompletePostfix(MeetingHud __instance, Il2CppStructArray<MeetingHud.VoterState> states, NetworkedPlayerInfo exiled, bool tie)
+    internal static void VotingCompletePostfix(MeetingHud __instance,
+                                               Il2CppStructArray<MeetingHud.VoterState> states,
+                                               NetworkedPlayerInfo exiled,
+                                               bool tie)
     {
         Meeting.VotingComplete(__instance, states, exiled, tie);
     }
@@ -77,8 +80,14 @@ internal static class MeetingHudPatch
     [HarmonyPatch(typeof(MeetingHud), nameof(MeetingHud.Close))]
     internal static void ClosePostfix(MeetingHud __instance)
     {
-        if (!Helpers.IsPolus || !CustomOptionHolder.PolusRandomSpawn.GetBool()) return;
-        if (!AmongUsClient.Instance.AmHost) return;
+        if (!Helpers.IsPolus || !CustomOptionHolder.PolusRandomSpawn.GetBool())
+        {
+            return;
+        }
+        if (!AmongUsClient.Instance.AmHost)
+        {
+            return;
+        }
         Random rand = RebuildUs.Rnd;
         foreach (PlayerControl player in PlayerControl.AllPlayerControls.GetFastEnumerator())
         {

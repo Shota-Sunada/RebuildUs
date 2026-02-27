@@ -17,14 +17,28 @@ internal class Spy : SingleRoleBase<Spy>
     }
 
     // write configs here
-    internal static bool ImpostorsCanKillAnyone { get => CustomOptionHolder.SpyImpostorsCanKillAnyone.GetBool(); }
-    internal static bool CanEnterVents { get => CustomOptionHolder.SpyCanEnterVents.GetBool(); }
-    internal static bool HasImpostorVision { get => CustomOptionHolder.SpyHasImpostorVision.GetBool(); }
+    internal static bool ImpostorsCanKillAnyone
+    {
+        get => CustomOptionHolder.SpyImpostorsCanKillAnyone.GetBool();
+    }
+
+    internal static bool CanEnterVents
+    {
+        get => CustomOptionHolder.SpyCanEnterVents.GetBool();
+    }
+
+    internal static bool HasImpostorVision
+    {
+        get => CustomOptionHolder.SpyHasImpostorVision.GetBool();
+    }
 
     internal override void OnUpdateNameColors()
     {
         PlayerControl localPlayer = PlayerControl.LocalPlayer;
-        if (localPlayer != null && localPlayer.IsTeamImpostor()) HudManagerPatch.SetPlayerNameColor(Player, NameColor);
+        if (localPlayer != null && localPlayer.IsTeamImpostor())
+        {
+            HudManagerPatch.SetPlayerNameColor(Player, NameColor);
+        }
     }
 
     internal override void OnMeetingStart() { }

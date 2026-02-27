@@ -132,55 +132,88 @@ internal static class MapSettings
 
     private static void UpdateTimerText()
     {
-        if (RestrictDevices == 0 || (!_restrictAdminText && !_restrictCamerasText && !_restrictVitalsText)) return;
+        if (RestrictDevices == 0 || !_restrictAdminText && !_restrictCamerasText && !_restrictVitalsText)
+        {
+            return;
+        }
 
-        if (FastDestroyableSingleton<HudManager>.Instance == null) return;
+        if (FastDestroyableSingleton<HudManager>.Instance == null)
+        {
+            return;
+        }
 
         // Admin
         if (_restrictAdminText)
         {
-            _adminTimerText = UnityObject.Instantiate(FastDestroyableSingleton<HudManager>.Instance.TaskPanel.taskText, FastDestroyableSingleton<HudManager>.Instance.transform);
+            _adminTimerText = UnityObject.Instantiate(FastDestroyableSingleton<HudManager>.Instance.TaskPanel.taskText,
+                FastDestroyableSingleton<HudManager>.Instance.transform);
             float y = -4.0f;
-            if (_restrictCamerasText) y += 0.2f;
+            if (_restrictCamerasText)
+            {
+                y += 0.2f;
+            }
 
-            if (_restrictVitalsText) y += 0.2f;
+            if (_restrictVitalsText)
+            {
+                y += 0.2f;
+            }
 
             _adminTimerText.transform.localPosition = new(-3.5f, y, 0);
-            _adminTimerText.text = RestrictAdminTime > 0 ? string.Format(Tr.Get(TrKey.AdminText), RestrictAdminTime.ToString("0.00")) : Tr.Get(TrKey.AdminRanOut);
+            _adminTimerText.text = RestrictAdminTime > 0
+                ? string.Format(Tr.Get(TrKey.AdminText), RestrictAdminTime.ToString("0.00"))
+                : Tr.Get(TrKey.AdminRanOut);
             _adminTimerText.gameObject.SetActive(true);
         }
 
         // Cameras
         if (_restrictCamerasText)
         {
-            _camerasTimerText = UnityObject.Instantiate(FastDestroyableSingleton<HudManager>.Instance.TaskPanel.taskText, FastDestroyableSingleton<HudManager>.Instance.transform);
+            _camerasTimerText = UnityObject.Instantiate(FastDestroyableSingleton<HudManager>.Instance.TaskPanel.taskText,
+                FastDestroyableSingleton<HudManager>.Instance.transform);
             float y = -4.0f;
-            if (_restrictVitalsText) y += 0.2f;
+            if (_restrictVitalsText)
+            {
+                y += 0.2f;
+            }
 
             _camerasTimerText.transform.localPosition = new(-3.5f, y, 0);
-            _camerasTimerText.text = RestrictCamerasTime > 0 ? string.Format(Tr.Get(TrKey.CamerasText), RestrictCamerasTime.ToString("0.00")) : Tr.Get(TrKey.CamerasRanOut);
+            _camerasTimerText.text = RestrictCamerasTime > 0
+                ? string.Format(Tr.Get(TrKey.CamerasText), RestrictCamerasTime.ToString("0.00"))
+                : Tr.Get(TrKey.CamerasRanOut);
             _camerasTimerText.gameObject.SetActive(true);
         }
 
         // Vitals
         if (_restrictVitalsText)
         {
-            _vitalsTimerText = UnityObject.Instantiate(FastDestroyableSingleton<HudManager>.Instance.TaskPanel.taskText, FastDestroyableSingleton<HudManager>.Instance.transform);
+            _vitalsTimerText = UnityObject.Instantiate(FastDestroyableSingleton<HudManager>.Instance.TaskPanel.taskText,
+                FastDestroyableSingleton<HudManager>.Instance.transform);
             _vitalsTimerText.transform.localPosition = new(-3.5f, -4.0f, 0);
-            _vitalsTimerText.text = RestrictVitalsTime > 0 ? string.Format(Tr.Get(TrKey.VitalsText), RestrictVitalsTime.ToString("0.00")) : Tr.Get(TrKey.VitalsRanOut);
+            _vitalsTimerText.text = RestrictVitalsTime > 0
+                ? string.Format(Tr.Get(TrKey.VitalsText), RestrictVitalsTime.ToString("0.00"))
+                : Tr.Get(TrKey.VitalsRanOut);
             _vitalsTimerText.gameObject.SetActive(true);
         }
     }
 
     private static void ClearTimerText()
     {
-        if (_adminTimerText != null) UnityObject.Destroy(_adminTimerText);
+        if (_adminTimerText != null)
+        {
+            UnityObject.Destroy(_adminTimerText);
+        }
 
         _adminTimerText = null;
-        if (_camerasTimerText != null) UnityObject.Destroy(_camerasTimerText);
+        if (_camerasTimerText != null)
+        {
+            UnityObject.Destroy(_camerasTimerText);
+        }
 
         _camerasTimerText = null;
-        if (_vitalsTimerText != null) UnityObject.Destroy(_vitalsTimerText);
+        if (_vitalsTimerText != null)
+        {
+            UnityObject.Destroy(_vitalsTimerText);
+        }
 
         _vitalsTimerText = null;
     }
