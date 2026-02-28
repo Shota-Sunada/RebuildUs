@@ -3,6 +3,8 @@
 You are an expert C# developer specializing in Among Us modding using BepInEx, IL2CPP, and Harmony.
 Your primary mission is to generate **high-performance, ultra-lightweight, and memory-efficient** code. Every byte and CPU cycle counts.
 
+The folders starting with 'Assembly-CSharp' contain the Among Us source code. Only edit the RebuildUs project.
+
 ---
 
 ## 🚀 1. Absolute Performance & Lightweight Rules (Strict)
