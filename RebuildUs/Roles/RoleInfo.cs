@@ -11,55 +11,18 @@ internal class RoleInfo(TrKey nameKey, Color color, CustomOption baseOption, Rol
     internal TrKey NameKey = nameKey;
     internal RoleType RoleType = roleType;
 
-    internal virtual string Name
-    {
-        get => Tr.Get(NameKey);
-    }
+    internal virtual string Name { get => Tr.Get(NameKey); }
+    internal virtual string NameColored { get => Helpers.Cs(Color, Name); }
+    internal virtual string IntroDescription { get => Tr.GetDynamic($"{NameKey}IntroDesc"); }
+    internal virtual string ShortDescription { get => Tr.GetDynamic($"{NameKey}ShortDesc"); }
+    internal virtual string FullDescription { get => Tr.GetDynamic($"{NameKey}FullDesc"); }
+    internal virtual string RoleOptions { get => CustomOption.OptionsToString(_baseOption); }
 
-    internal virtual string NameColored
-    {
-        get => Helpers.Cs(Color, Name);
-    }
+    internal bool Enabled { get => Helpers.RolesEnabled && (_baseOption == null || _baseOption.Enabled); }
 
-    internal virtual string IntroDescription
-    {
-        get => Tr.GetDynamic($"{NameKey}IntroDesc");
-    }
-
-    internal virtual string ShortDescription
-    {
-        get => Tr.GetDynamic($"{NameKey}ShortDesc");
-    }
-
-    internal virtual string FullDescription
-    {
-        get => Tr.GetDynamic($"{NameKey}FullDesc");
-    }
-
-    internal virtual string RoleOptions
-    {
-        get => CustomOption.OptionsToString(_baseOption);
-    }
-
-    internal bool Enabled
-    {
-        get => Helpers.RolesEnabled && (_baseOption == null || _baseOption.Enabled);
-    }
-
-    internal static RoleInfo Jackal
-    {
-        get => Get(RoleType.Jackal);
-    }
-
-    internal static RoleInfo Crewmate
-    {
-        get => Get(RoleType.Crewmate);
-    }
-
-    internal static RoleInfo Impostor
-    {
-        get => Get(RoleType.Impostor);
-    }
+    internal static RoleInfo Jackal { get => Get(RoleType.Jackal); }
+    internal static RoleInfo Crewmate { get => Get(RoleType.Crewmate); }
+    internal static RoleInfo Impostor { get => Get(RoleType.Impostor); }
 
     internal static List<RoleInfo> GetRoleInfoForPlayer(PlayerControl player, bool showModifier = true, RoleType[] excludeRoles = null)
     {
@@ -147,12 +110,7 @@ internal class RoleInfo(TrKey nameKey, Color color, CustomOption baseOption, Rol
         return infos;
     }
 
-    internal static string GetRolesString(PlayerControl p,
-                                          bool useColors,
-                                          bool showModifier = true,
-                                          RoleType[] excludeRoles = null,
-                                          bool includeHidden = false,
-                                          string joinSeparator = " ")
+    internal static string GetRolesString(PlayerControl p, bool useColors, bool showModifier = true, RoleType[] excludeRoles = null, bool includeHidden = false, string joinSeparator = " ")
     {
         if (p == null || p.Data == null || p.Data.Disconnected)
         {
@@ -249,14 +207,28 @@ internal class RoleInfo(TrKey nameKey, Color color, CustomOption baseOption, Rol
         RoleDict.Clear();
         AllRoleInfos.Clear();
 
-        foreach (var reg in RoleData.Roles)
+        var registration = RoleData.Roles;
+        if (registration == null)
         {
-            RoleInfo info = new(Enum.TryParse(Enum.GetName(reg.RoleType), out TrKey key) ? key : TrKey.None,
-                reg.GetColor(),
-                reg.GetOption(),
-                reg.RoleType);
-            RoleDict[reg.RoleType] = info;
-            AllRoleInfos.Add(info);
+            Logger.LogError("RoleData.Roles is null!", "RoleInfo");
+            return;
+        }
+
+        foreach (var reg in registration)
+        {
+            try
+            {
+                var color = reg.GetColor != null ? reg.GetColor() : Color.white;
+                var option = reg.GetOption != null ? reg.GetOption() : null;
+                var name = Enum.GetName(reg.RoleType);
+                RoleInfo info = new(Enum.TryParse(name, out TrKey key) ? key : TrKey.None, color, option, reg.RoleType);
+                RoleDict[reg.RoleType] = info;
+                AllRoleInfos.Add(info);
+            }
+            catch (Exception e)
+            {
+                Logger.LogError($"Error loading role info for {reg.RoleType}: {e}", "RoleInfo");
+            }
         }
 
         RoleDict[RoleType.Crewmate] = new(TrKey.Crewmate, Palette.CrewmateBlue, null, RoleType.Crewmate);
