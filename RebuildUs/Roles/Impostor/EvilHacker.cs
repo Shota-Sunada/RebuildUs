@@ -142,7 +142,7 @@ internal class EvilHacker : MultiRoleBase<EvilHacker>
             false,
             0f,
             () => { },
-            Helpers.GetOption(ByteOptionNames.MapId) == 3,
+            ByteOptionNames.MapId.Get() == 3,
             FastDestroyableSingleton<TranslationController>.Instance.GetString(StringNames.Admin));
 
         _evilHackerCreatesMadmateButton = new(() =>

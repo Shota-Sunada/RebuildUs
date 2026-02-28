@@ -231,7 +231,7 @@ internal class BountyHunter : SingleRoleBase<BountyHunter>
         }
         else
         {
-            Player.SetKillTimer(Helpers.GetOption(FloatOptionNames.KillCooldown) + PunishmentTime);
+            Player.SetKillTimer(FloatOptionNames.KillCooldown.Get() + PunishmentTime);
         }
     }
 

@@ -60,7 +60,7 @@ internal static class AssetLoader
         return obj;
     }
 
-#region Animations
+    #region Animations
 
     internal static readonly List<Sprite> TricksterAnimations = [];
 
@@ -89,9 +89,9 @@ internal static class AssetLoader
         TricksterAnimations.Add(ab.LoadAsset<Sprite>("trickster_box_0018.png").Resize(175f));
     }
 
-#endregion
+    #endregion
 
-#region Buttons
+    #region Buttons
 
     internal static Sprite DouseButton;
     internal static Sprite EmergencyButton;
@@ -163,9 +163,9 @@ internal static class AssetLoader
         RepairButton = ab.LoadAsset<Sprite>("RepairButton.png").Resize(115f);
     }
 
-#endregion
+    #endregion
 
-#region Sprites
+    #region Sprites
 
     internal static Sprite Arrow;
     internal static Sprite Garlic;
@@ -217,9 +217,9 @@ internal static class AssetLoader
         White = ab.LoadAsset<Sprite>("White.png").Resize(100f);
     }
 
-#endregion
+    #endregion
 
-#region Locations
+    #region Locations
 
     internal static Sprite ArmoryButton;
     internal static Sprite CockpitButton;
@@ -253,9 +253,9 @@ internal static class AssetLoader
         ViewingButton = ab.LoadAsset<Sprite>("ViewingButton.png").Resize(100f);
     }
 
-#endregion
+    #endregion
 
-#region KeyBinds
+    #region KeyBinds
 
     private static readonly Dictionary<string, Sprite> KeyBindSprites = [];
     internal static Sprite KeyBindBackground;
@@ -288,5 +288,5 @@ internal static class AssetLoader
         KeyBindBackground = ab.LoadAsset<Sprite>("KeyBindBackground.png").DontUnload();
     }
 
-#endregion
+    #endregion
 }

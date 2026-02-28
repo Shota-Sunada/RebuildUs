@@ -53,7 +53,7 @@ internal static class SpawnIn
         _isFirstSpawn = false;
         if (CustomOptionHolder.AirshipSetOriginalCooldown.GetBool())
         {
-            PlayerControl.LocalPlayer.SetKillTimerUnchecked(Helpers.GetOption(FloatOptionNames.KillCooldown));
+            PlayerControl.LocalPlayer.SetKillTimerUnchecked(FloatOptionNames.KillCooldown.Get());
             foreach (CustomButton t in CustomButton.Buttons)
             {
                 t.Timer = t.MaxTimer;

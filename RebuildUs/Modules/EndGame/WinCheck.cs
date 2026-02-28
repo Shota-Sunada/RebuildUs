@@ -53,9 +53,9 @@ internal static partial class EndGameMain
         {
             LifeSuppSystemType lifeSuppSystemType = systemType.TryCast<LifeSuppSystemType>();
             if (lifeSuppSystemType is
-            {
-                Countdown: < 0f,
-            })
+                {
+                    Countdown: < 0f,
+                })
             {
                 IsO2Win = true;
                 EndGameForSabotage();
@@ -71,9 +71,9 @@ internal static partial class EndGameMain
         }
         ICriticalSabotage criticalSystem = reactor.TryCast<ICriticalSabotage>();
         if (criticalSystem is not
-        {
-            Countdown: < 0f,
-        })
+            {
+                Countdown: < 0f,
+            })
         {
             return false;
         }

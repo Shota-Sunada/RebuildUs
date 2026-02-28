@@ -454,7 +454,8 @@ internal class CustomOption<T> : CustomOption
         parent,
         hideIfParentEnabled,
         format,
-        color) { }
+        color)
+    { }
 
     public CustomOption(int id,
                         CustomOptionType type,

@@ -10,7 +10,7 @@ internal static class TasksHandler
         if (pInfo.Disconnected
             || pInfo.Tasks == null
             || !pInfo.Object
-            || !Helpers.GetOption(BoolOptionNames.GhostsDoTasks) && pInfo.IsDead
+            || !BoolOptionNames.GhostsDoTasks.Get() && pInfo.IsDead
             || !pInfo.Role
             || !pInfo.Role.TasksCountTowardProgress
             || pInfo.Object.IsTeamImpostor()

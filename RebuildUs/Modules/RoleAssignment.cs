@@ -28,7 +28,7 @@ internal static class RoleAssignment
 
         if (!ShipStatus.Instance)
         {
-            int index = Mathf.Clamp(Helpers.GetOption(ByteOptionNames.MapId), 0, Constants.MapNames.Length - 1);
+            int index = Mathf.Clamp(ByteOptionNames.MapId.Get(), 0, Constants.MapNames.Length - 1);
             try
             {
                 switch (index)
@@ -86,7 +86,7 @@ internal static class RoleAssignment
             bool flag = true;
             int num = 10;
             float totalSeconds = (float)(DateTime.Now - start).TotalSeconds;
-            if (Helpers.GetOption(ByteOptionNames.MapId) is 4 or 5)
+            if (ByteOptionNames.MapId.Get() is 4 or 5)
             {
                 num = 15;
             }

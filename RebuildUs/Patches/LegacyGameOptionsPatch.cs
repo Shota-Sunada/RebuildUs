@@ -18,6 +18,6 @@ internal static class LegacyGameOptionsPatch
         {
             return;
         }
-        __instance.NumImpostors = Helpers.GetOption(Int32OptionNames.NumImpostors);
+        __instance.NumImpostors = Int32OptionNames.NumImpostors.Get();
     }
 }

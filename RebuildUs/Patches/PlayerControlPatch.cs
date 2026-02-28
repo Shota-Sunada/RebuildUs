@@ -37,7 +37,7 @@ internal static class PlayerControlPatch
     [HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.SetKillTimer))]
     internal static bool SetKillTimerPrefix(PlayerControl __instance, [HarmonyArgument(0)] float time)
     {
-        float baseCooldown = Helpers.GetOption(FloatOptionNames.KillCooldown);
+        float baseCooldown = FloatOptionNames.KillCooldown.Get();
         if (baseCooldown <= 0f)
         {
             return false;

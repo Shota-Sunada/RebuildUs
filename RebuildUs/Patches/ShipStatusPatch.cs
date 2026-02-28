@@ -14,7 +14,7 @@ internal static class ShipStatusPatch
     [HarmonyPatch(typeof(ShipStatus), nameof(ShipStatus.Awake))]
     internal static void AwakePostfix(ShipStatus __instance)
     {
-        if (Helpers.GetOption(ByteOptionNames.MapId) != 4)
+        if (ByteOptionNames.MapId.Get() != 4)
         {
             return;
         }
@@ -245,7 +245,7 @@ internal static class ShipStatusPatch
             }
 
             __result = Mathf.Lerp(__instance.MinLightRadius, __instance.MaxLightRadius, 1 - lerpValue)
-                       * Helpers.GetOption(FloatOptionNames.CrewLightMod);
+                       * FloatOptionNames.CrewLightMod.Get();
             return false;
         }
 
@@ -301,21 +301,21 @@ internal static class ShipStatusPatch
         int normalTaskCount = __instance.ShortTasks.Count;
         int longTaskCount = __instance.LongTasks.Count;
 
-        _originalNumCommonTasksOption = Helpers.GetOption(Int32OptionNames.NumCommonTasks);
-        _originalNumShortTasksOption = Helpers.GetOption(Int32OptionNames.NumShortTasks);
-        _originalNumLongTasksOption = Helpers.GetOption(Int32OptionNames.NumLongTasks);
+        _originalNumCommonTasksOption = Int32OptionNames.NumCommonTasks.Get();
+        _originalNumShortTasksOption = Int32OptionNames.NumShortTasks.Get();
+        _originalNumLongTasksOption = Int32OptionNames.NumLongTasks.Get();
 
-        if (Helpers.GetOption(Int32OptionNames.NumCommonTasks) > commonTaskCount)
+        if (Int32OptionNames.NumCommonTasks.Get() > commonTaskCount)
         {
-            Helpers.SetOption(Int32OptionNames.NumCommonTasks, commonTaskCount);
+            Int32OptionNames.NumCommonTasks.Set(commonTaskCount);
         }
-        if (Helpers.GetOption(Int32OptionNames.NumShortTasks) > normalTaskCount)
+        if (Int32OptionNames.NumShortTasks.Get() > normalTaskCount)
         {
-            Helpers.SetOption(Int32OptionNames.NumShortTasks, normalTaskCount);
+            Int32OptionNames.NumShortTasks.Set(normalTaskCount);
         }
-        if (Helpers.GetOption(Int32OptionNames.NumLongTasks) > longTaskCount)
+        if (Int32OptionNames.NumLongTasks.Get() > longTaskCount)
         {
-            Helpers.SetOption(Int32OptionNames.NumLongTasks, longTaskCount);
+            Int32OptionNames.NumLongTasks.Set(longTaskCount);
         }
 
         return true;
@@ -326,9 +326,9 @@ internal static class ShipStatusPatch
     internal static void BeginPostfix(ShipStatus __instance)
     {
         // Restore original settings after the tasks have been selected
-        Helpers.SetOption(Int32OptionNames.NumCommonTasks, _originalNumCommonTasksOption);
-        Helpers.SetOption(Int32OptionNames.NumShortTasks, _originalNumShortTasksOption);
-        Helpers.SetOption(Int32OptionNames.NumLongTasks, _originalNumLongTasksOption);
+        Int32OptionNames.NumCommonTasks.Set(_originalNumCommonTasksOption);
+        Int32OptionNames.NumShortTasks.Set(_originalNumShortTasksOption);
+        Int32OptionNames.NumLongTasks.Set(_originalNumLongTasksOption);
 
         // 一部役職のタスクを再割り当てする
         {

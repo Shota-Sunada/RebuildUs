@@ -106,7 +106,7 @@ internal class Mayor : MultiRoleBase<Mayor>
 
     internal static void SetButtonCooldowns()
     {
-        _mayorMeetingButton.MaxTimer = Helpers.GetOption(Int32OptionNames.EmergencyCooldown);
+        _mayorMeetingButton.MaxTimer = Int32OptionNames.EmergencyCooldown.Get();
     }
 
     internal static void Clear()

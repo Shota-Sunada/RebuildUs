@@ -377,7 +377,7 @@ internal static class GameStart
             return true;
         }
         for (int i = 0; i < probabilities.Length; i++)
-            // Normalize to [0,1]
+        // Normalize to [0,1]
         {
             probabilities[i] /= sum;
         }

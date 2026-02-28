@@ -11,78 +11,6 @@ internal static class PlayerControlExtensions
     private static readonly Vector3 ColorBlindMeetingPos = new(0.3384f, 0.23334f, -0.11f);
     private static readonly Vector3 ColorBlindMeetingScale = new(0.72f, 0.8f, 0.8f);
 
-    private static List<byte> GenerateTasks(int numCommon, int numShort, int numLong)
-    {
-        if (numCommon + numShort + numLong <= 0)
-        {
-            numShort = 1;
-        }
-
-        Il2CppSystem.Collections.Generic.List<byte> tasks = new();
-        Il2CppSystem.Collections.Generic.HashSet<TaskTypes> hashSet = new();
-
-        List<NormalPlayerTask> commonTasks = [.. MapUtilities.CachedShipStatus.CommonTasks];
-        commonTasks.Shuffle();
-
-        List<NormalPlayerTask> shortTasks = [.. MapUtilities.CachedShipStatus.ShortTasks];
-        shortTasks.Shuffle();
-
-        List<NormalPlayerTask> longTasks = [.. MapUtilities.CachedShipStatus.LongTasks];
-        longTasks.Shuffle();
-
-        int start = 0;
-        Il2CppSystem.Collections.Generic.List<NormalPlayerTask> commonTasksIl2Cpp = new();
-        foreach (NormalPlayerTask t in commonTasks)
-        {
-            commonTasksIl2Cpp.Add(t);
-        }
-        MapUtilities.CachedShipStatus.AddTasksFromList(ref start, numCommon, tasks, hashSet, commonTasksIl2Cpp);
-
-        start = 0;
-        Il2CppSystem.Collections.Generic.List<NormalPlayerTask> shortTasksIl2Cpp = new();
-        foreach (NormalPlayerTask t in shortTasks)
-        {
-            shortTasksIl2Cpp.Add(t);
-        }
-        MapUtilities.CachedShipStatus.AddTasksFromList(ref start, numShort, tasks, hashSet, shortTasksIl2Cpp);
-
-        start = 0;
-        Il2CppSystem.Collections.Generic.List<NormalPlayerTask> longTasksIl2Cpp = new();
-        foreach (NormalPlayerTask t in longTasks)
-        {
-            longTasksIl2Cpp.Add(t);
-        }
-        MapUtilities.CachedShipStatus.AddTasksFromList(ref start, numLong, tasks, hashSet, longTasksIl2Cpp);
-
-        return [.. tasks];
-    }
-
-    private static TextMeshPro GetOrCreateLabel(TextMeshPro source, string name, float yOffset, float fontScale)
-    {
-        if (source?.transform?.parent == null)
-        {
-            return null;
-        }
-
-        Transform labelTransform = source.transform.parent.Find(name);
-        TextMeshPro label = labelTransform?.GetComponent<TextMeshPro>();
-
-        if (label == null)
-        {
-            label = Object.Instantiate(source, source.transform.parent);
-            if (label == null)
-            {
-                return null;
-            }
-            label.transform.localPosition += Vector3.up * yOffset;
-            label.fontSize *= fontScale;
-            label.gameObject.name = name;
-            label.color = label.color.SetAlpha(1f);
-        }
-
-        return label;
-    }
-
     extension(PlayerControl player)
     {
         internal void UpdatePlayerInfo()
@@ -206,7 +134,7 @@ internal static class PlayerControlExtensions
                         bool commsActive = false;
                         if (MapUtilities.CachedShipStatus != null && MapUtilities.Systems.TryGetValue(SystemTypes.Comms, out UnityObject comms))
                         {
-                            IActivatable activatable = comms.TryCast<IActivatable>();
+                            IActivatable activatable = comms.CastFast<IActivatable>();
                             if (activatable != null)
                             {
                                 commsActive = activatable.IsActive;
@@ -581,5 +509,77 @@ internal static class PlayerControlExtensions
                 }
             }
         }
+    }
+
+    private static List<byte> GenerateTasks(int numCommon, int numShort, int numLong)
+    {
+        if (numCommon + numShort + numLong <= 0)
+        {
+            numShort = 1;
+        }
+
+        Il2CppSystem.Collections.Generic.List<byte> tasks = new();
+        Il2CppSystem.Collections.Generic.HashSet<TaskTypes> hashSet = new();
+
+        List<NormalPlayerTask> commonTasks = [.. MapUtilities.CachedShipStatus.CommonTasks];
+        commonTasks.Shuffle();
+
+        List<NormalPlayerTask> shortTasks = [.. MapUtilities.CachedShipStatus.ShortTasks];
+        shortTasks.Shuffle();
+
+        List<NormalPlayerTask> longTasks = [.. MapUtilities.CachedShipStatus.LongTasks];
+        longTasks.Shuffle();
+
+        int start = 0;
+        Il2CppSystem.Collections.Generic.List<NormalPlayerTask> commonTasksIl2Cpp = new();
+        foreach (NormalPlayerTask t in commonTasks)
+        {
+            commonTasksIl2Cpp.Add(t);
+        }
+        MapUtilities.CachedShipStatus.AddTasksFromList(ref start, numCommon, tasks, hashSet, commonTasksIl2Cpp);
+
+        start = 0;
+        Il2CppSystem.Collections.Generic.List<NormalPlayerTask> shortTasksIl2Cpp = new();
+        foreach (NormalPlayerTask t in shortTasks)
+        {
+            shortTasksIl2Cpp.Add(t);
+        }
+        MapUtilities.CachedShipStatus.AddTasksFromList(ref start, numShort, tasks, hashSet, shortTasksIl2Cpp);
+
+        start = 0;
+        Il2CppSystem.Collections.Generic.List<NormalPlayerTask> longTasksIl2Cpp = new();
+        foreach (NormalPlayerTask t in longTasks)
+        {
+            longTasksIl2Cpp.Add(t);
+        }
+        MapUtilities.CachedShipStatus.AddTasksFromList(ref start, numLong, tasks, hashSet, longTasksIl2Cpp);
+
+        return [.. tasks];
+    }
+
+    private static TextMeshPro GetOrCreateLabel(TextMeshPro source, string name, float yOffset, float fontScale)
+    {
+        if (source?.transform?.parent == null)
+        {
+            return null;
+        }
+
+        Transform labelTransform = source.transform.parent.Find(name);
+        TextMeshPro label = labelTransform?.GetComponent<TextMeshPro>();
+
+        if (label == null)
+        {
+            label = Object.Instantiate(source, source.transform.parent);
+            if (label == null)
+            {
+                return null;
+            }
+            label.transform.localPosition += Vector3.up * yOffset;
+            label.fontSize *= fontScale;
+            label.gameObject.name = name;
+            label.color = label.color.SetAlpha(1f);
+        }
+
+        return label;
     }
 }

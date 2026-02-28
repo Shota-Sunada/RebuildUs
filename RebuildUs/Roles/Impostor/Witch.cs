@@ -170,7 +170,7 @@ internal class Witch : MultiRoleBase<Witch>
                     WitchSpellButton.Timer = WitchSpellButton.MaxTimer;
                     if (TriggerBothCooldowns)
                     {
-                        Local.Player.killTimer = Helpers.GetOption(FloatOptionNames.KillCooldown);
+                        Local.Player.killTimer = FloatOptionNames.KillCooldown.Get();
                     }
                 }
                 else

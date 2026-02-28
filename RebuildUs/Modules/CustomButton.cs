@@ -90,7 +90,8 @@ internal sealed class CustomButton
         effectDuration,
         onEffectEnds,
         mirror,
-        buttonText) { }
+        buttonText)
+    { }
 
     internal CustomButton(Action onClick,
                           Func<bool> hasButton,
@@ -119,7 +120,8 @@ internal sealed class CustomButton
         effectDuration,
         onEffectEnds,
         mirror,
-        buttonText) { }
+        buttonText)
+    { }
 
     internal CustomButton(Action onClick,
                           Func<bool> hasButton,
@@ -145,7 +147,8 @@ internal sealed class CustomButton
         0f,
         () => { },
         mirror,
-        buttonText) { }
+        buttonText)
+    { }
 
     private CustomButton(Action onClick,
                          Func<bool> hasButton,
@@ -264,7 +267,8 @@ internal sealed class CustomButton
         0f,
         () => { },
         mirror,
-        buttonText) { }
+        buttonText)
+    { }
 #nullable disable
 
     private void OnClickEvent()

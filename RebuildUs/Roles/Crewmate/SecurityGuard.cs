@@ -143,7 +143,7 @@ internal class SecurityGuard : SingleRoleBase<SecurityGuard>
                     RPCProcedure.SealVent(Local._ventTarget.Id);
                     Local._ventTarget = null;
                 }
-                else if (Helpers.GetOption(ByteOptionNames.MapId) != 1 && MapSettings.CouldUseCameras && !SubmergedCompatibility.IsSubmerged)
+                else if (ByteOptionNames.MapId.Get() != 1 && MapSettings.CouldUseCameras && !SubmergedCompatibility.IsSubmerged)
                 {
                     // Place camera if there's no vent and it's not MiraHQ
                     Vector3 pos = PlayerControl.LocalPlayer.transform.position;
@@ -178,7 +178,7 @@ internal class SecurityGuard : SingleRoleBase<SecurityGuard>
             },
             () =>
             {
-                if (Local._ventTarget == null && Helpers.GetOption(ByteOptionNames.MapId) != 1 && !SubmergedCompatibility.IsSubmerged)
+                if (Local._ventTarget == null && ByteOptionNames.MapId.Get() != 1 && !SubmergedCompatibility.IsSubmerged)
                 {
                     _securityGuardButton.ButtonText = Tr.Get(TrKey.PlaceCameraText);
                     _securityGuardButton.Sprite = AssetLoader.PlaceCameraButton;
@@ -193,7 +193,7 @@ internal class SecurityGuard : SingleRoleBase<SecurityGuard>
 
                 return Local._ventTarget != null
                     ? Local.RemainingScrews >= VentPrice && PlayerControl.LocalPlayer.CanMove
-                    : Helpers.GetOption(ByteOptionNames.MapId) != 1
+                    : ByteOptionNames.MapId.Get() != 1
                       && !SubmergedCompatibility.IsSubmerged
                       && MapSettings.CouldUseCameras
                       && Local.RemainingScrews >= CamPrice
@@ -220,7 +220,7 @@ internal class SecurityGuard : SingleRoleBase<SecurityGuard>
 
         SecurityGuardCamButton = new(() =>
             {
-                if (Helpers.GetOption(ByteOptionNames.MapId) != 1)
+                if (ByteOptionNames.MapId.Get() != 1)
                 {
                     if (Local._minigame == null)
                     {

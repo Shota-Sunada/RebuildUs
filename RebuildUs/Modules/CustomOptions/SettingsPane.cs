@@ -401,9 +401,9 @@ internal partial class CustomOption
             name = TrKey.ImpostorRoles;
             int min = CustomOptionHolder.ImpostorRolesCountMin.GetSelection();
             int max = CustomOptionHolder.ImpostorRolesCountMax.GetSelection();
-            if (max > Helpers.GetOption(Int32OptionNames.NumImpostors))
+            if (max > Int32OptionNames.NumImpostors.Get())
             {
-                max = Helpers.GetOption(Int32OptionNames.NumImpostors);
+                max = Int32OptionNames.NumImpostors.Get();
             }
             if (min > max)
             {

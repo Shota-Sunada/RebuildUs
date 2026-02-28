@@ -19,7 +19,7 @@ internal static class KillButtonPatch
         // Handle blank kill
         if (res == MurderAttemptResult.BlankKill)
         {
-            float cooldown = Helpers.GetOption(FloatOptionNames.KillCooldown);
+            float cooldown = FloatOptionNames.KillCooldown.Get();
             lp.SetKillTimer(cooldown);
             if (lp.IsRole(RoleType.Cleaner))
             {

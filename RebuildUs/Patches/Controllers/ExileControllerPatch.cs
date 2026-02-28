@@ -287,7 +287,7 @@ internal static class ExileControllerPatch
         if (PlayerControl.LocalPlayer.HasModifier(ModifierType.Mini) && PlayerControl.LocalPlayer.IsTeamImpostor())
         {
             float multiplier = Mini.IsGrownUp(PlayerControl.LocalPlayer) ? 0.66f : 2f;
-            PlayerControl.LocalPlayer.SetKillTimer(Helpers.GetOption(FloatOptionNames.KillCooldown) * multiplier);
+            PlayerControl.LocalPlayer.SetKillTimer(FloatOptionNames.KillCooldown.Get() * multiplier);
         }
 
         if (PlayerControl.LocalPlayer.HasModifier(ModifierType.AntiTeleport))
@@ -327,8 +327,7 @@ internal static class ExileControllerPatch
 
         if (deadPlayers < (int)CustomOptionHolder.AdditionalEmergencyCooldown.GetFloat())
         {
-            MapUtilities.CachedShipStatus.EmergencyCooldown = Helpers.GetOption(Int32OptionNames.EmergencyCooldown)
-                                                              + CustomOptionHolder.AdditionalEmergencyCooldownTime.GetFloat();
+            MapUtilities.CachedShipStatus.EmergencyCooldown = Int32OptionNames.EmergencyCooldown.Get() + CustomOptionHolder.AdditionalEmergencyCooldownTime.GetFloat();
         }
     }
 }
