@@ -1,6 +1,7 @@
 namespace RebuildUs.Roles.Crewmate;
 
 [HarmonyPatch]
+[RegisterRole(RoleType.Tracker, RoleTeam.Crewmate, typeof(MultiRoleBase<Tracker>), nameof(Tracker.NameColor), nameof(CustomOptionHolder.TrackerSpawnRate))]
 internal class Tracker : MultiRoleBase<Tracker>
 {
     internal static Color NameColor = new Color32(100, 58, 220, byte.MaxValue);

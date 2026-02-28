@@ -1,6 +1,7 @@
 namespace RebuildUs.Roles.Crewmate;
 
 [HarmonyPatch]
+[RegisterRole(RoleType.Mayor, RoleTeam.Crewmate, typeof(MultiRoleBase<Mayor>), nameof(Mayor.NameColor), nameof(CustomOptionHolder.MayorSpawnRate))]
 internal class Mayor : MultiRoleBase<Mayor>
 {
     internal static Color NameColor = new Color32(32, 77, 66, byte.MaxValue);

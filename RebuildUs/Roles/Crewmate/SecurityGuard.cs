@@ -1,6 +1,7 @@
 namespace RebuildUs.Roles.Crewmate;
 
 [HarmonyPatch]
+[RegisterRole(RoleType.SecurityGuard, RoleTeam.Crewmate, typeof(SingleRoleBase<SecurityGuard>), nameof(SecurityGuard.NameColor), nameof(CustomOptionHolder.SecurityGuardSpawnRate))]
 internal class SecurityGuard : SingleRoleBase<SecurityGuard>
 {
     internal static Color NameColor = new Color32(195, 178, 95, byte.MaxValue);

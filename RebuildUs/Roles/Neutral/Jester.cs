@@ -1,6 +1,7 @@
 namespace RebuildUs.Roles.Neutral;
 
 [HarmonyPatch]
+[RegisterRole(RoleType.Jester, RoleTeam.Neutral, typeof(SingleRoleBase<Jester>), nameof(Jester.NameColor), nameof(CustomOptionHolder.JesterSpawnRate))]
 internal class Jester : SingleRoleBase<Jester>
 {
     internal static Color NameColor = new Color32(236, 98, 165, byte.MaxValue);

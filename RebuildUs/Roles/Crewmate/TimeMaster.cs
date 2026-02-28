@@ -1,6 +1,7 @@
 namespace RebuildUs.Roles.Crewmate;
 
 [HarmonyPatch]
+[RegisterRole(RoleType.TimeMaster, RoleTeam.Crewmate, typeof(SingleRoleBase<TimeMaster>), nameof(TimeMaster.NameColor), nameof(CustomOptionHolder.TimeMasterSpawnRate))]
 internal class TimeMaster : SingleRoleBase<TimeMaster>
 {
     internal static Color NameColor = new Color32(112, 142, 239, byte.MaxValue);

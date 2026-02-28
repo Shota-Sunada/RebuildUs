@@ -3,6 +3,7 @@ namespace RebuildUs.Roles.Crewmate;
 // 保護対象が志望したときにリセットする処理を書いていないので、もしかしたらバグるかも？
 
 [HarmonyPatch]
+[RegisterRole(RoleType.Medic, RoleTeam.Crewmate, typeof(SingleRoleBase<Medic>), nameof(Medic.NameColor), nameof(CustomOptionHolder.MedicSpawnRate))]
 internal class Medic : SingleRoleBase<Medic>
 {
     internal static Color NameColor = new Color32(126, 251, 194, byte.MaxValue);

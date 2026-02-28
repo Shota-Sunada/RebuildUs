@@ -1,6 +1,7 @@
 namespace RebuildUs.Roles.Crewmate;
 
 [HarmonyPatch]
+[RegisterRole(RoleType.Suicider, RoleTeam.Crewmate, typeof(MultiRoleBase<Suicider>), nameof(Suicider.NameColor), nameof(CustomOptionHolder.SuiciderSpawnRate))]
 internal class Suicider : MultiRoleBase<Suicider>
 {
     internal static Color NameColor = Palette.ImpostorRed;

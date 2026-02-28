@@ -1,6 +1,7 @@
 namespace RebuildUs.Roles.Crewmate;
 
 [HarmonyPatch]
+[RegisterRole(RoleType.Snitch, RoleTeam.Crewmate, typeof(SingleRoleBase<Snitch>), nameof(Snitch.NameColor), nameof(CustomOptionHolder.SnitchSpawnRate))]
 internal class Snitch : SingleRoleBase<Snitch>
 {
     internal static Color NameColor = new Color32(184, 251, 79, byte.MaxValue);

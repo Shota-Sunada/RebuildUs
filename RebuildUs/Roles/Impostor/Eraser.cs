@@ -1,6 +1,7 @@
 namespace RebuildUs.Roles.Impostor;
 
 [HarmonyPatch]
+[RegisterRole(RoleType.Eraser, RoleTeam.Impostor, typeof(MultiRoleBase<Eraser>), nameof(Eraser.NameColor), nameof(CustomOptionHolder.EraserSpawnRate))]
 internal class Eraser : MultiRoleBase<Eraser>
 {
     internal static Color NameColor = Palette.ImpostorRed;

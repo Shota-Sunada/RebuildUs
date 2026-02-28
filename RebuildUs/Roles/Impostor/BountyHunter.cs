@@ -1,6 +1,7 @@
 namespace RebuildUs.Roles.Impostor;
 
 [HarmonyPatch]
+[RegisterRole(RoleType.BountyHunter, RoleTeam.Impostor, typeof(SingleRoleBase<BountyHunter>), nameof(BountyHunter.NameColor), nameof(CustomOptionHolder.BountyHunterSpawnRate))]
 internal class BountyHunter : SingleRoleBase<BountyHunter>
 {
     internal static Color NameColor = Palette.ImpostorRed;

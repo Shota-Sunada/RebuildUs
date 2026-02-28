@@ -1,6 +1,7 @@
 namespace RebuildUs.Roles.Crewmate;
 
 [HarmonyPatch]
+[RegisterRole(RoleType.Madmate, RoleTeam.Crewmate, typeof(MultiRoleBase<MadmateRole>), nameof(MadmateRole.NameColor), nameof(CustomOptionHolder.MadmateRoleSpawnRate))]
 internal class MadmateRole : MultiRoleBase<MadmateRole>
 {
     internal static Color NameColor = Palette.ImpostorRed;

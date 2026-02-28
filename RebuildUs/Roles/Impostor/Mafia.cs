@@ -19,6 +19,7 @@ internal static class Mafia
     }
 
     [HarmonyPatch]
+    [RegisterRole(RoleType.Godfather, RoleTeam.Impostor, typeof(SingleRoleBase<Godfather>), nameof(Mafia.NameColor), nameof(CustomOptionHolder.MafiaSpawnRate))]
     internal class Godfather : SingleRoleBase<Godfather>
     {
         public Godfather()
@@ -62,6 +63,7 @@ internal static class Mafia
     }
 
     [HarmonyPatch]
+    [RegisterRole(RoleType.Mafioso, RoleTeam.Impostor, typeof(SingleRoleBase<Mafioso>), nameof(Mafia.NameColor), nameof(CustomOptionHolder.MafiaSpawnRate))]
     internal class Mafioso : SingleRoleBase<Mafioso>
     {
         public Mafioso()
@@ -127,6 +129,7 @@ internal static class Mafia
     }
 
     [HarmonyPatch]
+    [RegisterRole(RoleType.Janitor, RoleTeam.Impostor, typeof(SingleRoleBase<Janitor>), nameof(Mafia.NameColor), nameof(CustomOptionHolder.MafiaSpawnRate))]
     internal class Janitor : SingleRoleBase<Janitor>
     {
         // write configs here

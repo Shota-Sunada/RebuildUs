@@ -1,6 +1,7 @@
 namespace RebuildUs.Roles.Crewmate;
 
 [HarmonyPatch]
+[RegisterRole(RoleType.Sheriff, RoleTeam.Crewmate, typeof(MultiRoleBase<Sheriff>), nameof(Sheriff.NameColor), nameof(CustomOptionHolder.SheriffSpawnRate))]
 internal class Sheriff : MultiRoleBase<Sheriff>
 {
     internal static Color NameColor = new Color32(248, 205, 70, byte.MaxValue);

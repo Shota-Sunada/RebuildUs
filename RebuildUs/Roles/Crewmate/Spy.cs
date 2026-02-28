@@ -1,6 +1,7 @@
 namespace RebuildUs.Roles.Crewmate;
 
 [HarmonyPatch]
+[RegisterRole(RoleType.Spy, RoleTeam.Crewmate, typeof(SingleRoleBase<Spy>), nameof(Spy.NameColor), nameof(CustomOptionHolder.SpySpawnRate))]
 internal class Spy : SingleRoleBase<Spy>
 {
     internal static Color NameColor = Palette.ImpostorRed;

@@ -1,6 +1,7 @@
 namespace RebuildUs.Roles.Neutral;
 
 [HarmonyPatch]
+[RegisterRole(RoleType.Arsonist, RoleTeam.Neutral, typeof(SingleRoleBase<Arsonist>), nameof(Arsonist.NameColor), nameof(CustomOptionHolder.ArsonistSpawnRate))]
 internal class Arsonist : SingleRoleBase<Arsonist>
 {
     internal static Color NameColor = new Color32(238, 112, 46, byte.MaxValue);

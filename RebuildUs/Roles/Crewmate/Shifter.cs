@@ -1,6 +1,7 @@
 namespace RebuildUs.Roles.Crewmate;
 
 [HarmonyPatch]
+[RegisterRole(RoleType.Shifter, RoleTeam.Crewmate, typeof(MultiRoleBase<Shifter>), nameof(Shifter.NameColor), nameof(CustomOptionHolder.ShifterSpawnRate))]
 internal class Shifter : MultiRoleBase<Shifter>
 {
     internal static Color NameColor = new Color32(102, 102, 102, byte.MaxValue);

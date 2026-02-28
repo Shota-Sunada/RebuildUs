@@ -1,6 +1,7 @@
 namespace RebuildUs.Roles.Crewmate;
 
 [HarmonyPatch]
+[RegisterRole(RoleType.Hacker, RoleTeam.Crewmate, typeof(MultiRoleBase<Hacker>), nameof(Hacker.NameColor), nameof(CustomOptionHolder.HackerSpawnRate))]
 internal class Hacker : MultiRoleBase<Hacker>
 {
     internal static Color NameColor = new Color32(117, 250, 76, byte.MaxValue);

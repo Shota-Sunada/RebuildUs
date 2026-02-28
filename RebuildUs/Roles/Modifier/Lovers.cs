@@ -1,5 +1,7 @@
 namespace RebuildUs.Roles.Modifier;
 
+[HarmonyPatch]
+[RegisterRole(RoleType.Lovers, RoleTeam.Neutral, typeof(Lovers), nameof(Lovers.Color), nameof(CustomOptionHolder.LoversSpawnRate))]
 internal static class Lovers
 {
     internal static List<Couple> Couples = [];

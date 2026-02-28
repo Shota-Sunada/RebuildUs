@@ -1,6 +1,7 @@
 namespace RebuildUs.Roles.Impostor;
 
 [HarmonyPatch]
+[RegisterRole(RoleType.Camouflager, RoleTeam.Impostor, typeof(SingleRoleBase<Camouflager>), nameof(Camouflager.NameColor), nameof(CustomOptionHolder.CamouflagerSpawnRate))]
 internal class Camouflager : SingleRoleBase<Camouflager>
 {
     internal static Color NameColor = Palette.ImpostorRed;

@@ -1,6 +1,7 @@
 namespace RebuildUs.Roles.Impostor;
 
 [HarmonyPatch]
+[RegisterRole(RoleType.Warlock, RoleTeam.Impostor, typeof(MultiRoleBase<Warlock>), nameof(Warlock.NameColor), nameof(CustomOptionHolder.WarlockSpawnRate))]
 internal class Warlock : MultiRoleBase<Warlock>
 {
     internal static Color NameColor = Palette.ImpostorRed;

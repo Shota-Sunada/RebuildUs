@@ -1,9 +1,13 @@
 namespace RebuildUs.Roles.Crewmate;
 
 [HarmonyPatch]
+[RegisterRole(RoleType.NiceSwapper, RoleTeam.Crewmate, typeof(SingleRoleBase<Swapper>), nameof(NameColor), nameof(CustomOptionHolder.SwapperSpawnRate))]
+[RegisterRole(RoleType.EvilSwapper, RoleTeam.Impostor, typeof(SingleRoleBase<Swapper>), nameof(ImpostorNameColor), nameof(CustomOptionHolder.SwapperSpawnRate))]
 internal class Swapper : SingleRoleBase<Swapper>
 {
     internal static int RemainSwaps = 2;
+
+    internal static Color ImpostorNameColor => Palette.ImpostorRed;
 
     internal static byte PlayerId1 = byte.MaxValue;
     internal static byte PlayerId2 = byte.MaxValue;

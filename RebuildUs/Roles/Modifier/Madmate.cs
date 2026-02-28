@@ -14,6 +14,7 @@ internal enum MadmateAbility
 }
 
 [HarmonyPatch]
+[RegisterModifier(ModifierType.Madmate, typeof(Madmate), nameof(NameColor), nameof(CustomOptionHolder.MadmateSpawnRate))]
 internal class Madmate : ModifierBase<Madmate>
 {
     internal static Color NameColor = Palette.ImpostorRed;

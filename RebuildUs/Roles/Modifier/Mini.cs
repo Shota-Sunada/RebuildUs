@@ -1,6 +1,7 @@
 namespace RebuildUs.Roles.Modifier;
 
 [HarmonyPatch]
+[RegisterModifier(ModifierType.Mini, typeof(Mini), nameof(NameColor), nameof(CustomOptionHolder.MiniSpawnRate))]
 internal class Mini : ModifierBase<Mini>
 {
     internal const float DEFAULT_COLLIDER_RADIUS = 0.2233912f;

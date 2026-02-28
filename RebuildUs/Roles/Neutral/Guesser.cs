@@ -131,6 +131,7 @@ internal static class Guesser
     }
 
     [HarmonyPatch]
+    [RegisterRole(RoleType.EvilGuesser, RoleTeam.Impostor, typeof(SingleRoleBase<EvilGuesser>), nameof(EvilGuesser.NameColor), nameof(CustomOptionHolder.GuesserSpawnRate))]
     internal class EvilGuesser : SingleRoleBase<EvilGuesser>
     {
         internal static Color NameColor = Palette.ImpostorRed;

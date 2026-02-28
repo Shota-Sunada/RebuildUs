@@ -1,6 +1,7 @@
 namespace RebuildUs.Roles.Crewmate;
 
 [HarmonyPatch]
+[RegisterRole(RoleType.Seer, RoleTeam.Crewmate, typeof(MultiRoleBase<Seer>), nameof(Seer.NameColor), nameof(CustomOptionHolder.SeerSpawnRate))]
 internal class Seer : MultiRoleBase<Seer>
 {
     internal static Color NameColor = new Color32(97, 178, 108, byte.MaxValue);

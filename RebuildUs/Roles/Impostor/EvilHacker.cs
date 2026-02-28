@@ -1,6 +1,7 @@
 namespace RebuildUs.Roles.Impostor;
 
 [HarmonyPatch]
+[RegisterRole(RoleType.EvilHacker, RoleTeam.Impostor, typeof(MultiRoleBase<EvilHacker>), nameof(EvilHacker.NameColor), nameof(CustomOptionHolder.EvilHackerSpawnRate))]
 internal class EvilHacker : MultiRoleBase<EvilHacker>
 {
     internal static Color NameColor = Palette.ImpostorRed;

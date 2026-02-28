@@ -1,6 +1,7 @@
 namespace RebuildUs.Roles.Crewmate;
 
 [HarmonyPatch]
+[RegisterRole(RoleType.Engineer, RoleTeam.Crewmate, typeof(MultiRoleBase<Engineer>), nameof(Engineer.NameColor), nameof(CustomOptionHolder.EngineerSpawnRate))]
 internal class Engineer : MultiRoleBase<Engineer>
 {
     internal static Color NameColor = new Color32(0, 40, 245, byte.MaxValue);

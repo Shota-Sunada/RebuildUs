@@ -1,6 +1,7 @@
 namespace RebuildUs.Roles.Neutral;
 
 [HarmonyPatch]
+[RegisterRole(RoleType.Jackal, RoleTeam.Neutral, typeof(SingleRoleBase<Jackal>), nameof(Jackal.NameColor), nameof(CustomOptionHolder.JackalSpawnRate))]
 internal class Jackal : SingleRoleBase<Jackal>
 {
     internal static Color NameColor = new Color32(0, 180, 235, byte.MaxValue);

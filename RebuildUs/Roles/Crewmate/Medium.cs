@@ -1,6 +1,7 @@
 namespace RebuildUs.Roles.Crewmate;
 
 [HarmonyPatch]
+[RegisterRole(RoleType.Medium, RoleTeam.Crewmate, typeof(MultiRoleBase<Medium>), nameof(Medium.NameColor), nameof(CustomOptionHolder.MediumSpawnRate))]
 internal class Medium : MultiRoleBase<Medium>
 {
     internal static Color NameColor = new Color32(98, 120, 115, byte.MaxValue);

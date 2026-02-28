@@ -1,6 +1,7 @@
 namespace RebuildUs.Roles.Neutral;
 
 [HarmonyPatch]
+[RegisterRole(RoleType.Vulture, RoleTeam.Neutral, typeof(SingleRoleBase<Vulture>), nameof(Vulture.NameColor), nameof(CustomOptionHolder.VultureSpawnRate))]
 internal class Vulture : SingleRoleBase<Vulture>
 {
     internal static Color NameColor = new Color32(139, 69, 19, byte.MaxValue);

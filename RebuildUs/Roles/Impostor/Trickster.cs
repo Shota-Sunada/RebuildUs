@@ -1,6 +1,7 @@
 namespace RebuildUs.Roles.Impostor;
 
 [HarmonyPatch]
+[RegisterRole(RoleType.Trickster, RoleTeam.Impostor, typeof(SingleRoleBase<Trickster>), nameof(Trickster.NameColor), nameof(CustomOptionHolder.TricksterSpawnRate))]
 internal class Trickster : SingleRoleBase<Trickster>
 {
     internal static Color NameColor = Palette.ImpostorRed;

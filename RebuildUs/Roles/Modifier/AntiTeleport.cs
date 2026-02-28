@@ -1,6 +1,7 @@
 namespace RebuildUs.Roles.Modifier;
 
 [HarmonyPatch]
+[RegisterModifier(ModifierType.AntiTeleport, typeof(AntiTeleport), nameof(NameColor), nameof(CustomOptionHolder.AntiTeleportSpawnRate))]
 internal class AntiTeleport : ModifierBase<AntiTeleport>
 {
     internal static Color NameColor = Palette.Orange;

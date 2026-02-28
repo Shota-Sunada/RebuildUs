@@ -1,6 +1,7 @@
 namespace RebuildUs.Roles.Impostor;
 
 [HarmonyPatch]
+[RegisterRole(RoleType.EvilTracker, RoleTeam.Impostor, typeof(MultiRoleBase<EvilTracker>), nameof(EvilTracker.NameColor), nameof(CustomOptionHolder.EvilTrackerSpawnRate))]
 internal class EvilTracker : MultiRoleBase<EvilTracker>
 {
     internal static Color NameColor = Palette.ImpostorRed;

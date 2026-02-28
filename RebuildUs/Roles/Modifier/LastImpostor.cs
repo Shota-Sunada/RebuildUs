@@ -1,6 +1,7 @@
 namespace RebuildUs.Roles.Modifier;
 
 [HarmonyPatch]
+[RegisterModifier(ModifierType.LastImpostor, typeof(LastImpostor), nameof(NameColor), nameof(CustomOptionHolder.LastImpostorEnable))]
 internal class LastImpostor : ModifierBase<LastImpostor>
 {
     internal static Color NameColor = Palette.ImpostorRed;

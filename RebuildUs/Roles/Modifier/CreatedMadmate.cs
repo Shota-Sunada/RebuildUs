@@ -1,6 +1,7 @@
 namespace RebuildUs.Roles.Modifier;
 
 [HarmonyPatch]
+[RegisterModifier(ModifierType.CreatedMadmate, typeof(CreatedMadmate), nameof(Madmate.NameColor), nameof(CustomOptionHolder.EvilHackerSpawnRate))]
 internal class CreatedMadmate : ModifierBase<CreatedMadmate>
 {
     public CreatedMadmate()

@@ -1,6 +1,7 @@
 namespace RebuildUs.Roles.Impostor;
 
 [HarmonyPatch]
+[RegisterRole(RoleType.Morphing, RoleTeam.Impostor, typeof(MultiRoleBase<Morphing>), nameof(Morphing.NameColor), nameof(CustomOptionHolder.MorphingSpawnRate))]
 internal class Morphing : MultiRoleBase<Morphing>
 {
     internal static Color NameColor = Palette.ImpostorRed;

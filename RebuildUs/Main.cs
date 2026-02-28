@@ -18,6 +18,7 @@ global using System.Text.RegularExpressions;
 global using System.Linq.Expressions;
 global using AmongUs.GameOptions;
 global using AmongUs.Data;
+global using RebuildUs.Attributes;
 global using RebuildUs.Enums;
 global using RebuildUs.Extensions;
 global using RebuildUs.Localization;
@@ -51,8 +52,6 @@ namespace RebuildUs;
 [BepInDependency(REACTOR_GUID, REACTOR_VERSION)]
 [BepInProcess("Among Us.exe")]
 [ReactorModFlags(ModFlags.RequireOnAllClients)]
-// ReSharper disable once MemberCanBeInternal
-// ReSharper disable once ClassNeverInstantiated.Global
 public class RebuildUs : BasePlugin
 {
     private const string MOD_ID = "com.shota-sunada.rebuild-us";

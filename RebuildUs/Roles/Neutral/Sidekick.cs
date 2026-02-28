@@ -1,6 +1,7 @@
 namespace RebuildUs.Roles.Neutral;
 
 [HarmonyPatch]
+[RegisterRole(RoleType.Sidekick, RoleTeam.Neutral, typeof(SingleRoleBase<Sidekick>), nameof(Jackal.NameColor), nameof(CustomOptionHolder.JackalSpawnRate))]
 internal class Sidekick : SingleRoleBase<Sidekick>
 {
     // write configs here
