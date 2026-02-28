@@ -12,6 +12,12 @@
     <PackageReference Include="AmongUs.GameLibs.Steam" Version="2025.11.18"/>
     <PackageReference Include="BepInEx.IL2CPP.MSBuild" Version="2.1.0-rc.1"/>
     <PackageReference Include="BepInEx.Unity.IL2CPP" Version="6.0.0-be.735"/>
+
+    <PackageReference Include="Microsoft.CodeAnalysis.BannedApiAnalyzers" Version="3.3.4" PrivateAssets="all" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AdditionalFiles Include="BannedSymbols.txt" />
   </ItemGroup>
 
   <ItemGroup>

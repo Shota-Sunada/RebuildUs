@@ -1,0 +1,18 @@
+# LINQ (GC Allocations & CPU overhead)
+N:System.Linq;LINQ is forbidden. Use foreach or GetFastEnumerator().
+T:System.Linq.Enumerable;Avoid LINQ to maintain high FPS.
+
+# Regular Expressions (Heavy processing)
+N:System.Text.RegularExpressions;Regex is too heavy for hot paths. Use simple string manipulation.
+
+# Standard Casting (Reflection overhead)
+M:Il2CppInterop.Runtime.InteropTypes.Il2CppObjectBase.Cast``1;Use CastFast<T>() from Il2CppHelpers instead.
+
+# Standard Singleton (Reflection overhead)
+T:AmongUs.Runtime.Internal.DestroyableSingleton`1;Use FastDestroyableSingleton<T> instead of DestroyableSingleton<T>.
+
+# Logging (Consistency & Performance)
+T:BepInEx.Logging.ManualLogSource;Use RebuildUs.Logger instead.
+M:BepInEx.Logging.ManualLogSource.LogInfo(System.Object);Use RebuildUs.Logger.LogInfo instead.
+M:BepInEx.Logging.ManualLogSource.LogWarning(System.Object);Use RebuildUs.Logger.LogWarn instead.
+M:BepInEx.Logging.ManualLogSource.LogError(System.Object);Use RebuildUs.Logger.LogError instead.
