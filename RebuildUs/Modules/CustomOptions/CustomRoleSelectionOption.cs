@@ -1,6 +1,6 @@
 namespace RebuildUs.Modules.CustomOptions;
 
-internal sealed class CustomRoleSelectionOption : CustomOption<string>
+internal sealed class CustomRoleSelectionOption : CustomGeneralOption<string>
 {
     private readonly RoleType[] _roleTypes;
 

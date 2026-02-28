@@ -10,9 +10,17 @@ internal static class CustomOptionHolder
 
     internal static void Load()
     {
+        var presetHeader = new CustomOptionHeader(0, CustomOptionType.General, TrKey.Preset);
+        var rolesGeneralHeader = new CustomOptionHeader(10, CustomOptionType.General, TrKey.RolesGeneral);
+        var gameOptionsHeader = new CustomOptionHeader(19, CustomOptionType.General, TrKey.GameOptions);
+        var polusOptionsHeader = new CustomOptionHeader(70, CustomOptionType.General, TrKey.PolusOptions);
+        var airshipOptionsHeader = new CustomOptionHeader(80, CustomOptionType.General, TrKey.AirshipOptions);
+        var randomMapHeader = new CustomOptionHeader(100, CustomOptionType.General, TrKey.RandomMap);
+        var lastImpostorHeader = new CustomOptionHeader(4010, CustomOptionType.Modifier, TrKey.LastImpostor);
+
         #region MOD OPTIONS
 
-        PresetSelection = CustomOption.Header(0, CustomOptionType.General, TrKey.Preset, Presets, 0, TrKey.Preset);
+        PresetSelection = CustomOption.Normal(0, CustomOptionType.General, TrKey.Preset, Presets, 0, header: presetHeader);
         ActivateRoles = CustomOption.Normal(1, CustomOptionType.General, TrKey.ActivateRoles, true);
         EnableRandomRandomNumberAlgorithm = CustomOption.Normal(2, CustomOptionType.General, TrKey.RandomRandomNumberAlgorithm, false);
         RandomNumberAlgorithm = CustomOption.Normal(3, CustomOptionType.General, TrKey.RandomNumberAlgorithm, [Tr.Get(TrKey.RndDotnet), Tr.Get(TrKey.RndMT), Tr.Get(TrKey.RndXoshiro256), Tr.Get(TrKey.RndXoshiro256Ss), Tr.Get(TrKey.RndPcg64)], 0, EnableRandomRandomNumberAlgorithm);
@@ -26,7 +34,14 @@ internal static class CustomOptionHolder
 
         #region GENERAL OPTIONS
 
-        CrewmateRolesCountMin = CustomOption.Header(10, CustomOptionType.General, TrKey.CrewmateRolesCountMin, 0f, 0f, 15f, 1f, TrKey.RolesGeneral);
+        CrewmateRolesCountMin = CustomOption.Normal(10,
+            CustomOptionType.General,
+            TrKey.CrewmateRolesCountMin,
+            0f,
+            0f,
+            15f,
+            1f,
+            header: rolesGeneralHeader);
         CrewmateRolesCountMax = CustomOption.Normal(11, CustomOptionType.General, TrKey.CrewmateRolesCountMax, 0f, 0f, 15f, 1f);
         ImpostorRolesCountMin = CustomOption.Normal(12, CustomOptionType.General, TrKey.ImpostorRolesCountMin, 0f, 0f, 15f, 1f);
         ImpostorRolesCountMax = CustomOption.Normal(13, CustomOptionType.General, TrKey.ImpostorRolesCountMax, 0f, 0f, 15f, 1f);
@@ -39,7 +54,7 @@ internal static class CustomOptionHolder
 
         #region GAME OPTIONS
 
-        GameOptions = CustomOption.Header(19, CustomOptionType.General, TrKey.GameOptions, true, TrKey.GameOptions);
+        GameOptions = CustomOption.Normal(19, CustomOptionType.General, TrKey.GameOptions, true, header: gameOptionsHeader);
         MaxNumberOfMeetings = CustomOption.Normal(20, CustomOptionType.General, TrKey.MaxNumberOfMeetings, 10, 0, 15, 1);
         BlockSkippingInEmergencyMeetings = CustomOption.Normal(21, CustomOptionType.General, TrKey.BlockSkippingInEmergencyMeetings, false);
         NoVoteIsSelfVote = CustomOption.Normal(22, CustomOptionType.General, TrKey.NoVoteIsSelfVote, false);
@@ -75,7 +90,11 @@ internal static class CustomOptionHolder
 
         #region POLUS OPTIONS
 
-        PolusAdditionalVents = CustomOption.Header(70, CustomOptionType.General, TrKey.PolusAdditionalVents, true, TrKey.PolusOptions);
+        PolusAdditionalVents = CustomOption.Normal(70,
+            CustomOptionType.General,
+            TrKey.PolusAdditionalVents,
+            true,
+            header: polusOptionsHeader);
         PolusSpecimenVital = CustomOption.Normal(71, CustomOptionType.General, TrKey.PolusSpecimenVital, true);
         PolusRandomSpawn = CustomOption.Normal(72, CustomOptionType.General, TrKey.PolusRandomSpawn, true);
 
@@ -83,7 +102,7 @@ internal static class CustomOptionHolder
 
         #region AIRSHIP OPTIONS
 
-        AirshipOptimize = CustomOption.Header(80, CustomOptionType.General, TrKey.AirshipOptimize, false, TrKey.AirshipOptions);
+        AirshipOptimize = CustomOption.Normal(80, CustomOptionType.General, TrKey.AirshipOptimize, false, header: airshipOptionsHeader);
         AirshipEnableWallCheck = CustomOption.Normal(81, CustomOptionType.General, TrKey.AirshipEnableWallCheck, true);
         AirshipReactorDuration = CustomOption.Normal(82, CustomOptionType.General, TrKey.AirshipReactorDuration, 60f, 0f, 600f, 1f);
         AirshipRandomSpawn = CustomOption.Normal(83, CustomOptionType.General, TrKey.AirshipRandomSpawn, false);
@@ -105,7 +124,7 @@ internal static class CustomOptionHolder
 
         #region MAP OPTIONS
 
-        RandomMap = CustomOption.Header(100, CustomOptionType.General, TrKey.RandomMap, false, TrKey.RandomMap);
+        RandomMap = CustomOption.Normal(100, CustomOptionType.General, TrKey.RandomMap, false, header: randomMapHeader);
         RandomMapEnableSkeld = CustomOption.Normal(101, CustomOptionType.General, TrKey.RandomMapEnableSkeld, true, RandomMap);
         RandomMapEnableMiraHq = CustomOption.Normal(102, CustomOptionType.General, TrKey.RandomMapEnableMiraHq, true, RandomMap);
         RandomMapEnablePolus = CustomOption.Normal(103, CustomOptionType.General, TrKey.RandomMapEnablePolus, true, RandomMap);
@@ -385,7 +404,11 @@ internal static class CustomOptionHolder
         MadmateCanFixComm = CustomOption.Normal(4011, CustomOptionType.Modifier, TrKey.MadmateCanFixComm, true, MadmateSpawnRate);
         MadmateExilePlayer = CustomOption.Normal(4012, CustomOptionType.Modifier, TrKey.MadmateExileCrewmate, false, MadmateSpawnRate);
 
-        LastImpostorEnable = CustomOption.Header(4010, CustomOptionType.Modifier, TrKey.LastImpostorEnable, true, TrKey.LastImpostor);
+        LastImpostorEnable = CustomOption.Normal(4010,
+            CustomOptionType.Modifier,
+            TrKey.LastImpostorEnable,
+            true,
+            header: lastImpostorHeader);
         LastImpostorFunctions = CustomOption.Normal(4011, CustomOptionType.Modifier, TrKey.LastImpostorFunctions, [Tr.Get(TrKey.LastImpostorDivine), Tr.Get(TrKey.LastImpostorGuesser)], 0, LastImpostorEnable);
         LastImpostorNumKills = CustomOption.Normal(4012, CustomOptionType.Modifier, TrKey.LastImpostorNumKills, 3f, 0f, 10f, 1f, LastImpostorEnable);
         LastImpostorResults = CustomOption.Normal(4013, CustomOptionType.Modifier, TrKey.FortuneTellerResults, [Tr.Get(TrKey.FortuneTellerResultCrew), Tr.Get(TrKey.FortuneTellerResultTeam), Tr.Get(TrKey.FortuneTellerResultRole)], 0, LastImpostorEnable);

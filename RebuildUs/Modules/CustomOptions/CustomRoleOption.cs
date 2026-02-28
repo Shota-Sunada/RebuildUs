@@ -1,9 +1,9 @@
 namespace RebuildUs.Modules.CustomOptions;
 
-internal class CustomRoleOption : CustomOption<string>
+internal class CustomRoleOption : CustomGeneralOption<string>
 {
     internal bool IsRoleEnabled;
-    internal CustomOption NumberOfRoleOption;
+    internal CustomNumberOption NumberOfRoleOption;
 
     internal CustomRoleOption(int baseId, CustomOptionType type, RoleType roleType, Color color, int max = 15, bool roleEnabled = true) : base(baseId,
         type,
@@ -13,11 +13,11 @@ internal class CustomRoleOption : CustomOption<string>
         null,
         false,
         "",
-        color)
+        color,
+        new CustomOptionHeader(baseId, type, Enum.TryParse(Enum.GetName(roleType), out TrKey key2) ? key2 : TrKey.None, color))
     {
         IsRoleEnabled = roleEnabled;
-        IsHeader = true;
-        HeaderKey = NameKey;
+        UseSpawnChanceLabel = true;
 
         if (max <= 0 || !roleEnabled)
         {
@@ -38,11 +38,11 @@ internal class CustomRoleOption : CustomOption<string>
         null,
         false,
         "",
-        color)
+        color,
+        new CustomOptionHeader(baseId, type, nameKey, color))
     {
         IsRoleEnabled = roleEnabled;
-        IsHeader = true;
-        HeaderKey = nameKey;
+        UseSpawnChanceLabel = true;
 
         if (max <= 0 || !roleEnabled)
         {

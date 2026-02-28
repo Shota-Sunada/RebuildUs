@@ -2,9 +2,9 @@ namespace RebuildUs.Modules.CustomOptions;
 
 internal sealed class CustomTasksOption
 {
-    private readonly CustomOption _commonTaskOption;
-    private readonly CustomOption _longTaskOption;
-    private readonly CustomOption _shortTaskOption;
+    private readonly CustomNumberOption _commonTaskOption;
+    private readonly CustomNumberOption _longTaskOption;
+    private readonly CustomNumberOption _shortTaskOption;
 
     public CustomTasksOption((int commonId, int shortId, int longId) ids,
                              CustomOptionType type,

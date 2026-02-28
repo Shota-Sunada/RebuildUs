@@ -11,17 +11,10 @@ internal sealed class CustomModifierOption : CustomRoleOption
         roleEnabled)
     {
         IsRoleEnabled = roleEnabled;
-        IsHeader = true;
-        HeaderKey = NameKey;
 
         if (max <= 0 || !roleEnabled)
         {
             IsRoleEnabled = false;
-        }
-
-        if (max > 1)
-        {
-            NumberOfRoleOption = Normal(baseId + 10000, type, TrKey.NumberOfRole, 1f, 1f, 15f, 1f, this);
         }
     }
 }

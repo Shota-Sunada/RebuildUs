@@ -104,11 +104,18 @@ internal partial class CustomOption
         var singles = 1;
         var headers = 0;
         var lines = 0;
+        CustomOptionHeader currentHeader = null;
 
         foreach (var option in options)
         {
-            if (option.IsHeader)
+            if (option.Header != currentHeader)
             {
+                currentHeader = option.Header;
+                if (currentHeader == null)
+                {
+                    continue;
+                }
+
                 if (i != 0)
                 {
                     num -= 0.85f;
@@ -124,8 +131,7 @@ internal partial class CustomOption
                     __instance.settingsContainer,
                     true);
                 categoryHeaderMasked.SetHeader(StringNames.ImpostorsCategory, 61);
-                categoryHeaderMasked.Title.text = Helpers.Cs(option.Color,
-                    option.HeaderKey != TrKey.None ? Tr.Get(option.HeaderKey) : Tr.Get(option.NameKey));
+                categoryHeaderMasked.Title.text = currentHeader.GetTitleText();
                 categoryHeaderMasked.Title.outlineColor = Color.white;
                 categoryHeaderMasked.Title.outlineWidth = 0.1f;
                 categoryHeaderMasked.transform.localScale = Vector3.one;
@@ -171,7 +177,7 @@ internal partial class CustomOption
             (var viewName, var viewValue) = HandleSpecialOptionsView(option,
                 option.NameKey,
                 (option.GetSelections().Length > value ? option.GetSelections()[value] : null)?.ToString() ?? string.Empty);
-            if (option is CustomOption<bool>)
+            if (option is CustomToggleOption)
             {
                 viewSettingsInfoPanel.SetInfoCheckbox(StringNames.ImpostorsCategory, 61, option.GetBool());
             }
@@ -182,7 +188,7 @@ internal partial class CustomOption
 
             viewSettingsInfoPanel.titleText.text = Tr.Get(viewName);
 
-            if (option.IsHeader
+            if (option.UseSpawnChanceLabel
                 && option.Type is CustomOptionType.Neutral or CustomOptionType.Crewmate or CustomOptionType.Impostor or CustomOptionType.Modifier)
             {
                 viewSettingsInfoPanel.titleText.text = Tr.Get(TrKey.SpawnChance);
@@ -205,7 +211,7 @@ internal partial class CustomOption
         {
             foreach (var option in AllOptions)
             {
-                if (option.IsHeader && option.Type == type)
+                if (option.UseSpawnChanceLabel && option.Type == type)
                 {
                     options.Add(option);
                 }
@@ -217,7 +223,7 @@ internal partial class CustomOption
         var singles = 1;
         var headers = 0;
         var lines = 0;
-        CustomOptionType currentType = (CustomOptionType)(-1);
+        var currentType = (CustomOptionType)(-1);
 
         foreach (var option in options)
         {
@@ -277,7 +283,7 @@ internal partial class CustomOption
             (var optName, var optValue) = HandleSpecialOptionsView(option,
                 option.NameKey,
                 (option.GetSelections().Length > value ? option.GetSelections()[value] : null)?.ToString() ?? string.Empty);
-            if (option is CustomOption<bool>)
+            if (option is CustomToggleOption)
             {
                 viewSettingsInfoPanel.SetInfoCheckbox(StringNames.ImpostorsCategory, 61, option.GetBool());
             }
