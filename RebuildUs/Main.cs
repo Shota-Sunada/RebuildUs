@@ -25,7 +25,6 @@ global using RebuildUs.Modules;
 global using RebuildUs.Modules.Consoles;
 global using RebuildUs.Modules.CustomOptions;
 global using RebuildUs.Modules.EndGame;
-global using RebuildUs.Modules.GameEvents.Events;
 global using RebuildUs.Modules.Random;
 global using RebuildUs.Modules.RPC;
 global using RebuildUs.Objects;
