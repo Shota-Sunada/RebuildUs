@@ -15,7 +15,7 @@ internal static class MorphHandler
 #if DEBUG
         StackFrame stack1 = new(1);
         StackFrame stack2 = new(2);
-        Logger.LogInfo($"{morphing?.GetNameWithRole()} => {outfit?.PlayerName} at {stack1.GetMethod().Name} at {stack2.GetMethod().Name}",
+        Logger.LogInfo($"{morphing?.GetNameWithRole()} => {outfit?.PlayerName} at {stack1.GetMethod()?.Name} at {stack2.GetMethod()?.Name}",
             "setOutfit");
 #endif
 
