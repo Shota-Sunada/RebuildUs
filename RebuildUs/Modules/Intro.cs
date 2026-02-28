@@ -299,8 +299,8 @@ internal static class Intro
                     adjustedNumImpostors = GameManager.Instance.LogicOptions.GetAdjustedNumImpostors(GameData.Instance.PlayerCount);
                 }
                 __instance.ImpostorText.text = adjustedNumImpostors == 1
-                    ? DestroyableSingleton<TranslationController>.Instance.GetString(StringNames.NumImpostorsS)
-                    : DestroyableSingleton<TranslationController>.Instance.GetString(StringNames.NumImpostorsP, adjustedNumImpostors);
+                    ? FastDestroyableSingleton<TranslationController>.Instance.GetString(StringNames.NumImpostorsS)
+                    : FastDestroyableSingleton<TranslationController>.Instance.GetString(StringNames.NumImpostorsP, adjustedNumImpostors);
                 __instance.ImpostorText.text = __instance.ImpostorText.text.Replace("[FF1919FF]", "<color=#FF1919FF>");
                 __instance.ImpostorText.text = __instance.ImpostorText.text.Replace("[]", "</color>");
             }

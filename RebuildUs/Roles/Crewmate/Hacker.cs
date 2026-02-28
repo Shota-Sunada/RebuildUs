@@ -123,7 +123,7 @@ internal class Hacker : MultiRoleBase<Hacker>
             {
                 PlayerControl.LocalPlayer.NetTransform.Halt(); // Stop current movement
                 Local._chargesAdminTable--;
-                HudManager.Instance.ToggleMapVisible(new()
+                FastDestroyableSingleton<HudManager>.Instance.ToggleMapVisible(new()
                 {
                     Mode = MapOptions.Modes.CountOverlay,
                     AllowMovementWhileMapOpen = !NoMove,
@@ -267,8 +267,8 @@ internal class Hacker : MultiRoleBase<Hacker>
                     ? FastDestroyableSingleton<HudManager>.Instance.UseButton.fastUseSettings[ImageNames.DoorLogsButton].Image
                     : FastDestroyableSingleton<HudManager>.Instance.UseButton.fastUseSettings[ImageNames.VitalsButton].Image;
                 HackerVitalsButton.ActionButton.OverrideText(Helpers.IsMiraHq
-                    ? TranslationController.Instance.GetString(StringNames.DoorlogLabel)
-                    : TranslationController.Instance.GetString(StringNames.VitalsLabel));
+                    ? FastDestroyableSingleton<TranslationController>.Instance.GetString(StringNames.DoorlogLabel)
+                    : FastDestroyableSingleton<TranslationController>.Instance.GetString(StringNames.VitalsLabel));
                 return Local._chargesVitals > 0 && MapSettings.CanUseVitals;
             },
             () =>
@@ -306,8 +306,8 @@ internal class Hacker : MultiRoleBase<Hacker>
             },
             false,
             Helpers.IsMiraHq
-                ? TranslationController.Instance.GetString(StringNames.DoorlogLabel)
-                : TranslationController.Instance.GetString(StringNames.VitalsLabel));
+                ? FastDestroyableSingleton<TranslationController>.Instance.GetString(StringNames.DoorlogLabel)
+                : FastDestroyableSingleton<TranslationController>.Instance.GetString(StringNames.VitalsLabel));
 
         // Hacker Vitals Charges
         _hackerVitalsChargesText = UnityObject.Instantiate(HackerVitalsButton.ActionButton.cooldownTimerText,

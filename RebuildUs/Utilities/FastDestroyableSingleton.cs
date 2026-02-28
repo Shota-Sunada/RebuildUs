@@ -24,4 +24,14 @@ internal static unsafe class FastDestroyableSingleton<T> where T : MonoBehaviour
             return objectPointer == IntPtr.Zero ? DestroyableSingleton<T>.Instance : CreateObject(objectPointer);
         }
     }
+
+    internal static bool InstanceExists
+    {
+        get
+        {
+            IntPtr objectPointer;
+            IL2CPP.il2cpp_field_static_get_value(FieldPtr, &objectPointer);
+            return objectPointer != IntPtr.Zero;
+        }
+    }
 }

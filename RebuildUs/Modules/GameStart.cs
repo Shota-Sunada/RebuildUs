@@ -72,7 +72,7 @@ internal static class GameStart
         _cancelButton.OnClick.AddListener((Action)(() =>
         {
             __instance.ResetStartState();
-            SoundManager.Instance.StopSound(GameStartManager.Instance.gameStartSound);
+            SoundManager.Instance.StopSound(FastDestroyableSingleton<GameStartManager>.Instance.gameStartSound);
             {
                 using RPCSender sender = new(PlayerControl.LocalPlayer.NetId, CustomRPC.StopStart);
             }

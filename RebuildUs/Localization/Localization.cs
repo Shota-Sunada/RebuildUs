@@ -113,7 +113,7 @@ internal static class Tr
     internal static string Get(TrKey key, params object[] args)
     {
         string keyStr = key.ToString();
-        SupportedLangs lang = TranslationController.InstanceExists
+        SupportedLangs lang = FastDestroyableSingleton<TranslationController>.InstanceExists
             ? FastDestroyableSingleton<TranslationController>.Instance.currentLanguage.languageID
             : SupportedLangs.English;
 

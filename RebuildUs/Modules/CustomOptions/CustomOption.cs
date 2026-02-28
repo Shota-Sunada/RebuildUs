@@ -345,13 +345,13 @@ internal partial class CustomOption
             try
             {
                 SetSelectionIndex(newSelection);
-                if (GameStartManager.Instance != null
-                    && GameStartManager.Instance.LobbyInfoPane != null
-                    && GameStartManager.Instance.LobbyInfoPane.LobbyViewSettingsPane != null
-                    && GameStartManager.Instance.LobbyInfoPane.LobbyViewSettingsPane.gameObject.activeSelf)
+                if (FastDestroyableSingleton<GameStartManager>.Instance != null
+                    && FastDestroyableSingleton<GameStartManager>.Instance.LobbyInfoPane != null
+                    && FastDestroyableSingleton<GameStartManager>.Instance.LobbyInfoPane.LobbyViewSettingsPane != null
+                    && FastDestroyableSingleton<GameStartManager>.Instance.LobbyInfoPane.LobbyViewSettingsPane.gameObject.activeSelf)
                 {
-                    SettingsPaneChangeTab(GameStartManager.Instance.LobbyInfoPane.LobbyViewSettingsPane,
-                        (PanePage)GameStartManager.Instance.LobbyInfoPane.LobbyViewSettingsPane.currentTab);
+                    SettingsPaneChangeTab(FastDestroyableSingleton<GameStartManager>.Instance.LobbyInfoPane.LobbyViewSettingsPane,
+                        (PanePage)FastDestroyableSingleton<GameStartManager>.Instance.LobbyInfoPane.LobbyViewSettingsPane.currentTab);
                 }
             }
             catch

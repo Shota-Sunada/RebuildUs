@@ -230,7 +230,7 @@ internal static class RoleHelpers
 
         internal void OnFinishShipStatusBegin()
         {
-            HudManager.Instance.StartCoroutine(Effects.Lerp(1f,
+            FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(1f,
                 new Action<float>(p =>
                 {
                     if (!Mathf.Approximately(p, 1f))

@@ -183,7 +183,7 @@ internal static class PlayerControlPatch
             {
                 return false;
             }
-            DestroyableSingleton<DebugAnalytics>.Instance.Analytics.Kill(target.Data, __instance.Data);
+            FastDestroyableSingleton<DebugAnalytics>.Instance.Analytics.Kill(target.Data, __instance.Data);
             if (__instance.AmOwner)
             {
                 DataManager.Player.Stats.IncrementStat(GameManager.Instance.IsHideAndSeek()
@@ -202,7 +202,7 @@ internal static class PlayerControlPatch
                 __instance.SetKillTimer(GameOptionsManager.Instance.CurrentGameOptions.GetFloat(FloatOptionNames.KillCooldown));
             }
 
-            DestroyableSingleton<UnityTelemetry>.Instance.WriteMurder();
+            FastDestroyableSingleton<UnityTelemetry>.Instance.WriteMurder();
             target.gameObject.layer = LayerMask.NameToLayer("Ghost");
             if (target.AmOwner)
             {
@@ -220,7 +220,7 @@ internal static class PlayerControlPatch
                     }
                 }
 
-                DestroyableSingleton<HudManager>.Instance.KillOverlay.ShowKillAnimation(__instance.Data, data);
+                FastDestroyableSingleton<HudManager>.Instance.KillOverlay.ShowKillAnimation(__instance.Data, data);
                 target.cosmetics.SetNameMask(false);
                 target.RpcSetScanner(false);
             }
@@ -260,7 +260,7 @@ internal static class PlayerControlPatch
     {
         __result = __instance.moveable
                    && !Minigame.Instance
-                   && (!DestroyableSingleton<HudManager>.InstanceExists
+                   && (!FastDestroyableSingleton<HudManager>.InstanceExists
                        || !FastDestroyableSingleton<HudManager>.Instance.Chat.IsOpenOrOpening
                        && !FastDestroyableSingleton<HudManager>.Instance.KillOverlay.IsOpen
                        && !FastDestroyableSingleton<HudManager>.Instance.GameMenu.IsOpen)

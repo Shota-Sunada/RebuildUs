@@ -347,8 +347,8 @@ internal class SecurityGuard : SingleRoleBase<SecurityGuard>
                     ? FastDestroyableSingleton<HudManager>.Instance.UseButton.fastUseSettings[ImageNames.DoorLogsButton].Image
                     : FastDestroyableSingleton<HudManager>.Instance.UseButton.fastUseSettings[ImageNames.CamsButton].Image;
                 SecurityGuardCamButton.ActionButton.OverrideText(Helpers.IsMiraHq
-                    ? TranslationController.Instance.GetString(StringNames.SecurityLogsSystem)
-                    : TranslationController.Instance.GetString(StringNames.SecurityCamsSystem));
+                    ? FastDestroyableSingleton<TranslationController>.Instance.GetString(StringNames.SecurityLogsSystem)
+                    : FastDestroyableSingleton<TranslationController>.Instance.GetString(StringNames.SecurityCamsSystem));
                 return PlayerControl.LocalPlayer.CanMove && Local._charges > 0;
             },
             () =>
@@ -376,8 +376,8 @@ internal class SecurityGuard : SingleRoleBase<SecurityGuard>
             },
             false,
             Helpers.IsMiraHq
-                ? TranslationController.Instance.GetString(StringNames.SecurityLogsSystem)
-                : TranslationController.Instance.GetString(StringNames.SecurityCamsSystem));
+                ? FastDestroyableSingleton<TranslationController>.Instance.GetString(StringNames.SecurityLogsSystem)
+                : FastDestroyableSingleton<TranslationController>.Instance.GetString(StringNames.SecurityCamsSystem));
 
         // Security Guard cam button charges
         _securityGuardChargesText = UnityObject.Instantiate(SecurityGuardCamButton.ActionButton.cooldownTimerText,

@@ -163,7 +163,7 @@ internal class Vampire : MultiRoleBase<Vampire>
                 if (local.TargetNearGarlic && CanKillNearGarlics)
                 {
                     _vampireKillButton.Sprite = hm.KillButton.graphic.sprite;
-                    _vampireKillButton.ButtonText = TranslationController.Instance.GetString(StringNames.KillLabel);
+                    _vampireKillButton.ButtonText = FastDestroyableSingleton<TranslationController>.Instance.GetString(StringNames.KillLabel);
                 }
                 else
                 {

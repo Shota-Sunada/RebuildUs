@@ -1040,8 +1040,8 @@ internal static class Meeting
 
         {
             bool isEmergency = _target == null;
-            DestroyableSingleton<UnityTelemetry>.Instance.WriteMeetingStarted(isEmergency);
-            DestroyableSingleton<DebugAnalytics>.Instance.Analytics.MeetingStarted(__instance.Data, _target == null);
+            FastDestroyableSingleton<UnityTelemetry>.Instance.WriteMeetingStarted(isEmergency);
+            FastDestroyableSingleton<DebugAnalytics>.Instance.Analytics.MeetingStarted(__instance.Data, _target == null);
             MapUtilities.CachedShipStatus.StartCoroutine(CoStartMeeting(__instance, _target).WrapToIl2Cpp());
             if (!__instance.AmOwner)
             {

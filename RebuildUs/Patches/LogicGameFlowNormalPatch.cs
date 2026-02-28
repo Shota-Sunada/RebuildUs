@@ -11,7 +11,7 @@ internal static class LogicGameFlowNormalPatch
         {
             return false;
         }
-        if (DestroyableSingleton<TutorialManager>.InstanceExists)
+        if (FastDestroyableSingleton<TutorialManager>.InstanceExists)
         {
             return true; // InstanceExists | Don't check Custom Criteria when in Tutorial
         }

@@ -304,7 +304,7 @@ internal static class HatParentPatches
         {
             Directory.CreateDirectory(dirPath);
         }
-        if (!DestroyableSingleton<TutorialManager>.InstanceExists)
+        if (!FastDestroyableSingleton<TutorialManager>.InstanceExists)
         {
             return true;
         }

@@ -7,7 +7,7 @@ internal static class MainMenuManagerPatch
     [HarmonyPatch(typeof(MainMenuManager), nameof(MainMenuManager.Start))]
     internal static void StartPostfix(MainMenuManager __instance)
     {
-        ModManager.Instance.ShowModStamp();
+        FastDestroyableSingleton<ModManager>.Instance.ShowModStamp();
 
         ClientOptions.Start(__instance);
 

@@ -159,7 +159,7 @@ internal static class DeathPopup
 
     internal static Transform ResolveParent(HudManager hudManager = null)
     {
-        HudManager hud = hudManager ?? DestroyableSingleton<HudManager>.Instance;
+        HudManager hud = hudManager ?? FastDestroyableSingleton<HudManager>.Instance;
         if (hud == null)
         {
             return null;

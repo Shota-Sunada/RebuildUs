@@ -115,7 +115,7 @@ internal class EvilHacker : MultiRoleBase<EvilHacker>
             {
                 PlayerControl.LocalPlayer.NetTransform.Halt();
                 Admin.IsEvilHackerAdmin = true;
-                HudManager.Instance.ToggleMapVisible(new()
+                FastDestroyableSingleton<HudManager>.Instance.ToggleMapVisible(new()
                 {
                     Mode = MapOptions.Modes.CountOverlay,
                     AllowMovementWhileMapOpen = CanMoveEvenIfUsesAdmin,

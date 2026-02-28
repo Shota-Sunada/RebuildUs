@@ -88,7 +88,7 @@ internal static class Helpers
 
     internal static bool IsCountdown
     {
-        get => GameStartManager.InstanceExists && GameStartManager.Instance.startState is GameStartManager.StartingStates.Countdown;
+        get => GameStartManager.InstanceExists && FastDestroyableSingleton<GameStartManager>.Instance.startState is GameStartManager.StartingStates.Countdown;
     }
 
     internal static void DestroyList<T>(Il2CppSystem.Collections.Generic.List<T> items) where T : Object
@@ -404,7 +404,7 @@ internal static class Helpers
         }
         else if (murder == MurderAttemptResult.DelayVampireKill)
         {
-            HudManager.Instance.StartCoroutine(Effects.Lerp(10f,
+            FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(10f,
                 new Action<float>(p =>
                 {
                     if (!TransportationToolPatches.IsUsingTransportation(target) && Vampire.Bitten != null)

@@ -186,9 +186,9 @@ internal static class PlayerControlExtensions
                             }
                         }
 
-                        if (HudManager.Instance?.TaskPanel?.tab != null)
+                        if (FastDestroyableSingleton<HudManager>.Instance?.TaskPanel?.tab != null)
                         {
-                            Transform tabTextObj = HudManager.Instance.TaskPanel.tab.transform.Find("TabText_TMP");
+                            Transform tabTextObj = FastDestroyableSingleton<HudManager>.Instance.TaskPanel.tab.transform.Find("TabText_TMP");
                             if (tabTextObj != null)
                             {
                                 TextMeshPro tabText = tabTextObj.GetComponent<TextMeshPro>();
@@ -196,7 +196,7 @@ internal static class PlayerControlExtensions
                                 {
                                     InfoStringBuilder.Clear();
                                     InfoStringBuilder
-                                        .Append(TranslationController.Instance.GetString(StringNames.Tasks))
+                                        .Append(FastDestroyableSingleton<TranslationController>.Instance.GetString(StringNames.Tasks))
                                         .Append(' ')
                                         .Append(taskText);
                                     tabText.SetText(InfoStringBuilder.ToString());

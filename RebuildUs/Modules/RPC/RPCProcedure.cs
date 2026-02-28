@@ -205,13 +205,13 @@ internal static partial class RPCProcedure
         StopStartSound();
         if (AmongUsClient.Instance.AmHost)
         {
-            GameStartManager.Instance.ResetStartState();
+            FastDestroyableSingleton<GameStartManager>.Instance.ResetStartState();
         }
     }
 
     private static void StopStartSound()
     {
-        SoundManager.Instance.StopSound(GameStartManager.Instance.gameStartSound);
+        SoundManager.Instance.StopSound(FastDestroyableSingleton<GameStartManager>.Instance.gameStartSound);
     }
 
     private static void FinishResetVariables(byte playerId)

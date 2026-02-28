@@ -285,7 +285,7 @@ internal abstract class CustomOverlays
             return true;
         }
         _optionsData = [];
-        TranslationController tr = DestroyableSingleton<TranslationController>.Instance;
+        TranslationController tr = FastDestroyableSingleton<TranslationController>.Instance;
         StringBuilder sb = new();
 
         // Part 1: Among Us Settings

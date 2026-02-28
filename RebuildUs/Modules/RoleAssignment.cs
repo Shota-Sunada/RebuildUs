@@ -114,7 +114,7 @@ internal static class RoleAssignment
 
             if (totalSeconds > 1.0 && totalSeconds < num)
             {
-                LoadingBarManager loadingBar = DestroyableSingleton<LoadingBarManager>.Instance;
+                LoadingBarManager loadingBar = FastDestroyableSingleton<LoadingBarManager>.Instance;
                 if (loadingBar != null)
                 {
                     loadingBar.ToggleLoadingBar(true);
@@ -132,8 +132,8 @@ internal static class RoleAssignment
             }
         }
 
-        DestroyableSingleton<LoadingBarManager>.Instance?.ToggleLoadingBar(false);
-        DestroyableSingleton<RoleManager>.Instance?.SelectRoles();
+        FastDestroyableSingleton<LoadingBarManager>.Instance?.ToggleLoadingBar(false);
+        FastDestroyableSingleton<RoleManager>.Instance?.SelectRoles();
 
         // 独自処理開始
         yield return WaitForLocalPlayer().WrapToIl2Cpp();
@@ -151,7 +151,7 @@ internal static class RoleAssignment
         }
         yield return WaitResetVariables().WrapToIl2Cpp();
 
-        if (!DestroyableSingleton<TutorialManager>.InstanceExists
+        if (!FastDestroyableSingleton<TutorialManager>.InstanceExists
             && CustomOptionHolder.ActivateRoles.GetBool()) // Don't assign Roles in Tutorial or if deactivated
         {
             try

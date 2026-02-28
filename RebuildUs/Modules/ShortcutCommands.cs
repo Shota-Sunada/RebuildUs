@@ -38,8 +38,8 @@ internal static class ShortcutCommands
 
         if ((Input.GetKeyDown(KeyCode.LeftShift) || Input.GetKeyDown(KeyCode.RightShift)) && Helpers.IsCountdown)
         {
-            GameStartManager.Instance.countDownTimer = 0;
-            SoundManager.Instance.StopSound(GameStartManager.Instance.gameStartSound);
+            FastDestroyableSingleton<GameStartManager>.Instance.countDownTimer = 0;
+            SoundManager.Instance.StopSound(FastDestroyableSingleton<GameStartManager>.Instance.gameStartSound);
             {
                 using RPCSender sender = new(PlayerControl.LocalPlayer.NetId, CustomRPC.StopStart);
             }
@@ -48,13 +48,13 @@ internal static class ShortcutCommands
 #if DEBUG
         if (Helpers.GetKeysDown(KeyCode.LeftControl, KeyCode.F4) || Helpers.GetKeysDown(KeyCode.RightControl, KeyCode.F4))
         {
-            HudManager.Instance.Chat.AddChat(PlayerControl.LocalPlayer, "Reloaded Random Number Generation Algorithm.");
+            FastDestroyableSingleton<HudManager>.Instance.Chat.AddChat(PlayerControl.LocalPlayer, "Reloaded Random Number Generation Algorithm.");
             RebuildUs.RefreshRnd((int)DateTime.Now.Ticks);
         }
 
         if (Helpers.GetKeysDown(KeyCode.LeftControl, KeyCode.F8) || Helpers.GetKeysDown(KeyCode.RightControl, KeyCode.F8))
         {
-            HudManager.Instance.Chat.AddChat(PlayerControl.LocalPlayer, "Measured Random Number Quality. Check logs for details.");
+            FastDestroyableSingleton<HudManager>.Instance.Chat.AddChat(PlayerControl.LocalPlayer, "Measured Random Number Quality. Check logs for details.");
             RandomMain.LogScore();
         }
 #endif
@@ -83,7 +83,7 @@ internal static class ShortcutCommands
             return;
         }
 
-        HudManager hud = HudManager.Instance;
+        HudManager hud = FastDestroyableSingleton<HudManager>.Instance;
         PlayerControl localPlayer = PlayerControl.LocalPlayer;
 
         if (localPlayer == null || hud?.Chat == null)

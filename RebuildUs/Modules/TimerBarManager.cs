@@ -37,7 +37,7 @@ internal static class TimerBarManager
         }
 
         HideAndSeekTimerBar prefab = ResolveTimerBarPrefab();
-        HudManager hud = DestroyableSingleton<HudManager>.Instance;
+        HudManager hud = FastDestroyableSingleton<HudManager>.Instance;
         if (prefab == null || hud == null)
         {
             return false;

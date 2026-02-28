@@ -7,7 +7,7 @@ internal static class ChatControllerPatch
     [HarmonyPatch(typeof(ChatController), nameof(ChatController.Awake))]
     private static void AwakePrefix()
     {
-        if (!EOSManager.Instance.isKWSMinor)
+        if (!FastDestroyableSingleton<EOSManager>.Instance.isKWSMinor)
         {
             DataManager.Settings.Multiplayer.ChatMode = QuickChatModes.FreeChatOrQuickChat;
         }
