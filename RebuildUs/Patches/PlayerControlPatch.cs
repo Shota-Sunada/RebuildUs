@@ -162,7 +162,7 @@ internal static class PlayerControlPatch
             if (flag && PlayerControl.LocalPlayer.Data.PlayerId == target.protectedByGuardianId)
             {
                 DataManager.Player.Stats.IncrementStat(StatID.Role_GuardianAngel_CrewmatesProtected);
-                DestroyableSingleton<AchievementManager>.Instance.OnProtectACrewmate();
+                FastDestroyableSingleton<AchievementManager>.Instance.OnProtectACrewmate();
             }
 
             if (__instance.AmOwner | flag)
@@ -225,7 +225,7 @@ internal static class PlayerControlPatch
                 target.RpcSetScanner(false);
             }
 
-            DestroyableSingleton<AchievementManager>.Instance.OnMurder(__instance.AmOwner,
+            FastDestroyableSingleton<AchievementManager>.Instance.OnMurder(__instance.AmOwner,
                 target.AmOwner,
                 __instance.CurrentOutfitType == PlayerOutfitType.Shapeshifted,
                 __instance.shapeshiftTargetPlayerId,
