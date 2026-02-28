@@ -1,8 +1,8 @@
 {
   "workbench.colorTheme": "GitHub Dark",
   "powershell.cwd": "RebuildUs",
-  "dotnet.defaultSolution": "F:\\Repositories\\RebuildUs\\RebuildUs.sln",
-  "dotnet.solution.autoOpen": "F:\\Repositories\\RebuildUs\\RebuildUs.sln",
+  "dotnet.defaultSolution": ".\\RebuildUs.sln",
+  "dotnet.solution.autoOpen": ".\\RebuildUs.sln",
   "cSpell.words": [
     "ARGB",
     "Behaviour",
