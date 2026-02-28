@@ -14,22 +14,22 @@ internal static class Intro
                 return;
             }
 
-            HudManager hud = FastDestroyableSingleton<HudManager>.Instance;
-            ShipStatus ship = MapUtilities.CachedShipStatus ?? ShipStatus.Instance;
-            PlayerControl local = PlayerControl.LocalPlayer;
+            var hud = FastDestroyableSingleton<HudManager>.Instance;
+            var ship = MapUtilities.CachedShipStatus ?? ShipStatus.Instance;
+            var local = PlayerControl.LocalPlayer;
 
             if (local != null && hud != null && __instance.PlayerPrefab != null && PlayerControl.AllPlayerControls != null)
             {
-                Vector3 bottomLeft = AspectPosition.ComputePosition(AspectPosition.EdgeAlignments.LeftBottom, new(0.9f, 0.7f, -10f));
+                var bottomLeft = AspectPosition.ComputePosition(AspectPosition.EdgeAlignments.LeftBottom, new(0.9f, 0.7f, -10f));
 
-                foreach (PlayerControl p in PlayerControl.AllPlayerControls.GetFastEnumerator())
+                foreach (var p in PlayerControl.AllPlayerControls.GetFastEnumerator())
                 {
                     if (p?.Data == null)
                     {
                         continue;
                     }
-                    NetworkedPlayerInfo data = p.Data;
-                    PoolablePlayer player = UnityObject.Instantiate(__instance.PlayerPrefab, hud.transform);
+                    var data = p.Data;
+                    var player = UnityObject.Instantiate(__instance.PlayerPrefab, hud.transform);
                     if (player == null)
                     {
                         continue;
@@ -44,7 +44,7 @@ internal static class Intro
 
                     // UIレイヤーに設定
                     player.gameObject.layer = 5;
-                    foreach (Transform child in player.GetComponentsInChildren<Transform>(true))
+                    foreach (var child in player.GetComponentsInChildren<Transform>(true))
                     {
                         child.gameObject.layer = 5;
                     }
@@ -63,12 +63,12 @@ internal static class Intro
                 && ship?.FastRooms != null
                 && CustomOptionHolder.AirshipOptimize.GetBool()
                 && Helpers.HasImpostorVision(local)
-                && ship.FastRooms.TryGetValue(SystemTypes.GapRoom, out PlainShipRoom gapRoomForShadow)
+                && ship.FastRooms.TryGetValue(SystemTypes.GapRoom, out var gapRoomForShadow)
                 && gapRoomForShadow != null)
             {
-                GameObject obj = gapRoomForShadow.gameObject;
-                Transform shadow = obj?.transform?.FindChild("Shadow");
-                OneWayShadows oneWayShadow = shadow?.FindChild("LedgeShadow")?.GetComponent<OneWayShadows>();
+                var obj = gapRoomForShadow.gameObject;
+                var shadow = obj?.transform?.FindChild("Shadow");
+                var oneWayShadow = shadow?.FindChild("LedgeShadow")?.GetComponent<OneWayShadows>();
                 oneWayShadow?.gameObject.SetActive(false);
             }
 
@@ -85,11 +85,11 @@ internal static class Intro
             if (Helpers.IsAirship
                 && ship?.FastRooms != null
                 && CustomOptionHolder.AirshipOldAdmin.GetBool()
-                && ship.FastRooms.TryGetValue(SystemTypes.Records, out PlainShipRoom recordsRoom)
+                && ship.FastRooms.TryGetValue(SystemTypes.Records, out var recordsRoom)
                 && recordsRoom != null)
             {
-                GameObject records = recordsRoom.gameObject;
-                foreach (MapConsole console in records.GetComponentsInChildren<MapConsole>())
+                var records = recordsRoom.gameObject;
+                foreach (var console in records.GetComponentsInChildren<MapConsole>())
                 {
                     if (console.name != "records_admin_map")
                     {
@@ -100,14 +100,14 @@ internal static class Intro
                 }
             }
 
-            if (ship?.FastRooms != null && ship.FastRooms.TryGetValue(SystemTypes.GapRoom, out PlainShipRoom gapRoomData) && gapRoomData != null)
+            if (ship?.FastRooms != null && ship.FastRooms.TryGetValue(SystemTypes.GapRoom, out var gapRoomData) && gapRoomData != null)
             {
-                GameObject gapRoom = gapRoomData.gameObject;
+                var gapRoom = gapRoomData.gameObject;
                 // GapRoomの配電盤を消す
                 if (Helpers.IsAirship && CustomOptionHolder.AirshipDisableGapSwitchBoard.GetBool() && gapRoom != null)
                 {
                     GameObject sabotage = null;
-                    foreach (Console console in gapRoom.GetComponentsInChildren<Console>())
+                    foreach (var console in gapRoom.GetComponentsInChildren<Console>())
                     {
                         if (console.name != "task_lightssabotage (gap)")
                         {
@@ -120,11 +120,11 @@ internal static class Intro
                     if (sabotage != null)
                     {
                         sabotage.SetActive(false);
-                        Console sabotageConsole = sabotage.GetComponent<Console>();
+                        var sabotageConsole = sabotage.GetComponent<Console>();
                         List<Console> newConsoles = [];
                         if (ship.AllConsoles != null)
                         {
-                            foreach (Console c in ship.AllConsoles)
+                            foreach (var c in ship.AllConsoles)
                             {
                                 if (c != sabotageConsole)
                                 {
@@ -140,9 +140,9 @@ internal static class Intro
                 // ぬ～んを消す
                 if (Helpers.IsAirship && CustomOptionHolder.AirshipDisableMovingPlatform.GetBool() && gapRoom != null)
                 {
-                    MovingPlatformBehaviour movingPlatform = gapRoom.GetComponentInChildren<MovingPlatformBehaviour>();
+                    var movingPlatform = gapRoom.GetComponentInChildren<MovingPlatformBehaviour>();
                     movingPlatform?.gameObject.SetActive(false);
-                    foreach (PlatformConsole obj in gapRoom.GetComponentsInChildren<PlatformConsole>())
+                    foreach (var obj in gapRoom.GetComponentsInChildren<PlatformConsole>())
                     {
                         obj.gameObject.SetActive(false);
                     }
@@ -152,7 +152,7 @@ internal static class Intro
             // タスクバグ修正
             if (Helpers.IsAirship && CustomOptionHolder.AirshipEnableWallCheck.GetBool())
             {
-                foreach (Console x in UnityObject.FindObjectsOfType<Console>())
+                foreach (var x in UnityObject.FindObjectsOfType<Console>())
                 {
                     if (x.name == "task_garbage1"
                         || x.name == "task_garbage2"
@@ -175,10 +175,10 @@ internal static class Intro
             }
 
             // タスクパネルの表示優先度を上げる
-            GameObject taskPanel = hud?.TaskStuff;
+            var taskPanel = hud?.TaskStuff;
             if (taskPanel != null)
             {
-                Vector3 pos = taskPanel.transform.position;
+                var pos = taskPanel.transform.position;
                 taskPanel.transform.position = new(pos.x, pos.y, -20);
             }
 
@@ -217,7 +217,7 @@ internal static class Intro
             fakeImpostorTeam = new(); // The local player always has to be the first one in the list (to be displayed in the center)
         fakeImpostorTeam.Add(PlayerControl.LocalPlayer);
 
-        foreach (PlayerControl p in players)
+        foreach (var p in players)
         {
             if (PlayerControl.LocalPlayer != p && (p.IsRole(RoleType.Spy) || p.Data.Role.IsImpostor))
             {
@@ -230,8 +230,18 @@ internal static class Intro
 
     internal static void SetupIntroTeam(IntroCutscene __instance, ref Il2CppSystem.Collections.Generic.List<PlayerControl> yourTeam)
     {
-        List<RoleInfo> infos = RoleInfo.GetRoleInfoForPlayer(PlayerControl.LocalPlayer);
-        RoleInfo roleInfo = infos.FirstOrDefault(info => info.RoleType != RoleType.Lovers);
+        var infos = RoleInfo.GetRoleInfoForPlayer(PlayerControl.LocalPlayer);
+        RoleInfo roleInfo = null;
+        var enumerator = infos.GetEnumerator();
+        while (enumerator.MoveNext())
+        {
+            var info = enumerator.Current;
+            if (info.RoleType != RoleType.Lovers)
+            {
+                roleInfo = info;
+                break;
+            }
+        }
         if (roleInfo == null)
         {
             return;
@@ -277,7 +287,7 @@ internal static class Intro
             __instance.ImpostorRules.SetActive(false);
             __instance.ImpostorName.gameObject.SetActive(false);
             __instance.ImpostorTitle.gameObject.SetActive(false);
-            Il2CppSystem.Collections.Generic.List<PlayerControl> show = IntroCutscene.SelectTeamToShow(
+            var show = IntroCutscene.SelectTeamToShow(
                 (Func<NetworkedPlayerInfo, bool>)(pcd => !PlayerControl.LocalPlayer.IsTeamImpostor()
                                                          || pcd.Role.TeamType == PlayerControl.LocalPlayer.Data.Role.TeamType));
             if (show == null || show.Count < 1)
@@ -293,7 +303,7 @@ internal static class Intro
             }
             else
             {
-                int adjustedNumImpostors = 1;
+                var adjustedNumImpostors = 1;
                 if (GameManager.Instance?.LogicOptions != null && GameData.Instance != null)
                 {
                     adjustedNumImpostors = GameManager.Instance.LogicOptions.GetAdjustedNumImpostors(GameData.Instance.PlayerCount);
@@ -325,7 +335,7 @@ internal static class Intro
                 __instance.ImpostorRules.SetActive(false);
             }
 
-            Il2CppSystem.Collections.Generic.List<PlayerControl> show = IntroCutscene.SelectTeamToShow(
+            var show = IntroCutscene.SelectTeamToShow(
                 (Func<NetworkedPlayerInfo, bool>)(pcd => PlayerControl.LocalPlayer.IsTeamImpostor() != pcd.Role.IsImpostor));
             if (show == null || show.Count < 1)
             {
@@ -334,7 +344,7 @@ internal static class Intro
                 show.Add(PlayerControl.LocalPlayer);
             }
 
-            PlayerControl impostor = PlayerControl.AllPlayerControls.Find(
+            var impostor = PlayerControl.AllPlayerControls.Find(
                 (Il2CppSystem.Predicate<PlayerControl>)(pc => pc != null && pc.Data != null && pc.Data.Role.IsImpostor));
             if (impostor == null)
             {
@@ -372,7 +382,7 @@ internal static class Intro
             __instance.HideAndSeekPanels.SetActive(false);
             __instance.CrewmateRules.SetActive(false);
             __instance.ImpostorRules.SetActive(false);
-            LogicOptionsHnS logicOptions = GameManager.Instance.LogicOptions as LogicOptionsHnS;
+            var logicOptions = GameManager.Instance.LogicOptions as LogicOptionsHnS;
             if (GameManager.Instance.GetLogicComponent<LogicHnSMusic>() is LogicHnSMusic logicComponent)
             {
                 logicComponent.StartMusicWithIntro();
@@ -417,7 +427,7 @@ internal static class Intro
                         PlayerControl.LocalPlayer.CurrentOutfitType,
                         PlayerMaterial.MaskType.None,
                         false);
-                    SpriteAnim component = poolablePlayer.GetComponent<SpriteAnim>();
+                    var component = poolablePlayer.GetComponent<SpriteAnim>();
                     poolablePlayer.gameObject.SetActive(true);
                     poolablePlayer.ToggleName(false);
                     component.Play(anim);
@@ -461,7 +471,7 @@ internal static class Intro
     private static IEnumerator WaitForIntroPrerequisites()
     {
         const int timeoutMs = 7000;
-        DateTime start = DateTime.UtcNow;
+        var start = DateTime.UtcNow;
         while (PlayerControl.LocalPlayer == null)
         {
             if ((DateTime.UtcNow - start).TotalMilliseconds > timeoutMs)
@@ -495,39 +505,40 @@ internal static class Intro
             yield break;
         }
 
-        List<RoleInfo> infos = RoleInfo.GetRoleInfoForPlayer(PlayerControl.LocalPlayer, false, [RoleType.Lovers]);
-        RoleInfo roleInfo = infos.FirstOrDefault();
+        var infos = RoleInfo.GetRoleInfoForPlayer(PlayerControl.LocalPlayer, false, [RoleType.Lovers]);
+        RoleInfo roleInfo = null;
+        var infoEnumerator = infos.GetEnumerator();
+        if (infoEnumerator.MoveNext())
+        {
+            roleInfo = infoEnumerator.Current;
+        }
 
         Logger.LogInfo("----------Role Assign-----------", "Settings");
-        foreach (PlayerControl pc in PlayerControl.AllPlayerControls.GetFastEnumerator())
+        var pcEnumerator = PlayerControl.AllPlayerControls.GetFastEnumerator();
+        while (pcEnumerator.MoveNext())
         {
-            Logger.LogInfo(
-                $"{(pc.AmOwner ? "[*]" : ""),-3}{pc.PlayerId,-2}:{pc.Data.PlayerName.PadRightV2(20)}:{RoleInfo.GetRolesString(pc, false, joinSeparator: " + ")}",
-                "Settings");
+            var pc = pcEnumerator.Current;
+            Logger.LogInfo($"{(pc.AmOwner ? "[*]" : ""),-3}{pc.PlayerId,-2}:{pc.Data.PlayerName.PadRightV2(20)}:{RoleInfo.GetRolesString(pc, false, joinSeparator: " + ")}", "Settings");
         }
 
         Logger.LogInfo("-----------Platforms------------", "Settings");
-        foreach (PlayerControl pc in PlayerControl.AllPlayerControls.GetFastEnumerator())
+        var pcEnumerator2 = PlayerControl.AllPlayerControls.GetFastEnumerator();
+        while (pcEnumerator2.MoveNext())
         {
-            Logger.LogInfo(
-                $"{(pc.AmOwner ? "[*]" : ""),-3}{pc.PlayerId,-2}:{pc.Data.PlayerName.PadRightV2(20)}:{pc.GetPlatform().Replace("Standalone", "")}",
-                "Settings");
+            var pc = pcEnumerator2.Current;
+            Logger.LogInfo($"{(pc.AmOwner ? "[*]" : ""),-3}{pc.PlayerId,-2}:{pc.Data.PlayerName.PadRightV2(20)}:{pc.GetPlatform().Replace("Standalone", "")}", "Settings");
         }
 
         Logger.LogInfo("---------Game Settings----------", "Settings");
         RebuildUs.OptionsPage = 0;
-        string[] tmp = GameOptionsManager
-                       .Instance
-                       .CurrentGameOptions
-                       .ToHudString(GameData.Instance ? GameData.Instance.PlayerCount : 10)
-                       .Split("\r\n");
-        foreach (string t in tmp[1..^2])
+        var tmp = GameOptionsManager.Instance.CurrentGameOptions.ToHudString(GameData.Instance ? GameData.Instance.PlayerCount : 10).Split("\r\n");
+        foreach (var t in tmp[1..^2])
         {
             Logger.LogInfo(t, "Settings");
         }
 
         Logger.LogInfo("--------Advance Settings--------", "Settings");
-        foreach (CustomOption o in CustomOption.AllOptions)
+        foreach (var o in CustomOption.AllOptions)
         {
             if (o.Parent == null ? !o.GetString().Equals("0%") : o.Parent.Enabled)
             {
@@ -568,12 +579,21 @@ internal static class Intro
             }
         }
 
-        if (infos.Any(info => info.RoleType == RoleType.Lovers))
+        var hasLovers = false;
+        var loversEnumerator = infos.GetEnumerator();
+        while (loversEnumerator.MoveNext())
         {
-            PlayerControl otherLover = PlayerControl.LocalPlayer.GetPartner();
-            __instance.RoleBlurbText.text += "\n"
-                                             + Helpers.Cs(Lovers.Color,
-                                                 string.Format(Tr.Get(TrKey.LoversFlavorIntroDesc), otherLover?.Data?.PlayerName ?? ""));
+            var info = loversEnumerator.Current;
+            if (info.RoleType == RoleType.Lovers)
+            {
+                hasLovers = true;
+                break;
+            }
+        }
+        if (hasLovers)
+        {
+            var otherLover = PlayerControl.LocalPlayer.GetPartner();
+            __instance.RoleBlurbText.text += "\n" + Helpers.Cs(Lovers.Color, string.Format(Tr.Get(TrKey.LoversFlavorIntroDesc), otherLover?.Data?.PlayerName ?? ""));
         }
 
         // 従来処理

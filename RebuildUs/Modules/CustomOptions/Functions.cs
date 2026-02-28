@@ -162,9 +162,9 @@ internal partial class CustomOption
         NumberOption shortTasksOption = null;
         NumberOption longTasksOption = null;
 
-        foreach (OptionBehaviour child in __instance.Children)
+        foreach (var child in __instance.Children)
         {
-            NumberOption numOpt = child.TryCast<NumberOption>();
+            var numOpt = child.TryCast<NumberOption>();
             if (numOpt == null)
             {
                 continue;
@@ -217,10 +217,10 @@ internal partial class CustomOption
         __instance.GamePresetsButton.gameObject.SetActive(false);
         __instance.RoleSettingsButton.gameObject.SetActive(false);
 
-        PassiveButton gameSettingsButton = __instance.GameSettingsButton;
-        Transform leftPanel = gameSettingsButton.gameObject.transform.parent.parent.FindEx("LeftPanel");
-        Transform gameSettingsLabel = leftPanel.parent.gameObject.transform.FindEx("GameSettingsLabel");
-        Transform whatIsThis = leftPanel.parent.gameObject.transform.FindEx("What Is This?");
+        var gameSettingsButton = __instance.GameSettingsButton;
+        var leftPanel = gameSettingsButton.gameObject.transform.parent.parent.FindEx("LeftPanel");
+        var gameSettingsLabel = leftPanel.parent.gameObject.transform.FindEx("GameSettingsLabel");
+        var whatIsThis = leftPanel.parent.gameObject.transform.FindEx("What Is This?");
 
         gameSettingsLabel.gameObject.SetActive(false);
         whatIsThis.transform.localPosition = new(whatIsThis.transform.localPosition.x - 0.4f,
@@ -269,8 +269,8 @@ internal partial class CustomOption
 
     private static GameObject CreateSettingButton(GameSettingMenu __instance, string name, string buttonText, OptionPage id)
     {
-        GameObject template = __instance.GameSettingsButton.gameObject;
-        GameObject buttonObj = UnityObject.Instantiate(template, template.transform.parent);
+        var template = __instance.GameSettingsButton.gameObject;
+        var buttonObj = UnityObject.Instantiate(template, template.transform.parent);
         buttonObj.transform.localPosition += Vector3.down * 0.5f * ((int)id - 2); // 場所調整
         buttonObj.name = name;
         __instance.StartCoroutine(Effects.Lerp(2f,
@@ -278,7 +278,7 @@ internal partial class CustomOption
             {
                 buttonObj.transform.FindChild("FontPlacer").GetComponentInChildren<TextMeshPro>().text = buttonText;
             })));
-        PassiveButton buttonPb = buttonObj.GetComponent<PassiveButton>();
+        var buttonPb = buttonObj.GetComponent<PassiveButton>();
         buttonPb.OnClick.RemoveAllListeners();
         buttonPb.OnClick.AddListener((Action)(() =>
         {
@@ -293,13 +293,13 @@ internal partial class CustomOption
 
     private static GameObject CreateSettingTab(GameSettingMenu __instance, string name, CustomOptionType optionType)
     {
-        GameObject template = __instance.GameSettingsTab.gameObject;
-        GameObject tabObj = UnityObject.Instantiate(template, template.transform.parent);
+        var template = __instance.GameSettingsTab.gameObject;
+        var tabObj = UnityObject.Instantiate(template, template.transform.parent);
         tabObj.name = name;
 
-        GameOptionsMenu gameOptionsMenu = tabObj.GetComponent<GameOptionsMenu>();
+        var gameOptionsMenu = tabObj.GetComponent<GameOptionsMenu>();
         gameOptionsMenu.Children ??= new();
-        foreach (OptionBehaviour child in gameOptionsMenu.Children.GetFastEnumerator())
+        foreach (var child in gameOptionsMenu.Children.GetFastEnumerator())
         {
             child.Destroy();
         }
@@ -307,7 +307,7 @@ internal partial class CustomOption
         gameOptionsMenu.scrollBar.transform.FindChild("SliderInner").DestroyChildren();
         gameOptionsMenu.Children.Clear();
 
-        if (OptionsByType.TryGetValue(optionType, out List<CustomOption> relevantOptions))
+        if (OptionsByType.TryGetValue(optionType, out var relevantOptions))
         {
             CreateSettingsNew(gameOptionsMenu, relevantOptions);
         }
@@ -318,12 +318,12 @@ internal partial class CustomOption
 
     private static void CreateSettingsNew(GameOptionsMenu menu, List<CustomOption> options)
     {
-        float num = 1.5f;
-        foreach (CustomOption option in options)
+        var num = 1.5f;
+        foreach (var option in options)
         {
             if (option.IsHeader)
             {
-                CategoryHeaderMasked categoryHeaderMasked = UnityObject.Instantiate(menu.categoryHeaderOrigin,
+                var categoryHeaderMasked = UnityObject.Instantiate(menu.categoryHeaderOrigin,
                     Vector3.zero,
                     Quaternion.identity,
                     menu.settingsContainer);
@@ -347,24 +347,24 @@ internal partial class CustomOption
                 continue;
             }
 
-            StringOption ob = UnityObject.Instantiate(menu.stringOptionOrigin, Vector3.zero, Quaternion.identity, menu.settingsContainer);
+            var ob = UnityObject.Instantiate(menu.stringOptionOrigin, Vector3.zero, Quaternion.identity, menu.settingsContainer);
             ob.transform.localPosition = new(0.952f, num, -2f);
             ob.SetClickMask(menu.ButtonClickMask);
 
             // "SetUpFromData"
-            Il2CppArrayBase<SpriteRenderer> renderer = ob.GetComponentsInChildren<SpriteRenderer>(true);
-            for (int j = 0; j < renderer.Length; j++)
+            var renderer = ob.GetComponentsInChildren<SpriteRenderer>(true);
+            for (var j = 0; j < renderer.Length; j++)
             {
                 renderer[j].material.SetInt(PlayerMaterial.MaskLayer, 20);
             }
 
-            foreach (TextMeshPro tmp in ob.GetComponentsInChildren<TextMeshPro>(true))
+            foreach (var tmp in ob.GetComponentsInChildren<TextMeshPro>(true))
             {
                 tmp.fontMaterial.SetFloat(StencilComp, 3f);
                 tmp.fontMaterial.SetFloat(Stencil, 20);
             }
 
-            StringOption so = ob;
+            var so = ob;
             so.OnValueChanged = new Action<OptionBehaviour>(o => { });
             so.TitleText.text = Helpers.Cs(option.Color, Tr.Get(option.NameKey));
             if (option.IsHeader
@@ -393,7 +393,7 @@ internal partial class CustomOption
             menu.scrollBar.SetYBoundsMax(-num - 1.65f);
         }
 
-        foreach (OptionBehaviour ob in menu.Children)
+        foreach (var ob in menu.Children)
         {
             if (AmongUsClient.Instance && !AmongUsClient.Instance.AmHost)
             {
@@ -404,8 +404,8 @@ internal partial class CustomOption
 
     private static void UpdateGameOptionsMenu(CustomOptionType optionType, GameOptionsMenu menu)
     {
-        Il2CppSystem.Collections.Generic.List<OptionBehaviour> children = menu.Children;
-        foreach (OptionBehaviour t in children)
+        var children = menu.Children;
+        foreach (var t in children)
         {
             t.Destroy();
         }
@@ -413,7 +413,7 @@ internal partial class CustomOption
         menu.scrollBar.transform.FindChild("SliderInner").DestroyChildren();
         children.Clear();
 
-        if (OptionsByType.TryGetValue(optionType, out List<CustomOption> options))
+        if (OptionsByType.TryGetValue(optionType, out var options))
         {
             CreateSettingsNew(menu, options);
         }
@@ -422,7 +422,7 @@ internal partial class CustomOption
     internal static bool StringOptionInitialize(StringOption __instance)
     {
         CustomOption option = null;
-        foreach (CustomOption t in AllOptions)
+        foreach (var t in AllOptions)
         {
             if (t._optionBehavior != __instance)
             {
@@ -447,7 +447,7 @@ internal partial class CustomOption
 
     internal static bool StringOptionIncrease(StringOption __instance)
     {
-        if (!OptionsByBehaviour.TryGetValue(__instance, out CustomOption option))
+        if (!OptionsByBehaviour.TryGetValue(__instance, out var option))
         {
             return true;
         }
@@ -457,7 +457,7 @@ internal partial class CustomOption
 
     internal static bool StringOptionDecrease(StringOption __instance)
     {
-        if (!OptionsByBehaviour.TryGetValue(__instance, out CustomOption option))
+        if (!OptionsByBehaviour.TryGetValue(__instance, out var option))
         {
             return true;
         }
@@ -472,7 +472,7 @@ internal partial class CustomOption
             return;
         }
         // Save all custom option selections to config at game start
-        foreach (CustomOption option in AllOptions)
+        foreach (var option in AllOptions)
         {
             option.Entry?.Value = option.GetSelectionIndex();
         }
@@ -536,9 +536,9 @@ internal partial class CustomOption
         {
             return string.Join("\n", options);
         }
-        foreach (CustomOption op in option.Children)
+        foreach (var op in option.Children)
         {
-            string str = OptionsToString(op);
+            var str = OptionsToString(op);
             if (str != "")
             {
                 options.Add(str);

@@ -27,7 +27,7 @@ internal static class SecurityCamera
     internal static void UseCameraTime()
     {
         // Don't waste network traffic if we're out of time.
-        PlayerControl lp = PlayerControl.LocalPlayer;
+        var lp = PlayerControl.LocalPlayer;
         if (MapSettings.RestrictDevices > 0 && MapSettings.RestrictCameras && MapSettings.RestrictCamerasTime > 0f && lp != null && lp.IsAlive())
         {
             using RPCSender sender = new(lp.NetId, CustomRPC.UseCameraTime);
@@ -48,22 +48,22 @@ internal static class SecurityCamera
         // Add securityGuard cameras
         _page = 0;
         _timer = 0;
-        ShipStatus ship = MapUtilities.CachedShipStatus;
+        var ship = MapUtilities.CachedShipStatus;
         if (ship != null && ship.AllCameras.Length > 4 && __instance.FilteredRooms.Length > 0)
         {
-            int oldLen = __instance.textures.Length;
-            int newLen = ship.AllCameras.Length;
+            var oldLen = __instance.textures.Length;
+            var newLen = ship.AllCameras.Length;
             RenderTexture[] newTextures = new RenderTexture[newLen];
-            for (int i = 0; i < oldLen; i++)
+            for (var i = 0; i < oldLen; i++)
             {
                 newTextures[i] = __instance.textures[i];
             }
             __instance.textures = newTextures;
 
-            for (int i = 4; i < ship.AllCameras.Length; i++)
+            for (var i = 4; i < ship.AllCameras.Length; i++)
             {
-                SurvCamera surv = ship.AllCameras[i];
-                Camera camera = UnityObject.Instantiate(__instance.CameraPrefab, __instance.transform, true);
+                var surv = ship.AllCameras[i];
+                var camera = UnityObject.Instantiate(__instance.CameraPrefab, __instance.transform, true);
                 camera.transform.position = new(surv.transform.position.x, surv.transform.position.y, 8f);
                 camera.orthographicSize = 2.35f;
                 RenderTexture temporary = RenderTexture.GetTemporary(256, 256, 16, (RenderTextureFormat)0);
@@ -114,7 +114,7 @@ internal static class SecurityCamera
             .Append('.')
             .Append((ts.Milliseconds / 10).ToString("D2"));
 
-        string timeString = SecurityStringBuilder.ToString();
+        var timeString = SecurityStringBuilder.ToString();
         SecurityStringBuilder.Clear();
         SecurityStringBuilder.Append(string.Format(Tr.Get(TrKey.TimeRemaining), timeString));
         _timeRemaining.text = SecurityStringBuilder.ToString();
@@ -162,7 +162,7 @@ internal static class SecurityCamera
                 .Append('.')
                 .Append((ts.Milliseconds / 10).ToString("D2"));
 
-            string timeString = SecurityStringBuilder.ToString();
+            var timeString = SecurityStringBuilder.ToString();
             SecurityStringBuilder.Clear();
             SecurityStringBuilder.Append(string.Format(Tr.Get(TrKey.TimeRemaining), timeString));
             _timeRemaining.text = SecurityStringBuilder.ToString();
@@ -171,9 +171,9 @@ internal static class SecurityCamera
 
         // Update normal and securityGuard cameras
         _timer += Time.deltaTime;
-        int numberOfPages = Mathf.CeilToInt(MapUtilities.CachedShipStatus.AllCameras.Length / 4f);
+        var numberOfPages = Mathf.CeilToInt(MapUtilities.CachedShipStatus.AllCameras.Length / 4f);
 
-        bool update = false;
+        var update = false;
 
         if (_timer > 3f || Input.GetKeyDown(KeyCode.RightArrow))
         {
@@ -195,7 +195,7 @@ internal static class SecurityCamera
                 return false;
             }
             __instance.isStatic = false;
-            for (int i = 0; i < __instance.ViewPorts.Length; i++)
+            for (var i = 0; i < __instance.ViewPorts.Length; i++)
             {
                 __instance.ViewPorts[i].sharedMaterial = __instance.DefaultMaterial;
                 __instance.SabText[i].gameObject.SetActive(false);
@@ -212,7 +212,7 @@ internal static class SecurityCamera
         else if (!__instance.isStatic && PlayerTask.PlayerHasTaskOfType<HudOverrideTask>(PlayerControl.LocalPlayer))
         {
             __instance.isStatic = true;
-            for (int j = 0; j < __instance.ViewPorts.Length; j++)
+            for (var j = 0; j < __instance.ViewPorts.Length; j++)
             {
                 __instance.ViewPorts[j].sharedMaterial = __instance.StaticMaterial;
                 __instance.SabText[j].gameObject.SetActive(true);
@@ -250,7 +250,7 @@ internal static class SecurityCamera
             return false;
         }
 
-        string timeString = TimeSpan.FromSeconds(MapSettings.RestrictCamerasTime).ToString(@"mm\:ss\.ff");
+        var timeString = TimeSpan.FromSeconds(MapSettings.RestrictCamerasTime).ToString(@"mm\:ss\.ff");
         _timeRemaining.text = string.Format(Tr.Get(TrKey.TimeRemaining), timeString);
         _timeRemaining.gameObject.SetActive(true);
 

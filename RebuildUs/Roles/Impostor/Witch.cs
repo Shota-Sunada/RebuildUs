@@ -60,7 +60,7 @@ internal class Witch : MultiRoleBase<Witch>
 
     internal override void FixedUpdate()
     {
-        Witch local = Local;
+        var local = Local;
         if (local == null)
         {
             return;
@@ -68,7 +68,7 @@ internal class Witch : MultiRoleBase<Witch>
         List<PlayerControl> untargetables = [];
         if (_spellCastingTarget != null)
         {
-            foreach (PlayerControl p in PlayerControl.AllPlayerControls.GetFastEnumerator())
+            foreach (var p in PlayerControl.AllPlayerControls.GetFastEnumerator())
             {
                 if (p.PlayerId != _spellCastingTarget.PlayerId)
                 {
@@ -155,7 +155,7 @@ internal class Witch : MultiRoleBase<Witch>
 
                 KillAnimationPatch.AvoidNextKillMovement = true;
 
-                MurderAttemptResult attempt = Helpers.CheckMurderAttempt(Local.Player, _spellCastingTarget);
+                var attempt = Helpers.CheckMurderAttempt(Local.Player, _spellCastingTarget);
                 if (attempt == MurderAttemptResult.PerformKill)
                 {
                     {

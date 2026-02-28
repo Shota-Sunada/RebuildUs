@@ -36,22 +36,22 @@ internal static partial class EndGameMain
     {
         Logger.LogInfo("Game ended.");
 
-        GameOverReason gameOverReason = AdditionalTempData.GameOverReason;
+        var gameOverReason = AdditionalTempData.GameOverReason;
         AdditionalTempData.Clear();
 
         RoleType[] excludeRoles = [];
-        foreach (PlayerControl player in PlayerControl.AllPlayerControls.GetFastEnumerator())
+        foreach (var player in PlayerControl.AllPlayerControls.GetFastEnumerator())
         {
-            List<RoleInfo> roles = RoleInfo.GetRoleInfoForPlayer(player);
-            (int tasksCompleted, int tasksTotal) = TasksHandler.TaskInfo(player.Data);
+            var roles = RoleInfo.GetRoleInfoForPlayer(player);
+            (var tasksCompleted, var tasksTotal) = TasksHandler.TaskInfo(player.Data);
 
-            bool isOxygenDeath = SubmergedCompatibility.Loaded
+            var isOxygenDeath = SubmergedCompatibility.Loaded
                                  && SubmarineOxygenSystem.Instance != null
                                  && (OxygenDeathAnimationPatches.IsOxygenDeath || IsO2Win);
-            FinalStatus finalStatus = GameHistory.FinalStatuses[player.PlayerId] = player.Data.Disconnected
+            var finalStatus = GameHistory.FinalStatuses[player.PlayerId] = player.Data.Disconnected
                 ? FinalStatus.Disconnected
                 :
-                GameHistory.FinalStatuses.TryGetValue(player.PlayerId, out FinalStatus statuse)
+                GameHistory.FinalStatuses.TryGetValue(player.PlayerId, out var statuse)
                     ? statuse
                     :
                     player.Data.IsDead
@@ -111,21 +111,21 @@ internal static partial class EndGameMain
             notWinners.Add(Sidekick.PlayerControl);
         }
 
-        bool sabotageWin = gameOverReason is GameOverReason.ImpostorsBySabotage;
-        bool impostorWin = gameOverReason is GameOverReason.ImpostorsByVote or GameOverReason.ImpostorsByKill or GameOverReason.ImpostorDisconnect;
-        bool crewmateWin = gameOverReason is GameOverReason.CrewmatesByVote or GameOverReason.CrewmatesByTask or GameOverReason.CrewmateDisconnect;
+        var sabotageWin = gameOverReason is GameOverReason.ImpostorsBySabotage;
+        var impostorWin = gameOverReason is GameOverReason.ImpostorsByVote or GameOverReason.ImpostorsByKill or GameOverReason.ImpostorDisconnect;
+        var crewmateWin = gameOverReason is GameOverReason.CrewmatesByVote or GameOverReason.CrewmatesByTask or GameOverReason.CrewmateDisconnect;
 
         // ADD HERE MORE!
-        bool jesterWin = Jester.Exists && gameOverReason == (GameOverReason)CustomGameOverReason.JesterWin;
-        bool arsonistWin = Arsonist.Exists && gameOverReason == (GameOverReason)CustomGameOverReason.ArsonistWin;
-        bool vultureWin = Vulture.Exists && gameOverReason == (GameOverReason)CustomGameOverReason.VultureWin;
-        bool teamJackalWin = gameOverReason == (GameOverReason)CustomGameOverReason.TeamJackalWin;
-        bool miniLose = Mini.Exists && gameOverReason == (GameOverReason)CustomGameOverReason.MiniLose;
-        bool loversWin = Lovers.AnyAlive() && !(Lovers.SeparateTeam && gameOverReason == GameOverReason.CrewmatesByTask);
+        var jesterWin = Jester.Exists && gameOverReason == (GameOverReason)CustomGameOverReason.JesterWin;
+        var arsonistWin = Arsonist.Exists && gameOverReason == (GameOverReason)CustomGameOverReason.ArsonistWin;
+        var vultureWin = Vulture.Exists && gameOverReason == (GameOverReason)CustomGameOverReason.VultureWin;
+        var teamJackalWin = gameOverReason == (GameOverReason)CustomGameOverReason.TeamJackalWin;
+        var miniLose = Mini.Exists && gameOverReason == (GameOverReason)CustomGameOverReason.MiniLose;
+        var loversWin = Lovers.AnyAlive() && !(Lovers.SeparateTeam && gameOverReason == GameOverReason.CrewmatesByTask);
 
-        bool everyoneDead = true;
-        List<PlayerRoleInfo> playerRoles = AdditionalTempData.PlayerRoles;
-        foreach (PlayerRoleInfo t in playerRoles)
+        var everyoneDead = true;
+        var playerRoles = AdditionalTempData.PlayerRoles;
+        foreach (var t in playerRoles)
         {
             if (t.Status != FinalStatus.Alive)
             {
@@ -135,12 +135,12 @@ internal static partial class EndGameMain
             break;
         }
 
-        bool forceEnd = gameOverReason == (GameOverReason)CustomGameOverReason.ForceEnd;
+        var forceEnd = gameOverReason == (GameOverReason)CustomGameOverReason.ForceEnd;
 
         if (impostorWin)
         {
             EndGameResult.CachedWinners = new();
-            foreach (PlayerControl p in PlayerControl.AllPlayerControls.GetFastEnumerator())
+            foreach (var p in PlayerControl.AllPlayerControls.GetFastEnumerator())
             {
                 if (!p.IsTeamImpostor()
                     && !p.HasModifier(ModifierType.Madmate)
@@ -158,7 +158,7 @@ internal static partial class EndGameMain
         else if (crewmateWin)
         {
             EndGameResult.CachedWinners = new();
-            foreach (PlayerControl p in PlayerControl.AllPlayerControls.GetFastEnumerator())
+            foreach (var p in PlayerControl.AllPlayerControls.GetFastEnumerator())
             {
                 if (!p.IsTeamCrewmate()
                     || p.HasModifier(ModifierType.Madmate)
@@ -176,13 +176,13 @@ internal static partial class EndGameMain
 
         // 勝利画面から不要なキャラを追放する
         HashSet<string> notWinnerNames = [];
-        foreach (PlayerControl t in notWinners)
+        foreach (var t in notWinners)
         {
             notWinnerNames.Add(t.Data.PlayerName);
         }
 
-        Il2CppSystem.Collections.Generic.List<CachedPlayerData> cachedWinners = EndGameResult.CachedWinners;
-        for (int i = cachedWinners.Count - 1; i >= 0; i--)
+        var cachedWinners = EndGameResult.CachedWinners;
+        for (var i = cachedWinners.Count - 1; i >= 0; i--)
         {
             if (notWinnerNames.Contains(cachedWinners[i].PlayerName))
             {
@@ -230,7 +230,7 @@ internal static partial class EndGameMain
                 IsImpostor = false,
             });
 
-            foreach (PlayerControl jackal in Jackal.FormerJackals)
+            foreach (var jackal in Jackal.FormerJackals)
             {
                 EndGameResult.CachedWinners.Add(new(jackal.Data)
                 {
@@ -253,7 +253,7 @@ internal static partial class EndGameMain
                 AdditionalTempData.WinCondition = WinCondition.LoversSoloWin;
                 EndGameResult.CachedWinners = new();
 
-                foreach (Couple couple in Lovers.Couples)
+                foreach (var couple in Lovers.Couples)
                 {
                     if (!couple.ExistingAndAlive)
                     {
@@ -273,7 +273,7 @@ internal static partial class EndGameMain
         if (forceEnd)
         {
             EndGameResult.CachedWinners = new();
-            foreach (PlayerControl player in PlayerControl.AllPlayerControls.GetFastEnumerator())
+            foreach (var player in PlayerControl.AllPlayerControls.GetFastEnumerator())
             {
                 player.Data.IsDead = false;
                 EndGameResult.CachedWinners.Add(new(player.Data));
@@ -282,12 +282,12 @@ internal static partial class EndGameMain
             AdditionalTempData.WinCondition = WinCondition.ForceEnd;
         }
 
-        foreach (CachedPlayerData wpd in EndGameResult.CachedWinners.GetFastEnumerator())
+        foreach (var wpd in EndGameResult.CachedWinners.GetFastEnumerator())
         {
-            bool isDead = wpd.IsDead;
+            var isDead = wpd.IsDead;
             if (!isDead)
             {
-                foreach (PlayerRoleInfo pr in playerRoles)
+                foreach (var pr in playerRoles)
                 {
                     if (pr.PlayerName != wpd.PlayerName || pr.Status == FinalStatus.Alive)
                     {
@@ -307,16 +307,16 @@ internal static partial class EndGameMain
     internal static void SetupEndGameScreen(EndGameManager __instance)
     {
         // Delete and readd PoolablePlayers always showing the name and role of the player
-        foreach (PoolablePlayer pb in __instance.transform.GetComponentsInChildren<PoolablePlayer>())
+        foreach (var pb in __instance.transform.GetComponentsInChildren<PoolablePlayer>())
         {
             UnityObject.Destroy(pb.gameObject);
         }
 
-        int num = Mathf.CeilToInt(7.5f);
+        var num = Mathf.CeilToInt(7.5f);
 
         List<CachedPlayerData> list = [];
-        Il2CppSystem.Collections.Generic.List<CachedPlayerData> cachedWinners = EndGameResult.CachedWinners;
-        foreach (CachedPlayerData t in cachedWinners)
+        var cachedWinners = EndGameResult.CachedWinners;
+        foreach (var t in cachedWinners)
         {
             list.Add(t);
         }
@@ -324,8 +324,8 @@ internal static partial class EndGameMain
         list.Sort((a, b) => (a.IsYou ? -1 : 0).CompareTo(b.IsYou ? -1 : 0));
 
         Dictionary<string, PlayerRoleInfo> playerRolesDict = [];
-        List<PlayerRoleInfo> playerRoles = AdditionalTempData.PlayerRoles;
-        foreach (PlayerRoleInfo pr in playerRoles)
+        var playerRoles = AdditionalTempData.PlayerRoles;
+        foreach (var pr in playerRoles)
         {
             if (pr != null)
             {
@@ -333,18 +333,18 @@ internal static partial class EndGameMain
             }
         }
 
-        for (int i = 0; i < list.Count; i++)
+        for (var i = 0; i < list.Count; i++)
         {
-            CachedPlayerData cachedPlayerData2 = list[i];
-            int num2 = i % 2 == 0 ? -1 : 1;
-            int num3 = (i + 1) / 2;
-            float num4 = num3 / (float)num;
-            float num5 = Mathf.Lerp(1f, 0.75f, num4);
+            var cachedPlayerData2 = list[i];
+            var num2 = i % 2 == 0 ? -1 : 1;
+            var num3 = (i + 1) / 2;
+            var num4 = num3 / (float)num;
+            var num5 = Mathf.Lerp(1f, 0.75f, num4);
             float num6 = i == 0 ? -8 : -1;
-            float num7 = Mathf.Lerp(1f, 0.65f, num4) * 0.9f;
+            var num7 = Mathf.Lerp(1f, 0.65f, num4) * 0.9f;
             Vector3 vector = new(num7, num7, 1f);
 
-            PoolablePlayer poolablePlayer = UnityObject.Instantiate(__instance.PlayerPrefab, __instance.transform);
+            var poolablePlayer = UnityObject.Instantiate(__instance.PlayerPrefab, __instance.transform);
             poolablePlayer.transform.localPosition = new Vector3(1f * num2 * num3 * num5,
                                                          FloatRange.SpreadToEdges(-1.125f, 0f, num3, num),
                                                          num6 + num3 * 0.01f)
@@ -369,7 +369,7 @@ internal static partial class EndGameMain
                 poolablePlayer.cosmetics.nameText.transform.localPosition.y - 0.7f,
                 -15f);
 
-            if (playerRolesDict.TryGetValue(cachedPlayerData2.PlayerName, out PlayerRoleInfo data))
+            if (playerRolesDict.TryGetValue(cachedPlayerData2.PlayerName, out var data))
             {
                 poolablePlayer.cosmetics.nameText.text = cachedPlayerData2.PlayerName + data.NameSuffix + $"\n<size=80%>{data.RoleNames}</size>";
             }
@@ -380,7 +380,7 @@ internal static partial class EndGameMain
         }
 
         // Additional code
-        GameObject bonusTextObject = UnityObject.Instantiate(__instance.WinText.gameObject);
+        var bonusTextObject = UnityObject.Instantiate(__instance.WinText.gameObject);
         bonusTextObject.transform.position = new(__instance.WinText.transform.position.x,
             __instance.WinText.transform.position.y - 0.8f,
             __instance.WinText.transform.position.z);
@@ -394,7 +394,7 @@ internal static partial class EndGameMain
             // __instance.WinText.color = GM.color;
         }
 
-        string bonusText = "";
+        var bonusText = "";
 
         switch (AdditionalTempData.WinCondition)
         {
@@ -460,8 +460,8 @@ internal static partial class EndGameMain
                 break;
         }
 
-        string extraText = "";
-        foreach (WinCondition w in AdditionalTempData.AdditionalWinConditions)
+        var extraText = "";
+        foreach (var w in AdditionalTempData.AdditionalWinConditions)
         {
             switch (w)
             {
@@ -480,8 +480,8 @@ internal static partial class EndGameMain
         {
             if (Camera.main != null)
             {
-                Vector3 position = Camera.main.ViewportToWorldPoint(new(0f, 1f, Camera.main.nearClipPlane));
-                GameObject roleSummary = UnityObject.Instantiate(__instance.WinText.gameObject);
+                var position = Camera.main.ViewportToWorldPoint(new(0f, 1f, Camera.main.nearClipPlane));
+                var roleSummary = UnityObject.Instantiate(__instance.WinText.gameObject);
                 roleSummary.transform.position = new(__instance.Navigation.ExitButton.transform.position.x + 0.1f, position.y - 0.1f, -14f);
                 roleSummary.transform.localScale = new(1f, 1f, 1f);
 
@@ -489,10 +489,10 @@ internal static partial class EndGameMain
                 roleSummaryText.AppendLine(Tr.Get(TrKey.RoleSummaryText));
                 AdditionalTempData.PlayerRoles.Sort((x, y) =>
                 {
-                    RoleInfo roleX = x.Roles.Count > 0 ? x.Roles[0] : null;
-                    RoleInfo roleY = y.Roles.Count > 0 ? y.Roles[0] : null;
-                    RoleType idX = roleX?.RoleType ?? RoleType.NoRole;
-                    RoleType idY = roleY?.RoleType ?? RoleType.NoRole;
+                    var roleX = x.Roles.Count > 0 ? x.Roles[0] : null;
+                    var roleY = y.Roles.Count > 0 ? y.Roles[0] : null;
+                    var idX = roleX?.RoleType ?? RoleType.NoRole;
+                    var idY = roleY?.RoleType ?? RoleType.NoRole;
 
                     if (x.Status == y.Status)
                     {
@@ -503,22 +503,22 @@ internal static partial class EndGameMain
                 });
                 Logger.LogInfo(TextRenderer.text, "Result");
                 Logger.LogInfo("----------Game Result-----------", "Result");
-                foreach (PlayerRoleInfo data in AdditionalTempData.PlayerRoles)
+                foreach (var data in AdditionalTempData.PlayerRoles)
                 {
                     if (data.PlayerName == "")
                     {
                         continue;
                     }
-                    string taskInfo = data.TasksTotal > 0 ? $"<color=#FAD934FF>{data.TasksCompleted}/{data.TasksTotal}</color>" : "";
-                    string aliveDead = Tr.GetDynamic($"{data.Status}");
-                    string result = $"{data.PlayerName + data.NameSuffix}<pos=18.5%>{taskInfo}<pos=25%>{aliveDead}<pos=34%>{data.RoleNames}";
+                    var taskInfo = data.TasksTotal > 0 ? $"<color=#FAD934FF>{data.TasksCompleted}/{data.TasksTotal}</color>" : "";
+                    var aliveDead = Tr.GetDynamic($"{data.Status}");
+                    var result = $"{data.PlayerName + data.NameSuffix}<pos=18.5%>{taskInfo}<pos=25%>{aliveDead}<pos=34%>{data.RoleNames}";
                     roleSummaryText.AppendLine(result);
                     Logger.LogInfo(result, "Result");
                 }
 
                 Logger.LogInfo("--------------------------------", "Result");
 
-                TMP_Text roleSummaryTextMesh = roleSummary.GetComponent<TMP_Text>();
+                var roleSummaryTextMesh = roleSummary.GetComponent<TMP_Text>();
                 roleSummaryTextMesh.alignment = TextAlignmentOptions.TopLeft;
                 roleSummaryTextMesh.color = UnityEngine.Color.white;
                 roleSummaryTextMesh.outlineWidth *= 1.2f;
@@ -526,7 +526,7 @@ internal static partial class EndGameMain
                 roleSummaryTextMesh.fontSizeMax = 1.25f;
                 roleSummaryTextMesh.fontSize = 1.25f;
 
-                RectTransform roleSummaryTextMeshRectTransform = roleSummaryTextMesh.GetComponent<RectTransform>();
+                var roleSummaryTextMeshRectTransform = roleSummaryTextMesh.GetComponent<RectTransform>();
                 roleSummaryTextMeshRectTransform.anchoredPosition = new(position.x + 3.5f, position.y - 0.1f);
                 roleSummaryTextMesh.text = roleSummaryText.ToString();
             }

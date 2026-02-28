@@ -50,8 +50,18 @@ internal static class ModifierData
 
     internal static (ModifierType ModifierType, Type Type)[] AllModifierTypes
     {
-        get => [.. Modifiers.Select(r => (modType: r.ModType, classType: r.ClassType))];
+        get
+        {
+            var modifiers = Modifiers;
+            var result = new (ModifierType ModifierType, Type Type)[modifiers.Length];
+            for (var i = 0; i < modifiers.Length; i++)
+            {
+                var r = modifiers[i];
+                result[i] = (r.ModType, r.ClassType);
+            }
+            return result;
+        }
     }
 
-    internal sealed record ModifierRegistration(ModifierType ModType, Type ClassType, Func<Color> GetColor, Func<CustomOption>? GetOption);
+    internal sealed record ModifierRegistration(ModifierType ModType, Type ClassType, Func<Color> GetColor, Func<CustomOption> GetOption);
 }

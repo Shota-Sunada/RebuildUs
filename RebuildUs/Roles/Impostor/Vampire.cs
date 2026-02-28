@@ -1,8 +1,8 @@
 namespace RebuildUs.Roles.Impostor;
 
 [HarmonyPatch]
-[RegisterRole(RoleType.Vampire, RoleTeam.Impostor, typeof(MultiRoleBase<Vampire>), nameof(Vampire.NameColor), nameof(CustomOptionHolder.VampireSpawnRate))]
-internal class Vampire : MultiRoleBase<Vampire>
+[RegisterRole(RoleType.Vampire, RoleTeam.Impostor, typeof(SingleRoleBase<Vampire>), nameof(Vampire.NameColor), nameof(CustomOptionHolder.VampireSpawnRate))]
+internal class Vampire : SingleRoleBase<Vampire>
 {
     internal static Color NameColor = Palette.ImpostorRed;
 
@@ -54,7 +54,7 @@ internal class Vampire : MultiRoleBase<Vampire>
 
     internal override void FixedUpdate()
     {
-        Vampire local = Local;
+        var local = Local;
         if (local == null || Player.IsDead())
         {
             return;
@@ -68,11 +68,11 @@ internal class Vampire : MultiRoleBase<Vampire>
         {
             Helpers.SetPlayerOutline(local.CurrentTarget, RoleColor);
 
-            Vector2 targetPos = local.CurrentTarget.GetTruePosition();
-            List<Garlic> garlics = Garlic.Garlics;
-            for (int i = 0; i < garlics.Count; i++)
+            var targetPos = local.CurrentTarget.GetTruePosition();
+            var garlics = Garlic.Garlics;
+            for (var i = 0; i < garlics.Count; i++)
             {
-                Garlic garlic = garlics[i];
+                var garlic = garlics[i];
                 if (garlic?.GarlicObject != null && Vector2.Distance(targetPos, garlic.GarlicObject.transform.position) <= 2.5f)
                 {
                     local.TargetNearGarlic = true;
@@ -96,7 +96,7 @@ internal class Vampire : MultiRoleBase<Vampire>
                     return;
                 }
 
-                MurderAttemptResult murder = Helpers.CheckMurderAttempt(Local.Player, Local.CurrentTarget);
+                var murder = Helpers.CheckMurderAttempt(Local.Player, Local.CurrentTarget);
                 if (murder == MurderAttemptResult.PerformKill)
                 {
                     if (Local.TargetNearGarlic)
@@ -155,7 +155,7 @@ internal class Vampire : MultiRoleBase<Vampire>
             },
             () =>
             {
-                Vampire local = Local;
+                var local = Local;
                 if (local == null)
                 {
                     return false;
@@ -197,7 +197,7 @@ internal class Vampire : MultiRoleBase<Vampire>
         _garlicButton = new(() =>
             {
                 PlayerPlacedGarlic = true;
-                Vector3 pos = PlayerControl.LocalPlayer.transform.position;
+                var pos = PlayerControl.LocalPlayer.transform.position;
 
                 using (RPCSender sender = new(PlayerControl.LocalPlayer.NetId, CustomRPC.PlaceGarlic))
                 {
@@ -242,6 +242,8 @@ internal class Vampire : MultiRoleBase<Vampire>
     {
         // reset configs here
         Bitten = null;
-        Players.Clear();
+
+        ModRoleManager.RemoveRole(Instance);
+        Instance = null;
     }
 }

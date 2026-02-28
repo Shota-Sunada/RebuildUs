@@ -26,7 +26,7 @@ internal static class ChatNotificationPatch
         }
         catch
         {
-            Color32 c = Palette.PlayerColors[__instance.player.ColorId];
+            var c = Palette.PlayerColors[__instance.player.ColorId];
             str = ColorUtility.ToHtmlStringRGB(c);
 
             color = c.r + c.g + c.b > 180 ? Palette.Black : Palette.White;
@@ -45,7 +45,7 @@ internal static class ChatNotificationPatch
             ColorStringBuilder.Append(sender.Data.PlayerName);
         }
 
-        string playerName = ColorStringBuilder.ToString();
+        var playerName = ColorStringBuilder.ToString();
         if (__instance.playerNameText.text != playerName)
         {
             __instance.playerNameText.text = playerName;

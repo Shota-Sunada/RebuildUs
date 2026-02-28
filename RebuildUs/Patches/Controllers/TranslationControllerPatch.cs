@@ -19,9 +19,9 @@ internal static class TranslationControllerPatch
         }
 
         // For now only do this in custom options.
-        int idInt = (int)id - CustomOption.CUSTOM_OPTION_PRE_ID;
+        var idInt = (int)id - CustomOption.CUSTOM_OPTION_PRE_ID;
         CustomOption opt = null;
-        foreach (CustomOption o in CustomOption.AllOptions)
+        foreach (var o in CustomOption.AllOptions)
         {
             if (o.Id != idInt)
             {
@@ -37,7 +37,7 @@ internal static class TranslationControllerPatch
             return false;
         }
 
-        string ourString = Helpers.Cs(opt.Color, Tr.Get(opt.NameKey)) ?? "";
+        var ourString = Helpers.Cs(opt.Color, Tr.Get(opt.NameKey)) ?? "";
 
         __result = ourString;
         return false;
@@ -67,12 +67,12 @@ internal static class TranslationControllerPatch
             {
                 return;
             }
-            NetworkedPlayerInfo netPlayer = ExileController.Instance.initData.networkedPlayer;
+            var netPlayer = ExileController.Instance.initData.networkedPlayer;
             if (netPlayer == null)
             {
                 return;
             }
-            PlayerControl player = netPlayer.Object;
+            var player = netPlayer.Object;
             if (player == null)
             {
                 return;
@@ -85,8 +85,8 @@ internal static class TranslationControllerPatch
                     {
                         ExileStringBuilder.Clear();
                         ExileStringBuilder.Append(player.Data.PlayerName).Append(" was The ");
-                        List<RoleInfo> roleInfos = RoleInfo.GetRoleInfoForPlayer(player, false);
-                        for (int i = 0; i < roleInfos.Count; i++)
+                        var roleInfos = RoleInfo.GetRoleInfoForPlayer(player, false);
+                        for (var i = 0; i < roleInfos.Count; i++)
                         {
                             if (i > 0)
                             {

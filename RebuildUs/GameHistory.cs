@@ -12,7 +12,7 @@ internal sealed class DeadPlayer(PlayerControl player, DateTime timeOfDeath, Dea
 
 internal static class GameHistory
 {
-    internal static readonly List<Tuple<Vector3, bool>> LocalPlayerPositions = [];
+    internal static readonly List<(Vector3 pos, bool canMove)> LocalPlayerPositions = [];
     internal static readonly List<DeadPlayer> DeadPlayers = [];
     internal static readonly Dictionary<int, FinalStatus> FinalStatuses = [];
 
@@ -21,7 +21,7 @@ internal static class GameHistory
 
     internal static DeadPlayer GetDeadPlayer(byte playerId)
     {
-        foreach (DeadPlayer deadPlayer in DeadPlayers)
+        foreach (var deadPlayer in DeadPlayers)
         {
             if (deadPlayer.Player.PlayerId == playerId)
             {

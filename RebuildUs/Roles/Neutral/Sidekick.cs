@@ -50,7 +50,7 @@ internal class Sidekick : SingleRoleBase<Sidekick>
 
     internal override void OnUpdateNameColors()
     {
-        PlayerControl lp = PlayerControl.LocalPlayer;
+        var lp = PlayerControl.LocalPlayer;
         if (Player == lp)
         {
             HudManagerPatch.SetPlayerNameColor(Player, RoleColor);
@@ -76,7 +76,7 @@ internal class Sidekick : SingleRoleBase<Sidekick>
 
     internal override void FixedUpdate()
     {
-        Sidekick local = Local;
+        var local = Local;
         if (local == null)
         {
             return;
@@ -87,8 +87,8 @@ internal class Sidekick : SingleRoleBase<Sidekick>
             untargetablePlayers.Add(Jackal.PlayerControl);
         }
 
-        List<Mini> miniPlayers = Mini.Players;
-        foreach (Mini mini in miniPlayers)
+        var miniPlayers = Mini.Players;
+        foreach (var mini in miniPlayers)
         {
             if (!Mini.IsGrownUp(mini.Player))
             {

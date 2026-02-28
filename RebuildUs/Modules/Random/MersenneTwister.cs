@@ -132,9 +132,9 @@ internal sealed class MersenneTwister : System.Random
             throw new ArgumentNullException(nameof(initKey));
         }
 
-        uint[] initArray = new uint[initKey.Length];
+        var initArray = new uint[initKey.Length];
 
-        for (int i = 0; i < initKey.Length; ++i)
+        for (var i = 0; i < initKey.Length; ++i)
         {
             initArray[i] = (uint)initKey[i];
         }
@@ -273,9 +273,9 @@ internal sealed class MersenneTwister : System.Random
             throw new ArgumentNullException();
         }
 
-        int bufLen = buffer.Length;
+        var bufLen = buffer.Length;
 
-        for (int idx = 0; idx < bufLen; ++idx)
+        for (var idx = 0; idx < bufLen; ++idx)
         {
             buffer[idx] = (byte)Next(256);
         }
@@ -470,10 +470,10 @@ internal sealed class MersenneTwister : System.Random
     {
         Init(19650218U);
 
-        int keyLength = key.Count;
-        int i = 1;
-        int j = 0;
-        int k = N > keyLength ? N : keyLength;
+        var keyLength = key.Count;
+        var i = 1;
+        var j = 0;
+        var k = N > keyLength ? N : keyLength;
 
         for (; k > 0; k--)
         {
@@ -514,9 +514,9 @@ internal sealed class MersenneTwister : System.Random
     private double Compute53BitRandom(double translate, double scale)
     {
         // get 27 pseudo-random bits
-        ulong a = (ulong)GenerateUInt32() >> 5;
+        var a = (ulong)GenerateUInt32() >> 5;
         // get 26 pseudo-random bits
-        ulong b = (ulong)GenerateUInt32() >> 6;
+        var b = (ulong)GenerateUInt32() >> 6;
 
         // shift the 27 pseudo-random bits (a) over by 26 bits (* 67108864.0) and
         // add another pseudo-random 26 bits (+ b).

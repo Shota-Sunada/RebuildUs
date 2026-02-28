@@ -18,4 +18,6 @@ TheOtherRoles GM - Modのベースシステム・役職・画像\
 LasMonjas - ゲームモード・カスタムマップ
 TownOfHost - 一部機能の移植\
 Submerged - 新規マップ「サブマージド」対応\
-Reactor - サブマージド動作のためのフォーク作成
+Reactor - サブマージド動作のためのフォーク作成\
+
+This mod is based on TheOtherRoles GMH by haoming37. Thank you.

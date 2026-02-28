@@ -82,8 +82,8 @@ internal class Sheriff : MultiRoleBase<Sheriff>
 
     internal override void OnMeetingEnd()
     {
-        bool anyoneDead = false;
-        foreach (PlayerControl p in PlayerControl.AllPlayerControls.GetFastEnumerator())
+        var anyoneDead = false;
+        foreach (var p in PlayerControl.AllPlayerControls.GetFastEnumerator())
         {
             if (p.Data.IsDead)
             {
@@ -121,7 +121,7 @@ internal class Sheriff : MultiRoleBase<Sheriff>
                     return;
                 }
 
-                MurderAttemptResult murderAttemptResult = Helpers.CheckMurderAttempt(PlayerControl.LocalPlayer, Local.CurrentTarget);
+                var murderAttemptResult = Helpers.CheckMurderAttempt(PlayerControl.LocalPlayer, Local.CurrentTarget);
                 if (murderAttemptResult == MurderAttemptResult.SuppressKill)
                 {
                     return;
@@ -129,11 +129,11 @@ internal class Sheriff : MultiRoleBase<Sheriff>
 
                 if (murderAttemptResult == MurderAttemptResult.PerformKill)
                 {
-                    byte targetId = Local.CurrentTarget.PlayerId;
+                    var targetId = Local.CurrentTarget.PlayerId;
 
                     if (AmongUsClient.Instance.AmHost)
                     {
-                        bool misfire = CheckKill(Local.CurrentTarget);
+                        var misfire = CheckKill(Local.CurrentTarget);
                         {
                             using RPCSender killSender = new(PlayerControl.LocalPlayer.NetId, CustomRPC.SheriffKill);
                             killSender.Write(PlayerControl.LocalPlayer.Data.PlayerId);

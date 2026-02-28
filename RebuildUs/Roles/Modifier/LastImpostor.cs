@@ -85,7 +85,7 @@ internal class LastImpostor : ModifierBase<LastImpostor>
                 {
                     return;
                 }
-                PlayerControl p = Helpers.PlayerById(index);
+                var p = Helpers.PlayerById(index);
                 Divine(p);
             };
         }
@@ -100,7 +100,7 @@ internal class LastImpostor : ModifierBase<LastImpostor>
                 {
                     return false;
                 }
-                PlayerControl p = PlayerControl.LocalPlayer;
+                var p = PlayerControl.LocalPlayer;
                 if (!p.HasModifier(ModifierType.LastImpostor))
                 {
                     return false;
@@ -135,10 +135,10 @@ internal class LastImpostor : ModifierBase<LastImpostor>
 
         void SetButtonPos(byte index)
         {
-            Vector3 pos = LastImpostorCalcPos(index);
+            var pos = LastImpostorCalcPos(index);
             Vector3 scale = new(0.4f, 0.8f, 1.0f);
 
-            Vector3 iconBase = hm.UseButton.transform.localPosition;
+            var iconBase = hm.UseButton.transform.localPosition;
             iconBase.x *= -1;
             if (LastImpostorButtons[index].PositionOffset != pos)
             {
@@ -157,8 +157,8 @@ internal class LastImpostor : ModifierBase<LastImpostor>
 
         void SetBountyIconPos(Vector3 offset)
         {
-            Vector3 bottomLeft = AspectPosition.ComputePosition(AspectPosition.EdgeAlignments.LeftBottom, new(0.9f, 0.7f, -10f));
-            PoolablePlayer icon = MapSettings.PlayerIcons[BountyHunter.Bounty.PlayerId];
+            var bottomLeft = AspectPosition.ComputePosition(AspectPosition.EdgeAlignments.LeftBottom, new(0.9f, 0.7f, -10f));
+            var icon = MapSettings.PlayerIcons[BountyHunter.Bounty.PlayerId];
             icon.transform.localPosition = bottomLeft + new Vector3(-0.25f, 0f, 0) + offset;
             BountyHunter.CooldownText.transform.localPosition = bottomLeft + new Vector3(-0.25f, 0f, -0.1f) + offset;
         }
@@ -173,7 +173,7 @@ internal class LastImpostor : ModifierBase<LastImpostor>
                 }
 
                 //　ラストインポスター以外の場合、リソースがない場合はボタンを表示しない
-                PlayerControl p = Helpers.PlayerById(index);
+                var p = Helpers.PlayerById(index);
                 if (!_playerIcons.ContainsKey(index) || !PlayerControl.LocalPlayer.HasModifier(ModifierType.LastImpostor) || !IsCounterMax())
                 {
                     return false;
@@ -254,7 +254,7 @@ internal class LastImpostor : ModifierBase<LastImpostor>
         }
 
         List<PlayerControl> impList = [];
-        foreach (PlayerControl p in PlayerControl.AllPlayerControls.GetFastEnumerator())
+        foreach (var p in PlayerControl.AllPlayerControls.GetFastEnumerator())
         {
             if (p.IsTeamImpostor() && p.IsAlive())
             {
@@ -275,9 +275,9 @@ internal class LastImpostor : ModifierBase<LastImpostor>
     internal static void Divine(PlayerControl p)
     {
         // FortuneTeller.divine(p, resultIsCrewOrNot);
-        string msgBase = "";
-        string msgInfo = "";
-        Color color = Color.white;
+        var msgBase = "";
+        var msgInfo = "";
+        var color = Color.white;
 
         if (DivineResult == DivineResults.BlackWhite)
         {
@@ -316,22 +316,22 @@ internal class LastImpostor : ModifierBase<LastImpostor>
         else if (DivineResult == DivineResults.Role)
         {
             msgBase = "DivineMessageRole";
-            List<RoleInfo> roleInfos = RoleInfo.GetRoleInfoForPlayer(p);
+            var roleInfos = RoleInfo.GetRoleInfoForPlayer(p);
             StringBuilder sb = new();
-            for (int i = 0; i < roleInfos.Count; i++)
+            for (var i = 0; i < roleInfos.Count; i++)
             {
                 if (i > 0)
                 {
                     sb.Append(' ');
                 }
-                RoleInfo info = roleInfos[i];
+                var info = roleInfos[i];
                 sb.Append(Helpers.Cs(info.Color, info.Name));
             }
 
             msgInfo = sb.ToString();
         }
 
-        string msg = string.Format(Tr.GetDynamic(msgBase), p.name, msgInfo);
+        var msg = string.Format(Tr.GetDynamic(msgBase), p.name, msgInfo);
         if (!string.IsNullOrWhiteSpace(msg))
         {
             // TODO: FortuneTeller.fortuneTellerMessage(msg, 5f, color);
@@ -355,9 +355,9 @@ internal class LastImpostor : ModifierBase<LastImpostor>
     {
         if (PlayerControl.LocalPlayer != null && FastDestroyableSingleton<HudManager>.Instance != null)
         {
-            foreach (PlayerControl p in PlayerControl.AllPlayerControls.GetFastEnumerator())
+            foreach (var p in PlayerControl.AllPlayerControls.GetFastEnumerator())
             {
-                PoolablePlayer player = UnityObject.Instantiate(__instance.PlayerPrefab, FastDestroyableSingleton<HudManager>.Instance.transform);
+                var player = UnityObject.Instantiate(__instance.PlayerPrefab, FastDestroyableSingleton<HudManager>.Instance.transform);
                 player.UpdateFromPlayerOutfit(p.Data.DefaultOutfit, PlayerMaterial.MaskType.ComplexUI, p.Data.IsDead, true);
                 player.SetFlipX(true);
                 player.cosmetics.currentPet?.gameObject.SetActive(false);

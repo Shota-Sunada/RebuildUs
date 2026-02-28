@@ -70,8 +70,8 @@ internal class CreatedMadmate : ModifierBase<CreatedMadmate>
 
             if (Madmate.KnowsImpostors(Player))
             {
-                IEnumerable<PlayerControl> allPlayers = PlayerControl.AllPlayerControls.GetFastEnumerator();
-                foreach (PlayerControl p in PlayerControl.AllPlayerControls.GetFastEnumerator())
+                var allPlayers = PlayerControl.AllPlayerControls.GetFastEnumerator();
+                foreach (var p in PlayerControl.AllPlayerControls.GetFastEnumerator())
                 {
                     if (p.IsTeamImpostor()
                         || p.IsRole(RoleType.Spy)

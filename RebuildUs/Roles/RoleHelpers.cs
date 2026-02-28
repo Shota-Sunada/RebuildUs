@@ -8,22 +8,22 @@ internal static class RoleHelpers
     private static (MethodInfo exists, MethodInfo isRole, MethodInfo setRole, MethodInfo eraseRole, MethodInfo swapRole) GetMethods(RoleType roleType)
     {
         if (MethodCache.TryGetValue(roleType,
-                out (MethodInfo exists, MethodInfo isRole, MethodInfo setRole, MethodInfo eraseRole, MethodInfo swapRole) cached))
+                out var cached))
         {
             return cached;
         }
 
-        foreach (RoleData.RoleRegistration reg in RoleData.Roles)
+        foreach (var reg in RoleData.Roles)
         {
             if (reg.RoleType == roleType)
             {
-                Type type = reg.ClassType;
+                var type = reg.ClassType;
                 if (type == null)
                 {
                     break;
                 }
 
-                (MethodInfo GetMethod, MethodInfo, MethodInfo, MethodInfo, MethodInfo) methods = (
+                var methods = (
                     type.GetProperty("Exists", BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy)?.GetMethod,
                     type.GetMethod("IsRole", BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy),
                     type.GetMethod("SetRole", BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy),
@@ -52,7 +52,7 @@ internal static class RoleHelpers
                 return false;
             }
 
-            PlayerRole role = ModRoleManager.GetRole(player);
+            var role = ModRoleManager.GetRole(player);
             if (role != null && role.CurrentRoleType == roleType)
             {
                 return true;
@@ -91,7 +91,7 @@ internal static class RoleHelpers
                 return true;
             }
 
-            (MethodInfo exists, MethodInfo isRole, MethodInfo setRole, MethodInfo eraseRole, MethodInfo swapRole) methods = GetMethods(roleType);
+            var methods = GetMethods(roleType);
             if (methods.setRole != null)
             {
                 methods.setRole.Invoke(null, [player]);
@@ -117,7 +117,7 @@ internal static class RoleHelpers
 
             if (player.IsRole(roleType))
             {
-                (MethodInfo exists, MethodInfo isRole, MethodInfo setRole, MethodInfo eraseRole, MethodInfo swapRole) methods = GetMethods(roleType);
+                var methods = GetMethods(roleType);
                 if (methods.eraseRole != null)
                 {
                     methods.eraseRole.Invoke(null, [player]);
@@ -135,13 +135,13 @@ internal static class RoleHelpers
                 return;
             }
 
-            foreach (RoleData.RoleRegistration reg in RoleData.Roles)
+            foreach (var reg in RoleData.Roles)
             {
                 if (reg.ClassType == null)
                 {
                     continue;
                 }
-                (MethodInfo exists, MethodInfo isRole, MethodInfo setRole, MethodInfo eraseRole, MethodInfo swapRole) methods =
+                var methods =
                     GetMethods(reg.RoleType);
                 methods.eraseRole?.Invoke(null, [player]);
             }
@@ -154,13 +154,13 @@ internal static class RoleHelpers
                 return;
             }
 
-            foreach (RoleData.RoleRegistration reg in RoleData.Roles)
+            foreach (var reg in RoleData.Roles)
             {
                 if (reg.ClassType == null || !player.IsRole(reg.RoleType) && !target.IsRole(reg.RoleType))
                 {
                     continue;
                 }
-                (MethodInfo exists, MethodInfo isRole, MethodInfo setRole, MethodInfo eraseRole, MethodInfo swapRole) methods =
+                var methods =
                     GetMethods(reg.RoleType);
                 methods.swapRole?.Invoke(null, [player, target]);
             }
@@ -173,7 +173,7 @@ internal static class RoleHelpers
                 return nameText;
             }
 
-            foreach (PlayerRole role in ModRoleManager.AllRoles)
+            foreach (var role in ModRoleManager.AllRoles)
             {
                 if (role.Player == player)
                 {
@@ -181,7 +181,7 @@ internal static class RoleHelpers
                 }
             }
 
-            foreach (PlayerModifier mod in PlayerModifier.AllModifiers)
+            foreach (var mod in PlayerModifier.AllModifiers)
             {
                 if (mod.Player == player)
                 {
@@ -196,7 +196,7 @@ internal static class RoleHelpers
 
         internal string ModifyRoleText(string roleText, List<RoleInfo> roleInfo, bool useColors = true, bool includeHidden = false)
         {
-            foreach (PlayerModifier mod in PlayerModifier.AllModifiers)
+            foreach (var mod in PlayerModifier.AllModifiers)
             {
                 if (mod.Player == player)
                 {

@@ -4,7 +4,7 @@ internal static class Airship
 {
     internal static Console ActivateWiring(string consoleName, int consoleId)
     {
-        Console console = ActivateConsole(consoleName);
+        var console = ActivateConsole(consoleName);
 
         if (console == null)
         {
@@ -12,8 +12,8 @@ internal static class Airship
             return null;
         }
 
-        bool hasWiringText = false;
-        foreach (TaskTypes taskType in console.TaskTypes)
+        var hasWiringText = false;
+        foreach (var taskType in console.TaskTypes)
         {
             if (taskType != TaskTypes.FixWiring)
             {
@@ -26,7 +26,7 @@ internal static class Airship
         if (!hasWiringText)
         {
             TaskTypes[] newTasks = new TaskTypes[console.TaskTypes.Length + 1];
-            for (int i = 0; i < console.TaskTypes.Length; i++)
+            for (var i = 0; i < console.TaskTypes.Length; i++)
             {
                 newTasks[i] = console.TaskTypes[i];
             }
@@ -48,9 +48,9 @@ internal static class Airship
         }
 
         obj.layer = LayerMask.NameToLayer("ShortObjects");
-        Console console = obj.GetComponent<Console>();
-        PassiveButton button = obj.GetComponent<PassiveButton>();
-        CircleCollider2D collider = obj.GetComponent<CircleCollider2D>();
+        var console = obj.GetComponent<Console>();
+        var button = obj.GetComponent<PassiveButton>();
+        var collider = obj.GetComponent<CircleCollider2D>();
         if (!console)
         {
             console = obj.AddComponent<Console>();
@@ -59,9 +59,9 @@ internal static class Airship
             console.TaskTypes = Array.Empty<TaskTypes>();
             console.ValidTasks = new(0);
 
-            Il2CppReferenceArray<Console> oldConsoles = MapUtilities.CachedShipStatus.AllConsoles;
+            var oldConsoles = MapUtilities.CachedShipStatus.AllConsoles;
             Il2CppReferenceArray<Console> newConsoles = new(oldConsoles.Length + 1);
-            for (int i = 0; i < oldConsoles.Length; i++)
+            for (var i = 0; i < oldConsoles.Length; i++)
             {
                 newConsoles[i] = oldConsoles[i];
             }

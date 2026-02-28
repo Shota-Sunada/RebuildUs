@@ -37,11 +37,11 @@ internal static class MorphHandler
             return;
         }
 
-        PlayerPhysics phys = morphing.MyPhysics;
-        PlayerAnimationGroup group = phys.Animations.group;
-        AnimationClip currentAnim = phys.Animations.Animator.GetCurrentAnimation();
+        var phys = morphing.MyPhysics;
+        var group = phys.Animations.group;
+        var currentAnim = phys.Animations.Animator.GetCurrentAnimation();
 
-        AnimationClip clip = currentAnim switch
+        var clip = currentAnim switch
         {
             var a when a == group.RunAnim => nextSkin.RunAnim,
             var a when a == group.SpawnAnim => nextSkin.SpawnAnim,
@@ -50,8 +50,8 @@ internal static class MorphHandler
             _ => nextSkin.IdleAnim,
         };
 
-        SpriteAnim spriteAnim = phys.myPlayer.cosmetics.skin.animator;
-        float progress = phys.Animations.Animator.m_animator.GetCurrentAnimatorStateInfo(0).normalizedTime;
+        var spriteAnim = phys.myPlayer.cosmetics.skin.animator;
+        var progress = phys.Animations.Animator.m_animator.GetCurrentAnimatorStateInfo(0).normalizedTime;
 
         phys.myPlayer.cosmetics.skin.skin = nextSkin;
         phys.myPlayer.cosmetics.skin.UpdateMaterial();

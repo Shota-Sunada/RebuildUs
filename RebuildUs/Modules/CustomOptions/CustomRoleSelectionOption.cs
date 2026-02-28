@@ -17,25 +17,25 @@ internal sealed class CustomRoleSelectionOption : CustomOption<string>
     {
         if (roleTypes == null)
         {
-            Array values = Enum.GetValues(typeof(RoleType));
+            var values = Enum.GetValues(typeof(RoleType));
             roleTypes = new RoleType[values.Length];
-            for (int i = 0; i < values.Length; i++)
+            for (var i = 0; i < values.Length; i++)
             {
                 roleTypes[i] = (RoleType)values.GetValue(i)!;
             }
         }
 
         _roleTypes = roleTypes;
-        string[] strings = new string[roleTypes.Length];
-        for (int i = 0; i < roleTypes.Length; i++)
+        var strings = new string[roleTypes.Length];
+        for (var i = 0; i < roleTypes.Length; i++)
         {
-            RoleType x = roleTypes[i];
+            var x = roleTypes[i];
             strings[i] = x == RoleType.NoRole ? Tr.Get(TrKey.NoRole) : Tr.GetDynamic(x.ToString());
         }
 
         // reinitialize selections for this option
         Selections = strings;
-        int index = Array.IndexOf(strings, strings.Length > 0 ? strings[0] : string.Empty);
+        var index = Array.IndexOf(strings, strings.Length > 0 ? strings[0] : string.Empty);
         DefaultSelection = index >= 0 ? index : 0;
         if (Id != 0)
         {

@@ -70,7 +70,7 @@ internal static class TransportationToolPatches
     internal static void Postfix2(PlayerPhysics __instance, Ladder source, byte climbLadderSid)
     {
         // Fix camo:
-        PlayerControl player = __instance.myPlayer;
+        var player = __instance.myPlayer;
         __instance.StartCoroutine(Effects.Lerp(5.0f,
             new Action<float>(p =>
             {

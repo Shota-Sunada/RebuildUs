@@ -41,13 +41,13 @@ internal class Seer : MultiRoleBase<Seer>
     {
         if (DeadBodyPositions != null && PlayerControl.LocalPlayer.IsRole(RoleType.Seer) && Mode is 0 or 2)
         {
-            for (int i = 0; i < DeadBodyPositions.Count; i++)
+            for (var i = 0; i < DeadBodyPositions.Count; i++)
             {
-                Vector3 pos = DeadBodyPositions[i];
+                var pos = DeadBodyPositions[i];
                 GameObject soul = new("Soul");
                 soul.transform.position = new(pos.x, pos.y, pos.y / 1000f - 1f);
                 soul.layer = 5;
-                SpriteRenderer rend = soul.AddComponent<SpriteRenderer>();
+                var rend = soul.AddComponent<SpriteRenderer>();
                 soul.AddSubmergedComponent(SubmergedCompatibility.Classes.ELEVATOR_MOVER);
                 rend.sprite = AssetLoader.Soul;
 
@@ -58,7 +58,7 @@ internal class Seer : MultiRoleBase<Seer>
                         {
                             if (rend != null)
                             {
-                                Color tmp = rend.color;
+                                var tmp = rend.color;
                                 tmp.a = Mathf.Clamp01(1 - p);
                                 rend.color = tmp;
                             }

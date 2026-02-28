@@ -11,13 +11,13 @@ internal static class ChatBubblePatch
         {
             return;
         }
-        PlayerControl lp = PlayerControl.LocalPlayer;
+        var lp = PlayerControl.LocalPlayer;
         if (lp == null || !lp.IsTeamImpostor())
         {
             return;
         }
 
-        foreach (PlayerControl sourcePlayer in PlayerControl.AllPlayerControls.GetFastEnumerator())
+        foreach (var sourcePlayer in PlayerControl.AllPlayerControls.GetFastEnumerator())
         {
             if (sourcePlayer.Data == null || !sourcePlayer.Data.PlayerName.Equals(playerName))
             {

@@ -45,14 +45,14 @@ internal static class Meeting
         // This fixes a bug with the original game where pressing the button and a kill happens simultaneously
         // results in bodies sometimes being created *after* the meeting starts, marking them as dead and
         // removing the corpses so there's no random corpses leftover afterwards
-        foreach (DeadBody deadBody in UnityObject.FindObjectsOfType<DeadBody>())
+        foreach (var deadBody in UnityObject.FindObjectsOfType<DeadBody>())
         {
             if (deadBody == null)
             {
                 continue;
             }
 
-            foreach (PlayerVoteArea pva in __instance.playerStates)
+            foreach (var pva in __instance.playerStates)
             {
                 if (pva == null)
                 {
@@ -72,20 +72,20 @@ internal static class Meeting
     private static Dictionary<byte, int> CalculateVotes(MeetingHud __instance)
     {
         Dictionary<byte, int> dictionary = [];
-        foreach (PlayerVoteArea playerVoteArea in __instance.playerStates)
+        foreach (var playerVoteArea in __instance.playerStates)
         {
             if (playerVoteArea.VotedFor is 252 or 255 or 254)
             {
                 continue;
             }
-            PlayerControl player = Helpers.PlayerById(playerVoteArea.TargetPlayerId);
+            var player = Helpers.PlayerById(playerVoteArea.TargetPlayerId);
             if (player == null || player.Data == null || player.Data.IsDead || player.Data.Disconnected)
             {
                 continue;
             }
 
-            int additionalVotes = Mayor.Exists && player.IsRole(RoleType.Mayor) ? Mayor.NumVotes : 1; // Mayor vote
-            dictionary[playerVoteArea.VotedFor] = dictionary.TryGetValue(playerVoteArea.VotedFor, out int currentVotes)
+            var additionalVotes = Mayor.Exists && player.IsRole(RoleType.Mayor) ? Mayor.NumVotes : 1; // Mayor vote
+            dictionary[playerVoteArea.VotedFor] = dictionary.TryGetValue(playerVoteArea.VotedFor, out var currentVotes)
                 ? currentVotes + additionalVotes
                 : additionalVotes;
         }
@@ -98,7 +98,7 @@ internal static class Meeting
         {
             _swapped1 = null;
             _swapped2 = null;
-            foreach (PlayerVoteArea playerVoteArea in __instance.playerStates)
+            foreach (var playerVoteArea in __instance.playerStates)
             {
                 if (playerVoteArea.TargetPlayerId == Swapper.PlayerId1)
                 {
@@ -125,7 +125,7 @@ internal static class Meeting
 
     internal static bool CheckForEndVoting(MeetingHud __instance)
     {
-        foreach (PlayerVoteArea ps in __instance.playerStates)
+        foreach (var ps in __instance.playerStates)
         {
             if (!ps.AmDead && !ps.DidVote)
             {
@@ -135,7 +135,7 @@ internal static class Meeting
 
         if (_target == null && MapSettings.BlockSkippingInEmergencyMeetings && MapSettings.NoVoteIsSelfVote)
         {
-            foreach (PlayerVoteArea playerVoteArea in __instance.playerStates)
+            foreach (var playerVoteArea in __instance.playerStates)
             {
                 if (playerVoteArea.VotedFor == byte.MaxValue - 1)
                 {
@@ -144,12 +144,12 @@ internal static class Meeting
             }
         }
 
-        Dictionary<byte, int> self = CalculateVotes(__instance);
-        KeyValuePair<byte, int> max = self.MaxPair(out bool tie);
+        var self = CalculateVotes(__instance);
+        var max = self.MaxPair(out var tie);
         PlayerControl exiledPlayer = null;
         if (!tie)
         {
-            foreach (PlayerControl p in PlayerControl.AllPlayerControls.GetFastEnumerator())
+            foreach (var p in PlayerControl.AllPlayerControls.GetFastEnumerator())
             {
                 if (p.PlayerId != max.Key || p.Data.IsDead)
                 {
@@ -160,11 +160,11 @@ internal static class Meeting
             }
         }
 
-        NetworkedPlayerInfo exiled = exiledPlayer?.Data;
-        MeetingHud.VoterState[] states = new MeetingHud.VoterState[__instance.playerStates.Length];
-        for (int i = 0; i < __instance.playerStates.Length; i++)
+        var exiled = exiledPlayer?.Data;
+        var states = new MeetingHud.VoterState[__instance.playerStates.Length];
+        for (var i = 0; i < __instance.playerStates.Length; i++)
         {
-            PlayerVoteArea playerVoteArea = __instance.playerStates[i];
+            var playerVoteArea = __instance.playerStates[i];
             states[i] = new()
             {
                 VoterId = playerVoteArea.TargetPlayerId,
@@ -179,12 +179,10 @@ internal static class Meeting
 
     internal static bool BloopAVoteIcon(MeetingHud __instance, NetworkedPlayerInfo voterPlayer, int index, Transform parent)
     {
-        SpriteRenderer spriteRenderer = UnityObject.Instantiate(__instance.PlayerVotePrefab);
-        bool showVoteColors = !GameManager.Instance.LogicOptions.GetAnonymousVotes()
-                              || PlayerControl.LocalPlayer.IsDead() && MapSettings.GhostsSeeVotes
-                              || PlayerControl.LocalPlayer.IsRole(RoleType.Mayor)
-                              && Mayor.MayorCanSeeVoteColors
-                              && TasksHandler.TaskInfo(PlayerControl.LocalPlayer.Data).Completed >= Mayor.MayorTasksNeededToSeeVoteColors;
+        var spriteRenderer = UnityObject.Instantiate(__instance.PlayerVotePrefab);
+        var showVoteColors = !GameManager.Instance.LogicOptions.GetAnonymousVotes()
+                            || PlayerControl.LocalPlayer.IsDead() && MapSettings.GhostsSeeVotes
+                            || PlayerControl.LocalPlayer.IsRole(RoleType.Mayor) && Mayor.MayorCanSeeVoteColors && TasksHandler.TaskInfo(PlayerControl.LocalPlayer.Data).Completed >= Mayor.MayorTasksNeededToSeeVoteColors;
         if (showVoteColors)
         {
             PlayerMaterial.SetColors(voterPlayer.DefaultOutfit.ColorId, spriteRenderer);
@@ -194,10 +192,10 @@ internal static class Meeting
             PlayerMaterial.SetColors(Palette.DisabledGrey, spriteRenderer);
         }
 
-        Transform transform = spriteRenderer.transform;
+        var transform = spriteRenderer.transform;
         transform.SetParent(parent);
         transform.localScale = Vector3.zero;
-        PlayerVoteArea component = parent.GetComponent<PlayerVoteArea>();
+        var component = parent.GetComponent<PlayerVoteArea>();
         if (component != null)
         {
             spriteRenderer.material.SetInt(PlayerMaterial.MaskLayer, component.MaskLayer);
@@ -213,7 +211,7 @@ internal static class Meeting
         // Swapper swap
         _swapped1 = null;
         _swapped2 = null;
-        foreach (PlayerVoteArea playerVoteArea in __instance.playerStates)
+        foreach (var playerVoteArea in __instance.playerStates)
         {
             if (playerVoteArea.TargetPlayerId == Swapper.PlayerId1)
             {
@@ -225,7 +223,7 @@ internal static class Meeting
             }
         }
 
-        bool doSwap = _swapped1 != null && _swapped2 != null && Swapper.Exists && Swapper.PlayerControl.IsAlive();
+        var doSwap = _swapped1 != null && _swapped2 != null && Swapper.Exists && Swapper.PlayerControl.IsAlive();
         if (doSwap)
         {
             __instance.StartCoroutine(
@@ -237,12 +235,12 @@ internal static class Meeting
         __instance.TitleText.text = FastDestroyableSingleton<TranslationController>.Instance.GetString(StringNames.MeetingVotingResults,
             new Il2CppReferenceArray<CppObject>(0));
 
-        Dictionary<byte, PlayerControl> playersById = Helpers.AllPlayersById();
-        int num = 0;
-        for (int i = 0; i < __instance.playerStates.Length; i++)
+        var playersById = Helpers.AllPlayersById();
+        var num = 0;
+        for (var i = 0; i < __instance.playerStates.Length; i++)
         {
-            PlayerVoteArea playerVoteArea = __instance.playerStates[i];
-            byte targetPlayerId = playerVoteArea.TargetPlayerId;
+            var playerVoteArea = __instance.playerStates[i];
+            var targetPlayerId = playerVoteArea.TargetPlayerId;
             playerVoteArea = doSwap switch
             {
                 // Swapper change playerVoteArea that gets the votes
@@ -252,13 +250,13 @@ internal static class Meeting
             };
 
             playerVoteArea.ClearForResults();
-            int num2 = 0;
+            var num2 = 0;
             Dictionary<int, int> votesApplied = [];
-            for (int j = 0; j < states.Length; j++)
+            for (var j = 0; j < states.Length; j++)
             {
-                MeetingHud.VoterState state = states[j];
-                NetworkedPlayerInfo playerById = GameData.Instance.GetPlayerById(state.VoterId);
-                PlayerControl voter = playersById.GetValueOrDefault(state.VoterId);
+                var state = states[j];
+                var playerById = GameData.Instance.GetPlayerById(state.VoterId);
+                var voter = playersById.GetValueOrDefault(state.VoterId);
                 if (voter == null)
                 {
                     continue;
@@ -302,7 +300,7 @@ internal static class Meeting
 
         _meetingInfoText?.gameObject.SetActive(false);
 
-        foreach (DeadBody deadBody in UnityObject.FindObjectsOfType<DeadBody>())
+        foreach (var deadBody in UnityObject.FindObjectsOfType<DeadBody>())
         {
             UnityObject.Destroy(deadBody.gameObject);
         }
@@ -341,8 +339,8 @@ internal static class Meeting
         {
             return 0;
         }
-        int count = 0;
-        foreach (bool t in _selections)
+        var count = 0;
+        foreach (var t in _selections)
         {
             if (t)
             {
@@ -376,8 +374,8 @@ internal static class Meeting
             return;
         }
 
-        int selectedCount = GetSelectedCount();
-        SpriteRenderer renderer = _renderers[i];
+        var selectedCount = GetSelectedCount();
+        var renderer = _renderers[i];
 
         switch (selectedCount)
         {
@@ -430,7 +428,7 @@ internal static class Meeting
 
         PlayerVoteArea firstPlayer = null;
         PlayerVoteArea secondPlayer = null;
-        for (int a = 0; a < _selections.Length && a < __instance.playerStates.Length; a++)
+        for (var a = 0; a < _selections.Length && a < __instance.playerStates.Length; a++)
         {
             if (_selections[a])
             {
@@ -481,7 +479,7 @@ internal static class Meeting
         }
 
         // reset swap.
-        bool reset = false;
+        var reset = false;
         if (dyingPlayerId == Swapper.PlayerId1 || dyingPlayerId == Swapper.PlayerId2)
         {
             reset = true;
@@ -495,7 +493,7 @@ internal static class Meeting
         }
 
         // check if dying player was a selected player (but not confirmed yet)
-        for (int i = 0; i < __instance.playerStates.Length && i < _selections.Length; i++)
+        for (var i = 0; i < __instance.playerStates.Length && i < _selections.Length; i++)
         {
             reset = reset || _selections[i] && __instance.playerStates[i].TargetPlayerId == dyingPlayerId;
             if (reset)
@@ -509,22 +507,22 @@ internal static class Meeting
             return;
         }
 
-        int stateCount = __instance.playerStates.Length; // Using Length as it seems standard in this file
-        for (int i = 0; i < _selections.Length; i++)
+        var stateCount = __instance.playerStates.Length; // Using Length as it seems standard in this file
+        for (var i = 0; i < _selections.Length; i++)
         {
             _selections[i] = false;
             if (i >= stateCount)
             {
                 continue;
             }
-            PlayerVoteArea playerVoteArea = __instance.playerStates[i];
+            var playerVoteArea = __instance.playerStates[i];
             if (playerVoteArea.AmDead || Helpers.PlayerById(playerVoteArea.TargetPlayerId).IsRole(RoleType.NiceSwapper) && Swapper.CanOnlySwapOthers)
             {
                 continue;
             }
             _renderers[i].color = Color.red;
             Swapper.RemainSwaps++;
-            int copyI = i;
+            var copyI = i;
             _swapperButtonList[i].OnClick.RemoveAllListeners();
             _swapperButtonList[i].OnClick.AddListener((Action)(() => SwapperOnClick(copyI, __instance)));
         }
@@ -548,22 +546,34 @@ internal static class Meeting
             return;
         }
 
-        __instance.playerStates.ToList().ForEach(x => x.gameObject.SetActive(false));
+        foreach (var x in __instance.playerStates)
+        {
+            x.gameObject.SetActive(false);
+        }
 
-        Transform phoneUI = UnityObject.FindObjectsOfType<Transform>().FirstOrDefault(x => x.name == "PhoneUI");
-        Transform container = UnityObject.Instantiate(phoneUI, __instance.transform);
+        Transform phoneUI = null;
+        var transforms = UnityObject.FindObjectsOfType<Transform>();
+        for (var i = 0; i < transforms.Length; i++)
+        {
+            if (transforms[i].name == "PhoneUI")
+            {
+                phoneUI = transforms[i];
+                break;
+            }
+        }
+        var container = UnityObject.Instantiate(phoneUI, __instance.transform);
         container.transform.localPosition = new(0, 0, -5f);
         _guesserUI = container.gameObject;
 
-        int i = 0;
-        Transform buttonTemplate = __instance.playerStates[0].transform.FindChild("votePlayerBase");
-        Transform maskTemplate = __instance.playerStates[0].transform.FindChild("MaskArea");
-        Transform smallButtonTemplate = __instance.playerStates[0].Buttons.transform.Find("CancelButton");
-        TextMeshPro textTemplate = __instance.playerStates[0].NameText;
+        var buttonIndex = 0;
+        var buttonTemplate = __instance.playerStates[0].transform.FindChild("votePlayerBase");
+        var maskTemplate = __instance.playerStates[0].transform.FindChild("MaskArea");
+        var smallButtonTemplate = __instance.playerStates[0].Buttons.transform.Find("CancelButton");
+        var textTemplate = __instance.playerStates[0].NameText;
 
-        Transform exitButtonParent = new GameObject().transform;
+        var exitButtonParent = new GameObject().transform;
         exitButtonParent.SetParent(container);
-        Transform exitButton = UnityObject.Instantiate(buttonTemplate.transform, exitButtonParent);
+        var exitButton = UnityObject.Instantiate(buttonTemplate.transform, exitButtonParent);
         _ = UnityObject.Instantiate(maskTemplate, exitButtonParent);
         exitButton.gameObject.GetComponent<SpriteRenderer>().sprite = smallButtonTemplate.GetComponent<SpriteRenderer>().sprite;
         exitButtonParent.transform.localPosition = new(2.725f, 2.1f, -5);
@@ -573,26 +583,29 @@ internal static class Meeting
         _guesserUIExitButton.OnClick.RemoveAllListeners();
         _guesserUIExitButton.OnClick.AddListener((Action)(() =>
         {
-            __instance
-                .playerStates
-                .ToList()
-                .ForEach(x =>
+            foreach (var x in __instance.playerStates)
+            {
+                x.gameObject.SetActive(true);
+                if (PlayerControl.LocalPlayer.IsDead())
                 {
-                    x.gameObject.SetActive(true);
-                    if (PlayerControl.LocalPlayer.IsDead() && x.transform.FindChild("ShootButton") != null)
+                    var shootButton = x.transform.FindChild("ShootButton");
+                    if (shootButton != null)
                     {
-                        UnityObject.Destroy(x.transform.FindChild("ShootButton").gameObject);
+                        UnityObject.Destroy(shootButton.gameObject);
                     }
-                });
+                }
+            }
             UnityObject.Destroy(container.gameObject);
         }));
 
         List<Transform> buttons = [];
         Transform selectedButton = null;
 
-        foreach (RoleInfo roleInfo in RoleInfo.AllRoleInfos)
+        var roleInfos = RoleInfo.AllRoleInfos;
+        for (var i = 0; i < roleInfos.Count; i++)
         {
-            RoleType guesserRole = PlayerControl.LocalPlayer.IsRole(RoleType.NiceGuesser)
+            var roleInfo = roleInfos[i];
+            var guesserRole = PlayerControl.LocalPlayer.IsRole(RoleType.NiceGuesser)
                 ? RoleType.NiceGuesser
                 :
                 PlayerControl.LocalPlayer.IsRole(RoleType.EvilGuesser) || PlayerControl.LocalPlayer.HasModifier(ModifierType.LastImpostor)
@@ -608,14 +621,14 @@ internal static class Meeting
                 continue; // Not guessable roles & modifier
             }
 
-            Transform buttonParent = new GameObject().transform;
+            var buttonParent = new GameObject().transform;
             buttonParent.SetParent(container);
-            Transform button = UnityObject.Instantiate(buttonTemplate, buttonParent);
+            var button = UnityObject.Instantiate(buttonTemplate, buttonParent);
             _ = UnityObject.Instantiate(maskTemplate, buttonParent);
-            TextMeshPro label = UnityObject.Instantiate(textTemplate, button);
+            var label = UnityObject.Instantiate(textTemplate, button);
             button.GetComponent<SpriteRenderer>().sprite = MapUtilities.CachedShipStatus.CosmeticsCache.GetNameplate("nameplate_NoPlate").Image;
             buttons.Add(button);
-            int row = i / 5, col = i % 5;
+            int row = buttonIndex / 5, col = buttonIndex % 5;
             buttonParent.localPosition = new(-3.47f + 1.75f * col, 1.5f - 0.45f * row, -5);
             buttonParent.localScale = new(0.55f, 0.55f, 1f);
             label.text = Helpers.Cs(roleInfo.Color, roleInfo.Name);
@@ -632,11 +645,14 @@ internal static class Meeting
                     if (selectedButton != button)
                     {
                         selectedButton = button;
-                        buttons.ForEach(x => x.GetComponent<SpriteRenderer>().color = x == selectedButton ? Color.red : Color.white);
+                        foreach (var x in buttons)
+                        {
+                            x.GetComponent<SpriteRenderer>().color = x == selectedButton ? Color.red : Color.white;
+                        }
                     }
                     else
                     {
-                        PlayerControl focusedTarget = Helpers.PlayerById(__instance.playerStates[buttonTarget].TargetPlayerId);
+                        var focusedTarget = Helpers.PlayerById(__instance.playerStates[buttonTarget].TargetPlayerId);
                         if (!(__instance.state is MeetingHud.VoteStates.Voted or MeetingHud.VoteStates.NotVoted)
                             || focusedTarget == null
                             || Guesser.RemainingShots(PlayerControl.LocalPlayer) <= 0)
@@ -653,7 +669,10 @@ internal static class Meeting
                             if (Medic.Shielded == focusedTarget)
                             {
                                 // Depending on the options, shooting the shielded player will not allow the guess, notify everyone about the kill attempt and close the window
-                                __instance.playerStates.ToList().ForEach(x => x.gameObject.SetActive(true));
+                                foreach (var x in __instance.playerStates)
+                                {
+                                    x.gameObject.SetActive(true);
+                                }
                                 UnityObject.Destroy(container.gameObject);
 
                                 {
@@ -664,44 +683,52 @@ internal static class Meeting
                             }
                         }
 
-                        RoleInfo mainRoleInfo = RoleInfo.GetRoleInfoForPlayer(focusedTarget, false).FirstOrDefault();
+                        RoleInfo mainRoleInfo = null;
+                        var targetRoles = RoleInfo.GetRoleInfoForPlayer(focusedTarget, false);
+                        if (targetRoles.Count > 0)
+                        {
+                            mainRoleInfo = targetRoles[0];
+                        }
+
                         if (mainRoleInfo == null)
                         {
                             return;
                         }
 
-                        PlayerControl dyingTarget = mainRoleInfo == roleInfo ? focusedTarget : PlayerControl.LocalPlayer;
+                        var dyingTarget = mainRoleInfo == roleInfo ? focusedTarget : PlayerControl.LocalPlayer;
 
                         // Reset the GUI
-                        __instance.playerStates.ToList().ForEach(x => x.gameObject.SetActive(true));
+                        foreach (var x in __instance.playerStates)
+                        {
+                            x.gameObject.SetActive(true);
+                        }
                         UnityObject.Destroy(container.gameObject);
                         if (Guesser.HasMultipleShotsPerMeeting
                             && Guesser.RemainingShots(PlayerControl.LocalPlayer) > 1
                             && dyingTarget != PlayerControl.LocalPlayer)
                         {
-                            __instance
-                                .playerStates
-                                .ToList()
-                                .ForEach(x =>
+                            foreach (var x in __instance.playerStates)
+                            {
+                                if (x.TargetPlayerId == dyingTarget.PlayerId)
                                 {
-                                    if (x.TargetPlayerId == dyingTarget.PlayerId && x.transform.FindChild("ShootButton") != null)
+                                    var shootButton = x.transform.FindChild("ShootButton");
+                                    if (shootButton != null)
                                     {
-                                        UnityObject.Destroy(x.transform.FindChild("ShootButton").gameObject);
+                                        UnityObject.Destroy(shootButton.gameObject);
                                     }
-                                });
+                                }
+                            }
                         }
                         else
                         {
-                            __instance
-                                .playerStates
-                                .ToList()
-                                .ForEach(x =>
+                            foreach (var x in __instance.playerStates)
+                            {
+                                var shootButton = x.transform.FindChild("ShootButton");
+                                if (shootButton != null)
                                 {
-                                    if (x.transform.FindChild("ShootButton") != null)
-                                    {
-                                        UnityObject.Destroy(x.transform.FindChild("ShootButton").gameObject);
-                                    }
-                                });
+                                    UnityObject.Destroy(shootButton.gameObject);
+                                }
+                            }
                         }
 
                         // Shoot player and send chat info if activated
@@ -719,7 +746,7 @@ internal static class Meeting
                     }
                 }));
 
-            i++;
+            buttonIndex++;
         }
 
         container.transform.localScale *= 0.75f;
@@ -733,27 +760,27 @@ internal static class Meeting
         }
 
         // Add Swapper Buttons
-        bool addSwapperButtons = Swapper.Exists && PlayerControl.LocalPlayer.IsRole(RoleType.NiceSwapper) && Swapper.PlayerControl.IsAlive();
+        var addSwapperButtons = Swapper.Exists && PlayerControl.LocalPlayer.IsRole(RoleType.NiceSwapper) && Swapper.PlayerControl.IsAlive();
         if (addSwapperButtons)
         {
             _selections = new bool[__instance.playerStates.Length];
             _renderers = new SpriteRenderer[__instance.playerStates.Length];
             _swapperButtonList = new PassiveButton[__instance.playerStates.Length];
 
-            for (int i = 0; i < __instance.playerStates.Length; i++)
+            for (var i = 0; i < __instance.playerStates.Length; i++)
             {
-                PlayerVoteArea playerVoteArea = __instance.playerStates[i];
+                var playerVoteArea = __instance.playerStates[i];
                 if (playerVoteArea.AmDead
                     || Helpers.PlayerById(playerVoteArea.TargetPlayerId).IsRole(RoleType.NiceSwapper) && Swapper.CanOnlySwapOthers)
                 {
                     continue;
                 }
 
-                GameObject template = playerVoteArea.Buttons.transform.Find("CancelButton").gameObject;
-                GameObject checkbox = UnityObject.Instantiate(template, playerVoteArea.transform, true);
+                var template = playerVoteArea.Buttons.transform.Find("CancelButton").gameObject;
+                var checkbox = UnityObject.Instantiate(template, playerVoteArea.transform, true);
                 checkbox.transform.position = template.transform.position;
                 checkbox.transform.localPosition = new(-0.95f, 0.03f, -1.3f);
-                SpriteRenderer renderer = checkbox.GetComponent<SpriteRenderer>();
+                var renderer = checkbox.GetComponent<SpriteRenderer>();
                 renderer.sprite = AssetLoader.SwapperCheck;
                 renderer.color = Color.red;
 
@@ -762,26 +789,35 @@ internal static class Meeting
                     renderer.color = Color.gray;
                 }
 
-                PassiveButton button = checkbox.GetComponent<PassiveButton>();
+                var button = checkbox.GetComponent<PassiveButton>();
                 _swapperButtonList[i] = button;
                 button.OnClick.RemoveAllListeners();
-                int copiedIndex = i;
+                var copiedIndex = i;
                 button.OnClick.AddListener((Action)(() => SwapperOnClick(copiedIndex, __instance)));
 
                 _selections[i] = false;
                 _renderers[i] = renderer;
             }
 
-            Transform meetingUI = UnityObject.FindObjectsOfType<Transform>().FirstOrDefault(x => x.name == "PhoneUI");
+            Transform meetingUI = null;
+            var transforms = UnityObject.FindObjectsOfType<Transform>();
+            for (var i = 0; i < transforms.Length; i++)
+            {
+                if (transforms[i].name == "PhoneUI")
+                {
+                    meetingUI = transforms[i];
+                    break;
+                }
+            }
 
-            Transform buttonTemplate = __instance.playerStates[0].transform.FindChild("votePlayerBase");
-            Transform maskTemplate = __instance.playerStates[0].transform.FindChild("MaskArea");
-            TextMeshPro textTemplate = __instance.playerStates[0].NameText;
-            Transform meetingExtraButtonParent = new GameObject().transform;
+            var buttonTemplate = __instance.playerStates[0].transform.FindChild("votePlayerBase");
+            var maskTemplate = __instance.playerStates[0].transform.FindChild("MaskArea");
+            var textTemplate = __instance.playerStates[0].NameText;
+            var meetingExtraButtonParent = new GameObject().transform;
             meetingExtraButtonParent.SetParent(meetingUI);
-            Transform meetingExtraButton = UnityObject.Instantiate(buttonTemplate, meetingExtraButtonParent);
+            var meetingExtraButton = UnityObject.Instantiate(buttonTemplate, meetingExtraButtonParent);
 
-            Transform infoTransform = __instance.playerStates[0].NameText.transform.parent.FindChild("Info");
+            var infoTransform = __instance.playerStates[0].NameText.transform.parent.FindChild("Info");
             _meetingExtraButtonText = UnityObject.Instantiate(__instance.playerStates[0].NameText, meetingExtraButtonParent);
             _meetingExtraButtonText.text = Tr.Get(TrKey.SwapperSwapsLeft, Swapper.RemainSwaps);
             _meetingExtraButtonText.alignment = TextAlignmentOptions.Right;
@@ -801,7 +837,7 @@ internal static class Meeting
             _meetingExtraButtonLabel.transform.localScale *= 1.7f;
             _meetingExtraButtonLabel.text = Helpers.Cs(Color.red, Tr.Get(TrKey.SwapperConfirm));
 
-            PassiveButton passiveButton = meetingExtraButton.GetComponent<PassiveButton>();
+            var passiveButton = meetingExtraButton.GetComponent<PassiveButton>();
             passiveButton.OnClick.RemoveAllListeners();
             if (PlayerControl.LocalPlayer.IsAlive())
             {
@@ -823,13 +859,22 @@ internal static class Meeting
         // Add overlay for spelled players
         if (Witch.Exists && Witch.FutureSpelled != null)
         {
-            foreach (PlayerVoteArea pva in __instance.playerStates)
+            foreach (var pva in __instance.playerStates)
             {
-                if (!Witch.FutureSpelled.Any(x => x.PlayerId == pva.TargetPlayerId))
+                var isSpelled = false;
+                foreach (var spelled in Witch.FutureSpelled)
+                {
+                    if (spelled.PlayerId == pva.TargetPlayerId)
+                    {
+                        isSpelled = true;
+                        break;
+                    }
+                }
+                if (!isSpelled)
                 {
                     continue;
                 }
-                SpriteRenderer rend = new GameObject().AddComponent<SpriteRenderer>();
+                var rend = new GameObject().AddComponent<SpriteRenderer>();
                 rend.transform.SetParent(pva.transform);
                 rend.gameObject.layer = pva.Megaphone.gameObject.layer;
                 rend.transform.localPosition = new(-0.5f, -0.03f, -1f);
@@ -842,61 +887,59 @@ internal static class Meeting
         }
 
         // トラックボタン
-        bool isTrackerButton = EvilTracker.CanSetTargetOnMeeting
+        var isTrackerButton = EvilTracker.CanSetTargetOnMeeting
                                && EvilTracker.Target == null
                                && PlayerControl.LocalPlayer.IsRole(RoleType.EvilTracker)
                                && PlayerControl.LocalPlayer.IsAlive();
         if (isTrackerButton)
         {
-            for (int i = 0; i < __instance.playerStates.Length; i++)
+            for (var i = 0; i < __instance.playerStates.Length; i++)
             {
-                PlayerVoteArea playerVoteArea = __instance.playerStates[i];
+                var playerVoteArea = __instance.playerStates[i];
                 if (playerVoteArea.AmDead || playerVoteArea.TargetPlayerId == PlayerControl.LocalPlayer.PlayerId)
                 {
                     continue;
                 }
-                GameObject template = playerVoteArea.Buttons.transform.Find("CancelButton").gameObject;
-                GameObject targetBox = UnityObject.Instantiate(template, playerVoteArea.transform);
+                var template = playerVoteArea.Buttons.transform.Find("CancelButton").gameObject;
+                var targetBox = UnityObject.Instantiate(template, playerVoteArea.transform);
                 targetBox.name = "EvilTrackerButton";
                 targetBox.transform.localPosition = new(-0.95f, 0.03f, -1.3f);
-                SpriteRenderer renderer = targetBox.GetComponent<SpriteRenderer>();
+                var renderer = targetBox.GetComponent<SpriteRenderer>();
                 renderer.sprite = AssetLoader.Arrow;
                 renderer.color = Palette.CrewmateBlue;
-                PassiveButton button = targetBox.GetComponent<PassiveButton>();
+                var button = targetBox.GetComponent<PassiveButton>();
                 button.OnClick.RemoveAllListeners();
-                int copiedIndex = i;
+                var copiedIndex = i;
                 button.OnClick.AddListener((Action)(() =>
                 {
                     if (__instance == null || __instance.playerStates == null || copiedIndex < 0 || copiedIndex >= __instance.playerStates.Length)
                     {
                         return;
                     }
-                    PlayerControl focusedTarget = Helpers.PlayerById(__instance.playerStates[copiedIndex].TargetPlayerId);
+                    var focusedTarget = Helpers.PlayerById(__instance.playerStates[copiedIndex].TargetPlayerId);
                     EvilTracker.Target = focusedTarget;
                     // Reset the GUI
-                    __instance
-                        .playerStates
-                        .ToList()
-                        .ForEach(x =>
+                    foreach (var x in __instance.playerStates)
+                    {
+                        var eb = x.transform.FindChild("EvilTrackerButton");
+                        if (eb != null)
                         {
-                            if (x.transform.FindChild("EvilTrackerButton") != null)
-                            {
-                                UnityObject.Destroy(x.transform.FindChild("EvilTrackerButton").gameObject);
-                            }
-                        });
-                    GameObject targetMark = UnityObject.Instantiate(template, playerVoteArea.transform);
+                            UnityObject.Destroy(eb.gameObject);
+                        }
+                    }
+                    var targetMark = UnityObject.Instantiate(template, playerVoteArea.transform);
                     targetMark.name = "EvilTrackerMark";
-                    PassiveButton passiveButton = targetMark.GetComponent<PassiveButton>();
+                    var passiveButton = targetMark.GetComponent<PassiveButton>();
                     targetMark.transform.localPosition = new(1.1f, 0.03f, -20f);
                     UnityObject.Destroy(passiveButton);
-                    SpriteRenderer spriteRenderer = targetMark.GetComponent<SpriteRenderer>();
+                    var spriteRenderer = targetMark.GetComponent<SpriteRenderer>();
                     spriteRenderer.sprite = AssetLoader.Arrow;
                     spriteRenderer.color = Palette.CrewmateBlue;
 
-                    bool isGuesserButton = Guesser.IsGuesser(PlayerControl.LocalPlayer.PlayerId)
+                    var isGuesserButton = Guesser.IsGuesser(PlayerControl.LocalPlayer.PlayerId)
                                            && PlayerControl.LocalPlayer.IsAlive()
                                            && Guesser.RemainingShots(PlayerControl.LocalPlayer) > 0;
-                    bool isLastImpostorButton = PlayerControl.LocalPlayer.HasModifier(ModifierType.LastImpostor)
+                    var isLastImpostorButton = PlayerControl.LocalPlayer.HasModifier(ModifierType.LastImpostor)
                                                 && PlayerControl.LocalPlayer.IsAlive()
                                                 && LastImpostor.CanGuess();
                     if (isGuesserButton || isLastImpostorButton)
@@ -908,10 +951,10 @@ internal static class Meeting
         }
 
         // Add Guesser Buttons
-        bool isGuesser = Guesser.IsGuesser(PlayerControl.LocalPlayer.PlayerId)
+        var isGuesser = Guesser.IsGuesser(PlayerControl.LocalPlayer.PlayerId)
                          && PlayerControl.LocalPlayer.IsAlive()
                          && Guesser.RemainingShots(PlayerControl.LocalPlayer) > 0;
-        bool isLastImpostorButton = !isTrackerButton
+        var isLastImpostorButton = !isTrackerButton
                                     && PlayerControl.LocalPlayer.HasModifier(ModifierType.LastImpostor)
                                     && PlayerControl.LocalPlayer.IsAlive()
                                     && LastImpostor.CanGuess();
@@ -923,23 +966,23 @@ internal static class Meeting
 
     private static void CreateGuesserButton(MeetingHud __instance)
     {
-        for (int i = 0; i < __instance.playerStates.Length; i++)
+        for (var i = 0; i < __instance.playerStates.Length; i++)
         {
-            PlayerVoteArea playerVoteArea = __instance.playerStates[i];
+            var playerVoteArea = __instance.playerStates[i];
             if (playerVoteArea.AmDead || playerVoteArea.TargetPlayerId == PlayerControl.LocalPlayer.PlayerId)
             {
                 continue;
             }
 
-            GameObject template = playerVoteArea.Buttons.transform.Find("CancelButton").gameObject;
-            GameObject targetBox = UnityObject.Instantiate(template, playerVoteArea.transform);
+            var template = playerVoteArea.Buttons.transform.Find("CancelButton").gameObject;
+            var targetBox = UnityObject.Instantiate(template, playerVoteArea.transform);
             targetBox.name = "ShootButton";
             targetBox.transform.localPosition = new(-0.95f, 0.03f, -1.3f);
-            SpriteRenderer renderer = targetBox.GetComponent<SpriteRenderer>();
+            var renderer = targetBox.GetComponent<SpriteRenderer>();
             renderer.sprite = AssetLoader.TargetIcon;
-            PassiveButton button = targetBox.GetComponent<PassiveButton>();
+            var button = targetBox.GetComponent<PassiveButton>();
             button.OnClick.RemoveAllListeners();
-            int copiedIndex = i;
+            var copiedIndex = i;
             button.OnClick.AddListener((Action)(() => GuesserOnClick(copiedIndex, __instance)));
         }
     }
@@ -976,10 +1019,10 @@ internal static class Meeting
 
         if (MeetingHud.Instance.state is MeetingHud.VoteStates.Voted or MeetingHud.VoteStates.NotVoted or MeetingHud.VoteStates.Discussion)
         {
-            PlayerControl lp = PlayerControl.LocalPlayer;
+            var lp = PlayerControl.LocalPlayer;
             if (lp != null)
             {
-                int numGuesses = Guesser.RemainingShots(lp);
+                var numGuesses = Guesser.RemainingShots(lp);
                 if ((Guesser.IsGuesser(lp.PlayerId) || lp.HasModifier(ModifierType.LastImpostor)) && lp.IsAlive() && numGuesses > 0)
                 {
                     InfoStringBuilder.AppendFormat(Tr.Get(TrKey.GuesserGuessesLeft), numGuesses);
@@ -994,7 +1037,7 @@ internal static class Meeting
             }
         }
 
-        string text = InfoStringBuilder.ToString().Trim();
+        var text = InfoStringBuilder.ToString().Trim();
         _meetingInfoText.text = text;
         _meetingInfoText.gameObject.SetActive(text.Length > 0);
     }
@@ -1039,7 +1082,7 @@ internal static class Meeting
         }
 
         {
-            bool isEmergency = _target == null;
+            var isEmergency = _target == null;
             FastDestroyableSingleton<UnityTelemetry>.Instance.WriteMeetingStarted(isEmergency);
             FastDestroyableSingleton<DebugAnalytics>.Instance.Analytics.MeetingStarted(__instance.Data, _target == null);
             MapUtilities.CachedShipStatus.StartCoroutine(CoStartMeeting(__instance, _target).WrapToIl2Cpp());
@@ -1072,7 +1115,7 @@ internal static class Meeting
             }
 
             MeetingRoomManager.Instance.RemoveSelf();
-            foreach (PlayerControl player in PlayerControl.AllPlayerControls.GetFastEnumerator())
+            foreach (var player in PlayerControl.AllPlayerControls.GetFastEnumerator())
             {
                 player?.ResetForMeeting();
             }
@@ -1102,9 +1145,9 @@ internal static class Meeting
             // ボタンと同時に通報が入った場合のバグ対応、他のクライアントからキルイベントが飛んでくるのを待つ
             // 見えては行けないものが見えるので暗転させる
             MeetingHud.Instance.state = MeetingHud.VoteStates.Animating; // ゲッサーのキル用meetingUpdateが呼ばれないようにするおまじない（呼ばれるとバグる）
-            HudManager hudManager = FastDestroyableSingleton<HudManager>.Instance;
-            SpriteRenderer blackScreen = UnityObject.Instantiate(hudManager.FullScreen, hudManager.transform);
-            SpriteRenderer greyScreen = UnityObject.Instantiate(hudManager.FullScreen, hudManager.transform);
+            var hudManager = FastDestroyableSingleton<HudManager>.Instance;
+            var blackScreen = UnityObject.Instantiate(hudManager.FullScreen, hudManager.transform);
+            var greyScreen = UnityObject.Instantiate(hudManager.FullScreen, hudManager.transform);
             blackScreen.color = Palette.Black;
             blackScreen.transform.position = Vector3.zero;
             blackScreen.transform.localPosition = new(0f, 0f, -910f);
@@ -1118,10 +1161,10 @@ internal static class Meeting
             greyScreen.gameObject.SetActive(true);
             greyScreen.enabled = true;
             TMP_Text text = null;
-            RoomTracker roomTracker = FastDestroyableSingleton<HudManager>.Instance?.roomTracker;
+            var roomTracker = FastDestroyableSingleton<HudManager>.Instance?.roomTracker;
             if (roomTracker != null)
             {
-                GameObject gameObject = UnityObject.Instantiate(roomTracker.gameObject,
+                var gameObject = UnityObject.Instantiate(roomTracker.gameObject,
                     FastDestroyableSingleton<HudManager>.Instance.transform,
                     true);
                 UnityObject.DestroyImmediate(gameObject.GetComponent<RoomTracker>());
@@ -1135,7 +1178,7 @@ internal static class Meeting
                 {
                     // Delayed action
                     greyScreen.color = new(1.0f, 1.0f, 1.0f, 0.5f - p / 2);
-                    string message = (Delay - p * Delay).ToString("0.00");
+                    var message = (Delay - p * Delay).ToString("0.00");
                     if (message == "0")
                     {
                         return;
@@ -1165,9 +1208,14 @@ internal static class Meeting
 
         // 既存処理の移植
         {
-            Il2CppArrayBase<DeadBody> array = UnityObject.FindObjectsOfType<DeadBody>();
-            NetworkedPlayerInfo[] deadBodies = [.. from b in array select GameData.Instance.GetPlayerById(b.ParentId)];
-            foreach (DeadBody t in array)
+            var array = UnityObject.FindObjectsOfType<DeadBody>();
+            var deadBodies = new NetworkedPlayerInfo[array.Length];
+            for (var i = 0; i < array.Length; i++)
+            {
+                deadBodies[i] = GameData.Instance.GetPlayerById(array[i].ParentId);
+            }
+
+            foreach (var t in array)
             {
                 if (t != null && t.gameObject != null)
                 {
@@ -1179,8 +1227,8 @@ internal static class Meeting
                 }
             }
 
-            Il2CppArrayBase<ShapeshifterEvidence> array2 = UnityObject.FindObjectsOfType<ShapeshifterEvidence>();
-            foreach (ShapeshifterEvidence t in array2)
+            var array2 = UnityObject.FindObjectsOfType<ShapeshifterEvidence>();
+            foreach (var t in array2)
             {
                 if (t != null && t.gameObject != null)
                 {
@@ -1198,25 +1246,35 @@ internal static class Meeting
 
     private static void PopulateButtons(MeetingHud __instance, byte reporter)
     {
-        // 投票画面に人形遣いのダミーを表示させない
         // 会議に参加しないPlayerControlを持つRoleが増えたらこのListに追加
-        // 特殊なplayerInfo.Role.Roleを設定することで自動的に無視できないか？もしくはフラグをplayerInfoのどこかに追加
         List<PlayerControl> playerControlsToBeIgnored = [];
         playerControlsToBeIgnored.RemoveAll(x => x == null);
-        IEnumerable<byte> playerIdsToBeIgnored = playerControlsToBeIgnored.Select(x => x.PlayerId);
+
         // Generate PlayerVoteAreas
-        IEnumerable<byte> idsToBeIgnored = playerIdsToBeIgnored as byte[] ?? [.. playerIdsToBeIgnored];
-        __instance.playerStates = new PlayerVoteArea[GameData.Instance.PlayerCount - idsToBeIgnored.Count()];
-        int playerStatesCounter = 0;
-        for (int i = 0; i < __instance.playerStates.Length + idsToBeIgnored.Count(); i++)
+        var ignoredCount = playerControlsToBeIgnored.Count;
+        __instance.playerStates = new PlayerVoteArea[GameData.Instance.PlayerCount - ignoredCount];
+        var playerStatesCounter = 0;
+
+        for (var i = 0; i < GameData.Instance.AllPlayers.Count; i++)
         {
-            if (idsToBeIgnored.Contains(GameData.Instance.AllPlayers[i].PlayerId))
+            var playerInfo = GameData.Instance.AllPlayers[i];
+
+            var isIgnored = false;
+            for (var j = 0; j < ignoredCount; j++)
+            {
+                if (playerControlsToBeIgnored[j].PlayerId == playerInfo.PlayerId)
+                {
+                    isIgnored = true;
+                    break;
+                }
+            }
+
+            if (isIgnored)
             {
                 continue;
             }
 
-            NetworkedPlayerInfo playerInfo = GameData.Instance.AllPlayers[i];
-            PlayerVoteArea playerVoteArea = __instance.playerStates[playerStatesCounter] = __instance.CreateButton(playerInfo);
+            var playerVoteArea = __instance.playerStates[playerStatesCounter] = __instance.CreateButton(playerInfo);
             playerVoteArea.Parent = __instance;
             playerVoteArea.SetTargetPlayerId(playerInfo.PlayerId);
             playerVoteArea.SetDead(reporter == playerInfo.PlayerId,
@@ -1226,7 +1284,7 @@ internal static class Meeting
             playerStatesCounter++;
         }
 
-        foreach (PlayerVoteArea playerVoteArea2 in __instance.playerStates)
+        foreach (var playerVoteArea2 in __instance.playerStates)
         {
             ControllerManager.Instance.AddSelectableUiElement(playerVoteArea2.PlayerButton);
         }
@@ -1240,27 +1298,27 @@ internal static class Meeting
         {
             return;
         }
-        PlayerControl localPlayer = PlayerControl.LocalPlayer;
+        var localPlayer = PlayerControl.LocalPlayer;
         if (localPlayer == null)
         {
             return;
         }
 
-        bool isLocalReporter = reporter.PlayerId == localPlayer.PlayerId;
-        bool isMedicReport = Medic.Exists && localPlayer.IsRole(RoleType.Medic) && isLocalReporter;
-        bool isDetectiveReport = Detective.Exists && localPlayer.IsRole(RoleType.Detective) && isLocalReporter;
+        var isLocalReporter = reporter.PlayerId == localPlayer.PlayerId;
+        var isMedicReport = Medic.Exists && localPlayer.IsRole(RoleType.Medic) && isLocalReporter;
+        var isDetectiveReport = Detective.Exists && localPlayer.IsRole(RoleType.Detective) && isLocalReporter;
 
         if (!isMedicReport && !isDetectiveReport)
         {
             return;
         }
-        DeadPlayer deadPlayer = GameHistory.GetDeadPlayer(target.PlayerId);
+        var deadPlayer = GameHistory.GetDeadPlayer(target.PlayerId);
 
         if (deadPlayer == null || deadPlayer.KillerIfExisting == null)
         {
             return;
         }
-        float timeSinceDeath = (float)(DateTime.UtcNow - deadPlayer.TimeOfDeath).TotalMilliseconds;
+        var timeSinceDeath = (float)(DateTime.UtcNow - deadPlayer.TimeOfDeath).TotalMilliseconds;
 
         StringBuilder sb = new();
         if (isMedicReport)
@@ -1275,7 +1333,7 @@ internal static class Meeting
             }
             else if (timeSinceDeath < Detective.ReportColorDuration * 1000)
             {
-                string typeOfColor = Helpers.IsLighterColor(deadPlayer.KillerIfExisting.Data.DefaultOutfit.ColorId)
+                var typeOfColor = Helpers.IsLighterColor(deadPlayer.KillerIfExisting.Data.DefaultOutfit.ColorId)
                     ? Tr.Get(TrKey.DetectiveColorLight)
                     : Tr.Get(TrKey.DetectiveColorDark);
                 sb.AppendFormat(Tr.Get(TrKey.DetectiveReportColor), typeOfColor);
@@ -1286,7 +1344,7 @@ internal static class Meeting
             }
         }
 
-        string msg = sb.ToString();
+        var msg = sb.ToString();
         if (string.IsNullOrWhiteSpace(msg))
         {
             return;
@@ -1305,7 +1363,7 @@ internal static class Meeting
     private static IEnumerator CoAddDelayedChat(PlayerControl source, string msg)
     {
         // 会議画面が準備できるまで待機
-        float timer = 0f;
+        var timer = 0f;
         while ((!MeetingHud.Instance || MeetingHud.Instance.playerStates == null) && timer < 5f)
         {
             timer += Time.deltaTime;
@@ -1320,8 +1378,8 @@ internal static class Meeting
             yield break;
         }
         // 安全確認: 会議ボタンの一覧にプレイヤーが存在するかチェック
-        bool found = false;
-        foreach (PlayerVoteArea state in MeetingHud.Instance.playerStates)
+        var found = false;
+        foreach (var state in MeetingHud.Instance.playerStates)
         {
             if (state == null || state.TargetPlayerId != source.PlayerId)
             {

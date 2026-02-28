@@ -131,21 +131,21 @@ internal class Madmate : ModifierBase<Madmate>
             List<PlayerControl> crewNoRole = [];
             List<PlayerControl> validCrewmates = [];
 
-            foreach (PlayerControl player in PlayerControl.AllPlayerControls.GetFastEnumerator())
+            foreach (var player in PlayerControl.AllPlayerControls.GetFastEnumerator())
             {
                 if (player.IsTeamCrewmate() && !HasModifier(player))
                 {
-                    List<RoleInfo> info = RoleInfo.GetRoleInfoForPlayer(player);
+                    var info = RoleInfo.GetRoleInfoForPlayer(player);
                     // if (info.Contains(RoleInfo.Crewmate) && !player.HasModifier(ModifierType.Munou) && !player.IsRole(RoleType.FortuneTeller))
 
-                    bool isCrewmateOnly = false;
-                    bool isFortuneTeller = false;
-                    bool hasValidRole = false;
-                    bool hasFixedRole = false;
+                    var isCrewmateOnly = false;
+                    var isFortuneTeller = false;
+                    var hasValidRole = false;
+                    var hasFixedRole = false;
 
-                    for (int j = 0; j < info.Count; j++)
+                    for (var j = 0; j < info.Count; j++)
                     {
-                        RoleInfo ri = info[j];
+                        var ri = info[j];
                         if (ri.RoleType == RoleType.Crewmate)
                         {
                             isCrewmateOnly = true;
@@ -155,7 +155,7 @@ internal class Madmate : ModifierBase<Madmate>
                             isFortuneTeller = true;
                         }
 
-                        for (int k = 0; k < ValidRoles.Length; k++)
+                        for (var k = 0; k < ValidRoles.Length; k++)
                         {
                             if (ri.RoleType == ValidRoles[k])
                             {
@@ -211,7 +211,7 @@ internal class Madmate : ModifierBase<Madmate>
 
             if (KnowsImpostors(Player))
             {
-                foreach (PlayerControl p in PlayerControl.AllPlayerControls.GetFastEnumerator())
+                foreach (var p in PlayerControl.AllPlayerControls.GetFastEnumerator())
                 {
                     if (p.IsTeamImpostor()
                         || p.IsRole(RoleType.Spy)
@@ -258,13 +258,13 @@ internal class Madmate : ModifierBase<Madmate>
             return false;
         }
 
-        int counter = 0;
-        int totalTasks = NumCommonTasks + NumLongTasks + NumShortTasks;
+        var counter = 0;
+        var totalTasks = NumCommonTasks + NumLongTasks + NumShortTasks;
         if (totalTasks == 0)
         {
             return true;
         }
-        foreach (NetworkedPlayerInfo.TaskInfo task in player.Data.Tasks)
+        foreach (var task in player.Data.Tasks)
         {
             if (task.Complete)
             {

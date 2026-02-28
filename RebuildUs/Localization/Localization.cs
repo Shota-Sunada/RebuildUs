@@ -21,7 +21,7 @@ internal static class Tr
         InternalTranslations.Clear();
         foreach (SupportedLangs lang in Enum.GetValues(typeof(SupportedLangs)))
         {
-            Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream($"RebuildUs.Localization.Translations.{lang}.json");
+            var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream($"RebuildUs.Localization.Translations.{lang}.json");
             if (stream == null)
             {
                 continue;
@@ -29,7 +29,7 @@ internal static class Tr
 
             try
             {
-                Dictionary<string, JsonElement> nestedDict = JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(stream);
+                var nestedDict = JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(stream);
                 if (nestedDict != null)
                 {
                     Dictionary<string, string> flattened = new(StringComparer.OrdinalIgnoreCase);
@@ -48,13 +48,13 @@ internal static class Tr
 
     private static void FlattenTranslations(Dictionary<string, JsonElement> nestedDict, IDictionary<string, string> target)
     {
-        foreach (KeyValuePair<string, JsonElement> category in nestedDict)
+        foreach (var category in nestedDict)
         {
             if (category.Value.ValueKind == JsonValueKind.Object)
             {
-                foreach (JsonProperty property in category.Value.EnumerateObject())
+                foreach (var property in category.Value.EnumerateObject())
                 {
-                    string key = category.Key == "General" ? property.Name : $"{category.Key}.{property.Name}";
+                    var key = category.Key == "General" ? property.Name : $"{category.Key}.{property.Name}";
                     target[key] = property.Value.GetString() ?? "";
                 }
             }
@@ -83,9 +83,9 @@ internal static class Tr
             return;
         }
 
-        foreach (string file in Directory.GetFiles(LANGUAGES_FOLDER, "*.json"))
+        foreach (var file in Directory.GetFiles(LANGUAGES_FOLDER, "*.json"))
         {
-            string fileName = Path.GetFileNameWithoutExtension(file);
+            var fileName = Path.GetFileNameWithoutExtension(file);
             if (!Enum.TryParse(fileName, true, out SupportedLangs lang))
             {
                 continue;
@@ -93,8 +93,8 @@ internal static class Tr
 
             try
             {
-                string json = File.ReadAllText(file);
-                Dictionary<string, JsonElement> nestedDict = JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(json);
+                var json = File.ReadAllText(file);
+                var nestedDict = JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(json);
                 if (nestedDict != null)
                 {
                     Dictionary<string, string> flattened = new(StringComparer.OrdinalIgnoreCase);
@@ -112,20 +112,20 @@ internal static class Tr
 
     internal static string Get(TrKey key, params object[] args)
     {
-        string keyStr = key.ToString();
-        SupportedLangs lang = FastDestroyableSingleton<TranslationController>.InstanceExists
+        var keyStr = key.ToString();
+        var lang = FastDestroyableSingleton<TranslationController>.InstanceExists
             ? FastDestroyableSingleton<TranslationController>.Instance.currentLanguage.languageID
             : SupportedLangs.English;
 
         string result = null;
-        if (CustomTranslations.TryGetValue(lang, out Dictionary<string, string> customLang) && customLang.TryGetValue(keyStr, out result)) { }
+        if (CustomTranslations.TryGetValue(lang, out var customLang) && customLang.TryGetValue(keyStr, out result)) { }
         else if (lang != SupportedLangs.English
-                 && CustomTranslations.TryGetValue(SupportedLangs.English, out Dictionary<string, string> customEn)
+                 && CustomTranslations.TryGetValue(SupportedLangs.English, out var customEn)
                  && customEn.TryGetValue(keyStr, out result)) { }
-        else if (InternalTranslations.TryGetValue(lang, out Dictionary<string, string> internalLang)
+        else if (InternalTranslations.TryGetValue(lang, out var internalLang)
                  && internalLang.TryGetValue(keyStr, out result)) { }
         else if (lang != SupportedLangs.English
-                 && InternalTranslations.TryGetValue(SupportedLangs.English, out Dictionary<string, string> internalEn)
+                 && InternalTranslations.TryGetValue(SupportedLangs.English, out var internalEn)
                  && internalEn.TryGetValue(keyStr, out result)) { }
 
         if (result == null)
@@ -196,8 +196,8 @@ internal static class Tr
 
         try
         {
-            string path = Path.Combine(Directory.GetCurrentDirectory(), "MissingKeys.json");
-            string json = JsonSerializer.Serialize(MissingKeys,
+            var path = Path.Combine(Directory.GetCurrentDirectory(), "MissingKeys.json");
+            var json = JsonSerializer.Serialize(MissingKeys,
                 new JsonSerializerOptions
                 {
                     WriteIndented = true,

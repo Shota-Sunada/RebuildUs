@@ -49,17 +49,17 @@ internal class TimeMaster : SingleRoleBase<TimeMaster>
             if (GameHistory.LocalPlayerPositions.Count > 0)
             {
                 // Set position
-                Tuple<Vector3, bool> next = GameHistory.LocalPlayerPositions[0];
+                var next = GameHistory.LocalPlayerPositions[0];
                 if (next.Item2)
                 {
                     // Exit current vent if necessary
                     if (PlayerControl.LocalPlayer.inVent)
                     {
-                        Il2CppReferenceArray<Vent> vents = MapUtilities.CachedShipStatus.AllVents;
-                        for (int i = 0; i < vents.Length; i++)
+                        var vents = MapUtilities.CachedShipStatus.AllVents;
+                        for (var i = 0; i < vents.Length; i++)
                         {
-                            Vent vent = vents[i];
-                            vent.CanUse(PlayerControl.LocalPlayer?.Data, out bool canUse, out bool couldUse);
+                            var vent = vents[i];
+                            vent.CanUse(PlayerControl.LocalPlayer?.Data, out var canUse, out var couldUse);
                             if (canUse)
                             {
                                 PlayerControl.LocalPlayer.MyPhysics.RpcExitVent(vent.Id);
@@ -71,9 +71,22 @@ internal class TimeMaster : SingleRoleBase<TimeMaster>
                     // Set position
                     PlayerControl.LocalPlayer.transform.position = next.Item1;
                 }
-                else if (GameHistory.LocalPlayerPositions.Any(x => x.Item2))
+                else
                 {
-                    PlayerControl.LocalPlayer.transform.position = next.Item1;
+                    var hasValidPosition = false;
+                    for (var i = 0; i < GameHistory.LocalPlayerPositions.Count; i++)
+                    {
+                        if (GameHistory.LocalPlayerPositions[i].Item2)
+                        {
+                            hasValidPosition = true;
+                            break;
+                        }
+                    }
+
+                    if (hasValidPosition)
+                    {
+                        PlayerControl.LocalPlayer.transform.position = next.Item1;
+                    }
                 }
 
                 if (SubmergedCompatibility.IsSubmerged)
@@ -102,8 +115,7 @@ internal class TimeMaster : SingleRoleBase<TimeMaster>
                 GameHistory.LocalPlayerPositions.RemoveAt(GameHistory.LocalPlayerPositions.Count - 1);
             }
 
-            GameHistory.LocalPlayerPositions.Insert(0,
-                new(PlayerControl.LocalPlayer.transform.position, PlayerControl.LocalPlayer.CanMove)); // CanMove = CanMove
+            GameHistory.LocalPlayerPositions.Insert(0, new(PlayerControl.LocalPlayer.transform.position, PlayerControl.LocalPlayer.CanMove)); // CanMove = CanMove
         }
     }
 

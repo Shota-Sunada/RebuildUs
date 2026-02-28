@@ -27,7 +27,7 @@ internal sealed class JackInTheBox
         _boxRenderer.sprite = GetBoxAnimationSprite(0);
 
         // Create the vent
-        Vent referenceVent = UnityObject.FindObjectOfType<Vent>();
+        var referenceVent = UnityObject.FindObjectOfType<Vent>();
         _vent = UnityObject.Instantiate(referenceVent);
         _vent.gameObject.AddSubmergedComponent(SubmergedCompatibility.Classes.ELEVATOR_MOVER);
         _vent.transform.position = _gameObject.transform.position;
@@ -39,9 +39,9 @@ internal sealed class JackInTheBox
         _vent.Offset = new(0f, 0.25f, 0f);
         _vent.GetComponent<SpriteAnim>()?.Stop();
 
-        int maxId = -1;
-        Il2CppReferenceArray<Vent> allVents = MapUtilities.CachedShipStatus.AllVents;
-        foreach (Vent t in allVents)
+        var maxId = -1;
+        var allVents = MapUtilities.CachedShipStatus.AllVents;
+        foreach (var t in allVents)
         {
             if (t.Id > maxId)
             {
@@ -51,12 +51,12 @@ internal sealed class JackInTheBox
 
         _vent.Id = maxId + 1; // Make sure we have a unique id
 
-        SpriteRenderer ventRenderer = _vent.GetComponent<SpriteRenderer>();
+        var ventRenderer = _vent.GetComponent<SpriteRenderer>();
         ventRenderer.sprite = null;
         _vent.myRend = ventRenderer;
 
         Vent[] newVents = new Vent[allVents.Length + 1];
-        for (int i = 0; i < allVents.Length; i++)
+        for (var i = 0; i < allVents.Length; i++)
         {
             newVents[i] = allVents[i];
         }
@@ -88,7 +88,7 @@ internal sealed class JackInTheBox
     internal static void StartAnimation(int ventId)
     {
         JackInTheBox box = null;
-        foreach (JackInTheBox b in _allJackInTheBoxes)
+        foreach (var b in _allJackInTheBoxes)
         {
             if (b?._vent == null || b._vent.Id != ventId)
             {
@@ -124,9 +124,9 @@ internal sealed class JackInTheBox
         {
             return;
         }
-        foreach (JackInTheBox box in _allJackInTheBoxes)
+        foreach (var box in _allJackInTheBoxes)
         {
-            bool playerIsTrickster = PlayerControl.LocalPlayer.IsRole(RoleType.Trickster);
+            var playerIsTrickster = PlayerControl.LocalPlayer.IsRole(RoleType.Trickster);
             box._gameObject.SetActive(playerIsTrickster);
         }
     }
@@ -139,7 +139,7 @@ internal sealed class JackInTheBox
 
     internal static void ConvertToVents()
     {
-        foreach (JackInTheBox t in _allJackInTheBoxes)
+        foreach (var t in _allJackInTheBoxes)
         {
             t.ConvertToVent();
         }
@@ -155,10 +155,10 @@ internal sealed class JackInTheBox
 
     private static void ConnectVents()
     {
-        for (int i = 0; i < _allJackInTheBoxes.Count - 1; i++)
+        for (var i = 0; i < _allJackInTheBoxes.Count - 1; i++)
         {
-            JackInTheBox a = _allJackInTheBoxes[i];
-            JackInTheBox b = _allJackInTheBoxes[i + 1];
+            var a = _allJackInTheBoxes[i];
+            var b = _allJackInTheBoxes[i + 1];
             a._vent.Right = b._vent;
             b._vent.Left = a._vent;
         }
@@ -168,8 +168,8 @@ internal sealed class JackInTheBox
         {
             return;
         }
-        JackInTheBox first = _allJackInTheBoxes[0];
-        JackInTheBox last = _allJackInTheBoxes[^1];
+        var first = _allJackInTheBoxes[0];
+        var last = _allJackInTheBoxes[^1];
         first._vent.Left = last._vent;
         last._vent.Right = first._vent;
     }

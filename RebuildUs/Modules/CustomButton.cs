@@ -211,7 +211,7 @@ internal sealed class CustomButton
             _keyGuide.sortingOrder = ActionButton.graphic.sortingOrder + 2;
         }
 
-        PassiveButton button = ActionButton.GetComponent<PassiveButton>();
+        var button = ActionButton.GetComponent<PassiveButton>();
         button.OnClick = new();
         button.OnClick.AddListener((UnityAction)OnClickEvent);
 
@@ -291,7 +291,7 @@ internal sealed class CustomButton
 
     internal static void HudUpdate()
     {
-        for (int i = Buttons.Count - 1; i >= 0; i--)
+        for (var i = Buttons.Count - 1; i >= 0; i--)
         {
             if (Buttons[i].ActionButton == null)
             {
@@ -312,7 +312,7 @@ internal sealed class CustomButton
 
     internal static void MeetingEndedUpdate()
     {
-        for (int i = Buttons.Count - 1; i >= 0; i--)
+        for (var i = Buttons.Count - 1; i >= 0; i--)
         {
             if (Buttons[i].ActionButton == null)
             {
@@ -338,7 +338,7 @@ internal sealed class CustomButton
 
     internal static void ResetAllCooldowns()
     {
-        foreach (CustomButton t in Buttons)
+        foreach (var t in Buttons)
         {
             try
             {
@@ -374,8 +374,8 @@ internal sealed class CustomButton
             return;
         }
 
-        bool useActive = _hudManager?.UseButton != null && _hudManager.UseButton.isActiveAndEnabled;
-        bool petActive = _hudManager?.PetButton != null && _hudManager.PetButton.isActiveAndEnabled;
+        var useActive = _hudManager?.UseButton != null && _hudManager.UseButton.isActiveAndEnabled;
+        var petActive = _hudManager?.PetButton != null && _hudManager.PetButton.isActiveAndEnabled;
         SetActive(useActive || petActive);
 
         if (ActionButton?.graphic != null && ActionButton.graphic.sprite != Sprite)
@@ -397,13 +397,13 @@ internal sealed class CustomButton
         {
             if (!_useLayout)
             {
-                Transform useTransform = _hudManager.UseButton.transform;
-                Vector3 pos = useTransform.localPosition;
+                var useTransform = _hudManager.UseButton.transform;
+                var pos = useTransform.localPosition;
                 if (_mirror)
                 {
-                    float aspect = Camera.main != null ? Camera.main.aspect : 1.77f;
-                    float safeOrthographicSize = Camera.main != null ? CameraSafeArea.GetSafeOrthographicSize(Camera.main) : 3f;
-                    float xpos = 0.05f - safeOrthographicSize * aspect * 1.70f;
+                    var aspect = Camera.main != null ? Camera.main.aspect : 1.77f;
+                    var safeOrthographicSize = Camera.main != null ? CameraSafeArea.GetSafeOrthographicSize(Camera.main) : 3f;
+                    var xpos = 0.05f - safeOrthographicSize * aspect * 1.70f;
                     pos = new(xpos, pos.y, pos.z);
                 }
 
@@ -413,9 +413,9 @@ internal sealed class CustomButton
             ActionButton.transform.localScale = LocalScale;
         }
 
-        bool couldUse = _couldUse != null && _couldUse();
-        Color targetColor = couldUse ? Palette.EnabledColor : Palette.DisabledClear;
-        float targetDesat = couldUse ? 0f : 1f;
+        var couldUse = _couldUse != null && _couldUse();
+        var targetColor = couldUse ? Palette.EnabledColor : Palette.DisabledClear;
+        var targetDesat = couldUse ? 0f : 1f;
 
         if (ActionButton?.graphic != null)
         {
@@ -459,7 +459,7 @@ internal sealed class CustomButton
         ActionButton?.SetCoolDown(Timer, HasEffect && IsEffectActive ? EffectDuration : MaxTimer);
 
         // Update Key Guide
-        KeyCode? activeKey = _hotkey ?? (_slot.HasValue ? KeyBindingManager.GetKey(_slot.Value) : null);
+        var activeKey = _hotkey ?? (_slot.HasValue ? KeyBindingManager.GetKey(_slot.Value) : null);
         if (activeKey.HasValue && activeKey.Value != KeyCode.None)
         {
             _keyBackground.gameObject.SetActive(true);

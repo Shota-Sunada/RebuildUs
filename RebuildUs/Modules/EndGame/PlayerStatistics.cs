@@ -19,7 +19,7 @@ internal sealed class PlayerStatistics
 
     private bool IsLover(NetworkedPlayerInfo p)
     {
-        foreach (Couple couple in Lovers.Couples)
+        foreach (var couple in Lovers.Couples)
         {
             if (p.PlayerId == couple.Lover1.PlayerId || p.PlayerId == couple.Lover2.PlayerId)
             {
@@ -32,20 +32,20 @@ internal sealed class PlayerStatistics
 
     private void GetPlayerCounts()
     {
-        int numJackalAlive = 0;
-        int numImpostorsAlive = 0;
-        int numTotalAlive = 0;
-        int numNeutralAlive = 0;
-        int numCrewmate = 0;
+        var numJackalAlive = 0;
+        var numImpostorsAlive = 0;
+        var numTotalAlive = 0;
+        var numNeutralAlive = 0;
+        var numCrewmate = 0;
 
-        int numLoversAlive = 0;
-        int numCouplesAlive = 0;
-        int impLovers = 0;
-        int jackalLovers = 0;
+        var numLoversAlive = 0;
+        var numCouplesAlive = 0;
+        var impLovers = 0;
+        var jackalLovers = 0;
 
         HashSet<byte> loversId = [];
-        List<Couple> couples = Lovers.Couples;
-        foreach (Couple couple in couples)
+        var couples = Lovers.Couples;
+        foreach (var couple in couples)
         {
             if (couple == null)
             {
@@ -59,13 +59,13 @@ internal sealed class PlayerStatistics
             }
         }
 
-        foreach (NetworkedPlayerInfo playerInfo in GameData.Instance.AllPlayers.GetFastEnumerator())
+        foreach (var playerInfo in GameData.Instance.AllPlayers.GetFastEnumerator())
         {
             if (playerInfo == null)
             {
                 continue;
             }
-            PlayerControl obj = playerInfo.Object;
+            var obj = playerInfo.Object;
 
             if (playerInfo.Disconnected)
             {
@@ -81,7 +81,7 @@ internal sealed class PlayerStatistics
             }
             numTotalAlive++;
 
-            bool lover = loversId.Contains(playerInfo.PlayerId);
+            var lover = loversId.Contains(playerInfo.PlayerId);
             if (lover)
             {
                 numLoversAlive++;

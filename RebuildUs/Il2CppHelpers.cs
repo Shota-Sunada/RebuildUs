@@ -22,9 +22,9 @@ internal static class Il2CppHelpers
 
         static CastHelper()
         {
-            ConstructorInfo constructor = typeof(T).GetConstructor([typeof(IntPtr)]);
-            ParameterExpression ptr = Expression.Parameter(typeof(IntPtr));
-            NewExpression create = Expression.New(constructor!, ptr);
+            var constructor = typeof(T).GetConstructor([typeof(IntPtr)]);
+            var ptr = Expression.Parameter(typeof(IntPtr));
+            var create = Expression.New(constructor!, ptr);
             Expression<Func<IntPtr, T>> lambda = Expression.Lambda<Func<IntPtr, T>>(create, ptr);
             Cast = lambda.Compile();
         }

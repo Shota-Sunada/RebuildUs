@@ -30,15 +30,15 @@ internal static partial class RPCProcedure
                 break;
             case CustomRPC.VersionHandshake:
                 {
-                    byte major = reader.ReadByte();
-                    byte minor = reader.ReadByte();
-                    byte patch = reader.ReadByte();
-                    int versionOwnerId = reader.ReadPackedInt32();
-                    byte revRaw = reader.ReadByte();
+                    var major = reader.ReadByte();
+                    var minor = reader.ReadByte();
+                    var patch = reader.ReadByte();
+                    var versionOwnerId = reader.ReadPackedInt32();
+                    var revRaw = reader.ReadByte();
                     byte[] guidBytes = reader.ReadBytes(16);
-                    int rev = revRaw == 0xFF ? -1 : revRaw;
+                    var rev = revRaw == 0xFF ? -1 : revRaw;
 
-                    bool isNewToMe = !GameStart.PlayerVersions.ContainsKey(versionOwnerId);
+                    var isNewToMe = !GameStart.PlayerVersions.ContainsKey(versionOwnerId);
                     VersionHandshake(major, minor, patch, rev, versionOwnerId, new(guidBytes));
 
                     // If it's a new player to me, or I am host, send my version back

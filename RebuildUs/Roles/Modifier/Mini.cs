@@ -28,7 +28,7 @@ internal class Mini : ModifierBase<Mini>
         get
         {
             List<PlayerControl> validPlayers = [];
-            foreach (PlayerControl player in PlayerControl.AllPlayerControls.GetFastEnumerator())
+            foreach (var player in PlayerControl.AllPlayerControls.GetFastEnumerator())
             {
                 if (!player.HasModifier(ModifierType.Mini))
                 {
@@ -52,15 +52,15 @@ internal class Mini : ModifierBase<Mini>
 
     internal float GrowingProgress()
     {
-        float timeSinceStart = (float)(DateTime.UtcNow - TimeOfGrowthStart).TotalMilliseconds;
+        var timeSinceStart = (float)(DateTime.UtcNow - TimeOfGrowthStart).TotalMilliseconds;
         return Mathf.Clamp(timeSinceStart / (GrowingUpDuration * 1000), 0f, 1f);
     }
 
     internal static bool IsGrownUp(PlayerControl player)
     {
-        for (int i = 0; i < Players.Count; i++)
+        for (var i = 0; i < Players.Count; i++)
         {
-            Mini mini = Players[i];
+            var mini = Players[i];
             if (mini.Player == player)
             {
                 return mini.GrowingProgress() == 1f;

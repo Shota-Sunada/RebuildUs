@@ -45,13 +45,13 @@ internal static class Guesser
             return false;
         }
 
-        PlayerControl player = Helpers.PlayerById(playerId);
+        var player = Helpers.PlayerById(playerId);
         return player.IsRole(RoleType.EvilGuesser) || player.IsRole(RoleType.NiceGuesser);
     }
 
     internal static int RemainingShots(PlayerControl player, bool shoot = false)
     {
-        int remainingShots = 0;
+        var remainingShots = 0;
         if (player.IsRole(RoleType.NiceGuesser))
         {
             remainingShots = _remainingShotsNiceGuesser;

@@ -147,7 +147,7 @@ internal static class MapSettings
         {
             _adminTimerText = UnityObject.Instantiate(FastDestroyableSingleton<HudManager>.Instance.TaskPanel.taskText,
                 FastDestroyableSingleton<HudManager>.Instance.transform);
-            float y = -4.0f;
+            var y = -4.0f;
             if (_restrictCamerasText)
             {
                 y += 0.2f;
@@ -170,7 +170,7 @@ internal static class MapSettings
         {
             _camerasTimerText = UnityObject.Instantiate(FastDestroyableSingleton<HudManager>.Instance.TaskPanel.taskText,
                 FastDestroyableSingleton<HudManager>.Instance.transform);
-            float y = -4.0f;
+            var y = -4.0f;
             if (_restrictVitalsText)
             {
                 y += 0.2f;

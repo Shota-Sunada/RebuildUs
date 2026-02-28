@@ -48,15 +48,15 @@ internal class Arsonist : SingleRoleBase<Arsonist>
 
     private bool DousedEveryoneAlive()
     {
-        foreach (PlayerControl p in PlayerControl.AllPlayerControls.GetFastEnumerator())
+        foreach (var p in PlayerControl.AllPlayerControls.GetFastEnumerator())
         {
             if (p.IsRole(RoleType.Arsonist) || p.Data.IsDead || p.Data.Disconnected || p.IsGm())
             {
                 continue;
             }
 
-            bool isDoused = false;
-            foreach (PlayerControl t in DousedPlayers)
+            var isDoused = false;
+            foreach (var t in DousedPlayers)
             {
                 if (t.PlayerId != p.PlayerId)
                 {
@@ -89,7 +89,7 @@ internal class Arsonist : SingleRoleBase<Arsonist>
 
     internal override void FixedUpdate()
     {
-        Arsonist local = Local;
+        var local = Local;
         if (local == null)
         {
             return;
@@ -98,7 +98,7 @@ internal class Arsonist : SingleRoleBase<Arsonist>
         if (_douseTarget != null)
         {
             _untargetablesCache.Clear();
-            foreach (PlayerControl p in PlayerControl.AllPlayerControls.GetFastEnumerator())
+            foreach (var p in PlayerControl.AllPlayerControls.GetFastEnumerator())
             {
                 if (p.PlayerId != _douseTarget.PlayerId)
                 {
@@ -178,7 +178,7 @@ internal class Arsonist : SingleRoleBase<Arsonist>
                 Local.UpdateStatus();
                 _arsonistButton.Timer = Local._dousedEveryone ? 0 : _arsonistButton.MaxTimer;
 
-                foreach (PlayerControl p in Local.DousedPlayers)
+                foreach (var p in Local.DousedPlayers)
                 {
                     if (MapSettings.PlayerIcons.ContainsKey(p.PlayerId))
                     {
@@ -227,7 +227,7 @@ internal class Arsonist : SingleRoleBase<Arsonist>
 
     private void UpdateIcons()
     {
-        foreach (PoolablePlayer pp in MapSettings.PlayerIcons.Values)
+        foreach (var pp in MapSettings.PlayerIcons.Values)
         {
             pp.gameObject.SetActive(false);
         }
@@ -236,9 +236,9 @@ internal class Arsonist : SingleRoleBase<Arsonist>
         {
             return;
         }
-        Vector3 bottomLeft = AspectPosition.ComputePosition(AspectPosition.EdgeAlignments.LeftBottom, new(0.9f, 0.7f, -10f));
-        int visibleCounter = 0;
-        foreach (PlayerControl p in PlayerControl.AllPlayerControls.GetFastEnumerator())
+        var bottomLeft = AspectPosition.ComputePosition(AspectPosition.EdgeAlignments.LeftBottom, new(0.9f, 0.7f, -10f));
+        var visibleCounter = 0;
+        foreach (var p in PlayerControl.AllPlayerControls.GetFastEnumerator())
         {
             if (p.PlayerId == PlayerControl.LocalPlayer.PlayerId)
             {
@@ -260,8 +260,8 @@ internal class Arsonist : SingleRoleBase<Arsonist>
                 MapSettings.PlayerIcons[p.PlayerId].transform.localPosition = bottomLeft + Vector3.right * visibleCounter * 0.45f;
                 visibleCounter++;
 
-                bool isDoused = false;
-                for (int j = 0; j < DousedPlayers.Count; j++)
+                var isDoused = false;
+                for (var j = 0; j < DousedPlayers.Count; j++)
                 {
                     if (DousedPlayers[j].PlayerId == p.PlayerId)
                     {
@@ -282,7 +282,7 @@ internal class Arsonist : SingleRoleBase<Arsonist>
         ModRoleManager.RemoveRole(Instance);
         Instance = null;
         TriggerArsonistWin = false;
-        foreach (PoolablePlayer p in MapSettings.PlayerIcons.Values)
+        foreach (var p in MapSettings.PlayerIcons.Values)
         {
             if (p != null && p.gameObject != null)
             {

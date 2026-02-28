@@ -30,13 +30,13 @@ internal static class MapUtilities
             return;
         }
 
-        Il2CppSystem.Collections.Generic.Dictionary<SystemTypes, ISystemType> systems = CachedShipStatus.Systems;
+        var systems = CachedShipStatus.Systems;
         if (systems.Count <= 0)
         {
             return;
         }
 
-        foreach (SystemTypes systemTypes in SystemTypeHelpers.AllTypes)
+        foreach (var systemTypes in SystemTypeHelpers.AllTypes)
         {
             if (!systems.ContainsKey(systemTypes))
             {

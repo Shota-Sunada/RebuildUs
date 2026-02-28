@@ -51,7 +51,7 @@ internal static class ModRoleManager
     internal static void ClearAll()
     {
         AllRoles.Clear();
-        for (int i = 0; i < 256; i++)
+        for (var i = 0; i < 256; i++)
         {
             PlayerRoleCache[i] = null;
         }
@@ -68,13 +68,13 @@ internal static class ModRoleManager
         {
             return null;
         }
-        PlayerRole cached = PlayerRoleCache[player.PlayerId];
+        var cached = PlayerRoleCache[player.PlayerId];
         if (cached != null)
         {
             return cached;
         }
 
-        foreach (PlayerRole t in AllRoles)
+        foreach (var t in AllRoles)
         {
             if (t.Player != player)
             {
@@ -208,12 +208,12 @@ internal abstract class MultiRoleBase<T> : PlayerRole where T : MultiRoleBase<T>
     {
         get
         {
-            PlayerControl local = PlayerControl.LocalPlayer;
+            var local = PlayerControl.LocalPlayer;
             if (local == null)
             {
                 return null;
             }
-            foreach (T t in Players)
+            foreach (var t in Players)
             {
                 if (t.Player == local)
                 {
@@ -230,7 +230,7 @@ internal abstract class MultiRoleBase<T> : PlayerRole where T : MultiRoleBase<T>
         get
         {
             List<PlayerControl> list = new(Players.Count);
-            foreach (T t in Players)
+            foreach (var t in Players)
             {
                 list.Add(t.Player);
             }
@@ -244,9 +244,9 @@ internal abstract class MultiRoleBase<T> : PlayerRole where T : MultiRoleBase<T>
         get
         {
             List<PlayerControl> list = new(Players.Count);
-            foreach (T t in Players)
+            foreach (var t in Players)
             {
-                PlayerControl p = t.Player;
+                var p = t.Player;
                 if (p.IsAlive())
                 {
                     list.Add(p);
@@ -262,9 +262,9 @@ internal abstract class MultiRoleBase<T> : PlayerRole where T : MultiRoleBase<T>
         get
         {
             List<PlayerControl> list = new(Players.Count);
-            foreach (T t in Players)
+            foreach (var t in Players)
             {
-                PlayerControl p = t.Player;
+                var p = t.Player;
                 if (!p.IsAlive())
                 {
                     list.Add(p);
@@ -294,7 +294,7 @@ internal abstract class MultiRoleBase<T> : PlayerRole where T : MultiRoleBase<T>
         {
             return null;
         }
-        foreach (T t in Players)
+        foreach (var t in Players)
         {
             if (t.Player == player)
             {
@@ -312,7 +312,7 @@ internal abstract class MultiRoleBase<T> : PlayerRole where T : MultiRoleBase<T>
         {
             return false;
         }
-        foreach (T t in Players)
+        foreach (var t in Players)
         {
             if (t.Player == player)
             {
@@ -342,9 +342,9 @@ internal abstract class MultiRoleBase<T> : PlayerRole where T : MultiRoleBase<T>
             return;
         }
         ModRoleManager.RemoveFromCache(player.PlayerId);
-        for (int i = 0; i < Players.Count; i++)
+        for (var i = 0; i < Players.Count; i++)
         {
-            T x = Players[i];
+            var x = Players[i];
             if (x.Player != player || x.CurrentRoleType != StaticRoleType)
             {
                 continue;
@@ -365,7 +365,7 @@ internal abstract class MultiRoleBase<T> : PlayerRole where T : MultiRoleBase<T>
         }
         ModRoleManager.RemoveFromCache(p1.PlayerId);
         ModRoleManager.RemoveFromCache(p2.PlayerId);
-        foreach (T t in Players)
+        foreach (var t in Players)
         {
             if (t.Player == p1)
             {

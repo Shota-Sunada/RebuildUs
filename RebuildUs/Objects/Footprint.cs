@@ -47,14 +47,14 @@ internal sealed class FootprintHolder : MonoBehaviour
     [HideFromIl2Cpp]
     internal void MakeFootprint(PlayerControl player)
     {
-        if (!_pool.TryTake(out Footprint print))
+        if (!_pool.TryTake(out var print))
         {
             print = new();
         }
 
         print.Lifetime = FootprintDuration;
 
-        Vector3 pos = player.transform.position;
+        var pos = player.transform.position;
         pos.z = pos.y / 1000f + 0.001f;
         print.Transform.SetPositionAndRotation(pos, Quaternion.EulerRotation(0, 0, RebuildUs.Rnd.Next(0, 360)));
         print.GameObject.SetActive(true);
@@ -65,11 +65,11 @@ internal sealed class FootprintHolder : MonoBehaviour
 
     private void FootprintUpdate()
     {
-        float dt = UpdateDt;
+        var dt = UpdateDt;
         _toRemove.Clear();
-        foreach (Footprint activeFootprint in _activeFootprints)
+        foreach (var activeFootprint in _activeFootprints)
         {
-            float p = activeFootprint.Lifetime / FootprintDuration;
+            var p = activeFootprint.Lifetime / FootprintDuration;
 
             if (activeFootprint.Lifetime <= 0)
             {
@@ -100,7 +100,7 @@ internal sealed class FootprintHolder : MonoBehaviour
             activeFootprint.Lifetime -= dt;
         }
 
-        foreach (Footprint footprint in _toRemove)
+        foreach (var footprint in _toRemove)
         {
             footprint.GameObject.SetActive(false);
             _activeFootprints.Remove(footprint);

@@ -74,7 +74,7 @@ internal class Jackal : SingleRoleBase<Jackal>
 
     internal override void OnUpdateNameColors()
     {
-        PlayerControl lp = PlayerControl.LocalPlayer;
+        var lp = PlayerControl.LocalPlayer;
         if (Player == lp)
         {
             HudManagerPatch.SetPlayerNameColor(Player, RoleColor);
@@ -100,7 +100,7 @@ internal class Jackal : SingleRoleBase<Jackal>
 
     internal override void FixedUpdate()
     {
-        Jackal local = Local;
+        var local = Local;
         if (local == null)
         {
             return;
@@ -115,8 +115,8 @@ internal class Jackal : SingleRoleBase<Jackal>
             }
         }
 
-        List<Mini> miniPlayers = Mini.Players;
-        foreach (Mini mini in miniPlayers)
+        var miniPlayers = Mini.Players;
+        foreach (var mini in miniPlayers)
         {
             if (!Mini.IsGrownUp(mini.Player))
             {
@@ -148,7 +148,7 @@ internal class Jackal : SingleRoleBase<Jackal>
     {
         _jackalKillButton = new(() =>
             {
-                Jackal local = Local;
+                var local = Local;
                 if (local == null)
                 {
                     return;
@@ -164,7 +164,7 @@ internal class Jackal : SingleRoleBase<Jackal>
             () => PlayerControl.LocalPlayer != null && PlayerControl.LocalPlayer.IsRole(RoleType.Jackal) && PlayerControl.LocalPlayer.IsAlive(),
             () =>
             {
-                Jackal local = Local;
+                var local = Local;
                 return local != null && local._currentTarget != null && PlayerControl.LocalPlayer.CanMove;
             },
             () =>
@@ -182,7 +182,7 @@ internal class Jackal : SingleRoleBase<Jackal>
         // Jackal Sidekick Button
         _jackalSidekickButton = new(() =>
             {
-                Jackal local = Local;
+                var local = Local;
                 if (local == null || local._currentTarget == null)
                 {
                     return;
@@ -194,12 +194,12 @@ internal class Jackal : SingleRoleBase<Jackal>
             },
             () =>
             {
-                Jackal local = Local;
+                var local = Local;
                 return local != null && local.CanSidekick && PlayerControl.LocalPlayer.IsRole(RoleType.Jackal) && PlayerControl.LocalPlayer.IsAlive();
             },
             () =>
             {
-                Jackal local = Local;
+                var local = Local;
                 return local != null && local.CanSidekick && local._currentTarget != null && PlayerControl.LocalPlayer.CanMove;
             },
             () =>
@@ -263,8 +263,8 @@ internal class Jackal : SingleRoleBase<Jackal>
             return;
         }
 
-        bool alreadyFormer = false;
-        foreach (PlayerControl t in FormerJackals)
+        var alreadyFormer = false;
+        foreach (var t in FormerJackals)
         {
             if (t.PlayerId != Instance.Player.PlayerId)
             {

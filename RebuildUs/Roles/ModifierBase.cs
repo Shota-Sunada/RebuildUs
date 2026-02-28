@@ -50,7 +50,7 @@ internal abstract class PlayerModifier
     internal static void ClearAll()
     {
         AllModifiers.Clear();
-        for (int i = 0; i < 256; i++)
+        for (var i = 0; i < 256; i++)
         {
             PlayerModifierCache[i] = null;
         }
@@ -67,8 +67,8 @@ internal abstract class PlayerModifier
         {
             return null;
         }
-        List<PlayerModifier> list = GetModifiers(player);
-        foreach (PlayerModifier t in list)
+        var list = GetModifiers(player);
+        foreach (var t in list)
         {
             if (t.CurrentModifierType == type)
             {
@@ -91,7 +91,7 @@ internal abstract class PlayerModifier
         }
 
         List<PlayerModifier> list = [];
-        foreach (PlayerModifier t in AllModifiers)
+        foreach (var t in AllModifiers)
         {
             if (t.Player == player)
             {
@@ -114,12 +114,12 @@ internal abstract class ModifierBase<T> : PlayerModifier where T : ModifierBase<
     {
         get
         {
-            PlayerControl local = PlayerControl.LocalPlayer;
+            var local = PlayerControl.LocalPlayer;
             if (local == null)
             {
                 return null;
             }
-            foreach (T t in Players)
+            foreach (var t in Players)
             {
                 if (t.Player == local)
                 {
@@ -136,7 +136,7 @@ internal abstract class ModifierBase<T> : PlayerModifier where T : ModifierBase<
         get
         {
             List<PlayerControl> list = new(Players.Count);
-            foreach (T t in Players)
+            foreach (var t in Players)
             {
                 list.Add(t.Player);
             }
@@ -150,9 +150,9 @@ internal abstract class ModifierBase<T> : PlayerModifier where T : ModifierBase<
         get
         {
             List<PlayerControl> list = new(Players.Count);
-            foreach (T t in Players)
+            foreach (var t in Players)
             {
-                PlayerControl p = t.Player;
+                var p = t.Player;
                 if (p.IsAlive())
                 {
                     list.Add(p);
@@ -168,9 +168,9 @@ internal abstract class ModifierBase<T> : PlayerModifier where T : ModifierBase<
         get
         {
             List<PlayerControl> list = new(Players.Count);
-            foreach (T t in Players)
+            foreach (var t in Players)
             {
-                PlayerControl p = t.Player;
+                var p = t.Player;
                 if (!p.IsAlive())
                 {
                     list.Add(p);
@@ -201,7 +201,7 @@ internal abstract class ModifierBase<T> : PlayerModifier where T : ModifierBase<
         {
             return null;
         }
-        foreach (T t in Players)
+        foreach (var t in Players)
         {
             if (t.Player == player)
             {
@@ -219,7 +219,7 @@ internal abstract class ModifierBase<T> : PlayerModifier where T : ModifierBase<
         {
             return false;
         }
-        foreach (T t in Players)
+        foreach (var t in Players)
         {
             if (t.Player == player)
             {
@@ -249,9 +249,9 @@ internal abstract class ModifierBase<T> : PlayerModifier where T : ModifierBase<
         }
         RemoveFromCache(player.PlayerId);
 
-        for (int i = Players.Count - 1; i >= 0; i--)
+        for (var i = Players.Count - 1; i >= 0; i--)
         {
-            T x = Players[i];
+            var x = Players[i];
             if (x.Player != player || x.CurrentModifierType != StaticModifierType)
             {
                 continue;
@@ -260,9 +260,9 @@ internal abstract class ModifierBase<T> : PlayerModifier where T : ModifierBase<
             Players.RemoveAt(i);
         }
 
-        for (int i = AllModifiers.Count - 1; i >= 0; i--)
+        for (var i = AllModifiers.Count - 1; i >= 0; i--)
         {
-            PlayerModifier x = AllModifiers[i];
+            var x = AllModifiers[i];
             if (x.Player == player && x.CurrentModifierType == StaticModifierType)
             {
                 AllModifiers.RemoveAt(i);
@@ -278,7 +278,7 @@ internal abstract class ModifierBase<T> : PlayerModifier where T : ModifierBase<
         }
         RemoveFromCache(p1.PlayerId);
         RemoveFromCache(p2.PlayerId);
-        foreach (T t in Players)
+        foreach (var t in Players)
         {
             if (t.Player == p1)
             {

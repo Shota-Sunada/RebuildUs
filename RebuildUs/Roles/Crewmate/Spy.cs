@@ -35,7 +35,7 @@ internal class Spy : SingleRoleBase<Spy>
 
     internal override void OnUpdateNameColors()
     {
-        PlayerControl localPlayer = PlayerControl.LocalPlayer;
+        var localPlayer = PlayerControl.LocalPlayer;
         if (localPlayer != null && localPlayer.IsTeamImpostor())
         {
             HudManagerPatch.SetPlayerNameColor(Player, NameColor);

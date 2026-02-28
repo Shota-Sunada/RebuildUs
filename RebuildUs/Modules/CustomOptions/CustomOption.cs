@@ -53,7 +53,7 @@ internal partial class CustomOption
             AllOptionsById[id] = this;
         }
 
-        if (!OptionsByType.TryGetValue(type, out List<CustomOption> list))
+        if (!OptionsByType.TryGetValue(type, out var list))
         {
             list = [];
             OptionsByType[type] = list;
@@ -127,7 +127,7 @@ internal partial class CustomOption
                                                string format = "")
     {
         List<float> selections = [];
-        for (float s = min; s <= max; s += step)
+        for (var s = min; s <= max; s += step)
         {
             selections.Add(s);
         }
@@ -147,7 +147,7 @@ internal partial class CustomOption
                                                string format = "")
     {
         List<float> selections = [];
-        for (float s = min; s <= max; s += step)
+        for (var s = min; s <= max; s += step)
         {
             selections.Add(s);
         }
@@ -221,7 +221,7 @@ internal partial class CustomOption
     private static void SwitchPreset(int newPreset)
     {
         Preset = newPreset;
-        foreach (CustomOption option in AllOptions)
+        foreach (var option in AllOptions)
         {
             if (option.Id == 0)
             {
@@ -252,7 +252,7 @@ internal partial class CustomOption
 
     private static void ShareOptionChange(uint optionId)
     {
-        if (!AllOptionsById.TryGetValue((int)optionId, out CustomOption option))
+        if (!AllOptionsById.TryGetValue((int)optionId, out var option))
         {
             return;
         }
@@ -269,17 +269,17 @@ internal partial class CustomOption
             return;
         }
 
-        int totalOptions = AllOptions.Count;
-        int currentIndex = 0;
+        var totalOptions = AllOptions.Count;
+        var currentIndex = 0;
 
         while (currentIndex < totalOptions)
         {
-            byte amount = (byte)Math.Min(totalOptions - currentIndex, 200);
+            var amount = (byte)Math.Min(totalOptions - currentIndex, 200);
             using RPCSender sender = new(PlayerControl.LocalPlayer.NetId, CustomRPC.ShareOptions);
             sender.Write(amount);
-            for (int i = 0; i < amount; i++)
+            for (var i = 0; i < amount; i++)
             {
-                CustomOption option = AllOptions[currentIndex++];
+                var option = AllOptions[currentIndex++];
                 sender.WritePacked((uint)option.Id);
                 sender.WritePacked(Convert.ToUInt32(option.GetSelectionIndex()));
             }
@@ -299,7 +299,7 @@ internal partial class CustomOption
 
     internal float GetFloat()
     {
-        object val = GetValue();
+        var val = GetValue();
         return val switch
         {
             float f => f,
@@ -316,7 +316,7 @@ internal partial class CustomOption
 
     internal string GetString()
     {
-        string sel = GetValue()?.ToString() ?? "";
+        var sel = GetValue()?.ToString() ?? "";
 
         return sel switch
         {
@@ -333,8 +333,8 @@ internal partial class CustomOption
 
     internal void UpdateSelection(int newSelection, RoleTypes icon, bool notifyUsers = true)
     {
-        object[] selections = GetSelections();
-        int currentIndex = GetSelectionIndex();
+        var selections = GetSelections();
+        var currentIndex = GetSelectionIndex();
         newSelection = Mathf.Clamp((newSelection + selections.Length) % selections.Length, 0, selections.Length - 1);
         if (AmongUsClient.Instance?.AmClient == true && notifyUsers && currentIndex != newSelection)
         {
@@ -392,7 +392,7 @@ internal partial class CustomOption
         }
         if (_generalTab.active)
         {
-            GameOptionsMenu tab = _generalTab.GetComponent<GameOptionsMenu>();
+            var tab = _generalTab.GetComponent<GameOptionsMenu>();
             if (tab != null)
             {
                 UpdateGameOptionsMenu(CustomOptionType.General, tab);
@@ -400,7 +400,7 @@ internal partial class CustomOption
         }
         else if (_impostorTab.active)
         {
-            GameOptionsMenu tab = _impostorTab.GetComponent<GameOptionsMenu>();
+            var tab = _impostorTab.GetComponent<GameOptionsMenu>();
             if (tab != null)
             {
                 UpdateGameOptionsMenu(CustomOptionType.Impostor, tab);
@@ -408,7 +408,7 @@ internal partial class CustomOption
         }
         else if (_crewmateTab.active)
         {
-            GameOptionsMenu tab = _crewmateTab.GetComponent<GameOptionsMenu>();
+            var tab = _crewmateTab.GetComponent<GameOptionsMenu>();
             if (tab != null)
             {
                 UpdateGameOptionsMenu(CustomOptionType.Crewmate, tab);
@@ -416,7 +416,7 @@ internal partial class CustomOption
         }
         else if (_neutralTab.active)
         {
-            GameOptionsMenu tab = _neutralTab.GetComponent<GameOptionsMenu>();
+            var tab = _neutralTab.GetComponent<GameOptionsMenu>();
             if (tab != null)
             {
                 UpdateGameOptionsMenu(CustomOptionType.Neutral, tab);
@@ -424,7 +424,7 @@ internal partial class CustomOption
         }
         else if (_modifierTab.active)
         {
-            GameOptionsMenu tab = _modifierTab.GetComponent<GameOptionsMenu>();
+            var tab = _modifierTab.GetComponent<GameOptionsMenu>();
             if (tab != null)
             {
                 UpdateGameOptionsMenu(CustomOptionType.Modifier, tab);
@@ -505,6 +505,6 @@ internal class CustomOption<T> : CustomOption
 
     protected override object[] GetSelections()
     {
-        return [.. Selections.Cast<object>()];
+        return [.. Selections];
     }
 }

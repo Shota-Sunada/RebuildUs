@@ -27,19 +27,19 @@ internal static class CustomColors
     internal static void Load()
     {
         List<StringNames> longList = [];
-        foreach (StringNames name in Palette.ColorNames)
+        foreach (var name in Palette.ColorNames)
         {
             longList.Add(name);
         }
 
         List<Color32> colorList = [];
-        foreach (Color32 color in Palette.PlayerColors)
+        foreach (var color in Palette.PlayerColors)
         {
             colorList.Add(color);
         }
 
         List<Color32> shadowList = [];
-        foreach (Color32 shadow in Palette.ShadowColors)
+        foreach (var shadow in Palette.ShadowColors)
         {
             shadowList.Add(shadow);
         }
@@ -218,8 +218,8 @@ internal static class CustomColors
         ];
         _pickableColors += (uint)colors.Count; // Colors to show in Tab
 
-        int id = COLOR_BASE_ID_NUMBER;
-        foreach (CustomColor cc in colors)
+        var id = COLOR_BASE_ID_NUMBER;
+        foreach (var cc in colors)
         {
             longList.Add((StringNames)id);
             ColorStrings[id++] = Tr.Get(cc.NameKey);
@@ -238,7 +238,7 @@ internal static class CustomColors
 
     internal static bool GetColorName(ref string __result, [HarmonyArgument(0)] StringNames name)
     {
-        if ((int)name >= COLOR_BASE_ID_NUMBER && ColorStrings.TryGetValue((int)name, out string text))
+        if ((int)name >= COLOR_BASE_ID_NUMBER && ColorStrings.TryGetValue((int)name, out var text))
         {
             if (text != null)
             {
@@ -269,7 +269,7 @@ internal static class CustomColors
         }
         catch
         {
-            Color32 c = Palette.PlayerColors[__instance.player.ColorId];
+            var c = Palette.PlayerColors[__instance.player.ColorId];
             str = ColorUtility.ToHtmlStringRGB(c);
 
             color = c.r + c.g + c.b > 180 ? Palette.Black : Palette.White;
@@ -281,7 +281,7 @@ internal static class CustomColors
         ColorStringBuilder.Append("<color=#").Append(str).Append('>');
         ColorStringBuilder.Append(string.IsNullOrEmpty(sender.Data.PlayerName) ? "..." : sender.Data.PlayerName);
 
-        string playerName = ColorStringBuilder.ToString();
+        var playerName = ColorStringBuilder.ToString();
         if (__instance.playerNameText.text != playerName)
         {
             __instance.playerNameText.text = playerName;
@@ -294,26 +294,26 @@ internal static class CustomColors
     internal static void EnablePlayerTab(PlayerTab __instance)
     {
         // Replace instead
-        Il2CppSystem.Collections.Generic.List<ColorChip> chips = __instance.ColorChips;
+        var chips = __instance.ColorChips;
 
         const int cols = 7; // TODO: Design an algorithm to dynamically position chips to optimally fill space
-        for (int i = 0; i < Order.Length; i++)
+        for (var i = 0; i < Order.Length; i++)
         {
-            int pos = Order[i];
+            var pos = Order[i];
             if (pos < 0 || pos >= chips.Count)
             {
                 continue;
             }
-            ColorChip chip = chips[pos];
+            var chip = chips[pos];
             int row = i / cols, col = i % cols; // Dynamically do the positioning
             chip.transform.localPosition = new(-0.975f + col * 0.5f, 1.475f - row * 0.5f, chip.transform.localPosition.z);
             chip.transform.localScale *= 0.76f;
         }
 
-        for (int j = Order.Length; j < chips.Count; j++)
+        for (var j = Order.Length; j < chips.Count; j++)
         {
             // If number isn't in order, hide it
-            ColorChip chip = chips[j];
+            var chip = chips[j];
             chip.transform.localScale *= 0f;
             chip.enabled = false;
             chip.Button.enabled = false;
@@ -341,7 +341,7 @@ internal static class CustomColors
 
     private static bool IsTaken(PlayerControl player, uint color)
     {
-        foreach (NetworkedPlayerInfo p in GameData.Instance.AllPlayers.GetFastEnumerator())
+        foreach (var p in GameData.Instance.AllPlayers.GetFastEnumerator())
         {
             if (!p.Disconnected && p.PlayerId != player.PlayerId && p.DefaultOutfit.ColorId == color)
             {
@@ -358,7 +358,7 @@ internal static class CustomColors
         uint color = bodyColor;
         if (IsTaken(__instance, color) || color >= Palette.PlayerColors.Length)
         {
-            int num = 0;
+            var num = 0;
             while (num++ < 50 && (color >= _pickableColors || IsTaken(__instance, color)))
             {
                 color = (color + 1) % _pickableColors;

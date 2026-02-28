@@ -21,7 +21,7 @@ internal static class Map
     {
         if (_mapIcons != null)
         {
-            foreach (SpriteRenderer r in _mapIcons.Values)
+            foreach (var r in _mapIcons.Values)
             {
                 if (r != null && r.gameObject != null)
                 {
@@ -35,7 +35,7 @@ internal static class Map
 
         if (_corpseIcons != null)
         {
-            foreach (SpriteRenderer r in _corpseIcons.Values)
+            foreach (var r in _corpseIcons.Values)
             {
                 if (r != null && r.gameObject != null)
                 {
@@ -54,7 +54,7 @@ internal static class Map
 
         if (_impostorHerePoint != null)
         {
-            foreach (SpriteRenderer r in _impostorHerePoint.Values)
+            foreach (var r in _impostorHerePoint.Values)
             {
                 if (r != null && r.gameObject != null)
                 {
@@ -68,7 +68,7 @@ internal static class Map
 
         if (_doorMarks != null)
         {
-            foreach (SpriteRenderer mark in _doorMarks.Values)
+            foreach (var mark in _doorMarks.Values)
             {
                 if (mark != null && mark.gameObject != null)
                 {
@@ -98,7 +98,7 @@ internal static class Map
         {
             _mapIcons = [];
             _corpseIcons = [];
-            foreach (PlayerControl p in PlayerControl.AllPlayerControls.GetFastEnumerator())
+            foreach (var p in PlayerControl.AllPlayerControls.GetFastEnumerator())
             {
                 players.Add(p);
             }
@@ -108,14 +108,14 @@ internal static class Map
             players.Add(pc);
         }
 
-        foreach (PlayerControl p in players)
+        foreach (var p in players)
         {
             if (!p || p.IsGm())
             {
                 continue;
             }
 
-            byte id = p.PlayerId;
+            var id = p.PlayerId;
             _mapIcons[id] = UnityObject.Instantiate(__instance.HerePoint, __instance.HerePoint.transform.parent);
             p.SetPlayerMaterialColors(_mapIcons[id]);
 
@@ -132,10 +132,10 @@ internal static class Map
         {
             return;
         }
-        Vector3 vector = AntiTeleport.Position;
+        var vector = AntiTeleport.Position;
 
-        float mapScale = MapUtilities.CachedShipStatus.MapScale;
-        float flipX = Mathf.Sign(MapUtilities.CachedShipStatus.transform.localScale.x);
+        var mapScale = MapUtilities.CachedShipStatus.MapScale;
+        var flipX = Mathf.Sign(MapUtilities.CachedShipStatus.transform.localScale.x);
 
         vector.x /= mapScale;
         vector.y /= mapScale;
@@ -152,7 +152,7 @@ internal static class Map
 
     internal static void UpdatePostfix(MapBehaviour __instance)
     {
-        PlayerControl localPlayer = PlayerControl.LocalPlayer;
+        var localPlayer = PlayerControl.LocalPlayer;
         if (EvilTracker.Exists && localPlayer.IsRole(RoleType.EvilTracker) && EvilTracker.CanSeeTargetPosition)
         {
             EvilTrackerFixedUpdate(__instance);
@@ -167,31 +167,31 @@ internal static class Map
         {
             return;
         }
-        ShipStatus shipStatus = MapUtilities.CachedShipStatus;
+        var shipStatus = MapUtilities.CachedShipStatus;
         if (shipStatus == null)
         {
             return;
         }
-        float mapScale = shipStatus.MapScale;
-        float flipX = Mathf.Sign(shipStatus.transform.localScale.x);
+        var mapScale = shipStatus.MapScale;
+        var flipX = Mathf.Sign(shipStatus.transform.localScale.x);
 
-        foreach (PlayerControl player in PlayerControl.AllPlayerControls.GetFastEnumerator())
+        foreach (var player in PlayerControl.AllPlayerControls.GetFastEnumerator())
         {
             if (player == null || player.IsGm())
             {
                 continue;
             }
 
-            byte id = player.PlayerId;
-            if (_mapIcons == null || !_mapIcons.TryGetValue(id, out SpriteRenderer icon))
+            var id = player.PlayerId;
+            if (_mapIcons == null || !_mapIcons.TryGetValue(id, out var icon))
             {
                 continue;
             }
 
-            bool enabled = !player.Data.IsDead;
+            var enabled = !player.Data.IsDead;
             if (enabled)
             {
-                Vector3 vector = player.transform.position;
+                var vector = player.transform.position;
                 vector.x /= mapScale;
                 vector.y /= mapScale;
                 vector.x *= flipX;
@@ -207,7 +207,7 @@ internal static class Map
 
         if (_corpseIcons != null)
         {
-            foreach (SpriteRenderer r in _corpseIcons.Values)
+            foreach (var r in _corpseIcons.Values)
             {
                 r.enabled = false;
             }
@@ -225,20 +225,20 @@ internal static class Map
             return;
         }
         {
-            foreach (DeadBody b in _cachedBodies)
+            foreach (var b in _cachedBodies)
             {
                 if (b == null)
                 {
                     continue;
                 }
 
-                byte id = b.ParentId;
-                if (!_corpseIcons.TryGetValue(id, out SpriteRenderer corpseIcon))
+                var id = b.ParentId;
+                if (!_corpseIcons.TryGetValue(id, out var corpseIcon))
                 {
                     continue;
                 }
 
-                Vector3 vector = b.transform.position;
+                var vector = b.transform.position;
                 vector.x /= mapScale;
                 vector.y /= mapScale;
                 vector.x *= flipX;
@@ -259,7 +259,7 @@ internal static class Map
         {
             if (__instance.HerePoint && __instance.HerePoint.transform.parent)
             {
-                Vector3 pos = __instance.HerePoint.transform.parent.transform.position;
+                var pos = __instance.HerePoint.transform.parent.transform.position;
                 __instance.HerePoint.transform.parent.transform.position = new(pos.x, pos.y, -60f);
             }
 
@@ -285,7 +285,7 @@ internal static class Map
             __instance.ColorControl.SetColor(new(0.05f, 0.2f, 1f, 1f));
         }
 
-        HudManager hm = FastDestroyableSingleton<HudManager>.Instance;
+        var hm = FastDestroyableSingleton<HudManager>.Instance;
         if (hm)
         {
             hm.SetHudActive(false);
@@ -298,7 +298,7 @@ internal static class Map
     {
         if (PlayerControl.LocalPlayer.IsGm())
         {
-            HudManager hm = FastDestroyableSingleton<HudManager>.Instance;
+            var hm = FastDestroyableSingleton<HudManager>.Instance;
             if (hm != null && hm.UseButton != null)
             {
                 _useButtonPos = hm.UseButton.transform.localPosition;
@@ -325,9 +325,9 @@ internal static class Map
         }
         if (_mapIcons != null)
         {
-            foreach (byte id in _mapIcons.Keys)
+            foreach (var id in _mapIcons.Keys)
             {
-                PlayerControl p = Helpers.PlayerById(id);
+                var p = Helpers.PlayerById(id);
                 if (p != null && p.Data != null)
                 {
                     p.SetPlayerMaterialColors(_mapIcons[id]);
@@ -341,10 +341,10 @@ internal static class Map
             return;
         }
 
-        foreach (DeadBody b in UnityObject.FindObjectsOfType<DeadBody>())
+        foreach (var b in UnityObject.FindObjectsOfType<DeadBody>())
         {
-            byte id = b.ParentId;
-            PlayerControl p = Helpers.PlayerById(id);
+            var id = b.ParentId;
+            var p = Helpers.PlayerById(id);
             if (p == null)
             {
                 continue;
@@ -356,7 +356,7 @@ internal static class Map
 
     internal static void Close(MapBehaviour __instance)
     {
-        HudManager hm = FastDestroyableSingleton<HudManager>.Instance;
+        var hm = FastDestroyableSingleton<HudManager>.Instance;
         if (PlayerControl.LocalPlayer.IsGm())
         {
             if (hm != null && hm.UseButton != null)
@@ -369,12 +369,12 @@ internal static class Map
         {
             return;
         }
-        Transform taskDisplay = hm.transform.FindChild("TaskDisplay");
+        var taskDisplay = hm.transform.FindChild("TaskDisplay");
         if (taskDisplay == null)
         {
             return;
         }
-        Transform taskPanel = taskDisplay.FindChild("TaskPanel");
+        var taskPanel = taskDisplay.FindChild("TaskPanel");
         taskPanel?.gameObject.SetActive(true);
     }
 
@@ -399,7 +399,7 @@ internal static class Map
 
         if (__instance.HerePoint && __instance.HerePoint.transform.parent)
         {
-            Vector3 pos = __instance.HerePoint.transform.parent.transform.position;
+            var pos = __instance.HerePoint.transform.parent.transform.position;
             __instance.HerePoint.transform.parent.transform.position = new(pos.x, pos.y, -60f);
         }
 
@@ -431,7 +431,7 @@ internal static class Map
             {
                 return;
             }
-            foreach (SpriteRenderer mark in _doorMarks.Values)
+            foreach (var mark in _doorMarks.Values)
             {
                 if (mark.gameObject.activeSelf)
                 {
@@ -448,13 +448,13 @@ internal static class Map
             return;
         }
 
-        foreach (PlainDoor door in _plainDoors)
+        foreach (var door in _plainDoors)
         {
             if (door == null)
             {
                 continue;
             }
-            if (!_doorMarks.TryGetValue(door, out SpriteRenderer mark))
+            if (!_doorMarks.TryGetValue(door, out var mark))
             {
                 mark = UnityObject.Instantiate(__instance.HerePoint, __instance.HerePoint.transform.parent);
                 _doorMarks.Add(door, mark);
@@ -468,12 +468,12 @@ internal static class Map
                 }
                 mark.sprite = AssetLoader.Cross;
                 PlayerMaterial.SetColors(0, mark);
-                ShipStatus shipStatus = MapUtilities.CachedShipStatus;
+                var shipStatus = MapUtilities.CachedShipStatus;
                 if (shipStatus == null)
                 {
                     return;
                 }
-                Vector3 pos = door.gameObject.transform.position / shipStatus.MapScale;
+                var pos = door.gameObject.transform.position / shipStatus.MapScale;
                 pos.x *= Mathf.Sign(shipStatus.transform.localScale.x);
                 pos.z = -10f;
                 mark.transform.localPosition = pos;
@@ -497,15 +497,15 @@ internal static class Map
         // サボタージュアイコンのレイアウトを変更
         Vector3 halfScale = new(0.75f, 0.75f, 0.75f);
         Vector3 originalScale = new(1f, 1f, 1f);
-        Vector3 scale = RebuildUs.BetterSabotageMap.Value ? halfScale : originalScale;
-        Transform comms = __instance.infectedOverlay.transform.FindChild("Comms");
-        Transform electrical = __instance.infectedOverlay.transform.FindChild("Electrical");
-        Transform mainHall = __instance.infectedOverlay.transform.FindChild("MainHall");
-        Transform gapRoom = __instance.infectedOverlay.transform.FindChild("Gap Room");
-        Transform records = __instance.infectedOverlay.transform.FindChild("Records");
-        Transform brig = __instance.infectedOverlay.transform.FindChild("Brig");
-        Transform kitchen = __instance.infectedOverlay.transform.FindChild("Kitchen");
-        Transform medbay = __instance.infectedOverlay.transform.FindChild("Medbay");
+        var scale = RebuildUs.BetterSabotageMap.Value ? halfScale : originalScale;
+        var comms = __instance.infectedOverlay.transform.FindChild("Comms");
+        var electrical = __instance.infectedOverlay.transform.FindChild("Electrical");
+        var mainHall = __instance.infectedOverlay.transform.FindChild("MainHall");
+        var gapRoom = __instance.infectedOverlay.transform.FindChild("Gap Room");
+        var records = __instance.infectedOverlay.transform.FindChild("Records");
+        var brig = __instance.infectedOverlay.transform.FindChild("Brig");
+        var kitchen = __instance.infectedOverlay.transform.FindChild("Kitchen");
+        var medbay = __instance.infectedOverlay.transform.FindChild("Medbay");
 
         if (comms)
         {
@@ -544,12 +544,12 @@ internal static class Map
         {
             if (comms)
             {
-                Transform bomb = comms.FindChild("bomb");
+                var bomb = comms.FindChild("bomb");
                 if (bomb)
                 {
                     bomb.localPosition = new(-0.1f, 0.9f, -1f);
                 }
-                Transform doors = comms.FindChild("Doors");
+                var doors = comms.FindChild("Doors");
                 if (doors)
                 {
                     doors.localPosition = new(0.5f, 0.45f, -1f);
@@ -558,7 +558,7 @@ internal static class Map
 
             if (electrical)
             {
-                Transform lightsOut = electrical.FindChild("lightsOut");
+                var lightsOut = electrical.FindChild("lightsOut");
                 if (lightsOut)
                 {
                     lightsOut.localPosition = new(0f, -0.6f, -1f);
@@ -567,7 +567,7 @@ internal static class Map
 
             if (mainHall)
             {
-                Transform doors = mainHall.FindChild("Doors");
+                var doors = mainHall.FindChild("Doors");
                 if (doors)
                 {
                     doors.localPosition = new(-0.18f, -0.35f, -1f);
@@ -576,7 +576,7 @@ internal static class Map
 
             if (gapRoom)
             {
-                Transform meltdown = gapRoom.FindChild("meltdown");
+                var meltdown = gapRoom.FindChild("meltdown");
                 if (meltdown)
                 {
                     meltdown.localPosition = new(-0.34f, 0f, -1f);
@@ -585,7 +585,7 @@ internal static class Map
 
             if (records)
             {
-                Transform doors = records.FindChild("Doors");
+                var doors = records.FindChild("Doors");
                 if (doors)
                 {
                     doors.localPosition = new(0.01f, 1.2f, -1f);
@@ -594,7 +594,7 @@ internal static class Map
 
             if (brig)
             {
-                Transform doors = brig.FindChild("Doors");
+                var doors = brig.FindChild("Doors");
                 if (doors)
                 {
                     doors.localPosition = new(0f, 0.9f, -1f);
@@ -603,7 +603,7 @@ internal static class Map
 
             if (kitchen)
             {
-                Transform doors = kitchen.FindChild("Doors");
+                var doors = kitchen.FindChild("Doors");
                 if (doors)
                 {
                     doors.localPosition = new(0.1f, 0.9f, -1f);
@@ -615,7 +615,7 @@ internal static class Map
                 return;
             }
             {
-                Transform doors = medbay.FindChild("Doors");
+                var doors = medbay.FindChild("Doors");
                 if (doors)
                 {
                     doors.localPosition = new(0.2f, 0f, -1f);
@@ -626,12 +626,12 @@ internal static class Map
         {
             if (comms)
             {
-                Transform bomb = comms.FindChild("bomb");
+                var bomb = comms.FindChild("bomb");
                 if (bomb)
                 {
                     bomb.localPosition = new(-0.3f, 0f, -0.5f);
                 }
-                Transform doors = comms.FindChild("Doors");
+                var doors = comms.FindChild("Doors");
                 if (doors)
                 {
                     doors.localPosition = new(0.3f, 0f, -0.5f);
@@ -640,7 +640,7 @@ internal static class Map
 
             if (electrical)
             {
-                Transform lightsOut = electrical.FindChild("lightsOut");
+                var lightsOut = electrical.FindChild("lightsOut");
                 if (lightsOut)
                 {
                     lightsOut.localPosition = new(0f, 0f, -0.5f);
@@ -649,7 +649,7 @@ internal static class Map
 
             if (mainHall)
             {
-                Transform doors = mainHall.FindChild("Doors");
+                var doors = mainHall.FindChild("Doors");
                 if (doors)
                 {
                     doors.localPosition = new(0f, 0f, -0.5f);
@@ -658,7 +658,7 @@ internal static class Map
 
             if (gapRoom)
             {
-                Transform meltdown = gapRoom.FindChild("meltdown");
+                var meltdown = gapRoom.FindChild("meltdown");
                 if (meltdown)
                 {
                     meltdown.localPosition = new(0f, 0f, -0.5f);
@@ -667,7 +667,7 @@ internal static class Map
 
             if (records)
             {
-                Transform doors = records.FindChild("Doors");
+                var doors = records.FindChild("Doors");
                 if (doors)
                 {
                     doors.localPosition = new(0f, 0f, -0.5f);
@@ -676,7 +676,7 @@ internal static class Map
 
             if (brig)
             {
-                Transform doors = brig.FindChild("Doors");
+                var doors = brig.FindChild("Doors");
                 if (doors)
                 {
                     doors.localPosition = new(0f, 0f, -0.5f);
@@ -685,7 +685,7 @@ internal static class Map
 
             if (kitchen)
             {
-                Transform doors = kitchen.FindChild("Doors");
+                var doors = kitchen.FindChild("Doors");
                 if (doors)
                 {
                     doors.localPosition = new(0f, 0f, -0.5f);
@@ -697,7 +697,7 @@ internal static class Map
                 return;
             }
             {
-                Transform doors = medbay.FindChild("Doors");
+                var doors = medbay.FindChild("Doors");
                 if (doors)
                 {
                     doors.localPosition = new(0f, 0f, -0.5f);
@@ -713,7 +713,7 @@ internal static class Map
 
     private static void EvilTrackerFixedUpdate(MapBehaviour __instance)
     {
-        ShipStatus shipStatus = MapUtilities.CachedShipStatus;
+        var shipStatus = MapUtilities.CachedShipStatus;
         if (!shipStatus)
         {
             return;
@@ -729,14 +729,14 @@ internal static class Map
 
             if (_targetHerePoint != null)
             {
-                bool isAlive = EvilTracker.Target.IsAlive();
+                var isAlive = EvilTracker.Target.IsAlive();
                 if (_targetHerePoint.gameObject.activeSelf != isAlive)
                 {
                     _targetHerePoint.gameObject.SetActive(isAlive);
                 }
-                NetworkedPlayerInfo playerById = GameData.Instance.GetPlayerById(EvilTracker.Target.PlayerId);
+                var playerById = GameData.Instance.GetPlayerById(EvilTracker.Target.PlayerId);
                 PlayerControl.LocalPlayer.SetPlayerMaterialColors(_targetHerePoint);
-                Vector3 pos = EvilTracker.Target.transform.position;
+                var pos = EvilTracker.Target.transform.position;
                 pos.x /= shipStatus.MapScale;
                 pos.y /= shipStatus.MapScale;
                 pos.x *= Mathf.Sign(shipStatus.transform.localScale.x);
@@ -747,17 +747,17 @@ internal static class Map
 
         // インポスターの位置をマップに表示
         _impostorHerePoint ??= [];
-        PlayerControl localPlayer = PlayerControl.LocalPlayer;
-        float mapScale = shipStatus.MapScale;
-        float flipX = Mathf.Sign(shipStatus.transform.localScale.x);
+        var localPlayer = PlayerControl.LocalPlayer;
+        var mapScale = shipStatus.MapScale;
+        var flipX = Mathf.Sign(shipStatus.transform.localScale.x);
 
-        foreach (PlayerControl p in PlayerControl.AllPlayerControls.GetFastEnumerator())
+        foreach (var p in PlayerControl.AllPlayerControls.GetFastEnumerator())
         {
             if (!p.IsTeamImpostor() || p == localPlayer)
             {
                 continue;
             }
-            if (!_impostorHerePoint.TryGetValue(p.PlayerId, out SpriteRenderer icon))
+            if (!_impostorHerePoint.TryGetValue(p.PlayerId, out var icon))
             {
                 if (__instance.HerePoint && __instance.HerePoint.transform.parent)
                 {
@@ -770,13 +770,13 @@ internal static class Map
             {
                 continue;
             }
-            bool isAlive = p.IsAlive();
+            var isAlive = p.IsAlive();
             if (icon.gameObject.activeSelf != isAlive)
             {
                 icon.gameObject.SetActive(isAlive);
             }
             PlayerMaterial.SetColors(0, icon);
-            Vector3 pos = p.transform.position;
+            var pos = p.transform.position;
             pos.x /= mapScale;
             pos.y /= mapScale;
             pos.x *= flipX;
@@ -826,7 +826,7 @@ internal static class Map
             __instance.ColorControl.SetColor(Palette.ImpostorRed);
         }
 
-        HudManager hm = FastDestroyableSingleton<HudManager>.Instance;
+        var hm = FastDestroyableSingleton<HudManager>.Instance;
         if (hm)
         {
             hm.SetHudActive(false);
@@ -891,7 +891,7 @@ internal static class Map
             __instance.ColorControl.SetColor(Palette.ImpostorRed);
         }
 
-        HudManager hm = FastDestroyableSingleton<HudManager>.Instance;
+        var hm = FastDestroyableSingleton<HudManager>.Instance;
         if (hm)
         {
             hm.SetHudActive(false);
@@ -910,27 +910,27 @@ internal static class Map
     internal static void ShareRealTasks()
     {
         using RPCSender sender = new(PlayerControl.LocalPlayer.NetId, CustomRPC.ShareRealTasks);
-        int count = 0;
-        foreach (PlayerTask task in PlayerControl.LocalPlayer.myTasks)
+        var count = 0;
+        foreach (var task in PlayerControl.LocalPlayer.myTasks)
         {
             if (task.IsComplete || !task.HasLocation || PlayerTask.TaskIsEmergency(task))
             {
                 continue;
             }
-            foreach (Vector2 unused in task.Locations)
+            foreach (var unused in task.Locations)
             {
                 count++;
             }
         }
 
         sender.Write((byte)count);
-        foreach (PlayerTask task in PlayerControl.LocalPlayer.myTasks)
+        foreach (var task in PlayerControl.LocalPlayer.myTasks)
         {
             if (task.IsComplete || !task.HasLocation || PlayerTask.TaskIsEmergency(task))
             {
                 continue;
             }
-            foreach (Vector2 loc in task.Locations)
+            foreach (var loc in task.Locations)
             {
                 sender.Write(PlayerControl.LocalPlayer.PlayerId);
                 sender.Write(loc.x);
@@ -963,7 +963,7 @@ internal static class Map
             return false;
         }
 
-        ShipStatus shipStatus = MapUtilities.CachedShipStatus;
+        var shipStatus = MapUtilities.CachedShipStatus;
         if (!shipStatus)
         {
             return true;
@@ -971,21 +971,21 @@ internal static class Map
 
         __instance.gameObject.SetActive(true);
         __instance.data.Clear();
-        for (int i = 0; i < RealTasks[EvilTracker.Target.PlayerId].Count; i++)
+        for (var i = 0; i < RealTasks[EvilTracker.Target.PlayerId].Count; i++)
         {
             try
             {
-                Vector2 pos = RealTasks[EvilTracker.Target.PlayerId][i];
+                var pos = RealTasks[EvilTracker.Target.PlayerId][i];
 
                 Vector3 localPosition = pos / shipStatus.MapScale;
                 localPosition.z = -1f;
-                PooledMapIcon pooledMapIcon = __instance.icons.Get<PooledMapIcon>();
+                var pooledMapIcon = __instance.icons.Get<PooledMapIcon>();
                 pooledMapIcon.transform.localScale = new(pooledMapIcon.NormalSize, pooledMapIcon.NormalSize, pooledMapIcon.NormalSize);
                 pooledMapIcon.rend.color = Color.yellow;
                 pooledMapIcon.name = $"{i}";
                 pooledMapIcon.lastMapTaskStep = 0;
                 pooledMapIcon.transform.localPosition = localPosition;
-                string text = $"{i}";
+                var text = $"{i}";
                 __instance.data.Add(text, pooledMapIcon);
             }
             catch (Exception ex)
@@ -1015,21 +1015,21 @@ internal static class Map
         }
 
         __instance.timer = 0f;
-        foreach (CounterArea counterArea in __instance.CountAreas)
+        foreach (var counterArea in __instance.CountAreas)
         {
-            if (MapUtilities.CachedShipStatus.FastRooms.TryGetValue(counterArea.RoomType, out PlainShipRoom plainShipRoom) && plainShipRoom.roomArea)
+            if (MapUtilities.CachedShipStatus.FastRooms.TryGetValue(counterArea.RoomType, out var plainShipRoom) && plainShipRoom.roomArea)
             {
-                int num = plainShipRoom.roomArea.OverlapCollider(__instance.filter, __instance.buffer);
+                var num = plainShipRoom.roomArea.OverlapCollider(__instance.filter, __instance.buffer);
                 HashSet<byte> countedPlayers = [];
-                int num2 = 0;
-                for (int j = 0; j < num; j++)
+                var num2 = 0;
+                for (var j = 0; j < num; j++)
                 {
-                    Collider2D collider2D = __instance.buffer[j];
+                    var collider2D = __instance.buffer[j];
                     if (collider2D.tag == "DeadBody")
                     {
                         continue;
                     }
-                    PlayerControl component = collider2D.GetComponent<PlayerControl>();
+                    var component = collider2D.GetComponent<PlayerControl>();
                     if (!component || component.Data == null || component.Data.Disconnected || component.Data.IsDead)
                     {
                         continue;

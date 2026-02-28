@@ -46,7 +46,7 @@ internal static class SubmergedCompatibility
 
     internal static void Initialize()
     {
-        Loaded = IL2CPPChainloader.Instance.Plugins.TryGetValue(SUBMERGED_GUID, out PluginInfo plugin);
+        Loaded = IL2CPPChainloader.Instance.Plugins.TryGetValue(SUBMERGED_GUID, out var plugin);
         if (!Loaded)
         {
             return;
@@ -69,7 +69,7 @@ internal static class SubmergedCompatibility
         {
             return obj.AddComponent<MissingSubmergedBehaviour>();
         }
-        bool validType = ComponentExtensions.RegisteredTypes.TryGetValue(typeName, out Type type);
+        var validType = ComponentExtensions.RegisteredTypes.TryGetValue(typeName, out var type);
         return validType ? obj.AddComponent(Il2CppType.From(type)).TryCast<MonoBehaviour>() : obj.AddComponent<MissingSubmergedBehaviour>();
     }
 

@@ -74,10 +74,10 @@ internal class RoleInfo(TrKey nameKey, Color color, CustomOption baseOption, Rol
             // TODO: Write modifiers here
         }
 
-        List<RoleInfo> allRoleInfos = AllRoleInfos;
-        for (int i = 0; i < allRoleInfos.Count; i++)
+        var allRoleInfos = AllRoleInfos;
+        for (var i = 0; i < allRoleInfos.Count; i++)
         {
-            RoleInfo info = allRoleInfos[i];
+            var info = allRoleInfos[i];
             if (info.RoleType == RoleType.Jackal)
             {
                 continue;
@@ -90,11 +90,11 @@ internal class RoleInfo(TrKey nameKey, Color color, CustomOption baseOption, Rol
 
         if (player.IsRole(RoleType.Jackal) || Neutral.Jackal.FormerJackals != null)
         {
-            bool isJackalOrFormer = player.IsRole(RoleType.Jackal);
+            var isJackalOrFormer = player.IsRole(RoleType.Jackal);
             if (!isJackalOrFormer)
             {
-                List<PlayerControl> formerJackals = Neutral.Jackal.FormerJackals;
-                for (int i = 0; i < formerJackals.Count; i++)
+                var formerJackals = Neutral.Jackal.FormerJackals;
+                for (var i = 0; i < formerJackals.Count; i++)
                 {
                     if (formerJackals[i].PlayerId == player.PlayerId)
                     {
@@ -124,11 +124,11 @@ internal class RoleInfo(TrKey nameKey, Color color, CustomOption baseOption, Rol
 
         if (excludeRoles != null && excludeRoles.Length > 0)
         {
-            for (int i = infos.Count - 1; i >= 0; i--)
+            for (var i = infos.Count - 1; i >= 0; i--)
             {
-                RoleType roleType = infos[i].RoleType;
-                bool shouldRemove = false;
-                for (int j = 0; j < excludeRoles.Length; j++)
+                var roleType = infos[i].RoleType;
+                var shouldRemove = false;
+                for (var j = 0; j < excludeRoles.Length; j++)
                 {
                     if (roleType == excludeRoles[j])
                     {
@@ -159,7 +159,7 @@ internal class RoleInfo(TrKey nameKey, Color color, CustomOption baseOption, Rol
             return string.Empty;
         }
 
-        List<RoleInfo> roleInfo = GetRoleInfoForPlayer(p, showModifier, excludeRoles);
+        var roleInfo = GetRoleInfoForPlayer(p, showModifier, excludeRoles);
         if (roleInfo.Count == 0)
         {
             return string.Empty;
@@ -169,22 +169,22 @@ internal class RoleInfo(TrKey nameKey, Color color, CustomOption baseOption, Rol
 
         void AppendNames(bool useMadmateColor = false)
         {
-            for (int i = 0; i < roleInfo.Count; i++)
+            for (var i = 0; i < roleInfo.Count; i++)
             {
                 if (i > 0)
                 {
                     sb.Append(joinSeparator);
                 }
-                RoleInfo info = roleInfo[i];
-                Color c = useMadmateColor ? Madmate.NameColor : info.Color;
+                var info = roleInfo[i];
+                var c = useMadmateColor ? Madmate.NameColor : info.Color;
                 sb.Append(useColors ? Helpers.Cs(c, info.Name) : info.Name);
             }
         }
 
         if (p.HasModifier(ModifierType.Madmate) || p.HasModifier(ModifierType.CreatedMadmate))
         {
-            bool hasCrewmate = false;
-            for (int i = 0; i < roleInfo.Count; i++)
+            var hasCrewmate = false;
+            for (var i = 0; i < roleInfo.Count; i++)
             {
                 if (roleInfo[i].RoleType == RoleType.Crewmate)
                 {
@@ -198,7 +198,7 @@ internal class RoleInfo(TrKey nameKey, Color color, CustomOption baseOption, Rol
                 return useColors ? Helpers.Cs(Madmate.NameColor, Madmate.FullName) : Madmate.FullName;
             }
 
-            string prefix = useColors ? Helpers.Cs(Madmate.NameColor, Madmate.Prefix) : Madmate.Prefix;
+            var prefix = useColors ? Helpers.Cs(Madmate.NameColor, Madmate.Prefix) : Madmate.Prefix;
             sb.Append(prefix);
             AppendNames(true);
             return sb.ToString();
@@ -206,8 +206,8 @@ internal class RoleInfo(TrKey nameKey, Color color, CustomOption baseOption, Rol
 
         if (p.HasModifier(ModifierType.LastImpostor))
         {
-            bool hasImpostor = false;
-            for (int i = 0; i < roleInfo.Count; i++)
+            var hasImpostor = false;
+            for (var i = 0; i < roleInfo.Count; i++)
             {
                 if (roleInfo[i].RoleType == RoleType.Impostor)
                 {
@@ -221,7 +221,7 @@ internal class RoleInfo(TrKey nameKey, Color color, CustomOption baseOption, Rol
                 return useColors ? Helpers.Cs(LastImpostor.NameColor, LastImpostor.FullName) : LastImpostor.FullName;
             }
 
-            string postfix = useColors ? Helpers.Cs(LastImpostor.NameColor, LastImpostor.Postfix) : LastImpostor.Postfix;
+            var postfix = useColors ? Helpers.Cs(LastImpostor.NameColor, LastImpostor.Postfix) : LastImpostor.Postfix;
             AppendNames();
             sb.Append(postfix);
             return sb.ToString();
@@ -229,7 +229,7 @@ internal class RoleInfo(TrKey nameKey, Color color, CustomOption baseOption, Rol
 
         if (p.HasModifier(ModifierType.AntiTeleport))
         {
-            string postfix = useColors ? Helpers.Cs(AntiTeleport.NameColor, AntiTeleport.Postfix) : AntiTeleport.Postfix;
+            var postfix = useColors ? Helpers.Cs(AntiTeleport.NameColor, AntiTeleport.Postfix) : AntiTeleport.Postfix;
             AppendNames();
             sb.Append(postfix);
             return sb.ToString();
@@ -249,7 +249,7 @@ internal class RoleInfo(TrKey nameKey, Color color, CustomOption baseOption, Rol
         RoleDict.Clear();
         AllRoleInfos.Clear();
 
-        foreach (RoleData.RoleRegistration reg in RoleData.Roles)
+        foreach (var reg in RoleData.Roles)
         {
             RoleInfo info = new(Enum.TryParse(Enum.GetName(reg.RoleType), out TrKey key) ? key : TrKey.None,
                 reg.GetColor(),

@@ -10,13 +10,13 @@ internal static class ModifierHelpers
         ModifierType modType)
     {
         if (MethodCache.TryGetValue(modType,
-                out (MethodInfo exists, MethodInfo hasModifier, MethodInfo addModifier, MethodInfo eraseModifier, MethodInfo swapModifier) cached))
+                out var cached))
         {
             return cached;
         }
 
-        ModifierData.ModifierRegistration[] modifiers = ModifierData.Modifiers;
-        foreach ((ModifierType modifierType, Type type, _, _) in modifiers)
+        var modifiers = ModifierData.Modifiers;
+        foreach ((var modifierType, var type, _, _) in modifiers)
         {
             if (modifierType != modType)
             {
@@ -27,7 +27,7 @@ internal static class ModifierHelpers
                 break;
             }
 
-            (MethodInfo GetMethod, MethodInfo, MethodInfo, MethodInfo, MethodInfo) methods = (
+            var methods = (
                 type.GetProperty("Exists", BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy)?.GetMethod,
                 type.GetMethod("HasModifier", BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy),
                 type.GetMethod("AddModifier", BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy)
@@ -56,8 +56,8 @@ internal static class ModifierHelpers
                 return false;
             }
 
-            List<PlayerModifier> mods = PlayerModifier.GetModifiers(player);
-            foreach (PlayerModifier t in mods)
+            var mods = PlayerModifier.GetModifiers(player);
+            foreach (var t in mods)
             {
                 if (t.CurrentModifierType == modType)
                 {
@@ -76,7 +76,7 @@ internal static class ModifierHelpers
             }
 
             Logger.LogInfo($"{player.Data?.PlayerName}({player.PlayerId}): {Enum.GetName(typeof(ModifierType), modType)}");
-            (MethodInfo exists, MethodInfo hasModifier, MethodInfo addModifier, MethodInfo eraseModifier, MethodInfo swapModifier)
+            var
                 methods = GetMethods(modType);
             if (methods.addModifier != null)
             {
@@ -99,7 +99,7 @@ internal static class ModifierHelpers
             {
                 return;
             }
-            (MethodInfo exists, MethodInfo hasModifier, MethodInfo addModifier, MethodInfo eraseModifier, MethodInfo swapModifier)
+            var
                 methods = GetMethods(modType);
             if (methods.eraseModifier != null)
             {
@@ -117,14 +117,14 @@ internal static class ModifierHelpers
                 return;
             }
 
-            ModifierData.ModifierRegistration[] modifiers = ModifierData.Modifiers;
-            foreach (ModifierData.ModifierRegistration reg in modifiers)
+            var modifiers = ModifierData.Modifiers;
+            foreach (var reg in modifiers)
             {
                 if (reg.ClassType == null)
                 {
                     continue;
                 }
-                (MethodInfo exists, MethodInfo hasModifier, MethodInfo addModifier, MethodInfo eraseModifier, MethodInfo swapModifier)
+                var
                     methods = GetMethods(reg.ModType);
                 methods.eraseModifier?.Invoke(null, [player]);
             }
@@ -137,14 +137,14 @@ internal static class ModifierHelpers
                 return;
             }
 
-            ModifierData.ModifierRegistration[] modifiers = ModifierData.Modifiers;
-            foreach (ModifierData.ModifierRegistration reg in modifiers)
+            var modifiers = ModifierData.Modifiers;
+            foreach (var reg in modifiers)
             {
                 if (reg.ClassType == null || !player.HasModifier(reg.ModType) && !target.HasModifier(reg.ModType))
                 {
                     continue;
                 }
-                (MethodInfo exists, MethodInfo hasModifier, MethodInfo addModifier, MethodInfo eraseModifier, MethodInfo swapModifier)
+                var
                     methods = GetMethods(reg.ModType);
                 methods.swapModifier?.Invoke(null, [player, target]);
             }

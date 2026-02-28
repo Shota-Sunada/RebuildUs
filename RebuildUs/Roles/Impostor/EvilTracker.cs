@@ -70,7 +70,7 @@ internal class EvilTracker : MultiRoleBase<EvilTracker>
 
     internal override void FixedUpdate()
     {
-        EvilTracker local = Local;
+        var local = Local;
         if (local != null)
         {
             ArrowUpdate();
@@ -138,9 +138,9 @@ internal class EvilTracker : MultiRoleBase<EvilTracker>
         if (UpdateTimer <= 0.0f)
         {
             // 前回のArrowをすべて破棄する
-            for (int i = 0; i < Arrows.Count; i++)
+            for (var i = 0; i < Arrows.Count; i++)
             {
-                Arrow arrow = Arrows[i];
+                var arrow = Arrows[i];
                 if (arrow != null && arrow.ArrowObject != null)
                 {
                     arrow.ArrowObject.SetActive(false);
@@ -152,13 +152,13 @@ internal class EvilTracker : MultiRoleBase<EvilTracker>
             Arrows.Clear();
 
             // インポスターの位置を示すArrowsを描画
-            int count = 0;
+            var count = 0;
             StringBuilder sb = new();
-            foreach (PlayerControl p in PlayerControl.AllPlayerControls.GetFastEnumerator())
+            foreach (var p in PlayerControl.AllPlayerControls.GetFastEnumerator())
             {
                 if (p.Data.IsDead)
                 {
-                    if (p.IsTeamImpostor() && ImpostorPositionText.TryGetValue(p.name, out TMP_Text txt))
+                    if (p.IsTeamImpostor() && ImpostorPositionText.TryGetValue(p.name, out var txt))
                     {
                         txt.text = "";
                     }
@@ -173,14 +173,14 @@ internal class EvilTracker : MultiRoleBase<EvilTracker>
                     arrow.Update(p.transform.position);
                     Arrows.Add(arrow);
                     count += 1;
-                    if (!ImpostorPositionText.TryGetValue(p.name, out TMP_Text positionText))
+                    if (!ImpostorPositionText.TryGetValue(p.name, out var positionText))
                     {
-                        RoomTracker roomTracker = FastDestroyableSingleton<HudManager>.Instance?.roomTracker;
+                        var roomTracker = FastDestroyableSingleton<HudManager>.Instance?.roomTracker;
                         if (roomTracker == null)
                         {
                             return;
                         }
-                        GameObject gameObject = UnityObject.Instantiate(roomTracker.gameObject);
+                        var gameObject = UnityObject.Instantiate(roomTracker.gameObject);
                         UnityObject.DestroyImmediate(gameObject.GetComponent<RoomTracker>());
                         gameObject.transform.SetParent(FastDestroyableSingleton<HudManager>.Instance.transform);
                         gameObject.transform.localPosition = new(0, -2.0f + 0.25f * count, gameObject.transform.localPosition.z);
@@ -190,7 +190,7 @@ internal class EvilTracker : MultiRoleBase<EvilTracker>
                         ImpostorPositionText.Add(p.name, positionText);
                     }
 
-                    PlainShipRoom room = Helpers.GetPlainShipRoom(p);
+                    var room = Helpers.GetPlainShipRoom(p);
                     positionText.gameObject.SetActive(true);
                     if (room != null)
                     {
@@ -218,12 +218,12 @@ internal class EvilTracker : MultiRoleBase<EvilTracker>
                 Arrows.Add(arrow);
                 if (TargetPositionText == null)
                 {
-                    RoomTracker roomTracker = FastDestroyableSingleton<HudManager>.Instance?.roomTracker;
+                    var roomTracker = FastDestroyableSingleton<HudManager>.Instance?.roomTracker;
                     if (roomTracker == null)
                     {
                         return;
                     }
-                    GameObject gameObject = UnityObject.Instantiate(roomTracker.gameObject);
+                    var gameObject = UnityObject.Instantiate(roomTracker.gameObject);
                     UnityObject.DestroyImmediate(gameObject.GetComponent<RoomTracker>());
                     gameObject.transform.SetParent(FastDestroyableSingleton<HudManager>.Instance.transform);
                     gameObject.transform.localPosition = new(0, -2.0f, gameObject.transform.localPosition.z);
@@ -232,7 +232,7 @@ internal class EvilTracker : MultiRoleBase<EvilTracker>
                     TargetPositionText.alpha = 1.0f;
                 }
 
-                PlainShipRoom room = Helpers.GetPlainShipRoom(Target);
+                var room = Helpers.GetPlainShipRoom(Target);
                 TargetPositionText.gameObject.SetActive(true);
                 if (room != null)
                 {

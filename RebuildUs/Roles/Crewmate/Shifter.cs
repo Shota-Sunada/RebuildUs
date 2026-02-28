@@ -50,9 +50,9 @@ internal class Shifter : MultiRoleBase<Shifter>
         if (IsNeutral && !ShiftPastShifters)
         {
             blockShift = [];
-            for (int i = 0; i < PastShifters.Count; i++)
+            for (var i = 0; i < PastShifters.Count; i++)
             {
-                PlayerControl p = Helpers.PlayerById((byte)PastShifters[i]);
+                var p = Helpers.PlayerById((byte)PastShifters[i]);
                 if (p != null)
                 {
                     blockShift.Add(p);

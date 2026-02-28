@@ -190,26 +190,26 @@ internal static class Mafia
         {
             _janitorCleanButton = new(() =>
                 {
-                    Il2CppArrayBase<DeadBody> bodies = UnityObject.FindObjectsOfType<DeadBody>();
-                    PlayerControl local = PlayerControl.LocalPlayer;
-                    Vector2 truePosition = local.GetTruePosition();
-                    float maxDist = local.MaxReportDistance;
+                    var bodies = UnityObject.FindObjectsOfType<DeadBody>();
+                    var local = PlayerControl.LocalPlayer;
+                    var truePosition = local.GetTruePosition();
+                    var maxDist = local.MaxReportDistance;
 
-                    foreach (DeadBody body in bodies)
+                    foreach (var body in bodies)
                     {
                         if (body == null || body.Reported)
                         {
                             continue;
                         }
 
-                        Vector2 bodyPos = body.TruePosition;
+                        var bodyPos = body.TruePosition;
                         if (!(Vector2.Distance(bodyPos, truePosition) <= maxDist)
                             || !local.CanMove
                             || PhysicsHelpers.AnythingBetween(truePosition, bodyPos, Constants.ShipAndObjectsMask, false))
                         {
                             continue;
                         }
-                        NetworkedPlayerInfo playerInfo = GameData.Instance.GetPlayerById(body.ParentId);
+                        var playerInfo = GameData.Instance.GetPlayerById(body.ParentId);
                         if (playerInfo == null)
                         {
                             continue;

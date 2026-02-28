@@ -74,7 +74,7 @@ internal class Hacker : MultiRoleBase<Hacker>
         {
             return;
         }
-        (int playerCompleted, _) = TasksHandler.TaskInfo(Player.Data);
+        (var playerCompleted, _) = TasksHandler.TaskInfo(Player.Data);
         if (playerCompleted != _rechargedTasks)
         {
             return;
@@ -139,8 +139,8 @@ internal class Hacker : MultiRoleBase<Hacker>
                 {
                     return Local._chargesAdminTable > 0 && MapSettings.CanUseAdmin;
                 }
-                string format = Tr.Get(TrKey.HackerChargesText);
-                string text = string.Format(format, Local._chargesAdminTable, ToolsNumber);
+                var format = Tr.Get(TrKey.HackerChargesText);
+                var text = string.Format(format, Local._chargesAdminTable, ToolsNumber);
                 _hackerAdminTableChargesText?.text = text;
                 _hackerVitalsChargesText?.text = text;
 
@@ -191,8 +191,8 @@ internal class Hacker : MultiRoleBase<Hacker>
                     {
                         if (_vitalsConsole == null)
                         {
-                            Il2CppArrayBase<SystemConsole> consoles = UnityObject.FindObjectsOfType<SystemConsole>();
-                            for (int i = 0; i < consoles.Length; i++)
+                            var consoles = UnityObject.FindObjectsOfType<SystemConsole>();
+                            for (var i = 0; i < consoles.Length; i++)
                             {
                                 if (consoles[i].gameObject.name.Contains("panel_vitals"))
                                 {
@@ -222,8 +222,8 @@ internal class Hacker : MultiRoleBase<Hacker>
                     {
                         if (_doorLogConsole == null)
                         {
-                            Il2CppArrayBase<SystemConsole> consoles = UnityObject.FindObjectsOfType<SystemConsole>();
-                            for (int i = 0; i < consoles.Length; i++)
+                            var consoles = UnityObject.FindObjectsOfType<SystemConsole>();
+                            for (var i = 0; i < consoles.Length; i++)
                             {
                                 if (consoles[i].gameObject.name.Contains("SurvLogConsole"))
                                 {
@@ -331,8 +331,8 @@ internal class Hacker : MultiRoleBase<Hacker>
 
     internal static Sprite GetAdminSprite()
     {
-        byte mapId = GameOptionsManager.Instance.CurrentGameOptions.MapId;
-        UseButtonSettings button = mapId switch
+        var mapId = GameOptionsManager.Instance.CurrentGameOptions.MapId;
+        var button = mapId switch
         {
             0 or 3 => FastDestroyableSingleton<HudManager>.Instance.UseButton.fastUseSettings[ImageNames.AdminMapButton],
             1 => FastDestroyableSingleton<HudManager>.Instance.UseButton.fastUseSettings[ImageNames.MIRAAdminButton],

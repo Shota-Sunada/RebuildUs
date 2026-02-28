@@ -40,7 +40,7 @@ internal class Warlock : MultiRoleBase<Warlock>
 
     internal override void FixedUpdate()
     {
-        Warlock local = Local;
+        var local = Local;
         if (local == null)
         {
             return;
@@ -98,7 +98,7 @@ internal class Warlock : MultiRoleBase<Warlock>
                 }
                 else if (Local._curseVictim != null && Local._curseVictimTarget != null)
                 {
-                    MurderAttemptResult murder = Helpers.CheckMurderAttemptAndKill(Local._curseVictim,
+                    var murder = Helpers.CheckMurderAttemptAndKill(Local._curseVictim,
                         Local._curseVictimTarget,
                         showAnimation: false);
                     if (murder == MurderAttemptResult.SuppressKill)

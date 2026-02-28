@@ -59,14 +59,14 @@ internal class Vulture : SingleRoleBase<Vulture>
             return;
         }
 
-        Vulture local = Local;
+        var local = Local;
         if (local == null)
         {
             return;
         }
         if (Player.IsDead())
         {
-            foreach (Arrow t in _localArrows)
+            foreach (var t in _localArrows)
             {
                 UnityObject.Destroy(t.ArrowObject);
             }
@@ -83,11 +83,11 @@ internal class Vulture : SingleRoleBase<Vulture>
         _timeUntilUpdate = 0.25f;
 
         DeadBody[] deadBodies = UnityObject.FindObjectsOfType<DeadBody>();
-        bool arrowUpdate = _localArrows.Count != deadBodies.Length;
+        var arrowUpdate = _localArrows.Count != deadBodies.Length;
 
         if (arrowUpdate)
         {
-            foreach (Arrow t in _localArrows)
+            foreach (var t in _localArrows)
             {
                 UnityObject.Destroy(t.ArrowObject);
             }
@@ -95,9 +95,9 @@ internal class Vulture : SingleRoleBase<Vulture>
             _localArrows.Clear();
         }
 
-        for (int i = 0; i < deadBodies.Length; i++)
+        for (var i = 0; i < deadBodies.Length; i++)
         {
-            DeadBody db = deadBodies[i];
+            var db = deadBodies[i];
             if (arrowUpdate)
             {
                 _localArrows.Add(new(Color.blue));
@@ -117,26 +117,26 @@ internal class Vulture : SingleRoleBase<Vulture>
     {
         _vultureEatButton = new(() =>
             {
-                Il2CppArrayBase<DeadBody> bodies = UnityObject.FindObjectsOfType<DeadBody>();
-                PlayerControl local = PlayerControl.LocalPlayer;
-                Vector2 truePosition = local.GetTruePosition();
-                float maxDist = local.MaxReportDistance;
+                var bodies = UnityObject.FindObjectsOfType<DeadBody>();
+                var local = PlayerControl.LocalPlayer;
+                var truePosition = local.GetTruePosition();
+                var maxDist = local.MaxReportDistance;
 
-                foreach (DeadBody body in bodies)
+                foreach (var body in bodies)
                 {
                     if (body == null || body.Reported)
                     {
                         continue;
                     }
 
-                    Vector2 bodyPos = body.TruePosition;
+                    var bodyPos = body.TruePosition;
                     if (!(Vector2.Distance(bodyPos, truePosition) <= maxDist)
                         || !local.CanMove
                         || PhysicsHelpers.AnythingBetween(truePosition, bodyPos, Constants.ShipAndObjectsMask, false))
                     {
                         continue;
                     }
-                    NetworkedPlayerInfo playerInfo = GameData.Instance.GetPlayerById(body.ParentId);
+                    var playerInfo = GameData.Instance.GetPlayerById(body.ParentId);
                     if (playerInfo == null)
                     {
                         continue;
@@ -197,7 +197,7 @@ internal class Vulture : SingleRoleBase<Vulture>
         {
             if (Instance._localArrows != null)
             {
-                foreach (Arrow arrow in Instance._localArrows)
+                foreach (var arrow in Instance._localArrows)
                 {
                     if (arrow?.ArrowObject != null)
                     {

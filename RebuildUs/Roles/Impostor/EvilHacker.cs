@@ -97,7 +97,7 @@ internal class EvilHacker : MultiRoleBase<EvilHacker>
 
     internal override void FixedUpdate()
     {
-        EvilHacker local = Local;
+        var local = Local;
         if (local != null)
         {
             _currentTarget = Helpers.SetTarget(true);

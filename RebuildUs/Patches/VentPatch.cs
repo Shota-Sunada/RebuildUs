@@ -11,11 +11,11 @@ internal static class VentPatch
                                       [HarmonyArgument(1)] out bool canUse,
                                       [HarmonyArgument(2)] out bool couldUse)
     {
-        float num = float.MaxValue;
-        PlayerControl @object = pc.Object;
+        var num = float.MaxValue;
+        var @object = pc.Object;
 
-        bool roleCouldUse = @object.CanUseVents();
-        string name = __instance.name;
+        var roleCouldUse = @object.CanUseVents();
+        var name = __instance.name;
 
         if (name.StartsWith("SealedVent_"))
         {
@@ -52,8 +52,8 @@ internal static class VentPatch
                     {
                         return false;
                     }
-                    Vector3 center = @object.Collider.bounds.center;
-                    Vector3 position = __instance.transform.position;
+                    var center = @object.Collider.bounds.center;
+                    var position = __instance.transform.position;
                     __result = Vector2.Distance(center, position);
                     canUse &= __result <= __instance.UsableDistance;
 
@@ -61,10 +61,10 @@ internal static class VentPatch
             }
         }
 
-        float usableDistance = __instance.UsableDistance;
+        var usableDistance = __instance.UsableDistance;
         if (name.StartsWith("JackInTheBoxVent_"))
         {
-            PlayerControl lp = PlayerControl.LocalPlayer;
+            var lp = PlayerControl.LocalPlayer;
             if (lp != null && !lp.IsRole(RoleType.Trickster) && !lp.IsGm())
             {
                 // Only the Trickster can use the Jack-In-The-Boxes!
@@ -82,8 +82,8 @@ internal static class VentPatch
         canUse = couldUse;
         if (canUse)
         {
-            Vector2 truePosition = @object.GetTruePosition();
-            Vector3 position = __instance.transform.position;
+            var truePosition = @object.GetTruePosition();
+            var position = __instance.transform.position;
             num = Vector2.Distance(truePosition, position);
 
             canUse &= num <= usableDistance && !PhysicsHelpers.AnythingBetween(truePosition, position, Constants.ShipOnlyMask, false);
@@ -106,19 +106,19 @@ internal static class VentPatch
     [HarmonyPatch(typeof(Vent), nameof(Vent.Use))]
     internal static bool UsePrefix(Vent __instance)
     {
-        PlayerControl lp = PlayerControl.LocalPlayer;
+        var lp = PlayerControl.LocalPlayer;
         if (lp == null)
         {
             return false;
         }
 
-        __instance.CanUse(lp.Data, out bool canUse, out bool _);
+        __instance.CanUse(lp.Data, out var canUse, out var _);
         if (!canUse)
         {
             return false; // No need to execute the native method as using is disallowed anyways
         }
 
-        bool isEnter = !lp.inVent;
+        var isEnter = !lp.inVent;
 
         if (__instance.name.StartsWith("JackInTheBoxVent_"))
         {

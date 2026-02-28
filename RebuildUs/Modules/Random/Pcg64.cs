@@ -23,11 +23,11 @@ internal sealed class Pcg64 : System.Random
 
     private ulong NextUInt64()
     {
-        ulong oldstate = _state;
+        var oldstate = _state;
         _state = oldstate * 6364136223846793005UL + _inc;
 
         // RXS-M-XS output function
-        ulong word = (oldstate >> (int)((oldstate >> 59) + 5) ^ oldstate) * 12605985483714317049UL;
+        var word = (oldstate >> (int)((oldstate >> 59) + 5) ^ oldstate) * 12605985483714317049UL;
         return word >> 43 ^ word;
     }
 
@@ -73,11 +73,11 @@ internal sealed class Pcg64 : System.Random
         {
             throw new ArgumentNullException(nameof(buffer));
         }
-        int i = 0;
+        var i = 0;
         while (i < buffer.Length)
         {
-            ulong r = NextUInt64();
-            for (int j = 0; j < 8 && i < buffer.Length; j++)
+            var r = NextUInt64();
+            for (var j = 0; j < 8 && i < buffer.Length; j++)
             {
                 buffer[i++] = (byte)(r & 0xFF);
                 r >>= 8;

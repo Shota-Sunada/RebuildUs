@@ -10,7 +10,7 @@ internal static class PingTrackerPatch
     internal static void UpdatePostfix(PingTracker __instance)
     {
         __instance.text.alignment = TextAlignmentOptions.Right;
-        AspectPosition position = __instance.GetComponent<AspectPosition>();
+        var position = __instance.GetComponent<AspectPosition>();
         position.Alignment = AspectPosition.EdgeAlignments.Top;
 
         PingStringBuilder.Clear();
@@ -23,7 +23,7 @@ internal static class PingTrackerPatch
                 .Append(RebuildUs.MOD_VERSION)
                 .Append('\n')
                 .Append(__instance.text.text);
-            string newText = PingStringBuilder.ToString();
+            var newText = PingStringBuilder.ToString();
             if (__instance.text.text != newText)
             {
                 __instance.text.text = newText;
@@ -41,7 +41,7 @@ internal static class PingTrackerPatch
                 .Append(RebuildUs.MOD_DEVELOPER)
                 .Append("</size>\n")
                 .Append(__instance.text.text);
-            string newText = PingStringBuilder.ToString();
+            var newText = PingStringBuilder.ToString();
             if (__instance.text.text != newText)
             {
                 __instance.text.text = newText;

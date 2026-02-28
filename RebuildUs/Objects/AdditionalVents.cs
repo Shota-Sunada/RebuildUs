@@ -9,20 +9,20 @@ internal sealed class AdditionalVents
     private AdditionalVents(Vector3 p)
     {
         // Create the vent
-        Vent referenceVent = UnityObject.FindObjectOfType<Vent>();
+        var referenceVent = UnityObject.FindObjectOfType<Vent>();
         _vent = UnityObject.Instantiate(referenceVent);
         _vent.transform.position = p;
         _vent.Left = null;
         _vent.Right = null;
         _vent.Center = null;
-        Vent tmp = MapUtilities.CachedShipStatus.AllVents[0];
+        var tmp = MapUtilities.CachedShipStatus.AllVents[0];
         _vent.EnterVentAnim = tmp.EnterVentAnim;
         _vent.ExitVentAnim = tmp.ExitVentAnim;
         _vent.Offset = new(0f, 0.25f, 0f);
 
-        int maxId = -1;
-        Il2CppReferenceArray<Vent> allVents = MapUtilities.CachedShipStatus.AllVents;
-        foreach (Vent t in allVents)
+        var maxId = -1;
+        var allVents = MapUtilities.CachedShipStatus.AllVents;
+        foreach (var t in allVents)
         {
             if (t.Id > maxId)
             {
@@ -33,7 +33,7 @@ internal sealed class AdditionalVents
         _vent.Id = maxId + 1; // Make sure we have a unique id
 
         Vent[] newVents = new Vent[allVents.Length + 1];
-        for (int i = 0; i < allVents.Length; i++)
+        for (var i = 0; i < allVents.Length; i++)
         {
             newVents[i] = allVents[i];
         }

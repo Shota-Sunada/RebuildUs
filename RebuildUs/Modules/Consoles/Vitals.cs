@@ -44,9 +44,9 @@ internal static class Vitals
             return;
         }
         _hackerTexts = [];
-        foreach (VitalsPanel panel in __instance.vitals)
+        foreach (var panel in __instance.vitals)
         {
-            TextMeshPro text = UnityObject.Instantiate(__instance.SabText, panel.transform);
+            var text = UnityObject.Instantiate(__instance.SabText, panel.transform);
             _hackerTexts.Add(text);
             UnityObject.DestroyImmediate(text.GetComponent<AlphaBlink>());
             text.gameObject.SetActive(false);
@@ -96,7 +96,7 @@ internal static class Vitals
             .Append('.')
             .Append((ts.Milliseconds / 10).ToString("D2"));
 
-        string timeString = VitalsStringBuilder.ToString();
+        var timeString = VitalsStringBuilder.ToString();
         VitalsStringBuilder.Clear();
         VitalsStringBuilder.Append(string.Format(Tr.Get(TrKey.TimeRemaining), timeString));
         _timeRemaining.text = VitalsStringBuilder.ToString();
@@ -110,22 +110,22 @@ internal static class Vitals
         // Hacker show time since death
         if (PlayerControl.LocalPlayer.IsRole(RoleType.Hacker) && Hacker.HackerTimer > 0)
         {
-            for (int k = 0; k < __instance.vitals.Length; k++)
+            for (var k = 0; k < __instance.vitals.Length; k++)
             {
-                VitalsPanel vitalsPanel = __instance.vitals[k];
-                NetworkedPlayerInfo player = GameData.Instance.AllPlayers[k];
+                var vitalsPanel = __instance.vitals[k];
+                var player = GameData.Instance.AllPlayers[k];
 
                 // Hacker update
                 if (!vitalsPanel.IsDead)
                 {
                     continue;
                 }
-                DeadPlayer deadPlayer = GameHistory.GetDeadPlayer(player.PlayerId);
+                var deadPlayer = GameHistory.GetDeadPlayer(player.PlayerId);
                 if (deadPlayer == null || k >= _hackerTexts.Count || _hackerTexts[k] == null)
                 {
                     continue;
                 }
-                float timeSinceDeath = (float)(DateTime.UtcNow - deadPlayer.TimeOfDeath).TotalMilliseconds;
+                var timeSinceDeath = (float)(DateTime.UtcNow - deadPlayer.TimeOfDeath).TotalMilliseconds;
                 _hackerTexts[k].gameObject.SetActive(true);
                 VitalsStringBuilder.Clear();
                 VitalsStringBuilder.Append(Math.Round(timeSinceDeath / 1000)).Append('s');
@@ -134,7 +134,7 @@ internal static class Vitals
         }
         else
         {
-            foreach (TextMeshPro text in _hackerTexts)
+            foreach (var text in _hackerTexts)
             {
                 if (text != null && text.gameObject != null)
                 {

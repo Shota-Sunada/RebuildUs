@@ -16,7 +16,7 @@ internal static class HeliSabotageSystemPatch
         {
             return;
         }
-        float reactorDuration = CustomOptionHolder.AirshipReactorDuration.GetFloat();
+        var reactorDuration = CustomOptionHolder.AirshipReactorDuration.GetFloat();
         if (__instance.Countdown >= reactorDuration)
         {
             __instance.Countdown = reactorDuration;

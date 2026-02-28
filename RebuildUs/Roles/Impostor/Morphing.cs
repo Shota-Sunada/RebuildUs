@@ -44,7 +44,7 @@ internal class Morphing : MultiRoleBase<Morphing>
 
     internal override void FixedUpdate()
     {
-        Morphing local = Local;
+        var local = Local;
         if (local == null)
         {
             return;
@@ -155,7 +155,7 @@ internal class Morphing : MultiRoleBase<Morphing>
     {
         MorphTarget = null;
         MorphTimer = 0f;
-        foreach (Morphing t in Players)
+        foreach (var t in Players)
         {
             t.HandleMorphing();
         }

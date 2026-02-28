@@ -91,18 +91,18 @@ internal class SecurityGuard : SingleRoleBase<SecurityGuard>
         }
 
         Vent target = null;
-        Vector2 truePosition = PlayerControl.LocalPlayer.GetTruePosition();
-        float closestDistance = float.MaxValue;
-        for (int i = 0; i < MapUtilities.CachedShipStatus.AllVents.Length; i++)
+        var truePosition = PlayerControl.LocalPlayer.GetTruePosition();
+        var closestDistance = float.MaxValue;
+        for (var i = 0; i < MapUtilities.CachedShipStatus.AllVents.Length; i++)
         {
-            Vent vent = MapUtilities.CachedShipStatus.AllVents[i];
+            var vent = MapUtilities.CachedShipStatus.AllVents[i];
             if (vent.gameObject.name.StartsWith("JackInTheBoxVent_")
                 || vent.gameObject.name.StartsWith("SealedVent_")
                 || vent.gameObject.name.StartsWith("FutureSealedVent_"))
             {
                 continue;
             }
-            float distance = Vector2.Distance(vent.transform.position, truePosition);
+            var distance = Vector2.Distance(vent.transform.position, truePosition);
             if (distance <= vent.UsableDistance && distance < closestDistance)
             {
                 closestDistance = distance;
@@ -116,7 +116,7 @@ internal class SecurityGuard : SingleRoleBase<SecurityGuard>
         {
             return;
         }
-        (int playerCompleted, _) = TasksHandler.TaskInfo(Player.Data);
+        (var playerCompleted, _) = TasksHandler.TaskInfo(Player.Data);
         if (playerCompleted == _rechargedTasks)
         {
             _rechargedTasks += CamRechargeTasksNumber;
@@ -147,7 +147,7 @@ internal class SecurityGuard : SingleRoleBase<SecurityGuard>
                 else if (ByteOptionNames.MapId.Get() != 1 && MapSettings.CouldUseCameras && !SubmergedCompatibility.IsSubmerged)
                 {
                     // Place camera if there's no vent and it's not MiraHQ
-                    Vector3 pos = PlayerControl.LocalPlayer.transform.position;
+                    var pos = PlayerControl.LocalPlayer.transform.position;
 
                     byte roomId;
                     try
@@ -225,15 +225,15 @@ internal class SecurityGuard : SingleRoleBase<SecurityGuard>
                 {
                     if (Local._minigame == null)
                     {
-                        byte mapId = GameOptionsManager.Instance.CurrentGameOptions.MapId;
+                        var mapId = GameOptionsManager.Instance.CurrentGameOptions.MapId;
                         SystemConsole targetConsole = null;
 
                         if (mapId is 0 or 3)
                         {
                             if (_survConsole == null)
                             {
-                                Il2CppArrayBase<SystemConsole> consoles = UnityObject.FindObjectsOfType<SystemConsole>();
-                                foreach (SystemConsole t in consoles)
+                                var consoles = UnityObject.FindObjectsOfType<SystemConsole>();
+                                foreach (var t in consoles)
                                 {
                                     if (t.gameObject.name.Contains("SurvConsole"))
                                     {
@@ -249,8 +249,8 @@ internal class SecurityGuard : SingleRoleBase<SecurityGuard>
                         {
                             if (_taskCamsConsole == null)
                             {
-                                Il2CppArrayBase<SystemConsole> consoles = UnityObject.FindObjectsOfType<SystemConsole>();
-                                for (int i = 0; i < consoles.Length; i++)
+                                var consoles = UnityObject.FindObjectsOfType<SystemConsole>();
+                                for (var i = 0; i < consoles.Length; i++)
                                 {
                                     if (consoles[i].gameObject.name.Contains("task_cams"))
                                     {
@@ -266,8 +266,8 @@ internal class SecurityGuard : SingleRoleBase<SecurityGuard>
                         {
                             if (_survPanelConsole == null)
                             {
-                                Il2CppArrayBase<SystemConsole> consoles = UnityObject.FindObjectsOfType<SystemConsole>();
-                                foreach (SystemConsole t in consoles)
+                                var consoles = UnityObject.FindObjectsOfType<SystemConsole>();
+                                foreach (var t in consoles)
                                 {
                                     if (t.gameObject.name.Contains("Surv_Panel"))
                                     {
@@ -300,8 +300,8 @@ internal class SecurityGuard : SingleRoleBase<SecurityGuard>
                     {
                         if (_doorLogConsole == null)
                         {
-                            Il2CppArrayBase<SystemConsole> consoles = UnityObject.FindObjectsOfType<SystemConsole>();
-                            for (int i = 0; i < consoles.Length; i++)
+                            var consoles = UnityObject.FindObjectsOfType<SystemConsole>();
+                            for (var i = 0; i < consoles.Length; i++)
                             {
                                 if (consoles[i].gameObject.name.Contains("SurvLogConsole"))
                                 {

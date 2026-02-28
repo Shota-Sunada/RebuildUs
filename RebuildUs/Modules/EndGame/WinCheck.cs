@@ -48,10 +48,10 @@ internal static partial class EndGameMain
         {
             return false;
         }
-        Dictionary<SystemTypes, UnityObject> systems = MapUtilities.Systems;
-        if (systems.TryGetValue(SystemTypes.LifeSupp, out UnityObject systemType) && systemType != null)
+        var systems = MapUtilities.Systems;
+        if (systems.TryGetValue(SystemTypes.LifeSupp, out var systemType) && systemType != null)
         {
-            LifeSuppSystemType lifeSuppSystemType = systemType.TryCast<LifeSuppSystemType>();
+            var lifeSuppSystemType = systemType.TryCast<LifeSuppSystemType>();
             if (lifeSuppSystemType is
                 {
                     Countdown: < 0f,
@@ -64,12 +64,12 @@ internal static partial class EndGameMain
             }
         }
 
-        if (!systems.TryGetValue(SystemTypes.Reactor, out UnityObject reactor) && !systems.TryGetValue(SystemTypes.Laboratory, out reactor)
+        if (!systems.TryGetValue(SystemTypes.Reactor, out var reactor) && !systems.TryGetValue(SystemTypes.Laboratory, out reactor)
             || reactor == null)
         {
             return false;
         }
-        ICriticalSabotage criticalSystem = reactor.TryCast<ICriticalSabotage>();
+        var criticalSystem = reactor.TryCast<ICriticalSabotage>();
         if (criticalSystem is not
             {
                 Countdown: < 0f,
@@ -114,7 +114,7 @@ internal static partial class EndGameMain
             return false;
         }
 
-        GameOverReason endReason = GameData.LastDeathReason switch
+        var endReason = GameData.LastDeathReason switch
         {
             DeathReason.Exile => GameOverReason.ImpostorsByVote,
             DeathReason.Kill => GameOverReason.ImpostorsByKill,

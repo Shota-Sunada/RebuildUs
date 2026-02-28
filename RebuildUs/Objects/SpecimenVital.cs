@@ -25,7 +25,7 @@ internal abstract class SpecimenVital
         {
             return;
         }
-        Transform transform = panel.GetComponent<Transform>();
+        var transform = panel.GetComponent<Transform>();
         transform.SetPositionAndRotation(Pos, transform.rotation);
         _flag = true;
     }

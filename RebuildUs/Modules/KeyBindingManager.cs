@@ -59,13 +59,13 @@ internal static class KeyBindingManager
 
     internal static Sprite GetKeySprite(KeyCode keyCode)
     {
-        return AllKeyCodes.TryGetValue(keyCode, out KeyCodeData data) ? data.GetSprite() : null;
+        return AllKeyCodes.TryGetValue(keyCode, out var data) ? data.GetSprite() : null;
     }
 
     internal static void Load()
     {
         KeyInputTexture kit = new("KeyBindCharacters");
-        for (int i = 0; i < 10; i++)
+        for (var i = 0; i < 10; i++)
         {
             _ = new KeyCodeData(KeyCode.Alpha0 + i, i.ToString(), kit, i);
         }
@@ -88,13 +88,13 @@ internal static class KeyBindingManager
         _ = new KeyCodeData(KeyCode.Delete, "Del", kit, 7);
 
         kit = new("KeyBindCharacters1");
-        for (KeyCode key = KeyCode.A; key <= KeyCode.Z; key++)
+        for (var key = KeyCode.A; key <= KeyCode.Z; key++)
         {
             _ = new KeyCodeData(key, ((char)('A' + key - KeyCode.A)).ToString(), kit, key - KeyCode.A);
         }
 
         kit = new("KeyBindCharacters2");
-        for (int i = 0; i < 12; i++)
+        for (var i = 0; i < 12; i++)
         {
             _ = new KeyCodeData(KeyCode.F1 + i, "F" + (i + 1), kit, i);
         }
@@ -148,7 +148,7 @@ internal static class KeyBindingManager
             if (_texture == null || !_texture)
             {
                 // In RebuildUs, we use AssetLoader to get sprites/textures
-                Sprite sprite = AssetLoader.GetKeyBindTexture(_address);
+                var sprite = AssetLoader.GetKeyBindTexture(_address);
                 if (sprite != null)
                 {
                     _texture = sprite.texture;
@@ -184,7 +184,7 @@ internal static class KeyBindingManager
             {
                 return _sprite;
             }
-            Texture2D tex = Texture.GetTexture();
+            var tex = Texture.GetTexture();
             if (tex != null)
             {
                 _sprite = Sprite.Create(tex, new(0f, tex.height - 19f * (TextureNum + 1), 18f, 19f), new(0.5f, 0.5f), 100f);

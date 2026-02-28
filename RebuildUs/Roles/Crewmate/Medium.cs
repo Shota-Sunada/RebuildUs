@@ -55,7 +55,7 @@ internal class Medium : MultiRoleBase<Medium>
         }
         if (_souls != null)
         {
-            foreach (SpriteRenderer t in _souls)
+            foreach (var t in _souls)
             {
                 if (t != null && t.gameObject != null)
                 {
@@ -70,9 +70,9 @@ internal class Medium : MultiRoleBase<Medium>
         {
             return;
         }
-        for (int i = 0; i < FeatureDeadBodies.Count; i++)
+        for (var i = 0; i < FeatureDeadBodies.Count; i++)
         {
-            (DeadPlayer _, Vector3 ps) = FeatureDeadBodies[i];
+            (var _, var ps) = FeatureDeadBodies[i];
             GameObject s = new("Soul")
             {
                 transform =
@@ -81,7 +81,7 @@ internal class Medium : MultiRoleBase<Medium>
                 },
                 layer = 5,
             };
-            SpriteRenderer rend = s.AddComponent<SpriteRenderer>();
+            var rend = s.AddComponent<SpriteRenderer>();
             s.AddSubmergedComponent(SubmergedCompatibility.Classes.ELEVATOR_MOVER);
             rend.sprite = AssetLoader.Soul;
             _souls?.Add(rend);
@@ -105,12 +105,12 @@ internal class Medium : MultiRoleBase<Medium>
             return;
         }
         DeadPlayer target = null;
-        Vector2 truePosition = PlayerControl.LocalPlayer.GetTruePosition();
-        float closestDistance = float.MaxValue;
-        float usableDistance = MapUtilities.CachedShipStatus.AllVents[0].UsableDistance;
-        foreach ((DeadPlayer dp, Vector3 ps) in DeadBodies)
+        var truePosition = PlayerControl.LocalPlayer.GetTruePosition();
+        var closestDistance = float.MaxValue;
+        var usableDistance = MapUtilities.CachedShipStatus.AllVents[0].UsableDistance;
+        foreach ((var dp, var ps) in DeadBodies)
         {
-            float distance = Vector2.Distance(ps, truePosition);
+            var distance = Vector2.Distance(ps, truePosition);
             if (!(distance <= usableDistance) || !(distance < closestDistance))
             {
                 continue;
@@ -171,9 +171,9 @@ internal class Medium : MultiRoleBase<Medium>
                 {
                     return;
                 }
-                string msg = "";
+                var msg = "";
 
-                int randomNumber = RebuildUs.Rnd.Next(4);
+                var randomNumber = RebuildUs.Rnd.Next(4);
                 if (Local._target.KillerIfExisting != null)
                 {
                     if (Helpers.PlayerById(Local._target.KillerIfExisting.PlayerId).HasModifier(ModifierType.Mini))
@@ -182,11 +182,11 @@ internal class Medium : MultiRoleBase<Medium>
                     }
                 }
 
-                string typeOfColor = Helpers.IsLighterColor(Local._target.KillerIfExisting.Data.DefaultOutfit.ColorId)
+                var typeOfColor = Helpers.IsLighterColor(Local._target.KillerIfExisting.Data.DefaultOutfit.ColorId)
                     ? Tr.Get(TrKey.DetectiveColorLight)
                     : Tr.Get(TrKey.DetectiveColorDark);
-                float timeSinceDeath = (float)(MeetingStartTime - Local._target.TimeOfDeath).TotalMilliseconds;
-                string name = " (" + Local._target.Player.Data.PlayerName + ")";
+                var timeSinceDeath = (float)(MeetingStartTime - Local._target.TimeOfDeath).TotalMilliseconds;
+                var name = " (" + Local._target.Player.Data.PlayerName + ")";
 
                 msg = randomNumber == 0
                     ?
@@ -201,7 +201,7 @@ internal class Medium : MultiRoleBase<Medium>
 
                 // Excludes mini
 
-                bool censorChat = DataManager.Settings.Multiplayer.CensorChat;
+                var censorChat = DataManager.Settings.Multiplayer.CensorChat;
                 if (censorChat)
                 {
                     DataManager.Settings.Multiplayer.CensorChat = false;
@@ -214,10 +214,10 @@ internal class Medium : MultiRoleBase<Medium>
                 {
                     return;
                 }
-                float closestDistance = float.MaxValue;
+                var closestDistance = float.MaxValue;
                 SpriteRenderer target = null;
 
-                foreach ((DeadPlayer db, Vector3 ps) in DeadBodies)
+                foreach ((var db, var ps) in DeadBodies)
                 {
                     if (db != Local._target)
                     {
@@ -227,9 +227,9 @@ internal class Medium : MultiRoleBase<Medium>
                     break;
                 }
 
-                foreach (SpriteRenderer rend in _souls)
+                foreach (var rend in _souls)
                 {
-                    float distance = Vector2.Distance(rend.transform.position, PlayerControl.LocalPlayer.GetTruePosition());
+                    var distance = Vector2.Distance(rend.transform.position, PlayerControl.LocalPlayer.GetTruePosition());
                     if (!(distance < closestDistance))
                     {
                         continue;
@@ -243,7 +243,7 @@ internal class Medium : MultiRoleBase<Medium>
                     {
                         if (target != null)
                         {
-                            Color tmp = target.color;
+                            var tmp = target.color;
                             tmp.a = Mathf.Clamp01(1 - p);
                             target.color = tmp;
                         }

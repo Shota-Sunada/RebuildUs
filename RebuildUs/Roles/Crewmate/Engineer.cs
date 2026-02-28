@@ -64,8 +64,8 @@ internal class Engineer : MultiRoleBase<Engineer>
 
     private static bool CouldUse()
     {
-        bool sabotageActive = false;
-        foreach (PlayerTask task in PlayerControl.LocalPlayer.myTasks.GetFastEnumerator())
+        var sabotageActive = false;
+        foreach (var task in PlayerControl.LocalPlayer.myTasks.GetFastEnumerator())
         {
             if (task.TaskType is not (TaskTypes.FixLights
                                       or TaskTypes.RestoreOxy
@@ -98,7 +98,7 @@ internal class Engineer : MultiRoleBase<Engineer>
         sender.Write(PlayerControl.LocalPlayer.PlayerId);
         RPCProcedure.EngineerUsedRepair(PlayerControl.LocalPlayer.PlayerId);
 
-        foreach (PlayerTask task in PlayerControl.LocalPlayer.myTasks.GetFastEnumerator())
+        foreach (var task in PlayerControl.LocalPlayer.myTasks.GetFastEnumerator())
         {
             switch (task.TaskType)
             {

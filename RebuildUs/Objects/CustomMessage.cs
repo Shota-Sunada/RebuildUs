@@ -8,13 +8,13 @@ internal sealed class CustomMessage
 
     internal CustomMessage(string message, float duration)
     {
-        RoomTracker roomTracker = FastDestroyableSingleton<HudManager>.Instance?.roomTracker;
+        var roomTracker = FastDestroyableSingleton<HudManager>.Instance?.roomTracker;
         if (roomTracker != null)
         {
-            GameObject gameObject = UnityObject.Instantiate(roomTracker.gameObject, FastDestroyableSingleton<HudManager>.Instance.transform, true);
+            var gameObject = UnityObject.Instantiate(roomTracker.gameObject, FastDestroyableSingleton<HudManager>.Instance.transform, true);
 
             UnityObject.DestroyImmediate(gameObject.GetComponent<RoomTracker>());
-            TMP_Text text = gameObject.GetComponent<TMP_Text>();
+            var text = gameObject.GetComponent<TMP_Text>();
             text.text = Tr.GetDynamic(message);
 
             // Use local position to place it in the player's view instead of the world location
@@ -28,7 +28,7 @@ internal sealed class CustomMessage
                     {
                         return;
                     }
-                    bool even = (int)(p * duration / 0.25f) % 2 == 0; // Bool flips every 0.25 seconds
+                    var even = (int)(p * duration / 0.25f) % 2 == 0; // Bool flips every 0.25 seconds
                     text.color = even ? YellowColor : Color.red;
 
                     if (!Mathf.Approximately(p, 1f))

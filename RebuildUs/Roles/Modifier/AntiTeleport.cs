@@ -24,7 +24,7 @@ internal class AntiTeleport : ModifierBase<AntiTeleport>
         get
         {
             List<PlayerControl> validPlayers = [];
-            foreach (PlayerControl player in PlayerControl.AllPlayerControls.GetFastEnumerator())
+            foreach (var player in PlayerControl.AllPlayerControls.GetFastEnumerator())
             {
                 if (!player.HasModifier(ModifierType.AntiTeleport))
                 {

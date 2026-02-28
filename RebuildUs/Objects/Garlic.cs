@@ -23,9 +23,9 @@ internal sealed class Garlic
         GarlicObject.transform.position = position;
         _background.transform.localPosition = new(0, 0, -1f); // before player
 
-        SpriteRenderer garlicRenderer = GarlicObject.AddComponent<SpriteRenderer>();
+        var garlicRenderer = GarlicObject.AddComponent<SpriteRenderer>();
         garlicRenderer.sprite = AssetLoader.Garlic;
-        SpriteRenderer backgroundRenderer = _background.AddComponent<SpriteRenderer>();
+        var backgroundRenderer = _background.AddComponent<SpriteRenderer>();
         backgroundRenderer.sprite = AssetLoader.GarlicBackground;
 
         GarlicObject.SetActive(true);
@@ -39,7 +39,7 @@ internal sealed class Garlic
 
     internal static void UpdateAll()
     {
-        foreach (Garlic t in Garlics)
+        foreach (var t in Garlics)
         {
             t?.Update();
         }

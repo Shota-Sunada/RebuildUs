@@ -38,7 +38,7 @@ internal static class Admin
     private static bool FilterAdmin(SystemTypes type)
     {
         // イビルハッカーのアドミンは今まで通り
-        PlayerControl lp = PlayerControl.LocalPlayer;
+        var lp = PlayerControl.LocalPlayer;
         if (lp != null && (lp.IsRole(RoleType.EvilHacker) || EvilHacker.IsInherited()))
         {
             return true;
@@ -52,12 +52,12 @@ internal static class Admin
         {
             return true;
         }
-        string roomName = _room.name;
+        var roomName = _room.name;
         switch (roomName)
         {
             case "Cockpit":
                 {
-                    foreach (SystemTypes t in FilterCockpitAdmin)
+                    foreach (var t in FilterCockpitAdmin)
                     {
                         if (t == type)
                         {
@@ -69,7 +69,7 @@ internal static class Admin
                 }
             case "Records":
                 {
-                    foreach (SystemTypes t in FilterRecordsAdmin)
+                    foreach (var t in FilterRecordsAdmin)
                     {
                         if (t == type)
                         {
@@ -166,7 +166,7 @@ internal static class Admin
                 {
                     return false;
                 }
-                foreach (CounterArea ca in __instance.CountAreas)
+                foreach (var ca in __instance.CountAreas)
                 {
                     ca.UpdateCount(0);
                 }
@@ -177,14 +177,14 @@ internal static class Admin
 
             _clearedIcons = false;
             _outOfTime.gameObject.SetActive(false);
-            string timeString = TimeSpan.FromSeconds(MapSettings.RestrictAdminTime).ToString(@"mm\:ss\.ff");
+            var timeString = TimeSpan.FromSeconds(MapSettings.RestrictAdminTime).ToString(@"mm\:ss\.ff");
             _timeRemaining.text = string.Format(Tr.Get(TrKey.TimeRemaining), timeString);
             //TimeRemaining.color = MapOptions.restrictAdminTime > 10f ? Palette.AcceptedGreen : Palette.ImpostorRed;
             _timeRemaining.gameObject.SetActive(true);
         }
 
-        bool commsActive = false;
-        foreach (PlayerTask task in PlayerControl.LocalPlayer.myTasks.GetFastEnumerator())
+        var commsActive = false;
+        foreach (var task in PlayerControl.LocalPlayer.myTasks.GetFastEnumerator())
         {
             if (task.TaskType == TaskTypes.FixComms)
             {
@@ -213,34 +213,34 @@ internal static class Admin
                 break;
         }
 
-        foreach (CounterArea counterArea in __instance.CountAreas)
+        foreach (var counterArea in __instance.CountAreas)
         {
             List<Color> roomColors = [];
             _playerColors.Add(counterArea.RoomType, roomColors);
 
             if (!commsActive && counterArea.RoomType > SystemTypes.Hallway)
             {
-                PlainShipRoom plainShipRoom = MapUtilities.CachedShipStatus.FastRooms[counterArea.RoomType];
+                var plainShipRoom = MapUtilities.CachedShipStatus.FastRooms[counterArea.RoomType];
 
                 if (plainShipRoom != null && plainShipRoom.roomArea)
                 {
-                    int num = plainShipRoom.roomArea.OverlapCollider(__instance.filter, __instance.buffer);
+                    var num = plainShipRoom.roomArea.OverlapCollider(__instance.filter, __instance.buffer);
                     HashSet<byte> countedPlayers = [];
                     HashSet<int> countedDeadBodies = [];
-                    int num2 = 0;
+                    var num2 = 0;
 
                     // ロミジュリと絵画の部屋をアドミンの対象から外す
                     // アドミン毎に表示する範囲を制限する
-                    bool forceZero = CustomOptionHolder.AirshipOldAdmin.GetBool()
+                    var forceZero = CustomOptionHolder.AirshipOldAdmin.GetBool()
                                      && counterArea.RoomType is SystemTypes.Ventilation or SystemTypes.HallOfPortraits
                                      || !FilterAdmin(counterArea.RoomType);
 
-                    for (int j = 0; j < num; j++)
+                    for (var j = 0; j < num; j++)
                     {
-                        Collider2D collider2D = __instance.buffer[j];
+                        var collider2D = __instance.buffer[j];
                         if (collider2D.tag != "DeadBody")
                         {
-                            PlayerControl component = collider2D.GetComponent<PlayerControl>();
+                            var component = collider2D.GetComponent<PlayerControl>();
                             if (!component || component.Data == null || component.Data.Disconnected || component.Data.IsDead)
                             {
                                 continue;
@@ -258,7 +258,7 @@ internal static class Admin
                             Color color = Palette.PlayerColors[component.Data.DefaultOutfit.ColorId];
                             if (Hacker.OnlyColorType)
                             {
-                                int id = Mathf.Max(0, Palette.PlayerColors.IndexOf(color));
+                                var id = Mathf.Max(0, Palette.PlayerColors.IndexOf(color));
                                 color = Helpers.IsLighterColor((byte)id) ? Palette.PlayerColors[7] : Palette.PlayerColors[6];
                             }
 
@@ -266,17 +266,17 @@ internal static class Admin
                         }
                         else
                         {
-                            DeadBody component = collider2D.GetComponent<DeadBody>();
+                            var component = collider2D.GetComponent<DeadBody>();
                             if (!component || !countedDeadBodies.Add(component.GetInstanceID()))
                             {
                                 continue;
                             }
-                            NetworkedPlayerInfo playerInfo = GameData.Instance.GetPlayerById(component.ParentId);
+                            var playerInfo = GameData.Instance.GetPlayerById(component.ParentId);
                             if (playerInfo == null)
                             {
                                 continue;
                             }
-                            Color32 color = Palette.PlayerColors[playerInfo.Object.CurrentOutfit.ColorId];
+                            var color = Palette.PlayerColors[playerInfo.Object.CurrentOutfit.ColorId];
                             if (Hacker.OnlyColorType)
                             {
                                 color = Helpers.IsLighterColor(playerInfo.Object.CurrentOutfit.ColorId)
@@ -336,12 +336,15 @@ internal static class Admin
 
         if (!_map)
         {
-            _map = DestroyableSingleton<MapBehaviour>
-                   .Instance
-                   .gameObject
-                   .GetComponentsInChildren<SpriteRenderer>()
-                   .FirstOrDefault(x => x.name == "Background")
-                   ?.gameObject;
+            var renderers = MapBehaviour.Instance.gameObject.GetComponentsInChildren<SpriteRenderer>();
+
+            foreach (var rend in renderers)
+            {
+                if (rend.name is "Background")
+                {
+                    _map = rend.gameObject;
+                }
+            }
         }
 
         if (!_newMap)
@@ -352,7 +355,7 @@ internal static class Admin
             }
         }
 
-        SpriteRenderer renderer = _newMap.GetComponent<SpriteRenderer>();
+        var renderer = _newMap.GetComponent<SpriteRenderer>();
         switch (_room.name)
         {
             case "Cockpit":
@@ -395,17 +398,17 @@ internal static class Admin
     internal static void UpdateCount(CounterArea __instance)
     {
         // Hacker display saved colors on the admin panel
-        bool showHackerInfo = PlayerControl.LocalPlayer.IsRole(RoleType.Hacker) && Hacker.HackerTimer > 0;
-        if (!_playerColors.TryGetValue(__instance.RoomType, out List<Color> colors))
+        var showHackerInfo = PlayerControl.LocalPlayer.IsRole(RoleType.Hacker) && Hacker.HackerTimer > 0;
+        if (!_playerColors.TryGetValue(__instance.RoomType, out var colors))
         {
             return;
         }
         List<Color> impostorColors = [];
         List<Color> deadBodyColors = [];
-        foreach (PlayerControl p in PlayerControl.AllPlayerControls.GetFastEnumerator())
+        foreach (var p in PlayerControl.AllPlayerControls.GetFastEnumerator())
         {
             // var color = p.myRend.material.GetColor("_BodyColor");
-            Color32 color = Palette.PlayerColors[p.Data.DefaultOutfit.ColorId];
+            var color = Palette.PlayerColors[p.Data.DefaultOutfit.ColorId];
             if (p.IsTeamImpostor())
             {
                 impostorColors.Add(color);
@@ -416,10 +419,10 @@ internal static class Admin
             }
         }
 
-        for (int i = 0; i < __instance.myIcons.Count; i++)
+        for (var i = 0; i < __instance.myIcons.Count; i++)
         {
-            PoolableBehavior icon = __instance.myIcons[i];
-            SpriteRenderer renderer = icon.GetComponent<SpriteRenderer>();
+            var icon = __instance.myIcons[i];
+            var renderer = icon.GetComponent<SpriteRenderer>();
 
             if (renderer == null)
             {
@@ -436,9 +439,9 @@ internal static class Admin
             if (showHackerInfo && colors.Count > i)
             {
                 renderer.material = _newMat;
-                Color color = colors[i];
+                var color = colors[i];
                 renderer.material.SetColor(BodyColor, color);
-                int id = Palette.PlayerColors.IndexOf(color);
+                var id = Palette.PlayerColors.IndexOf(color);
                 if (id < 0)
                 {
                     renderer.material.SetColor(BackColor, color);
@@ -453,13 +456,13 @@ internal static class Admin
             else if ((PlayerControl.LocalPlayer.IsRole(RoleType.EvilHacker) || EvilHacker.IsInherited()) && EvilHacker.CanHasBetterAdmin)
             {
                 renderer.material = _newMat;
-                Color color = colors[i];
+                var color = colors[i];
                 if (impostorColors.Contains(color))
                 {
                     color = Palette.ImpostorRed;
 
                     renderer.material.SetColor(BodyColor, color);
-                    int id = Palette.PlayerColors.IndexOf(color);
+                    var id = Palette.PlayerColors.IndexOf(color);
                     if (id < 0)
                     {
                         renderer.material.SetColor(BackColor, color);
@@ -475,7 +478,7 @@ internal static class Admin
                 {
                     color = Palette.Black;
                     renderer.material.SetColor(BodyColor, color);
-                    int id = Palette.PlayerColors.IndexOf(color);
+                    var id = Palette.PlayerColors.IndexOf(color);
                     if (id < 0)
                     {
                         renderer.material.SetColor(BackColor, color);

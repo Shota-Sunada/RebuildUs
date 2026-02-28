@@ -6,7 +6,7 @@ internal static class RoleBehaviours
     {
         internal bool CanUseVents()
         {
-            bool roleCouldUse = false;
+            var roleCouldUse = false;
             if (player.IsRole(RoleType.Engineer)
                 || Jackal.CanUseVents && player.IsRole(RoleType.Jackal)
                 || Sidekick.CanUseVents && player.IsRole(RoleType.Sidekick)
@@ -45,7 +45,7 @@ internal static class RoleBehaviours
 
         internal bool CanSabotage()
         {
-            bool roleCouldUse = false;
+            var roleCouldUse = false;
             if (Madmate.CanSabotage && player.HasModifier(ModifierType.Madmate)
                 || MadmateRole.CanSabotage && player.IsRole(RoleType.Madmate)
                 || CreatedMadmate.CanSabotage && player.HasModifier(ModifierType.CreatedMadmate)

@@ -13,7 +13,7 @@ internal sealed class Xoshiro256PlusPlus : System.Random
 
     private void Seed(int seed)
     {
-        ulong s = (ulong)seed;
+        var s = (ulong)seed;
         _s0 = SplitMix64(ref s);
         _s1 = SplitMix64(ref s);
         _s2 = SplitMix64(ref s);
@@ -22,7 +22,7 @@ internal sealed class Xoshiro256PlusPlus : System.Random
 
     private static ulong SplitMix64(ref ulong x)
     {
-        ulong z = x += 0x9e3779b97f4a7c15;
+        var z = x += 0x9e3779b97f4a7c15;
         z = (z ^ z >> 30) * 0xbf58476d1ce4e5b9;
         z = (z ^ z >> 27) * 0x94d049bb133111eb;
         return z ^ z >> 31;
@@ -35,9 +35,9 @@ internal sealed class Xoshiro256PlusPlus : System.Random
 
     private ulong NextUInt64()
     {
-        ulong result = Rotl(_s0 + _s3, 23) + _s0;
+        var result = Rotl(_s0 + _s3, 23) + _s0;
 
-        ulong t = _s1 << 17;
+        var t = _s1 << 17;
 
         _s2 ^= _s0;
         _s3 ^= _s1;
@@ -93,11 +93,11 @@ internal sealed class Xoshiro256PlusPlus : System.Random
         {
             throw new ArgumentNullException(nameof(buffer));
         }
-        int i = 0;
+        var i = 0;
         while (i < buffer.Length)
         {
-            ulong r = NextUInt64();
-            for (int j = 0; j < 8 && i < buffer.Length; j++)
+            var r = NextUInt64();
+            for (var j = 0; j < 8 && i < buffer.Length; j++)
             {
                 buffer[i++] = (byte)(r & 0xFF);
                 r >>= 8;

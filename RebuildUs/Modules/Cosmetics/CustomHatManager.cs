@@ -56,8 +56,8 @@ internal static class CustomHatManager
 
     internal static HatData CreateHatBehaviour(CustomHat ch, bool testOnly = false)
     {
-        HatViewData viewData = ScriptableObject.CreateInstance<HatViewData>();
-        HatData hat = ScriptableObject.CreateInstance<HatData>();
+        var viewData = ScriptableObject.CreateInstance<HatViewData>();
+        var hat = ScriptableObject.CreateInstance<HatData>();
 
         viewData.MainImage = CreateHatSprite(ch.Resource) ?? throw new FileNotFoundException("File not downloaded yet");
         viewData.FloorImage = viewData.MainImage;
@@ -118,7 +118,7 @@ internal static class CustomHatManager
 
     private static Sprite CreateHatSprite(string path)
     {
-        Texture2D texture = Helpers.LoadTextureFromDisk(Path.Combine(HatsDirectory, path));
+        var texture = Helpers.LoadTextureFromDisk(Path.Combine(HatsDirectory, path));
         if (texture == null)
         {
             return null;
@@ -142,11 +142,11 @@ internal static class CustomHatManager
         Dictionary<string, string> backFlips = [];
         Dictionary<string, string> climbs = [];
 
-        foreach (string fileName in fileNames)
+        foreach (var fileName in fileNames)
         {
-            int index = fileName.LastIndexOf("\\", StringComparison.InvariantCulture) + 1;
-            string s = fromDisk ? fileName[index..].Split('.')[0] : fileName.Split('.')[3];
-            string[] p = s.Split('_');
+            var index = fileName.LastIndexOf("\\", StringComparison.InvariantCulture) + 1;
+            var s = fromDisk ? fileName[index..].Split('.')[0] : fileName.Split('.')[3];
+            var p = s.Split('_');
             HashSet<string> options = [.. p];
             if (options.Contains("back") && options.Contains("flip"))
             {
@@ -179,12 +179,12 @@ internal static class CustomHatManager
 
         List<CustomHat> hats = [];
 
-        foreach ((string k, CustomHat hat) in fronts)
+        foreach ((var k, var hat) in fronts)
         {
-            backs.TryGetValue(k, out string backResource);
-            climbs.TryGetValue(k, out string climbResource);
-            flips.TryGetValue(k, out string flipResource);
-            backFlips.TryGetValue(k, out string backFlipResource);
+            backs.TryGetValue(k, out var backResource);
+            climbs.TryGetValue(k, out var climbResource);
+            flips.TryGetValue(k, out var flipResource);
+            backFlips.TryGetValue(k, out var backFlipResource);
             if (backResource != null)
             {
                 hat.BackResource = backResource;
@@ -213,7 +213,7 @@ internal static class CustomHatManager
 
     internal static List<CustomHat> SanitizeHats(SkinsConfigFile response)
     {
-        foreach (CustomHat hat in response.Hats)
+        foreach (var hat in response.Hats)
         {
             hat.Resource = SanitizeFileName(hat.Resource);
             hat.BackResource = SanitizeFileName(hat.BackResource);
@@ -238,10 +238,10 @@ internal static class CustomHatManager
 
         StringBuilder sb = new();
         // We only want to sanitize the part before the .png extension
-        int nameLen = path.Length - 4;
-        for (int i = 0; i < nameLen; i++)
+        var nameLen = path.Length - 4;
+        for (var i = 0; i < nameLen; i++)
         {
-            char c = path[i];
+            var c = path[i];
             if (c is '\\' or '/' or '*' or '.')
             {
                 // Skip these characters or handle '..'
@@ -262,14 +262,14 @@ internal static class CustomHatManager
 
     private static bool ResourceRequireDownload(string resFile, string resHash, HashAlgorithm algorithm)
     {
-        string filePath = Path.Combine(HatsDirectory, resFile);
+        var filePath = Path.Combine(HatsDirectory, resFile);
         if (resHash == null || !File.Exists(filePath))
         {
             return true;
         }
 
-        using FileStream stream = File.OpenRead(filePath);
-        string hash = BitConverter.ToString(algorithm.ComputeHash(stream)).Replace("-", string.Empty).ToLowerInvariant();
+        using var stream = File.OpenRead(filePath);
+        var hash = BitConverter.ToString(algorithm.ComputeHash(stream)).Replace("-", string.Empty).ToLowerInvariant();
         return !resHash.Equals(hash);
     }
 
@@ -278,7 +278,7 @@ internal static class CustomHatManager
         using MD5 algorithm = MD5.Create();
         List<string> toDownload = [];
 
-        foreach (CustomHat hat in hats)
+        foreach (var hat in hats)
         {
             if (hat.Resource != null && ResourceRequireDownload(hat.Resource, hat.ResHashA, algorithm))
             {

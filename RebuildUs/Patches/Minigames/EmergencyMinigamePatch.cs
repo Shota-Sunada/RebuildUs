@@ -9,14 +9,14 @@ internal static class EmergencyMinigamePatch
     [HarmonyPatch(typeof(EmergencyMinigame), nameof(EmergencyMinigame.Update))]
     internal static void UpdatePostfix(EmergencyMinigame __instance)
     {
-        PlayerControl lp = PlayerControl.LocalPlayer;
+        var lp = PlayerControl.LocalPlayer;
         if (lp == null)
         {
             return;
         }
 
-        bool roleCanCallEmergency = true;
-        TrKey statusTextKey = TrKey.None;
+        var roleCanCallEmergency = true;
+        var statusTextKey = TrKey.None;
 
         if (lp.IsRole(RoleType.Jester) && !Jester.CanCallEmergency)
         {
@@ -45,9 +45,9 @@ internal static class EmergencyMinigamePatch
         {
             return;
         }
-        int localRemaining = lp.RemainingEmergencies;
-        int teamRemaining = Mathf.Max(0, MapSettings.MaxNumberOfMeetings - MapSettings.MeetingsCount);
-        int remaining = Mathf.Min(localRemaining, lp.IsRole(RoleType.Mayor) ? 1 : teamRemaining);
+        var localRemaining = lp.RemainingEmergencies;
+        var teamRemaining = Mathf.Max(0, MapSettings.MaxNumberOfMeetings - MapSettings.MeetingsCount);
+        var remaining = Mathf.Min(localRemaining, lp.IsRole(RoleType.Mayor) ? 1 : teamRemaining);
 
         EmergencyStringBuilder.Clear();
         EmergencyStringBuilder.Append("<size=100%> ");

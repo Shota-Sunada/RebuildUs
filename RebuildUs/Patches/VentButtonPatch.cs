@@ -10,7 +10,7 @@ internal static class VentButtonPatch
     internal static void SetTargetPostfix(VentButton __instance)
     {
         // Trickster render special vent button
-        PlayerControl lp = PlayerControl.LocalPlayer;
+        var lp = PlayerControl.LocalPlayer;
         if (!lp.IsRole(RoleType.Trickster))
         {
             return;
@@ -19,7 +19,7 @@ internal static class VentButtonPatch
         {
             _defaultVentSprite = __instance.graphic.sprite;
         }
-        bool isSpecialVent = __instance.currentTarget != null
+        var isSpecialVent = __instance.currentTarget != null
                              && __instance.currentTarget.gameObject != null
                              && __instance.currentTarget.gameObject.name.StartsWith("JackInTheBoxVent_");
         __instance.graphic.sprite = isSpecialVent ? AssetLoader.TricksterVentButton : _defaultVentSprite;

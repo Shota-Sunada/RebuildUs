@@ -14,13 +14,23 @@ internal static class DeathPopup
     private const int RESULT_FALLBACK_UNAVAILABLE = 1 << 4;
     private const int RESULT_INSTANTIATION_FAILED = 1 << 5;
 
-    private static readonly FieldInfo AnyDeathPopupPrefabField = typeof(HideAndSeekManager)
-                                                                 .GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
-                                                                 .FirstOrDefault(f => typeof(HideAndSeekDeathPopup).IsAssignableFrom(f.FieldType));
+    private static readonly FieldInfo AnyDeathPopupPrefabField = FindDeathPopupField(typeof(HideAndSeekManager));
+    private static readonly FieldInfo LogicPopupPrefabField = FindDeathPopupField(typeof(LogicHnSDeathPopup));
 
-    private static readonly FieldInfo LogicPopupPrefabField = typeof(LogicHnSDeathPopup)
-                                                              .GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
-                                                              .FirstOrDefault(f => typeof(HideAndSeekDeathPopup).IsAssignableFrom(f.FieldType));
+    private static FieldInfo FindDeathPopupField(Type type)
+    {
+        var fields = type.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+        for (var i = 0; i < fields.Length; i++)
+        {
+            var f = fields[i];
+            if (typeof(HideAndSeekDeathPopup).IsAssignableFrom(f.FieldType))
+            {
+                return f;
+            }
+        }
+        return null;
+    }
+
     private static int _nextDeathIndex;
     private static int _lastPrefabResolveFrame = -RESOLVE_RETRY_INTERVAL_FRAMES;
     private static HideAndSeekDeathPopup _cachedPrefab;
@@ -47,7 +57,7 @@ internal static class DeathPopup
             return RESULT_INVALID_DEAD_PLAYER;
         }
 
-        int deathIndex = _nextDeathIndex++;
+        var deathIndex = _nextDeathIndex++;
         return TryShow(deadPlayer, deathIndex, out popupInstance);
     }
 
@@ -69,10 +79,10 @@ internal static class DeathPopup
             return RESULT_INVALID_DEATH_INDEX;
         }
 
-        HideAndSeekDeathPopup prefab = GetOrResolvePrefab();
-        Transform parent = GetOrResolveParent();
+        var prefab = GetOrResolvePrefab();
+        var parent = GetOrResolveParent();
 
-        int resolveError = RESULT_SUCCESS;
+        var resolveError = RESULT_SUCCESS;
         if (prefab == null)
         {
             resolveError |= RESULT_MISSING_PREFAB;
@@ -109,7 +119,7 @@ internal static class DeathPopup
     {
         if (hideAndSeekManager != null)
         {
-            HideAndSeekDeathPopup popup = ResolvePrefabFromManager(hideAndSeekManager);
+            var popup = ResolvePrefabFromManager(hideAndSeekManager);
             if (popup != null)
             {
                 return popup;
@@ -118,7 +128,7 @@ internal static class DeathPopup
 
         if (hideAndSeekManagerPrefab != null)
         {
-            HideAndSeekDeathPopup popup = ResolvePrefabFromManager(hideAndSeekManagerPrefab);
+            var popup = ResolvePrefabFromManager(hideAndSeekManagerPrefab);
             if (popup != null)
             {
                 return popup;
@@ -127,17 +137,17 @@ internal static class DeathPopup
 
         if (GameManager.Instance is HideAndSeekManager hnsManager)
         {
-            HideAndSeekDeathPopup popup = ResolvePrefabFromManager(hnsManager);
+            var popup = ResolvePrefabFromManager(hnsManager);
             if (popup != null)
             {
                 return popup;
             }
         }
 
-        HideAndSeekManager creatorPrefab = GameManagerCreator.Instance?.HideAndSeekManagerPrefab;
+        var creatorPrefab = GameManagerCreator.Instance?.HideAndSeekManagerPrefab;
         if (creatorPrefab != null)
         {
-            HideAndSeekDeathPopup popup = ResolvePrefabFromManager(creatorPrefab);
+            var popup = ResolvePrefabFromManager(creatorPrefab);
             if (popup != null)
             {
                 return popup;
@@ -145,9 +155,9 @@ internal static class DeathPopup
         }
 
         Object[] popups = Resources.FindObjectsOfTypeAll(Il2CppType.Of<HideAndSeekDeathPopup>());
-        foreach (Object obj in popups)
+        foreach (var obj in popups)
         {
-            HideAndSeekDeathPopup popup = obj.TryCast<HideAndSeekDeathPopup>();
+            var popup = obj.TryCast<HideAndSeekDeathPopup>();
             if (popup != null)
             {
                 return popup;
@@ -159,7 +169,7 @@ internal static class DeathPopup
 
     internal static Transform ResolveParent(HudManager hudManager = null)
     {
-        HudManager hud = hudManager ?? FastDestroyableSingleton<HudManager>.Instance;
+        var hud = hudManager ?? FastDestroyableSingleton<HudManager>.Instance;
         if (hud == null)
         {
             return null;
@@ -174,7 +184,7 @@ internal static class DeathPopup
             return _cachedPrefab;
         }
 
-        int frame = Time.frameCount;
+        var frame = Time.frameCount;
         if (frame - _lastPrefabResolveFrame < RESOLVE_RETRY_INTERVAL_FRAMES)
         {
             return null;
@@ -204,7 +214,7 @@ internal static class DeathPopup
 
         if (manager.LogicDeathPopup != null && LogicPopupPrefabField != null)
         {
-            HideAndSeekDeathPopup fromLogic = LogicPopupPrefabField.GetValue(manager.LogicDeathPopup) as HideAndSeekDeathPopup;
+            var fromLogic = LogicPopupPrefabField.GetValue(manager.LogicDeathPopup) as HideAndSeekDeathPopup;
             if (fromLogic != null)
             {
                 return fromLogic;
@@ -213,7 +223,7 @@ internal static class DeathPopup
 
         if (AnyDeathPopupPrefabField != null)
         {
-            HideAndSeekDeathPopup byType = AnyDeathPopupPrefabField.GetValue(manager) as HideAndSeekDeathPopup;
+            var byType = AnyDeathPopupPrefabField.GetValue(manager) as HideAndSeekDeathPopup;
             if (byType != null)
             {
                 return byType;

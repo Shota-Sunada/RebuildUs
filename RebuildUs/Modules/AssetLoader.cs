@@ -29,7 +29,7 @@ internal static class AssetLoader
 #nullable enable
     private static T? LoadAsset<T>(this AssetBundle assetBundle, string name) where T : UnityObject
     {
-        return assetBundle.LoadAsset(name, Il2CppType.Of<T>())?.Cast<T>() ?? throw new($"The asset was not found: {name}");
+        return assetBundle.LoadAsset(name, Il2CppType.Of<T>())?.CastFast<T>() ?? throw new($"The asset was not found: {name}");
     }
 #nullable disable
 
@@ -66,8 +66,8 @@ internal static class AssetLoader
 
     private static void LoadAnimationAssets()
     {
-        Stream resource = Assembly.GetExecutingAssembly().GetManifestResourceStream("RebuildUs.Resources.tricksteranimation");
-        AssetBundle ab = AssetBundle.LoadFromMemory(resource.ReadFully());
+        var resource = Assembly.GetExecutingAssembly().GetManifestResourceStream("RebuildUs.Resources.tricksteranimation");
+        var ab = AssetBundle.LoadFromMemory(resource.ReadFully());
 
         TricksterAnimations.Add(ab.LoadAsset<Sprite>("trickster_box_0001.png").Resize(175f));
         TricksterAnimations.Add(ab.LoadAsset<Sprite>("trickster_box_0002.png").Resize(175f));
@@ -127,8 +127,8 @@ internal static class AssetLoader
 
     private static void LoadButtonAssets()
     {
-        Stream resource = Assembly.GetExecutingAssembly().GetManifestResourceStream("RebuildUs.Resources.buttons");
-        AssetBundle ab = AssetBundle.LoadFromMemory(resource.ReadFully());
+        var resource = Assembly.GetExecutingAssembly().GetManifestResourceStream("RebuildUs.Resources.buttons");
+        var ab = AssetBundle.LoadFromMemory(resource.ReadFully());
 
         DouseButton = ab.LoadAsset<Sprite>("DouseButton.png").Resize(115f);
         EmergencyButton = ab.LoadAsset<Sprite>("EmergencyButton.png").Resize(550f);
@@ -191,8 +191,8 @@ internal static class AssetLoader
 
     private static void LoadSpriteAssets()
     {
-        Stream resource = Assembly.GetExecutingAssembly().GetManifestResourceStream("RebuildUs.Resources.sprites");
-        AssetBundle ab = AssetBundle.LoadFromMemory(resource.ReadFully());
+        var resource = Assembly.GetExecutingAssembly().GetManifestResourceStream("RebuildUs.Resources.sprites");
+        var ab = AssetBundle.LoadFromMemory(resource.ReadFully());
 
         Arrow = ab.LoadAsset<Sprite>("Arrow.png").Resize(200f);
         Garlic = ab.LoadAsset<Sprite>("Garlic.png").Resize(300f);
@@ -236,8 +236,8 @@ internal static class AssetLoader
 
     private static void LoadLocationAssets()
     {
-        Stream resource = Assembly.GetExecutingAssembly().GetManifestResourceStream("RebuildUs.Resources.locations");
-        AssetBundle ab = AssetBundle.LoadFromMemory(resource.ReadFully());
+        var resource = Assembly.GetExecutingAssembly().GetManifestResourceStream("RebuildUs.Resources.locations");
+        var ab = AssetBundle.LoadFromMemory(resource.ReadFully());
 
         ArmoryButton = ab.LoadAsset<Sprite>("ArmoryButton.png").Resize(100f);
         CockpitButton = ab.LoadAsset<Sprite>("CockpitButton.png").Resize(100f);
@@ -267,12 +267,12 @@ internal static class AssetLoader
 
     private static void LoadKeyBindAssets()
     {
-        Stream resource = Assembly.GetExecutingAssembly().GetManifestResourceStream("RebuildUs.Resources.keybinds");
+        var resource = Assembly.GetExecutingAssembly().GetManifestResourceStream("RebuildUs.Resources.keybinds");
         if (resource == null)
         {
             return;
         }
-        AssetBundle ab = AssetBundle.LoadFromMemory(resource.ReadFully());
+        var ab = AssetBundle.LoadFromMemory(resource.ReadFully());
         if (ab == null)
         {
             return;

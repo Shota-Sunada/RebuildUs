@@ -62,7 +62,7 @@ internal class Suicider : MultiRoleBase<Suicider>
 
             if (KnowsImpostors(Player))
             {
-                foreach (PlayerControl p in PlayerControl.AllPlayerControls.GetFastEnumerator())
+                foreach (var p in PlayerControl.AllPlayerControls.GetFastEnumerator())
                 {
                     if (p.IsTeamImpostor()
                         || p.IsRole(RoleType.Spy)
@@ -138,13 +138,13 @@ internal class Suicider : MultiRoleBase<Suicider>
             return false;
         }
 
-        int counter = 0;
-        int totalTasks = NumCommonTasks + NumLongTasks + NumShortTasks;
+        var counter = 0;
+        var totalTasks = NumCommonTasks + NumLongTasks + NumShortTasks;
         if (totalTasks == 0)
         {
             return true;
         }
-        foreach (NetworkedPlayerInfo.TaskInfo task in player.Data.Tasks)
+        foreach (var task in player.Data.Tasks)
         {
             if (task.Complete)
             {

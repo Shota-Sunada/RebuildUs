@@ -17,7 +17,7 @@ internal abstract class MapData
             assetReference = __instance.ShipPrefabs[0];
             asset = assetReference.LoadAsset<GameObject>();
             asset.WaitForCompletion();
-            _skeldShip = assetReference.Asset.Cast<GameObject>().GetComponent<ShipStatus>();
+            _skeldShip = assetReference.Asset.CastFast<GameObject>().GetComponent<ShipStatus>();
         }
 
         // Mira
@@ -26,7 +26,7 @@ internal abstract class MapData
             assetReference = __instance.ShipPrefabs[1];
             asset = assetReference.LoadAsset<GameObject>();
             asset.WaitForCompletion();
-            _miraHq = assetReference.Asset.Cast<GameObject>().GetComponent<ShipStatus>();
+            _miraHq = assetReference.Asset.CastFast<GameObject>().GetComponent<ShipStatus>();
         }
 
         // Polus
@@ -35,7 +35,7 @@ internal abstract class MapData
             assetReference = __instance.ShipPrefabs[2];
             asset = assetReference.LoadAsset<GameObject>();
             asset.WaitForCompletion();
-            PolusShip = assetReference.Asset.Cast<GameObject>().GetComponent<ShipStatus>();
+            PolusShip = assetReference.Asset.CastFast<GameObject>().GetComponent<ShipStatus>();
         }
 
         // AirShip
@@ -44,7 +44,7 @@ internal abstract class MapData
             assetReference = __instance.ShipPrefabs[4];
             asset = assetReference.LoadAsset<GameObject>();
             asset.WaitForCompletion();
-            _airShip = assetReference.Asset.Cast<GameObject>().GetComponent<ShipStatus>();
+            _airShip = assetReference.Asset.CastFast<GameObject>().GetComponent<ShipStatus>();
         }
     }
 }

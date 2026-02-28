@@ -61,7 +61,7 @@ internal class Detective : MultiRoleBase<Detective>
             return;
         }
         _timer = FootprintInterval;
-        foreach (PlayerControl player in PlayerControl.AllPlayerControls.GetFastEnumerator())
+        foreach (var player in PlayerControl.AllPlayerControls.GetFastEnumerator())
         {
             if (player != null && player != PlayerControl.LocalPlayer && !player.Data.IsDead && !player.inVent && !player.IsGm())
             {

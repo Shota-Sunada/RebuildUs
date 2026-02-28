@@ -37,7 +37,7 @@ internal static class PlayerControlPatch
     [HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.SetKillTimer))]
     internal static bool SetKillTimerPrefix(PlayerControl __instance, [HarmonyArgument(0)] float time)
     {
-        float baseCooldown = FloatOptionNames.KillCooldown.Get();
+        var baseCooldown = FloatOptionNames.KillCooldown.Get();
         if (baseCooldown <= 0f)
         {
             return false;
@@ -47,9 +47,9 @@ internal static class PlayerControlPatch
             return true;
         }
 
-        float multiplier = 1f;
-        float addition = 0f;
-        PlayerControl localPlayer = PlayerControl.LocalPlayer;
+        var multiplier = 1f;
+        var addition = 0f;
+        var localPlayer = PlayerControl.LocalPlayer;
         if (localPlayer != null)
         {
             if (Mini.Exists && localPlayer.HasModifier(ModifierType.Mini))
@@ -63,7 +63,7 @@ internal static class PlayerControlPatch
             }
         }
 
-        float maxCooldown = baseCooldown * multiplier + addition;
+        var maxCooldown = baseCooldown * multiplier + addition;
         __instance.killTimer = Mathf.Clamp(time, 0f, maxCooldown);
         if (FastDestroyableSingleton<HudManager>.Instance)
         {
@@ -149,7 +149,7 @@ internal static class PlayerControlPatch
         // ORIGINAL MURDER_PLAYER
         __instance.isKilling = false;
         __instance.logger.Debug($"{__instance.PlayerId} trying to murder {target.PlayerId}");
-        NetworkedPlayerInfo data = target.Data;
+        var data = target.Data;
         if (resultFlags.HasFlag(MurderResultFlags.FailedError))
         {
             return false;
@@ -158,7 +158,7 @@ internal static class PlayerControlPatch
             || resultFlags.HasFlag(MurderResultFlags.DecisionByHost) && target.protectedByGuardianId > -1)
         {
             target.protectedByGuardianThisRound = true;
-            bool flag = PlayerControl.LocalPlayer.Data.Role.Role == RoleTypes.GuardianAngel;
+            var flag = PlayerControl.LocalPlayer.Data.Role.Role == RoleTypes.GuardianAngel;
             if (flag && PlayerControl.LocalPlayer.Data.PlayerId == target.protectedByGuardianId)
             {
                 DataManager.Player.Stats.IncrementStat(StatID.Role_GuardianAngel_CrewmatesProtected);
@@ -295,7 +295,7 @@ internal static class PlayerControlPatch
             return;
         }
 
-        bool specialTeamRedExists = false;
+        var specialTeamRedExists = false;
         if (Spy.Exists)
         {
             specialTeamRedExists = true;
@@ -359,7 +359,7 @@ internal static class PlayerControlPatch
         {
             return;
         }
-        HudManager hudManager = FastDestroyableSingleton<HudManager>.Instance;
+        var hudManager = FastDestroyableSingleton<HudManager>.Instance;
         hudManager.ImpostorVentButton.Hide();
         hudManager.SabotageButton.Hide();
 
@@ -387,23 +387,23 @@ internal static class PlayerControlPatch
             return;
         }
 
-        bool jackalHighlight = Engineer.HighlightForTeamJackal && (__instance.IsRole(RoleType.Jackal) || __instance.IsRole(RoleType.Sidekick));
-        bool impostorHighlight = Engineer.HighlightForImpostors && __instance.IsTeamImpostor();
-        bool isBait = __instance.IsRole(RoleType.Bait) && __instance.IsAlive();
+        var jackalHighlight = Engineer.HighlightForTeamJackal && (__instance.IsRole(RoleType.Jackal) || __instance.IsRole(RoleType.Sidekick));
+        var impostorHighlight = Engineer.HighlightForImpostors && __instance.IsTeamImpostor();
+        var isBait = __instance.IsRole(RoleType.Bait) && __instance.IsAlive();
 
-        ShipStatus shipStatus = MapUtilities.CachedShipStatus;
+        var shipStatus = MapUtilities.CachedShipStatus;
         if (shipStatus == null || shipStatus.AllVents == null)
         {
             return;
         }
-        Il2CppReferenceArray<Vent> allVents = shipStatus.AllVents;
+        var allVents = shipStatus.AllVents;
 
         // Engineer check
-        bool anyEngineerInVent = false;
+        var anyEngineerInVent = false;
         if (jackalHighlight || impostorHighlight)
         {
-            List<PlayerControl> engineers = Engineer.AllPlayers;
-            foreach (PlayerControl t in engineers)
+            var engineers = Engineer.AllPlayers;
+            foreach (var t in engineers)
             {
                 if (t.inVent)
                 {
@@ -416,10 +416,10 @@ internal static class PlayerControlPatch
 
         // Bait check
         HashSet<int> ventsWithPlayers = [];
-        bool anyPlayerInVent = false;
+        var anyPlayerInVent = false;
         if (isBait)
         {
-            foreach (PlayerControl player in PlayerControl.AllPlayerControls.GetFastEnumerator())
+            foreach (var player in PlayerControl.AllPlayerControls.GetFastEnumerator())
             {
                 if (player == null || !player.inVent)
                 {
@@ -427,16 +427,16 @@ internal static class PlayerControlPatch
                 }
 
                 anyPlayerInVent = true;
-                Vector2 playerPos = player.GetTruePosition();
+                var playerPos = player.GetTruePosition();
                 Vent closestVent = null;
-                float minDistance = float.MaxValue;
-                foreach (Vent v in allVents)
+                var minDistance = float.MaxValue;
+                foreach (var v in allVents)
                 {
                     if (v == null)
                     {
                         continue;
                     }
-                    float dist = Vector2.Distance(v.transform.position, playerPos);
+                    var dist = Vector2.Distance(v.transform.position, playerPos);
                     if (!(dist < minDistance))
                     {
                         continue;
@@ -452,21 +452,21 @@ internal static class PlayerControlPatch
             }
         }
 
-        foreach (Vent vent in allVents)
+        foreach (var vent in allVents)
         {
             if (vent == null || vent.myRend == null)
             {
                 continue;
             }
 
-            Material mat = vent.myRend.material;
+            var mat = vent.myRend.material;
             if (mat == null)
             {
                 continue;
             }
 
-            bool highlight = false;
-            Color highlightColor = Color.white;
+            var highlight = false;
+            var highlightColor = Color.white;
 
             if ((jackalHighlight || impostorHighlight) && anyEngineerInVent)
             {
@@ -513,7 +513,7 @@ internal static class PlayerControlPatch
             return;
         }
 
-        CircleCollider2D collider = p.GetComponent<CircleCollider2D>();
+        var collider = p.GetComponent<CircleCollider2D>();
         if (collider == null)
         {
             return;
@@ -547,9 +547,9 @@ internal static class PlayerControlPatch
         {
             return;
         }
-        float growingProgress = miniRole.GrowingProgress();
-        float scale = growingProgress * 0.35f + 0.35f;
-        float correctedColliderRadius = Mini.DEFAULT_COLLIDER_RADIUS * 0.7f / scale;
+        var growingProgress = miniRole.GrowingProgress();
+        var scale = growingProgress * 0.35f + 0.35f;
+        var correctedColliderRadius = Mini.DEFAULT_COLLIDER_RADIUS * 0.7f / scale;
 
         p.transform.localScale = new(scale, scale, 1f);
         collider.radius = correctedColliderRadius;

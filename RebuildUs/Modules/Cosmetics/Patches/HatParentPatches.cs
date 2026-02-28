@@ -51,7 +51,7 @@ internal static class HatParentPatches
             {
                 return false;
             }
-            if (!__instance.TryGetCached(out HatViewData asset))
+            if (!__instance.TryGetCached(out var asset))
             {
                 return true;
             }
@@ -60,7 +60,7 @@ internal static class HatParentPatches
                 return false;
             }
 
-            HatManager hatManager = DestroyableSingleton<HatManager>.Instance;
+            var hatManager = DestroyableSingleton<HatManager>.Instance;
             if (hatManager == null)
             {
                 return false;
@@ -70,8 +70,8 @@ internal static class HatParentPatches
                 return false;
             }
 
-            HatExtension extend = __instance.Hat.GetHatExtension();
-            Material targetMaterial = asset
+            var extend = __instance.Hat.GetHatExtension();
+            var targetMaterial = asset
                                       && extend is
                                       {
                                           Adaptive: true,
@@ -89,7 +89,7 @@ internal static class HatParentPatches
                 __instance.BackLayer.sharedMaterial = targetMaterial;
             }
 
-            int colorId = __instance.matProperties.ColorId;
+            var colorId = __instance.matProperties.ColorId;
             PlayerMaterial.SetColors(colorId, __instance.FrontLayer);
             if (__instance.BackLayer && __instance.BackLayer)
             {
@@ -102,7 +102,7 @@ internal static class HatParentPatches
                 __instance.BackLayer.material.SetInt(PlayerMaterial.MaskLayer, __instance.matProperties.MaskLayer);
             }
 
-            PlayerMaterial.MaskType maskType = __instance.matProperties.MaskType;
+            var maskType = __instance.matProperties.MaskType;
             switch (maskType)
             {
                 case PlayerMaterial.MaskType.ScrollingUI:
@@ -166,7 +166,7 @@ internal static class HatParentPatches
         {
             return false;
         }
-        if (!__instance.TryGetCached(out HatViewData hatViewData))
+        if (!__instance.TryGetCached(out var hatViewData))
         {
             return true;
         }
@@ -191,7 +191,7 @@ internal static class HatParentPatches
         }
         else if (__instance.FrontLayer.sprite == hatViewData.ClimbImage || __instance.FrontLayer.sprite == hatViewData.LeftClimbImage)
         {
-            SpriteAnimNodeSync spriteAnimNodeSync = __instance.SpriteSyncNode ?? __instance.GetComponent<SpriteAnimNodeSync>();
+            var spriteAnimNodeSync = __instance.SpriteSyncNode ?? __instance.GetComponent<SpriteAnimNodeSync>();
             if (spriteAnimNodeSync)
             {
                 spriteAnimNodeSync.NodeId = 0;
@@ -205,7 +205,7 @@ internal static class HatParentPatches
     [HarmonyPrefix]
     private static bool SetFloorAnimPrefix(HatParent __instance)
     {
-        if (!__instance.TryGetCached(out HatViewData hatViewData))
+        if (!__instance.TryGetCached(out var hatViewData))
         {
             return true;
         }
@@ -237,7 +237,7 @@ internal static class HatParentPatches
     [HarmonyPrefix]
     private static bool SetClimbAnimPrefix(HatParent __instance)
     {
-        if (!__instance.TryGetCached(out HatViewData hatViewData))
+        if (!__instance.TryGetCached(out var hatViewData))
         {
             return true;
         }
@@ -255,13 +255,13 @@ internal static class HatParentPatches
     [HarmonyPrefix]
     private static bool PopulateFromHatViewDataPrefix(HatParent __instance)
     {
-        if (!__instance.TryGetCached(out HatViewData asset))
+        if (!__instance.TryGetCached(out var asset))
         {
             return true;
         }
         __instance.UpdateMaterial();
 
-        SpriteAnimNodeSync spriteAnimNodeSync = __instance.SpriteSyncNode ? __instance.SpriteSyncNode : __instance.GetComponent<SpriteAnimNodeSync>();
+        var spriteAnimNodeSync = __instance.SpriteSyncNode ? __instance.SpriteSyncNode : __instance.GetComponent<SpriteAnimNodeSync>();
         if (spriteAnimNodeSync)
         {
             spriteAnimNodeSync.NodeId = __instance.Hat.NoBounce ? 1 : 0;
@@ -299,7 +299,7 @@ internal static class HatParentPatches
 
     private static bool SetCustomHat(HatParent hatParent)
     {
-        string dirPath = Path.Combine(CustomHatManager.HatsDirectory, "Test");
+        var dirPath = Path.Combine(CustomHatManager.HatsDirectory, "Test");
         if (!Directory.Exists(dirPath))
         {
             Directory.CreateDirectory(dirPath);
@@ -309,8 +309,13 @@ internal static class HatParentPatches
             return true;
         }
         DirectoryInfo d = new(dirPath);
-        string[] filePaths = [.. d.GetFiles("*.png").Select(x => x.FullName)];
-        List<CustomHat> hats = CustomHatManager.CreateHatDetailsFromFileNames(filePaths, true);
+        var files = d.GetFiles("*.png");
+        var filePaths = new string[files.Length];
+        for (var i = 0; i < files.Length; i++)
+        {
+            filePaths[i] = files[i].FullName;
+        }
+        var hats = CustomHatManager.CreateHatDetailsFromFileNames(filePaths, true);
         if (hats.Count <= 0)
         {
             return false;

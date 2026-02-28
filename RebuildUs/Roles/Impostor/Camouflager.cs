@@ -109,7 +109,7 @@ internal class Camouflager : SingleRoleBase<Camouflager>
 
         _data.ColorId = RandomColors ? (byte)RebuildUs.Rnd.Next(0, Palette.PlayerColors.Length) : 6;
 
-        foreach (PlayerControl p in PlayerControl.AllPlayerControls.GetFastEnumerator())
+        foreach (var p in PlayerControl.AllPlayerControls.GetFastEnumerator())
         {
             if (p == null)
             {
@@ -122,8 +122,8 @@ internal class Camouflager : SingleRoleBase<Camouflager>
     internal static void ResetCamouflage()
     {
         CamouflageTimer = 0f;
-        IEnumerable<PlayerControl> players = PlayerControl.AllPlayerControls.GetFastEnumerator();
-        foreach (PlayerControl p in PlayerControl.AllPlayerControls.GetFastEnumerator())
+        var players = PlayerControl.AllPlayerControls.GetFastEnumerator();
+        foreach (var p in PlayerControl.AllPlayerControls.GetFastEnumerator())
         {
             if (p == null)
             {

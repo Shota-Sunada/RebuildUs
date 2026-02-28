@@ -26,8 +26,8 @@ internal abstract class CustomOverlays
         {
             return 0;
         }
-        int count = 1;
-        foreach (char t in text)
+        var count = 1;
+        foreach (var t in text)
         {
             if (t == '\n')
             {
@@ -41,11 +41,11 @@ internal abstract class CustomOverlays
     private static List<string> SplitToPages(string text, int maxLines)
     {
         List<string> pages = [];
-        string[] lines = text.Replace("\r\n", "\n").Split('\n');
+        var lines = text.Replace("\r\n", "\n").Split('\n');
         StringBuilder currentPage = new();
-        int currentLineCount = 0;
+        var currentLineCount = 0;
 
-        foreach (string rawLine in lines)
+        foreach (var rawLine in lines)
         {
             if (rawLine == "\f")
             {
@@ -58,8 +58,8 @@ internal abstract class CustomOverlays
                 continue;
             }
 
-            List<string> wrappedLines = WrapLine(rawLine, MAX_CHARS_PER_LINE);
-            foreach (string line in wrappedLines)
+            var wrappedLines = WrapLine(rawLine, MAX_CHARS_PER_LINE);
+            foreach (var line in wrappedLines)
             {
                 if (currentLineCount >= maxLines)
                 {
@@ -91,10 +91,10 @@ internal abstract class CustomOverlays
         }
 
         StringBuilder sb = new();
-        int visibleWidth = 0;
-        bool inTag = false;
+        var visibleWidth = 0;
+        var inTag = false;
 
-        foreach (char c in line)
+        foreach (var c in line)
         {
             if (c == '<')
             {
@@ -104,7 +104,7 @@ internal abstract class CustomOverlays
             if (!inTag)
             {
                 // Determine width: 2 for CJK/Full-width, 1 for ASCII/Half-width
-                int charWidth = c <= '\u007f' ? 1 : 2;
+                var charWidth = c <= '\u007f' ? 1 : 2;
 
                 if (visibleWidth + charWidth > maxChars && visibleWidth > 0)
                 {
@@ -138,8 +138,8 @@ internal abstract class CustomOverlays
             return;
         }
 
-        int currentPageNumber = RebuildUs.OptionsPage / 2 + 1;
-        int totalPagesNumber = (_maxOptionsPage + 1) / 2;
+        var currentPageNumber = RebuildUs.OptionsPage / 2 + 1;
+        var totalPagesNumber = (_maxOptionsPage + 1) / 2;
         _infoOverlayTitle?.text = new StringBuilder(Tr.Get(TrKey.GameOptions))
                                   .Append(" <size=80%>")
                                   .Append(Tr.Get(TrKey.CurrentPage))
@@ -161,8 +161,8 @@ internal abstract class CustomOverlays
 
     private static void AppendRoleCount(ref StringBuilder sb, string key, CustomOption minOpt, CustomOption maxOpt)
     {
-        int min = minOpt.GetSelection();
-        int max = maxOpt.GetSelection();
+        var min = minOpt.GetSelection();
+        var max = maxOpt.GetSelection();
         if (min > max)
         {
             min = max;
@@ -214,7 +214,7 @@ internal abstract class CustomOverlays
 
     private static bool InitializeOverlays()
     {
-        HudManager hudManager = FastDestroyableSingleton<HudManager>.Instance;
+        var hudManager = FastDestroyableSingleton<HudManager>.Instance;
         if (hudManager == null)
         {
             return false;
@@ -274,7 +274,7 @@ internal abstract class CustomOverlays
             _infoOverlayRulesRight.enabled = false;
         }
 
-        PlayerControl player = PlayerControl.LocalPlayer;
+        var player = PlayerControl.LocalPlayer;
         if (player == null)
         {
             return true;
@@ -285,11 +285,11 @@ internal abstract class CustomOverlays
             return true;
         }
         _optionsData = [];
-        TranslationController tr = FastDestroyableSingleton<TranslationController>.Instance;
+        var tr = FastDestroyableSingleton<TranslationController>.Instance;
         StringBuilder sb = new();
 
         // Part 1: Among Us Settings
-        int votingTime = Int32OptionNames.VotingTime.Get();
+        var votingTime = Int32OptionNames.VotingTime.Get();
         sb
             .Append("<size=120%>")
             .Append(Tr.Get(TrKey.AmongUsSettings))
@@ -369,7 +369,7 @@ internal abstract class CustomOverlays
 
         // Part 2: Role Info for Player
         sb.Clear();
-        foreach (RoleInfo r in RoleInfo.GetRoleInfoForPlayer(player))
+        foreach (var r in RoleInfo.GetRoleInfoForPlayer(player))
         {
             sb.Append("<size=150%>").Append(r.NameColored).Append("</size>");
             if (!string.IsNullOrEmpty(r.FullDescription))
@@ -405,7 +405,7 @@ internal abstract class CustomOverlays
         AppendRoleCount(ref sb, "ImpostorRoles", CustomOptionHolder.ImpostorRolesCountMin, CustomOptionHolder.ImpostorRolesCountMax);
         entries.Add(sb.ToString().TrimEnd());
 
-        foreach (CustomOption option in CustomOption.AllOptions)
+        foreach (var option in CustomOption.AllOptions)
         {
             if (IsCommonOption(option))
             {
@@ -420,8 +420,8 @@ internal abstract class CustomOverlays
             sb.AppendLine(CustomOption.OptionToString(option));
             AddChildren(option, sb);
 
-            string entryText = sb.ToString().TrimEnd();
-            int lines = CountLines(entryText);
+            var entryText = sb.ToString().TrimEnd();
+            var lines = CountLines(entryText);
             if (lines > MAX_LINES)
             {
                 _optionsData.AddRange(SplitToPages(entryText, MAX_LINES));
@@ -433,10 +433,10 @@ internal abstract class CustomOverlays
         }
 
         sb.Clear();
-        int currentLineCount = 0;
-        foreach (string e in entries)
+        var currentLineCount = 0;
+        foreach (var e in entries)
         {
-            int lines = CountLines(e);
+            var lines = CountLines(e);
             if (e == "\f" || currentLineCount + lines > MAX_LINES)
             {
                 if (sb.Length > 0)
@@ -482,7 +482,7 @@ internal abstract class CustomOverlays
         {
             return;
         }
-        foreach (CustomOption child in option.Children)
+        foreach (var child in option.Children)
         {
             if (indent)
             {
@@ -495,7 +495,7 @@ internal abstract class CustomOverlays
 
     internal static void ShowBlackBg()
     {
-        HudManager hudManager = FastDestroyableSingleton<HudManager>.Instance;
+        var hudManager = FastDestroyableSingleton<HudManager>.Instance;
         if (hudManager == null)
         {
             return;
@@ -529,8 +529,8 @@ internal abstract class CustomOverlays
             return;
         }
 
-        HudManager hudManager = FastDestroyableSingleton<HudManager>.Instance;
-        PlayerControl player = PlayerControl.LocalPlayer;
+        var hudManager = FastDestroyableSingleton<HudManager>.Instance;
+        var player = PlayerControl.LocalPlayer;
         if (MapUtilities.CachedShipStatus == null
             || player == null
             || hudManager == null
@@ -553,7 +553,7 @@ internal abstract class CustomOverlays
         hudManager.SetHudActive(false);
 
         _overlayShown = true;
-        Transform parent = MeetingHud.Instance != null ? MeetingHud.Instance.transform : hudManager.transform;
+        var parent = MeetingHud.Instance != null ? MeetingHud.Instance.transform : hudManager.transform;
 
         _infoUnderlay.transform.SetParent(parent);
         _infoUnderlay.sprite = AssetLoader.White;
@@ -586,7 +586,7 @@ internal abstract class CustomOverlays
             return;
         }
 
-        HudManager hudManager = FastDestroyableSingleton<HudManager>.Instance;
+        var hudManager = FastDestroyableSingleton<HudManager>.Instance;
         if (hudManager == null)
         {
             return;
@@ -658,8 +658,8 @@ internal abstract class CustomOverlays
     {
         internal static void Postfix(KeyboardJoystick __instance)
         {
-            ChatController cc = DestroyableSingleton<ChatController>.Instance;
-            bool isChatOpen = cc != null && cc.IsOpenOrOpening;
+            var cc = DestroyableSingleton<ChatController>.Instance;
+            var isChatOpen = cc != null && cc.IsOpenOrOpening;
 
             if (Input.GetKeyDown(KeyCode.H) && AmongUsClient.Instance.GameState == InnerNetClient.GameStates.Started && !isChatOpen)
             {

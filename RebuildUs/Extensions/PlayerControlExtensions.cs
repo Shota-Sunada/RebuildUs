@@ -20,12 +20,12 @@ internal static class PlayerControlExtensions
                 return;
             }
 
-            MeetingHud meeting = MeetingHud.Instance;
-            bool hasMeeting = meeting?.playerStates != null;
+            var meeting = MeetingHud.Instance;
+            var hasMeeting = meeting?.playerStates != null;
             if (hasMeeting)
             {
                 VoteAreaStates.Clear();
-                foreach (PlayerVoteArea s in meeting.playerStates)
+                foreach (var s in meeting.playerStates)
                 {
                     if (s != null)
                     {
@@ -34,7 +34,7 @@ internal static class PlayerControlExtensions
                 }
             }
 
-            foreach (PlayerControl p in PlayerControl.AllPlayerControls.GetFastEnumerator())
+            foreach (var p in PlayerControl.AllPlayerControls.GetFastEnumerator())
             {
                 if (p?.Data == null || p.cosmetics == null)
                 {
@@ -63,7 +63,7 @@ internal static class PlayerControlExtensions
 
                 if (p == player || player.Data.IsDead)
                 {
-                    TextMeshPro label = GetOrCreateLabel(p.cosmetics.nameText, "Info", 0.225f, 0.75f);
+                    var label = GetOrCreateLabel(p.cosmetics.nameText, "Info", 0.225f, 0.75f);
                     if (label == null)
                     {
                         continue;
@@ -79,20 +79,20 @@ internal static class PlayerControlExtensions
                         }
                     }
 
-                    (int completed, int total) = TasksHandler.TaskInfo(p.Data);
-                    string roleBase = RoleInfo.GetRolesString(p, true, false);
-                    string roleGhost = RoleInfo.GetRolesString(p, true, MapSettings.GhostsSeeModifier);
+                    (var completed, var total) = TasksHandler.TaskInfo(p.Data);
+                    var roleBase = RoleInfo.GetRolesString(p, true, false);
+                    var roleGhost = RoleInfo.GetRolesString(p, true, MapSettings.GhostsSeeModifier);
 
-                    string statusText = "";
+                    var statusText = "";
                     if (p == player || player.Data.IsDead && MapSettings.GhostsSeeInformation)
                     {
                         if (p.IsRole(RoleType.Arsonist))
                         {
-                            Arsonist role = Arsonist.Instance;
+                            var role = Arsonist.Instance;
                             if (role != null)
                             {
-                                int dousedSurvivors = 0;
-                                foreach (PlayerControl dousedPlayer in role.DousedPlayers)
+                                var dousedSurvivors = 0;
+                                foreach (var dousedPlayer in role.DousedPlayers)
                                 {
                                     if (dousedPlayer?.Data != null && !dousedPlayer.Data.IsDead && !dousedPlayer.Data.Disconnected)
                                     {
@@ -100,8 +100,8 @@ internal static class PlayerControlExtensions
                                     }
                                 }
 
-                                int totalSurvivors = 0;
-                                foreach (PlayerControl targetPlayer in PlayerControl.AllPlayerControls.GetFastEnumerator())
+                                var totalSurvivors = 0;
+                                foreach (var targetPlayer in PlayerControl.AllPlayerControls.GetFastEnumerator())
                                 {
                                     if (targetPlayer?.Data != null
                                         && !targetPlayer.Data.IsDead
@@ -118,7 +118,7 @@ internal static class PlayerControlExtensions
                         }
                         else if (p.IsRole(RoleType.Vulture))
                         {
-                            Vulture role = Vulture.Instance;
+                            var role = Vulture.Instance;
                             if (role != null)
                             {
                                 statusText = Helpers.Cs(Vulture.NameColor, $" ({role.EatenBodies}/{Vulture.NumberToWin})");
@@ -126,15 +126,15 @@ internal static class PlayerControlExtensions
                         }
                     }
 
-                    string taskText = "";
+                    var taskText = "";
                     if (total > 0)
                     {
                         InfoStringBuilder.Clear();
 
-                        bool commsActive = false;
-                        if (MapUtilities.CachedShipStatus != null && MapUtilities.Systems.TryGetValue(SystemTypes.Comms, out UnityObject comms))
+                        var commsActive = false;
+                        if (MapUtilities.CachedShipStatus != null && MapUtilities.Systems.TryGetValue(SystemTypes.Comms, out var comms))
                         {
-                            IActivatable activatable = comms.CastFast<IActivatable>();
+                            var activatable = comms.CastFast<IActivatable>();
                             if (activatable != null)
                             {
                                 commsActive = activatable.IsActive;
@@ -147,7 +147,7 @@ internal static class PlayerControlExtensions
                         }
                         else
                         {
-                            string color = completed == total ? "#00FF00FF" : "#FAD934FF";
+                            var color = completed == total ? "#00FF00FF" : "#FAD934FF";
                             InfoStringBuilder
                                 .Append("<color=")
                                 .Append(color)
@@ -161,11 +161,11 @@ internal static class PlayerControlExtensions
                         taskText = InfoStringBuilder.ToString();
                     }
 
-                    string pInfo = "";
-                    string mInfo = "";
+                    var pInfo = "";
+                    var mInfo = "";
                     if (p == player)
                     {
-                        string roles = (p.Data.IsDead ? roleGhost : roleBase) + statusText;
+                        var roles = (p.Data.IsDead ? roleGhost : roleBase) + statusText;
                         if (p.IsRole(RoleType.NiceSwapper))
                         {
                             InfoStringBuilder.Clear();
@@ -188,10 +188,10 @@ internal static class PlayerControlExtensions
 
                         if (FastDestroyableSingleton<HudManager>.Instance?.TaskPanel?.tab != null)
                         {
-                            Transform tabTextObj = FastDestroyableSingleton<HudManager>.Instance.TaskPanel.tab.transform.Find("TabText_TMP");
+                            var tabTextObj = FastDestroyableSingleton<HudManager>.Instance.TaskPanel.tab.transform.Find("TabText_TMP");
                             if (tabTextObj != null)
                             {
-                                TextMeshPro tabText = tabTextObj.GetComponent<TextMeshPro>();
+                                var tabText = tabTextObj.GetComponent<TextMeshPro>();
                                 if (tabText != null)
                                 {
                                     InfoStringBuilder.Clear();
@@ -242,18 +242,18 @@ internal static class PlayerControlExtensions
                 return;
             }
 
-            List<RoleInfo> infos = RoleInfo.GetRoleInfoForPlayer(player);
+            var infos = RoleInfo.GetRoleInfoForPlayer(player);
             List<PlayerTask> toRemove = [];
 
-            foreach (PlayerTask t in player.myTasks.GetFastEnumerator())
+            foreach (var t in player.myTasks.GetFastEnumerator())
             {
-                ImportantTextTask textTask = t.TryCast<ImportantTextTask>();
+                var textTask = t.TryCast<ImportantTextTask>();
                 if (textTask == null)
                 {
                     continue;
                 }
-                bool found = false;
-                for (int i = 0; i < infos.Count; i++)
+                var found = false;
+                for (var i = 0; i < infos.Count; i++)
                 {
                     if (!textTask.Text.StartsWith(infos[i].Name))
                     {
@@ -270,16 +270,16 @@ internal static class PlayerControlExtensions
                 }
             }
 
-            foreach (PlayerTask t in toRemove)
+            foreach (var t in toRemove)
             {
                 t.OnRemove();
                 player.myTasks.Remove(t);
                 Object.Destroy(t.gameObject);
             }
 
-            foreach (RoleInfo roleInfo in infos)
+            foreach (var roleInfo in infos)
             {
-                ImportantTextTask task = new GameObject("RoleTask").AddComponent<ImportantTextTask>();
+                var task = new GameObject("RoleTask").AddComponent<ImportantTextTask>();
                 task.transform.SetParent(player.transform, false);
 
                 InfoStringBuilder.Clear();
@@ -299,7 +299,7 @@ internal static class PlayerControlExtensions
 
             if (player.HasModifier(ModifierType.Madmate) || player.HasModifier(ModifierType.CreatedMadmate))
             {
-                ImportantTextTask task = new GameObject("RoleTask").AddComponent<ImportantTextTask>();
+                var task = new GameObject("RoleTask").AddComponent<ImportantTextTask>();
                 task.transform.SetParent(player.transform, false);
 
                 InfoStringBuilder.Clear();
@@ -311,8 +311,8 @@ internal static class PlayerControlExtensions
 
         internal void SetPetVisibility()
         {
-            bool localDead = player.Data.IsDead;
-            foreach (PlayerControl p in PlayerControl.AllPlayerControls.GetFastEnumerator())
+            var localDead = player.Data.IsDead;
+            foreach (var p in PlayerControl.AllPlayerControls.GetFastEnumerator())
             {
                 p.cosmetics.SetPetVisible(localDead && !p.Data.IsDead || !localDead);
             }
@@ -325,7 +325,7 @@ internal static class PlayerControlExtensions
                 return;
             }
 
-            List<byte> taskTypeIds = GenerateTasks(numCommon, numShort, numLong);
+            var taskTypeIds = GenerateTasks(numCommon, numShort, numLong);
             using RPCSender sender = new(PlayerControl.LocalPlayer.NetId, CustomRPC.UncheckedSetTasks);
             sender.Write(player.PlayerId);
             sender.WriteBytesAndSize(taskTypeIds.ToArray());
@@ -338,7 +338,7 @@ internal static class PlayerControlExtensions
             {
                 return;
             }
-            foreach (PlayerTask t in player.myTasks)
+            foreach (var t in player.myTasks)
             {
                 t.OnRemove();
                 Object.Destroy(t.gameObject);
@@ -369,14 +369,14 @@ internal static class PlayerControlExtensions
             {
                 return true;
             }
-            NetworkedPlayerInfo data = player.Data;
+            var data = player.Data;
             if (data == null || data.IsDead || data.Disconnected)
             {
                 return true;
             }
 
             return GameHistory.FinalStatuses != null
-                   && GameHistory.FinalStatuses.TryGetValue(player.PlayerId, out FinalStatus status)
+                   && GameHistory.FinalStatuses.TryGetValue(player.PlayerId, out var status)
                    && status != FinalStatus.Alive;
         }
 
@@ -422,7 +422,7 @@ internal static class PlayerControlExtensions
             {
                 return null;
             }
-            foreach (ClientData cd in AmongUsClient.Instance.allClients.GetFastEnumerator())
+            foreach (var cd in AmongUsClient.Instance.allClients.GetFastEnumerator())
             {
                 if (cd?.Character != null && cd.Character.PlayerId == player.PlayerId)
                 {
@@ -435,7 +435,7 @@ internal static class PlayerControlExtensions
 
         internal string GetPlatform()
         {
-            ClientData client = player.GetClient();
+            var client = player.GetClient();
             return client != null ? client.PlatformData.Platform.ToString() : "Unknown";
         }
 
@@ -451,7 +451,7 @@ internal static class PlayerControlExtensions
                 return "";
             }
             RoleStringBuilder.Clear();
-            string name = player.Data.PlayerName;
+            var name = player.Data.PlayerName;
             if (Camouflager.CamouflageTimer > 0f)
             {
                 if (string.IsNullOrEmpty(name))
@@ -475,15 +475,15 @@ internal static class PlayerControlExtensions
 
         internal void SetBasePlayerOutlines()
         {
-            foreach (PlayerControl target in PlayerControl.AllPlayerControls.GetFastEnumerator())
+            foreach (var target in PlayerControl.AllPlayerControls.GetFastEnumerator())
             {
                 if (target?.cosmetics?.currentBodySprite?.BodySprite == null)
                 {
                     continue;
                 }
 
-                bool isMorphedMorphing = target.IsRole(RoleType.Morphing) && Morphing.MorphTarget != null && Morphing.MorphTimer > 0f;
-                bool hasVisibleShield = false;
+                var isMorphedMorphing = target.IsRole(RoleType.Morphing) && Morphing.MorphTarget != null && Morphing.MorphTimer > 0f;
+                var hasVisibleShield = false;
                 if (Camouflager.CamouflageTimer <= 0f
                     && Medic.Shielded != null
                     && (target == Medic.Shielded && !isMorphedMorphing || isMorphedMorphing && Morphing.MorphTarget == Medic.Shielded))
@@ -497,7 +497,7 @@ internal static class PlayerControlExtensions
                     };
                 }
 
-                Material mat = target.cosmetics.currentBodySprite.BodySprite.material;
+                var mat = target.cosmetics.currentBodySprite.BodySprite.material;
                 if (hasVisibleShield)
                 {
                     mat.SetFloat("_Outline", 1f);
@@ -530,9 +530,9 @@ internal static class PlayerControlExtensions
         List<NormalPlayerTask> longTasks = [.. MapUtilities.CachedShipStatus.LongTasks];
         longTasks.Shuffle();
 
-        int start = 0;
+        var start = 0;
         Il2CppSystem.Collections.Generic.List<NormalPlayerTask> commonTasksIl2Cpp = new();
-        foreach (NormalPlayerTask t in commonTasks)
+        foreach (var t in commonTasks)
         {
             commonTasksIl2Cpp.Add(t);
         }
@@ -540,7 +540,7 @@ internal static class PlayerControlExtensions
 
         start = 0;
         Il2CppSystem.Collections.Generic.List<NormalPlayerTask> shortTasksIl2Cpp = new();
-        foreach (NormalPlayerTask t in shortTasks)
+        foreach (var t in shortTasks)
         {
             shortTasksIl2Cpp.Add(t);
         }
@@ -548,7 +548,7 @@ internal static class PlayerControlExtensions
 
         start = 0;
         Il2CppSystem.Collections.Generic.List<NormalPlayerTask> longTasksIl2Cpp = new();
-        foreach (NormalPlayerTask t in longTasks)
+        foreach (var t in longTasks)
         {
             longTasksIl2Cpp.Add(t);
         }
@@ -564,8 +564,8 @@ internal static class PlayerControlExtensions
             return null;
         }
 
-        Transform labelTransform = source.transform.parent.Find(name);
-        TextMeshPro label = labelTransform?.GetComponent<TextMeshPro>();
+        var labelTransform = source.transform.parent.Find(name);
+        var label = labelTransform?.GetComponent<TextMeshPro>();
 
         if (label == null)
         {

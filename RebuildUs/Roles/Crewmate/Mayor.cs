@@ -72,8 +72,8 @@ internal class Mayor : MultiRoleBase<Mayor>
             () =>
             {
                 _mayorMeetingButton.ActionButton.OverrideText(string.Format(Tr.Get(TrKey.Emergency), Local._remoteMeetingsLeft));
-                bool sabotageActive = false;
-                foreach (PlayerTask task in PlayerControl.LocalPlayer.myTasks.GetFastEnumerator())
+                var sabotageActive = false;
+                foreach (var task in PlayerControl.LocalPlayer.myTasks.GetFastEnumerator())
                 {
                     if (task.TaskType is TaskTypes.FixLights
                                          or TaskTypes.RestoreOxy

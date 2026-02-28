@@ -18,7 +18,7 @@ internal static class MainMenuManagerPatch
             ruLogo.transform.localPosition = new(-0.4f, 1f, 5f);
 
             GameObject credits = new("RUModCredits");
-            TextMeshPro text = credits.AddComponent<TextMeshPro>();
+            var text = credits.AddComponent<TextMeshPro>();
             text.SetText($"<color=#1684B0>{RebuildUs.MOD_NAME}</color> v{RebuildUs.MOD_VERSION}\n<size=70%>By {RebuildUs.MOD_DEVELOPER}</size>");
             text.alignment = TextAlignmentOptions.Center;
             text.fontSize *= 0.07f;
@@ -26,15 +26,15 @@ internal static class MainMenuManagerPatch
             text.transform.SetParent(ruLogo.transform);
             text.transform.localPosition = Vector3.down * 1.25f;
 
-            PassiveButton howToPlayButton = __instance.howToPlayButton;
-            PassiveButton freePlayButton = __instance.freePlayButton;
+            var howToPlayButton = __instance.howToPlayButton;
+            var freePlayButton = __instance.freePlayButton;
             howToPlayButton.gameObject.SetActive(false);
             freePlayButton.gameObject.SetActive(false);
 
-            PassiveButton createGameButton = __instance.createGameButton;
+            var createGameButton = __instance.createGameButton;
             // var enterCodeButtons = __instance.enterCodeButtons;
-            Transform enterCodeButtons = createGameButton.transform.parent.Find("Enter Code Button");
-            FindGameButton findGameButton = __instance.findGameButton;
+            var enterCodeButtons = createGameButton.transform.parent.Find("Enter Code Button");
+            var findGameButton = __instance.findGameButton;
 
             // remove line
             findGameButton.gameObject.transform.parent.Find("Line")?.gameObject.SetActive(false);

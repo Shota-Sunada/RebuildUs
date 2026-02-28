@@ -8,9 +8,9 @@ internal static unsafe class FastDestroyableSingleton<T> where T : MonoBehaviour
     static FastDestroyableSingleton()
     {
         FieldPtr = IL2CPP.GetIl2CppField(Il2CppClassPointerStore<DestroyableSingleton<T>>.NativeClassPtr, nameof(DestroyableSingleton<T>._instance));
-        ConstructorInfo constructor = typeof(T).GetConstructor([typeof(IntPtr)]);
-        ParameterExpression ptr = Expression.Parameter(typeof(IntPtr));
-        NewExpression create = Expression.New(constructor!, ptr);
+        var constructor = typeof(T).GetConstructor([typeof(IntPtr)]);
+        var ptr = Expression.Parameter(typeof(IntPtr));
+        var create = Expression.New(constructor!, ptr);
         Expression<Func<IntPtr, T>> lambda = Expression.Lambda<Func<IntPtr, T>>(create, ptr);
         CreateObject = lambda.Compile();
     }

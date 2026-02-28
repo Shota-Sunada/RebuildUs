@@ -52,15 +52,15 @@ internal static class GameStart
 
         _cancelButton = UnityObject.Instantiate(__instance.StartButton, __instance.transform);
         _cancelButton.name = "CancelButton";
-        TextMeshPro cancelLabel = _cancelButton.buttonText;
+        var cancelLabel = _cancelButton.buttonText;
         cancelLabel.GetComponent<TextTranslatorTMP>()?.Destroy();
         cancelLabel.text = "Cancel";
         _cancelButton.transform.localScale = new(0.5f, 0.5f, 1f);
-        SpriteRenderer cancelButtonInactiveRenderer = _cancelButton.inactiveSprites.GetComponent<SpriteRenderer>();
+        var cancelButtonInactiveRenderer = _cancelButton.inactiveSprites.GetComponent<SpriteRenderer>();
         cancelButtonInactiveRenderer.color = new(0.8f, 0f, 0f, 1f);
-        SpriteRenderer cancelButtonActiveRenderer = _cancelButton.activeSprites.GetComponent<SpriteRenderer>();
+        var cancelButtonActiveRenderer = _cancelButton.activeSprites.GetComponent<SpriteRenderer>();
         cancelButtonActiveRenderer.color = Color.red;
-        Transform cancelButtonInactiveShine = _cancelButton.inactiveSprites.transform.Find("Shine");
+        var cancelButtonInactiveShine = _cancelButton.inactiveSprites.transform.Find("Shine");
         if (cancelButtonInactiveShine)
         {
             cancelButtonInactiveShine.gameObject.SetActive(false);
@@ -98,11 +98,11 @@ internal static class GameStart
         }
 
         // Check version handshake infos
-        bool versionMismatch = false;
+        var versionMismatch = false;
         InfoStringBuilder.Clear();
 
-        Il2CppArrayBase<ClientData> clients = AmongUsClient.Instance.allClients.ToArray();
-        foreach (ClientData client in clients)
+        var clients = AmongUsClient.Instance.allClients.ToArray();
+        foreach (var client in clients)
         {
             if (client == null || client.Character == null || client.Character.Data == null)
             {
@@ -110,13 +110,13 @@ internal static class GameStart
             }
 
             // Skip Dummies
-            DummyBehaviour dummyComponent = client.Character.GetComponent<DummyBehaviour>();
+            var dummyComponent = client.Character.GetComponent<DummyBehaviour>();
             if (dummyComponent != null && dummyComponent.enabled)
             {
                 continue;
             }
 
-            if (!PlayerVersions.TryGetValue(client.Id, out PlayerVersion pV))
+            if (!PlayerVersions.TryGetValue(client.Id, out var pV))
             {
                 versionMismatch = true;
                 InfoStringBuilder.Append("<color=#FF0000FF>");
@@ -146,7 +146,7 @@ internal static class GameStart
             }
         }
 
-        string message = InfoStringBuilder.ToString();
+        var message = InfoStringBuilder.ToString();
 
         // Display message to the host
         if (AmongUsClient.Instance.AmHost)
@@ -170,7 +170,7 @@ internal static class GameStart
         // Client update with handshake infos
         else
         {
-            if (!PlayerVersions.TryGetValue(AmongUsClient.Instance.HostId, out PlayerVersion hostVersion)
+            if (!PlayerVersions.TryGetValue(AmongUsClient.Instance.HostId, out var hostVersion)
                 || !hostVersion.Matches(RebuildUs.Instance.Version))
             {
                 KickingTimer += Time.deltaTime;
@@ -185,7 +185,7 @@ internal static class GameStart
                 InfoStringBuilder.Append("<color=#FF0000FF>The host has no or a different version of RebuildUs\nYou will be kicked in ");
                 InfoStringBuilder.Append(Math.Max(0, (int)Math.Round(10 - KickingTimer)));
                 InfoStringBuilder.Append("s</color>");
-                string warning = InfoStringBuilder.ToString();
+                var warning = InfoStringBuilder.ToString();
                 if (_lastWarningMessage != warning)
                 {
                     _warningText.text = warning;
@@ -199,7 +199,7 @@ internal static class GameStart
                 InfoStringBuilder.Clear();
                 InfoStringBuilder.Append("<color=#FF0000FF>Players With Different Versions:\n</color>");
                 InfoStringBuilder.Append(message);
-                string warning = InfoStringBuilder.ToString();
+                var warning = InfoStringBuilder.ToString();
                 if (_lastWarningMessage != warning)
                 {
                     _warningText.text = warning;
@@ -233,9 +233,9 @@ internal static class GameStart
         }
 
         _timer = Mathf.Max(0f, _timer - Time.deltaTime);
-        int totalSeconds = (int)_timer;
-        int minutes = totalSeconds / 60;
-        int seconds = totalSeconds % 60;
+        var totalSeconds = (int)_timer;
+        var minutes = totalSeconds / 60;
+        var seconds = totalSeconds % 60;
 
         InfoStringBuilder.Clear();
         if (minutes < 10)
@@ -250,7 +250,7 @@ internal static class GameStart
         }
         InfoStringBuilder.Append(seconds);
 
-        string countDown = InfoStringBuilder.ToString();
+        var countDown = InfoStringBuilder.ToString();
         if (_timer <= 60)
         {
             countDown = Helpers.Cs(Color.red, countDown);
@@ -287,25 +287,25 @@ internal static class GameStart
     internal static bool BeginGame(GameStartManager __instance)
     {
         // Block game start if not everyone has the same mod version
-        bool continueStart = true;
+        var continueStart = true;
 
         if (!AmongUsClient.Instance.AmHost)
         {
             return continueStart;
         }
-        foreach (ClientData client in AmongUsClient.Instance.allClients.GetFastEnumerator())
+        foreach (var client in AmongUsClient.Instance.allClients.GetFastEnumerator())
         {
             if (client.Character == null)
             {
                 continue;
             }
-            DummyBehaviour dummyComponent = client.Character.GetComponent<DummyBehaviour>();
+            var dummyComponent = client.Character.GetComponent<DummyBehaviour>();
             if (dummyComponent != null && dummyComponent.enabled)
             {
                 continue;
             }
 
-            if (PlayerVersions.TryGetValue(client.Id, out PlayerVersion pV) && pV.Matches(RebuildUs.Instance.Version))
+            if (PlayerVersions.TryGetValue(client.Id, out var pV) && pV.Matches(RebuildUs.Instance.Version))
             {
                 continue;
             }
@@ -344,8 +344,8 @@ internal static class GameStart
         ];
 
         // if any map is at 100%, remove all maps that are not!
-        bool hasEnsured = false;
-        foreach (float t in probabilities)
+        var hasEnsured = false;
+        foreach (var t in probabilities)
         {
             if (t >= 1.0f)
             {
@@ -356,7 +356,7 @@ internal static class GameStart
 
         if (hasEnsured)
         {
-            for (int i = 0; i < probabilities.Length; i++)
+            for (var i = 0; i < probabilities.Length; i++)
             {
                 if (probabilities[i] < 1.0f)
                 {
@@ -366,7 +366,7 @@ internal static class GameStart
         }
 
         float sum = 0;
-        foreach (float t in probabilities)
+        foreach (var t in probabilities)
         {
             sum += t;
         }
@@ -376,13 +376,13 @@ internal static class GameStart
         {
             return true;
         }
-        for (int i = 0; i < probabilities.Length; i++)
+        for (var i = 0; i < probabilities.Length; i++)
         // Normalize to [0,1]
         {
             probabilities[i] /= sum;
         }
 
-        float selection = (float)RebuildUs.Rnd.NextDouble();
+        var selection = (float)RebuildUs.Rnd.NextDouble();
         float cumSum = 0;
         for (byte i = 0; i < (byte)probabilities.Length; i++)
         {

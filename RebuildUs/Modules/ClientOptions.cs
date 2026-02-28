@@ -45,7 +45,7 @@ internal static class ClientOptions
     {
         // Prefab for the title
         GameObject go = new("TitleTextRU");
-        TextMeshPro tmp = go.AddComponent<TextMeshPro>();
+        var tmp = go.AddComponent<TextMeshPro>();
         tmp.fontSize = 4;
         tmp.alignment = TextAlignmentOptions.Center;
         tmp.transform.localPosition += Vector3.left * 0.2f;
@@ -82,15 +82,15 @@ internal static class ClientOptions
     {
         _popUp = UnityObject.Instantiate(prefab.gameObject);
         UnityObject.DontDestroyOnLoad(_popUp);
-        Transform transform = _popUp.transform;
-        Vector3 pos = transform.localPosition;
+        var transform = _popUp.transform;
+        var pos = transform.localPosition;
         pos.z = -810f;
         transform.localPosition = pos;
 
         UnityObject.Destroy(_popUp.GetComponent<OptionsMenuBehaviour>());
-        for (int i = transform.childCount - 1; i >= 0; i--)
+        for (var i = transform.childCount - 1; i >= 0; i--)
         {
-            GameObject obj = transform.GetChild(i).gameObject;
+            var obj = transform.GetChild(i).gameObject;
             if (obj.name is not "Background" and not "CloseButton")
             {
                 UnityObject.Destroy(obj);
@@ -102,15 +102,15 @@ internal static class ClientOptions
 
     private static void InitializeMoreButton(OptionsMenuBehaviour __instance)
     {
-        ToggleButtonBehaviour moreOptions = UnityObject.Instantiate(_buttonPrefab, __instance.CensorChatButton.transform.parent);
+        var moreOptions = UnityObject.Instantiate(_buttonPrefab, __instance.CensorChatButton.transform.parent);
         moreOptions.transform.localPosition = __instance.CensorChatButton.transform.localPosition + Vector3.down * 1.0f;
         moreOptions.gameObject.SetActive(true);
         moreOptions.Text.text = Tr.Get(TrKey.ModOptionsText);
-        PassiveButton moreOptionsButton = moreOptions.GetComponent<PassiveButton>();
+        var moreOptionsButton = moreOptions.GetComponent<PassiveButton>();
         moreOptionsButton.OnClick = new();
         moreOptionsButton.OnClick.AddListener((Action)(() =>
         {
-            bool closeUnderlying = false;
+            var closeUnderlying = false;
             if (!_popUp)
             {
                 return;
@@ -165,7 +165,7 @@ internal static class ClientOptions
             return;
         }
 
-        TextMeshPro title = UnityObject.Instantiate(_titleText, _popUp.transform);
+        var title = UnityObject.Instantiate(_titleText, _popUp.transform);
         title.GetComponent<RectTransform>().localPosition = Vector3.up * 2.3f;
         title.gameObject.SetActive(true);
         title.text = Tr.Get(TrKey.MoreOptionsText);
@@ -179,7 +179,7 @@ internal static class ClientOptions
             return;
         }
 
-        foreach (ToggleButtonBehaviour button in _modButtons)
+        foreach (var button in _modButtons)
         {
             if (button != null)
             {
@@ -188,16 +188,16 @@ internal static class ClientOptions
         }
 
         _modButtons = [];
-        int length = _page * 10 < AllOptions.Length ? _page * 10 : AllOptions.Length;
+        var length = _page * 10 < AllOptions.Length ? _page * 10 : AllOptions.Length;
 
-        for (int i = 0; i + (_page - 1) * 10 < length; i++)
+        for (var i = 0; i + (_page - 1) * 10 < length; i++)
         {
-            SelectionBehaviour info = AllOptions[i + (_page - 1) * 10];
+            var info = AllOptions[i + (_page - 1) * 10];
 
-            ToggleButtonBehaviour button = UnityObject.Instantiate(_buttonPrefab, _popUp.transform);
+            var button = UnityObject.Instantiate(_buttonPrefab, _popUp.transform);
             Vector3 pos = new(i % 2 == 0 ? -1.17f : 1.17f, 1.3f - i / 2 * 0.8f, -.5f);
 
-            Transform transform = button.transform;
+            var transform = button.transform;
             transform.localPosition = pos;
 
             button.onState = info.DefaultValue;
@@ -211,8 +211,8 @@ internal static class ClientOptions
             button.name = info.Title.Replace(" ", "") + "Toggle";
             button.gameObject.SetActive(true);
 
-            PassiveButton passiveButton = button.GetComponent<PassiveButton>();
-            BoxCollider2D colliderButton = button.GetComponent<BoxCollider2D>();
+            var passiveButton = button.GetComponent<PassiveButton>();
+            var colliderButton = button.GetComponent<BoxCollider2D>();
 
             colliderButton.size = new(2.2f, .7f);
 
@@ -229,7 +229,7 @@ internal static class ClientOptions
             passiveButton.OnMouseOver.AddListener((Action)(() => button.Background.color = new Color32(34, 139, 34, byte.MaxValue)));
             passiveButton.OnMouseOut.AddListener((Action)(() => button.Background.color = button.onState ? Color.green : Palette.ImpostorRed));
 
-            foreach (SpriteRenderer spr in button.gameObject.GetComponentsInChildren<SpriteRenderer>())
+            foreach (var spr in button.gameObject.GetComponentsInChildren<SpriteRenderer>())
             {
                 spr.size = new(2.2f, .7f);
             }
@@ -240,17 +240,17 @@ internal static class ClientOptions
         // ページ移動ボタンを追加
         if (_page * 10 < AllOptions.Length)
         {
-            ToggleButtonBehaviour button = UnityObject.Instantiate(_buttonPrefab, _popUp.transform);
+            var button = UnityObject.Instantiate(_buttonPrefab, _popUp.transform);
             Vector3 pos = new(1.2f, -2.5f, -0.5f);
-            Transform transform = button.transform;
+            var transform = button.transform;
             transform.localPosition = pos;
             button.Text.text = Tr.Get(TrKey.Next);
             button.Text.fontSizeMin = button.Text.fontSizeMax = 2.2f;
             button.Text.font = UnityObject.Instantiate(_titleText.font);
             button.Text.GetComponent<RectTransform>().sizeDelta = new(2, 2);
             button.gameObject.SetActive(true);
-            PassiveButton passiveButton = button.GetComponent<PassiveButton>();
-            BoxCollider2D colliderButton = button.GetComponent<BoxCollider2D>();
+            var passiveButton = button.GetComponent<PassiveButton>();
+            var colliderButton = button.GetComponent<BoxCollider2D>();
             colliderButton.size = new(2.2f, .7f);
             passiveButton.OnClick = new();
             passiveButton.OnMouseOut = new();
@@ -265,17 +265,17 @@ internal static class ClientOptions
 
         if (_page > 1)
         {
-            ToggleButtonBehaviour button = UnityObject.Instantiate(_buttonPrefab, _popUp.transform);
+            var button = UnityObject.Instantiate(_buttonPrefab, _popUp.transform);
             Vector3 pos = new(-1.2f, -2.5f, -0.5f);
-            Transform transform = button.transform;
+            var transform = button.transform;
             transform.localPosition = pos;
             button.Text.text = Tr.Get(TrKey.Previous);
             button.Text.fontSizeMin = button.Text.fontSizeMax = 2.2f;
             button.Text.font = UnityObject.Instantiate(_titleText.font);
             button.Text.GetComponent<RectTransform>().sizeDelta = new(2, 2);
             button.gameObject.SetActive(true);
-            PassiveButton passiveButton = button.GetComponent<PassiveButton>();
-            BoxCollider2D colliderButton = button.GetComponent<BoxCollider2D>();
+            var passiveButton = button.GetComponent<PassiveButton>();
+            var colliderButton = button.GetComponent<BoxCollider2D>();
             colliderButton.size = new(2.2f, .7f);
             passiveButton.OnClick = new();
             passiveButton.OnMouseOut = new();

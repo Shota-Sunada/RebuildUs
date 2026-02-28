@@ -23,7 +23,7 @@ internal sealed class Arrow
 
     internal void Update()
     {
-        Vector3 target = _oldTarget;
+        var target = _oldTarget;
         Update(target);
     }
 

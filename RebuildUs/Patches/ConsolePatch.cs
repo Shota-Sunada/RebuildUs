@@ -18,14 +18,14 @@ internal static class ConsolePatch
         {
             return true;
         }
-        PlayerTask playerTask = __instance.FindTask(PlayerControl.LocalPlayer);
+        var playerTask = __instance.FindTask(PlayerControl.LocalPlayer);
         if (playerTask == null || playerTask.MinigamePrefab.name != "SafeGame")
         {
             return true;
         }
         if (_alignTelescopeMinigame == null)
         {
-            foreach (NormalPlayerTask task in MapData.PolusShip.ShortTasks)
+            foreach (var task in MapData.PolusShip.ShortTasks)
             {
                 if (task.name != "AlignTelescope")
                 {

@@ -9,7 +9,7 @@ internal static class UseButtonPatch
     [HarmonyPatch(typeof(UseButton), nameof(UseButton.SetTarget))]
     internal static bool SetTargetPrefix(UseButton __instance, [HarmonyArgument(0)] IUsable target)
     {
-        PlayerControl pc = PlayerControl.LocalPlayer;
+        var pc = PlayerControl.LocalPlayer;
         __instance.enabled = true;
 
         if (Helpers.IsBlocked(target, pc))

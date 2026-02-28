@@ -47,7 +47,7 @@ internal class Lighter : MultiRoleBase<Lighter>
         {
             return false;
         }
-        Lighter r = GetRole(player);
+        var r = GetRole(player);
         return r._lightActive;
     }
 
@@ -65,14 +65,14 @@ internal class Lighter : MultiRoleBase<Lighter>
         // Lighter light
         _lighterButton = new(() =>
             {
-                Lighter local = Local;
+                var local = Local;
                 local?._lightActive = true;
             },
             () => Local != null && PlayerControl.LocalPlayer?.Data?.IsDead == false,
             () => PlayerControl.LocalPlayer.CanMove,
             () =>
             {
-                Lighter local = Local;
+                var local = Local;
                 local?._lightActive = false;
                 _lighterButton.Timer = _lighterButton.MaxTimer;
                 _lighterButton.IsEffectActive = false;
@@ -87,7 +87,7 @@ internal class Lighter : MultiRoleBase<Lighter>
             Duration,
             () =>
             {
-                Lighter local = Local;
+                var local = Local;
                 local?._lightActive = false;
                 _lighterButton.Timer = _lighterButton.MaxTimer;
             },

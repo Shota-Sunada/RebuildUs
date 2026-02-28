@@ -36,7 +36,7 @@ internal static class LoadScreen
         // Background
         GameObject bg = new("Background");
         bg.transform.SetParent(_uiContainer.transform);
-        SpriteRenderer bgRenderer = bg.AddComponent<SpriteRenderer>();
+        var bgRenderer = bg.AddComponent<SpriteRenderer>();
         bgRenderer.sprite = _whiteSprite;
         bgRenderer.color = new(0.05f, 0.05f, 0.1f, 1f); // Dark Blue-ish Black
         bg.transform.localScale = new(100f, 100f, 1f);

@@ -65,59 +65,59 @@ internal static class HudManagerPatch
         _isUpdating = true;
         ColorCache.Clear();
 
-        PlayerControl localPlayer = PlayerControl.LocalPlayer;
+        var localPlayer = PlayerControl.LocalPlayer;
         if (localPlayer == null)
         {
             _isUpdating = false;
             return;
         }
 
-        bool isLocalImpostor = localPlayer.IsTeamImpostor();
-        bool isLocalDead = localPlayer.IsDead();
-        bool meetingShow = Helpers.ShowMeetingText;
+        var isLocalImpostor = localPlayer.IsTeamImpostor();
+        var isLocalDead = localPlayer.IsDead();
+        var meetingShow = Helpers.ShowMeetingText;
 
         // 1. Initialize Base Colors
-        foreach (PlayerControl p in PlayerControl.AllPlayerControls.GetFastEnumerator())
+        foreach (var p in PlayerControl.AllPlayerControls.GetFastEnumerator())
         {
             if (p == null)
             {
                 continue;
             }
-            Color baseColor = isLocalImpostor && p.IsTeamImpostor() ? Palette.ImpostorRed : Color.white;
+            var baseColor = isLocalImpostor && p.IsTeamImpostor() ? Palette.ImpostorRed : Color.white;
             SetPlayerNameColor(p, baseColor);
         }
 
         // 2. Calculate Role/Modifier Colors (populates ColorCache via SetPlayerNameColor)
-        PlayerControl lp = PlayerControl.LocalPlayer;
+        var lp = PlayerControl.LocalPlayer;
         if (lp == null)
         {
             return;
         }
 
         // 1. Set Local Player Color
-        PlayerRole roleInstance = ModRoleManager.GetRole(lp);
+        var roleInstance = ModRoleManager.GetRole(lp);
         if (roleInstance != null)
         {
             SetPlayerNameColor(lp, roleInstance.RoleColor);
         }
 
-        foreach (PlayerModifier mod in PlayerModifier.GetModifiers(lp))
+        foreach (var mod in PlayerModifier.GetModifiers(lp))
         {
             SetPlayerNameColor(lp, mod.ModifierColor);
         }
 
         // 2. Process logic-heavy vision (Jackal seeing Sidekick, Spy seeing Impostors, etc.)
-        foreach (PlayerRole r in ModRoleManager.AllRoles)
+        foreach (var r in ModRoleManager.AllRoles)
         {
             r.OnUpdateNameColors();
         }
-        foreach (PlayerModifier m in PlayerModifier.AllModifiers)
+        foreach (var m in PlayerModifier.AllModifiers)
         {
             m.OnUpdateNameColors();
         }
 
         // 3. Update Player Instances
-        foreach (PlayerControl player in PlayerControl.AllPlayerControls.GetFastEnumerator())
+        foreach (var player in PlayerControl.AllPlayerControls.GetFastEnumerator())
         {
             if (player == null || player.cosmetics == null || player.cosmetics.nameText == null)
             {
@@ -125,8 +125,8 @@ internal static class HudManagerPatch
             }
 
             // --- Name Calculation ---
-            string finalName = player.CurrentOutfit.PlayerName;
-            bool hideName = Helpers.HidePlayerName(localPlayer, player);
+            var finalName = player.CurrentOutfit.PlayerName;
+            var hideName = Helpers.HidePlayerName(localPlayer, player);
 
             if (hideName)
             {
@@ -150,7 +150,7 @@ internal static class HudManagerPatch
             if (!string.IsNullOrEmpty(finalName))
             {
                 // Role Tags
-                PlayerRole r = ModRoleManager.GetRole(player);
+                var r = ModRoleManager.GetRole(player);
                 if (r != null)
                 {
                     if (!string.IsNullOrEmpty(r.NameTag))
@@ -161,7 +161,7 @@ internal static class HudManagerPatch
                 }
 
                 // Modifier Tags
-                foreach (PlayerModifier m in PlayerModifier.GetModifiers(player))
+                foreach (var m in PlayerModifier.GetModifiers(player))
                 {
                     if (!string.IsNullOrEmpty(m.NameTag))
                     {
@@ -177,13 +177,13 @@ internal static class HudManagerPatch
                 }
             }
 
-            string resultText = TagStringBuilder.ToString();
+            var resultText = TagStringBuilder.ToString();
             if (player.cosmetics.nameText.text != resultText)
             {
                 player.cosmetics.nameText.text = resultText;
             }
 
-            if (!ColorCache.TryGetValue(player.PlayerId, out Color c))
+            if (!ColorCache.TryGetValue(player.PlayerId, out var c))
             {
                 continue;
             }
@@ -196,19 +196,19 @@ internal static class HudManagerPatch
         // 4. Update Meeting HUD
         if (MeetingHud.Instance != null)
         {
-            Dictionary<byte, PlayerControl> playersById = Helpers.AllPlayersById();
-            foreach (PlayerVoteArea pva in MeetingHud.Instance.playerStates)
+            var playersById = Helpers.AllPlayersById();
+            foreach (var pva in MeetingHud.Instance.playerStates)
             {
                 if (pva == null || pva.NameText == null)
                 {
                     continue;
                 }
-                if (!playersById.TryGetValue(pva.TargetPlayerId, out PlayerControl target) || target == null || target.Data == null)
+                if (!playersById.TryGetValue(pva.TargetPlayerId, out var target) || target == null || target.Data == null)
                 {
                     continue;
                 }
 
-                string baseName = target.Data.PlayerName;
+                var baseName = target.Data.PlayerName;
                 if (isLocalDead)
                 {
                     if (string.IsNullOrEmpty(baseName) && Camouflager.CamouflageTimer > 0f)
@@ -225,7 +225,7 @@ internal static class HudManagerPatch
                 TagStringBuilder.Append(baseName);
 
                 // Role Tags (Meeting Only)
-                PlayerRole r = ModRoleManager.GetRole(target);
+                var r = ModRoleManager.GetRole(target);
                 if (r != null && !string.IsNullOrEmpty(r.NameTag))
                 {
                     TagStringBuilder.Append(r.NameTag);
@@ -248,13 +248,13 @@ internal static class HudManagerPatch
                     TagStringBuilder.Append(Lovers.GetIcon(target));
                 }
 
-                string resultText = TagStringBuilder.ToString();
+                var resultText = TagStringBuilder.ToString();
                 if (pva.NameText.text != resultText)
                 {
                     pva.NameText.text = resultText;
                 }
 
-                if (!ColorCache.TryGetValue(target.PlayerId, out Color c))
+                if (!ColorCache.TryGetValue(target.PlayerId, out var c))
                 {
                     continue;
                 }
@@ -284,7 +284,7 @@ internal static class HudManagerPatch
             return;
         }
 
-        bool enabled = Helpers.ShowButtons;
+        var enabled = Helpers.ShowButtons;
         if (PlayerControl.LocalPlayer.IsRole(RoleType.Vampire)
             || PlayerControl.LocalPlayer.IsRole(RoleType.Mafioso) && !Mafia.Mafioso.CanKill
             || PlayerControl.LocalPlayer.IsRole(RoleType.Janitor))
@@ -352,8 +352,8 @@ internal static class HudManagerPatch
 
     private static void CamouflageAndMorphActions()
     {
-        float oldCamouflageTimer = Camouflager.CamouflageTimer;
-        float oldMorphTimer = Morphing.MorphTimer;
+        var oldCamouflageTimer = Camouflager.CamouflageTimer;
+        var oldMorphTimer = Morphing.MorphTimer;
 
         Camouflager.CamouflageTimer -= Time.deltaTime;
         Morphing.MorphTimer -= Time.deltaTime;
@@ -384,7 +384,7 @@ internal static class HudManagerPatch
         {
             return;
         }
-        foreach (PlayerVoteArea player in MeetingHud.Instance.playerStates)
+        foreach (var player in MeetingHud.Instance.playerStates)
         {
             if (player.NameText != null && p.PlayerId == player.TargetPlayerId)
             {

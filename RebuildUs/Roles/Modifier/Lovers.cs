@@ -47,9 +47,9 @@ internal static class Lovers
     {
         if (IsLovers(player))
         {
-            for (int i = 0; i < Couples.Count; i++)
+            for (var i = 0; i < Couples.Count; i++)
             {
-                Couple couple = Couples[i];
+                var couple = Couples[i];
                 if (couple.Lover1 == player || couple.Lover2 == player)
                 {
                     return couple.Icon;
@@ -63,10 +63,10 @@ internal static class Lovers
     internal static void AddCouple(PlayerControl player1, PlayerControl player2)
     {
         List<Color> availableColors = [.. LoverIconColors];
-        for (int i = 0; i < Couples.Count; i++)
+        for (var i = 0; i < Couples.Count; i++)
         {
-            Color color = Couples[i].Color;
-            for (int j = availableColors.Count - 1; j >= 0; j--)
+            var color = Couples[i].Color;
+            for (var j = availableColors.Count - 1; j >= 0; j--)
             {
                 if (availableColors[j] == color)
                 {
@@ -89,8 +89,8 @@ internal static class Lovers
 
     internal static void SwapLovers(PlayerControl player1, PlayerControl player2)
     {
-        int couple1 = Couples.FindIndex(x => x.Lover1 == player1 || x.Lover2 == player1);
-        int couple2 = Couples.FindIndex(x => x.Lover1 == player2 || x.Lover2 == player2);
+        var couple1 = Couples.FindIndex(x => x.Lover1 == player1 || x.Lover2 == player1);
+        var couple2 = Couples.FindIndex(x => x.Lover1 == player2 || x.Lover2 == player2);
 
         // trying to swap within the same couple, just ignore
         if (couple1 == couple2)
@@ -140,7 +140,7 @@ internal static class Lovers
             return;
         }
 
-        PlayerControl partner = GetPartner(player);
+        var partner = GetPartner(player);
         if (partner != null)
         {
             if (!partner.Data.IsDead)
@@ -166,7 +166,7 @@ internal static class Lovers
 
     internal static PlayerControl GetPartner(PlayerControl player)
     {
-        Couple couple = GetCouple(player);
+        var couple = GetCouple(player);
         if (couple != null)
         {
             return player?.PlayerId == couple.Lover1?.PlayerId ? couple.Lover2 : couple.Lover1;
@@ -188,9 +188,9 @@ internal static class Lovers
         {
             return null;
         }
-        for (int i = 0; i < Couples.Count; i++)
+        for (var i = 0; i < Couples.Count; i++)
         {
-            Couple pair = Couples[i];
+            var pair = Couples[i];
             if (pair.Lover1?.PlayerId == player.PlayerId || pair.Lover2?.PlayerId == player.PlayerId)
             {
                 return pair;
@@ -207,7 +207,7 @@ internal static class Lovers
 
     internal static bool AnyAlive()
     {
-        for (int i = 0; i < Couples.Count; i++)
+        for (var i = 0; i < Couples.Count; i++)
         {
             if (Couples[i].Alive)
             {
@@ -220,7 +220,7 @@ internal static class Lovers
 
     internal static bool AnyNonKillingCouples()
     {
-        for (int i = 0; i < Couples.Count; i++)
+        for (var i = 0; i < Couples.Count; i++)
         {
             if (!Couples[i].HasAliveKillingLover)
             {

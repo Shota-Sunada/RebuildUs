@@ -76,7 +76,7 @@ internal class Medic : SingleRoleBase<Medic>
     {
         _medicShieldButton = new(() =>
             {
-                Medic local = Local;
+                var local = Local;
                 if (local == null)
                 {
                     return;
@@ -100,7 +100,7 @@ internal class Medic : SingleRoleBase<Medic>
             () => Local != null && !UsedShield && PlayerControl.LocalPlayer.IsAlive(),
             () =>
             {
-                Medic local = Local;
+                var local = Local;
                 return !UsedShield && local != null && local._currentTarget && PlayerControl.LocalPlayer.CanMove;
             },
             () => { },

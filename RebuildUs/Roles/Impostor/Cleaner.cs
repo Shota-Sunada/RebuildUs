@@ -46,25 +46,25 @@ internal class Cleaner : MultiRoleBase<Cleaner>
     {
         CleanerCleanButton = new(() =>
             {
-                Vector2 truePosition = PlayerControl.LocalPlayer.GetTruePosition();
-                float maxDist = PlayerControl.LocalPlayer.MaxReportDistance;
-                Il2CppArrayBase<DeadBody> bodies = UnityObject.FindObjectsOfType<DeadBody>();
+                var truePosition = PlayerControl.LocalPlayer.GetTruePosition();
+                var maxDist = PlayerControl.LocalPlayer.MaxReportDistance;
+                var bodies = UnityObject.FindObjectsOfType<DeadBody>();
 
-                foreach (DeadBody body in bodies)
+                foreach (var body in bodies)
                 {
                     if (body == null || body.Reported)
                     {
                         continue;
                     }
 
-                    Vector2 bodyPosition = body.TruePosition;
-                    float dist = Vector2.Distance(truePosition, bodyPosition);
+                    var bodyPosition = body.TruePosition;
+                    var dist = Vector2.Distance(truePosition, bodyPosition);
 
                     if (dist <= maxDist
                         && PlayerControl.LocalPlayer.CanMove
                         && !PhysicsHelpers.AnythingBetween(truePosition, bodyPosition, Constants.ShipAndObjectsMask, false))
                     {
-                        NetworkedPlayerInfo playerInfo = GameData.Instance.GetPlayerById(body.ParentId);
+                        var playerInfo = GameData.Instance.GetPlayerById(body.ParentId);
                         if (playerInfo == null)
                         {
                             continue;

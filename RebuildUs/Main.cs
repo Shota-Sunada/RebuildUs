@@ -321,7 +321,7 @@ public class RebuildUs : BasePlugin
 
     private static void UpdateRegions()
     {
-        ServerManager serverManager = FastDestroyableSingleton<ServerManager>.Instance;
+        var serverManager = FastDestroyableSingleton<ServerManager>.Instance;
 
         serverManager.AvailableRegions = ServerManager.DefaultRegions;
 
@@ -330,9 +330,9 @@ public class RebuildUs : BasePlugin
             new DnsRegionInfo(Ip.Value, "Custom", StringNames.NoTranslation, Ip.Value, Port.Value, false).CastFast<IRegionInfo>(),
         ];
 #nullable enable
-        IRegionInfo? currentRegion = serverManager.CurrentRegion;
+        var currentRegion = serverManager.CurrentRegion;
 #nullable disable
-        foreach (IRegionInfo region in regions)
+        foreach (var region in regions)
         {
             if (region == null)
             {

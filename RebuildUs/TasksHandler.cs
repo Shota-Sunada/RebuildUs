@@ -5,8 +5,8 @@ internal static class TasksHandler
 {
     internal static (int Completed, int Total) TaskInfo(NetworkedPlayerInfo pInfo)
     {
-        int total = 0;
-        int completed = 0;
+        var total = 0;
+        var completed = 0;
         if (pInfo.Disconnected
             || pInfo.Tasks == null
             || !pInfo.Object
@@ -21,7 +21,7 @@ internal static class TasksHandler
             return (completed, total);
         }
 
-        foreach (NetworkedPlayerInfo.TaskInfo playerInfoTask in pInfo.Tasks.GetFastEnumerator())
+        foreach (var playerInfoTask in pInfo.Tasks.GetFastEnumerator())
         {
             total++;
             if (playerInfoTask.Complete)
@@ -37,7 +37,7 @@ internal static class TasksHandler
     {
         __instance.TotalTasks = 0;
         __instance.CompletedTasks = 0;
-        foreach (NetworkedPlayerInfo pInfo in GameData.Instance.AllPlayers.GetFastEnumerator())
+        foreach (var pInfo in GameData.Instance.AllPlayers.GetFastEnumerator())
         {
             if (pInfo.Object
                 && (pInfo.Object.IsLovers() && !Lovers.TasksCount
@@ -49,7 +49,7 @@ internal static class TasksHandler
                 continue;
             }
 
-            (int playerCompleted, int playerTotal) = TaskInfo(pInfo);
+            (var playerCompleted, var playerTotal) = TaskInfo(pInfo);
             __instance.TotalTasks += playerTotal;
             __instance.CompletedTasks += playerCompleted;
         }

@@ -77,14 +77,14 @@ internal static class ShortcutCommands
             DecreaseTimerBarDebugValue();
         }
 
-        bool triggerDeathPopup = Helpers.GetKeysDown(KeyCode.LeftControl, KeyCode.F9) || Helpers.GetKeysDown(KeyCode.RightControl, KeyCode.F9);
+        var triggerDeathPopup = Helpers.GetKeysDown(KeyCode.LeftControl, KeyCode.F9) || Helpers.GetKeysDown(KeyCode.RightControl, KeyCode.F9);
         if (!triggerDeathPopup)
         {
             return;
         }
 
-        HudManager hud = FastDestroyableSingleton<HudManager>.Instance;
-        PlayerControl localPlayer = PlayerControl.LocalPlayer;
+        var hud = FastDestroyableSingleton<HudManager>.Instance;
+        var localPlayer = PlayerControl.LocalPlayer;
 
         if (localPlayer == null || hud?.Chat == null)
         {
@@ -96,8 +96,8 @@ internal static class ShortcutCommands
             return;
         }
 
-        int result = DeathPopup.TryShow(localPlayer, out HideAndSeekDeathPopup popup);
-        string reason = DeathPopup.ExplainResult(result);
+        var result = DeathPopup.TryShow(localPlayer, out var popup);
+        var reason = DeathPopup.ExplainResult(result);
         if (result != DeathPopup.RESULT_SUCCESS)
         {
             Logger.LogInfo($"DeathPopup debug result={result} ({reason})");
@@ -152,7 +152,7 @@ internal static class ShortcutCommands
             TimerBarManager.Settings.TimeTextColor = Color.white;
             TimerBarManager.Settings.TimeFormatter = (time, _, isFinal) =>
             {
-                int seconds = Mathf.CeilToInt(Mathf.Max(0f, time));
+                var seconds = Mathf.CeilToInt(Mathf.Max(0f, time));
                 return isFinal ? $"FINAL {seconds}s" : $"ESCAPE {seconds}s";
             };
 
@@ -216,7 +216,7 @@ internal static class ShortcutCommands
         }
 
         const float debugDecreaseValue = 5f;
-        bool ok = TimerBarManager.DecreaseCustomTimer(debugDecreaseValue);
+        var ok = TimerBarManager.DecreaseCustomTimer(debugDecreaseValue);
         if (ok)
         {
             Logger.LogInfo($"TimerBar debug value decreased by {debugDecreaseValue} (Ctrl+F12).");

@@ -31,7 +31,7 @@ internal static class ExileControllerPatch
                 || Madmate.ExileCrewmate && player.Object.HasModifier(ModifierType.Madmate)))
         {
             // pick random crewmate
-            PlayerControl target = PickRandomCrewmate(player.PlayerId);
+            var target = PickRandomCrewmate(player.PlayerId);
             if (target != null)
             {
                 // exile the picked crewmate
@@ -56,7 +56,7 @@ internal static class ExileControllerPatch
         if (Eraser.Exists && AmongUsClient.Instance.AmHost && Eraser.FutureErased != null)
         {
             // We need to send the RPC from the host here, to make sure that the order of shifting and erasing is correct (for that reason the futureShifted and futureErased are being synced)
-            foreach (PlayerControl target in Eraser.FutureErased)
+            foreach (var target in Eraser.FutureErased)
             {
                 if (target == null || !target.CanBeErased())
                 {
@@ -79,9 +79,9 @@ internal static class ExileControllerPatch
         // Witch execute casted spells
         if (Witch.Exists && Witch.FutureSpelled != null && AmongUsClient.Instance.AmHost)
         {
-            PlayerControl exiledPlayer = player?.Object;
-            bool exiledIsWitch = exiledPlayer != null && exiledPlayer.IsRole(RoleType.Witch);
-            bool witchDiesWithExiledLover = exiledPlayer != null
+            var exiledPlayer = player?.Object;
+            var exiledIsWitch = exiledPlayer != null && exiledPlayer.IsRole(RoleType.Witch);
+            var witchDiesWithExiledLover = exiledPlayer != null
                                             && Lovers.BothDie
                                             && exiledPlayer.IsLovers()
                                             && exiledPlayer.GetPartner()?.IsRole(RoleType.Witch) == true;
@@ -90,14 +90,14 @@ internal static class ExileControllerPatch
             {
                 Witch.FutureSpelled = [];
             }
-            foreach (PlayerControl target in Witch.FutureSpelled)
+            foreach (var target in Witch.FutureSpelled)
             {
                 if (target != null && !target.Data.IsDead)
                 {
-                    PlayerControl witchKiller = exiledIsWitch ? exiledPlayer : null;
+                    var witchKiller = exiledIsWitch ? exiledPlayer : null;
                     if (witchKiller == null)
                     {
-                        foreach (Witch w in Witch.Players)
+                        foreach (var w in Witch.Players)
                         {
                             if (w.Player == null || w.Player.Data.IsDead)
                             {
@@ -127,21 +127,21 @@ internal static class ExileControllerPatch
         Witch.FutureSpelled = [];
 
         // SecurityGuard vents and cameras
-        ShipStatus ship = MapUtilities.CachedShipStatus;
+        var ship = MapUtilities.CachedShipStatus;
         if (ship != null)
         {
-            int oldLen = ship.AllCameras.Length;
-            int addLen = MapSettings.CamerasToAdd.Count;
+            var oldLen = ship.AllCameras.Length;
+            var addLen = MapSettings.CamerasToAdd.Count;
             if (addLen > 0)
             {
                 SurvCamera[] newCameras = new SurvCamera[oldLen + addLen];
-                for (int i = 0; i < oldLen; i++)
+                for (var i = 0; i < oldLen; i++)
                 {
                     newCameras[i] = ship.AllCameras[i];
                 }
-                for (int i = 0; i < addLen; i++)
+                for (var i = 0; i < addLen; i++)
                 {
-                    SurvCamera camera = MapSettings.CamerasToAdd[i];
+                    var camera = MapSettings.CamerasToAdd[i];
                     camera.gameObject.SetActive(true);
                     camera.gameObject.GetComponent<SpriteRenderer>().color = Color.white;
                     newCameras[oldLen + i] = camera;
@@ -152,9 +152,9 @@ internal static class ExileControllerPatch
             }
         }
 
-        foreach (Vent vent in MapSettings.VentsToSeal)
+        foreach (var vent in MapSettings.VentsToSeal)
         {
-            SpriteAnim animator = vent.GetComponent<SpriteAnim>();
+            var animator = vent.GetComponent<SpriteAnim>();
             vent.EnterVentAnim = vent.ExitVentAnim = null;
             if (Helpers.IsFungle)
             {
@@ -187,9 +187,9 @@ internal static class ExileControllerPatch
 
     private static PlayerControl PickRandomCrewmate(int exiledPlayerId)
     {
-        int numAliveCrewmates = 0;
+        var numAliveCrewmates = 0;
         // count alive crewmates
-        foreach (PlayerControl player in PlayerControl.AllPlayerControls.GetFastEnumerator())
+        foreach (var player in PlayerControl.AllPlayerControls.GetFastEnumerator())
         {
             if (player.IsTeamImpostor())
             {
@@ -211,10 +211,10 @@ internal static class ExileControllerPatch
             return null;
         }
         // get random number range 0, num of alive crewmates
-        int targetPlayerIndex = RebuildUs.Rnd.Next(0, numAliveCrewmates);
-        int currentPlayerIndex = 0;
+        var targetPlayerIndex = RebuildUs.Rnd.Next(0, numAliveCrewmates);
+        var currentPlayerIndex = 0;
         // return the player
-        foreach (PlayerControl player in PlayerControl.AllPlayerControls.GetFastEnumerator())
+        foreach (var player in PlayerControl.AllPlayerControls.GetFastEnumerator())
         {
             if (player.IsTeamImpostor())
             {
@@ -243,7 +243,7 @@ internal static class ExileControllerPatch
     [HarmonyPatch(typeof(AirshipExileController), nameof(AirshipExileController.WrapUpAndSpawn))]
     internal static void WrapUpPostfix(ExileController __instance)
     {
-        NetworkedPlayerInfo networkedPlayer = __instance.initData.networkedPlayer;
+        var networkedPlayer = __instance.initData.networkedPlayer;
         WrapUpPostfix(networkedPlayer?.Object);
     }
 
@@ -286,7 +286,7 @@ internal static class ExileControllerPatch
         // Mini set adapted cooldown
         if (PlayerControl.LocalPlayer.HasModifier(ModifierType.Mini) && PlayerControl.LocalPlayer.IsTeamImpostor())
         {
-            float multiplier = Mini.IsGrownUp(PlayerControl.LocalPlayer) ? 0.66f : 2f;
+            var multiplier = Mini.IsGrownUp(PlayerControl.LocalPlayer) ? 0.66f : 2f;
             PlayerControl.LocalPlayer.SetKillTimer(FloatOptionNames.KillCooldown.Get() * multiplier);
         }
 
@@ -303,21 +303,21 @@ internal static class ExileControllerPatch
         }
 
         // Remove DeadBodies
-        Il2CppArrayBase<DeadBody> array = UnityObject.FindObjectsOfType<DeadBody>();
-        foreach (DeadBody t in array)
+        var array = UnityObject.FindObjectsOfType<DeadBody>();
+        foreach (var t in array)
         {
             UnityObject.Destroy(t.gameObject);
         }
 
         // ベントバグ対策
-        VentilationSystem vs = FastDestroyableSingleton<ShipStatus>.Instance.Systems[SystemTypes.Ventilation].TryCast<VentilationSystem>();
+        var vs = FastDestroyableSingleton<ShipStatus>.Instance.Systems[SystemTypes.Ventilation].TryCast<VentilationSystem>();
         vs?.PlayersInsideVents.Clear();
 
         // イビルトラッカーで他のプレイヤーのタスク情報を表示する
         Map.ResetRealTasks();
 
-        int deadPlayers = 0;
-        foreach (PlayerControl p in PlayerControl.AllPlayerControls.GetFastEnumerator())
+        var deadPlayers = 0;
+        foreach (var p in PlayerControl.AllPlayerControls.GetFastEnumerator())
         {
             if (p.Data.IsDead)
             {

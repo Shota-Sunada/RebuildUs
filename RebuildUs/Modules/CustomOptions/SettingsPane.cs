@@ -23,12 +23,12 @@ internal partial class CustomOption
 
     internal static void SetTab(LobbyViewSettingsPane __instance, PanePage id)
     {
-        PassiveButton generalPaneButton = _generalPaneButton.GetComponent<PassiveButton>();
-        PassiveButton overviewPaneButton = _overviewPaneButton.GetComponent<PassiveButton>();
-        PassiveButton impostorPaneButton = _impostorPaneButton.GetComponent<PassiveButton>();
-        PassiveButton crewmatePaneButton = _crewmatePaneButton.GetComponent<PassiveButton>();
-        PassiveButton neutralPaneButton = _neutralPaneButton.GetComponent<PassiveButton>();
-        PassiveButton modifierPaneButton = _modifierPaneButton.GetComponent<PassiveButton>();
+        var generalPaneButton = _generalPaneButton.GetComponent<PassiveButton>();
+        var overviewPaneButton = _overviewPaneButton.GetComponent<PassiveButton>();
+        var impostorPaneButton = _impostorPaneButton.GetComponent<PassiveButton>();
+        var crewmatePaneButton = _crewmatePaneButton.GetComponent<PassiveButton>();
+        var neutralPaneButton = _neutralPaneButton.GetComponent<PassiveButton>();
+        var modifierPaneButton = _modifierPaneButton.GetComponent<PassiveButton>();
 
         generalPaneButton.SelectButton(false);
         overviewPaneButton.SelectButton(false);
@@ -82,7 +82,7 @@ internal partial class CustomOption
     internal static void SettingsPaneChangeTab(LobbyViewSettingsPane __instance, PanePage id)
     {
         __instance.currentTab = (StringNames)id;
-        foreach (GameObject info in __instance.settingsInfo.GetFastEnumerator())
+        foreach (var info in __instance.settingsInfo.GetFastEnumerator())
         {
             info.gameObject.Destroy();
         }
@@ -94,18 +94,18 @@ internal partial class CustomOption
 
     private static void DrawTab(LobbyViewSettingsPane __instance, CustomOptionType type)
     {
-        if (!OptionsByType.TryGetValue(type, out List<CustomOption> options))
+        if (!OptionsByType.TryGetValue(type, out var options))
         {
             return;
         }
 
-        float num = 1.44f;
-        int i = 0;
-        int singles = 1;
-        int headers = 0;
-        int lines = 0;
+        var num = 1.44f;
+        var i = 0;
+        var singles = 1;
+        var headers = 0;
+        var lines = 0;
 
-        foreach (CustomOption option in options)
+        foreach (var option in options)
         {
             if (option.IsHeader)
             {
@@ -120,7 +120,7 @@ internal partial class CustomOption
                 }
                 headers++; // for header
 
-                CategoryHeaderMasked categoryHeaderMasked = UnityObject.Instantiate(__instance.categoryHeaderOrigin,
+                var categoryHeaderMasked = UnityObject.Instantiate(__instance.categoryHeaderOrigin,
                     __instance.settingsContainer,
                     true);
                 categoryHeaderMasked.SetHeader(StringNames.ImpostorsCategory, 61);
@@ -149,7 +149,7 @@ internal partial class CustomOption
                 continue;
             }
 
-            ViewSettingsInfoPanel viewSettingsInfoPanel = UnityObject.Instantiate(__instance.infoPanelOrigin, __instance.settingsContainer, true);
+            var viewSettingsInfoPanel = UnityObject.Instantiate(__instance.infoPanelOrigin, __instance.settingsContainer, true);
             viewSettingsInfoPanel.transform.localScale = Vector3.one;
             float num2;
             if (i % 2 == 0)
@@ -167,8 +167,8 @@ internal partial class CustomOption
             }
 
             viewSettingsInfoPanel.transform.localPosition = new(num2, num, -2f);
-            int value = option.GetSelection();
-            (TrKey viewName, string viewValue) = HandleSpecialOptionsView(option,
+            var value = option.GetSelection();
+            (var viewName, var viewValue) = HandleSpecialOptionsView(option,
                 option.NameKey,
                 (option.GetSelections().Length > value ? option.GetSelections()[value] : null)?.ToString() ?? string.Empty);
             if (option is CustomOption<bool>)
@@ -193,7 +193,7 @@ internal partial class CustomOption
             i++;
         }
 
-        float actualSpacing = (headers * 1.05f + lines * 0.85f) / (headers + lines) * 1.01f;
+        var actualSpacing = (headers * 1.05f + lines * 0.85f) / (headers + lines) * 1.01f;
         __instance.scrollBar.CalculateAndSetYBounds(__instance.settingsInfo.Count + singles * 2 + headers, 2f, 5f, actualSpacing);
     }
 
@@ -201,9 +201,9 @@ internal partial class CustomOption
     {
         List<CustomOption> options = [];
         CustomOptionType[] targetTypes = [CustomOptionType.Impostor, CustomOptionType.Crewmate, CustomOptionType.Neutral, CustomOptionType.Modifier];
-        foreach (CustomOptionType type in targetTypes)
+        foreach (var type in targetTypes)
         {
-            foreach (CustomOption option in AllOptions)
+            foreach (var option in AllOptions)
             {
                 if (option.IsHeader && option.Type == type)
                 {
@@ -212,14 +212,14 @@ internal partial class CustomOption
             }
         }
 
-        float num = 1.44f;
-        int i = 0;
-        int singles = 1;
-        int headers = 0;
-        int lines = 0;
+        var num = 1.44f;
+        var i = 0;
+        var singles = 1;
+        var headers = 0;
+        var lines = 0;
         CustomOptionType currentType = (CustomOptionType)(-1);
 
-        foreach (CustomOption option in options)
+        foreach (var option in options)
         {
             if (currentType != option.Type)
             {
@@ -234,7 +234,7 @@ internal partial class CustomOption
                     singles++;
                 }
                 headers++; // for header
-                CategoryHeaderMasked categoryHeaderMasked = UnityObject.Instantiate(__instance.categoryHeaderOrigin,
+                var categoryHeaderMasked = UnityObject.Instantiate(__instance.categoryHeaderOrigin,
                     __instance.settingsContainer,
                     true);
                 categoryHeaderMasked.SetHeader(StringNames.ImpostorsCategory, 61);
@@ -255,7 +255,7 @@ internal partial class CustomOption
                 i = 0;
             }
 
-            ViewSettingsInfoPanel viewSettingsInfoPanel = UnityObject.Instantiate(__instance.infoPanelOrigin, __instance.settingsContainer, true);
+            var viewSettingsInfoPanel = UnityObject.Instantiate(__instance.infoPanelOrigin, __instance.settingsContainer, true);
             viewSettingsInfoPanel.transform.localScale = Vector3.one;
             float num2;
             if (i % 2 == 0)
@@ -273,8 +273,8 @@ internal partial class CustomOption
             }
 
             viewSettingsInfoPanel.transform.localPosition = new(num2, num, -2f);
-            int value = option.GetSelection();
-            (TrKey optName, string optValue) = HandleSpecialOptionsView(option,
+            var value = option.GetSelection();
+            (var optName, var optValue) = HandleSpecialOptionsView(option,
                 option.NameKey,
                 (option.GetSelections().Length > value ? option.GetSelections()[value] : null)?.ToString() ?? string.Empty);
             if (option is CustomOption<bool>)
@@ -299,7 +299,7 @@ internal partial class CustomOption
             i++;
         }
 
-        float actualSpacing = (headers * 1.05f + lines * 0.85f) / (headers + lines) * 1.01f;
+        var actualSpacing = (headers * 1.05f + lines * 0.85f) / (headers + lines) * 1.01f;
         __instance.scrollBar.CalculateAndSetYBounds(__instance.settingsInfo.Count + singles * 2 + headers, 2f, 5f, actualSpacing);
     }
 
@@ -308,7 +308,7 @@ internal partial class CustomOption
         __instance.rolesTabButton.gameObject.SetActive(false);
         __instance.gameModeText.text = Tr.Get(TrKey.GameModeText);
 
-        GameObject overview = __instance.taskTabButton.gameObject;
+        var overview = __instance.taskTabButton.gameObject;
         __instance.StartCoroutine(Effects.Lerp(2f,
             new Action<float>(_ =>
             {
@@ -345,8 +345,8 @@ internal partial class CustomOption
                                                  string buttonText,
                                                  CustomOptionType optionType)
     {
-        GameObject template = __instance.taskTabButton.gameObject;
-        GameObject buttonObj = UnityObject.Instantiate(template, template.transform.parent);
+        var template = __instance.taskTabButton.gameObject;
+        var buttonObj = UnityObject.Instantiate(template, template.transform.parent);
         buttonObj.transform.localPosition += Vector3.right * 1.75f * (int)(id - 1);
         buttonObj.name = buttonName;
         __instance.StartCoroutine(Effects.Lerp(2f,
@@ -354,7 +354,7 @@ internal partial class CustomOption
             {
                 buttonObj.transform.FindChild("FontPlacer").GetComponentInChildren<TextMeshPro>().text = buttonText;
             })));
-        PassiveButton buttonPb = buttonObj.GetComponent<PassiveButton>();
+        var buttonPb = buttonObj.GetComponent<PassiveButton>();
         buttonPb.OnClick.RemoveAllListeners();
         buttonPb.OnClick.AddListener((Action)(() =>
         {
@@ -369,14 +369,14 @@ internal partial class CustomOption
 
     private static (TrKey name, string value) HandleSpecialOptionsView(CustomOption option, TrKey defKey, string defaultVal)
     {
-        TrKey name = defKey;
-        string val = defaultVal;
+        var name = defKey;
+        var val = defaultVal;
         if (option == CustomOptionHolder.CrewmateRolesCountMin)
         {
             val = "";
             name = TrKey.CrewmateRoles;
-            int min = CustomOptionHolder.CrewmateRolesCountMin.GetSelection();
-            int max = CustomOptionHolder.CrewmateRolesCountMax.GetSelection();
+            var min = CustomOptionHolder.CrewmateRolesCountMin.GetSelection();
+            var max = CustomOptionHolder.CrewmateRolesCountMax.GetSelection();
             if (min > max)
             {
                 min = max;
@@ -387,8 +387,8 @@ internal partial class CustomOption
         if (option == CustomOptionHolder.NeutralRolesCountMin)
         {
             name = TrKey.NeutralRoles;
-            int min = CustomOptionHolder.NeutralRolesCountMin.GetSelection();
-            int max = CustomOptionHolder.NeutralRolesCountMax.GetSelection();
+            var min = CustomOptionHolder.NeutralRolesCountMin.GetSelection();
+            var max = CustomOptionHolder.NeutralRolesCountMax.GetSelection();
             if (min > max)
             {
                 min = max;
@@ -399,8 +399,8 @@ internal partial class CustomOption
         if (option == CustomOptionHolder.ImpostorRolesCountMin)
         {
             name = TrKey.ImpostorRoles;
-            int min = CustomOptionHolder.ImpostorRolesCountMin.GetSelection();
-            int max = CustomOptionHolder.ImpostorRolesCountMax.GetSelection();
+            var min = CustomOptionHolder.ImpostorRolesCountMin.GetSelection();
+            var max = CustomOptionHolder.ImpostorRolesCountMax.GetSelection();
             if (max > Int32OptionNames.NumImpostors.Get())
             {
                 max = Int32OptionNames.NumImpostors.Get();
@@ -415,8 +415,8 @@ internal partial class CustomOption
         if (option == CustomOptionHolder.ModifiersCountMin)
         {
             name = TrKey.Modifiers;
-            int min = CustomOptionHolder.ModifiersCountMin.GetSelection();
-            int max = CustomOptionHolder.ModifiersCountMax.GetSelection();
+            var min = CustomOptionHolder.ModifiersCountMin.GetSelection();
+            var max = CustomOptionHolder.ModifiersCountMax.GetSelection();
             if (min > max)
             {
                 min = max;

@@ -28,7 +28,7 @@ internal static class RoleAssignment
 
         if (!ShipStatus.Instance)
         {
-            int index = Mathf.Clamp(ByteOptionNames.MapId.Get(), 0, Constants.MapNames.Length - 1);
+            var index = Mathf.Clamp(ByteOptionNames.MapId.Get(), 0, Constants.MapNames.Length - 1);
             try
             {
                 switch (index)
@@ -62,7 +62,7 @@ internal static class RoleAssignment
 
             __instance.ShipLoadingAsyncHandle = __instance.ShipPrefabs[index].InstantiateAsync();
             yield return __instance.ShipLoadingAsyncHandle;
-            GameObject result = __instance.ShipLoadingAsyncHandle.Result;
+            var result = __instance.ShipLoadingAsyncHandle.Result;
             if (result == null)
             {
                 Logger.LogError("CoStartGameHost aborted: ship loading result is null.");
@@ -80,12 +80,12 @@ internal static class RoleAssignment
             __instance.Spawn(ShipStatus.Instance);
         }
 
-        DateTime start = DateTime.Now;
+        var start = DateTime.Now;
         while (true)
         {
-            bool flag = true;
-            int num = 10;
-            float totalSeconds = (float)(DateTime.Now - start).TotalSeconds;
+            var flag = true;
+            var num = 10;
+            var totalSeconds = (float)(DateTime.Now - start).TotalSeconds;
             if (ByteOptionNames.MapId.Get() is 4 or 5)
             {
                 num = 15;
@@ -93,7 +93,7 @@ internal static class RoleAssignment
 
             lock (__instance.allClients)
             {
-                foreach (ClientData allClient in __instance.allClients)
+                foreach (var allClient in __instance.allClients)
                 {
                     if (allClient.Id == __instance.ClientId || allClient.IsReady)
                     {
@@ -114,7 +114,7 @@ internal static class RoleAssignment
 
             if (totalSeconds > 1.0 && totalSeconds < num)
             {
-                LoadingBarManager loadingBar = FastDestroyableSingleton<LoadingBarManager>.Instance;
+                var loadingBar = FastDestroyableSingleton<LoadingBarManager>.Instance;
                 if (loadingBar != null)
                 {
                     loadingBar.ToggleLoadingBar(true);
@@ -176,7 +176,7 @@ internal static class RoleAssignment
 
     private static void BeginShipAndSendClientReady(AmongUsClient client)
     {
-        ShipStatus ship = MapUtilities.CachedShipStatus ?? ShipStatus.Instance;
+        var ship = MapUtilities.CachedShipStatus ?? ShipStatus.Instance;
         if (ship == null)
         {
             Logger.LogError("Cannot begin ship: both MapUtilities.CachedShipStatus and ShipStatus.Instance are null.");
@@ -192,7 +192,7 @@ internal static class RoleAssignment
     private static IEnumerator WaitForLocalPlayer()
     {
         const int timeoutMs = 5000;
-        DateTime start = DateTime.UtcNow;
+        var start = DateTime.UtcNow;
         while (PlayerControl.LocalPlayer == null)
         {
             if ((DateTime.UtcNow - start).TotalMilliseconds > timeoutMs)
@@ -213,7 +213,7 @@ internal static class RoleAssignment
             return;
         }
 
-        foreach (PlayerControl player in PlayerControl.AllPlayerControls.GetFastEnumerator())
+        foreach (var player in PlayerControl.AllPlayerControls.GetFastEnumerator())
         {
             if (player.Data == null || player.Data.Disconnected)
             {
@@ -226,9 +226,9 @@ internal static class RoleAssignment
     private static IEnumerator WaitResetVariables()
     {
         Logger.LogInfo("waitResetVariables");
-        bool check = false;
+        var check = false;
         const int timeout = 10000;
-        DateTime startTime = DateTime.UtcNow;
+        var startTime = DateTime.UtcNow;
         while (!check)
         {
             if (CheckList == null)
@@ -238,7 +238,7 @@ internal static class RoleAssignment
             }
 
             check = true;
-            foreach (byte playerId in CheckList.Keys)
+            foreach (var playerId in CheckList.Keys)
             {
                 if (CheckList[playerId])
                 {
@@ -263,12 +263,12 @@ internal static class RoleAssignment
 
     private static void Shuffle<T>(IList<T> list)
     {
-        int n = list.Count;
-        System.Random rnd = RebuildUs.Rnd;
+        var n = list.Count;
+        var rnd = RebuildUs.Rnd;
         while (n > 1)
         {
             n--;
-            int k = rnd.Next(n + 1);
+            var k = rnd.Next(n + 1);
             (list[n], list[k]) = (list[k], list[n]);
         }
     }
@@ -324,7 +324,7 @@ internal static class RoleAssignment
             _blockLovers.Add((byte)RoleType.Arsonist);
         }
 
-        RoleAssignmentData data = GetRoleAssignmentData();
+        var data = GetRoleAssignmentData();
         AssignSpecialRoles(data); // Assign special roles like mafia and lovers first as they assign a role to multiple players and the chances are independent of the ticket system
         SelectFactionForFactionIndependentRoles(data);
         AssignEnsuredRoles(data); // Assign roles that should always be in the game next
@@ -340,7 +340,7 @@ internal static class RoleAssignment
         List<PlayerControl> crewmates = [];
         List<PlayerControl> impostors = [];
 
-        foreach (PlayerControl p in PlayerControl.AllPlayerControls.GetFastEnumerator())
+        foreach (var p in PlayerControl.AllPlayerControls.GetFastEnumerator())
         {
             if (p.Data == null || p.Data.Disconnected)
             {
@@ -359,12 +359,12 @@ internal static class RoleAssignment
         Shuffle(crewmates);
         Shuffle(impostors);
 
-        int crewmateMin = CustomOptionHolder.CrewmateRolesCountMin.GetSelection();
-        int crewmateMax = CustomOptionHolder.CrewmateRolesCountMax.GetSelection();
-        int neutralMin = CustomOptionHolder.NeutralRolesCountMin.GetSelection();
-        int neutralMax = CustomOptionHolder.NeutralRolesCountMax.GetSelection();
-        int impostorMin = CustomOptionHolder.ImpostorRolesCountMin.GetSelection();
-        int impostorMax = CustomOptionHolder.ImpostorRolesCountMax.GetSelection();
+        var crewmateMin = CustomOptionHolder.CrewmateRolesCountMin.GetSelection();
+        var crewmateMax = CustomOptionHolder.CrewmateRolesCountMax.GetSelection();
+        var neutralMin = CustomOptionHolder.NeutralRolesCountMin.GetSelection();
+        var neutralMax = CustomOptionHolder.NeutralRolesCountMax.GetSelection();
+        var impostorMin = CustomOptionHolder.ImpostorRolesCountMin.GetSelection();
+        var impostorMax = CustomOptionHolder.ImpostorRolesCountMax.GetSelection();
 
         // Make sure min is less or equal to max
         if (crewmateMin > crewmateMax)
@@ -381,14 +381,14 @@ internal static class RoleAssignment
         }
 
         // Get the maximum allowed count of each role type based on the minimum and maximum option
-        int crewCountSettings = RebuildUs.Rnd.Next(crewmateMin, crewmateMax + 1);
-        int neutralCountSettings = RebuildUs.Rnd.Next(neutralMin, neutralMax + 1);
-        int impCountSettings = RebuildUs.Rnd.Next(impostorMin, impostorMax + 1);
+        var crewCountSettings = RebuildUs.Rnd.Next(crewmateMin, crewmateMax + 1);
+        var neutralCountSettings = RebuildUs.Rnd.Next(neutralMin, neutralMax + 1);
+        var impCountSettings = RebuildUs.Rnd.Next(impostorMin, impostorMax + 1);
 
         // Potentially lower the actual maximum to the assignable players
-        int maxCrewmateRoles = Mathf.Min(crewmates.Count, crewCountSettings);
-        int maxNeutralRoles = Mathf.Min(crewmates.Count, neutralCountSettings);
-        int maxImpostorRoles = Mathf.Min(impostors.Count, impCountSettings);
+        var maxCrewmateRoles = Mathf.Min(crewmates.Count, crewCountSettings);
+        var maxNeutralRoles = Mathf.Min(crewmates.Count, neutralCountSettings);
+        var maxImpostorRoles = Mathf.Min(impostors.Count, impCountSettings);
 
         // Fill in the lists with the roles that should be assigned to players. Note that the special roles (like Mafia or Lovers) are NOT included in these lists
         Dictionary<byte, (int rate, int count)> impSettings = [];
@@ -396,7 +396,7 @@ internal static class RoleAssignment
         Dictionary<byte, (int rate, int count)> crewSettings = [];
 
         Logger.LogMessage("Initializing Role Data");
-        foreach (RoleData.RoleRegistration role in RoleData.Roles)
+        foreach (var role in RoleData.Roles)
         {
             if (role.GetOption == null || role.GetOption() is not CustomRoleOption roleOption)
             {
@@ -480,21 +480,21 @@ internal static class RoleAssignment
         // Assign Lovers
         if (CustomOptionHolder.LoversSpawnRate.Enabled)
         {
-            for (int i = 0; i < CustomOptionHolder.LoversNumCouples.GetFloat(); i++)
+            for (var i = 0; i < CustomOptionHolder.LoversNumCouples.GetFloat(); i++)
             {
-                List<PlayerControl> singleCrew = data.Crewmates.FindAll(x => !x.IsLovers());
-                List<PlayerControl> singleImps = data.Impostors.FindAll(x => !x.IsLovers());
+                var singleCrew = data.Crewmates.FindAll(x => !x.IsLovers());
+                var singleImps = data.Impostors.FindAll(x => !x.IsLovers());
 
-                bool isOnlyRole = !CustomOptionHolder.LoversCanHaveAnotherRole.GetBool();
+                var isOnlyRole = !CustomOptionHolder.LoversCanHaveAnotherRole.GetBool();
                 if (RebuildUs.Rnd.Next(1, 101) > CustomOptionHolder.LoversSpawnRate.GetSelection() * 10)
                 {
                     continue;
                 }
 
-                int lover1 = -1;
-                int lover2 = -1;
-                int lover1Index = -1;
-                int lover2Index = -1;
+                var lover1 = -1;
+                var lover2 = -1;
+                var lover1Index = -1;
+                var lover2Index = -1;
                 if (singleImps.Count > 0
                     && singleCrew.Count > 0
                     && (!isOnlyRole || data.MaxCrewmateRoles > 0 && data.MaxImpostorRoles > 0)
@@ -565,7 +565,7 @@ internal static class RoleAssignment
     private static void SelectFactionForFactionIndependentRoles(RoleAssignmentData data)
     {
         // Assign Guesser (chance to be impostor based on setting)
-        bool isEvilGuesser = RebuildUs.Rnd.Next(1, 101) <= CustomOptionHolder.GuesserIsImpGuesserRate.GetSelection() * 10;
+        var isEvilGuesser = RebuildUs.Rnd.Next(1, 101) <= CustomOptionHolder.GuesserIsImpGuesserRate.GetSelection() * 10;
         if (CustomOptionHolder.GuesserSpawnBothRate.GetSelection() > 0)
         {
             if (RebuildUs.Rnd.Next(1, 101) <= CustomOptionHolder.GuesserSpawnRate.GetSelection() * 10)
@@ -574,7 +574,7 @@ internal static class RoleAssignment
                 {
                     if (data.Impostors.Count > 0 && data.MaxImpostorRoles > 0)
                     {
-                        byte evilGuesser = SetRoleToRandomPlayer((byte)RoleType.EvilGuesser, data.Impostors);
+                        var evilGuesser = SetRoleToRandomPlayer((byte)RoleType.EvilGuesser, data.Impostors);
                         data.Impostors.RemoveAll(x => x.PlayerId == evilGuesser);
                         data.MaxImpostorRoles--;
                         data.CrewSettings.Add((byte)RoleType.NiceGuesser, (CustomOptionHolder.GuesserSpawnBothRate.GetSelection(), 1));
@@ -582,7 +582,7 @@ internal static class RoleAssignment
                 }
                 else if (data.Crewmates.Count > 0 && data.MaxCrewmateRoles > 0)
                 {
-                    byte niceGuesser = SetRoleToRandomPlayer((byte)RoleType.NiceGuesser, data.Crewmates);
+                    var niceGuesser = SetRoleToRandomPlayer((byte)RoleType.NiceGuesser, data.Crewmates);
                     data.Crewmates.RemoveAll(x => x.PlayerId == niceGuesser);
                     data.MaxCrewmateRoles--;
                     data.ImpSettings.Add((byte)RoleType.EvilGuesser, (CustomOptionHolder.GuesserSpawnBothRate.GetSelection(), 1));
@@ -614,7 +614,7 @@ internal static class RoleAssignment
         }
 
         // Assign Shifter (chance to be neutral based on setting)
-        bool shifterIsNeutral = false;
+        var shifterIsNeutral = false;
         switch (data.Crewmates.Count)
         {
             case > 0 when data.MaxNeutralRoles > 0 && RebuildUs.Rnd.Next(1, 101) <= CustomOptionHolder.ShifterIsNeutralRate.GetSelection() * 10:
@@ -637,39 +637,39 @@ internal static class RoleAssignment
 
         // Get all roles where the chance to occur is set to 100%
         List<byte> ensuredCrewmateRoles = [];
-        foreach (KeyValuePair<byte, (int rate, int count)> kvp in data.CrewSettings)
+        foreach (var kvp in data.CrewSettings)
         {
             if (kvp.Value.rate != 10)
             {
                 continue;
             }
-            for (int i = 0; i < kvp.Value.count; i++)
+            for (var i = 0; i < kvp.Value.count; i++)
             {
                 ensuredCrewmateRoles.Add(kvp.Key);
             }
         }
 
         List<byte> ensuredNeutralRoles = [];
-        foreach (KeyValuePair<byte, (int rate, int count)> kvp in data.NeutralSettings)
+        foreach (var kvp in data.NeutralSettings)
         {
             if (kvp.Value.rate != 10)
             {
                 continue;
             }
-            for (int i = 0; i < kvp.Value.count; i++)
+            for (var i = 0; i < kvp.Value.count; i++)
             {
                 ensuredNeutralRoles.Add(kvp.Key);
             }
         }
 
         List<byte> ensuredImpostorRoles = [];
-        foreach (KeyValuePair<byte, (int rate, int count)> kvp in data.ImpSettings)
+        foreach (var kvp in data.ImpSettings)
         {
             if (kvp.Value.rate != 10)
             {
                 continue;
             }
-            for (int i = 0; i < kvp.Value.count; i++)
+            for (var i = 0; i < kvp.Value.count; i++)
             {
                 ensuredImpostorRoles.Add(kvp.Key);
             }
@@ -694,7 +694,7 @@ internal static class RoleAssignment
                 availableTeams.Add(TeamType.Impostor);
             }
 
-            TeamType roleType = availableTeams[RebuildUs.Rnd.Next(0, availableTeams.Count)];
+            var roleType = availableTeams[RebuildUs.Rnd.Next(0, availableTeams.Count)];
 
             List<byte> selectedRoles;
             List<PlayerControl> players;
@@ -714,9 +714,9 @@ internal static class RoleAssignment
                     break;
             }
 
-            int index = RebuildUs.Rnd.Next(0, selectedRoles.Count);
-            byte roleId = selectedRoles[index];
-            byte player = SetRoleToRandomPlayer(roleId, players);
+            var index = RebuildUs.Rnd.Next(0, selectedRoles.Count);
+            var roleId = selectedRoles[index];
+            var player = SetRoleToRandomPlayer(roleId, players);
 
             if (player == byte.MaxValue && _blockedAssignments < MAX_BLOCKS)
             {
@@ -728,9 +728,9 @@ internal static class RoleAssignment
 
             selectedRoles.RemoveAt(index);
 
-            if (CustomOptionHolder.BlockedRolePairings.TryGetValue(roleId, out byte[] blockedRoles))
+            if (CustomOptionHolder.BlockedRolePairings.TryGetValue(roleId, out var blockedRoles))
             {
-                foreach (byte blockedRoleId in blockedRoles)
+                foreach (var blockedRoleId in blockedRoles)
                 {
                     // Set chance for the blocked roles to 0 for chances less than 100%
                     if (data.ImpSettings.ContainsKey(blockedRoleId))
@@ -775,39 +775,39 @@ internal static class RoleAssignment
 
         // Get all roles where the chance to occur is set grater than 0% but not 100% and build a ticket pool based on their weight
         List<byte> crewmateTickets = [];
-        foreach (KeyValuePair<byte, (int rate, int count)> kvp in data.CrewSettings)
+        foreach (var kvp in data.CrewSettings)
         {
             if (kvp.Value.rate is <= 0 or >= 10)
             {
                 continue;
             }
-            for (int i = 0; i < kvp.Value.rate * kvp.Value.count; i++)
+            for (var i = 0; i < kvp.Value.rate * kvp.Value.count; i++)
             {
                 crewmateTickets.Add(kvp.Key);
             }
         }
 
         List<byte> neutralTickets = [];
-        foreach (KeyValuePair<byte, (int rate, int count)> kvp in data.NeutralSettings)
+        foreach (var kvp in data.NeutralSettings)
         {
             if (kvp.Value.rate is <= 0 or >= 10)
             {
                 continue;
             }
-            for (int i = 0; i < kvp.Value.rate * kvp.Value.count; i++)
+            for (var i = 0; i < kvp.Value.rate * kvp.Value.count; i++)
             {
                 neutralTickets.Add(kvp.Key);
             }
         }
 
         List<byte> impostorTickets = [];
-        foreach (KeyValuePair<byte, (int rate, int count)> kvp in data.ImpSettings)
+        foreach (var kvp in data.ImpSettings)
         {
             if (kvp.Value.rate is <= 0 or >= 10)
             {
                 continue;
             }
-            for (int i = 0; i < kvp.Value.rate * kvp.Value.count; i++)
+            for (var i = 0; i < kvp.Value.rate * kvp.Value.count; i++)
             {
                 impostorTickets.Add(kvp.Key);
             }
@@ -832,7 +832,7 @@ internal static class RoleAssignment
                 availableTeams.Add(TeamType.Impostor);
             }
 
-            TeamType roleType = availableTeams[RebuildUs.Rnd.Next(0, availableTeams.Count)];
+            var roleType = availableTeams[RebuildUs.Rnd.Next(0, availableTeams.Count)];
 
             List<byte> selectedTickets;
             List<PlayerControl> players;
@@ -852,9 +852,9 @@ internal static class RoleAssignment
                     break;
             }
 
-            int index = RebuildUs.Rnd.Next(0, selectedTickets.Count);
-            byte roleId = selectedTickets[index];
-            byte player = SetRoleToRandomPlayer(roleId, players);
+            var index = RebuildUs.Rnd.Next(0, selectedTickets.Count);
+            var roleId = selectedTickets[index];
+            var player = SetRoleToRandomPlayer(roleId, players);
 
             if (player == byte.MaxValue && _blockedAssignments < MAX_BLOCKS)
             {
@@ -866,9 +866,9 @@ internal static class RoleAssignment
 
             selectedTickets.RemoveAll(x => x == roleId);
 
-            if (CustomOptionHolder.BlockedRolePairings.TryGetValue(roleId, out byte[] blockedRoles))
+            if (CustomOptionHolder.BlockedRolePairings.TryGetValue(roleId, out var blockedRoles))
             {
-                foreach (byte blockedRoleId in blockedRoles)
+                foreach (var blockedRoleId in blockedRoles)
                 {
                     // Remove tickets of blocked roles from all pools
                     crewmateTickets.RemoveAll(x => x == blockedRoleId);
@@ -895,7 +895,7 @@ internal static class RoleAssignment
 
     private static byte SetRoleToHost(byte roleId, PlayerControl host)
     {
-        byte playerId = host.PlayerId;
+        var playerId = host.PlayerId;
 
         using RPCSender sender = new(PlayerControl.LocalPlayer.NetId, CustomRPC.SetRole);
         sender.Write(roleId);
@@ -985,8 +985,8 @@ internal static class RoleAssignment
 
     private static byte SetRoleToRandomPlayer(byte roleId, IList<PlayerControl> playerList, bool removePlayer = true)
     {
-        int index = RebuildUs.Rnd.Next(0, playerList.Count);
-        byte playerId = playerList[index].PlayerId;
+        var index = RebuildUs.Rnd.Next(0, playerList.Count);
+        var playerId = playerList[index].PlayerId;
         if (Helpers.RolesEnabled
             && (CustomOptionHolder.LoversSpawnRate == null || CustomOptionHolder.LoversSpawnRate.Enabled)
             && Helpers.PlayerById(playerId)?.IsLovers() == true
@@ -1016,8 +1016,8 @@ internal static class RoleAssignment
             return byte.MaxValue;
         }
 
-        int index = RebuildUs.Rnd.Next(0, playerList.Count);
-        byte playerId = playerList[index].PlayerId;
+        var index = RebuildUs.Rnd.Next(0, playerList.Count);
+        var playerId = playerList[index].PlayerId;
 
         using RPCSender sender = new(PlayerControl.LocalPlayer.NetId, CustomRPC.AddModifier);
         sender.Write(modId);
@@ -1031,14 +1031,14 @@ internal static class RoleAssignment
     {
         while (PlayerRoleMap.Count > 0)
         {
-            byte amount = (byte)Math.Min(PlayerRoleMap.Count, 20);
-            MessageWriter writer = AmongUsClient.Instance!.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
+            var amount = (byte)Math.Min(PlayerRoleMap.Count, 20);
+            var writer = AmongUsClient.Instance!.StartRpcImmediately(PlayerControl.LocalPlayer.NetId,
                 (byte)CustomRPC.WorkaroundSetRoles,
                 SendOption.Reliable);
             writer.Write(amount);
-            for (int i = 0; i < amount; i++)
+            for (var i = 0; i < amount; i++)
             {
-                Tuple<byte, byte> option = PlayerRoleMap[0];
+                var option = PlayerRoleMap[0];
                 PlayerRoleMap.RemoveAt(0);
                 writer.WritePacked((uint)option.Item1);
                 writer.WritePacked((uint)option.Item2);

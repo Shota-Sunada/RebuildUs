@@ -22,7 +22,7 @@ internal static class ShowHost
 
     internal static void Update(MeetingHud __instance)
     {
-        NetworkedPlayerInfo host = GameData.Instance.GetHost();
+        var host = GameData.Instance.GetHost();
 
         if (host == null || _text == null)
         {
@@ -35,7 +35,7 @@ internal static class ShowHost
         Sb.Append(": ");
         Sb.Append(host.PlayerName);
 
-        string newText = Sb.ToString();
+        var newText = Sb.ToString();
         if (_text.text != newText)
         {
             _text.text = newText;

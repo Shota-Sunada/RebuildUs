@@ -55,10 +55,10 @@ internal class Bait : MultiRoleBase<Bait>
             return;
         }
         DeadPlayer baitDeadPlayer = null;
-        List<DeadPlayer> deadPlayers = GameHistory.DeadPlayers;
+        var deadPlayers = GameHistory.DeadPlayers;
         if (deadPlayers != null)
         {
-            foreach (DeadPlayer dp in deadPlayers)
+            foreach (var dp in deadPlayers)
             {
                 if (dp.Player == null || dp.Player.PlayerId != Player.PlayerId)
                 {
@@ -91,11 +91,11 @@ internal class Bait : MultiRoleBase<Bait>
         }
         Helpers.HandleVampireBiteOnBodyReport(); // Manually call Vampire handling, since the CmdReportDeadBody Prefix won't be called
 
-        byte reporter = baitDeadPlayer.KillerIfExisting.PlayerId;
+        var reporter = baitDeadPlayer.KillerIfExisting.PlayerId;
         if (Player.HasModifier(ModifierType.Madmate))
         {
             List<PlayerControl> candidates = [];
-            foreach (PlayerControl p in PlayerControl.AllPlayerControls.GetFastEnumerator())
+            foreach (var p in PlayerControl.AllPlayerControls.GetFastEnumerator())
             {
                 if (p != null && p.IsAlive() && !p.IsTeamImpostor() && !p.isDummy)
                 {
@@ -105,7 +105,7 @@ internal class Bait : MultiRoleBase<Bait>
 
             if (candidates.Count > 0)
             {
-                int i = RebuildUs.Rnd.Next(0, candidates.Count);
+                var i = RebuildUs.Rnd.Next(0, candidates.Count);
                 reporter = candidates[i].PlayerId;
             }
         }

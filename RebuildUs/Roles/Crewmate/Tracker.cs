@@ -87,13 +87,13 @@ internal class Tracker : MultiRoleBase<Tracker>
 
                 if (TimeUntilUpdate <= 0f)
                 {
-                    bool trackedOnMap = !Tracked.Data.IsDead;
-                    Vector3 position = Tracked.transform.position;
+                    var trackedOnMap = !Tracked.Data.IsDead;
+                    var position = Tracked.transform.position;
                     if (!trackedOnMap)
                     {
                         // Check for dead body
-                        Il2CppArrayBase<DeadBody> bodies = UnityObject.FindObjectsOfType<DeadBody>();
-                        foreach (DeadBody t in bodies)
+                        var bodies = UnityObject.FindObjectsOfType<DeadBody>();
+                        foreach (var t in bodies)
                         {
                             if (t.ParentId == Tracked.PlayerId)
                             {
@@ -126,12 +126,12 @@ internal class Tracker : MultiRoleBase<Tracker>
         // Handle corpses tracking
         if (CorpsesTrackingTimer >= 0f && !Player.Data.IsDead)
         {
-            bool arrowsCountChanged = LocalArrows.Count != DeadBodyPositions.Count;
-            int index = 0;
+            var arrowsCountChanged = LocalArrows.Count != DeadBodyPositions.Count;
+            var index = 0;
 
             if (arrowsCountChanged)
             {
-                for (int i = 0; i < LocalArrows.Count; i++)
+                for (var i = 0; i < LocalArrows.Count; i++)
                 {
                     if (LocalArrows[i]?.ArrowObject != null)
                     {
@@ -142,9 +142,9 @@ internal class Tracker : MultiRoleBase<Tracker>
                 LocalArrows.Clear();
             }
 
-            for (int i = 0; i < DeadBodyPositions.Count; i++)
+            for (var i = 0; i < DeadBodyPositions.Count; i++)
             {
-                Vector3 position = DeadBodyPositions[i];
+                var position = DeadBodyPositions[i];
                 if (arrowsCountChanged)
                 {
                     Arrow a = new(RoleColor);
@@ -162,7 +162,7 @@ internal class Tracker : MultiRoleBase<Tracker>
         }
         else if (LocalArrows.Count > 0)
         {
-            for (int i = 0; i < LocalArrows.Count; i++)
+            for (var i = 0; i < LocalArrows.Count; i++)
             {
                 if (LocalArrows[i]?.ArrowObject != null)
                 {
@@ -266,12 +266,12 @@ internal class Tracker : MultiRoleBase<Tracker>
     {
         // reset configs here
         DeadBodyPositions = [];
-        foreach (Tracker p in Players)
+        foreach (var p in Players)
         {
             p.ResetTracked();
             if (p.LocalArrows != null)
             {
-                foreach (Arrow arrow in p.LocalArrows)
+                foreach (var arrow in p.LocalArrows)
                 {
                     if (arrow?.ArrowObject != null)
                     {

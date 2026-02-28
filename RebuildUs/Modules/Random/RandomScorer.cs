@@ -9,23 +9,23 @@ internal static class RandomScorer
             return "Random instance is null.";
         }
 
-        int[] frequencies = new int[10];
-        long start = DateTime.Now.Ticks;
+        var frequencies = new int[10];
+        var start = DateTime.Now.Ticks;
 
-        for (int i = 0; i < sampleCount; i++)
+        for (var i = 0; i < sampleCount; i++)
         {
             frequencies[random.Next(0, 10)]++;
         }
 
-        long end = DateTime.Now.Ticks;
-        double durationSeconds = TimeSpan.FromTicks(end - start).TotalSeconds;
-        double samplesPerSecond = sampleCount / durationSeconds;
+        var end = DateTime.Now.Ticks;
+        var durationSeconds = TimeSpan.FromTicks(end - start).TotalSeconds;
+        var samplesPerSecond = sampleCount / durationSeconds;
 
-        double expected = sampleCount / 10.0;
+        var expected = sampleCount / 10.0;
         double chiSquare = 0;
-        for (int i = 0; i < 10; i++)
+        for (var i = 0; i < 10; i++)
         {
-            double diff = frequencies[i] - expected;
+            var diff = frequencies[i] - expected;
             chiSquare += diff * diff / expected;
         }
 
@@ -53,7 +53,7 @@ internal static class RandomScorer
         }
 
         sb.Append("Frequencies: [");
-        for (int i = 0; i < 10; i++)
+        for (var i = 0; i < 10; i++)
         {
             sb.Append(frequencies[i]);
             if (i < 9)

@@ -54,7 +54,7 @@ internal static class SpawnIn
         if (CustomOptionHolder.AirshipSetOriginalCooldown.GetBool())
         {
             PlayerControl.LocalPlayer.SetKillTimerUnchecked(FloatOptionNames.KillCooldown.Get());
-            foreach (CustomButton t in CustomButton.Buttons)
+            foreach (var t in CustomButton.Buttons)
             {
                 t.Timer = t.MaxTimer;
             }
@@ -62,7 +62,7 @@ internal static class SpawnIn
         else
         {
             PlayerControl.LocalPlayer.SetKillTimerUnchecked(10f);
-            foreach (CustomButton t in CustomButton.Buttons)
+            foreach (var t in CustomButton.Buttons)
             {
                 t.Timer = 10f;
             }
@@ -88,12 +88,12 @@ internal static class SpawnIn
         __instance.StartCoroutine(__instance.CoAnimateOpen());
 
         List<SpawnInMinigame.SpawnLocation> list = [];
-        foreach (SpawnInMinigame.SpawnLocation loc in __instance.Locations)
+        foreach (var loc in __instance.Locations)
         {
             list.Add(loc);
         }
 
-        foreach (SpawnCandidate spawnCandidate in _spawnCandidates)
+        foreach (var spawnCandidate in _spawnCandidates)
         {
             SpawnInMinigame.SpawnLocation spawnLocation = new()
             {
@@ -107,39 +107,39 @@ internal static class SpawnIn
         }
 
         // 手動シャッフル
-        System.Random rnd = RebuildUs.Rnd;
-        for (int i = list.Count - 1; i > 0; i--)
+        var rnd = RebuildUs.Rnd;
+        for (var i = list.Count - 1; i > 0; i--)
         {
-            int j = rnd.Next(i + 1);
+            var j = rnd.Next(i + 1);
             (list[i], list[j]) = (list[j], list[i]);
         }
 
         // Take と手動ソート
-        int takeCount = Math.Min(list.Count, __instance.LocationButtons.Length);
+        var takeCount = Math.Min(list.Count, __instance.LocationButtons.Length);
         List<SpawnInMinigame.SpawnLocation> sortedList = [];
-        for (int i = 0; i < takeCount; i++)
+        for (var i = 0; i < takeCount; i++)
         {
             sortedList.Add(list[i]);
         }
 
         sortedList.Sort((a, b) =>
         {
-            int res = a.Location.x.CompareTo(b.Location.x);
+            var res = a.Location.x.CompareTo(b.Location.x);
             return res != 0 ? res : b.Location.y.CompareTo(a.Location.y);
         });
 
         PlayerControl.LocalPlayer.NetTransform.RpcSnapTo(new(-25f, 40f));
 
-        for (int i = 0; i < sortedList.Count; i++)
+        for (var i = 0; i < sortedList.Count; i++)
         {
-            PassiveButton passiveButton = __instance.LocationButtons[i];
-            SpawnInMinigame.SpawnLocation pt = sortedList[i];
+            var passiveButton = __instance.LocationButtons[i];
+            var pt = sortedList[i];
             passiveButton.OnClick.AddListener((UnityAction)(() => SpawnAt(__instance, pt.Location)));
             passiveButton.GetComponent<SpriteAnim>().Stop();
             passiveButton.GetComponent<SpriteRenderer>().sprite = pt.Image;
             passiveButton.GetComponentInChildren<TextMeshPro>().text = FastDestroyableSingleton<TranslationController>.Instance.GetString(pt.Name,
                 new Il2CppReferenceArray<CppObject>(0));
-            ButtonAnimRolloverHandler component = passiveButton.GetComponent<ButtonAnimRolloverHandler>();
+            var component = passiveButton.GetComponent<ButtonAnimRolloverHandler>();
             component.StaticOutImage = pt.Image;
             component.RolloverAnim = pt.Rollover;
             component.HoverSound = pt.RolloverSfx ? pt.RolloverSfx : __instance.DefaultRolloverSound;
@@ -171,7 +171,7 @@ internal static class SpawnIn
             return;
         }
 
-        foreach (PassiveButton button in __instance.LocationButtons)
+        foreach (var button in __instance.LocationButtons)
         {
             button.OnClick.AddListener((UnityAction)(() =>
             {
@@ -227,7 +227,7 @@ internal static class SpawnIn
 
             __instance.gotButton = true;
 
-            foreach (PassiveButton button in __instance.LocationButtons)
+            foreach (var button in __instance.LocationButtons)
             {
                 button.enabled = false;
             }
@@ -235,10 +235,10 @@ internal static class SpawnIn
             __instance.StartCoroutine(Effects.Lerp(10f,
                 new Action<float>(p =>
                 {
-                    float time = p * 10f;
-                    bool aligned = SynchronizeData.Align(SynchronizeTag.PreSpawnMinigame, false) || p == 1f;
+                    var time = p * 10f;
+                    var aligned = SynchronizeData.Align(SynchronizeTag.PreSpawnMinigame, false) || p == 1f;
 
-                    foreach (PassiveButton button in __instance.LocationButtons)
+                    foreach (var button in __instance.LocationButtons)
                     {
                         if (_selected == button)
                         {
@@ -246,8 +246,8 @@ internal static class SpawnIn
                             {
                                 continue;
                             }
-                            Vector3 pos = button.transform.localPosition;
-                            float x = pos.x;
+                            var pos = button.transform.localPosition;
+                            var x = pos.x;
                             switch (x)
                             {
                                 case < 0f:
@@ -266,9 +266,9 @@ internal static class SpawnIn
                         }
                         else
                         {
-                            SpriteRenderer sr = button.GetComponent<SpriteRenderer>();
-                            Color color = sr.color;
-                            float a = color.a;
+                            var sr = button.GetComponent<SpriteRenderer>();
+                            var color = sr.color;
+                            var a = color.a;
                             if (a > 0f)
                             {
                                 a -= 2f * Time.deltaTime;
@@ -299,10 +299,10 @@ internal static class SpawnIn
                     __instance.Close();
                     CustomButton.StopCountdown = false;
                     // サボタージュのクールダウンをリセット
-                    SabotageSystemType sabotageSystem = MapUtilities.Systems[SystemTypes.Sabotage].Cast<SabotageSystemType>();
+                    var sabotageSystem = MapUtilities.Systems[SystemTypes.Sabotage].CastFast<SabotageSystemType>();
                     sabotageSystem.IsDirty = true;
                     sabotageSystem.Timer = InitialSabotageCooldown;
-                    DoorsSystemType doorSystem = MapUtilities.Systems[SystemTypes.Doors].Cast<DoorsSystemType>();
+                    var doorSystem = MapUtilities.Systems[SystemTypes.Doors].CastFast<DoorsSystemType>();
                     doorSystem.IsDirty = true;
                     doorSystem.timers[SystemTypes.MainHall] = InitialDoorCooldown;
                     doorSystem.timers[SystemTypes.Brig] = InitialDoorCooldown;

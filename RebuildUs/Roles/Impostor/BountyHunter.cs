@@ -77,7 +77,7 @@ internal class BountyHunter : SingleRoleBase<BountyHunter>
         CooldownText = UnityObject.Instantiate(FastDestroyableSingleton<HudManager>.Instance.KillButton.cooldownTimerText,
             FastDestroyableSingleton<HudManager>.Instance.transform);
         CooldownText.alignment = TextAlignmentOptions.Center;
-        Vector3 bottomLeft = AspectPosition.ComputePosition(AspectPosition.EdgeAlignments.LeftBottom, new(0.9f, 0.7f, -10f));
+        var bottomLeft = AspectPosition.ComputePosition(AspectPosition.EdgeAlignments.LeftBottom, new(0.9f, 0.7f, -10f));
         CooldownText.transform.localPosition = bottomLeft + new Vector3(0f, -0.35f, -0.1f);
         CooldownText.transform.localScale = Vector3.one * 0.4f;
         CooldownText.gameObject.SetActive(true);
@@ -109,7 +109,7 @@ internal class BountyHunter : SingleRoleBase<BountyHunter>
             CooldownText = null;
             Bounty = null;
             _lastSecond = -1;
-            foreach (PoolablePlayer p in MapSettings.PlayerIcons.Values)
+            foreach (var p in MapSettings.PlayerIcons.Values)
             {
                 if (p != null && p.gameObject != null)
                 {
@@ -130,9 +130,9 @@ internal class BountyHunter : SingleRoleBase<BountyHunter>
             _arrowUpdateTimer = 0f; // Force arrow to update
             _bountyUpdateTimer = BountyDuration;
             List<PlayerControl> possibleTargets = [];
-            PlayerControl partner = Player.GetPartner();
+            var partner = Player.GetPartner();
 
-            foreach (PlayerControl p in PlayerControl.AllPlayerControls.GetFastEnumerator())
+            foreach (var p in PlayerControl.AllPlayerControls.GetFastEnumerator())
             {
                 if (p == null || p.Data == null)
                 {
@@ -166,7 +166,7 @@ internal class BountyHunter : SingleRoleBase<BountyHunter>
             // Show poolable player
             if (FastDestroyableSingleton<HudManager>.Instance != null)
             {
-                foreach (PoolablePlayer pp in MapSettings.PlayerIcons.Values)
+                foreach (var pp in MapSettings.PlayerIcons.Values)
                 {
                     if (pp != null && pp.gameObject != null)
                     {
@@ -174,9 +174,9 @@ internal class BountyHunter : SingleRoleBase<BountyHunter>
                     }
                 }
 
-                if (MapSettings.PlayerIcons.TryGetValue(Bounty.PlayerId, out PoolablePlayer icon) && icon != null && icon.gameObject != null)
+                if (MapSettings.PlayerIcons.TryGetValue(Bounty.PlayerId, out var icon) && icon != null && icon.gameObject != null)
                 {
-                    Vector3 bottomLeft = AspectPosition.ComputePosition(AspectPosition.EdgeAlignments.LeftBottom, new(0.9f, 0.7f, -10f));
+                    var bottomLeft = AspectPosition.ComputePosition(AspectPosition.EdgeAlignments.LeftBottom, new(0.9f, 0.7f, -10f));
                     icon.transform.localPosition = bottomLeft;
                     icon.transform.localScale = Vector3.one * 0.3f;
                     icon.gameObject.SetActive(true);
@@ -186,7 +186,7 @@ internal class BountyHunter : SingleRoleBase<BountyHunter>
 
         // Hide in meeting
         if (MeetingHud.Instance
-            && MapSettings.PlayerIcons.TryGetValue(Bounty.PlayerId, out PoolablePlayer mIcon)
+            && MapSettings.PlayerIcons.TryGetValue(Bounty.PlayerId, out var mIcon)
             && mIcon != null
             && mIcon.gameObject != null)
         {
@@ -196,7 +196,7 @@ internal class BountyHunter : SingleRoleBase<BountyHunter>
         // Update Cooldown Text
         if (CooldownText != null)
         {
-            int currentSecond = Mathf.CeilToInt(Mathf.Clamp(_bountyUpdateTimer, 0, BountyDuration));
+            var currentSecond = Mathf.CeilToInt(Mathf.Clamp(_bountyUpdateTimer, 0, BountyDuration));
             if (currentSecond != _lastSecond)
             {
                 _lastSecond = currentSecond;
@@ -252,7 +252,7 @@ internal class BountyHunter : SingleRoleBase<BountyHunter>
             UnityObject.Destroy(CooldownText.gameObject);
         }
         CooldownText = null;
-        foreach (PoolablePlayer p in MapSettings.PlayerIcons.Values)
+        foreach (var p in MapSettings.PlayerIcons.Values)
         {
             if (p != null && p.gameObject != null)
             {

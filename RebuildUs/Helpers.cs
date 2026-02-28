@@ -97,10 +97,30 @@ internal static class Helpers
         {
             return;
         }
-        foreach (T item in items)
+        foreach (var item in items)
         {
-            Object.Destroy(item);
+            if (item != null)
+            {
+                Object.Destroy(item);
+            }
         }
+        items.Clear();
+    }
+
+    internal static T[] CastArray<T>(object[] items)
+    {
+        if (items == null)
+        {
+            return [];
+        }
+
+        var result = new T[items.Length];
+        for (var i = 0; i < items.Length; i++)
+        {
+            result[i] = (T)items[i];
+        }
+
+        return result;
     }
 
     internal static void DestroyList<T>(IEnumerable<T> items) where T : Object
@@ -109,7 +129,7 @@ internal static class Helpers
         {
             return;
         }
-        foreach (T item in items)
+        foreach (var item in items)
         {
             Object.Destroy(item);
         }
@@ -140,20 +160,15 @@ internal static class Helpers
         return (byte)(Mathf.Clamp01(f) * 255);
     }
 
-    internal static int LineCount(string text)
-    {
-        return text.Count(c => c == '\n');
-    }
-
     internal static bool GetKeysDown(params KeyCode[] keys)
     {
         if (keys.Length == 0)
         {
             return false;
         }
-        bool allHeld = true;
-        bool anyJustPressed = false;
-        foreach (KeyCode key in keys)
+        var allHeld = true;
+        var anyJustPressed = false;
+        foreach (var key in keys)
         {
             if (!Input.GetKey(key))
             {
@@ -182,7 +197,7 @@ internal static class Helpers
 
     internal static PlayerControl PlayerById(byte id)
     {
-        foreach (PlayerControl player in PlayerControl.AllPlayerControls.GetFastEnumerator())
+        foreach (var player in PlayerControl.AllPlayerControls.GetFastEnumerator())
         {
             if (player.PlayerId == id)
             {
@@ -202,7 +217,7 @@ internal static class Helpers
 
         _lastCacheFrame = Time.frameCount;
         PlayerByIdCache.Clear();
-        foreach (PlayerControl p in PlayerControl.AllPlayerControls.GetFastEnumerator())
+        foreach (var p in PlayerControl.AllPlayerControls.GetFastEnumerator())
         {
             if (p != null)
             {
@@ -216,7 +231,7 @@ internal static class Helpers
     internal static void HandleVampireBiteOnBodyReport()
     {
         // Murder the bitten player and reset bitten (regardless whether the kill was successful or not)
-        PlayerControl killer = Vampire.AllPlayers.FirstOrDefault();
+        var killer = Vampire.PlayerControl;
         if (killer != null && Vampire.Bitten != null)
         {
             CheckMurderAttemptAndKill(killer, Vampire.Bitten, true, false);
@@ -238,7 +253,7 @@ internal static class Helpers
 
     internal static bool MushroomSabotageActive()
     {
-        foreach (PlayerTask task in PlayerControl.LocalPlayer.myTasks)
+        foreach (var task in PlayerControl.LocalPlayer.myTasks)
         {
             if (task.TaskType == TaskTypes.MushroomMixupSabotage)
             {
@@ -251,20 +266,20 @@ internal static class Helpers
 
     internal static void SetSemiTransparent(this PoolablePlayer player, bool value)
     {
-        float alpha = value ? 0.25f : 1f;
-        foreach (SpriteRenderer r in player.gameObject.GetComponentsInChildren<SpriteRenderer>())
+        var alpha = value ? 0.25f : 1f;
+        foreach (var r in player.gameObject.GetComponentsInChildren<SpriteRenderer>())
         {
-            Color c = r.color;
+            var c = r.color;
             r.color = new(c.r, c.g, c.b, alpha);
         }
 
-        TextMeshPro nameTxt = player.cosmetics.nameText;
+        var nameTxt = player.cosmetics.nameText;
         nameTxt.color = new(nameTxt.color.r, nameTxt.color.g, nameTxt.color.b, alpha);
     }
 
     internal static bool IsCrewmateAlive()
     {
-        foreach (PlayerControl p in PlayerControl.AllPlayerControls.GetFastEnumerator())
+        foreach (var p in PlayerControl.AllPlayerControls.GetFastEnumerator())
         {
             if (p.IsTeamCrewmate()
                 && !p.HasModifier(ModifierType.Madmate)
@@ -286,8 +301,8 @@ internal static class Helpers
             return true;
         }
 
-        bool isFormerJackal = false;
-        foreach (PlayerControl p in Jackal.FormerJackals)
+        var isFormerJackal = false;
+        foreach (var p in Jackal.FormerJackals)
         {
             if (p.PlayerId == player.PlayerId)
             {
@@ -307,10 +322,10 @@ internal static class Helpers
     internal static KeyValuePair<byte, int> MaxPair(this Dictionary<byte, int> self, out bool tie)
     {
         tie = true;
-        byte maxKey = byte.MaxValue;
-        int maxValue = int.MinValue;
+        var maxKey = byte.MaxValue;
+        var maxValue = int.MinValue;
 
-        foreach (KeyValuePair<byte, int> pair in self)
+        foreach (var pair in self)
         {
             if (pair.Value > maxValue)
             {
@@ -395,7 +410,7 @@ internal static class Helpers
                                                                   bool ignoreBlank = false,
                                                                   bool ignoreIfKillerIsDead = false)
     {
-        MurderAttemptResult murder = CheckMurderAttempt(killer, target, isMeetingStart, ignoreBlank, ignoreIfKillerIsDead);
+        var murder = CheckMurderAttempt(killer, target, isMeetingStart, ignoreBlank, ignoreIfKillerIsDead);
         Logger.LogMessage(Enum.GetName(typeof(MurderAttemptResult), murder));
 
         if (murder == MurderAttemptResult.PerformKill)
@@ -432,9 +447,9 @@ internal static class Helpers
 
     internal static bool CanUseSabotage()
     {
-        SabotageSystemType sabSystem = MapUtilities.Systems[SystemTypes.Sabotage].CastFast<SabotageSystemType>();
+        var sabSystem = MapUtilities.Systems[SystemTypes.Sabotage].CastFast<SabotageSystemType>();
         IActivatable doors = null;
-        if (MapUtilities.Systems.TryGetValue(SystemTypes.Doors, out Object systemType))
+        if (MapUtilities.Systems.TryGetValue(SystemTypes.Doors, out var systemType))
         {
             doors = systemType.CastFast<IActivatable>();
         }
@@ -459,15 +474,15 @@ internal static class Helpers
             return null;
         }
 
-        float num = NormalGameOptionsV10.KillDistances[Mathf.Clamp(killDistanceIdx == -1 ? Get(Int32OptionNames.KillDistance) : killDistanceIdx,
+        var num = NormalGameOptionsV10.KillDistances[Mathf.Clamp(killDistanceIdx == -1 ? Get(Int32OptionNames.KillDistance) : killDistanceIdx,
             0,
             2)];
         untargetablePlayers ??= [];
 
-        Vector2 truePosition = targetingPlayer.GetTruePosition();
+        var truePosition = targetingPlayer.GetTruePosition();
         PlayerControl result = null;
 
-        foreach (NetworkedPlayerInfo playerInfo in GameData.Instance.AllPlayers.GetFastEnumerator())
+        foreach (var playerInfo in GameData.Instance.AllPlayers.GetFastEnumerator())
         {
             if (playerInfo.Disconnected || playerInfo.PlayerId == targetingPlayer.PlayerId || playerInfo.IsDead)
             {
@@ -478,14 +493,14 @@ internal static class Helpers
                 continue;
             }
 
-            PlayerControl obj = playerInfo.Object;
+            var obj = playerInfo.Object;
             if (obj == null || obj.inVent && !targetPlayersInVents)
             {
                 continue;
             }
 
-            bool untargetable = false;
-            foreach (PlayerControl utp in untargetablePlayers)
+            var untargetable = false;
+            foreach (var utp in untargetablePlayers)
             {
                 if (utp == obj)
                 {
@@ -499,8 +514,8 @@ internal static class Helpers
                 continue;
             }
 
-            Vector2 vector = obj.GetTruePosition() - truePosition;
-            float magnitude = vector.magnitude;
+            var vector = obj.GetTruePosition() - truePosition;
+            var magnitude = vector.magnitude;
             if (magnitude <= num && !PhysicsHelpers.AnyNonTriggersBetween(truePosition, vector.normalized, magnitude, Constants.ShipAndObjectsMask))
             {
                 result = obj;
@@ -518,23 +533,23 @@ internal static class Helpers
             return;
         }
 
-        Material mat = target.cosmetics.currentBodySprite.BodySprite.material;
+        var mat = target.cosmetics.currentBodySprite.BodySprite.material;
         mat.SetFloat("_Outline", 1f);
         mat.SetColor("_OutlineColor", color);
     }
 
     internal static void SetBasePlayerOutlines()
     {
-        PlayerControl localPlayer = PlayerControl.LocalPlayer;
-        foreach (PlayerControl target in PlayerControl.AllPlayerControls.GetFastEnumerator())
+        var localPlayer = PlayerControl.LocalPlayer;
+        foreach (var target in PlayerControl.AllPlayerControls.GetFastEnumerator())
         {
             if (target?.cosmetics?.currentBodySprite?.BodySprite == null)
             {
                 continue;
             }
 
-            bool isMorphedMorphing = target.IsRole(RoleType.Morphing) && Morphing.MorphTarget != null && Morphing.MorphTimer > 0f;
-            bool hasVisibleShield = false;
+            var isMorphedMorphing = target.IsRole(RoleType.Morphing) && Morphing.MorphTarget != null && Morphing.MorphTimer > 0f;
+            var hasVisibleShield = false;
             if (Camouflager.CamouflageTimer <= 0f
                 && Medic.Shielded != null
                 && (target == Medic.Shielded && !isMorphedMorphing || isMorphedMorphing && Morphing.MorphTarget == Medic.Shielded))
@@ -548,7 +563,7 @@ internal static class Helpers
                 };
             }
 
-            Material mat = target.cosmetics.currentBodySprite.BodySprite.material;
+            var mat = target.cosmetics.currentBodySprite.BodySprite.material;
             if (hasVisibleShield)
             {
                 mat.SetFloat("_Outline", 1f);
@@ -568,7 +583,7 @@ internal static class Helpers
             return;
         }
 
-        Version ver = RebuildUs.Instance.Version;
+        var ver = RebuildUs.Instance.Version;
         using (RPCSender sender = new(PlayerControl.LocalPlayer.NetId, CustomRPC.VersionHandshake, targetId))
         {
             sender.Write((byte)ver.Major);
@@ -592,9 +607,9 @@ internal static class Helpers
 
     internal static string PadRightV2(this object text, int num)
     {
-        int bc = 0;
-        string t = text.ToString();
-        foreach (char c in t)
+        var bc = 0;
+        var t = text.ToString();
+        foreach (var c in t)
         {
             bc += Encoding.UTF8.GetByteCount(c.ToString()) == 1 ? 1 : 2;
         }
@@ -636,9 +651,9 @@ internal static class Helpers
 
         if (MapSettings.HideOutOfSightNametags && GameStarted && MapUtilities.CachedShipStatus != null)
         {
-            float distMod = 1.025f;
-            float distance = Vector3.Distance(source.transform.position, target.transform.position);
-            bool blocked = PhysicsHelpers.AnythingBetween(source.GetTruePosition(), target.GetTruePosition(), Constants.ShadowMask, false);
+            var distMod = 1.025f;
+            var distance = Vector3.Distance(source.transform.position, target.transform.position);
+            var blocked = PhysicsHelpers.AnythingBetween(source.GetTruePosition(), target.GetTruePosition(), Constants.ShadowMask, false);
 
             if (distance > MapUtilities.CachedShipStatus.CalculateLightRadius(source.Data) * distMod || blocked)
             {
@@ -677,7 +692,7 @@ internal static class Helpers
         {
             return;
         }
-        string name = obj.name;
+        var name = obj.name;
         if (name == null)
         {
             return;
@@ -700,7 +715,7 @@ internal static class Helpers
         {
             return;
         }
-        ExileController controller = obj.GetComponent<ExileController>();
+        var controller = obj.GetComponent<ExileController>();
         if (controller != null && controller.initData != null)
         {
             ExileControllerPatch.WrapUpPostfix(controller.initData.networkedPlayer?.Object);
@@ -709,7 +724,7 @@ internal static class Helpers
 
     internal static void ShowFlash(Color color, float duration = 1f)
     {
-        HudManager hud = FastDestroyableSingleton<HudManager>.Instance;
+        var hud = FastDestroyableSingleton<HudManager>.Instance;
         if (hud?.FullScreen == null)
         {
             return;
@@ -720,19 +735,19 @@ internal static class Helpers
         hud.StartCoroutine(Effects.Lerp(duration,
             new Action<float>(p =>
             {
-                SpriteRenderer renderer = hud.FullScreen;
+                var renderer = hud.FullScreen;
                 if (renderer == null)
                 {
                     return;
                 }
 
-                float alpha = p < 0.5f ? p * 2f * 0.75f : (1f - p) * 2f * 0.75f;
+                var alpha = p < 0.5f ? p * 2f * 0.75f : (1f - p) * 2f * 0.75f;
                 renderer.color = new(color.r, color.g, color.b, Mathf.Clamp01(alpha));
 
                 if (p == 1f)
                 {
-                    bool reactorActive = false;
-                    foreach (PlayerTask task in PlayerControl.LocalPlayer.myTasks.GetFastEnumerator())
+                    var reactorActive = false;
+                    foreach (var task in PlayerControl.LocalPlayer.myTasks.GetFastEnumerator())
                     {
                         if (task.TaskType == TaskTypes.StopCharles)
                         {
@@ -762,36 +777,36 @@ internal static class Helpers
 
     internal static void Shuffle<T>(this IList<T> self, int startAt = 0)
     {
-        for (int i = startAt; i < self.Count - 1; i++)
+        for (var i = startAt; i < self.Count - 1; i++)
         {
-            int index = RebuildUs.Rnd.Next(i, self.Count);
+            var index = RebuildUs.Rnd.Next(i, self.Count);
             (self[index], self[i]) = (self[i], self[index]);
         }
     }
 
     internal static PlainShipRoom GetPlainShipRoom(PlayerControl p)
     {
-        Collider2D[] buffer = new Collider2D[10];
+        var buffer = new Collider2D[10];
         ContactFilter2D filter = new()
         {
             layerMask = Constants.PlayersOnlyMask,
             useLayerMask = true,
             useTriggers = false,
         };
-        Il2CppReferenceArray<PlainShipRoom> rooms = MapUtilities.CachedShipStatus?.AllRooms;
+        var rooms = MapUtilities.CachedShipStatus?.AllRooms;
         if (rooms == null)
         {
             return null;
         }
 
-        foreach (PlainShipRoom room in rooms)
+        foreach (var room in rooms)
         {
             if (room.roomArea == null)
             {
                 continue;
             }
-            int hits = room.roomArea.OverlapCollider(filter, buffer);
-            for (int i = 0; i < hits; i++)
+            var hits = room.roomArea.OverlapCollider(filter, buffer);
+            for (var i = 0; i < hits; i++)
             {
                 if (buffer[i]?.gameObject == p.gameObject)
                 {
@@ -865,7 +880,7 @@ internal static class Helpers
             if (File.Exists(path))
             {
                 Texture2D texture = new(2, 2, TextureFormat.ARGB32, true);
-                Il2CppStructArray<byte> bytes = Il2CppSystem.IO.File.ReadAllBytes(path);
+                var bytes = Il2CppSystem.IO.File.ReadAllBytes(path);
                 texture.LoadImage(bytes, false);
                 return texture;
             }
@@ -898,11 +913,11 @@ internal static class Helpers
             return false;
         }
 
-        TaskTypes taskType = task.TaskType;
-        bool isLights = taskType == TaskTypes.FixLights;
-        bool isComms = taskType == TaskTypes.FixComms;
-        bool isReactor = taskType is TaskTypes.StopCharles or TaskTypes.ResetSeismic or TaskTypes.ResetReactor;
-        bool isO2 = taskType == TaskTypes.RestoreOxy;
+        var taskType = task.TaskType;
+        var isLights = taskType == TaskTypes.FixLights;
+        var isComms = taskType == TaskTypes.FixComms;
+        var isReactor = taskType is TaskTypes.StopCharles or TaskTypes.ResetSeismic or TaskTypes.ResetReactor;
+        var isO2 = taskType == TaskTypes.RestoreOxy;
 
         if (pc.IsRole(RoleType.NiceSwapper) && (isLights || isComms))
         {
@@ -954,7 +969,7 @@ internal static class Helpers
             return false;
         }
 
-        PlayerTask task = console.FindTask(pc);
+        var task = console.FindTask(pc);
         return IsBlocked(task, pc);
     }
 
@@ -965,9 +980,9 @@ internal static class Helpers
             return false;
         }
 
-        string name = console.name;
-        bool isSecurity = name is "task_cams" or "Surv_Panel" or "SurvLogConsole" or "SurvConsole";
-        bool isVitals = name == "panel_vitals";
+        var name = console.name;
+        var isSecurity = name is "task_cams" or "Surv_Panel" or "SurvLogConsole" or "SurvConsole";
+        var isVitals = name == "panel_vitals";
 
         return isSecurity && !MapSettings.CanUseCameras || isVitals && !MapSettings.CanUseVitals;
     }
@@ -979,19 +994,19 @@ internal static class Helpers
             return false;
         }
 
-        Console targetConsole = target.TryCast<Console>();
+        var targetConsole = target.TryCast<Console>();
         if (targetConsole != null)
         {
             return IsBlocked(targetConsole, pc);
         }
 
-        SystemConsole targetSysConsole = target.TryCast<SystemConsole>();
+        var targetSysConsole = target.TryCast<SystemConsole>();
         if (targetSysConsole != null)
         {
             return IsBlocked(targetSysConsole, pc);
         }
 
-        MapConsole targetMapConsole = target.TryCast<MapConsole>();
+        var targetMapConsole = target.TryCast<MapConsole>();
         if (targetMapConsole != null)
         {
             return !MapSettings.CanUseAdmin;

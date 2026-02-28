@@ -52,8 +52,8 @@ internal class Trickster : SingleRoleBase<Trickster>
             {
                 _placeJackInTheBoxButton.Timer = _placeJackInTheBoxButton.MaxTimer;
 
-                Vector3 pos = PlayerControl.LocalPlayer.transform.position;
-                byte[] buff = new byte[sizeof(float) * 2];
+                var pos = PlayerControl.LocalPlayer.transform.position;
+                var buff = new byte[sizeof(float) * 2];
                 Buffer.BlockCopy(BitConverter.GetBytes(pos.x), 0, buff, 0 * sizeof(float), sizeof(float));
                 Buffer.BlockCopy(BitConverter.GetBytes(pos.y), 0, buff, 1 * sizeof(float), sizeof(float));
 

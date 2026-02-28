@@ -9,7 +9,7 @@ internal static class PlayerPhysicsPatches
     [HarmonyPostfix]
     private static void HandleAnimationPostfix(PlayerPhysics __instance)
     {
-        AnimationClip currentAnimation = __instance.Animations.Animator.GetCurrentAnimation();
+        var currentAnimation = __instance.Animations.Animator.GetCurrentAnimation();
         if (currentAnimation == __instance.Animations.group.ClimbUpAnim)
         {
             return;
@@ -18,16 +18,16 @@ internal static class PlayerPhysicsPatches
         {
             return;
         }
-        HatParent hatParent = __instance.myPlayer.cosmetics.hat;
+        var hatParent = __instance.myPlayer.cosmetics.hat;
         if (hatParent == null)
         {
             return;
         }
-        if (!hatParent.TryGetCached(out HatViewData viewData))
+        if (!hatParent.TryGetCached(out var viewData))
         {
             return;
         }
-        HatExtension extend = hatParent.Hat.GetHatExtension();
+        var extend = hatParent.Hat.GetHatExtension();
         if (extend == null)
         {
             return;

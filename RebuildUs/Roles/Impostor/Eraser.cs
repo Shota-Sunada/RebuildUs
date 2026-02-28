@@ -44,7 +44,7 @@ internal class Eraser : MultiRoleBase<Eraser>
 
     internal override void FixedUpdate()
     {
-        Eraser local = Local;
+        var local = Local;
         if (local != null)
         {
             List<PlayerControl> untargetables = [];

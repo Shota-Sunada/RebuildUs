@@ -23,9 +23,9 @@ internal static class KillAnimationPatch
         {
             yield break;
         }
-        FollowerCamera cam = Camera.main.GetComponent<FollowerCamera>();
-        bool isParticipant = PlayerControl.LocalPlayer == source || PlayerControl.LocalPlayer == target;
-        PlayerPhysics sourcePhys = source.MyPhysics;
+        var cam = Camera.main.GetComponent<FollowerCamera>();
+        var isParticipant = PlayerControl.LocalPlayer == source || PlayerControl.LocalPlayer == target;
+        var sourcePhys = source.MyPhysics;
         KillAnimation.SetMovement(source, false);
         KillAnimation.SetMovement(target, false);
         if (isParticipant)
@@ -34,16 +34,16 @@ internal static class KillAnimationPatch
             source.isKilling = true;
         }
 
-        DeadBody deadBody = UnityObject.Instantiate(GameManager.Instance.GetDeadBody(source.Data.Role));
+        var deadBody = UnityObject.Instantiate(GameManager.Instance.GetDeadBody(source.Data.Role));
         deadBody.enabled = false;
         deadBody.ParentId = target.PlayerId;
-        foreach (SpriteRenderer b in deadBody.bodyRenderers)
+        foreach (var b in deadBody.bodyRenderers)
         {
             target.SetPlayerMaterialColors(b);
         }
 
         target.SetPlayerMaterialColors(deadBody.bloodSplatter);
-        Vector3 vector3 = target.transform.position + __instance.BodyOffset;
+        var vector3 = target.transform.position + __instance.BodyOffset;
         vector3.z = vector3.y / 1000f;
         deadBody.transform.position = vector3;
         source.Data.Role.KillAnimSpecialSetup(deadBody, source, target);
@@ -93,12 +93,12 @@ internal static class KillAnimationPatch
     [HarmonyPatch(typeof(KillAnimation), nameof(KillAnimation.SetMovement), typeof(PlayerControl), typeof(bool))]
     internal static void SetMovementPrefix(PlayerControl source, bool canMove)
     {
-        Color color = source.cosmetics.currentBodySprite.BodySprite.material.GetColor(BodyColor);
+        var color = source.cosmetics.currentBodySprite.BodySprite.material.GetColor(BodyColor);
         if (!Morphing.Exists || !source.IsRole(RoleType.Morphing))
         {
             return;
         }
-        int index = Palette.PlayerColors.IndexOf(color);
+        var index = Palette.PlayerColors.IndexOf(color);
         if (index != -1)
         {
             _colorId = index;
