@@ -137,11 +137,11 @@ internal static class Helpers
     internal static bool HasFakeTasks(this PlayerControl player)
     {
         return player.IsNeutral() && !player.NeutralHasTasks()
-               || player.HasModifier(ModifierType.CreatedMadmate) && !CreatedMadmate.HasTasks
-               || player.HasModifier(ModifierType.Madmate) && !Madmate.HasTasks
-               || player.IsRole(RoleType.Madmate) && !MadmateRole.CanKnowImpostorAfterFinishTasks
-               || player.IsRole(RoleType.Suicider) && !Suicider.CanKnowImpostorAfterFinishTasks
-               || player.IsLovers() && Lovers.SeparateTeam && !Lovers.TasksCount;
+            || player.HasModifier(ModifierType.CreatedMadmate) && !CreatedMadmate.HasTasks
+            || player.HasModifier(ModifierType.Madmate) && !Madmate.HasTasks
+            || player.IsRole(RoleType.Madmate) && !MadmateRole.CanKnowImpostorAfterFinishTasks
+            || player.IsRole(RoleType.Suicider) && !Suicider.CanKnowImpostorAfterFinishTasks
+            || player.IsLovers() && Lovers.SeparateTeam && !Lovers.TasksCount;
     }
 
     internal static PlayerControl PlayerById(byte id)
@@ -261,11 +261,11 @@ internal static class Helpers
         }
 
         return (player.IsRole(RoleType.Jackal) || isFormerJackal) && Jackal.HasImpostorVision
-               || player.IsRole(RoleType.Sidekick) && Sidekick.HasImpostorVision
-               || player.IsRole(RoleType.Spy) && Spy.HasImpostorVision
-               || player.IsRole(RoleType.Madmate) && MadmateRole.HasImpostorVision
-               || player.IsRole(RoleType.Suicider) && Suicider.HasImpostorVision
-               || player.IsRole(RoleType.Jester) && Jester.HasImpostorVision;
+            || player.IsRole(RoleType.Sidekick) && Sidekick.HasImpostorVision
+            || player.IsRole(RoleType.Spy) && Spy.HasImpostorVision
+            || player.IsRole(RoleType.Madmate) && MadmateRole.HasImpostorVision
+            || player.IsRole(RoleType.Suicider) && Suicider.HasImpostorVision
+            || player.IsRole(RoleType.Jester) && Jester.HasImpostorVision;
     }
 
     internal static KeyValuePair<byte, int> MaxPair(this Dictionary<byte, int> self, out bool tie)
@@ -291,12 +291,7 @@ internal static class Helpers
         return new(maxKey, maxValue);
     }
 
-    internal static MurderAttemptResult CheckMurderAttempt(PlayerControl killer,
-                                                           PlayerControl target,
-                                                           bool blockRewind = false,
-                                                           bool ignoreBlank = false,
-                                                           bool ignoreIfKillerIsDead = false,
-                                                           bool ignoreMedic = false)
+    internal static MurderAttemptResult CheckMurderAttempt(PlayerControl killer, PlayerControl target, bool blockRewind = false, bool ignoreBlank = false, bool ignoreIfKillerIsDead = false, bool ignoreMedic = false)
     {
         if (AmongUsClient.Instance.IsGameOver)
         {
@@ -352,12 +347,7 @@ internal static class Helpers
         RPCProcedure.UncheckedMurderPlayer(killer.PlayerId, target.PlayerId, showAnimation ? byte.MaxValue : (byte)0);
     }
 
-    internal static MurderAttemptResult CheckMurderAttemptAndKill(PlayerControl killer,
-                                                                  PlayerControl target,
-                                                                  bool isMeetingStart = false,
-                                                                  bool showAnimation = true,
-                                                                  bool ignoreBlank = false,
-                                                                  bool ignoreIfKillerIsDead = false)
+    internal static MurderAttemptResult CheckMurderAttemptAndKill(PlayerControl killer, PlayerControl target, bool isMeetingStart = false, bool showAnimation = true, bool ignoreBlank = false, bool ignoreIfKillerIsDead = false)
     {
         var murder = CheckMurderAttempt(killer, target, isMeetingStart, ignoreBlank, ignoreIfKillerIsDead);
         Logger.LogMessage(Enum.GetName(typeof(MurderAttemptResult), murder));
@@ -406,11 +396,7 @@ internal static class Helpers
         return GameManager.Instance.SabotagesEnabled() && sabSystem.Timer <= 0f && !sabSystem.AnyActive && !(doors != null && doors.IsActive);
     }
 
-    internal static PlayerControl SetTarget(bool onlyCrewmates = false,
-                                            bool targetPlayersInVents = false,
-                                            List<PlayerControl> untargetablePlayers = null,
-                                            PlayerControl targetingPlayer = null,
-                                            int killDistanceIdx = -1)
+    internal static PlayerControl SetTarget(bool onlyCrewmates = false, bool targetPlayersInVents = false, List<PlayerControl> untargetablePlayers = null, PlayerControl targetingPlayer = null, int killDistanceIdx = -1)
     {
         if (!MapUtilities.CachedShipStatus)
         {
@@ -423,9 +409,7 @@ internal static class Helpers
             return null;
         }
 
-        var num = NormalGameOptionsV10.KillDistances[Mathf.Clamp(killDistanceIdx == -1 ? Get(Int32OptionNames.KillDistance) : killDistanceIdx,
-            0,
-            2)];
+        var num = NormalGameOptionsV10.KillDistances[Mathf.Clamp(killDistanceIdx == -1 ? Get(Int32OptionNames.KillDistance) : killDistanceIdx, 0, 2)];
         untargetablePlayers ??= [];
 
         var truePosition = targetingPlayer.GetTruePosition();
