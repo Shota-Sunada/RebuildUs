@@ -62,7 +62,7 @@ internal static class Intro
                 && local != null
                 && ship?.FastRooms != null
                 && CustomOptionHolder.AirshipOptimize.GetBool()
-                && Helpers.HasImpostorVision(local)
+                && local.HasImpostorVision()
                 && ship.FastRooms.TryGetValue(SystemTypes.GapRoom, out var gapRoomForShadow)
                 && gapRoomForShadow != null)
             {

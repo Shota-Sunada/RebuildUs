@@ -243,31 +243,6 @@ internal static class Helpers
         return false;
     }
 
-    internal static bool HasImpostorVision(PlayerControl player)
-    {
-        if (player.IsTeamImpostor())
-        {
-            return true;
-        }
-
-        var isFormerJackal = false;
-        foreach (var p in Jackal.FormerJackals)
-        {
-            if (p.PlayerId == player.PlayerId)
-            {
-                isFormerJackal = true;
-                break;
-            }
-        }
-
-        return (player.IsRole(RoleType.Jackal) || isFormerJackal) && Jackal.HasImpostorVision
-            || player.IsRole(RoleType.Sidekick) && Sidekick.HasImpostorVision
-            || player.IsRole(RoleType.Spy) && Spy.HasImpostorVision
-            || player.IsRole(RoleType.Madmate) && MadmateRole.HasImpostorVision
-            || player.IsRole(RoleType.Suicider) && Suicider.HasImpostorVision
-            || player.IsRole(RoleType.Jester) && Jester.HasImpostorVision;
-    }
-
     internal static KeyValuePair<byte, int> MaxPair(this Dictionary<byte, int> self, out bool tie)
     {
         tie = true;

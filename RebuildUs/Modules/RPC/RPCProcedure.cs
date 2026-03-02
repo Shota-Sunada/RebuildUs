@@ -626,7 +626,7 @@ internal static partial class RPCProcedure
     {
         Trickster.LightsOutTimer = Trickster.LightsOutDuration;
         // If the local player is impostor indicate lights out
-        if (Helpers.HasImpostorVision(PlayerControl.LocalPlayer))
+        if (PlayerControl.LocalPlayer.HasImpostorVision())
         {
             _ = new CustomMessage("TricksterLightsOutText", Trickster.LightsOutDuration);
         }

@@ -213,7 +213,7 @@ internal static class ShipStatusPatch
         }
 
         // If player is a role which has Impostor vision
-        if (Helpers.HasImpostorVision(player.Object))
+        if (player.Object.HasImpostorVision())
         {
             __result = GetNeutralLightRadius(__instance, true);
             return false;
