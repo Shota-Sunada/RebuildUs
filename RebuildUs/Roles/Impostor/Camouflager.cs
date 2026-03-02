@@ -64,7 +64,8 @@ internal class Camouflager : SingleRoleBase<Camouflager>
 
     internal override void HandleDisconnect(PlayerControl player, DisconnectReasons reason) { }
 
-    internal static void MakeButtons(HudManager hm)
+        [RegisterCustomButton]
+        internal static void MakeButtons(HudManager hm)
     {
         _camouflagerButton = new(() =>
             {
@@ -96,7 +97,8 @@ internal class Camouflager : SingleRoleBase<Camouflager>
             Tr.Get(TrKey.CamoText));
     }
 
-    internal static void SetButtonCooldowns()
+        [RegisterCustomButton]
+        internal static void SetButtonCooldowns()
     {
         _camouflagerButton.MaxTimer = Cooldown;
         _camouflagerButton.EffectDuration = Duration;

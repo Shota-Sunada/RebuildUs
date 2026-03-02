@@ -132,7 +132,8 @@ internal class SecurityGuard : SingleRoleBase<SecurityGuard>
     internal override void OnFinishShipStatusBegin() { }
     internal override void HandleDisconnect(PlayerControl player, DisconnectReasons reason) { }
 
-    internal static void MakeButtons(HudManager hm)
+        [RegisterCustomButton]
+        internal static void MakeButtons(HudManager hm)
     {
         _securityGuardButton = new(() =>
             {
@@ -389,7 +390,8 @@ internal class SecurityGuard : SingleRoleBase<SecurityGuard>
         _securityGuardChargesText.transform.localPosition += new Vector3(-0.05f, 0.7f, 0);
     }
 
-    internal static void SetButtonCooldowns()
+        [RegisterCustomButton]
+        internal static void SetButtonCooldowns()
     {
         _securityGuardButton.MaxTimer = Cooldown;
         SecurityGuardCamButton.MaxTimer = Cooldown;

@@ -133,6 +133,8 @@ public class RebuildUs : BasePlugin
 
         SubmergedCompatibility.Initialize();
 
+        InitializeButtons();
+
         Logger.LogMessage("\"Rebuild Us\" was completely loaded! Enjoy the modifications!");
     }
 
@@ -244,79 +246,59 @@ public class RebuildUs : BasePlugin
         }
     }
 
+    private static readonly List<Action<HudManager>> MakeButtonsActions = new();
+    private static readonly List<Action> SetButtonCooldownsActions = new();
+
+    private static void InitializeButtons()
+    {
+        foreach (var type in typeof(RebuildUs).Assembly.GetTypes())
+        {
+            foreach (var method in type.GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static))
+            {
+                if (method.GetCustomAttributes(typeof(RegisterCustomButtonAttribute), false).Length > 0)
+                {
+                    var parameters = method.GetParameters();
+                    if (parameters.Length == 1 && parameters[0].ParameterType == typeof(HudManager))
+                    {
+                        MakeButtonsActions.Add((Action<HudManager>)Delegate.CreateDelegate(typeof(Action<HudManager>), method));
+                    }
+                    else if (parameters.Length == 0)
+                    {
+                        SetButtonCooldownsActions.Add((Action)Delegate.CreateDelegate(typeof(Action), method));
+                    }
+                }
+            }
+        }
+    }
+
     internal static void MakeButtons(HudManager hm)
     {
-        // Crewmate
-        Engineer.MakeButtons(hm);
-        Hacker.MakeButtons(hm);
-        Lighter.MakeButtons(hm);
-        Mayor.MakeButtons(hm);
-        Medic.MakeButtons(hm);
-        Medium.MakeButtons(hm);
-        Sheriff.MakeButtons(hm);
-        Shifter.MakeButtons(hm);
-        TimeMaster.MakeButtons(hm);
-        SecurityGuard.MakeButtons(hm);
-        Tracker.MakeButtons(hm);
-        Suicider.MakeButtons(hm);
-
-        // Impostor
-        Camouflager.MakeButtons(hm);
-        Cleaner.MakeButtons(hm);
-        Eraser.MakeButtons(hm);
-        EvilHacker.MakeButtons(hm);
-        EvilTracker.MakeButtons(hm);
-        Mafia.Janitor.MakeButtons(hm);
-        Morphing.MakeButtons(hm);
-        Trickster.MakeButtons(hm);
-        Vampire.MakeButtons(hm);
-        Warlock.MakeButtons(hm);
-        Witch.MakeButtons(hm);
-
-        // Neutral
-        Arsonist.MakeButtons(hm);
-        Jackal.MakeButtons(hm);
-        Sidekick.MakeButtons(hm);
-        Vulture.MakeButtons(hm);
-
-        // Modifier
-        LastImpostor.MakeButtons(hm);
+        foreach (var action in MakeButtonsActions)
+        {
+            try
+            {
+                action(hm);
+            }
+            catch (Exception ex)
+            {
+                Logger.LogError($"Error in MakeButtons: {ex}");
+            }
+        }
     }
 
     internal static void SetButtonCooldowns()
     {
-        // Crewmate
-        Engineer.SetButtonCooldowns();
-        Hacker.SetButtonCooldowns();
-        Lighter.SetButtonCooldowns();
-        Mayor.SetButtonCooldowns();
-        Medic.SetButtonCooldowns();
-        Medium.SetButtonCooldowns();
-        Sheriff.SetButtonCooldowns();
-        Shifter.SetButtonCooldowns();
-        TimeMaster.SetButtonCooldowns();
-        SecurityGuard.SetButtonCooldowns();
-        Tracker.SetButtonCooldowns();
-        Suicider.SetButtonCooldowns();
-
-        // Impostor
-        Camouflager.SetButtonCooldowns();
-        Cleaner.SetButtonCooldowns();
-        Eraser.SetButtonCooldowns();
-        EvilHacker.SetButtonCooldowns();
-        EvilTracker.SetButtonCooldowns();
-        Mafia.Janitor.SetButtonCooldowns();
-        Morphing.SetButtonCooldowns();
-        Trickster.SetButtonCooldowns();
-        Vampire.SetButtonCooldowns();
-        Warlock.SetButtonCooldowns();
-        Witch.SetButtonCooldowns();
-
-        // Neutral
-        Arsonist.SetButtonCooldowns();
-        Jackal.SetButtonCooldowns();
-        Sidekick.SetButtonCooldowns();
-        Vulture.SetButtonCooldowns();
+        foreach (var action in SetButtonCooldownsActions)
+        {
+            try
+            {
+                action();
+            }
+            catch (Exception ex)
+            {
+                Logger.LogError($"Error in SetButtonCooldowns: {ex}");
+            }
+        }
     }
 
     private static void UpdateRegions()

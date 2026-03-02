@@ -108,7 +108,8 @@ internal class Sidekick : SingleRoleBase<Sidekick>
     internal override void OnFinishShipStatusBegin() { }
     internal override void HandleDisconnect(PlayerControl player, DisconnectReasons reason) { }
 
-    internal static void MakeButtons(HudManager hm)
+        [RegisterCustomButton]
+        internal static void MakeButtons(HudManager hm)
     {
         _sidekickKillButton = new(() =>
             {
@@ -161,7 +162,8 @@ internal class Sidekick : SingleRoleBase<Sidekick>
             FastDestroyableSingleton<TranslationController>.Instance.GetString(StringNames.FixLights));
     }
 
-    internal static void SetButtonCooldowns()
+        [RegisterCustomButton]
+        internal static void SetButtonCooldowns()
     {
         _sidekickKillButton.MaxTimer = Jackal.KillCooldown;
     }

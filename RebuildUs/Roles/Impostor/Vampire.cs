@@ -87,7 +87,8 @@ internal class Vampire : SingleRoleBase<Vampire>
     internal override void OnFinishShipStatusBegin() { }
     internal override void HandleDisconnect(PlayerControl player, DisconnectReasons reason) { }
 
-    internal static void MakeButtons(HudManager hm)
+        [RegisterCustomButton]
+        internal static void MakeButtons(HudManager hm)
     {
         _vampireKillButton = new(() =>
             {
@@ -225,7 +226,8 @@ internal class Vampire : SingleRoleBase<Vampire>
             Tr.Get(TrKey.GarlicText));
     }
 
-    internal static void SetButtonCooldowns()
+        [RegisterCustomButton]
+        internal static void SetButtonCooldowns()
     {
         if (_vampireKillButton != null)
         {

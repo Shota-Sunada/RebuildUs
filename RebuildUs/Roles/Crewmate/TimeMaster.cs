@@ -124,6 +124,7 @@ internal class TimeMaster : SingleRoleBase<TimeMaster>
     internal override void OnFinishShipStatusBegin() { }
     internal override void HandleDisconnect(PlayerControl player, DisconnectReasons reason) { }
 
+    [RegisterCustomButton]
     internal static void MakeButtons(HudManager hm)
     {
         _timeMasterShieldButton = new(() =>
@@ -160,6 +161,7 @@ internal class TimeMaster : SingleRoleBase<TimeMaster>
             Tr.Get(TrKey.TimeShieldText));
     }
 
+    [RegisterCustomButton]
     internal static void SetButtonCooldowns()
     {
         _timeMasterShieldButton.MaxTimer = Cooldown;

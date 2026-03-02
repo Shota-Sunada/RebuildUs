@@ -85,7 +85,8 @@ internal class EvilTracker : MultiRoleBase<EvilTracker>
     internal override void OnFinishShipStatusBegin() { }
     internal override void HandleDisconnect(PlayerControl player, DisconnectReasons reason) { }
 
-    internal static void MakeButtons(HudManager hm)
+        [RegisterCustomButton]
+        internal static void MakeButtons(HudManager hm)
     {
         TrackerButton = new(() =>
             {
@@ -112,7 +113,8 @@ internal class EvilTracker : MultiRoleBase<EvilTracker>
             Tr.Get(TrKey.TrackerText));
     }
 
-    internal static void SetButtonCooldowns()
+        [RegisterCustomButton]
+        internal static void SetButtonCooldowns()
     {
         TrackerButton.MaxTimer = Cooldown;
     }

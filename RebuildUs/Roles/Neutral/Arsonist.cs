@@ -129,7 +129,8 @@ internal class Arsonist : SingleRoleBase<Arsonist>
     internal override void OnFinishShipStatusBegin() { }
     internal override void HandleDisconnect(PlayerControl player, DisconnectReasons reason) { }
 
-    internal static void MakeButtons(HudManager hm)
+        [RegisterCustomButton]
+        internal static void MakeButtons(HudManager hm)
     {
         _arsonistButton = new(() =>
             {
@@ -213,7 +214,8 @@ internal class Arsonist : SingleRoleBase<Arsonist>
             Tr.Get(TrKey.IgniteText));
     }
 
-    internal static void SetButtonCooldowns()
+        [RegisterCustomButton]
+        internal static void SetButtonCooldowns()
     {
         _arsonistButton?.MaxTimer = Cooldown;
         _arsonistIgniteButton.Timer = _arsonistIgniteButton.MaxTimer = 0f;

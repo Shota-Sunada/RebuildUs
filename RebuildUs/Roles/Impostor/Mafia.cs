@@ -186,7 +186,8 @@ internal static class Mafia
 
         internal override void HandleDisconnect(PlayerControl player, DisconnectReasons reason) { }
 
-        internal static void MakeButtons(HudManager hm)
+                [RegisterCustomButton]
+                internal static void MakeButtons(HudManager hm)
         {
             _janitorCleanButton = new(() =>
                 {
@@ -237,7 +238,8 @@ internal static class Mafia
                 Tr.Get(TrKey.CleanText));
         }
 
-        internal static void SetButtonCooldowns()
+                [RegisterCustomButton]
+                internal static void SetButtonCooldowns()
         {
             _janitorCleanButton.MaxTimer = Cooldown;
         }

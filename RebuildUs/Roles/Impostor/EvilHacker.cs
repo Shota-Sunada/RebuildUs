@@ -110,7 +110,8 @@ internal class EvilHacker : MultiRoleBase<EvilHacker>
     internal override void OnFinishShipStatusBegin() { }
     internal override void HandleDisconnect(PlayerControl player, DisconnectReasons reason) { }
 
-    internal static void MakeButtons(HudManager hm)
+        [RegisterCustomButton]
+        internal static void MakeButtons(HudManager hm)
     {
         _evilHackerButton = new(() =>
             {
@@ -170,7 +171,8 @@ internal class EvilHacker : MultiRoleBase<EvilHacker>
             Tr.Get(TrKey.Madmate));
     }
 
-    internal static void SetButtonCooldowns()
+        [RegisterCustomButton]
+        internal static void SetButtonCooldowns()
     {
         _evilHackerButton.MaxTimer = 0f;
         _evilHackerCreatesMadmateButton.MaxTimer = 0f;

@@ -58,7 +58,8 @@ internal class Morphing : MultiRoleBase<Morphing>
     internal override void OnFinishShipStatusBegin() { }
     internal override void HandleDisconnect(PlayerControl player, DisconnectReasons reason) { }
 
-    internal static void MakeButtons(HudManager hm)
+        [RegisterCustomButton]
+        internal static void MakeButtons(HudManager hm)
     {
         _morphingButton = new(() =>
             {
@@ -118,7 +119,8 @@ internal class Morphing : MultiRoleBase<Morphing>
             Tr.Get(TrKey.SampleText));
     }
 
-    internal static void SetButtonCooldowns()
+        [RegisterCustomButton]
+        internal static void SetButtonCooldowns()
     {
         _morphingButton.MaxTimer = Cooldown;
         _morphingButton.EffectDuration = Duration;

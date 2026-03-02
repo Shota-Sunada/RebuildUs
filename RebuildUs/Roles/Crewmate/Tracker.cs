@@ -179,6 +179,7 @@ internal class Tracker : MultiRoleBase<Tracker>
     internal override void OnFinishShipStatusBegin() { }
     internal override void HandleDisconnect(PlayerControl player, DisconnectReasons reason) { }
 
+    [RegisterCustomButton]
     internal static void MakeButtons(HudManager hm)
     {
         _trackerTrackPlayerButton = new(() =>
@@ -243,6 +244,7 @@ internal class Tracker : MultiRoleBase<Tracker>
             Tr.Get(TrKey.PathfindText));
     }
 
+    [RegisterCustomButton]
     internal static void SetButtonCooldowns()
     {
         _trackerTrackPlayerButton.MaxTimer = 0f;

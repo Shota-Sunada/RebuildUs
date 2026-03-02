@@ -60,7 +60,8 @@ internal class Lighter : MultiRoleBase<Lighter>
     internal override void OnFinishShipStatusBegin() { }
     internal override void HandleDisconnect(PlayerControl player, DisconnectReasons reason) { }
 
-    internal static void MakeButtons(HudManager hm)
+        [RegisterCustomButton]
+        internal static void MakeButtons(HudManager hm)
     {
         // Lighter light
         _lighterButton = new(() =>
@@ -95,7 +96,8 @@ internal class Lighter : MultiRoleBase<Lighter>
             Tr.Get(TrKey.LighterText));
     }
 
-    internal static void SetButtonCooldowns()
+        [RegisterCustomButton]
+        internal static void SetButtonCooldowns()
     {
         _lighterButton.MaxTimer = Cooldown;
         _lighterButton.EffectDuration = Duration;
