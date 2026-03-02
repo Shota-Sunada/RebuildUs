@@ -12,7 +12,7 @@ internal static class HudManagerPatch
     [HarmonyPatch(typeof(HudManager), nameof(HudManager.Update))]
     internal static void UpdatePostfix(HudManager __instance)
     {
-        if (AmongUsClient.Instance?.GameState != InnerNetClient.GameStates.Started)
+        if (!Helpers.IsGameStarted)
         {
             return;
         }

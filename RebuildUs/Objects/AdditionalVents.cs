@@ -52,7 +52,7 @@ internal sealed class AdditionalVents
             return;
         }
         _flag = true;
-        if (AmongUsClient.Instance.GameState != InnerNetClient.GameStates.Started)
+        if (Helpers.IsGameStarted)
         {
             return;
         }

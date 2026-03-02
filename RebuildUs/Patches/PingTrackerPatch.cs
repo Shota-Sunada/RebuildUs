@@ -14,7 +14,7 @@ internal static class PingTrackerPatch
         position.Alignment = AspectPosition.EdgeAlignments.Top;
 
         PingStringBuilder.Clear();
-        if (AmongUsClient.Instance.GameState == InnerNetClient.GameStates.Started)
+        if (Helpers.IsGameStarted)
         {
             PingStringBuilder
                 .Append("<color=#1684B0>")

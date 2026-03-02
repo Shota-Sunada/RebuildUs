@@ -77,7 +77,7 @@ internal static class PlayerControlPatch
     [HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.FixedUpdate))]
     internal static void FixedUpdatePostfix(PlayerControl __instance)
     {
-        if (AmongUsClient.Instance.GameState != InnerNetClient.GameStates.Started || Helpers.IsHideNSeekMode)
+        if (!Helpers.IsGameStarted || Helpers.IsHideNSeekMode)
         {
             return;
         }

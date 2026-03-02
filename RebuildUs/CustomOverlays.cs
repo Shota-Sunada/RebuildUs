@@ -661,7 +661,7 @@ internal abstract class CustomOverlays
             var cc = DestroyableSingleton<ChatController>.Instance;
             var isChatOpen = cc != null && cc.IsOpenOrOpening;
 
-            if (Input.GetKeyDown(KeyCode.H) && AmongUsClient.Instance.GameState == InnerNetClient.GameStates.Started && !isChatOpen)
+            if (Input.GetKeyDown(KeyCode.H) && Helpers.IsGameStarted && !isChatOpen)
             {
                 ToggleInfoOverlay();
             }

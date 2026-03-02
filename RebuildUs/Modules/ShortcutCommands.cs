@@ -24,14 +24,14 @@ internal static class ShortcutCommands
 
         if ((Helpers.GetKeysDown(KeyCode.LeftControl, KeyCode.F6) || Helpers.GetKeysDown(KeyCode.RightControl, KeyCode.F6))
             && MeetingHud.Instance
-            && Helpers.GameStarted)
+            && Helpers.IsGameStarted)
         {
             MeetingHud.Instance.RpcClose();
         }
 
         if ((Helpers.GetKeysDown(KeyCode.LeftControl, KeyCode.F7) || Helpers.GetKeysDown(KeyCode.RightControl, KeyCode.F7))
             && !MeetingHud.Instance
-            && Helpers.GameStarted)
+            && Helpers.IsGameStarted)
         {
             MapUtilities.CachedShipStatus.StartMeeting(PlayerControl.LocalPlayer, PlayerControl.LocalPlayer.Data);
         }
@@ -90,7 +90,7 @@ internal static class ShortcutCommands
         {
             return;
         }
-        if (!Helpers.GameStarted)
+        if (!Helpers.IsGameStarted)
         {
             Logger.LogInfo("DeathPopup debug failed: game is not started.");
             return;
@@ -127,7 +127,7 @@ internal static class ShortcutCommands
 
     private static void ToggleTimerBarDebug()
     {
-        if (!Helpers.GameStarted)
+        if (!Helpers.IsGameStarted)
         {
             Logger.LogInfo("TimerBar debug failed: game is not started.");
             return;

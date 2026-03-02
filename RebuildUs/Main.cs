@@ -232,7 +232,7 @@ public class RebuildUs : BasePlugin
 
     internal static void HandleDisconnect(PlayerControl player, DisconnectReasons reason)
     {
-        if (AmongUsClient.Instance.GameState == InnerNetClient.GameStates.Started)
+        if (Helpers.IsGameStarted)
         {
             ModRoleManager.AllRoles.Do(x => x.HandleDisconnect(player, reason));
             PlayerModifier.AllModifiers.Do(x => x.HandleDisconnect(player, reason));

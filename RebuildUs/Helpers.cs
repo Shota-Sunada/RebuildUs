@@ -25,71 +25,20 @@ internal static class Helpers
 
     private static readonly StringBuilder RoleStringBuilder = new();
 
-    internal static bool ShowButtons
-    {
-        get => !(MapBehaviour.Instance && MapBehaviour.Instance.IsOpen) && !MeetingHud.Instance && !ExileController.Instance;
-    }
-
-    internal static bool ShowMeetingText
-    {
-        get => MeetingHud.Instance != null
-               && MeetingHud.Instance.state is MeetingHud.VoteStates.Voted or MeetingHud.VoteStates.NotVoted or MeetingHud.VoteStates.Discussion;
-    }
-
-    internal static bool GameStarted
-    {
-        get => AmongUsClient.Instance?.GameState == InnerNetClient.GameStates.Started;
-    }
-
-    internal static bool RolesEnabled
-    {
-        get => CustomOptionHolder.ActivateRoles.GetBool();
-    }
-
-    internal static bool RefundVotes
-    {
-        get => CustomOptionHolder.RefundVotesOnDeath.GetBool();
-    }
-
-    internal static bool IsSkeld
-    {
-        get => ByteOptionNames.MapId.Get() == 0;
-    }
-
-    internal static bool IsMiraHq
-    {
-        get => ByteOptionNames.MapId.Get() == 1;
-    }
-
-    internal static bool IsPolus
-    {
-        get => ByteOptionNames.MapId.Get() == 2;
-    }
-
-    internal static bool IsAirship
-    {
-        get => ByteOptionNames.MapId.Get() == 4;
-    }
-
-    internal static bool IsFungle
-    {
-        get => ByteOptionNames.MapId.Get() == 5;
-    }
-
-    internal static bool IsHideNSeekMode
-    {
-        get => GameManager.Instance.IsHideAndSeek();
-    }
-
-    internal static bool IsNormal
-    {
-        get => GameManager.Instance.IsNormal();
-    }
-
-    internal static bool IsCountdown
-    {
-        get => GameStartManager.InstanceExists && FastDestroyableSingleton<GameStartManager>.Instance.startState is GameStartManager.StartingStates.Countdown;
-    }
+    internal static bool ShowButtons { get => !(MapBehaviour.Instance && MapBehaviour.Instance.IsOpen) && !MeetingHud.Instance && !ExileController.Instance; }
+    internal static bool ShowMeetingText { get => MeetingHud.Instance != null && MeetingHud.Instance.state is MeetingHud.VoteStates.Voted or MeetingHud.VoteStates.NotVoted or MeetingHud.VoteStates.Discussion; }
+    internal static bool IsGameStarted { get => FastDestroyableSingleton<InnerNetClient>.Instance.IsGameStarted; }
+    internal static bool IsGameOver { get => FastDestroyableSingleton<InnerNetClient>.Instance.IsGameOver; }
+    internal static bool RolesEnabled { get => CustomOptionHolder.ActivateRoles.GetBool(); }
+    internal static bool RefundVotes { get => CustomOptionHolder.RefundVotesOnDeath.GetBool(); }
+    internal static bool IsSkeld { get => ByteOptionNames.MapId.Get() == 0; }
+    internal static bool IsMiraHq { get => ByteOptionNames.MapId.Get() == 1; }
+    internal static bool IsPolus { get => ByteOptionNames.MapId.Get() == 2; }
+    internal static bool IsAirship { get => ByteOptionNames.MapId.Get() == 4; }
+    internal static bool IsFungle { get => ByteOptionNames.MapId.Get() == 5; }
+    internal static bool IsHideNSeekMode { get => GameManager.Instance && GameManager.Instance.IsHideAndSeek(); }
+    internal static bool IsNormal { get => GameManager.Instance && GameManager.Instance.IsNormal(); }
+    internal static bool IsCountdown { get => GameStartManager.InstanceExists && FastDestroyableSingleton<GameStartManager>.Instance.startState is GameStartManager.StartingStates.Countdown; }
 
     internal static void DestroyList<T>(Il2CppSystem.Collections.Generic.List<T> items) where T : Object
     {
@@ -649,7 +598,7 @@ internal static class Helpers
             return true;
         }
 
-        if (MapSettings.HideOutOfSightNametags && GameStarted && MapUtilities.CachedShipStatus != null)
+        if (MapSettings.HideOutOfSightNametags && IsGameStarted && MapUtilities.CachedShipStatus != null)
         {
             var distMod = 1.025f;
             var distance = Vector3.Distance(source.transform.position, target.transform.position);

@@ -143,7 +143,7 @@ internal static class TimerBarManager
         {
             return;
         }
-        if (!Helpers.GameStarted)
+        if (!Helpers.IsGameStarted)
         {
             return;
         }

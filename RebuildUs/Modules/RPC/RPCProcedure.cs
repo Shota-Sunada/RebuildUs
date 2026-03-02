@@ -167,7 +167,7 @@ internal static partial class RPCProcedure
 
     internal static void UncheckedMurderPlayer(byte sourceId, byte targetId, byte showAnimation)
     {
-        if (AmongUsClient.Instance.GameState != InnerNetClient.GameStates.Started)
+        if (!Helpers.IsGameStarted)
         {
             return;
         }
