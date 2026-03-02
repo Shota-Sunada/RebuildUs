@@ -20,7 +20,7 @@ internal abstract class SpecimenVital
         {
             return;
         }
-        GameObject panel = GameObject.Find("panel_vitals");
+        var panel = GameObject.Find("panel_vitals");
         if (panel == null)
         {
             return;

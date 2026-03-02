@@ -25,7 +25,7 @@ internal static class Airship
 
         if (!hasWiringText)
         {
-            TaskTypes[] newTasks = new TaskTypes[console.TaskTypes.Length + 1];
+            var newTasks = new TaskTypes[console.TaskTypes.Length + 1];
             for (var i = 0; i < console.TaskTypes.Length; i++)
             {
                 newTasks[i] = console.TaskTypes[i];
@@ -40,7 +40,7 @@ internal static class Airship
 
     private static Console ActivateConsole(string objectName)
     {
-        GameObject obj = GameObject.Find(objectName);
+        var obj = GameObject.Find(objectName);
         if (obj == null)
         {
             Logger.LogError($"Object \"{objectName}\" was not found!", "ActivateConsole");

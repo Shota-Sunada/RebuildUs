@@ -390,7 +390,7 @@ internal static class TimerBarManager
         var fromCurrent = GameManager.Instance?.TryCast<HideAndSeekManager>();
         if (fromCurrent != null && TimerBarPrefabField != null)
         {
-            HideAndSeekTimerBar prefab = TimerBarPrefabField.GetValue(fromCurrent) as HideAndSeekTimerBar;
+            var prefab = TimerBarPrefabField.GetValue(fromCurrent) as HideAndSeekTimerBar;
             if (prefab != null)
             {
                 return prefab;
@@ -400,7 +400,7 @@ internal static class TimerBarManager
         var fromCreator = GameManagerCreator.Instance?.HideAndSeekManagerPrefab;
         if (fromCreator != null && TimerBarPrefabField != null)
         {
-            HideAndSeekTimerBar prefab = TimerBarPrefabField.GetValue(fromCreator) as HideAndSeekTimerBar;
+            var prefab = TimerBarPrefabField.GetValue(fromCreator) as HideAndSeekTimerBar;
             if (prefab != null)
             {
                 return prefab;

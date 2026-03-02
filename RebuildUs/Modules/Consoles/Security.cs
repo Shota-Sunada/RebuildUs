@@ -53,7 +53,7 @@ internal static class SecurityCamera
         {
             var oldLen = __instance.textures.Length;
             var newLen = ship.AllCameras.Length;
-            RenderTexture[] newTextures = new RenderTexture[newLen];
+            var newTextures = new RenderTexture[newLen];
             for (var i = 0; i < oldLen; i++)
             {
                 newTextures[i] = __instance.textures[i];
@@ -66,7 +66,7 @@ internal static class SecurityCamera
                 var camera = UnityObject.Instantiate(__instance.CameraPrefab, __instance.transform, true);
                 camera.transform.position = new(surv.transform.position.x, surv.transform.position.y, 8f);
                 camera.orthographicSize = 2.35f;
-                RenderTexture temporary = RenderTexture.GetTemporary(256, 256, 16, (RenderTextureFormat)0);
+                var temporary = RenderTexture.GetTemporary(256, 256, 16, (RenderTextureFormat)0);
                 __instance.textures[i] = temporary;
                 camera.targetTexture = temporary;
             }
@@ -102,7 +102,7 @@ internal static class SecurityCamera
         }
 
         SecurityStringBuilder.Clear();
-        TimeSpan ts = TimeSpan.FromSeconds(MapSettings.RestrictCamerasTime);
+        var ts = TimeSpan.FromSeconds(MapSettings.RestrictCamerasTime);
         if (ts.TotalHours >= 1)
         {
             SecurityStringBuilder.Append((int)ts.TotalHours).Append(':');
@@ -150,7 +150,7 @@ internal static class SecurityCamera
             }
 
             SecurityStringBuilder.Clear();
-            TimeSpan ts = TimeSpan.FromSeconds(MapSettings.RestrictCamerasTime);
+            var ts = TimeSpan.FromSeconds(MapSettings.RestrictCamerasTime);
             if (ts.TotalHours >= 1)
             {
                 SecurityStringBuilder.Append((int)ts.TotalHours).Append(':');

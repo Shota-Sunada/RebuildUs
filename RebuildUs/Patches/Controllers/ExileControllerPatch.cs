@@ -134,7 +134,7 @@ internal static class ExileControllerPatch
             var addLen = MapSettings.CamerasToAdd.Count;
             if (addLen > 0)
             {
-                SurvCamera[] newCameras = new SurvCamera[oldLen + addLen];
+                var newCameras = new SurvCamera[oldLen + addLen];
                 for (var i = 0; i < oldLen; i++)
                 {
                     newCameras[i] = ship.AllCameras[i];
@@ -268,7 +268,7 @@ internal static class ExileControllerPatch
         {
             return;
         }
-        GameObject fullscreen = GameObject.Find("FullScreen500(Clone)");
+        var fullscreen = GameObject.Find("FullScreen500(Clone)");
         if (fullscreen)
         {
             fullscreen.SetActive(false);

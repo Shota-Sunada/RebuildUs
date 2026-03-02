@@ -84,7 +84,7 @@ internal static class Vitals
         }
 
         VitalsStringBuilder.Clear();
-        TimeSpan ts = TimeSpan.FromSeconds(MapSettings.RestrictVitalsTime);
+        var ts = TimeSpan.FromSeconds(MapSettings.RestrictVitalsTime);
         if (ts.TotalHours >= 1)
         {
             VitalsStringBuilder.Append((int)ts.TotalHours).Append(':');

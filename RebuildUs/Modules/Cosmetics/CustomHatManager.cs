@@ -123,7 +123,7 @@ internal static class CustomHatManager
         {
             return null;
         }
-        Sprite sprite = Sprite.Create(texture, new(0, 0, texture.width, texture.height), new(0.53f, 0.575f), texture.width * 0.375f);
+        var sprite = Sprite.Create(texture, new(0, 0, texture.width, texture.height), new(0.53f, 0.575f), texture.width * 0.375f);
         if (sprite == null)
         {
             return null;
@@ -275,7 +275,7 @@ internal static class CustomHatManager
 
     internal static List<string> GenerateDownloadList(List<CustomHat> hats)
     {
-        using MD5 algorithm = MD5.Create();
+        using var algorithm = MD5.Create();
         List<string> toDownload = [];
 
         foreach (var hat in hats)

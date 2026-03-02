@@ -40,7 +40,7 @@ internal static class PlayerPhysicsPatch
         {
             return;
         }
-        Mini mini = Mini.GetModifier(__instance.myPlayer);
+        var mini = Mini.GetModifier(__instance.myPlayer);
         if (mini == null)
         {
             return;

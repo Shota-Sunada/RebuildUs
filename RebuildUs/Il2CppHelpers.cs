@@ -25,7 +25,7 @@ internal static class Il2CppHelpers
             var constructor = typeof(T).GetConstructor([typeof(IntPtr)]);
             var ptr = Expression.Parameter(typeof(IntPtr));
             var create = Expression.New(constructor!, ptr);
-            Expression<Func<IntPtr, T>> lambda = Expression.Lambda<Func<IntPtr, T>>(create, ptr);
+            var lambda = Expression.Lambda<Func<IntPtr, T>>(create, ptr);
             Cast = lambda.Compile();
         }
     }

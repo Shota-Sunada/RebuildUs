@@ -137,8 +137,8 @@ internal static class ClientOptions
             }
         }));
 
-        GameObject returnToGameButton = GameObject.Find("ReturnToGameButton");
-        GameObject leaveGameButton = GameObject.Find("LeaveGameButton");
+        var returnToGameButton = GameObject.Find("ReturnToGameButton");
+        var leaveGameButton = GameObject.Find("LeaveGameButton");
 
         if (!returnToGameButton || !leaveGameButton)
         {

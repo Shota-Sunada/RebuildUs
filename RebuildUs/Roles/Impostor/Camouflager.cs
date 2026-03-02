@@ -133,7 +133,7 @@ internal class Camouflager : SingleRoleBase<Camouflager>
             // special case for morphing
             if (p.IsRole(RoleType.Morphing))
             {
-                Morphing morphRole = Morphing.GetRole(p);
+                var morphRole = Morphing.GetRole(p);
                 morphRole?.HandleMorphing();
             }
             else

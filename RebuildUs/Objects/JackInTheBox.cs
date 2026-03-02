@@ -55,7 +55,7 @@ internal sealed class JackInTheBox
         ventRenderer.sprite = null;
         _vent.myRend = ventRenderer;
 
-        Vent[] newVents = new Vent[allVents.Length + 1];
+        var newVents = new Vent[allVents.Length + 1];
         for (var i = 0; i < allVents.Length; i++)
         {
             newVents[i] = allVents[i];

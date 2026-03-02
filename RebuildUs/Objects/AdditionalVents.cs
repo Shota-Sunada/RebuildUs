@@ -32,7 +32,7 @@ internal sealed class AdditionalVents
 
         _vent.Id = maxId + 1; // Make sure we have a unique id
 
-        Vent[] newVents = new Vent[allVents.Length + 1];
+        var newVents = new Vent[allVents.Length + 1];
         for (var i = 0; i < allVents.Length; i++)
         {
             newVents[i] = allVents[i];
