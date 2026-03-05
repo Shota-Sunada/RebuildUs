@@ -3,8 +3,7 @@ namespace RebuildUs;
 internal static class CustomOptionHolder
 {
     internal static readonly object[] Rates = ["0%", "10%", "20%", "30%", "40%", "50%", "60%", "70%", "80%", "90%", "100%"];
-    private static readonly string[] Presets =
-        [Tr.Get(TrKey.Preset1), Tr.Get(TrKey.Preset2), Tr.Get(TrKey.Preset3), Tr.Get(TrKey.Preset4), Tr.Get(TrKey.Preset5)];
+    private static readonly string[] Presets = [Tr.Get(TrKey.Preset1), Tr.Get(TrKey.Preset2), Tr.Get(TrKey.Preset3), Tr.Get(TrKey.Preset4), Tr.Get(TrKey.Preset5)];
 
     internal static readonly Dictionary<byte, byte[]> BlockedRolePairings = [];
 
@@ -34,14 +33,7 @@ internal static class CustomOptionHolder
 
         #region GENERAL OPTIONS
 
-        CrewmateRolesCountMin = CustomOption.Normal(10,
-            CustomOptionType.General,
-            TrKey.CrewmateRolesCountMin,
-            0f,
-            0f,
-            15f,
-            1f,
-            header: rolesGeneralHeader);
+        CrewmateRolesCountMin = CustomOption.Normal(10, CustomOptionType.General, TrKey.CrewmateRolesCountMin, 0f, 0f, 15f, 1f, header: rolesGeneralHeader);
         CrewmateRolesCountMax = CustomOption.Normal(11, CustomOptionType.General, TrKey.CrewmateRolesCountMax, 0f, 0f, 15f, 1f);
         ImpostorRolesCountMin = CustomOption.Normal(12, CustomOptionType.General, TrKey.ImpostorRolesCountMin, 0f, 0f, 15f, 1f);
         ImpostorRolesCountMax = CustomOption.Normal(13, CustomOptionType.General, TrKey.ImpostorRolesCountMax, 0f, 0f, 15f, 1f);
@@ -90,11 +82,7 @@ internal static class CustomOptionHolder
 
         #region POLUS OPTIONS
 
-        PolusAdditionalVents = CustomOption.Normal(70,
-            CustomOptionType.General,
-            TrKey.PolusAdditionalVents,
-            true,
-            header: polusOptionsHeader);
+        PolusAdditionalVents = CustomOption.Normal(70, CustomOptionType.General, TrKey.PolusAdditionalVents, true, header: polusOptionsHeader);
         PolusSpecimenVital = CustomOption.Normal(71, CustomOptionType.General, TrKey.PolusSpecimenVital, true);
         PolusRandomSpawn = CustomOption.Normal(72, CustomOptionType.General, TrKey.PolusRandomSpawn, true);
 
@@ -404,11 +392,7 @@ internal static class CustomOptionHolder
         MadmateCanFixComm = CustomOption.Normal(4011, CustomOptionType.Modifier, TrKey.MadmateCanFixComm, true, MadmateSpawnRate);
         MadmateExilePlayer = CustomOption.Normal(4012, CustomOptionType.Modifier, TrKey.MadmateExileCrewmate, false, MadmateSpawnRate);
 
-        LastImpostorEnable = CustomOption.Normal(4010,
-            CustomOptionType.Modifier,
-            TrKey.LastImpostorEnable,
-            true,
-            header: lastImpostorHeader);
+        LastImpostorEnable = CustomOption.Normal(4010, CustomOptionType.Modifier, TrKey.LastImpostorEnable, true, header: lastImpostorHeader);
         LastImpostorFunctions = CustomOption.Normal(4011, CustomOptionType.Modifier, TrKey.LastImpostorFunctions, [Tr.Get(TrKey.LastImpostorDivine), Tr.Get(TrKey.LastImpostorGuesser)], 0, LastImpostorEnable);
         LastImpostorNumKills = CustomOption.Normal(4012, CustomOptionType.Modifier, TrKey.LastImpostorNumKills, 3f, 0f, 10f, 1f, LastImpostorEnable);
         LastImpostorResults = CustomOption.Normal(4013, CustomOptionType.Modifier, TrKey.FortuneTellerResults, [Tr.Get(TrKey.FortuneTellerResultCrew), Tr.Get(TrKey.FortuneTellerResultTeam), Tr.Get(TrKey.FortuneTellerResultRole)], 0, LastImpostorEnable);
