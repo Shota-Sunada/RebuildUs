@@ -94,11 +94,8 @@ internal class Jackal : SingleRoleBase<Jackal>
         }
     }
 
-    internal override void OnMeetingStart() { }
-    internal override void OnMeetingEnd() { }
-    internal override void OnIntroEnd() { }
-
-    internal override void FixedUpdate()
+    [CustomEvent(CustomEventType.FixedUpdate)]
+    internal void FixedUpdate()
     {
         var local = Local;
         if (local == null)
@@ -128,9 +125,8 @@ internal class Jackal : SingleRoleBase<Jackal>
         Helpers.SetPlayerOutline(_currentTarget, Palette.ImpostorRed);
     }
 
-    internal override void OnKill(PlayerControl target) { }
-
-    internal override void OnDeath(PlayerControl killer = null)
+    [CustomEvent(CustomEventType.OnDeath)]
+    internal void OnDeath(PlayerControl killer)
     {
         // If LocalPlayer is Sidekick, the Jackal is disconnected and Sidekick promotion is enabled, then trigger promotion
         if (!Sidekick.PromotesToJackal || MySidekick == null || !MySidekick.IsAlive())
@@ -141,8 +137,7 @@ internal class Jackal : SingleRoleBase<Jackal>
         RPCProcedure.SidekickPromotes();
     }
 
-    internal override void OnFinishShipStatusBegin() { }
-    internal override void HandleDisconnect(PlayerControl player, DisconnectReasons reason) { }
+
 
     [RegisterCustomButton]
     internal static void MakeButtons(HudManager hm)

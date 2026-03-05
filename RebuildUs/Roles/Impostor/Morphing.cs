@@ -34,15 +34,14 @@ internal class Morphing : MultiRoleBase<Morphing>
         get => CustomOptionHolder.MorphingDuration.GetFloat();
     }
 
-    internal override void OnMeetingStart() { }
-    internal override void OnMeetingEnd() { }
-
-    internal override void OnIntroEnd()
+    [CustomEvent(CustomEventType.OnIntroEnd)]
+    internal void OnIntroEnd()
     {
         ResetMorph();
     }
 
-    internal override void FixedUpdate()
+    [CustomEvent(CustomEventType.FixedUpdate)]
+    internal void FixedUpdate()
     {
         var local = Local;
         if (local == null)
@@ -53,10 +52,7 @@ internal class Morphing : MultiRoleBase<Morphing>
         Helpers.SetPlayerOutline(_currentTarget, RoleColor);
     }
 
-    internal override void OnKill(PlayerControl target) { }
-    internal override void OnDeath(PlayerControl killer = null) { }
-    internal override void OnFinishShipStatusBegin() { }
-    internal override void HandleDisconnect(PlayerControl player, DisconnectReasons reason) { }
+
 
     [RegisterCustomButton]
     internal static void MakeButtons(HudManager hm)

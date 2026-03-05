@@ -48,11 +48,8 @@ internal class Medic : SingleRoleBase<Medic>
         get => CustomOptionHolder.MedicShowAttemptToMedic.GetBool();
     }
 
-    internal override void OnMeetingStart() { }
-    internal override void OnMeetingEnd() { }
-    internal override void OnIntroEnd() { }
-
-    internal override void FixedUpdate()
+    [CustomEvent(CustomEventType.FixedUpdate)]
+    internal void FixedUpdate()
     {
         if (UsedShield)
         {
@@ -62,15 +59,11 @@ internal class Medic : SingleRoleBase<Medic>
         Helpers.SetPlayerOutline(_currentTarget, ShieldedColor);
     }
 
-    internal override void OnKill(PlayerControl target) { }
-
-    internal override void OnDeath(PlayerControl killer = null)
+    [CustomEvent(CustomEventType.OnDeath)]
+    internal void OnDeath(PlayerControl killer)
     {
         Shielded = null;
     }
-
-    internal override void OnFinishShipStatusBegin() { }
-    internal override void HandleDisconnect(PlayerControl player, DisconnectReasons reason) { }
 
     [RegisterCustomButton]
     internal static void MakeButtons(HudManager hm)

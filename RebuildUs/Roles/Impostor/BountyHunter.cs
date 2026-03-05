@@ -53,9 +53,8 @@ internal class BountyHunter : SingleRoleBase<BountyHunter>
         get => (int)CustomOptionHolder.BountyHunterArrowUpdateInterval.GetFloat();
     }
 
-    internal override void OnMeetingStart() { }
-
-    internal override void OnMeetingEnd()
+    [CustomEvent(CustomEventType.OnMeetingEnd)]
+    internal void OnMeetingEnd()
     {
         if (PlayerControl.LocalPlayer.IsRole(RoleType.BountyHunter))
         {
@@ -63,7 +62,8 @@ internal class BountyHunter : SingleRoleBase<BountyHunter>
         }
     }
 
-    internal override void OnIntroEnd()
+    [CustomEvent(CustomEventType.OnIntroEnd)]
+    internal void OnIntroEnd()
     {
         if (!PlayerControl.LocalPlayer.IsRole(RoleType.BountyHunter))
         {
@@ -84,7 +84,8 @@ internal class BountyHunter : SingleRoleBase<BountyHunter>
         CooldownText.gameObject.layer = 5;
     }
 
-    internal override void FixedUpdate()
+    [CustomEvent(CustomEventType.FixedUpdate)]
+    internal void FixedUpdate()
     {
         if (!PlayerControl.LocalPlayer.IsRole(RoleType.BountyHunter))
         {
@@ -219,7 +220,8 @@ internal class BountyHunter : SingleRoleBase<BountyHunter>
         _arrow.Update();
     }
 
-    internal override void OnKill(PlayerControl target)
+    [CustomEvent(CustomEventType.OnKill)]
+    internal void OnKill(PlayerControl target)
     {
         if (!PlayerControl.LocalPlayer.IsRole(RoleType.BountyHunter))
         {
@@ -236,9 +238,7 @@ internal class BountyHunter : SingleRoleBase<BountyHunter>
         }
     }
 
-    internal override void OnDeath(PlayerControl killer = null) { }
-    internal override void OnFinishShipStatusBegin() { }
-    internal override void HandleDisconnect(PlayerControl player, DisconnectReasons reason) { }
+
 
     internal static void Clear()
     {

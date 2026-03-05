@@ -34,11 +34,8 @@ internal class Warlock : MultiRoleBase<Warlock>
         get => CustomOptionHolder.WarlockRootTime.GetFloat();
     }
 
-    internal override void OnMeetingStart() { }
-    internal override void OnMeetingEnd() { }
-    internal override void OnIntroEnd() { }
-
-    internal override void FixedUpdate()
+    [CustomEvent(CustomEventType.FixedUpdate)]
+    internal void FixedUpdate()
     {
         var local = Local;
         if (local == null)
@@ -68,7 +65,8 @@ internal class Warlock : MultiRoleBase<Warlock>
         }
     }
 
-    internal override void OnKill(PlayerControl target)
+    [CustomEvent(CustomEventType.OnKill)]
+    internal void OnKill(PlayerControl target)
     {
         if (!PlayerControl.LocalPlayer.IsRole(RoleType.Warlock) || WarlockCurseButton == null)
         {
@@ -80,9 +78,7 @@ internal class Warlock : MultiRoleBase<Warlock>
         }
     }
 
-    internal override void OnDeath(PlayerControl killer = null) { }
-    internal override void OnFinishShipStatusBegin() { }
-    internal override void HandleDisconnect(PlayerControl player, DisconnectReasons reason) { }
+
 
     [RegisterCustomButton]
     internal static void MakeButtons(HudManager hm)

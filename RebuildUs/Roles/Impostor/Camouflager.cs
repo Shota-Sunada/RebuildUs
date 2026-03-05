@@ -49,20 +49,13 @@ internal class Camouflager : SingleRoleBase<Camouflager>
         get => CustomOptionHolder.CamouflagerRandomColors.GetBool();
     }
 
-    internal override void OnMeetingStart() { }
-    internal override void OnMeetingEnd() { }
-
-    internal override void OnIntroEnd()
+    [CustomEvent(CustomEventType.OnIntroEnd)]
+    internal void OnIntroEnd()
     {
         ResetCamouflage();
     }
 
-    internal override void FixedUpdate() { }
-    internal override void OnKill(PlayerControl target) { }
-    internal override void OnDeath(PlayerControl killer = null) { }
-    internal override void OnFinishShipStatusBegin() { }
 
-    internal override void HandleDisconnect(PlayerControl player, DisconnectReasons reason) { }
 
     [RegisterCustomButton]
     internal static void MakeButtons(HudManager hm)

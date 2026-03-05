@@ -57,7 +57,8 @@ internal class EvilTracker : MultiRoleBase<EvilTracker>
         get => CustomOptionHolder.EvilTrackerCanSetTargetOnMeeting.GetBool();
     }
 
-    internal override void OnMeetingStart()
+    [CustomEvent(CustomEventType.OnMeetingStart)]
+    internal void OnMeetingStart()
     {
         if (ResetTargetAfterMeeting)
         {
@@ -65,10 +66,8 @@ internal class EvilTracker : MultiRoleBase<EvilTracker>
         }
     }
 
-    internal override void OnMeetingEnd() { }
-    internal override void OnIntroEnd() { }
-
-    internal override void FixedUpdate()
+    [CustomEvent(CustomEventType.FixedUpdate)]
+    internal void FixedUpdate()
     {
         var local = Local;
         if (local != null)
@@ -80,10 +79,7 @@ internal class EvilTracker : MultiRoleBase<EvilTracker>
         }
     }
 
-    internal override void OnKill(PlayerControl target) { }
-    internal override void OnDeath(PlayerControl killer = null) { }
-    internal override void OnFinishShipStatusBegin() { }
-    internal override void HandleDisconnect(PlayerControl player, DisconnectReasons reason) { }
+
 
     [RegisterCustomButton]
     internal static void MakeButtons(HudManager hm)

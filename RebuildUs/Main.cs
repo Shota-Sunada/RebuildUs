@@ -133,8 +133,7 @@ public class RebuildUs : BasePlugin
 
         SubmergedCompatibility.Initialize();
 
-        InitializeButtons();
-        InitializeResetButtonCooldown();
+        ModEventDispatcher.Initialize();
 
         Logger.LogMessage("\"Rebuild Us\" was completely loaded! Enjoy the modifications!");
     }
@@ -196,14 +195,14 @@ public class RebuildUs : BasePlugin
 
     internal static void FixedUpdate(PlayerControl player)
     {
-        ModRoleManager.AllRoles.DoIf(x => x.Player == player, x => x.FixedUpdate());
-        PlayerModifier.AllModifiers.DoIf(x => x.Player == player, x => x.FixedUpdate());
+        ModRoleManager.AllRoles.DoIf(x => x.Player == player, ModEventDispatcher.DispatchFixedUpdate);
+        PlayerModifier.AllModifiers.DoIf(x => x.Player == player, ModEventDispatcher.DispatchFixedUpdate);
     }
 
     internal static void OnMeetingStart()
     {
-        ModRoleManager.AllRoles.Do(x => x.OnMeetingStart());
-        PlayerModifier.AllModifiers.Do(x => x.OnMeetingStart());
+        ModRoleManager.AllRoles.Do(ModEventDispatcher.DispatchOnMeetingStart);
+        PlayerModifier.AllModifiers.Do(ModEventDispatcher.DispatchOnMeetingStart);
 
         // GM.resetZoom();
         FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(3f,
@@ -220,8 +219,8 @@ public class RebuildUs : BasePlugin
 
     internal static void OnMeetingEnd()
     {
-        ModRoleManager.AllRoles.Do(x => x.OnMeetingEnd());
-        PlayerModifier.AllModifiers.Do(x => x.OnMeetingEnd());
+        ModRoleManager.AllRoles.Do(ModEventDispatcher.DispatchOnMeetingEnd);
+        PlayerModifier.AllModifiers.Do(ModEventDispatcher.DispatchOnMeetingEnd);
 
         CustomOverlays.HideInfoOverlay();
         CustomOverlays.HideBlackBg();
@@ -229,16 +228,16 @@ public class RebuildUs : BasePlugin
 
     internal static void OnIntroEnd()
     {
-        ModRoleManager.AllRoles.Do(x => x.OnIntroEnd());
-        PlayerModifier.AllModifiers.Do(x => x.OnIntroEnd());
+        ModRoleManager.AllRoles.Do(ModEventDispatcher.DispatchOnIntroEnd);
+        PlayerModifier.AllModifiers.Do(ModEventDispatcher.DispatchOnIntroEnd);
     }
 
     internal static void HandleDisconnect(PlayerControl player, DisconnectReasons reason)
     {
         if (Helpers.IsGameStarted)
         {
-            ModRoleManager.AllRoles.Do(x => x.HandleDisconnect(player, reason));
-            PlayerModifier.AllModifiers.Do(x => x.HandleDisconnect(player, reason));
+            ModRoleManager.AllRoles.Do(x => ModEventDispatcher.DispatchHandleDisconnect(x, player, reason));
+            PlayerModifier.AllModifiers.Do(x => ModEventDispatcher.DispatchHandleDisconnect(x, player, reason));
 
             Lovers.HandleDisconnect(player, reason);
             // Shifter.HandleDisconnect(player, reason);
@@ -247,44 +246,9 @@ public class RebuildUs : BasePlugin
         }
     }
 
-    private static readonly List<Action<HudManager>> MakeButtonsActions = new();
-    private static readonly List<Action> SetButtonCooldownsActions = new();
-
-    private static void InitializeButtons()
-    {
-        foreach (var type in typeof(RebuildUs).Assembly.GetTypes())
-        {
-            foreach (var method in type.GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static))
-            {
-                if (method.GetCustomAttributes(typeof(RegisterCustomButtonAttribute), false).Length > 0)
-                {
-                    var parameters = method.GetParameters();
-                    if (parameters.Length == 1 && parameters[0].ParameterType == typeof(HudManager))
-                    {
-                        MakeButtonsActions.Add((Action<HudManager>)Delegate.CreateDelegate(typeof(Action<HudManager>), method));
-                    }
-                }
-            }
-        }
-    }
-
-    private static void InitializeResetButtonCooldown()
-    {
-        foreach (var type in typeof(RebuildUs).Assembly.GetTypes())
-        {
-            foreach (var method in type.GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static))
-            {
-                if (method.GetCustomAttributes(typeof(SetCustomButtonTimerAttribute), false).Length > 0)
-                {
-                    SetButtonCooldownsActions.Add((Action)Delegate.CreateDelegate(typeof(Action), method));
-                }
-            }
-        }
-    }
-
     internal static void MakeButtons(HudManager hm)
     {
-        foreach (var action in MakeButtonsActions)
+        foreach (var action in ModEventDispatcher.CustomButtonRegistrations)
         {
             try
             {
@@ -299,7 +263,7 @@ public class RebuildUs : BasePlugin
 
     internal static void SetButtonCooldowns()
     {
-        foreach (var action in SetButtonCooldownsActions)
+        foreach (var action in ModEventDispatcher.CustomButtonTimers)
         {
             try
             {

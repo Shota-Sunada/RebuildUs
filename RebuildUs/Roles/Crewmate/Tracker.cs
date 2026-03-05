@@ -56,16 +56,14 @@ internal class Tracker : MultiRoleBase<Tracker>
         get => CustomOptionHolder.TrackerCorpsesTrackingDuration.GetFloat();
     }
 
-    internal override void OnMeetingStart() { }
-
-    internal override void OnMeetingEnd()
+    [CustomEvent(CustomEventType.OnMeetingEnd)]
+    internal void OnMeetingEnd()
     {
         DeadBodyPositions = [];
     }
 
-    internal override void OnIntroEnd() { }
-
-    internal override void FixedUpdate()
+    [CustomEvent(CustomEventType.FixedUpdate)]
+    internal void FixedUpdate()
     {
         if (Player != PlayerControl.LocalPlayer)
         {
@@ -174,10 +172,7 @@ internal class Tracker : MultiRoleBase<Tracker>
         }
     }
 
-    internal override void OnKill(PlayerControl target) { }
-    internal override void OnDeath(PlayerControl killer = null) { }
-    internal override void OnFinishShipStatusBegin() { }
-    internal override void HandleDisconnect(PlayerControl player, DisconnectReasons reason) { }
+
 
     [RegisterCustomButton]
     internal static void MakeButtons(HudManager hm)

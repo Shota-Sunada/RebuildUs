@@ -78,9 +78,8 @@ internal class Sheriff : MultiRoleBase<Sheriff>
         get => CustomOptionHolder.SheriffCanKillNoDeadBody.GetBool();
     }
 
-    internal override void OnMeetingStart() { }
-
-    internal override void OnMeetingEnd()
+    [CustomEvent(CustomEventType.OnMeetingEnd)]
+    internal void OnMeetingEnd()
     {
         var anyoneDead = false;
         foreach (var p in PlayerControl.AllPlayerControls.GetFastEnumerator())
@@ -95,9 +94,8 @@ internal class Sheriff : MultiRoleBase<Sheriff>
         CanKill = SheriffCanKillNoDeadBody || anyoneDead;
     }
 
-    internal override void OnIntroEnd() { }
-
-    internal override void FixedUpdate()
+    [CustomEvent(CustomEventType.FixedUpdate)]
+    internal void FixedUpdate()
     {
         if (Player == PlayerControl.LocalPlayer && NumShots > 0)
         {
@@ -106,10 +104,7 @@ internal class Sheriff : MultiRoleBase<Sheriff>
         }
     }
 
-    internal override void OnKill(PlayerControl target) { }
-    internal override void OnDeath(PlayerControl killer = null) { }
-    internal override void OnFinishShipStatusBegin() { }
-    internal override void HandleDisconnect(PlayerControl player, DisconnectReasons reason) { }
+
 
     [RegisterCustomButton]
     internal static void MakeButtons(HudManager hm)

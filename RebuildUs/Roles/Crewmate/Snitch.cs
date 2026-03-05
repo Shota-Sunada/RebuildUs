@@ -35,11 +35,8 @@ internal class Snitch : SingleRoleBase<Snitch>
         get => CustomOptionHolder.SnitchTeamJackalUseDifferentArrowColor.GetBool();
     }
 
-    internal override void OnMeetingStart() { }
-    internal override void OnMeetingEnd() { }
-    internal override void OnIntroEnd() { }
-
-    internal override void FixedUpdate()
+    [CustomEvent(CustomEventType.FixedUpdate)]
+    internal void FixedUpdate()
     {
         if (LocalArrows == null)
         {
@@ -111,10 +108,7 @@ internal class Snitch : SingleRoleBase<Snitch>
         }
     }
 
-    internal override void OnKill(PlayerControl target) { }
-    internal override void OnDeath(PlayerControl killer = null) { }
-    internal override void OnFinishShipStatusBegin() { }
-    internal override void HandleDisconnect(PlayerControl player, DisconnectReasons reason) { }
+
 
     // write functions here
 

@@ -75,19 +75,20 @@ internal class Arsonist : SingleRoleBase<Arsonist>
         return true;
     }
 
-    internal override void OnMeetingStart() { }
-
-    internal override void OnMeetingEnd()
+    [CustomEvent(CustomEventType.OnMeetingEnd)]
+    internal void OnMeetingEnd()
     {
         UpdateIcons();
     }
 
-    internal override void OnIntroEnd()
+    [CustomEvent(CustomEventType.OnIntroEnd)]
+    internal void OnIntroEnd()
     {
         UpdateIcons();
     }
 
-    internal override void FixedUpdate()
+    [CustomEvent(CustomEventType.FixedUpdate)]
+    internal void FixedUpdate()
     {
         var local = Local;
         if (local == null)
@@ -120,14 +121,13 @@ internal class Arsonist : SingleRoleBase<Arsonist>
         }
     }
 
-    internal override void OnKill(PlayerControl target)
+    [CustomEvent(CustomEventType.OnKill)]
+    internal void OnKill(PlayerControl target)
     {
         UpdateStatus();
     }
 
-    internal override void OnDeath(PlayerControl killer = null) { }
-    internal override void OnFinishShipStatusBegin() { }
-    internal override void HandleDisconnect(PlayerControl player, DisconnectReasons reason) { }
+
 
     [RegisterCustomButton]
     internal static void MakeButtons(HudManager hm)

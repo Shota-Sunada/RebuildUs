@@ -38,11 +38,8 @@ internal class TimeMaster : SingleRoleBase<TimeMaster>
         get => CustomOptionHolder.TimeMasterShieldDuration.GetFloat();
     }
 
-    internal override void OnMeetingStart() { }
-    internal override void OnMeetingEnd() { }
-    internal override void OnIntroEnd() { }
-
-    internal override void FixedUpdate()
+    [CustomEvent(CustomEventType.FixedUpdate)]
+    internal void FixedUpdate()
     {
         if (IsRewinding)
         {
@@ -119,10 +116,7 @@ internal class TimeMaster : SingleRoleBase<TimeMaster>
         }
     }
 
-    internal override void OnKill(PlayerControl target) { }
-    internal override void OnDeath(PlayerControl killer = null) { }
-    internal override void OnFinishShipStatusBegin() { }
-    internal override void HandleDisconnect(PlayerControl player, DisconnectReasons reason) { }
+
 
     [RegisterCustomButton]
     internal static void MakeButtons(HudManager hm)

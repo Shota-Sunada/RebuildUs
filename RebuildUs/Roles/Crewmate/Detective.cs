@@ -44,11 +44,8 @@ internal class Detective : MultiRoleBase<Detective>
         get => CustomOptionHolder.DetectiveReportColorDuration.GetFloat();
     }
 
-    internal override void OnMeetingStart() { }
-    internal override void OnMeetingEnd() { }
-    internal override void OnIntroEnd() { }
-
-    internal override void FixedUpdate()
+    [CustomEvent(CustomEventType.FixedUpdate)]
+    internal void FixedUpdate()
     {
         if (!Exists || !PlayerControl.LocalPlayer.IsRole(RoleType.Detective))
         {
@@ -70,10 +67,7 @@ internal class Detective : MultiRoleBase<Detective>
         }
     }
 
-    internal override void OnKill(PlayerControl target) { }
-    internal override void OnDeath(PlayerControl killer = null) { }
-    internal override void OnFinishShipStatusBegin() { }
-    internal override void HandleDisconnect(PlayerControl player, DisconnectReasons reason) { }
+
 
     // write functions here
 

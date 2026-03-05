@@ -64,11 +64,8 @@ internal class Hacker : MultiRoleBase<Hacker>
         get => CustomOptionHolder.HackerNoMove.GetBool();
     }
 
-    internal override void OnMeetingStart() { }
-    internal override void OnMeetingEnd() { }
-    internal override void OnIntroEnd() { }
-
-    internal override void FixedUpdate()
+    [CustomEvent(CustomEventType.FixedUpdate)]
+    internal void FixedUpdate()
     {
         if (!PlayerControl.LocalPlayer.IsRole(RoleType.Hacker) || !PlayerControl.LocalPlayer.IsAlive())
         {
@@ -90,10 +87,7 @@ internal class Hacker : MultiRoleBase<Hacker>
         }
     }
 
-    internal override void OnKill(PlayerControl target) { }
-    internal override void OnDeath(PlayerControl killer = null) { }
-    internal override void OnFinishShipStatusBegin() { }
-    internal override void HandleDisconnect(PlayerControl player, DisconnectReasons reason) { }
+
 
     [RegisterCustomButton]
     internal static void MakeButtons(HudManager hm)

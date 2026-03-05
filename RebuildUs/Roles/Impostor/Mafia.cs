@@ -38,20 +38,11 @@ internal static class Mafia
             get => PlayerControl.LocalPlayer?.Data.Role.IsImpostor ?? false ? $" ({Tr.Get(TrKey.MafiaG)})" : "";
         }
 
-        internal override void OnMeetingStart() { }
-        internal override void OnMeetingEnd() { }
-        internal override void OnIntroEnd() { }
-        internal override void FixedUpdate() { }
-        internal override void OnKill(PlayerControl target) { }
-
-        internal override void OnDeath(PlayerControl killer = null)
+        [CustomEvent(CustomEventType.OnDeath)]
+        internal void OnDeath(PlayerControl killer)
         {
             IsGodfatherDead = true;
         }
-
-        internal override void OnFinishShipStatusBegin() { }
-
-        internal override void HandleDisconnect(PlayerControl player, DisconnectReasons reason) { }
 
         // write functions here
 
@@ -104,20 +95,11 @@ internal static class Mafia
             get => PlayerControl.LocalPlayer?.Data.Role.IsImpostor ?? false ? $" ({Tr.Get(TrKey.MafiaM)})" : "";
         }
 
-        internal override void OnMeetingStart() { }
-        internal override void OnMeetingEnd() { }
-        internal override void OnIntroEnd() { }
-        internal override void FixedUpdate() { }
-        internal override void OnKill(PlayerControl target) { }
-
-        internal override void OnDeath(PlayerControl killer = null)
+        [CustomEvent(CustomEventType.OnDeath)]
+        internal void OnDeath(PlayerControl killer)
         {
             IsMafiosoDead = true;
         }
-
-        internal override void OnFinishShipStatusBegin() { }
-
-        internal override void HandleDisconnect(PlayerControl player, DisconnectReasons reason) { }
 
         // write functions here
 
@@ -171,20 +153,11 @@ internal static class Mafia
             get => PlayerControl.LocalPlayer?.Data.Role.IsImpostor ?? false ? $" ({Tr.Get(TrKey.MafiaJ)})" : "";
         }
 
-        internal override void OnMeetingStart() { }
-        internal override void OnMeetingEnd() { }
-        internal override void OnIntroEnd() { }
-        internal override void FixedUpdate() { }
-        internal override void OnKill(PlayerControl target) { }
-
-        internal override void OnDeath(PlayerControl killer = null)
+        [CustomEvent(CustomEventType.OnDeath)]
+        internal void OnDeath(PlayerControl killer)
         {
             IsJanitorDead = true;
         }
-
-        internal override void OnFinishShipStatusBegin() { }
-
-        internal override void HandleDisconnect(PlayerControl player, DisconnectReasons reason) { }
 
         [RegisterCustomButton]
         internal static void MakeButtons(HudManager hm)

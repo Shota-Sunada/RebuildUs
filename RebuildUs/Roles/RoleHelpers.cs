@@ -209,14 +209,14 @@ internal static class RoleHelpers
 
         internal void OnKill(PlayerControl target)
         {
-            ModRoleManager.AllRoles.DoIf(x => x.Player == player, x => x.OnKill(target));
-            PlayerModifier.AllModifiers.DoIf(x => x.Player == player, x => x.OnKill(target));
+            ModRoleManager.AllRoles.DoIf(x => x.Player == player, x => ModEventDispatcher.DispatchOnKill(x, target));
+            PlayerModifier.AllModifiers.DoIf(x => x.Player == player, x => ModEventDispatcher.DispatchOnKill(x, target));
         }
 
         internal void OnDeath(PlayerControl killer)
         {
-            ModRoleManager.AllRoles.DoIf(x => x.Player == player, x => x.OnDeath(killer));
-            PlayerModifier.AllModifiers.DoIf(x => x.Player == player, x => x.OnDeath(killer));
+            ModRoleManager.AllRoles.DoIf(x => x.Player == player, x => ModEventDispatcher.DispatchOnDeath(x, killer));
+            PlayerModifier.AllModifiers.DoIf(x => x.Player == player, x => ModEventDispatcher.DispatchOnDeath(x, killer));
 
             // Lover suicide trigger on exile/death
             // if (player.isLovers())
@@ -237,8 +237,8 @@ internal static class RoleHelpers
                     {
                         return;
                     }
-                    ModRoleManager.AllRoles.DoIf(x => x.Player == player, x => x.OnFinishShipStatusBegin());
-                    PlayerModifier.AllModifiers.DoIf(x => x.Player == player, x => x.OnFinishShipStatusBegin());
+                    ModRoleManager.AllRoles.DoIf(x => x.Player == player, ModEventDispatcher.DispatchOnFinishShipStatusBegin);
+                    PlayerModifier.AllModifiers.DoIf(x => x.Player == player, ModEventDispatcher.DispatchOnFinishShipStatusBegin);
                 })));
         }
     }

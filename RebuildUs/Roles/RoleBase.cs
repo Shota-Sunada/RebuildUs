@@ -19,15 +19,6 @@ internal abstract class PlayerRole
     internal virtual void OnUpdateNameColors() { }
     internal virtual void OnUpdateNameTags() { }
 
-    internal abstract void OnMeetingStart();
-    internal abstract void OnMeetingEnd();
-    internal abstract void OnIntroEnd();
-    internal abstract void FixedUpdate();
-    internal abstract void OnKill(PlayerControl target);
-    internal abstract void OnDeath(PlayerControl killer = null);
-    internal abstract void OnFinishShipStatusBegin();
-    internal abstract void HandleDisconnect(PlayerControl player, DisconnectReasons reason);
-
     internal virtual void ResetRole() { }
     internal virtual void PostInit() { }
 

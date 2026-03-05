@@ -85,19 +85,13 @@ internal class CreatedMadmate : ModifierBase<CreatedMadmate>
         }
     }
 
-    internal override void OnMeetingStart() { }
-    internal override void OnMeetingEnd() { }
-    internal override void OnIntroEnd() { }
-    internal override void FixedUpdate() { }
-    internal override void OnKill(PlayerControl target) { }
-
-    internal override void OnDeath(PlayerControl killer = null)
+    [CustomEvent(CustomEventType.OnDeath)]
+    internal void OnDeath(PlayerControl killer)
     {
         Player.ClearAllTasks();
     }
 
-    internal override void OnFinishShipStatusBegin() { }
-    internal override void HandleDisconnect(PlayerControl player, DisconnectReasons reason) { }
+
 
     // write functions here
 

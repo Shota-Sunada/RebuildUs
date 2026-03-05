@@ -25,12 +25,8 @@ internal class Cleaner : MultiRoleBase<Cleaner>
         get => CustomOptionHolder.CleanerCooldown.GetFloat();
     }
 
-    internal override void OnMeetingStart() { }
-    internal override void OnMeetingEnd() { }
-    internal override void OnIntroEnd() { }
-    internal override void FixedUpdate() { }
-
-    internal override void OnKill(PlayerControl target)
+    [CustomEvent(CustomEventType.OnKill)]
+    internal void OnKill(PlayerControl target)
     {
         if (PlayerControl.LocalPlayer.IsRole(RoleType.Cleaner) && CleanerCleanButton != null)
         {
@@ -38,9 +34,7 @@ internal class Cleaner : MultiRoleBase<Cleaner>
         }
     }
 
-    internal override void OnDeath(PlayerControl killer = null) { }
-    internal override void OnFinishShipStatusBegin() { }
-    internal override void HandleDisconnect(PlayerControl player, DisconnectReasons reason) { }
+
 
     [RegisterCustomButton]
     internal static void MakeButtons(HudManager hm)
