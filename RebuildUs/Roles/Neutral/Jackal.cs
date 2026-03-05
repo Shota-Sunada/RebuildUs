@@ -144,8 +144,8 @@ internal class Jackal : SingleRoleBase<Jackal>
     internal override void OnFinishShipStatusBegin() { }
     internal override void HandleDisconnect(PlayerControl player, DisconnectReasons reason) { }
 
-        [RegisterCustomButton]
-        internal static void MakeButtons(HudManager hm)
+    [RegisterCustomButton]
+    internal static void MakeButtons(HudManager hm)
     {
         _jackalKillButton = new(() =>
             {
@@ -250,8 +250,8 @@ internal class Jackal : SingleRoleBase<Jackal>
             FastDestroyableSingleton<TranslationController>.Instance.GetString(StringNames.FixLights));
     }
 
-        [RegisterCustomButton]
-        internal static void SetButtonCooldowns()
+    [RegisterCustomButton]
+    internal static void SetButtonCooldowns()
     {
         _jackalKillButton?.MaxTimer = KillCooldown;
         _jackalSidekickButton?.MaxTimer = CreateSidekickCooldown;

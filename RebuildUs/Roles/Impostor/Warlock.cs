@@ -84,8 +84,8 @@ internal class Warlock : MultiRoleBase<Warlock>
     internal override void OnFinishShipStatusBegin() { }
     internal override void HandleDisconnect(PlayerControl player, DisconnectReasons reason) { }
 
-        [RegisterCustomButton]
-        internal static void MakeButtons(HudManager hm)
+    [RegisterCustomButton]
+    internal static void MakeButtons(HudManager hm)
     {
         WarlockCurseButton = new(() =>
             {
@@ -157,8 +157,8 @@ internal class Warlock : MultiRoleBase<Warlock>
             Tr.Get(TrKey.CurseText));
     }
 
-        [RegisterCustomButton]
-        internal static void SetButtonCooldowns()
+    [RegisterCustomButton]
+    internal static void SetButtonCooldowns()
     {
         WarlockCurseButton.MaxTimer = Cooldown;
     }

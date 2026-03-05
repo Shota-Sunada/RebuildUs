@@ -95,8 +95,8 @@ internal class Hacker : MultiRoleBase<Hacker>
     internal override void OnFinishShipStatusBegin() { }
     internal override void HandleDisconnect(PlayerControl player, DisconnectReasons reason) { }
 
-        [RegisterCustomButton]
-        internal static void MakeButtons(HudManager hm)
+    [RegisterCustomButton]
+    internal static void MakeButtons(HudManager hm)
     {
         _hackerButton = new(() => HackerTimer = Duration,
             () => PlayerControl.LocalPlayer.IsRole(RoleType.Hacker) && PlayerControl.LocalPlayer.IsAlive(),
@@ -320,8 +320,8 @@ internal class Hacker : MultiRoleBase<Hacker>
         _hackerVitalsChargesText.transform.localPosition += new Vector3(-0.05f, 0.7f, 0);
     }
 
-        [RegisterCustomButton]
-        internal static void SetButtonCooldowns()
+    [RegisterCustomButton]
+    internal static void SetButtonCooldowns()
     {
         _hackerButton.MaxTimer = Cooldown;
         HackerVitalsButton.MaxTimer = Cooldown;

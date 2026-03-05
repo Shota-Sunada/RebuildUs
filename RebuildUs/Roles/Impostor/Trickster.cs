@@ -46,8 +46,8 @@ internal class Trickster : SingleRoleBase<Trickster>
     internal override void OnFinishShipStatusBegin() { }
     internal override void HandleDisconnect(PlayerControl player, DisconnectReasons reason) { }
 
-        [RegisterCustomButton]
-        internal static void MakeButtons(HudManager hm)
+    [RegisterCustomButton]
+    internal static void MakeButtons(HudManager hm)
     {
         _placeJackInTheBoxButton = new(() =>
             {
@@ -121,8 +121,8 @@ internal class Trickster : SingleRoleBase<Trickster>
             Tr.Get(TrKey.LightsOutText));
     }
 
-        [RegisterCustomButton]
-        internal static void SetButtonCooldowns()
+    [RegisterCustomButton]
+    internal static void SetButtonCooldowns()
     {
         _placeJackInTheBoxButton.MaxTimer = PlaceBoxCooldown;
         _lightsOutButton.MaxTimer = LightsOutCooldown;

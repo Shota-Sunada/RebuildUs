@@ -56,8 +56,8 @@ internal class Mayor : MultiRoleBase<Mayor>
     internal override void OnFinishShipStatusBegin() { }
     internal override void HandleDisconnect(PlayerControl player, DisconnectReasons reason) { }
 
-        [RegisterCustomButton]
-        internal static void MakeButtons(HudManager hm)
+    [RegisterCustomButton]
+    internal static void MakeButtons(HudManager hm)
     {
         _mayorMeetingButton = new(() =>
             {
@@ -106,8 +106,8 @@ internal class Mayor : MultiRoleBase<Mayor>
             Tr.Get(TrKey.Meeting));
     }
 
-        [RegisterCustomButton]
-        internal static void SetButtonCooldowns()
+    [RegisterCustomButton]
+    internal static void SetButtonCooldowns()
     {
         _mayorMeetingButton.MaxTimer = Int32OptionNames.EmergencyCooldown.Get();
     }

@@ -85,8 +85,8 @@ internal class Suicider : MultiRoleBase<Suicider>
     internal override void OnFinishShipStatusBegin() { }
     internal override void HandleDisconnect(PlayerControl player, DisconnectReasons reason) { }
 
-        [RegisterCustomButton]
-        internal static void MakeButtons(HudManager hm)
+    [RegisterCustomButton]
+    internal static void MakeButtons(HudManager hm)
     {
         _suicideButton = new(() =>
             {
@@ -122,8 +122,8 @@ internal class Suicider : MultiRoleBase<Suicider>
             Tr.Get(TrKey.Suicide));
     }
 
-        [RegisterCustomButton]
-        internal static void SetButtonCooldowns()
+    [RegisterCustomButton]
+    internal static void SetButtonCooldowns()
     {
         _suicideButton?.MaxTimer = 0f;
     }

@@ -72,8 +72,8 @@ internal class Medic : SingleRoleBase<Medic>
     internal override void OnFinishShipStatusBegin() { }
     internal override void HandleDisconnect(PlayerControl player, DisconnectReasons reason) { }
 
-        [RegisterCustomButton]
-        internal static void MakeButtons(HudManager hm)
+    [RegisterCustomButton]
+    internal static void MakeButtons(HudManager hm)
     {
         _medicShieldButton = new(() =>
             {
@@ -114,8 +114,8 @@ internal class Medic : SingleRoleBase<Medic>
             Tr.Get(TrKey.ShieldText));
     }
 
-        [RegisterCustomButton]
-        internal static void SetButtonCooldowns()
+    [RegisterCustomButton]
+    internal static void SetButtonCooldowns()
     {
         _medicShieldButton.MaxTimer = 0f;
     }

@@ -113,8 +113,8 @@ internal class Vulture : SingleRoleBase<Vulture>
     internal override void OnFinishShipStatusBegin() { }
     internal override void HandleDisconnect(PlayerControl player, DisconnectReasons reason) { }
 
-        [RegisterCustomButton]
-        internal static void MakeButtons(HudManager hm)
+    [RegisterCustomButton]
+    internal static void MakeButtons(HudManager hm)
     {
         _vultureEatButton = new(() =>
             {
@@ -185,8 +185,8 @@ internal class Vulture : SingleRoleBase<Vulture>
         _vultureNumCorpsesText.transform.localPosition += new Vector3(0.0f, 0.7f, 0);
     }
 
-        [RegisterCustomButton]
-        internal static void SetButtonCooldowns()
+    [RegisterCustomButton]
+    internal static void SetButtonCooldowns()
     {
         _vultureEatButton.MaxTimer = Cooldown;
     }

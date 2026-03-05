@@ -67,8 +67,8 @@ internal class LastImpostor : ModifierBase<LastImpostor>
     internal override void OnFinishShipStatusBegin() { }
     internal override void HandleDisconnect(PlayerControl player, DisconnectReasons reason) { }
 
-        [RegisterCustomButton]
-        internal static void MakeButtons(HudManager hm)
+    [RegisterCustomButton]
+    internal static void MakeButtons(HudManager hm)
     {
         LastImpostorButtons = [];
 
@@ -91,7 +91,7 @@ internal class LastImpostor : ModifierBase<LastImpostor>
             };
         }
 
-        ;
+    ;
 
         Func<bool> LastImpostorHasButton(byte index)
         {

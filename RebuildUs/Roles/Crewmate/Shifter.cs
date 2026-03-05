@@ -79,8 +79,8 @@ internal class Shifter : MultiRoleBase<Shifter>
         }
     }
 
-        [RegisterCustomButton]
-        internal static void MakeButtons(HudManager hm)
+    [RegisterCustomButton]
+    internal static void MakeButtons(HudManager hm)
     {
         _shifterShiftButton = new(() =>
             {
@@ -108,8 +108,8 @@ internal class Shifter : MultiRoleBase<Shifter>
             Tr.Get(TrKey.ShiftText));
     }
 
-        [RegisterCustomButton]
-        internal static void SetButtonCooldowns()
+    [RegisterCustomButton]
+    internal static void SetButtonCooldowns()
     {
         _shifterShiftButton.MaxTimer = 0f;
     }

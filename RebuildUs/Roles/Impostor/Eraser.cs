@@ -73,8 +73,8 @@ internal class Eraser : MultiRoleBase<Eraser>
     internal override void OnFinishShipStatusBegin() { }
     internal override void HandleDisconnect(PlayerControl player, DisconnectReasons reason) { }
 
-        [RegisterCustomButton]
-        internal static void MakeButtons(HudManager hm)
+    [RegisterCustomButton]
+    internal static void MakeButtons(HudManager hm)
     {
         _eraserButton = new(() =>
             {
@@ -106,8 +106,8 @@ internal class Eraser : MultiRoleBase<Eraser>
             Tr.Get(TrKey.EraserText));
     }
 
-        [RegisterCustomButton]
-        internal static void SetButtonCooldowns()
+    [RegisterCustomButton]
+    internal static void SetButtonCooldowns()
     {
         _eraserButton.MaxTimer = Cooldown;
     }

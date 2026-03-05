@@ -111,8 +111,8 @@ internal class Sheriff : MultiRoleBase<Sheriff>
     internal override void OnFinishShipStatusBegin() { }
     internal override void HandleDisconnect(PlayerControl player, DisconnectReasons reason) { }
 
-        [RegisterCustomButton]
-        internal static void MakeButtons(HudManager hm)
+    [RegisterCustomButton]
+    internal static void MakeButtons(HudManager hm)
     {
         // Sheriff Kill
         _sheriffKillButton = new(() =>
@@ -186,8 +186,8 @@ internal class Sheriff : MultiRoleBase<Sheriff>
         SheriffNumShotsText.transform.localPosition += new Vector3(-0.05f, 0.7f, 0);
     }
 
-        [RegisterCustomButton]
-        internal static void SetButtonCooldowns()
+    [RegisterCustomButton]
+    internal static void SetButtonCooldowns()
     {
         _sheriffKillButton.MaxTimer = Cooldown;
     }

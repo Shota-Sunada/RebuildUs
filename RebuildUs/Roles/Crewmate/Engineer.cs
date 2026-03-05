@@ -47,8 +47,8 @@ internal class Engineer : MultiRoleBase<Engineer>
     internal override void OnFinishShipStatusBegin() { }
     internal override void HandleDisconnect(PlayerControl player, DisconnectReasons reason) { }
 
-        [RegisterCustomButton]
-        internal static void MakeButtons(HudManager hm)
+    [RegisterCustomButton]
+    internal static void MakeButtons(HudManager hm)
     {
         _engineerRepairButton = new(OnClick,
             HasButton,
@@ -141,8 +141,8 @@ internal class Engineer : MultiRoleBase<Engineer>
         }
     }
 
-        [RegisterCustomButton]
-        internal static void SetButtonCooldowns()
+    [RegisterCustomButton]
+    internal static void SetButtonCooldowns()
     {
         _engineerRepairButton.MaxTimer = 0f;
     }
