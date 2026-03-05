@@ -258,7 +258,11 @@ public class RebuildUs : BasePlugin
             {
                 if (method.GetCustomAttributes(typeof(RegisterCustomButtonAttribute), false).Length > 0)
                 {
-                    MakeButtonsActions.Add((Action<HudManager>)Delegate.CreateDelegate(typeof(Action<HudManager>), method));
+                    var parameters = method.GetParameters();
+                    if (parameters.Length == 1 && parameters[0].ParameterType == typeof(HudManager))
+                    {
+                        MakeButtonsActions.Add((Action<HudManager>)Delegate.CreateDelegate(typeof(Action<HudManager>), method));
+                    }
                 }
             }
         }
