@@ -134,6 +134,7 @@ public class RebuildUs : BasePlugin
         SubmergedCompatibility.Initialize();
 
         InitializeButtons();
+        InitializeResetButtonCooldown();
 
         Logger.LogMessage("\"Rebuild Us\" was completely loaded! Enjoy the modifications!");
     }
@@ -257,15 +258,21 @@ public class RebuildUs : BasePlugin
             {
                 if (method.GetCustomAttributes(typeof(RegisterCustomButtonAttribute), false).Length > 0)
                 {
-                    var parameters = method.GetParameters();
-                    if (parameters.Length == 1 && parameters[0].ParameterType == typeof(HudManager))
-                    {
-                        MakeButtonsActions.Add((Action<HudManager>)Delegate.CreateDelegate(typeof(Action<HudManager>), method));
-                    }
-                    else if (parameters.Length == 0)
-                    {
-                        SetButtonCooldownsActions.Add((Action)Delegate.CreateDelegate(typeof(Action), method));
-                    }
+                    MakeButtonsActions.Add((Action<HudManager>)Delegate.CreateDelegate(typeof(Action<HudManager>), method));
+                }
+            }
+        }
+    }
+
+    private static void InitializeResetButtonCooldown()
+    {
+        foreach (var type in typeof(RebuildUs).Assembly.GetTypes())
+        {
+            foreach (var method in type.GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static))
+            {
+                if (method.GetCustomAttributes(typeof(SetCustomButtonTimerAttribute), false).Length > 0)
+                {
+                    SetButtonCooldownsActions.Add((Action)Delegate.CreateDelegate(typeof(Action), method));
                 }
             }
         }
