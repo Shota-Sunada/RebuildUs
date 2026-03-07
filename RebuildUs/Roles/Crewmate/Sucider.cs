@@ -83,13 +83,7 @@ internal class Suicider : MultiRoleBase<Suicider>
     {
         _suicideButton = new(() =>
             {
-                {
-                    using RPCSender sender = new(PlayerControl.LocalPlayer.NetId, CustomRPC.UncheckedMurderPlayer);
-                    sender.Write(PlayerControl.LocalPlayer.PlayerId); // source
-                    sender.Write(PlayerControl.LocalPlayer.PlayerId); // target
-                    sender.Write((byte)1); // showAnimation
-                }
-                RPCProcedure.UncheckedMurderPlayer(PlayerControl.LocalPlayer.PlayerId, PlayerControl.LocalPlayer.PlayerId, 1);
+                RPCProcedure.UncheckedMurderPlayer(PlayerControl.LocalPlayer, PlayerControl.LocalPlayer.PlayerId, PlayerControl.LocalPlayer.PlayerId, 1);
             },
             () =>
             {

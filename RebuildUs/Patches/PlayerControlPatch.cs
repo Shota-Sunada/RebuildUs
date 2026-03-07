@@ -16,7 +16,7 @@ internal static class PlayerControlPatch
     [HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.HandleRpc))]
     internal static void HandleRpcPostfix(byte callId, MessageReader reader)
     {
-        RPCProcedure.Handle((CustomRPC)callId, reader);
+        RPCProcedure.HandleManualRpc((CustomRPC)callId, reader);
     }
 
     [HarmonyPostfix]

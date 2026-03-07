@@ -38,6 +38,7 @@ global using RebuildUs.Roles.Modifier;
 global using RebuildUs.Utilities;
 global using Reactor.Networking;
 global using Reactor.Networking.Attributes;
+global using Reactor.Networking.Rpc;
 global using InnerNet;
 global using UnityEngine.AddressableAssets;
 global using UnityEngine.ResourceManagement.AsyncOperations;

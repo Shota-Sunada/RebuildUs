@@ -73,9 +73,7 @@ internal static class GameStart
         {
             __instance.ResetStartState();
             SoundManager.Instance.StopSound(FastDestroyableSingleton<GameStartManager>.Instance.gameStartSound);
-            {
-                using RPCSender sender = new(PlayerControl.LocalPlayer.NetId, CustomRPC.StopStart);
-            }
+            RPCProcedure.StopStart(PlayerControl.LocalPlayer);
         }));
         _cancelButton.gameObject.SetActive(false);
     }
@@ -276,11 +274,7 @@ internal static class GameStart
         {
             return;
         }
-        {
-            using RPCSender sender = new(PlayerControl.LocalPlayer.NetId, CustomRPC.ShareGamemode);
-            sender.Write((byte)MapSettings.GameMode);
-            RPCProcedure.ShareGamemode((byte)MapSettings.GameMode);
-        }
+        RPCProcedure.ShareGamemode(PlayerControl.LocalPlayer, (byte)MapSettings.GameMode);
         SendGamemode = false;
     }
 
@@ -395,11 +389,7 @@ internal static class GameStart
             break;
         }
 
-        {
-            using RPCSender sender = new(PlayerControl.LocalPlayer.NetId, CustomRPC.DynamicMapOption);
-            sender.Write(chosenMapId);
-            RPCProcedure.DynamicMapOption(chosenMapId);
-        }
+        RPCProcedure.DynamicMapOption(PlayerControl.LocalPlayer, chosenMapId);
 
         return true;
     }

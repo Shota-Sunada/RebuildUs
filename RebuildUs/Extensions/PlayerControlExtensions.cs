@@ -326,10 +326,7 @@ internal static class PlayerControlExtensions
             }
 
             var taskTypeIds = GenerateTasks(numCommon, numShort, numLong);
-            using RPCSender sender = new(PlayerControl.LocalPlayer.NetId, CustomRPC.UncheckedSetTasks);
-            sender.Write(player.PlayerId);
-            sender.WriteBytesAndSize(taskTypeIds.ToArray());
-            RPCProcedure.UncheckedSetTasks(player.PlayerId, [.. taskTypeIds]);
+            RPCProcedure.UncheckedSetTasks(PlayerControl.LocalPlayer, player.PlayerId, [.. taskTypeIds]);
         }
 
         internal void ClearAllTasks()

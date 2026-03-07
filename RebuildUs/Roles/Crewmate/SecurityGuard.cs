@@ -1,3 +1,5 @@
+using PowerTools;
+
 namespace RebuildUs.Roles.Crewmate;
 
 [HarmonyPatch]
@@ -134,9 +136,7 @@ internal class SecurityGuard : SingleRoleBase<SecurityGuard>
                 if (Local._ventTarget != null)
                 {
                     // Seal vent
-                    using RPCSender sender = new(PlayerControl.LocalPlayer.NetId, CustomRPC.SealVent);
-                    sender.WritePacked(Local._ventTarget.Id);
-                    RPCProcedure.SealVent(Local._ventTarget.Id);
+                    SealVent(PlayerControl.LocalPlayer, Local._ventTarget.Id);
                     Local._ventTarget = null;
                 }
                 else if (ByteOptionNames.MapId.Get() != 1 && MapSettings.CouldUseCameras && !SubmergedCompatibility.IsSubmerged)
@@ -154,14 +154,7 @@ internal class SecurityGuard : SingleRoleBase<SecurityGuard>
                         roomId = 255;
                     }
 
-                    using (RPCSender sender = new(PlayerControl.LocalPlayer.NetId, CustomRPC.PlaceCamera))
-                    {
-                        sender.Write(pos.x);
-                        sender.Write(pos.y);
-                        sender.Write(roomId);
-                    }
-
-                    RPCProcedure.PlaceCamera(pos.x, pos.y, roomId);
+                    PlaceCamera(PlayerControl.LocalPlayer, pos.x, pos.y, roomId);
                 }
 
                 _securityGuardButton.Timer = _securityGuardButton.MaxTimer;
@@ -407,5 +400,138 @@ internal class SecurityGuard : SingleRoleBase<SecurityGuard>
     {
         ModRoleManager.RemoveRole(Instance);
         Instance = null;
+    }
+
+    [MethodRpc((uint)CustomRPC.PlaceCamera)]
+    internal static void PlaceCamera(PlayerControl sender, float x, float y, byte roomId)
+    {
+        var sg = Instance;
+
+        var referenceCamera = UnityObject.FindObjectOfType<SurvCamera>();
+        if (referenceCamera == null)
+        {
+            return;
+        }
+
+        sg.RemainingScrews -= CamPrice;
+        sg.PlacedCameras++;
+
+        Vector3 position = new(x, y);
+
+        var roomType = (SystemTypes)roomId;
+
+        var camera = UnityObject.Instantiate(referenceCamera);
+        camera.transform.position = new(position.x, position.y, referenceCamera.transform.position.z - 1f);
+        camera.CamName = $"Security Camera {sg.PlacedCameras}";
+        camera.Offset = new(0f, 0f, camera.Offset.z);
+
+        camera.NewName = roomType switch
+        {
+            SystemTypes.Hallway => StringNames.Hallway,
+            SystemTypes.Storage => StringNames.Storage,
+            SystemTypes.Cafeteria => StringNames.Cafeteria,
+            SystemTypes.Reactor => StringNames.Reactor,
+            SystemTypes.UpperEngine => StringNames.UpperEngine,
+            SystemTypes.Nav => StringNames.Nav,
+            SystemTypes.Admin => StringNames.Admin,
+            SystemTypes.Electrical => StringNames.Electrical,
+            SystemTypes.LifeSupp => StringNames.LifeSupp,
+            SystemTypes.Shields => StringNames.Shields,
+            SystemTypes.MedBay => StringNames.MedBay,
+            SystemTypes.Security => StringNames.Security,
+            SystemTypes.Weapons => StringNames.Weapons,
+            SystemTypes.LowerEngine => StringNames.LowerEngine,
+            SystemTypes.Comms => StringNames.Comms,
+            SystemTypes.Decontamination => StringNames.Decontamination,
+            SystemTypes.Launchpad => StringNames.Launchpad,
+            SystemTypes.LockerRoom => StringNames.LockerRoom,
+            SystemTypes.Laboratory => StringNames.Laboratory,
+            SystemTypes.Balcony => StringNames.Balcony,
+            SystemTypes.Office => StringNames.Office,
+            SystemTypes.Greenhouse => StringNames.Greenhouse,
+            SystemTypes.Dropship => StringNames.Dropship,
+            SystemTypes.Decontamination2 => StringNames.Decontamination2,
+            SystemTypes.Outside => StringNames.Outside,
+            SystemTypes.Specimens => StringNames.Specimens,
+            SystemTypes.BoilerRoom => StringNames.BoilerRoom,
+            SystemTypes.VaultRoom => StringNames.VaultRoom,
+            SystemTypes.Cockpit => StringNames.Cockpit,
+            SystemTypes.Armory => StringNames.Armory,
+            SystemTypes.Kitchen => StringNames.Kitchen,
+            SystemTypes.ViewingDeck => StringNames.ViewingDeck,
+            SystemTypes.HallOfPortraits => StringNames.HallOfPortraits,
+            SystemTypes.CargoBay => StringNames.CargoBay,
+            SystemTypes.Ventilation => StringNames.Ventilation,
+            SystemTypes.Showers => StringNames.Showers,
+            SystemTypes.Engine => StringNames.Engine,
+            SystemTypes.Brig => StringNames.Brig,
+            SystemTypes.MeetingRoom => StringNames.MeetingRoom,
+            SystemTypes.Records => StringNames.Records,
+            SystemTypes.Lounge => StringNames.Lounge,
+            SystemTypes.GapRoom => StringNames.GapRoom,
+            SystemTypes.MainHall => StringNames.MainHall,
+            SystemTypes.Medical => StringNames.Medical,
+            _ => StringNames.ExitButton,
+        };
+        if (ByteOptionNames.MapId.Get() is 2 or 4)
+        {
+            camera.transform.localRotation = new(0, 0, 1, 1);
+        }
+
+        if (PlayerControl.LocalPlayer.IsRole(RoleType.SecurityGuard))
+        {
+            camera.gameObject.SetActive(true);
+            camera.gameObject.GetComponent<SpriteRenderer>().color = new(1f, 1f, 1f, 0.5f);
+        }
+        else
+        {
+            camera.gameObject.SetActive(false);
+        }
+
+        MapSettings.CamerasToAdd.Add(camera);
+    }
+
+    [MethodRpc((uint)CustomRPC.SealVent)]
+    internal static void SealVent(PlayerControl sender, int ventId)
+    {
+        var sg = Instance;
+
+        Vent vent = null;
+        var allVents = MapUtilities.CachedShipStatus.AllVents;
+        foreach (var v in allVents)
+        {
+            if (v == null || v.Id != ventId)
+            {
+                continue;
+            }
+            vent = v;
+            break;
+        }
+
+        if (vent == null)
+        {
+            return;
+        }
+
+        sg.RemainingScrews -= VentPrice;
+        if (PlayerControl.LocalPlayer.IsRole(RoleType.SecurityGuard))
+        {
+            var animator = vent.GetComponent<SpriteAnim>();
+            animator?.Stop();
+            vent.EnterVentAnim = vent.ExitVentAnim = null;
+            vent.myRend.sprite = animator == null ? AssetLoader.StaticVentSealed : AssetLoader.AnimatedVentSealed;
+            if (SubmergedCompatibility.IsSubmerged && vent.Id == 0)
+            {
+                vent.myRend.sprite = AssetLoader.CentralUpperBlocked;
+            }
+            if (SubmergedCompatibility.IsSubmerged && vent.Id == 14)
+            {
+                vent.myRend.sprite = AssetLoader.CentralLowerBlocked;
+            }
+            vent.myRend.color = new(1f, 1f, 1f, 0.5f);
+            vent.name = "FutureSealedVent_" + vent.name;
+        }
+
+        MapSettings.VentsToSeal.Add(vent);
     }
 }

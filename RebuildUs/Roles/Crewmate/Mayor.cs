@@ -56,10 +56,7 @@ internal class Mayor : MultiRoleBase<Mayor>
             {
                 PlayerControl.LocalPlayer.NetTransform.Halt(); // Stop current movement
                 Local._remoteMeetingsLeft--;
-                using RPCSender sender = new(PlayerControl.LocalPlayer.NetId, CustomRPC.UncheckedCmdReportDeadBody);
-                sender.Write(PlayerControl.LocalPlayer.PlayerId);
-                sender.Write(byte.MaxValue);
-                RPCProcedure.UncheckedCmdReportDeadBody(PlayerControl.LocalPlayer.PlayerId, byte.MaxValue);
+                RPCProcedure.UncheckedCmdReportDeadBody(PlayerControl.LocalPlayer, PlayerControl.LocalPlayer.PlayerId, byte.MaxValue);
                 _mayorMeetingButton.Timer = 1f;
             },
             () => PlayerControl.LocalPlayer.IsRole(RoleType.Mayor) && PlayerControl.LocalPlayer?.Data?.IsDead == false && MayorHasMeetingButton,

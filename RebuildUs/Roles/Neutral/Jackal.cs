@@ -133,8 +133,7 @@ internal class Jackal : SingleRoleBase<Jackal>
         {
             return;
         }
-        using RPCSender sender = new(PlayerControl.LocalPlayer.NetId, CustomRPC.SidekickPromotes);
-        RPCProcedure.SidekickPromotes();
+        SidekickPromotes(PlayerControl.LocalPlayer);
     }
 
 
@@ -184,9 +183,7 @@ internal class Jackal : SingleRoleBase<Jackal>
                     return;
                 }
 
-                using RPCSender sender = new(PlayerControl.LocalPlayer.NetId, CustomRPC.JackalCreatesSidekick);
-                sender.Write(local._currentTarget.PlayerId);
-                RPCProcedure.JackalCreatesSidekick(local._currentTarget.PlayerId);
+                JackalCreatesSidekick(PlayerControl.LocalPlayer, local._currentTarget.PlayerId);
             },
             () =>
             {
@@ -276,6 +273,83 @@ internal class Jackal : SingleRoleBase<Jackal>
             FormerJackals.Add(Instance.Player);
         }
         Instance.Player.EraseRole(RoleType.Jackal);
+    }
+
+    [MethodRpc((uint)CustomRPC.JackalCreatesSidekick)]
+    internal static void JackalCreatesSidekick(PlayerControl sender, byte targetId)
+    {
+        var target = Helpers.PlayerById(targetId);
+        var jackal = Instance;
+        if (target == null)
+        {
+            return;
+        }
+
+        if (!CanCreateSidekickFromImpostor && target.Data.Role.IsImpostor)
+        {
+            jackal?.FakeSidekick = target;
+        }
+        else
+        {
+            var wasSpy = target.IsRole(RoleType.Spy);
+            var wasImpostor = target.IsTeamImpostor(); // This can only be reached if impostors can be sidekicked.
+            FastDestroyableSingleton<RoleManager>.Instance.SetRole(target, RoleTypes.Crewmate);
+            Eraser.ErasePlayerRolesLocal(target.PlayerId, true);
+            if (target.SetRole(RoleType.Sidekick))
+            {
+                var sidekick = Sidekick.Instance;
+                if (sidekick != null)
+                {
+                    if (wasSpy || wasImpostor)
+                    {
+                        sidekick.WasTeamRed = true;
+                    }
+                    sidekick.WasSpy = wasSpy;
+                    sidekick.WasImpostor = wasImpostor;
+                }
+            }
+
+            if (target.PlayerId == PlayerControl.LocalPlayer.PlayerId)
+            {
+                PlayerControl.LocalPlayer.moveable = true;
+            }
+        }
+
+        if (jackal != null)
+        {
+            jackal.CanSidekick = false;
+            jackal.MySidekick = target;
+        }
+    }
+
+    [MethodRpc((uint)CustomRPC.SidekickPromotes)]
+    internal static void SidekickPromotes(PlayerControl sender)
+    {
+        var sidekick = Sidekick.Instance;
+        if (sidekick == null)
+        {
+            return;
+        }
+
+        var wasTeamRed = sidekick.WasTeamRed;
+        var wasImpostor = sidekick.WasImpostor;
+        var wasSpy = sidekick.WasSpy;
+        RemoveCurrentJackal();
+        FastDestroyableSingleton<RoleManager>.Instance.SetRole(sidekick.Player, RoleTypes.Crewmate);
+        Eraser.ErasePlayerRolesLocal(sidekick.Player.PlayerId, true);
+        if (sidekick.Player.SetRole(RoleType.Jackal))
+        {
+            var newJackal = Instance;
+            if (newJackal != null)
+            {
+                newJackal.CanSidekick = JackalPromotedFromSidekickCanCreateSidekick;
+                newJackal.WasTeamRed = wasTeamRed;
+                newJackal.WasImpostor = wasImpostor;
+                newJackal.WasSpy = wasSpy;
+            }
+        }
+
+        Sidekick.Clear();
     }
 
     internal static void Clear()

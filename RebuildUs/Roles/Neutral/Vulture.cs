@@ -136,9 +136,7 @@ internal class Vulture : SingleRoleBase<Vulture>
                     {
                         continue;
                     }
-                    using RPCSender sender = new(local.NetId, CustomRPC.VultureEat);
-                    sender.Write(playerInfo.PlayerId);
-                    RPCProcedure.VultureEat(playerInfo.PlayerId);
+                    VultureEat(local, playerInfo.PlayerId);
 
                     _vultureEatButton.Timer = _vultureEatButton.MaxTimer;
                     break;
@@ -148,10 +146,7 @@ internal class Vulture : SingleRoleBase<Vulture>
                 {
                     return;
                 }
-                {
-                    using RPCSender sender = new(PlayerControl.LocalPlayer.NetId, CustomRPC.VultureWin);
-                    RPCProcedure.VultureWin();
-                }
+                VultureWin(PlayerControl.LocalPlayer);
             },
             () => PlayerControl.LocalPlayer.IsRole(RoleType.Vulture) && PlayerControl.LocalPlayer.IsAlive(),
             () =>
@@ -207,5 +202,22 @@ internal class Vulture : SingleRoleBase<Vulture>
 
         ModRoleManager.RemoveRole(Instance);
         Instance = null;
+    }
+
+    [MethodRpc((uint)CustomRPC.VultureEat)]
+    internal static void VultureEat(PlayerControl sender, byte playerId)
+    {
+        Cleaner.CleanBodyLocal(playerId);
+        var vulture = Instance;
+        if (vulture != null)
+        {
+            vulture.EatenBodies++;
+        }
+    }
+
+    [MethodRpc((uint)CustomRPC.VultureWin)]
+    internal static void VultureWin(PlayerControl sender)
+    {
+        TriggerVultureWin = true;
     }
 }

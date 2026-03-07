@@ -107,12 +107,7 @@ internal class Bait : MultiRoleBase<Bait>
             }
         }
 
-        {
-            using RPCSender sender = new(Player.NetId, CustomRPC.UncheckedCmdReportDeadBody);
-            sender.Write(reporter);
-            sender.Write(Player.PlayerId);
-        }
-        RPCProcedure.UncheckedCmdReportDeadBody(reporter, Player.PlayerId);
+        RPCProcedure.UncheckedCmdReportDeadBody(Player, reporter, Player.PlayerId);
         _reported = true;
         _warningMessage = null;
     }

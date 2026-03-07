@@ -143,9 +143,7 @@ internal class EvilHacker : MultiRoleBase<EvilHacker>
 
         _evilHackerCreatesMadmateButton = new(() =>
             {
-                using RPCSender sender = new(PlayerControl.LocalPlayer.NetId, CustomRPC.EvilHackerCreatesMadmate);
-                sender.Write(Local._currentTarget.PlayerId);
-                RPCProcedure.EvilHackerCreatesMadmate(Local._currentTarget.PlayerId, Local.Player.PlayerId);
+                EvilHackerCreatesMadmate(PlayerControl.LocalPlayer, Local._currentTarget.PlayerId, Local.Player.PlayerId);
             },
             () =>
             {
@@ -182,5 +180,47 @@ internal class EvilHacker : MultiRoleBase<EvilHacker>
     {
         // reset configs here
         Players.Clear();
+    }
+
+    [MethodRpc((uint)CustomRPC.EvilHackerCreatesMadmate)]
+    internal static void EvilHackerCreatesMadmate(PlayerControl sender, byte targetId, byte evilHackerId)
+    {
+        var targetPlayer = Helpers.PlayerById(targetId);
+        var evilHackerPlayer = Helpers.PlayerById(evilHackerId);
+        if (targetPlayer == null || evilHackerPlayer == null)
+        {
+            return;
+        }
+        var evilHacker = GetRole(evilHackerPlayer);
+        if (evilHacker == null)
+        {
+            return;
+        }
+        if (!CanCreateMadmateFromJackal && targetPlayer.IsRole(RoleType.Jackal))
+        {
+            evilHacker.FakeMadmate = targetPlayer;
+        }
+        else
+        {
+            List<PlayerControl> tmpFormerJackals = [.. Jackal.FormerJackals];
+
+            if (targetPlayer.HasFakeTasks())
+            {
+                if (CreatedMadmate.HasTasks)
+                {
+                    targetPlayer.ClearAllTasks();
+                    targetPlayer.GenerateAndAssignTasks(0, CreatedMadmate.NumTasks, 0);
+                }
+            }
+
+            FastDestroyableSingleton<RoleManager>.Instance.SetRole(targetPlayer, RoleTypes.Crewmate);
+            Eraser.ErasePlayerRolesLocal(targetPlayer.PlayerId, true, false);
+
+            Jackal.FormerJackals = tmpFormerJackals;
+
+            targetPlayer.AddModifier(ModifierType.CreatedMadmate);
+        }
+
+        evilHacker.CanCreateMadmate = false;
     }
 }

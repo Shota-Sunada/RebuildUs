@@ -331,10 +331,7 @@ internal static class ShipStatusPatch
         Int32OptionNames.NumLongTasks.Set(_originalNumLongTasksOption);
 
         // 一部役職のタスクを再割り当てする
-        {
-            using RPCSender sender = new(PlayerControl.LocalPlayer.NetId, CustomRPC.FinishShipStatusBegin);
-            RPCProcedure.FinishShipStatusBegin();
-        }
+        RPCProcedure.FinishShipStatusBegin(PlayerControl.LocalPlayer);
     }
 
     [HarmonyPostfix]
@@ -351,10 +348,7 @@ internal static class ShipStatusPatch
             if (AmongUsClient.Instance.AmHost && player.Data != null)
             {
                 var randVal = (byte)RebuildUs.Rnd.Next(0, 6);
-                using RPCSender sender = new(PlayerControl.LocalPlayer.NetId, CustomRPC.PolusRandomSpawn);
-                sender.Write(player.Data.PlayerId);
-                sender.Write(randVal);
-                RPCProcedure.PolusRandomSpawn(player.Data.PlayerId, randVal);
+                RPCProcedure.PolusRandomSpawn(PlayerControl.LocalPlayer, player.Data.PlayerId, randVal);
             }
         }
 

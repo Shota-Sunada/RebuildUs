@@ -259,11 +259,7 @@ internal class LastImpostor : ModifierBase<LastImpostor>
 
         if (impList.Count == 1)
         {
-            {
-                using RPCSender sender = new(PlayerControl.LocalPlayer.NetId, CustomRPC.ImpostorPromotesToLastImpostor);
-                sender.Write(impList[0].PlayerId);
-            }
-            RPCProcedure.ImpostorPromotesToLastImpostor(impList[0].PlayerId);
+            ImpostorPromotesToLastImpostor(PlayerControl.LocalPlayer, impList[0].PlayerId);
         }
     }
 
@@ -338,12 +334,7 @@ internal class LastImpostor : ModifierBase<LastImpostor>
         }
 
         // 占いを実行したことで発火される処理を他クライアントに通知
-        {
-            using RPCSender sender = new(PlayerControl.LocalPlayer.NetId, CustomRPC.FortuneTellerUsedDivine);
-            sender.Write(PlayerControl.LocalPlayer.PlayerId);
-            sender.Write(p.PlayerId);
-        }
-        RPCProcedure.FortuneTellerUsedDivine(PlayerControl.LocalPlayer.PlayerId, p.PlayerId);
+        FortuneTellerUsedDivine(PlayerControl.LocalPlayer, PlayerControl.LocalPlayer.PlayerId, p.PlayerId);
     }
 
     internal static void OnIntroDestroy(IntroCutscene __instance)
@@ -361,6 +352,19 @@ internal class LastImpostor : ModifierBase<LastImpostor>
                 _playerIcons[p.PlayerId] = player;
             }
         }
+    }
+
+    [MethodRpc((uint)CustomRPC.ImpostorPromotesToLastImpostor)]
+    internal static void ImpostorPromotesToLastImpostor(PlayerControl sender, byte targetId)
+    {
+        var player = Helpers.PlayerById(targetId);
+        player.AddModifier(ModifierType.LastImpostor);
+    }
+
+    [MethodRpc((uint)CustomRPC.FortuneTellerUsedDivine)]
+    internal static void FortuneTellerUsedDivine(PlayerControl sender, byte killerId, byte targetId)
+    {
+        NumUsed += 1;
     }
 
     internal enum DivineResults

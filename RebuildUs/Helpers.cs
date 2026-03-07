@@ -186,13 +186,7 @@ internal static class Helpers
             CheckMurderAttemptAndKill(killer, Vampire.Bitten, true, false);
         }
 
-        using (RPCSender sender = new(PlayerControl.LocalPlayer.NetId, CustomRPC.VampireSetBitten))
-        {
-            sender.Write(byte.MaxValue);
-            sender.Write(byte.MaxValue);
-        }
-
-        RPCProcedure.VampireSetBitten(byte.MaxValue, byte.MaxValue);
+        Vampire.VampireSetBitten(PlayerControl.LocalPlayer, byte.MaxValue, byte.MaxValue);
     }
 
     internal static bool IsLighterColor(int colorId)
@@ -287,7 +281,7 @@ internal static class Helpers
 
         if (Medic.Exists && !ignoreMedic && Medic.Shielded != null && Medic.Shielded == target)
         {
-            using (new RPCSender(killer.NetId, CustomRPC.ShieldedMurderAttempt)) RPCProcedure.ShieldedMurderAttempt();
+            Medic.ShieldedMurderAttempt(killer);
 
             return MurderAttemptResult.SuppressKill;
         }
@@ -301,7 +295,7 @@ internal static class Helpers
         {
             if (!blockRewind)
             {
-                using (new RPCSender(killer.NetId, CustomRPC.TimeMasterRewindTime)) RPCProcedure.TimeMasterRewindTime();
+                TimeMaster.TimeMasterRewindTime(killer);
             }
 
             return MurderAttemptResult.SuppressKill;
@@ -312,14 +306,7 @@ internal static class Helpers
 
     internal static void MurderPlayer(PlayerControl killer, PlayerControl target, bool showAnimation)
     {
-        using (RPCSender sender = new(PlayerControl.LocalPlayer.NetId, CustomRPC.UncheckedMurderPlayer))
-        {
-            sender.Write(killer.PlayerId);
-            sender.Write(target.PlayerId);
-            sender.Write(showAnimation ? byte.MaxValue : (byte)0);
-        }
-
-        RPCProcedure.UncheckedMurderPlayer(killer.PlayerId, target.PlayerId, showAnimation ? byte.MaxValue : (byte)0);
+        RPCProcedure.UncheckedMurderPlayer(PlayerControl.LocalPlayer, killer.PlayerId, target.PlayerId, showAnimation ? byte.MaxValue : (byte)0);
     }
 
     internal static MurderAttemptResult CheckMurderAttemptAndKill(PlayerControl killer, PlayerControl target, bool isMeetingStart = false, bool showAnimation = true, bool ignoreBlank = false, bool ignoreIfKillerIsDead = false)
@@ -338,8 +325,7 @@ internal static class Helpers
                 {
                     if (!TransportationToolPatches.IsUsingTransportation(target) && Vampire.Bitten != null)
                     {
-                        using (new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.VampireSetBitten))
-                            RPCProcedure.VampireSetBitten(byte.MaxValue, byte.MaxValue);
+                        Vampire.VampireSetBitten(PlayerControl.LocalPlayer, byte.MaxValue, byte.MaxValue);
 
                         MurderPlayer(killer, target, showAnimation);
                     }

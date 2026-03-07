@@ -188,9 +188,7 @@ internal static class Mafia
                         {
                             continue;
                         }
-                        using RPCSender sender = new(local.NetId, CustomRPC.CleanBody);
-                        sender.Write(playerInfo.PlayerId);
-                        RPCProcedure.CleanBody(playerInfo.PlayerId);
+                        Cleaner.CleanBody(local, playerInfo.PlayerId);
 
                         _janitorCleanButton.Timer = _janitorCleanButton.MaxTimer;
                         break;

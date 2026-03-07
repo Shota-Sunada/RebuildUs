@@ -57,6 +57,20 @@ internal class Swapper : SingleRoleBase<Swapper>
 
     // write functions here
 
+    [MethodRpc((uint)CustomRPC.SwapperSwap)]
+    internal static void SwapperSwap(PlayerControl sender, byte playerId1, byte playerId2)
+    {
+        if (!MeetingHud.Instance)
+        {
+            return;
+        }
+        PlayerId1 = playerId1;
+        PlayerId2 = playerId2;
+    }
+
+    [MethodRpc((uint)CustomRPC.SwapperAnimate)]
+    internal static void SwapperAnimate(PlayerControl sender) { }
+
     internal static void Clear()
     {
         ModRoleManager.RemoveRole(Instance);

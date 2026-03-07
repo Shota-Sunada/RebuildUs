@@ -30,9 +30,7 @@ internal static class SecurityCamera
         var lp = PlayerControl.LocalPlayer;
         if (MapSettings.RestrictDevices > 0 && MapSettings.RestrictCameras && MapSettings.RestrictCamerasTime > 0f && lp != null && lp.IsAlive())
         {
-            using RPCSender sender = new(lp.NetId, CustomRPC.UseCameraTime);
-            sender.Write(_cameraTimer);
-            RPCProcedure.UseCameraTime(_cameraTimer);
+            UseCameraTime(lp, _cameraTimer);
         }
 
         _cameraTimer = 0f;
@@ -255,5 +253,11 @@ internal static class SecurityCamera
         _timeRemaining.gameObject.SetActive(true);
 
         return true;
+    }
+
+    [MethodRpc((uint)CustomRPC.UseCameraTime)]
+    internal static void UseCameraTime(PlayerControl sender, float time)
+    {
+        MapSettings.RestrictCamerasTime -= time;
     }
 }

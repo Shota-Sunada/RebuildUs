@@ -79,15 +79,11 @@ internal class Medic : SingleRoleBase<Medic>
                 {
                     if (SetShieldAfterMeeting)
                     {
-                        using RPCSender sender = new(PlayerControl.LocalPlayer.NetId, CustomRPC.SetFutureShielded);
-                        sender.Write(local._currentTarget.PlayerId);
-                        RPCProcedure.SetFutureShielded(local._currentTarget.PlayerId);
+                        SetFutureShielded(PlayerControl.LocalPlayer, local._currentTarget.PlayerId);
                     }
                     else
                     {
-                        using RPCSender sender = new(PlayerControl.LocalPlayer.NetId, CustomRPC.MedicSetShielded);
-                        sender.Write(local._currentTarget.PlayerId);
-                        RPCProcedure.MedicSetShielded(local._currentTarget.PlayerId);
+                        MedicSetShielded(PlayerControl.LocalPlayer, local._currentTarget.PlayerId);
                     }
                 }
             },
@@ -123,5 +119,39 @@ internal class Medic : SingleRoleBase<Medic>
         Shielded = null;
         FutureShielded = null;
         UsedShield = false;
+    }
+
+    [MethodRpc((uint)CustomRPC.MedicSetShielded)]
+    internal static void MedicSetShielded(PlayerControl sender, byte shieldedId)
+    {
+        UsedShield = true;
+        Shielded = Helpers.PlayerById(shieldedId);
+        FutureShielded = null;
+    }
+
+    [MethodRpc((uint)CustomRPC.ShieldedMurderAttempt)]
+    internal static void ShieldedMurderAttempt(PlayerControl sender)
+    {
+        if (!Exists || Shielded == null)
+        {
+            return;
+        }
+
+        var isShieldedAndShow = Shielded == PlayerControl.LocalPlayer && ShowAttemptToShielded;
+        var isMedicAndShow = PlayerControl.LocalPlayer.IsRole(RoleType.Medic) && ShowAttemptToMedic;
+
+        if (!isShieldedAndShow && !isMedicAndShow || FastDestroyableSingleton<HudManager>.Instance?.FullScreen == null)
+        {
+            return;
+        }
+        var c = Palette.ImpostorRed;
+        Helpers.ShowFlash(new(c.r, c.g, c.b));
+    }
+
+    [MethodRpc((uint)CustomRPC.SetFutureShielded)]
+    internal static void SetFutureShielded(PlayerControl sender, byte playerId)
+    {
+        FutureShielded = Helpers.PlayerById(playerId);
+        UsedShield = true;
     }
 }

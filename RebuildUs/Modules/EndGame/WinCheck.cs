@@ -154,10 +154,7 @@ internal static partial class EndGameMain
     private static void UncheckedEndGame(GameOverReason reason)
     {
         GameManager.Instance.RpcEndGame(reason, false);
-        using RPCSender sender = new(PlayerControl.LocalPlayer.NetId, CustomRPC.UncheckedEndGame);
-        sender.Write((byte)reason);
-        sender.Write(IsO2Win);
-        RPCProcedure.UncheckedEndGame((byte)reason, IsO2Win);
+        RPCProcedure.UncheckedEndGame(PlayerControl.LocalPlayer, (byte)reason, IsO2Win);
     }
 
     private static void UncheckedEndGame(CustomGameOverReason reason)
