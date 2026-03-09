@@ -75,7 +75,7 @@ internal static class ModifierHelpers
                 return false;
             }
 
-            Logger.LogInfo($"{player.Data?.PlayerName}({player.PlayerId}): {Enum.GetName(typeof(ModifierType), modType)}");
+            Logger.LogInfo($"{player.Data?.PlayerName}({player.PlayerId}): {Enum.GetName(typeof(ModifierType), modType)}", "AddModifier");
             var
                 methods = GetMethods(modType);
             if (methods.addModifier != null)

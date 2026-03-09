@@ -74,7 +74,7 @@ internal static class RoleHelpers
                 return false;
             }
 
-            Logger.LogInfo($"{player.Data?.PlayerName}({player.PlayerId}): {Enum.GetName(typeof(RoleType), roleType)}");
+            Logger.LogInfo($"{player.Data?.PlayerName}({player.PlayerId}): {Enum.GetName(typeof(RoleType), roleType)}", "SetRole");
 
             if (roleType != RoleType.Lovers)
             {

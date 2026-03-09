@@ -312,7 +312,7 @@ internal static class Helpers
     internal static MurderAttemptResult CheckMurderAttemptAndKill(PlayerControl killer, PlayerControl target, bool isMeetingStart = false, bool showAnimation = true, bool ignoreBlank = false, bool ignoreIfKillerIsDead = false)
     {
         var murder = CheckMurderAttempt(killer, target, isMeetingStart, ignoreBlank, ignoreIfKillerIsDead);
-        Logger.LogMessage(Enum.GetName(typeof(MurderAttemptResult), murder));
+        Logger.LogMessage(Enum.GetName(typeof(MurderAttemptResult), murder), "MurderAttemptResult");
 
         if (murder == MurderAttemptResult.PerformKill)
         {
@@ -781,7 +781,7 @@ internal static class Helpers
         }
         catch (Exception e)
         {
-            Logger.LogError("Error loading texture from disk (" + path + "): " + e.Message);
+            Logger.LogError(new StringBuilder("Error loading texture from disk (").Append(path).Append("): ").Append(e.Message).ToString());
         }
 
         return null;

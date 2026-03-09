@@ -71,12 +71,12 @@ internal static class RoleData
             }
         }
 
-        Logger.LogInfo("Registering Roles");
+        Logger.LogInfo("Registering Roles", "InitRole");
         foreach (var role in roles)
         {
-            Logger.LogInfo(role.RoleType.ToString());
+            Logger.LogInfo(role.RoleType.ToString(), "InitRole");
         }
-        Logger.LogInfo("Finish Registering Roles");
+        Logger.LogInfo("Finish Registering Roles", "InitRole");
 
         return [.. roles];
     }

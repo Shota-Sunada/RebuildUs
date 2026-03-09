@@ -514,11 +514,17 @@ internal static class Intro
         }
 
         Logger.LogInfo("----------Role Assign-----------", "Settings");
-        var pcEnumerator = PlayerControl.AllPlayerControls.GetFastEnumerator();
-        while (pcEnumerator.MoveNext())
+        if (PlayerControl.LocalPlayer.AmOwner)
         {
-            var pc = pcEnumerator.Current;
-            Logger.LogInfo($"{(pc.AmOwner ? "[*]" : ""),-3}{pc.PlayerId,-2}:{pc.Data.PlayerName.PadRightV2(20)}:{RoleInfo.GetRolesString(pc, false, joinSeparator: " + ")}", "Settings");
+            LogRoleAssign();
+        }
+        else
+        {
+            Logger.LogInfo("The Role Assignments will be seen in host log file.", "Settings");
+#if DEBUG
+            Logger.LogInfo("But this is a debug build, you can see the role assignments.", "Settings");
+            LogRoleAssign();
+#endif
         }
 
         Logger.LogInfo("-----------Platforms------------", "Settings");
@@ -546,20 +552,18 @@ internal static class Intro
             }
         }
 
-        Logger.LogInfo("--------------------------------", "Settings");
-
         if (roleInfo != null)
         {
             __instance.YouAreText.color = roleInfo.Color;
-            Logger.LogInfo(roleInfo.Color);
             __instance.RoleText.text = roleInfo.Name;
-            Logger.LogInfo(roleInfo.Name);
             __instance.RoleText.color = roleInfo.Color;
-            Logger.LogInfo(roleInfo.Color);
             __instance.RoleBlurbText.text = roleInfo.IntroDescription;
-            Logger.LogInfo(roleInfo.IntroDescription);
             __instance.RoleBlurbText.color = roleInfo.Color;
+
+            Logger.LogInfo("--------Intro Data--------", "Settings");
             Logger.LogInfo(roleInfo.Color);
+            Logger.LogInfo(roleInfo.Name);
+            Logger.LogInfo(roleInfo.IntroDescription);
 
             if (PlayerControl.LocalPlayer.HasModifier(ModifierType.Madmate))
             {
@@ -578,6 +582,8 @@ internal static class Intro
                 __instance.RoleBlurbText.color = Madmate.NameColor;
             }
         }
+
+        Logger.LogInfo("--------------------------------", "Settings");
 
         var hasLovers = false;
         var loversEnumerator = infos.GetEnumerator();
@@ -623,5 +629,15 @@ internal static class Intro
         __instance.RoleText.gameObject.SetActive(false);
         __instance.RoleBlurbText.gameObject.SetActive(false);
         __instance.ourCrewmate.gameObject.SetActive(false);
+    }
+
+    private static void LogRoleAssign()
+    {
+        var pcEnumerator = PlayerControl.AllPlayerControls.GetFastEnumerator();
+        while (pcEnumerator.MoveNext())
+        {
+            var pc = pcEnumerator.Current;
+            Logger.LogInfo($"{(pc.AmOwner ? "[*]" : ""),-3}{pc.PlayerId,-2}:{pc.Data.PlayerName.PadRightV2(20)}:{RoleInfo.GetRolesString(pc, false, joinSeparator: " + ")}", "Settings");
+        }
     }
 }

@@ -8,7 +8,7 @@ internal static class Airship
 
         if (console == null)
         {
-            Logger.LogError($"consoleName \"{consoleName}\" is null", "ActivateWiring");
+            Logger.LogError($"Console \"{consoleName}\" is null", "ActivateWiring");
             return null;
         }
 
