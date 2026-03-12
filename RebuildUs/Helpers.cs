@@ -14,16 +14,8 @@ internal static class Helpers
 {
     private static readonly StringBuilder ColorStringBuilder = new();
 
-    private static readonly StringBuilder InfoStringBuilder = new();
-
     private static readonly Dictionary<byte, PlayerControl> PlayerByIdCache = [];
     private static int _lastCacheFrame = -1;
-
-    private static readonly Vector3 ColorBlindMeetingPos = new(0.3384f, 0.23334f, -0.11f);
-    private static readonly Vector3 ColorBlindMeetingScale = new(0.72f, 0.8f, 0.8f);
-    private static readonly Dictionary<byte, PlayerVoteArea> VoteAreaStates = [];
-
-    private static readonly StringBuilder RoleStringBuilder = new();
 
     internal static bool ShowButtons { get => !(MapBehaviour.Instance && MapBehaviour.Instance.IsOpen) && !MeetingHud.Instance && !ExileController.Instance; }
     internal static bool ShowMeetingText { get => MeetingHud.Instance != null && MeetingHud.Instance.state is MeetingHud.VoteStates.Voted or MeetingHud.VoteStates.NotVoted or MeetingHud.VoteStates.Discussion; }
@@ -31,14 +23,17 @@ internal static class Helpers
     internal static bool IsGameOver { get => FastDestroyableSingleton<InnerNetClient>.Instance.IsGameOver; }
     internal static bool RolesEnabled { get => CustomOptionHolder.ActivateRoles.GetBool(); }
     internal static bool RefundVotes { get => CustomOptionHolder.RefundVotesOnDeath.GetBool(); }
+
     internal static bool IsSkeld { get => ByteOptionNames.MapId.Get() == 0; }
     internal static bool IsMiraHq { get => ByteOptionNames.MapId.Get() == 1; }
     internal static bool IsPolus { get => ByteOptionNames.MapId.Get() == 2; }
     internal static bool IsAirship { get => ByteOptionNames.MapId.Get() == 4; }
     internal static bool IsFungle { get => ByteOptionNames.MapId.Get() == 5; }
+
     internal static bool IsHideNSeekMode { get => GameManager.Instance && GameManager.Instance.IsHideAndSeek(); }
     internal static bool IsNormal { get => GameManager.Instance && GameManager.Instance.IsNormal(); }
-    internal static bool IsCountdown { get => GameStartManager.InstanceExists && FastDestroyableSingleton<GameStartManager>.Instance.startState is GameStartManager.StartingStates.Countdown; }
+
+    internal static bool IsLobbyCountdown { get => GameStartManager.InstanceExists && FastDestroyableSingleton<GameStartManager>.Instance.startState is GameStartManager.StartingStates.Countdown; }
 
     internal static void DestroyList<T>(Il2CppSystem.Collections.Generic.List<T> items) where T : Object
     {
@@ -320,16 +315,14 @@ internal static class Helpers
         }
         else if (murder == MurderAttemptResult.DelayVampireKill)
         {
-            FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(10f,
-                new Action<float>(p =>
+            FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(10f, new Action<float>(p =>
+            {
+                if (!TransportationToolPatches.IsUsingTransportation(target) && Vampire.Bitten != null)
                 {
-                    if (!TransportationToolPatches.IsUsingTransportation(target) && Vampire.Bitten != null)
-                    {
-                        Vampire.VampireSetBitten(PlayerControl.LocalPlayer, byte.MaxValue, byte.MaxValue);
-
-                        MurderPlayer(killer, target, showAnimation);
-                    }
-                })));
+                    Vampire.VampireSetBitten(PlayerControl.LocalPlayer, byte.MaxValue, byte.MaxValue);
+                    MurderPlayer(killer, target, showAnimation);
+                }
+            })));
         }
 
         return murder;
@@ -430,44 +423,6 @@ internal static class Helpers
         var mat = target.cosmetics.currentBodySprite.BodySprite.material;
         mat.SetFloat("_Outline", 1f);
         mat.SetColor("_OutlineColor", color);
-    }
-
-    internal static void SetBasePlayerOutlines()
-    {
-        var localPlayer = PlayerControl.LocalPlayer;
-        foreach (var target in PlayerControl.AllPlayerControls.GetFastEnumerator())
-        {
-            if (target?.cosmetics?.currentBodySprite?.BodySprite == null)
-            {
-                continue;
-            }
-
-            var isMorphedMorphing = target.IsRole(RoleType.Morphing) && Morphing.MorphTarget != null && Morphing.MorphTimer > 0f;
-            var hasVisibleShield = false;
-            if (Camouflager.CamouflageTimer <= 0f
-                && Medic.Shielded != null
-                && (target == Medic.Shielded && !isMorphedMorphing || isMorphedMorphing && Morphing.MorphTarget == Medic.Shielded))
-            {
-                hasVisibleShield = Medic.ShowShielded switch
-                {
-                    0 => true, // Everyone
-                    1 => localPlayer == Medic.Shielded || localPlayer.IsRole(RoleType.Medic), // Shielded + Medic
-                    2 => localPlayer.IsRole(RoleType.Medic), // Medic only
-                    _ => false,
-                };
-            }
-
-            var mat = target.cosmetics.currentBodySprite.BodySprite.material;
-            if (hasVisibleShield)
-            {
-                mat.SetFloat("_Outline", 1f);
-                mat.SetColor("_OutlineColor", Medic.ShieldedColor);
-            }
-            else
-            {
-                mat.SetFloat("_Outline", 0f);
-            }
-        }
     }
 
     internal static void ShareGameVersion(int targetId = -1)
@@ -626,37 +581,36 @@ internal static class Helpers
 
         hud.FullScreen.gameObject.SetActive(true);
         hud.FullScreen.enabled = true;
-        hud.StartCoroutine(Effects.Lerp(duration,
-            new Action<float>(p =>
+        hud.StartCoroutine(Effects.Lerp(duration, new Action<float>(p =>
+        {
+            var renderer = hud.FullScreen;
+            if (renderer == null)
             {
-                var renderer = hud.FullScreen;
-                if (renderer == null)
+                return;
+            }
+
+            var alpha = p < 0.5f ? p * 2f * 0.75f : (1f - p) * 2f * 0.75f;
+            renderer.color = new(color.r, color.g, color.b, Mathf.Clamp01(alpha));
+
+            if (p == 1f)
+            {
+                var reactorActive = false;
+                foreach (var task in PlayerControl.LocalPlayer.myTasks.GetFastEnumerator())
                 {
-                    return;
+                    if (task.TaskType == TaskTypes.StopCharles)
+                    {
+                        reactorActive = true;
+                        break;
+                    }
                 }
 
-                var alpha = p < 0.5f ? p * 2f * 0.75f : (1f - p) * 2f * 0.75f;
-                renderer.color = new(color.r, color.g, color.b, Mathf.Clamp01(alpha));
-
-                if (p == 1f)
+                if (!reactorActive && IsAirship)
                 {
-                    var reactorActive = false;
-                    foreach (var task in PlayerControl.LocalPlayer.myTasks.GetFastEnumerator())
-                    {
-                        if (task.TaskType == TaskTypes.StopCharles)
-                        {
-                            reactorActive = true;
-                            break;
-                        }
-                    }
-
-                    if (!reactorActive && IsAirship)
-                    {
-                        renderer.color = Color.black;
-                    }
-                    renderer.gameObject.SetActive(false);
+                    renderer.color = Color.black;
                 }
-            })));
+                renderer.gameObject.SetActive(false);
+            }
+        })));
     }
 
     internal static List<T> ToSystemList<T>(this Il2CppSystem.Collections.Generic.List<T> iList)

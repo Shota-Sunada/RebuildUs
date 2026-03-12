@@ -141,16 +141,16 @@ internal abstract class CustomOverlays
         var currentPageNumber = RebuildUs.OptionsPage / 2 + 1;
         var totalPagesNumber = (_maxOptionsPage + 1) / 2;
         _infoOverlayTitle?.text = new StringBuilder(Tr.Get(TrKey.GameOptions))
-                                  .Append(" <size=80%>")
-                                  .Append(Tr.Get(TrKey.CurrentPage))
-                                  .Append(" (")
-                                  .Append(currentPageNumber)
-                                  .Append('/')
-                                  .Append(totalPagesNumber)
-                                  .Append(")\n")
-                                  .Append(Tr.Get(TrKey.ChangePage))
-                                  .Append("</size>")
-                                  .ToString();
+                                    .Append(" <size=80%>")
+                                    .Append(Tr.Get(TrKey.CurrentPage))
+                                    .Append(" (")
+                                    .Append(currentPageNumber)
+                                    .Append('/')
+                                    .Append(totalPagesNumber)
+                                    .Append(")\n")
+                                    .Append(Tr.Get(TrKey.ChangePage))
+                                    .Append("</size>")
+                                    .ToString();
 
         StringBuilder sb = new();
         sb.Append(_optionsData[RebuildUs.OptionsPage]);
@@ -290,80 +290,42 @@ internal abstract class CustomOverlays
 
         // Part 1: Among Us Settings
         var votingTime = Int32OptionNames.VotingTime.Get();
-        sb
-            .Append("<size=120%>")
-            .Append(Tr.Get(TrKey.AmongUsSettings))
-            .Append("</size>\n\n")
-            .Append(tr.GetString(StringNames.GameNumImpostors))
-            .Append(": ")
-            .Append(Int32OptionNames.NumImpostors.Get())
-            .Append('\n')
-            .Append(tr.GetString(StringNames.GameConfirmImpostor))
-            .Append(": ")
-            .Append(BoolOptionNames.ConfirmImpostor.Get() ? Tr.Get(TrKey.On) : Tr.Get(TrKey.Off))
-            .Append('\n')
-            .Append(tr.GetString(StringNames.GameNumMeetings))
-            .Append(": ")
-            .Append(Int32OptionNames.NumEmergencyMeetings.Get())
-            .Append('\n')
-            .Append(tr.GetString(StringNames.GameAnonymousVotes))
-            .Append(": ")
-            .Append(BoolOptionNames.AnonymousVotes.Get() ? Tr.Get(TrKey.On) : Tr.Get(TrKey.Off))
-            .Append('\n')
-            .Append(tr.GetString(StringNames.GameEmergencyCooldown))
-            .Append(": ")
-            .Append(tr.GetString(StringNames.GameSecondsAbbrev, Int32OptionNames.EmergencyCooldown.Get()))
-            .Append('\n')
-            .Append(tr.GetString(StringNames.GameDiscussTime))
-            .Append(": ")
-            .Append(tr.GetString(StringNames.GameSecondsAbbrev, Int32OptionNames.EmergencyCooldown.Get()))
-            .Append('\n')
-            .Append(tr.GetString(StringNames.GameVotingTime))
-            .Append(": ")
-            .Append(tr.GetString(StringNames.GameSecondsAbbrev, votingTime > 0 ? votingTime : "∞"))
-            .Append('\n')
-            .Append(tr.GetString(StringNames.GamePlayerSpeed))
-            .Append(": ")
-            .Append(FloatOptionNames.PlayerSpeedMod.Get())
-            .Append('\n')
-            .Append(tr.GetString(StringNames.GameTaskBarMode))
-            .Append(": ")
-            .Append(tr.GetString((StringNames)(277 + Int32OptionNames.TaskBarMode.Get())))
-            .Append('\n')
-            .Append(tr.GetString(StringNames.GameVisualTasks))
-            .Append(": ")
-            .Append(BoolOptionNames.VisualTasks.Get() ? Tr.Get(TrKey.On) : Tr.Get(TrKey.Off))
-            .Append('\n')
-            .Append(tr.GetString(StringNames.GameCrewLight))
-            .Append(": ")
-            .Append(FloatOptionNames.CrewLightMod.Get())
-            .Append('x')
-            .Append('\n')
-            .Append(tr.GetString(StringNames.GameImpostorLight))
-            .Append(": ")
-            .Append(FloatOptionNames.ImpostorLightMod.Get())
-            .Append('x')
-            .Append('\n')
-            .Append(tr.GetString(StringNames.GameKillCooldown))
-            .Append(": ")
-            .Append(tr.GetString(StringNames.GameSecondsAbbrev, FloatOptionNames.KillCooldown.Get()))
-            .Append('\n')
-            .Append(tr.GetString(StringNames.GameKillDistance))
-            .Append(": ")
-            .Append(tr.GetString((StringNames)(204 + Int32OptionNames.KillDistance.Get())))
-            .Append('\n')
-            .Append(tr.GetString(StringNames.GameCommonTasks))
-            .Append(": ")
-            .Append(Int32OptionNames.NumCommonTasks.Get())
-            .Append('\n')
-            .Append(tr.GetString(StringNames.GameLongTasks))
-            .Append(": ")
-            .Append(Int32OptionNames.NumLongTasks.Get())
-            .Append('\n')
-            .Append(tr.GetString(StringNames.GameShortTasks))
-            .Append(": ")
-            .Append(Int32OptionNames.NumShortTasks.Get())
-            .Append("\n\n")
+        sb.Append("<size=120%>")
+            .Append(Tr.Get(TrKey.AmongUsSettings)).Append("</size>\n\n")
+            .Append(tr.GetString(StringNames.GameNumImpostors)).Append(": ")
+            .Append(Int32OptionNames.NumImpostors.Get()).Append('\n')
+            .Append(tr.GetString(StringNames.GameConfirmImpostor)).Append(": ")
+            .Append(BoolOptionNames.ConfirmImpostor.Get() ? Tr.Get(TrKey.On) : Tr.Get(TrKey.Off)).Append('\n')
+            .Append(tr.GetString(StringNames.GameNumMeetings)).Append(": ")
+            .Append(Int32OptionNames.NumEmergencyMeetings.Get()).Append('\n')
+            .Append(tr.GetString(StringNames.GameAnonymousVotes)).Append(": ")
+            .Append(BoolOptionNames.AnonymousVotes.Get() ? Tr.Get(TrKey.On) : Tr.Get(TrKey.Off)).Append('\n')
+            .Append(tr.GetString(StringNames.GameEmergencyCooldown)).Append(": ")
+            .Append(tr.GetString(StringNames.GameSecondsAbbrev, Int32OptionNames.EmergencyCooldown.Get())).Append('\n')
+            .Append(tr.GetString(StringNames.GameDiscussTime)).Append(": ")
+            .Append(tr.GetString(StringNames.GameSecondsAbbrev, Int32OptionNames.EmergencyCooldown.Get())).Append('\n')
+            .Append(tr.GetString(StringNames.GameVotingTime)).Append(": ")
+            .Append(tr.GetString(StringNames.GameSecondsAbbrev, votingTime > 0 ? votingTime : "∞")).Append('\n')
+            .Append(tr.GetString(StringNames.GamePlayerSpeed)).Append(": ")
+            .Append(FloatOptionNames.PlayerSpeedMod.Get()).Append('\n')
+            .Append(tr.GetString(StringNames.GameTaskBarMode)).Append(": ")
+            .Append(tr.GetString((StringNames)(277 + Int32OptionNames.TaskBarMode.Get()))).Append('\n')
+            .Append(tr.GetString(StringNames.GameVisualTasks)).Append(": ")
+            .Append(BoolOptionNames.VisualTasks.Get() ? Tr.Get(TrKey.On) : Tr.Get(TrKey.Off)).Append('\n')
+            .Append(tr.GetString(StringNames.GameCrewLight)).Append(": ")
+            .Append(FloatOptionNames.CrewLightMod.Get()).Append('x').Append('\n')
+            .Append(tr.GetString(StringNames.GameImpostorLight)).Append(": ")
+            .Append(FloatOptionNames.ImpostorLightMod.Get()).Append('x').Append('\n')
+            .Append(tr.GetString(StringNames.GameKillCooldown)).Append(": ")
+            .Append(tr.GetString(StringNames.GameSecondsAbbrev, FloatOptionNames.KillCooldown.Get())).Append('\n')
+            .Append(tr.GetString(StringNames.GameKillDistance)).Append(": ")
+            .Append(tr.GetString((StringNames)(204 + Int32OptionNames.KillDistance.Get()))).Append('\n')
+            .Append(tr.GetString(StringNames.GameCommonTasks)).Append(": ")
+            .Append(Int32OptionNames.NumCommonTasks.Get()).Append('\n')
+            .Append(tr.GetString(StringNames.GameLongTasks)).Append(": ")
+            .Append(Int32OptionNames.NumLongTasks.Get()).Append('\n')
+            .Append(tr.GetString(StringNames.GameShortTasks)).Append(": ")
+            .Append(Int32OptionNames.NumShortTasks.Get()).Append("\n\n")
             .Append('\f');
         _optionsData.AddRange(SplitToPages(sb.ToString(), MAX_LINES - 1));
 
@@ -388,11 +350,8 @@ internal abstract class CustomOverlays
 
         // Part 3: Custom Options Groups
         sb.Clear();
-        sb
-            .Append(CustomOption.OptionsToString(CustomOptionHolder.GameOptions))
-            .Append("\n\n")
-            .Append(CustomOption.OptionsToString(CustomOptionHolder.AirshipOptimize))
-            .Append("\n\n")
+        sb.Append(CustomOption.OptionsToString(CustomOptionHolder.GameOptions)).Append("\n\n")
+            .Append(CustomOption.OptionsToString(CustomOptionHolder.AirshipOptimize)).Append("\n\n")
             .Append(CustomOption.OptionsToString(CustomOptionHolder.RandomMap))
             .Append('\f');
         _optionsData.AddRange(SplitToPages(sb.ToString(), MAX_LINES - 1));
@@ -468,12 +427,12 @@ internal abstract class CustomOverlays
     private static bool IsCommonOption(CustomOption option)
     {
         return option == CustomOptionHolder.PresetSelection
-               || option == CustomOptionHolder.CrewmateRolesCountMin
-               || option == CustomOptionHolder.CrewmateRolesCountMax
-               || option == CustomOptionHolder.NeutralRolesCountMin
-               || option == CustomOptionHolder.NeutralRolesCountMax
-               || option == CustomOptionHolder.ImpostorRolesCountMin
-               || option == CustomOptionHolder.ImpostorRolesCountMax;
+            || option == CustomOptionHolder.CrewmateRolesCountMin
+            || option == CustomOptionHolder.CrewmateRolesCountMax
+            || option == CustomOptionHolder.NeutralRolesCountMin
+            || option == CustomOptionHolder.NeutralRolesCountMax
+            || option == CustomOptionHolder.ImpostorRolesCountMin
+            || option == CustomOptionHolder.ImpostorRolesCountMax;
     }
 
     private static void AddChildren(CustomOption option, StringBuilder sb, bool indent = true)
@@ -509,11 +468,10 @@ internal abstract class CustomOverlays
         // MeetingUnderlay.enabled = true;
         // MeetingUnderlay.transform.localScale = new Vector3(13f, 5f, 1f);
 
-        hudManager.StartCoroutine(Effects.Lerp(0.2f,
-            new Action<float>(t =>
-            {
-                // MeetingUnderlay.color = Color.Lerp(clearBlack, Palette.Black, t);
-            })));
+        hudManager.StartCoroutine(Effects.Lerp(0.2f, new Action<float>(t =>
+        {
+            // MeetingUnderlay.color = Color.Lerp(clearBlack, Palette.Black, t);
+        })));
     }
 
     internal static void HideBlackBg()
@@ -571,12 +529,11 @@ internal abstract class CustomOverlays
 
         Color transparent = new(0.1f, 0.1f, 0.1f, 0.0f);
         Color opaque = new(0.1f, 0.1f, 0.1f, 0.88f);
-        hudManager.StartCoroutine(Effects.Lerp(0.2f,
-            new Action<float>(t =>
-            {
-                _infoUnderlay.color = Color.Lerp(transparent, opaque, t);
-                _infoOverlayTitle.color = _infoOverlayRules.color = _infoOverlayRulesRight.color = Color.Lerp(Palette.ClearWhite, Palette.White, t);
-            })));
+        hudManager.StartCoroutine(Effects.Lerp(0.2f, new Action<float>(t =>
+        {
+            _infoUnderlay.color = Color.Lerp(transparent, opaque, t);
+            _infoOverlayTitle.color = _infoOverlayRules.color = _infoOverlayRulesRight.color = Color.Lerp(Palette.ClearWhite, Palette.White, t);
+        })));
     }
 
     internal static void HideInfoOverlay()
@@ -600,45 +557,44 @@ internal abstract class CustomOverlays
         Color transparent = new(0.1f, 0.1f, 0.1f, 0.0f);
         Color opaque = new(0.1f, 0.1f, 0.1f, 0.88f);
 
-        hudManager.StartCoroutine(Effects.Lerp(0.2f,
-            new Action<float>(t =>
+        hudManager.StartCoroutine(Effects.Lerp(0.2f, new Action<float>(t =>
+        {
+            if (_infoUnderlay != null)
             {
-                if (_infoUnderlay != null)
+                _infoUnderlay.color = Color.Lerp(opaque, transparent, t);
+                if (t >= 1.0f)
                 {
-                    _infoUnderlay.color = Color.Lerp(opaque, transparent, t);
-                    if (t >= 1.0f)
-                    {
-                        _infoUnderlay.enabled = false;
-                    }
+                    _infoUnderlay.enabled = false;
                 }
+            }
 
-                if (_infoOverlayTitle != null)
+            if (_infoOverlayTitle != null)
+            {
+                _infoOverlayTitle.color = Color.Lerp(Palette.White, Palette.ClearWhite, t);
+                if (t >= 1.0f)
                 {
-                    _infoOverlayTitle.color = Color.Lerp(Palette.White, Palette.ClearWhite, t);
-                    if (t >= 1.0f)
-                    {
-                        _infoOverlayTitle.enabled = false;
-                    }
+                    _infoOverlayTitle.enabled = false;
                 }
+            }
 
-                if (_infoOverlayRules != null)
+            if (_infoOverlayRules != null)
+            {
+                _infoOverlayRules.color = Color.Lerp(Palette.White, Palette.ClearWhite, t);
+                if (t >= 1.0f)
                 {
-                    _infoOverlayRules.color = Color.Lerp(Palette.White, Palette.ClearWhite, t);
-                    if (t >= 1.0f)
-                    {
-                        _infoOverlayRules.enabled = false;
-                    }
+                    _infoOverlayRules.enabled = false;
                 }
+            }
 
-                if (_infoOverlayRulesRight != null)
+            if (_infoOverlayRulesRight != null)
+            {
+                _infoOverlayRulesRight.color = Color.Lerp(Palette.White, Palette.ClearWhite, t);
+                if (t >= 1.0f)
                 {
-                    _infoOverlayRulesRight.color = Color.Lerp(Palette.White, Palette.ClearWhite, t);
-                    if (t >= 1.0f)
-                    {
-                        _infoOverlayRulesRight.enabled = false;
-                    }
+                    _infoOverlayRulesRight.enabled = false;
                 }
-            })));
+            }
+        })));
     }
 
     private static void ToggleInfoOverlay()

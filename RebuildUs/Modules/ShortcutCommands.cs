@@ -36,7 +36,7 @@ internal static class ShortcutCommands
             MapUtilities.CachedShipStatus.StartMeeting(PlayerControl.LocalPlayer, PlayerControl.LocalPlayer.Data);
         }
 
-        if ((Input.GetKeyDown(KeyCode.LeftShift) || Input.GetKeyDown(KeyCode.RightShift)) && Helpers.IsCountdown)
+        if ((Input.GetKeyDown(KeyCode.LeftShift) || Input.GetKeyDown(KeyCode.RightShift)) && Helpers.IsLobbyCountdown)
         {
             FastDestroyableSingleton<GameStartManager>.Instance.countDownTimer = 0;
             SoundManager.Instance.StopSound(FastDestroyableSingleton<GameStartManager>.Instance.gameStartSound);

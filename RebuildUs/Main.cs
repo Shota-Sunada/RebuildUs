@@ -206,16 +206,15 @@ public class RebuildUs : BasePlugin
         PlayerModifier.AllModifiers.Do(ModEventDispatcher.DispatchOnMeetingStart);
 
         // GM.resetZoom();
-        FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(3f,
-            new Action<float>(p =>
+        FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(3f, new Action<float>(p =>
+        {
+            if (!Mathf.Approximately(p, 1))
             {
-                if (!Mathf.Approximately(p, 1))
-                {
-                    return;
-                }
-                Camouflager.ResetCamouflage();
-                Morphing.ResetMorph();
-            })));
+                return;
+            }
+            Camouflager.ResetCamouflage();
+            Morphing.ResetMorph();
+        })));
     }
 
     internal static void OnMeetingEnd()
