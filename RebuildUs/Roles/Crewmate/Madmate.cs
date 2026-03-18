@@ -1,10 +1,10 @@
 namespace RebuildUs.Roles.Crewmate;
 
 [HarmonyPatch]
-[RegisterRole(RoleType.Madmate, RoleTeam.Crewmate, typeof(MultiRoleBase<MadmateRole>), nameof(MadmateRole.NameColor), nameof(CustomOptionHolder.MadmateRoleSpawnRate))]
+[RegisterRole(RoleType.Madmate, RoleTeam.Crewmate, typeof(MultiRoleBase<MadmateRole>), nameof(CustomOptionHolder.MadmateRoleSpawnRate))]
 internal class MadmateRole : MultiRoleBase<MadmateRole>
 {
-    internal static Color NameColor = Palette.ImpostorRed;
+    internal static new Color RoleColor = Palette.ImpostorRed;
 
     public MadmateRole()
     {
@@ -12,10 +12,6 @@ internal class MadmateRole : MultiRoleBase<MadmateRole>
         StaticRoleType = CurrentRoleType = RoleType.Madmate;
     }
 
-    internal override Color RoleColor
-    {
-        get => NameColor;
-    }
 
     internal static bool CanEnterVents
     {
@@ -57,13 +53,13 @@ internal class MadmateRole : MultiRoleBase<MadmateRole>
         get => CustomOptionHolder.MadmateRoleTasks.ShortTasksNum;
     }
 
-    internal override void OnUpdateNameColors()
+    internal override void OnUpdateRoleColors()
     {
         if (Player != PlayerControl.LocalPlayer)
         {
             return;
         }
-        HudManagerPatch.SetPlayerNameColor(Player, NameColor);
+        HudManagerPatch.SetPlayerNameColor(Player, RoleColor);
 
         if (!KnowsImpostors(Player))
         {

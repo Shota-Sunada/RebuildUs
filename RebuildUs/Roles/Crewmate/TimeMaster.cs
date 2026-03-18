@@ -3,10 +3,10 @@ using Action = Il2CppSystem.Action;
 namespace RebuildUs.Roles.Crewmate;
 
 [HarmonyPatch]
-[RegisterRole(RoleType.TimeMaster, RoleTeam.Crewmate, typeof(SingleRoleBase<TimeMaster>), nameof(TimeMaster.NameColor), nameof(CustomOptionHolder.TimeMasterSpawnRate))]
+[RegisterRole(RoleType.TimeMaster, RoleTeam.Crewmate, typeof(SingleRoleBase<TimeMaster>), nameof(CustomOptionHolder.TimeMasterSpawnRate))]
 internal class TimeMaster : SingleRoleBase<TimeMaster>
 {
-    internal static Color NameColor = new Color32(112, 142, 239, byte.MaxValue);
+    internal static new Color RoleColor = new Color32(112, 142, 239, byte.MaxValue);
 
     private static CustomButton _timeMasterShieldButton;
 
@@ -19,10 +19,6 @@ internal class TimeMaster : SingleRoleBase<TimeMaster>
         StaticRoleType = CurrentRoleType = RoleType.TimeMaster;
     }
 
-    internal override Color RoleColor
-    {
-        get => NameColor;
-    }
 
     // write configs here
     internal static float Cooldown

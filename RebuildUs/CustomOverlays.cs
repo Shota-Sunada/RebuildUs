@@ -333,7 +333,7 @@ internal abstract class CustomOverlays
         sb.Clear();
         foreach (var r in RoleInfo.GetRoleInfoForPlayer(player))
         {
-            sb.Append("<size=150%>").Append(r.NameColored).Append("</size>");
+            sb.Append("<size=150%>").Append(r.RoleColored).Append("</size>");
             if (!string.IsNullOrEmpty(r.FullDescription))
             {
                 sb.Append('\n').Append(r.FullDescription);

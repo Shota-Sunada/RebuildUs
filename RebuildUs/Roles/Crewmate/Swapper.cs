@@ -1,13 +1,13 @@
 namespace RebuildUs.Roles.Crewmate;
 
 [HarmonyPatch]
-[RegisterRole(RoleType.NiceSwapper, RoleTeam.Crewmate, typeof(SingleRoleBase<Swapper>), nameof(NameColor), nameof(CustomOptionHolder.SwapperSpawnRate))]
-[RegisterRole(RoleType.EvilSwapper, RoleTeam.Impostor, typeof(SingleRoleBase<Swapper>), nameof(ImpostorNameColor), nameof(CustomOptionHolder.SwapperSpawnRate))]
+[RegisterRole(RoleType.NiceSwapper, RoleTeam.Crewmate, typeof(SingleRoleBase<Swapper>), nameof(CustomOptionHolder.SwapperSpawnRate))]
+[RegisterRole(RoleType.EvilSwapper, RoleTeam.Impostor, typeof(SingleRoleBase<Swapper>), nameof(CustomOptionHolder.SwapperSpawnRate))]
 internal class Swapper : SingleRoleBase<Swapper>
 {
     internal static int RemainSwaps = 2;
 
-    internal static Color ImpostorNameColor => Palette.ImpostorRed;
+    internal static Color ImpostorRoleColor => Palette.ImpostorRed;
 
     internal static byte PlayerId1 = byte.MaxValue;
     internal static byte PlayerId2 = byte.MaxValue;
@@ -19,15 +19,11 @@ internal class Swapper : SingleRoleBase<Swapper>
         RemainSwaps = NumSwaps;
     }
 
-    internal static Color NameColor
+    internal static new Color RoleColor
     {
         get => PlayerControl.LocalPlayer?.Data.Role.IsImpostor ?? false ? Palette.ImpostorRed : new Color32(134, 55, 86, byte.MaxValue);
     }
 
-    internal override Color RoleColor
-    {
-        get => NameColor;
-    }
 
     // write configs here
     internal static int NumSwaps
@@ -45,11 +41,11 @@ internal class Swapper : SingleRoleBase<Swapper>
         get => CustomOptionHolder.SwapperCanOnlySwapOthers.GetBool();
     }
 
-    internal override void OnUpdateNameColors()
+    internal override void OnUpdateRoleColors()
     {
         if (Player == PlayerControl.LocalPlayer)
         {
-            HudManagerPatch.SetPlayerNameColor(Player, NameColor);
+            HudManagerPatch.SetPlayerNameColor(Player, RoleColor);
         }
     }
 

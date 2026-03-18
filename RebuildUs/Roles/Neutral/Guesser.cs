@@ -163,7 +163,7 @@ internal static class Guesser
     [HarmonyPatch]
     internal class NiceGuesser : SingleRoleBase<NiceGuesser>
     {
-        internal static Color NameColor = new Color32(255, 255, 0, byte.MaxValue);
+        internal static new Color RoleColor = new Color32(255, 255, 0, byte.MaxValue);
 
         // write configs here
 
@@ -171,11 +171,6 @@ internal static class Guesser
         {
             // write value init here
             StaticRoleType = CurrentRoleType = RoleType.NiceGuesser;
-        }
-
-        internal override Color RoleColor
-        {
-            get => NameColor;
         }
 
         // write functions here
@@ -188,10 +183,10 @@ internal static class Guesser
     }
 
     [HarmonyPatch]
-    [RegisterRole(RoleType.EvilGuesser, RoleTeam.Impostor, typeof(SingleRoleBase<EvilGuesser>), nameof(EvilGuesser.NameColor), nameof(CustomOptionHolder.GuesserSpawnRate))]
+    [RegisterRole(RoleType.EvilGuesser, RoleTeam.Impostor, typeof(SingleRoleBase<EvilGuesser>), nameof(CustomOptionHolder.GuesserSpawnRate))]
     internal class EvilGuesser : SingleRoleBase<EvilGuesser>
     {
-        internal static Color NameColor = Palette.ImpostorRed;
+        internal static new Color RoleColor = Palette.ImpostorRed;
 
         // write configs here
 
@@ -199,11 +194,6 @@ internal static class Guesser
         {
             // write value init here
             StaticRoleType = CurrentRoleType = RoleType.EvilGuesser;
-        }
-
-        internal override Color RoleColor
-        {
-            get => NameColor;
         }
 
         // write functions here

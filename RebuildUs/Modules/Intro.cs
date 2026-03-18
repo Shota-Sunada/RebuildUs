@@ -576,10 +576,10 @@ internal static class Intro
                     __instance.RoleText.text = Tr.Get(TrKey.MadmatePrefix) + __instance.RoleText.text;
                 }
 
-                __instance.YouAreText.color = Madmate.NameColor;
-                __instance.RoleText.color = Madmate.NameColor;
+                __instance.YouAreText.color = Madmate.RoleColor;
+                __instance.RoleText.color = Madmate.RoleColor;
                 __instance.RoleBlurbText.text = Tr.Get(TrKey.MadmateIntroDesc);
-                __instance.RoleBlurbText.color = Madmate.NameColor;
+                __instance.RoleBlurbText.color = Madmate.RoleColor;
             }
         }
 
@@ -599,7 +599,7 @@ internal static class Intro
         if (hasLovers)
         {
             var otherLover = PlayerControl.LocalPlayer.GetPartner();
-            __instance.RoleBlurbText.text += "\n" + Helpers.Cs(Lovers.Color, string.Format(Tr.Get(TrKey.LoversFlavorIntroDesc), otherLover?.Data?.PlayerName ?? ""));
+            __instance.RoleBlurbText.text += "\n" + Helpers.Cs(Lovers.ModifierColor, string.Format(Tr.Get(TrKey.LoversFlavorIntroDesc), otherLover?.Data?.PlayerName ?? ""));
         }
 
         // 従来処理

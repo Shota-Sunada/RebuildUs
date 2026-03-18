@@ -1,10 +1,10 @@
 namespace RebuildUs.Roles.Modifier;
 
 [HarmonyPatch]
-[RegisterModifier(ModifierType.LastImpostor, typeof(LastImpostor), nameof(NameColor), nameof(CustomOptionHolder.LastImpostorEnable))]
+[RegisterModifier(ModifierType.LastImpostor, typeof(LastImpostor), nameof(CustomOptionHolder.LastImpostorEnable))]
 internal class LastImpostor : ModifierBase<LastImpostor>
 {
-    internal static Color NameColor = Palette.ImpostorRed;
+    internal static new Color ModifierColor = Palette.ImpostorRed;
     internal static int KillCounter;
     internal static int NumUsed;
     internal static int RemainingShots;
@@ -16,11 +16,6 @@ internal class LastImpostor : ModifierBase<LastImpostor>
     {
         // write value init here
         StaticModifierType = CurrentModifierType = ModifierType.LastImpostor;
-    }
-
-    internal override Color ModifierColor
-    {
-        get => NameColor;
     }
 
     internal static bool IsEnable

@@ -1,10 +1,10 @@
 namespace RebuildUs.Roles.Impostor;
 
 [HarmonyPatch]
-[RegisterRole(RoleType.Eraser, RoleTeam.Impostor, typeof(MultiRoleBase<Eraser>), nameof(Eraser.NameColor), nameof(CustomOptionHolder.EraserSpawnRate))]
+[RegisterRole(RoleType.Eraser, RoleTeam.Impostor, typeof(MultiRoleBase<Eraser>), nameof(CustomOptionHolder.EraserSpawnRate))]
 internal class Eraser : MultiRoleBase<Eraser>
 {
-    internal static Color NameColor = Palette.ImpostorRed;
+    internal static new Color RoleColor = Palette.ImpostorRed;
 
     private static CustomButton _eraserButton;
 
@@ -16,11 +16,6 @@ internal class Eraser : MultiRoleBase<Eraser>
     {
         // write value init here
         StaticRoleType = CurrentRoleType = RoleType.Eraser;
-    }
-
-    internal override Color RoleColor
-    {
-        get => NameColor;
     }
 
     internal static float Cooldown
@@ -61,7 +56,7 @@ internal class Eraser : MultiRoleBase<Eraser>
             }
 
             CurrentTarget = Helpers.SetTarget(!CanEraseAnyone, untargetablePlayers: CanEraseAnyone ? [] : untargetables);
-            Helpers.SetPlayerOutline(CurrentTarget, NameColor);
+            Helpers.SetPlayerOutline(CurrentTarget, RoleColor);
         }
     }
 

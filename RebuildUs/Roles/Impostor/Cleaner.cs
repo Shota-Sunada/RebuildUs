@@ -1,10 +1,10 @@
 namespace RebuildUs.Roles.Impostor;
 
 [HarmonyPatch]
-[RegisterRole(RoleType.Cleaner, RoleTeam.Impostor, typeof(MultiRoleBase<Cleaner>), nameof(Cleaner.NameColor), nameof(CustomOptionHolder.CleanerSpawnRate))]
+[RegisterRole(RoleType.Cleaner, RoleTeam.Impostor, typeof(MultiRoleBase<Cleaner>), nameof(CustomOptionHolder.CleanerSpawnRate))]
 internal class Cleaner : MultiRoleBase<Cleaner>
 {
-    internal static Color NameColor = Palette.ImpostorRed;
+    internal static new Color RoleColor = Palette.ImpostorRed;
 
     internal static CustomButton CleanerCleanButton;
 
@@ -12,11 +12,6 @@ internal class Cleaner : MultiRoleBase<Cleaner>
     {
         // write value init here
         StaticRoleType = CurrentRoleType = RoleType.Cleaner;
-    }
-
-    internal override Color RoleColor
-    {
-        get => NameColor;
     }
 
     // write configs here

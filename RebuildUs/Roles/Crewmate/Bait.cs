@@ -1,10 +1,10 @@
 namespace RebuildUs.Roles.Crewmate;
 
 [HarmonyPatch]
-[RegisterRole(RoleType.Bait, RoleTeam.Crewmate, typeof(MultiRoleBase<Bait>), nameof(RoleColor), nameof(CustomOptionHolder.BaitSpawnRate))]
+[RegisterRole(RoleType.Bait, RoleTeam.Crewmate, typeof(MultiRoleBase<Bait>), nameof(CustomOptionHolder.BaitSpawnRate))]
 internal class Bait : MultiRoleBase<Bait>
 {
-    internal static Color NameColor = new Color32(0, 247, 255, byte.MaxValue);
+    internal static new Color RoleColor = new Color32(0, 247, 255, byte.MaxValue);
     private float _delay;
 
     private bool _reported;
@@ -15,11 +15,6 @@ internal class Bait : MultiRoleBase<Bait>
         // write value init here
         StaticRoleType = CurrentRoleType = RoleType.Bait;
         _delay = ReportDelay;
-    }
-
-    internal override Color RoleColor
-    {
-        get => NameColor;
     }
 
     // write configs here

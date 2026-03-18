@@ -1,10 +1,10 @@
 namespace RebuildUs.Roles.Crewmate;
 
 [HarmonyPatch]
-[RegisterRole(RoleType.Hacker, RoleTeam.Crewmate, typeof(MultiRoleBase<Hacker>), nameof(Hacker.NameColor), nameof(CustomOptionHolder.HackerSpawnRate))]
+[RegisterRole(RoleType.Hacker, RoleTeam.Crewmate, typeof(MultiRoleBase<Hacker>), nameof(CustomOptionHolder.HackerSpawnRate))]
 internal class Hacker : MultiRoleBase<Hacker>
 {
-    internal static Color NameColor = new Color32(117, 250, 76, byte.MaxValue);
+    internal static new Color RoleColor = new Color32(117, 250, 76, byte.MaxValue);
 
     private static CustomButton _hackerButton;
     internal static CustomButton HackerVitalsButton;
@@ -28,10 +28,6 @@ internal class Hacker : MultiRoleBase<Hacker>
         StaticRoleType = CurrentRoleType = RoleType.Hacker;
     }
 
-    internal override Color RoleColor
-    {
-        get => NameColor;
-    }
 
     // write configs here
     private static float Cooldown

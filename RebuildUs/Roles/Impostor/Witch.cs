@@ -1,10 +1,10 @@
 namespace RebuildUs.Roles.Impostor;
 
 [HarmonyPatch]
-[RegisterRole(RoleType.Witch, RoleTeam.Impostor, typeof(MultiRoleBase<Witch>), nameof(Witch.NameColor), nameof(CustomOptionHolder.WitchSpawnRate))]
+[RegisterRole(RoleType.Witch, RoleTeam.Impostor, typeof(MultiRoleBase<Witch>), nameof(CustomOptionHolder.WitchSpawnRate))]
 internal class Witch : MultiRoleBase<Witch>
 {
-    internal static Color NameColor = Palette.ImpostorRed;
+    internal static new Color RoleColor = Palette.ImpostorRed;
 
     internal static CustomButton WitchSpellButton;
 
@@ -16,11 +16,6 @@ internal class Witch : MultiRoleBase<Witch>
     {
         // write value init here
         StaticRoleType = CurrentRoleType = RoleType.Witch;
-    }
-
-    internal override Color RoleColor
-    {
-        get => NameColor;
     }
 
     // write configs here

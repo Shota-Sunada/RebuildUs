@@ -1,10 +1,10 @@
 namespace RebuildUs.Roles.Impostor;
 
 [HarmonyPatch]
-[RegisterRole(RoleType.Morphing, RoleTeam.Impostor, typeof(MultiRoleBase<Morphing>), nameof(Morphing.NameColor), nameof(CustomOptionHolder.MorphingSpawnRate))]
+[RegisterRole(RoleType.Morphing, RoleTeam.Impostor, typeof(MultiRoleBase<Morphing>), nameof(CustomOptionHolder.MorphingSpawnRate))]
 internal class Morphing : MultiRoleBase<Morphing>
 {
-    internal static Color NameColor = Palette.ImpostorRed;
+    internal static new Color RoleColor = Palette.ImpostorRed;
 
     private static CustomButton _morphingButton;
     private static PlayerControl _currentTarget;
@@ -16,11 +16,6 @@ internal class Morphing : MultiRoleBase<Morphing>
     {
         // write value init here
         StaticRoleType = CurrentRoleType = RoleType.Morphing;
-    }
-
-    internal override Color RoleColor
-    {
-        get => NameColor;
     }
 
     // write configs here

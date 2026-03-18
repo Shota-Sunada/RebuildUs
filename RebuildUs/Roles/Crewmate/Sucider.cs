@@ -1,10 +1,10 @@
 namespace RebuildUs.Roles.Crewmate;
 
 [HarmonyPatch]
-[RegisterRole(RoleType.Suicider, RoleTeam.Crewmate, typeof(MultiRoleBase<Suicider>), nameof(Suicider.NameColor), nameof(CustomOptionHolder.SuiciderSpawnRate))]
+[RegisterRole(RoleType.Suicider, RoleTeam.Crewmate, typeof(MultiRoleBase<Suicider>), nameof(CustomOptionHolder.SuiciderSpawnRate))]
 internal class Suicider : MultiRoleBase<Suicider>
 {
-    internal static Color NameColor = Palette.ImpostorRed;
+    internal static new Color RoleColor = Palette.ImpostorRed;
 
     private static CustomButton _suicideButton;
 
@@ -14,10 +14,6 @@ internal class Suicider : MultiRoleBase<Suicider>
         StaticRoleType = CurrentRoleType = RoleType.Suicider;
     }
 
-    internal override Color RoleColor
-    {
-        get => NameColor;
-    }
 
     internal static bool CanEnterVents
     {
@@ -54,11 +50,11 @@ internal class Suicider : MultiRoleBase<Suicider>
         get => CustomOptionHolder.SuiciderTasks.ShortTasksNum;
     }
 
-    internal override void OnUpdateNameColors()
+    internal override void OnUpdateRoleColors()
     {
         if (Player == PlayerControl.LocalPlayer)
         {
-            HudManagerPatch.SetPlayerNameColor(Player, NameColor);
+            HudManagerPatch.SetPlayerNameColor(Player, RoleColor);
 
             if (KnowsImpostors(Player))
             {

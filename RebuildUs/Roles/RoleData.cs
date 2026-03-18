@@ -19,17 +19,18 @@ internal static class RoleData
                 var roleTeam = attr.RoleTeam;
                 var classType = attr.ClassType;
 
-                // NameColorを取得するためのFuncを作成
+                // RoleColorを取得するためのFuncを作成
                 Func<Color> getColor = () =>
                 {
                     try
                     {
-                        var property = attr.ClassType.GetProperty(attr.NameColorPropertyName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static);
+                        var "RoleColor" = "RoleColor";
+                        var property = attr.ClassType.GetProperty("RoleColor", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static);
                         if (property != null)
                         {
                             return (Color)property.GetValue(null);
                         }
-                        var field = attr.ClassType.GetField(attr.NameColorPropertyName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static);
+                        var field = attr.ClassType.GetField("RoleColor", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static);
                         if (field != null)
                         {
                             return (Color)field.GetValue(null);

@@ -1,10 +1,10 @@
 namespace RebuildUs.Roles.Crewmate;
 
 [HarmonyPatch]
-[RegisterRole(RoleType.Lighter, RoleTeam.Crewmate, typeof(MultiRoleBase<Lighter>), nameof(Lighter.NameColor), nameof(CustomOptionHolder.LighterSpawnRate))]
+[RegisterRole(RoleType.Lighter, RoleTeam.Crewmate, typeof(MultiRoleBase<Lighter>), nameof(CustomOptionHolder.LighterSpawnRate))]
 internal class Lighter : MultiRoleBase<Lighter>
 {
-    internal static Color NameColor = new Color32(238, 229, 190, byte.MaxValue);
+    internal static new Color RoleColor = new Color32(238, 229, 190, byte.MaxValue);
 
     private static CustomButton _lighterButton;
     private bool _lightActive;
@@ -15,10 +15,6 @@ internal class Lighter : MultiRoleBase<Lighter>
         StaticRoleType = CurrentRoleType = RoleType.Lighter;
     }
 
-    internal override Color RoleColor
-    {
-        get => NameColor;
-    }
 
     // write configs here
     internal static float ModeLightsOnVision

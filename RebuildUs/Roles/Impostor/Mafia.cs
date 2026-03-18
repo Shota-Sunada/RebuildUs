@@ -2,7 +2,7 @@ namespace RebuildUs.Roles.Impostor;
 
 internal static class Mafia
 {
-    internal static Color NameColor = Palette.ImpostorRed;
+    internal static new Color RoleColor = Palette.ImpostorRed;
 
     internal static bool IsGodfatherDead;
     internal static bool IsMafiosoDead;
@@ -19,18 +19,13 @@ internal static class Mafia
     }
 
     [HarmonyPatch]
-    [RegisterRole(RoleType.Godfather, RoleTeam.Impostor, typeof(SingleRoleBase<Godfather>), nameof(Mafia.NameColor), nameof(CustomOptionHolder.MafiaSpawnRate))]
+    [RegisterRole(RoleType.Godfather, RoleTeam.Impostor, typeof(SingleRoleBase<Godfather>), nameof(CustomOptionHolder.MafiaSpawnRate))]
     internal class Godfather : SingleRoleBase<Godfather>
     {
         public Godfather()
         {
             // write value init here
             StaticRoleType = CurrentRoleType = RoleType.Godfather;
-        }
-
-        internal override Color RoleColor
-        {
-            get => NameColor;
         }
 
         internal override string NameTag
@@ -54,18 +49,13 @@ internal static class Mafia
     }
 
     [HarmonyPatch]
-    [RegisterRole(RoleType.Mafioso, RoleTeam.Impostor, typeof(SingleRoleBase<Mafioso>), nameof(Mafia.NameColor), nameof(CustomOptionHolder.MafiaSpawnRate))]
+    [RegisterRole(RoleType.Mafioso, RoleTeam.Impostor, typeof(SingleRoleBase<Mafioso>), nameof(CustomOptionHolder.MafiaSpawnRate))]
     internal class Mafioso : SingleRoleBase<Mafioso>
     {
         public Mafioso()
         {
             // write value init here
             StaticRoleType = CurrentRoleType = RoleType.Mafioso;
-        }
-
-        internal override Color RoleColor
-        {
-            get => NameColor;
         }
 
         // write configs here
@@ -111,7 +101,7 @@ internal static class Mafia
     }
 
     [HarmonyPatch]
-    [RegisterRole(RoleType.Janitor, RoleTeam.Impostor, typeof(SingleRoleBase<Janitor>), nameof(Mafia.NameColor), nameof(CustomOptionHolder.MafiaSpawnRate))]
+    [RegisterRole(RoleType.Janitor, RoleTeam.Impostor, typeof(SingleRoleBase<Janitor>), nameof(CustomOptionHolder.MafiaSpawnRate))]
     internal class Janitor : SingleRoleBase<Janitor>
     {
         // write configs here
@@ -121,11 +111,6 @@ internal static class Mafia
         {
             // write value init here
             StaticRoleType = CurrentRoleType = RoleType.Janitor;
-        }
-
-        internal override Color RoleColor
-        {
-            get => NameColor;
         }
 
         private static float Cooldown

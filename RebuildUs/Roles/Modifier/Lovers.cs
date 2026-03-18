@@ -1,15 +1,15 @@
 namespace RebuildUs.Roles.Modifier;
 
 [HarmonyPatch]
-[RegisterRole(RoleType.Lovers, RoleTeam.Neutral, typeof(Lovers), nameof(Lovers.Color), nameof(CustomOptionHolder.LoversSpawnRate))]
+[RegisterRole(RoleType.Lovers, RoleTeam.Neutral, typeof(Lovers), nameof(CustomOptionHolder.LoversSpawnRate))]
 internal static class Lovers
 {
     internal static List<Couple> Couples = [];
-    internal static Color Color = new Color32(232, 57, 185, byte.MaxValue);
+    internal static Color RoleColor = new Color32(232, 57, 185, byte.MaxValue);
 
     internal static Color[] LoverIconColors =
     [
-        Color, // pink
+        RoleColor, // pink
         new Color32(255, 165, 0, 255), // orange
         new Color32(255, 255, 0, 255), // yellow
         new Color32(0, 255, 0, 255), // green

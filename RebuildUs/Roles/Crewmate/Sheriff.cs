@@ -1,10 +1,10 @@
 namespace RebuildUs.Roles.Crewmate;
 
 [HarmonyPatch]
-[RegisterRole(RoleType.Sheriff, RoleTeam.Crewmate, typeof(MultiRoleBase<Sheriff>), nameof(Sheriff.NameColor), nameof(CustomOptionHolder.SheriffSpawnRate))]
+[RegisterRole(RoleType.Sheriff, RoleTeam.Crewmate, typeof(MultiRoleBase<Sheriff>), nameof(CustomOptionHolder.SheriffSpawnRate))]
 internal class Sheriff : MultiRoleBase<Sheriff>
 {
-    internal static Color NameColor = new Color32(248, 205, 70, byte.MaxValue);
+    internal static new Color RoleColor = new Color32(248, 205, 70, byte.MaxValue);
 
     // write configs here
     private static CustomButton _sheriffKillButton;
@@ -21,11 +21,6 @@ internal class Sheriff : MultiRoleBase<Sheriff>
         NumShots = MaxShots;
         CanKill = SheriffCanKillNoDeadBody;
         CurrentTarget = null;
-    }
-
-    internal override Color RoleColor
-    {
-        get => NameColor;
     }
 
     internal static float Cooldown
@@ -100,7 +95,7 @@ internal class Sheriff : MultiRoleBase<Sheriff>
         if (Player == PlayerControl.LocalPlayer && NumShots > 0)
         {
             CurrentTarget = Helpers.SetTarget();
-            Helpers.SetPlayerOutline(CurrentTarget, NameColor);
+            Helpers.SetPlayerOutline(CurrentTarget, RoleColor);
         }
     }
 

@@ -1,12 +1,12 @@
 namespace RebuildUs.Roles.Modifier;
 
 [HarmonyPatch]
-[RegisterModifier(ModifierType.Mini, typeof(Mini), nameof(NameColor), nameof(CustomOptionHolder.MiniSpawnRate))]
+[RegisterModifier(ModifierType.Mini, typeof(Mini), nameof(CustomOptionHolder.MiniSpawnRate))]
 internal class Mini : ModifierBase<Mini>
 {
     internal const float DEFAULT_COLLIDER_RADIUS = 0.2233912f;
     internal const float DEFAULT_COLLIDER_OFFSET = 0.3636057f;
-    internal static Color NameColor = Color.yellow;
+    internal static new Color ModifierColor = Color.yellow;
 
     internal static float GrowingUpDuration = 400f;
     internal static bool TriggerMiniLose;
@@ -16,11 +16,6 @@ internal class Mini : ModifierBase<Mini>
     {
         // write value init here
         StaticModifierType = CurrentModifierType = ModifierType.Mini;
-    }
-
-    internal override Color ModifierColor
-    {
-        get => NameColor;
     }
 
     internal static List<PlayerControl> Candidates

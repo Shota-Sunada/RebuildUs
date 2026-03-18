@@ -3,10 +3,10 @@ namespace RebuildUs.Roles.Crewmate;
 // 保護対象が志望したときにリセットする処理を書いていないので、もしかしたらバグるかも？
 
 [HarmonyPatch]
-[RegisterRole(RoleType.Medic, RoleTeam.Crewmate, typeof(SingleRoleBase<Medic>), nameof(Medic.NameColor), nameof(CustomOptionHolder.MedicSpawnRate))]
+[RegisterRole(RoleType.Medic, RoleTeam.Crewmate, typeof(SingleRoleBase<Medic>), nameof(CustomOptionHolder.MedicSpawnRate))]
 internal class Medic : SingleRoleBase<Medic>
 {
-    internal static Color NameColor = new Color32(126, 251, 194, byte.MaxValue);
+    internal static new Color RoleColor = new Color32(126, 251, 194, byte.MaxValue);
 
     internal static Color ShieldedColor = new Color32(0, 221, 255, byte.MaxValue);
     private static CustomButton _medicShieldButton;
@@ -22,10 +22,6 @@ internal class Medic : SingleRoleBase<Medic>
         StaticRoleType = CurrentRoleType = RoleType.Medic;
     }
 
-    internal override Color RoleColor
-    {
-        get => NameColor;
-    }
 
     // write configs here
     internal static int ShowShielded

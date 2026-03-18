@@ -1,10 +1,10 @@
 namespace RebuildUs.Roles.Crewmate;
 
 [HarmonyPatch]
-[RegisterRole(RoleType.Spy, RoleTeam.Crewmate, typeof(SingleRoleBase<Spy>), nameof(Spy.NameColor), nameof(CustomOptionHolder.SpySpawnRate))]
+[RegisterRole(RoleType.Spy, RoleTeam.Crewmate, typeof(SingleRoleBase<Spy>), nameof(CustomOptionHolder.SpySpawnRate))]
 internal class Spy : SingleRoleBase<Spy>
 {
-    internal static Color NameColor = Palette.ImpostorRed;
+    internal static new Color RoleColor = Palette.ImpostorRed;
 
     public Spy()
     {
@@ -12,10 +12,6 @@ internal class Spy : SingleRoleBase<Spy>
         StaticRoleType = CurrentRoleType = RoleType.Spy;
     }
 
-    internal override Color RoleColor
-    {
-        get => NameColor;
-    }
 
     // write configs here
     internal static bool ImpostorsCanKillAnyone
@@ -33,12 +29,12 @@ internal class Spy : SingleRoleBase<Spy>
         get => CustomOptionHolder.SpyHasImpostorVision.GetBool();
     }
 
-    internal override void OnUpdateNameColors()
+    internal override void OnUpdateRoleColors()
     {
         var localPlayer = PlayerControl.LocalPlayer;
         if (localPlayer != null && localPlayer.IsTeamImpostor())
         {
-            HudManagerPatch.SetPlayerNameColor(Player, NameColor);
+            HudManagerPatch.SetPlayerNameColor(Player, RoleColor);
         }
     }
 

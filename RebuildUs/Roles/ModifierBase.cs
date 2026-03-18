@@ -9,7 +9,7 @@ internal abstract class PlayerModifier
 
     internal virtual Color ModifierColor
     {
-        get => Color.white;
+        get => ModifierData.GetColor(CurrentModifierType);
     }
 
     internal virtual string NameTag
@@ -17,7 +17,7 @@ internal abstract class PlayerModifier
         get => "";
     }
 
-    internal virtual void OnUpdateNameColors() { }
+    internal virtual void OnUpdateRoleColors() { }
     internal virtual void OnUpdateNameTags() { }
 
     internal virtual void ResetRole() { }

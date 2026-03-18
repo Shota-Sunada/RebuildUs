@@ -109,11 +109,11 @@ internal static class HudManagerPatch
         // 2. Process logic-heavy vision (Jackal seeing Sidekick, Spy seeing Impostors, etc.)
         foreach (var r in ModRoleManager.AllRoles)
         {
-            r.OnUpdateNameColors();
+            r.OnUpdateRoleColors();
         }
         foreach (var m in PlayerModifier.AllModifiers)
         {
-            m.OnUpdateNameColors();
+            m.OnUpdateRoleColors();
         }
 
         // 3. Update Player Instances

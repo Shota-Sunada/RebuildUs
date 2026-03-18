@@ -1,10 +1,10 @@
 namespace RebuildUs.Roles.Impostor;
 
 [HarmonyPatch]
-[RegisterRole(RoleType.BountyHunter, RoleTeam.Impostor, typeof(SingleRoleBase<BountyHunter>), nameof(BountyHunter.NameColor), nameof(CustomOptionHolder.BountyHunterSpawnRate))]
+[RegisterRole(RoleType.BountyHunter, RoleTeam.Impostor, typeof(SingleRoleBase<BountyHunter>), nameof(CustomOptionHolder.BountyHunterSpawnRate))]
 internal class BountyHunter : SingleRoleBase<BountyHunter>
 {
-    internal static Color NameColor = Palette.ImpostorRed;
+    internal static new Color RoleColor = Palette.ImpostorRed;
 
     private static Arrow _arrow;
     internal static PlayerControl Bounty;
@@ -20,11 +20,6 @@ internal class BountyHunter : SingleRoleBase<BountyHunter>
         _arrowUpdateTimer = 0f;
         _bountyUpdateTimer = 0f;
         StaticRoleType = CurrentRoleType = RoleType.BountyHunter;
-    }
-
-    internal override Color RoleColor
-    {
-        get => NameColor;
     }
 
     // write configs here

@@ -1,10 +1,10 @@
 namespace RebuildUs.Roles.Crewmate;
 
 [HarmonyPatch]
-[RegisterRole(RoleType.Snitch, RoleTeam.Crewmate, typeof(SingleRoleBase<Snitch>), nameof(Snitch.NameColor), nameof(CustomOptionHolder.SnitchSpawnRate))]
+[RegisterRole(RoleType.Snitch, RoleTeam.Crewmate, typeof(SingleRoleBase<Snitch>), nameof(CustomOptionHolder.SnitchSpawnRate))]
 internal class Snitch : SingleRoleBase<Snitch>
 {
-    internal static Color NameColor = new Color32(184, 251, 79, byte.MaxValue);
+    internal static new Color RoleColor = new Color32(184, 251, 79, byte.MaxValue);
 
     // write configs here
     internal static List<Arrow> LocalArrows = [];
@@ -15,10 +15,6 @@ internal class Snitch : SingleRoleBase<Snitch>
         StaticRoleType = CurrentRoleType = RoleType.Snitch;
     }
 
-    internal override Color RoleColor
-    {
-        get => NameColor;
-    }
 
     internal static int LeftTasksForReveal
     {
@@ -87,7 +83,7 @@ internal class Snitch : SingleRoleBase<Snitch>
 
                 if (!p.Data.IsDead && (arrowForImp || arrowForTeamJackal))
                 {
-                    var c = arrowForTeamJackal ? Jackal.NameColor : Palette.ImpostorRed;
+                    var c = arrowForTeamJackal ? Jackal.RoleColor : Palette.ImpostorRed;
 
                     if (arrowIndex >= LocalArrows.Count)
                     {

@@ -1,21 +1,16 @@
 namespace RebuildUs.Roles.Crewmate;
 
 [HarmonyPatch]
-[RegisterRole(RoleType.Detective, RoleTeam.Crewmate, typeof(MultiRoleBase<Detective>), nameof(RoleColor), nameof(CustomOptionHolder.DetectiveSpawnRate))]
+[RegisterRole(RoleType.Detective, RoleTeam.Crewmate, typeof(MultiRoleBase<Detective>), nameof(CustomOptionHolder.DetectiveSpawnRate))]
 internal class Detective : MultiRoleBase<Detective>
 {
-    internal static Color NameColor = new Color32(45, 106, 165, byte.MaxValue);
+    internal static new Color RoleColor = new Color32(45, 106, 165, byte.MaxValue);
     private float _timer = 6.2f;
 
     public Detective()
     {
         // write value init here
         StaticRoleType = CurrentRoleType = RoleType.Detective;
-    }
-
-    internal override Color RoleColor
-    {
-        get => NameColor;
     }
 
     // write configs here

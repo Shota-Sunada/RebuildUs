@@ -12,7 +12,7 @@ internal class RoleInfo(TrKey nameKey, Color color, CustomOption baseOption, Rol
     internal RoleType RoleType = roleType;
 
     internal virtual string Name { get => Tr.Get(NameKey); }
-    internal virtual string NameColored { get => Helpers.Cs(Color, Name); }
+    internal virtual string RoleColored { get => Helpers.Cs(Color, Name); }
     internal virtual string IntroDescription { get => Tr.GetDynamic($"{NameKey}IntroDesc"); }
     internal virtual string ShortDescription { get => Tr.GetDynamic($"{NameKey}ShortDesc"); }
     internal virtual string FullDescription { get => Tr.GetDynamic($"{NameKey}FullDesc"); }
@@ -134,7 +134,7 @@ internal class RoleInfo(TrKey nameKey, Color color, CustomOption baseOption, Rol
                     sb.Append(joinSeparator);
                 }
                 var info = roleInfo[i];
-                var c = useMadmateColor ? Madmate.NameColor : info.Color;
+                var c = useMadmateColor ? Madmate.ModifierColor : info.Color;
                 sb.Append(useColors ? Helpers.Cs(c, info.Name) : info.Name);
             }
         }
@@ -153,10 +153,10 @@ internal class RoleInfo(TrKey nameKey, Color color, CustomOption baseOption, Rol
 
             if (hasCrewmate)
             {
-                return useColors ? Helpers.Cs(Madmate.NameColor, Madmate.FullName) : Madmate.FullName;
+                return useColors ? Helpers.Cs(Madmate.ModifierColor, Madmate.FullName) : Madmate.FullName;
             }
 
-            var prefix = useColors ? Helpers.Cs(Madmate.NameColor, Madmate.Prefix) : Madmate.Prefix;
+            var prefix = useColors ? Helpers.Cs(Madmate.ModifierColor, Madmate.Prefix) : Madmate.Prefix;
             sb.Append(prefix);
             AppendNames(true);
             return sb.ToString();
@@ -176,10 +176,10 @@ internal class RoleInfo(TrKey nameKey, Color color, CustomOption baseOption, Rol
 
             if (hasImpostor)
             {
-                return useColors ? Helpers.Cs(LastImpostor.NameColor, LastImpostor.FullName) : LastImpostor.FullName;
+                return useColors ? Helpers.Cs(LastImpostor.ModifierColor, LastImpostor.FullName) : LastImpostor.FullName;
             }
 
-            var postfix = useColors ? Helpers.Cs(LastImpostor.NameColor, LastImpostor.Postfix) : LastImpostor.Postfix;
+            var postfix = useColors ? Helpers.Cs(LastImpostor.ModifierColor, LastImpostor.Postfix) : LastImpostor.Postfix;
             AppendNames();
             sb.Append(postfix);
             return sb.ToString();
@@ -187,7 +187,7 @@ internal class RoleInfo(TrKey nameKey, Color color, CustomOption baseOption, Rol
 
         if (p.HasModifier(ModifierType.AntiTeleport))
         {
-            var postfix = useColors ? Helpers.Cs(AntiTeleport.NameColor, AntiTeleport.Postfix) : AntiTeleport.Postfix;
+            var postfix = useColors ? Helpers.Cs(AntiTeleport.ModifierColor, AntiTeleport.Postfix) : AntiTeleport.Postfix;
             AppendNames();
             sb.Append(postfix);
             return sb.ToString();

@@ -1,10 +1,10 @@
 namespace RebuildUs.Roles.Crewmate;
 
 [HarmonyPatch]
-[RegisterRole(RoleType.Tracker, RoleTeam.Crewmate, typeof(MultiRoleBase<Tracker>), nameof(Tracker.NameColor), nameof(CustomOptionHolder.TrackerSpawnRate))]
+[RegisterRole(RoleType.Tracker, RoleTeam.Crewmate, typeof(MultiRoleBase<Tracker>), nameof(CustomOptionHolder.TrackerSpawnRate))]
 internal class Tracker : MultiRoleBase<Tracker>
 {
-    internal static Color NameColor = new Color32(100, 58, 220, byte.MaxValue);
+    internal static new Color RoleColor = new Color32(100, 58, 220, byte.MaxValue);
 
     private static CustomButton _trackerTrackPlayerButton;
     private static CustomButton _trackerTrackCorpsesButton;
@@ -25,10 +25,6 @@ internal class Tracker : MultiRoleBase<Tracker>
         StaticRoleType = CurrentRoleType = RoleType.Tracker;
     }
 
-    internal override Color RoleColor
-    {
-        get => NameColor;
-    }
 
     // write configs here
     internal static float UpdateInterval

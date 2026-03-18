@@ -1,10 +1,10 @@
 namespace RebuildUs.Roles.Impostor;
 
 [HarmonyPatch]
-[RegisterRole(RoleType.EvilHacker, RoleTeam.Impostor, typeof(MultiRoleBase<EvilHacker>), nameof(EvilHacker.NameColor), nameof(CustomOptionHolder.EvilHackerSpawnRate))]
+[RegisterRole(RoleType.EvilHacker, RoleTeam.Impostor, typeof(MultiRoleBase<EvilHacker>), nameof(CustomOptionHolder.EvilHackerSpawnRate))]
 internal class EvilHacker : MultiRoleBase<EvilHacker>
 {
-    internal static Color NameColor = Palette.ImpostorRed;
+    internal static new Color RoleColor = Palette.ImpostorRed;
     private static CustomButton _evilHackerButton;
     private static CustomButton _evilHackerCreatesMadmateButton;
 
@@ -17,11 +17,6 @@ internal class EvilHacker : MultiRoleBase<EvilHacker>
         // write value init here
         StaticRoleType = CurrentRoleType = RoleType.EvilHacker;
         CanCreateMadmate = CustomOptionHolder.EvilHackerCanCreateMadmate.GetBool();
-    }
-
-    internal override Color RoleColor
-    {
-        get => NameColor;
     }
 
     // write configs here

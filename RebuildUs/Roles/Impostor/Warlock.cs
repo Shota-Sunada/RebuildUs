@@ -1,10 +1,10 @@
 namespace RebuildUs.Roles.Impostor;
 
 [HarmonyPatch]
-[RegisterRole(RoleType.Warlock, RoleTeam.Impostor, typeof(MultiRoleBase<Warlock>), nameof(Warlock.NameColor), nameof(CustomOptionHolder.WarlockSpawnRate))]
+[RegisterRole(RoleType.Warlock, RoleTeam.Impostor, typeof(MultiRoleBase<Warlock>), nameof(CustomOptionHolder.WarlockSpawnRate))]
 internal class Warlock : MultiRoleBase<Warlock>
 {
-    internal static Color NameColor = Palette.ImpostorRed;
+    internal static new Color RoleColor = Palette.ImpostorRed;
 
     internal static CustomButton WarlockCurseButton;
 
@@ -16,11 +16,6 @@ internal class Warlock : MultiRoleBase<Warlock>
     {
         // write value init here
         StaticRoleType = CurrentRoleType = RoleType.Warlock;
-    }
-
-    internal override Color RoleColor
-    {
-        get => NameColor;
     }
 
     // write configs here

@@ -1,10 +1,10 @@
 namespace RebuildUs.Roles.Crewmate;
 
 [HarmonyPatch]
-[RegisterRole(RoleType.Mayor, RoleTeam.Crewmate, typeof(MultiRoleBase<Mayor>), nameof(Mayor.NameColor), nameof(CustomOptionHolder.MayorSpawnRate))]
+[RegisterRole(RoleType.Mayor, RoleTeam.Crewmate, typeof(MultiRoleBase<Mayor>), nameof(CustomOptionHolder.MayorSpawnRate))]
 internal class Mayor : MultiRoleBase<Mayor>
 {
-    internal static Color NameColor = new Color32(32, 77, 66, byte.MaxValue);
+    internal static new Color RoleColor = new Color32(32, 77, 66, byte.MaxValue);
 
     private static CustomButton _mayorMeetingButton;
 
@@ -17,10 +17,6 @@ internal class Mayor : MultiRoleBase<Mayor>
         _remoteMeetingsLeft = MayorMaxRemoteMeetings;
     }
 
-    internal override Color RoleColor
-    {
-        get => NameColor;
-    }
 
     internal static int NumVotes
     {

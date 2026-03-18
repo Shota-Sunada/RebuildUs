@@ -1,10 +1,10 @@
 namespace RebuildUs.Roles.Impostor;
 
 [HarmonyPatch]
-[RegisterRole(RoleType.Trickster, RoleTeam.Impostor, typeof(SingleRoleBase<Trickster>), nameof(Trickster.NameColor), nameof(CustomOptionHolder.TricksterSpawnRate))]
+[RegisterRole(RoleType.Trickster, RoleTeam.Impostor, typeof(SingleRoleBase<Trickster>), nameof(CustomOptionHolder.TricksterSpawnRate))]
 internal class Trickster : SingleRoleBase<Trickster>
 {
-    internal static Color NameColor = Palette.ImpostorRed;
+    internal static new Color RoleColor = Palette.ImpostorRed;
 
     private static CustomButton _placeJackInTheBoxButton;
     private static CustomButton _lightsOutButton;
@@ -14,11 +14,6 @@ internal class Trickster : SingleRoleBase<Trickster>
     {
         // write value init here
         StaticRoleType = CurrentRoleType = RoleType.Trickster;
-    }
-
-    internal override Color RoleColor
-    {
-        get => NameColor;
     }
 
     // write configs here

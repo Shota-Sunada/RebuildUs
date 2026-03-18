@@ -1,10 +1,10 @@
 namespace RebuildUs.Roles.Neutral;
 
 [HarmonyPatch]
-[RegisterRole(RoleType.Arsonist, RoleTeam.Neutral, typeof(SingleRoleBase<Arsonist>), nameof(Arsonist.NameColor), nameof(CustomOptionHolder.ArsonistSpawnRate))]
+[RegisterRole(RoleType.Arsonist, RoleTeam.Neutral, typeof(SingleRoleBase<Arsonist>), nameof(CustomOptionHolder.ArsonistSpawnRate))]
 internal class Arsonist : SingleRoleBase<Arsonist>
 {
-    internal static Color NameColor = new Color32(238, 112, 46, byte.MaxValue);
+    internal static new Color RoleColor = new Color32(238, 112, 46, byte.MaxValue);
 
     internal static bool TriggerArsonistWin;
     private static CustomButton _arsonistButton;
@@ -23,11 +23,6 @@ internal class Arsonist : SingleRoleBase<Arsonist>
         _currentTarget = null;
         _douseTarget = null;
         DousedPlayers = [];
-    }
-
-    internal override Color RoleColor
-    {
-        get => NameColor;
     }
 
     // write configs here

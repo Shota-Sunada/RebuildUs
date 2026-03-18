@@ -1,10 +1,10 @@
 namespace RebuildUs.Roles.Impostor;
 
 [HarmonyPatch]
-[RegisterRole(RoleType.Camouflager, RoleTeam.Impostor, typeof(SingleRoleBase<Camouflager>), nameof(Camouflager.NameColor), nameof(CustomOptionHolder.CamouflagerSpawnRate))]
+[RegisterRole(RoleType.Camouflager, RoleTeam.Impostor, typeof(SingleRoleBase<Camouflager>), nameof(CustomOptionHolder.CamouflagerSpawnRate))]
 internal class Camouflager : SingleRoleBase<Camouflager>
 {
-    internal static Color NameColor = Palette.ImpostorRed;
+    internal static new Color RoleColor = Palette.ImpostorRed;
 
     private static CustomButton _camouflagerButton;
     internal static float CamouflageTimer;
@@ -26,11 +26,6 @@ internal class Camouflager : SingleRoleBase<Camouflager>
             VisorId = "",
             NamePlateId = "",
         };
-    }
-
-    internal override Color RoleColor
-    {
-        get => NameColor;
     }
 
     // write configs here

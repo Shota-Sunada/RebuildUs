@@ -1,10 +1,10 @@
 namespace RebuildUs.Roles.Crewmate;
 
 [HarmonyPatch]
-[RegisterRole(RoleType.Medium, RoleTeam.Crewmate, typeof(MultiRoleBase<Medium>), nameof(Medium.NameColor), nameof(CustomOptionHolder.MediumSpawnRate))]
+[RegisterRole(RoleType.Medium, RoleTeam.Crewmate, typeof(MultiRoleBase<Medium>), nameof(CustomOptionHolder.MediumSpawnRate))]
 internal class Medium : MultiRoleBase<Medium>
 {
-    internal static Color NameColor = new Color32(98, 120, 115, byte.MaxValue);
+    internal static new Color RoleColor = new Color32(98, 120, 115, byte.MaxValue);
 
     private static CustomButton _mediumButton;
     internal static List<(DeadPlayer deadPlayer, Vector3 pos)> DeadBodies = [];
@@ -21,10 +21,6 @@ internal class Medium : MultiRoleBase<Medium>
         StaticRoleType = CurrentRoleType = RoleType.Medium;
     }
 
-    internal override Color RoleColor
-    {
-        get => NameColor;
-    }
 
     // write configs here
     private static float Cooldown

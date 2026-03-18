@@ -8,7 +8,11 @@ internal abstract class PlayerRole
 
     internal virtual Color RoleColor
     {
-        get => Color.white;
+        get
+        {
+            var info = RoleInfo.Get(CurrentRoleType);
+            return info?.Color ?? Color.white;
+        }
     }
 
     internal virtual string NameTag
@@ -16,7 +20,7 @@ internal abstract class PlayerRole
         get => "";
     }
 
-    internal virtual void OnUpdateNameColors() { }
+    internal virtual void OnUpdateRoleColors() { }
     internal virtual void OnUpdateNameTags() { }
 
     internal virtual void ResetRole() { }

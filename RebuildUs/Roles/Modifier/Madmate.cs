@@ -14,10 +14,10 @@ internal enum MadmateAbility
 }
 
 [HarmonyPatch]
-[RegisterModifier(ModifierType.Madmate, typeof(Madmate), nameof(NameColor), nameof(CustomOptionHolder.MadmateSpawnRate))]
+[RegisterModifier(ModifierType.Madmate, typeof(Madmate), nameof(CustomOptionHolder.MadmateSpawnRate))]
 internal class Madmate : ModifierBase<Madmate>
 {
-    internal static Color NameColor = Palette.ImpostorRed;
+    internal static new Color ModifierColor = Palette.ImpostorRed;
 
     internal static RoleType[] ValidRoles =
     [
@@ -45,11 +45,6 @@ internal class Madmate : ModifierBase<Madmate>
     {
         // write value init here
         StaticModifierType = CurrentModifierType = ModifierType.Madmate;
-    }
-
-    internal override Color ModifierColor
-    {
-        get => NameColor;
     }
 
     // write configs here
@@ -203,11 +198,11 @@ internal class Madmate : ModifierBase<Madmate>
         }
     }
 
-    internal override void OnUpdateNameColors()
+    internal override void OnUpdateRoleColors()
     {
         if (Player == PlayerControl.LocalPlayer)
         {
-            HudManagerPatch.SetPlayerNameColor(Player, NameColor);
+            HudManagerPatch.SetPlayerNameColor(Player, ModifierColor);
 
             if (KnowsImpostors(Player))
             {

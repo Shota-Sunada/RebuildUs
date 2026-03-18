@@ -1,10 +1,10 @@
 namespace RebuildUs.Roles.Impostor;
 
 [HarmonyPatch]
-[RegisterRole(RoleType.Vampire, RoleTeam.Impostor, typeof(SingleRoleBase<Vampire>), nameof(Vampire.NameColor), nameof(CustomOptionHolder.VampireSpawnRate))]
+[RegisterRole(RoleType.Vampire, RoleTeam.Impostor, typeof(SingleRoleBase<Vampire>), nameof(CustomOptionHolder.VampireSpawnRate))]
 internal class Vampire : SingleRoleBase<Vampire>
 {
-    internal static Color NameColor = Palette.ImpostorRed;
+    internal static new Color RoleColor = Palette.ImpostorRed;
 
     private static CustomButton _vampireKillButton;
     private static CustomButton _garlicButton;
@@ -20,11 +20,6 @@ internal class Vampire : SingleRoleBase<Vampire>
     {
         // write value init here
         StaticRoleType = CurrentRoleType = RoleType.Vampire;
-    }
-
-    internal override Color RoleColor
-    {
-        get => NameColor;
     }
 
     // write configs here

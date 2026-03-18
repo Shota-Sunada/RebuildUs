@@ -1,7 +1,7 @@
 namespace RebuildUs.Roles.Neutral;
 
 [HarmonyPatch]
-[RegisterRole(RoleType.Sidekick, RoleTeam.Neutral, typeof(SingleRoleBase<Sidekick>), nameof(Jackal.NameColor), nameof(CustomOptionHolder.JackalSpawnRate))]
+[RegisterRole(RoleType.Sidekick, RoleTeam.Neutral, typeof(SingleRoleBase<Sidekick>), nameof(CustomOptionHolder.JackalSpawnRate))]
 internal class Sidekick : SingleRoleBase<Sidekick>
 {
     // write configs here
@@ -20,7 +20,7 @@ internal class Sidekick : SingleRoleBase<Sidekick>
 
     internal override Color RoleColor
     {
-        get => Jackal.NameColor;
+        get => Jackal.RoleColor;
     }
 
     private static bool CanKill
@@ -48,7 +48,7 @@ internal class Sidekick : SingleRoleBase<Sidekick>
         get => CustomOptionHolder.SidekickPromotesToJackal.GetBool();
     }
 
-    internal override void OnUpdateNameColors()
+    internal override void OnUpdateRoleColors()
     {
         var lp = PlayerControl.LocalPlayer;
         if (Player == lp)

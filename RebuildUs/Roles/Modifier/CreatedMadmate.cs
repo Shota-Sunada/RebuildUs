@@ -1,18 +1,13 @@
 namespace RebuildUs.Roles.Modifier;
 
 [HarmonyPatch]
-[RegisterModifier(ModifierType.CreatedMadmate, typeof(CreatedMadmate), nameof(Madmate.NameColor), nameof(CustomOptionHolder.EvilHackerSpawnRate))]
+[RegisterModifier(ModifierType.CreatedMadmate, typeof(CreatedMadmate), nameof(CustomOptionHolder.EvilHackerSpawnRate))]
 internal class CreatedMadmate : ModifierBase<CreatedMadmate>
 {
     public CreatedMadmate()
     {
         // write value init here
         StaticModifierType = CurrentModifierType = ModifierType.CreatedMadmate;
-    }
-
-    internal override Color ModifierColor
-    {
-        get => Madmate.NameColor;
     }
 
     // write configs here
@@ -62,7 +57,7 @@ internal class CreatedMadmate : ModifierBase<CreatedMadmate>
         get => CustomOptionHolder.CreatedMadmateExileCrewmate.GetBool();
     }
 
-    internal override void OnUpdateNameColors()
+    internal override void OnUpdateRoleColors()
     {
         if (Player == PlayerControl.LocalPlayer)
         {

@@ -1,10 +1,10 @@
 namespace RebuildUs.Roles.Neutral;
 
 [HarmonyPatch]
-[RegisterRole(RoleType.Jackal, RoleTeam.Neutral, typeof(SingleRoleBase<Jackal>), nameof(Jackal.NameColor), nameof(CustomOptionHolder.JackalSpawnRate))]
+[RegisterRole(RoleType.Jackal, RoleTeam.Neutral, typeof(SingleRoleBase<Jackal>), nameof(CustomOptionHolder.JackalSpawnRate))]
 internal class Jackal : SingleRoleBase<Jackal>
 {
-    internal static Color NameColor = new Color32(0, 180, 235, byte.MaxValue);
+    internal static new Color RoleColor = new Color32(0, 180, 235, byte.MaxValue);
 
     private static CustomButton _jackalKillButton;
     private static CustomButton _jackalSidekickButton;
@@ -24,11 +24,6 @@ internal class Jackal : SingleRoleBase<Jackal>
         // write value init here
         StaticRoleType = CurrentRoleType = RoleType.Jackal;
         CanSidekick = CanCreateSidekick;
-    }
-
-    internal override Color RoleColor
-    {
-        get => NameColor;
     }
 
     // write configs here
@@ -72,7 +67,7 @@ internal class Jackal : SingleRoleBase<Jackal>
         get => CustomOptionHolder.JackalCanCreateSidekickFromImpostor.GetBool();
     }
 
-    internal override void OnUpdateNameColors()
+    internal override void OnUpdateRoleColors()
     {
         var lp = PlayerControl.LocalPlayer;
         if (Player == lp)

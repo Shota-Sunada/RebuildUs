@@ -113,7 +113,7 @@ internal static class PlayerControlExtensions
                                     }
                                 }
 
-                                statusText = Helpers.Cs(Arsonist.NameColor, $" ({dousedSurvivors}/{totalSurvivors})");
+                                statusText = Helpers.Cs(Arsonist.RoleColor, $" ({dousedSurvivors}/{totalSurvivors})");
                             }
                         }
                         else if (p.IsRole(RoleType.Vulture))
@@ -121,7 +121,7 @@ internal static class PlayerControlExtensions
                             var role = Vulture.Instance;
                             if (role != null)
                             {
-                                statusText = Helpers.Cs(Vulture.NameColor, $" ({role.EatenBodies}/{Vulture.NumberToWin})");
+                                statusText = Helpers.Cs(Vulture.RoleColor, $" ({role.EatenBodies}/{Vulture.NumberToWin})");
                             }
                         }
                     }
@@ -304,7 +304,7 @@ internal static class PlayerControlExtensions
 
                 InfoStringBuilder.Clear();
                 InfoStringBuilder.Append(Madmate.FullName).Append(": ").Append(Tr.Get(TrKey.MadmateShortDesc));
-                task.Text = Helpers.Cs(Madmate.NameColor, InfoStringBuilder.ToString());
+                task.Text = Helpers.Cs(Madmate.ModifierColor, InfoStringBuilder.ToString());
                 player.myTasks.Insert(0, task);
             }
         }
