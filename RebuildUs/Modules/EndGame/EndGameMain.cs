@@ -400,38 +400,38 @@ internal static partial class EndGameMain
         {
             case WinCondition.JesterWin:
                 bonusText = "JesterWin";
-                TextRenderer.color = Jester.RoleColor;
-                __instance.BackgroundBar.material.SetColor(Color, Jester.RoleColor);
+                TextRenderer.color = Jester.Color;
+                __instance.BackgroundBar.material.SetColor(Color, Jester.Color);
                 break;
             case WinCondition.ArsonistWin:
                 bonusText = "ArsonistWin";
-                TextRenderer.color = Arsonist.RoleColor;
-                __instance.BackgroundBar.material.SetColor(Color, Arsonist.RoleColor);
+                TextRenderer.color = Arsonist.Color;
+                __instance.BackgroundBar.material.SetColor(Color, Arsonist.Color);
                 break;
             case WinCondition.VultureWin:
                 bonusText = "VultureWin";
-                TextRenderer.color = Vulture.RoleColor;
-                __instance.BackgroundBar.material.SetColor(Color, Vulture.RoleColor);
+                TextRenderer.color = Vulture.Color;
+                __instance.BackgroundBar.material.SetColor(Color, Vulture.Color);
                 break;
             case WinCondition.JackalWin:
                 bonusText = "JackalWin";
-                TextRenderer.color = Jackal.RoleColor;
-                __instance.BackgroundBar.material.SetColor(Color, Jackal.RoleColor);
+                TextRenderer.color = Jackal.Color;
+                __instance.BackgroundBar.material.SetColor(Color, Jackal.Color);
                 break;
             case WinCondition.MiniLose:
                 bonusText = "MiniDied";
-                TextRenderer.color = Mini.RoleColor;
+                TextRenderer.color = Mini.Color;
                 __instance.BackgroundBar.material.SetColor(Color, Palette.DisabledGrey);
                 break;
             case WinCondition.LoversTeamWin:
                 bonusText = "CrewmateWin";
-                TextRenderer.color = Lovers.ModifierColor;
-                __instance.BackgroundBar.material.SetColor(Color, Lovers.ModifierColor);
+                TextRenderer.color = Lovers.Color;
+                __instance.BackgroundBar.material.SetColor(Color, Lovers.Color);
                 break;
             case WinCondition.LoversSoloWin:
                 bonusText = "LoversWin";
-                TextRenderer.color = Lovers.ModifierColor;
-                __instance.BackgroundBar.material.SetColor(Color, Lovers.ModifierColor);
+                TextRenderer.color = Lovers.Color;
+                __instance.BackgroundBar.material.SetColor(Color, Lovers.Color);
                 break;
             case WinCondition.EveryoneDied:
                 bonusText = "EveryoneDied";

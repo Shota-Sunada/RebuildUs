@@ -163,7 +163,7 @@ internal static class Guesser
     [HarmonyPatch]
     internal class NiceGuesser : SingleRoleBase<NiceGuesser>
     {
-        internal static new Color RoleColor = new Color32(255, 255, 0, byte.MaxValue);
+        internal static Color Color = new Color32(255, 255, 0, byte.MaxValue);
 
         // write configs here
 
@@ -186,7 +186,7 @@ internal static class Guesser
     [RegisterRole(RoleType.EvilGuesser, RoleTeam.Impostor, typeof(SingleRoleBase<EvilGuesser>), nameof(CustomOptionHolder.GuesserSpawnRate))]
     internal class EvilGuesser : SingleRoleBase<EvilGuesser>
     {
-        internal static new Color RoleColor = Palette.ImpostorRed;
+        internal static Color Color = Palette.ImpostorRed;
 
         // write configs here
 

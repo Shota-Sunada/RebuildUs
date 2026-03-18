@@ -18,12 +18,31 @@ internal static class ModifierData
             var modType = attr.ModifierType;
             var classType = attr.ClassType;
 
-            // RoleColorを取得するためのFuncを作成
-            Func<Color> getColor = () =>
+            // 起動時に一度だけ色を解決してレジストリへ登録する
+            var resolvedColor = Color.white;
+            try
             {
                 var property = attr.ClassType.GetProperty(attr.NameColorPropertyName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static);
-                return (Color)property.GetValue(null);
-            };
+                if (property != null)
+                {
+                    resolvedColor = (Color)property.GetValue(null);
+                }
+                else
+                {
+                    var field = attr.ClassType.GetField(attr.NameColorPropertyName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static);
+                    if (field != null)
+                    {
+                        resolvedColor = (Color)field.GetValue(null);
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.LogError($"Failed to get color for {attr.ModifierType}: {e.Message}", "ModifierData");
+            }
+
+            RoleColorRegistry.RegisterModifierColor(modType, resolvedColor);
+            Func<Color> getColor = () => RoleColorRegistry.GetModifierColor(modType, resolvedColor);
 
             // SpawnRateを取得するためのFuncを作成
             var spawnRatePropertyName = attr.SpawnRatePropertyName;
@@ -65,16 +84,8 @@ internal static class ModifierData
 
     internal static Color GetColor(ModifierType type)
     {
-        var modifiers = Modifiers;
-        for (var i = 0; i < modifiers.Length; i++)
-        {
-            var reg = modifiers[i];
-            if (reg.ModType == type)
-            {
-                return reg.GetColor?.Invoke() ?? Color.white;
-            }
-        }
-        return Color.white;
+        _ = Modifiers;
+        return RoleColorRegistry.GetModifierColor(type, Color.white);
     }
 
     internal sealed record ModifierRegistration(ModifierType ModType, Type ClassType, Func<Color> GetColor, Func<CustomOption> GetOption);

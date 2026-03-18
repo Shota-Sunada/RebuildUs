@@ -19,29 +19,31 @@ internal static class RoleData
                 var roleTeam = attr.RoleTeam;
                 var classType = attr.ClassType;
 
-                // RoleColorを取得するためのFuncを作成
-                Func<Color> getColor = () =>
+                // 起動時に一度だけ色を解決してレジストリへ登録する
+                var resolvedColor = Color.white;
+                try
                 {
-                    try
+                    var property = attr.ClassType.GetProperty("RoleColor", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static);
+                    if (property != null)
                     {
-                        var "RoleColor" = "RoleColor";
-                        var property = attr.ClassType.GetProperty("RoleColor", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static);
-                        if (property != null)
-                        {
-                            return (Color)property.GetValue(null);
-                        }
+                        resolvedColor = (Color)property.GetValue(null);
+                    }
+                    else
+                    {
                         var field = attr.ClassType.GetField("RoleColor", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static);
                         if (field != null)
                         {
-                            return (Color)field.GetValue(null);
+                            resolvedColor = (Color)field.GetValue(null);
                         }
                     }
-                    catch (Exception e)
-                    {
-                        Logger.LogError($"Failed to get color for {attr.RoleType}: {e.Message}", "RoleData");
-                    }
-                    return Color.white;
-                };
+                }
+                catch (Exception e)
+                {
+                    Logger.LogError($"Failed to get color for {attr.RoleType}: {e.Message}", "RoleData");
+                }
+
+                RoleColorRegistry.RegisterRoleColor(roleType, resolvedColor);
+                Func<Color> getColor = () => RoleColorRegistry.GetRoleColor(roleType, resolvedColor);
 
                 // SpawnRateを取得するためのFuncを作成
                 Func<CustomOption> getOption = () =>

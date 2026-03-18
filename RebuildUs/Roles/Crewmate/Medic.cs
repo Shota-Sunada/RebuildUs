@@ -6,7 +6,7 @@ namespace RebuildUs.Roles.Crewmate;
 [RegisterRole(RoleType.Medic, RoleTeam.Crewmate, typeof(SingleRoleBase<Medic>), nameof(CustomOptionHolder.MedicSpawnRate))]
 internal class Medic : SingleRoleBase<Medic>
 {
-    internal static new Color RoleColor = new Color32(126, 251, 194, byte.MaxValue);
+    internal static Color Color = new Color32(126, 251, 194, byte.MaxValue);
 
     internal static Color ShieldedColor = new Color32(0, 221, 255, byte.MaxValue);
     private static CustomButton _medicShieldButton;

@@ -4,7 +4,7 @@ namespace RebuildUs.Roles.Impostor;
 [RegisterRole(RoleType.Vampire, RoleTeam.Impostor, typeof(SingleRoleBase<Vampire>), nameof(CustomOptionHolder.VampireSpawnRate))]
 internal class Vampire : SingleRoleBase<Vampire>
 {
-    internal static new Color RoleColor = Palette.ImpostorRed;
+    internal static Color Color = Palette.ImpostorRed;
 
     private static CustomButton _vampireKillButton;
     private static CustomButton _garlicButton;

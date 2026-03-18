@@ -4,7 +4,7 @@ namespace RebuildUs.Roles.Impostor;
 [RegisterRole(RoleType.Trickster, RoleTeam.Impostor, typeof(SingleRoleBase<Trickster>), nameof(CustomOptionHolder.TricksterSpawnRate))]
 internal class Trickster : SingleRoleBase<Trickster>
 {
-    internal static new Color RoleColor = Palette.ImpostorRed;
+    internal static Color Color = Palette.ImpostorRed;
 
     private static CustomButton _placeJackInTheBoxButton;
     private static CustomButton _lightsOutButton;

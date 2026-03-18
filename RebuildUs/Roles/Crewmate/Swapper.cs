@@ -19,7 +19,7 @@ internal class Swapper : SingleRoleBase<Swapper>
         RemainSwaps = NumSwaps;
     }
 
-    internal static new Color RoleColor
+    internal static Color Color
     {
         get => PlayerControl.LocalPlayer?.Data.Role.IsImpostor ?? false ? Palette.ImpostorRed : new Color32(134, 55, 86, byte.MaxValue);
     }

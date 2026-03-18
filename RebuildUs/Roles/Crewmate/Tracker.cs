@@ -4,7 +4,7 @@ namespace RebuildUs.Roles.Crewmate;
 [RegisterRole(RoleType.Tracker, RoleTeam.Crewmate, typeof(MultiRoleBase<Tracker>), nameof(CustomOptionHolder.TrackerSpawnRate))]
 internal class Tracker : MultiRoleBase<Tracker>
 {
-    internal static new Color RoleColor = new Color32(100, 58, 220, byte.MaxValue);
+    internal static Color Color = new Color32(100, 58, 220, byte.MaxValue);
 
     private static CustomButton _trackerTrackPlayerButton;
     private static CustomButton _trackerTrackCorpsesButton;

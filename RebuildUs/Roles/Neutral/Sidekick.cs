@@ -20,7 +20,7 @@ internal class Sidekick : SingleRoleBase<Sidekick>
 
     internal override Color RoleColor
     {
-        get => Jackal.RoleColor;
+        get => Jackal.Color;
     }
 
     private static bool CanKill

@@ -4,7 +4,7 @@ namespace RebuildUs.Roles.Impostor;
 [RegisterRole(RoleType.Camouflager, RoleTeam.Impostor, typeof(SingleRoleBase<Camouflager>), nameof(CustomOptionHolder.CamouflagerSpawnRate))]
 internal class Camouflager : SingleRoleBase<Camouflager>
 {
-    internal static new Color RoleColor = Palette.ImpostorRed;
+    internal static Color Color = Palette.ImpostorRed;
 
     private static CustomButton _camouflagerButton;
     internal static float CamouflageTimer;

@@ -4,7 +4,7 @@ namespace RebuildUs.Roles.Modifier;
 [RegisterModifier(ModifierType.LastImpostor, typeof(LastImpostor), nameof(CustomOptionHolder.LastImpostorEnable))]
 internal class LastImpostor : ModifierBase<LastImpostor>
 {
-    internal static new Color ModifierColor = Palette.ImpostorRed;
+    internal static Color Color = Palette.ImpostorRed;
     internal static int KillCounter;
     internal static int NumUsed;
     internal static int RemainingShots;

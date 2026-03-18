@@ -4,7 +4,7 @@ namespace RebuildUs.Roles.Crewmate;
 [RegisterRole(RoleType.Snitch, RoleTeam.Crewmate, typeof(SingleRoleBase<Snitch>), nameof(CustomOptionHolder.SnitchSpawnRate))]
 internal class Snitch : SingleRoleBase<Snitch>
 {
-    internal static new Color RoleColor = new Color32(184, 251, 79, byte.MaxValue);
+    internal static Color Color = new Color32(184, 251, 79, byte.MaxValue);
 
     // write configs here
     internal static List<Arrow> LocalArrows = [];
@@ -83,7 +83,7 @@ internal class Snitch : SingleRoleBase<Snitch>
 
                 if (!p.Data.IsDead && (arrowForImp || arrowForTeamJackal))
                 {
-                    var c = arrowForTeamJackal ? Jackal.RoleColor : Palette.ImpostorRed;
+                    var c = arrowForTeamJackal ? Jackal.Color : Palette.ImpostorRed;
 
                     if (arrowIndex >= LocalArrows.Count)
                     {

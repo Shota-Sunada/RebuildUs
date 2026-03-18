@@ -4,7 +4,7 @@ namespace RebuildUs.Roles.Impostor;
 [RegisterRole(RoleType.Morphing, RoleTeam.Impostor, typeof(MultiRoleBase<Morphing>), nameof(CustomOptionHolder.MorphingSpawnRate))]
 internal class Morphing : MultiRoleBase<Morphing>
 {
-    internal static new Color RoleColor = Palette.ImpostorRed;
+    internal static Color Color = Palette.ImpostorRed;
 
     private static CustomButton _morphingButton;
     private static PlayerControl _currentTarget;

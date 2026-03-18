@@ -12,7 +12,7 @@ internal class RoleInfo(TrKey nameKey, Color color, CustomOption baseOption, Rol
     internal RoleType RoleType = roleType;
 
     internal virtual string Name { get => Tr.Get(NameKey); }
-    internal virtual string RoleColored { get => Helpers.Cs(Color, Name); }
+    internal virtual string RoleColored { get => RoleColorRegistry.WrapRoleText(RoleType, Name, Color); }
     internal virtual string IntroDescription { get => Tr.GetDynamic($"{NameKey}IntroDesc"); }
     internal virtual string ShortDescription { get => Tr.GetDynamic($"{NameKey}ShortDesc"); }
     internal virtual string FullDescription { get => Tr.GetDynamic($"{NameKey}FullDesc"); }
@@ -218,7 +218,9 @@ internal class RoleInfo(TrKey nameKey, Color color, CustomOption baseOption, Rol
         {
             try
             {
-                var color = reg.GetColor != null ? reg.GetColor() : Color.white;
+                var color = reg.GetColor != null
+                    ? RoleColorRegistry.GetRoleColor(reg.RoleType, reg.GetColor())
+                    : RoleColorRegistry.GetRoleColor(reg.RoleType, Color.white);
                 var option = reg.GetOption != null ? reg.GetOption() : null;
                 var name = Enum.GetName(reg.RoleType);
                 RoleInfo info = new(Enum.TryParse(name, out TrKey key) ? key : TrKey.None, color, option, reg.RoleType);
@@ -231,7 +233,9 @@ internal class RoleInfo(TrKey nameKey, Color color, CustomOption baseOption, Rol
             }
         }
 
-        RoleDict[RoleType.Crewmate] = new(TrKey.Crewmate, Palette.CrewmateBlue, null, RoleType.Crewmate);
-        RoleDict[RoleType.Impostor] = new(TrKey.Impostor, Palette.ImpostorRed, null, RoleType.Impostor);
+        RoleColorRegistry.RegisterRoleColor(RoleType.Crewmate, Palette.CrewmateBlue);
+        RoleColorRegistry.RegisterRoleColor(RoleType.Impostor, Palette.ImpostorRed);
+        RoleDict[RoleType.Crewmate] = new(TrKey.Crewmate, RoleColorRegistry.GetRoleColor(RoleType.Crewmate), null, RoleType.Crewmate);
+        RoleDict[RoleType.Impostor] = new(TrKey.Impostor, RoleColorRegistry.GetRoleColor(RoleType.Impostor), null, RoleType.Impostor);
     }
 }

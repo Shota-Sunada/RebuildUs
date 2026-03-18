@@ -471,7 +471,7 @@ internal static class PlayerControlPatch
             if ((jackalHighlight || impostorHighlight) && anyEngineerInVent)
             {
                 highlight = true;
-                highlightColor = Engineer.RoleColor;
+                highlightColor = Engineer.Color;
             }
             else if (isBait)
             {
@@ -480,13 +480,13 @@ internal static class PlayerControlPatch
                     if (anyPlayerInVent)
                     {
                         highlight = true;
-                        highlightColor = Bait.RoleColor;
+                        highlightColor = Bait.Color;
                     }
                 }
                 else if (ventsWithPlayers.Contains(vent.Id))
                 {
                     highlight = true;
-                    highlightColor = Bait.RoleColor;
+                    highlightColor = Bait.Color;
                 }
             }
 

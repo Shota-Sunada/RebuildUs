@@ -2,7 +2,7 @@ namespace RebuildUs.Roles.Impostor;
 
 internal static class Mafia
 {
-    internal static new Color RoleColor = Palette.ImpostorRed;
+    internal static Color Color = Palette.ImpostorRed;
 
     internal static bool IsGodfatherDead;
     internal static bool IsMafiosoDead;

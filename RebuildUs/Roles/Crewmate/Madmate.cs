@@ -4,7 +4,7 @@ namespace RebuildUs.Roles.Crewmate;
 [RegisterRole(RoleType.Madmate, RoleTeam.Crewmate, typeof(MultiRoleBase<MadmateRole>), nameof(CustomOptionHolder.MadmateRoleSpawnRate))]
 internal class MadmateRole : MultiRoleBase<MadmateRole>
 {
-    internal static new Color RoleColor = Palette.ImpostorRed;
+    internal static Color Color = Palette.ImpostorRed;
 
     public MadmateRole()
     {

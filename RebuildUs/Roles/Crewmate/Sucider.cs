@@ -4,7 +4,7 @@ namespace RebuildUs.Roles.Crewmate;
 [RegisterRole(RoleType.Suicider, RoleTeam.Crewmate, typeof(MultiRoleBase<Suicider>), nameof(CustomOptionHolder.SuiciderSpawnRate))]
 internal class Suicider : MultiRoleBase<Suicider>
 {
-    internal static new Color RoleColor = Palette.ImpostorRed;
+    internal static Color Color = Palette.ImpostorRed;
 
     private static CustomButton _suicideButton;
 

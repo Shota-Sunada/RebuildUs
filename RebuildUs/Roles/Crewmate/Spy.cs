@@ -4,7 +4,7 @@ namespace RebuildUs.Roles.Crewmate;
 [RegisterRole(RoleType.Spy, RoleTeam.Crewmate, typeof(SingleRoleBase<Spy>), nameof(CustomOptionHolder.SpySpawnRate))]
 internal class Spy : SingleRoleBase<Spy>
 {
-    internal static new Color RoleColor = Palette.ImpostorRed;
+    internal static Color Color = Palette.ImpostorRed;
 
     public Spy()
     {
