@@ -341,7 +341,7 @@ internal partial class CustomOption
         newSelection = Mathf.Clamp((newSelection + selections.Length) % selections.Length, 0, selections.Length - 1);
         if (AmongUsClient.Instance?.AmClient == true && notifyUsers && currentIndex != newSelection)
         {
-            DestroyableSingleton<HudManager>.Instance.Notifier.AddSettingsChangeMessage((StringNames)(Id + CUSTOM_OPTION_PRE_ID),
+            FastDestroyableSingleton<HudManager>.Instance.Notifier.AddSettingsChangeMessage((StringNames)(Id + CUSTOM_OPTION_PRE_ID),
                 selections[newSelection].ToString(),
                 false,
                 icon);
@@ -460,18 +460,18 @@ internal partial class CustomOption
                 case OptionPage.Presets:
                     __instance.PresetsTab.gameObject.SetActive(true);
                     __instance.MenuDescriptionText.text =
-                        DestroyableSingleton<TranslationController>.Instance.GetString(StringNames.GamePresetsDescription);
+                        FastDestroyableSingleton<TranslationController>.Instance.GetString(StringNames.GamePresetsDescription);
                     break;
                 case OptionPage.GameSettings:
                     __instance.GameSettingsTab.gameObject.SetActive(true);
                     __instance.MenuDescriptionText.text =
-                        DestroyableSingleton<TranslationController>.Instance.GetString(StringNames.GameSettingsDescription);
+                        FastDestroyableSingleton<TranslationController>.Instance.GetString(StringNames.GameSettingsDescription);
                     break;
                 case OptionPage.VanillaRoleSettings:
                     __instance.RoleSettingsTab.gameObject.SetActive(true);
                     __instance.RoleSettingsTab.OpenMenu(false);
                     __instance.MenuDescriptionText.text =
-                        DestroyableSingleton<TranslationController>.Instance.GetString(StringNames.RoleSettingsDescription);
+                        FastDestroyableSingleton<TranslationController>.Instance.GetString(StringNames.RoleSettingsDescription);
                     break;
                 case OptionPage.GeneralSettings:
                     _generalTab.gameObject.SetActive(true);
@@ -644,7 +644,7 @@ internal partial class CustomOption
         _modifierTab = CreateSettingTab(__instance, "RUModifierSettingsTab", CustomOptionType.Modifier);
 
         __instance.GameSettingsButton.SelectButton(true);
-        __instance.MenuDescriptionText.text = DestroyableSingleton<TranslationController>.Instance.GetString(StringNames.GameSettingsDescription);
+        __instance.MenuDescriptionText.text = FastDestroyableSingleton<TranslationController>.Instance.GetString(StringNames.GameSettingsDescription);
     }
 
     private static GameObject CreateSettingButton(GameSettingMenu __instance, string name, string buttonText, OptionPage id)

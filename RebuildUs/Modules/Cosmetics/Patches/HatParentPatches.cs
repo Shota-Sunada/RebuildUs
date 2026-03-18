@@ -60,7 +60,7 @@ internal static class HatParentPatches
                 return false;
             }
 
-            var hatManager = DestroyableSingleton<HatManager>.Instance;
+            var hatManager = FastDestroyableSingleton<HatManager>.Instance;
             if (hatManager == null)
             {
                 return false;

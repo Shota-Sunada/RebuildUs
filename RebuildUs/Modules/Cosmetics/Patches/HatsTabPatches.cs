@@ -17,7 +17,7 @@ internal static class HatsTabPatches
         }
 
         __instance.ColorChips = new();
-        var unlockedHats = DestroyableSingleton<HatManager>.Instance.GetUnlockedHats();
+        var unlockedHats = FastDestroyableSingleton<HatManager>.Instance.GetUnlockedHats();
         Dictionary<string, List<Tuple<HatData, HatExtension>>> packages = [];
 
         foreach (var hatBehaviour in unlockedHats)
@@ -70,7 +70,7 @@ internal static class HatsTabPatches
         }
 
         __instance.scroller.ContentYBounds.max = -(yOffset + 4.1f);
-        __instance.SelectHat(DestroyableSingleton<HatManager>.Instance.GetHatById(DataManager.Player.Customization.Hat));
+        __instance.SelectHat(FastDestroyableSingleton<HatManager>.Instance.GetHatById(DataManager.Player.Customization.Hat));
         return false;
     }
 
@@ -108,7 +108,7 @@ internal static class HatsTabPatches
             {
                 colorChip.Button.OnMouseOver.AddListener((Action)(() => hatsTab.SelectHat(hat)));
                 colorChip.Button.OnMouseOut.AddListener(
-                    (Action)(() => hatsTab.SelectHat(DestroyableSingleton<HatManager>.Instance.GetHatById(DataManager.Player.Customization.Hat))));
+                    (Action)(() => hatsTab.SelectHat(FastDestroyableSingleton<HatManager>.Instance.GetHatById(DataManager.Player.Customization.Hat))));
                 colorChip.Button.OnClick.AddListener((Action)hatsTab.ClickEquip);
             }
             else
@@ -152,7 +152,7 @@ internal static class HatsTabPatches
             colorChip.Inner.transform.localPosition = hat.ChipOffset;
             colorChip.Tag = hat;
             colorChip.SelectionHighlight.gameObject.SetActive(hat
-                                                              == DestroyableSingleton<HatManager>.Instance.GetHatById(DataManager.Player.Customization
+                                                              == FastDestroyableSingleton<HatManager>.Instance.GetHatById(DataManager.Player.Customization
                                                                                                                                  .Hat));
             hatsTab.ColorChips.Add(colorChip);
         }

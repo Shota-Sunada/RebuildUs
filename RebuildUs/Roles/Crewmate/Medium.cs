@@ -201,7 +201,7 @@ internal class Medium : MultiRoleBase<Medium>
                 {
                     DataManager.Settings.Multiplayer.CensorChat = false;
                 }
-                FastDestroyableSingleton<HudManager>.Instance.Chat.AddChat(PlayerControl.LocalPlayer, $"{msg}");
+                FastDestroyableSingleton<HudManager>.Instance.Chat.AddChat(PlayerControl.LocalPlayer, msg);
                 DataManager.Settings.Multiplayer.CensorChat = censorChat;
 
                 // Remove soul

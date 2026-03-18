@@ -158,7 +158,7 @@ internal static class Map
             EvilTrackerFixedUpdate(__instance);
         }
 
-        if (EvilHacker.Exists && localPlayer.IsRole(RoleType.EvilHacker) || EvilHacker.IsInherited())
+        if ((EvilHacker.Exists && localPlayer.IsRole(RoleType.EvilHacker)) || EvilHacker.IsInherited())
         {
             EvilHackerFixedUpdate(__instance);
         }
