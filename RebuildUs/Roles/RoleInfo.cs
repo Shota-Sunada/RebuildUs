@@ -134,7 +134,7 @@ internal class RoleInfo(TrKey nameKey, Color color, CustomOption baseOption, Rol
                     sb.Append(joinSeparator);
                 }
                 var info = roleInfo[i];
-                var c = useMadmateColor ? Madmate.ModifierColor : info.Color;
+                var c = useMadmateColor ? Madmate.Color : info.Color;
                 sb.Append(useColors ? Helpers.Cs(c, info.Name) : info.Name);
             }
         }
@@ -153,10 +153,10 @@ internal class RoleInfo(TrKey nameKey, Color color, CustomOption baseOption, Rol
 
             if (hasCrewmate)
             {
-                return useColors ? Helpers.Cs(Madmate.ModifierColor, Madmate.FullName) : Madmate.FullName;
+                return useColors ? Helpers.Cs(Madmate.Color, Madmate.FullName) : Madmate.FullName;
             }
 
-            var prefix = useColors ? Helpers.Cs(Madmate.ModifierColor, Madmate.Prefix) : Madmate.Prefix;
+            var prefix = useColors ? Helpers.Cs(Madmate.Color, Madmate.Prefix) : Madmate.Prefix;
             sb.Append(prefix);
             AppendNames(true);
             return sb.ToString();
@@ -176,10 +176,10 @@ internal class RoleInfo(TrKey nameKey, Color color, CustomOption baseOption, Rol
 
             if (hasImpostor)
             {
-                return useColors ? Helpers.Cs(LastImpostor.ModifierColor, LastImpostor.FullName) : LastImpostor.FullName;
+                return useColors ? Helpers.Cs(LastImpostor.Color, LastImpostor.FullName) : LastImpostor.FullName;
             }
 
-            var postfix = useColors ? Helpers.Cs(LastImpostor.ModifierColor, LastImpostor.Postfix) : LastImpostor.Postfix;
+            var postfix = useColors ? Helpers.Cs(LastImpostor.Color, LastImpostor.Postfix) : LastImpostor.Postfix;
             AppendNames();
             sb.Append(postfix);
             return sb.ToString();
@@ -187,7 +187,7 @@ internal class RoleInfo(TrKey nameKey, Color color, CustomOption baseOption, Rol
 
         if (p.HasModifier(ModifierType.AntiTeleport))
         {
-            var postfix = useColors ? Helpers.Cs(AntiTeleport.ModifierColor, AntiTeleport.Postfix) : AntiTeleport.Postfix;
+            var postfix = useColors ? Helpers.Cs(AntiTeleport.Color, AntiTeleport.Postfix) : AntiTeleport.Postfix;
             AppendNames();
             sb.Append(postfix);
             return sb.ToString();
