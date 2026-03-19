@@ -82,7 +82,7 @@
     },
     {
       "label": "Generate Release Zip",
-      "command": "dotnet cake build.cake --target=GenerateRelease --version=${input:releaseVersion}",
+      "command": "dotnet cake build.cake --target=GenerateRelease --modVersion=${input:releaseVersion}",
       "group": {
         "kind": "build",
         "isDefault": true

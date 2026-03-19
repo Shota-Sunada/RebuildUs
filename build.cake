@@ -1,6 +1,6 @@
 var target = Argument("target", "BuildDebug");
 var configuration = Argument("configuration", "Debug");
-var version = Argument("version", string.Empty);
+var version = Argument("modVersion", string.Empty);
 var launchCount = Argument("launchCount", 1);
 
 var root = MakeAbsolute(Directory("./"));
@@ -149,7 +149,7 @@ void SyncVersionFromMainToCsproj()
     var csprojPath = MakeAbsolute(rebuildUsProject).FullPath;
 
     var mainContent = System.IO.File.ReadAllText(mainCsPath);
-    var versionMatch = System.Text.RegularExpressions.Regex.Match(mainContent, "public const string MOD_VERSION = \"([^\"]+)\";");
+    var versionMatch = System.Text.RegularExpressions.Regex.Match(mainContent, "internal const string MOD_VERSION = \"([^\"]+)\";");
     if (!versionMatch.Success)
     {
         throw new Exception("Could not parse MOD_VERSION from Main.cs.");
@@ -330,15 +330,15 @@ Task("GenerateRelease")
 {
     if (string.IsNullOrWhiteSpace(version))
     {
-        throw new Exception("Please pass --version=... when using GenerateRelease.");
+        throw new Exception("Please pass --modVersion=... when using GenerateRelease.");
     }
 
     var mainCsPath = MakeAbsolute(mainCsFile).FullPath;
     var mainContent = System.IO.File.ReadAllText(mainCsPath);
     var updatedMain = System.Text.RegularExpressions.Regex.Replace(
         mainContent,
-        "public const string MOD_VERSION = \".*?\";",
-        "public const string MOD_VERSION = \"" + version + "\";");
+        "internal const string MOD_VERSION = \".*?\";",
+        "internal const string MOD_VERSION = \"" + version + "\";");
     System.IO.File.WriteAllText(mainCsPath, updatedMain);
 
     KillAmongUsProcesses();

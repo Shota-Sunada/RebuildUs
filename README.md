@@ -42,7 +42,7 @@ dotnet cake build.cake --target=StartDebug2
 dotnet cake build.cake --target=StartDebug4
 dotnet cake build.cake --target=BuildLauncher
 dotnet cake build.cake --target=PublishUpdater
-dotnet cake build.cake --target=GenerateRelease --version=1.2.3
+dotnet cake build.cake --target=GenerateRelease --modVersion=1.2.3
 ```
 
 Notes:
