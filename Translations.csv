@@ -683,3 +683,8 @@ EnableRandomRandomNumberAlgorithmMT,Enable Mersenne Twister,Mersenne Twister を
 EnableRandomRandomNumberAlgorithmXorshiro256PP,Enable Xorshiro256++,Xorshiro256++ を有効
 EnableRandomRandomNumberAlgorithmXorshiro256SS,Enable Xorshiro256**,Xorshiro256** を有効
 EnableRandomRandomNumberAlgorithmPcg64,Enable PCG64,PCG64 を有効
+RndDotnet,.NET,.NET
+RndMT,Mersenne Twister,メルセンヌ・ツイスタ
+RndXoshiro256,Xorshiro256++,Xorshiro256++
+RndXoshiro256Ss,Xorshiro256**,Xorshiro256**
+RndPcg64,PCG64,PCG64
