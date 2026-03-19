@@ -113,14 +113,6 @@
       }
     },
     {
-      "label": "Run Refactor Tool",
-      "command": "dotnet run --project RefactorTool/RefactorTool.csproj -- RebuildUs.sln",
-      "group": {
-        "kind": "build",
-        "isDefault": true
-      }
-    },
-    {
       "label": "Build Reactor Debug",
       "command": "dotnet cake build.cake --target=BuildReactor",
       "group": {
