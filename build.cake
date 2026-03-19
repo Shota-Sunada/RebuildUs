@@ -283,42 +283,6 @@ Task("BuildLauncher")
     }
 });
 
-Task("BuildImpostor")
-    .Does(() =>
-{
-    var impostorProject = root.CombineWithFilePath("RebuildUs.Impostor/RebuildUs.Impostor.csproj");
-    if (!FileExists(impostorProject))
-    {
-        throw new Exception("RebuildUs.Impostor project was not found.");
-    }
-
-    RunProcessOrFail("dotnet", "build \"" + impostorProject.FullPath + "\" -c Debug", root);
-
-    var serverPath = ReadTrimmedTextFile(serverEnvFile);
-    var buildPath = root.Combine("RebuildUs.Impostor/bin/Debug/net8.0");
-    var pluginsPath = Directory(System.IO.Path.Combine(serverPath, "plugins"));
-    EnsureDirectoryExists(pluginsPath);
-
-    var dlls = GetFiles(buildPath.FullPath + "/*.dll");
-    foreach (var dll in dlls)
-    {
-        var fileName = dll.GetFilename().ToString();
-        var toPlugins =
-            fileName.Equals("RebuildUs.Impostor.dll", StringComparison.OrdinalIgnoreCase) ||
-            fileName.Equals("Newtonsoft.Json.dll", StringComparison.OrdinalIgnoreCase) ||
-            fileName.StartsWith("Discord.", StringComparison.OrdinalIgnoreCase);
-
-        if (toPlugins)
-        {
-            CopyFileForceToDirectory(dll, pluginsPath);
-        }
-        else
-        {
-            CopyFileForceToDirectory(dll, Directory(serverPath));
-        }
-    }
-});
-
 Task("PublishUpdater")
     .Does(() =>
 {

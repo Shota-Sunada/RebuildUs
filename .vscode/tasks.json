@@ -17,14 +17,6 @@
   "problemMatcher": [],
   "tasks": [
     {
-      "label": "Build RebuildUs.Impostor",
-      "command": "dotnet cake build.cake --target=BuildImpostor",
-      "group": {
-        "kind": "build",
-        "isDefault": true
-      }
-    },
-    {
       "label": "Build Launcher",
       "command": "dotnet cake build.cake --target=BuildLauncher",
       "group": {
