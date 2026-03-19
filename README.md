@@ -21,3 +21,31 @@ Submerged - 新規マップ「サブマージド」対応\
 Reactor - サブマージド動作のためのフォーク作成\
 
 This mod is based on TheOtherRoles GMH by haoming37. Thank you.
+
+## Build Workflow (No PowerShell)
+
+PowerShell scripts can be replaced by Cake tasks at the repository root.
+
+1. Restore local tools:
+
+```bash
+dotnet tool restore
+```
+
+2. Run tasks with Cake:
+
+```bash
+dotnet cake build.cake --target=BuildDebug
+dotnet cake build.cake --target=BuildRelease
+dotnet cake build.cake --target=StartDebug
+dotnet cake build.cake --target=StartDebug2
+dotnet cake build.cake --target=StartDebug4
+dotnet cake build.cake --target=BuildLauncher
+dotnet cake build.cake --target=PublishUpdater
+dotnet cake build.cake --target=GenerateRelease --version=1.2.3
+```
+
+Notes:
+- `BuildDebug` and `BuildRelease` require `AMONG_US` environment variable.
+- `StartDebug*` uses `debugenv.txt`.
+- `BuildImpostor` uses `serverenv.txt`.
