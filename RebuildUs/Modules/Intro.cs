@@ -81,7 +81,7 @@ internal static class Intro
                 SpecimenVital.MoveVital();
 
                 // ShipStatus.Awake で実行していたものをIntroに移行
-                ShipStatusPatch.AwakePostfix(ship);
+                Airship.AwakePostfix();
             }
 
             // アーカイブのアドミンを消す
