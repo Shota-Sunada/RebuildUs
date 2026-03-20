@@ -350,7 +350,7 @@ internal abstract class CustomOverlays
 
         // Part 3: Custom Options Groups
         sb.Clear();
-        sb.Append(CustomOption.OptionsToString(CustomOptionHolder.GameOptions)).Append("\n\n")
+        sb.Append(CustomOption.OptionsToString(CustomOptionHolder.MaxNumberOfMeetings)).Append("\n\n")
             .Append(CustomOption.OptionsToString(CustomOptionHolder.AirshipOptimize)).Append("\n\n")
             .Append(CustomOption.OptionsToString(CustomOptionHolder.RandomMap))
             .Append('\f');

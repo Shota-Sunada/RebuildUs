@@ -430,7 +430,6 @@ internal static class CustomOptionHolder
 
     #region GAME OPTIONS
 
-    internal static CustomOption GameOptions;
     internal static CustomOption MaxNumberOfMeetings;
     internal static CustomOption BlockSkippingInEmergencyMeetings;
     internal static CustomOption NoVoteIsSelfVote;
