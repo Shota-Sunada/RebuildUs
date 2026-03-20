@@ -1004,8 +1004,6 @@ internal static partial class RPCProcedure
             && (player.Data.Role.IsImpostor
                 || player.IsNeutral()
                 || player.HasModifier(ModifierType.Madmate)
-                || player.IsRole(RoleType.Madmate)
-                || player.IsRole(RoleType.Suicider)
                 || player.HasModifier(ModifierType.CreatedMadmate)))
         {
             oldShifterPlayer.Exiled();
