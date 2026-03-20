@@ -144,7 +144,6 @@ internal static partial class EndGameMain
             {
                 if (!p.IsTeamImpostor()
                     && !p.HasModifier(ModifierType.Madmate)
-                    && !p.IsRole(RoleType.Madmate)
                     && !p.IsRole(RoleType.Suicider)
                     && !p.HasModifier(ModifierType.CreatedMadmate))
                 {
@@ -162,7 +161,6 @@ internal static partial class EndGameMain
             {
                 if (!p.IsTeamCrewmate()
                     || p.HasModifier(ModifierType.Madmate)
-                    || p.IsRole(RoleType.Madmate)
                     || p.IsRole(RoleType.Suicider)
                     || p.HasModifier(ModifierType.CreatedMadmate))
                 {

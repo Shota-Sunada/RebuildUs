@@ -38,7 +38,7 @@ internal enum RoleType : byte
     Warlock,
     BountyHunter,
     Witch,
-    Madmate,
+    // Madmate,
     EvilSwapper,
 
     // Neutral

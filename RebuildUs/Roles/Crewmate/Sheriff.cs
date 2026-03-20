@@ -184,7 +184,6 @@ internal class Sheriff : MultiRoleBase<Sheriff>
         if (target.Data.Role.IsImpostor && (!target.HasModifier(ModifierType.Mini) || Mini.IsGrownUp(target))
             || SpyCanDieToSheriff && target.IsRole(RoleType.Spy)
             || MadmateCanDieToSheriff && target.HasModifier(ModifierType.Madmate)
-            || MadmateRoleCanDieToSheriff && target.IsRole(RoleType.Madmate)
             || SuiciderCanDieToSheriff && target.IsRole(RoleType.Suicider)
             || CreatedMadmateCanDieToSheriff && target.HasModifier(ModifierType.CreatedMadmate)
             || CanKillNeutrals && target.IsNeutral()

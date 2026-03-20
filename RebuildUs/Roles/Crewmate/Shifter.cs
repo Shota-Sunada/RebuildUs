@@ -122,7 +122,6 @@ internal class Shifter : MultiRoleBase<Shifter>
             && (player.Data.Role.IsImpostor
                 || player.IsNeutral()
                 || player.HasModifier(ModifierType.Madmate)
-                || player.IsRole(RoleType.Madmate)
                 || player.IsRole(RoleType.Suicider)
                 || player.HasModifier(ModifierType.CreatedMadmate)))
         {

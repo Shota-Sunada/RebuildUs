@@ -134,7 +134,6 @@ internal static class Helpers
         return player.IsNeutral() && !player.NeutralHasTasks()
             || player.HasModifier(ModifierType.CreatedMadmate) && !CreatedMadmate.HasTasks
             || player.HasModifier(ModifierType.Madmate) && !Madmate.HasTasks
-            || player.IsRole(RoleType.Madmate) && !MadmateRole.CanKnowImpostorAfterFinishTasks
             || player.IsRole(RoleType.Suicider) && !Suicider.CanKnowImpostorAfterFinishTasks
             || player.IsLovers() && Lovers.SeparateTeam && !Lovers.TasksCount;
     }
@@ -221,7 +220,6 @@ internal static class Helpers
         {
             if (p.IsTeamCrewmate()
                 && !p.HasModifier(ModifierType.Madmate)
-                && !p.IsRole(RoleType.Madmate)
                 && !p.IsRole(RoleType.Suicider)
                 && p.IsAlive())
             {
@@ -773,11 +771,6 @@ internal static class Helpers
         }
 
         if (pc.HasModifier(ModifierType.Madmate) && (isLights || isComms && !Madmate.CanFixComm))
-        {
-            return true;
-        }
-
-        if (pc.IsRole(RoleType.Madmate) && (isLights || isComms && !MadmateRole.CanFixComm))
         {
             return true;
         }

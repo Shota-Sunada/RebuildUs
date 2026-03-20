@@ -43,7 +43,6 @@ internal static class TasksHandler
                 && (pInfo.Object.IsLovers() && !Lovers.TasksCount
                     || Madmate.HasTasks && pInfo.Object?.HasModifier(ModifierType.Madmate) == true
                     || CreatedMadmate.HasTasks && pInfo.Object?.HasModifier(ModifierType.CreatedMadmate) == true
-                    || MadmateRole.CanKnowImpostorAfterFinishTasks && pInfo.Object.IsRole(RoleType.Madmate)
                     || Suicider.CanKnowImpostorAfterFinishTasks && pInfo.Object.IsRole(RoleType.Suicider)))
             {
                 continue;

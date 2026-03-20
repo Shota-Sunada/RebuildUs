@@ -231,15 +231,6 @@ internal static class CustomOptionHolder
         SheriffCanKillNoDeadBody = CustomOption.Normal(1164, CustomOptionType.Crewmate, TrKey.SheriffCanKillNoDeadBody, true, SheriffSpawnRate);
         SheriffCanKillNeutrals = CustomOption.Normal(1165, CustomOptionType.Crewmate, TrKey.SheriffCanKillNeutrals, false, SheriffSpawnRate);
 
-        MadmateRoleSpawnRate = new(1170, CustomOptionType.Crewmate, RoleType.Madmate, MadmateRole.Color, 3);
-        MadmateRoleCanDieToSheriff = CustomOption.Normal(1171, CustomOptionType.Crewmate, TrKey.MadmateCanDieToSheriff, true, MadmateRoleSpawnRate);
-        MadmateRoleCanEnterVents = CustomOption.Normal(1172, CustomOptionType.Crewmate, TrKey.MadmateCanEnterVents, true, MadmateRoleSpawnRate);
-        MadmateRoleHasImpostorVision = CustomOption.Normal(1173, CustomOptionType.Crewmate, TrKey.MadmateHasImpostorVision, false, MadmateRoleSpawnRate);
-        MadmateRoleCanSabotage = CustomOption.Normal(1174, CustomOptionType.Crewmate, TrKey.MadmateCanSabotage, false, MadmateRoleSpawnRate);
-        MadmateRoleCanFixComm = CustomOption.Normal(1175, CustomOptionType.Crewmate, TrKey.MadmateCanFixComm, false, MadmateRoleSpawnRate);
-        MadmateRoleCanKnowImpostorAfterFinishTasks = CustomOption.Normal(1176, CustomOptionType.Crewmate, TrKey.MadmateCanKnowImpostorAfterFinishTasks, false, MadmateRoleSpawnRate);
-        MadmateRoleTasks = new((1177, 1178, 1179), CustomOptionType.Crewmate, (3, 2, 3), MadmateRoleCanKnowImpostorAfterFinishTasks);
-
         SuiciderSpawnRate = new(1190, CustomOptionType.Crewmate, RoleType.Suicider, Suicider.Color, 3);
         SuiciderCanDieToSheriff = CustomOption.Normal(1191, CustomOptionType.Crewmate, TrKey.SuiciderCanDieToSheriff, true, SuiciderSpawnRate);
         SuiciderCanEnterVents = CustomOption.Normal(1192, CustomOptionType.Crewmate, TrKey.SuiciderCanEnterVents, true, SuiciderSpawnRate);
@@ -632,15 +623,6 @@ internal static class CustomOptionHolder
     internal static CustomOption SheriffCanKillNeutrals;
     internal static CustomOption SheriffMisfireKillsTarget;
     internal static CustomOption SheriffCanKillNoDeadBody;
-
-    internal static CustomRoleOption MadmateRoleSpawnRate;
-    internal static CustomOption MadmateRoleCanDieToSheriff;
-    internal static CustomOption MadmateRoleCanEnterVents;
-    internal static CustomOption MadmateRoleHasImpostorVision;
-    internal static CustomOption MadmateRoleCanSabotage;
-    internal static CustomOption MadmateRoleCanFixComm;
-    internal static CustomOption MadmateRoleCanKnowImpostorAfterFinishTasks;
-    internal static CustomTasksOption MadmateRoleTasks;
 
     internal static CustomRoleOption SuiciderSpawnRate;
     internal static CustomOption SuiciderCanDieToSheriff;
