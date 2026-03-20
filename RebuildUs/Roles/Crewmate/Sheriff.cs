@@ -53,16 +53,6 @@ internal class Sheriff : MultiRoleBase<Sheriff>
         get => CustomOptionHolder.MadmateCanDieToSheriff.GetBool();
     }
 
-    internal static bool MadmateRoleCanDieToSheriff
-    {
-        get => CustomOptionHolder.MadmateRoleCanDieToSheriff.GetBool();
-    }
-
-    internal static bool SuiciderCanDieToSheriff
-    {
-        get => CustomOptionHolder.SuiciderCanDieToSheriff.GetBool();
-    }
-
     internal static bool CreatedMadmateCanDieToSheriff
     {
         get => CustomOptionHolder.CreatedMadmateCanDieToSheriff.GetBool();
@@ -184,7 +174,6 @@ internal class Sheriff : MultiRoleBase<Sheriff>
         if (target.Data.Role.IsImpostor && (!target.HasModifier(ModifierType.Mini) || Mini.IsGrownUp(target))
             || SpyCanDieToSheriff && target.IsRole(RoleType.Spy)
             || MadmateCanDieToSheriff && target.HasModifier(ModifierType.Madmate)
-            || SuiciderCanDieToSheriff && target.IsRole(RoleType.Suicider)
             || CreatedMadmateCanDieToSheriff && target.HasModifier(ModifierType.CreatedMadmate)
             || CanKillNeutrals && target.IsNeutral()
             || target.IsRole(RoleType.Jackal)

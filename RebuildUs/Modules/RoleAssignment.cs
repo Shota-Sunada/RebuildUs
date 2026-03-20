@@ -892,78 +892,58 @@ internal static class RoleAssignment
 
     private static void AssignRoleModifiers(RoleAssignmentData data)
     {
-        // // Madmate
-        // for (int i = 0; i < CustomOptionHolder.madmateSpawnRate.count; i++)
-        // {
-        //     if (rnd.Next(1, 100) <= CustomOptionHolder.madmateSpawnRate.rate * 10)
-        //     {
-        //         var candidates = Madmate.candidates;
-        //         if (candidates.Count <= 0)
-        //         {
-        //             break;
-        //         }
+        // Madmate
+        for (var i = 0; i < CustomOptionHolder.MadmateSpawnRate.Count; i++)
+        {
+            if (RebuildUs.Rnd.Next(1, 101) <= CustomOptionHolder.MadmateSpawnRate.Rate * 10)
+            {
+                var candidates = Roles.Modifier.Madmate.Candidates;
+                if (candidates.Count <= 0)
+                {
+                    break;
+                }
 
-        //         if (Madmate.madmateType == Madmate.MadmateType.Simple)
-        //         {
-        //             if (data.maxCrewmateRoles <= 0) break;
-        //             setModifierToRandomPlayer((byte)ModifierType.Madmate, Madmate.candidates);
-        //             data.maxCrewmateRoles--;
-        //         }
-        //         else
-        //         {
-        //             setModifierToRandomPlayer((byte)ModifierType.Madmate, Madmate.candidates);
-        //         }
-        //     }
-        // }
-        // // Munou
-        // for (int i = 0; i < CustomOptionHolder.munouSpawnRate.count; i++)
-        // {
-        //     if (rnd.Next(1, 100) <= CustomOptionHolder.munouSpawnRate.rate * 10)
-        //     {
-        //         var candidates = Munou.candidates;
-        //         if (candidates.Count <= 0)
-        //         {
-        //             break;
-        //         }
+                if (Roles.Modifier.Madmate.MadmateType == Roles.Modifier.MadmateType.Simple)
+                {
+                    if (data.MaxCrewmateRoles <= 0) break;
+                    SetModifierToRandomPlayer((byte)ModifierType.Madmate, candidates);
+                    data.MaxCrewmateRoles--;
+                }
+                else
+                {
+                    SetModifierToRandomPlayer((byte)ModifierType.Madmate, candidates);
+                }
+            }
+        }
 
-        //         if (Munou.munouType == Munou.MunouType.Simple)
-        //         {
-        //             if (data.maxCrewmateRoles <= 0) break;
-        //             setModifierToRandomPlayer((byte)ModifierType.Munou, Munou.candidates);
-        //             data.maxCrewmateRoles--;
-        //         }
-        //         else
-        //         {
-        //             setModifierToRandomPlayer((byte)ModifierType.Munou, Munou.candidates);
-        //         }
-        //     }
-        // }
-        // // AntiTeleport
-        // for (int i = 0; i < CustomOptionHolder.antiTeleportSpawnRate.count; i++)
-        // {
-        //     if (rnd.Next(1, 100) <= CustomOptionHolder.antiTeleportSpawnRate.rate * 10)
-        //     {
-        //         var candidates = AntiTeleport.candidates;
-        //         if (candidates.Count <= 0)
-        //         {
-        //             break;
-        //         }
-        //         setModifierToRandomPlayer((byte)ModifierType.AntiTeleport, AntiTeleport.candidates);
-        //     }
-        // }
-        // // Mini
-        // for (int i = 0; i < CustomOptionHolder.miniSpawnRate.count; i++)
-        // {
-        //     if (rnd.Next(1, 100) <= CustomOptionHolder.miniSpawnRate.rate * 10)
-        //     {
-        //         var candidates = Mini.candidates;
-        //         if (candidates.Count <= 0)
-        //         {
-        //             break;
-        //         }
-        //         setModifierToRandomPlayer((byte)ModifierType.Mini, Mini.candidates);
-        //     }
-        // }
+        // AntiTeleport
+        for (var i = 0; i < CustomOptionHolder.AntiTeleportSpawnRate.Count; i++)
+        {
+            if (RebuildUs.Rnd.Next(1, 101) <= CustomOptionHolder.AntiTeleportSpawnRate.Rate * 10)
+            {
+                var candidates = Roles.Modifier.AntiTeleport.Candidates;
+                if (candidates.Count <= 0)
+                {
+                    break;
+                }
+
+                SetModifierToRandomPlayer((byte)ModifierType.AntiTeleport, candidates);
+            }
+        }
+
+        // Mini
+        for (var i = 0; i < CustomOptionHolder.MiniSpawnRate.Count; i++)
+        {
+            if (RebuildUs.Rnd.Next(1, 101) <= CustomOptionHolder.MiniSpawnRate.Rate * 10)
+            {
+                var candidates = Roles.Modifier.Mini.Candidates;
+                if (candidates.Count <= 0)
+                {
+                    break;
+                }
+                SetModifierToRandomPlayer((byte)ModifierType.Mini, candidates);
+            }
+        }
     }
 
     private static byte SetRoleToRandomPlayer(byte roleId, IList<PlayerControl> playerList, bool removePlayer = true)

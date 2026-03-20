@@ -201,7 +201,8 @@ internal class EvilHacker : MultiRoleBase<EvilHacker>
 
             if (targetPlayer.HasFakeTasks())
             {
-                if (CreatedMadmate.HasTasks)
+                // Only the target player handles their own task generation to prevent network flooding and races
+                if (CreatedMadmate.HasTasks && targetPlayer == PlayerControl.LocalPlayer)
                 {
                     targetPlayer.ClearAllTasks();
                     targetPlayer.GenerateAndAssignTasks(0, CreatedMadmate.NumTasks, 0);

@@ -11,6 +11,7 @@ internal enum MadmateAbility
 {
     None = 0,
     Fanatic = 1,
+    Suicider = 2,
 }
 
 [HarmonyPatch]
@@ -48,6 +49,8 @@ internal class Madmate : ModifierBase<Madmate>
     }
 
     // write configs here
+    private static CustomButton _suicideButton;
+
     internal static bool CanEnterVents
     {
         get => CustomOptionHolder.MadmateCanEnterVents.GetBool();
@@ -229,11 +232,49 @@ internal class Madmate : ModifierBase<Madmate>
     [CustomEvent(CustomEventType.OnFinishShipStatusBegin)]
     internal void OnFinishShipStatusBegin()
     {
-        Player.ClearAllTasks();
-        Player.GenerateAndAssignTasks(NumCommonTasks, NumShortTasks, NumLongTasks);
+        if (Player == PlayerControl.LocalPlayer && HasTasks)
+        {
+            Player.ClearAllTasks();
+            Player.GenerateAndAssignTasks(NumCommonTasks, NumShortTasks, NumLongTasks);
+        }
     }
 
+    [RegisterCustomButton]
+    internal static void MakeButtons(HudManager hm)
+    {
+        _suicideButton = new(() =>
+            {
+                RPCProcedure.UncheckedMurderPlayer(PlayerControl.LocalPlayer, PlayerControl.LocalPlayer.PlayerId, PlayerControl.LocalPlayer.PlayerId, 1);
+            },
+            () =>
+            {
+                return PlayerControl.LocalPlayer.HasModifier(ModifierType.Madmate) && MadmateAbility == MadmateAbility.Suicider && PlayerControl.LocalPlayer?.Data?.IsDead == false;
+            },
+            () =>
+            {
+                return PlayerControl.LocalPlayer.CanMove;
+            },
+            () =>
+            {
+                _suicideButton.Timer = _suicideButton.MaxTimer;
+            },
+            hm.KillButton.graphic.sprite,
+            ButtonPosition.Layout,
+            hm,
+            hm.KillButton,
+            AbilitySlot.CrewmateAbilityPrimary,
+            false,
+            0f,
+            null,
+            false,
+            Tr.Get(TrKey.Suicide));
+    }
 
+    [RegisterCustomButton]
+    internal static void SetButtonCooldowns()
+    {
+        if (_suicideButton != null) _suicideButton.MaxTimer = 0f;
+    }
 
     // write functions here
 
@@ -263,7 +304,7 @@ internal class Madmate : ModifierBase<Madmate>
             }
         }
 
-        return counter == totalTasks;
+        return counter >= totalTasks;
     }
 
     internal static void Clear()

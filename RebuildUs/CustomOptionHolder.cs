@@ -231,13 +231,6 @@ internal static class CustomOptionHolder
         SheriffCanKillNoDeadBody = CustomOption.Normal(1164, CustomOptionType.Crewmate, TrKey.SheriffCanKillNoDeadBody, true, SheriffSpawnRate);
         SheriffCanKillNeutrals = CustomOption.Normal(1165, CustomOptionType.Crewmate, TrKey.SheriffCanKillNeutrals, false, SheriffSpawnRate);
 
-        SuiciderSpawnRate = new(1190, CustomOptionType.Crewmate, RoleType.Suicider, Suicider.Color, 3);
-        SuiciderCanDieToSheriff = CustomOption.Normal(1191, CustomOptionType.Crewmate, TrKey.SuiciderCanDieToSheriff, true, SuiciderSpawnRate);
-        SuiciderCanEnterVents = CustomOption.Normal(1192, CustomOptionType.Crewmate, TrKey.SuiciderCanEnterVents, true, SuiciderSpawnRate);
-        SuiciderHasImpostorVision = CustomOption.Normal(1193, CustomOptionType.Crewmate, TrKey.SuiciderHasImpostorVision, false, SuiciderSpawnRate);
-        SuiciderCanFixComm = CustomOption.Normal(1194, CustomOptionType.Crewmate, TrKey.SuiciderCanFixComm, false, SuiciderSpawnRate);
-        SuiciderCanKnowImpostorAfterFinishTasks = CustomOption.Normal(1195, CustomOptionType.Crewmate, TrKey.SuiciderCanKnowImpostorAfterFinishTasks, false, SuiciderSpawnRate);
-        SuiciderTasks = new((1196, 1197, 1198), CustomOptionType.Crewmate, (3, 2, 3), SuiciderCanKnowImpostorAfterFinishTasks);
 
         #endregion
 
@@ -276,7 +269,7 @@ internal static class CustomOptionHolder
         CreatedMadmateHasImpostorVision = CustomOption.Normal(2039, CustomOptionType.Impostor, TrKey.CreatedMadmateHasImpostorVision, false, EvilHackerCanCreateMadmate);
         CreatedMadmateCanSabotage = CustomOption.Normal(2040, CustomOptionType.Impostor, TrKey.CreatedMadmateCanSabotage, false, EvilHackerCanCreateMadmate);
         CreatedMadmateCanFixComm = CustomOption.Normal(2041, CustomOptionType.Impostor, TrKey.CreatedMadmateCanFixComm, true, EvilHackerCanCreateMadmate);
-        CreatedMadmateAbility = CustomOption.Normal(2042, CustomOptionType.Impostor, TrKey.MadmateAbility, [Tr.Get(TrKey.MadmateNone), Tr.Get(TrKey.MadmateFanatic)], 0, EvilHackerCanCreateMadmate);
+        CreatedMadmateAbility = CustomOption.Normal(2042, CustomOptionType.Impostor, TrKey.MadmateAbility, [Tr.Get(TrKey.MadmateNone), Tr.Get(TrKey.MadmateFanatic), Tr.Get(TrKey.Suicider)], 0, EvilHackerCanCreateMadmate);
         CreatedMadmateNumTasks = CustomOption.Normal(2043, CustomOptionType.Impostor, TrKey.CreatedMadmateNumTasks, 4f, 1f, 20f, 1f, CreatedMadmateAbility);
         CreatedMadmateExileCrewmate = CustomOption.Normal(2044, CustomOptionType.Impostor, TrKey.CreatedMadmateExileCrewmate, false, EvilHackerCanCreateMadmate);
 
@@ -374,7 +367,7 @@ internal static class CustomOptionHolder
         MadmateSpawnRate = new(4000, CustomOptionType.Modifier, ModifierType.Madmate, Madmate.Color);
         MadmateType = CustomOption.Normal(4001, CustomOptionType.Modifier, TrKey.MadmateType, [Tr.Get(TrKey.MadmateDefault), Tr.Get(TrKey.MadmateWithRole), Tr.Get(TrKey.MadmateRandom)], 0, MadmateSpawnRate);
         MadmateFixedRole = new(4002, CustomOptionType.Modifier, TrKey.MadmateFixedRole, Madmate.ValidRoles, MadmateType);
-        MadmateAbility = CustomOption.Normal(4003, CustomOptionType.Modifier, TrKey.MadmateAbility, [Tr.Get(TrKey.MadmateNone), Tr.Get(TrKey.MadmateFanatic)], 0, MadmateSpawnRate);
+        MadmateAbility = CustomOption.Normal(4003, CustomOptionType.Modifier, TrKey.MadmateAbility, [Tr.Get(TrKey.MadmateNone), Tr.Get(TrKey.MadmateFanatic), Tr.Get(TrKey.Suicider)], 0, MadmateSpawnRate);
         MadmateTasks = new((4004, 4005, 4006), CustomOptionType.Modifier, (1, 1, 3), MadmateAbility);
         MadmateCanDieToSheriff = CustomOption.Normal(4007, CustomOptionType.Modifier, TrKey.MadmateCanDieToSheriff, false, MadmateSpawnRate);
         MadmateCanEnterVents = CustomOption.Normal(4008, CustomOptionType.Modifier, TrKey.MadmateCanEnterVents, false, MadmateSpawnRate);
@@ -624,13 +617,6 @@ internal static class CustomOptionHolder
     internal static CustomOption SheriffMisfireKillsTarget;
     internal static CustomOption SheriffCanKillNoDeadBody;
 
-    internal static CustomRoleOption SuiciderSpawnRate;
-    internal static CustomOption SuiciderCanDieToSheriff;
-    internal static CustomOption SuiciderCanEnterVents;
-    internal static CustomOption SuiciderHasImpostorVision;
-    internal static CustomOption SuiciderCanFixComm;
-    internal static CustomOption SuiciderCanKnowImpostorAfterFinishTasks;
-    internal static CustomTasksOption SuiciderTasks;
 
     #endregion
 

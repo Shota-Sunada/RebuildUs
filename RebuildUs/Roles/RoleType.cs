@@ -22,7 +22,6 @@ internal enum RoleType : byte
     Bait,
     Medium,
     FortuneTeller,
-    Suicider,
 
     // Impostor
     Impostor,
@@ -38,7 +37,6 @@ internal enum RoleType : byte
     Warlock,
     BountyHunter,
     Witch,
-    // Madmate,
     EvilSwapper,
 
     // Neutral

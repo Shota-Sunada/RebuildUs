@@ -11,6 +11,7 @@ internal class CreatedMadmate : ModifierBase<CreatedMadmate>
     }
 
     // write configs here
+    private static CustomButton _suicideButton;
 
     internal static bool CanEnterVents
     {
@@ -63,7 +64,7 @@ internal class CreatedMadmate : ModifierBase<CreatedMadmate>
         {
             HudManagerPatch.SetPlayerNameColor(Player, ModifierColor);
 
-            if (Madmate.KnowsImpostors(Player))
+            if (KnowsImpostors(Player))
             {
                 var allPlayers = PlayerControl.AllPlayerControls.GetFastEnumerator();
                 foreach (var p in PlayerControl.AllPlayerControls.GetFastEnumerator())
@@ -84,6 +85,72 @@ internal class CreatedMadmate : ModifierBase<CreatedMadmate>
     internal void OnDeath(PlayerControl killer)
     {
         Player.ClearAllTasks();
+    }
+
+    [RegisterCustomButton]
+    internal static void MakeButtons(HudManager hm)
+    {
+        _suicideButton = new(() =>
+            {
+                RPCProcedure.UncheckedMurderPlayer(PlayerControl.LocalPlayer, PlayerControl.LocalPlayer.PlayerId, PlayerControl.LocalPlayer.PlayerId, 1);
+            },
+            () =>
+            {
+                return PlayerControl.LocalPlayer.HasModifier(ModifierType.CreatedMadmate) && MadmateAbility == CreatedMadmateAbility.Suicider && PlayerControl.LocalPlayer?.Data?.IsDead == false;
+            },
+            () =>
+            {
+                return PlayerControl.LocalPlayer.CanMove;
+            },
+            () =>
+            {
+                _suicideButton.Timer = _suicideButton.MaxTimer;
+            },
+            hm.KillButton.graphic.sprite,
+            ButtonPosition.Layout,
+            hm,
+            hm.KillButton,
+            AbilitySlot.CrewmateAbilityPrimary,
+            false,
+            0f,
+            null,
+            false,
+            Tr.Get(TrKey.Suicide));
+    }
+
+    [RegisterCustomButton]
+    internal static void SetButtonCooldowns()
+    {
+        if (_suicideButton != null) _suicideButton.MaxTimer = 0f;
+    }
+
+    internal static bool KnowsImpostors(PlayerControl player)
+    {
+        return HasTasks && HasModifier(player) && TasksComplete(player);
+    }
+
+    internal static bool TasksComplete(PlayerControl player)
+    {
+        if (!HasTasks)
+        {
+            return false;
+        }
+
+        var counter = 0;
+        var totalTasks = NumTasks;
+        if (totalTasks == 0)
+        {
+            return true;
+        }
+        foreach (var task in player.Data.Tasks)
+        {
+            if (task.Complete)
+            {
+                counter++;
+            }
+        }
+
+        return counter >= totalTasks;
     }
 
 
@@ -107,5 +174,6 @@ internal class CreatedMadmate : ModifierBase<CreatedMadmate>
     {
         None = 0,
         Fanatic = 1,
+        Suicider = 2,
     }
 }

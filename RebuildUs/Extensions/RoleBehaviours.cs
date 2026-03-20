@@ -12,7 +12,6 @@ internal static class RoleBehaviours
                 || Sidekick.CanUseVents && player.IsRole(RoleType.Sidekick)
                 || Spy.CanEnterVents && player.IsRole(RoleType.Spy)
                 || Madmate.CanEnterVents && player.HasModifier(ModifierType.Madmate)
-                || Suicider.CanEnterVents && player.IsRole(RoleType.Suicider)
                 || CreatedMadmate.CanEnterVents && player.HasModifier(ModifierType.CreatedMadmate)
                 || Vulture.CanUseVents && player.IsRole(RoleType.Vulture))
             {
@@ -37,7 +36,6 @@ internal static class RoleBehaviours
         {
             return !player.IsRole(RoleType.Spy)
                    && !player.HasModifier(ModifierType.Madmate)
-                   && !player.IsRole(RoleType.Suicider)
                    && !player.HasModifier(ModifierType.CreatedMadmate);
         }
 
@@ -62,7 +60,6 @@ internal static class RoleBehaviours
             return player.IsNeutral() && !player.NeutralHasTasks()
                    || player.HasModifier(ModifierType.CreatedMadmate) && !CreatedMadmate.HasTasks
                    || player.HasModifier(ModifierType.Madmate) && !Madmate.HasTasks
-                   || player.IsRole(RoleType.Suicider) && !Suicider.CanKnowImpostorAfterFinishTasks
                    || player.IsLovers() && Lovers.SeparateTeam && !Lovers.TasksCount;
         }
 
