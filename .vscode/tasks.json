@@ -17,7 +17,7 @@
   "problemMatcher": [],
   "tasks": [
     {
-      "label": "Build Impostor Debug",
+      "label": "Build Impostor Plugin Debug",
       "command": "dotnet build RebuildUs.Impostor/RebuildUs.Impostor.csproj -c Debug",
       "group": {
         "kind": "build",
@@ -25,7 +25,7 @@
       }
     },
     {
-      "label": "Build Impostor Release",
+      "label": "Build Impostor Plugin Release",
       "command": "dotnet build RebuildUs.Impostor/RebuildUs.Impostor.csproj -c Release",
       "group": {
         "kind": "build",
