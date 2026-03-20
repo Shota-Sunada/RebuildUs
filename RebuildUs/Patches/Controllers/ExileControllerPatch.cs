@@ -19,7 +19,9 @@ internal static class ExileControllerPatch
         if (Medic.Exists && AmongUsClient.Instance.AmHost && Medic.FutureShielded != null && Medic.PlayerControl.IsAlive())
         {
             // We need to send the RPC from the host here, to make sure that the order of shifting and setting the shield is correct(for that reason the futureShifted and futureShielded are being synced)
-            Medic.MedicSetShielded(PlayerControl.LocalPlayer, Medic.FutureShielded.PlayerId);
+            using RPCSender sender = new(PlayerControl.LocalPlayer.NetId, CustomRPC.MedicSetShielded);
+            sender.Write(Medic.FutureShielded.PlayerId);
+            RPCProcedure.MedicSetShielded(Medic.FutureShielded.PlayerId);
         }
 
         // Madmate exiled
@@ -33,7 +35,9 @@ internal static class ExileControllerPatch
             if (target != null)
             {
                 // exile the picked crewmate
-                RPCProcedure.UncheckedExilePlayer(PlayerControl.LocalPlayer, target.PlayerId);
+                using RPCSender sender = new(PlayerControl.LocalPlayer.NetId, CustomRPC.UncheckedExilePlayer);
+                sender.Write(target.PlayerId);
+                RPCProcedure.UncheckedExilePlayer(target.PlayerId);
             }
         }
 
@@ -41,7 +45,9 @@ internal static class ExileControllerPatch
         if (Shifter.Exists && AmongUsClient.Instance.AmHost && Shifter.FutureShift != null)
         {
             // We need to send the RPC from the host here, to make sure that the order of shifting and erasing is correct (for that reason the futureShifted and futureErased are being synced)
-            Shifter.ShifterShift(PlayerControl.LocalPlayer, Shifter.FutureShift.PlayerId);
+            using (RPCSender sender = new(PlayerControl.LocalPlayer.NetId, CustomRPC.ShifterShift)) sender.Write(Shifter.FutureShift.PlayerId);
+
+            RPCProcedure.ShifterShift(Shifter.FutureShift.PlayerId);
         }
 
         Shifter.FutureShift = null;
@@ -56,7 +62,9 @@ internal static class ExileControllerPatch
                 {
                     continue;
                 }
-                Eraser.ErasePlayerRoles(PlayerControl.LocalPlayer, target.PlayerId);
+                using RPCSender sender = new(PlayerControl.LocalPlayer.NetId, CustomRPC.ErasePlayerRoles);
+                sender.Write(target.PlayerId);
+                RPCProcedure.ErasePlayerRoles(target.PlayerId);
             }
         }
 
@@ -109,7 +117,9 @@ internal static class ExileControllerPatch
                     {
                         continue;
                     }
-                    Witch.WitchSpellCast(PlayerControl.LocalPlayer, target.PlayerId);
+                    using RPCSender sender = new(PlayerControl.LocalPlayer.NetId, CustomRPC.WitchSpellCast);
+                    sender.Write(target.PlayerId);
+                    RPCProcedure.WitchSpellCast(target.PlayerId);
                 }
             }
         }

@@ -40,7 +40,9 @@ internal static class ShortcutCommands
         {
             FastDestroyableSingleton<GameStartManager>.Instance.countDownTimer = 0;
             SoundManager.Instance.StopSound(FastDestroyableSingleton<GameStartManager>.Instance.gameStartSound);
-            RPCProcedure.StopStart(PlayerControl.LocalPlayer);
+            {
+                using RPCSender sender = new(PlayerControl.LocalPlayer.NetId, CustomRPC.StopStart);
+            }
         }
 
 #if DEBUG

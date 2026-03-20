@@ -40,7 +40,13 @@ internal class Trickster : SingleRoleBase<Trickster>
                 _placeJackInTheBoxButton.Timer = _placeJackInTheBoxButton.MaxTimer;
 
                 var pos = PlayerControl.LocalPlayer.transform.position;
-                PlaceJackInTheBox(PlayerControl.LocalPlayer, pos.x, pos.y);
+                var buff = new byte[sizeof(float) * 2];
+                Buffer.BlockCopy(BitConverter.GetBytes(pos.x), 0, buff, 0 * sizeof(float), sizeof(float));
+                Buffer.BlockCopy(BitConverter.GetBytes(pos.y), 0, buff, 1 * sizeof(float), sizeof(float));
+
+                using RPCSender sender = new(PlayerControl.LocalPlayer.NetId, CustomRPC.PlaceJackInTheBox);
+                sender.WriteBytesAndSize(buff);
+                RPCProcedure.PlaceJackInTheBox(buff);
             },
             () =>
             {
@@ -66,7 +72,8 @@ internal class Trickster : SingleRoleBase<Trickster>
 
         _lightsOutButton = new(() =>
             {
-                LightsOut(PlayerControl.LocalPlayer);
+                using RPCSender sender = new(PlayerControl.LocalPlayer.NetId, CustomRPC.LightsOut);
+                RPCProcedure.LightsOut();
             },
             () =>
             {
@@ -117,22 +124,5 @@ internal class Trickster : SingleRoleBase<Trickster>
 
         ModRoleManager.RemoveRole(Instance);
         Instance = null;
-    }
-
-    [MethodRpc((uint)CustomRPC.PlaceJackInTheBox)]
-    internal static void PlaceJackInTheBox(PlayerControl sender, float x, float y)
-    {
-        _ = new JackInTheBox(new Vector3(x, y));
-    }
-
-    [MethodRpc((uint)CustomRPC.LightsOut)]
-    internal static void LightsOut(PlayerControl sender)
-    {
-        LightsOutTimer = LightsOutDuration;
-        // If the local player is impostor indicate lights out
-        if (PlayerControl.LocalPlayer.HasImpostorVision())
-        {
-            _ = new CustomMessage("TricksterLightsOutText", LightsOutDuration);
-        }
     }
 }

@@ -123,7 +123,13 @@ internal static class VentPatch
         if (__instance.name.StartsWith("JackInTheBoxVent_"))
         {
             __instance.SetButtons(isEnter && lp.CanMoveInVents());
-            RPCProcedure.UseUncheckedVent(PlayerControl.LocalPlayer, __instance.Id, lp.PlayerId, isEnter ? byte.MaxValue : (byte)0);
+            {
+                using RPCSender sender = new(lp.NetId, CustomRPC.UseUncheckedVent);
+                sender.WritePacked(__instance.Id);
+                sender.Write(lp.PlayerId);
+                sender.Write(isEnter ? byte.MaxValue : (byte)0);
+                RPCProcedure.UseUncheckedVent(__instance.Id, lp.PlayerId, isEnter ? byte.MaxValue : (byte)0);
+            }
             return false;
         }
 

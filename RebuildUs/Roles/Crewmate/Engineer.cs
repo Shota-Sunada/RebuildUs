@@ -81,7 +81,9 @@ internal class Engineer : MultiRoleBase<Engineer>
     {
         _engineerRepairButton.Timer = 0f;
 
-        EngineerUsedRepair(PlayerControl.LocalPlayer, PlayerControl.LocalPlayer.PlayerId);
+        using RPCSender sender = new(PlayerControl.LocalPlayer.NetId, CustomRPC.EngineerUsedRepair);
+        sender.Write(PlayerControl.LocalPlayer.PlayerId);
+        RPCProcedure.EngineerUsedRepair(PlayerControl.LocalPlayer.PlayerId);
 
         foreach (var task in PlayerControl.LocalPlayer.myTasks.GetFastEnumerator())
         {
@@ -89,7 +91,8 @@ internal class Engineer : MultiRoleBase<Engineer>
             {
                 case TaskTypes.FixLights:
                     {
-                        EngineerFixLights(PlayerControl.LocalPlayer);
+                        using RPCSender sender2 = new(PlayerControl.LocalPlayer.NetId, CustomRPC.EngineerFixLights);
+                        RPCProcedure.EngineerFixLights();
                         break;
                     }
                 case TaskTypes.RestoreOxy:
@@ -114,7 +117,8 @@ internal class Engineer : MultiRoleBase<Engineer>
                     {
                         if (SubmergedCompatibility.IsSubmerged && task.TaskType == SubmergedCompatibility.RetrieveOxygenMask)
                         {
-                            EngineerFixSubmergedOxygen(PlayerControl.LocalPlayer);
+                            using RPCSender sender3 = new(PlayerControl.LocalPlayer.NetId, CustomRPC.EngineerFixSubmergedOxygen);
+                            RPCProcedure.EngineerFixSubmergedOxygen();
                         }
 
                         break;
@@ -133,33 +137,5 @@ internal class Engineer : MultiRoleBase<Engineer>
     {
         // reset configs here
         Players.Clear();
-    }
-
-    [MethodRpc((uint)CustomRPC.EngineerFixLights)]
-    internal static void EngineerFixLights(PlayerControl sender)
-    {
-        var switchSystem = MapUtilities.Systems[SystemTypes.Electrical].CastFast<SwitchSystem>();
-        switchSystem.ActualSwitches = switchSystem.ExpectedSwitches;
-    }
-
-    [MethodRpc((uint)CustomRPC.EngineerFixSubmergedOxygen)]
-    internal static void EngineerFixSubmergedOxygen(PlayerControl sender)
-    {
-        SubmergedCompatibility.RepairOxygen();
-    }
-
-    [MethodRpc((uint)CustomRPC.EngineerUsedRepair)]
-    internal static void EngineerUsedRepair(PlayerControl sender, byte engineerId)
-    {
-        var engineerPlayer = Helpers.PlayerById(engineerId);
-        if (engineerPlayer == null)
-        {
-            return;
-        }
-        var engineer = GetRole(engineerPlayer);
-        if (engineer != null)
-        {
-            engineer.RemainingFixes--;
-        }
     }
 }

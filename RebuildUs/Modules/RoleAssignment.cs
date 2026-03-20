@@ -145,7 +145,10 @@ internal static class RoleAssignment
         }
 
         CreateCheckList();
-        RPCProcedure.ResetVariables(PlayerControl.LocalPlayer);
+        {
+            using RPCSender sender = new(PlayerControl.LocalPlayer.NetId, CustomRPC.ResetVariables);
+            RPCProcedure.ResetVariables();
+        }
         yield return WaitResetVariables().WrapToIl2Cpp();
 
         if (!FastDestroyableSingleton<TutorialManager>.InstanceExists
@@ -161,7 +164,10 @@ internal static class RoleAssignment
                 Logger.LogError(ex);
             }
 
-            RPCProcedure.FinishSetRole(PlayerControl.LocalPlayer);
+            {
+                using RPCSender sender2 = new(PlayerControl.LocalPlayer.NetId, CustomRPC.FinishSetRole);
+                RPCProcedure.FinishSetRole();
+            }
         }
         // 独自処理終了
 
@@ -532,7 +538,13 @@ internal static class RoleAssignment
                 {
                     continue;
                 }
-                RPCProcedure.SetLovers(PlayerControl.LocalPlayer, (byte)lover1, (byte)lover2);
+                using (RPCSender sender = new(PlayerControl.LocalPlayer.NetId, CustomRPC.SetLovers))
+                {
+                    sender.Write((byte)lover1);
+                    sender.Write((byte)lover2);
+                }
+
+                RPCProcedure.SetLovers((byte)lover1, (byte)lover2);
             }
         }
 
@@ -614,7 +626,9 @@ internal static class RoleAssignment
                 break;
         }
 
-        Shifter.SetShifterType(PlayerControl.LocalPlayer, shifterIsNeutral);
+        using (RPCSender sender = new(PlayerControl.LocalPlayer.NetId, CustomRPC.SetShifterType)) sender.Write(shifterIsNeutral);
+
+        RPCProcedure.SetShifterType(shifterIsNeutral);
     }
 
     private static void AssignEnsuredRoles(RoleAssignmentData data)
@@ -883,7 +897,10 @@ internal static class RoleAssignment
     {
         var playerId = host.PlayerId;
 
-        RPCProcedure.SetRole(PlayerControl.LocalPlayer, roleId, playerId);
+        using RPCSender sender = new(PlayerControl.LocalPlayer.NetId, CustomRPC.SetRole);
+        sender.Write(roleId);
+        sender.Write(playerId);
+        RPCProcedure.SetRole(roleId, playerId);
 
         return playerId;
     }
@@ -964,7 +981,10 @@ internal static class RoleAssignment
         }
         PlayerRoleMap.Add(new(playerId, roleId));
 
-        RPCProcedure.SetRole(PlayerControl.LocalPlayer, roleId, playerId);
+        using RPCSender sender = new(PlayerControl.LocalPlayer.NetId, CustomRPC.SetRole);
+        sender.Write(roleId);
+        sender.Write(playerId);
+        RPCProcedure.SetRole(roleId, playerId);
 
         return playerId;
     }
@@ -979,7 +999,10 @@ internal static class RoleAssignment
         var index = RebuildUs.Rnd.Next(0, playerList.Count);
         var playerId = playerList[index].PlayerId;
 
-        RPCProcedure.AddModifier(PlayerControl.LocalPlayer, modId, playerId);
+        using RPCSender sender = new(PlayerControl.LocalPlayer.NetId, CustomRPC.AddModifier);
+        sender.Write(modId);
+        sender.Write(playerId);
+        RPCProcedure.AddModifier(modId, playerId);
 
         return playerId;
     }

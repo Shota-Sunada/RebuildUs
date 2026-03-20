@@ -297,7 +297,7 @@ internal static partial class EndGameMain
             wpd.IsDead = isDead;
         }
 
-        RPCProcedure.ResetVariablesLocal();
+        RPCProcedure.ResetVariables();
     }
 
     internal static void SetupEndGameScreen(EndGameManager __instance)

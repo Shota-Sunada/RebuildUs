@@ -1,5 +1,3 @@
-using Assets.CoreScripts;
-
 namespace RebuildUs.Roles.Neutral;
 
 internal static class Guesser
@@ -94,70 +92,6 @@ internal static class Guesser
         }
 
         return remainingShots;
-    }
-
-    [MethodRpc((uint)CustomRPC.GuesserShoot)]
-    internal static void GuesserShoot(PlayerControl sender, byte killerId, byte dyingTargetId, byte guessedTargetId, byte guessedRoleType)
-    {
-        var killer = Helpers.PlayerById(killerId);
-        var dyingTarget = Helpers.PlayerById(dyingTargetId);
-        if (dyingTarget == null)
-        {
-            return;
-        }
-        dyingTarget.Exiled();
-        var dyingLoverPartner = Lovers.BothDie ? dyingTarget.GetPartner() : null; // Lover check
-
-        if (killer != null)
-        {
-            RemainingShots(killer, true);
-        }
-
-        if (Constants.ShouldPlaySfx())
-        {
-            SoundManager.Instance.PlaySound(dyingTarget.KillSfx, false, 0.8f);
-        }
-
-        if (FastDestroyableSingleton<HudManager>.Instance != null && killer != null)
-        {
-            if (PlayerControl.LocalPlayer == dyingTarget)
-            {
-                FastDestroyableSingleton<HudManager>.Instance.KillOverlay.ShowKillAnimation(killer.Data, dyingTarget.Data);
-            }
-            else if (dyingLoverPartner != null && PlayerControl.LocalPlayer == dyingLoverPartner)
-            {
-                FastDestroyableSingleton<HudManager>.Instance.KillOverlay.ShowKillAnimation(dyingLoverPartner.Data, dyingLoverPartner.Data);
-            }
-        }
-
-        var guessedTarget = Helpers.PlayerById(guessedTargetId);
-        if (ShowInfoInGhostChat && PlayerControl.LocalPlayer.Data.IsDead && guessedTarget != null)
-        {
-            RoleInfo roleInfo = null;
-            foreach (var r in RoleInfo.AllRoleInfos)
-            {
-                if ((byte)r.RoleType == guessedRoleType)
-                {
-                    roleInfo = r;
-                    break;
-                }
-            }
-
-            if (roleInfo == null)
-            {
-                return;
-            }
-            var msg = string.Format(Tr.Get(TrKey.GuesserGuessChat), roleInfo.Name, guessedTarget.Data.PlayerName);
-            if (AmongUsClient.Instance.AmClient && FastDestroyableSingleton<HudManager>.Instance)
-            {
-                FastDestroyableSingleton<HudManager>.Instance.Chat.AddChat(killer, msg);
-            }
-
-            if (msg.Contains("who", StringComparison.OrdinalIgnoreCase))
-            {
-                FastDestroyableSingleton<UnityTelemetry>.Instance.SendWho();
-            }
-        }
     }
 
     [HarmonyPatch]

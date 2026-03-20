@@ -1,5 +1,3 @@
-using Action = Il2CppSystem.Action;
-
 namespace RebuildUs.Roles.Crewmate;
 
 [HarmonyPatch]
@@ -118,7 +116,8 @@ internal class TimeMaster : SingleRoleBase<TimeMaster>
     {
         _timeMasterShieldButton = new(() =>
             {
-                TimeMasterShield(PlayerControl.LocalPlayer);
+                using RPCSender sender = new(PlayerControl.LocalPlayer.NetId, CustomRPC.TimeMasterShield);
+                RPCProcedure.TimeMasterShield();
             },
             () =>
             {
@@ -169,65 +168,5 @@ internal class TimeMaster : SingleRoleBase<TimeMaster>
     {
         ModRoleManager.RemoveRole(Instance);
         Instance = null;
-    }
-
-    [MethodRpc((uint)CustomRPC.TimeMasterRewindTime)]
-    internal static void TimeMasterRewindTime(PlayerControl sender)
-    {
-        ShieldActive = false;
-        if (PlayerControl.LocalPlayer.IsRole(RoleType.TimeMaster))
-        {
-            ResetTimeMasterButton();
-        }
-
-        var hm = FastDestroyableSingleton<HudManager>.Instance;
-        hm.FullScreen.color = new(0f, 0.5f, 0.8f, 0.3f);
-        hm.FullScreen.enabled = true;
-        hm.FullScreen.gameObject.SetActive(true);
-        hm.StartCoroutine(Effects.Lerp(RewindTime / 2,
-            new Action<float>(p =>
-            {
-                if (Mathf.Approximately(p, 1f))
-                {
-                    hm.FullScreen.enabled = false;
-                }
-            })));
-
-        if (!Exists || PlayerControl.LocalPlayer.IsRole(RoleType.TimeMaster))
-        {
-            return;
-        }
-        if (PlayerControl.LocalPlayer.IsGm())
-        {
-            return;
-        }
-
-        IsRewinding = true;
-
-        if (MapBehaviour.Instance)
-        {
-            MapBehaviour.Instance.Close();
-        }
-
-        if (Minigame.Instance)
-        {
-            Minigame.Instance.ForceClose();
-        }
-
-        PlayerControl.LocalPlayer.moveable = false;
-    }
-
-    [MethodRpc((uint)CustomRPC.TimeMasterShield)]
-    internal static void TimeMasterShield(PlayerControl sender)
-    {
-        ShieldActive = true;
-        FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(ShieldDuration,
-            new Action<float>(p =>
-            {
-                if (Mathf.Approximately(p, 1f))
-                {
-                    ShieldActive = false;
-                }
-            })));
     }
 }

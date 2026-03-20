@@ -73,7 +73,11 @@ internal class Shifter : MultiRoleBase<Shifter>
     {
         _shifterShiftButton = new(() =>
             {
-                SetFutureShifted(PlayerControl.LocalPlayer, _currentTarget.PlayerId);
+                {
+                    using RPCSender sender = new(PlayerControl.LocalPlayer.NetId, CustomRPC.SetFutureShifted);
+                    sender.Write(_currentTarget.PlayerId);
+                }
+                RPCProcedure.SetFutureShifted(_currentTarget.PlayerId);
             },
             () =>
             {
@@ -97,93 +101,6 @@ internal class Shifter : MultiRoleBase<Shifter>
     internal static void SetButtonCooldowns()
     {
         _shifterShiftButton.MaxTimer = 0f;
-    }
-
-    [MethodRpc((uint)CustomRPC.ShifterShift)]
-    internal static void ShifterShift(PlayerControl sender, byte targetId)
-    {
-        if (Players.Count == 0)
-        {
-            return;
-        }
-        var oldShifter = Players[0];
-        var player = Helpers.PlayerById(targetId);
-        if (player == null || oldShifter == null)
-        {
-            return;
-        }
-
-        var oldShifterPlayer = oldShifter.Player;
-        FutureShift = null;
-
-        // Suicide (exile) when impostor or impostor variants
-        if (!IsNeutral
-            && (player.Data.Role.IsImpostor
-                || player.IsNeutral()
-                || player.HasModifier(ModifierType.Madmate)
-                || player.HasModifier(ModifierType.CreatedMadmate)))
-        {
-            oldShifterPlayer.Exiled();
-            GameHistory.FinalStatuses[oldShifterPlayer.PlayerId] = FinalStatus.Suicide;
-            return;
-        }
-
-        if (ShiftsModifiers)
-        {
-            // Switch shield
-            if (Medic.Shielded != null && Medic.Shielded == player)
-            {
-                Medic.Shielded = oldShifterPlayer;
-            }
-            else if (Medic.Shielded != null && Medic.Shielded == oldShifterPlayer)
-            {
-                Medic.Shielded = player;
-            }
-
-            player.SwapModifiers(oldShifterPlayer);
-            Lovers.SwapLovers(oldShifterPlayer, player);
-        }
-
-        // Shift roles (now a true swap)
-        player.SwapRoles(oldShifterPlayer);
-
-        if (IsNeutral)
-        {
-            PastShifters.Add(oldShifterPlayer.PlayerId);
-
-            if (player.Data.Role.IsImpostor)
-            {
-                FastDestroyableSingleton<RoleManager>.Instance.SetRole(player, RoleTypes.Crewmate);
-                FastDestroyableSingleton<RoleManager>.Instance.SetRole(oldShifterPlayer, RoleTypes.Impostor);
-            }
-        }
-        else
-        {
-            // For Crewmate Shifter, the original target (who now has the Shifter role due to the swap) should lose it and become a plain Crewmate.
-            player.EraseRole(RoleType.Shifter);
-        }
-
-        // Set cooldowns to max for both players
-        if (PlayerControl.LocalPlayer == oldShifterPlayer || PlayerControl.LocalPlayer == player)
-        {
-            CustomButton.ResetAllCooldowns();
-        }
-    }
-
-    [MethodRpc((uint)CustomRPC.SetFutureShifted)]
-    internal static void SetFutureShifted(PlayerControl sender, byte playerId)
-    {
-        if (IsNeutral && !ShiftPastShifters && PastShifters.Contains(playerId))
-        {
-            return;
-        }
-        FutureShift = Helpers.PlayerById(playerId);
-    }
-
-    [MethodRpc((uint)CustomRPC.SetShifterType)]
-    internal static void SetShifterType(PlayerControl sender, bool isNeutral)
-    {
-        IsNeutral = isNeutral;
     }
 
     internal static void Clear()

@@ -185,7 +185,10 @@ internal static class SpawnIn
 
     private static void Synchronize(SynchronizeTag tag, byte playerId)
     {
-        RPCProcedure.Synchronize(PlayerControl.LocalPlayer, playerId, (int)tag);
+        using RPCSender sender = new(PlayerControl.LocalPlayer.NetId, CustomRPC.Synchronize);
+        sender.Write(playerId);
+        sender.Write((int)tag);
+        RPCProcedure.Synchronize(playerId, (int)tag);
     }
 
     private static void SpawnAt(SpawnInMinigame __instance, Vector3 spawnAt)

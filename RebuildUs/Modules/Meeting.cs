@@ -458,7 +458,12 @@ internal static class Meeting
         {
             return;
         }
-        Swapper.SwapperSwap(PlayerControl.LocalPlayer, firstPlayer.TargetPlayerId, secondPlayer.TargetPlayerId);
+        {
+            using RPCSender sender = new(PlayerControl.LocalPlayer.NetId, CustomRPC.SwapperSwap);
+            sender.Write(firstPlayer.TargetPlayerId);
+            sender.Write(secondPlayer.TargetPlayerId);
+            RPCProcedure.SwapperSwap(firstPlayer.TargetPlayerId, secondPlayer.TargetPlayerId);
+        }
 
         _meetingExtraButtonLabel.text = Helpers.Cs(Color.green, Tr.Get(TrKey.SwapperSwapping));
         Swapper.RemainSwaps--;
@@ -670,7 +675,10 @@ internal static class Meeting
                                 }
                                 UnityObject.Destroy(container.gameObject);
 
-                                Medic.ShieldedMurderAttempt(PlayerControl.LocalPlayer);
+                                {
+                                    using RPCSender sender = new(PlayerControl.LocalPlayer.NetId, CustomRPC.ShieldedMurderAttempt);
+                                    RPCProcedure.ShieldedMurderAttempt();
+                                }
                                 return;
                             }
                         }
@@ -724,11 +732,17 @@ internal static class Meeting
                         }
 
                         // Shoot player and send chat info if activated
-                        Guesser.GuesserShoot(PlayerControl.LocalPlayer,
-                            PlayerControl.LocalPlayer.PlayerId,
-                            dyingTarget.PlayerId,
-                            focusedTarget.PlayerId,
-                            (byte)roleInfo.RoleType);
+                        {
+                            using RPCSender sender = new(PlayerControl.LocalPlayer.NetId, CustomRPC.GuesserShoot);
+                            sender.Write(PlayerControl.LocalPlayer.PlayerId);
+                            sender.Write(dyingTarget.PlayerId);
+                            sender.Write(focusedTarget.PlayerId);
+                            sender.Write((byte)roleInfo.RoleType);
+                            RPCProcedure.GuesserShoot(PlayerControl.LocalPlayer.PlayerId,
+                                dyingTarget.PlayerId,
+                                focusedTarget.PlayerId,
+                                (byte)roleInfo.RoleType);
+                        }
                     }
                 }));
 

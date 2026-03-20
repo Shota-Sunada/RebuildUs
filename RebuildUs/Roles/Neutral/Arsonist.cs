@@ -163,7 +163,9 @@ internal class Arsonist : SingleRoleBase<Arsonist>
             {
                 if (Local._douseTarget != null)
                 {
-                    ArsonistDouse(PlayerControl.LocalPlayer, Local._douseTarget.PlayerId);
+                    using RPCSender sender = new(PlayerControl.LocalPlayer.NetId, CustomRPC.ArsonistDouse);
+                    sender.Write(Local._douseTarget.PlayerId);
+                    RPCProcedure.ArsonistDouse(Local._douseTarget.PlayerId);
                 }
 
                 Local._douseTarget = null;
@@ -187,7 +189,8 @@ internal class Arsonist : SingleRoleBase<Arsonist>
                 {
                     return;
                 }
-                ArsonistWin(PlayerControl.LocalPlayer);
+                using RPCSender sender = new(PlayerControl.LocalPlayer.NetId, CustomRPC.ArsonistWin);
+                RPCProcedure.ArsonistWin();
             },
             () => PlayerControl.LocalPlayer.IsRole(RoleType.Arsonist) && Local._dousedEveryone && PlayerControl.LocalPlayer.IsAlive(),
             () =>
@@ -280,36 +283,6 @@ internal class Arsonist : SingleRoleBase<Arsonist>
             {
                 p.gameObject.SetActive(false);
             }
-        }
-    }
-
-    [MethodRpc((uint)CustomRPC.ArsonistDouse)]
-    internal static void ArsonistDouse(PlayerControl sender, byte playerId)
-    {
-        var arsonist = Instance;
-        if (arsonist == null)
-        {
-            return;
-        }
-        var target = Helpers.PlayerById(playerId);
-        if (target != null)
-        {
-            arsonist.DousedPlayers.Add(target);
-        }
-    }
-
-    [MethodRpc((uint)CustomRPC.ArsonistWin)]
-    internal static void ArsonistWin(PlayerControl sender)
-    {
-        TriggerArsonistWin = true;
-        foreach (var p in PlayerControl.AllPlayerControls.GetFastEnumerator())
-        {
-            if (p == null || !p.IsAlive() || p.IsRole(RoleType.Arsonist))
-            {
-                continue;
-            }
-            p.Exiled();
-            GameHistory.FinalStatuses[p.PlayerId] = FinalStatus.Torched;
         }
     }
 }

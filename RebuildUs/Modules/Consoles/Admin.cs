@@ -111,7 +111,9 @@ internal static class Admin
                 && MapSettings.RestrictAdminTime > 0f
                 && PlayerControl.LocalPlayer.IsAlive())
             {
-                UseAdminTime(PlayerControl.LocalPlayer, _adminTimer);
+                using RPCSender sender = new(PlayerControl.LocalPlayer.NetId, CustomRPC.UseAdminTime);
+                sender.Write(_adminTimer);
+                RPCProcedure.UseAdminTime(_adminTimer);
             }
         }
 
@@ -498,11 +500,5 @@ internal static class Admin
                 renderer.material = _defaultMat;
             }
         }
-    }
-
-    [MethodRpc((uint)CustomRPC.UseAdminTime)]
-    internal static void UseAdminTime(PlayerControl sender, float time)
-    {
-        MapSettings.RestrictAdminTime -= time;
     }
 }
