@@ -140,22 +140,26 @@ public partial class MainForm : Form
             BtnUninstall.Visible = true;
 
             // バージョン情報の取得
-            var dllVersion = GetInstalledModVersion();
-            var displayedVersion = !string.IsNullOrEmpty(LastInstalledVersion) ? LastInstalledVersion : (dllVersion != "Unknown" ? $"v{dllVersion} (DLL)" : "Unknown");
-            LblVersion.Text = "Installed Version: " + displayedVersion;
+            var currentVersion = GetInstalledModVersion();
+            LblVersion.Text = "Version: " + currentVersion;
 
             // コンボボックスで選択されているバージョンと、インストールされているバージョンを比較
             var needsUpdate = false;
             if (!string.IsNullOrEmpty(CmbVersions.Text))
             {
-                var currentVerStr = (!string.IsNullOrEmpty(LastInstalledVersion) ? LastInstalledVersion : dllVersion).TrimStart('v');
-                if (Version.TryParse(CmbVersions.Text.TrimStart('v'), out var selectedVer) && Version.TryParse(currentVerStr, out var installedVer))
+                if (!string.IsNullOrEmpty(LastInstalledVersion))
                 {
-                    needsUpdate = selectedVer > installedVer;
+                    needsUpdate = CmbVersions.Text != LastInstalledVersion;
+                }
+                else if (currentVersion != "Unknown")
+                {
+                    // lastInstalledVersion がない場合は、ファイルバージョンとタグ名を比較（'v'プレフィックスを無視）
+                    needsUpdate = CmbVersions.Text.TrimStart('v') != currentVersion.TrimStart('v');
                 }
                 else
                 {
-                    needsUpdate = CmbVersions.Text != LastInstalledVersion;
+                    // インストールはされているがバージョンが特定できない場合、選択されているものがあればアップデート可能とする
+                    needsUpdate = true;
                 }
             }
 
@@ -216,18 +220,7 @@ public partial class MainForm : Form
         if (Releases.Count > 0 && !string.IsNullOrEmpty(LastInstalledVersion))
         {
             var latest = Releases[0].TagName;
-            var notify = false;
-
-            if (Version.TryParse(latest.TrimStart('v'), out var latestVer) && Version.TryParse(LastInstalledVersion.TrimStart('v'), out var installedVer))
-            {
-                if (latestVer > installedVer) notify = true;
-            }
-            else if (latest != LastInstalledVersion)
-            {
-                notify = true;
-            }
-
-            if (notify)
+            if (latest != LastInstalledVersion)
             {
                 NotifyIcon.Visible = true;
                 NotifyIcon.ShowBalloonTip(5000, "Update Available", $"新しいバージョン {latest} が利用可能です。アップデートを推奨します。", ToolTipIcon.Info);
@@ -333,7 +326,16 @@ public partial class MainForm : Form
             // 1. ZIPのダウンロード
             LblStatus.Text = "Modをダウンロード中...";
             var tempZipPath = Path.Combine(Path.GetTempPath(), "rebuildus_download.zip");
-            await DownloadFileWithRetryAsync(downloadUrl, tempZipPath);
+            using (HttpClient client = new())
+            {
+                var response = await client.GetAsync(downloadUrl);
+                if (!response.IsSuccessStatusCode)
+                {
+                    MessageBox.Show($"指定されたバージョンのファイルが見つかりません。 (HTTP {response.StatusCode})\nURL: {downloadUrl}");
+                    return;
+                }
+                using (FileStream fs = new(tempZipPath, FileMode.Create)) await response.Content.CopyToAsync(fs);
+            }
 
             // 2. ファイルコピー
             LblStatus.Text = "インストール中... ファイルをコピーしています。";
@@ -365,7 +367,7 @@ public partial class MainForm : Form
         }
         catch (Exception ex)
         {
-            MessageBox.Show($"インストールの失敗:\nException: {ex.GetType().Name}\nMessage: {ex.Message}\nStackTrace: {ex.StackTrace}");
+            MessageBox.Show($"インストールの失敗: {ex.Message}");
             LblStatus.Text = "インストールに失敗しました。";
         }
         finally
@@ -395,7 +397,16 @@ public partial class MainForm : Form
             // 1. ZIPのダウンロード
             LblStatus.Text = "最新のModをダウンロード中...";
             var tempZipPath = Path.Combine(Path.GetTempPath(), "rebuildus_update.zip");
-            await DownloadFileWithRetryAsync(downloadUrl, tempZipPath);
+            using (HttpClient client = new())
+            {
+                var response = await client.GetAsync(downloadUrl);
+                if (!response.IsSuccessStatusCode)
+                {
+                    MessageBox.Show($"指定されたバージョンのファイルが見つかりません。 (HTTP {response.StatusCode})\nURL: {downloadUrl}");
+                    return;
+                }
+                using (FileStream fs = new(tempZipPath, FileMode.Create)) await response.Content.CopyToAsync(fs);
+            }
 
             // 2. Modの展開 (上書き)
             LblStatus.Text = "アップデート中... ファイルを更新しています。";
@@ -415,7 +426,7 @@ public partial class MainForm : Form
         }
         catch (Exception ex)
         {
-            MessageBox.Show($"アップデートの失敗:\nException: {ex.GetType().Name}\nMessage: {ex.Message}\nStackTrace: {ex.StackTrace}");
+            MessageBox.Show($"アップデートの失敗: {ex.Message}");
             LblStatus.Text = "アップデートに失敗しました。";
         }
         finally
@@ -605,35 +616,6 @@ public partial class MainForm : Form
         WindowState = FormWindowState.Normal;
         Activate();
         NotifyIcon.Visible = false;
-    }
-
-    private async Task DownloadFileWithRetryAsync(string url, string destinationPath)
-    {
-        var maxRetries = 3;
-        for (var i = 0; i < maxRetries; i++)
-        {
-            try
-            {
-                using HttpClient client = new();
-                using var response = await client.GetAsync(url, HttpCompletionOption.ResponseHeadersRead);
-                response.EnsureSuccessStatusCode();
-                using FileStream fs = new(destinationPath, FileMode.Create, FileAccess.Write, FileShare.None);
-                await response.Content.CopyToAsync(fs);
-                return;
-            }
-            catch (HttpRequestException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
-            {
-                throw new Exception($"File not found (HTTP 404)\nURL: {url}", ex);
-            }
-            catch (Exception ex)
-            {
-                if (i == maxRetries - 1)
-                {
-                    throw new Exception($"Failed to download after {maxRetries} retries: {ex.Message}", ex);
-                }
-                await Task.Delay(2000);
-            }
-        }
     }
 }
 
