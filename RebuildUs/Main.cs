@@ -57,7 +57,7 @@ public class RebuildUs : BasePlugin
 {
     private const string MOD_ID = "com.shota-sunada.rebuild-us";
     internal const string MOD_NAME = "Rebuild Us";
-    internal const string MOD_VERSION = "1.2.3";
+    internal const string MOD_VERSION = "1.9.9";
     internal const string MOD_DEVELOPER = "Shota Sunada";
 
     private const string REACTOR_GUID = "gg.reactor-sunada.api";
@@ -83,8 +83,8 @@ public class RebuildUs : BasePlugin
     internal static ConfigEntry<bool> TransparentMap { get; private set; }
     internal static ConfigEntry<bool> HideFakeTasks { get; private set; }
 
-    private static ConfigEntry<string> Ip { get; set; }
-    private static ConfigEntry<ushort> Port { get; set; }
+    internal static ConfigEntry<string> Ip { get; set; }
+    internal static ConfigEntry<ushort> Port { get; set; }
 
     internal static Random Rnd
     {
@@ -276,7 +276,7 @@ public class RebuildUs : BasePlugin
         }
     }
 
-    private static void UpdateRegions()
+    internal static void UpdateRegions()
     {
         var serverManager = FastDestroyableSingleton<ServerManager>.Instance;
 
