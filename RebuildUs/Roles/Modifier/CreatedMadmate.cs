@@ -92,7 +92,7 @@ internal class CreatedMadmate : ModifierBase<CreatedMadmate>
     {
         _suicideButton = new(() =>
             {
-                RPCProcedure.UncheckedMurderPlayer(PlayerControl.LocalPlayer, PlayerControl.LocalPlayer.PlayerId, PlayerControl.LocalPlayer.PlayerId, 1);
+                RPCProcedure.UncheckedMurderPlayer(PlayerControl.LocalPlayer.PlayerId, PlayerControl.LocalPlayer.PlayerId, 1);
             },
             () =>
             {
