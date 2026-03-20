@@ -21,8 +21,15 @@ internal static class PingTrackerPatch
                 .Append(RebuildUs.MOD_NAME)
                 .Append("</color> v")
                 .Append(RebuildUs.MOD_VERSION)
-                .Append('\n')
-                .Append(__instance.text.text);
+                .Append('\n');
+            if (CustomOptionHolder.DontFinishGame.GetBool())
+            {
+                PingStringBuilder
+                    .Append("<color=#FF0000>")
+                    .Append(Tr.Get(TrKey.DontFinishGameMode))
+                    .Append("</color>\n");
+            }
+            PingStringBuilder.Append(__instance.text.text);
             var newText = PingStringBuilder.ToString();
             if (__instance.text.text != newText)
             {
@@ -39,8 +46,15 @@ internal static class PingTrackerPatch
                 .Append(RebuildUs.MOD_VERSION)
                 .Append("\n<size=70%>By ")
                 .Append(RebuildUs.MOD_DEVELOPER)
-                .Append("</size>\n")
-                .Append(__instance.text.text);
+                .Append("</size>\n");
+            if (CustomOptionHolder.DontFinishGame.GetBool())
+            {
+                PingStringBuilder
+                    .Append("<color=#FF0000>")
+                    .Append(Tr.Get(TrKey.DontFinishGameMode))
+                    .Append("</color>\n");
+            }
+            PingStringBuilder.Append(__instance.text.text);
             var newText = PingStringBuilder.ToString();
             if (__instance.text.text != newText)
             {

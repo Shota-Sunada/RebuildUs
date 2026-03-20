@@ -46,8 +46,7 @@ internal static class CustomOptionHolder
 
         #region GAME OPTIONS
 
-        GameOptions = CustomOption.Normal(19, CustomOptionType.General, TrKey.GameOptions, true, header: gameOptionsHeader);
-        MaxNumberOfMeetings = CustomOption.Normal(20, CustomOptionType.General, TrKey.MaxNumberOfMeetings, 10, 0, 15, 1);
+        MaxNumberOfMeetings = CustomOption.Normal(20, CustomOptionType.General, TrKey.MaxNumberOfMeetings, 10, 0, 15, 1, header: gameOptionsHeader);
         BlockSkippingInEmergencyMeetings = CustomOption.Normal(21, CustomOptionType.General, TrKey.BlockSkippingInEmergencyMeetings, false);
         NoVoteIsSelfVote = CustomOption.Normal(22, CustomOptionType.General, TrKey.NoVoteIsSelfVote, false);
         HidePlayerNames = CustomOption.Normal(23, CustomOptionType.General, TrKey.HidePlayerNames, false);
@@ -63,6 +62,7 @@ internal static class CustomOptionHolder
         ImpostorCanIgnoreCommSabotage = CustomOption.Normal(33, CustomOptionType.General, TrKey.ImpostorCanIgnoreCommSabotage, false);
         // BlockSabotageFromDeadImpostors = CustomOption.Normal(34, CustomOptionType.General, "BlockSabotageFromDeadImpostors", false);
         // ShieldFirstKill = CustomOption.Normal(35, CustomOptionType.General, "ShieldFirstKill", false);
+        DontFinishGame = CustomOption.Normal(36, CustomOptionType.General, TrKey.DontFinishGame, false);
 
         AdditionalEmergencyCooldown = CustomOption.Normal(55, CustomOptionType.General, TrKey.AdditionalEmergencyCooldown, 0f, 0f, 15f, 1f);
         AdditionalEmergencyCooldownTime = CustomOption.Normal(56, CustomOptionType.General, TrKey.AdditionalEmergencyCooldownTime, 10f, 0f, 60f, 1f, AdditionalEmergencyCooldown);
@@ -449,6 +449,7 @@ internal static class CustomOptionHolder
     internal static CustomOption ImpostorCanIgnoreCommSabotage;
     // internal static CustomOption BlockSabotageFromDeadImpostors;
     // internal static CustomOption ShieldFirstKill;
+    internal static CustomOption DontFinishGame;
 
     internal static CustomOption AdditionalEmergencyCooldown;
     internal static CustomOption AdditionalEmergencyCooldownTime;
