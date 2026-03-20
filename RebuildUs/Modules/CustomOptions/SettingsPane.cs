@@ -111,35 +111,36 @@ internal partial class CustomOption
             if (option.Header != currentHeader)
             {
                 currentHeader = option.Header;
-                if (currentHeader != null)
+                if (currentHeader == null)
                 {
-                    if (i != 0)
-                    {
-                        num -= 0.85f;
-                    }
-
-                    if (i % 2 != 0)
-                    {
-                        singles++;
-                    }
-                    headers++; // for header
-
-                    var categoryHeaderMasked = UnityObject.Instantiate(__instance.categoryHeaderOrigin,
-                        __instance.settingsContainer,
-                        true);
-                    categoryHeaderMasked.SetHeader(StringNames.ImpostorsCategory, 61);
-                    categoryHeaderMasked.Title.text = currentHeader.GetTitleText();
-                    categoryHeaderMasked.Title.outlineColor = Color.white;
-                    categoryHeaderMasked.Title.outlineWidth = 0.1f;
-                    categoryHeaderMasked.transform.localScale = Vector3.one;
-                    categoryHeaderMasked.transform.localPosition = new(-9.77f, num, -2f);
-                    __instance.settingsInfo.Add(categoryHeaderMasked.gameObject);
-                    num -= 1.05f;
-                    i = 0;
+                    continue;
                 }
-            }
 
-            if (option.Parent != null
+                if (i != 0)
+                {
+                    num -= 0.85f;
+                }
+
+                if (i % 2 != 0)
+                {
+                    singles++;
+                }
+                headers++; // for header
+
+                var categoryHeaderMasked = UnityObject.Instantiate(__instance.categoryHeaderOrigin,
+                    __instance.settingsContainer,
+                    true);
+                categoryHeaderMasked.SetHeader(StringNames.ImpostorsCategory, 61);
+                categoryHeaderMasked.Title.text = currentHeader.GetTitleText();
+                categoryHeaderMasked.Title.outlineColor = Color.white;
+                categoryHeaderMasked.Title.outlineWidth = 0.1f;
+                categoryHeaderMasked.transform.localScale = Vector3.one;
+                categoryHeaderMasked.transform.localPosition = new(-9.77f, num, -2f);
+                __instance.settingsInfo.Add(categoryHeaderMasked.gameObject);
+                num -= 1.05f;
+                i = 0;
+            }
+            else if (option.Parent != null
                      && (option.Parent.GetSelectionIndex() == 0 || option.Parent.Parent != null && option.Parent.Parent.GetSelectionIndex() == 0))
             {
                 // Hides options, for which the parent is disabled!
