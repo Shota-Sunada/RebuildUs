@@ -1,176 +1,218 @@
-using Object = UnityEngine.Object;
-
 namespace RebuildUs.Roles.Neutral;
 
 [HarmonyPatch]
-public class Vulture : RoleBase<Vulture>
+[RegisterRole(RoleType.Vulture, RoleTeam.Neutral, typeof(SingleRoleBase<Vulture>), nameof(CustomOptionHolder.VultureSpawnRate))]
+internal class Vulture : SingleRoleBase<Vulture>
 {
-    public static Color NameColor = new Color32(139, 69, 19, byte.MaxValue);
+    internal static Color Color = new Color32(139, 69, 19, byte.MaxValue);
 
-    public static bool TriggerVultureWin;
+    internal static bool TriggerVultureWin;
 
-    public static CustomButton VultureEatButton;
-    public static TMP_Text VultureNumCorpsesText;
+    private static CustomButton _vultureEatButton;
+    private static TMP_Text _vultureNumCorpsesText;
+    private readonly List<Arrow> _localArrows;
     private float _timeUntilUpdate;
-    public int EatenBodies;
-    public List<Arrow> LocalArrows = [];
+    internal int EatenBodies;
 
     public Vulture()
     {
         // write value init here
         StaticRoleType = CurrentRoleType = RoleType.Vulture;
         EatenBodies = 0;
-        LocalArrows = [];
-    }
-
-    public override Color RoleColor
-    {
-        get => NameColor;
+        _localArrows = [];
     }
 
     // write configs here
-    public static float Cooldown
+    private static float Cooldown
     {
         get => CustomOptionHolder.VultureCooldown.GetFloat();
     }
 
-    public static int NumberToWin
+    internal static int NumberToWin
     {
         get => (int)CustomOptionHolder.VultureNumberToWin.GetFloat();
     }
 
-    public static bool CanUseVents
+    internal static bool CanUseVents
     {
         get => CustomOptionHolder.VultureCanUseVents.GetBool();
     }
 
-    public static bool ShowArrows
+    private static bool ShowArrows
     {
         get => CustomOptionHolder.VultureShowArrows.GetBool();
     }
 
-    public override void OnMeetingStart() { }
-    public override void OnMeetingEnd() { }
-    public override void OnIntroEnd() { }
-
-    public override void FixedUpdate()
+    [CustomEvent(CustomEventType.FixedUpdate)]
+    internal void FixedUpdate()
     {
-        if (LocalArrows == null || !ShowArrows) return;
+        if (_localArrows == null || !ShowArrows)
+        {
+            return;
+        }
 
         var local = Local;
-        if (local != null)
+        if (local == null)
         {
-            if (Player.IsDead())
+            return;
+        }
+        if (Player.IsDead())
+        {
+            foreach (var t in _localArrows)
             {
-                for (var i = 0; i < LocalArrows.Count; i++) Object.Destroy(LocalArrows[i].ArrowObject);
-                LocalArrows.Clear();
-                return;
+                UnityObject.Destroy(t.ArrowObject);
             }
 
-            _timeUntilUpdate -= Time.fixedDeltaTime;
-            if (_timeUntilUpdate > 0f) return;
-            _timeUntilUpdate = 0.25f;
+            _localArrows.Clear();
+            return;
+        }
 
-            DeadBody[] deadBodies = Object.FindObjectsOfType<DeadBody>();
-            var arrowUpdate = LocalArrows.Count != deadBodies.Length;
+        _timeUntilUpdate -= Time.fixedDeltaTime;
+        if (_timeUntilUpdate > 0f)
+        {
+            return;
+        }
+        _timeUntilUpdate = 0.25f;
 
+        DeadBody[] deadBodies = UnityObject.FindObjectsOfType<DeadBody>();
+        var arrowUpdate = _localArrows.Count != deadBodies.Length;
+
+        if (arrowUpdate)
+        {
+            foreach (var t in _localArrows)
+            {
+                UnityObject.Destroy(t.ArrowObject);
+            }
+
+            _localArrows.Clear();
+        }
+
+        for (var i = 0; i < deadBodies.Length; i++)
+        {
+            var db = deadBodies[i];
             if (arrowUpdate)
             {
-                for (var i = 0; i < LocalArrows.Count; i++) Object.Destroy(LocalArrows[i].ArrowObject);
-                LocalArrows.Clear();
+                _localArrows.Add(new(Color.blue));
+                _localArrows[i].ArrowObject.SetActive(true);
             }
 
-            for (var i = 0; i < deadBodies.Length; i++)
-            {
-                var db = deadBodies[i];
-                if (arrowUpdate)
-                {
-                    LocalArrows.Add(new(Color.blue));
-                    LocalArrows[i].ArrowObject.SetActive(true);
-                }
-
-                LocalArrows[i]?.Update(db.transform.position);
-            }
+            _localArrows[i]?.Update(db.transform.position);
         }
     }
 
-    public override void OnKill(PlayerControl target) { }
-    public override void OnDeath(PlayerControl killer = null) { }
-    public override void OnFinishShipStatusBegin() { }
-    public override void HandleDisconnect(PlayerControl player, DisconnectReasons reason) { }
 
-    public static void MakeButtons(HudManager hm)
+
+    [RegisterCustomButton]
+    internal static void MakeButtons(HudManager hm)
     {
-        VultureEatButton = new(() =>
-        {
-            var bodies = Object.FindObjectsOfType<DeadBody>();
-            var local = PlayerControl.LocalPlayer;
-            var truePosition = local.GetTruePosition();
-            var maxDist = local.MaxReportDistance;
-
-            for (var i = 0; i < bodies.Length; i++)
+        _vultureEatButton = new(() =>
             {
-                var body = bodies[i];
-                if (body == null || body.Reported) continue;
+                var bodies = UnityObject.FindObjectsOfType<DeadBody>();
+                var local = PlayerControl.LocalPlayer;
+                var truePosition = local.GetTruePosition();
+                var maxDist = local.MaxReportDistance;
 
-                var bodyPos = body.TruePosition;
-                if (Vector2.Distance(bodyPos, truePosition) <= maxDist && local.CanMove && !PhysicsHelpers.AnythingBetween(truePosition, bodyPos, Constants.ShipAndObjectsMask, false))
+                foreach (var body in bodies)
                 {
-                    var playerInfo = GameData.Instance.GetPlayerById(body.ParentId);
-                    if (playerInfo != null)
+                    if (body == null || body.Reported)
                     {
-                        using var sender = new RPCSender(local.NetId, CustomRPC.VultureEat);
-                        sender.Write(playerInfo.PlayerId);
-                        sender.Write(local.PlayerId);
-                        RPCProcedure.VultureEat(playerInfo.PlayerId, local.PlayerId);
+                        continue;
+                    }
 
-                        VultureEatButton.Timer = VultureEatButton.MaxTimer;
-                        break;
+                    var bodyPos = body.TruePosition;
+                    if (!(Vector2.Distance(bodyPos, truePosition) <= maxDist)
+                        || !local.CanMove
+                        || PhysicsHelpers.AnythingBetween(truePosition, bodyPos, Constants.ShipAndObjectsMask, false))
+                    {
+                        continue;
+                    }
+                    var playerInfo = GameData.Instance.GetPlayerById(body.ParentId);
+                    if (playerInfo == null)
+                    {
+                        continue;
+                    }
+                    VultureEat(local, playerInfo.PlayerId);
+
+                    _vultureEatButton.Timer = _vultureEatButton.MaxTimer;
+                    break;
+                }
+
+                if (Local.EatenBodies < NumberToWin)
+                {
+                    return;
+                }
+                VultureWin(PlayerControl.LocalPlayer);
+            },
+            () => PlayerControl.LocalPlayer.IsRole(RoleType.Vulture) && PlayerControl.LocalPlayer.IsAlive(),
+            () =>
+            {
+                _vultureNumCorpsesText?.text = string.Format(Tr.Get(TrKey.VultureCorpses), NumberToWin - Local.EatenBodies);
+                return hm.ReportButton.graphic.color == Palette.EnabledColor && PlayerControl.LocalPlayer.CanMove;
+            },
+            () =>
+            {
+                _vultureEatButton.Timer = _vultureEatButton.MaxTimer;
+            },
+            AssetLoader.VultureButton,
+            ButtonPosition.Layout,
+            hm,
+            hm.KillButton,
+            AbilitySlot.NeutralAbilityPrimary,
+            false,
+            Tr.Get(TrKey.VultureText));
+
+        _vultureNumCorpsesText = UnityObject.Instantiate(_vultureEatButton.ActionButton.cooldownTimerText,
+            _vultureEatButton.ActionButton.cooldownTimerText.transform.parent);
+        _vultureNumCorpsesText.text = "";
+        _vultureNumCorpsesText.enableWordWrapping = false;
+        _vultureNumCorpsesText.transform.localScale = Vector3.one * 0.5f;
+        _vultureNumCorpsesText.transform.localPosition += new Vector3(0.0f, 0.7f, 0);
+    }
+
+    [RegisterCustomButton]
+    internal static void SetButtonCooldowns()
+    {
+        _vultureEatButton.MaxTimer = Cooldown;
+    }
+
+    internal static void Clear()
+    {
+        TriggerVultureWin = false;
+
+        if (Instance is not null)
+        {
+            if (Instance._localArrows != null)
+            {
+                foreach (var arrow in Instance._localArrows)
+                {
+                    if (arrow?.ArrowObject != null)
+                    {
+                        UnityObject.Destroy(arrow.ArrowObject);
                     }
                 }
             }
 
-            if (Local.EatenBodies >= NumberToWin)
-            {
-                using var sender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.VultureWin);
-                RPCProcedure.VultureWin();
-            }
-        }, () => { return PlayerControl.LocalPlayer.IsRole(RoleType.Vulture) && PlayerControl.LocalPlayer.IsAlive(); }, () =>
-        {
-            VultureNumCorpsesText?.text = string.Format(Tr.Get(TrKey.VultureCorpses), NumberToWin - Local.EatenBodies);
-            return hm.ReportButton.graphic.color == Palette.EnabledColor && PlayerControl.LocalPlayer.CanMove;
-        }, () => { VultureEatButton.Timer = VultureEatButton.MaxTimer; }, AssetLoader.VultureButton, ButtonPosition.Layout, hm, hm.KillButton, AbilitySlot.NeutralAbilityPrimary, false, Tr.Get(TrKey.VultureText));
-
-        VultureNumCorpsesText = Object.Instantiate(VultureEatButton.ActionButton.cooldownTimerText, VultureEatButton.ActionButton.cooldownTimerText.transform.parent);
-        VultureNumCorpsesText.text = "";
-        VultureNumCorpsesText.enableWordWrapping = false;
-        VultureNumCorpsesText.transform.localScale = Vector3.one * 0.5f;
-        VultureNumCorpsesText.transform.localPosition += new Vector3(0.0f, 0.7f, 0);
-    }
-
-    public static void SetButtonCooldowns()
-    {
-        VultureEatButton.MaxTimer = Cooldown;
-    }
-
-    public static void Clear()
-    {
-        TriggerVultureWin = false;
-        for (var i = 0; i < Players.Count; i++)
-        {
-            var p = Players[i];
-            if (p.LocalArrows != null)
-            {
-                for (var j = 0; j < p.LocalArrows.Count; j++)
-                {
-                    var arrow = p.LocalArrows[j];
-                    if (arrow?.ArrowObject != null) Object.Destroy(arrow.ArrowObject);
-                }
-
-                p.LocalArrows.Clear();
-            }
+            Instance._localArrows?.Clear();
         }
 
-        Players.Clear();
+        ModRoleManager.RemoveRole(Instance);
+        Instance = null;
+    }
+
+    [MethodRpc((uint)CustomRPC.VultureEat)]
+    internal static void VultureEat(PlayerControl sender, byte playerId)
+    {
+        Cleaner.CleanBodyLocal(playerId);
+        var vulture = Instance;
+        if (vulture != null)
+        {
+            vulture.EatenBodies++;
+        }
+    }
+
+    [MethodRpc((uint)CustomRPC.VultureWin)]
+    internal static void VultureWin(PlayerControl sender)
+    {
+        TriggerVultureWin = true;
     }
 }

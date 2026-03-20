@@ -1,23 +1,24 @@
-using System.Linq.Expressions;
-
 namespace RebuildUs;
 
-public static class Il2CppHelpers
+internal static class Il2CppHelpers
 {
-    public static T CastFast<T>(this Il2CppObjectBase obj) where T : Il2CppObjectBase
+    internal static T CastFast<T>(this Il2CppObjectBase obj) where T : Il2CppObjectBase
     {
-        if (obj is T casted) return casted;
+        if (obj is T casted)
+        {
+            return casted;
+        }
         return obj.Pointer.CastFast<T>();
     }
 
-    public static T CastFast<T>(this IntPtr ptr) where T : Il2CppObjectBase
+    internal static T CastFast<T>(this IntPtr ptr) where T : Il2CppObjectBase
     {
-        return CastHelper<T>.CAST(ptr);
+        return CastHelper<T>.Cast(ptr);
     }
 
     private static class CastHelper<T> where T : Il2CppObjectBase
     {
-        public static readonly Func<IntPtr, T> CAST;
+        internal static readonly Func<IntPtr, T> Cast;
 
         static CastHelper()
         {
@@ -25,7 +26,7 @@ public static class Il2CppHelpers
             var ptr = Expression.Parameter(typeof(IntPtr));
             var create = Expression.New(constructor!, ptr);
             var lambda = Expression.Lambda<Func<IntPtr, T>>(create, ptr);
-            CAST = lambda.Compile();
+            Cast = lambda.Compile();
         }
     }
 }

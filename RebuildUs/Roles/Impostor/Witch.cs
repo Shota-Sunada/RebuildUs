@@ -1,15 +1,16 @@
 namespace RebuildUs.Roles.Impostor;
 
 [HarmonyPatch]
-public class Witch : RoleBase<Witch>
+[RegisterRole(RoleType.Witch, RoleTeam.Impostor, typeof(MultiRoleBase<Witch>), nameof(CustomOptionHolder.WitchSpawnRate))]
+internal class Witch : MultiRoleBase<Witch>
 {
-    public static Color NameColor = Palette.ImpostorRed;
+    internal static Color Color = Palette.ImpostorRed;
 
-    public static CustomButton WitchSpellButton;
+    internal static CustomButton WitchSpellButton;
 
-    public static List<PlayerControl> FutureSpelled = [];
-    public static PlayerControl CurrentTarget;
-    public static PlayerControl SpellCastingTarget;
+    internal static List<PlayerControl> FutureSpelled = [];
+    private static PlayerControl _currentTarget;
+    private static PlayerControl _spellCastingTarget;
 
     public Witch()
     {
@@ -17,57 +18,54 @@ public class Witch : RoleBase<Witch>
         StaticRoleType = CurrentRoleType = RoleType.Witch;
     }
 
-    public override Color RoleColor
-    {
-        get => NameColor;
-    }
-
     // write configs here
-    public static float Cooldown
+    private static float Cooldown
     {
         get => CustomOptionHolder.WitchCooldown.GetFloat();
     }
 
-    public static float AdditionalCooldown
+    private static float AdditionalCooldown
     {
         get => CustomOptionHolder.WitchAdditionalCooldown.GetFloat();
     }
 
-    public static bool CanSpellAnyone
+    private static bool CanSpellAnyone
     {
         get => CustomOptionHolder.WitchCanSpellAnyone.GetBool();
     }
 
-    public static float SpellCastingDuration
+    private static float SpellCastingDuration
     {
         get => CustomOptionHolder.WitchSpellCastingDuration.GetFloat();
     }
 
-    public static bool TriggerBothCooldowns
+    private static bool TriggerBothCooldowns
     {
         get => CustomOptionHolder.WitchTriggerBothCooldowns.GetBool();
     }
 
-    public static bool VoteSavesTargets
+    internal static bool VoteSavesTargets
     {
         get => CustomOptionHolder.WitchVoteSavesTargets.GetBool();
     }
 
-    public override void OnMeetingStart() { }
-    public override void OnMeetingEnd() { }
-    public override void OnIntroEnd() { }
-
-    public override void FixedUpdate()
+    [CustomEvent(CustomEventType.FixedUpdate)]
+    internal void FixedUpdate()
     {
         var local = Local;
-        if (local == null) return;
+        if (local == null)
+        {
+            return;
+        }
         List<PlayerControl> untargetables = [];
-        if (SpellCastingTarget != null)
+        if (_spellCastingTarget != null)
         {
             foreach (var p in PlayerControl.AllPlayerControls.GetFastEnumerator())
             {
-                if (p.PlayerId != SpellCastingTarget.PlayerId)
+                if (p.PlayerId != _spellCastingTarget.PlayerId)
+                {
                     untargetables.Add(p);
+                }
             }
         }
         else
@@ -75,88 +73,108 @@ public class Witch : RoleBase<Witch>
             // Also target players that have already been spelled, to hide spells that were blanks/blocked by shields
             if (Spy.Exists && !CanSpellAnyone)
             {
-                var spyPlayers = Spy.AllPlayers;
-                for (var i = 0; i < spyPlayers.Count; i++) untargetables.Add(spyPlayers[i]);
+                untargetables.Add(Spy.PlayerControl);
             }
 
-            var sidekickPlayers = Sidekick.Players;
-            for (var i = 0; i < sidekickPlayers.Count; i++)
+            if (Sidekick.Exists && Sidekick.Instance.WasTeamRed && !CanSpellAnyone)
             {
-                var sidekick = sidekickPlayers[i];
-                if (sidekick.WasTeamRed && !CanSpellAnyone) untargetables.Add(sidekick.Player);
+                untargetables.Add(Sidekick.PlayerControl);
             }
 
-            var jackalPlayers = Jackal.Players;
-            for (var i = 0; i < jackalPlayers.Count; i++)
+            if (Jackal.Exists && Jackal.Instance.WasTeamRed && !CanSpellAnyone)
             {
-                var jackal = jackalPlayers[i];
-                if (jackal.WasTeamRed && !CanSpellAnyone) untargetables.Add(jackal.Player);
+                untargetables.Add(Jackal.PlayerControl);
             }
         }
 
-        CurrentTarget = Helpers.SetTarget(!CanSpellAnyone, untargetablePlayers: untargetables);
-        Helpers.SetPlayerOutline(CurrentTarget, RoleColor);
+        _currentTarget = Helpers.SetTarget(!CanSpellAnyone, untargetablePlayers: untargetables);
+        Helpers.SetPlayerOutline(_currentTarget, RoleColor);
     }
 
-    public override void OnKill(PlayerControl target)
+    [CustomEvent(CustomEventType.OnKill)]
+    internal void OnKill(PlayerControl target)
     {
-        if (TriggerBothCooldowns && PlayerControl.LocalPlayer.IsRole(RoleType.Witch) && WitchSpellButton != null) WitchSpellButton.Timer = WitchSpellButton.MaxTimer;
-    }
-
-    public override void OnDeath(PlayerControl killer = null) { }
-    public override void OnFinishShipStatusBegin() { }
-    public override void HandleDisconnect(PlayerControl player, DisconnectReasons reason) { }
-
-    public static void MakeButtons(HudManager hm)
-    {
-        WitchSpellButton = new(() =>
-        {
-            if (CurrentTarget != null) SpellCastingTarget = CurrentTarget;
-        }, () => { return PlayerControl.LocalPlayer.IsRole(RoleType.Witch) && PlayerControl.LocalPlayer.IsAlive(); }, () =>
-        {
-            if (WitchSpellButton.IsEffectActive && SpellCastingTarget != CurrentTarget)
-            {
-                SpellCastingTarget = null;
-                WitchSpellButton.Timer = 0f;
-                WitchSpellButton.IsEffectActive = false;
-            }
-
-            return PlayerControl.LocalPlayer.CanMove && CurrentTarget != null;
-        }, () =>
+        if (TriggerBothCooldowns && PlayerControl.LocalPlayer.IsRole(RoleType.Witch) && WitchSpellButton != null)
         {
             WitchSpellButton.Timer = WitchSpellButton.MaxTimer;
-            WitchSpellButton.IsEffectActive = false;
-            SpellCastingTarget = null;
-        }, AssetLoader.SpellButton, ButtonPosition.Layout, hm, hm.KillButton, AbilitySlot.ImpostorAbilityPrimary, true, SpellCastingDuration, () =>
-        {
-            if (SpellCastingTarget == null) return;
-
-            KillAnimationPatch.AvoidNextKillMovement = true;
-
-            var attempt = Helpers.CheckMurderAttempt(Local.Player, SpellCastingTarget);
-            if (attempt == MurderAttemptResult.PerformKill)
-            {
-                {
-                    using var sender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.SetFutureSpelled);
-                    sender.Write(CurrentTarget.PlayerId);
-                }
-                RPCProcedure.SetFutureSpelled(CurrentTarget.PlayerId);
-            }
-
-            if (attempt is MurderAttemptResult.BlankKill or MurderAttemptResult.PerformKill)
-            {
-                WitchSpellButton.MaxTimer += AdditionalCooldown;
-                WitchSpellButton.Timer = WitchSpellButton.MaxTimer;
-                if (TriggerBothCooldowns) Local.Player.killTimer = Helpers.GetOption(FloatOptionNames.KillCooldown);
-            }
-            else
-                WitchSpellButton.Timer = 0f;
-
-            SpellCastingTarget = null;
-        }, false, Tr.Get(TrKey.WitchText));
+        }
     }
 
-    public static void SetButtonCooldowns()
+
+
+    [RegisterCustomButton]
+    internal static void MakeButtons(HudManager hm)
+    {
+        WitchSpellButton = new(() =>
+            {
+                if (_currentTarget != null)
+                {
+                    _spellCastingTarget = _currentTarget;
+                }
+            },
+            () => PlayerControl.LocalPlayer.IsRole(RoleType.Witch) && PlayerControl.LocalPlayer.IsAlive(),
+            () =>
+            {
+                if (!WitchSpellButton.IsEffectActive || _spellCastingTarget == _currentTarget)
+                {
+                    return PlayerControl.LocalPlayer.CanMove && _currentTarget != null;
+                }
+                _spellCastingTarget = null;
+                WitchSpellButton.Timer = 0f;
+                WitchSpellButton.IsEffectActive = false;
+
+                return PlayerControl.LocalPlayer.CanMove && _currentTarget != null;
+            },
+            () =>
+            {
+                WitchSpellButton.Timer = WitchSpellButton.MaxTimer;
+                WitchSpellButton.IsEffectActive = false;
+                _spellCastingTarget = null;
+            },
+            AssetLoader.SpellButton,
+            ButtonPosition.Layout,
+            hm,
+            hm.KillButton,
+            AbilitySlot.ImpostorAbilityPrimary,
+            true,
+            SpellCastingDuration,
+            () =>
+            {
+                if (_spellCastingTarget == null)
+                {
+                    return;
+                }
+
+                KillAnimationPatch.AvoidNextKillMovement = true;
+
+                var attempt = Helpers.CheckMurderAttempt(Local.Player, _spellCastingTarget);
+                if (attempt == MurderAttemptResult.PerformKill)
+                {
+                    SetFutureSpelled(PlayerControl.LocalPlayer, _currentTarget.PlayerId);
+                }
+
+                if (attempt is MurderAttemptResult.BlankKill or MurderAttemptResult.PerformKill)
+                {
+                    WitchSpellButton.MaxTimer += AdditionalCooldown;
+                    WitchSpellButton.Timer = WitchSpellButton.MaxTimer;
+                    if (TriggerBothCooldowns)
+                    {
+                        Local.Player.killTimer = FloatOptionNames.KillCooldown.Get();
+                    }
+                }
+                else
+                {
+                    WitchSpellButton.Timer = 0f;
+                }
+
+                _spellCastingTarget = null;
+            },
+            false,
+            Tr.Get(TrKey.WitchText));
+    }
+
+    [RegisterCustomButton]
+    internal static void SetButtonCooldowns()
     {
         WitchSpellButton.MaxTimer = Cooldown;
         WitchSpellButton.EffectDuration = SpellCastingDuration;
@@ -164,12 +182,30 @@ public class Witch : RoleBase<Witch>
 
     // write functions here
 
-    public static void Clear()
+    internal static void Clear()
     {
         // reset configs here
         Players.Clear();
         FutureSpelled = [];
-        CurrentTarget = null;
-        SpellCastingTarget = null;
+        _currentTarget = null;
+        _spellCastingTarget = null;
+    }
+
+    [MethodRpc((uint)CustomRPC.SetFutureSpelled)]
+    internal static void SetFutureSpelled(PlayerControl sender, byte playerId)
+    {
+        var player = Helpers.PlayerById(playerId);
+        FutureSpelled ??= [];
+        if (player != null)
+        {
+            FutureSpelled.Add(player);
+        }
+    }
+
+    [MethodRpc((uint)CustomRPC.WitchSpellCast)]
+    internal static void WitchSpellCast(PlayerControl sender, byte playerId)
+    {
+        RPCProcedure.ExilePlayerLocal(playerId);
+        GameHistory.FinalStatuses[playerId] = FinalStatus.Spelled;
     }
 }

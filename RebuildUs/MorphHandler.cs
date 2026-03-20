@@ -1,20 +1,21 @@
 using System.Diagnostics;
+using PowerTools;
 
 namespace RebuildUs;
 
-public static class MorphHandler
+internal static class MorphHandler
 {
-    public static void MorphToPlayer(this PlayerControl pc, PlayerControl target)
+    internal static void MorphToPlayer(this PlayerControl pc, PlayerControl target)
     {
         pc.SetOutfit(target.Data.DefaultOutfit, target.Visible);
     }
 
-    public static void SetOutfit(this PlayerControl morphing, NetworkedPlayerInfo.PlayerOutfit outfit, bool visible = true)
+    internal static void SetOutfit(this PlayerControl morphing, NetworkedPlayerInfo.PlayerOutfit outfit, bool visible = true)
     {
 #if DEBUG
         StackFrame stack1 = new(1);
         StackFrame stack2 = new(2);
-        Logger.LogInfo($"{morphing?.GetNameWithRole()} => {outfit?.PlayerName} at {stack1.GetMethod().Name} at {stack2.GetMethod().Name}", "setOutfit");
+        Logger.LogInfo($"{morphing?.GetNameWithRole()} => {outfit?.PlayerName} at {stack1.GetMethod()?.Name} at {stack2.GetMethod()?.Name}", "setOutfit");
 #endif
 
         morphing.Data.Outfits[PlayerOutfitType.Shapeshifted] = outfit;
@@ -61,7 +62,7 @@ public static class MorphHandler
         morphing.RawSetPet(outfit.PetId, outfit.ColorId);
     }
 
-    public static void ResetMorph(this PlayerControl pc)
+    internal static void ResetMorph(this PlayerControl pc)
     {
         pc.MorphToPlayer(pc);
         // Munou.reMorph(pc.PlayerId);

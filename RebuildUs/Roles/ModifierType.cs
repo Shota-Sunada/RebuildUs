@@ -1,6 +1,6 @@
 namespace RebuildUs.Roles;
 
-public enum ModifierType : byte
+internal enum ModifierType : byte
 {
     Madmate = 0,
     CreatedMadmate,

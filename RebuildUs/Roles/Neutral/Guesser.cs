@@ -1,85 +1,169 @@
+using Assets.CoreScripts;
+
 namespace RebuildUs.Roles.Neutral;
 
-public static class Guesser
+internal static class Guesser
 {
-    public static int RemainingShotsNiceGuesser;
-    public static int RemainingShotsEvilGuesser;
+    private static int _remainingShotsNiceGuesser;
+    private static int _remainingShotsEvilGuesser;
 
-    public static bool OnlyAvailableRoles
+    internal static bool OnlyAvailableRoles
     {
         get => CustomOptionHolder.GuesserOnlyAvailableRoles.GetBool();
     }
 
-    public static bool HasMultipleShotsPerMeeting
+    internal static bool HasMultipleShotsPerMeeting
     {
         get => CustomOptionHolder.GuesserHasMultipleShotsPerMeeting.GetBool();
     }
 
-    public static bool ShowInfoInGhostChat
+    internal static bool ShowInfoInGhostChat
     {
         get => CustomOptionHolder.GuesserShowInfoInGhostChat.GetBool();
     }
 
-    public static bool KillsThroughShield
+    internal static bool KillsThroughShield
     {
         get => CustomOptionHolder.GuesserKillsThroughShield.GetBool();
     }
 
-    public static bool EvilCanKillSpy
+    internal static bool EvilCanKillSpy
     {
         get => CustomOptionHolder.GuesserEvilCanKillSpy.GetBool();
     }
 
-    public static void ClearAndReload()
+    internal static void ClearAndReload()
     {
-        RemainingShotsNiceGuesser = Mathf.RoundToInt(CustomOptionHolder.GuesserNumberOfShots.GetFloat());
-        RemainingShotsEvilGuesser = Mathf.RoundToInt(CustomOptionHolder.GuesserNumberOfShots.GetFloat());
+        _remainingShotsNiceGuesser = Mathf.RoundToInt(CustomOptionHolder.GuesserNumberOfShots.GetFloat());
+        _remainingShotsEvilGuesser = Mathf.RoundToInt(CustomOptionHolder.GuesserNumberOfShots.GetFloat());
         NiceGuesser.Clear();
         EvilGuesser.Clear();
     }
 
-    public static bool IsGuesser(byte playerId)
+    internal static bool IsGuesser(byte playerId)
     {
-        if (!EvilGuesser.Exists && !NiceGuesser.Exists) return false;
+        if (!EvilGuesser.Exists && !NiceGuesser.Exists)
+        {
+            return false;
+        }
 
         var player = Helpers.PlayerById(playerId);
         return player.IsRole(RoleType.EvilGuesser) || player.IsRole(RoleType.NiceGuesser);
     }
 
-    public static int RemainingShots(PlayerControl player, bool shoot = false)
+    internal static int RemainingShots(PlayerControl player, bool shoot = false)
     {
         var remainingShots = 0;
         if (player.IsRole(RoleType.NiceGuesser))
         {
-            remainingShots = RemainingShotsNiceGuesser;
-            if (shoot) RemainingShotsNiceGuesser = Mathf.Max(0, RemainingShotsNiceGuesser - 1);
+            remainingShots = _remainingShotsNiceGuesser;
+            if (shoot)
+            {
+                _remainingShotsNiceGuesser = Mathf.Max(0, _remainingShotsNiceGuesser - 1);
+            }
         }
         else if (player.IsRole(RoleType.EvilGuesser))
         {
-            remainingShots = RemainingShotsEvilGuesser;
-            if (player.HasModifier(ModifierType.LastImpostor) && LastImpostor.CanGuess()) remainingShots += LastImpostor.RemainingShots;
-            if (shoot)
+            remainingShots = _remainingShotsEvilGuesser;
+            if (player.HasModifier(ModifierType.LastImpostor) && LastImpostor.CanGuess())
             {
-                // ラストインポスターの弾数を優先的に消費させる
-                if (player.HasModifier(ModifierType.LastImpostor) && LastImpostor.CanGuess())
-                    LastImpostor.RemainingShots = Mathf.Max(0, LastImpostor.RemainingShots - 1);
-                else
-                    RemainingShotsEvilGuesser = Mathf.Max(0, RemainingShotsEvilGuesser - 1);
+                remainingShots += LastImpostor.RemainingShots;
+            }
+
+            if (!shoot)
+            {
+                return remainingShots;
+            }
+            // ラストインポスターの弾数を優先的に消費させる
+            if (player.HasModifier(ModifierType.LastImpostor) && LastImpostor.CanGuess())
+            {
+                LastImpostor.RemainingShots = Mathf.Max(0, LastImpostor.RemainingShots - 1);
+            }
+            else
+            {
+                _remainingShotsEvilGuesser = Mathf.Max(0, _remainingShotsEvilGuesser - 1);
             }
         }
         else if (player.HasModifier(ModifierType.LastImpostor) && LastImpostor.CanGuess())
         {
             remainingShots = LastImpostor.RemainingShots;
-            if (shoot) LastImpostor.RemainingShots = Mathf.Max(0, LastImpostor.RemainingShots - 1);
+            if (shoot)
+            {
+                LastImpostor.RemainingShots = Mathf.Max(0, LastImpostor.RemainingShots - 1);
+            }
         }
 
         return remainingShots;
     }
 
-    [HarmonyPatch]
-    public class NiceGuesser : RoleBase<NiceGuesser>
+    [MethodRpc((uint)CustomRPC.GuesserShoot)]
+    internal static void GuesserShoot(PlayerControl sender, byte killerId, byte dyingTargetId, byte guessedTargetId, byte guessedRoleType)
     {
-        public static Color NameColor = new Color32(255, 255, 0, byte.MaxValue);
+        var killer = Helpers.PlayerById(killerId);
+        var dyingTarget = Helpers.PlayerById(dyingTargetId);
+        if (dyingTarget == null)
+        {
+            return;
+        }
+        dyingTarget.Exiled();
+        var dyingLoverPartner = Lovers.BothDie ? dyingTarget.GetPartner() : null; // Lover check
+
+        if (killer != null)
+        {
+            RemainingShots(killer, true);
+        }
+
+        if (Constants.ShouldPlaySfx())
+        {
+            SoundManager.Instance.PlaySound(dyingTarget.KillSfx, false, 0.8f);
+        }
+
+        if (FastDestroyableSingleton<HudManager>.Instance != null && killer != null)
+        {
+            if (PlayerControl.LocalPlayer == dyingTarget)
+            {
+                FastDestroyableSingleton<HudManager>.Instance.KillOverlay.ShowKillAnimation(killer.Data, dyingTarget.Data);
+            }
+            else if (dyingLoverPartner != null && PlayerControl.LocalPlayer == dyingLoverPartner)
+            {
+                FastDestroyableSingleton<HudManager>.Instance.KillOverlay.ShowKillAnimation(dyingLoverPartner.Data, dyingLoverPartner.Data);
+            }
+        }
+
+        var guessedTarget = Helpers.PlayerById(guessedTargetId);
+        if (ShowInfoInGhostChat && PlayerControl.LocalPlayer.Data.IsDead && guessedTarget != null)
+        {
+            RoleInfo roleInfo = null;
+            foreach (var r in RoleInfo.AllRoleInfos)
+            {
+                if ((byte)r.RoleType == guessedRoleType)
+                {
+                    roleInfo = r;
+                    break;
+                }
+            }
+
+            if (roleInfo == null)
+            {
+                return;
+            }
+            var msg = string.Format(Tr.Get(TrKey.GuesserGuessChat), roleInfo.Name, guessedTarget.Data.PlayerName);
+            if (AmongUsClient.Instance.AmClient && FastDestroyableSingleton<HudManager>.Instance)
+            {
+                FastDestroyableSingleton<HudManager>.Instance.Chat.AddChat(killer, msg);
+            }
+
+            if (msg.Contains("who", StringComparison.OrdinalIgnoreCase))
+            {
+                FastDestroyableSingleton<UnityTelemetry>.Instance.SendWho();
+            }
+        }
+    }
+
+    [HarmonyPatch]
+    internal class NiceGuesser : SingleRoleBase<NiceGuesser>
+    {
+        internal static Color Color = new Color32(255, 255, 0, byte.MaxValue);
 
         // write configs here
 
@@ -89,33 +173,20 @@ public static class Guesser
             StaticRoleType = CurrentRoleType = RoleType.NiceGuesser;
         }
 
-        public override Color RoleColor
-        {
-            get => NameColor;
-        }
-
-        public override void OnMeetingStart() { }
-        public override void OnMeetingEnd() { }
-        public override void OnIntroEnd() { }
-        public override void FixedUpdate() { }
-        public override void OnKill(PlayerControl target) { }
-        public override void OnDeath(PlayerControl killer = null) { }
-        public override void OnFinishShipStatusBegin() { }
-        public override void HandleDisconnect(PlayerControl player, DisconnectReasons reason) { }
-
         // write functions here
 
-        public static void Clear()
+        internal static void Clear()
         {
-            // reset configs here
-            Players.Clear();
+            ModRoleManager.RemoveRole(Instance);
+            Instance = null;
         }
     }
 
     [HarmonyPatch]
-    public class EvilGuesser : RoleBase<EvilGuesser>
+    [RegisterRole(RoleType.EvilGuesser, RoleTeam.Impostor, typeof(SingleRoleBase<EvilGuesser>), nameof(CustomOptionHolder.GuesserSpawnRate))]
+    internal class EvilGuesser : SingleRoleBase<EvilGuesser>
     {
-        public static Color NameColor = Palette.ImpostorRed;
+        internal static Color Color = Palette.ImpostorRed;
 
         // write configs here
 
@@ -125,26 +196,12 @@ public static class Guesser
             StaticRoleType = CurrentRoleType = RoleType.EvilGuesser;
         }
 
-        public override Color RoleColor
-        {
-            get => NameColor;
-        }
-
-        public override void OnMeetingStart() { }
-        public override void OnMeetingEnd() { }
-        public override void OnIntroEnd() { }
-        public override void FixedUpdate() { }
-        public override void OnKill(PlayerControl target) { }
-        public override void OnDeath(PlayerControl killer = null) { }
-        public override void OnFinishShipStatusBegin() { }
-        public override void HandleDisconnect(PlayerControl player, DisconnectReasons reason) { }
-
         // write functions here
 
-        public static void Clear()
+        internal static void Clear()
         {
-            // reset configs here
-            Players.Clear();
+            ModRoleManager.RemoveRole(Instance);
+            Instance = null;
         }
     }
 }

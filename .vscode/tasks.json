@@ -17,8 +17,16 @@
   "problemMatcher": [],
   "tasks": [
     {
-      "label": "Build RebuildUs.Impostor",
-      "command": "powershell -ExecutionPolicy Bypass .\\build-impostor.ps1",
+      "label": "Build Impostor Debug",
+      "command": "dotnet build RebuildUs.Impostor/RebuildUs.Impostor.csproj -c Debug",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      }
+    },
+    {
+      "label": "Build Impostor Release",
+      "command": "dotnet build RebuildUs.Impostor/RebuildUs.Impostor.csproj -c Release",
       "group": {
         "kind": "build",
         "isDefault": true
@@ -26,7 +34,7 @@
     },
     {
       "label": "Build Launcher",
-      "command": "powershell -ExecutionPolicy Bypass .\\build-launcher.ps1",
+      "command": "dotnet cake build.cake --target=BuildLauncher",
       "group": {
         "kind": "build",
         "isDefault": true
@@ -34,7 +42,7 @@
     },
     {
       "label": "Build Debug",
-      "command": "powershell -ExecutionPolicy Bypass .\\build-debug.ps1",
+      "command": "dotnet cake build.cake --target=BuildDebug",
       "group": {
         "kind": "build",
         "isDefault": true
@@ -42,7 +50,7 @@
     },
     {
       "label": "Build Relase",
-      "command": "powershell -ExecutionPolicy Bypass .\\build-release.ps1",
+      "command": "dotnet cake build.cake --target=BuildRelease",
       "group": {
         "kind": "build",
         "isDefault": true
@@ -66,7 +74,7 @@
     },
     {
       "label": "Taskkill",
-      "command": "powershell -ExecutionPolicy Bypass .\\taskkill.ps1",
+      "command": "dotnet cake build.cake --target=Taskkill",
       "group": {
         "kind": "build",
         "isDefault": true
@@ -74,7 +82,7 @@
     },
     {
       "label": "BepInEx Updater Publish",
-      "command": "powershell -ExecutionPolicy Bypass .\\updater-publish.ps1",
+      "command": "dotnet cake build.cake --target=PublishUpdater",
       "group": {
         "kind": "build",
         "isDefault": true
@@ -82,7 +90,7 @@
     },
     {
       "label": "Generate Release Zip",
-      "command": "powershell -ExecutionPolicy Bypass .\\generate-release.ps1",
+      "command": "dotnet cake build.cake --target=GenerateRelease --modVersion=${input:releaseVersion}",
       "group": {
         "kind": "build",
         "isDefault": true
@@ -90,23 +98,7 @@
     },
     {
       "label": "Start Debug",
-      "command": "powershell -ExecutionPolicy Bypass .\\start-debug.ps1",
-      "group": {
-        "kind": "build",
-        "isDefault": true
-      }
-    },
-    {
-      "label": "Start Debug 2",
-      "command": "powershell -ExecutionPolicy Bypass .\\start-debug-2.ps1",
-      "group": {
-        "kind": "build",
-        "isDefault": true
-      }
-    },
-    {
-      "label": "Start Debug 4",
-      "command": "powershell -ExecutionPolicy Bypass .\\start-debug-4.ps1",
+      "command": "dotnet cake build.cake --target=StartDebug",
       "group": {
         "kind": "build",
         "isDefault": true
@@ -114,7 +106,7 @@
     },
     {
       "label": "Boot AmongUs",
-      "command": "powershell -ExecutionPolicy Bypass .\\start-debug-boot.ps1",
+      "command": "dotnet cake build.cake --target=StartDebugBoot",
       "group": {
         "kind": "build",
         "isDefault": true
@@ -122,7 +114,7 @@
     },
     {
       "label": "Format",
-      "command": "dotnet format RebuildUs.sln",
+      "command": "dotnet cake build.cake --target=FormatCode",
       "group": {
         "kind": "build",
         "isDefault": true
@@ -130,15 +122,7 @@
     },
     {
       "label": "Format Translation Json",
-      "command": "powershell -ExecutionPolicy Bypass .\\format-translations.ps1",
-      "group": {
-        "kind": "build",
-        "isDefault": true
-      }
-    },
-    {
-      "label": "Run Refactor Tool",
-      "command": "dotnet run --project RefactorTool/RefactorTool.csproj -- RebuildUs.sln",
+      "command": "dotnet cake build.cake --target=FormatTranslations",
       "group": {
         "kind": "build",
         "isDefault": true
@@ -146,13 +130,7 @@
     },
     {
       "label": "Build Reactor Debug",
-      "command": "powershell",
-      "args": [
-        "-File",
-        "build-reactor.ps1",
-        "-Configuration",
-        "Debug"
-      ],
+      "command": "dotnet cake build.cake --target=BuildReactor",
       "group": {
         "kind": "build",
         "isDefault": true
@@ -160,13 +138,7 @@
     },
     {
       "label": "Build Reactor Release",
-      "command": "powershell",
-      "args": [
-        "-File",
-        "build-reactor.ps1",
-        "-Configuration",
-        "Release"
-      ],
+      "command": "dotnet cake build.cake --target=BuildReactor",
       "group": {
         "kind": "build",
         "isDefault": true
@@ -174,13 +146,7 @@
     },
     {
       "label": "Build Submerged Debug",
-      "command": "powershell",
-      "args": [
-        "-File",
-        "build-submerged.ps1",
-        "-Configuration",
-        "Debug"
-      ],
+      "command": "dotnet cake build.cake --target=BuildSubmerged --configuration=Debug",
       "group": {
         "kind": "build",
         "isDefault": true
@@ -188,17 +154,19 @@
     },
     {
       "label": "Build Submerged Release",
-      "command": "powershell",
-      "args": [
-        "-File",
-        "build-submerged.ps1",
-        "-Configuration",
-        "Release"
-      ],
+      "command": "dotnet cake build.cake --target=BuildSubmerged --configuration=Release",
       "group": {
         "kind": "build",
         "isDefault": true
       }
+    }
+  ],
+  "inputs": [
+    {
+      "id": "releaseVersion",
+      "type": "promptString",
+      "description": "Enter the version for the release (e.g., 1.2.3):",
+      "default": "1.0.0"
     }
   ]
 }

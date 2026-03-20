@@ -1,35 +1,32 @@
-using UnityEngine.AddressableAssets;
-using UnityEngine.ResourceManagement.AsyncOperations;
-
 namespace RebuildUs.Objects;
 
-public class MapData
+internal abstract class MapData
 {
-    public static ShipStatus AirShip;
-    public static ShipStatus SkeldShip;
-    public static ShipStatus MiraHq;
-    public static ShipStatus PolusShip;
+    private static ShipStatus _airShip;
+    private static ShipStatus _skeldShip;
+    private static ShipStatus _miraHq;
+    internal static ShipStatus PolusShip;
 
-    public static void LoadAssets(AmongUsClient __instance)
+    internal static void LoadAssets(AmongUsClient __instance)
     {
         AssetReference assetReference;
         AsyncOperationHandle<GameObject> asset;
         // Skeld
-        if (!SkeldShip)
+        if (!_skeldShip)
         {
             assetReference = __instance.ShipPrefabs[0];
             asset = assetReference.LoadAsset<GameObject>();
             asset.WaitForCompletion();
-            SkeldShip = assetReference.Asset.Cast<GameObject>().GetComponent<ShipStatus>();
+            _skeldShip = assetReference.Asset.CastFast<GameObject>().GetComponent<ShipStatus>();
         }
 
         // Mira
-        if (!MiraHq)
+        if (!_miraHq)
         {
             assetReference = __instance.ShipPrefabs[1];
             asset = assetReference.LoadAsset<GameObject>();
             asset.WaitForCompletion();
-            MiraHq = assetReference.Asset.Cast<GameObject>().GetComponent<ShipStatus>();
+            _miraHq = assetReference.Asset.CastFast<GameObject>().GetComponent<ShipStatus>();
         }
 
         // Polus
@@ -38,16 +35,16 @@ public class MapData
             assetReference = __instance.ShipPrefabs[2];
             asset = assetReference.LoadAsset<GameObject>();
             asset.WaitForCompletion();
-            PolusShip = assetReference.Asset.Cast<GameObject>().GetComponent<ShipStatus>();
+            PolusShip = assetReference.Asset.CastFast<GameObject>().GetComponent<ShipStatus>();
         }
 
         // AirShip
-        if (!AirShip)
+        if (!_airShip)
         {
             assetReference = __instance.ShipPrefabs[4];
             asset = assetReference.LoadAsset<GameObject>();
             asset.WaitForCompletion();
-            AirShip = assetReference.Asset.Cast<GameObject>().GetComponent<ShipStatus>();
+            _airShip = assetReference.Asset.CastFast<GameObject>().GetComponent<ShipStatus>();
         }
     }
 }

@@ -1,7 +1,7 @@
 namespace RebuildUs.Patches;
 
 [HarmonyPatch]
-public static class CounterAreaPatch
+internal static class CounterAreaPatch
 {
     [HarmonyPostfix]
     [HarmonyPatch(typeof(CounterArea), nameof(CounterArea.UpdateCount))]

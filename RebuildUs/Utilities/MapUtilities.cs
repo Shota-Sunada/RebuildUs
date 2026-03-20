@@ -1,45 +1,55 @@
-using Object = UnityEngine.Object;
-
 namespace RebuildUs.Utilities;
 
-public static class MapUtilities
+internal static class MapUtilities
 {
-    private static readonly Dictionary<SystemTypes, Object> SYSTEMS = [];
+    private static readonly Dictionary<SystemTypes, UnityObject> PrivateSystems = [];
     internal static ShipStatus CachedShipStatus { get; private set; } = ShipStatus.Instance;
 
-    internal static Dictionary<SystemTypes, Object> Systems
+    internal static Dictionary<SystemTypes, UnityObject> Systems
     {
         get
         {
-            if (SYSTEMS.Count == 0) GetSystems();
-            return SYSTEMS;
+            if (PrivateSystems.Count == 0)
+            {
+                GetSystems();
+            }
+            return PrivateSystems;
         }
     }
 
     private static void MapDestroyed()
     {
         CachedShipStatus = ShipStatus.Instance;
-        SYSTEMS.Clear();
+        PrivateSystems.Clear();
     }
 
     private static void GetSystems()
     {
-        if (!CachedShipStatus) return;
+        if (!CachedShipStatus)
+        {
+            return;
+        }
 
         var systems = CachedShipStatus.Systems;
-        if (systems.Count <= 0) return;
+        if (systems.Count <= 0)
+        {
+            return;
+        }
 
         foreach (var systemTypes in SystemTypeHelpers.AllTypes)
         {
-            if (!systems.ContainsKey(systemTypes)) continue;
-            SYSTEMS[systemTypes] = systems[systemTypes].TryCast<Object>();
+            if (!systems.ContainsKey(systemTypes))
+            {
+                continue;
+            }
+            PrivateSystems[systemTypes] = systems[systemTypes].TryCast<UnityObject>();
         }
     }
 
-    [HarmonyPatch(typeof(ShipStatus), nameof(ShipStatus.Awake))]
     [HarmonyPostfix]
+    [HarmonyPatch(typeof(ShipStatus), nameof(ShipStatus.Awake))]
     [HarmonyPriority(Priority.Last)]
-    public static void AwakePostfix(ShipStatus __instance)
+    internal static void AwakePostfix(ShipStatus __instance)
     {
         CachedShipStatus = __instance;
         SubmergedCompatibility.SetupMap(__instance);
@@ -48,7 +58,7 @@ public static class MapUtilities
     [HarmonyPatch(typeof(ShipStatus), nameof(ShipStatus.OnDestroy))]
     [HarmonyPostfix]
     [HarmonyPriority(Priority.Last)]
-    public static void OnDestroyPostfix()
+    internal static void OnDestroyPostfix()
     {
         CachedShipStatus = null;
         MapDestroyed();

@@ -11,17 +11,21 @@ global using BepInEx.Unity.IL2CPP;
 global using UnityEngine;
 global using TMPro;
 global using System.Text;
+global using System.Reflection;
+global using System.Collections;
+global using System.Text.Json.Serialization;
+global using System.Text.RegularExpressions;
+global using System.Linq.Expressions;
 global using AmongUs.GameOptions;
+global using AmongUs.Data;
+global using RebuildUs.Attributes;
 global using RebuildUs.Enums;
 global using RebuildUs.Extensions;
 global using RebuildUs.Localization;
 global using RebuildUs.Modules;
 global using RebuildUs.Modules.Consoles;
 global using RebuildUs.Modules.CustomOptions;
-global using RebuildUs.Modules.Discord;
 global using RebuildUs.Modules.EndGame;
-global using RebuildUs.Modules.GameEvents.Events;
-global using RebuildUs.Modules.GameMode;
 global using RebuildUs.Modules.Random;
 global using RebuildUs.Modules.RPC;
 global using RebuildUs.Objects;
@@ -34,8 +38,12 @@ global using RebuildUs.Roles.Modifier;
 global using RebuildUs.Utilities;
 global using Reactor.Networking;
 global using Reactor.Networking.Attributes;
-global using Submerged.Extensions;
-using InnerNet;
+global using Reactor.Networking.Rpc;
+global using InnerNet;
+global using UnityEngine.AddressableAssets;
+global using UnityEngine.ResourceManagement.AsyncOperations;
+global using UnityObject = UnityEngine.Object;
+global using CppObject = Il2CppSystem.Object;
 using Random = System.Random;
 
 namespace RebuildUs;
@@ -49,7 +57,7 @@ public class RebuildUs : BasePlugin
 {
     private const string MOD_ID = "com.shota-sunada.rebuild-us";
     internal const string MOD_NAME = "Rebuild Us";
-    internal const string MOD_VERSION = "2.0.0";
+    internal const string MOD_VERSION = "1.9.9";
     internal const string MOD_DEVELOPER = "Shota Sunada";
 
     private const string REACTOR_GUID = "gg.reactor-sunada.api";
@@ -58,49 +66,32 @@ public class RebuildUs : BasePlugin
     internal static RebuildUs Instance;
 
     internal static int OptionsPage = 0;
-    public static IRegionInfo[] DefaultRegions;
-
-    internal static bool ActivatedSensei;
-    internal static bool ActivatedDleks;
-    internal static bool UpdatedSenseiMinimap;
-    internal static bool UpdatedSenseiAdminmap;
-
-    internal static GameObject Progress = null;
-    internal static float ProgressStart = 0;
-    internal static float ProgressEnd = 0;
+    internal static IRegionInfo[] DefaultRegions;
     private Harmony Harmony { get; } = new(MOD_ID);
     internal Version Version { get; } = Version.Parse(MOD_VERSION);
 
-    public static ConfigEntry<bool> GhostsSeeInformation { get; set; }
-    public static ConfigEntry<bool> GhostsSeeRoles { get; set; }
-    public static ConfigEntry<bool> GhostsSeeModifier { get; set; }
-    public static ConfigEntry<bool> GhostsSeeVotes { get; set; }
-    public static ConfigEntry<bool> ShowRoleSummary { get; set; }
-    public static ConfigEntry<bool> ShowLighterDarker { get; set; }
-    public static ConfigEntry<bool> ShowVentsOnMap { get; set; }
-    public static ConfigEntry<bool> ShowChatNotifications { get; set; }
-    public static ConfigEntry<bool> ForceNormalSabotageMap { get; set; }
-    public static ConfigEntry<bool> BetterSabotageMap { get; set; }
-    public static ConfigEntry<bool> TransparentMap { get; set; }
-    public static ConfigEntry<bool> HideFakeTasks { get; set; }
+    internal static ConfigEntry<bool> GhostsSeeInformation { get; private set; }
+    internal static ConfigEntry<bool> GhostsSeeRoles { get; private set; }
+    internal static ConfigEntry<bool> GhostsSeeModifier { get; private set; }
+    internal static ConfigEntry<bool> GhostsSeeVotes { get; private set; }
+    internal static ConfigEntry<bool> ShowRoleSummary { get; private set; }
+    internal static ConfigEntry<bool> ShowLighterDarker { get; private set; }
+    internal static ConfigEntry<bool> ShowVentsOnMap { get; private set; }
+    internal static ConfigEntry<bool> ShowChatNotifications { get; private set; }
+    internal static ConfigEntry<bool> ForceNormalSabotageMap { get; private set; }
+    internal static ConfigEntry<bool> BetterSabotageMap { get; private set; }
+    internal static ConfigEntry<bool> TransparentMap { get; private set; }
+    internal static ConfigEntry<bool> HideFakeTasks { get; private set; }
 
-    public static ConfigEntry<string> DiscordBotToken { get; set; }
-    public static ConfigEntry<string> DiscordBotToken2 { get; set; }
-    public static ConfigEntry<string> DiscordBotToken3 { get; set; }
-    public static ConfigEntry<string> DiscordGuildId { get; set; }
-    public static ConfigEntry<string> DiscordVcId { get; set; }
-    public static ConfigEntry<string> StatusChannelId { get; set; }
-    public static ConfigEntry<string> ResultChannelId { get; set; }
+    internal static ConfigEntry<string> Ip { get; set; }
+    internal static ConfigEntry<ushort> Port { get; set; }
 
-    public static ConfigEntry<string> Ip { get; set; }
-    public static ConfigEntry<ushort> Port { get; set; }
-
-    public Random Rnd
+    internal static Random Rnd
     {
         get => RandomMain.Rnd;
     }
 
-    public void RefreshRnd(int seed)
+    internal static void RefreshRnd(int seed)
     {
         RandomMain.RefreshRnd(seed);
     }
@@ -123,14 +114,6 @@ public class RebuildUs : BasePlugin
         TransparentMap = Config.Bind("Custom", "Transparent Map", false);
         HideFakeTasks = Config.Bind("Custom", "Hide Fake Tasks", false);
 
-        DiscordBotToken = Config.Bind("Discord", "Bot Token", "");
-        DiscordBotToken2 = Config.Bind("Discord", "Bot Token 2", "");
-        DiscordBotToken3 = Config.Bind("Discord", "Bot Token 3", "");
-        DiscordGuildId = Config.Bind("Discord", "Guild ID", "");
-        DiscordVcId = Config.Bind("Discord", "Voice Channel ID", "");
-        StatusChannelId = Config.Bind("Discord", "Status Channel ID", "");
-        ResultChannelId = Config.Bind("Discord", "Result Channel ID", "");
-
         KeyBindingManager.Initialize(Config);
 
         Ip = Config.Bind("Custom", "Custom Server IP", "127.0.0.1");
@@ -140,23 +123,23 @@ public class RebuildUs : BasePlugin
         AssetLoader.LoadAssets();
 
         Tr.Initialize();
+        CustomOptionHolder.Load();
         RoleInfo.Load();
         CustomColors.Load();
         UpdateRegions();
-        CustomOptionHolder.Load();
 
         RefreshRnd((int)DateTime.Now.Ticks);
-
-        DiscordModManager.Initialize();
 
         Harmony.PatchAll();
 
         SubmergedCompatibility.Initialize();
 
+        ModEventDispatcher.Initialize();
+
         Logger.LogMessage("\"Rebuild Us\" was completely loaded! Enjoy the modifications!");
     }
 
-    public static void ClearAndReloadRoles()
+    internal static void ClearAndReloadRoles()
     {
         // Crewmate
         Bait.Clear();
@@ -207,144 +190,93 @@ public class RebuildUs : BasePlugin
         Madmate.Clear();
         Mini.Clear();
 
-        PlayerRole.ClearAll();
+        ModRoleManager.ClearAll();
         PlayerModifier.ClearAll();
-
-        Update.ActivatedReportButtonAfterCustomMode = false;
-
-        ActivatedSensei = false;
-        UpdatedSenseiMinimap = false;
-        UpdatedSenseiAdminmap = false;
-        ActivatedDleks = false;
     }
 
-    public static void FixedUpdate(PlayerControl player)
+    internal static void FixedUpdate(PlayerControl player)
     {
-        PlayerRole.AllRoles.DoIf(x => x.Player == player, x => x.FixedUpdate());
-        PlayerModifier.AllModifiers.DoIf(x => x.Player == player, x => x.FixedUpdate());
+        ModRoleManager.AllRoles.DoIf(x => x.Player == player, ModEventDispatcher.DispatchFixedUpdate);
+        PlayerModifier.AllModifiers.DoIf(x => x.Player == player, ModEventDispatcher.DispatchFixedUpdate);
     }
 
-    public static void OnMeetingStart()
+    internal static void OnMeetingStart()
     {
-        PlayerRole.AllRoles.Do(x => x.OnMeetingStart());
-        PlayerModifier.AllModifiers.Do(x => x.OnMeetingStart());
+        ModRoleManager.AllRoles.Do(ModEventDispatcher.DispatchOnMeetingStart);
+        PlayerModifier.AllModifiers.Do(ModEventDispatcher.DispatchOnMeetingStart);
 
         // GM.resetZoom();
         FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(3f, new Action<float>(p =>
         {
-            if (p == 1)
+            if (!Mathf.Approximately(p, 1))
             {
-                Camouflager.ResetCamouflage();
-                Morphing.ResetMorph();
+                return;
             }
+            Camouflager.ResetCamouflage();
+            Morphing.ResetMorph();
         })));
     }
 
-    public static void OnMeetingEnd()
+    internal static void OnMeetingEnd()
     {
-        PlayerRole.AllRoles.Do(x => x.OnMeetingEnd());
-        PlayerModifier.AllModifiers.Do(x => x.OnMeetingEnd());
+        ModRoleManager.AllRoles.Do(ModEventDispatcher.DispatchOnMeetingEnd);
+        PlayerModifier.AllModifiers.Do(ModEventDispatcher.DispatchOnMeetingEnd);
 
         CustomOverlays.HideInfoOverlay();
         CustomOverlays.HideBlackBg();
     }
 
-    public static void OnIntroEnd()
+    internal static void OnIntroEnd()
     {
-        PlayerRole.AllRoles.Do(x => x.OnIntroEnd());
-        PlayerModifier.AllModifiers.Do(x => x.OnIntroEnd());
+        ModRoleManager.AllRoles.Do(ModEventDispatcher.DispatchOnIntroEnd);
+        PlayerModifier.AllModifiers.Do(ModEventDispatcher.DispatchOnIntroEnd);
     }
 
-    public static void HandleDisconnect(PlayerControl player, DisconnectReasons reason)
+    internal static void HandleDisconnect(PlayerControl player, DisconnectReasons reason)
     {
-        if (AmongUsClient.Instance.GameState == InnerNetClient.GameStates.Started)
+        if (Helpers.IsGameStarted)
         {
-            PlayerRole.AllRoles.Do(x => x.HandleDisconnect(player, reason));
-            PlayerModifier.AllModifiers.Do(x => x.HandleDisconnect(player, reason));
+            ModRoleManager.AllRoles.Do(x => ModEventDispatcher.DispatchHandleDisconnect(x, player, reason));
+            PlayerModifier.AllModifiers.Do(x => ModEventDispatcher.DispatchHandleDisconnect(x, player, reason));
 
             Lovers.HandleDisconnect(player, reason);
             // Shifter.HandleDisconnect(player, reason);
 
-            GameHistory.FINAL_STATUSES[player.PlayerId] = FinalStatus.Disconnected;
+            GameHistory.FinalStatuses[player.PlayerId] = FinalStatus.Disconnected;
         }
     }
 
-    public static void MakeButtons(HudManager hm)
+    internal static void MakeButtons(HudManager hm)
     {
-        // Crewmate
-        Engineer.MakeButtons(hm);
-        Hacker.MakeButtons(hm);
-        Lighter.MakeButtons(hm);
-        Mayor.MakeButtons(hm);
-        Medic.MakeButtons(hm);
-        Medium.MakeButtons(hm);
-        Sheriff.MakeButtons(hm);
-        Shifter.MakeButtons(hm);
-        TimeMaster.MakeButtons(hm);
-        SecurityGuard.MakeButtons(hm);
-        Tracker.MakeButtons(hm);
-        Suicider.MakeButtons(hm);
-
-        // Impostor
-        Camouflager.MakeButtons(hm);
-        Cleaner.MakeButtons(hm);
-        Eraser.MakeButtons(hm);
-        EvilHacker.MakeButtons(hm);
-        EvilTracker.MakeButtons(hm);
-        Mafia.Janitor.MakeButtons(hm);
-        Morphing.MakeButtons(hm);
-        Trickster.MakeButtons(hm);
-        Vampire.MakeButtons(hm);
-        Warlock.MakeButtons(hm);
-        Witch.MakeButtons(hm);
-
-        // Neutral
-        Arsonist.MakeButtons(hm);
-        Jackal.MakeButtons(hm);
-        Sidekick.MakeButtons(hm);
-        Vulture.MakeButtons(hm);
-
-        // Modifier
-        LastImpostor.MakeButtons(hm);
+        foreach (var action in ModEventDispatcher.CustomButtonRegistrations)
+        {
+            try
+            {
+                action(hm);
+            }
+            catch (Exception ex)
+            {
+                Logger.LogError($"Error in MakeButtons: {ex}");
+            }
+        }
     }
 
-    public static void SetButtonCooldowns()
+    internal static void SetButtonCooldowns()
     {
-        // Crewmate
-        Engineer.SetButtonCooldowns();
-        Hacker.SetButtonCooldowns();
-        Lighter.SetButtonCooldowns();
-        Mayor.SetButtonCooldowns();
-        Medic.SetButtonCooldowns();
-        Medium.SetButtonCooldowns();
-        Sheriff.SetButtonCooldowns();
-        Shifter.SetButtonCooldowns();
-        TimeMaster.SetButtonCooldowns();
-        SecurityGuard.SetButtonCooldowns();
-        Tracker.SetButtonCooldowns();
-        Suicider.SetButtonCooldowns();
-
-        // Impostor
-        Camouflager.SetButtonCooldowns();
-        Cleaner.SetButtonCooldowns();
-        Eraser.SetButtonCooldowns();
-        EvilHacker.SetButtonCooldowns();
-        EvilTracker.SetButtonCooldowns();
-        Mafia.Janitor.SetButtonCooldowns();
-        Morphing.SetButtonCooldowns();
-        Trickster.SetButtonCooldowns();
-        Vampire.SetButtonCooldowns();
-        Warlock.SetButtonCooldowns();
-        Witch.SetButtonCooldowns();
-
-        // Neutral
-        Arsonist.SetButtonCooldowns();
-        Jackal.SetButtonCooldowns();
-        Sidekick.SetButtonCooldowns();
-        Vulture.SetButtonCooldowns();
+        foreach (var action in ModEventDispatcher.CustomButtonTimers)
+        {
+            try
+            {
+                action();
+            }
+            catch (Exception ex)
+            {
+                Logger.LogError($"Error in SetButtonCooldowns: {ex}");
+            }
+        }
     }
 
-    public static void UpdateRegions()
+    internal static void UpdateRegions()
     {
         var serverManager = FastDestroyableSingleton<ServerManager>.Instance;
 
@@ -352,8 +284,7 @@ public class RebuildUs : BasePlugin
 
         IRegionInfo[] regions =
         [
-            new DnsRegionInfo(Ip.Value, "Custom", StringNames.NoTranslation, Ip.Value, Port.Value, false)
-                .CastFast<IRegionInfo>()
+            new DnsRegionInfo(Ip.Value, "Custom", StringNames.NoTranslation, Ip.Value, Port.Value, false).CastFast<IRegionInfo>(),
         ];
 #nullable enable
         var currentRegion = serverManager.CurrentRegion;
@@ -361,11 +292,16 @@ public class RebuildUs : BasePlugin
         foreach (var region in regions)
         {
             if (region == null)
+            {
                 Logger.LogError("Could not add region");
+            }
             else
             {
                 if (currentRegion != null && region.Name.Equals(currentRegion.Name, StringComparison.OrdinalIgnoreCase))
+                {
                     currentRegion = region;
+                }
+
                 serverManager.AddOrUpdateRegion(region);
             }
         }

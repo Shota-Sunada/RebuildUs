@@ -1,15 +1,16 @@
 namespace RebuildUs.Roles.Impostor;
 
 [HarmonyPatch]
-public class Warlock : RoleBase<Warlock>
+[RegisterRole(RoleType.Warlock, RoleTeam.Impostor, typeof(MultiRoleBase<Warlock>), nameof(CustomOptionHolder.WarlockSpawnRate))]
+internal class Warlock : MultiRoleBase<Warlock>
 {
-    public static Color NameColor = Palette.ImpostorRed;
+    internal static Color Color = Palette.ImpostorRed;
 
-    public static CustomButton WarlockCurseButton;
+    internal static CustomButton WarlockCurseButton;
 
-    public PlayerControl CurrentTarget;
-    public PlayerControl CurseVictim;
-    public PlayerControl CurseVictimTarget;
+    private PlayerControl _currentTarget;
+    private PlayerControl _curseVictim;
+    private PlayerControl _curseVictimTarget;
 
     public Warlock()
     {
@@ -17,117 +18,143 @@ public class Warlock : RoleBase<Warlock>
         StaticRoleType = CurrentRoleType = RoleType.Warlock;
     }
 
-    public override Color RoleColor
-    {
-        get => NameColor;
-    }
-
     // write configs here
-    public static float Cooldown
+    private static float Cooldown
     {
         get => CustomOptionHolder.WarlockCooldown.GetFloat();
     }
 
-    public static float RootTime
+    private static float RootTime
     {
         get => CustomOptionHolder.WarlockRootTime.GetFloat();
     }
 
-    public override void OnMeetingStart() { }
-    public override void OnMeetingEnd() { }
-    public override void OnIntroEnd() { }
-
-    public override void FixedUpdate()
+    [CustomEvent(CustomEventType.FixedUpdate)]
+    internal void FixedUpdate()
     {
         var local = Local;
-        if (local == null) return;
-        if (CurseVictim != null && (CurseVictim.Data.Disconnected || CurseVictim.Data.IsDead))
+        if (local == null)
+        {
+            return;
+        }
+        if (_curseVictim != null && (_curseVictim.Data.Disconnected || _curseVictim.Data.IsDead))
         {
             // If the cursed victim is disconnected or dead reset the curse so a new curse can be applied
             WarlockCurseButton.Timer = WarlockCurseButton.MaxTimer;
             WarlockCurseButton.Sprite = AssetLoader.CurseButton;
             WarlockCurseButton.ActionButton.cooldownTimerText.color = Palette.EnabledColor;
-            Local.CurrentTarget = null;
-            Local.CurseVictim = null;
-            Local.CurseVictimTarget = null;
+            Local._currentTarget = null;
+            Local._curseVictim = null;
+            Local._curseVictimTarget = null;
         }
 
-        if (CurseVictim == null)
+        if (_curseVictim == null)
         {
-            CurrentTarget = Helpers.SetTarget();
-            Helpers.SetPlayerOutline(CurrentTarget, RoleColor);
+            _currentTarget = Helpers.SetTarget();
+            Helpers.SetPlayerOutline(_currentTarget, RoleColor);
         }
         else
         {
-            CurseVictimTarget = Helpers.SetTarget(targetingPlayer: CurseVictim);
-            Helpers.SetPlayerOutline(CurseVictimTarget, RoleColor);
+            _curseVictimTarget = Helpers.SetTarget(targetingPlayer: _curseVictim);
+            Helpers.SetPlayerOutline(_curseVictimTarget, RoleColor);
         }
     }
 
-    public override void OnKill(PlayerControl target)
+    [CustomEvent(CustomEventType.OnKill)]
+    internal void OnKill(PlayerControl target)
     {
-        if (PlayerControl.LocalPlayer.IsRole(RoleType.Warlock) && WarlockCurseButton != null)
+        if (!PlayerControl.LocalPlayer.IsRole(RoleType.Warlock) || WarlockCurseButton == null)
         {
-            if (Player.killTimer > WarlockCurseButton.Timer)
-                WarlockCurseButton.Timer = Player.killTimer;
+            return;
+        }
+        if (Player.killTimer > WarlockCurseButton.Timer)
+        {
+            WarlockCurseButton.Timer = Player.killTimer;
         }
     }
 
-    public override void OnDeath(PlayerControl killer = null) { }
-    public override void OnFinishShipStatusBegin() { }
-    public override void HandleDisconnect(PlayerControl player, DisconnectReasons reason) { }
 
-    public static void MakeButtons(HudManager hm)
+
+    [RegisterCustomButton]
+    internal static void MakeButtons(HudManager hm)
     {
         WarlockCurseButton = new(() =>
-        {
-            if (Local.CurseVictim == null)
             {
-                // Apply Curse
-                Local.CurseVictim = Local.CurrentTarget;
-                WarlockCurseButton.Sprite = AssetLoader.CurseKillButton;
-                WarlockCurseButton.Timer = 1f;
-                WarlockCurseButton.ButtonText = Tr.Get(TrKey.CurseKillText);
-            }
-            else if (Local.CurseVictim != null && Local.CurseVictimTarget != null)
-            {
-                var murder = Helpers.CheckMurderAttemptAndKill(Local.CurseVictim, Local.CurseVictimTarget, showAnimation: false);
-                if (murder == MurderAttemptResult.SuppressKill) return;
-
-                // If blanked or killed
-                WarlockCurseButton.ButtonText = Tr.Get(TrKey.CurseText);
-                if (RootTime > 0)
+                if (Local._curseVictim == null)
                 {
-                    PlayerControl.LocalPlayer.moveable = false;
-                    PlayerControl.LocalPlayer.NetTransform.Halt(); // Stop current movement so the warlock is not just running straight into the next object
-                    FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(RootTime, new Action<float>(p =>
-                    {
-                        // Delayed action
-                        if (p == 1f) PlayerControl.LocalPlayer.moveable = true;
-                    })));
+                    // Apply Curse
+                    Local._curseVictim = Local._currentTarget;
+                    WarlockCurseButton.Sprite = AssetLoader.CurseKillButton;
+                    WarlockCurseButton.Timer = 1f;
+                    WarlockCurseButton.ButtonText = Tr.Get(TrKey.CurseKillText);
                 }
+                else if (Local._curseVictim != null && Local._curseVictimTarget != null)
+                {
+                    var murder = Helpers.CheckMurderAttemptAndKill(Local._curseVictim,
+                        Local._curseVictimTarget,
+                        showAnimation: false);
+                    if (murder == MurderAttemptResult.SuppressKill)
+                    {
+                        return;
+                    }
 
-                Local.CurseVictim = null;
-                Local.CurseVictimTarget = null;
+                    // If blanked or killed
+                    WarlockCurseButton.ButtonText = Tr.Get(TrKey.CurseText);
+                    if (RootTime > 0)
+                    {
+                        PlayerControl.LocalPlayer.moveable = false;
+                        PlayerControl.LocalPlayer.NetTransform
+                                     .Halt(); // Stop current movement so the warlock is not just running straight into the next object
+                        FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(RootTime,
+                            new Action<float>(p =>
+                            {
+                                // Delayed action
+                                if (Mathf.Approximately(p, 1f))
+                                {
+                                    PlayerControl.LocalPlayer.moveable = true;
+                                }
+                            })));
+                    }
+
+                    Local._curseVictim = null;
+                    Local._curseVictimTarget = null;
+                    WarlockCurseButton.Sprite = AssetLoader.CurseButton;
+                    Local.Player.killTimer = WarlockCurseButton.Timer = WarlockCurseButton.MaxTimer;
+                }
+            },
+            () =>
+            {
+                return PlayerControl.LocalPlayer.IsRole(RoleType.Warlock) && PlayerControl.LocalPlayer.IsAlive();
+            },
+            () =>
+            {
+                return (Local._curseVictim == null && Local._currentTarget != null || Local._curseVictim != null && Local._curseVictimTarget != null)
+                       && PlayerControl.LocalPlayer.CanMove;
+            },
+            () =>
+            {
+                WarlockCurseButton.Timer = WarlockCurseButton.MaxTimer;
                 WarlockCurseButton.Sprite = AssetLoader.CurseButton;
-                Local.Player.killTimer = WarlockCurseButton.Timer = WarlockCurseButton.MaxTimer;
-            }
-        }, () => { return PlayerControl.LocalPlayer.IsRole(RoleType.Warlock) && PlayerControl.LocalPlayer.IsAlive(); }, () => { return ((Local.CurseVictim == null && Local.CurrentTarget != null) || (Local.CurseVictim != null && Local.CurseVictimTarget != null)) && PlayerControl.LocalPlayer.CanMove; }, () =>
-        {
-            WarlockCurseButton.Timer = WarlockCurseButton.MaxTimer;
-            WarlockCurseButton.Sprite = AssetLoader.CurseButton;
-            WarlockCurseButton.ButtonText = Tr.Get(TrKey.CurseText);
-            Local.CurseVictim = null;
-            Local.CurseVictimTarget = null;
-        }, AssetLoader.CurseButton, ButtonPosition.Layout, hm, hm.KillButton, AbilitySlot.ImpostorAbilityPrimary, false, Tr.Get(TrKey.CurseText));
+                WarlockCurseButton.ButtonText = Tr.Get(TrKey.CurseText);
+                Local._curseVictim = null;
+                Local._curseVictimTarget = null;
+            },
+            AssetLoader.CurseButton,
+            ButtonPosition.Layout,
+            hm,
+            hm.KillButton,
+            AbilitySlot.ImpostorAbilityPrimary,
+            false,
+            Tr.Get(TrKey.CurseText));
     }
 
-    public static void SetButtonCooldowns()
+    [RegisterCustomButton]
+    internal static void SetButtonCooldowns()
     {
         WarlockCurseButton.MaxTimer = Cooldown;
     }
 
-    public static void Clear()
+    internal static void Clear()
     {
         // reset configs here
         Players.Clear();

@@ -1,23 +1,22 @@
-using Object = UnityEngine.Object;
-
 namespace RebuildUs.Modules.Consoles;
 
-public static class SecurityCamera
+internal static class SecurityCamera
 {
-    public static float CameraTimer;
+    private static float _cameraTimer;
     private static int _page;
     private static float _timer;
 
-    private static readonly StringBuilder SECURITY_STRING_BUILDER = new();
+    private static readonly StringBuilder SecurityStringBuilder = new();
 
     private static TextMeshPro _timeRemaining;
+    private static readonly int MainTex = Shader.PropertyToID("_MainTex");
 
-    public static void ResetData()
+    internal static void ResetData()
     {
-        CameraTimer = 0f;
+        _cameraTimer = 0f;
         if (_timeRemaining != null)
         {
-            Object.Destroy(_timeRemaining.gameObject);
+            UnityObject.Destroy(_timeRemaining.gameObject);
             _timeRemaining = null;
         }
 
@@ -25,26 +24,24 @@ public static class SecurityCamera
         _timer = 0f;
     }
 
-    public static void UseCameraTime()
+    internal static void UseCameraTime()
     {
         // Don't waste network traffic if we're out of time.
         var lp = PlayerControl.LocalPlayer;
         if (MapSettings.RestrictDevices > 0 && MapSettings.RestrictCameras && MapSettings.RestrictCamerasTime > 0f && lp != null && lp.IsAlive())
         {
-            using var sender = new RPCSender(lp.NetId, CustomRPC.UseCameraTime);
-            sender.Write(CameraTimer);
-            RPCProcedure.UseCameraTime(CameraTimer);
+            UseCameraTime(lp, _cameraTimer);
         }
 
-        CameraTimer = 0f;
+        _cameraTimer = 0f;
     }
 
-    public static void BeginCommon()
+    internal static void BeginCommon()
     {
-        CameraTimer = 0f;
+        _cameraTimer = 0f;
     }
 
-    public static void BeginPostfix(SurveillanceMinigame __instance)
+    internal static void BeginPostfix(SurveillanceMinigame __instance)
     {
         // Add securityGuard cameras
         _page = 0;
@@ -55,14 +52,16 @@ public static class SecurityCamera
             var oldLen = __instance.textures.Length;
             var newLen = ship.AllCameras.Length;
             var newTextures = new RenderTexture[newLen];
-            for (var i = 0; i < oldLen; i++) newTextures[i] = __instance.textures[i];
+            for (var i = 0; i < oldLen; i++)
+            {
+                newTextures[i] = __instance.textures[i];
+            }
             __instance.textures = newTextures;
 
             for (var i = 4; i < ship.AllCameras.Length; i++)
             {
                 var surv = ship.AllCameras[i];
-                var camera = Object.Instantiate(__instance.CameraPrefab);
-                camera.transform.SetParent(__instance.transform);
+                var camera = UnityObject.Instantiate(__instance.CameraPrefab, __instance.transform, true);
                 camera.transform.position = new(surv.transform.position.x, surv.transform.position.y, 8f);
                 camera.orthographicSize = 2.35f;
                 var temporary = RenderTexture.GetTemporary(256, 256, 16, (RenderTextureFormat)0);
@@ -72,55 +71,69 @@ public static class SecurityCamera
         }
     }
 
-    public static bool Update(PlanetSurveillanceMinigame __instance)
+    internal static bool Update(PlanetSurveillanceMinigame __instance)
     {
-        CameraTimer += Time.deltaTime;
-        if (CameraTimer > 0.1f)
-            UseCameraTime();
-
-        if (MapSettings.RestrictDevices > 0 && MapSettings.RestrictCameras)
+        _cameraTimer += Time.deltaTime;
+        if (_cameraTimer > 0.1f)
         {
-            if (_timeRemaining == null)
-            {
-                _timeRemaining = Object.Instantiate(FastDestroyableSingleton<HudManager>.Instance.TaskPanel.taskText, __instance.transform);
-                _timeRemaining.alignment = TextAlignmentOptions.BottomRight;
-                _timeRemaining.transform.position = Vector3.zero;
-                _timeRemaining.transform.localPosition = new(0.95f, 4.45f);
-                _timeRemaining.transform.localScale *= 1.8f;
-                _timeRemaining.color = Palette.White;
-            }
-
-            if (MapSettings.RestrictCamerasTime <= 0f)
-            {
-                __instance.Close();
-                return false;
-            }
-
-            SECURITY_STRING_BUILDER.Clear();
-            var ts = TimeSpan.FromSeconds(MapSettings.RestrictCamerasTime);
-            if (ts.TotalHours >= 1) SECURITY_STRING_BUILDER.Append((int)ts.TotalHours).Append(':');
-            SECURITY_STRING_BUILDER.Append(ts.Minutes.ToString("D2")).Append(':').Append(ts.Seconds.ToString("D2")).Append('.').Append((ts.Milliseconds / 10).ToString("D2"));
-
-            var timeString = SECURITY_STRING_BUILDER.ToString();
-            SECURITY_STRING_BUILDER.Clear();
-            SECURITY_STRING_BUILDER.Append(string.Format(Tr.Get(TrKey.TimeRemaining), timeString));
-            _timeRemaining.text = SECURITY_STRING_BUILDER.ToString();
-            _timeRemaining.gameObject.SetActive(true);
+            UseCameraTime();
         }
+
+        if (MapSettings.RestrictDevices <= 0 || !MapSettings.RestrictCameras)
+        {
+            return true;
+        }
+        if (_timeRemaining == null)
+        {
+            _timeRemaining = UnityObject.Instantiate(FastDestroyableSingleton<HudManager>.Instance.TaskPanel.taskText, __instance.transform);
+            _timeRemaining.alignment = TextAlignmentOptions.BottomRight;
+            _timeRemaining.transform.position = Vector3.zero;
+            _timeRemaining.transform.localPosition = new(0.95f, 4.45f);
+            _timeRemaining.transform.localScale *= 1.8f;
+            _timeRemaining.color = Palette.White;
+        }
+
+        if (MapSettings.RestrictCamerasTime <= 0f)
+        {
+            __instance.Close();
+            return false;
+        }
+
+        SecurityStringBuilder.Clear();
+        var ts = TimeSpan.FromSeconds(MapSettings.RestrictCamerasTime);
+        if (ts.TotalHours >= 1)
+        {
+            SecurityStringBuilder.Append((int)ts.TotalHours).Append(':');
+        }
+        SecurityStringBuilder
+            .Append(ts.Minutes.ToString("D2"))
+            .Append(':')
+            .Append(ts.Seconds.ToString("D2"))
+            .Append('.')
+            .Append((ts.Milliseconds / 10).ToString("D2"));
+
+        var timeString = SecurityStringBuilder.ToString();
+        SecurityStringBuilder.Clear();
+        SecurityStringBuilder.Append(string.Format(Tr.Get(TrKey.TimeRemaining), timeString));
+        _timeRemaining.text = SecurityStringBuilder.ToString();
+        _timeRemaining.gameObject.SetActive(true);
 
         return true;
     }
 
-    public static bool Update(SurveillanceMinigame __instance)
+    internal static bool Update(SurveillanceMinigame __instance)
     {
-        CameraTimer += Time.deltaTime;
-        if (CameraTimer > 0.1f) UseCameraTime();
+        _cameraTimer += Time.deltaTime;
+        if (_cameraTimer > 0.1f)
+        {
+            UseCameraTime();
+        }
 
         if (MapSettings.RestrictDevices > 0 && MapSettings.RestrictCameras)
         {
             if (_timeRemaining == null)
             {
-                _timeRemaining = Object.Instantiate(FastDestroyableSingleton<HudManager>.Instance.TaskPanel.taskText, __instance.transform);
+                _timeRemaining = UnityObject.Instantiate(FastDestroyableSingleton<HudManager>.Instance.TaskPanel.taskText, __instance.transform);
                 _timeRemaining.alignment = TextAlignmentOptions.Center;
                 _timeRemaining.transform.position = Vector3.zero;
                 _timeRemaining.transform.localPosition = new(0.0f, -1.7f);
@@ -134,15 +147,23 @@ public static class SecurityCamera
                 return false;
             }
 
-            SECURITY_STRING_BUILDER.Clear();
+            SecurityStringBuilder.Clear();
             var ts = TimeSpan.FromSeconds(MapSettings.RestrictCamerasTime);
-            if (ts.TotalHours >= 1) SECURITY_STRING_BUILDER.Append((int)ts.TotalHours).Append(':');
-            SECURITY_STRING_BUILDER.Append(ts.Minutes.ToString("D2")).Append(':').Append(ts.Seconds.ToString("D2")).Append('.').Append((ts.Milliseconds / 10).ToString("D2"));
+            if (ts.TotalHours >= 1)
+            {
+                SecurityStringBuilder.Append((int)ts.TotalHours).Append(':');
+            }
+            SecurityStringBuilder
+                .Append(ts.Minutes.ToString("D2"))
+                .Append(':')
+                .Append(ts.Seconds.ToString("D2"))
+                .Append('.')
+                .Append((ts.Milliseconds / 10).ToString("D2"));
 
-            var timeString = SECURITY_STRING_BUILDER.ToString();
-            SECURITY_STRING_BUILDER.Clear();
-            SECURITY_STRING_BUILDER.Append(string.Format(Tr.Get(TrKey.TimeRemaining), timeString));
-            _timeRemaining.text = SECURITY_STRING_BUILDER.ToString();
+            var timeString = SecurityStringBuilder.ToString();
+            SecurityStringBuilder.Clear();
+            SecurityStringBuilder.Append(string.Format(Tr.Get(TrKey.TimeRemaining), timeString));
+            _timeRemaining.text = SecurityStringBuilder.ToString();
             _timeRemaining.gameObject.SetActive(true);
         }
 
@@ -160,22 +181,30 @@ public static class SecurityCamera
         }
         else if (Input.GetKeyDown(KeyCode.LeftArrow))
         {
-            _page = ((_page + numberOfPages) - 1) % numberOfPages;
+            _page = (_page + numberOfPages - 1) % numberOfPages;
             update = true;
             _timer = 0f;
         }
 
-        if ((__instance.isStatic || update) && !PlayerTask.PlayerHasTaskOfType<IHudOverrideTask>(PlayerControl.LocalPlayer))
+        if (__instance.isStatic || update)
         {
+            if (PlayerTask.PlayerHasTaskOfType<IHudOverrideTask>(PlayerControl.LocalPlayer))
+            {
+                return false;
+            }
             __instance.isStatic = false;
             for (var i = 0; i < __instance.ViewPorts.Length; i++)
             {
                 __instance.ViewPorts[i].sharedMaterial = __instance.DefaultMaterial;
                 __instance.SabText[i].gameObject.SetActive(false);
-                if ((_page * 4) + i < __instance.textures.Length)
-                    __instance.ViewPorts[i].material.SetTexture("_MainTex", __instance.textures[(_page * 4) + i]);
+                if (_page * 4 + i < __instance.textures.Length)
+                {
+                    __instance.ViewPorts[i].material.SetTexture(MainTex, __instance.textures[_page * 4 + i]);
+                }
                 else
+                {
                     __instance.ViewPorts[i].sharedMaterial = __instance.StaticMaterial;
+                }
             }
         }
         else if (!__instance.isStatic && PlayerTask.PlayerHasTaskOfType<HudOverrideTask>(PlayerControl.LocalPlayer))
@@ -191,35 +220,44 @@ public static class SecurityCamera
         return false;
     }
 
-    public static bool Update(SecurityLogGame __instance)
+    internal static bool Update(SecurityLogGame __instance)
     {
-        CameraTimer += Time.deltaTime;
-        if (CameraTimer > 0.05f)
-            UseCameraTime();
-
-        if (MapSettings.RestrictDevices > 0)
+        _cameraTimer += Time.deltaTime;
+        if (_cameraTimer > 0.05f)
         {
-            if (_timeRemaining == null)
-            {
-                _timeRemaining = Object.Instantiate(FastDestroyableSingleton<HudManager>.Instance.TaskPanel.taskText, __instance.transform);
-                _timeRemaining.alignment = TextAlignmentOptions.BottomRight;
-                _timeRemaining.transform.position = Vector3.zero;
-                _timeRemaining.transform.localPosition = new(1.0f, 4.25f);
-                _timeRemaining.transform.localScale *= 1.6f;
-                _timeRemaining.color = Palette.White;
-            }
-
-            if (MapSettings.RestrictCamerasTime <= 0f)
-            {
-                __instance.Close();
-                return false;
-            }
-
-            var timeString = TimeSpan.FromSeconds(MapSettings.RestrictCamerasTime).ToString(@"mm\:ss\.ff");
-            _timeRemaining.text = string.Format(Tr.Get(TrKey.TimeRemaining), timeString);
-            _timeRemaining.gameObject.SetActive(true);
+            UseCameraTime();
         }
 
+        if (MapSettings.RestrictDevices <= 0)
+        {
+            return true;
+        }
+        if (_timeRemaining == null)
+        {
+            _timeRemaining = UnityObject.Instantiate(FastDestroyableSingleton<HudManager>.Instance.TaskPanel.taskText, __instance.transform);
+            _timeRemaining.alignment = TextAlignmentOptions.BottomRight;
+            _timeRemaining.transform.position = Vector3.zero;
+            _timeRemaining.transform.localPosition = new(1.0f, 4.25f);
+            _timeRemaining.transform.localScale *= 1.6f;
+            _timeRemaining.color = Palette.White;
+        }
+
+        if (MapSettings.RestrictCamerasTime <= 0f)
+        {
+            __instance.Close();
+            return false;
+        }
+
+        var timeString = TimeSpan.FromSeconds(MapSettings.RestrictCamerasTime).ToString(@"mm\:ss\.ff");
+        _timeRemaining.text = string.Format(Tr.Get(TrKey.TimeRemaining), timeString);
+        _timeRemaining.gameObject.SetActive(true);
+
         return true;
+    }
+
+    [MethodRpc((uint)CustomRPC.UseCameraTime)]
+    internal static void UseCameraTime(PlayerControl sender, float time)
+    {
+        MapSettings.RestrictCamerasTime -= time;
     }
 }

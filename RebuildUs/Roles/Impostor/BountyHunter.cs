@@ -1,212 +1,258 @@
-using Object = UnityEngine.Object;
-
 namespace RebuildUs.Roles.Impostor;
 
 [HarmonyPatch]
-public class BountyHunter : RoleBase<BountyHunter>
+[RegisterRole(RoleType.BountyHunter, RoleTeam.Impostor, typeof(SingleRoleBase<BountyHunter>), nameof(CustomOptionHolder.BountyHunterSpawnRate))]
+internal class BountyHunter : SingleRoleBase<BountyHunter>
 {
-    public static Color NameColor = Palette.ImpostorRed;
+    internal static Color Color = Palette.ImpostorRed;
 
-    public static Arrow Arrow;
-    public static PlayerControl Bounty;
-    public static TextMeshPro CooldownText;
+    private static Arrow _arrow;
+    internal static PlayerControl Bounty;
+    internal static TextMeshPro CooldownText;
+
     private static int _lastSecond = -1;
-    public float ArrowUpdateTimer;
-    public float BountyUpdateTimer;
+    private float _arrowUpdateTimer;
+    private float _bountyUpdateTimer;
 
     public BountyHunter()
     {
         // write value init here
-        ArrowUpdateTimer = 0f;
-        BountyUpdateTimer = 0f;
+        _arrowUpdateTimer = 0f;
+        _bountyUpdateTimer = 0f;
         StaticRoleType = CurrentRoleType = RoleType.BountyHunter;
     }
 
-    public override Color RoleColor
-    {
-        get => NameColor;
-    }
-
     // write configs here
-    public static int BountyDuration
+    private static int BountyDuration
     {
         get => (int)CustomOptionHolder.BountyHunterBountyDuration.GetFloat();
     }
 
-    public static int ReducedCooldown
+    private static int ReducedCooldown
     {
         get => (int)CustomOptionHolder.BountyHunterReducedCooldown.GetFloat();
     }
 
-    public static int PunishmentTime
+    internal static int PunishmentTime
     {
         get => (int)CustomOptionHolder.BountyHunterPunishmentTime.GetFloat();
     }
 
-    public static bool ShowArrow
+    private static bool ShowArrow
     {
         get => CustomOptionHolder.BountyHunterShowArrow.GetBool();
     }
 
-    public static int ArrowUpdateInterval
+    private static int ArrowUpdateInterval
     {
         get => (int)CustomOptionHolder.BountyHunterArrowUpdateInterval.GetFloat();
     }
 
-    public override void OnMeetingStart() { }
-
-    public override void OnMeetingEnd()
-    {
-        if (PlayerControl.LocalPlayer.IsRole(RoleType.BountyHunter)) BountyUpdateTimer = 0f;
-    }
-
-    public override void OnIntroEnd()
+    [CustomEvent(CustomEventType.OnMeetingEnd)]
+    internal void OnMeetingEnd()
     {
         if (PlayerControl.LocalPlayer.IsRole(RoleType.BountyHunter))
         {
-            BountyUpdateTimer = 0f;
-            if (FastDestroyableSingleton<HudManager>.Instance != null)
-            {
-                CooldownText = Object.Instantiate(FastDestroyableSingleton<HudManager>.Instance.KillButton.cooldownTimerText, FastDestroyableSingleton<HudManager>.Instance.transform);
-                CooldownText.alignment = TextAlignmentOptions.Center;
-                var bottomLeft = AspectPosition.ComputePosition(AspectPosition.EdgeAlignments.LeftBottom, new(0.9f, 0.7f, -10f));
-                CooldownText.transform.localPosition = bottomLeft + new Vector3(0f, -0.35f, -0.1f);
-                CooldownText.transform.localScale = Vector3.one * 0.4f;
-                CooldownText.gameObject.SetActive(true);
-                CooldownText.gameObject.layer = 5;
-            }
+            _bountyUpdateTimer = 0f;
         }
     }
 
-    public override void FixedUpdate()
+    [CustomEvent(CustomEventType.OnIntroEnd)]
+    internal void OnIntroEnd()
     {
-        if (!PlayerControl.LocalPlayer.IsRole(RoleType.BountyHunter)) return;
-
-        if (Local != null)
+        if (!PlayerControl.LocalPlayer.IsRole(RoleType.BountyHunter))
         {
-            if (Player.IsDead())
+            return;
+        }
+        _bountyUpdateTimer = 0f;
+        if (FastDestroyableSingleton<HudManager>.Instance == null)
+        {
+            return;
+        }
+        CooldownText = UnityObject.Instantiate(FastDestroyableSingleton<HudManager>.Instance.KillButton.cooldownTimerText,
+            FastDestroyableSingleton<HudManager>.Instance.transform);
+        CooldownText.alignment = TextAlignmentOptions.Center;
+        var bottomLeft = AspectPosition.ComputePosition(AspectPosition.EdgeAlignments.LeftBottom, new(0.9f, 0.7f, -10f));
+        CooldownText.transform.localPosition = bottomLeft + new Vector3(0f, -0.35f, -0.1f);
+        CooldownText.transform.localScale = Vector3.one * 0.4f;
+        CooldownText.gameObject.SetActive(true);
+        CooldownText.gameObject.layer = 5;
+    }
+
+    [CustomEvent(CustomEventType.FixedUpdate)]
+    internal void FixedUpdate()
+    {
+        if (!PlayerControl.LocalPlayer.IsRole(RoleType.BountyHunter))
+        {
+            return;
+        }
+
+        if (Local == null)
+        {
+            return;
+        }
+        if (Player.IsDead())
+        {
+            if (_arrow != null && _arrow.ArrowObject != null)
             {
-                if (Arrow != null && Arrow.ArrowObject != null) Object.Destroy(Arrow.ArrowObject);
-                Arrow = null;
-                if (CooldownText != null && CooldownText.gameObject != null) Object.Destroy(CooldownText.gameObject);
-                CooldownText = null;
-                Bounty = null;
-                _lastSecond = -1;
-                foreach (var p in MapSettings.PlayerIcons.Values)
+                UnityObject.Destroy(_arrow.ArrowObject);
+            }
+            _arrow = null;
+            if (CooldownText != null && CooldownText.gameObject != null)
+            {
+                UnityObject.Destroy(CooldownText.gameObject);
+            }
+            CooldownText = null;
+            Bounty = null;
+            _lastSecond = -1;
+            foreach (var p in MapSettings.PlayerIcons.Values)
+            {
+                if (p != null && p.gameObject != null)
                 {
-                    if (p != null && p.gameObject != null)
-                        p.gameObject.SetActive(false);
+                    p.gameObject.SetActive(false);
+                }
+            }
+
+            return;
+        }
+
+        _arrowUpdateTimer -= Time.fixedDeltaTime;
+        _bountyUpdateTimer -= Time.fixedDeltaTime;
+
+        if (Bounty == null || _bountyUpdateTimer <= 0f)
+        {
+            // Set new bounty
+            Bounty = null;
+            _arrowUpdateTimer = 0f; // Force arrow to update
+            _bountyUpdateTimer = BountyDuration;
+            List<PlayerControl> possibleTargets = [];
+            var partner = Player.GetPartner();
+
+            foreach (var p in PlayerControl.AllPlayerControls.GetFastEnumerator())
+            {
+                if (p == null || p.Data == null)
+                {
+                    continue;
                 }
 
+                if (!p.Data.IsDead
+                    && !p.Data.Disconnected
+                    && !p.Data.Role.IsImpostor
+                    && !p.IsRole(RoleType.Spy)
+                    && (!p.IsRole(RoleType.Sidekick) || !Sidekick.Instance.WasTeamRed)
+                    && (!p.IsRole(RoleType.Jackal) || !Jackal.Instance.WasTeamRed)
+                    && !(p.HasModifier(ModifierType.Mini) && !Mini.IsGrownUp(p))
+                    && !p.IsGm()
+                    && partner != p)
+                {
+                    possibleTargets.Add(p);
+                }
+            }
+
+            if (possibleTargets.Count > 0)
+            {
+                Bounty = possibleTargets[RebuildUs.Rnd.Next(0, possibleTargets.Count)];
+            }
+
+            if (Bounty == null)
+            {
                 return;
             }
 
-            ArrowUpdateTimer -= Time.fixedDeltaTime;
-            BountyUpdateTimer -= Time.fixedDeltaTime;
-
-            if (Bounty == null || BountyUpdateTimer <= 0f)
+            // Show poolable player
+            if (FastDestroyableSingleton<HudManager>.Instance != null)
             {
-                // Set new bounty
-                Bounty = null;
-                ArrowUpdateTimer = 0f; // Force arrow to update
-                BountyUpdateTimer = BountyDuration;
-                var possibleTargets = new List<PlayerControl>();
-                var partner = Player.GetPartner();
-
-                foreach (var p in PlayerControl.AllPlayerControls.GetFastEnumerator())
+                foreach (var pp in MapSettings.PlayerIcons.Values)
                 {
-                    if (p == null || p.Data == null) continue;
-
-                    if (!p.Data.IsDead && !p.Data.Disconnected && !p.Data.Role.IsImpostor && !p.IsRole(RoleType.Spy) && (!p.IsRole(RoleType.Sidekick) || !Sidekick.GetRole(p).WasTeamRed) && (!p.IsRole(RoleType.Jackal) || !Jackal.GetRole(p).WasTeamRed) && !(p.HasModifier(ModifierType.Mini) && !Mini.IsGrownUp(p)) && !p.IsGm() && partner != p)
-                        possibleTargets.Add(p);
-                }
-
-                if (possibleTargets.Count > 0) Bounty = possibleTargets[RebuildUs.Instance.Rnd.Next(0, possibleTargets.Count)];
-
-                if (Bounty == null) return;
-
-                // Show poolable player
-                if (FastDestroyableSingleton<HudManager>.Instance != null)
-                {
-                    foreach (var pp in MapSettings.PlayerIcons.Values)
+                    if (pp != null && pp.gameObject != null)
                     {
-                        if (pp != null && pp.gameObject != null)
-                            pp.gameObject.SetActive(false);
-                    }
-
-                    if (MapSettings.PlayerIcons.TryGetValue(Bounty.PlayerId, out var icon) && icon != null && icon.gameObject != null)
-                    {
-                        var bottomLeft = AspectPosition.ComputePosition(AspectPosition.EdgeAlignments.LeftBottom, new(0.9f, 0.7f, -10f));
-                        icon.transform.localPosition = bottomLeft;
-                        icon.transform.localScale = Vector3.one * 0.3f;
-                        icon.gameObject.SetActive(true);
+                        pp.gameObject.SetActive(false);
                     }
                 }
-            }
 
-            // Hide in meeting
-            if (MeetingHud.Instance && MapSettings.PlayerIcons.TryGetValue(Bounty.PlayerId, out var mIcon) && mIcon != null && mIcon.gameObject != null) mIcon.gameObject.SetActive(false);
-
-            // Update Cooldown Text
-            if (CooldownText != null)
-            {
-                var currentSecond = Mathf.CeilToInt(Mathf.Clamp(BountyUpdateTimer, 0, BountyDuration));
-                if (currentSecond != _lastSecond)
+                if (MapSettings.PlayerIcons.TryGetValue(Bounty.PlayerId, out var icon) && icon != null && icon.gameObject != null)
                 {
-                    _lastSecond = currentSecond;
-                    CooldownText.text = currentSecond.ToString();
+                    var bottomLeft = AspectPosition.ComputePosition(AspectPosition.EdgeAlignments.LeftBottom, new(0.9f, 0.7f, -10f));
+                    icon.transform.localPosition = bottomLeft;
+                    icon.transform.localScale = Vector3.one * 0.3f;
+                    icon.gameObject.SetActive(true);
                 }
-            }
-
-            // Update Arrow
-            if (ShowArrow && Bounty != null)
-            {
-                Arrow ??= new(RoleColor);
-                if (ArrowUpdateTimer <= 0f)
-                {
-                    Arrow.Update(Bounty.transform.position);
-                    ArrowUpdateTimer = ArrowUpdateInterval;
-                }
-
-                Arrow.Update();
             }
         }
-    }
 
-    public override void OnKill(PlayerControl target)
-    {
-        if (PlayerControl.LocalPlayer.IsRole(RoleType.BountyHunter))
+        // Hide in meeting
+        if (MeetingHud.Instance
+            && MapSettings.PlayerIcons.TryGetValue(Bounty.PlayerId, out var mIcon)
+            && mIcon != null
+            && mIcon.gameObject != null)
         {
-            if (target == Bounty)
+            mIcon.gameObject.SetActive(false);
+        }
+
+        // Update Cooldown Text
+        if (CooldownText != null)
+        {
+            var currentSecond = Mathf.CeilToInt(Mathf.Clamp(_bountyUpdateTimer, 0, BountyDuration));
+            if (currentSecond != _lastSecond)
             {
-                Player.SetKillTimer(ReducedCooldown);
-                BountyUpdateTimer = 0f; // Force bounty update
+                _lastSecond = currentSecond;
+                CooldownText.text = currentSecond.ToString();
             }
-            else
-                Player.SetKillTimer(Helpers.GetOption(FloatOptionNames.KillCooldown) + PunishmentTime);
+        }
+
+        // Update Arrow
+        if (!ShowArrow || Bounty == null)
+        {
+            return;
+        }
+        _arrow ??= new(RoleColor);
+        if (_arrowUpdateTimer <= 0f)
+        {
+            _arrow.Update(Bounty.transform.position);
+            _arrowUpdateTimer = ArrowUpdateInterval;
+        }
+
+        _arrow.Update();
+    }
+
+    [CustomEvent(CustomEventType.OnKill)]
+    internal void OnKill(PlayerControl target)
+    {
+        if (!PlayerControl.LocalPlayer.IsRole(RoleType.BountyHunter))
+        {
+            return;
+        }
+        if (target == Bounty)
+        {
+            Player.SetKillTimer(ReducedCooldown);
+            _bountyUpdateTimer = 0f; // Force bounty update
+        }
+        else
+        {
+            Player.SetKillTimer(FloatOptionNames.KillCooldown.Get() + PunishmentTime);
         }
     }
 
-    public override void OnDeath(PlayerControl killer = null) { }
-    public override void OnFinishShipStatusBegin() { }
-    public override void HandleDisconnect(PlayerControl player, DisconnectReasons reason) { }
 
-    // write functions here
 
-    public static void Clear()
+    internal static void Clear()
     {
-        // reset configs here
-        Players.Clear();
+        ModRoleManager.RemoveRole(Instance);
+        Instance = null;
 
         Bounty = null;
-        if (Arrow != null && Arrow.ArrowObject != null) Object.Destroy(Arrow.ArrowObject);
-        Arrow = null;
-        if (CooldownText != null && CooldownText.gameObject != null) Object.Destroy(CooldownText.gameObject);
+        _arrow = null;
+        if (CooldownText != null && CooldownText.gameObject != null)
+        {
+            UnityObject.Destroy(CooldownText.gameObject);
+        }
         CooldownText = null;
         foreach (var p in MapSettings.PlayerIcons.Values)
         {
             if (p != null && p.gameObject != null)
+            {
                 p.gameObject.SetActive(false);
+            }
         }
     }
 }

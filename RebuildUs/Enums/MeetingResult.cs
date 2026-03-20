@@ -1,6 +1,8 @@
 namespace RebuildUs.Enums;
 
-public enum MeetingResult
+internal enum MeetingResult
 {
-    Skip, Tie, Exile,
+    Skip,
+    Tie,
+    Exile,
 }

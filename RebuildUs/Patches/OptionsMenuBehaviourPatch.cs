@@ -1,27 +1,32 @@
 namespace RebuildUs.Patches;
 
 [HarmonyPatch]
-public static class OptionsMenuBehaviourPatch
+internal static class OptionsMenuBehaviourPatch
 {
     [HarmonyPrefix]
     [HarmonyPatch(typeof(OptionsMenuBehaviour), nameof(OptionsMenuBehaviour.Update))]
-    public static bool UpdatePrefix(OptionsMenuBehaviour __instance)
+    internal static bool UpdatePrefix(OptionsMenuBehaviour __instance)
     {
-        if (__instance.name == "KeyBindingMenu")
+        if (__instance.name != "KeyBindingMenu")
         {
-            KeyBindingMenu.Update();
-            return false;
+            return true;
         }
-
-        return true;
+        KeyBindingMenu.Update();
+        return false;
     }
 
     [HarmonyPostfix]
     [HarmonyPatch(typeof(OptionsMenuBehaviour), nameof(OptionsMenuBehaviour.Start))]
-    public static void StartPostfix(OptionsMenuBehaviour __instance)
+    internal static void StartPostfix(OptionsMenuBehaviour __instance)
     {
-        if (__instance.name == "KeyBindingMenu") return;
-        if (__instance.transform.parent && __instance.transform.parent.name == "KeyBindingMenu") return;
+        if (__instance.name == "KeyBindingMenu")
+        {
+            return;
+        }
+        if (__instance.transform.parent && __instance.transform.parent.name == "KeyBindingMenu")
+        {
+            return;
+        }
 
         ClientOptions.Start(__instance);
         KeyBindingMenu.Start(__instance);

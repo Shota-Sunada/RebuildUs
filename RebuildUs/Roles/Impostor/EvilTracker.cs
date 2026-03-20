@@ -1,20 +1,19 @@
-using Object = UnityEngine.Object;
-
 namespace RebuildUs.Roles.Impostor;
 
 [HarmonyPatch]
-public class EvilTracker : RoleBase<EvilTracker>
+[RegisterRole(RoleType.EvilTracker, RoleTeam.Impostor, typeof(MultiRoleBase<EvilTracker>), nameof(CustomOptionHolder.EvilTrackerSpawnRate))]
+internal class EvilTracker : MultiRoleBase<EvilTracker>
 {
-    public static Color NameColor = Palette.ImpostorRed;
-    public static PlayerControl Target;
-    public static PlayerControl CurrentTarget;
-    public static CustomButton TrackerButton;
-    public static Dictionary<string, TMP_Text> ImpostorPositionText;
-    public static TMP_Text TargetPositionText;
+    internal static Color Color = Palette.ImpostorRed;
+    internal static PlayerControl Target;
+    internal static PlayerControl CurrentTarget;
+    internal static CustomButton TrackerButton;
+    internal static Dictionary<string, TMP_Text> ImpostorPositionText;
+    internal static TMP_Text TargetPositionText;
 
-    public static List<Arrow> Arrows = [];
-    public static float UpdateTimer;
-    public static float ArrowUpdateInterval = 0.5f;
+    internal static List<Arrow> Arrows = [];
+    internal static float UpdateTimer;
+    internal static float ArrowUpdateInterval = 0.5f;
 
     public EvilTracker()
     {
@@ -22,51 +21,48 @@ public class EvilTracker : RoleBase<EvilTracker>
         StaticRoleType = CurrentRoleType = RoleType.Tracker;
     }
 
-    public override Color RoleColor
-    {
-        get => NameColor;
-    }
-
     // write configs here
-    public static float Cooldown
+    internal static float Cooldown
     {
         get => CustomOptionHolder.EvilTrackerCooldown.GetFloat();
     }
 
-    public static bool ResetTargetAfterMeeting
+    internal static bool ResetTargetAfterMeeting
     {
         get => CustomOptionHolder.EvilTrackerResetTargetAfterMeeting.GetBool();
     }
 
-    public static bool CanSeeDeathFlash
+    internal static bool CanSeeDeathFlash
     {
         get => CustomOptionHolder.EvilTrackerCanSeeDeathFlash.GetBool();
     }
 
-    public static bool CanSeeTargetTask
+    internal static bool CanSeeTargetTask
     {
         get => CustomOptionHolder.EvilTrackerCanSeeTargetTask.GetBool();
     }
 
-    public static bool CanSeeTargetPosition
+    internal static bool CanSeeTargetPosition
     {
         get => CustomOptionHolder.EvilTrackerCanSeeTargetPosition.GetBool();
     }
 
-    public static bool CanSetTargetOnMeeting
+    internal static bool CanSetTargetOnMeeting
     {
         get => CustomOptionHolder.EvilTrackerCanSetTargetOnMeeting.GetBool();
     }
 
-    public override void OnMeetingStart()
+    [CustomEvent(CustomEventType.OnMeetingStart)]
+    internal void OnMeetingStart()
     {
-        if (ResetTargetAfterMeeting) Target = null;
+        if (ResetTargetAfterMeeting)
+        {
+            Target = null;
+        }
     }
 
-    public override void OnMeetingEnd() { }
-    public override void OnIntroEnd() { }
-
-    public override void FixedUpdate()
+    [CustomEvent(CustomEventType.FixedUpdate)]
+    internal void FixedUpdate()
     {
         var local = Local;
         if (local != null)
@@ -78,24 +74,45 @@ public class EvilTracker : RoleBase<EvilTracker>
         }
     }
 
-    public override void OnKill(PlayerControl target) { }
-    public override void OnDeath(PlayerControl killer = null) { }
-    public override void OnFinishShipStatusBegin() { }
-    public override void HandleDisconnect(PlayerControl player, DisconnectReasons reason) { }
 
-    public static void MakeButtons(HudManager hm)
+
+    [RegisterCustomButton]
+    internal static void MakeButtons(HudManager hm)
     {
-        TrackerButton = new(() => { Target = CurrentTarget; }, () => { return Target == null && PlayerControl.LocalPlayer.IsRole(RoleType.EvilTracker) && PlayerControl.LocalPlayer.IsAlive(); }, () => { return CurrentTarget != null && Target == null && PlayerControl.LocalPlayer.CanMove; }, () => { TrackerButton.Timer = TrackerButton.MaxTimer; }, AssetLoader.TrackerButton, ButtonPosition.Layout, hm, hm.KillButton, AbilitySlot.ImpostorAbilityPrimary, false, Tr.Get(TrKey.TrackerText));
+        TrackerButton = new(() =>
+            {
+                Target = CurrentTarget;
+            },
+            () =>
+            {
+                return Target == null && PlayerControl.LocalPlayer.IsRole(RoleType.EvilTracker) && PlayerControl.LocalPlayer.IsAlive();
+            },
+            () =>
+            {
+                return CurrentTarget != null && Target == null && PlayerControl.LocalPlayer.CanMove;
+            },
+            () =>
+            {
+                TrackerButton.Timer = TrackerButton.MaxTimer;
+            },
+            AssetLoader.TrackerButton,
+            ButtonPosition.Layout,
+            hm,
+            hm.KillButton,
+            AbilitySlot.ImpostorAbilityPrimary,
+            false,
+            Tr.Get(TrKey.TrackerText));
     }
 
-    public static void SetButtonCooldowns()
+    [RegisterCustomButton]
+    internal static void SetButtonCooldowns()
     {
         TrackerButton.MaxTimer = Cooldown;
     }
 
     // write functions here
 
-    public static void Clear()
+    internal static void Clear()
     {
         // reset configs here
         Players.Clear();
@@ -120,7 +137,7 @@ public class EvilTracker : RoleBase<EvilTracker>
                 if (arrow != null && arrow.ArrowObject != null)
                 {
                     arrow.ArrowObject.SetActive(false);
-                    Object.Destroy(arrow.ArrowObject);
+                    UnityObject.Destroy(arrow.ArrowObject);
                 }
             }
 
@@ -129,18 +146,22 @@ public class EvilTracker : RoleBase<EvilTracker>
 
             // インポスターの位置を示すArrowsを描画
             var count = 0;
-            var sb = new StringBuilder();
+            StringBuilder sb = new();
             foreach (var p in PlayerControl.AllPlayerControls.GetFastEnumerator())
             {
                 if (p.Data.IsDead)
                 {
-                    if (p.IsTeamImpostor() && ImpostorPositionText.TryGetValue(p.name, out var txt)) txt.text = "";
+                    if (p.IsTeamImpostor() && ImpostorPositionText.TryGetValue(p.name, out var txt))
+                    {
+                        txt.text = "";
+                    }
+
                     continue;
                 }
 
                 if (p.IsTeamImpostor() && p.PlayerId != PlayerControl.LocalPlayer.PlayerId)
                 {
-                    var arrow = new Arrow(Palette.ImpostorRed);
+                    Arrow arrow = new(Palette.ImpostorRed);
                     arrow.ArrowObject.SetActive(true);
                     arrow.Update(p.transform.position);
                     Arrows.Add(arrow);
@@ -148,11 +169,14 @@ public class EvilTracker : RoleBase<EvilTracker>
                     if (!ImpostorPositionText.TryGetValue(p.name, out var positionText))
                     {
                         var roomTracker = FastDestroyableSingleton<HudManager>.Instance?.roomTracker;
-                        if (roomTracker == null) return;
-                        var gameObject = Object.Instantiate(roomTracker.gameObject);
-                        Object.DestroyImmediate(gameObject.GetComponent<RoomTracker>());
+                        if (roomTracker == null)
+                        {
+                            return;
+                        }
+                        var gameObject = UnityObject.Instantiate(roomTracker.gameObject);
+                        UnityObject.DestroyImmediate(gameObject.GetComponent<RoomTracker>());
                         gameObject.transform.SetParent(FastDestroyableSingleton<HudManager>.Instance.transform);
-                        gameObject.transform.localPosition = new(0, -2.0f + (0.25f * count), gameObject.transform.localPosition.z);
+                        gameObject.transform.localPosition = new(0, -2.0f + 0.25f * count, gameObject.transform.localPosition.z);
                         gameObject.transform.localScale = Vector3.one * 1.0f;
                         positionText = gameObject.GetComponent<TMP_Text>();
                         positionText.alpha = 1.0f;
@@ -172,23 +196,28 @@ public class EvilTracker : RoleBase<EvilTracker>
                         positionText.text = sb.ToString();
                     }
                     else
+                    {
                         positionText.text = "";
+                    }
                 }
             }
 
             // ターゲットの位置を示すArrowを描画
             if (Target != null && !Target.IsDead())
             {
-                var arrow = new Arrow(Palette.CrewmateBlue);
+                Arrow arrow = new(Palette.CrewmateBlue);
                 arrow.ArrowObject.SetActive(true);
                 arrow.Update(Target.transform.position);
                 Arrows.Add(arrow);
                 if (TargetPositionText == null)
                 {
                     var roomTracker = FastDestroyableSingleton<HudManager>.Instance?.roomTracker;
-                    if (roomTracker == null) return;
-                    var gameObject = Object.Instantiate(roomTracker.gameObject);
-                    Object.DestroyImmediate(gameObject.GetComponent<RoomTracker>());
+                    if (roomTracker == null)
+                    {
+                        return;
+                    }
+                    var gameObject = UnityObject.Instantiate(roomTracker.gameObject);
+                    UnityObject.DestroyImmediate(gameObject.GetComponent<RoomTracker>());
                     gameObject.transform.SetParent(FastDestroyableSingleton<HudManager>.Instance.transform);
                     gameObject.transform.localPosition = new(0, -2.0f, gameObject.transform.localPosition.z);
                     gameObject.transform.localScale = Vector3.one * 1.0f;
@@ -209,10 +238,14 @@ public class EvilTracker : RoleBase<EvilTracker>
                     TargetPositionText.text = sb.ToString();
                 }
                 else
+                {
                     TargetPositionText.text = "";
+                }
             }
             else
+            {
                 TargetPositionText?.text = "";
+            }
 
             // タイマーに時間をセット
             UpdateTimer = ArrowUpdateInterval;

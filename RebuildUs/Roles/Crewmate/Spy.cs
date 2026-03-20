@@ -1,9 +1,10 @@
 namespace RebuildUs.Roles.Crewmate;
 
 [HarmonyPatch]
-public class Spy : RoleBase<Spy>
+[RegisterRole(RoleType.Spy, RoleTeam.Crewmate, typeof(SingleRoleBase<Spy>), nameof(CustomOptionHolder.SpySpawnRate))]
+internal class Spy : SingleRoleBase<Spy>
 {
-    public static Color NameColor = Palette.ImpostorRed;
+    internal static Color Color = Palette.ImpostorRed;
 
     public Spy()
     {
@@ -11,47 +12,39 @@ public class Spy : RoleBase<Spy>
         StaticRoleType = CurrentRoleType = RoleType.Spy;
     }
 
-    public override Color RoleColor
-    {
-        get => NameColor;
-    }
 
     // write configs here
-    public static bool ImpostorsCanKillAnyone
+    internal static bool ImpostorsCanKillAnyone
     {
         get => CustomOptionHolder.SpyImpostorsCanKillAnyone.GetBool();
     }
 
-    public static bool CanEnterVents
+    internal static bool CanEnterVents
     {
         get => CustomOptionHolder.SpyCanEnterVents.GetBool();
     }
 
-    public static bool HasImpostorVision
+    internal static bool HasImpostorVision
     {
         get => CustomOptionHolder.SpyHasImpostorVision.GetBool();
     }
 
-    public override void OnUpdateNameColors()
+    internal override void OnUpdateRoleColors()
     {
         var localPlayer = PlayerControl.LocalPlayer;
-        if (localPlayer != null && localPlayer.IsTeamImpostor()) Update.SetPlayerNameColor(Player, NameColor);
+        if (localPlayer != null && localPlayer.IsTeamImpostor())
+        {
+            HudManagerPatch.SetPlayerNameColor(Player, RoleColor);
+        }
     }
 
-    public override void OnMeetingStart() { }
-    public override void OnMeetingEnd() { }
-    public override void OnIntroEnd() { }
-    public override void FixedUpdate() { }
-    public override void OnKill(PlayerControl target) { }
-    public override void OnDeath(PlayerControl killer = null) { }
-    public override void OnFinishShipStatusBegin() { }
-    public override void HandleDisconnect(PlayerControl player, DisconnectReasons reason) { }
+
 
     // write functions here
 
-    public static void Clear()
+    internal static void Clear()
     {
-        // reset configs here
-        Players.Clear();
+        ModRoleManager.RemoveRole(Instance);
+        Instance = null;
     }
 }

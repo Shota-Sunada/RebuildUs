@@ -1,15 +1,16 @@
 namespace RebuildUs.Roles.Modifier;
 
 [HarmonyPatch]
-public class Mini : ModifierBase<Mini>
+[RegisterModifier(ModifierType.Mini, typeof(Mini), nameof(CustomOptionHolder.MiniSpawnRate))]
+internal class Mini : ModifierBase<Mini>
 {
-    public const float DEFAULT_COLLIDER_RADIUS = 0.2233912f;
-    public const float DEFAULT_COLLIDER_OFFSET = 0.3636057f;
-    public static Color NameColor = Color.yellow;
+    internal const float DEFAULT_COLLIDER_RADIUS = 0.2233912f;
+    internal const float DEFAULT_COLLIDER_OFFSET = 0.3636057f;
+    internal static Color Color = Color.yellow;
 
-    public static float GrowingUpDuration = 400f;
-    public static bool TriggerMiniLose;
-    public DateTime TimeOfGrowthStart = DateTime.UtcNow;
+    internal static float GrowingUpDuration = 400f;
+    internal static bool TriggerMiniLose;
+    internal DateTime TimeOfGrowthStart = DateTime.UtcNow;
 
     public Mini()
     {
@@ -17,12 +18,7 @@ public class Mini : ModifierBase<Mini>
         StaticModifierType = CurrentModifierType = ModifierType.Mini;
     }
 
-    public override Color ModifierColor
-    {
-        get => NameColor;
-    }
-
-    public static List<PlayerControl> Candidates
+    internal static List<PlayerControl> Candidates
     {
         get
         {
@@ -30,52 +26,50 @@ public class Mini : ModifierBase<Mini>
             foreach (var player in PlayerControl.AllPlayerControls.GetFastEnumerator())
             {
                 if (!player.HasModifier(ModifierType.Mini))
+                {
                     validPlayers.Add(player);
+                }
             }
 
             return validPlayers;
         }
     }
 
-    public static string Postfix
+    internal static string Postfix
     {
         get => Tr.Get(TrKey.MiniPostfix);
     }
 
-    public static string FullName
+    internal static string FullName
     {
         get => Tr.Get(TrKey.Mini);
     }
 
-    public float GrowingProgress()
+    internal float GrowingProgress()
     {
         var timeSinceStart = (float)(DateTime.UtcNow - TimeOfGrowthStart).TotalMilliseconds;
         return Mathf.Clamp(timeSinceStart / (GrowingUpDuration * 1000), 0f, 1f);
     }
 
-    public static bool IsGrownUp(PlayerControl player)
+    internal static bool IsGrownUp(PlayerControl player)
     {
         for (var i = 0; i < Players.Count; i++)
         {
             var mini = Players[i];
-            if (mini.Player == player) return mini.GrowingProgress() == 1f;
+            if (mini.Player == player)
+            {
+                return mini.GrowingProgress() == 1f;
+            }
         }
 
         return true;
     }
 
-    public override void OnMeetingStart() { }
-    public override void OnMeetingEnd() { }
-    public override void OnIntroEnd() { }
-    public override void FixedUpdate() { }
-    public override void OnKill(PlayerControl target) { }
-    public override void OnDeath(PlayerControl killer = null) { }
-    public override void OnFinishShipStatusBegin() { }
-    public override void HandleDisconnect(PlayerControl player, DisconnectReasons reason) { }
+
 
     // write functions here
 
-    public static void Clear()
+    internal static void Clear()
     {
         // reset configs here
         Players.Clear();

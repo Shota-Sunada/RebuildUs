@@ -1,15 +1,16 @@
-using Object = UnityEngine.Object;
-
 namespace RebuildUs.Extensions;
 
-public static class UnityEngineExtensions
+internal static class UnityEngineExtensions
 {
-    public static void Destroy(this Object obj)
+    internal static void Destroy(this UnityObject obj)
     {
-        if (obj != null) Object.Destroy(obj);
+        if (obj != null)
+        {
+            UnityObject.Destroy(obj);
+        }
     }
 
-    public static Transform FindEx(this Transform transform, string name)
+    internal static Transform FindEx(this Transform transform, string name)
     {
         return transform.Find(name) ?? throw new($"The Transform {name} was not found");
     }

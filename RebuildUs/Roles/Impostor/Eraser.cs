@@ -1,15 +1,16 @@
 namespace RebuildUs.Roles.Impostor;
 
 [HarmonyPatch]
-public class Eraser : RoleBase<Eraser>
+[RegisterRole(RoleType.Eraser, RoleTeam.Impostor, typeof(MultiRoleBase<Eraser>), nameof(CustomOptionHolder.EraserSpawnRate))]
+internal class Eraser : MultiRoleBase<Eraser>
 {
-    public static Color NameColor = Palette.ImpostorRed;
+    internal static Color Color = Palette.ImpostorRed;
 
     private static CustomButton _eraserButton;
 
     // write configs here
-    public static List<PlayerControl> FutureErased = [];
-    public PlayerControl CurrentTarget;
+    internal static List<PlayerControl> FutureErased = [];
+    internal PlayerControl CurrentTarget;
 
     public Eraser()
     {
@@ -17,31 +18,23 @@ public class Eraser : RoleBase<Eraser>
         StaticRoleType = CurrentRoleType = RoleType.Eraser;
     }
 
-    public override Color RoleColor
-    {
-        get => NameColor;
-    }
-
-    public static float Cooldown
+    internal static float Cooldown
     {
         get => CustomOptionHolder.EraserCooldown.GetFloat();
     }
 
-    public static float CooldownIncrease
+    internal static float CooldownIncrease
     {
         get => CustomOptionHolder.EraserCooldownIncrease.GetFloat();
     }
 
-    public static bool CanEraseAnyone
+    internal static bool CanEraseAnyone
     {
         get => CustomOptionHolder.EraserCanEraseAnyone.GetBool();
     }
 
-    public override void OnMeetingStart() { }
-    public override void OnMeetingEnd() { }
-    public override void OnIntroEnd() { }
-
-    public override void FixedUpdate()
+    [CustomEvent(CustomEventType.FixedUpdate)]
+    internal void FixedUpdate()
     {
         var local = Local;
         if (local != null)
@@ -49,64 +42,110 @@ public class Eraser : RoleBase<Eraser>
             List<PlayerControl> untargetables = [];
             if (Spy.Exists)
             {
-                var spyPlayers = Spy.AllPlayers;
-                for (var i = 0; i < spyPlayers.Count; i++) untargetables.Add(spyPlayers[i]);
+                untargetables.Add(Spy.PlayerControl);
             }
 
-            if (Sidekick.Exists)
+            if (Sidekick.Exists && Sidekick.Instance.WasTeamRed)
             {
-                var sidekickPlayers = Sidekick.Players;
-                for (var i = 0; i < sidekickPlayers.Count; i++)
-                {
-                    var sidekick = sidekickPlayers[i];
-                    if (sidekick.WasTeamRed) untargetables.Add(sidekick.Player);
-                }
+                untargetables.Add(Sidekick.PlayerControl);
             }
 
-            if (Jackal.Exists)
+            if (Jackal.Exists && Jackal.Instance.WasTeamRed)
             {
-                var jackalPlayers = Jackal.Players;
-                for (var i = 0; i < jackalPlayers.Count; i++)
-                {
-                    var jackal = jackalPlayers[i];
-                    if (jackal.WasTeamRed) untargetables.Add(jackal.Player);
-                }
+                untargetables.Add(Jackal.PlayerControl);
             }
 
             CurrentTarget = Helpers.SetTarget(!CanEraseAnyone, untargetablePlayers: CanEraseAnyone ? [] : untargetables);
-            Helpers.SetPlayerOutline(CurrentTarget, NameColor);
+            Helpers.SetPlayerOutline(CurrentTarget, RoleColor);
         }
     }
 
-    public override void OnKill(PlayerControl target) { }
-    public override void OnDeath(PlayerControl killer = null) { }
-    public override void OnFinishShipStatusBegin() { }
-    public override void HandleDisconnect(PlayerControl player, DisconnectReasons reason) { }
 
-    public static void MakeButtons(HudManager hm)
+
+    [RegisterCustomButton]
+    internal static void MakeButtons(HudManager hm)
     {
         _eraserButton = new(() =>
-        {
-            _eraserButton.MaxTimer += CooldownIncrease;
-            _eraserButton.Timer = _eraserButton.MaxTimer;
+            {
+                _eraserButton.MaxTimer += CooldownIncrease;
+                _eraserButton.Timer = _eraserButton.MaxTimer;
 
-            using var sender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.SetFutureErased);
-            sender.Write(Local.CurrentTarget.PlayerId);
-            RPCProcedure.SetFutureErased(Local.CurrentTarget.PlayerId);
-        }, () => { return PlayerControl.LocalPlayer.IsRole(RoleType.Eraser) && PlayerControl.LocalPlayer.IsAlive(); }, () => { return PlayerControl.LocalPlayer.CanMove && Local.CurrentTarget != null; }, () => { _eraserButton.Timer = _eraserButton.MaxTimer; }, AssetLoader.EraserButton, ButtonPosition.Layout, hm, hm.KillButton, AbilitySlot.ImpostorAbilityPrimary, false, Tr.Get(TrKey.EraserText));
+                SetFutureErased(PlayerControl.LocalPlayer, Local.CurrentTarget.PlayerId);
+            },
+            () =>
+            {
+                return PlayerControl.LocalPlayer.IsRole(RoleType.Eraser) && PlayerControl.LocalPlayer.IsAlive();
+            },
+            () =>
+            {
+                return PlayerControl.LocalPlayer.CanMove && Local.CurrentTarget != null;
+            },
+            () =>
+            {
+                _eraserButton.Timer = _eraserButton.MaxTimer;
+            },
+            AssetLoader.EraserButton,
+            ButtonPosition.Layout,
+            hm,
+            hm.KillButton,
+            AbilitySlot.ImpostorAbilityPrimary,
+            false,
+            Tr.Get(TrKey.EraserText));
     }
 
-    public static void SetButtonCooldowns()
+    [RegisterCustomButton]
+    internal static void SetButtonCooldowns()
     {
         _eraserButton.MaxTimer = Cooldown;
     }
 
     // write functions here
 
-    public static void Clear()
+    internal static void Clear()
     {
         // reset configs here
         Players.Clear();
         FutureErased = [];
+    }
+
+    [MethodRpc((uint)CustomRPC.ErasePlayerRoles)]
+    internal static void ErasePlayerRoles(PlayerControl sender, byte playerId)
+    {
+        ErasePlayerRolesLocal(playerId);
+    }
+
+    internal static void ErasePlayerRolesLocal(byte playerId, bool ignoreLovers = false, bool clearNeutralTasks = true)
+    {
+        var player = Helpers.PlayerById(playerId);
+        if (player == null)
+        {
+            return;
+        }
+
+        // Don't give a former neutral role tasks because that destroys the balance.
+        if (player.IsNeutral() && clearNeutralTasks)
+        {
+            player.ClearAllTasks();
+        }
+
+        player.EraseAllRoles();
+        player.EraseAllModifiers();
+
+        if (!ignoreLovers && player.IsLovers())
+        {
+            // The whole Lover couple is being erased
+            Lovers.EraseCouple(player);
+        }
+    }
+
+    [MethodRpc((uint)CustomRPC.SetFutureErased)]
+    internal static void SetFutureErased(PlayerControl sender, byte playerId)
+    {
+        var player = Helpers.PlayerById(playerId);
+        FutureErased ??= [];
+        if (player != null)
+        {
+            FutureErased.Add(player);
+        }
     }
 }

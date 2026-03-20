@@ -1,70 +1,36 @@
 namespace RebuildUs.Roles;
 
-public class RoleInfo(TrKey nameKey, Color color, CustomOption baseOption, RoleType roleType)
+internal class RoleInfo(TrKey nameKey, Color color, CustomOption baseOption, RoleType roleType)
 {
-    public static List<RoleInfo> AllRoleInfos = [];
+    internal static List<RoleInfo> AllRoleInfos = [];
 
-    private static readonly Dictionary<RoleType, RoleInfo> ROLE_DICT = [];
+    private static readonly Dictionary<RoleType, RoleInfo> RoleDict = [];
     private readonly CustomOption _baseOption = baseOption;
-    public Color Color = color;
+    internal Color Color = color;
 
-    public TrKey NameKey = nameKey;
-    public RoleType RoleType = roleType;
+    internal TrKey NameKey = nameKey;
+    internal RoleType RoleType = roleType;
 
-    public virtual string Name
+    internal virtual string Name { get => Tr.Get(NameKey); }
+    internal virtual string RoleColored { get => RoleColorRegistry.WrapRoleText(RoleType, Name, Color); }
+    internal virtual string IntroDescription { get => Tr.GetDynamic($"{NameKey}IntroDesc"); }
+    internal virtual string ShortDescription { get => Tr.GetDynamic($"{NameKey}ShortDesc"); }
+    internal virtual string FullDescription { get => Tr.GetDynamic($"{NameKey}FullDesc"); }
+    internal virtual string RoleOptions { get => CustomOption.OptionsToString(_baseOption); }
+
+    internal bool Enabled { get => Helpers.RolesEnabled && (_baseOption == null || _baseOption.Enabled); }
+
+    internal static RoleInfo Jackal { get => Get(RoleType.Jackal); }
+    internal static RoleInfo Crewmate { get => Get(RoleType.Crewmate); }
+    internal static RoleInfo Impostor { get => Get(RoleType.Impostor); }
+
+    internal static List<RoleInfo> GetRoleInfoForPlayer(PlayerControl player, bool showModifier = true, RoleType[] excludeRoles = null)
     {
-        get => Tr.Get(NameKey);
-    }
-
-    public virtual string NameColored
-    {
-        get => Helpers.Cs(Color, Name);
-    }
-
-    public virtual string IntroDescription
-    {
-        get => Tr.GetDynamic($"{NameKey}IntroDesc");
-    }
-
-    public virtual string ShortDescription
-    {
-        get => Tr.GetDynamic($"{NameKey}ShortDesc");
-    }
-
-    public virtual string FullDescription
-    {
-        get => Tr.GetDynamic($"{NameKey}FullDesc");
-    }
-
-    public virtual string RoleOptions
-    {
-        get => CustomOption.OptionsToString(_baseOption);
-    }
-
-    public bool Enabled
-    {
-        get => Helpers.RolesEnabled && (_baseOption == null || _baseOption.Enabled);
-    }
-
-    public static RoleInfo Jackal
-    {
-        get => Get(RoleType.Jackal);
-    }
-
-    public static RoleInfo Crewmate
-    {
-        get => Get(RoleType.Crewmate);
-    }
-
-    public static RoleInfo Impostor
-    {
-        get => Get(RoleType.Impostor);
-    }
-
-    public static List<RoleInfo> GetRoleInfoForPlayer(PlayerControl player, bool showModifier = true, RoleType[] excludeRoles = null)
-    {
-        var infos = new List<RoleInfo>();
-        if (player == null) return infos;
+        List<RoleInfo> infos = [];
+        if (player == null)
+        {
+            return infos;
+        }
 
         if (showModifier)
         {
@@ -75,8 +41,14 @@ public class RoleInfo(TrKey nameKey, Color color, CustomOption baseOption, RoleT
         for (var i = 0; i < allRoleInfos.Count; i++)
         {
             var info = allRoleInfos[i];
-            if (info.RoleType == RoleType.Jackal) continue;
-            if (player.IsRole(info.RoleType)) infos.Add(info);
+            if (info.RoleType == RoleType.Jackal)
+            {
+                continue;
+            }
+            if (player.IsRole(info.RoleType))
+            {
+                infos.Add(info);
+            }
         }
 
         if (player.IsRole(RoleType.Jackal) || Neutral.Jackal.FormerJackals != null)
@@ -95,13 +67,22 @@ public class RoleInfo(TrKey nameKey, Color color, CustomOption baseOption, RoleT
                 }
             }
 
-            if (isJackalOrFormer) infos.Add(Jackal);
+            if (isJackalOrFormer)
+            {
+                infos.Add(Jackal);
+            }
         }
 
         if (infos.Count == 0 && player.Data != null && player.Data.Role != null)
         {
-            if (player.IsTeamImpostor()) infos.Add(Impostor);
-            else infos.Add(Crewmate);
+            if (player.IsTeamImpostor())
+            {
+                infos.Add(Impostor);
+            }
+            else
+            {
+                infos.Add(Crewmate);
+            }
         }
 
         if (excludeRoles != null && excludeRoles.Length > 0)
@@ -119,29 +100,41 @@ public class RoleInfo(TrKey nameKey, Color color, CustomOption baseOption, RoleT
                     }
                 }
 
-                if (shouldRemove) infos.RemoveAt(i);
+                if (shouldRemove)
+                {
+                    infos.RemoveAt(i);
+                }
             }
         }
 
         return infos;
     }
 
-    public static string GetRolesString(PlayerControl p, bool useColors, bool showModifier = true, RoleType[] excludeRoles = null, bool includeHidden = false, string joinSeparator = " ")
+    internal static string GetRolesString(PlayerControl p, bool useColors, bool showModifier = true, RoleType[] excludeRoles = null, bool includeHidden = false, string joinSeparator = " ")
     {
-        if (p == null || p.Data == null || p.Data.Disconnected) return string.Empty;
+        if (p == null || p.Data == null || p.Data.Disconnected)
+        {
+            return string.Empty;
+        }
 
         var roleInfo = GetRoleInfoForPlayer(p, showModifier, excludeRoles);
-        if (roleInfo.Count == 0) return string.Empty;
+        if (roleInfo.Count == 0)
+        {
+            return string.Empty;
+        }
 
-        var sb = new StringBuilder();
+        StringBuilder sb = new();
 
         void AppendNames(bool useMadmateColor = false)
         {
             for (var i = 0; i < roleInfo.Count; i++)
             {
-                if (i > 0) sb.Append(joinSeparator);
+                if (i > 0)
+                {
+                    sb.Append(joinSeparator);
+                }
                 var info = roleInfo[i];
-                var c = useMadmateColor ? Madmate.NameColor : info.Color;
+                var c = useMadmateColor ? Madmate.Color : info.Color;
                 sb.Append(useColors ? Helpers.Cs(c, info.Name) : info.Name);
             }
         }
@@ -158,9 +151,12 @@ public class RoleInfo(TrKey nameKey, Color color, CustomOption baseOption, RoleT
                 }
             }
 
-            if (hasCrewmate) return useColors ? Helpers.Cs(Madmate.NameColor, Madmate.FullName) : Madmate.FullName;
+            if (hasCrewmate)
+            {
+                return useColors ? Helpers.Cs(Madmate.Color, Madmate.FullName) : Madmate.FullName;
+            }
 
-            var prefix = useColors ? Helpers.Cs(Madmate.NameColor, Madmate.Prefix) : Madmate.Prefix;
+            var prefix = useColors ? Helpers.Cs(Madmate.Color, Madmate.Prefix) : Madmate.Prefix;
             sb.Append(prefix);
             AppendNames(true);
             return sb.ToString();
@@ -178,9 +174,12 @@ public class RoleInfo(TrKey nameKey, Color color, CustomOption baseOption, RoleT
                 }
             }
 
-            if (hasImpostor) return useColors ? Helpers.Cs(LastImpostor.NameColor, LastImpostor.FullName) : LastImpostor.FullName;
+            if (hasImpostor)
+            {
+                return useColors ? Helpers.Cs(LastImpostor.Color, LastImpostor.FullName) : LastImpostor.FullName;
+            }
 
-            var postfix = useColors ? Helpers.Cs(LastImpostor.NameColor, LastImpostor.Postfix) : LastImpostor.Postfix;
+            var postfix = useColors ? Helpers.Cs(LastImpostor.Color, LastImpostor.Postfix) : LastImpostor.Postfix;
             AppendNames();
             sb.Append(postfix);
             return sb.ToString();
@@ -188,7 +187,7 @@ public class RoleInfo(TrKey nameKey, Color color, CustomOption baseOption, RoleT
 
         if (p.HasModifier(ModifierType.AntiTeleport))
         {
-            var postfix = useColors ? Helpers.Cs(AntiTeleport.NameColor, AntiTeleport.Postfix) : AntiTeleport.Postfix;
+            var postfix = useColors ? Helpers.Cs(AntiTeleport.Color, AntiTeleport.Postfix) : AntiTeleport.Postfix;
             AppendNames();
             sb.Append(postfix);
             return sb.ToString();
@@ -198,24 +197,45 @@ public class RoleInfo(TrKey nameKey, Color color, CustomOption baseOption, RoleT
         return sb.ToString();
     }
 
-    public static RoleInfo Get(RoleType type)
+    internal static RoleInfo Get(RoleType type)
     {
-        return ROLE_DICT.GetValueOrDefault(type);
+        return RoleDict.GetValueOrDefault(type);
     }
 
-    public static void Load()
+    internal static void Load()
     {
-        ROLE_DICT.Clear();
+        RoleDict.Clear();
         AllRoleInfos.Clear();
 
-        foreach (var reg in RoleData.ROLES)
+        var registration = RoleData.Roles;
+        if (registration == null)
         {
-            var info = new RoleInfo(Enum.TryParse<TrKey>(Enum.GetName(reg.RoleType), out var key) ? key : TrKey.None, reg.GetColor(), reg.GetOption(), reg.RoleType);
-            ROLE_DICT[reg.RoleType] = info;
-            AllRoleInfos.Add(info);
+            Logger.LogError("RoleData.Roles is null!", "RoleInfo");
+            return;
         }
 
-        ROLE_DICT[RoleType.Crewmate] = new(TrKey.Crewmate, Palette.CrewmateBlue, null, RoleType.Crewmate);
-        ROLE_DICT[RoleType.Impostor] = new(TrKey.Impostor, Palette.ImpostorRed, null, RoleType.Impostor);
+        foreach (var reg in registration)
+        {
+            try
+            {
+                var color = reg.GetColor != null
+                    ? RoleColorRegistry.GetRoleColor(reg.RoleType, reg.GetColor())
+                    : RoleColorRegistry.GetRoleColor(reg.RoleType, Color.white);
+                var option = reg.GetOption != null ? reg.GetOption() : null;
+                var name = Enum.GetName(reg.RoleType);
+                RoleInfo info = new(Enum.TryParse(name, out TrKey key) ? key : TrKey.None, color, option, reg.RoleType);
+                RoleDict[reg.RoleType] = info;
+                AllRoleInfos.Add(info);
+            }
+            catch (Exception e)
+            {
+                Logger.LogError($"Error loading role info for {reg.RoleType}: {e}", "RoleInfo");
+            }
+        }
+
+        RoleColorRegistry.RegisterRoleColor(RoleType.Crewmate, Palette.CrewmateBlue);
+        RoleColorRegistry.RegisterRoleColor(RoleType.Impostor, Palette.ImpostorRed);
+        RoleDict[RoleType.Crewmate] = new(TrKey.Crewmate, RoleColorRegistry.GetRoleColor(RoleType.Crewmate), null, RoleType.Crewmate);
+        RoleDict[RoleType.Impostor] = new(TrKey.Impostor, RoleColorRegistry.GetRoleColor(RoleType.Impostor), null, RoleType.Impostor);
     }
 }

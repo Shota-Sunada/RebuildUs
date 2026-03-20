@@ -4,11 +4,11 @@ namespace RebuildUs.Impostor;
 
 public interface IGameCodeManager
 {
-    public int SixCharCodes { get; }
-    public int FourCharCodes { get; }
-    public string Path { get; }
-    public GameCode Get();
-    public void Release(GameCode code);
-    public bool IsInUse(string code);
-    public bool AnyInUse();
+    int SixCharCodes { get; }
+    int FourCharCodes { get; }
+    string Path { get; }
+    GameCode Get();
+    void Release(GameCode code);
+    bool IsInUse(string code);
+    bool AnyInUse();
 }

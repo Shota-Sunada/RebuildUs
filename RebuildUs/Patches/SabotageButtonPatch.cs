@@ -1,23 +1,41 @@
 namespace RebuildUs.Patches;
 
 [HarmonyPatch]
-public static class SabotageButtonPatch
+internal static class SabotageButtonPatch
 {
     [HarmonyPostfix]
     [HarmonyPatch(typeof(SabotageButton), nameof(SabotageButton.Refresh))]
-    public static void RefreshPostfix()
+    internal static void RefreshPostfix()
     {
-        Usables.SabotageButtonRefresh();
+        var localPlayer = PlayerControl.LocalPlayer;
+        if (localPlayer == null)
+        {
+            return;
+        }
+
+        // Mafia disable sabotage button for Janitor and sometimes for Mafioso
+        var blockSabotageJanitor = localPlayer.IsRole(RoleType.Janitor);
+        var blockSabotageMafioso = localPlayer.IsRole(RoleType.Mafioso) && !Mafia.IsGodfatherDead;
+        if (blockSabotageJanitor || blockSabotageMafioso)
+        {
+            FastDestroyableSingleton<HudManager>.Instance.SabotageButton.SetDisabled();
+        }
     }
 
     [HarmonyPrefix]
     [HarmonyPatch(typeof(SabotageButton), nameof(SabotageButton.DoClick))]
-    public static bool DoClickPrefix(SabotageButton __instance)
+    internal static bool DoClickPrefix(SabotageButton __instance)
     {
         // The sabotage button behaves just fine if it's a regular impostor
-        if (PlayerControl.LocalPlayer?.Data?.Role?.TeamType == RoleTeamTypes.Impostor) return true;
+        if (PlayerControl.LocalPlayer?.Data?.Role?.TeamType == RoleTeamTypes.Impostor)
+        {
+            return true;
+        }
 
-        FastDestroyableSingleton<HudManager>.Instance.ToggleMapVisible(new() { Mode = MapOptions.Modes.Sabotage });
+        FastDestroyableSingleton<HudManager>.Instance.ToggleMapVisible(new()
+        {
+            Mode = MapOptions.Modes.Sabotage,
+        });
         return false;
     }
 }

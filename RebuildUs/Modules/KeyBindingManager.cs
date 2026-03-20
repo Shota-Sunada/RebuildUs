@@ -1,6 +1,6 @@
 namespace RebuildUs.Modules;
 
-public enum AbilitySlot
+internal enum AbilitySlot
 {
     CrewmateAbilityPrimary,
     CrewmateAbilitySecondary,
@@ -9,25 +9,25 @@ public enum AbilitySlot
     NeutralAbilityPrimary,
     NeutralAbilitySecondary,
     CommonAbilityPrimary,
-    CommonAbilitySecondary
+    CommonAbilitySecondary,
 }
 
-public static class KeyBindingManager
+internal static class KeyBindingManager
 {
-    public static List<RebuildUsInput> AllInputs = [];
+    internal static List<RebuildUsInput> AllInputs = [];
 
-    public static RebuildUsInput CrewmateAbilityPrimary;
-    public static RebuildUsInput CrewmateAbilitySecondary;
-    public static RebuildUsInput ImpostorAbilityPrimary;
-    public static RebuildUsInput ImpostorAbilitySecondary;
-    public static RebuildUsInput NeutralAbilityPrimary;
-    public static RebuildUsInput NeutralAbilitySecondary;
-    public static RebuildUsInput CommonAbilityPrimary;
-    public static RebuildUsInput CommonAbilitySecondary;
+    internal static RebuildUsInput CrewmateAbilityPrimary;
+    internal static RebuildUsInput CrewmateAbilitySecondary;
+    internal static RebuildUsInput ImpostorAbilityPrimary;
+    internal static RebuildUsInput ImpostorAbilitySecondary;
+    internal static RebuildUsInput NeutralAbilityPrimary;
+    internal static RebuildUsInput NeutralAbilitySecondary;
+    internal static RebuildUsInput CommonAbilityPrimary;
+    internal static RebuildUsInput CommonAbilitySecondary;
 
-    public static Dictionary<KeyCode, KeyCodeData> AllKeyCodes = [];
+    internal static Dictionary<KeyCode, KeyCodeData> AllKeyCodes = [];
 
-    public static void Initialize(ConfigFile config)
+    internal static void Initialize(ConfigFile config)
     {
         CrewmateAbilityPrimary = new(nameof(CrewmateAbilityPrimary), KeyCode.F, config);
         CrewmateAbilitySecondary = new(nameof(CrewmateAbilitySecondary), KeyCode.G, config);
@@ -41,7 +41,7 @@ public static class KeyBindingManager
         Load();
     }
 
-    public static KeyCode GetKey(AbilitySlot slot)
+    internal static KeyCode GetKey(AbilitySlot slot)
     {
         return slot switch
         {
@@ -57,17 +57,19 @@ public static class KeyBindingManager
         };
     }
 
-    public static Sprite GetKeySprite(KeyCode keyCode)
+    internal static Sprite GetKeySprite(KeyCode keyCode)
     {
-        if (AllKeyCodes.TryGetValue(keyCode, out var data)) return data.GetSprite();
-        return null;
+        return AllKeyCodes.TryGetValue(keyCode, out var data) ? data.GetSprite() : null;
     }
 
-    public static void Load()
+    internal static void Load()
     {
-        KeyInputTexture kit;
-        kit = new("KeyBindCharacters");
-        for (var i = 0; i < 10; i++) _ = new KeyCodeData(KeyCode.Alpha0 + i, i.ToString(), kit, i);
+        KeyInputTexture kit = new("KeyBindCharacters");
+        for (var i = 0; i < 10; i++)
+        {
+            _ = new KeyCodeData(KeyCode.Alpha0 + i, i.ToString(), kit, i);
+        }
+
         _ = new KeyCodeData(KeyCode.Mouse0, "Mouse Left", kit, 10);
         _ = new KeyCodeData(KeyCode.Mouse1, "Mouse Right", kit, 11);
         _ = new KeyCodeData(KeyCode.Mouse2, "Mouse Middle", kit, 12);
@@ -86,18 +88,24 @@ public static class KeyBindingManager
         _ = new KeyCodeData(KeyCode.Delete, "Del", kit, 7);
 
         kit = new("KeyBindCharacters1");
-        for (var key = KeyCode.A; key <= KeyCode.Z; key++) _ = new KeyCodeData(key, ((char)(('A' + key) - KeyCode.A)).ToString(), kit, key - KeyCode.A);
+        for (var key = KeyCode.A; key <= KeyCode.Z; key++)
+        {
+            _ = new KeyCodeData(key, ((char)('A' + key - KeyCode.A)).ToString(), kit, key - KeyCode.A);
+        }
 
         kit = new("KeyBindCharacters2");
-        for (var i = 0; i < 12; i++) _ = new KeyCodeData(KeyCode.F1 + i, "F" + (i + 1), kit, i);
+        for (var i = 0; i < 12; i++)
+        {
+            _ = new KeyCodeData(KeyCode.F1 + i, "F" + (i + 1), kit, i);
+        }
     }
 
-    public sealed class RebuildUsInput
+    internal sealed class RebuildUsInput
     {
         private readonly ConfigEntry<KeyCode> _config;
         private readonly KeyCode _defaultKey;
 
-        public RebuildUsInput(string identifier, KeyCode defaultKey, ConfigFile config)
+        internal RebuildUsInput(string identifier, KeyCode defaultKey, ConfigFile config)
         {
             Identifier = identifier;
             _defaultKey = defaultKey;
@@ -106,50 +114,56 @@ public static class KeyBindingManager
             AllInputs.Add(this);
         }
 
-        public string Identifier { get; private set; }
-        public KeyCode Key { get; private set; }
+        internal string Identifier { get; private set; }
+        internal KeyCode Key { get; private set; }
 
-        public void ChangeKey(KeyCode newKey)
+        internal void ChangeKey(KeyCode newKey)
         {
-            if (Key == newKey) return;
+            if (Key == newKey)
+            {
+                return;
+            }
             Key = newKey;
             _config.Value = newKey;
         }
 
-        public void Reset()
+        internal void Reset()
         {
             ChangeKey(_defaultKey);
         }
     }
 
-    public sealed class KeyInputTexture
+    internal sealed class KeyInputTexture
     {
         private readonly string _address;
         private Texture2D _texture;
 
-        public KeyInputTexture(string address)
+        internal KeyInputTexture(string address)
         {
             _address = address;
         }
 
-        public Texture2D GetTexture()
+        internal Texture2D GetTexture()
         {
             if (_texture == null || !_texture)
             {
                 // In RebuildUs, we use AssetLoader to get sprites/textures
                 var sprite = AssetLoader.GetKeyBindTexture(_address);
-                if (sprite != null) _texture = sprite.texture;
+                if (sprite != null)
+                {
+                    _texture = sprite.texture;
+                }
             }
 
             return _texture;
         }
     }
 
-    public sealed class KeyCodeData
+    internal sealed class KeyCodeData
     {
         private Sprite _sprite;
 
-        public KeyCodeData(KeyCode keyCode, string displayKey, KeyInputTexture texture, int num)
+        internal KeyCodeData(KeyCode keyCode, string displayKey, KeyInputTexture texture, int num)
         {
             KeyCode = keyCode;
             DisplayKey = displayKey;
@@ -159,17 +173,21 @@ public static class KeyBindingManager
             AllKeyCodes[keyCode] = this;
         }
 
-        public KeyCode KeyCode { get; private set; }
-        public KeyInputTexture Texture { get; }
-        public int TextureNum { get; }
-        public string DisplayKey { get; private set; }
+        internal KeyCode KeyCode { get; private set; }
+        private KeyInputTexture Texture { get; }
+        private int TextureNum { get; }
+        internal string DisplayKey { get; private set; }
 
-        public Sprite GetSprite()
+        internal Sprite GetSprite()
         {
-            if (_sprite == null || !_sprite)
+            if (_sprite != null && _sprite)
             {
-                var tex = Texture.GetTexture();
-                if (tex != null) _sprite = Sprite.Create(tex, new(0f, tex.height - (19f * (TextureNum + 1)), 18f, 19f), new(0.5f, 0.5f), 100f);
+                return _sprite;
+            }
+            var tex = Texture.GetTexture();
+            if (tex != null)
+            {
+                _sprite = Sprite.Create(tex, new(0f, tex.height - 19f * (TextureNum + 1), 18f, 19f), new(0.5f, 0.5f), 100f);
             }
 
             return _sprite;

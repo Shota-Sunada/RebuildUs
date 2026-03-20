@@ -1,11 +1,11 @@
 namespace RebuildUs.Patches;
 
 [HarmonyPatch]
-public static class LobbyViewSettingsPanePatch
+internal static class LobbyViewSettingsPanePatch
 {
     [HarmonyPrefix]
     [HarmonyPatch(typeof(LobbyViewSettingsPane), nameof(LobbyViewSettingsPane.SetTab))]
-    public static bool LobbyViewSettingsPaneSetTabPrefix(LobbyViewSettingsPane __instance)
+    internal static bool LobbyViewSettingsPaneSetTabPrefix(LobbyViewSettingsPane __instance)
     {
         CustomOption.SetTab(__instance, (PanePage)__instance.currentTab);
         return false;
@@ -13,7 +13,7 @@ public static class LobbyViewSettingsPanePatch
 
     [HarmonyPrefix]
     [HarmonyPatch(typeof(LobbyViewSettingsPane), nameof(LobbyViewSettingsPane.ChangeTab))]
-    public static bool LobbyViewSettingsPaneChangeTabPrefix(LobbyViewSettingsPane __instance, StringNames category)
+    internal static bool LobbyViewSettingsPaneChangeTabPrefix(LobbyViewSettingsPane __instance, StringNames category)
     {
         CustomOption.SettingsPaneChangeTab(__instance, (PanePage)category);
         return false;
@@ -21,14 +21,14 @@ public static class LobbyViewSettingsPanePatch
 
     [HarmonyPostfix]
     [HarmonyPatch(typeof(LobbyViewSettingsPane), nameof(LobbyViewSettingsPane.Update))]
-    public static void UpdatePostfix(LobbyViewSettingsPane __instance)
+    internal static void UpdatePostfix(LobbyViewSettingsPane __instance)
     {
         // CustomOption.SettingsPaneUpdate(__instance);
     }
 
     [HarmonyPostfix]
     [HarmonyPatch(typeof(LobbyViewSettingsPane), nameof(LobbyViewSettingsPane.Awake))]
-    public static void SettingsPaneAwake(LobbyViewSettingsPane __instance)
+    internal static void SettingsPaneAwake(LobbyViewSettingsPane __instance)
     {
         CustomOption.SettingsPaneAwake(__instance);
     }

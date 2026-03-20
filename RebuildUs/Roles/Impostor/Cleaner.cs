@@ -1,13 +1,12 @@
-using Object = UnityEngine.Object;
-
 namespace RebuildUs.Roles.Impostor;
 
 [HarmonyPatch]
-public class Cleaner : RoleBase<Cleaner>
+[RegisterRole(RoleType.Cleaner, RoleTeam.Impostor, typeof(MultiRoleBase<Cleaner>), nameof(CustomOptionHolder.CleanerSpawnRate))]
+internal class Cleaner : MultiRoleBase<Cleaner>
 {
-    public static Color NameColor = Palette.ImpostorRed;
+    internal static Color Color = Palette.ImpostorRed;
 
-    public static CustomButton CleanerCleanButton;
+    internal static CustomButton CleanerCleanButton;
 
     public Cleaner()
     {
@@ -15,73 +14,102 @@ public class Cleaner : RoleBase<Cleaner>
         StaticRoleType = CurrentRoleType = RoleType.Cleaner;
     }
 
-    public override Color RoleColor
-    {
-        get => NameColor;
-    }
-
     // write configs here
-    public static float Cooldown
+    private static float Cooldown
     {
         get => CustomOptionHolder.CleanerCooldown.GetFloat();
     }
 
-    public override void OnMeetingStart() { }
-    public override void OnMeetingEnd() { }
-    public override void OnIntroEnd() { }
-    public override void FixedUpdate() { }
-
-    public override void OnKill(PlayerControl target)
+    [CustomEvent(CustomEventType.OnKill)]
+    internal void OnKill(PlayerControl target)
     {
-        if (PlayerControl.LocalPlayer.IsRole(RoleType.Cleaner) && CleanerCleanButton != null) CleanerCleanButton.Timer = Player.killTimer;
+        if (PlayerControl.LocalPlayer.IsRole(RoleType.Cleaner) && CleanerCleanButton != null)
+        {
+            CleanerCleanButton.Timer = Player.killTimer;
+        }
     }
 
-    public override void OnDeath(PlayerControl killer = null) { }
-    public override void OnFinishShipStatusBegin() { }
-    public override void HandleDisconnect(PlayerControl player, DisconnectReasons reason) { }
 
-    public static void MakeButtons(HudManager hm)
+
+    [RegisterCustomButton]
+    internal static void MakeButtons(HudManager hm)
     {
         CleanerCleanButton = new(() =>
-        {
-            var truePosition = PlayerControl.LocalPlayer.GetTruePosition();
-            var maxDist = PlayerControl.LocalPlayer.MaxReportDistance;
-            var bodies = Object.FindObjectsOfType<DeadBody>();
-
-            for (var i = 0; i < bodies.Length; i++)
             {
-                var body = bodies[i];
-                if (body == null || body.Reported) continue;
+                var truePosition = PlayerControl.LocalPlayer.GetTruePosition();
+                var maxDist = PlayerControl.LocalPlayer.MaxReportDistance;
+                var bodies = UnityObject.FindObjectsOfType<DeadBody>();
 
-                var bodyPosition = body.TruePosition;
-                var dist = Vector2.Distance(truePosition, bodyPosition);
-
-                if (dist <= maxDist && PlayerControl.LocalPlayer.CanMove && !PhysicsHelpers.AnythingBetween(truePosition, bodyPosition, Constants.ShipAndObjectsMask, false))
+                foreach (var body in bodies)
                 {
-                    var playerInfo = GameData.Instance.GetPlayerById(body.ParentId);
-                    if (playerInfo == null) continue;
-
+                    if (body == null || body.Reported)
                     {
-                        using var sender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.CleanBody);
-                        sender.Write(playerInfo.PlayerId);
+                        continue;
                     }
-                    RPCProcedure.CleanBody(playerInfo.PlayerId);
 
-                    Local.Player.killTimer = CleanerCleanButton.Timer = CleanerCleanButton.MaxTimer;
-                    break;
+                    var bodyPosition = body.TruePosition;
+                    var dist = Vector2.Distance(truePosition, bodyPosition);
+
+                    if (dist <= maxDist
+                        && PlayerControl.LocalPlayer.CanMove
+                        && !PhysicsHelpers.AnythingBetween(truePosition, bodyPosition, Constants.ShipAndObjectsMask, false))
+                    {
+                        var playerInfo = GameData.Instance.GetPlayerById(body.ParentId);
+                        if (playerInfo == null)
+                        {
+                            continue;
+                        }
+
+                        CleanBody(PlayerControl.LocalPlayer, playerInfo.PlayerId);
+
+                        Local.Player.killTimer = CleanerCleanButton.Timer = CleanerCleanButton.MaxTimer;
+                        break;
+                    }
                 }
-            }
-        }, () => { return Local != null && PlayerControl.LocalPlayer.IsAlive(); }, () => { return hm.ReportButton.graphic.color == Palette.EnabledColor && PlayerControl.LocalPlayer.CanMove; }, () => { CleanerCleanButton.Timer = CleanerCleanButton.MaxTimer; }, AssetLoader.CleanButton, ButtonPosition.Layout, hm, hm.KillButton, AbilitySlot.ImpostorAbilityPrimary, false, Tr.Get(TrKey.CleanText));
+            },
+            () => Local != null && PlayerControl.LocalPlayer.IsAlive(),
+            () => hm.ReportButton.graphic.color == Palette.EnabledColor && PlayerControl.LocalPlayer.CanMove,
+            () =>
+            {
+                CleanerCleanButton.Timer = CleanerCleanButton.MaxTimer;
+            },
+            AssetLoader.CleanButton,
+            ButtonPosition.Layout,
+            hm,
+            hm.KillButton,
+            AbilitySlot.ImpostorAbilityPrimary,
+            false,
+            Tr.Get(TrKey.CleanText));
     }
 
-    public static void SetButtonCooldowns()
+    [RegisterCustomButton]
+    internal static void SetButtonCooldowns()
     {
         CleanerCleanButton.MaxTimer = Cooldown;
     }
 
     // write functions here
 
-    public static void Clear()
+    [MethodRpc((uint)CustomRPC.CleanBody)]
+    internal static void CleanBody(PlayerControl sender, byte playerId)
+    {
+        CleanBodyLocal(playerId);
+    }
+
+    internal static void CleanBodyLocal(byte playerId)
+    {
+        DeadBody[] array = UnityObject.FindObjectsOfType<DeadBody>();
+        foreach (var t in array)
+        {
+            var info = GameData.Instance.GetPlayerById(t.ParentId);
+            if (info != null && info.PlayerId == playerId)
+            {
+                UnityObject.Destroy(t.gameObject);
+            }
+        }
+    }
+
+    internal static void Clear()
     {
         // reset configs here
         Players.Clear();

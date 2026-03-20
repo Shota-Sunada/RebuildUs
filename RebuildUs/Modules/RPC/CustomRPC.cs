@@ -1,6 +1,6 @@
 namespace RebuildUs.Modules.RPC;
 
-public enum CustomRPC : byte
+internal enum CustomRPC : byte
 {
     // Systems
     ResetVariables = 70,
@@ -82,20 +82,9 @@ public enum CustomRPC : byte
     SubmergedSubmarineBoxCatSystem = 144,
     SheriffKill = 145,
     SheriffKillRequest = 146,
-    GamemodeKills,
-    CaptureTheFlagWhoTookTheFlag,
-    CaptureTheFlagWhichTeamScored,
-    PoliceandThiefJail,
-    PoliceandThiefFreeThief,
-    PoliceandThiefTakeJewel,
-    PoliceandThiefDeliverJewel,
-    PoliceandThiefRevertedJewelPosition,
-    PoliceandThiefsTased,
-    HotPotatoTransfer,
-    HotPotatoExploded,
-    BattleRoyaleShowShoots,
+
     SubmergedSetCustomData = 210,
     SubmergedRequestChangeFloor = 211,
     SubmergedEngineVent = 213,
-    SubmergedOxygenDeath = 214
+    SubmergedOxygenDeath = 214,
 }

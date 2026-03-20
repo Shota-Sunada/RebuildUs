@@ -1,6 +1,6 @@
 namespace RebuildUs.Enums;
 
-public enum FinalStatus
+internal enum FinalStatus
 {
     Alive,
     Torched,
@@ -11,5 +11,5 @@ public enum FinalStatus
     Suicide,
     Misfire,
     Disconnected,
-    Dead
+    Dead,
 }

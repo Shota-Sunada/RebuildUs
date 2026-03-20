@@ -1,5 +1,3 @@
-using Object = UnityEngine.Object;
-
 namespace RebuildUs;
 
 internal static class MapSettings
@@ -7,7 +5,7 @@ internal static class MapSettings
     // Set values
     internal static int MaxNumberOfMeetings = 10;
     internal static bool BlockSkippingInEmergencyMeetings;
-    public static bool NoVoteIsSelfVote;
+    internal static bool NoVoteIsSelfVote;
     internal static bool HidePlayerNames;
     internal static bool AllowParallelMedBayScans;
     internal static bool HideOutOfSightNametags;
@@ -15,16 +13,16 @@ internal static class MapSettings
     internal static int RestrictDevices;
     internal static bool RestrictAdmin = true;
     internal static float RestrictAdminTime = 600f;
-    internal static float RestrictAdminTimeMax = 600f;
-    internal static bool RestrictAdminText = true;
+    private static float _restrictAdminTimeMax = 600f;
+    private static bool _restrictAdminText = true;
     internal static bool RestrictCameras = true;
     internal static float RestrictCamerasTime = 600f;
-    internal static float RestrictCamerasTimeMax = 600f;
-    internal static bool RestrictCamerasText = true;
+    private static float _restrictCamerasTimeMax = 600f;
+    private static bool _restrictCamerasText = true;
     internal static bool RestrictVitals = true;
     internal static float RestrictVitalsTime = 600f;
-    internal static float RestrictVitalsTimeMax = 600f;
-    internal static bool RestrictVitalsText = true;
+    private static float _restrictVitalsTimeMax = 600f;
+    private static bool _restrictVitalsText = true;
 
     internal static bool GhostsSeeRoles = true;
     internal static bool GhostsSeeModifier = true;
@@ -32,72 +30,61 @@ internal static class MapSettings
     internal static bool GhostsSeeVotes = true;
     internal static bool ShowRoleSummary = true;
     internal static bool ShowLighterDarker;
-    public static bool BetterSabotageMap = false;
-    public static bool ForceNormalSabotageMap = false;
-    public static bool TransparentMap = false;
-    public static bool HideFakeTasks = false;
+    internal static bool BetterSabotageMap = false;
+    internal static bool ForceNormalSabotageMap = false;
+    internal static bool TransparentMap = false;
+    internal static bool HideFakeTasks = false;
 
-    public static bool ShowVentsOnMap = true;
-    public static bool ShowChatNotifications = true;
-
-    public static CustomGameMode GameMode = CustomGameMode.Roles;
-    public static float GamemodeMatchDuration = CustomOptionHolder.GamemodeMatchDuration.GetFloat();
-    public static float GamemodeKillCooldown = CustomOptionHolder.GamemodeKillCooldown.GetFloat();
-    public static bool GamemodeEnableFlashlight = CustomOptionHolder.GamemodeEnableFlashlight.GetBool();
-    public static float GamemodeFlashlightRange = CustomOptionHolder.GamemodeFlashlightRange.GetFloat();
-    public static float GamemodeReviveTime = CustomOptionHolder.GamemodeReviveTime.GetFloat();
-    public static float GamemodeInvincibilityTime = CustomOptionHolder.GamemodeInvincibilityTimeAfterRevive.GetFloat();
-
-    public static bool EnableDiscordAutoMute = true;
-    public static bool EnableDiscordEmbed = true;
+    internal static bool ShowVentsOnMap = true;
+    internal static bool ShowChatNotifications = true;
+    internal static CustomGamemode GameMode = CustomGamemode.Classic;
 
     // Updating values
-    public static int MeetingsCount;
-    public static List<SurvCamera> CamerasToAdd = [];
-    public static List<Vent> VentsToSeal = [];
-    public static Dictionary<byte, PoolablePlayer> PlayerIcons = [];
+    internal static int MeetingsCount;
+    internal static List<SurvCamera> CamerasToAdd = [];
+    internal static List<Vent> VentsToSeal = [];
+    internal static Dictionary<byte, PoolablePlayer> PlayerIcons = [];
 
-    public static TextMeshPro AdminTimerText;
-    public static TextMeshPro CamerasTimerText;
-    public static TextMeshPro VitalsTimerText;
+    private static TextMeshPro _adminTimerText;
+    private static TextMeshPro _camerasTimerText;
+    private static TextMeshPro _vitalsTimerText;
 
-    public static bool CanUseAdmin
+    internal static bool CanUseAdmin
     {
         get => RestrictDevices == 0 || RestrictAdminTime > 0f;
     }
 
-    public static bool CouldUseAdmin
+    internal static bool CouldUseAdmin
     {
-        get => RestrictDevices == 0 || !RestrictAdmin || RestrictAdminTimeMax > 0f;
+        get => RestrictDevices == 0 || !RestrictAdmin || _restrictAdminTimeMax > 0f;
     }
 
-    public static bool CanUseCameras
+    internal static bool CanUseCameras
     {
         get => RestrictDevices == 0 || !RestrictCameras || RestrictCamerasTime > 0f;
     }
 
-    public static bool CouldUseCameras
+    internal static bool CouldUseCameras
     {
-        get => RestrictDevices == 0 || !RestrictCameras || RestrictCamerasTimeMax > 0f;
+        get => RestrictDevices == 0 || !RestrictCameras || _restrictCamerasTimeMax > 0f;
     }
 
-    public static bool CanUseVitals
+    internal static bool CanUseVitals
     {
         get => RestrictDevices == 0 || !RestrictVitals || RestrictVitalsTime > 0f;
     }
 
-    public static bool CouldUseVitals
+    internal static bool CouldUseVitals
     {
-        get => RestrictDevices == 0 || !RestrictVitals || RestrictVitalsTimeMax > 0f;
+        get => RestrictDevices == 0 || !RestrictVitals || _restrictVitalsTimeMax > 0f;
     }
 
-    public static void ClearAndReloadMapOptions()
+    internal static void ClearAndReloadMapOptions()
     {
         MeetingsCount = 0;
         CamerasToAdd = [];
         VentsToSeal = [];
         PlayerIcons = [];
-        ;
 
         MaxNumberOfMeetings = Mathf.RoundToInt(CustomOptionHolder.MaxNumberOfMeetings.GetSelection());
         BlockSkippingInEmergencyMeetings = CustomOptionHolder.BlockSkippingInEmergencyMeetings.GetBool();
@@ -108,14 +95,14 @@ internal static class MapSettings
 
         RestrictDevices = CustomOptionHolder.RestrictDevices.GetSelection();
         RestrictAdmin = CustomOptionHolder.RestrictAdmin.GetBool();
-        RestrictAdminTime = RestrictAdminTimeMax = CustomOptionHolder.RestrictAdminTime.GetFloat();
-        RestrictAdminText = CustomOptionHolder.RestrictAdminText.GetBool();
+        RestrictAdminTime = _restrictAdminTimeMax = CustomOptionHolder.RestrictAdminTime.GetFloat();
+        _restrictAdminText = CustomOptionHolder.RestrictAdminText.GetBool();
         RestrictCameras = CustomOptionHolder.RestrictCameras.GetBool();
-        RestrictCamerasTime = RestrictCamerasTimeMax = CustomOptionHolder.RestrictCamerasTime.GetFloat();
-        RestrictCamerasText = CustomOptionHolder.RestrictCamerasText.GetBool();
-        RestrictVitalsText = CustomOptionHolder.RestrictVitalsText.GetBool();
+        RestrictCamerasTime = _restrictCamerasTimeMax = CustomOptionHolder.RestrictCamerasTime.GetFloat();
+        _restrictCamerasText = CustomOptionHolder.RestrictCamerasText.GetBool();
+        _restrictVitalsText = CustomOptionHolder.RestrictVitalsText.GetBool();
         RestrictVitals = CustomOptionHolder.RestrictVitals.GetBool();
-        RestrictVitalsTime = RestrictVitalsTimeMax = CustomOptionHolder.RestrictVitalsTime.GetFloat();
+        RestrictVitalsTime = _restrictVitalsTimeMax = CustomOptionHolder.RestrictVitalsTime.GetFloat();
 
         ClearTimerText();
         UpdateTimerText();
@@ -128,71 +115,97 @@ internal static class MapSettings
         ShowLighterDarker = RebuildUs.ShowLighterDarker.Value;
         ShowVentsOnMap = RebuildUs.ShowVentsOnMap.Value;
         ShowChatNotifications = RebuildUs.ShowChatNotifications.Value;
-
-        EnableDiscordAutoMute = CustomOptionHolder.EnableDiscordAutoMute.GetBool();
-        EnableDiscordEmbed = CustomOptionHolder.EnableDiscordEmbed.GetBool();
-
-        DiscordModManager.Initialize();
     }
 
-    public static void ResetDeviceTimes()
+    internal static void ResetDeviceTimes()
     {
-        RestrictAdminTime = RestrictAdminTimeMax;
-        RestrictCamerasTime = RestrictCamerasTimeMax;
-        RestrictVitalsTime = RestrictVitalsTimeMax;
+        RestrictAdminTime = _restrictAdminTimeMax;
+        RestrictCamerasTime = _restrictCamerasTimeMax;
+        RestrictVitalsTime = _restrictVitalsTimeMax;
     }
 
-    public static void MeetingEndedUpdate()
+    internal static void MeetingEndedUpdate()
     {
         ClearTimerText();
         UpdateTimerText();
     }
 
-    public static void UpdateTimerText()
+    private static void UpdateTimerText()
     {
-        if (RestrictDevices == 0 || (!RestrictAdminText && !RestrictCamerasText && !RestrictVitalsText)) return;
-        if (FastDestroyableSingleton<HudManager>.Instance == null) return;
+        if (RestrictDevices == 0 || !_restrictAdminText && !_restrictCamerasText && !_restrictVitalsText)
+        {
+            return;
+        }
+
+        if (FastDestroyableSingleton<HudManager>.Instance == null)
+        {
+            return;
+        }
 
         // Admin
-        if (RestrictAdminText)
+        if (_restrictAdminText)
         {
-            AdminTimerText = Object.Instantiate(FastDestroyableSingleton<HudManager>.Instance.TaskPanel.taskText, FastDestroyableSingleton<HudManager>.Instance.transform);
+            _adminTimerText = UnityObject.Instantiate(FastDestroyableSingleton<HudManager>.Instance.TaskPanel.taskText, FastDestroyableSingleton<HudManager>.Instance.transform);
             var y = -4.0f;
-            if (RestrictCamerasText) y += 0.2f;
-            if (RestrictVitalsText) y += 0.2f;
-            AdminTimerText.transform.localPosition = new(-3.5f, y, 0);
-            AdminTimerText.text = RestrictAdminTime > 0 ? string.Format(Tr.Get(TrKey.AdminText), RestrictAdminTime.ToString("0.00")) : Tr.Get(TrKey.AdminRanOut);
-            AdminTimerText.gameObject.SetActive(true);
+            if (_restrictCamerasText)
+            {
+                y += 0.2f;
+            }
+
+            if (_restrictVitalsText)
+            {
+                y += 0.2f;
+            }
+
+            _adminTimerText.transform.localPosition = new(-3.5f, y, 0);
+            _adminTimerText.text = RestrictAdminTime > 0 ? string.Format(Tr.Get(TrKey.AdminText), RestrictAdminTime.ToString("0.00")) : Tr.Get(TrKey.AdminRanOut);
+            _adminTimerText.gameObject.SetActive(true);
         }
 
         // Cameras
-        if (RestrictCamerasText)
+        if (_restrictCamerasText)
         {
-            CamerasTimerText = Object.Instantiate(FastDestroyableSingleton<HudManager>.Instance.TaskPanel.taskText, FastDestroyableSingleton<HudManager>.Instance.transform);
+            _camerasTimerText = UnityObject.Instantiate(FastDestroyableSingleton<HudManager>.Instance.TaskPanel.taskText, FastDestroyableSingleton<HudManager>.Instance.transform);
             var y = -4.0f;
-            if (RestrictVitalsText) y += 0.2f;
-            CamerasTimerText.transform.localPosition = new(-3.5f, y, 0);
-            CamerasTimerText.text = RestrictCamerasTime > 0 ? string.Format(Tr.Get(TrKey.CamerasText), RestrictCamerasTime.ToString("0.00")) : Tr.Get(TrKey.CamerasRanOut);
-            CamerasTimerText.gameObject.SetActive(true);
+            if (_restrictVitalsText)
+            {
+                y += 0.2f;
+            }
+
+            _camerasTimerText.transform.localPosition = new(-3.5f, y, 0);
+            _camerasTimerText.text = RestrictCamerasTime > 0 ? string.Format(Tr.Get(TrKey.CamerasText), RestrictCamerasTime.ToString("0.00")) : Tr.Get(TrKey.CamerasRanOut);
+            _camerasTimerText.gameObject.SetActive(true);
         }
 
         // Vitals
-        if (RestrictVitalsText)
+        if (_restrictVitalsText)
         {
-            VitalsTimerText = Object.Instantiate(FastDestroyableSingleton<HudManager>.Instance.TaskPanel.taskText, FastDestroyableSingleton<HudManager>.Instance.transform);
-            VitalsTimerText.transform.localPosition = new(-3.5f, -4.0f, 0);
-            VitalsTimerText.text = RestrictVitalsTime > 0 ? string.Format(Tr.Get(TrKey.VitalsText), RestrictVitalsTime.ToString("0.00")) : Tr.Get(TrKey.VitalsRanOut);
-            VitalsTimerText.gameObject.SetActive(true);
+            _vitalsTimerText = UnityObject.Instantiate(FastDestroyableSingleton<HudManager>.Instance.TaskPanel.taskText, FastDestroyableSingleton<HudManager>.Instance.transform);
+            _vitalsTimerText.transform.localPosition = new(-3.5f, -4.0f, 0);
+            _vitalsTimerText.text = RestrictVitalsTime > 0 ? string.Format(Tr.Get(TrKey.VitalsText), RestrictVitalsTime.ToString("0.00")) : Tr.Get(TrKey.VitalsRanOut);
+            _vitalsTimerText.gameObject.SetActive(true);
         }
     }
 
     private static void ClearTimerText()
     {
-        if (AdminTimerText != null) Object.Destroy(AdminTimerText);
-        AdminTimerText = null;
-        if (CamerasTimerText != null) Object.Destroy(CamerasTimerText);
-        CamerasTimerText = null;
-        if (VitalsTimerText != null) Object.Destroy(VitalsTimerText);
-        VitalsTimerText = null;
+        if (_adminTimerText != null)
+        {
+            UnityObject.Destroy(_adminTimerText);
+        }
+
+        _adminTimerText = null;
+        if (_camerasTimerText != null)
+        {
+            UnityObject.Destroy(_camerasTimerText);
+        }
+
+        _camerasTimerText = null;
+        if (_vitalsTimerText != null)
+        {
+            UnityObject.Destroy(_vitalsTimerText);
+        }
+
+        _vitalsTimerText = null;
     }
 }

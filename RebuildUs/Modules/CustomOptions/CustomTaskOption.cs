@@ -1,23 +1,33 @@
 namespace RebuildUs.Modules.CustomOptions;
 
-public sealed class CustomTasksOption((int commonId, int shortId, int longId) ids, CustomOptionType type, (int commonTasks, int shortTasks, int longTasks) defaultValue, CustomOption parent = null) : CustomOption
+internal sealed class CustomTasksOption
 {
-    public CustomOption CommonTaskOption = Normal(ids.commonId, type, TrKey.NumCommonTask, defaultValue.commonTasks, 0f, 4f, 1f, parent);
-    public CustomOption LongTaskOption = Normal(ids.longId, type, TrKey.NumLongTask, defaultValue.longTasks, 0f, 23f, 1f, parent);
-    public CustomOption ShortTaskOption = Normal(ids.shortId, type, TrKey.NumShortTask, defaultValue.shortTasks, 0f, 15f, 1f, parent);
+    private readonly CustomNumberOption _commonTaskOption;
+    private readonly CustomNumberOption _longTaskOption;
+    private readonly CustomNumberOption _shortTaskOption;
 
-    public int CommonTasksNum
+    public CustomTasksOption((int commonId, int shortId, int longId) ids,
+                             CustomOptionType type,
+                             (int commonTasks, int shortTasks, int longTasks) defaultValue,
+                             CustomOption parent = null)
     {
-        get => Mathf.RoundToInt(CommonTaskOption.GetSelection());
+        _commonTaskOption = CustomOption.Normal(ids.commonId, type, TrKey.NumCommonTask, defaultValue.commonTasks, 0f, 4f, 1f, parent);
+        _longTaskOption = CustomOption.Normal(ids.longId, type, TrKey.NumLongTask, defaultValue.longTasks, 0f, 23f, 1f, parent);
+        _shortTaskOption = CustomOption.Normal(ids.shortId, type, TrKey.NumShortTask, defaultValue.shortTasks, 0f, 15f, 1f, parent);
     }
 
-    public int ShortTasksNum
+    internal int CommonTasksNum
     {
-        get => Mathf.RoundToInt(ShortTaskOption.GetSelection());
+        get => Mathf.RoundToInt(_commonTaskOption.GetFloat());
     }
 
-    public int LongTasksNum
+    internal int ShortTasksNum
     {
-        get => Mathf.RoundToInt(LongTaskOption.GetSelection());
+        get => Mathf.RoundToInt(_shortTaskOption.GetFloat());
+    }
+
+    internal int LongTasksNum
+    {
+        get => Mathf.RoundToInt(_longTaskOption.GetFloat());
     }
 }

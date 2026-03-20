@@ -1,26 +1,46 @@
 namespace RebuildUs.Roles.Modifier;
 
-public enum MadmateType
+internal enum MadmateType
 {
-    Simple = 0, WithRole = 1, Random = 2,
+    Simple = 0,
+    WithRole = 1,
+    Random = 2,
 }
 
-public enum MadmateAbility
+internal enum MadmateAbility
 {
-    None = 0, Fanatic = 1,
+    None = 0,
+    Fanatic = 1,
+    Suicider = 2,
 }
 
 [HarmonyPatch]
-public class Madmate : ModifierBase<Madmate>
+[RegisterModifier(ModifierType.Madmate, typeof(Madmate), nameof(CustomOptionHolder.MadmateSpawnRate))]
+internal class Madmate : ModifierBase<Madmate>
 {
-    public static Color NameColor = Palette.ImpostorRed;
+    internal static Color Color = Palette.ImpostorRed;
 
-    public static RoleType[] ValidRoles =
+    internal static RoleType[] ValidRoles =
     [
         RoleType.NoRole, // NoRole = off
-		RoleType.Shifter, RoleType.Mayor, RoleType.Engineer, RoleType.Sheriff, RoleType.Lighter, RoleType.Detective, RoleType.TimeMaster, RoleType.Medic, RoleType.NiceSwapper, RoleType.Seer, RoleType.Hacker, RoleType.Tracker, RoleType.SecurityGuard, RoleType.Bait, RoleType.Medium, RoleType.NiceGuesser,
-		// RoleType.Watcher,
-	];
+        RoleType.Shifter,
+        RoleType.Mayor,
+        RoleType.Engineer,
+        RoleType.Sheriff,
+        RoleType.Lighter,
+        RoleType.Detective,
+        RoleType.TimeMaster,
+        RoleType.Medic,
+        RoleType.NiceSwapper,
+        RoleType.Seer,
+        RoleType.Hacker,
+        RoleType.Tracker,
+        RoleType.SecurityGuard,
+        RoleType.Bait,
+        RoleType.Medium,
+        RoleType.NiceGuesser,
+        // RoleType.Watcher,
+    ];
 
     public Madmate()
     {
@@ -28,83 +48,80 @@ public class Madmate : ModifierBase<Madmate>
         StaticModifierType = CurrentModifierType = ModifierType.Madmate;
     }
 
-    public override Color ModifierColor
-    {
-        get => NameColor;
-    }
-
     // write configs here
-    public static bool CanEnterVents
+    private static CustomButton _suicideButton;
+
+    internal static bool CanEnterVents
     {
         get => CustomOptionHolder.MadmateCanEnterVents.GetBool();
     }
 
-    public static bool HasImpostorVision
+    internal static bool HasImpostorVision
     {
         get => CustomOptionHolder.MadmateHasImpostorVision.GetBool();
     }
 
-    public static bool CanSabotage
+    internal static bool CanSabotage
     {
         get => CustomOptionHolder.MadmateCanSabotage.GetBool();
     }
 
-    public static bool CanFixComm
+    internal static bool CanFixComm
     {
         get => CustomOptionHolder.MadmateCanFixComm.GetBool();
     }
 
-    public static MadmateType MadmateType
+    internal static MadmateType MadmateType
     {
         get => (MadmateType)CustomOptionHolder.MadmateType.GetSelection();
     }
 
-    public static MadmateAbility MadmateAbility
+    internal static MadmateAbility MadmateAbility
     {
         get => (MadmateAbility)CustomOptionHolder.MadmateAbility.GetSelection();
     }
 
-    public static RoleType FixedRole
+    internal static RoleType FixedRole
     {
         get => CustomOptionHolder.MadmateFixedRole.Role;
     }
 
-    public static int NumCommonTasks
+    internal static int NumCommonTasks
     {
         get => CustomOptionHolder.MadmateTasks.CommonTasksNum;
     }
 
-    public static int NumLongTasks
+    internal static int NumLongTasks
     {
         get => CustomOptionHolder.MadmateTasks.LongTasksNum;
     }
 
-    public static int NumShortTasks
+    internal static int NumShortTasks
     {
         get => CustomOptionHolder.MadmateTasks.ShortTasksNum;
     }
 
-    public static bool HasTasks
+    internal static bool HasTasks
     {
         get => MadmateAbility == MadmateAbility.Fanatic;
     }
 
-    public static bool ExileCrewmate
+    internal static bool ExileCrewmate
     {
         get => CustomOptionHolder.MadmateExilePlayer.GetBool();
     }
 
-    public static string Prefix
+    internal static string Prefix
     {
         get => Tr.Get(TrKey.MadmatePrefix);
     }
 
-    public static string FullName
+    internal static string FullName
     {
         get => Tr.Get(TrKey.Madmate);
     }
 
-    public static List<PlayerControl> Candidates
+    internal static List<PlayerControl> Candidates
     {
         get
         {
@@ -127,8 +144,14 @@ public class Madmate : ModifierBase<Madmate>
                     for (var j = 0; j < info.Count; j++)
                     {
                         var ri = info[j];
-                        if (ri.RoleType == RoleType.Crewmate) isCrewmateOnly = true;
-                        if (ri.RoleType == RoleType.FortuneTeller) isFortuneTeller = true;
+                        if (ri.RoleType == RoleType.Crewmate)
+                        {
+                            isCrewmateOnly = true;
+                        }
+                        if (ri.RoleType == RoleType.FortuneTeller)
+                        {
+                            isFortuneTeller = true;
+                        }
 
                         for (var k = 0; k < ValidRoles.Length; k++)
                         {
@@ -139,7 +162,10 @@ public class Madmate : ModifierBase<Madmate>
                             }
                         }
 
-                        if (ri.RoleType == FixedRole) hasFixedRole = true;
+                        if (ri.RoleType == FixedRole)
+                        {
+                            hasFixedRole = true;
+                        }
                     }
 
                     if (isCrewmateOnly && !isFortuneTeller)
@@ -149,80 +175,139 @@ public class Madmate : ModifierBase<Madmate>
                     }
                     else if (hasValidRole)
                     {
-                        if (FixedRole == RoleType.NoRole || hasFixedRole) crewHasRole.Add(player);
+                        if (FixedRole == RoleType.NoRole || hasFixedRole)
+                        {
+                            crewHasRole.Add(player);
+                        }
 
                         validCrewmates.Add(player);
                     }
                 }
             }
 
-            if (MadmateType == MadmateType.Simple) return crewNoRole;
-            if (MadmateType == MadmateType.WithRole && crewHasRole.Count > 0) return crewHasRole;
-            if (MadmateType == MadmateType.Random) return validCrewmates;
+            if (MadmateType == MadmateType.Simple)
+            {
+                return crewNoRole;
+            }
+            if (MadmateType == MadmateType.WithRole && crewHasRole.Count > 0)
+            {
+                return crewHasRole;
+            }
+            if (MadmateType == MadmateType.Random)
+            {
+                return validCrewmates;
+            }
             return validCrewmates;
         }
     }
 
-    public override void OnUpdateNameColors()
+    internal override void OnUpdateRoleColors()
     {
         if (Player == PlayerControl.LocalPlayer)
         {
-            Update.SetPlayerNameColor(Player, NameColor);
+            HudManagerPatch.SetPlayerNameColor(Player, ModifierColor);
 
             if (KnowsImpostors(Player))
             {
                 foreach (var p in PlayerControl.AllPlayerControls.GetFastEnumerator())
                 {
-                    if (p.IsTeamImpostor() || p.IsRole(RoleType.Spy) || (p.IsRole(RoleType.Jackal) && Jackal.GetRole(p).WasTeamRed) || (p.IsRole(RoleType.Sidekick) && Sidekick.GetRole(p).WasTeamRed))
-                        Update.SetPlayerNameColor(p, Palette.ImpostorRed);
+                    if (p.IsTeamImpostor()
+                        || p.IsRole(RoleType.Spy)
+                        || p.IsRole(RoleType.Jackal) && Jackal.Instance.WasTeamRed
+                        || p.IsRole(RoleType.Sidekick) && Sidekick.Instance.WasTeamRed)
+                    {
+                        HudManagerPatch.SetPlayerNameColor(p, Palette.ImpostorRed);
+                    }
                 }
             }
         }
     }
 
-    public override void OnMeetingStart() { }
-    public override void OnMeetingEnd() { }
-    public override void OnIntroEnd() { }
-    public override void FixedUpdate() { }
-    public override void OnKill(PlayerControl target) { }
-
-    public override void OnDeath(PlayerControl killer = null)
+    [CustomEvent(CustomEventType.OnDeath)]
+    internal void OnDeath(PlayerControl killer)
     {
         Player.ClearAllTasks();
     }
 
-    public override void OnFinishShipStatusBegin()
+    [CustomEvent(CustomEventType.OnFinishShipStatusBegin)]
+    internal void OnFinishShipStatusBegin()
     {
-        Player.ClearAllTasks();
-        Player.GenerateAndAssignTasks(NumCommonTasks, NumShortTasks, NumLongTasks);
+        if (Player == PlayerControl.LocalPlayer && HasTasks)
+        {
+            Player.ClearAllTasks();
+            Player.GenerateAndAssignTasks(NumCommonTasks, NumShortTasks, NumLongTasks);
+        }
     }
 
-    public override void HandleDisconnect(PlayerControl player, DisconnectReasons reason) { }
+    [RegisterCustomButton]
+    internal static void MakeButtons(HudManager hm)
+    {
+        _suicideButton = new(() =>
+            {
+                RPCProcedure.UncheckedMurderPlayer(PlayerControl.LocalPlayer, PlayerControl.LocalPlayer.PlayerId, PlayerControl.LocalPlayer.PlayerId, 1);
+            },
+            () =>
+            {
+                return PlayerControl.LocalPlayer.HasModifier(ModifierType.Madmate) && MadmateAbility == MadmateAbility.Suicider && PlayerControl.LocalPlayer?.Data?.IsDead == false;
+            },
+            () =>
+            {
+                return PlayerControl.LocalPlayer.CanMove;
+            },
+            () =>
+            {
+                _suicideButton.Timer = _suicideButton.MaxTimer;
+            },
+            hm.KillButton.graphic.sprite,
+            ButtonPosition.Layout,
+            hm,
+            hm.KillButton,
+            AbilitySlot.CrewmateAbilityPrimary,
+            false,
+            0f,
+            null,
+            false,
+            Tr.Get(TrKey.Suicide));
+    }
+
+    [RegisterCustomButton]
+    internal static void SetButtonCooldowns()
+    {
+        if (_suicideButton != null) _suicideButton.MaxTimer = 0f;
+    }
 
     // write functions here
 
-    public static bool KnowsImpostors(PlayerControl player)
+    internal static bool KnowsImpostors(PlayerControl player)
     {
         return HasTasks && HasModifier(player) && TasksComplete(player);
     }
 
-    public static bool TasksComplete(PlayerControl player)
+    internal static bool TasksComplete(PlayerControl player)
     {
-        if (!HasTasks) return false;
+        if (!HasTasks)
+        {
+            return false;
+        }
 
         var counter = 0;
         var totalTasks = NumCommonTasks + NumLongTasks + NumShortTasks;
-        if (totalTasks == 0) return true;
+        if (totalTasks == 0)
+        {
+            return true;
+        }
         foreach (var task in player.Data.Tasks)
         {
             if (task.Complete)
+            {
                 counter++;
+            }
         }
 
-        return counter == totalTasks;
+        return counter >= totalTasks;
     }
 
-    public static void Clear()
+    internal static void Clear()
     {
         // reset configs here
         Players.Clear();

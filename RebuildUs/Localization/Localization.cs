@@ -1,9 +1,8 @@
-using System.Reflection;
 using System.Text.Json;
 
 namespace RebuildUs.Localization;
 
-public static class Tr
+internal static class Tr
 {
     private const string BLANK = "[BLANK]";
     private const string NO_KEY = "[NO KEY]";
@@ -11,26 +10,31 @@ public static class Tr
     private const string NO_VALUE = "[NO VALUE]";
     private const string ERROR = "[ERROR]";
 
-    private static readonly Dictionary<SupportedLangs, Dictionary<string, string>> INTERNAL_TRANSLATIONS = [];
-    private static readonly Dictionary<SupportedLangs, Dictionary<string, string>> CUSTOM_TRANSLATIONS = [];
-    private static readonly HashSet<string> MISSING_KEYS = [];
+    private const string LANGUAGES_FOLDER = "Languages";
 
-    public static void Initialize()
+    private static readonly Dictionary<SupportedLangs, Dictionary<string, string>> InternalTranslations = [];
+    private static readonly Dictionary<SupportedLangs, Dictionary<string, string>> CustomTranslations = [];
+    private static readonly HashSet<string> MissingKeys = [];
+
+    internal static void Initialize()
     {
-        INTERNAL_TRANSLATIONS.Clear();
+        InternalTranslations.Clear();
         foreach (SupportedLangs lang in Enum.GetValues(typeof(SupportedLangs)))
         {
             var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream($"RebuildUs.Localization.Translations.{lang}.json");
-            if (stream == null) continue;
+            if (stream == null)
+            {
+                continue;
+            }
 
             try
             {
                 var nestedDict = JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(stream);
                 if (nestedDict != null)
                 {
-                    var flattened = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+                    Dictionary<string, string> flattened = new(StringComparer.OrdinalIgnoreCase);
                     FlattenTranslations(nestedDict, flattened);
-                    INTERNAL_TRANSLATIONS[lang] = flattened;
+                    InternalTranslations[lang] = flattened;
                 }
             }
             catch (Exception ex)
@@ -42,7 +46,7 @@ public static class Tr
         LoadCustomTranslations();
     }
 
-    private static void FlattenTranslations(Dictionary<string, JsonElement> nestedDict, Dictionary<string, string> target)
+    private static void FlattenTranslations(Dictionary<string, JsonElement> nestedDict, IDictionary<string, string> target)
     {
         foreach (var category in nestedDict)
         {
@@ -55,66 +59,82 @@ public static class Tr
                 }
             }
             else
+            {
                 target[category.Key] = category.Value.GetString() ?? "";
+            }
         }
     }
 
     private static void LoadCustomTranslations()
     {
-        CUSTOM_TRANSLATIONS.Clear();
-        var modDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-        var langDir = Path.Combine(modDir, "Language");
+        CustomTranslations.Clear();
 
-        if (!Directory.Exists(langDir))
+        if (!Directory.Exists(LANGUAGES_FOLDER))
         {
             try
             {
-                Directory.CreateDirectory(langDir);
+                Directory.CreateDirectory(LANGUAGES_FOLDER);
             }
-            catch { }
+            catch
+            {
+                // ignored
+            }
 
             return;
         }
 
-        foreach (var file in Directory.GetFiles(langDir, "*.json"))
+        foreach (var file in Directory.GetFiles(LANGUAGES_FOLDER, "*.json"))
         {
             var fileName = Path.GetFileNameWithoutExtension(file);
-            if (Enum.TryParse<SupportedLangs>(fileName, true, out var lang))
+            if (!Enum.TryParse(fileName, true, out SupportedLangs lang))
             {
-                try
+                continue;
+            }
+
+            try
+            {
+                var json = File.ReadAllText(file);
+                var nestedDict = JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(json);
+                if (nestedDict != null)
                 {
-                    var json = File.ReadAllText(file);
-                    var nestedDict = JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(json);
-                    if (nestedDict != null)
-                    {
-                        var flattened = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
-                        FlattenTranslations(nestedDict, flattened);
-                        CUSTOM_TRANSLATIONS[lang] = flattened;
-                        Logger.LogInfo($"Loaded custom translation for {lang} from {file}");
-                    }
+                    Dictionary<string, string> flattened = new(StringComparer.OrdinalIgnoreCase);
+                    FlattenTranslations(nestedDict, flattened);
+                    CustomTranslations[lang] = flattened;
+                    Logger.LogInfo($"Loaded custom translation for {lang} from {file}");
                 }
-                catch (Exception ex)
-                {
-                    Logger.LogError($"Failed to load custom translation from {file}: {ex.Message}");
-                }
+            }
+            catch (Exception ex)
+            {
+                Logger.LogError($"Failed to load custom translation from {file}: {ex.Message}");
             }
         }
     }
 
-    public static string Get(TrKey key, params object[] args)
+    internal static string Get(TrKey key, params object[] args)
     {
         var keyStr = key.ToString();
-        var lang = TranslationController.InstanceExists ? FastDestroyableSingleton<TranslationController>.Instance.currentLanguage.languageID : SupportedLangs.English;
+        var lang = FastDestroyableSingleton<TranslationController>.InstanceExists
+            ? FastDestroyableSingleton<TranslationController>.Instance.currentLanguage.languageID
+            : SupportedLangs.English;
 
         string result = null;
-        if (CUSTOM_TRANSLATIONS.TryGetValue(lang, out var customLang) && customLang.TryGetValue(keyStr, out result)) { }
-        else if (lang != SupportedLangs.English && CUSTOM_TRANSLATIONS.TryGetValue(SupportedLangs.English, out var customEn) && customEn.TryGetValue(keyStr, out result)) { }
-        else if (INTERNAL_TRANSLATIONS.TryGetValue(lang, out var internalLang) && internalLang.TryGetValue(keyStr, out result)) { }
-        else if (lang != SupportedLangs.English && INTERNAL_TRANSLATIONS.TryGetValue(SupportedLangs.English, out var internalEn) && internalEn.TryGetValue(keyStr, out result)) { }
+        if (CustomTranslations.TryGetValue(lang, out var customLang) && customLang.TryGetValue(keyStr, out result)) { }
+        else if (lang != SupportedLangs.English
+                 && CustomTranslations.TryGetValue(SupportedLangs.English, out var customEn)
+                 && customEn.TryGetValue(keyStr, out result)) { }
+        else if (InternalTranslations.TryGetValue(lang, out var internalLang)
+                 && internalLang.TryGetValue(keyStr, out result)) { }
+        else if (lang != SupportedLangs.English
+                 && InternalTranslations.TryGetValue(SupportedLangs.English, out var internalEn)
+                 && internalEn.TryGetValue(keyStr, out result)) { }
 
         if (result == null)
         {
-            if (MISSING_KEYS.Add(keyStr)) Logger.LogWarn($"Translation key not found: {keyStr}");
+            if (MissingKeys.Add(keyStr))
+            {
+                Logger.LogWarn($"Translation key not found: {keyStr}");
+            }
+
             return NOTFOUND;
         }
 
@@ -139,26 +159,36 @@ public static class Tr
     ///     Helper to get translation from a string key. Use this only for dynamic keys.
     ///     TODO: This method should be removed and all calls should be replaced with TranslateKey.
     /// </summary>
-    public static string GetDynamic(string keyStr, params object[] args)
+    internal static string GetDynamic(string keyStr, params object[] args)
     {
-        if (Enum.TryParse<TrKey>(keyStr, out var key)) return Get(key, args);
+        if (Enum.TryParse(keyStr, out TrKey key))
+        {
+            return Get(key, args);
+        }
+
         Logger.LogWarn($"Dynamic translation key not found in enum: {keyStr}");
         return NOTFOUND;
     }
 
-    public static void Update()
+    internal static void Update()
     {
-        if (Helpers.GetKeysDown(KeyCode.LeftShift, KeyCode.L) || Helpers.GetKeysDown(KeyCode.RightShift, KeyCode.L)) DumpMissingKeys();
-        if (Helpers.GetKeysDown(KeyCode.LeftShift, KeyCode.T) || Helpers.GetKeysDown(KeyCode.RightShift, KeyCode.T))
+        if (Helpers.GetKeysDown(KeyCode.LeftShift, KeyCode.L) || Helpers.GetKeysDown(KeyCode.RightShift, KeyCode.L))
         {
-            Initialize();
-            Logger.LogInfo("Translations reloaded.");
+            DumpMissingKeys();
         }
+
+        if (!Helpers.GetKeysDown(KeyCode.LeftShift, KeyCode.T) && !Helpers.GetKeysDown(KeyCode.RightShift, KeyCode.T))
+        {
+            return;
+        }
+
+        Initialize();
+        Logger.LogInfo("Translations reloaded.");
     }
 
     private static void DumpMissingKeys()
     {
-        if (MISSING_KEYS.Count == 0)
+        if (MissingKeys.Count == 0)
         {
             Logger.LogInfo("No missing translation keys found.");
             return;
@@ -167,7 +197,11 @@ public static class Tr
         try
         {
             var path = Path.Combine(Directory.GetCurrentDirectory(), "MissingKeys.json");
-            var json = JsonSerializer.Serialize(MISSING_KEYS, new JsonSerializerOptions { WriteIndented = true });
+            var json = JsonSerializer.Serialize(MissingKeys,
+                new JsonSerializerOptions
+                {
+                    WriteIndented = true,
+                });
             File.WriteAllText(path, json);
             Logger.LogInfo($"Missing translation keys dumped to {path}");
         }

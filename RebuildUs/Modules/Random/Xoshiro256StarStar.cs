@@ -4,12 +4,12 @@ internal sealed class Xoshiro256StarStar : System.Random
 {
     private ulong _s0, _s1, _s2, _s3;
 
-    public Xoshiro256StarStar(int seed)
+    internal Xoshiro256StarStar(int seed)
     {
         Seed(seed);
     }
 
-    public Xoshiro256StarStar() : this((int)DateTime.Now.Ticks) { }
+    internal Xoshiro256StarStar() : this((int)DateTime.Now.Ticks) { }
 
     private void Seed(int seed)
     {
@@ -23,14 +23,14 @@ internal sealed class Xoshiro256StarStar : System.Random
     private static ulong SplitMix64(ref ulong x)
     {
         var z = x += 0x9e3779b97f4a7c15;
-        z = (z ^ (z >> 30)) * 0xbf58476d1ce4e5b9;
-        z = (z ^ (z >> 27)) * 0x94d049bb133111eb;
-        return z ^ (z >> 31);
+        z = (z ^ z >> 30) * 0xbf58476d1ce4e5b9;
+        z = (z ^ z >> 27) * 0x94d049bb133111eb;
+        return z ^ z >> 31;
     }
 
     private static ulong Rotl(ulong x, int k)
     {
-        return (x << k) | (x >> (64 - k));
+        return x << k | x >> 64 - k;
     }
 
     private ulong NextUInt64()
@@ -51,7 +51,7 @@ internal sealed class Xoshiro256StarStar : System.Random
         return result;
     }
 
-    public uint NextUInt32()
+    internal uint NextUInt32()
     {
         return (uint)(NextUInt64() >> 32);
     }
@@ -63,24 +63,36 @@ internal sealed class Xoshiro256StarStar : System.Random
 
     public override int Next(int maxValue)
     {
-        return maxValue switch
+        if (maxValue < 0)
         {
-            < 0 => throw new ArgumentOutOfRangeException(nameof(maxValue)),
-            <= 1 => 0,
-            _ => (int)(NextDouble() * maxValue)
-        };
+            throw new ArgumentOutOfRangeException(nameof(maxValue));
+        }
+        if (maxValue <= 1)
+        {
+            return 0;
+        }
+        return (int)(NextDouble() * maxValue);
     }
 
     public override int Next(int minValue, int maxValue)
     {
-        if (minValue > maxValue) throw new ArgumentOutOfRangeException(nameof(minValue));
-        if (minValue == maxValue) return minValue;
+        if (minValue > maxValue)
+        {
+            throw new ArgumentOutOfRangeException(nameof(minValue));
+        }
+        if (minValue == maxValue)
+        {
+            return minValue;
+        }
         return (int)((long)(NextDouble() * ((long)maxValue - minValue)) + minValue);
     }
 
     public override void NextBytes(byte[] buffer)
     {
-        if (buffer == null) throw new ArgumentNullException(nameof(buffer));
+        if (buffer == null)
+        {
+            throw new ArgumentNullException(nameof(buffer));
+        }
         var i = 0;
         while (i < buffer.Length)
         {

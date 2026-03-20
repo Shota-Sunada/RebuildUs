@@ -4,6 +4,3 @@
 [submodule "Submerged"]
 	path = Submerged
 	url = https://github.com/Shota-Sunada/Submerged
-[submodule "Impostor"]
-	path = Impostor
-	url = https://github.com/Shota-Sunada/Impostor

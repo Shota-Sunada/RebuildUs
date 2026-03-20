@@ -1,13 +1,16 @@
 namespace RebuildUs.Modules;
 
-public static class ShowHost
+internal static class ShowHost
 {
     private static TextMeshPro _text;
-    private static readonly StringBuilder SB = new();
+    private static readonly StringBuilder Sb = new();
 
-    public static void Setup(MeetingHud __instance)
+    internal static void Setup(MeetingHud __instance)
     {
-        if (AmongUsClient.Instance.NetworkMode != NetworkModes.OnlineGame) return;
+        if (AmongUsClient.Instance.NetworkMode != NetworkModes.OnlineGame)
+        {
+            return;
+        }
 
         __instance.ProceedButton.gameObject.transform.localPosition = new(-2.5f, 2.2f, 0);
         __instance.ProceedButton.gameObject.GetComponent<SpriteRenderer>().enabled = false;
@@ -17,21 +20,25 @@ public static class ShowHost
         _text = __instance.ProceedButton.gameObject.GetComponentInChildren<TextMeshPro>();
     }
 
-    public static void Update(MeetingHud __instance)
+    internal static void Update(MeetingHud __instance)
     {
         var host = GameData.Instance.GetHost();
 
-        if (host != null && _text != null)
+        if (host == null || _text == null)
         {
-            PlayerMaterial.SetColors(host.DefaultOutfit.ColorId, __instance.HostIcon);
+            return;
+        }
+        PlayerMaterial.SetColors(host.DefaultOutfit.ColorId, __instance.HostIcon);
 
-            SB.Clear();
-            SB.Append(Tr.Get(TrKey.Host));
-            SB.Append(": ");
-            SB.Append(host.PlayerName);
+        Sb.Clear();
+        Sb.Append(Tr.Get(TrKey.Host));
+        Sb.Append(": ");
+        Sb.Append(host.PlayerName);
 
-            var newText = SB.ToString();
-            if (_text.text != newText) _text.text = newText;
+        var newText = Sb.ToString();
+        if (_text.text != newText)
+        {
+            _text.text = newText;
         }
     }
 }

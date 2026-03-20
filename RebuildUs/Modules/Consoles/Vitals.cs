@@ -1,97 +1,109 @@
-using Object = UnityEngine.Object;
-
 namespace RebuildUs.Modules.Consoles;
 
-public static class Vitals
+internal static class Vitals
 {
     private static float _vitalsTimer;
     private static TextMeshPro _timeRemaining;
     private static List<TextMeshPro> _hackerTexts = [];
 
-    private static readonly StringBuilder VITALS_STRING_BUILDER = new();
+    private static readonly StringBuilder VitalsStringBuilder = new();
 
-    public static void ResetData()
+    internal static void ResetData()
     {
         _vitalsTimer = 0f;
-        if (_timeRemaining != null)
+        if (_timeRemaining == null)
         {
-            Object.Destroy(_timeRemaining);
-            _timeRemaining = null;
+            return;
         }
+        UnityObject.Destroy(_timeRemaining);
+        _timeRemaining = null;
     }
 
     private static void UseVitalsTime()
     {
         // Don't waste network traffic if we're out of time.
-        if (MapSettings.RestrictDevices > 0 && MapSettings.RestrictVitals && MapSettings.RestrictVitalsTime > 0f && PlayerControl.LocalPlayer.IsAlive())
+        if (MapSettings.RestrictDevices > 0
+            && MapSettings.RestrictVitals
+            && MapSettings.RestrictVitalsTime > 0f
+            && PlayerControl.LocalPlayer.IsAlive())
         {
-            using var sender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.UseVitalsTime);
-            sender.Write(_vitalsTimer);
-            RPCProcedure.UseVitalsTime(_vitalsTimer);
+            UseVitalsTime(PlayerControl.LocalPlayer, _vitalsTimer);
         }
 
         _vitalsTimer = 0f;
     }
 
-    public static void Begin(VitalsMinigame __instance)
+    internal static void Begin(VitalsMinigame __instance)
     {
         _vitalsTimer = 0f;
 
-        if (PlayerControl.LocalPlayer.IsRole(RoleType.Hacker))
+        if (!PlayerControl.LocalPlayer.IsRole(RoleType.Hacker))
         {
-            _hackerTexts = [];
-            foreach (var panel in __instance.vitals)
-            {
-                var text = Object.Instantiate(__instance.SabText, panel.transform);
-                _hackerTexts.Add(text);
-                Object.DestroyImmediate(text.GetComponent<AlphaBlink>());
-                text.gameObject.SetActive(false);
-                text.transform.localScale = Vector3.one * 0.75f;
-                text.transform.localPosition = new(-0.75f, -0.23f, 0f);
-            }
+            return;
+        }
+        _hackerTexts = [];
+        foreach (var panel in __instance.vitals)
+        {
+            var text = UnityObject.Instantiate(__instance.SabText, panel.transform);
+            _hackerTexts.Add(text);
+            UnityObject.DestroyImmediate(text.GetComponent<AlphaBlink>());
+            text.gameObject.SetActive(false);
+            text.transform.localScale = Vector3.one * 0.75f;
+            text.transform.localPosition = new(-0.75f, -0.23f, 0f);
         }
     }
 
-    public static bool UpdatePrefix(VitalsMinigame __instance)
+    internal static bool UpdatePrefix(VitalsMinigame __instance)
     {
         _vitalsTimer += Time.deltaTime;
         if (_vitalsTimer > 0.05f)
-            UseVitalsTime();
-
-        if (MapSettings.RestrictDevices > 0 && MapSettings.RestrictVitals)
         {
-            if (_timeRemaining == null)
-            {
-                _timeRemaining = Object.Instantiate(FastDestroyableSingleton<HudManager>.Instance.TaskPanel.taskText, __instance.transform);
-                _timeRemaining.alignment = TextAlignmentOptions.BottomRight;
-                _timeRemaining.transform.position = Vector3.zero;
-                _timeRemaining.transform.localPosition = new(1.7f, 4.45f);
-                _timeRemaining.transform.localScale *= 1.8f;
-                _timeRemaining.color = Palette.White;
-            }
-
-            if (MapSettings.RestrictVitalsTime <= 0f)
-            {
-                __instance.Close();
-                return false;
-            }
-
-            VITALS_STRING_BUILDER.Clear();
-            var ts = TimeSpan.FromSeconds(MapSettings.RestrictVitalsTime);
-            if (ts.TotalHours >= 1) VITALS_STRING_BUILDER.Append((int)ts.TotalHours).Append(':');
-            VITALS_STRING_BUILDER.Append(ts.Minutes.ToString("D2")).Append(':').Append(ts.Seconds.ToString("D2")).Append('.').Append((ts.Milliseconds / 10).ToString("D2"));
-
-            var timeString = VITALS_STRING_BUILDER.ToString();
-            VITALS_STRING_BUILDER.Clear();
-            VITALS_STRING_BUILDER.Append(string.Format(Tr.Get(TrKey.TimeRemaining), timeString));
-            _timeRemaining.text = VITALS_STRING_BUILDER.ToString();
-            _timeRemaining.gameObject.SetActive(true);
+            UseVitalsTime();
         }
+
+        if (MapSettings.RestrictDevices <= 0 || !MapSettings.RestrictVitals)
+        {
+            return true;
+        }
+        if (_timeRemaining == null)
+        {
+            _timeRemaining = UnityObject.Instantiate(FastDestroyableSingleton<HudManager>.Instance.TaskPanel.taskText, __instance.transform);
+            _timeRemaining.alignment = TextAlignmentOptions.BottomRight;
+            _timeRemaining.transform.position = Vector3.zero;
+            _timeRemaining.transform.localPosition = new(1.7f, 4.45f);
+            _timeRemaining.transform.localScale *= 1.8f;
+            _timeRemaining.color = Palette.White;
+        }
+
+        if (MapSettings.RestrictVitalsTime <= 0f)
+        {
+            __instance.Close();
+            return false;
+        }
+
+        VitalsStringBuilder.Clear();
+        var ts = TimeSpan.FromSeconds(MapSettings.RestrictVitalsTime);
+        if (ts.TotalHours >= 1)
+        {
+            VitalsStringBuilder.Append((int)ts.TotalHours).Append(':');
+        }
+        VitalsStringBuilder
+            .Append(ts.Minutes.ToString("D2"))
+            .Append(':')
+            .Append(ts.Seconds.ToString("D2"))
+            .Append('.')
+            .Append((ts.Milliseconds / 10).ToString("D2"));
+
+        var timeString = VitalsStringBuilder.ToString();
+        VitalsStringBuilder.Clear();
+        VitalsStringBuilder.Append(string.Format(Tr.Get(TrKey.TimeRemaining), timeString));
+        _timeRemaining.text = VitalsStringBuilder.ToString();
+        _timeRemaining.gameObject.SetActive(true);
 
         return true;
     }
 
-    public static void UpdatePostfix(VitalsMinigame __instance)
+    internal static void UpdatePostfix(VitalsMinigame __instance)
     {
         // Hacker show time since death
         if (PlayerControl.LocalPlayer.IsRole(RoleType.Hacker) && Hacker.HackerTimer > 0)
@@ -102,18 +114,20 @@ public static class Vitals
                 var player = GameData.Instance.AllPlayers[k];
 
                 // Hacker update
-                if (vitalsPanel.IsDead)
+                if (!vitalsPanel.IsDead)
                 {
-                    var deadPlayer = GameHistory.GetDeadPlayer(player.PlayerId);
-                    if (deadPlayer != null && k < _hackerTexts.Count && _hackerTexts[k] != null)
-                    {
-                        var timeSinceDeath = (float)(DateTime.UtcNow - deadPlayer.TimeOfDeath).TotalMilliseconds;
-                        _hackerTexts[k].gameObject.SetActive(true);
-                        VITALS_STRING_BUILDER.Clear();
-                        VITALS_STRING_BUILDER.Append(Math.Round(timeSinceDeath / 1000)).Append('s');
-                        _hackerTexts[k].text = VITALS_STRING_BUILDER.ToString();
-                    }
+                    continue;
                 }
+                var deadPlayer = GameHistory.GetDeadPlayer(player.PlayerId);
+                if (deadPlayer == null || k >= _hackerTexts.Count || _hackerTexts[k] == null)
+                {
+                    continue;
+                }
+                var timeSinceDeath = (float)(DateTime.UtcNow - deadPlayer.TimeOfDeath).TotalMilliseconds;
+                _hackerTexts[k].gameObject.SetActive(true);
+                VitalsStringBuilder.Clear();
+                VitalsStringBuilder.Append(Math.Round(timeSinceDeath / 1000)).Append('s');
+                _hackerTexts[k].text = VitalsStringBuilder.ToString();
             }
         }
         else
@@ -121,8 +135,16 @@ public static class Vitals
             foreach (var text in _hackerTexts)
             {
                 if (text != null && text.gameObject != null)
+                {
                     text.gameObject.SetActive(false);
+                }
             }
         }
+    }
+
+    [MethodRpc((uint)CustomRPC.UseVitalsTime)]
+    internal static void UseVitalsTime(PlayerControl sender, float time)
+    {
+        MapSettings.RestrictVitalsTime -= time;
     }
 }

@@ -1,9 +1,6 @@
-using InnerNet;
-using Object = UnityEngine.Object;
-
 namespace RebuildUs;
 
-public class CustomOverlays
+internal abstract class CustomOverlays
 {
     private const int MAX_LINES = 26;
     private const int MAX_CHARS_PER_LINE = 45;
@@ -25,12 +22,17 @@ public class CustomOverlays
 
     private static int CountLines(string text)
     {
-        if (string.IsNullOrEmpty(text)) return 0;
-        var count = 1;
-        for (var i = 0; i < text.Length; i++)
+        if (string.IsNullOrEmpty(text))
         {
-            if (text[i] == '\n')
+            return 0;
+        }
+        var count = 1;
+        foreach (var t in text)
+        {
+            if (t == '\n')
+            {
                 count++;
+            }
         }
 
         return count;
@@ -38,16 +40,19 @@ public class CustomOverlays
 
     private static List<string> SplitToPages(string text, int maxLines)
     {
-        var pages = new List<string>();
+        List<string> pages = [];
         var lines = text.Replace("\r\n", "\n").Split('\n');
-        var currentPage = new StringBuilder();
+        StringBuilder currentPage = new();
         var currentLineCount = 0;
 
         foreach (var rawLine in lines)
         {
             if (rawLine == "\f")
             {
-                if (currentPage.Length > 0) pages.Add(currentPage.ToString().TrimEnd());
+                if (currentPage.Length > 0)
+                {
+                    pages.Add(currentPage.ToString().TrimEnd());
+                }
                 currentPage.Clear();
                 currentLineCount = 0;
                 continue;
@@ -68,28 +73,33 @@ public class CustomOverlays
             }
         }
 
-        if (currentPage.Length > 0) pages.Add(currentPage.ToString().TrimEnd());
+        if (currentPage.Length > 0)
+        {
+            pages.Add(currentPage.ToString().TrimEnd());
+        }
 
         return pages;
     }
 
     private static List<string> WrapLine(string line, int maxChars)
     {
-        var result = new List<string>();
+        List<string> result = [];
         if (string.IsNullOrEmpty(line))
         {
             result.Add(string.Empty);
             return result;
         }
 
-        var sb = new StringBuilder();
+        StringBuilder sb = new();
         var visibleWidth = 0;
         var inTag = false;
 
-        for (var i = 0; i < line.Length; i++)
+        foreach (var c in line)
         {
-            var c = line[i];
-            if (c == '<') inTag = true;
+            if (c == '<')
+            {
+                inTag = true;
+            }
 
             if (!inTag)
             {
@@ -108,40 +118,65 @@ public class CustomOverlays
 
             sb.Append(c);
 
-            if (c == '>') inTag = false;
+            if (c == '>')
+            {
+                inTag = false;
+            }
         }
 
-        if (sb.Length > 0) result.Add(sb.ToString());
+        if (sb.Length > 0)
+        {
+            result.Add(sb.ToString());
+        }
         return result;
     }
 
     private static void SetInfoOverlayText()
     {
-        if (_optionsData == null || RebuildUs.OptionsPage < 0 || RebuildUs.OptionsPage >= _optionsData.Count) return;
+        if (_optionsData == null || RebuildUs.OptionsPage < 0 || RebuildUs.OptionsPage >= _optionsData.Count)
+        {
+            return;
+        }
 
-        var currentPageNumber = (RebuildUs.OptionsPage / 2) + 1;
+        var currentPageNumber = RebuildUs.OptionsPage / 2 + 1;
         var totalPagesNumber = (_maxOptionsPage + 1) / 2;
-        _infoOverlayTitle?.text = new StringBuilder(Tr.Get(TrKey.GameOptions)).Append(" <size=80%>").Append(Tr.Get(TrKey.CurrentPage)).Append(" (").Append(currentPageNumber).Append('/').Append(totalPagesNumber).Append(")\n").Append(Tr.Get(TrKey.ChangePage)).Append("</size>").ToString();
+        _infoOverlayTitle?.text = new StringBuilder(Tr.Get(TrKey.GameOptions))
+                                    .Append(" <size=80%>")
+                                    .Append(Tr.Get(TrKey.CurrentPage))
+                                    .Append(" (")
+                                    .Append(currentPageNumber)
+                                    .Append('/')
+                                    .Append(totalPagesNumber)
+                                    .Append(")\n")
+                                    .Append(Tr.Get(TrKey.ChangePage))
+                                    .Append("</size>")
+                                    .ToString();
 
-        var sb = new StringBuilder();
+        StringBuilder sb = new();
         sb.Append(_optionsData[RebuildUs.OptionsPage]);
         _infoOverlayRules.text = sb.ToString();
 
-        if (RebuildUs.OptionsPage + 1 < _optionsData.Count)
-            _infoOverlayRulesRight.text = _optionsData[RebuildUs.OptionsPage + 1];
-        else
-            _infoOverlayRulesRight.text = string.Empty;
+        _infoOverlayRulesRight.text = RebuildUs.OptionsPage + 1 < _optionsData.Count ? _optionsData[RebuildUs.OptionsPage + 1] : string.Empty;
     }
 
     private static void AppendRoleCount(ref StringBuilder sb, string key, CustomOption minOpt, CustomOption maxOpt)
     {
         var min = minOpt.GetSelection();
         var max = maxOpt.GetSelection();
-        if (min > max) min = max;
+        if (min > max)
+        {
+            min = max;
+        }
 
         sb.Append(Helpers.Cs(new(204f / 255f, 204f / 255f, 0, 1f), Tr.GetDynamic(key))).Append(": ");
-        if (min == max) sb.Append(max);
-        else sb.Append(min).Append(" - ").Append(max);
+        if (min == max)
+        {
+            sb.Append(max);
+        }
+        else
+        {
+            sb.Append(min).Append(" - ").Append(max);
+        }
         sb.AppendLine();
     }
 
@@ -150,10 +185,22 @@ public class CustomOverlays
         HideBlackBg();
         HideInfoOverlay();
         // if (MeetingUnderlay != null) UnityEngine.Object.Destroy(MeetingUnderlay);
-        if (_infoUnderlay != null) Object.Destroy(_infoUnderlay);
-        if (_infoOverlayTitle != null) Object.Destroy(_infoOverlayTitle);
-        if (_infoOverlayRules != null) Object.Destroy(_infoOverlayRules);
-        if (_infoOverlayRulesRight != null) Object.Destroy(_infoOverlayRulesRight);
+        if (_infoUnderlay != null)
+        {
+            UnityObject.Destroy(_infoUnderlay);
+        }
+        if (_infoOverlayTitle != null)
+        {
+            UnityObject.Destroy(_infoOverlayTitle);
+        }
+        if (_infoOverlayRules != null)
+        {
+            UnityObject.Destroy(_infoOverlayRules);
+        }
+        if (_infoOverlayRulesRight != null)
+        {
+            UnityObject.Destroy(_infoOverlayRulesRight);
+        }
         // MeetingUnderlay = InfoUnderlay = null;
         _infoUnderlay = null;
         _infoOverlayTitle = null;
@@ -168,7 +215,10 @@ public class CustomOverlays
     private static bool InitializeOverlays()
     {
         var hudManager = FastDestroyableSingleton<HudManager>.Instance;
-        if (hudManager == null) return false;
+        if (hudManager == null)
+        {
+            return false;
+        }
 
         // if (MeetingUnderlay == null)
         // {
@@ -181,7 +231,7 @@ public class CustomOverlays
 
         if (_infoUnderlay == null)
         {
-            _infoUnderlay = Object.Instantiate(hudManager.FullScreen, hudManager.transform);
+            _infoUnderlay = UnityObject.Instantiate(hudManager.FullScreen, hudManager.transform);
             _infoUnderlay.name = "InfoUnderlay";
             _infoUnderlay.transform.localPosition = new(0f, 0f, UNDERLAY_Z);
             _infoUnderlay.gameObject.SetActive(true);
@@ -190,7 +240,7 @@ public class CustomOverlays
 
         if (_infoOverlayTitle == null)
         {
-            _infoOverlayTitle = Object.Instantiate(hudManager.TaskPanel.taskText, hudManager.transform);
+            _infoOverlayTitle = UnityObject.Instantiate(hudManager.TaskPanel.taskText, hudManager.transform);
             _infoOverlayTitle.name = "InfoOverlayTitle";
             _infoOverlayTitle.maxVisibleLines = MAX_LINES;
             _infoOverlayTitle.fontSize = _infoOverlayTitle.fontSizeMin = _infoOverlayTitle.fontSizeMax = 1.75f;
@@ -204,7 +254,7 @@ public class CustomOverlays
 
         if (_infoOverlayRules == null)
         {
-            _infoOverlayRules = Object.Instantiate(hudManager.TaskPanel.taskText, hudManager.transform);
+            _infoOverlayRules = UnityObject.Instantiate(hudManager.TaskPanel.taskText, hudManager.transform);
             _infoOverlayRules.name = "InfoOverlayRules";
             _infoOverlayRules.maxVisibleLines = MAX_LINES;
             _infoOverlayRules.fontSize = _infoOverlayRules.fontSizeMin = _infoOverlayRules.fontSizeMax = 1.20f;
@@ -218,108 +268,185 @@ public class CustomOverlays
 
         if (_infoOverlayRulesRight == null)
         {
-            _infoOverlayRulesRight = Object.Instantiate(_infoOverlayRules, hudManager.transform);
+            _infoOverlayRulesRight = UnityObject.Instantiate(_infoOverlayRules, hudManager.transform);
             _infoOverlayRulesRight.name = "InfoOverlayRulesRight";
             _infoOverlayRulesRight.transform.localPosition = new(RIGHT_COLUMN_X, TEXT_Y, TEXT_Z);
             _infoOverlayRulesRight.enabled = false;
         }
 
         var player = PlayerControl.LocalPlayer;
-        if (player == null) return true;
-
-        if (_optionsData == null)
+        if (player == null)
         {
-            _optionsData = [];
-            var tr = DestroyableSingleton<TranslationController>.Instance;
-            var sb = new StringBuilder();
-
-            // Part 1: Among Us Settings
-            var votingTime = Helpers.GetOption(Int32OptionNames.VotingTime);
-            sb.Append("<size=120%>").Append(Tr.Get(TrKey.AmongUsSettings)).Append("</size>\n\n").Append(tr.GetString(StringNames.GameNumImpostors)).Append(": ").Append(Helpers.GetOption(Int32OptionNames.NumImpostors)).Append('\n').Append(tr.GetString(StringNames.GameConfirmImpostor)).Append(": ").Append(Helpers.GetOption(BoolOptionNames.ConfirmImpostor) ? Tr.Get(TrKey.On) : Tr.Get(TrKey.Off)).Append('\n').Append(tr.GetString(StringNames.GameNumMeetings)).Append(": ").Append(Helpers.GetOption(Int32OptionNames.NumEmergencyMeetings)).Append('\n').Append(tr.GetString(StringNames.GameAnonymousVotes)).Append(": ").Append(Helpers.GetOption(BoolOptionNames.AnonymousVotes) ? Tr.Get(TrKey.On) : Tr.Get(TrKey.Off)).Append('\n').Append(tr.GetString(StringNames.GameEmergencyCooldown)).Append(": ").Append(tr.GetString(StringNames.GameSecondsAbbrev, Helpers.GetOption(Int32OptionNames.EmergencyCooldown))).Append('\n').Append(tr.GetString(StringNames.GameDiscussTime)).Append(": ").Append(tr.GetString(StringNames.GameSecondsAbbrev, Helpers.GetOption(Int32OptionNames.EmergencyCooldown))).Append('\n').Append(tr.GetString(StringNames.GameVotingTime)).Append(": ").Append(tr.GetString(StringNames.GameSecondsAbbrev, votingTime > 0 ? votingTime : "∞")).Append('\n').Append(tr.GetString(StringNames.GamePlayerSpeed)).Append(": ").Append(Helpers.GetOption(FloatOptionNames.PlayerSpeedMod)).Append('\n').Append(tr.GetString(StringNames.GameTaskBarMode)).Append(": ").Append(tr.GetString((StringNames)(277 + Helpers.GetOption(Int32OptionNames.TaskBarMode)))).Append('\n').Append(tr.GetString(StringNames.GameVisualTasks)).Append(": ").Append(Helpers.GetOption(BoolOptionNames.VisualTasks) ? Tr.Get(TrKey.On) : Tr.Get(TrKey.Off)).Append('\n').Append(tr.GetString(StringNames.GameCrewLight)).Append(": ").Append(Helpers.GetOption(FloatOptionNames.CrewLightMod)).Append('x').Append('\n').Append(tr.GetString(StringNames.GameImpostorLight)).Append(": ").Append(Helpers.GetOption(FloatOptionNames.ImpostorLightMod)).Append('x').Append('\n').Append(tr.GetString(StringNames.GameKillCooldown)).Append(": ").Append(tr.GetString(StringNames.GameSecondsAbbrev, Helpers.GetOption(FloatOptionNames.KillCooldown))).Append('\n').Append(tr.GetString(StringNames.GameKillDistance)).Append(": ").Append(tr.GetString((StringNames)(204 + Helpers.GetOption(Int32OptionNames.KillDistance)))).Append('\n').Append(tr.GetString(StringNames.GameCommonTasks)).Append(": ").Append(Helpers.GetOption(Int32OptionNames.NumCommonTasks)).Append('\n').Append(tr.GetString(StringNames.GameLongTasks)).Append(": ").Append(Helpers.GetOption(Int32OptionNames.NumLongTasks)).Append('\n').Append(tr.GetString(StringNames.GameShortTasks)).Append(": ").Append(Helpers.GetOption(Int32OptionNames.NumShortTasks)).Append("\n\n").Append('\f');
-            _optionsData.AddRange(SplitToPages(sb.ToString(), MAX_LINES - 1));
-
-            // Part 2: Role Info for Player
-            sb.Clear();
-            foreach (var r in RoleInfo.GetRoleInfoForPlayer(player))
-            {
-                sb.Append("<size=150%>").Append(r.NameColored).Append("</size>");
-                if (!string.IsNullOrEmpty(r.FullDescription)) sb.Append('\n').Append(r.FullDescription);
-                sb.Append("\n\n");
-                if (!string.IsNullOrEmpty(r.RoleOptions)) sb.Append(r.RoleOptions).Append("\n\n");
-            }
-
-            sb.Append('\f');
-            _optionsData.AddRange(SplitToPages(sb.ToString(), MAX_LINES - 1));
-
-            // Part 3: Custom Options Groups
-            sb.Clear();
-            sb.Append(CustomOption.OptionsToString(CustomOptionHolder.GameOptions)).Append("\n\n").Append(CustomOption.OptionsToString(CustomOptionHolder.AirshipOptimize)).Append("\n\n").Append(CustomOption.OptionsToString(CustomOptionHolder.RandomMap)).Append('\f');
-            _optionsData.AddRange(SplitToPages(sb.ToString(), MAX_LINES - 1));
-
-            // Part 4: Detailed Custom Options
-            var entries = new List<string> { CustomOption.OptionToString(CustomOptionHolder.PresetSelection) };
-            sb.Clear();
-            AppendRoleCount(ref sb, "CrewmateRoles", CustomOptionHolder.CrewmateRolesCountMin, CustomOptionHolder.CrewmateRolesCountMax);
-            AppendRoleCount(ref sb, "NeutralRoles", CustomOptionHolder.NeutralRolesCountMin, CustomOptionHolder.NeutralRolesCountMax);
-            AppendRoleCount(ref sb, "ImpostorRoles", CustomOptionHolder.ImpostorRolesCountMin, CustomOptionHolder.ImpostorRolesCountMax);
-            entries.Add(sb.ToString().TrimEnd());
-
-            foreach (var option in CustomOption.AllOptions)
-            {
-                if (IsCommonOption(option)) continue;
-
-                if (option.Parent == null && option.Enabled)
-                {
-                    sb.Clear();
-                    sb.AppendLine(CustomOption.OptionToString(option));
-                    AddChildren(option, sb);
-
-                    var entryText = sb.ToString().TrimEnd();
-                    var lines = CountLines(entryText);
-                    if (lines > MAX_LINES) _optionsData.AddRange(SplitToPages(entryText, MAX_LINES));
-                    else entries.Add(entryText);
-                }
-            }
-
-            sb.Clear();
-            var currentLineCount = 0;
-            foreach (var e in entries)
-            {
-                var lines = CountLines(e);
-                if (e == "\f" || currentLineCount + lines > MAX_LINES)
-                {
-                    if (sb.Length > 0)
-                    {
-                        _optionsData.Add(sb.ToString().TrimEnd());
-                        sb.Clear();
-                    }
-
-                    currentLineCount = 0;
-                    if (e == "\f") continue;
-                }
-
-                sb.Append(e).Append("\n\n");
-                currentLineCount += lines + 1;
-            }
-
-            if (sb.Length > 0) _optionsData.Add(sb.ToString().TrimEnd());
-            _maxOptionsPage = _optionsData.Count;
+            return true;
         }
+
+        if (_optionsData != null)
+        {
+            return true;
+        }
+        _optionsData = [];
+        var tr = FastDestroyableSingleton<TranslationController>.Instance;
+        StringBuilder sb = new();
+
+        // Part 1: Among Us Settings
+        var votingTime = Int32OptionNames.VotingTime.Get();
+        sb.Append("<size=120%>")
+            .Append(Tr.Get(TrKey.AmongUsSettings)).Append("</size>\n\n")
+            .Append(tr.GetString(StringNames.GameNumImpostors)).Append(": ")
+            .Append(Int32OptionNames.NumImpostors.Get()).Append('\n')
+            .Append(tr.GetString(StringNames.GameConfirmImpostor)).Append(": ")
+            .Append(BoolOptionNames.ConfirmImpostor.Get() ? Tr.Get(TrKey.On) : Tr.Get(TrKey.Off)).Append('\n')
+            .Append(tr.GetString(StringNames.GameNumMeetings)).Append(": ")
+            .Append(Int32OptionNames.NumEmergencyMeetings.Get()).Append('\n')
+            .Append(tr.GetString(StringNames.GameAnonymousVotes)).Append(": ")
+            .Append(BoolOptionNames.AnonymousVotes.Get() ? Tr.Get(TrKey.On) : Tr.Get(TrKey.Off)).Append('\n')
+            .Append(tr.GetString(StringNames.GameEmergencyCooldown)).Append(": ")
+            .Append(tr.GetString(StringNames.GameSecondsAbbrev, Int32OptionNames.EmergencyCooldown.Get())).Append('\n')
+            .Append(tr.GetString(StringNames.GameDiscussTime)).Append(": ")
+            .Append(tr.GetString(StringNames.GameSecondsAbbrev, Int32OptionNames.EmergencyCooldown.Get())).Append('\n')
+            .Append(tr.GetString(StringNames.GameVotingTime)).Append(": ")
+            .Append(tr.GetString(StringNames.GameSecondsAbbrev, votingTime > 0 ? votingTime : "∞")).Append('\n')
+            .Append(tr.GetString(StringNames.GamePlayerSpeed)).Append(": ")
+            .Append(FloatOptionNames.PlayerSpeedMod.Get()).Append('\n')
+            .Append(tr.GetString(StringNames.GameTaskBarMode)).Append(": ")
+            .Append(tr.GetString((StringNames)(277 + Int32OptionNames.TaskBarMode.Get()))).Append('\n')
+            .Append(tr.GetString(StringNames.GameVisualTasks)).Append(": ")
+            .Append(BoolOptionNames.VisualTasks.Get() ? Tr.Get(TrKey.On) : Tr.Get(TrKey.Off)).Append('\n')
+            .Append(tr.GetString(StringNames.GameCrewLight)).Append(": ")
+            .Append(FloatOptionNames.CrewLightMod.Get()).Append('x').Append('\n')
+            .Append(tr.GetString(StringNames.GameImpostorLight)).Append(": ")
+            .Append(FloatOptionNames.ImpostorLightMod.Get()).Append('x').Append('\n')
+            .Append(tr.GetString(StringNames.GameKillCooldown)).Append(": ")
+            .Append(tr.GetString(StringNames.GameSecondsAbbrev, FloatOptionNames.KillCooldown.Get())).Append('\n')
+            .Append(tr.GetString(StringNames.GameKillDistance)).Append(": ")
+            .Append(tr.GetString((StringNames)(204 + Int32OptionNames.KillDistance.Get()))).Append('\n')
+            .Append(tr.GetString(StringNames.GameCommonTasks)).Append(": ")
+            .Append(Int32OptionNames.NumCommonTasks.Get()).Append('\n')
+            .Append(tr.GetString(StringNames.GameLongTasks)).Append(": ")
+            .Append(Int32OptionNames.NumLongTasks.Get()).Append('\n')
+            .Append(tr.GetString(StringNames.GameShortTasks)).Append(": ")
+            .Append(Int32OptionNames.NumShortTasks.Get()).Append("\n\n")
+            .Append('\f');
+        _optionsData.AddRange(SplitToPages(sb.ToString(), MAX_LINES - 1));
+
+        // Part 2: Role Info for Player
+        sb.Clear();
+        foreach (var r in RoleInfo.GetRoleInfoForPlayer(player))
+        {
+            sb.Append("<size=150%>").Append(r.RoleColored).Append("</size>");
+            if (!string.IsNullOrEmpty(r.FullDescription))
+            {
+                sb.Append('\n').Append(r.FullDescription);
+            }
+            sb.Append("\n\n");
+            if (!string.IsNullOrEmpty(r.RoleOptions))
+            {
+                sb.Append(r.RoleOptions).Append("\n\n");
+            }
+        }
+
+        sb.Append('\f');
+        _optionsData.AddRange(SplitToPages(sb.ToString(), MAX_LINES - 1));
+
+        // Part 3: Custom Options Groups
+        sb.Clear();
+        sb.Append(CustomOption.OptionsToString(CustomOptionHolder.GameOptions)).Append("\n\n")
+            .Append(CustomOption.OptionsToString(CustomOptionHolder.AirshipOptimize)).Append("\n\n")
+            .Append(CustomOption.OptionsToString(CustomOptionHolder.RandomMap))
+            .Append('\f');
+        _optionsData.AddRange(SplitToPages(sb.ToString(), MAX_LINES - 1));
+
+        // Part 4: Detailed Custom Options
+        List<string> entries = [CustomOption.OptionToString(CustomOptionHolder.PresetSelection)];
+        sb.Clear();
+        AppendRoleCount(ref sb, "CrewmateRoles", CustomOptionHolder.CrewmateRolesCountMin, CustomOptionHolder.CrewmateRolesCountMax);
+        AppendRoleCount(ref sb, "NeutralRoles", CustomOptionHolder.NeutralRolesCountMin, CustomOptionHolder.NeutralRolesCountMax);
+        AppendRoleCount(ref sb, "ImpostorRoles", CustomOptionHolder.ImpostorRolesCountMin, CustomOptionHolder.ImpostorRolesCountMax);
+        entries.Add(sb.ToString().TrimEnd());
+
+        foreach (var option in CustomOption.AllOptions)
+        {
+            if (IsCommonOption(option))
+            {
+                continue;
+            }
+
+            if (option.Parent != null || !option.Enabled)
+            {
+                continue;
+            }
+            sb.Clear();
+            sb.AppendLine(CustomOption.OptionToString(option));
+            AddChildren(option, sb);
+
+            var entryText = sb.ToString().TrimEnd();
+            var lines = CountLines(entryText);
+            if (lines > MAX_LINES)
+            {
+                _optionsData.AddRange(SplitToPages(entryText, MAX_LINES));
+            }
+            else
+            {
+                entries.Add(entryText);
+            }
+        }
+
+        sb.Clear();
+        var currentLineCount = 0;
+        foreach (var e in entries)
+        {
+            var lines = CountLines(e);
+            if (e == "\f" || currentLineCount + lines > MAX_LINES)
+            {
+                if (sb.Length > 0)
+                {
+                    _optionsData.Add(sb.ToString().TrimEnd());
+                    sb.Clear();
+                }
+
+                currentLineCount = 0;
+                if (e == "\f")
+                {
+                    continue;
+                }
+            }
+
+            sb.Append(e).Append("\n\n");
+            currentLineCount += lines + 1;
+        }
+
+        if (sb.Length > 0)
+        {
+            _optionsData.Add(sb.ToString().TrimEnd());
+        }
+        _maxOptionsPage = _optionsData.Count;
 
         return true;
     }
 
     private static bool IsCommonOption(CustomOption option)
     {
-        return option == CustomOptionHolder.PresetSelection || option == CustomOptionHolder.CrewmateRolesCountMin || option == CustomOptionHolder.CrewmateRolesCountMax || option == CustomOptionHolder.NeutralRolesCountMin || option == CustomOptionHolder.NeutralRolesCountMax || option == CustomOptionHolder.ImpostorRolesCountMin || option == CustomOptionHolder.ImpostorRolesCountMax;
+        return option == CustomOptionHolder.PresetSelection
+            || option == CustomOptionHolder.CrewmateRolesCountMin
+            || option == CustomOptionHolder.CrewmateRolesCountMax
+            || option == CustomOptionHolder.NeutralRolesCountMin
+            || option == CustomOptionHolder.NeutralRolesCountMax
+            || option == CustomOptionHolder.ImpostorRolesCountMin
+            || option == CustomOptionHolder.ImpostorRolesCountMax;
     }
 
     private static void AddChildren(CustomOption option, StringBuilder sb, bool indent = true)
     {
-        if (!option.Enabled) return;
+        if (!option.Enabled)
+        {
+            return;
+        }
         foreach (var child in option.Children)
         {
-            if (indent) sb.Append("    ");
+            if (indent)
+            {
+                sb.Append("    ");
+            }
             sb.Append(CustomOption.OptionToString(child)).AppendLine();
             AddChildren(child, sb, indent);
         }
@@ -327,19 +454,24 @@ public class CustomOverlays
 
     internal static void ShowBlackBg()
     {
-        // var hudManager = FastDestroyableSingleton<HudManager>.Instance;
-        // if (hudManager == null) return;
-        // if (!InitializeOverlays()) return;
-        //
-        // // MeetingUnderlay.sprite = AssetLoader.White;
-        // // MeetingUnderlay.enabled = true;
-        // // MeetingUnderlay.transform.localScale = new Vector3(13f, 5f, 1f);
-        // // var clearBlack = new Color32(0, 0, 0, 0);
-        //
-        // hudManager.StartCoroutine(Effects.Lerp(0.2f, new Action<float>(t =>
-        // {
-        // 	// MeetingUnderlay.color = Color.Lerp(clearBlack, Palette.Black, t);
-        // })));
+        var hudManager = FastDestroyableSingleton<HudManager>.Instance;
+        if (hudManager == null)
+        {
+            return;
+        }
+        if (!InitializeOverlays())
+        {
+            return;
+        }
+
+        // MeetingUnderlay.sprite = AssetLoader.White;
+        // MeetingUnderlay.enabled = true;
+        // MeetingUnderlay.transform.localScale = new Vector3(13f, 5f, 1f);
+
+        hudManager.StartCoroutine(Effects.Lerp(0.2f, new Action<float>(t =>
+        {
+            // MeetingUnderlay.color = Color.Lerp(clearBlack, Palette.Black, t);
+        })));
     }
 
     internal static void HideBlackBg()
@@ -350,16 +482,32 @@ public class CustomOverlays
 
     private static void ShowInfoOverlay()
     {
-        if (_overlayShown) return;
+        if (_overlayShown)
+        {
+            return;
+        }
 
         var hudManager = FastDestroyableSingleton<HudManager>.Instance;
         var player = PlayerControl.LocalPlayer;
-        if (MapUtilities.CachedShipStatus == null || player == null || hudManager == null || hudManager.IsIntroDisplayed || (!player.CanMove && MeetingHud.Instance == null))
+        if (MapUtilities.CachedShipStatus == null
+            || player == null
+            || hudManager == null
+            || hudManager.IsIntroDisplayed
+            || !player.CanMove && MeetingHud.Instance == null)
+        {
             return;
+        }
 
-        if (!InitializeOverlays()) return;
+        if (!InitializeOverlays())
+        {
+            return;
+        }
 
-        if (MapBehaviour.Instance && MapBehaviour.Instance.IsOpen) MapBehaviour.Instance.Close();
+        if (MapBehaviour.Instance && MapBehaviour.Instance.IsOpen)
+        {
+            MapBehaviour.Instance.Close();
+        }
+
         hudManager.SetHudActive(false);
 
         _overlayShown = true;
@@ -379,8 +527,8 @@ public class CustomOverlays
         SetInfoOverlayText();
         _infoOverlayTitle.enabled = _infoOverlayRules.enabled = _infoOverlayRulesRight.enabled = true;
 
-        var transparent = new Color(0.1f, 0.1f, 0.1f, 0.0f);
-        var opaque = new Color(0.1f, 0.1f, 0.1f, 0.88f);
+        Color transparent = new(0.1f, 0.1f, 0.1f, 0.0f);
+        Color opaque = new(0.1f, 0.1f, 0.1f, 0.88f);
         hudManager.StartCoroutine(Effects.Lerp(0.2f, new Action<float>(t =>
         {
             _infoUnderlay.color = Color.Lerp(transparent, opaque, t);
@@ -390,73 +538,108 @@ public class CustomOverlays
 
     internal static void HideInfoOverlay()
     {
-        if (!_overlayShown) return;
+        if (!_overlayShown)
+        {
+            return;
+        }
 
         var hudManager = FastDestroyableSingleton<HudManager>.Instance;
-        if (hudManager == null) return;
-        if (MeetingHud.Instance == null) hudManager.SetHudActive(true);
+        if (hudManager == null)
+        {
+            return;
+        }
+        if (MeetingHud.Instance == null)
+        {
+            hudManager.SetHudActive(true);
+        }
 
         _overlayShown = false;
-        var transparent = new Color(0.1f, 0.1f, 0.1f, 0.0f);
-        var opaque = new Color(0.1f, 0.1f, 0.1f, 0.88f);
+        Color transparent = new(0.1f, 0.1f, 0.1f, 0.0f);
+        Color opaque = new(0.1f, 0.1f, 0.1f, 0.88f);
 
         hudManager.StartCoroutine(Effects.Lerp(0.2f, new Action<float>(t =>
         {
             if (_infoUnderlay != null)
             {
                 _infoUnderlay.color = Color.Lerp(opaque, transparent, t);
-                if (t >= 1.0f) _infoUnderlay.enabled = false;
+                if (t >= 1.0f)
+                {
+                    _infoUnderlay.enabled = false;
+                }
             }
 
             if (_infoOverlayTitle != null)
             {
                 _infoOverlayTitle.color = Color.Lerp(Palette.White, Palette.ClearWhite, t);
-                if (t >= 1.0f) _infoOverlayTitle.enabled = false;
+                if (t >= 1.0f)
+                {
+                    _infoOverlayTitle.enabled = false;
+                }
             }
 
             if (_infoOverlayRules != null)
             {
                 _infoOverlayRules.color = Color.Lerp(Palette.White, Palette.ClearWhite, t);
-                if (t >= 1.0f) _infoOverlayRules.enabled = false;
+                if (t >= 1.0f)
+                {
+                    _infoOverlayRules.enabled = false;
+                }
             }
 
             if (_infoOverlayRulesRight != null)
             {
                 _infoOverlayRulesRight.color = Color.Lerp(Palette.White, Palette.ClearWhite, t);
-                if (t >= 1.0f) _infoOverlayRulesRight.enabled = false;
+                if (t >= 1.0f)
+                {
+                    _infoOverlayRulesRight.enabled = false;
+                }
             }
         })));
     }
 
     private static void ToggleInfoOverlay()
     {
-        if (_overlayShown) HideInfoOverlay();
-        else ShowInfoOverlay();
+        if (_overlayShown)
+        {
+            HideInfoOverlay();
+        }
+        else
+        {
+            ShowInfoOverlay();
+        }
     }
 
     [HarmonyPatch(typeof(KeyboardJoystick), nameof(KeyboardJoystick.Update))]
-    public static class CustomOverlayKeybinds
+    internal static class CustomOverlayKeybinds
     {
-        public static void Postfix(KeyboardJoystick __instance)
+        internal static void Postfix(KeyboardJoystick __instance)
         {
             var cc = DestroyableSingleton<ChatController>.Instance;
             var isChatOpen = cc != null && cc.IsOpenOrOpening;
 
-            if (Input.GetKeyDown(KeyCode.H) && AmongUsClient.Instance.GameState == InnerNetClient.GameStates.Started && !isChatOpen)
+            if (Input.GetKeyDown(KeyCode.H) && Helpers.IsGameStarted && !isChatOpen)
+            {
                 ToggleInfoOverlay();
+            }
 
             if (_overlayShown && !isChatOpen)
             {
                 if (Input.GetKeyDown(KeyCode.Comma))
                 {
                     RebuildUs.OptionsPage -= 2;
-                    if (RebuildUs.OptionsPage < 0) RebuildUs.OptionsPage = Math.Max(0, ((_maxOptionsPage - 1) / 2) * 2);
+                    if (RebuildUs.OptionsPage < 0)
+                    {
+                        RebuildUs.OptionsPage = Math.Max(0, (_maxOptionsPage - 1) / 2 * 2);
+                    }
                     SetInfoOverlayText();
                 }
                 else if (Input.GetKeyDown(KeyCode.Period))
                 {
                     RebuildUs.OptionsPage += 2;
-                    if (RebuildUs.OptionsPage >= _maxOptionsPage) RebuildUs.OptionsPage = 0;
+                    if (RebuildUs.OptionsPage >= _maxOptionsPage)
+                    {
+                        RebuildUs.OptionsPage = 0;
+                    }
                     SetInfoOverlayText();
                 }
             }

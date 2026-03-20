@@ -1,289 +1,282 @@
-using System.Collections;
 using BepInEx.Unity.IL2CPP.Utils.Collections;
 using PowerTools;
-using Object = UnityEngine.Object;
 
 namespace RebuildUs.Modules;
 
-public static class Intro
+internal static class Intro
 {
-    public static PoolablePlayer PlayerPrefab;
-    public static Vector3 BottomLeft;
-
-    public static void GenerateMiniCrewIcons(IntroCutscene __instance)
+    internal static void GenerateMiniCrewIcons(IntroCutscene __instance)
     {
-        if (PlayerControl.LocalPlayer != null
-            && FastDestroyableSingleton<HudManager>.Instance != null
-            && __instance.PlayerPrefab != null)
+        try
         {
-            BottomLeft = AspectPosition.ComputePosition(AspectPosition.EdgeAlignments.LeftBottom,
-                                                        new(0.9f, 0.7f, -10f));
-
-            foreach (var p in PlayerControl.AllPlayerControls.GetFastEnumerator())
+            if (__instance == null)
             {
-                if (p.Data == null) continue; // Null check for p.Data
-                var data = p.Data;
-                var player = Object.Instantiate(__instance.PlayerPrefab,
-                                                FastDestroyableSingleton<HudManager>.Instance.transform);
-                PlayerPrefab = __instance.PlayerPrefab;
-                player.UpdateFromPlayerData(data, p.CurrentOutfitType, PlayerMaterial.MaskType.None, false);
-                player.cosmetics.nameText.text = data.PlayerName;
-                player.cosmetics.nameText.transform.localPosition = new(0f, -0.7f, -0.1f);
-                player.SetFlipX(true);
-                MapSettings.PlayerIcons[p.PlayerId] = player;
-                player.gameObject.SetActive(false);
-
-                // UIレイヤーに設定
-                player.gameObject.layer = 5;
-                foreach (var child in player.GetComponentsInChildren<Transform>(true)) child.gameObject.layer = 5;
-
-                //  Allows the roles to have the correct position and scaling via their own UpdateIcons
-                player.transform.localPosition = BottomLeft;
-                player.transform.localScale = Vector3.one * 0.3f;
+                return;
             }
-        }
 
-        RebuildUs.OnIntroEnd();
+            var hud = FastDestroyableSingleton<HudManager>.Instance;
+            var ship = MapUtilities.CachedShipStatus ?? ShipStatus.Instance;
+            var local = PlayerControl.LocalPlayer;
 
-        // インポスター視界の場合に昇降機右の影を無効化
-        if (Helpers.IsAirship
-            && CustomOptionHolder.AirshipOptimize.GetBool()
-            && Helpers.HasImpostorVision(PlayerControl.LocalPlayer)
-            && MapUtilities.CachedShipStatus.FastRooms.ContainsKey(SystemTypes.GapRoom))
-        {
-            var obj = MapUtilities.CachedShipStatus.FastRooms[SystemTypes.GapRoom].gameObject;
-            var oneWayShadow = obj.transform.FindChild("Shadow").FindChild("LedgeShadow").GetComponent<OneWayShadows>();
-            oneWayShadow.gameObject.SetActive(false);
-        }
-
-        // ベントを追加する
-        AdditionalVents.AddAdditionalVents();
-
-        // スペシメンにバイタルを移動する
-        SpecimenVital.MoveVital();
-
-        // アーカイブのアドミンを消す
-        if (Helpers.IsAirship && CustomOptionHolder.AirshipOldAdmin.GetBool())
-        {
-            var records = MapUtilities.CachedShipStatus.FastRooms[SystemTypes.Records].gameObject;
-            foreach (var console in records.GetComponentsInChildren<MapConsole>())
+            if (local != null && hud != null && __instance.PlayerPrefab != null && PlayerControl.AllPlayerControls != null)
             {
-                if (console.name == "records_admin_map")
+                var bottomLeft = AspectPosition.ComputePosition(AspectPosition.EdgeAlignments.LeftBottom, new(0.9f, 0.7f, -10f));
+
+                foreach (var p in PlayerControl.AllPlayerControls.GetFastEnumerator())
                 {
+                    if (p?.Data == null)
+                    {
+                        continue;
+                    }
+                    var data = p.Data;
+                    var player = UnityObject.Instantiate(__instance.PlayerPrefab, hud.transform);
+                    if (player == null)
+                    {
+                        continue;
+                    }
+
+                    player.UpdateFromPlayerData(data, p.CurrentOutfitType, PlayerMaterial.MaskType.None, false);
+                    player.cosmetics.nameText.text = data.PlayerName;
+                    player.cosmetics.nameText.transform.localPosition = new(0f, -0.7f, -0.1f);
+                    player.SetFlipX(true);
+                    MapSettings.PlayerIcons[p.PlayerId] = player;
+                    player.gameObject.SetActive(false);
+
+                    // UIレイヤーに設定
+                    player.gameObject.layer = 5;
+                    foreach (var child in player.GetComponentsInChildren<Transform>(true))
+                    {
+                        child.gameObject.layer = 5;
+                    }
+
+                    // Allows the roles to have the correct position and scaling via their own UpdateIcons
+                    player.transform.localPosition = bottomLeft;
+                    player.transform.localScale = Vector3.one * 0.3f;
+                }
+            }
+
+            RebuildUs.OnIntroEnd();
+
+            // インポスター視界の場合に昇降機右の影を無効化
+            if (Helpers.IsAirship
+                && local != null
+                && ship?.FastRooms != null
+                && CustomOptionHolder.AirshipOptimize.GetBool()
+                && local.HasImpostorVision()
+                && ship.FastRooms.TryGetValue(SystemTypes.GapRoom, out var gapRoomForShadow)
+                && gapRoomForShadow != null)
+            {
+                var obj = gapRoomForShadow.gameObject;
+                var shadow = obj?.transform?.FindChild("Shadow");
+                var oneWayShadow = shadow?.FindChild("LedgeShadow")?.GetComponent<OneWayShadows>();
+                oneWayShadow?.gameObject.SetActive(false);
+            }
+
+            if (ship != null)
+            {
+                // ベントを追加する
+                AdditionalVents.AddAdditionalVents();
+
+                // スペシメンにバイタルを移動する
+                SpecimenVital.MoveVital();
+            }
+
+            // アーカイブのアドミンを消す
+            if (Helpers.IsAirship
+                && ship?.FastRooms != null
+                && CustomOptionHolder.AirshipOldAdmin.GetBool()
+                && ship.FastRooms.TryGetValue(SystemTypes.Records, out var recordsRoom)
+                && recordsRoom != null)
+            {
+                var records = recordsRoom.gameObject;
+                foreach (var console in records.GetComponentsInChildren<MapConsole>())
+                {
+                    if (console.name != "records_admin_map")
+                    {
+                        continue;
+                    }
                     console.gameObject.SetActive(false);
                     break;
                 }
             }
-        }
 
-        if (MapUtilities.CachedShipStatus.FastRooms.ContainsKey(SystemTypes.GapRoom))
-        {
-            var gapRoom = MapUtilities.CachedShipStatus.FastRooms[SystemTypes.GapRoom].gameObject;
-            // GapRoomの配電盤を消す
-            if (Helpers.IsAirship && CustomOptionHolder.AirshipDisableGapSwitchBoard.GetBool())
+            if (ship?.FastRooms != null && ship.FastRooms.TryGetValue(SystemTypes.GapRoom, out var gapRoomData) && gapRoomData != null)
             {
-                GameObject sabotage = null;
-                foreach (var console in gapRoom.GetComponentsInChildren<Console>())
+                var gapRoom = gapRoomData.gameObject;
+                // GapRoomの配電盤を消す
+                if (Helpers.IsAirship && CustomOptionHolder.AirshipDisableGapSwitchBoard.GetBool() && gapRoom != null)
                 {
-                    if (console.name == "task_lightssabotage (gap)")
+                    GameObject sabotage = null;
+                    foreach (var console in gapRoom.GetComponentsInChildren<Console>())
                     {
+                        if (console.name != "task_lightssabotage (gap)")
+                        {
+                            continue;
+                        }
                         sabotage = console.gameObject;
                         break;
                     }
-                }
 
-                if (sabotage != null)
-                {
-                    sabotage.SetActive(false);
-                    var sabotageConsole = sabotage.GetComponent<Console>();
-                    var newConsoles = new List<Console>();
-                    foreach (var c in MapUtilities.CachedShipStatus.AllConsoles)
+                    if (sabotage != null)
                     {
-                        if (c != sabotageConsole)
-                            newConsoles.Add(c);
-                    }
+                        sabotage.SetActive(false);
+                        var sabotageConsole = sabotage.GetComponent<Console>();
+                        List<Console> newConsoles = [];
+                        if (ship.AllConsoles != null)
+                        {
+                            foreach (var c in ship.AllConsoles)
+                            {
+                                if (c != sabotageConsole)
+                                {
+                                    newConsoles.Add(c);
+                                }
+                            }
 
-                    MapUtilities.CachedShipStatus.AllConsoles = newConsoles.ToArray();
+                            ship.AllConsoles = newConsoles.ToArray();
+                        }
+                    }
+                }
+
+                // ぬ～んを消す
+                if (Helpers.IsAirship && CustomOptionHolder.AirshipDisableMovingPlatform.GetBool() && gapRoom != null)
+                {
+                    var movingPlatform = gapRoom.GetComponentInChildren<MovingPlatformBehaviour>();
+                    movingPlatform?.gameObject.SetActive(false);
+                    foreach (var obj in gapRoom.GetComponentsInChildren<PlatformConsole>())
+                    {
+                        obj.gameObject.SetActive(false);
+                    }
                 }
             }
 
-            // ぬ～んを消す
-            if (Helpers.IsAirship && CustomOptionHolder.AirshipDisableMovingPlatform.GetBool())
+            // タスクバグ修正
+            if (Helpers.IsAirship && CustomOptionHolder.AirshipEnableWallCheck.GetBool())
             {
-                gapRoom.GetComponentInChildren<MovingPlatformBehaviour>().gameObject.SetActive(false);
-                foreach (var obj in gapRoom.GetComponentsInChildren<PlatformConsole>()) obj.gameObject.SetActive(false);
+                foreach (var x in UnityObject.FindObjectsOfType<Console>())
+                {
+                    if (x.name == "task_garbage1"
+                        || x.name == "task_garbage2"
+                        || x.name == "task_garbage3"
+                        || x.name == "task_garbage4"
+                        || x.name == "task_garbage5"
+                        || x.name == "task_shower"
+                        || x.name == "task_developphotos"
+                        || x.name == "DivertRecieve" && x.Room is SystemTypes.Armory or SystemTypes.MainHall)
+                    {
+                        x.checkWalls = true;
+                    }
+                }
+            }
+
+            // 最初から一人の場合はLast Impostorになる
+            if (AmongUsClient.Instance?.AmHost == true)
+            {
+                LastImpostor.PromoteToLastImpostor();
+            }
+
+            // タスクパネルの表示優先度を上げる
+            var taskPanel = hud?.TaskStuff;
+            if (taskPanel != null)
+            {
+                var pos = taskPanel.transform.position;
+                taskPanel.transform.position = new(pos.x, pos.y, -20);
+            }
+
+            // マップデータのコピーを読み込み
+            if (CustomOptionHolder.AirshipReplaceSafeTask.GetBool() && AmongUsClient.Instance != null)
+            {
+                MapData.LoadAssets(AmongUsClient.Instance);
             }
         }
-
-        //タスクバグ修正
-        if (Helpers.IsAirship && CustomOptionHolder.AirshipEnableWallCheck.GetBool())
+        catch (Exception ex)
         {
-            foreach (var x in Object.FindObjectsOfType<Console>())
-            {
-                if (x.name == "task_garbage1") x.checkWalls = true;
-                else if (x.name == "task_garbage2") x.checkWalls = true;
-                else if (x.name == "task_garbage3") x.checkWalls = true;
-                else if (x.name == "task_garbage4") x.checkWalls = true;
-                else if (x.name == "task_garbage5") x.checkWalls = true;
-                else if (x.name == "task_shower") x.checkWalls = true;
-                else if (x.name == "task_developphotos") x.checkWalls = true;
-                else if (x.name == "DivertRecieve" && (x.Room == SystemTypes.Armory || x.Room == SystemTypes.MainHall))
-                    x.checkWalls = true;
-            }
+            Logger.LogError("Intro.GenerateMiniCrewIcons failed");
+            Logger.LogError(ex);
         }
-
-        // 最初から一人の場合はLast Impostorになる
-        if (AmongUsClient.Instance.AmHost) LastImpostor.PromoteToLastImpostor();
-
-        // タスクパネルの表示優先度を上げる
-        var taskPanel = FastDestroyableSingleton<HudManager>.Instance.TaskStuff;
-        var pos = taskPanel.transform.position;
-        taskPanel.transform.position = new(pos.x, pos.y, -20);
-
-        // マップデータのコピーを読み込み
-        if (CustomOptionHolder.AirshipReplaceSafeTask.GetBool()) MapData.LoadAssets(AmongUsClient.Instance);
     }
 
-    public static void SetupIntroTeamIcons(IntroCutscene __instance,
-                                           ref Il2CppSystem.Collections.Generic.List<PlayerControl> yourTeam)
+    internal static void SetupIntroTeamIcons(IntroCutscene __instance, ref Il2CppSystem.Collections.Generic.List<PlayerControl> yourTeam)
     {
-        switch (MapSettings.GameMode)
+        // Intro solo teams
+        if (PlayerControl.LocalPlayer.IsNeutral())
         {
-            case CustomGameMode.Roles:
-                // Intro solo teams
-                if (PlayerControl.LocalPlayer.IsNeutral())
-                {
-                    var soloTeam = new Il2CppSystem.Collections.Generic.List<PlayerControl>();
-                    soloTeam.Add(PlayerControl.LocalPlayer);
-                    yourTeam = soloTeam;
-                }
-
-                // Add the Spy to the Impostor team (for the Impostors)
-                if (Spy.Exists && PlayerControl.LocalPlayer.IsTeamImpostor())
-                {
-                    var players = new List<PlayerControl>();
-                    foreach (var p in PlayerControl.AllPlayerControls.GetFastEnumerator()) players.Add(p);
-                    players.Shuffle();
-
-                    var fakeImpostorTeam =
-                        new Il2CppSystem.Collections.Generic.List<
-                            PlayerControl>(); // The local player always has to be the first one in the list (to be displayed in the center)
-                    fakeImpostorTeam.Add(PlayerControl.LocalPlayer);
-
-                    foreach (var p in players)
-                    {
-                        if (PlayerControl.LocalPlayer != p && (p.IsRole(RoleType.Spy) || p.Data.Role.IsImpostor))
-                            fakeImpostorTeam.Add(p);
-                    }
-
-                    yourTeam = fakeImpostorTeam;
-                }
-
-                break;
-            case CustomGameMode.CaptureTheFlag:
-                // SoundManager.Instance.PlaySound(AssetLoader.captureTheFlagMusic, true, 25f);
-                if (PlayerControl.LocalPlayer == CaptureTheFlag.StealerPlayer)
-                {
-                    var greyTeam = new Il2CppSystem.Collections.Generic.List<PlayerControl>();
-                    greyTeam.Add(PlayerControl.LocalPlayer);
-                    yourTeam = greyTeam;
-                    PlayerControl.LocalPlayer.Data.Role.IntroSound = Helpers.GetIntroSound(RoleTypes.Shapeshifter);
-                }
-                else
-                    PlayerControl.LocalPlayer.Data.Role.IntroSound = Helpers.GetIntroSound(RoleTypes.Crewmate);
-
-                break;
-            case CustomGameMode.PoliceAndThieves:
-                // SoundManager.Instance.PlaySound(AssetLoader.policeAndThiefMusic, true, 25f);
-                PlayerControl.LocalPlayer.Data.Role.IntroSound = Helpers.GetIntroSound(RoleTypes.Crewmate);
-                break;
-            case CustomGameMode.HotPotato:
-                // SoundManager.Instance.PlaySound(AssetLoader.hotPotatoMusic, true, 25f);
-                if (PlayerControl.LocalPlayer == HotPotato.HotPotatoPlayer)
-                {
-                    var greyTeam = new Il2CppSystem.Collections.Generic.List<PlayerControl>();
-                    greyTeam.Add(PlayerControl.LocalPlayer);
-                    yourTeam = greyTeam;
-                    PlayerControl.LocalPlayer.Data.Role.IntroSound = Helpers.GetIntroSound(RoleTypes.Impostor);
-                }
-                else
-                    PlayerControl.LocalPlayer.Data.Role.IntroSound = Helpers.GetIntroSound(RoleTypes.Crewmate);
-
-                break;
-            case CustomGameMode.BattleRoyale:
-                // SoundManager.Instance.PlaySound(AssetLoader.battleRoyaleMusic, true, 25f);
-                if (BattleRoyale.MatchType == 0)
-                    PlayerControl.LocalPlayer.Data.Role.IntroSound = Helpers.GetIntroSound(RoleTypes.Crewmate);
-                else
-                {
-                    if (PlayerControl.LocalPlayer == BattleRoyale.SerialKiller)
-                    {
-                        var greyTeam = new Il2CppSystem.Collections.Generic.List<PlayerControl>();
-                        greyTeam.Add(PlayerControl.LocalPlayer);
-                        yourTeam = greyTeam;
-                        PlayerControl.LocalPlayer.Data.Role.IntroSound = Helpers.GetIntroSound(RoleTypes.Shapeshifter);
-                    }
-                    else
-                        PlayerControl.LocalPlayer.Data.Role.IntroSound = Helpers.GetIntroSound(RoleTypes.Crewmate);
-                }
-
-                break;
+            Il2CppSystem.Collections.Generic.List<PlayerControl> soloTeam = new();
+            soloTeam.Add(PlayerControl.LocalPlayer);
+            yourTeam = soloTeam;
         }
+
+        // Add the Spy to the Impostor team (for the Impostors)
+        if (!Spy.Exists || !PlayerControl.LocalPlayer.IsTeamImpostor())
+        {
+            return;
+        }
+        List<PlayerControl> players = [.. PlayerControl.AllPlayerControls.GetFastEnumerator()];
+        players.Shuffle();
+
+        Il2CppSystem.Collections.Generic.List<PlayerControl>
+            fakeImpostorTeam = new(); // The local player always has to be the first one in the list (to be displayed in the center)
+        fakeImpostorTeam.Add(PlayerControl.LocalPlayer);
+
+        foreach (var p in players)
+        {
+            if (PlayerControl.LocalPlayer != p && (p.IsRole(RoleType.Spy) || p.Data.Role.IsImpostor))
+            {
+                fakeImpostorTeam.Add(p);
+            }
+        }
+
+        yourTeam = fakeImpostorTeam;
     }
 
-    public static void SetupIntroTeam(IntroCutscene __instance,
-                                      ref Il2CppSystem.Collections.Generic.List<PlayerControl> yourTeam)
+    internal static void SetupIntroTeam(IntroCutscene __instance, ref Il2CppSystem.Collections.Generic.List<PlayerControl> yourTeam)
     {
         var infos = RoleInfo.GetRoleInfoForPlayer(PlayerControl.LocalPlayer);
-        var roleInfo = infos.FirstOrDefault(info => info.RoleType != RoleType.Lovers);
-        if (roleInfo == null) return;
-
-        switch (MapSettings.GameMode)
+        RoleInfo roleInfo = null;
+        var enumerator = infos.GetEnumerator();
+        while (enumerator.MoveNext())
         {
-            case CustomGameMode.Roles:
-                // if (PlayerControl.LocalPlayer.IsNeutral() || PlayerControl.LocalPlayer.IsGM())
-                if (PlayerControl.LocalPlayer.IsNeutral())
-                {
-                    __instance.BackgroundBar.material.color = roleInfo.Color;
-                    __instance.TeamTitle.text = roleInfo.Name;
-                    __instance.TeamTitle.color = roleInfo.Color;
-                    __instance.ImpostorText.text = "";
-                }
-
+            var info = enumerator.Current;
+            if (info.RoleType != RoleType.Lovers)
+            {
+                roleInfo = info;
                 break;
-            case CustomGameMode.CaptureTheFlag:
-                __instance.ImpostorText.text = "";
-                __instance.BackgroundBar.material.color = CaptureTheFlag.IntroColor;
-                __instance.TeamTitle.color = CaptureTheFlag.IntroColor;
-                break;
-            case CustomGameMode.PoliceAndThieves:
-                __instance.ImpostorText.text = "";
-                __instance.BackgroundBar.material.color = PoliceAndThief.IntroColor;
-                __instance.TeamTitle.text = Tr.Get(TrKey.PoliceAndThiefIntro);
-                __instance.TeamTitle.color = PoliceAndThief.IntroColor;
-                break;
-            case CustomGameMode.HotPotato:
-                __instance.ImpostorText.text = "";
-                __instance.BackgroundBar.material.color = HotPotato.IntroColor;
-                __instance.TeamTitle.text = Tr.Get(TrKey.HotPotatoIntro);
-                __instance.TeamTitle.color = HotPotato.IntroColor;
-                break;
-            case CustomGameMode.BattleRoyale:
-                __instance.ImpostorText.text = "";
-                __instance.BackgroundBar.material.color = BattleRoyale.IntroColor;
-                __instance.TeamTitle.text = Tr.Get(TrKey.BattleRoyaleIntro);
-                __instance.TeamTitle.color = BattleRoyale.IntroColor;
-                break;
+            }
         }
+        if (roleInfo == null)
+        {
+            return;
+        }
+        // if (PlayerControl.LocalPlayer.IsNeutral() || PlayerControl.LocalPlayer.IsGM())
+        if (!PlayerControl.LocalPlayer.IsNeutral())
+        {
+            return;
+        }
+        __instance.BackgroundBar.material.color = roleInfo.Color;
+        __instance.TeamTitle.text = roleInfo.Name;
+        __instance.TeamTitle.color = roleInfo.Color;
+        __instance.ImpostorText.text = "";
     }
 
-    public static IEnumerator CoBegin(IntroCutscene __instance)
+    internal static IEnumerator CoBegin(IntroCutscene __instance)
     {
+        if (__instance == null)
+        {
+            Logger.LogError("IntroCutscene :: CoBegin() aborted: __instance is null");
+            yield break;
+        }
+
         yield return WaitRoleAssign().WrapToIl2Cpp();
+        yield return WaitForIntroPrerequisites().WrapToIl2Cpp();
+        if (PlayerControl.LocalPlayer == null)
+        {
+            Logger.LogError("IntroCutscene :: CoBegin() aborted: LocalPlayer is null");
+            yield break;
+        }
+
         // yield return __instance.CoBegin();
 
         Logger.LogInfo("IntroCutscene :: CoBegin() :: Starting intro cutscene");
-        SoundManager.Instance.PlaySound(__instance.IntroStinger, false);
+        SoundManager.Instance?.PlaySound(__instance.IntroStinger, false);
 
         if (Helpers.IsNormal)
         {
@@ -294,30 +287,37 @@ public static class Intro
             __instance.ImpostorRules.SetActive(false);
             __instance.ImpostorName.gameObject.SetActive(false);
             __instance.ImpostorTitle.gameObject.SetActive(false);
-            var show = IntroCutscene.SelectTeamToShow((Func<NetworkedPlayerInfo, bool>)(pcd =>
-                                                          !PlayerControl.LocalPlayer.IsTeamImpostor()
-                                                          || pcd.Role.TeamType
-                                                          == PlayerControl.LocalPlayer.Data.Role.TeamType));
+            var show = IntroCutscene.SelectTeamToShow(
+                (Func<NetworkedPlayerInfo, bool>)(pcd => !PlayerControl.LocalPlayer.IsTeamImpostor()
+                                                         || pcd.Role.TeamType == PlayerControl.LocalPlayer.Data.Role.TeamType));
             if (show == null || show.Count < 1)
+            {
                 Logger.LogError("IntroCutscene :: CoBegin() :: teamToShow is EMPTY or NULL");
+                show = new();
+                show.Add(PlayerControl.LocalPlayer);
+            }
+
             if (PlayerControl.LocalPlayer.IsTeamImpostor())
+            {
                 __instance.ImpostorText.gameObject.SetActive(false);
+            }
             else
             {
-                var adjustedNumImpostors =
-                    GameManager.Instance.LogicOptions.GetAdjustedNumImpostors(GameData.Instance.PlayerCount);
+                var adjustedNumImpostors = 1;
+                if (GameManager.Instance?.LogicOptions != null && GameData.Instance != null)
+                {
+                    adjustedNumImpostors = GameManager.Instance.LogicOptions.GetAdjustedNumImpostors(GameData.Instance.PlayerCount);
+                }
                 __instance.ImpostorText.text = adjustedNumImpostors == 1
-                    ? DestroyableSingleton<TranslationController>.Instance.GetString(StringNames.NumImpostorsS)
-                    : DestroyableSingleton<TranslationController>.Instance.GetString(StringNames.NumImpostorsP,
-                        adjustedNumImpostors);
+                    ? FastDestroyableSingleton<TranslationController>.Instance.GetString(StringNames.NumImpostorsS)
+                    : FastDestroyableSingleton<TranslationController>.Instance.GetString(StringNames.NumImpostorsP, adjustedNumImpostors);
                 __instance.ImpostorText.text = __instance.ImpostorText.text.Replace("[FF1919FF]", "<color=#FF1919FF>");
                 __instance.ImpostorText.text = __instance.ImpostorText.text.Replace("[]", "</color>");
             }
 
             yield return __instance.ShowTeam(show, 3f);
             // 独自処理挿入
-            yield return ShowRole(__instance);
-            yield return ShowRolePostfix(__instance);
+            yield return SetupRole(__instance);
         }
         else
         {
@@ -335,24 +335,34 @@ public static class Intro
                 __instance.ImpostorRules.SetActive(false);
             }
 
-            var show = IntroCutscene.SelectTeamToShow((Func<NetworkedPlayerInfo, bool>)(pcd =>
-                                                          PlayerControl.LocalPlayer.IsTeamImpostor()
-                                                          != pcd.Role.IsImpostor));
+            var show = IntroCutscene.SelectTeamToShow(
+                (Func<NetworkedPlayerInfo, bool>)(pcd => PlayerControl.LocalPlayer.IsTeamImpostor() != pcd.Role.IsImpostor));
             if (show == null || show.Count < 1)
+            {
                 Logger.LogError("IntroCutscene :: CoBegin() :: teamToShow is EMPTY or NULL");
-            var impostor =
-                PlayerControl.AllPlayerControls.Find((Il2CppSystem.Predicate<PlayerControl>)(pc =>
-                                                         pc.Data.Role.IsImpostor));
-            if (impostor == null) Logger.LogError("IntroCutscene :: CoBegin() :: impostor is NULL");
-            GameManager.Instance.SetSpecialCosmetics(impostor);
+                show = new();
+                show.Add(PlayerControl.LocalPlayer);
+            }
+
+            var impostor = PlayerControl.AllPlayerControls.Find(
+                (Il2CppSystem.Predicate<PlayerControl>)(pc => pc != null && pc.Data != null && pc.Data.Role.IsImpostor));
+            if (impostor == null)
+            {
+                Logger.LogError("IntroCutscene :: CoBegin() :: impostor is NULL");
+            }
+
+            if (impostor != null)
+            {
+                GameManager.Instance?.SetSpecialCosmetics(impostor);
+            }
             __instance.ImpostorName.gameObject.SetActive(true);
             __instance.ImpostorTitle.gameObject.SetActive(true);
             __instance.BackgroundBar.enabled = false;
             __instance.TeamTitle.gameObject.SetActive(false);
-            __instance.ImpostorName.text = impostor == null ? impostor.Data.PlayerName : "???";
+            __instance.ImpostorName.text = impostor != null ? impostor.Data.PlayerName : "???";
             yield return new WaitForSecondsRealtime(0.1f);
             PoolablePlayer playerSlot = null;
-            if (impostor == null)
+            if (impostor != null)
             {
                 playerSlot = __instance.CreatePlayer(1, 1, impostor.Data, false);
                 playerSlot.SetBodyType(PlayerBodyTypes.Normal);
@@ -361,75 +371,89 @@ public static class Intro
                 playerSlot.transform.localScale = Vector3.one * __instance.impostorScale;
             }
 
-            yield return MapUtilities.CachedShipStatus.CosmeticsCache.PopulateFromPlayers();
+            if (MapUtilities.CachedShipStatus?.CosmeticsCache != null)
+            {
+                yield return MapUtilities.CachedShipStatus.CosmeticsCache.PopulateFromPlayers();
+            }
             yield return new WaitForSecondsRealtime(6f);
-            if (playerSlot == null) playerSlot.gameObject.SetActive(false);
+
+            playerSlot?.gameObject.SetActive(false);
+
             __instance.HideAndSeekPanels.SetActive(false);
             __instance.CrewmateRules.SetActive(false);
             __instance.ImpostorRules.SetActive(false);
             var logicOptions = GameManager.Instance.LogicOptions as LogicOptionsHnS;
             if (GameManager.Instance.GetLogicComponent<LogicHnSMusic>() is LogicHnSMusic logicComponent)
+            {
                 logicComponent.StartMusicWithIntro();
+            }
             if (PlayerControl.LocalPlayer.IsTeamImpostor())
             {
-                float crewmateLeadTime = logicOptions.GetCrewmateLeadTime();
-                __instance.HideAndSeekTimerText.gameObject.SetActive(true);
-                PoolablePlayer poolablePlayer;
-                AnimationClip anim;
-                if (AprilFoolsMode.ShouldHorseAround())
+                if (logicOptions != null)
                 {
-                    poolablePlayer = __instance.HorseWrangleVisualSuit;
-                    poolablePlayer.gameObject.SetActive(true);
-                    poolablePlayer.SetBodyType(PlayerBodyTypes.Seeker);
-                    anim = __instance.HnSSeekerSpawnHorseAnim;
-                    __instance.HorseWrangleVisualPlayer.SetBodyType(PlayerBodyTypes.Normal);
-                    __instance.HorseWrangleVisualPlayer.UpdateFromPlayerData(PlayerControl.LocalPlayer.Data,
-                                                                             PlayerControl.LocalPlayer
-                                                                                 .CurrentOutfitType,
-                                                                             PlayerMaterial.MaskType.None, false);
-                }
-                else if (AprilFoolsMode.ShouldLongAround())
-                {
-                    poolablePlayer = __instance.HideAndSeekPlayerVisual;
-                    poolablePlayer.gameObject.SetActive(true);
-                    poolablePlayer.SetBodyType(PlayerBodyTypes.LongSeeker);
-                    anim = __instance.HnSSeekerSpawnLongAnim;
-                }
-                else
-                {
-                    poolablePlayer = __instance.HideAndSeekPlayerVisual;
-                    poolablePlayer.gameObject.SetActive(true);
-                    poolablePlayer.SetBodyType(PlayerBodyTypes.Seeker);
-                    anim = __instance.HnSSeekerSpawnAnim;
-                }
+                    float crewmateLeadTime = logicOptions.GetCrewmateLeadTime();
+                    __instance.HideAndSeekTimerText.gameObject.SetActive(true);
+                    PoolablePlayer poolablePlayer;
+                    AnimationClip anim;
+                    if (AprilFoolsMode.ShouldHorseAround())
+                    {
+                        poolablePlayer = __instance.HorseWrangleVisualSuit;
+                        poolablePlayer.gameObject.SetActive(true);
+                        poolablePlayer.SetBodyType(PlayerBodyTypes.Seeker);
+                        anim = __instance.HnSSeekerSpawnHorseAnim;
+                        __instance.HorseWrangleVisualPlayer.SetBodyType(PlayerBodyTypes.Normal);
+                        __instance.HorseWrangleVisualPlayer.UpdateFromPlayerData(PlayerControl.LocalPlayer.Data,
+                            PlayerControl.LocalPlayer.CurrentOutfitType,
+                            PlayerMaterial.MaskType.None,
+                            false);
+                    }
+                    else if (AprilFoolsMode.ShouldLongAround())
+                    {
+                        poolablePlayer = __instance.HideAndSeekPlayerVisual;
+                        poolablePlayer.gameObject.SetActive(true);
+                        poolablePlayer.SetBodyType(PlayerBodyTypes.LongSeeker);
+                        anim = __instance.HnSSeekerSpawnLongAnim;
+                    }
+                    else
+                    {
+                        poolablePlayer = __instance.HideAndSeekPlayerVisual;
+                        poolablePlayer.gameObject.SetActive(true);
+                        poolablePlayer.SetBodyType(PlayerBodyTypes.Seeker);
+                        anim = __instance.HnSSeekerSpawnAnim;
+                    }
 
-                poolablePlayer.SetBodyCosmeticsVisible(false);
-                poolablePlayer.UpdateFromPlayerData(PlayerControl.LocalPlayer.Data,
-                                                    PlayerControl.LocalPlayer.CurrentOutfitType,
-                                                    PlayerMaterial.MaskType.None, false);
-                var component = poolablePlayer.GetComponent<SpriteAnim>();
-                poolablePlayer.gameObject.SetActive(true);
-                poolablePlayer.ToggleName(false);
-                component.Play(anim);
-                while (crewmateLeadTime > 0.0)
-                {
-                    __instance.HideAndSeekTimerText.text = Mathf.RoundToInt(crewmateLeadTime).ToString();
-                    crewmateLeadTime -= Time.deltaTime;
-                    yield return null;
+                    poolablePlayer.SetBodyCosmeticsVisible(false);
+                    poolablePlayer.UpdateFromPlayerData(PlayerControl.LocalPlayer.Data,
+                        PlayerControl.LocalPlayer.CurrentOutfitType,
+                        PlayerMaterial.MaskType.None,
+                        false);
+                    var component = poolablePlayer.GetComponent<SpriteAnim>();
+                    poolablePlayer.gameObject.SetActive(true);
+                    poolablePlayer.ToggleName(false);
+                    component.Play(anim);
+                    while (crewmateLeadTime > 0.0)
+                    {
+                        __instance.HideAndSeekTimerText.text = Mathf.RoundToInt(crewmateLeadTime).ToString();
+                        crewmateLeadTime -= Time.deltaTime;
+                        yield return null;
+                    }
                 }
             }
             else
             {
-                MapUtilities.CachedShipStatus.HideCountdown = logicOptions.GetCrewmateLeadTime();
+                if (logicOptions != null && MapUtilities.CachedShipStatus != null)
+                {
+                    MapUtilities.CachedShipStatus.HideCountdown = logicOptions.GetCrewmateLeadTime();
+                }
                 if (AprilFoolsMode.ShouldHorseAround())
                 {
-                    if (impostor == null) impostor.AnimateCustom(__instance.HnSSeekerSpawnHorseInGameAnim);
+                    impostor?.AnimateCustom(__instance.HnSSeekerSpawnHorseInGameAnim);
                 }
                 else if (AprilFoolsMode.ShouldLongAround())
                 {
-                    if (impostor == null) impostor.AnimateCustom(__instance.HnSSeekerSpawnLongInGameAnim);
+                    impostor?.AnimateCustom(__instance.HnSSeekerSpawnLongInGameAnim);
                 }
-                else if (impostor == null)
+                else if (impostor != null)
                 {
                     impostor.AnimateCustom(__instance.HnSSeekerSpawnAnim);
                     impostor.cosmetics.SetBodyCosmeticsVisible(false);
@@ -440,82 +464,142 @@ public static class Intro
             playerSlot = null;
         }
 
-        MapUtilities.CachedShipStatus.StartSFX();
-        __instance.gameObject.Destroy();
+        MapUtilities.CachedShipStatus?.StartSFX();
+        __instance.gameObject?.Destroy();
+    }
+
+    private static IEnumerator WaitForIntroPrerequisites()
+    {
+        const int timeoutMs = 7000;
+        var start = DateTime.UtcNow;
+        while (PlayerControl.LocalPlayer == null)
+        {
+            if ((DateTime.UtcNow - start).TotalMilliseconds > timeoutMs)
+            {
+                Logger.LogError($"IntroCutscene :: CoBegin() timeout({timeoutMs}ms): LocalPlayer is null");
+                yield break;
+            }
+
+            yield return null;
+        }
     }
 
     private static IEnumerator WaitRoleAssign()
     {
-        if (!CustomOptionHolder.ActivateRoles.GetBool()) yield break;
+        if (!CustomOptionHolder.ActivateRoles.GetBool())
+        {
+            yield break;
+        }
 
-        while (!RoleAssignment.IsAssigned) yield return null;
-        yield break;
+        while (!RoleAssignment.IsAssigned)
+        {
+            yield return null;
+        }
     }
 
-    private static IEnumerator ShowRole(IntroCutscene __instance)
+    private static IEnumerator SetupRole(IntroCutscene __instance)
     {
+        if (__instance == null || PlayerControl.LocalPlayer == null || PlayerControl.LocalPlayer.Data == null)
+        {
+            Logger.LogError("SetupRole aborted: IntroCutscene or LocalPlayer is null.");
+            yield break;
+        }
+
         var infos = RoleInfo.GetRoleInfoForPlayer(PlayerControl.LocalPlayer, false, [RoleType.Lovers]);
-        var roleInfo = infos.FirstOrDefault();
+        RoleInfo roleInfo = null;
+        var infoEnumerator = infos.GetEnumerator();
+        if (infoEnumerator.MoveNext())
+        {
+            roleInfo = infoEnumerator.Current;
+        }
 
         Logger.LogInfo("----------Role Assign-----------", "Settings");
-        foreach (var pc in PlayerControl.AllPlayerControls.GetFastEnumerator())
-            Logger.LogInfo(string.Format("{0,-3}{1,-2}:{2}:{3}", pc.AmOwner ? "[*]" : "", pc.PlayerId,
-                                         pc.Data.PlayerName.PadRightV2(20),
-                                         RoleInfo.GetRolesString(pc, false, joinSeparator: " + ")), "Settings");
+        if (PlayerControl.LocalPlayer.AmOwner)
+        {
+            LogRoleAssign();
+        }
+        else
+        {
+            Logger.LogInfo("The Role Assignments will be seen in host log file.", "Settings");
+#if DEBUG
+            Logger.LogInfo("But this is a debug build, you can see the role assignments.", "Settings");
+            LogRoleAssign();
+#endif
+        }
 
         Logger.LogInfo("-----------Platforms------------", "Settings");
-        foreach (var pc in PlayerControl.AllPlayerControls.GetFastEnumerator())
-            Logger.LogInfo(string.Format("{0,-3}{1,-2}:{2}:{3}", pc.AmOwner ? "[*]" : "", pc.PlayerId,
-                                         pc.Data.PlayerName.PadRightV2(20), pc.GetPlatform().Replace("Standalone", "")),
-                           "Settings");
+        var pcEnumerator2 = PlayerControl.AllPlayerControls.GetFastEnumerator();
+        while (pcEnumerator2.MoveNext())
+        {
+            var pc = pcEnumerator2.Current;
+            Logger.LogInfo($"{(pc.AmOwner ? "[*]" : ""),-3}{pc.PlayerId,-2}:{pc.Data.PlayerName.PadRightV2(20)}:{pc.GetPlatform().Replace("Standalone", "")}", "Settings");
+        }
 
         Logger.LogInfo("---------Game Settings----------", "Settings");
         RebuildUs.OptionsPage = 0;
-        var tmp = GameOptionsManager.Instance
-                                    .CurrentGameOptions
-                                    .ToHudString(GameData.Instance ? GameData.Instance.PlayerCount : 10)
-                                    .Split("\r\n");
-        foreach (var t in tmp[1..(tmp.Length - 2)]) Logger.LogInfo(t, "Settings");
+        var tmp = GameOptionsManager.Instance.CurrentGameOptions.ToHudString(GameData.Instance ? GameData.Instance.PlayerCount : 10).Split("\r\n");
+        foreach (var t in tmp[1..^2])
+        {
+            Logger.LogInfo(t, "Settings");
+        }
+
         Logger.LogInfo("--------Advance Settings--------", "Settings");
         foreach (var o in CustomOption.AllOptions)
         {
             if (o.Parent == null ? !o.GetString().Equals("0%") : o.Parent.Enabled)
-                Logger.LogInfo(string.Format("{0}:{1}", o.Parent == null ? o.NameKey : $"┗ {o.NameKey}",
-                                             o.GetString().RemoveHtml()), "Settings");
+            {
+                Logger.LogInfo($"{(o.Parent == null ? o.NameKey : $"┗ {o.NameKey}")}:{o.GetString().RemoveHtml()}", "Settings");
+            }
+        }
+
+        if (roleInfo != null)
+        {
+            __instance.YouAreText.color = roleInfo.Color;
+            __instance.RoleText.text = roleInfo.Name;
+            __instance.RoleText.color = roleInfo.Color;
+            __instance.RoleBlurbText.text = roleInfo.IntroDescription;
+            __instance.RoleBlurbText.color = roleInfo.Color;
+
+            Logger.LogInfo("--------Intro Data--------", "Settings");
+            Logger.LogInfo(roleInfo.Color);
+            Logger.LogInfo(roleInfo.Name);
+            Logger.LogInfo(roleInfo.IntroDescription);
+
+            if (PlayerControl.LocalPlayer.HasModifier(ModifierType.Madmate))
+            {
+                if (roleInfo == RoleInfo.Crewmate)
+                {
+                    __instance.RoleText.text = Tr.Get(TrKey.Madmate);
+                }
+                else
+                {
+                    __instance.RoleText.text = Tr.Get(TrKey.MadmatePrefix) + __instance.RoleText.text;
+                }
+
+                __instance.YouAreText.color = Madmate.Color;
+                __instance.RoleText.color = Madmate.Color;
+                __instance.RoleBlurbText.text = Tr.Get(TrKey.MadmateIntroDesc);
+                __instance.RoleBlurbText.color = Madmate.Color;
+            }
         }
 
         Logger.LogInfo("--------------------------------", "Settings");
 
-        __instance.YouAreText.color = roleInfo.Color;
-        Logger.LogInfo(roleInfo.Color);
-        __instance.RoleText.text = roleInfo.Name;
-        Logger.LogInfo(roleInfo.Name);
-        __instance.RoleText.color = roleInfo.Color;
-        Logger.LogInfo(roleInfo.Color);
-        __instance.RoleBlurbText.text = roleInfo.IntroDescription;
-        Logger.LogInfo(roleInfo.IntroDescription);
-        __instance.RoleBlurbText.color = roleInfo.Color;
-        Logger.LogInfo(roleInfo.Color);
-
-        if (PlayerControl.LocalPlayer.HasModifier(ModifierType.Madmate))
+        var hasLovers = false;
+        var loversEnumerator = infos.GetEnumerator();
+        while (loversEnumerator.MoveNext())
         {
-            if (roleInfo == RoleInfo.Crewmate)
-                __instance.RoleText.text = Tr.Get(TrKey.Madmate);
-            else
-                __instance.RoleText.text = Tr.Get(TrKey.MadmatePrefix) + __instance.RoleText.text;
-            __instance.YouAreText.color = Madmate.NameColor;
-            __instance.RoleText.color = Madmate.NameColor;
-            __instance.RoleBlurbText.text = Tr.Get(TrKey.MadmateIntroDesc);
-            __instance.RoleBlurbText.color = Madmate.NameColor;
+            var info = loversEnumerator.Current;
+            if (info.RoleType == RoleType.Lovers)
+            {
+                hasLovers = true;
+                break;
+            }
         }
-
-        if (infos.Any(info => info.RoleType == RoleType.Lovers))
+        if (hasLovers)
         {
             var otherLover = PlayerControl.LocalPlayer.GetPartner();
-            __instance.RoleBlurbText.text += "\n"
-                                             + Helpers.Cs(Lovers.Color,
-                                                          string.Format(Tr.Get(TrKey.LoversFlavorIntroDesc),
-                                                                        otherLover?.Data?.PlayerName ?? ""));
+            __instance.RoleBlurbText.text += "\n" + Helpers.Cs(Lovers.Color, string.Format(Tr.Get(TrKey.LoversFlavorIntroDesc), otherLover?.Data?.PlayerName ?? ""));
         }
 
         // 従来処理
@@ -527,6 +611,12 @@ public static class Intro
         if (__instance.ourCrewmate == null)
         {
             __instance.ourCrewmate = __instance.CreatePlayer(0, 1, PlayerControl.LocalPlayer.Data, false);
+            if (__instance.ourCrewmate == null)
+            {
+                Logger.LogError("SetupRole aborted: failed to create intro player.");
+                yield break;
+            }
+
             __instance.ourCrewmate.gameObject.SetActive(false);
         }
 
@@ -541,165 +631,13 @@ public static class Intro
         __instance.ourCrewmate.gameObject.SetActive(false);
     }
 
-    private static IEnumerator ShowRolePostfix(IntroCutscene __instance)
+    private static void LogRoleAssign()
     {
-        if (MapSettings.GameMode is CustomGameMode.Roles) yield break;
-
-        RebuildUs.Progress = GameObject.Find("ProgressTracker");
-        RebuildUs.Progress.GetComponentInChildren<TextTranslatorTMP>().enabled = false;
-        RebuildUs.Progress.GetComponentInChildren<TextMeshPro>().alignment = TextAlignmentOptions.Right;
-
-        switch (MapSettings.GameMode)
+        var pcEnumerator = PlayerControl.AllPlayerControls.GetFastEnumerator();
+        while (pcEnumerator.MoveNext())
         {
-            case CustomGameMode.CaptureTheFlag:
-                CaptureTheFlag.CreateCtf();
-                RebuildUs.Progress.GetComponentInChildren<TextMeshPro>().text =
-                    new StringBuilder(Tr.Get(TrKey.TimeLeft)).Append(MapSettings.GamemodeMatchDuration.ToString("F0"))
-                                                             .ToString();
-                new CustomMessage(CaptureTheFlag.FlagpointCounter, MapSettings.GamemodeMatchDuration, new(-2.5f, 2.35f),
-                                  MessageType.GameMode);
-                // Add Arrows pointing the flags
-                if (CaptureTheFlag.LocalRedFlagArrow.Count == 0) CaptureTheFlag.LocalRedFlagArrow.Add(new(Color.red));
-                CaptureTheFlag.LocalRedFlagArrow[0].ArrowObject.SetActive(true);
-                if (CaptureTheFlag.LocalBlueFlagArrow.Count == 0)
-                    CaptureTheFlag.LocalBlueFlagArrow.Add(new(Color.blue));
-                CaptureTheFlag.LocalBlueFlagArrow[0].ArrowObject.SetActive(true);
-                break;
-            case CustomGameMode.PoliceAndThieves:
-                PoliceAndThief.CreatePat();
-                if (!PoliceAndThief.PoliceCanSeeJewels)
-                {
-                    foreach (var police in PoliceAndThief.PoliceTeam)
-                    {
-                        if (police == PlayerControl.LocalPlayer)
-                        {
-                            foreach (var jewel in PoliceAndThief.ThiefTreasures)
-                                jewel.SetActive(false);
-                        }
-                    }
-                }
-
-                RebuildUs.Progress.GetComponentInChildren<TextMeshPro>().text =
-                    new StringBuilder(Tr.Get(TrKey.TimeLeft)).Append(MapSettings.GamemodeMatchDuration.ToString("F0"))
-                                                             .ToString();
-                var sbPnT = new StringBuilder(Tr.Get(TrKey.StolenJewels)).Append("<color=#00F7FFFF>")
-                                                                         .Append(PoliceAndThief.CurrentJewelsStoled)
-                                                                         .Append(" / ")
-                                                                         .Append(PoliceAndThief.RequiredJewels)
-                                                                         .Append("</color> | ")
-                                                                         .Append(Tr.Get(TrKey.CapturedThieves))
-                                                                         .Append("<color=#928B55FF>")
-                                                                         .Append(PoliceAndThief.CurrentThiefsCaptured)
-                                                                         .Append(" / ")
-                                                                         .Append(PoliceAndThief.ThiefTeam.Count)
-                                                                         .Append("</color>");
-                PoliceAndThief.ThiefpointCounter = sbPnT.ToString();
-                new CustomMessage(PoliceAndThief.ThiefpointCounter, MapSettings.GamemodeMatchDuration,
-                                  new(-2.5f, 2.35f), MessageType.GameMode);
-                break;
-            case CustomGameMode.HotPotato:
-                HotPotato.CreateHp();
-                var sbHp = new StringBuilder("<color=#FF8000FF>").Append(Tr.Get(TrKey.TimeLeft))
-                                                                 .Append("</color>")
-                                                                 .Append(MapSettings.GamemodeMatchDuration
-                                                                             .ToString("F0"))
-                                                                 .Append(" | <color=#FF8000FF>")
-                                                                 .Append(Tr.Get(TrKey.HotPotatoIntro))
-                                                                 .Append("</color>")
-                                                                 .Append(HotPotato.TimeforTransfer.ToString("F0"));
-                var sbHp2 = new StringBuilder(Tr.Get(TrKey.HotPotatoIntro)).Append("<color=#808080FF>")
-                                                                           .Append(HotPotato.HotPotatoPlayer.name)
-                                                                           .Append("</color> | ")
-                                                                           .Append(Tr.Get(TrKey.ColdPotatoes))
-                                                                           .Append("<color=#00F7FFFF>")
-                                                                           .Append(HotPotato.NOT_POTATO_TEAM.Count)
-                                                                           .Append("</color>");
-                RebuildUs.Progress.GetComponentInChildren<TextMeshPro>().text = sbHp.ToString();
-                HotPotato.HotpotatopointCounter = sbHp2.ToString();
-                new CustomMessage(HotPotato.HotpotatopointCounter, MapSettings.GamemodeMatchDuration, new(-2.5f, 2.35f),
-                                  MessageType.GameMode);
-                break;
-            case CustomGameMode.BattleRoyale:
-                BattleRoyale.CreateBR();
-                RebuildUs.Progress.GetComponentInChildren<TextMeshPro>().text =
-                    new StringBuilder(Tr.Get(TrKey.TimeLeft)).Append(MapSettings.GamemodeMatchDuration.ToString("F0"))
-                                                             .ToString();
-                switch (BattleRoyale.MatchType)
-                {
-                    case 0:
-                        var sbBr = new StringBuilder(Tr.Get(TrKey.BattleRoyaleFighters)).Append("<color=#009F57FF>")
-                            .Append(BattleRoyale.SoloPlayerTeam.Count)
-                            .Append("</color>");
-                        BattleRoyale.BattleRoyalePointCounter = sbBr.ToString();
-                        break;
-                    case 1:
-                        if (BattleRoyale.SerialKiller != null)
-                        {
-                            var sbBr2 = new StringBuilder(Tr.Get(TrKey.BattleRoyaleLimeTeam))
-                                        .Append("<color=#39FF14FF>")
-                                        .Append(BattleRoyale.LimeTeam.Count)
-                                        .Append("</color> | ")
-                                        .Append(Tr.Get(TrKey.BattleRoyalePinkTeam))
-                                        .Append("<color=#F2BEFFFF>")
-                                        .Append(BattleRoyale.PinkTeam.Count)
-                                        .Append("</color> | ")
-                                        .Append(Tr.Get(TrKey.BattleRoyaleSerialKiller))
-                                        .Append("<color=#808080FF>")
-                                        .Append(BattleRoyale.SerialKillerTeam.Count)
-                                        .Append("</color>");
-                            BattleRoyale.BattleRoyalePointCounter = sbBr2.ToString();
-                        }
-                        else
-                        {
-                            var sbBr3 = new StringBuilder(Tr.Get(TrKey.BattleRoyaleLimeTeam))
-                                        .Append("<color=#39FF14FF>")
-                                        .Append(BattleRoyale.LimeTeam.Count)
-                                        .Append("</color> | ")
-                                        .Append(Tr.Get(TrKey.BattleRoyalePinkTeam))
-                                        .Append("<color=#F2BEFFFF>")
-                                        .Append(BattleRoyale.PinkTeam.Count)
-                                        .Append("</color>");
-                            BattleRoyale.BattleRoyalePointCounter = sbBr3.ToString();
-                        }
-
-                        break;
-                    case 2:
-                        if (BattleRoyale.SerialKiller != null)
-                        {
-                            var sbBr4 = new StringBuilder(Tr.Get(TrKey.BattleRoyaleGoal))
-                                        .Append(BattleRoyale.RequiredScore)
-                                        .Append(" | <color=#39FF14FF>")
-                                        .Append(Tr.Get(TrKey.BattleRoyaleLimeTeam))
-                                        .Append(BattleRoyale.LimePoints)
-                                        .Append("</color> | <color=#F2BEFFFF>")
-                                        .Append(Tr.Get(TrKey.BattleRoyalePinkTeam))
-                                        .Append(BattleRoyale.PinkPoints)
-                                        .Append("</color> | <color=#808080FF>")
-                                        .Append(Tr.Get(TrKey.BattleRoyaleSerialKillerPoints))
-                                        .Append(BattleRoyale.SerialKillerPoints)
-                                        .Append("</color>");
-                            BattleRoyale.BattleRoyalePointCounter = sbBr4.ToString();
-                        }
-                        else
-                        {
-                            var sbBr5 = new StringBuilder(Tr.Get(TrKey.BattleRoyaleGoal))
-                                        .Append(BattleRoyale.RequiredScore)
-                                        .Append(" | <color=#39FF14FF>")
-                                        .Append(Tr.Get(TrKey.BattleRoyaleLimeTeam))
-                                        .Append(BattleRoyale.LimePoints)
-                                        .Append("</color> | <color=#F2BEFFFF>")
-                                        .Append(Tr.Get(TrKey.BattleRoyalePinkTeam))
-                                        .Append(BattleRoyale.PinkPoints)
-                                        .Append("</color>");
-                            BattleRoyale.BattleRoyalePointCounter = sbBr5.ToString();
-                        }
-
-                        break;
-                }
-
-                new CustomMessage(BattleRoyale.BattleRoyalePointCounter, MapSettings.GamemodeMatchDuration,
-                                  new(-2.5f, 2.35f), MessageType.GameMode);
-                break;
+            var pc = pcEnumerator.Current;
+            Logger.LogInfo($"{(pc.AmOwner ? "[*]" : ""),-3}{pc.PlayerId,-2}:{pc.Data.PlayerName.PadRightV2(20)}:{RoleInfo.GetRolesString(pc, false, joinSeparator: " + ")}", "Settings");
         }
     }
 }

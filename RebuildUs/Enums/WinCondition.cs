@@ -1,6 +1,6 @@
 namespace RebuildUs.Enums;
 
-public enum WinCondition
+internal enum WinCondition
 {
     Default,
     JesterWin,
@@ -12,16 +12,4 @@ public enum WinCondition
     LoversSoloWin,
     EveryoneDied,
     ForceEnd,
-    DrawTeamWin,
-    RedTeamFlagWin,
-    BlueTeamFlagWin,
-    ThiefModeThiefWin,
-    ThiefModePoliceWin,
-    HotPotatoEnd,
-    BattleRoyaleSoloWin,
-    BattleRoyaleTimeWin,
-    BattleRoyaleDraw,
-    BattleRoyaleLimeTeamWin,
-    BattleRoyalePinkTeamWin,
-    BattleRoyaleSerialKillerWin
 }

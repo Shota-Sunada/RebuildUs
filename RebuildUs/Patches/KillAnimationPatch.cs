@@ -1,17 +1,15 @@
-using System.Collections;
-using Object = UnityEngine.Object;
-
 namespace RebuildUs.Patches;
 
 [HarmonyPatch]
-public static class KillAnimationPatch
+internal static class KillAnimationPatch
 {
-    public static bool HideNextAnimation;
-    public static bool AvoidNextKillMovement;
+    internal static bool HideNextAnimation;
+    internal static bool AvoidNextKillMovement;
 
     private static int? _colorId;
+    private static readonly int BodyColor = Shader.PropertyToID("_BodyColor");
 
-    public static IEnumerator CoPerformKill(KillAnimation __instance, PlayerControl source, PlayerControl target)
+    internal static IEnumerator CoPerformKill(KillAnimation __instance, PlayerControl source, PlayerControl target)
     {
         Logger.LogMessage("CoPerformKill is overridden!");
 
@@ -21,6 +19,10 @@ public static class KillAnimationPatch
             HideNextAnimation = false;
         }
 
+        if (Camera.main == null)
+        {
+            yield break;
+        }
         var cam = Camera.main.GetComponent<FollowerCamera>();
         var isParticipant = PlayerControl.LocalPlayer == source || PlayerControl.LocalPlayer == target;
         var sourcePhys = source.MyPhysics;
@@ -32,59 +34,85 @@ public static class KillAnimationPatch
             source.isKilling = true;
         }
 
-        var deadBody = Object.Instantiate(GameManager.Instance.GetDeadBody(source.Data.Role));
+        var deadBody = UnityObject.Instantiate(GameManager.Instance.GetDeadBody(source.Data.Role));
         deadBody.enabled = false;
         deadBody.ParentId = target.PlayerId;
-        foreach (var b in deadBody.bodyRenderers) target.SetPlayerMaterialColors(b);
+        foreach (var b in deadBody.bodyRenderers)
+        {
+            target.SetPlayerMaterialColors(b);
+        }
+
         target.SetPlayerMaterialColors(deadBody.bloodSplatter);
         var vector3 = target.transform.position + __instance.BodyOffset;
         vector3.z = vector3.y / 1000f;
         deadBody.transform.position = vector3;
         source.Data.Role.KillAnimSpecialSetup(deadBody, source, target);
         target.Data.Role.KillAnimSpecialSetup(deadBody, source, target);
-        if (PlayerControl.LocalPlayer.Data.Role.Role == RoleTypes.Detective && !PlayerControl.LocalPlayer.Data.IsDead && !PlayerControl.LocalPlayer.Data.Disconnected) (PlayerControl.LocalPlayer.Data.Role as DetectiveRole).KillAnimSpecialSetup(deadBody, source, target);
+        if (PlayerControl.LocalPlayer.Data.Role.Role == RoleTypes.Detective
+            && !PlayerControl.LocalPlayer.Data.IsDead
+            && !PlayerControl.LocalPlayer.Data.Disconnected)
+        {
+            (PlayerControl.LocalPlayer.Data.Role as DetectiveRole)?.KillAnimSpecialSetup(deadBody, source, target);
+        }
+
         if (isParticipant)
         {
             cam.Locked = true;
             ConsoleJoystick.SetMode_Task();
-            if (PlayerControl.LocalPlayer.AmOwner) PlayerControl.LocalPlayer.MyPhysics.inputHandler.enabled = true;
+            if (PlayerControl.LocalPlayer.AmOwner)
+            {
+                PlayerControl.LocalPlayer.MyPhysics.inputHandler.enabled = true;
+            }
         }
 
         target.Die(DeathReason.Kill, true);
         yield return source.MyPhysics.Animations.CoPlayCustomAnimation(__instance.BlurAnim);
         if (AvoidNextKillMovement)
+        {
             AvoidNextKillMovement = false;
+        }
         else
+        {
             source.NetTransform.SnapTo(target.transform.position);
+        }
+
         sourcePhys.Animations.PlayIdleAnimation();
         KillAnimation.SetMovement(source, true);
         KillAnimation.SetMovement(target, true);
         deadBody.enabled = true;
-        if (isParticipant)
+        if (!isParticipant)
         {
-            cam.Locked = false;
-            PlayerControl.LocalPlayer.isKilling = false;
-            source.isKilling = false;
+            yield break;
         }
+        cam.Locked = false;
+        PlayerControl.LocalPlayer.isKilling = false;
+        source.isKilling = false;
     }
 
     [HarmonyPrefix]
     [HarmonyPatch(typeof(KillAnimation), nameof(KillAnimation.SetMovement), typeof(PlayerControl), typeof(bool))]
-    public static void SetMovementPrefix(PlayerControl source, bool canMove)
+    internal static void SetMovementPrefix(PlayerControl source, bool canMove)
     {
-        var color = source.cosmetics.currentBodySprite.BodySprite.material.GetColor("_BodyColor");
-        if (Morphing.Exists && source.IsRole(RoleType.Morphing))
+        var color = source.cosmetics.currentBodySprite.BodySprite.material.GetColor(BodyColor);
+        if (!Morphing.Exists || !source.IsRole(RoleType.Morphing))
         {
-            var index = Palette.PlayerColors.IndexOf(color);
-            if (index != -1) _colorId = index;
+            return;
+        }
+        var index = Palette.PlayerColors.IndexOf(color);
+        if (index != -1)
+        {
+            _colorId = index;
         }
     }
 
     [HarmonyPostfix]
     [HarmonyPatch(typeof(KillAnimation), nameof(KillAnimation.SetMovement), typeof(PlayerControl), typeof(bool))]
-    public static void Postfix(PlayerControl source, bool canMove)
+    internal static void Postfix(PlayerControl source, bool canMove)
     {
-        if (_colorId.HasValue) source.RawSetColor(_colorId.Value);
+        if (_colorId.HasValue)
+        {
+            source.RawSetColor(_colorId.Value);
+        }
         _colorId = null;
     }
 }

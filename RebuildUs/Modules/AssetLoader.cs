@@ -1,15 +1,15 @@
-using System.Reflection;
-using Object = UnityEngine.Object;
-
 namespace RebuildUs.Modules;
 
-public static class AssetLoader
+internal static class AssetLoader
 {
     private static bool _isLoaded;
 
-    public static void LoadAssets()
+    internal static void LoadAssets()
     {
-        if (_isLoaded) return;
+        if (_isLoaded)
+        {
+            return;
+        }
         _isLoaded = true;
 
         LoadButtonAssets();
@@ -17,31 +17,43 @@ public static class AssetLoader
         LoadSpriteAssets();
         LoadLocationAssets();
         LoadKeyBindAssets();
-        LoadGameModeAssets();
     }
 
-    public static byte[] ReadFully(this Stream input)
+    private static byte[] ReadFully(this Stream input)
     {
-        using var ms = new MemoryStream();
+        using MemoryStream ms = new();
         input.CopyTo(ms);
         return ms.ToArray();
     }
 
 #nullable enable
-    private static T? LoadAsset<T>(this AssetBundle assetBundle, string name) where T : Object
+    private static T? LoadAsset<T>(this AssetBundle assetBundle, string name) where T : UnityObject
     {
-        return assetBundle.LoadAsset(name, Il2CppType.Of<T>())?.Cast<T>() ?? throw new($"The asset was not found: {name}");
+        return assetBundle.LoadAsset(name, Il2CppType.Of<T>())?.CastFast<T>() ?? throw new($"The asset was not found: {name}");
     }
 #nullable disable
 
     private static Sprite Resize(this Sprite sprite, float pixelsPerUnit)
     {
-        if (pixelsPerUnit == 100f) return sprite.DontUnload();
+        if (Mathf.Approximately(pixelsPerUnit, 100f))
+        {
+            return sprite.DontUnload();
+        }
 
-        return sprite == null ? null : Sprite.Create(sprite.texture, sprite.rect, new(sprite.pivot.x / sprite.rect.width, sprite.pivot.y / sprite.rect.height), pixelsPerUnit, 0, SpriteMeshType.FullRect, sprite.border).DontUnload();
+        return sprite == null
+            ? null
+            : Sprite
+              .Create(sprite.texture,
+                  sprite.rect,
+                  new(sprite.pivot.x / sprite.rect.width, sprite.pivot.y / sprite.rect.height),
+                  pixelsPerUnit,
+                  0,
+                  SpriteMeshType.FullRect,
+                  sprite.border)
+              .DontUnload();
     }
 
-    private static T DontUnload<T>(this T obj) where T : Object
+    private static T DontUnload<T>(this T obj) where T : UnityObject
     {
         obj.hideFlags |= HideFlags.DontUnloadUnusedAsset;
 
@@ -50,7 +62,7 @@ public static class AssetLoader
 
     #region Animations
 
-    public static List<Sprite> TricksterAnimations = [];
+    internal static readonly List<Sprite> TricksterAnimations = [];
 
     private static void LoadAnimationAssets()
     {
@@ -81,37 +93,37 @@ public static class AssetLoader
 
     #region Buttons
 
-    public static Sprite DouseButton;
-    public static Sprite EmergencyButton;
-    public static Sprite VultureButton;
-    public static Sprite SidekickButton;
-    public static Sprite IgniteButton;
-    public static Sprite HackerButton;
-    public static Sprite LighterButton;
-    public static Sprite ShieldButton;
-    public static Sprite MediumButton;
-    public static Sprite TimeShieldButton;
-    public static Sprite TrackerButton;
-    public static Sprite PathfindButton;
-    public static Sprite EraserButton;
-    public static Sprite CleanButton;
-    public static Sprite PlaceJackInTheBoxButton;
-    public static Sprite LightsOutButton;
-    public static Sprite PlaceCameraButton;
-    public static Sprite CloseVentButton;
-    public static Sprite CurseButton;
-    public static Sprite CurseKillButton;
-    public static Sprite MorphButton;
-    public static Sprite SampleButton;
-    public static Sprite SpellButton;
-    public static Sprite SpellButtonMeeting;
-    public static Sprite CamouflageButton;
-    public static Sprite SwapperCheck;
-    public static Sprite GarlicButton;
-    public static Sprite VampireButton;
-    public static Sprite ShiftButton;
-    public static Sprite TricksterVentButton;
-    public static Sprite RepairButton;
+    internal static Sprite DouseButton;
+    internal static Sprite EmergencyButton;
+    internal static Sprite VultureButton;
+    internal static Sprite SidekickButton;
+    internal static Sprite IgniteButton;
+    internal static Sprite HackerButton;
+    internal static Sprite LighterButton;
+    internal static Sprite ShieldButton;
+    internal static Sprite MediumButton;
+    internal static Sprite TimeShieldButton;
+    internal static Sprite TrackerButton;
+    internal static Sprite PathfindButton;
+    internal static Sprite EraserButton;
+    internal static Sprite CleanButton;
+    internal static Sprite PlaceJackInTheBoxButton;
+    internal static Sprite LightsOutButton;
+    internal static Sprite PlaceCameraButton;
+    internal static Sprite CloseVentButton;
+    internal static Sprite CurseButton;
+    internal static Sprite CurseKillButton;
+    internal static Sprite MorphButton;
+    internal static Sprite SampleButton;
+    internal static Sprite SpellButton;
+    internal static Sprite SpellButtonMeeting;
+    internal static Sprite CamouflageButton;
+    internal static Sprite SwapperCheck;
+    internal static Sprite GarlicButton;
+    internal static Sprite VampireButton;
+    internal static Sprite ShiftButton;
+    internal static Sprite TricksterVentButton;
+    internal static Sprite RepairButton;
 
     private static void LoadButtonAssets()
     {
@@ -155,27 +167,27 @@ public static class AssetLoader
 
     #region Sprites
 
-    public static Sprite Arrow;
-    public static Sprite Garlic;
-    public static Sprite GarlicBackground;
-    public static Sprite Ladder;
-    public static Sprite LadderBackground;
-    public static Sprite AirshipFence;
-    public static Sprite AirshipDownloadG;
-    public static Sprite CorpseIcon;
-    public static Sprite Cross;
-    public static Sprite AdminCockpit;
-    public static Sprite AdminRecords;
-    public static Sprite Footprint;
-    public static Sprite Soul;
-    public static Sprite AnimatedVentSealed;
-    public static Sprite AnimatedVentSealedSubmerged;
-    public static Sprite StaticVentSealed;
-    public static Sprite FungleVentSealed;
-    public static Sprite CentralUpperBlocked;
-    public static Sprite CentralLowerBlocked;
-    public static Sprite TargetIcon;
-    public static Sprite White;
+    internal static Sprite Arrow;
+    internal static Sprite Garlic;
+    internal static Sprite GarlicBackground;
+    internal static Sprite Ladder;
+    internal static Sprite LadderBackground;
+    internal static Sprite AirshipFence;
+    internal static Sprite AirshipDownloadG;
+    internal static Sprite CorpseIcon;
+    internal static Sprite Cross;
+    internal static Sprite AdminCockpit;
+    internal static Sprite AdminRecords;
+    internal static Sprite Footprint;
+    internal static Sprite Soul;
+    internal static Sprite AnimatedVentSealed;
+    internal static Sprite AnimatedVentSealedSubmerged;
+    internal static Sprite StaticVentSealed;
+    internal static Sprite FungleVentSealed;
+    internal static Sprite CentralUpperBlocked;
+    internal static Sprite CentralLowerBlocked;
+    internal static Sprite TargetIcon;
+    internal static Sprite White;
 
     private static void LoadSpriteAssets()
     {
@@ -209,18 +221,18 @@ public static class AssetLoader
 
     #region Locations
 
-    public static Sprite ArmoryButton;
-    public static Sprite CockpitButton;
-    public static Sprite CommunicationsButton;
-    public static Sprite ElectricalButton;
-    public static Sprite GapButton;
-    public static Sprite LoungeButton;
-    public static Sprite MedicalButton;
-    public static Sprite MeetingButton;
-    public static Sprite SecurityButton;
-    public static Sprite ShowersButton;
-    public static Sprite VaultButton;
-    public static Sprite ViewingButton;
+    internal static Sprite ArmoryButton;
+    internal static Sprite CockpitButton;
+    internal static Sprite CommunicationsButton;
+    internal static Sprite ElectricalButton;
+    internal static Sprite GapButton;
+    internal static Sprite LoungeButton;
+    internal static Sprite MedicalButton;
+    internal static Sprite MeetingButton;
+    internal static Sprite SecurityButton;
+    internal static Sprite ShowersButton;
+    internal static Sprite VaultButton;
+    internal static Sprite ViewingButton;
 
     private static void LoadLocationAssets()
     {
@@ -245,141 +257,35 @@ public static class AssetLoader
 
     #region KeyBinds
 
-    private static readonly Dictionary<string, Sprite> KEY_BIND_SPRITES = [];
-    public static Sprite KeyBindBackground;
+    private static readonly Dictionary<string, Sprite> KeyBindSprites = [];
+    internal static Sprite KeyBindBackground;
 
-    public static Sprite GetKeyBindTexture(string address)
+    internal static Sprite GetKeyBindTexture(string address)
     {
-        if (KEY_BIND_SPRITES.TryGetValue(address, out var sprite)) return sprite;
-        return null;
+        return KeyBindSprites.GetValueOrDefault(address);
     }
 
     private static void LoadKeyBindAssets()
     {
         var resource = Assembly.GetExecutingAssembly().GetManifestResourceStream("RebuildUs.Resources.keybinds");
-        if (resource == null) return;
+        if (resource == null)
+        {
+            return;
+        }
         var ab = AssetBundle.LoadFromMemory(resource.ReadFully());
-        if (ab == null) return;
+        if (ab == null)
+        {
+            return;
+        }
 
-        KEY_BIND_SPRITES["KeyBindCharacters"] = ab.LoadAsset<Sprite>("KeyBindCharacters.png").DontUnload();
-        KEY_BIND_SPRITES["KeyBindCharacters0"] = ab.LoadAsset<Sprite>("KeyBindCharacters0.png").DontUnload();
-        KEY_BIND_SPRITES["KeyBindCharacters1"] = ab.LoadAsset<Sprite>("KeyBindCharacters1.png").DontUnload();
-        KEY_BIND_SPRITES["KeyBindCharacters2"] = ab.LoadAsset<Sprite>("KeyBindCharacters2.png").DontUnload();
-        KEY_BIND_SPRITES["KeyBindCharacters3"] = ab.LoadAsset<Sprite>("KeyBindCharacters3.png").DontUnload();
-        KEY_BIND_SPRITES["KeyBindCharacters4"] = ab.LoadAsset<Sprite>("KeyBindCharacters4.png").DontUnload();
-        KEY_BIND_SPRITES["KeyBindCharacters5"] = ab.LoadAsset<Sprite>("KeyBindCharacters5.png").DontUnload();
+        KeyBindSprites["KeyBindCharacters"] = ab.LoadAsset<Sprite>("KeyBindCharacters.png").DontUnload();
+        KeyBindSprites["KeyBindCharacters0"] = ab.LoadAsset<Sprite>("KeyBindCharacters0.png").DontUnload();
+        KeyBindSprites["KeyBindCharacters1"] = ab.LoadAsset<Sprite>("KeyBindCharacters1.png").DontUnload();
+        KeyBindSprites["KeyBindCharacters2"] = ab.LoadAsset<Sprite>("KeyBindCharacters2.png").DontUnload();
+        KeyBindSprites["KeyBindCharacters3"] = ab.LoadAsset<Sprite>("KeyBindCharacters3.png").DontUnload();
+        KeyBindSprites["KeyBindCharacters4"] = ab.LoadAsset<Sprite>("KeyBindCharacters4.png").DontUnload();
+        KeyBindSprites["KeyBindCharacters5"] = ab.LoadAsset<Sprite>("KeyBindCharacters5.png").DontUnload();
         KeyBindBackground = ab.LoadAsset<Sprite>("KeyBindBackground.png").DontUnload();
-    }
-
-    #endregion
-
-    #region Game Mode
-
-    public static Sprite BattleRoyaleFootprint;
-
-    public static GameObject RoyaleShoot;
-    public static GameObject Greenfloor;
-
-    public static AudioClip RoyaleGetHit;
-    public static AudioClip RoyaleHitPlayer;
-
-    public static Sprite CaptureTheFlagStealRedFlagButton;
-    public static Sprite CaptureTheFlagStealBlueFlagButton;
-    public static Sprite CaptureTheFlagDeliverRedFlagButton;
-    public static Sprite CaptureTheFlagDeliverBlueFlagButton;
-
-    public static Sprite HotPotatoHotPotatusButton;
-
-    public static Sprite PoliceAndThiefsLightButton;
-    public static Sprite PoliceAndThiefCaptureButton;
-    public static Sprite PoliceAndThiefFreeButton;
-    public static Sprite PoliceAndThiefDeliverJewelButton;
-    public static Sprite PoliceAndThiefTakeJewelButton;
-    public static Sprite PoliceAndThiefsTaser;
-    public static Sprite PoliceAndThiefsTaserButton;
-
-    public static GameObject HotPotato;
-
-    public static GameObject Cell;
-    public static GameObject Jewelbutton;
-    public static GameObject Freethiefbutton;
-    public static GameObject Jeweldiamond;
-    public static GameObject Jewelruby;
-    public static GameObject Thiefspaceship;
-    public static GameObject Thiefspaceshiphatch;
-    public static GameObject PoliceParalyze;
-    public static AudioClip PoliceTaser;
-
-    public static GameObject Redflag;
-    public static GameObject Redflagbase;
-    public static GameObject Blueflag;
-    public static GameObject Blueflagbase;
-    public static GameObject Redfloor;
-    public static GameObject Bluefloor;
-
-    public static Sprite Bow;
-
-    public static GameObject CustomMap;
-    public static GameObject CustomMinimap;
-    public static GameObject CustomComms;
-
-    public static AudioClip JailSound;
-    public static AudioClip StealRoleSound;
-
-    private static void LoadGameModeAssets()
-    {
-        var resource = Assembly.GetExecutingAssembly().GetManifestResourceStream("RebuildUs.Resources.gamemode");
-        var ab = AssetBundle.LoadFromMemory(resource.ReadFully());
-
-        Greenfloor = ab.LoadAsset<GameObject>("greenfloorbase.prefab").DontUnload();
-
-        BattleRoyaleFootprint = ab.LoadAsset<Sprite>("BattleRoyaleFootprint.png").Resize(100f);
-        RoyaleShoot = ab.LoadAsset<GameObject>("BattleRoyale_Shoot.prefab").DontUnload();
-        RoyaleGetHit = ab.LoadAsset<AudioClip>("battleroyaleGetHit_Blow3.ogg").DontUnload();
-        RoyaleHitPlayer = ab.LoadAsset<AudioClip>("battleroyaleHit_Damage3.ogg").DontUnload();
-
-        CaptureTheFlagStealRedFlagButton = ab.LoadAsset<Sprite>("CaptureTheFlagStealRedFlagButton.png").Resize(90f);
-        CaptureTheFlagStealBlueFlagButton = ab.LoadAsset<Sprite>("CaptureTheFlagStealBlueFlagButton.png").Resize(90f);
-        CaptureTheFlagDeliverRedFlagButton = ab.LoadAsset<Sprite>("CaptureTheFlagDeliverRedFlagButton.png").Resize(90f);
-        CaptureTheFlagDeliverBlueFlagButton = ab.LoadAsset<Sprite>("CaptureTheFlagDeliverBlueFlagButton.png").Resize(90f);
-
-        HotPotatoHotPotatusButton = ab.LoadAsset<Sprite>("HotPotatoHotPotatusButton.png").Resize(90f);
-
-        PoliceAndThiefsLightButton = ab.LoadAsset<Sprite>("PoliceAndThiefsLightButton.png").Resize(90f);
-        PoliceAndThiefCaptureButton = ab.LoadAsset<Sprite>("PoliceAndThiefCaptureButton.png").Resize(90f);
-        PoliceAndThiefFreeButton = ab.LoadAsset<Sprite>("PoliceAndThiefFreeButton.png").Resize(90f);
-        PoliceAndThiefDeliverJewelButton = ab.LoadAsset<Sprite>("PoliceAndThiefDeliverJewelButton.png").Resize(90f);
-        PoliceAndThiefTakeJewelButton = ab.LoadAsset<Sprite>("PoliceAndThiefTakeJewelButton.png").Resize(90f);
-        PoliceAndThiefsTaser = ab.LoadAsset<Sprite>("PoliceAndThiefsTaser.png").Resize(100f);
-        PoliceAndThiefsTaserButton = ab.LoadAsset<Sprite>("PoliceAndThiefsTaserButton.png").Resize(90f);
-
-        HotPotato = ab.LoadAsset<GameObject>("Hot_Potato.prefab").DontUnload();
-
-        Cell = ab.LoadAsset<GameObject>("Cell.prefab").DontUnload();
-        Jewelbutton = ab.LoadAsset<GameObject>("deliverjewel_floor.prefab").DontUnload();
-        Freethiefbutton = ab.LoadAsset<GameObject>("cell_button.prefab").DontUnload();
-        Jeweldiamond = ab.LoadAsset<GameObject>("jewel_diamond.prefab").DontUnload();
-        Jewelruby = ab.LoadAsset<GameObject>("jewel_ruby.prefab").DontUnload();
-        Thiefspaceship = ab.LoadAsset<GameObject>("thief_spaceship.prefab").DontUnload();
-        Thiefspaceshiphatch = ab.LoadAsset<GameObject>("thief_spaceship_hatch.prefab").DontUnload();
-        PoliceParalyze = ab.LoadAsset<GameObject>("Tased.prefab").DontUnload();
-        PoliceTaser = ab.LoadAsset<AudioClip>("policeandThiefsTase_Paralyze3.ogg").DontUnload();
-
-        Redflag = ab.LoadAsset<GameObject>("redFlag.prefab").DontUnload();
-        Redflagbase = ab.LoadAsset<GameObject>("redFlagBase.prefab").DontUnload();
-        Blueflag = ab.LoadAsset<GameObject>("blueFlag.prefab").DontUnload();
-        Blueflagbase = ab.LoadAsset<GameObject>("blueFlagBase.prefab").DontUnload();
-        Redfloor = ab.LoadAsset<GameObject>("redfloorbase.prefab").DontUnload();
-        Bluefloor = ab.LoadAsset<GameObject>("bluefloorbase.prefab").DontUnload();
-
-        Bow = ab.LoadAsset<Sprite>("Bow.png").Resize(100f);
-
-        CustomMap = ab.LoadAsset<GameObject>("HalconUI.prefab").DontUnload();
-        CustomMinimap = ab.LoadAsset<GameObject>("Minimap.prefab").DontUnload();
-        CustomComms = ab.LoadAsset<GameObject>("new_comms.prefab").DontUnload();
-
-        JailSound = ab.LoadAsset<AudioClip>("Jail.ogg").DontUnload();
-        StealRoleSound = ab.LoadAsset<AudioClip>("StealRole.ogg").DontUnload();
     }
 
     #endregion

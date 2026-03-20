@@ -1,10 +1,6 @@
 namespace RebuildUs.Enums;
 
-internal enum CustomGameMode
+internal enum CustomGamemode
 {
-    Roles,
-    CaptureTheFlag,
-    PoliceAndThieves,
-    HotPotato,
-    BattleRoyale
+    Classic = 0,
 }

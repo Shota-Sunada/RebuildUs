@@ -1,120 +1,117 @@
 namespace RebuildUs.Roles.Crewmate;
 
 [HarmonyPatch]
-public class Bait : RoleBase<Bait>
+[RegisterRole(RoleType.Bait, RoleTeam.Crewmate, typeof(MultiRoleBase<Bait>), nameof(CustomOptionHolder.BaitSpawnRate))]
+internal class Bait : MultiRoleBase<Bait>
 {
-    public static Color NameColor = new Color32(0, 247, 255, byte.MaxValue);
-    public float Delay = 1f;
+    internal static Color Color = new Color32(0, 247, 255, byte.MaxValue);
+    private float _delay;
 
-    public bool Reported;
-    public CustomMessage WarningMessage;
+    private bool _reported;
+    private CustomMessage _warningMessage;
 
     public Bait()
     {
         // write value init here
         StaticRoleType = CurrentRoleType = RoleType.Bait;
-        Delay = ReportDelay;
-    }
-
-    public override Color RoleColor
-    {
-        get => NameColor;
+        _delay = ReportDelay;
     }
 
     // write configs here
-    public static bool HighlightAllVents
+    internal static bool HighlightAllVents
     {
         get => CustomOptionHolder.BaitHighlightAllVents.GetBool();
     }
 
-    public static float ReportDelay
+    private static float ReportDelay
     {
         get => CustomOptionHolder.BaitReportDelay.GetFloat();
     }
 
-    public static bool ShowKillFlash
+    internal static bool ShowKillFlash
     {
         get => CustomOptionHolder.BaitShowKillFlash.GetBool();
     }
 
-    public override void OnMeetingStart() { }
-    public override void OnMeetingEnd() { }
-    public override void OnIntroEnd() { }
-
-    public override void FixedUpdate()
+    [CustomEvent(CustomEventType.FixedUpdate)]
+    internal void FixedUpdate()
     {
-        if (Player == null) return;
+        if (Player == null)
+        {
+            return;
+        }
 
         // Bait report
-        if (Player.Data.IsDead && !Reported)
+        if (!Player.Data.IsDead || _reported)
         {
-            DeadPlayer baitDeadPlayer = null;
-            var deadPlayers = GameHistory.DEAD_PLAYERS;
-            if (deadPlayers != null)
+            return;
+        }
+        DeadPlayer baitDeadPlayer = null;
+        var deadPlayers = GameHistory.DeadPlayers;
+        if (deadPlayers != null)
+        {
+            foreach (var dp in deadPlayers)
             {
-                for (var i = 0; i < deadPlayers.Count; i++)
+                if (dp.Player == null || dp.Player.PlayerId != Player.PlayerId)
                 {
-                    var dp = deadPlayers[i];
-                    if (dp.Player != null && dp.Player.PlayerId == Player.PlayerId)
-                    {
-                        baitDeadPlayer = dp;
-                        break;
-                    }
+                    continue;
                 }
-            }
-
-            if (baitDeadPlayer != null && baitDeadPlayer.KillerIfExisting != null)
-            {
-                // Show warning to the killer
-                if (baitDeadPlayer.KillerIfExisting == PlayerControl.LocalPlayer)
-                    WarningMessage ??= new("BaitWarning", Delay, new(0f, -1.8f), MessageType.Normal);
-            }
-
-            if (Player != PlayerControl.LocalPlayer) return;
-
-            Delay -= Time.fixedDeltaTime;
-
-            if (baitDeadPlayer != null && baitDeadPlayer.KillerIfExisting != null && Delay <= 0f)
-            {
-                Helpers.HandleVampireBiteOnBodyReport(); // Manually call Vampire handling, since the CmdReportDeadBody Prefix won't be called
-
-                var reporter = baitDeadPlayer.KillerIfExisting.PlayerId;
-                if (Player.HasModifier(ModifierType.Madmate))
-                {
-                    var candidates = new List<PlayerControl>();
-                    foreach (var p in PlayerControl.AllPlayerControls.GetFastEnumerator())
-                    {
-                        if (p != null && p.IsAlive() && !p.IsTeamImpostor() && !p.isDummy)
-                            candidates.Add(p);
-                    }
-
-                    if (candidates.Count > 0)
-                    {
-                        var i = RebuildUs.Instance.Rnd.Next(0, candidates.Count);
-                        reporter = candidates[i].PlayerId;
-                    }
-                }
-
-                {
-                    using var sender = new RPCSender(Player.NetId, CustomRPC.UncheckedCmdReportDeadBody);
-                    sender.Write(reporter);
-                    sender.Write(Player.PlayerId);
-                }
-                RPCProcedure.UncheckedCmdReportDeadBody(reporter, Player.PlayerId);
-                Reported = true;
-                WarningMessage = null;
+                baitDeadPlayer = dp;
+                break;
             }
         }
+
+        if (baitDeadPlayer != null && baitDeadPlayer.KillerIfExisting != null)
+        {
+            // Show warning to the killer
+            if (baitDeadPlayer.KillerIfExisting == PlayerControl.LocalPlayer)
+            {
+                _warningMessage ??= new("BaitWarning", _delay);
+            }
+        }
+
+        if (Player != PlayerControl.LocalPlayer)
+        {
+            return;
+        }
+
+        _delay -= Time.fixedDeltaTime;
+
+        if (baitDeadPlayer == null || baitDeadPlayer.KillerIfExisting == null || !(_delay <= 0f))
+        {
+            return;
+        }
+        Helpers.HandleVampireBiteOnBodyReport(); // Manually call Vampire handling, since the CmdReportDeadBody Prefix won't be called
+
+        var reporter = baitDeadPlayer.KillerIfExisting.PlayerId;
+        if (Player.HasModifier(ModifierType.Madmate))
+        {
+            List<PlayerControl> candidates = [];
+            foreach (var p in PlayerControl.AllPlayerControls.GetFastEnumerator())
+            {
+                if (p != null && p.IsAlive() && !p.IsTeamImpostor() && !p.isDummy)
+                {
+                    candidates.Add(p);
+                }
+            }
+
+            if (candidates.Count > 0)
+            {
+                var i = RebuildUs.Rnd.Next(0, candidates.Count);
+                reporter = candidates[i].PlayerId;
+            }
+        }
+
+        RPCProcedure.UncheckedCmdReportDeadBody(Player, reporter, Player.PlayerId);
+        _reported = true;
+        _warningMessage = null;
     }
 
-    public override void OnKill(PlayerControl target) { }
-    public override void OnDeath(PlayerControl killer = null) { }
-    public override void OnFinishShipStatusBegin() { }
-    public override void HandleDisconnect(PlayerControl player, DisconnectReasons reason) { }
+
 
     // write functions here
 
-    public static void Clear()
+    internal static void Clear()
     {
         // reset configs here
         Players.Clear();

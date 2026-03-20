@@ -3,17 +3,18 @@ namespace RebuildUs.Roles.Crewmate;
 // 保護対象が志望したときにリセットする処理を書いていないので、もしかしたらバグるかも？
 
 [HarmonyPatch]
-public class Medic : RoleBase<Medic>
+[RegisterRole(RoleType.Medic, RoleTeam.Crewmate, typeof(SingleRoleBase<Medic>), nameof(CustomOptionHolder.MedicSpawnRate))]
+internal class Medic : SingleRoleBase<Medic>
 {
-    public static Color NameColor = new Color32(126, 251, 194, byte.MaxValue);
+    internal static Color Color = new Color32(126, 251, 194, byte.MaxValue);
 
-    public static Color ShieldedColor = new Color32(0, 221, 255, byte.MaxValue);
+    internal static Color ShieldedColor = new Color32(0, 221, 255, byte.MaxValue);
     private static CustomButton _medicShieldButton;
-    public static PlayerControl Shielded;
-    public static PlayerControl FutureShielded;
-    public static bool UsedShield;
+    internal static PlayerControl Shielded;
+    internal static PlayerControl FutureShielded;
+    internal static bool UsedShield;
 
-    public PlayerControl CurrentTarget;
+    private PlayerControl _currentTarget;
 
     public Medic()
     {
@@ -21,96 +22,132 @@ public class Medic : RoleBase<Medic>
         StaticRoleType = CurrentRoleType = RoleType.Medic;
     }
 
-    public override Color RoleColor
-    {
-        get => NameColor;
-    }
 
     // write configs here
-    public static int ShowShielded
+    internal static int ShowShielded
     {
         get => CustomOptionHolder.MedicShowShielded.GetSelection();
     }
 
-    public static bool ShowAttemptToShielded
+    internal static bool ShowAttemptToShielded
     {
         get => CustomOptionHolder.MedicShowAttemptToShielded.GetBool();
     }
 
-    public static bool SetShieldAfterMeeting
+    private static bool SetShieldAfterMeeting
     {
         get => CustomOptionHolder.MedicSetShieldAfterMeeting.GetBool();
     }
 
-    public static bool ShowAttemptToMedic
+    internal static bool ShowAttemptToMedic
     {
         get => CustomOptionHolder.MedicShowAttemptToMedic.GetBool();
     }
 
-    public override void OnMeetingStart() { }
-    public override void OnMeetingEnd() { }
-    public override void OnIntroEnd() { }
-
-    public override void FixedUpdate()
+    [CustomEvent(CustomEventType.FixedUpdate)]
+    internal void FixedUpdate()
     {
-        if (!UsedShield)
+        if (UsedShield)
         {
-            CurrentTarget = Helpers.SetTarget();
-            Helpers.SetPlayerOutline(CurrentTarget, ShieldedColor);
+            return;
         }
+        _currentTarget = Helpers.SetTarget();
+        Helpers.SetPlayerOutline(_currentTarget, ShieldedColor);
     }
 
-    public override void OnKill(PlayerControl target) { }
-
-    public override void OnDeath(PlayerControl killer = null)
+    [CustomEvent(CustomEventType.OnDeath)]
+    internal void OnDeath(PlayerControl killer)
     {
         Shielded = null;
     }
 
-    public override void OnFinishShipStatusBegin() { }
-    public override void HandleDisconnect(PlayerControl player, DisconnectReasons reason) { }
-
-    public static void MakeButtons(HudManager hm)
+    [RegisterCustomButton]
+    internal static void MakeButtons(HudManager hm)
     {
         _medicShieldButton = new(() =>
-        {
-            var local = Local;
-            if (local == null) return;
-            _medicShieldButton.Timer = 0f;
             {
-                if (SetShieldAfterMeeting)
+                var local = Local;
+                if (local == null)
                 {
-                    using var sender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.SetFutureShielded);
-                    sender.Write(local.CurrentTarget.PlayerId);
-                    RPCProcedure.SetFutureShielded(local.CurrentTarget.PlayerId);
+                    return;
                 }
-                else
+                _medicShieldButton.Timer = 0f;
                 {
-                    using var sender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.MedicSetShielded);
-                    sender.Write(local.CurrentTarget.PlayerId);
-                    RPCProcedure.MedicSetShielded(local.CurrentTarget.PlayerId);
+                    if (SetShieldAfterMeeting)
+                    {
+                        SetFutureShielded(PlayerControl.LocalPlayer, local._currentTarget.PlayerId);
+                    }
+                    else
+                    {
+                        MedicSetShielded(PlayerControl.LocalPlayer, local._currentTarget.PlayerId);
+                    }
                 }
-            }
-        }, () => { return Local != null && !UsedShield && PlayerControl.LocalPlayer.IsAlive(); }, () =>
-        {
-            var local = Local;
-            return !UsedShield && local != null && local.CurrentTarget && PlayerControl.LocalPlayer.CanMove;
-        }, () => { }, AssetLoader.ShieldButton, ButtonPosition.Layout, hm, hm.UseButton, AbilitySlot.CrewmateAbilityPrimary, false, Tr.Get(TrKey.ShieldText));
+            },
+            () => Local != null && !UsedShield && PlayerControl.LocalPlayer.IsAlive(),
+            () =>
+            {
+                var local = Local;
+                return !UsedShield && local != null && local._currentTarget && PlayerControl.LocalPlayer.CanMove;
+            },
+            () => { },
+            AssetLoader.ShieldButton,
+            ButtonPosition.Layout,
+            hm,
+            hm.UseButton,
+            AbilitySlot.CrewmateAbilityPrimary,
+            false,
+            Tr.Get(TrKey.ShieldText));
     }
 
-    public static void SetButtonCooldowns()
+    [RegisterCustomButton]
+    internal static void SetButtonCooldowns()
     {
         _medicShieldButton.MaxTimer = 0f;
     }
 
     // write functions here
 
-    public static void Clear()
+    internal static void Clear()
     {
-        // reset configs here
-        Players.Clear();
+        ModRoleManager.RemoveRole(Instance);
+        Instance = null;
+
         Shielded = null;
         FutureShielded = null;
         UsedShield = false;
+    }
+
+    [MethodRpc((uint)CustomRPC.MedicSetShielded)]
+    internal static void MedicSetShielded(PlayerControl sender, byte shieldedId)
+    {
+        UsedShield = true;
+        Shielded = Helpers.PlayerById(shieldedId);
+        FutureShielded = null;
+    }
+
+    [MethodRpc((uint)CustomRPC.ShieldedMurderAttempt)]
+    internal static void ShieldedMurderAttempt(PlayerControl sender)
+    {
+        if (!Exists || Shielded == null)
+        {
+            return;
+        }
+
+        var isShieldedAndShow = Shielded == PlayerControl.LocalPlayer && ShowAttemptToShielded;
+        var isMedicAndShow = PlayerControl.LocalPlayer.IsRole(RoleType.Medic) && ShowAttemptToMedic;
+
+        if (!isShieldedAndShow && !isMedicAndShow || FastDestroyableSingleton<HudManager>.Instance?.FullScreen == null)
+        {
+            return;
+        }
+        var c = Palette.ImpostorRed;
+        Helpers.ShowFlash(new(c.r, c.g, c.b));
+    }
+
+    [MethodRpc((uint)CustomRPC.SetFutureShielded)]
+    internal static void SetFutureShielded(PlayerControl sender, byte playerId)
+    {
+        FutureShielded = Helpers.PlayerById(playerId);
+        UsedShield = true;
     }
 }

@@ -1,46 +1,40 @@
 using BepInEx.Unity.IL2CPP.Utils.Collections;
-using Il2CppSystem.Collections;
-using InnerNet;
+using IEnumerator = Il2CppSystem.Collections.IEnumerator;
 
 namespace RebuildUs.Patches;
 
 [HarmonyPatch]
-public static class AmongUsClientPatch
+internal static class AmongUsClientPatch
 {
     [HarmonyPostfix]
     [HarmonyPatch(typeof(AmongUsClient), nameof(AmongUsClient.OnGameJoined))]
-    public static void OnGameJoinedPostfix()
+    internal static void OnGameJoinedPostfix()
     {
         GameStart.VersionSent = false;
-        DiscordEmbedManager.UpdateStatus();
     }
 
     [HarmonyPrefix]
     [HarmonyPatch(typeof(AmongUsClient), nameof(AmongUsClient.ExitGame))]
-    public static void ExitGamePrefix()
-    {
-        DiscordModManager.OnQuitGame();
-    }
+    internal static void ExitGamePrefix() { }
 
     [HarmonyPrefix]
     [HarmonyPatch(typeof(AmongUsClient), nameof(AmongUsClient.OnGameEnd))]
-    public static void OnGameEndPrefix(AmongUsClient __instance, [HarmonyArgument(0)] ref EndGameResult endGameResult)
+    internal static void OnGameEndPrefix(AmongUsClient __instance, [HarmonyArgument(0)] ref EndGameResult endGameResult)
     {
         EndGameMain.OnGameEndPrefix(ref endGameResult);
     }
 
     [HarmonyPostfix]
     [HarmonyPatch(typeof(AmongUsClient), nameof(AmongUsClient.OnGameEnd))]
-    public static void OnGameEndPostfix(AmongUsClient __instance, [HarmonyArgument(0)] ref EndGameResult endGameResult)
+    internal static void OnGameEndPostfix(AmongUsClient __instance, [HarmonyArgument(0)] ref EndGameResult endGameResult)
     {
         GameStart.PlayerVersions.Clear();
         EndGameMain.OnGameEndPostfix(__instance, ref endGameResult);
-        DiscordModManager.OnGameEnd();
     }
 
     [HarmonyPrefix]
     [HarmonyPatch(typeof(AmongUsClient), nameof(AmongUsClient.CoStartGameHost))]
-    public static bool CoStartGameHostPrefix(AmongUsClient __instance, ref IEnumerator __result)
+    internal static bool CoStartGameHostPrefix(AmongUsClient __instance, ref IEnumerator __result)
     {
         __result = RoleAssignment.CoStartGameHost(__instance).WrapToIl2Cpp();
         return false;
@@ -48,33 +42,12 @@ public static class AmongUsClientPatch
 
     [HarmonyPostfix]
     [HarmonyPatch(typeof(AmongUsClient), nameof(AmongUsClient.OnPlayerJoined))]
-    public static void OnPlayerJoinedPostfix(AmongUsClient __instance, ClientData data)
+    internal static void OnPlayerJoinedPostfix(AmongUsClient __instance, ClientData data)
     {
         GameStart.OnPlayerJoined();
-        DiscordEmbedManager.UpdateStatus();
     }
 
     [HarmonyPostfix]
     [HarmonyPatch(typeof(AmongUsClient), nameof(AmongUsClient.OnPlayerLeft))]
-    public static void OnPlayerLeftPostfix(AmongUsClient __instance, ClientData data)
-    {
-        if (data != null)
-        {
-            GameStart.OnPlayerLeft(data.Id);
-            PlayerControl player = null;
-            foreach (var p in PlayerControl.AllPlayerControls.GetFastEnumerator())
-            {
-                if (p.PlayerId != data.Id) continue;
-                player = p;
-                break;
-            }
-
-            if (player == null) return;
-
-            var id = DiscordModManager.GetIdentifier(player);
-            if (id != null) DiscordModManager.OnPlayerLeft(id);
-        }
-        else
-            DiscordEmbedManager.UpdateStatus();
-    }
+    internal static void OnPlayerLeftPostfix(AmongUsClient __instance, ClientData data) { }
 }

@@ -1,92 +1,104 @@
 namespace RebuildUs.Roles.Crewmate;
 
 [HarmonyPatch]
-public class Mayor : RoleBase<Mayor>
+[RegisterRole(RoleType.Mayor, RoleTeam.Crewmate, typeof(MultiRoleBase<Mayor>), nameof(CustomOptionHolder.MayorSpawnRate))]
+internal class Mayor : MultiRoleBase<Mayor>
 {
-    public static Color NameColor = new Color32(32, 77, 66, byte.MaxValue);
+    internal static Color Color = new Color32(32, 77, 66, byte.MaxValue);
 
-    public static Minigame Emergency = null;
-    public static CustomButton MayorMeetingButton;
+    private static CustomButton _mayorMeetingButton;
 
     // write configs here
-    public int RemoteMeetingsLeft = 1;
+    private int _remoteMeetingsLeft;
 
     public Mayor()
     {
         StaticRoleType = CurrentRoleType = RoleType.Mayor;
-        RemoteMeetingsLeft = MayorMaxRemoteMeetings;
+        _remoteMeetingsLeft = MayorMaxRemoteMeetings;
     }
 
-    public override Color RoleColor
-    {
-        get => NameColor;
-    }
 
-    public static int NumVotes
+    internal static int NumVotes
     {
         get => (int)CustomOptionHolder.MayorNumVotes.GetFloat();
     }
 
-    public static bool MayorCanSeeVoteColors
+    internal static bool MayorCanSeeVoteColors
     {
         get => CustomOptionHolder.MayorCanSeeVoteColors.GetBool();
     }
 
-    public static int MayorTasksNeededToSeeVoteColors
+    internal static int MayorTasksNeededToSeeVoteColors
     {
         get => (int)CustomOptionHolder.MayorTasksNeededToSeeVoteColors.GetFloat();
     }
 
-    public static bool MayorHasMeetingButton
+    private static bool MayorHasMeetingButton
     {
         get => CustomOptionHolder.MayorMeetingButton.GetBool();
     }
 
-    public static int MayorMaxRemoteMeetings
+    private static int MayorMaxRemoteMeetings
     {
         get => (int)CustomOptionHolder.MayorMaxRemoteMeetings.GetFloat();
     }
 
-    public override void OnMeetingStart() { }
-    public override void OnMeetingEnd() { }
-    public override void OnIntroEnd() { }
-    public override void FixedUpdate() { }
-    public override void OnKill(PlayerControl target) { }
-    public override void OnDeath(PlayerControl killer = null) { }
-    public override void OnFinishShipStatusBegin() { }
-    public override void HandleDisconnect(PlayerControl player, DisconnectReasons reason) { }
 
-    public static void MakeButtons(HudManager hm)
+
+    [RegisterCustomButton]
+    internal static void MakeButtons(HudManager hm)
     {
-        MayorMeetingButton = new(() =>
-        {
-            PlayerControl.LocalPlayer.NetTransform.Halt(); // Stop current movement
-            Local.RemoteMeetingsLeft--;
-            using var sender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.UncheckedCmdReportDeadBody);
-            sender.Write(PlayerControl.LocalPlayer.PlayerId);
-            sender.Write(byte.MaxValue);
-            RPCProcedure.UncheckedCmdReportDeadBody(PlayerControl.LocalPlayer.PlayerId, byte.MaxValue);
-            MayorMeetingButton.Timer = 1f;
-        }, () => { return PlayerControl.LocalPlayer.IsRole(RoleType.Mayor) && PlayerControl.LocalPlayer?.Data?.IsDead == false && MayorHasMeetingButton; }, () =>
-        {
-            MayorMeetingButton.ActionButton.OverrideText(string.Format(Tr.Get(TrKey.Emergency), Local.RemoteMeetingsLeft));
-            var sabotageActive = false;
-            foreach (var task in PlayerControl.LocalPlayer.myTasks.GetFastEnumerator())
+        _mayorMeetingButton = new(() =>
             {
-                if (task.TaskType is TaskTypes.FixLights or TaskTypes.RestoreOxy or TaskTypes.ResetReactor or TaskTypes.ResetSeismic or TaskTypes.FixComms or TaskTypes.StopCharles || (SubmergedCompatibility.IsSubmerged && task.TaskType == SubmergedCompatibility.RetrieveOxygenMask))
-                    sabotageActive = true;
-            }
+                PlayerControl.LocalPlayer.NetTransform.Halt(); // Stop current movement
+                Local._remoteMeetingsLeft--;
+                RPCProcedure.UncheckedCmdReportDeadBody(PlayerControl.LocalPlayer, PlayerControl.LocalPlayer.PlayerId, byte.MaxValue);
+                _mayorMeetingButton.Timer = 1f;
+            },
+            () => PlayerControl.LocalPlayer.IsRole(RoleType.Mayor) && PlayerControl.LocalPlayer?.Data?.IsDead == false && MayorHasMeetingButton,
+            () =>
+            {
+                _mayorMeetingButton.ActionButton.OverrideText(string.Format(Tr.Get(TrKey.Emergency), Local._remoteMeetingsLeft));
+                var sabotageActive = false;
+                foreach (var task in PlayerControl.LocalPlayer.myTasks.GetFastEnumerator())
+                {
+                    if (task.TaskType is TaskTypes.FixLights
+                                         or TaskTypes.RestoreOxy
+                                         or TaskTypes.ResetReactor
+                                         or TaskTypes.ResetSeismic
+                                         or TaskTypes.FixComms
+                                         or TaskTypes.StopCharles
+                        || SubmergedCompatibility.IsSubmerged && task.TaskType == SubmergedCompatibility.RetrieveOxygenMask)
+                    {
+                        sabotageActive = true;
+                    }
+                }
 
-            return !sabotageActive && PlayerControl.LocalPlayer.CanMove && Local.RemoteMeetingsLeft > 0;
-        }, () => { MayorMeetingButton.Timer = MayorMeetingButton.MaxTimer; }, AssetLoader.EmergencyButton, ButtonPosition.Layout, hm, hm.AbilityButton, AbilitySlot.CrewmateAbilityPrimary, true, 0f, () => { }, false, Tr.Get(TrKey.Meeting));
+                return !sabotageActive && PlayerControl.LocalPlayer.CanMove && Local._remoteMeetingsLeft > 0;
+            },
+            () =>
+            {
+                _mayorMeetingButton.Timer = _mayorMeetingButton.MaxTimer;
+            },
+            AssetLoader.EmergencyButton,
+            ButtonPosition.Layout,
+            hm,
+            hm.AbilityButton,
+            AbilitySlot.CrewmateAbilityPrimary,
+            true,
+            0f,
+            () => { },
+            false,
+            Tr.Get(TrKey.Meeting));
     }
 
-    public static void SetButtonCooldowns()
+    [RegisterCustomButton]
+    internal static void SetButtonCooldowns()
     {
-        MayorMeetingButton.MaxTimer = Helpers.GetOption(Int32OptionNames.EmergencyCooldown);
+        _mayorMeetingButton.MaxTimer = Int32OptionNames.EmergencyCooldown.Get();
     }
 
-    public static void Clear()
+    internal static void Clear()
     {
         // reset configs here
         Players.Clear();

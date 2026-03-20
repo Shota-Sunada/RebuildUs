@@ -1,11 +1,12 @@
 namespace RebuildUs.Roles.Modifier;
 
 [HarmonyPatch]
-public class AntiTeleport : ModifierBase<AntiTeleport>
+[RegisterModifier(ModifierType.AntiTeleport, typeof(AntiTeleport), nameof(CustomOptionHolder.AntiTeleportSpawnRate))]
+internal class AntiTeleport : ModifierBase<AntiTeleport>
 {
-    public static Color NameColor = Palette.Orange;
+    internal static Color Color = Palette.Orange;
 
-    public static Vector3 Position;
+    internal static Vector3 Position;
 
     public AntiTeleport()
     {
@@ -13,12 +14,7 @@ public class AntiTeleport : ModifierBase<AntiTeleport>
         StaticModifierType = CurrentModifierType = ModifierType.AntiTeleport;
     }
 
-    public override Color ModifierColor
-    {
-        get => NameColor;
-    }
-
-    public static List<PlayerControl> Candidates
+    internal static List<PlayerControl> Candidates
     {
         get
         {
@@ -26,35 +22,30 @@ public class AntiTeleport : ModifierBase<AntiTeleport>
             foreach (var player in PlayerControl.AllPlayerControls.GetFastEnumerator())
             {
                 if (!player.HasModifier(ModifierType.AntiTeleport))
+                {
                     validPlayers.Add(player);
+                }
             }
 
             return validPlayers;
         }
     }
 
-    public static string Postfix
+    internal static string Postfix
     {
         get => Tr.Get(TrKey.AntiTeleportPostfix);
     }
 
-    public static string FullName
+    internal static string FullName
     {
         get => Tr.Get(TrKey.AntiTeleport);
     }
 
-    public override void OnMeetingStart() { }
-    public override void OnMeetingEnd() { }
-    public override void OnIntroEnd() { }
-    public override void FixedUpdate() { }
-    public override void OnKill(PlayerControl target) { }
-    public override void OnDeath(PlayerControl killer = null) { }
-    public override void OnFinishShipStatusBegin() { }
-    public override void HandleDisconnect(PlayerControl player, DisconnectReasons reason) { }
+
 
     // write functions here
 
-    public static void Clear()
+    internal static void Clear()
     {
         // reset configs here
         Players.Clear();

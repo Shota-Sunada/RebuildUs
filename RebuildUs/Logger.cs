@@ -2,6 +2,7 @@ namespace RebuildUs;
 
 internal static class Logger
 {
+#pragma warning disable RS0030 // 禁止 API を使用しない
     private static ManualLogSource _logSource;
 
     internal static void Initialize(ManualLogSource log)
@@ -101,8 +102,9 @@ internal static class Logger
 
     internal static string BuildLog(object text, string tag)
     {
-        var sb = new StringBuilder();
+        StringBuilder sb = new();
         sb.Append('[').Append(tag).Append("] ").Append(text);
         return sb.ToString();
     }
+#pragma warning restore RS0030 // 禁止 API を使用しない
 }

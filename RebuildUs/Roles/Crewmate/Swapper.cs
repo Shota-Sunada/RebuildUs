@@ -1,12 +1,16 @@
 namespace RebuildUs.Roles.Crewmate;
 
 [HarmonyPatch]
-public class Swapper : RoleBase<Swapper>
+[RegisterRole(RoleType.NiceSwapper, RoleTeam.Crewmate, typeof(SingleRoleBase<Swapper>), nameof(CustomOptionHolder.SwapperSpawnRate))]
+[RegisterRole(RoleType.EvilSwapper, RoleTeam.Impostor, typeof(SingleRoleBase<Swapper>), nameof(CustomOptionHolder.SwapperSpawnRate))]
+internal class Swapper : SingleRoleBase<Swapper>
 {
-    public static int RemainSwaps = 2;
+    internal static int RemainSwaps = 2;
 
-    public static byte PlayerId1 = byte.MaxValue;
-    public static byte PlayerId2 = byte.MaxValue;
+    internal static Color ImpostorRoleColor => Palette.ImpostorRed;
+
+    internal static byte PlayerId1 = byte.MaxValue;
+    internal static byte PlayerId2 = byte.MaxValue;
 
     public Swapper()
     {
@@ -15,52 +19,59 @@ public class Swapper : RoleBase<Swapper>
         RemainSwaps = NumSwaps;
     }
 
-    public static Color NameColor
+    internal static Color Color
     {
         get => PlayerControl.LocalPlayer?.Data.Role.IsImpostor ?? false ? Palette.ImpostorRed : new Color32(134, 55, 86, byte.MaxValue);
     }
 
-    public override Color RoleColor
-    {
-        get => NameColor;
-    }
 
     // write configs here
-    public static int NumSwaps
+    internal static int NumSwaps
     {
         get => Mathf.RoundToInt(CustomOptionHolder.SwapperNumSwaps.GetFloat());
     }
 
-    public static bool CanCallEmergency
+    internal static bool CanCallEmergency
     {
         get => CustomOptionHolder.SwapperCanCallEmergency.GetBool();
     }
 
-    public static bool CanOnlySwapOthers
+    internal static bool CanOnlySwapOthers
     {
         get => CustomOptionHolder.SwapperCanOnlySwapOthers.GetBool();
     }
 
-    public override void OnUpdateNameColors()
+    internal override void OnUpdateRoleColors()
     {
-        if (Player == PlayerControl.LocalPlayer) Update.SetPlayerNameColor(Player, NameColor);
+        if (Player == PlayerControl.LocalPlayer)
+        {
+            HudManagerPatch.SetPlayerNameColor(Player, RoleColor);
+        }
     }
 
-    public override void OnMeetingStart() { }
-    public override void OnMeetingEnd() { }
-    public override void OnIntroEnd() { }
-    public override void FixedUpdate() { }
-    public override void OnKill(PlayerControl target) { }
-    public override void OnDeath(PlayerControl killer = null) { }
-    public override void OnFinishShipStatusBegin() { }
-    public override void HandleDisconnect(PlayerControl player, DisconnectReasons reason) { }
+
 
     // write functions here
 
-    public static void Clear()
+    [MethodRpc((uint)CustomRPC.SwapperSwap)]
+    internal static void SwapperSwap(PlayerControl sender, byte playerId1, byte playerId2)
     {
-        // reset configs here
-        Players.Clear();
+        if (!MeetingHud.Instance)
+        {
+            return;
+        }
+        PlayerId1 = playerId1;
+        PlayerId2 = playerId2;
+    }
+
+    [MethodRpc((uint)CustomRPC.SwapperAnimate)]
+    internal static void SwapperAnimate(PlayerControl sender) { }
+
+    internal static void Clear()
+    {
+        ModRoleManager.RemoveRole(Instance);
+        Instance = null;
+
         PlayerId1 = byte.MaxValue;
         PlayerId2 = byte.MaxValue;
         RemainSwaps = 2;

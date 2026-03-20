@@ -1,21 +1,15 @@
-using Object = UnityEngine.Object;
-
 namespace RebuildUs.Roles.Modifier;
 
 [HarmonyPatch]
-public class LastImpostor : ModifierBase<LastImpostor>
+[RegisterModifier(ModifierType.LastImpostor, typeof(LastImpostor), nameof(CustomOptionHolder.LastImpostorEnable))]
+internal class LastImpostor : ModifierBase<LastImpostor>
 {
-    public enum DivineResults
-    {
-        BlackWhite, Team, Role,
-    }
+    internal static Color Color = Palette.ImpostorRed;
+    internal static int KillCounter;
+    internal static int NumUsed;
+    internal static int RemainingShots;
 
-    public static Color NameColor = Palette.ImpostorRed;
-    public static int KillCounter;
-    public static int NumUsed;
-    public static int RemainingShots;
-
-    public static List<CustomButton> LastImpostorButtons = [];
+    internal static List<CustomButton> LastImpostorButtons = [];
     private static Dictionary<byte, PoolablePlayer> _playerIcons = [];
 
     public LastImpostor()
@@ -24,95 +18,107 @@ public class LastImpostor : ModifierBase<LastImpostor>
         StaticModifierType = CurrentModifierType = ModifierType.LastImpostor;
     }
 
-    public override Color ModifierColor
-    {
-        get => NameColor;
-    }
-
-    public static bool IsEnable
+    internal static bool IsEnable
     {
         get => CustomOptionHolder.LastImpostorEnable.GetBool();
     }
 
-    public static int MaxKillCounter
+    internal static int MaxKillCounter
     {
         get => (int)CustomOptionHolder.LastImpostorNumKills.GetFloat();
     }
 
-    public static int SelectedFunction
+    internal static int SelectedFunction
     {
         get => CustomOptionHolder.LastImpostorFunctions.GetSelection();
     }
 
-    public static DivineResults DivineResult
+    internal static DivineResults DivineResult
     {
         get => (DivineResults)CustomOptionHolder.LastImpostorResults.GetSelection();
     }
 
-    public static string Postfix
+    internal static string Postfix
     {
         get => Tr.Get(TrKey.LastImpostorPostfix);
     }
 
-    public static string FullName
+    internal static string FullName
     {
         get => Tr.Get(TrKey.LastImpostor);
     }
 
-    public override void OnMeetingStart() { }
-    public override void OnMeetingEnd() { }
-    public override void OnIntroEnd() { }
-    public override void FixedUpdate() { }
-
-    public override void OnKill(PlayerControl target)
+    [CustomEvent(CustomEventType.OnKill)]
+    internal void OnKill(PlayerControl target)
     {
         KillCounter += 1;
     }
 
-    public override void OnDeath(PlayerControl killer = null) { }
-    public override void OnFinishShipStatusBegin() { }
-    public override void HandleDisconnect(PlayerControl player, DisconnectReasons reason) { }
 
-    public static void MakeButtons(HudManager hm)
+
+    [RegisterCustomButton]
+    internal static void MakeButtons(HudManager hm)
     {
         LastImpostorButtons = [];
 
         Vector3 LastImpostorCalcPos(byte index)
         {
             //return new Vector3(-0.25f, -0.25f, 0) + Vector3.right * index * 0.55f;
-            return new Vector3(-0.25f, -0.15f, 0) + (Vector3.right * index * 0.55f);
+            return new Vector3(-0.25f, -0.15f, 0) + Vector3.right * index * 0.55f;
         }
 
         Action LastImpostorButtonOnClick(byte index)
         {
             return () =>
             {
-                if (SelectedFunction == 1) return;
+                if (SelectedFunction == 1)
+                {
+                    return;
+                }
                 var p = Helpers.PlayerById(index);
                 Divine(p);
             };
         }
 
-        ;
+    ;
 
         Func<bool> LastImpostorHasButton(byte index)
         {
             return () =>
             {
-                if (SelectedFunction == 1) return false;
+                if (SelectedFunction == 1)
+                {
+                    return false;
+                }
                 var p = PlayerControl.LocalPlayer;
-                if (!p.HasModifier(ModifierType.LastImpostor)) return false;
-                if (p.HasModifier(ModifierType.LastImpostor) && p.CanMove && p.IsAlive() & (p.PlayerId != index) && MapSettings.PlayerIcons.ContainsKey(index) && NumUsed < 1 && IsCounterMax())
+                if (!p.HasModifier(ModifierType.LastImpostor))
+                {
+                    return false;
+                }
+                if (p.HasModifier(ModifierType.LastImpostor)
+                    && p.CanMove
+                    && p.IsAlive() & p.PlayerId != index
+                    && MapSettings.PlayerIcons.ContainsKey(index)
+                    && NumUsed < 1
+                    && IsCounterMax())
+                {
                     return true;
+                }
 
                 if (_playerIcons.ContainsKey(index))
                 {
                     _playerIcons[index].gameObject.SetActive(false);
                     if (PlayerControl.LocalPlayer.IsRole(RoleType.BountyHunter))
+                    {
                         SetBountyIconPos(Vector3.zero);
+                    }
                 }
 
-                if (LastImpostorButtons.Count > index) LastImpostorButtons[index].SetActive(false);
+                if (LastImpostorButtons.Count > index)
+                {
+                    LastImpostorButtons[index].SetActive(false);
+                }
+
                 return false;
             };
         }
@@ -151,12 +157,17 @@ public class LastImpostor : ModifierBase<LastImpostor>
         {
             return () =>
             {
-                if (SelectedFunction == 1) return false;
+                if (SelectedFunction == 1)
+                {
+                    return false;
+                }
 
                 //　ラストインポスター以外の場合、リソースがない場合はボタンを表示しない
                 var p = Helpers.PlayerById(index);
                 if (!_playerIcons.ContainsKey(index) || !PlayerControl.LocalPlayer.HasModifier(ModifierType.LastImpostor) || !IsCounterMax())
+                {
                     return false;
+                }
 
                 // ボタンの位置を変更
                 SetButtonPos(index);
@@ -180,7 +191,20 @@ public class LastImpostor : ModifierBase<LastImpostor>
 
         for (byte i = 0; i < 15; i++)
         {
-            CustomButton lastImpostorButton = new(LastImpostorButtonOnClick(i), LastImpostorHasButton(i), LastImpostorCouldUse(i), () => { }, null, Vector3.zero, hm, null, KeyCode.None, true) { Timer = 0.0f, MaxTimer = 0.0f };
+            CustomButton lastImpostorButton = new(LastImpostorButtonOnClick(i),
+                LastImpostorHasButton(i),
+                LastImpostorCouldUse(i),
+                () => { },
+                null,
+                Vector3.zero,
+                hm,
+                null,
+                KeyCode.None,
+                true)
+            {
+                Timer = 0.0f,
+                MaxTimer = 0.0f,
+            };
 
             LastImpostorButtons.Add(lastImpostorButton);
         }
@@ -188,7 +212,7 @@ public class LastImpostor : ModifierBase<LastImpostor>
 
     // write functions here
 
-    public static void Clear()
+    internal static void Clear()
     {
         // reset configs here
         Players.Clear();
@@ -198,39 +222,43 @@ public class LastImpostor : ModifierBase<LastImpostor>
         _playerIcons = [];
     }
 
-    public static bool IsCounterMax()
+    internal static bool IsCounterMax()
     {
-        if (MaxKillCounter <= KillCounter) return true;
+        if (MaxKillCounter <= KillCounter)
+        {
+            return true;
+        }
         return false;
     }
 
-    public static bool CanGuess()
+    internal static bool CanGuess()
     {
         return RemainingShots > 0 && SelectedFunction == 1 && IsCounterMax();
     }
 
-    public static void PromoteToLastImpostor()
+    internal static void PromoteToLastImpostor()
     {
-        if (!IsEnable) return;
+        if (!IsEnable)
+        {
+            return;
+        }
 
-        var impList = new List<PlayerControl>();
+        List<PlayerControl> impList = [];
         foreach (var p in PlayerControl.AllPlayerControls.GetFastEnumerator())
         {
             if (p.IsTeamImpostor() && p.IsAlive())
+            {
                 impList.Add(p);
+            }
         }
 
         if (impList.Count == 1)
         {
-            {
-                using var sender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.ImpostorPromotesToLastImpostor);
-                sender.Write(impList[0].PlayerId);
-            }
-            RPCProcedure.ImpostorPromotesToLastImpostor(impList[0].PlayerId);
+            ImpostorPromotesToLastImpostor(PlayerControl.LocalPlayer, impList[0].PlayerId);
         }
     }
 
-    public static void Divine(PlayerControl p)
+    internal static void Divine(PlayerControl p)
     {
         // FortuneTeller.divine(p, resultIsCrewOrNot);
         var msgBase = "";
@@ -275,10 +303,13 @@ public class LastImpostor : ModifierBase<LastImpostor>
         {
             msgBase = "DivineMessageRole";
             var roleInfos = RoleInfo.GetRoleInfoForPlayer(p);
-            var sb = new StringBuilder();
+            StringBuilder sb = new();
             for (var i = 0; i < roleInfos.Count; i++)
             {
-                if (i > 0) sb.Append(' ');
+                if (i > 0)
+                {
+                    sb.Append(' ');
+                }
                 var info = roleInfos[i];
                 sb.Append(Helpers.Cs(info.Color, info.Name));
             }
@@ -292,24 +323,22 @@ public class LastImpostor : ModifierBase<LastImpostor>
             // TODO: FortuneTeller.fortuneTellerMessage(msg, 5f, color);
         }
 
-        if (Constants.ShouldPlaySfx()) SoundManager.Instance.PlaySound(FastDestroyableSingleton<HudManager>.Instance.TaskCompleteSound, false, 0.8f);
+        if (Constants.ShouldPlaySfx())
+        {
+            SoundManager.Instance.PlaySound(FastDestroyableSingleton<HudManager>.Instance.TaskCompleteSound, false, 0.8f);
+        }
 
         // 占いを実行したことで発火される処理を他クライアントに通知
-        {
-            using var sender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.FortuneTellerUsedDivine);
-            sender.Write(PlayerControl.LocalPlayer.PlayerId);
-            sender.Write(p.PlayerId);
-        }
-        RPCProcedure.FortuneTellerUsedDivine(PlayerControl.LocalPlayer.PlayerId, p.PlayerId);
+        FortuneTellerUsedDivine(PlayerControl.LocalPlayer, PlayerControl.LocalPlayer.PlayerId, p.PlayerId);
     }
 
-    public static void OnIntroDestroy(IntroCutscene __instance)
+    internal static void OnIntroDestroy(IntroCutscene __instance)
     {
         if (PlayerControl.LocalPlayer != null && FastDestroyableSingleton<HudManager>.Instance != null)
         {
             foreach (var p in PlayerControl.AllPlayerControls.GetFastEnumerator())
             {
-                var player = Object.Instantiate(__instance.PlayerPrefab, FastDestroyableSingleton<HudManager>.Instance.transform);
+                var player = UnityObject.Instantiate(__instance.PlayerPrefab, FastDestroyableSingleton<HudManager>.Instance.transform);
                 player.UpdateFromPlayerOutfit(p.Data.DefaultOutfit, PlayerMaterial.MaskType.ComplexUI, p.Data.IsDead, true);
                 player.SetFlipX(true);
                 player.cosmetics.currentPet?.gameObject.SetActive(false);
@@ -318,5 +347,25 @@ public class LastImpostor : ModifierBase<LastImpostor>
                 _playerIcons[p.PlayerId] = player;
             }
         }
+    }
+
+    [MethodRpc((uint)CustomRPC.ImpostorPromotesToLastImpostor)]
+    internal static void ImpostorPromotesToLastImpostor(PlayerControl sender, byte targetId)
+    {
+        var player = Helpers.PlayerById(targetId);
+        player.AddModifier(ModifierType.LastImpostor);
+    }
+
+    [MethodRpc((uint)CustomRPC.FortuneTellerUsedDivine)]
+    internal static void FortuneTellerUsedDivine(PlayerControl sender, byte killerId, byte targetId)
+    {
+        NumUsed += 1;
+    }
+
+    internal enum DivineResults
+    {
+        BlackWhite,
+        Team,
+        Role,
     }
 }

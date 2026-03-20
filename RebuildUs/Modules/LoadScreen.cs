@@ -1,9 +1,8 @@
 using Il2CppInterop.Runtime.Attributes;
-using Object = UnityEngine.Object;
 
 namespace RebuildUs.Modules;
 
-public static class LoadScreen
+internal static class LoadScreen
 {
     private static GameObject _uiContainer;
     private static TextMeshPro _titleTMPro;
@@ -11,28 +10,31 @@ public static class LoadScreen
 
     private static Sprite _whiteSprite;
 
-    public static string StatusText { get; set; } = "";
-    public static float Progress { get; set; }
-    public static string ProgressDetailText { get; set; } = "";
+    internal static string StatusText { get; set; } = "";
+    internal static float Progress { get; set; }
+    internal static string ProgressDetailText { get; set; } = "";
 
     [HideFromIl2Cpp]
-    public static void Create()
+    internal static void Create()
     {
-        if (_uiContainer != null) return;
+        if (_uiContainer != null)
+        {
+            return;
+        }
 
         if (_whiteSprite == null)
         {
-            var tex = new Texture2D(1, 1);
+            Texture2D tex = new(1, 1);
             tex.SetPixel(0, 0, Color.white);
             tex.Apply();
             _whiteSprite = Sprite.Create(tex, new(0, 0, 1, 1), new(0.5f, 0.5f));
         }
 
         _uiContainer = new("RebuildUsLoadScreen");
-        Object.DontDestroyOnLoad(_uiContainer);
+        UnityObject.DontDestroyOnLoad(_uiContainer);
 
         // Background
-        var bg = new GameObject("Background");
+        GameObject bg = new("Background");
         bg.transform.SetParent(_uiContainer.transform);
         var bgRenderer = bg.AddComponent<SpriteRenderer>();
         bgRenderer.sprite = _whiteSprite;
@@ -41,7 +43,7 @@ public static class LoadScreen
         bg.transform.localPosition = new(0, 0, 20f);
 
         // Title
-        var titleObj = new GameObject("TitleText");
+        GameObject titleObj = new("TitleText");
         titleObj.transform.SetParent(_uiContainer.transform);
         _titleTMPro = titleObj.AddComponent<TextMeshPro>();
         _titleTMPro.alignment = TextAlignmentOptions.Center;
@@ -51,7 +53,7 @@ public static class LoadScreen
         titleObj.transform.localPosition = new(0, 1.5f, 5f);
 
         // Status
-        var statusObj = new GameObject("StatusText");
+        GameObject statusObj = new("StatusText");
         statusObj.transform.SetParent(_uiContainer.transform);
         _statusTMPro = statusObj.AddComponent<TextMeshPro>();
         _statusTMPro.alignment = TextAlignmentOptions.Center;
@@ -63,18 +65,22 @@ public static class LoadScreen
     }
 
     [HideFromIl2Cpp]
-    public static void Update()
+    internal static void Update()
     {
-        if (_statusTMPro != null && _statusTMPro.text != StatusText) _statusTMPro.text = StatusText;
+        if (_statusTMPro != null && _statusTMPro.text != StatusText)
+        {
+            _statusTMPro.text = StatusText;
+        }
     }
 
     [HideFromIl2Cpp]
-    public static void Destroy()
+    internal static void Destroy()
     {
-        if (_uiContainer != null)
+        if (_uiContainer == null)
         {
-            Object.Destroy(_uiContainer);
-            _uiContainer = null;
+            return;
         }
+        UnityObject.Destroy(_uiContainer);
+        _uiContainer = null;
     }
 }

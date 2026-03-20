@@ -1,15 +1,16 @@
 namespace RebuildUs.Roles.Impostor;
 
 [HarmonyPatch]
-public class Morphing : RoleBase<Morphing>
+[RegisterRole(RoleType.Morphing, RoleTeam.Impostor, typeof(MultiRoleBase<Morphing>), nameof(CustomOptionHolder.MorphingSpawnRate))]
+internal class Morphing : MultiRoleBase<Morphing>
 {
-    public static Color NameColor = Palette.ImpostorRed;
+    internal static Color Color = Palette.ImpostorRed;
 
     private static CustomButton _morphingButton;
-    public static PlayerControl CurrentTarget;
-    public static PlayerControl SampledTarget;
-    public static PlayerControl MorphTarget;
-    public static float MorphTimer;
+    private static PlayerControl _currentTarget;
+    private static PlayerControl _sampledTarget;
+    internal static PlayerControl MorphTarget;
+    internal static float MorphTimer;
 
     public Morphing()
     {
@@ -17,124 +18,156 @@ public class Morphing : RoleBase<Morphing>
         StaticRoleType = CurrentRoleType = RoleType.Morphing;
     }
 
-    public override Color RoleColor
-    {
-        get => NameColor;
-    }
-
     // write configs here
-    public static float Cooldown
+    private static float Cooldown
     {
         get => CustomOptionHolder.MorphingCooldown.GetFloat();
     }
 
-    public static float Duration
+    private static float Duration
     {
         get => CustomOptionHolder.MorphingDuration.GetFloat();
     }
 
-    public override void OnMeetingStart() { }
-    public override void OnMeetingEnd() { }
-
-    public override void OnIntroEnd()
+    [CustomEvent(CustomEventType.OnIntroEnd)]
+    internal void OnIntroEnd()
     {
         ResetMorph();
     }
 
-    public override void FixedUpdate()
+    [CustomEvent(CustomEventType.FixedUpdate)]
+    internal void FixedUpdate()
     {
         var local = Local;
-        if (local == null) return;
-        CurrentTarget = Helpers.SetTarget();
-        Helpers.SetPlayerOutline(CurrentTarget, RoleColor);
+        if (local == null)
+        {
+            return;
+        }
+        _currentTarget = Helpers.SetTarget();
+        Helpers.SetPlayerOutline(_currentTarget, RoleColor);
     }
 
-    public override void OnKill(PlayerControl target) { }
-    public override void OnDeath(PlayerControl killer = null) { }
-    public override void OnFinishShipStatusBegin() { }
-    public override void HandleDisconnect(PlayerControl player, DisconnectReasons reason) { }
 
-    public static void MakeButtons(HudManager hm)
+
+    [RegisterCustomButton]
+    internal static void MakeButtons(HudManager hm)
     {
         _morphingButton = new(() =>
-        {
-            if (SampledTarget != null)
             {
+                if (_sampledTarget != null)
                 {
-                    using var sender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.MorphingMorph);
-                    sender.Write(SampledTarget.PlayerId);
-                    sender.Write(Local.Player.PlayerId);
+                    MorphingMorph(PlayerControl.LocalPlayer, _sampledTarget.PlayerId, Local.Player.PlayerId);
+                    _sampledTarget = null;
+                    _morphingButton.EffectDuration = Duration;
                 }
-                RPCProcedure.MorphingMorph(SampledTarget.PlayerId, Local.Player.PlayerId);
-                SampledTarget = null;
-                _morphingButton.EffectDuration = Duration;
-            }
-            else if (CurrentTarget != null)
+                else if (_currentTarget != null)
+                {
+                    _sampledTarget = _currentTarget;
+                    _morphingButton.Sprite = AssetLoader.MorphButton;
+                    _morphingButton.ButtonText = Tr.Get(TrKey.MorphText);
+                    _morphingButton.EffectDuration = 1f;
+                }
+            },
+            () =>
             {
-                SampledTarget = CurrentTarget;
-                _morphingButton.Sprite = AssetLoader.MorphButton;
-                _morphingButton.ButtonText = Tr.Get(TrKey.MorphText);
-                _morphingButton.EffectDuration = 1f;
-            }
-        }, () => { return PlayerControl.LocalPlayer.IsRole(RoleType.Morphing) && PlayerControl.LocalPlayer.IsAlive(); }, () => { return (CurrentTarget || SampledTarget) && PlayerControl.LocalPlayer.CanMove; }, () =>
-        {
-            _morphingButton.Timer = _morphingButton.MaxTimer;
-            _morphingButton.Sprite = AssetLoader.SampleButton;
-            _morphingButton.ButtonText = Tr.Get(TrKey.SampleText);
-            _morphingButton.IsEffectActive = false;
-            _morphingButton.ActionButton.cooldownTimerText.color = Palette.EnabledColor;
-            SampledTarget = null;
-        }, AssetLoader.SampleButton, ButtonPosition.Layout, hm, hm.KillButton, AbilitySlot.ImpostorAbilityPrimary, true, Duration, () =>
-        {
-            if (SampledTarget == null)
+                return PlayerControl.LocalPlayer.IsRole(RoleType.Morphing) && PlayerControl.LocalPlayer.IsAlive();
+            },
+            () =>
+            {
+                return (_currentTarget || _sampledTarget) && PlayerControl.LocalPlayer.CanMove;
+            },
+            () =>
             {
                 _morphingButton.Timer = _morphingButton.MaxTimer;
                 _morphingButton.Sprite = AssetLoader.SampleButton;
                 _morphingButton.ButtonText = Tr.Get(TrKey.SampleText);
-            }
-        }, false, Tr.Get(TrKey.SampleText));
+                _morphingButton.IsEffectActive = false;
+                _morphingButton.ActionButton.cooldownTimerText.color = Palette.EnabledColor;
+                _sampledTarget = null;
+            },
+            AssetLoader.SampleButton,
+            ButtonPosition.Layout,
+            hm,
+            hm.KillButton,
+            AbilitySlot.ImpostorAbilityPrimary,
+            true,
+            Duration,
+            () =>
+            {
+                if (_sampledTarget == null)
+                {
+                    _morphingButton.Timer = _morphingButton.MaxTimer;
+                    _morphingButton.Sprite = AssetLoader.SampleButton;
+                    _morphingButton.ButtonText = Tr.Get(TrKey.SampleText);
+                }
+            },
+            false,
+            Tr.Get(TrKey.SampleText));
     }
 
-    public static void SetButtonCooldowns()
+    [RegisterCustomButton]
+    internal static void SetButtonCooldowns()
     {
         _morphingButton.MaxTimer = Cooldown;
         _morphingButton.EffectDuration = Duration;
     }
 
     // write functions here
-    public void HandleMorphing()
+    internal void HandleMorphing()
     {
         // first, if camouflager is active, don't do anything
-        if (Camouflager.Exists && Camouflager.CamouflageTimer > 0f) return;
+        if (Camouflager.Exists && Camouflager.CamouflageTimer > 0f)
+        {
+            return;
+        }
 
         // next, if we're currently morphed, set our skin to the target
         if (MorphTimer > 0f && MorphTarget != null)
+        {
             Player.MorphToPlayer(MorphTarget);
+        }
         else
+        {
             Player.ResetMorph();
+        }
     }
 
-    public void StartMorph(PlayerControl target)
+    internal void StartMorph(PlayerControl target)
     {
         MorphTarget = target;
         MorphTimer = Duration;
         HandleMorphing();
     }
 
-    public static void ResetMorph()
+    internal static void ResetMorph()
     {
         MorphTarget = null;
         MorphTimer = 0f;
-        for (var i = 0; i < Players.Count; i++) Players[i].HandleMorphing();
+        foreach (var t in Players)
+        {
+            t.HandleMorphing();
+        }
     }
 
-    public static void Clear()
+    internal static void Clear()
     {
         // reset configs here
         Players.Clear();
-        CurrentTarget = null;
-        SampledTarget = null;
+        _currentTarget = null;
+        _sampledTarget = null;
         MorphTarget = null;
         MorphTimer = 0;
+    }
+
+    [MethodRpc((uint)CustomRPC.MorphingMorph)]
+    internal static void MorphingMorph(PlayerControl sender, byte playerId, byte morphId)
+    {
+        var morphPlayer = Helpers.PlayerById(morphId);
+        var target = Helpers.PlayerById(playerId);
+        if (morphPlayer == null || target == null)
+        {
+            return;
+        }
+        GetRole(morphPlayer).StartMorph(target);
     }
 }
