@@ -374,8 +374,8 @@ Task("StartDebugBoot4")
     var gamePath = ReadTrimmedTextFile(debugEnvFile);
     for (int i = 0; i < 4; i++)
     {
-        StartAmongUsInstances(1, gamePath);
-        System.Threading.Thread.Sleep(10000);
+        StartAmongUsInstances(launchCount, gamePath);
+        await Task.Delay(10000);
     }
 });
 
