@@ -2,47 +2,35 @@ namespace RebuildUs.Utilities;
 
 internal static class MapUtilities
 {
-    private static readonly Dictionary<SystemTypes, UnityObject> PrivateSystems = [];
+    private static readonly Dictionary<SystemTypes, UnityObject> _systems = [];
     internal static ShipStatus CachedShipStatus { get; private set; } = ShipStatus.Instance;
 
     internal static Dictionary<SystemTypes, UnityObject> Systems
     {
         get
         {
-            if (PrivateSystems.Count == 0)
-            {
-                GetSystems();
-            }
-            return PrivateSystems;
+            if (_systems.Count == 0) GetSystems();
+            return _systems;
         }
     }
 
     private static void MapDestroyed()
     {
         CachedShipStatus = ShipStatus.Instance;
-        PrivateSystems.Clear();
+        _systems.Clear();
     }
 
     private static void GetSystems()
     {
-        if (!CachedShipStatus)
-        {
-            return;
-        }
+        if (!CachedShipStatus) return;
 
         var systems = CachedShipStatus.Systems;
-        if (systems.Count <= 0)
-        {
-            return;
-        }
+        if (systems.Count <= 0) return;
 
         foreach (var systemTypes in SystemTypeHelpers.AllTypes)
         {
-            if (!systems.ContainsKey(systemTypes))
-            {
-                continue;
-            }
-            PrivateSystems[systemTypes] = systems[systemTypes].TryCast<UnityObject>();
+            if (!systems.ContainsKey(systemTypes)) continue;
+            _systems[systemTypes] = systems[systemTypes].TryCast<UnityObject>();
         }
     }
 
