@@ -4,7 +4,7 @@ namespace RebuildUs.Roles.Crewmate;
 [RegisterRole(RoleType.Snitch, RoleTeam.Crewmate, typeof(SingleRoleBase<Snitch>), nameof(CustomOptionHolder.SnitchSpawnRate))]
 internal class Snitch : SingleRoleBase<Snitch>
 {
-    public static Color Color = new Color32(184, 251, 79, byte.MaxValue);
+    internal static Color Color = new Color32(184, 251, 79, byte.MaxValue);
 
     // write configs here
     internal static List<Arrow> LocalArrows = [];

@@ -4,7 +4,7 @@ namespace RebuildUs.Roles.Crewmate;
 [RegisterRole(RoleType.Sheriff, RoleTeam.Crewmate, typeof(MultiRoleBase<Sheriff>), nameof(CustomOptionHolder.SheriffSpawnRate))]
 internal class Sheriff : MultiRoleBase<Sheriff>
 {
-    public static Color Color = new Color32(248, 205, 70, byte.MaxValue);
+    internal static Color Color = new Color32(248, 205, 70, byte.MaxValue);
 
     // write configs here
     private static CustomButton _sheriffKillButton;

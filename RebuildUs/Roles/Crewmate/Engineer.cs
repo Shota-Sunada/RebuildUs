@@ -4,7 +4,7 @@ namespace RebuildUs.Roles.Crewmate;
 [RegisterRole(RoleType.Engineer, RoleTeam.Crewmate, typeof(MultiRoleBase<Engineer>), nameof(CustomOptionHolder.EngineerSpawnRate))]
 internal class Engineer : MultiRoleBase<Engineer>
 {
-    public static Color Color = new Color32(0, 40, 245, byte.MaxValue);
+    internal static Color Color = new Color32(0, 40, 245, byte.MaxValue);
 
     private static CustomButton _engineerRepairButton;
 

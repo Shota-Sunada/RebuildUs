@@ -4,7 +4,7 @@ namespace RebuildUs.Roles.Crewmate;
 [RegisterRole(RoleType.Seer, RoleTeam.Crewmate, typeof(MultiRoleBase<Seer>), nameof(CustomOptionHolder.SeerSpawnRate))]
 internal class Seer : MultiRoleBase<Seer>
 {
-    public static Color Color = new Color32(97, 178, 108, byte.MaxValue);
+    internal static Color Color = new Color32(97, 178, 108, byte.MaxValue);
 
     internal static List<Vector3> DeadBodyPositions = [];
 

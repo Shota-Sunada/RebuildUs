@@ -18,7 +18,7 @@ internal sealed class RegisterRoleAttribute : Attribute
         RoleType = roleType;
         RoleTeam = roleTeam;
         ClassType = classType;
-        NameColorPropertyName = "Color";
+        NameColorPropertyName = "RoleColor";
         SpawnRatePropertyName = spawnRatePropertyName;
     }
 }

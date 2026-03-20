@@ -4,7 +4,7 @@ namespace RebuildUs.Roles.Impostor;
 [RegisterRole(RoleType.Witch, RoleTeam.Impostor, typeof(MultiRoleBase<Witch>), nameof(CustomOptionHolder.WitchSpawnRate))]
 internal class Witch : MultiRoleBase<Witch>
 {
-    public static Color Color = Palette.ImpostorRed;
+    internal static Color Color = Palette.ImpostorRed;
 
     internal static CustomButton WitchSpellButton;
 

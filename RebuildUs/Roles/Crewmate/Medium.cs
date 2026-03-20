@@ -4,7 +4,7 @@ namespace RebuildUs.Roles.Crewmate;
 [RegisterRole(RoleType.Medium, RoleTeam.Crewmate, typeof(MultiRoleBase<Medium>), nameof(CustomOptionHolder.MediumSpawnRate))]
 internal class Medium : MultiRoleBase<Medium>
 {
-    public static Color Color = new Color32(98, 120, 115, byte.MaxValue);
+    internal static Color Color = new Color32(98, 120, 115, byte.MaxValue);
 
     private static CustomButton _mediumButton;
     internal static List<(DeadPlayer deadPlayer, Vector3 pos)> DeadBodies = [];

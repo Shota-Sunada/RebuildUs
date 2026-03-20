@@ -4,7 +4,7 @@ namespace RebuildUs.Roles.Neutral;
 [RegisterRole(RoleType.Jackal, RoleTeam.Neutral, typeof(SingleRoleBase<Jackal>), nameof(CustomOptionHolder.JackalSpawnRate))]
 internal class Jackal : SingleRoleBase<Jackal>
 {
-    public static Color Color = new Color32(0, 180, 235, byte.MaxValue);
+    internal static Color Color = new Color32(0, 180, 235, byte.MaxValue);
 
     private static CustomButton _jackalKillButton;
     private static CustomButton _jackalSidekickButton;
