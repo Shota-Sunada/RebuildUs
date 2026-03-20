@@ -9,13 +9,13 @@ internal static class CustomOptionHolder
 
     internal static void Load()
     {
-        var presetHeader = new CustomOptionHeader(0, CustomOptionType.General, TrKey.Preset);
-        var rolesGeneralHeader = new CustomOptionHeader(10, CustomOptionType.General, TrKey.RolesGeneral);
-        var gameOptionsHeader = new CustomOptionHeader(19, CustomOptionType.General, TrKey.GameOptions);
-        var polusOptionsHeader = new CustomOptionHeader(70, CustomOptionType.General, TrKey.PolusOptions);
-        var airshipOptionsHeader = new CustomOptionHeader(80, CustomOptionType.General, TrKey.AirshipOptions);
-        var randomMapHeader = new CustomOptionHeader(100, CustomOptionType.General, TrKey.RandomMap);
-        var lastImpostorHeader = new CustomOptionHeader(4010, CustomOptionType.Modifier, TrKey.LastImpostor);
+        var presetHeader = new CustomOptionHeader(50000, CustomOptionType.General, TrKey.Preset);
+        var rolesGeneralHeader = new CustomOptionHeader(50001, CustomOptionType.General, TrKey.RolesGeneral);
+        var gameOptionsHeader = new CustomOptionHeader(50002, CustomOptionType.General, TrKey.GameOptions);
+        var polusOptionsHeader = new CustomOptionHeader(50003, CustomOptionType.General, TrKey.PolusOptions);
+        var airshipOptionsHeader = new CustomOptionHeader(50004, CustomOptionType.General, TrKey.AirshipOptions);
+        var randomMapHeader = new CustomOptionHeader(50005, CustomOptionType.General, TrKey.RandomMap);
+        var lastImpostorHeader = new CustomOptionHeader(50006, CustomOptionType.Modifier, TrKey.LastImpostor);
 
         #region MOD OPTIONS
 

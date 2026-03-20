@@ -702,21 +702,20 @@ internal partial class CustomOption
             if (option.Header != currentHeader)
             {
                 currentHeader = option.Header;
-                if (currentHeader == null)
+                if (currentHeader != null)
                 {
-                    continue;
+                    var categoryHeaderMasked = UnityObject.Instantiate(menu.categoryHeaderOrigin, Vector3.zero, Quaternion.identity, menu.settingsContainer);
+                    categoryHeaderMasked.SetHeader(StringNames.ImpostorsCategory, 20);
+                    categoryHeaderMasked.Title.text = currentHeader.GetTitleText();
+                    categoryHeaderMasked.Title.outlineColor = Color.white;
+                    categoryHeaderMasked.Title.outlineWidth = 0.1f;
+                    categoryHeaderMasked.transform.localScale = Vector3.one * 0.63f;
+                    categoryHeaderMasked.transform.localPosition = new(-0.903f, num, -2f);
+                    num -= 0.63f;
                 }
-
-                var categoryHeaderMasked = UnityObject.Instantiate(menu.categoryHeaderOrigin, Vector3.zero, Quaternion.identity, menu.settingsContainer);
-                categoryHeaderMasked.SetHeader(StringNames.ImpostorsCategory, 20);
-                categoryHeaderMasked.Title.text = currentHeader.GetTitleText();
-                categoryHeaderMasked.Title.outlineColor = Color.white;
-                categoryHeaderMasked.Title.outlineWidth = 0.1f;
-                categoryHeaderMasked.transform.localScale = Vector3.one * 0.63f;
-                categoryHeaderMasked.transform.localPosition = new(-0.903f, num, -2f);
-                num -= 0.63f;
             }
-            else if (option.Parent != null && (option.Parent.GetSelectionIndex() == 0 && !option.HideIfParentEnabled
+
+            if (option.Parent != null && (option.Parent.GetSelectionIndex() == 0 && !option.HideIfParentEnabled
                                                 || option.Parent.Parent != null && option.Parent.Parent.GetSelectionIndex() == 0 && !option.Parent.HideIfParentEnabled))
             {
                 continue;
