@@ -105,6 +105,14 @@
       }
     },
     {
+      "label": "Start Debug x4",
+      "command": "dotnet cake build.cake --target=StartDebugBoot4",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      }
+    },
+    {
       "label": "Boot AmongUs",
       "command": "dotnet cake build.cake --target=StartDebugBoot",
       "group": {
