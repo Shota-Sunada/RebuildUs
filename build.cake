@@ -364,6 +364,7 @@ Task("StartDebug")
 Task("StartDebugBoot")
     .Does(() =>
 {
+    KillAmongUsProcesses();
     var gamePath = ReadTrimmedTextFile(debugEnvFile);
     StartAmongUsInstances(launchCount, gamePath);
 });
