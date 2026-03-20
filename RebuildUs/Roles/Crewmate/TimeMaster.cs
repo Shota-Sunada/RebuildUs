@@ -6,7 +6,7 @@ namespace RebuildUs.Roles.Crewmate;
 [RegisterRole(RoleType.TimeMaster, RoleTeam.Crewmate, typeof(SingleRoleBase<TimeMaster>), nameof(CustomOptionHolder.TimeMasterSpawnRate))]
 internal class TimeMaster : SingleRoleBase<TimeMaster>
 {
-    public static Color Color = new Color32(112, 142, 239, byte.MaxValue);
+    internal static Color Color = new Color32(112, 142, 239, byte.MaxValue);
 
     private static CustomButton _timeMasterShieldButton;
 

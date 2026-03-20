@@ -4,7 +4,7 @@ namespace RebuildUs.Roles.Impostor;
 [RegisterRole(RoleType.Cleaner, RoleTeam.Impostor, typeof(MultiRoleBase<Cleaner>), nameof(CustomOptionHolder.CleanerSpawnRate))]
 internal class Cleaner : MultiRoleBase<Cleaner>
 {
-    public static Color Color = Palette.ImpostorRed;
+    internal static Color Color = Palette.ImpostorRed;
 
     internal static CustomButton CleanerCleanButton;
 

@@ -4,7 +4,7 @@ namespace RebuildUs.Roles.Crewmate;
 [RegisterRole(RoleType.Shifter, RoleTeam.Crewmate, typeof(MultiRoleBase<Shifter>), nameof(CustomOptionHolder.ShifterSpawnRate))]
 internal class Shifter : MultiRoleBase<Shifter>
 {
-    public static Color Color = new Color32(102, 102, 102, byte.MaxValue);
+    internal static Color Color = new Color32(102, 102, 102, byte.MaxValue);
 
     private static CustomButton _shifterShiftButton;
     internal static readonly List<int> PastShifters = [];

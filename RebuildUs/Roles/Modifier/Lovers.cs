@@ -5,7 +5,7 @@ namespace RebuildUs.Roles.Modifier;
 internal static class Lovers
 {
     internal static List<Couple> Couples = [];
-    public static Color Color = new Color32(232, 57, 185, byte.MaxValue);
+    internal static Color Color = new Color32(232, 57, 185, byte.MaxValue);
 
     internal static Color[] LoverIconColors =
     [

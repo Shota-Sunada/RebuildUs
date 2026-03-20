@@ -4,7 +4,7 @@ namespace RebuildUs.Roles.Neutral;
 [RegisterRole(RoleType.Vulture, RoleTeam.Neutral, typeof(SingleRoleBase<Vulture>), nameof(CustomOptionHolder.VultureSpawnRate))]
 internal class Vulture : SingleRoleBase<Vulture>
 {
-    public static Color Color = new Color32(139, 69, 19, byte.MaxValue);
+    internal static Color Color = new Color32(139, 69, 19, byte.MaxValue);
 
     internal static bool TriggerVultureWin;
 

@@ -4,7 +4,7 @@ namespace RebuildUs.Roles.Crewmate;
 [RegisterRole(RoleType.Mayor, RoleTeam.Crewmate, typeof(MultiRoleBase<Mayor>), nameof(CustomOptionHolder.MayorSpawnRate))]
 internal class Mayor : MultiRoleBase<Mayor>
 {
-    public static Color Color = new Color32(32, 77, 66, byte.MaxValue);
+    internal static Color Color = new Color32(32, 77, 66, byte.MaxValue);
 
     private static CustomButton _mayorMeetingButton;
 

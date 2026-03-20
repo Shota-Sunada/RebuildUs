@@ -4,7 +4,7 @@ namespace RebuildUs.Roles.Crewmate;
 [RegisterRole(RoleType.Hacker, RoleTeam.Crewmate, typeof(MultiRoleBase<Hacker>), nameof(CustomOptionHolder.HackerSpawnRate))]
 internal class Hacker : MultiRoleBase<Hacker>
 {
-    public static Color Color = new Color32(117, 250, 76, byte.MaxValue);
+    internal static Color Color = new Color32(117, 250, 76, byte.MaxValue);
 
     private static CustomButton _hackerButton;
     internal static CustomButton HackerVitalsButton;
