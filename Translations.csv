@@ -685,6 +685,6 @@ RndMT,Mersenne Twister,メルセンヌ・ツイスタ
 RndXoshiro256,Xorshiro256++,Xorshiro256++
 RndXoshiro256Ss,Xorshiro256**,Xorshiro256**
 RndPcg64,PCG64,PCG64
-DontFinishGame,Do not Finish Game,
-DontFinishGameMode,GAME WILL BE NOT FINISHED,
-AmongUsIsNotRequiredVersion,PLEASE UPDATE YOUR AMONG US,
+DontFinishGame,Do not Finish Game,ゲームを終了しない
+DontFinishGameMode,GAME WILL BE NOT FINISHED,ゲームを終了しないモード
+AmongUsIsNotRequiredVersion,PLEASE UPDATE YOUR AMONG US,ゲームをアップデートしてください
