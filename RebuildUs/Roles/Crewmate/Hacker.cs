@@ -160,7 +160,7 @@ internal class Hacker : MultiRoleBase<Hacker>
                     MapBehaviour.Instance.Close();
                 }
             },
-            ByteOptionNames.MapId.Get() == 3,
+            Helpers.IsPolus,
             FastDestroyableSingleton<TranslationController>.Instance.GetString(StringNames.Admin));
 
         // Hacker Admin Table Charges
@@ -173,7 +173,7 @@ internal class Hacker : MultiRoleBase<Hacker>
 
         HackerVitalsButton = new(() =>
             {
-                if (ByteOptionNames.MapId.Get() != 1)
+                if (!Helpers.IsMiraHq)
                 {
                     if (Local._vitals == null)
                     {
@@ -247,8 +247,7 @@ internal class Hacker : MultiRoleBase<Hacker>
             () => PlayerControl.LocalPlayer.IsRole(RoleType.Hacker)
                   && MapSettings.CouldUseVitals
                   && PlayerControl.LocalPlayer.IsAlive()
-                  && ByteOptionNames.MapId.Get() != 0
-                  && ByteOptionNames.MapId.Get() != 3,
+                  && !Helpers.IsSkeld,
             () =>
             {
                 _hackerVitalsChargesText?.text = string.Format(Tr.Get(TrKey.HackerChargesText), Local._chargesVitals, ToolsNumber);

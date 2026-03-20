@@ -116,7 +116,7 @@ internal class EvilHacker : MultiRoleBase<EvilHacker>
             {
                 return (PlayerControl.LocalPlayer.IsRole(RoleType.EvilHacker) && PlayerControl.LocalPlayer.IsAlive()
                         || IsInherited() && PlayerControl.LocalPlayer.IsTeamImpostor())
-                       && !RebuildUs.BetterSabotageMap.Value;
+                        && !RebuildUs.BetterSabotageMap.Value;
             },
             () =>
             {
@@ -131,7 +131,7 @@ internal class EvilHacker : MultiRoleBase<EvilHacker>
             false,
             0f,
             () => { },
-            ByteOptionNames.MapId.Get() == 3,
+            Helpers.IsPolus,
             FastDestroyableSingleton<TranslationController>.Instance.GetString(StringNames.Admin));
 
         _evilHackerCreatesMadmateButton = new(() =>

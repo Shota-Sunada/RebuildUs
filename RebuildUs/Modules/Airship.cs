@@ -4,10 +4,7 @@ internal static class Airship
 {
     internal static void AwakePostfix()
     {
-        if (ByteOptionNames.MapId.Get() != 4)
-        {
-            return;
-        }
+        if (!Helpers.IsAirship) return;
 
         if (CustomOptionHolder.AirshipAdditionalWireTask.GetBool())
         {

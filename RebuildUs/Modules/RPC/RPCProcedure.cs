@@ -863,7 +863,7 @@ internal static partial class RPCProcedure
             SystemTypes.Medical => StringNames.Medical,
             _ => StringNames.ExitButton,
         };
-        if (ByteOptionNames.MapId.Get() is 2 or 4)
+        if (Helpers.IsPolus && Helpers.IsAirship)
         {
             camera.transform.localRotation = new(0, 0, 1, 1); // Polus and Airship
         }

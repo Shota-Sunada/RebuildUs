@@ -86,7 +86,7 @@ internal static class RoleAssignment
             var flag = true;
             var num = 10;
             var totalSeconds = (float)(DateTime.Now - start).TotalSeconds;
-            if (ByteOptionNames.MapId.Get() is 4 or 5)
+            if (Helpers.IsAirship && Helpers.IsFungle)
             {
                 num = 15;
             }
