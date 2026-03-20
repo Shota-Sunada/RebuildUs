@@ -315,7 +315,7 @@ internal static class Helpers
             {
                 if (!TransportationToolPatches.IsUsingTransportation(target) && Vampire.Bitten != null)
                 {
-                    Vampire.VampireSetBitten(PlayerControl.LocalPlayer, byte.MaxValue, byte.MaxValue);
+                    RPCProcedure.VampireSetBitten(byte.MaxValue, byte.MaxValue);
                     MurderPlayer(killer, target, showAnimation);
                 }
             })));
