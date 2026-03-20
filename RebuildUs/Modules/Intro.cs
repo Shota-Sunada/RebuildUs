@@ -79,14 +79,16 @@ internal static class Intro
 
                 // スペシメンにバイタルを移動する
                 SpecimenVital.MoveVital();
+
+                // ShipStatus.Awake で実行していたものをIntroに移行
+                ShipStatusPatch.AwakePostfix(ship);
             }
 
             // アーカイブのアドミンを消す
             if (Helpers.IsAirship
                 && ship?.FastRooms != null
                 && CustomOptionHolder.AirshipOldAdmin.GetBool()
-                && ship.FastRooms.TryGetValue(SystemTypes.Records, out var recordsRoom)
-                && recordsRoom != null)
+                && ship.FastRooms.TryGetValue(SystemTypes.Records, out var recordsRoom) && recordsRoom != null)
             {
                 var records = recordsRoom.gameObject;
                 foreach (var console in records.GetComponentsInChildren<MapConsole>())

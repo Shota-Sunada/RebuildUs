@@ -10,8 +10,9 @@ internal static class ShipStatusPatch
     private static int _originalNumShortTasksOption;
     private static int _originalNumLongTasksOption;
 
-    [HarmonyPostfix]
-    [HarmonyPatch(typeof(ShipStatus), nameof(ShipStatus.Awake))]
+    // ShipStatus.Awake は動作しません
+    // [HarmonyPostfix]
+    // [HarmonyPatch(typeof(ShipStatus), nameof(ShipStatus.Awake))]
     internal static void AwakePostfix(ShipStatus __instance)
     {
         if (ByteOptionNames.MapId.Get() != 4)
@@ -181,6 +182,7 @@ internal static class ShipStatusPatch
             {
                 return;
             }
+
             {
                 if (ladder == null)
                 {
@@ -198,10 +200,6 @@ internal static class ShipStatusPatch
             }
         }
     }
-
-    [HarmonyPostfix]
-    [HarmonyPatch(typeof(ShipStatus), nameof(ShipStatus.OnEnable))]
-    internal static void OnEnablePostfix() { }
 
     [HarmonyPrefix]
     [HarmonyPatch(typeof(ShipStatus), nameof(ShipStatus.CalculateLightRadius))]
@@ -224,9 +222,7 @@ internal static class ShipStatusPatch
         if (PlayerControl.LocalPlayer.IsRole(RoleType.Lighter) && Lighter.IsLightActive(PlayerControl.LocalPlayer))
         {
             var unLerp = Mathf.InverseLerp(__instance.MinLightRadius, __instance.MaxLightRadius, GetNeutralLightRadius(__instance, true));
-            __result = Mathf.Lerp(__instance.MaxLightRadius * Lighter.ModeLightsOffVision,
-                __instance.MaxLightRadius * Lighter.ModeLightsOnVision,
-                unLerp);
+            __result = Mathf.Lerp(__instance.MaxLightRadius * Lighter.ModeLightsOffVision, __instance.MaxLightRadius * Lighter.ModeLightsOnVision, unLerp);
             return false;
         }
 
@@ -244,8 +240,7 @@ internal static class ShipStatusPatch
                 lerpValue = Mathf.Clamp01(Trickster.LightsOutTimer * 2);
             }
 
-            __result = Mathf.Lerp(__instance.MinLightRadius, __instance.MaxLightRadius, 1 - lerpValue)
-                       * FloatOptionNames.CrewLightMod.Get();
+            __result = Mathf.Lerp(__instance.MinLightRadius, __instance.MaxLightRadius, 1 - lerpValue) * FloatOptionNames.CrewLightMod.Get();
             return false;
         }
 
@@ -337,10 +332,7 @@ internal static class ShipStatusPatch
         }
     }
 
-    [HarmonyPostfix]
-    [HarmonyPatch(typeof(ShipStatus), nameof(ShipStatus.Start))]
-    internal static void StartPostfix() { }
-
+    // 動作確認しました
     [HarmonyPostfix]
     [HarmonyPatch(typeof(ShipStatus), nameof(ShipStatus.SpawnPlayer))]
     internal static void SpawnPlayerPostfix(ShipStatus __instance, PlayerControl player, int numPlayers, bool initialSpawn)

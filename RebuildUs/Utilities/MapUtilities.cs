@@ -3,7 +3,12 @@ namespace RebuildUs.Utilities;
 internal static class MapUtilities
 {
     private static readonly Dictionary<SystemTypes, UnityObject> _systems = [];
-    internal static ShipStatus CachedShipStatus { get; private set; } = ShipStatus.Instance;
+    private static ShipStatus _cachedShipStatus;
+    internal static ShipStatus CachedShipStatus
+    {
+        get => _cachedShipStatus ?? ShipStatus.Instance;
+        private set => _cachedShipStatus = value;
+    }
 
     internal static Dictionary<SystemTypes, UnityObject> Systems
     {
@@ -22,20 +27,30 @@ internal static class MapUtilities
 
     private static void GetSystems()
     {
-        if (!CachedShipStatus) return;
+        Logger.LogInfo("GetSystems");
+
+        if (!CachedShipStatus)
+        {
+            Logger.LogInfo("NO CachedShipStatus");
+            CachedShipStatus = ShipStatus.Instance;
+        }
 
         var systems = CachedShipStatus.Systems;
-        if (systems.Count <= 0) return;
+        if (systems.Count <= 0)
+        {
+            Logger.LogInfo("NO CachedShipStatus.Systems");
+            return;
+        }
 
         foreach (var systemTypes in SystemTypeHelpers.AllTypes)
         {
             if (!systems.ContainsKey(systemTypes)) continue;
-            _systems[systemTypes] = systems[systemTypes].TryCast<UnityObject>();
+            _systems[systemTypes] = systems[systemTypes].CastFast<UnityObject>();
         }
     }
 
     [HarmonyPostfix]
-    [HarmonyPatch(typeof(ShipStatus), nameof(ShipStatus.Awake))]
+    [HarmonyPatch(typeof(ShipStatus), nameof(ShipStatus.OnEnable))]
     [HarmonyPriority(Priority.Last)]
     internal static void AwakePostfix(ShipStatus __instance)
     {
