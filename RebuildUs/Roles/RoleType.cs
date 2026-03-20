@@ -25,7 +25,7 @@ internal enum RoleType : byte
     Suicider,
 
     // Impostor
-    Impostor = 100,
+    Impostor,
     Godfather,
     Mafioso,
     Janitor,
@@ -42,7 +42,7 @@ internal enum RoleType : byte
     EvilSwapper,
 
     // Neutral
-    Lovers = 150,
+    Lovers,
     EvilGuesser,
     NiceGuesser,
     Jester,
@@ -59,7 +59,7 @@ internal enum RoleType : byte
     EvilHacker,
 
     // Others
-    Gm = 200,
+    Gm,
 
     // don't put anything below this
     NoRole = byte.MaxValue,
