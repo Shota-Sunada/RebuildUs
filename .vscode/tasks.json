@@ -17,16 +17,16 @@
   "problemMatcher": [],
   "tasks": [
     {
-      "label": "Build Discord Debug",
-      "command": "dotnet build RebuildUs.Discord/RebuildUs.Discord.csproj -c Debug",
+      "label": "Build Impostor Debug",
+      "command": "dotnet build RebuildUs.Impostor/RebuildUs.Impostor.csproj -c Debug",
       "group": {
         "kind": "build",
         "isDefault": true
       }
     },
     {
-      "label": "Build Discord Release",
-      "command": "dotnet build RebuildUs.Discord/RebuildUs.Discord.csproj -c Release",
+      "label": "Build Impostor Release",
+      "command": "dotnet build RebuildUs.Impostor/RebuildUs.Impostor.csproj -c Release",
       "group": {
         "kind": "build",
         "isDefault": true

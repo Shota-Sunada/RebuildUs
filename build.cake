@@ -6,7 +6,7 @@ var launchCount = Argument("launchCount", 1);
 var root = MakeAbsolute(Directory("./"));
 var sdkDir = root.Combine("SDK");
 var rebuildUsProject = root.CombineWithFilePath("RebuildUs/RebuildUs.csproj");
-var discordProject = root.CombineWithFilePath("RebuildUs.Discord/RebuildUs.Discord.csproj");
+var impostorProject = root.CombineWithFilePath("RebuildUs.Impostor/RebuildUs.Impostor.csproj");
 var launcherProject = root.CombineWithFilePath("RebuildUs.Launcher/RebuildUs.Launcher.csproj");
 var submergedProject = root.CombineWithFilePath("Submerged/Submerged/Submerged.csproj");
 var mainCsFile = root.CombineWithFilePath("RebuildUs/Main.cs");
@@ -103,10 +103,10 @@ void BuildRebuildUs(string config)
             .WithProperty("UseSharedCompilation", "false")
     });
 
-    if (FileExists(discordProject))
+    if (FileExists(impostorProject))
     {
-        Information("Building RebuildUs.Discord ({0})...", config);
-        DotNetBuild(discordProject.FullPath, new DotNetBuildSettings
+        Information("Building RebuildUs.Impostor ({0})...", config);
+        DotNetBuild(impostorProject.FullPath, new DotNetBuildSettings
         {
             Configuration = config,
             NoLogo = true,
@@ -177,20 +177,12 @@ void SyncVersionFromMainToCsproj()
     System.IO.File.WriteAllText(csprojPath, replaced);
     Information("Synced RebuildUs.csproj version to {0}", modVersion);
 
-    var discordPluginPath = root.CombineWithFilePath("RebuildUs.Discord/Plugin.cs").FullPath;
-    var discordCsprojPath = MakeAbsolute(discordProject).FullPath;
-    if (FileExists(discordPluginPath))
+    var impostorPluginPath = root.CombineWithFilePath("RebuildUs.Impostor/RebuildUsPlugin.cs").FullPath;
+    var impostorCsprojPath = MakeAbsolute(impostorProject).FullPath;
+    if (FileExists(impostorPluginPath))
     {
-        var discordContent = System.IO.File.ReadAllText(discordPluginPath);
-        var discordVersionMatch = System.Text.RegularExpressions.Regex.Match(discordContent, "public const string VERSION = \"([^\"]+)\";");
-        if (discordVersionMatch.Success)
-        {
-            var discordVersion = discordVersionMatch.Groups[1].Value;
-            var discordCsprojContent = System.IO.File.ReadAllText(discordCsprojPath);
-            var discordReplaced = System.Text.RegularExpressions.Regex.Replace(discordCsprojContent, "<Version>[^<]+</Version>", "<Version>" + discordVersion + "</Version>");
-            System.IO.File.WriteAllText(discordCsprojPath, discordReplaced);
-            Information("Synced RebuildUs.Discord.csproj version to {0}", discordVersion);
-        }
+        // For RebuildUs.Impostor, we might want to sync version too if it has a constant
+        // But the user didn't explicitly ask for it, let's just remove the discord one.
     }
 }
 
