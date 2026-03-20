@@ -4,7 +4,7 @@ namespace RebuildUs.Roles.Impostor;
 [RegisterRole(RoleType.BountyHunter, RoleTeam.Impostor, typeof(SingleRoleBase<BountyHunter>), nameof(CustomOptionHolder.BountyHunterSpawnRate))]
 internal class BountyHunter : SingleRoleBase<BountyHunter>
 {
-    internal static Color Color = Palette.ImpostorRed;
+    public static Color Color = Palette.ImpostorRed;
 
     private static Arrow _arrow;
     internal static PlayerControl Bounty;

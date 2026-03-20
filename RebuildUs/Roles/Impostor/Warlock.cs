@@ -4,7 +4,7 @@ namespace RebuildUs.Roles.Impostor;
 [RegisterRole(RoleType.Warlock, RoleTeam.Impostor, typeof(MultiRoleBase<Warlock>), nameof(CustomOptionHolder.WarlockSpawnRate))]
 internal class Warlock : MultiRoleBase<Warlock>
 {
-    internal static Color Color = Palette.ImpostorRed;
+    public static Color Color = Palette.ImpostorRed;
 
     internal static CustomButton WarlockCurseButton;
 

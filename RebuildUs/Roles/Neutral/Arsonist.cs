@@ -4,7 +4,7 @@ namespace RebuildUs.Roles.Neutral;
 [RegisterRole(RoleType.Arsonist, RoleTeam.Neutral, typeof(SingleRoleBase<Arsonist>), nameof(CustomOptionHolder.ArsonistSpawnRate))]
 internal class Arsonist : SingleRoleBase<Arsonist>
 {
-    internal static Color Color = new Color32(238, 112, 46, byte.MaxValue);
+    public static Color Color = new Color32(238, 112, 46, byte.MaxValue);
 
     internal static bool TriggerArsonistWin;
     private static CustomButton _arsonistButton;

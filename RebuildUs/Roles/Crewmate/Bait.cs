@@ -4,7 +4,7 @@ namespace RebuildUs.Roles.Crewmate;
 [RegisterRole(RoleType.Bait, RoleTeam.Crewmate, typeof(MultiRoleBase<Bait>), nameof(CustomOptionHolder.BaitSpawnRate))]
 internal class Bait : MultiRoleBase<Bait>
 {
-    internal static Color Color = new Color32(0, 247, 255, byte.MaxValue);
+    public static Color Color = new Color32(0, 247, 255, byte.MaxValue);
     private float _delay;
 
     private bool _reported;

@@ -4,7 +4,7 @@ namespace RebuildUs.Roles.Impostor;
 [RegisterRole(RoleType.EvilHacker, RoleTeam.Impostor, typeof(MultiRoleBase<EvilHacker>), nameof(CustomOptionHolder.EvilHackerSpawnRate))]
 internal class EvilHacker : MultiRoleBase<EvilHacker>
 {
-    internal static Color Color = Palette.ImpostorRed;
+    public static Color Color = Palette.ImpostorRed;
     private static CustomButton _evilHackerButton;
     private static CustomButton _evilHackerCreatesMadmateButton;
 

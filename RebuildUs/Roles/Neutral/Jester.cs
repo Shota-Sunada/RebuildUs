@@ -4,7 +4,7 @@ namespace RebuildUs.Roles.Neutral;
 [RegisterRole(RoleType.Jester, RoleTeam.Neutral, typeof(SingleRoleBase<Jester>), nameof(CustomOptionHolder.JesterSpawnRate))]
 internal class Jester : SingleRoleBase<Jester>
 {
-    internal static Color Color = new Color32(236, 98, 165, byte.MaxValue);
+    public static Color Color = new Color32(236, 98, 165, byte.MaxValue);
 
     internal static bool TriggerJesterWin;
 

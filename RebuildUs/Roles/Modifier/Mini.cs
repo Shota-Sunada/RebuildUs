@@ -6,7 +6,7 @@ internal class Mini : ModifierBase<Mini>
 {
     internal const float DEFAULT_COLLIDER_RADIUS = 0.2233912f;
     internal const float DEFAULT_COLLIDER_OFFSET = 0.3636057f;
-    internal static Color Color = Color.yellow;
+    public static Color Color = Color.yellow;
 
     internal static float GrowingUpDuration = 400f;
     internal static bool TriggerMiniLose;
