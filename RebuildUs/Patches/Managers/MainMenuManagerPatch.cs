@@ -17,9 +17,22 @@ internal static class MainMenuManagerPatch
             ruLogo.transform.SetParent(GameObject.Find("RightPanel").transform, false);
             ruLogo.transform.localPosition = new(-0.4f, 1f, 5f);
 
+            var sb = new StringBuilder("<color=#1684B0>")
+                .Append(RebuildUs.MOD_NAME)
+                .Append("</color> v")
+                .Append(RebuildUs.MOD_VERSION)
+                .Append("\n<size=70%>By ")
+                .Append(RebuildUs.MOD_DEVELOPER)
+                .Append("</size>");
+
+            if (!RebuildUs.Instance.CanBootThisMod)
+            {
+                sb.Append("\n<size=150%>").Append(Tr.Get(TrKey.AmongUsIsNotRequiredVersion)).Append("</size>");
+            }
+
             GameObject credits = new("RUModCredits");
             var text = credits.AddComponent<TextMeshPro>();
-            text.SetText($"<color=#1684B0>{RebuildUs.MOD_NAME}</color> v{RebuildUs.MOD_VERSION}\n<size=70%>By {RebuildUs.MOD_DEVELOPER}</size>");
+            text.SetText(sb.ToString());
             text.alignment = TextAlignmentOptions.Center;
             text.fontSize *= 0.07f;
 

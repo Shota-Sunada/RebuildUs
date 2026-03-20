@@ -30,6 +30,7 @@ internal enum TrKey
     AirshipWait,
     Alive,
     AllowParallelMedBayScans,
+    AmongUsIsNotRequiredVersion,
     AmongUsSettings,
     AntiTeleport,
     AntiTeleportPostfix,

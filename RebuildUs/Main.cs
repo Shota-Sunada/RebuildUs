@@ -62,6 +62,10 @@ public class RebuildUs : BasePlugin
     private const string REACTOR_GUID = "gg.reactor-sunada.api";
     private const string REACTOR_VERSION = "3.3.4-SND";
 
+    private const string REQUIRED_AMONG_US_VERSION = "2026.3.17";
+
+    internal bool CanBootThisMod = false;
+
     internal static RebuildUs Instance;
 
     internal static int OptionsPage = 0;
@@ -101,6 +105,11 @@ public class RebuildUs : BasePlugin
         Instance = this;
 
         Logger.LogInfo(new StringBuilder("AmongUs Version: ").Append(Application.version).ToString());
+
+        if (Application.version == REQUIRED_AMONG_US_VERSION)
+        {
+            CanBootThisMod = true;
+        }
 
         GhostsSeeInformation = Config.Bind("Custom", "Ghosts See Remaining Tasks", true);
         GhostsSeeRoles = Config.Bind("Custom", "Ghosts See Roles", true);

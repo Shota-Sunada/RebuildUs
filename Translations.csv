@@ -687,3 +687,4 @@ RndXoshiro256Ss,Xorshiro256**,Xorshiro256**
 RndPcg64,PCG64,PCG64
 DontFinishGame,Do not Finish Game,
 DontFinishGameMode,GAME WILL BE NOT FINISHED,
+AmongUsIsNotRequiredVersion,PLEASE UPDATE YOUR AMONG US,
