@@ -50,14 +50,15 @@ internal class Camouflager : SingleRoleBase<Camouflager>
         ResetCamouflage();
     }
 
-
-
     [RegisterCustomButton]
     internal static void MakeButtons(HudManager hm)
     {
         _camouflagerButton = new(() =>
             {
-                CamouflagerCamouflage(PlayerControl.LocalPlayer);
+                {
+                    using RPCSender sender = new(PlayerControl.LocalPlayer.NetId, CustomRPC.CamouflagerCamouflage);
+                }
+                RPCProcedure.CamouflagerCamouflage();
             },
             () => PlayerControl.LocalPlayer.IsRole(RoleType.Camouflager) && PlayerControl.LocalPlayer.IsAlive(),
             () => PlayerControl.LocalPlayer.CanMove,
@@ -134,15 +135,5 @@ internal class Camouflager : SingleRoleBase<Camouflager>
     {
         ModRoleManager.RemoveRole(Instance);
         Instance = null;
-    }
-
-    [MethodRpc((uint)CustomRPC.CamouflagerCamouflage)]
-    internal static void CamouflagerCamouflage(PlayerControl sender)
-    {
-        if (!Exists)
-        {
-            return;
-        }
-        StartCamouflage();
     }
 }

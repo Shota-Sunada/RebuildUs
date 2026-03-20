@@ -74,8 +74,6 @@ internal class Vampire : SingleRoleBase<Vampire>
         }
     }
 
-
-
     [RegisterCustomButton]
     internal static void MakeButtons(HudManager hm)
     {
@@ -91,7 +89,13 @@ internal class Vampire : SingleRoleBase<Vampire>
                 {
                     if (Local.TargetNearGarlic)
                     {
-                        RPCProcedure.UncheckedMurderPlayer(PlayerControl.LocalPlayer, Local.Player.PlayerId, Local.CurrentTarget.PlayerId, byte.MaxValue);
+                        {
+                            using RPCSender sender = new(PlayerControl.LocalPlayer.NetId, CustomRPC.UncheckedMurderPlayer);
+                            sender.Write(Local.Player.PlayerId);
+                            sender.Write(Local.CurrentTarget.PlayerId);
+                            sender.Write(byte.MaxValue);
+                        }
+                        RPCProcedure.UncheckedMurderPlayer(Local.Player.PlayerId, Local.CurrentTarget.PlayerId, byte.MaxValue);
 
                         _vampireKillButton.HasEffect = false; // Block effect on this click
                         _vampireKillButton.Timer = _vampireKillButton.MaxTimer;
@@ -100,7 +104,12 @@ internal class Vampire : SingleRoleBase<Vampire>
                     {
                         Bitten = Local.CurrentTarget;
                         // Notify players about bitten
-                        VampireSetBitten(PlayerControl.LocalPlayer, Bitten.PlayerId, 0);
+                        {
+                            using RPCSender sender = new(PlayerControl.LocalPlayer.NetId, CustomRPC.VampireSetBitten);
+                            sender.Write(Bitten.PlayerId);
+                            sender.Write((byte)0);
+                        }
+                        RPCProcedure.VampireSetBitten(Bitten.PlayerId, 0);
 
                         FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(Delay,
                             new Action<float>(p =>
@@ -110,7 +119,12 @@ internal class Vampire : SingleRoleBase<Vampire>
                                 {
                                     // Perform kill if possible and reset bitten (regardless whether the kill was successful or not)
                                     Helpers.CheckMurderAttemptAndKill(Local.Player, Bitten, showAnimation: false);
-                                    VampireSetBitten(PlayerControl.LocalPlayer, byte.MaxValue, byte.MaxValue);
+                                    {
+                                        using RPCSender sender = new(PlayerControl.LocalPlayer.NetId, CustomRPC.VampireSetBitten);
+                                        sender.Write(byte.MaxValue);
+                                        sender.Write(byte.MaxValue);
+                                    }
+                                    RPCProcedure.VampireSetBitten(byte.MaxValue, byte.MaxValue);
                                 }
                             })));
 
@@ -173,7 +187,13 @@ internal class Vampire : SingleRoleBase<Vampire>
                 PlayerPlacedGarlic = true;
                 var pos = PlayerControl.LocalPlayer.transform.position;
 
-                PlaceGarlic(PlayerControl.LocalPlayer, pos.x, pos.y);
+                using (RPCSender sender = new(PlayerControl.LocalPlayer.NetId, CustomRPC.PlaceGarlic))
+                {
+                    sender.Write(pos.x);
+                    sender.Write(pos.y);
+                }
+
+                RPCProcedure.PlaceGarlic(pos.x, pos.y);
             },
             () =>
             {
@@ -214,31 +234,5 @@ internal class Vampire : SingleRoleBase<Vampire>
 
         ModRoleManager.RemoveRole(Instance);
         Instance = null;
-    }
-
-    [MethodRpc((uint)CustomRPC.VampireSetBitten)]
-    internal static void VampireSetBitten(PlayerControl sender, byte targetId, byte performReset)
-    {
-        if (performReset != 0)
-        {
-            Bitten = null;
-            return;
-        }
-
-        if (!Exists)
-        {
-            return;
-        }
-        var player = Helpers.PlayerById(targetId);
-        if (player != null && !player.Data.IsDead)
-        {
-            Bitten = player;
-        }
-    }
-
-    [MethodRpc((uint)CustomRPC.PlaceGarlic)]
-    internal static void PlaceGarlic(PlayerControl sender, float x, float y)
-    {
-        _ = new Garlic(new Vector3(x, y));
     }
 }

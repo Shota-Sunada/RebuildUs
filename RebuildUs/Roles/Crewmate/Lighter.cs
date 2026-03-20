@@ -15,7 +15,6 @@ internal class Lighter : MultiRoleBase<Lighter>
         StaticRoleType = CurrentRoleType = RoleType.Lighter;
     }
 
-
     // write configs here
     internal static float ModeLightsOnVision
     {
@@ -46,8 +45,6 @@ internal class Lighter : MultiRoleBase<Lighter>
         var r = GetRole(player);
         return r._lightActive;
     }
-
-
 
     [RegisterCustomButton]
     internal static void MakeButtons(HudManager hm)

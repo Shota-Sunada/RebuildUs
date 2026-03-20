@@ -25,7 +25,6 @@ internal class Tracker : MultiRoleBase<Tracker>
         StaticRoleType = CurrentRoleType = RoleType.Tracker;
     }
 
-
     // write configs here
     internal static float UpdateInterval
     {
@@ -168,14 +167,14 @@ internal class Tracker : MultiRoleBase<Tracker>
         }
     }
 
-
-
     [RegisterCustomButton]
     internal static void MakeButtons(HudManager hm)
     {
         _trackerTrackPlayerButton = new(() =>
             {
-                TrackerUsedTracker(PlayerControl.LocalPlayer, Local.CurrentTarget.PlayerId, Local.Player.PlayerId);
+                using RPCSender sender = new(PlayerControl.LocalPlayer.NetId, CustomRPC.TrackerUsedTracker);
+                sender.Write(Local.CurrentTarget.PlayerId);
+                RPCProcedure.TrackerUsedTracker(Local.CurrentTarget.PlayerId, Local.Player.PlayerId);
             },
             () =>
             {
@@ -274,23 +273,5 @@ internal class Tracker : MultiRoleBase<Tracker>
 
         CorpsesTrackingTimer = 0f;
         Players.Clear();
-    }
-
-    [MethodRpc((uint)CustomRPC.TrackerUsedTracker)]
-    internal static void TrackerUsedTracker(PlayerControl sender, byte targetId, byte trackerId)
-    {
-        var trackerPlayer = Helpers.PlayerById(trackerId);
-        if (trackerPlayer == null)
-        {
-            return;
-        }
-        var tracker = GetRole(trackerPlayer);
-        if (tracker == null)
-        {
-            return;
-        }
-
-        tracker.UsedTracker = true;
-        tracker.Tracked = Helpers.PlayerById(targetId);
     }
 }

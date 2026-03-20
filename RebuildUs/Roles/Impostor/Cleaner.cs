@@ -29,8 +29,6 @@ internal class Cleaner : MultiRoleBase<Cleaner>
         }
     }
 
-
-
     [RegisterCustomButton]
     internal static void MakeButtons(HudManager hm)
     {
@@ -60,7 +58,11 @@ internal class Cleaner : MultiRoleBase<Cleaner>
                             continue;
                         }
 
-                        CleanBody(PlayerControl.LocalPlayer, playerInfo.PlayerId);
+                        {
+                            using RPCSender sender = new(PlayerControl.LocalPlayer.NetId, CustomRPC.CleanBody);
+                            sender.Write(playerInfo.PlayerId);
+                        }
+                        RPCProcedure.CleanBody(playerInfo.PlayerId);
 
                         Local.Player.killTimer = CleanerCleanButton.Timer = CleanerCleanButton.MaxTimer;
                         break;
@@ -89,25 +91,6 @@ internal class Cleaner : MultiRoleBase<Cleaner>
     }
 
     // write functions here
-
-    [MethodRpc((uint)CustomRPC.CleanBody)]
-    internal static void CleanBody(PlayerControl sender, byte playerId)
-    {
-        CleanBodyLocal(playerId);
-    }
-
-    internal static void CleanBodyLocal(byte playerId)
-    {
-        DeadBody[] array = UnityObject.FindObjectsOfType<DeadBody>();
-        foreach (var t in array)
-        {
-            var info = GameData.Instance.GetPlayerById(t.ParentId);
-            if (info != null && info.PlayerId == playerId)
-            {
-                UnityObject.Destroy(t.gameObject);
-            }
-        }
-    }
 
     internal static void Clear()
     {

@@ -38,12 +38,8 @@ global using RebuildUs.Roles.Modifier;
 global using RebuildUs.Utilities;
 global using Reactor.Networking;
 global using Reactor.Networking.Attributes;
-global using Reactor.Networking.Rpc;
-global using InnerNet;
-global using UnityEngine.AddressableAssets;
-global using UnityEngine.ResourceManagement.AsyncOperations;
-global using UnityObject = UnityEngine.Object;
-global using CppObject = Il2CppSystem.Object;
+global using Submerged.Extensions;
+using InnerNet;
 using Random = System.Random;
 
 namespace RebuildUs;
@@ -70,23 +66,31 @@ public class RebuildUs : BasePlugin
     private Harmony Harmony { get; } = new(MOD_ID);
     internal Version Version { get; } = Version.Parse(MOD_VERSION);
 
-    internal static ConfigEntry<bool> GhostsSeeInformation { get; private set; }
-    internal static ConfigEntry<bool> GhostsSeeRoles { get; private set; }
-    internal static ConfigEntry<bool> GhostsSeeModifier { get; private set; }
-    internal static ConfigEntry<bool> GhostsSeeVotes { get; private set; }
-    internal static ConfigEntry<bool> ShowRoleSummary { get; private set; }
-    internal static ConfigEntry<bool> ShowLighterDarker { get; private set; }
-    internal static ConfigEntry<bool> ShowVentsOnMap { get; private set; }
-    internal static ConfigEntry<bool> ShowChatNotifications { get; private set; }
-    internal static ConfigEntry<bool> ForceNormalSabotageMap { get; private set; }
-    internal static ConfigEntry<bool> BetterSabotageMap { get; private set; }
-    internal static ConfigEntry<bool> TransparentMap { get; private set; }
-    internal static ConfigEntry<bool> HideFakeTasks { get; private set; }
+    public static ConfigEntry<bool> GhostsSeeInformation { get; set; }
+    public static ConfigEntry<bool> GhostsSeeRoles { get; set; }
+    public static ConfigEntry<bool> GhostsSeeModifier { get; set; }
+    public static ConfigEntry<bool> GhostsSeeVotes { get; set; }
+    public static ConfigEntry<bool> ShowRoleSummary { get; set; }
+    public static ConfigEntry<bool> ShowLighterDarker { get; set; }
+    public static ConfigEntry<bool> ShowVentsOnMap { get; set; }
+    public static ConfigEntry<bool> ShowChatNotifications { get; set; }
+    public static ConfigEntry<bool> ForceNormalSabotageMap { get; set; }
+    public static ConfigEntry<bool> BetterSabotageMap { get; set; }
+    public static ConfigEntry<bool> TransparentMap { get; set; }
+    public static ConfigEntry<bool> HideFakeTasks { get; set; }
 
-    private static ConfigEntry<string> Ip { get; set; }
-    private static ConfigEntry<ushort> Port { get; set; }
+    public static ConfigEntry<string> DiscordBotToken { get; set; }
+    public static ConfigEntry<string> DiscordBotToken2 { get; set; }
+    public static ConfigEntry<string> DiscordBotToken3 { get; set; }
+    public static ConfigEntry<string> DiscordGuildId { get; set; }
+    public static ConfigEntry<string> DiscordVcId { get; set; }
+    public static ConfigEntry<string> StatusChannelId { get; set; }
+    public static ConfigEntry<string> ResultChannelId { get; set; }
 
-    internal static Random Rnd
+    public static ConfigEntry<string> Ip { get; set; }
+    public static ConfigEntry<ushort> Port { get; set; }
+
+    public Random Rnd
     {
         get => RandomMain.Rnd;
     }
@@ -263,20 +267,41 @@ public class RebuildUs : BasePlugin
 
     internal static void SetButtonCooldowns()
     {
-        foreach (var action in ModEventDispatcher.CustomButtonTimers)
-        {
-            try
-            {
-                action();
-            }
-            catch (Exception ex)
-            {
-                Logger.LogError($"Error in SetButtonCooldowns: {ex}");
-            }
-        }
+        // Crewmate
+        Engineer.SetButtonCooldowns();
+        Hacker.SetButtonCooldowns();
+        Lighter.SetButtonCooldowns();
+        Mayor.SetButtonCooldowns();
+        Medic.SetButtonCooldowns();
+        Medium.SetButtonCooldowns();
+        Sheriff.SetButtonCooldowns();
+        Shifter.SetButtonCooldowns();
+        TimeMaster.SetButtonCooldowns();
+        SecurityGuard.SetButtonCooldowns();
+        Tracker.SetButtonCooldowns();
+        Suicider.SetButtonCooldowns();
+
+        // Impostor
+        Camouflager.SetButtonCooldowns();
+        Cleaner.SetButtonCooldowns();
+        Eraser.SetButtonCooldowns();
+        EvilHacker.SetButtonCooldowns();
+        EvilTracker.SetButtonCooldowns();
+        Mafia.Janitor.SetButtonCooldowns();
+        Morphing.SetButtonCooldowns();
+        Trickster.SetButtonCooldowns();
+        Vampire.SetButtonCooldowns();
+        Warlock.SetButtonCooldowns();
+        Witch.SetButtonCooldowns();
+
+        // Neutral
+        Arsonist.SetButtonCooldowns();
+        Jackal.SetButtonCooldowns();
+        Sidekick.SetButtonCooldowns();
+        Vulture.SetButtonCooldowns();
     }
 
-    private static void UpdateRegions()
+    public static void UpdateRegions()
     {
         var serverManager = FastDestroyableSingleton<ServerManager>.Instance;
 

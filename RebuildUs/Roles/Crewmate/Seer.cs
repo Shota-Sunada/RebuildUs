@@ -14,7 +14,6 @@ internal class Seer : MultiRoleBase<Seer>
         StaticRoleType = CurrentRoleType = RoleType.Seer;
     }
 
-
     // write configs here
     internal static int Mode
     {
@@ -69,8 +68,6 @@ internal class Seer : MultiRoleBase<Seer>
             DeadBodyPositions.Clear();
         }
     }
-
-
 
     // write functions here
 

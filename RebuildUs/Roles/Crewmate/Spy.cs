@@ -12,7 +12,6 @@ internal class Spy : SingleRoleBase<Spy>
         StaticRoleType = CurrentRoleType = RoleType.Spy;
     }
 
-
     // write configs here
     internal static bool ImpostorsCanKillAnyone
     {
@@ -37,8 +36,6 @@ internal class Spy : SingleRoleBase<Spy>
             HudManagerPatch.SetPlayerNameColor(Player, RoleColor);
         }
     }
-
-
 
     // write functions here
 

@@ -100,8 +100,6 @@ internal class Sidekick : SingleRoleBase<Sidekick>
         }
     }
 
-
-
     [RegisterCustomButton]
     internal static void MakeButtons(HudManager hm)
     {

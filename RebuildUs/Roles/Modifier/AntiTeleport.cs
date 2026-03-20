@@ -41,8 +41,6 @@ internal class AntiTeleport : ModifierBase<AntiTeleport>
         get => Tr.Get(TrKey.AntiTeleport);
     }
 
-
-
     // write functions here
 
     internal static void Clear()

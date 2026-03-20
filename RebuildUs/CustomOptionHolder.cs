@@ -9,20 +9,20 @@ internal static class CustomOptionHolder
 
     internal static void Load()
     {
-        var presetHeader = new CustomOptionHeader(0, CustomOptionType.General, TrKey.Preset);
-        var rolesGeneralHeader = new CustomOptionHeader(10, CustomOptionType.General, TrKey.RolesGeneral);
-        var gameOptionsHeader = new CustomOptionHeader(19, CustomOptionType.General, TrKey.GameOptions);
-        var polusOptionsHeader = new CustomOptionHeader(70, CustomOptionType.General, TrKey.PolusOptions);
-        var airshipOptionsHeader = new CustomOptionHeader(80, CustomOptionType.General, TrKey.AirshipOptions);
-        var randomMapHeader = new CustomOptionHeader(100, CustomOptionType.General, TrKey.RandomMap);
-        var lastImpostorHeader = new CustomOptionHeader(4010, CustomOptionType.Modifier, TrKey.LastImpostor);
+        var presetHeader = new CustomOptionHeader(50000, CustomOptionType.General, TrKey.Preset);
+        var rolesGeneralHeader = new CustomOptionHeader(50001, CustomOptionType.General, TrKey.RolesGeneral);
+        var gameOptionsHeader = new CustomOptionHeader(50002, CustomOptionType.General, TrKey.GameOptions);
+        var polusOptionsHeader = new CustomOptionHeader(50003, CustomOptionType.General, TrKey.PolusOptions);
+        var airshipOptionsHeader = new CustomOptionHeader(50004, CustomOptionType.General, TrKey.AirshipOptions);
+        var randomMapHeader = new CustomOptionHeader(50005, CustomOptionType.General, TrKey.RandomMap);
+        var lastImpostorHeader = new CustomOptionHeader(50006, CustomOptionType.Modifier, TrKey.LastImpostor);
 
         #region MOD OPTIONS
 
         PresetSelection = CustomOption.Normal(0, CustomOptionType.General, TrKey.Preset, Presets, 0, header: presetHeader);
         ActivateRoles = CustomOption.Normal(1, CustomOptionType.General, TrKey.ActivateRoles, true);
+        RandomNumberAlgorithm = CustomOption.Normal(3, CustomOptionType.General, TrKey.RandomNumberAlgorithm, [Tr.Get(TrKey.RndDotnet), Tr.Get(TrKey.RndMT), Tr.Get(TrKey.RndXoshiro256), Tr.Get(TrKey.RndXoshiro256Ss), Tr.Get(TrKey.RndPcg64)], 0);
         EnableRandomRandomNumberAlgorithm = CustomOption.Normal(2, CustomOptionType.General, TrKey.RandomRandomNumberAlgorithm, false);
-        RandomNumberAlgorithm = CustomOption.Normal(3, CustomOptionType.General, TrKey.RandomNumberAlgorithm, [Tr.Get(TrKey.RndDotnet), Tr.Get(TrKey.RndMT), Tr.Get(TrKey.RndXoshiro256), Tr.Get(TrKey.RndXoshiro256Ss), Tr.Get(TrKey.RndPcg64)], 0, EnableRandomRandomNumberAlgorithm);
         EnableRandomRandomNumberAlgorithmDotnet = CustomOption.Normal(4, CustomOptionType.General, TrKey.EnableRandomRandomNumberAlgorithmDotnet, true, EnableRandomRandomNumberAlgorithm);
         EnableRandomRandomNumberAlgorithmMT = CustomOption.Normal(5, CustomOptionType.General, TrKey.EnableRandomRandomNumberAlgorithmMT, true, EnableRandomRandomNumberAlgorithm);
         EnableRandomRandomNumberAlgorithmXorshiro256Pp = CustomOption.Normal(6, CustomOptionType.General, TrKey.EnableRandomRandomNumberAlgorithmXorshiro256PP, true, EnableRandomRandomNumberAlgorithm);
@@ -230,7 +230,6 @@ internal static class CustomOptionHolder
         SheriffMisfireKillsTarget = CustomOption.Normal(1163, CustomOptionType.Crewmate, TrKey.SheriffMisfireKillsTarget, false, SheriffSpawnRate);
         SheriffCanKillNoDeadBody = CustomOption.Normal(1164, CustomOptionType.Crewmate, TrKey.SheriffCanKillNoDeadBody, true, SheriffSpawnRate);
         SheriffCanKillNeutrals = CustomOption.Normal(1165, CustomOptionType.Crewmate, TrKey.SheriffCanKillNeutrals, false, SheriffSpawnRate);
-
 
         #endregion
 
@@ -616,7 +615,6 @@ internal static class CustomOptionHolder
     internal static CustomOption SheriffCanKillNeutrals;
     internal static CustomOption SheriffMisfireKillsTarget;
     internal static CustomOption SheriffCanKillNoDeadBody;
-
 
     #endregion
 

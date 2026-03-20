@@ -47,8 +47,6 @@ internal class Morphing : MultiRoleBase<Morphing>
         Helpers.SetPlayerOutline(_currentTarget, RoleColor);
     }
 
-
-
     [RegisterCustomButton]
     internal static void MakeButtons(HudManager hm)
     {
@@ -56,7 +54,12 @@ internal class Morphing : MultiRoleBase<Morphing>
             {
                 if (_sampledTarget != null)
                 {
-                    MorphingMorph(PlayerControl.LocalPlayer, _sampledTarget.PlayerId, Local.Player.PlayerId);
+                    {
+                        using RPCSender sender = new(PlayerControl.LocalPlayer.NetId, CustomRPC.MorphingMorph);
+                        sender.Write(_sampledTarget.PlayerId);
+                        sender.Write(Local.Player.PlayerId);
+                    }
+                    RPCProcedure.MorphingMorph(_sampledTarget.PlayerId, Local.Player.PlayerId);
                     _sampledTarget = null;
                     _morphingButton.EffectDuration = Duration;
                 }
@@ -157,17 +160,5 @@ internal class Morphing : MultiRoleBase<Morphing>
         _sampledTarget = null;
         MorphTarget = null;
         MorphTimer = 0;
-    }
-
-    [MethodRpc((uint)CustomRPC.MorphingMorph)]
-    internal static void MorphingMorph(PlayerControl sender, byte playerId, byte morphId)
-    {
-        var morphPlayer = Helpers.PlayerById(morphId);
-        var target = Helpers.PlayerById(playerId);
-        if (morphPlayer == null || target == null)
-        {
-            return;
-        }
-        GetRole(morphPlayer).StartMorph(target);
     }
 }

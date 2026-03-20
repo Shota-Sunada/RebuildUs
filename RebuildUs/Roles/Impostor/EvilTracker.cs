@@ -74,8 +74,6 @@ internal class EvilTracker : MultiRoleBase<EvilTracker>
         }
     }
 
-
-
     [RegisterCustomButton]
     internal static void MakeButtons(HudManager hm)
     {

@@ -100,8 +100,6 @@ internal class Witch : MultiRoleBase<Witch>
         }
     }
 
-
-
     [RegisterCustomButton]
     internal static void MakeButtons(HudManager hm)
     {
@@ -150,7 +148,11 @@ internal class Witch : MultiRoleBase<Witch>
                 var attempt = Helpers.CheckMurderAttempt(Local.Player, _spellCastingTarget);
                 if (attempt == MurderAttemptResult.PerformKill)
                 {
-                    SetFutureSpelled(PlayerControl.LocalPlayer, _currentTarget.PlayerId);
+                    {
+                        using RPCSender sender = new(PlayerControl.LocalPlayer.NetId, CustomRPC.SetFutureSpelled);
+                        sender.Write(_currentTarget.PlayerId);
+                    }
+                    RPCProcedure.SetFutureSpelled(_currentTarget.PlayerId);
                 }
 
                 if (attempt is MurderAttemptResult.BlankKill or MurderAttemptResult.PerformKill)
@@ -189,23 +191,5 @@ internal class Witch : MultiRoleBase<Witch>
         FutureSpelled = [];
         _currentTarget = null;
         _spellCastingTarget = null;
-    }
-
-    [MethodRpc((uint)CustomRPC.SetFutureSpelled)]
-    internal static void SetFutureSpelled(PlayerControl sender, byte playerId)
-    {
-        var player = Helpers.PlayerById(playerId);
-        FutureSpelled ??= [];
-        if (player != null)
-        {
-            FutureSpelled.Add(player);
-        }
-    }
-
-    [MethodRpc((uint)CustomRPC.WitchSpellCast)]
-    internal static void WitchSpellCast(PlayerControl sender, byte playerId)
-    {
-        RPCProcedure.ExilePlayerLocal(playerId);
-        GameHistory.FinalStatuses[playerId] = FinalStatus.Spelled;
     }
 }

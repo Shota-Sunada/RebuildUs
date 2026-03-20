@@ -364,9 +364,19 @@ Task("StartDebug")
 Task("StartDebugBoot")
     .Does(() =>
 {
-    KillAmongUsProcesses();
     var gamePath = ReadTrimmedTextFile(debugEnvFile);
     StartAmongUsInstances(launchCount, gamePath);
+});
+
+Task("StartDebugBoot4")
+    .Does(() =>
+{
+    var gamePath = ReadTrimmedTextFile(debugEnvFile);
+    for (int i = 0; i < 4; i++)
+    {
+        StartAmongUsInstances(1, gamePath);
+        System.Threading.Thread.Sleep(10000);
+    }
 });
 
 Task("Taskkill")

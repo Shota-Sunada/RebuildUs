@@ -92,7 +92,10 @@ internal static class MeetingHudPatch
         foreach (var player in PlayerControl.AllPlayerControls.GetFastEnumerator())
         {
             var randVal = rand.Next(0, 6);
-            RPCProcedure.PolusRandomSpawn(PlayerControl.LocalPlayer, player.Data.PlayerId, (byte)randVal);
+            using RPCSender sender = new(PlayerControl.LocalPlayer.NetId, CustomRPC.PolusRandomSpawn);
+            sender.Write(player.Data.PlayerId);
+            sender.Write((byte)randVal);
+            RPCProcedure.PolusRandomSpawn(player.Data.PlayerId, (byte)randVal);
         }
     }
 

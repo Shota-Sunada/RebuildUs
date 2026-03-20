@@ -89,8 +89,6 @@ internal class Sheriff : MultiRoleBase<Sheriff>
         }
     }
 
-
-
     [RegisterCustomButton]
     internal static void MakeButtons(HudManager hm)
     {
@@ -115,11 +113,19 @@ internal class Sheriff : MultiRoleBase<Sheriff>
                     if (AmongUsClient.Instance.AmHost)
                     {
                         var misfire = CheckKill(Local.CurrentTarget);
-                        SheriffKill(PlayerControl.LocalPlayer, PlayerControl.LocalPlayer.Data.PlayerId, targetId, misfire);
+                        {
+                            using RPCSender killSender = new(PlayerControl.LocalPlayer.NetId, CustomRPC.SheriffKill);
+                            killSender.Write(PlayerControl.LocalPlayer.Data.PlayerId);
+                            killSender.Write(targetId);
+                            killSender.Write(misfire);
+                        }
+                        RPCProcedure.SheriffKill(PlayerControl.LocalPlayer.Data.PlayerId, targetId, misfire);
                     }
                     else
                     {
-                        SheriffKillRequest(PlayerControl.LocalPlayer, PlayerControl.LocalPlayer.Data.PlayerId, targetId);
+                        using RPCSender requestSender = new(PlayerControl.LocalPlayer.NetId, CustomRPC.SheriffKillRequest);
+                        requestSender.Write(PlayerControl.LocalPlayer.Data.PlayerId);
+                        requestSender.Write(targetId);
                     }
                 }
 
@@ -183,56 +189,6 @@ internal class Sheriff : MultiRoleBase<Sheriff>
         }
 
         return true;
-    }
-
-    [MethodRpc((uint)CustomRPC.SheriffKillRequest)]
-    internal static void SheriffKillRequest(PlayerControl sender, byte sheriffId, byte targetId)
-    {
-        if (!AmongUsClient.Instance.AmHost)
-        {
-            return;
-        }
-        var sheriff = Helpers.PlayerById(sheriffId);
-        var target = Helpers.PlayerById(targetId);
-        if (sheriff == null || target == null)
-        {
-            return;
-        }
-
-        var misfire = CheckKill(target);
-
-        SheriffKill(sheriff, sheriffId, targetId, misfire);
-    }
-
-    [MethodRpc((uint)CustomRPC.SheriffKill)]
-    internal static void SheriffKill(PlayerControl sender, byte sheriffId, byte targetId, bool misfire)
-    {
-        var sheriff = Helpers.PlayerById(sheriffId);
-        var target = Helpers.PlayerById(targetId);
-        if (sheriff == null || target == null)
-        {
-            return;
-        }
-
-        var role = GetRole(sheriff);
-        if (role != null)
-        {
-            role.NumShots--;
-        }
-
-        if (misfire)
-        {
-            sheriff.MurderPlayer(sheriff);
-            GameHistory.FinalStatuses[sheriffId] = FinalStatus.Misfire;
-
-            if (!MisfireKillsTarget)
-            {
-                return;
-            }
-            GameHistory.FinalStatuses[targetId] = FinalStatus.Misfire;
-        }
-
-        sheriff.MurderPlayer(target);
     }
 
     internal static void Clear()

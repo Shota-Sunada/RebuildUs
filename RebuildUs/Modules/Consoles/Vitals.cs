@@ -27,7 +27,9 @@ internal static class Vitals
             && MapSettings.RestrictVitalsTime > 0f
             && PlayerControl.LocalPlayer.IsAlive())
         {
-            UseVitalsTime(PlayerControl.LocalPlayer, _vitalsTimer);
+            using RPCSender sender = new(PlayerControl.LocalPlayer.NetId, CustomRPC.UseVitalsTime);
+            sender.Write(_vitalsTimer);
+            RPCProcedure.UseVitalsTime(_vitalsTimer);
         }
 
         _vitalsTimer = 0f;
@@ -140,11 +142,5 @@ internal static class Vitals
                 }
             }
         }
-    }
-
-    [MethodRpc((uint)CustomRPC.UseVitalsTime)]
-    internal static void UseVitalsTime(PlayerControl sender, float time)
-    {
-        MapSettings.RestrictVitalsTime -= time;
     }
 }

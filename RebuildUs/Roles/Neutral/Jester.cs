@@ -29,8 +29,6 @@ internal class Jester : SingleRoleBase<Jester>
         get => CustomOptionHolder.JesterHasImpostorVision.GetBool();
     }
 
-
-
     // write functions here
 
     internal static void Clear()

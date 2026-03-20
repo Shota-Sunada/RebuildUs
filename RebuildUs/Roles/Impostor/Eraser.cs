@@ -60,8 +60,6 @@ internal class Eraser : MultiRoleBase<Eraser>
         }
     }
 
-
-
     [RegisterCustomButton]
     internal static void MakeButtons(HudManager hm)
     {
@@ -70,7 +68,9 @@ internal class Eraser : MultiRoleBase<Eraser>
                 _eraserButton.MaxTimer += CooldownIncrease;
                 _eraserButton.Timer = _eraserButton.MaxTimer;
 
-                SetFutureErased(PlayerControl.LocalPlayer, Local.CurrentTarget.PlayerId);
+                using RPCSender sender = new(PlayerControl.LocalPlayer.NetId, CustomRPC.SetFutureErased);
+                sender.Write(Local.CurrentTarget.PlayerId);
+                RPCProcedure.SetFutureErased(Local.CurrentTarget.PlayerId);
             },
             () =>
             {
@@ -106,46 +106,5 @@ internal class Eraser : MultiRoleBase<Eraser>
         // reset configs here
         Players.Clear();
         FutureErased = [];
-    }
-
-    [MethodRpc((uint)CustomRPC.ErasePlayerRoles)]
-    internal static void ErasePlayerRoles(PlayerControl sender, byte playerId)
-    {
-        ErasePlayerRolesLocal(playerId);
-    }
-
-    internal static void ErasePlayerRolesLocal(byte playerId, bool ignoreLovers = false, bool clearNeutralTasks = true)
-    {
-        var player = Helpers.PlayerById(playerId);
-        if (player == null)
-        {
-            return;
-        }
-
-        // Don't give a former neutral role tasks because that destroys the balance.
-        if (player.IsNeutral() && clearNeutralTasks)
-        {
-            player.ClearAllTasks();
-        }
-
-        player.EraseAllRoles();
-        player.EraseAllModifiers();
-
-        if (!ignoreLovers && player.IsLovers())
-        {
-            // The whole Lover couple is being erased
-            Lovers.EraseCouple(player);
-        }
-    }
-
-    [MethodRpc((uint)CustomRPC.SetFutureErased)]
-    internal static void SetFutureErased(PlayerControl sender, byte playerId)
-    {
-        var player = Helpers.PlayerById(playerId);
-        FutureErased ??= [];
-        if (player != null)
-        {
-            FutureErased.Add(player);
-        }
     }
 }

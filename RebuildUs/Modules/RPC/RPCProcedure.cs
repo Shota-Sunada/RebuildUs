@@ -1,17 +1,12 @@
 using Assets.CoreScripts;
+using PowerTools;
 using Action = Il2CppSystem.Action;
 
 namespace RebuildUs.Modules.RPC;
 
 internal static partial class RPCProcedure
 {
-    [MethodRpc((uint)CustomRPC.ResetVariables)]
-    internal static void ResetVariables(PlayerControl sender)
-    {
-        ResetVariablesLocal();
-    }
-
-    internal static void ResetVariablesLocal()
+    internal static void ResetVariables()
     {
         RoleAssignment.IsAssigned = false;
         Garlic.ClearGarlics();
@@ -35,7 +30,9 @@ internal static partial class RPCProcedure
         KillAnimationPatch.HideNextAnimation = false;
         KillAnimationPatch.AvoidNextKillMovement = false;
 
-        FinishResetVariables(PlayerControl.LocalPlayer, PlayerControl.LocalPlayer.PlayerId);
+        using RPCSender sender = new(PlayerControl.LocalPlayer.NetId, CustomRPC.FinishResetVariables);
+        sender.Write(PlayerControl.LocalPlayer.PlayerId);
+        FinishResetVariables(PlayerControl.LocalPlayer.PlayerId);
     }
 
     private static void ShareOptions(MessageReader reader)
@@ -69,13 +66,7 @@ internal static partial class RPCProcedure
         }
     }
 
-    [MethodRpc((uint)CustomRPC.SetRole)]
-    internal static void SetRole(PlayerControl sender, byte roleId, byte playerId)
-    {
-        SetRoleLocal(roleId, playerId);
-    }
-
-    internal static void SetRoleLocal(byte roleId, byte playerId)
+    internal static void SetRole(byte roleId, byte playerId)
     {
         var player = Helpers.PlayerById(playerId);
         if (player == null)
@@ -86,8 +77,7 @@ internal static partial class RPCProcedure
         player.SetRole((RoleType)roleId);
     }
 
-    [MethodRpc((uint)CustomRPC.AddModifier)]
-    internal static void AddModifier(PlayerControl sender, byte modId, byte playerId)
+    internal static void AddModifier(byte modId, byte playerId)
     {
         var player = Helpers.PlayerById(playerId);
         if (player == null)
@@ -103,8 +93,7 @@ internal static partial class RPCProcedure
         GameStart.PlayerVersions[clientId] = new(major, minor, build, revision, guid);
     }
 
-    [MethodRpc((uint)CustomRPC.FinishSetRole)]
-    internal static void FinishSetRole(PlayerControl sender)
+    internal static void FinishSetRole()
     {
         RoleAssignment.IsAssigned = true;
     }
@@ -147,16 +136,14 @@ internal static partial class RPCProcedure
         }
     }
 
-    [MethodRpc((uint)CustomRPC.UncheckedCmdReportDeadBody)]
-    internal static void UncheckedCmdReportDeadBody(PlayerControl sender, byte sourceId, byte targetId)
+    internal static void UncheckedCmdReportDeadBody(byte sourceId, byte targetId)
     {
         var source = Helpers.PlayerById(sourceId);
         var target = targetId == byte.MaxValue ? null : Helpers.PlayerById(targetId).Data;
         source?.ReportDeadBody(target);
     }
 
-    [MethodRpc((uint)CustomRPC.UseUncheckedVent)]
-    internal static void UseUncheckedVent(PlayerControl sender, int ventId, byte playerId, byte isEnter)
+    internal static void UseUncheckedVent(int ventId, byte playerId, byte isEnter)
     {
         var player = Helpers.PlayerById(playerId);
         if (player == null)
@@ -178,8 +165,7 @@ internal static partial class RPCProcedure
         player.MyPhysics.HandleRpc(isEnter != 0 ? (byte)19 : (byte)20, reader);
     }
 
-    [MethodRpc((uint)CustomRPC.UncheckedMurderPlayer)]
-    internal static void UncheckedMurderPlayer(PlayerControl sender, byte sourceId, byte targetId, byte showAnimation)
+    internal static void UncheckedMurderPlayer(byte sourceId, byte targetId, byte showAnimation)
     {
         if (!Helpers.IsGameStarted)
         {
@@ -198,60 +184,43 @@ internal static partial class RPCProcedure
         source.MurderPlayer(target);
     }
 
-    [MethodRpc((uint)CustomRPC.UncheckedExilePlayer)]
-    internal static void UncheckedExilePlayer(PlayerControl sender, byte targetId)
-    {
-        ExilePlayerLocal(targetId);
-    }
-
-    internal static void ExilePlayerLocal(byte targetId)
+    internal static void UncheckedExilePlayer(byte targetId)
     {
         var target = Helpers.PlayerById(targetId);
         target?.Exiled();
     }
 
-    [MethodRpc((uint)CustomRPC.DynamicMapOption)]
-    internal static void DynamicMapOption(PlayerControl sender, byte mapId)
+    internal static void DynamicMapOption(byte mapId)
     {
         GameOptionsManager.Instance.currentNormalGameOptions.SetByte(ByteOptionNames.MapId, mapId);
     }
 
-    [MethodRpc((uint)CustomRPC.ShareGamemode)]
-    internal static void ShareGamemode(PlayerControl sender, byte gameMode)
+    internal static void ShareGamemode(byte gameMode)
     {
         MapSettings.GameMode = (CustomGamemode)gameMode;
         GameStart.SendGamemode = false;
     }
 
-    [MethodRpc((uint)CustomRPC.SetGameStarting)]
-    internal static void SetGameStarting(PlayerControl sender)
+    private static void SetGameStarting()
     {
         GameStart.StartingTimer = 5f;
     }
 
-    [MethodRpc((uint)CustomRPC.StopStart)]
-    internal static void StopStart(PlayerControl sender)
+    private static void StopStart()
     {
-        StopStartSoundLocal();
+        StopStartSound();
         if (AmongUsClient.Instance.AmHost)
         {
             FastDestroyableSingleton<GameStartManager>.Instance.ResetStartState();
         }
     }
 
-    [MethodRpc((uint)CustomRPC.StopStartSound)]
-    internal static void StopStartSound(PlayerControl sender)
-    {
-        StopStartSoundLocal();
-    }
-
-    private static void StopStartSoundLocal()
+    private static void StopStartSound()
     {
         SoundManager.Instance.StopSound(FastDestroyableSingleton<GameStartManager>.Instance.gameStartSound);
     }
 
-    [MethodRpc((uint)CustomRPC.FinishResetVariables)]
-    internal static void FinishResetVariables(PlayerControl sender, byte playerId)
+    private static void FinishResetVariables(byte playerId)
     {
         var checkList = RoleAssignment.CheckList;
         if (checkList == null)
@@ -264,22 +233,19 @@ internal static partial class RPCProcedure
         }
     }
 
-    [MethodRpc((uint)CustomRPC.SetLovers)]
-    internal static void SetLovers(PlayerControl sender, byte playerId1, byte playerId2)
+    internal static void SetLovers(byte playerId1, byte playerId2)
     {
         Lovers.AddCouple(Helpers.PlayerById(playerId1), Helpers.PlayerById(playerId2));
     }
 
-    [MethodRpc((uint)CustomRPC.OverrideNativeRole)]
-    internal static void OverrideNativeRole(PlayerControl sender, byte playerId, byte roleType)
+    private static void OverrideNativeRole(byte playerId, byte roleType)
     {
         var player = Helpers.PlayerById(playerId);
         player.roleAssigned = false;
         FastDestroyableSingleton<RoleManager>.Instance.SetRole(player, (RoleTypes)roleType);
     }
 
-    [MethodRpc((uint)CustomRPC.UncheckedEndGame)]
-    internal static void UncheckedEndGame(PlayerControl sender, byte reason, bool isO2Win)
+    internal static void UncheckedEndGame(byte reason, bool isO2Win = false)
     {
         EndGameMain.IsO2Win = isO2Win;
         AmongUsClient.Instance.GameState = InnerNetClient.GameStates.Ended;
@@ -303,8 +269,7 @@ internal static partial class RPCProcedure
         }
     }
 
-    [MethodRpc((uint)CustomRPC.UncheckedSetTasks)]
-    internal static void UncheckedSetTasks(PlayerControl sender, byte playerId, byte[] taskTypeIds)
+    internal static void UncheckedSetTasks(byte playerId, byte[] taskTypeIds)
     {
         var player = Helpers.PlayerById(playerId);
         player.ClearAllTasks();
@@ -312,10 +277,464 @@ internal static partial class RPCProcedure
         player.Data.SetTasks(taskTypeIds);
     }
 
-    [MethodRpc((uint)CustomRPC.FinishShipStatusBegin)]
-    internal static void FinishShipStatusBegin(PlayerControl sender)
+    internal static void FinishShipStatusBegin()
     {
         PlayerControl.LocalPlayer.OnFinishShipStatusBegin();
+    }
+
+    internal static void EngineerFixLights()
+    {
+        var switchSystem = MapUtilities.Systems[SystemTypes.Electrical].CastFast<SwitchSystem>();
+        switchSystem.ActualSwitches = switchSystem.ExpectedSwitches;
+    }
+
+    internal static void EngineerFixSubmergedOxygen()
+    {
+        SubmergedCompatibility.RepairOxygen();
+    }
+
+    internal static void EngineerUsedRepair(byte engineerId)
+    {
+        var engineerPlayer = Helpers.PlayerById(engineerId);
+        if (engineerPlayer == null)
+        {
+            return;
+        }
+        var engineer = Engineer.GetRole(engineerPlayer);
+        if (engineer != null)
+        {
+            engineer.RemainingFixes--;
+        }
+    }
+
+    internal static void ArsonistDouse(byte playerId)
+    {
+        var arsonist = Arsonist.Instance;
+        if (arsonist == null)
+        {
+            return;
+        }
+        var target = Helpers.PlayerById(playerId);
+        if (target != null)
+        {
+            arsonist.DousedPlayers.Add(target);
+        }
+    }
+
+    internal static void ArsonistWin()
+    {
+        Arsonist.TriggerArsonistWin = true;
+        foreach (var p in PlayerControl.AllPlayerControls.GetFastEnumerator())
+        {
+            if (p == null || !p.IsAlive() || p.IsRole(RoleType.Arsonist))
+            {
+                continue;
+            }
+            p.Exiled();
+            GameHistory.FinalStatuses[p.PlayerId] = FinalStatus.Torched;
+        }
+    }
+
+    internal static void CleanBody(byte playerId)
+    {
+        DeadBody[] array = UnityObject.FindObjectsOfType<DeadBody>();
+        foreach (var t in array)
+        {
+            var info = GameData.Instance.GetPlayerById(t.ParentId);
+            if (info != null && info.PlayerId == playerId)
+            {
+                UnityObject.Destroy(t.gameObject);
+            }
+        }
+    }
+
+    internal static void VultureEat(byte playerId)
+    {
+        CleanBody(playerId);
+        var vulture = Vulture.Instance;
+        if (vulture != null)
+        {
+            vulture.EatenBodies++;
+        }
+    }
+
+    internal static void VultureWin()
+    {
+        Vulture.TriggerVultureWin = true;
+    }
+
+    internal static void ErasePlayerRoles(byte playerId, bool ignoreLovers = false, bool clearNeutralTasks = true)
+    {
+        var player = Helpers.PlayerById(playerId);
+        if (player == null)
+        {
+            return;
+        }
+
+        // Don't give a former neutral role tasks because that destroys the balance.
+        if (player.IsNeutral() && clearNeutralTasks)
+        {
+            player.ClearAllTasks();
+        }
+
+        player.EraseAllRoles();
+        player.EraseAllModifiers();
+
+        if (!ignoreLovers && player.IsLovers())
+        {
+            // The whole Lover couple is being erased
+            Lovers.EraseCouple(player);
+        }
+    }
+
+    internal static void JackalCreatesSidekick(byte targetId)
+    {
+        var target = Helpers.PlayerById(targetId);
+        var jackal = Jackal.Instance;
+        if (target == null)
+        {
+            return;
+        }
+
+        if (!Jackal.CanCreateSidekickFromImpostor && target.Data.Role.IsImpostor)
+        {
+            jackal?.FakeSidekick = target;
+        }
+        else
+        {
+            var wasSpy = target.IsRole(RoleType.Spy);
+            var wasImpostor = target.IsTeamImpostor(); // This can only be reached if impostors can be sidekicked.
+            FastDestroyableSingleton<RoleManager>.Instance.SetRole(target, RoleTypes.Crewmate);
+            ErasePlayerRoles(target.PlayerId, true);
+            if (target.SetRole(RoleType.Sidekick))
+            {
+                var sidekick = Sidekick.Instance;
+                if (sidekick != null)
+                {
+                    if (wasSpy || wasImpostor)
+                    {
+                        sidekick.WasTeamRed = true;
+                    }
+                    sidekick.WasSpy = wasSpy;
+                    sidekick.WasImpostor = wasImpostor;
+                }
+            }
+
+            if (target.PlayerId == PlayerControl.LocalPlayer.PlayerId)
+            {
+                PlayerControl.LocalPlayer.moveable = true;
+            }
+        }
+
+        if (jackal != null)
+        {
+            jackal.CanSidekick = false;
+            jackal.MySidekick = target;
+        }
+    }
+
+    internal static void SidekickPromotes()
+    {
+        var sidekick = Sidekick.Instance;
+        if (sidekick == null)
+        {
+            return;
+        }
+
+        var wasTeamRed = sidekick.WasTeamRed;
+        var wasImpostor = sidekick.WasImpostor;
+        var wasSpy = sidekick.WasSpy;
+        Jackal.RemoveCurrentJackal();
+        FastDestroyableSingleton<RoleManager>.Instance.SetRole(sidekick.Player, RoleTypes.Crewmate);
+        ErasePlayerRoles(sidekick.Player.PlayerId, true);
+        if (sidekick.Player.SetRole(RoleType.Jackal))
+        {
+            var newJackal = Jackal.Instance;
+            if (newJackal != null)
+            {
+                newJackal.CanSidekick = Jackal.JackalPromotedFromSidekickCanCreateSidekick;
+                newJackal.WasTeamRed = wasTeamRed;
+                newJackal.WasImpostor = wasImpostor;
+                newJackal.WasSpy = wasSpy;
+            }
+        }
+
+        Sidekick.Clear();
+    }
+
+    internal static void MedicSetShielded(byte shieldedId)
+    {
+        Medic.UsedShield = true;
+        Medic.Shielded = Helpers.PlayerById(shieldedId);
+        Medic.FutureShielded = null;
+    }
+
+    internal static void ShieldedMurderAttempt()
+    {
+        if (!Medic.Exists || Medic.Shielded == null)
+        {
+            return;
+        }
+
+        var isShieldedAndShow = Medic.Shielded == PlayerControl.LocalPlayer && Medic.ShowAttemptToShielded;
+        var isMedicAndShow = PlayerControl.LocalPlayer.IsRole(RoleType.Medic) && Medic.ShowAttemptToMedic;
+
+        if (!isShieldedAndShow && !isMedicAndShow || FastDestroyableSingleton<HudManager>.Instance?.FullScreen == null)
+        {
+            return;
+        }
+        var c = Palette.ImpostorRed;
+        Helpers.ShowFlash(new(c.r, c.g, c.b));
+    }
+
+    internal static void SetFutureShielded(byte playerId)
+    {
+        Medic.FutureShielded = Helpers.PlayerById(playerId);
+        Medic.UsedShield = true;
+    }
+
+    internal static void TimeMasterRewindTime()
+    {
+        TimeMaster.ShieldActive = false; // Shield is no longer active when rewinding
+        if (PlayerControl.LocalPlayer.IsRole(RoleType.TimeMaster))
+        {
+            TimeMaster.ResetTimeMasterButton();
+        }
+
+        var hm = FastDestroyableSingleton<HudManager>.Instance;
+        hm.FullScreen.color = new(0f, 0.5f, 0.8f, 0.3f);
+        hm.FullScreen.enabled = true;
+        hm.FullScreen.gameObject.SetActive(true);
+        hm.StartCoroutine(Effects.Lerp(TimeMaster.RewindTime / 2,
+            new Action<float>(p =>
+            {
+                if (Mathf.Approximately(p, 1f))
+                {
+                    hm.FullScreen.enabled = false;
+                }
+            })));
+
+        if (!TimeMaster.Exists || PlayerControl.LocalPlayer.IsRole(RoleType.TimeMaster))
+        {
+            return; // Time Master himself does not rewind
+        }
+        if (PlayerControl.LocalPlayer.IsGm())
+        {
+            return; // GM does not rewind
+        }
+
+        TimeMaster.IsRewinding = true;
+
+        if (MapBehaviour.Instance)
+        {
+            MapBehaviour.Instance.Close();
+        }
+
+        if (Minigame.Instance)
+        {
+            Minigame.Instance.ForceClose();
+        }
+
+        PlayerControl.LocalPlayer.moveable = false;
+    }
+
+    internal static void TimeMasterShield()
+    {
+        TimeMaster.ShieldActive = true;
+        FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(TimeMaster.ShieldDuration,
+            new Action<float>(p =>
+            {
+                if (Mathf.Approximately(p, 1f))
+                {
+                    TimeMaster.ShieldActive = false;
+                }
+            })));
+    }
+
+    internal static void GuesserShoot(byte killerId, byte dyingTargetId, byte guessedTargetId, byte guessedRoleType)
+    {
+        var killer = Helpers.PlayerById(killerId);
+        var dyingTarget = Helpers.PlayerById(dyingTargetId);
+        if (dyingTarget == null)
+        {
+            return;
+        }
+        dyingTarget.Exiled();
+        var dyingLoverPartner = Lovers.BothDie ? dyingTarget.GetPartner() : null; // Lover check
+
+        if (killer != null)
+        {
+            Guesser.RemainingShots(killer, true);
+        }
+
+        if (Constants.ShouldPlaySfx())
+        {
+            SoundManager.Instance.PlaySound(dyingTarget.KillSfx, false, 0.8f);
+        }
+
+        if (FastDestroyableSingleton<HudManager>.Instance != null && killer != null)
+        {
+            if (PlayerControl.LocalPlayer == dyingTarget)
+            {
+                FastDestroyableSingleton<HudManager>.Instance.KillOverlay.ShowKillAnimation(killer.Data, dyingTarget.Data);
+            }
+            else if (dyingLoverPartner != null && PlayerControl.LocalPlayer == dyingLoverPartner)
+            {
+                FastDestroyableSingleton<HudManager>.Instance.KillOverlay.ShowKillAnimation(dyingLoverPartner.Data, dyingLoverPartner.Data);
+            }
+        }
+
+        var guessedTarget = Helpers.PlayerById(guessedTargetId);
+        if (Guesser.ShowInfoInGhostChat && PlayerControl.LocalPlayer.Data.IsDead && guessedTarget != null)
+        {
+            RoleInfo roleInfo = null;
+            foreach (var r in RoleInfo.AllRoleInfos)
+            {
+                if ((byte)r.RoleType == guessedRoleType)
+                {
+                    roleInfo = r;
+                    break;
+                }
+            }
+
+            if (roleInfo == null)
+            {
+                return;
+            }
+            var msg = string.Format(Tr.Get(TrKey.GuesserGuessChat), roleInfo.Name, guessedTarget.Data.PlayerName);
+            if (AmongUsClient.Instance.AmClient && FastDestroyableSingleton<HudManager>.Instance)
+            {
+                FastDestroyableSingleton<HudManager>.Instance.Chat.AddChat(killer, msg);
+            }
+
+            if (msg.Contains("who", StringComparison.OrdinalIgnoreCase))
+            {
+                FastDestroyableSingleton<UnityTelemetry>.Instance.SendWho();
+            }
+        }
+    }
+
+    internal static void PlaceJackInTheBox(byte[] buff)
+    {
+        var position = Vector3.zero;
+        position.x = BitConverter.ToSingle(buff, 0 * sizeof(float));
+        position.y = BitConverter.ToSingle(buff, 1 * sizeof(float));
+        _ = new JackInTheBox(position);
+    }
+
+    internal static void LightsOut()
+    {
+        Trickster.LightsOutTimer = Trickster.LightsOutDuration;
+        // If the local player is impostor indicate lights out
+        if (PlayerControl.LocalPlayer.HasImpostorVision())
+        {
+            _ = new CustomMessage("TricksterLightsOutText", Trickster.LightsOutDuration);
+        }
+    }
+
+    internal static void EvilHackerCreatesMadmate(byte targetId, byte evilHackerId)
+    {
+        var targetPlayer = Helpers.PlayerById(targetId);
+        var evilHackerPlayer = Helpers.PlayerById(evilHackerId);
+        if (targetPlayer == null || evilHackerPlayer == null)
+        {
+            return;
+        }
+        var evilHacker = EvilHacker.GetRole(evilHackerPlayer);
+        if (evilHacker == null)
+        {
+            return;
+        }
+        if (!EvilHacker.CanCreateMadmateFromJackal && targetPlayer.IsRole(RoleType.Jackal))
+        {
+            evilHacker.FakeMadmate = targetPlayer;
+        }
+        else
+        {
+            // Jackalバグ対応
+            List<PlayerControl> tmpFormerJackals = [.. Jackal.FormerJackals];
+
+            // タスクがないプレイヤーがMadmateになった場合はショートタスクを必要数割り当てる
+            if (targetPlayer.HasFakeTasks())
+            {
+                if (CreatedMadmate.HasTasks)
+                {
+                    targetPlayer.ClearAllTasks();
+                    targetPlayer.GenerateAndAssignTasks(0, CreatedMadmate.NumTasks, 0);
+                }
+            }
+
+            FastDestroyableSingleton<RoleManager>.Instance.SetRole(targetPlayer, RoleTypes.Crewmate);
+            ErasePlayerRoles(targetPlayer.PlayerId, true, false);
+
+            // Jackalバグ対応
+            Jackal.FormerJackals = tmpFormerJackals;
+
+            targetPlayer.AddModifier(ModifierType.CreatedMadmate);
+        }
+
+        evilHacker.CanCreateMadmate = false;
+    }
+
+    internal static void UseAdminTime(float time)
+    {
+        MapSettings.RestrictAdminTime -= time;
+    }
+
+    internal static void UseCameraTime(float time)
+    {
+        MapSettings.RestrictCamerasTime -= time;
+    }
+
+    internal static void UseVitalsTime(float time)
+    {
+        MapSettings.RestrictVitalsTime -= time;
+    }
+
+    internal static void TrackerUsedTracker(byte targetId, byte trackerId)
+    {
+        var trackerPlayer = Helpers.PlayerById(trackerId);
+        if (trackerPlayer == null)
+        {
+            return;
+        }
+        var tracker = Tracker.GetRole(trackerPlayer);
+        if (tracker == null)
+        {
+            return;
+        }
+
+        tracker.UsedTracker = true;
+        tracker.Tracked = Helpers.PlayerById(targetId);
+    }
+
+    internal static void SetFutureErased(byte playerId)
+    {
+        var player = Helpers.PlayerById(playerId);
+        Eraser.FutureErased ??= [];
+        if (player != null)
+        {
+            Eraser.FutureErased.Add(player);
+        }
+    }
+
+    internal static void VampireSetBitten(byte targetId, byte performReset)
+    {
+        if (performReset != 0)
+        {
+            Vampire.Bitten = null;
+            return;
+        }
+
+        if (!Vampire.Exists)
+        {
+            return;
+        }
+        var player = Helpers.PlayerById(targetId);
+        if (player != null && !player.Data.IsDead)
+        {
+            Vampire.Bitten = player;
+        }
     }
 
     private static void ShareRealTasks(MessageReader reader)
@@ -338,8 +757,7 @@ internal static partial class RPCProcedure
         }
     }
 
-    [MethodRpc((uint)CustomRPC.PolusRandomSpawn)]
-    internal static void PolusRandomSpawn(PlayerControl sender, byte playerId, byte locId)
+    internal static void PolusRandomSpawn(byte playerId, byte locId)
     {
         FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(3f,
             new Action<float>(p =>
@@ -370,8 +788,7 @@ internal static partial class RPCProcedure
             })));
     }
 
-    [MethodRpc((uint)CustomRPC.Synchronize)]
-    internal static void Synchronize(PlayerControl sender, byte playerId, int tag)
+    internal static void Synchronize(byte playerId, int tag)
     {
         SpawnIn.SynchronizeData.Synchronize((SynchronizeTag)tag, playerId);
     }
@@ -590,8 +1007,6 @@ internal static partial class RPCProcedure
             && (player.Data.Role.IsImpostor
                 || player.IsNeutral()
                 || player.HasModifier(ModifierType.Madmate)
-                || player.IsRole(RoleType.Madmate)
-                || player.IsRole(RoleType.Suicider)
                 || player.HasModifier(ModifierType.CreatedMadmate)))
         {
             oldShifterPlayer.Exiled();
@@ -712,5 +1127,9 @@ internal static partial class RPCProcedure
 
         sheriff.MurderPlayer(target);
     }
+<<<<<<< HEAD
 }
 >>>>>>> 167f591 (リバートによる調整)
+=======
+}
+>>>>>>> fff7fb386f817ecb69b96928ccdbb8f2191265d8
