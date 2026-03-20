@@ -20,7 +20,6 @@ internal class Shifter : MultiRoleBase<Shifter>
         StaticRoleType = CurrentRoleType = RoleType.Shifter;
     }
 
-
     internal static bool ShiftsModifiers
     {
         get => CustomOptionHolder.ShifterShiftsModifiers.GetBool();

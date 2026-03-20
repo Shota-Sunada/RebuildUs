@@ -54,8 +54,6 @@ internal class LastImpostor : ModifierBase<LastImpostor>
         KillCounter += 1;
     }
 
-
-
     [RegisterCustomButton]
     internal static void MakeButtons(HudManager hm)
     {

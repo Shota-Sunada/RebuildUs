@@ -62,8 +62,6 @@ internal class Detective : MultiRoleBase<Detective>
         }
     }
 
-
-
     // write functions here
 
     internal static void Clear()

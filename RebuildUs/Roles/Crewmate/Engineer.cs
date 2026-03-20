@@ -18,7 +18,6 @@ internal class Engineer : MultiRoleBase<Engineer>
         RemainingFixes = NumberOfFixes;
     }
 
-
     private static int NumberOfFixes
     {
         get => (int)CustomOptionHolder.EngineerNumberOfFixes.GetFloat();
@@ -33,8 +32,6 @@ internal class Engineer : MultiRoleBase<Engineer>
     {
         get => CustomOptionHolder.EngineerHighlightForTeamJackal.GetBool();
     }
-
-
 
     [RegisterCustomButton]
     internal static void MakeButtons(HudManager hm)

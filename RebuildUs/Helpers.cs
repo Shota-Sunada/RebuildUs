@@ -773,7 +773,6 @@ internal static class Helpers
             return true;
         }
 
-
         if (pc.HasModifier(ModifierType.CreatedMadmate) && (isLights || isComms && !CreatedMadmate.CanFixComm))
         {
             return true;

@@ -60,8 +60,6 @@ internal class Eraser : MultiRoleBase<Eraser>
         }
     }
 
-
-
     [RegisterCustomButton]
     internal static void MakeButtons(HudManager hm)
     {

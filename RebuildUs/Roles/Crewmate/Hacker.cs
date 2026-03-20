@@ -28,7 +28,6 @@ internal class Hacker : MultiRoleBase<Hacker>
         StaticRoleType = CurrentRoleType = RoleType.Hacker;
     }
 
-
     // write configs here
     private static float Cooldown
     {
@@ -82,8 +81,6 @@ internal class Hacker : MultiRoleBase<Hacker>
             _chargesAdminTable++;
         }
     }
-
-
 
     [RegisterCustomButton]
     internal static void MakeButtons(HudManager hm)

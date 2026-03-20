@@ -47,8 +47,6 @@ internal class Morphing : MultiRoleBase<Morphing>
         Helpers.SetPlayerOutline(_currentTarget, RoleColor);
     }
 
-
-
     [RegisterCustomButton]
     internal static void MakeButtons(HudManager hm)
     {

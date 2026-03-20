@@ -89,8 +89,6 @@ internal class Sheriff : MultiRoleBase<Sheriff>
         }
     }
 
-
-
     [RegisterCustomButton]
     internal static void MakeButtons(HudManager hm)
     {

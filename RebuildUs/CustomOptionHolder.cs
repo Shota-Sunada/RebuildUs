@@ -231,7 +231,6 @@ internal static class CustomOptionHolder
         SheriffCanKillNoDeadBody = CustomOption.Normal(1164, CustomOptionType.Crewmate, TrKey.SheriffCanKillNoDeadBody, true, SheriffSpawnRate);
         SheriffCanKillNeutrals = CustomOption.Normal(1165, CustomOptionType.Crewmate, TrKey.SheriffCanKillNeutrals, false, SheriffSpawnRate);
 
-
         #endregion
 
         #region ROLES IMPOSTOR
@@ -616,7 +615,6 @@ internal static class CustomOptionHolder
     internal static CustomOption SheriffCanKillNeutrals;
     internal static CustomOption SheriffMisfireKillsTarget;
     internal static CustomOption SheriffCanKillNoDeadBody;
-
 
     #endregion
 

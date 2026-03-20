@@ -107,8 +107,6 @@ internal class Bait : MultiRoleBase<Bait>
         _warningMessage = null;
     }
 
-
-
     // write functions here
 
     internal static void Clear()

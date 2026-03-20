@@ -153,8 +153,6 @@ internal class CreatedMadmate : ModifierBase<CreatedMadmate>
         return counter >= totalTasks;
     }
 
-
-
     // write functions here
 
     internal static void Clear()

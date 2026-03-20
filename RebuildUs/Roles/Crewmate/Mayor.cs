@@ -17,7 +17,6 @@ internal class Mayor : MultiRoleBase<Mayor>
         _remoteMeetingsLeft = MayorMaxRemoteMeetings;
     }
 
-
     internal static int NumVotes
     {
         get => (int)CustomOptionHolder.MayorNumVotes.GetFloat();
@@ -42,8 +41,6 @@ internal class Mayor : MultiRoleBase<Mayor>
     {
         get => (int)CustomOptionHolder.MayorMaxRemoteMeetings.GetFloat();
     }
-
-
 
     [RegisterCustomButton]
     internal static void MakeButtons(HudManager hm)

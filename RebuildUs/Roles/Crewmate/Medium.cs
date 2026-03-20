@@ -21,7 +21,6 @@ internal class Medium : MultiRoleBase<Medium>
         StaticRoleType = CurrentRoleType = RoleType.Medium;
     }
 
-
     // write configs here
     private static float Cooldown
     {
@@ -118,8 +117,6 @@ internal class Medium : MultiRoleBase<Medium>
 
         Local._target = target;
     }
-
-
 
     [RegisterCustomButton]
     internal static void MakeButtons(HudManager hm)

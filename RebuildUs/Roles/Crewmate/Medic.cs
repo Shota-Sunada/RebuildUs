@@ -22,7 +22,6 @@ internal class Medic : SingleRoleBase<Medic>
         StaticRoleType = CurrentRoleType = RoleType.Medic;
     }
 
-
     // write configs here
     internal static int ShowShielded
     {

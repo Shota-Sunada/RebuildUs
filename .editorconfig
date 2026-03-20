@@ -11,6 +11,10 @@ trim_trailing_whitespace = true
 insert_final_newline = false
 indent_size = 4
 
+# Blank line preferences
+csharp_style_allow_multiple_blank_lines_experimental = false:warning
+dotnet_style_allow_multiple_blank_lines_experimental = false:warning
+
 # Microsoft .NET properties
 csharp_preferred_modifier_order = protected, private, internal, public, file, sealed, static, override, async, abstract, new, virtual, extern, unsafe, volatile, readonly, required:suggestion
 csharp_style_namespace_declarations = file_scoped:warning

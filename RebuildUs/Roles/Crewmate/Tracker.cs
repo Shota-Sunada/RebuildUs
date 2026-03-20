@@ -25,7 +25,6 @@ internal class Tracker : MultiRoleBase<Tracker>
         StaticRoleType = CurrentRoleType = RoleType.Tracker;
     }
 
-
     // write configs here
     internal static float UpdateInterval
     {
@@ -167,8 +166,6 @@ internal class Tracker : MultiRoleBase<Tracker>
             LocalArrows.Clear();
         }
     }
-
-
 
     [RegisterCustomButton]
     internal static void MakeButtons(HudManager hm)

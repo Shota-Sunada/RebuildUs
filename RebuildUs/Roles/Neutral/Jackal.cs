@@ -131,8 +131,6 @@ internal class Jackal : SingleRoleBase<Jackal>
         SidekickPromotes(PlayerControl.LocalPlayer);
     }
 
-
-
     [RegisterCustomButton]
     internal static void MakeButtons(HudManager hm)
     {

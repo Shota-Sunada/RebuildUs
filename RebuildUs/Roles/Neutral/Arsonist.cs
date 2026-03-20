@@ -122,8 +122,6 @@ internal class Arsonist : SingleRoleBase<Arsonist>
         UpdateStatus();
     }
 
-
-
     [RegisterCustomButton]
     internal static void MakeButtons(HudManager hm)
     {

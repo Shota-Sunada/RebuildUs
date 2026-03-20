@@ -233,8 +233,6 @@ internal class BountyHunter : SingleRoleBase<BountyHunter>
         }
     }
 
-
-
     internal static void Clear()
     {
         ModRoleManager.RemoveRole(Instance);

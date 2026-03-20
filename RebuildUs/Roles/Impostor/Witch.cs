@@ -100,8 +100,6 @@ internal class Witch : MultiRoleBase<Witch>
         }
     }
 
-
-
     [RegisterCustomButton]
     internal static void MakeButtons(HudManager hm)
     {

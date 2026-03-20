@@ -74,8 +74,6 @@ internal class Vampire : SingleRoleBase<Vampire>
         }
     }
 
-
-
     [RegisterCustomButton]
     internal static void MakeButtons(HudManager hm)
     {

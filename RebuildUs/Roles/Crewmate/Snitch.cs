@@ -15,7 +15,6 @@ internal class Snitch : SingleRoleBase<Snitch>
         StaticRoleType = CurrentRoleType = RoleType.Snitch;
     }
 
-
     internal static int LeftTasksForReveal
     {
         get => Mathf.RoundToInt(CustomOptionHolder.SnitchLeftTasksForReveal.GetFloat());
@@ -103,8 +102,6 @@ internal class Snitch : SingleRoleBase<Snitch>
             }
         }
     }
-
-
 
     // write functions here
 

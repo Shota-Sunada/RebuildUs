@@ -100,8 +100,6 @@ internal class Vulture : SingleRoleBase<Vulture>
         }
     }
 
-
-
     [RegisterCustomButton]
     internal static void MakeButtons(HudManager hm)
     {

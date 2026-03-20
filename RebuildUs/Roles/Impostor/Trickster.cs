@@ -32,8 +32,6 @@ internal class Trickster : SingleRoleBase<Trickster>
         get => CustomOptionHolder.TricksterLightsOutDuration.GetFloat();
     }
 
-
-
     [RegisterCustomButton]
     internal static void MakeButtons(HudManager hm)
     {

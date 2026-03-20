@@ -65,8 +65,6 @@ internal class Mini : ModifierBase<Mini>
         return true;
     }
 
-
-
     // write functions here
 
     internal static void Clear()

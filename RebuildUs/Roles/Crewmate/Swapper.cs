@@ -24,7 +24,6 @@ internal class Swapper : SingleRoleBase<Swapper>
         get => PlayerControl.LocalPlayer?.Data.Role.IsImpostor ?? false ? Palette.ImpostorRed : new Color32(134, 55, 86, byte.MaxValue);
     }
 
-
     // write configs here
     internal static int NumSwaps
     {
@@ -48,8 +47,6 @@ internal class Swapper : SingleRoleBase<Swapper>
             HudManagerPatch.SetPlayerNameColor(Player, RoleColor);
         }
     }
-
-
 
     // write functions here
 

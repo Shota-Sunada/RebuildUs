@@ -50,8 +50,6 @@ internal class Camouflager : SingleRoleBase<Camouflager>
         ResetCamouflage();
     }
 
-
-
     [RegisterCustomButton]
     internal static void MakeButtons(HudManager hm)
     {

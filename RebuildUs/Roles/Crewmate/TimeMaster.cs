@@ -19,7 +19,6 @@ internal class TimeMaster : SingleRoleBase<TimeMaster>
         StaticRoleType = CurrentRoleType = RoleType.TimeMaster;
     }
 
-
     // write configs here
     internal static float Cooldown
     {
@@ -113,8 +112,6 @@ internal class TimeMaster : SingleRoleBase<TimeMaster>
             GameHistory.LocalPlayerPositions.Insert(0, new(PlayerControl.LocalPlayer.transform.position, PlayerControl.LocalPlayer.CanMove)); // CanMove = CanMove
         }
     }
-
-
 
     [RegisterCustomButton]
     internal static void MakeButtons(HudManager hm)

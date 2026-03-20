@@ -29,8 +29,6 @@ internal class Cleaner : MultiRoleBase<Cleaner>
         }
     }
 
-
-
     [RegisterCustomButton]
     internal static void MakeButtons(HudManager hm)
     {

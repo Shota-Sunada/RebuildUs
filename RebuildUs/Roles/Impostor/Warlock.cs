@@ -73,8 +73,6 @@ internal class Warlock : MultiRoleBase<Warlock>
         }
     }
 
-
-
     [RegisterCustomButton]
     internal static void MakeButtons(HudManager hm)
     {

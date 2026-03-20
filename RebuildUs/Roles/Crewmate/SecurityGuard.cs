@@ -33,7 +33,6 @@ internal class SecurityGuard : SingleRoleBase<SecurityGuard>
         _charges = CamMaxCharges;
     }
 
-
     // write configs here
     internal static float Cooldown
     {
@@ -121,8 +120,6 @@ internal class SecurityGuard : SingleRoleBase<SecurityGuard>
             }
         }
     }
-
-
 
     [RegisterCustomButton]
     internal static void MakeButtons(HudManager hm)
