@@ -4,7 +4,7 @@ namespace RebuildUs.Roles.Crewmate;
 [RegisterRole(RoleType.Lighter, RoleTeam.Crewmate, typeof(MultiRoleBase<Lighter>), nameof(CustomOptionHolder.LighterSpawnRate))]
 internal class Lighter : MultiRoleBase<Lighter>
 {
-    internal static Color Color = new Color32(238, 229, 190, byte.MaxValue);
+    public static Color Color = new Color32(238, 229, 190, byte.MaxValue);
 
     private static CustomButton _lighterButton;
     private bool _lightActive;

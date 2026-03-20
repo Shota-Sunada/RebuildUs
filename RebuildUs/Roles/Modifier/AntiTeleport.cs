@@ -4,7 +4,7 @@ namespace RebuildUs.Roles.Modifier;
 [RegisterModifier(ModifierType.AntiTeleport, typeof(AntiTeleport), nameof(CustomOptionHolder.AntiTeleportSpawnRate))]
 internal class AntiTeleport : ModifierBase<AntiTeleport>
 {
-    internal static Color Color = Palette.Orange;
+    public static Color Color = Palette.Orange;
 
     internal static Vector3 Position;
 

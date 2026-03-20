@@ -4,7 +4,7 @@ namespace RebuildUs.Roles.Impostor;
 [RegisterRole(RoleType.EvilTracker, RoleTeam.Impostor, typeof(MultiRoleBase<EvilTracker>), nameof(CustomOptionHolder.EvilTrackerSpawnRate))]
 internal class EvilTracker : MultiRoleBase<EvilTracker>
 {
-    internal static Color Color = Palette.ImpostorRed;
+    public static Color Color = Palette.ImpostorRed;
     internal static PlayerControl Target;
     internal static PlayerControl CurrentTarget;
     internal static CustomButton TrackerButton;

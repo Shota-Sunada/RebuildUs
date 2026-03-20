@@ -18,7 +18,7 @@ internal enum MadmateAbility
 [RegisterModifier(ModifierType.Madmate, typeof(Madmate), nameof(CustomOptionHolder.MadmateSpawnRate))]
 internal class Madmate : ModifierBase<Madmate>
 {
-    internal static Color Color = Palette.ImpostorRed;
+    public static Color Color = Palette.ImpostorRed;
 
     internal static RoleType[] ValidRoles =
     [

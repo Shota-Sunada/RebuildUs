@@ -23,14 +23,14 @@ internal static class RoleData
                 var resolvedColor = Color.white;
                 try
                 {
-                    var property = attr.ClassType.GetProperty("RoleColor", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static);
+                    var property = type.GetProperty(attr.NameColorPropertyName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static);
                     if (property != null)
                     {
                         resolvedColor = (Color)property.GetValue(null);
                     }
                     else
                     {
-                        var field = attr.ClassType.GetField("RoleColor", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static);
+                        var field = type.GetField(attr.NameColorPropertyName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static);
                         if (field != null)
                         {
                             resolvedColor = (Color)field.GetValue(null);

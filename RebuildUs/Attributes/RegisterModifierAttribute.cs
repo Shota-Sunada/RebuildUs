@@ -12,7 +12,7 @@ internal sealed class RegisterModifierAttribute : Attribute
         ModifierType modifierType,
         Type classType,
         string spawnRatePropertyName,
-        string modifierColorPropertyName = "ModifierColor")
+        string modifierColorPropertyName = "Color")
     {
         ModifierType = modifierType;
         ClassType = classType;
