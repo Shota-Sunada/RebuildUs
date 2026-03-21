@@ -207,7 +207,7 @@ internal class Arsonist : SingleRoleBase<Arsonist>
             Tr.Get(TrKey.IgniteText));
     }
 
-    [RegisterCustomButton]
+    [SetCustomButtonTimer]
     internal static void SetButtonCooldowns()
     {
         _arsonistButton?.MaxTimer = Cooldown;

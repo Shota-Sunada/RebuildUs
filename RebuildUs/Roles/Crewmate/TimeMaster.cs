@@ -148,7 +148,7 @@ internal class TimeMaster : SingleRoleBase<TimeMaster>
             Tr.Get(TrKey.TimeShieldText));
     }
 
-    [RegisterCustomButton]
+    [SetCustomButtonTimer]
     internal static void SetButtonCooldowns()
     {
         _timeMasterShieldButton.MaxTimer = Cooldown;

@@ -84,7 +84,7 @@ internal class Cleaner : MultiRoleBase<Cleaner>
             Tr.Get(TrKey.CleanText));
     }
 
-    [RegisterCustomButton]
+    [SetCustomButtonTimer]
     internal static void SetButtonCooldowns()
     {
         CleanerCleanButton.MaxTimer = Cooldown;

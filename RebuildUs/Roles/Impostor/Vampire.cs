@@ -213,7 +213,7 @@ internal class Vampire : SingleRoleBase<Vampire>
             Tr.Get(TrKey.GarlicText));
     }
 
-    [RegisterCustomButton]
+    [SetCustomButtonTimer]
     internal static void SetButtonCooldowns()
     {
         if (_vampireKillButton != null)

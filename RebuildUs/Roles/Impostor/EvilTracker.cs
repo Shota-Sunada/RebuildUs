@@ -102,7 +102,7 @@ internal class EvilTracker : MultiRoleBase<EvilTracker>
             Tr.Get(TrKey.TrackerText));
     }
 
-    [RegisterCustomButton]
+    [SetCustomButtonTimer]
     internal static void SetButtonCooldowns()
     {
         TrackerButton.MaxTimer = Cooldown;

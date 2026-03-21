@@ -97,7 +97,7 @@ internal class Shifter : MultiRoleBase<Shifter>
             Tr.Get(TrKey.ShiftText));
     }
 
-    [RegisterCustomButton]
+    [SetCustomButtonTimer]
     internal static void SetButtonCooldowns()
     {
         _shifterShiftButton.MaxTimer = 0f;

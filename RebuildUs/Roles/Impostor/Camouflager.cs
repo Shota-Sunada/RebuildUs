@@ -83,7 +83,7 @@ internal class Camouflager : SingleRoleBase<Camouflager>
             Tr.Get(TrKey.CamoText));
     }
 
-    [RegisterCustomButton]
+    [SetCustomButtonTimer]
     internal static void SetButtonCooldowns()
     {
         _camouflagerButton.MaxTimer = Cooldown;

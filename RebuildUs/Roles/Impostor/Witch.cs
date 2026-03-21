@@ -175,7 +175,7 @@ internal class Witch : MultiRoleBase<Witch>
             Tr.Get(TrKey.WitchText));
     }
 
-    [RegisterCustomButton]
+    [SetCustomButtonTimer]
     internal static void SetButtonCooldowns()
     {
         WitchSpellButton.MaxTimer = Cooldown;

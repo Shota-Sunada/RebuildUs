@@ -108,7 +108,7 @@ internal class Morphing : MultiRoleBase<Morphing>
             Tr.Get(TrKey.SampleText));
     }
 
-    [RegisterCustomButton]
+    [SetCustomButtonTimer]
     internal static void SetButtonCooldowns()
     {
         _morphingButton.MaxTimer = Cooldown;

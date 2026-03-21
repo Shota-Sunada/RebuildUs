@@ -127,7 +127,7 @@ internal class Engineer : MultiRoleBase<Engineer>
         }
     }
 
-    [RegisterCustomButton]
+    [SetCustomButtonTimer]
     internal static void SetButtonCooldowns()
     {
         _engineerRepairButton.MaxTimer = 0f;

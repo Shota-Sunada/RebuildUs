@@ -102,7 +102,7 @@ internal class Medic : SingleRoleBase<Medic>
             Tr.Get(TrKey.ShieldText));
     }
 
-    [RegisterCustomButton]
+    [SetCustomButtonTimer]
     internal static void SetButtonCooldowns()
     {
         _medicShieldButton.MaxTimer = 0f;

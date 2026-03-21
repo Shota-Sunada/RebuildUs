@@ -118,7 +118,7 @@ internal class CreatedMadmate : ModifierBase<CreatedMadmate>
             Tr.Get(TrKey.Suicide));
     }
 
-    [RegisterCustomButton]
+    [SetCustomButtonTimer]
     internal static void SetButtonCooldowns()
     {
         if (_suicideButton != null) _suicideButton.MaxTimer = 0f;

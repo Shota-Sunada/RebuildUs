@@ -82,7 +82,7 @@ internal class Lighter : MultiRoleBase<Lighter>
             Tr.Get(TrKey.LighterText));
     }
 
-    [RegisterCustomButton]
+    [SetCustomButtonTimer]
     internal static void SetButtonCooldowns()
     {
         _lighterButton.MaxTimer = Cooldown;

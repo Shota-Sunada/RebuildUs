@@ -154,7 +154,7 @@ internal class Sidekick : SingleRoleBase<Sidekick>
             FastDestroyableSingleton<TranslationController>.Instance.GetString(StringNames.FixLights));
     }
 
-    [RegisterCustomButton]
+    [SetCustomButtonTimer]
     internal static void SetButtonCooldowns()
     {
         _sidekickKillButton.MaxTimer = Jackal.KillCooldown;

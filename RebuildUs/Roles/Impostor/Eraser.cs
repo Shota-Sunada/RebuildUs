@@ -93,7 +93,7 @@ internal class Eraser : MultiRoleBase<Eraser>
             Tr.Get(TrKey.EraserText));
     }
 
-    [RegisterCustomButton]
+    [SetCustomButtonTimer]
     internal static void SetButtonCooldowns()
     {
         _eraserButton.MaxTimer = Cooldown;

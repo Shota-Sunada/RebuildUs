@@ -172,7 +172,7 @@ internal class Vulture : SingleRoleBase<Vulture>
         _vultureNumCorpsesText.transform.localPosition += new Vector3(0.0f, 0.7f, 0);
     }
 
-    [RegisterCustomButton]
+    [SetCustomButtonTimer]
     internal static void SetButtonCooldowns()
     {
         _vultureEatButton.MaxTimer = Cooldown;

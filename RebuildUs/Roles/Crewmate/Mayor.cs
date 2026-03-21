@@ -95,7 +95,7 @@ internal class Mayor : MultiRoleBase<Mayor>
         MayorRemoteButtonLeftText.transform.localPosition += new Vector3(-0.05f, 0.7f, 0);
     }
 
-    [RegisterCustomButton]
+    [SetCustomButtonTimer]
     internal static void SetButtonCooldowns()
     {
         _mayorMeetingButton.MaxTimer = Int32OptionNames.EmergencyCooldown.Get();

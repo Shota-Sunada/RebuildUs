@@ -306,7 +306,7 @@ internal class Hacker : MultiRoleBase<Hacker>
         _hackerVitalsChargesText.transform.localPosition += new Vector3(-0.05f, 0.7f, 0);
     }
 
-    [RegisterCustomButton]
+    [SetCustomButtonTimer]
     internal static void SetButtonCooldowns()
     {
         _hackerButton.MaxTimer = Cooldown;

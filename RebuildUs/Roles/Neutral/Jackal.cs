@@ -238,7 +238,7 @@ internal class Jackal : SingleRoleBase<Jackal>
             FastDestroyableSingleton<TranslationController>.Instance.GetString(StringNames.FixLights));
     }
 
-    [RegisterCustomButton]
+    [SetCustomButtonTimer]
     internal static void SetButtonCooldowns()
     {
         _jackalKillButton?.MaxTimer = KillCooldown;

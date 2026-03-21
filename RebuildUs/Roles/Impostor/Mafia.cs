@@ -196,7 +196,7 @@ internal static class Mafia
                 Tr.Get(TrKey.CleanText));
         }
 
-        [RegisterCustomButton]
+        [SetCustomButtonTimer]
         internal static void SetButtonCooldowns()
         {
             _janitorCleanButton.MaxTimer = Cooldown;

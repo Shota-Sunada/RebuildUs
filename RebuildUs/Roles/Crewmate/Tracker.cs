@@ -232,7 +232,7 @@ internal class Tracker : MultiRoleBase<Tracker>
             Tr.Get(TrKey.PathfindText));
     }
 
-    [RegisterCustomButton]
+    [SetCustomButtonTimer]
     internal static void SetButtonCooldowns()
     {
         _trackerTrackPlayerButton.MaxTimer = 0f;

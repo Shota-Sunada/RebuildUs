@@ -107,7 +107,7 @@ internal class Trickster : SingleRoleBase<Trickster>
             Tr.Get(TrKey.LightsOutText));
     }
 
-    [RegisterCustomButton]
+    [SetCustomButtonTimer]
     internal static void SetButtonCooldowns()
     {
         _placeJackInTheBoxButton.MaxTimer = PlaceBoxCooldown;

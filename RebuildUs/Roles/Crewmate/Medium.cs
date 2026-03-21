@@ -258,7 +258,7 @@ internal class Medium : MultiRoleBase<Medium>
             Tr.Get(TrKey.MediumText));
     }
 
-    [RegisterCustomButton]
+    [SetCustomButtonTimer]
     internal static void SetButtonCooldowns()
     {
         _mediumButton.MaxTimer = Cooldown;

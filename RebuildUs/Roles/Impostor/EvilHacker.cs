@@ -158,7 +158,7 @@ internal class EvilHacker : MultiRoleBase<EvilHacker>
             Tr.Get(TrKey.Madmate));
     }
 
-    [RegisterCustomButton]
+    [SetCustomButtonTimer]
     internal static void SetButtonCooldowns()
     {
         _evilHackerButton.MaxTimer = 0f;

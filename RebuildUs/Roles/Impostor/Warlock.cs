@@ -146,7 +146,7 @@ internal class Warlock : MultiRoleBase<Warlock>
             Tr.Get(TrKey.CurseText));
     }
 
-    [RegisterCustomButton]
+    [SetCustomButtonTimer]
     internal static void SetButtonCooldowns()
     {
         WarlockCurseButton.MaxTimer = Cooldown;
