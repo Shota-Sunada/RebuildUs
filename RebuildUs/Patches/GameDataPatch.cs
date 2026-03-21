@@ -10,7 +10,7 @@ internal static class GameDataPatch
         RebuildUs.HandleDisconnect(player, reason);
         if (MeetingHud.Instance)
         {
-            Meeting.SwapperCheckAndReturnSwap(MeetingHud.Instance, player.PlayerId);
+            SwapperModule.CheckAndReturnSwap(MeetingHud.Instance, player.PlayerId);
         }
     }
 
