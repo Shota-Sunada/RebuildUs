@@ -3,10 +3,13 @@ namespace RebuildUs.Patches;
 [HarmonyPatch]
 internal static class EndGameManagerPatch
 {
-    [HarmonyPostfix]
+    [HarmonyPrefix]
     [HarmonyPatch(typeof(EndGameManager), nameof(EndGameManager.SetEverythingUp))]
-    internal static void SetEverythingUpPostfix(EndGameManager __instance)
+    internal static bool SetEverythingUpPrefix(EndGameManager __instance)
     {
-        EndGameMain.SetupEndGameScreen(__instance);
+        EndGameMain.Override(__instance);
+        EndGameMain.Postfix(__instance);
+
+        return false;
     }
 }
