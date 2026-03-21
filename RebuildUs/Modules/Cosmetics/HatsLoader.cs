@@ -43,7 +43,7 @@ internal sealed class HatsLoader : MonoBehaviour
         IsRunning = true;
         LoadScreen.Create();
 
-        Logger.LogMessage("Downloading cosmetics...");
+        Logger.LogMessage("[CoFetchHats] Downloading cosmetics...");
         var downloadTask = DownloadAllHats(Repositories, HatsDirectory);
         while (!downloadTask.IsCompleted)
         {
@@ -51,7 +51,7 @@ internal sealed class HatsLoader : MonoBehaviour
             yield return null;
         }
 
-        Logger.LogMessage("Downloading finished.");
+        Logger.LogMessage("[CoFetchHats] Downloading finished.");
 
         UnregisteredHats.Clear();
         LoadScreen.StatusText = "Loading hats...";
@@ -89,17 +89,17 @@ internal sealed class HatsLoader : MonoBehaviour
                         }
 
                         UnregisteredHats.AddRange(response.Hats);
-                        Logger.LogMessage($"Loaded {response.Hats.Count} hats from {manifestPath}.");
+                        Logger.LogMessage("[CoFetchHats] Loaded {0} hats from {1}.", response.Hats.Count, manifestPath);
                     }
                 }
                 catch (Exception e)
                 {
-                    Logger.LogError($"Failed to load hats from {manifestPath}: {e}");
+                    Logger.LogError("[CoFetchHats] Failed to load hats from {0}: {1}", manifestPath, e.Message);
                 }
             }
         }
 
-        Logger.LogMessage($"Total {UnregisteredHats.Count} hats registered.");
+        Logger.LogMessage("[CoFetchHats] Total {0} hats registered.", UnregisteredHats.Count);
 
         LoadScreen.Destroy();
         IsRunning = false;
@@ -154,7 +154,7 @@ internal sealed class HatsLoader : MonoBehaviour
                     tasks.Add(DownloadItemAsync(item, semaphore, total, () =>
                     {
                         var done = Interlocked.Increment(ref completed);
-                        LoadScreen.StatusText = $"Downloading {item.fileName} ({done} / {total})";
+                        LoadScreen.StatusText = string.Format("[DownloadAllHats] Downloading {0} ({1} / {2})", item.fileName, done, total);
                         LoadScreen.Progress = 0.2f + (float)done / total * 0.8f;
                     }));
                 }
@@ -167,8 +167,8 @@ internal sealed class HatsLoader : MonoBehaviour
         }
         catch (Exception ex)
         {
-            Logger.LogError($"Download error: {ex.Message}");
-            LoadScreen.StatusText = $"Error: {ex.Message}";
+            Logger.LogError("[DownloadAllHats] Download error: {0}", ex.Message);
+            LoadScreen.StatusText = string.Format("Error: {0}", ex.Message);
             await Task.Delay(2000);
         }
     }
@@ -190,16 +190,16 @@ internal sealed class HatsLoader : MonoBehaviour
                 Directory.CreateDirectory(repoDir);
             }
 
-            var manifestURL = $"{repoUrl}/CustomHats.json";
+            var manifestURL = string.Format("{0}/CustomHats.json", repoUrl);
             var manifestPath = Path.Combine(repoDir, "CustomHats.json");
 
             try
             {
-                Logger.LogMessage($"Downloading manifest: {manifestURL}");
+                Logger.LogMessage("[ProcessRepoAsync] Downloading manifest: {0}", manifestURL);
                 var response = await Client.GetAsync(manifestURL);
                 if (!response.IsSuccessStatusCode)
                 {
-                    Logger.LogWarn($"Failed to download manifest from {manifestURL}: {response.StatusCode}");
+                    Logger.LogWarn("[ProcessRepoAsync] Failed to download manifest from {0}: {1}", manifestURL, response.StatusCode);
                     return;
                 }
 
@@ -223,7 +223,7 @@ internal sealed class HatsLoader : MonoBehaviour
             }
             catch (Exception ex)
             {
-                Logger.LogWarn($"Failed to check repository {repoUrl}: {ex.Message}");
+                Logger.LogWarn("[ProcessRepoAsync] Failed to check repository {0}: {1}", repoUrl, ex.Message);
             }
         }
     }
@@ -233,7 +233,7 @@ internal sealed class HatsLoader : MonoBehaviour
         await semaphore.WaitAsync();
         try
         {
-            LoadScreen.StatusText = $"Downloading {item.fileName}";
+            LoadScreen.StatusText = string.Format("Downloading {0}", item.fileName);
             var response = await Client.GetAsync(item.url);
             if (response.IsSuccessStatusCode)
             {
@@ -242,12 +242,12 @@ internal sealed class HatsLoader : MonoBehaviour
             }
             else
             {
-                Logger.LogMessage($"Failed to download {item.url}: {response.StatusCode}");
+                Logger.LogMessage("[DownloadItemAsync] Failed to download {0}: {1}", item.url, response.StatusCode);
             }
         }
         catch (Exception ex)
         {
-            Logger.LogMessage($"Failed to download {item.url}: {ex.Message}");
+            Logger.LogMessage("[DownloadItemAsync] Failed to download {0}: {1}", item.url, ex.Message);
         }
         finally
         {

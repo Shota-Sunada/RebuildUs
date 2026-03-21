@@ -57,11 +57,7 @@ internal static class GameHistory
 
     internal static void OnMurderPlayerPostfix(PlayerControl killer, PlayerControl target)
     {
-        StringBuilder sb = new();
-        sb.Append(killer.GetNameWithRole());
-        sb.Append(" => ");
-        sb.Append(target.GetNameWithRole());
-        Logger.LogInfo(sb.ToString(), "MurderPlayer");
+        Logger.LogInfo("[MurderPlayer] {0} => {1}", killer.GetNameWithRole(), target.GetNameWithRole());
 
         // Collect dead player info
         DeadPlayer deadPlayer = new(target, DateTime.UtcNow, DeathReason.Kill, killer);

@@ -105,7 +105,7 @@ internal static class SubmergedCompatibility
         }
         catch (NullReferenceException)
         {
-            Logger.LogMessage("null reference in engineer oxygen fix");
+            Logger.LogMessage("[RepairOxygen] null reference in engineer oxygen fix");
         }
     }
 

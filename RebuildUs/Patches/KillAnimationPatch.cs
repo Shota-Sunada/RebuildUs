@@ -11,7 +11,7 @@ internal static class KillAnimationPatch
 
     internal static IEnumerator CoPerformKill(KillAnimation __instance, PlayerControl source, PlayerControl target)
     {
-        Logger.LogMessage("CoPerformKill is overridden!");
+        Logger.LogMessage("[CoPerformKill] CoPerformKill was customized.");
 
         if (HideNextAnimation)
         {

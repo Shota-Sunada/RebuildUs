@@ -990,7 +990,7 @@ internal static class Map
             }
             catch (Exception ex)
             {
-                Logger.LogError(ex.Message);
+                Logger.LogError("[EvilTrackerShowTask] {0}", ex.Message);
             }
         }
 
@@ -1044,7 +1044,7 @@ internal static class Map
             }
             else
             {
-                Logger.LogWarn("Couldn't find counter for:" + counterArea.RoomType);
+                Logger.LogWarn("[OverlayOnEnablePostfix] Couldn't find counter for: {0}", counterArea.RoomType);
             }
         }
 

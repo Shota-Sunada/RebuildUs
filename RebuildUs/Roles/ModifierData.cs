@@ -38,7 +38,7 @@ internal static class ModifierData
             }
             catch (Exception e)
             {
-                Logger.LogError($"Failed to get color for {attr.ModifierType}: {e.Message}", "ModifierData");
+                Logger.LogError("[ModifierData] Failed to get color for {0}: {1}", attr.ModifierType, e.Message);
             }
 
             RoleColorRegistry.RegisterModifierColor(modType, resolvedColor);

@@ -203,7 +203,7 @@ internal static class TimerBarManager
         }
         catch (Exception ex)
         {
-            Logger.LogError($"[TimerBarManager] Update error: {ex}");
+            Logger.LogError("[TimerBarManager] Update error: {0}", ex.Message);
             return true;
         }
     }
@@ -226,7 +226,7 @@ internal static class TimerBarManager
         }
         catch (Exception ex)
         {
-            Logger.LogError($"[TimerBarManager] UpdateTimer error: {ex}");
+            Logger.LogError("[TimerBarManager] UpdateTimer error: {0}", ex.Message);
             return true;
         }
     }
@@ -249,7 +249,7 @@ internal static class TimerBarManager
         }
         catch (Exception ex)
         {
-            Logger.LogError($"[TimerBarManager] StartFinalHide error: {ex}");
+            Logger.LogError("[TimerBarManager] StartFinalHide error: {0}", ex.Message);
             return true;
         }
     }
@@ -272,7 +272,7 @@ internal static class TimerBarManager
         }
         catch (Exception ex)
         {
-            Logger.LogError($"[TimerBarManager] TaskComplete error: {ex}");
+            Logger.LogError("[TimerBarManager] TaskComplete error: {0}", ex.Message);
             return true;
         }
     }
@@ -358,11 +358,7 @@ internal static class TimerBarManager
             return currentValue <= CustomTimer.MinValue;
         }
 
-        return CustomTimer.FinalCondition?.Invoke(currentValue, CustomTimer.MinValue, CustomTimer.MaxValue)
-               ?? CustomTimerSettings.DefaultFinalCondition(currentValue,
-                   CustomTimer.MinValue,
-                   CustomTimer.MaxValue,
-                   CustomTimer.FinalStartThreshold);
+        return CustomTimer.FinalCondition?.Invoke(currentValue, CustomTimer.MinValue, CustomTimer.MaxValue) ?? CustomTimerSettings.DefaultFinalCondition(currentValue, CustomTimer.MinValue, CustomTimer.MaxValue, CustomTimer.FinalStartThreshold);
     }
 
     private static void RenderCustomTimer(bool isFinal, bool pulseTaskComplete)

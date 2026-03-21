@@ -120,7 +120,7 @@ internal static class PlayerControlPatch
     [HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.ReportDeadBody))]
     internal static bool ReportDeadBodyPrefix(PlayerControl __instance, NetworkedPlayerInfo target)
     {
-        Logger.LogInfo("ReportDeadBody Prefix");
+        Logger.LogInfo("[ReportDeadBodyPrefix] Customized.");
 
         Helpers.HandleVampireBiteOnBodyReport();
 
@@ -131,13 +131,8 @@ internal static class PlayerControlPatch
     [HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.ReportDeadBody))]
     internal static void ReportDeadBodyPostfix(PlayerControl __instance, NetworkedPlayerInfo target)
     {
-        Logger.LogInfo("ReportDeadBody Postfix");
-
-        StringBuilder sb = new();
-        sb.Append(__instance.GetNameWithRole());
-        sb.Append(" => ");
-        sb.Append(target?.Object?.GetNameWithRole() ?? "null");
-        Logger.LogInfo(sb.ToString(), "ReportDeadBody");
+        Logger.LogInfo("[ReportDeadBodyPostfix] Customized.");
+        Logger.LogInfo("[ReportDeadBodyPostfix] {0} => {1}", __instance.GetNameWithRole(), target?.Object?.GetNameWithRole() ?? "null");
     }
 
     [HarmonyPrefix]
@@ -148,14 +143,13 @@ internal static class PlayerControlPatch
 
         // ORIGINAL MURDER_PLAYER
         __instance.isKilling = false;
-        __instance.logger.Debug($"{__instance.PlayerId} trying to murder {target.PlayerId}");
+        Logger.LogDebug("[MurderPlayerPrefix] {0} trying to murder {1}", __instance.PlayerId, target.PlayerId);
         var data = target.Data;
         if (resultFlags.HasFlag(MurderResultFlags.FailedError))
         {
             return false;
         }
-        if (resultFlags.HasFlag(MurderResultFlags.FailedProtected)
-            || resultFlags.HasFlag(MurderResultFlags.DecisionByHost) && target.protectedByGuardianId > -1)
+        if (resultFlags.HasFlag(MurderResultFlags.FailedProtected) || resultFlags.HasFlag(MurderResultFlags.DecisionByHost) && target.protectedByGuardianId > -1)
         {
             target.protectedByGuardianThisRound = true;
             var flag = PlayerControl.LocalPlayer.Data.Role.Role == RoleTypes.GuardianAngel;
@@ -175,7 +169,7 @@ internal static class PlayerControlPatch
                 target.RemoveProtection();
             }
 
-            __instance.logger.Debug($"{__instance.PlayerId} failed to murder {target.PlayerId} due to guardian angel protection");
+            Logger.LogDebug("[MurderPlayerPrefix] {0} failed to murder {1} due to guardian angel protection", __instance.PlayerId, target.PlayerId);
         }
         else
         {
@@ -186,9 +180,7 @@ internal static class PlayerControlPatch
             FastDestroyableSingleton<DebugAnalytics>.Instance.Analytics.Kill(target.Data, __instance.Data);
             if (__instance.AmOwner)
             {
-                DataManager.Player.Stats.IncrementStat(GameManager.Instance.IsHideAndSeek()
-                    ? StatID.HideAndSeek_ImpostorKills
-                    : StatID.ImpostorKills);
+                DataManager.Player.Stats.IncrementStat(GameManager.Instance.IsHideAndSeek() ? StatID.HideAndSeek_ImpostorKills : StatID.ImpostorKills);
                 if (__instance.CurrentOutfitType == PlayerOutfitType.Shapeshifted)
                 {
                     DataManager.Player.Stats.IncrementStat(StatID.Role_Shapeshifter_ShiftedKills);
@@ -225,17 +217,11 @@ internal static class PlayerControlPatch
                 target.RpcSetScanner(false);
             }
 
-            FastDestroyableSingleton<AchievementManager>.Instance.OnMurder(__instance.AmOwner,
-                target.AmOwner,
-                __instance.CurrentOutfitType == PlayerOutfitType.Shapeshifted,
-                __instance.shapeshiftTargetPlayerId,
-                target.PlayerId);
+            FastDestroyableSingleton<AchievementManager>.Instance.OnMurder(__instance.AmOwner, target.AmOwner, __instance.CurrentOutfitType == PlayerOutfitType.Shapeshifted, __instance.shapeshiftTargetPlayerId, target.PlayerId);
             // DISABLE ORIGINAL CO_PERFORM_KILL
             // __instance.MyPhysics.StartCoroutine(__instance.KillAnimations.Random().CoPerformKill(__instance, target));
-            __instance.MyPhysics.StartCoroutine(KillAnimationPatch
-                                                .CoPerformKill(__instance.KillAnimations.Random(), __instance, target)
-                                                .WrapToIl2Cpp());
-            __instance.logger.Debug($"{__instance.PlayerId} succeeded in murdering {target.PlayerId}");
+            __instance.MyPhysics.StartCoroutine(KillAnimationPatch                                                .CoPerformKill(__instance.KillAnimations.Random(), __instance, target).WrapToIl2Cpp());
+            Logger.LogDebug("[MurderPlayerPrefix] {0} succeeded in murdering {1}", __instance.PlayerId, target.PlayerId);
         }
         // ORIGINAL MURDER_PLAYER
 
@@ -259,15 +245,15 @@ internal static class PlayerControlPatch
     internal static bool CanMovePrefix(PlayerControl __instance, ref bool __result)
     {
         __result = __instance.moveable
-                   && !Minigame.Instance
-                   && (!FastDestroyableSingleton<HudManager>.InstanceExists
-                       || !FastDestroyableSingleton<HudManager>.Instance.Chat.IsOpenOrOpening
-                       && !FastDestroyableSingleton<HudManager>.Instance.KillOverlay.IsOpen
-                       && !FastDestroyableSingleton<HudManager>.Instance.GameMenu.IsOpen)
-                   && (!MapBehaviour.Instance || !MapBehaviour.Instance.IsOpenStopped)
-                   && !MeetingHud.Instance
-                   && !ExileController.Instance
-                   && !IntroCutscene.Instance;
+                    && !Minigame.Instance
+                    && (!FastDestroyableSingleton<HudManager>.InstanceExists
+                        || !FastDestroyableSingleton<HudManager>.Instance.Chat.IsOpenOrOpening
+                        && !FastDestroyableSingleton<HudManager>.Instance.KillOverlay.IsOpen
+                        && !FastDestroyableSingleton<HudManager>.Instance.GameMenu.IsOpen)
+                    && (!MapBehaviour.Instance || !MapBehaviour.Instance.IsOpenStopped)
+                    && !MeetingHud.Instance
+                    && !ExileController.Instance
+                    && !IntroCutscene.Instance;
         return false;
     }
 

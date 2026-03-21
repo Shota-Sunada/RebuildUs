@@ -494,7 +494,7 @@ internal partial class CustomOption
                     __instance.MenuDescriptionText.text = Tr.Get(TrKey.ModifierSettings);
                     break;
                 default:
-                    Logger.LogWarn($"Invalid Option Page ID in ChangeTabPrefix: {tabNum}");
+                    Logger.LogWarn("[ChangeTabPrefix] Invalid Option Page ID in ChangeTabPrefix: {0}", tabNum);
                     break;
             }
         }
@@ -539,7 +539,7 @@ internal partial class CustomOption
                     _modifierButton.GetComponent<PassiveButton>().SelectButton(true);
                     break;
                 default:
-                    Logger.LogWarn($"Invalid Option Page ID in ChangeTabPrefix: {tabNum}");
+                    Logger.LogWarn("[ChangeTabPrefix] Invalid Option Page ID in ChangeTabPrefix: {0}", tabNum);
                     break;
             }
         }

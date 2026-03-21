@@ -34,7 +34,7 @@ internal static class HudManagerPatch
         }
         catch (Exception ex)
         {
-            Logger.LogError($"[HudManagerPatch] UpdatePostfix error: {ex}");
+            Logger.LogError("[HudManagerPatchUpdatePostfix] Error occurred: {0}", ex.Message);
         }
     }
 

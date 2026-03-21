@@ -104,7 +104,7 @@ public class RebuildUs : BasePlugin
         Logger.Initialize(Log);
         Instance = this;
 
-        Logger.LogInfo(new StringBuilder("AmongUs Version: ").Append(Application.version).ToString());
+        Logger.LogInfo("[Main] AmongUs Version: {0}", Application.version);
 
         if (Application.version == REQUIRED_AMONG_US_VERSION)
         {
@@ -146,7 +146,7 @@ public class RebuildUs : BasePlugin
 
         ModEventDispatcher.Initialize();
 
-        Logger.LogMessage("\"Rebuild Us\" was completely loaded! Enjoy the modifications!");
+        Logger.LogMessage("[Main] \"Rebuild Us\" was completely loaded! Enjoy the modifications!");
     }
 
     internal static void ClearAndReloadRoles()
@@ -266,7 +266,7 @@ public class RebuildUs : BasePlugin
             }
             catch (Exception ex)
             {
-                Logger.LogError($"Error in MakeButtons: {ex}");
+                Logger.LogError("[MakeButtons] Error in MakeButtons: {0}", ex.ToString());
             }
         }
     }
@@ -281,7 +281,7 @@ public class RebuildUs : BasePlugin
             }
             catch (Exception ex)
             {
-                Logger.LogError($"Error in SetButtonCooldowns: {ex}");
+                Logger.LogError("[SetButtonCooldowns] Error in SetButtonCooldowns: {0}", ex.ToString());
             }
         }
     }
@@ -303,7 +303,7 @@ public class RebuildUs : BasePlugin
         {
             if (region == null)
             {
-                Logger.LogError("Could not add region");
+                Logger.LogError("[UpdateRegions] Could not add region.");
             }
             else
             {
@@ -318,7 +318,7 @@ public class RebuildUs : BasePlugin
 
         if (currentRegion != null)
         {
-            Logger.LogDebug("Resetting previous region");
+            Logger.LogDebug("[UpdateRegions] Resetting previous region.");
             serverManager.SetRegion(currentRegion);
         }
     }

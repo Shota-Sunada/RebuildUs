@@ -21,7 +21,7 @@ internal static class Tr
         InternalTranslations.Clear();
         foreach (SupportedLangs lang in Enum.GetValues(typeof(SupportedLangs)))
         {
-            var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream($"RebuildUs.Localization.Translations.{lang}.json");
+            var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(string.Format("RebuildUs.Localization.Translations.{0}.json", Enum.GetName(lang)));
             if (stream == null)
             {
                 continue;
@@ -39,7 +39,7 @@ internal static class Tr
             }
             catch (Exception ex)
             {
-                Logger.LogError($"Failed to load internal translation for {lang}: {ex.Message}");
+                Logger.LogError("[Localization] Failed to load internal translation for {0}: {1}", Enum.GetName(lang), ex.Message);
             }
         }
 
@@ -100,12 +100,12 @@ internal static class Tr
                     Dictionary<string, string> flattened = new(StringComparer.OrdinalIgnoreCase);
                     FlattenTranslations(nestedDict, flattened);
                     CustomTranslations[lang] = flattened;
-                    Logger.LogInfo($"Loaded custom translation for {lang} from {file}");
+                    Logger.LogInfo("[LoadCustomTranslations] Loaded custom translation for {0} from {1}", Enum.GetName(lang), file);
                 }
             }
             catch (Exception ex)
             {
-                Logger.LogError($"Failed to load custom translation from {file}: {ex.Message}");
+                Logger.LogError("[LoadCustomTranslations] Failed to load custom translation from {0}: {1}", file, ex.Message);
             }
         }
     }
@@ -119,20 +119,15 @@ internal static class Tr
 
         string result = null;
         if (CustomTranslations.TryGetValue(lang, out var customLang) && customLang.TryGetValue(keyStr, out result)) { }
-        else if (lang != SupportedLangs.English
-                 && CustomTranslations.TryGetValue(SupportedLangs.English, out var customEn)
-                 && customEn.TryGetValue(keyStr, out result)) { }
-        else if (InternalTranslations.TryGetValue(lang, out var internalLang)
-                 && internalLang.TryGetValue(keyStr, out result)) { }
-        else if (lang != SupportedLangs.English
-                 && InternalTranslations.TryGetValue(SupportedLangs.English, out var internalEn)
-                 && internalEn.TryGetValue(keyStr, out result)) { }
+        else if (InternalTranslations.TryGetValue(lang, out var internalLang) && internalLang.TryGetValue(keyStr, out result)) { }
+        else if (CustomTranslations.TryGetValue(SupportedLangs.English, out var customEn) && customEn.TryGetValue(keyStr, out result)) { }
+        else if (InternalTranslations.TryGetValue(SupportedLangs.English, out var internalEn) && internalEn.TryGetValue(keyStr, out result)) { }
 
         if (result == null)
         {
             if (MissingKeys.Add(keyStr))
             {
-                Logger.LogWarn($"Translation key not found: {keyStr}");
+                Logger.LogWarn("[Get] Translation key not found: {0}", keyStr);
             }
 
             return NOTFOUND;
@@ -140,7 +135,7 @@ internal static class Tr
 
         if (string.IsNullOrEmpty(result))
         {
-            Logger.LogWarn($"Translation value is null or empty: {keyStr}");
+            Logger.LogWarn("[Get] Translation value is null or empty: {0}", keyStr);
             return NO_VALUE;
         }
 
@@ -150,7 +145,7 @@ internal static class Tr
         }
         catch (Exception ex)
         {
-            Logger.LogError($"Failed to format string for key {keyStr}: {ex.Message}");
+            Logger.LogError("[Get] Failed to format string for key {0}: {1}", keyStr, ex.Message);
             return result;
         }
     }
@@ -166,7 +161,7 @@ internal static class Tr
             return Get(key, args);
         }
 
-        Logger.LogWarn($"Dynamic translation key not found in enum: {keyStr}");
+        Logger.LogWarn("[GetDynamic] Dynamic translation key not found in enum: {0}", keyStr);
         return NOTFOUND;
     }
 
@@ -183,14 +178,14 @@ internal static class Tr
         }
 
         Initialize();
-        Logger.LogInfo("Translations reloaded.");
+        Logger.LogInfo("[Update] Translations reloaded.");
     }
 
     private static void DumpMissingKeys()
     {
         if (MissingKeys.Count == 0)
         {
-            Logger.LogInfo("No missing translation keys found.");
+            Logger.LogInfo("[DumpMissingKeys] No missing translation keys found.");
             return;
         }
 
@@ -203,11 +198,11 @@ internal static class Tr
                     WriteIndented = true,
                 });
             File.WriteAllText(path, json);
-            Logger.LogInfo($"Missing translation keys dumped to {path}");
+            Logger.LogInfo("[DumpMissingKeys] Missing translation keys dumped to {0}", path);
         }
         catch (Exception ex)
         {
-            Logger.LogError($"Failed to dump missing keys: {ex.Message}");
+            Logger.LogError("[DumpMissingKeys] Failed to dump missing keys: {0}", ex.Message);
         }
     }
 }

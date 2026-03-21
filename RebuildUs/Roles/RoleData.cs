@@ -39,7 +39,7 @@ internal static class RoleData
                 }
                 catch (Exception e)
                 {
-                    Logger.LogError($"Failed to get color for {attr.RoleType}: {e.Message}", "RoleData");
+                    Logger.LogError("[RoleData] Failed to get color for {0}: {1}", attr.RoleType, e.Message);
                 }
 
                 RoleColorRegistry.RegisterRoleColor(roleType, resolvedColor);
@@ -65,21 +65,21 @@ internal static class RoleData
                     }
                     catch (Exception e)
                     {
-                        Logger.LogError($"Failed to get option for {attr.RoleType} ({attr.SpawnRatePropertyName}): {e.Message}", "RoleData");
+                        Logger.LogError("[RoleData] Failed to get option for {0} ({1}): {2}", attr.RoleType, attr.SpawnRatePropertyName, e.Message);
                     }
-                    return null!;
+                    return null;
                 };
 
                 roles.Add(new RoleRegistration(roleType, roleTeam, classType, getColor, getOption));
             }
         }
 
-        Logger.LogInfo("Registering Roles", "InitRole");
+        Logger.LogInfo("[InitRole] Registering Roles");
         foreach (var role in roles)
         {
-            Logger.LogInfo(role.RoleType.ToString(), "InitRole");
+            Logger.LogInfo("[InitRole] {0}", Enum.GetName(role.RoleType));
         }
-        Logger.LogInfo("Finish Registering Roles", "InitRole");
+        Logger.LogInfo("[InitRole] Finish Registering Roles");
 
         return [.. roles];
     }

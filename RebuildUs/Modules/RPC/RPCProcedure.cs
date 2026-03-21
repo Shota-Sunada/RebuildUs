@@ -61,7 +61,7 @@ internal static partial class RPCProcedure
             }
             catch (Exception e)
             {
-                Logger.LogError("Error while deserializing roles: " + e.Message);
+                Logger.LogError("[WorkaroundSetRoles] Error while deserializing roles: {0}", e.Message);
             }
         }
     }
@@ -73,7 +73,7 @@ internal static partial class RPCProcedure
         {
             return;
         }
-        Logger.LogInfo($"{player.Data.PlayerName}({playerId}): {Enum.GetName(typeof(RoleType), roleId)}", "setRole");
+        Logger.LogInfo("[SetRole] {0}({1}): {2}", player.Data.PlayerName, playerId, Enum.GetName(typeof(RoleType), roleId));
         player.SetRole((RoleType)roleId);
     }
 
@@ -84,7 +84,7 @@ internal static partial class RPCProcedure
         {
             return;
         }
-        Logger.LogInfo($"{player.Data.PlayerName}({playerId}): {Enum.GetName(typeof(RoleType), modId)}", nameof(AddModifier));
+        Logger.LogInfo("[AddModifier] {0}({1}): {2}", player.Data.PlayerName, playerId, Enum.GetName(typeof(RoleType), modId));
         player.AddModifier((ModifierType)modId);
     }
 

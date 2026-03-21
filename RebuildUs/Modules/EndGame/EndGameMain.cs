@@ -34,7 +34,7 @@ internal static partial class EndGameMain
 
     internal static void OnGameEndPostfix(AmongUsClient __instance, [HarmonyArgument(0)] ref EndGameResult endGameResult)
     {
-        Logger.LogInfo("Game ended.");
+        Logger.LogInfo("========== GAME ENDED ==========");
 
         var gameOverReason = AdditionalTempData.GameOverReason;
         AdditionalTempData.Clear();
@@ -45,9 +45,7 @@ internal static partial class EndGameMain
             var roles = RoleInfo.GetRoleInfoForPlayer(player);
             (var tasksCompleted, var tasksTotal) = TasksHandler.TaskInfo(player.Data);
 
-            var isOxygenDeath = SubmergedCompatibility.Loaded
-                                 && SubmarineOxygenSystem.Instance != null
-                                 && (OxygenDeathAnimationPatches.IsOxygenDeath || IsO2Win);
+            var isOxygenDeath = SubmergedCompatibility.Loaded && SubmarineOxygenSystem.Instance != null && (OxygenDeathAnimationPatches.IsOxygenDeath || IsO2Win);
             var finalStatus = GameHistory.FinalStatuses[player.PlayerId] = player.Data.Disconnected
                 ? FinalStatus.Disconnected
                 :
@@ -497,22 +495,22 @@ internal static partial class EndGameMain
 
                     return x.Status.CompareTo(y.Status);
                 });
-                Logger.LogInfo(TextRenderer.text, "Result");
-                Logger.LogInfo("----------Game Result-----------", "Result");
+                Logger.LogInfo("[Result] {0}", TextRenderer.text);
+                Logger.LogInfo("[Result] ---------- Game Result -----------");
                 foreach (var data in AdditionalTempData.PlayerRoles)
                 {
                     if (data.PlayerName == "")
                     {
                         continue;
                     }
-                    var taskInfo = data.TasksTotal > 0 ? $"<color=#FAD934FF>{data.TasksCompleted}/{data.TasksTotal}</color>" : "";
-                    var aliveDead = Tr.GetDynamic($"{data.Status}");
-                    var result = $"{data.PlayerName + data.NameSuffix}<pos=18.5%>{taskInfo}<pos=25%>{aliveDead}<pos=34%>{data.RoleNames}";
+                    var taskInfo = data.TasksTotal > 0 ? string.Format("<color=#FAD934FF>{0}/{1}</color>", data.TasksCompleted, data.TasksTotal) : "";
+                    var aliveDead = Tr.GetDynamic(Enum.GetName(data.Status));
+                    var result = string.Format("{0}<pos=18.5%>{1}<pos=25%>{2}<pos=34%>{3}", string.Format("{0}{1}", data.PlayerName, data.NameSuffix), taskInfo, aliveDead, data.RoleNames);
                     roleSummaryText.AppendLine(result);
-                    Logger.LogInfo(result, "Result");
+                    Logger.LogInfo("[Result] {0}", result);
                 }
 
-                Logger.LogInfo("--------------------------------", "Result");
+                Logger.LogInfo("[Result] --------------------------------");
 
                 var roleSummaryTextMesh = roleSummary.GetComponent<TMP_Text>();
                 roleSummaryTextMesh.alignment = TextAlignmentOptions.TopLeft;

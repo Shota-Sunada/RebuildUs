@@ -152,8 +152,7 @@ internal static class HatParentPatches
         }
         catch (Exception ex)
         {
-            Logger.LogError("HatParentPatches.UpdateMaterialPrefix failed.");
-            Logger.LogError(ex);
+            Logger.LogError("[UpdateMaterialPrefix] HatParentPatches.UpdateMaterialPrefix failed.\n{0}", ex.Message);
             return false;
         }
     }
@@ -324,9 +323,9 @@ internal static class HatParentPatches
         {
             hatParent.Hat = CustomHatManager.CreateHatBehaviour(hats[0], true);
         }
-        catch (Exception err)
+        catch (Exception ex)
         {
-            Logger.LogWarn($"Unable to create test hat \n{err}");
+            Logger.LogWarn("[SetCustomHat] Unable to create test hat:\n{0}", ex.Message);
             return true;
         }
 

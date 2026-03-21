@@ -1,67 +1,50 @@
-using System.Text;
-using BepInEx.Logging;
-
 namespace RebuildUs;
 
-internal class Logger
+internal static class Logger
 {
-    private static ManualLogSource _logSource = null!;
-    private readonly string _tag;
+#pragma warning disable RS0030 // 禁止 API を使用しない
+    private static ManualLogSource _logSource;
 
     internal static void Initialize(ManualLogSource log)
     {
         _logSource = log;
     }
 
-    internal Logger(string tag)
+    internal static void LogInfo(string text, params object[] args)
     {
-        _tag = tag;
+        _logSource.LogInfo(string.Format(text, args));
     }
 
-    private string Format(string text, params object[] args)
+    internal static void LogMessage(string text, params object[] args)
+    {
+        _logSource.LogMessage(string.Format(text, args));
+    }
+
+    internal static void LogWarn(string text, params object[] args)
+    {
+        _logSource.LogWarning(string.Format(text, args));
+    }
+
+    internal static void LogError(string text, params object[] args)
+    {
+        _logSource.LogError(string.Format(text, args));
+    }
+
+    internal static void LogFatal(string text, params object[] args)
+    {
+        _logSource.LogFatal(string.Format(text, args));
+    }
+
+    internal static void LogDebug(string text, params object[] args)
+    {
+        _logSource.LogDebug(string.Format(text, args));
+    }
+
+    internal static string BuildLog(object text, string tag)
     {
         StringBuilder sb = new();
-        sb.Append('[').Append(_tag).Append("] ");
-        if (args != null && args.Length > 0)
-        {
-            sb.AppendFormat(text, args);
-        }
-        else
-        {
-            sb.Append(text);
-        }
+        sb.Append('[').Append(tag).Append("] ").Append(text);
         return sb.ToString();
-    }
-
-#pragma warning disable RS0030 // 禁止 API を使用しない
-    internal void LogInfo(string text, params object[] args)
-    {
-        _logSource.LogInfo(Format(text, args));
-    }
-
-    internal void LogMessage(string text, params object[] args)
-    {
-        _logSource.LogMessage(Format(text, args));
-    }
-
-    internal void LogWarn(string text, params object[] args)
-    {
-        _logSource.LogWarning(Format(text, args));
-    }
-
-    internal void LogError(string text, params object[] args)
-    {
-        _logSource.LogError(Format(text, args));
-    }
-
-    internal void LogFatal(string text, params object[] args)
-    {
-        _logSource.LogFatal(Format(text, args));
-    }
-
-    internal void LogDebug(string text, params object[] args)
-    {
-        _logSource.LogDebug(Format(text, args));
     }
 #pragma warning restore RS0030 // 禁止 API を使用しない
 }

@@ -49,14 +49,12 @@ internal static class RoleAssignment
             }
             catch (Exception ex)
             {
-                Logger.LogError("AmongUsClient::CoStartGame: Exception:");
-                Logger.LogError(ex);
-                Logger.LogError(__instance);
+                Logger.LogError("AmongUsClient::CoStartGame: Exception: {0}\n{1}", ex.Message, __instance);
             }
 
             if (__instance.ShipPrefabs == null || __instance.ShipPrefabs.Count <= index || __instance.ShipPrefabs[index] == null)
             {
-                Logger.LogError($"CoStartGameHost aborted: invalid ship prefab index {index}.");
+                Logger.LogError("CoStartGameHost aborted: invalid ship prefab index {0}.", index);
                 yield break;
             }
 
@@ -160,8 +158,7 @@ internal static class RoleAssignment
             }
             catch (Exception ex)
             {
-                Logger.LogError("AssignRoles failed in CoStartGameHost.");
-                Logger.LogError(ex);
+                Logger.LogError("AssignRoles failed in CoStartGameHost.\n{0}", ex.Message);
             }
 
             {
@@ -197,7 +194,7 @@ internal static class RoleAssignment
         {
             if ((DateTime.UtcNow - start).TotalMilliseconds > timeoutMs)
             {
-                Logger.LogError($"Timeout({timeoutMs}ms): PlayerControl.LocalPlayer is null in CoStartGameHost");
+                Logger.LogError("Timeout({0}ms): PlayerControl.LocalPlayer is null in CoStartGameHost", timeoutMs);
                 yield break;
             }
 
@@ -225,7 +222,7 @@ internal static class RoleAssignment
 
     private static IEnumerator WaitResetVariables()
     {
-        Logger.LogInfo("waitResetVariables");
+        Logger.LogInfo("[WaitResetVariables] Starting.");
         var check = false;
         const int timeout = 10000;
         var startTime = DateTime.UtcNow;
@@ -233,7 +230,7 @@ internal static class RoleAssignment
         {
             if (CheckList == null)
             {
-                Logger.LogError("CheckList is null in WaitResetVariables");
+                Logger.LogError("[WaitResetVariables] CheckList is null.");
                 yield break;
             }
 
@@ -249,16 +246,17 @@ internal static class RoleAssignment
             }
 
             yield return new WaitForSeconds(1);
-            if (!((DateTime.UtcNow - startTime).TotalMilliseconds > timeout))
+            var ms = (DateTime.UtcNow - startTime).TotalMilliseconds;
+            if (!(ms > timeout))
             {
                 continue;
             }
-            Logger.LogInfo($"{(DateTime.UtcNow - startTime).TotalMilliseconds}");
-            Logger.LogError($"Timeout({timeout}ms) ResetVariables");
+            Logger.LogInfo("[WaitResetVariables] Time: {0}ms", ms);
+            Logger.LogError("[ResetVariables] Timeout({0}ms)", timeout);
             break;
         }
 
-        Logger.LogInfo("waitResetVariables done.");
+        Logger.LogInfo("[WaitResetVariables] Done.");
     }
 
     private static void Shuffle<T>(IList<T> list)
@@ -395,7 +393,7 @@ internal static class RoleAssignment
         Dictionary<byte, (int rate, int count)> neutralSettings = [];
         Dictionary<byte, (int rate, int count)> crewSettings = [];
 
-        Logger.LogMessage("Initializing Role Data");
+        Logger.LogMessage("[GetRoleAssignmentData] Initializing Role Data");
         foreach (var role in RoleData.Roles)
         {
             if (role.GetOption == null || role.GetOption() is not CustomRoleOption roleOption)

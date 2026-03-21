@@ -40,7 +40,7 @@ internal static class ModifierHelpers
 
         if (modType != ModifierType.NoModifier)
         {
-            Logger.LogWarn($"There is no modifier type registration for: {modType}", "GetMethods");
+            Logger.LogWarn("[GetMethods] There is no modifier type registration for: {0}", modType);
         }
         (MethodInfo, MethodInfo, MethodInfo, MethodInfo, MethodInfo) nullMethods = (null, null, null, null, null);
         MethodCache[modType] = nullMethods;
@@ -75,16 +75,15 @@ internal static class ModifierHelpers
                 return false;
             }
 
-            Logger.LogInfo($"{player.Data?.PlayerName}({player.PlayerId}): {Enum.GetName(typeof(ModifierType), modType)}", "AddModifier");
-            var
-                methods = GetMethods(modType);
-            if (methods.addModifier != null)
+            Logger.LogInfo("[AddModifier] {0}({1}): {2}", player.Data?.PlayerName, player.PlayerId, Enum.GetName(typeof(ModifierType), modType));
+            var (_, _, addModifier, _, _) = GetMethods(modType);
+            if (addModifier != null)
             {
-                methods.addModifier.Invoke(null, [player]);
+                addModifier.Invoke(null, [player]);
                 return true;
             }
 
-            Logger.LogWarn($"There is no modifier type: {modType}", "AddModifier");
+            Logger.LogWarn("[AddModifier] There is no modifier type: {0}", modType);
             return false;
         }
 
@@ -107,7 +106,7 @@ internal static class ModifierHelpers
                 return;
             }
 
-            Logger.LogWarn($"There is no modifier type: {modType}", "EraseModifier");
+            Logger.LogWarn("[EraseModifier] There is no modifier type: {0}", modType);
         }
 
         internal void EraseAllModifiers()

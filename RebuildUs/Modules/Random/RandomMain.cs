@@ -19,6 +19,6 @@ internal static class RandomMain
 
     internal static void LogScore()
     {
-        Logger.LogInfo(RandomScorer.MeasureQuality(Rnd), "RandomScorer");
+        Logger.LogInfo("[RandomScorer] {0}", RandomScorer.MeasureQuality(Rnd));
     }
 }

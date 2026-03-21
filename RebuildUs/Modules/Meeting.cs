@@ -200,7 +200,7 @@ internal static class Meeting
 
                 if (playerById == null)
                 {
-                    Logger.LogError(new StringBuilder("Couldn't find player info for voter: ").Append(state.VoterId).ToString());
+                    Logger.LogError("[PopulateResults] Couldn't find player info for voter: {0}", state.VoterId);
                 }
                 else if (i == 0 && state.SkippedVote && !playerById.IsDead)
                 {
@@ -558,7 +558,7 @@ internal static class Meeting
                 }
                 else
                 {
-                    Logger.LogError("Encountered a null Dead Body while destroying.");
+                    Logger.LogError("[CoStartMeeting2] Encountered a null Dead Body while destroying.");
                 }
             }
 
@@ -571,7 +571,7 @@ internal static class Meeting
                 }
                 else
                 {
-                    Logger.LogError("Encountered a null Evidence while destroying.");
+                    Logger.LogError("[CoStartMeeting2] Encountered a null Evidence while destroying.");
                 }
             }
 
@@ -730,7 +730,7 @@ internal static class Meeting
         }
         else
         {
-            Logger.LogWarn($"Player {source.Data.PlayerName} not found in MeetingHud. Message suppressed to prevent crash.");
+            Logger.LogWarn("[CoAddDelayedChat] Player {0} not found in MeetingHud. Message suppressed to prevent crash.", source.Data.PlayerName);
         }
     }
 }

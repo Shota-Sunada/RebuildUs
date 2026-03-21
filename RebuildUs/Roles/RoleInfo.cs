@@ -210,7 +210,7 @@ internal class RoleInfo(TrKey nameKey, Color color, CustomOption baseOption, Rol
         var registration = RoleData.Roles;
         if (registration == null)
         {
-            Logger.LogError("RoleData.Roles is null!", "RoleInfo");
+            Logger.LogError("[RoleInfo] RoleData.Roles is null!");
             return;
         }
 
@@ -229,7 +229,7 @@ internal class RoleInfo(TrKey nameKey, Color color, CustomOption baseOption, Rol
             }
             catch (Exception e)
             {
-                Logger.LogError($"Error loading role info for {reg.RoleType}: {e}", "RoleInfo");
+                Logger.LogError("[RoleInfo] Error loading role info for {0}: {1}", Enum.GetName(reg.RoleType), e.Message);
             }
         }
 

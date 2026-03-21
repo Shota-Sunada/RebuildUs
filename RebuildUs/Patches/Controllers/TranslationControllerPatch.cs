@@ -110,7 +110,7 @@ internal static class TranslationControllerPatch
         }
         catch (Exception ex)
         {
-            Logger.LogError(ex, "ExileMessage");
+            Logger.LogError("[ExileMessage] Error occurred: {0}", ex.Message);
         }
     }
 }

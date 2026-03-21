@@ -36,7 +36,7 @@ internal static class RoleHelpers
 
         if (roleType != RoleType.NoRole && roleType != RoleType.Crewmate && roleType != RoleType.Impostor && roleType != RoleType.Lovers)
         {
-            Logger.LogWarn($"There is no role type registration for: {roleType}", "GetMethods");
+            Logger.LogWarn("[GetMethods] There is no role type registration for: {0}", roleType);
         }
         (MethodInfo, MethodInfo, MethodInfo, MethodInfo, MethodInfo) nullMethods = (null, null, null, null, null);
         MethodCache[roleType] = nullMethods;
@@ -74,7 +74,7 @@ internal static class RoleHelpers
                 return false;
             }
 
-            Logger.LogInfo($"{player.Data?.PlayerName}({player.PlayerId}): {Enum.GetName(typeof(RoleType), roleType)}", "SetRole");
+            Logger.LogInfo("[SetRole] {0}({1}): {2}", player.Data?.PlayerName, player.PlayerId, Enum.GetName(roleType));
 
             if (roleType != RoleType.Lovers)
             {
@@ -91,14 +91,14 @@ internal static class RoleHelpers
                 return true;
             }
 
-            var methods = GetMethods(roleType);
-            if (methods.setRole != null)
+            var (_, _, setRole, _, _) = GetMethods(roleType);
+            if (setRole != null)
             {
-                methods.setRole.Invoke(null, [player]);
+                setRole.Invoke(null, [player]);
                 return true;
             }
 
-            Logger.LogWarn($"There is no role type: {roleType}", "SetRole");
+            Logger.LogWarn("[SetRole] There is no role type: {0}", Enum.GetName(roleType));
             return false;
         }
 
@@ -117,14 +117,14 @@ internal static class RoleHelpers
 
             if (player.IsRole(roleType))
             {
-                var methods = GetMethods(roleType);
-                if (methods.eraseRole != null)
+                var (_, _, _, eraseRole, _) = GetMethods(roleType);
+                if (eraseRole != null)
                 {
-                    methods.eraseRole.Invoke(null, [player]);
+                    eraseRole.Invoke(null, [player]);
                     return;
                 }
 
-                Logger.LogWarn($"There is no role type: {roleType}", "EraseRole");
+                Logger.LogWarn("[EraseRole] There is no role type: {0}", Enum.GetName(roleType));
             }
         }
 
@@ -141,9 +141,9 @@ internal static class RoleHelpers
                 {
                     continue;
                 }
-                var methods =
-                    GetMethods(reg.RoleType);
-                methods.eraseRole?.Invoke(null, [player]);
+
+                var (_, _, _, eraseRole, _) = GetMethods(reg.RoleType);
+                eraseRole?.Invoke(null, [player]);
             }
         }
 
@@ -160,9 +160,9 @@ internal static class RoleHelpers
                 {
                     continue;
                 }
-                var methods =
-                    GetMethods(reg.RoleType);
-                methods.swapRole?.Invoke(null, [player, target]);
+
+                var (_, _, _, _, swapRole) = GetMethods(reg.RoleType);
+                swapRole?.Invoke(null, [player, target]);
             }
         }
 

@@ -47,6 +47,8 @@ internal sealed class AdditionalVents
 
     internal static void AddAdditionalVents()
     {
+        Logger.LogMessage("[AddAdditionalVents] Starting.");
+
         if (_flag)
         {
             return;
@@ -56,7 +58,6 @@ internal sealed class AdditionalVents
         {
             return;
         }
-        Logger.LogMessage("AddAdditionalVents");
 
         // Polusにベントを追加する
         if (!Helpers.IsPolus || !CustomOptionHolder.PolusAdditionalVents.GetBool())
@@ -78,11 +79,13 @@ internal sealed class AdditionalVents
         //     vents1.vent.Right = vents2.vent;
         //     vents2.vent.Left = vents1.vent;
         // }
+
+        Logger.LogMessage("[AddAdditionalVents] Done.");
     }
 
     internal static void ClearAndReload()
     {
-        Logger.LogMessage("additionalVentsClearAndReload");
+        Logger.LogMessage("[AdditionalVentsClearAndReload] Reloading.");
         _flag = false;
         _allVents = [];
     }

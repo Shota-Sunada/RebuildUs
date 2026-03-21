@@ -192,8 +192,7 @@ internal static class Intro
         }
         catch (Exception ex)
         {
-            Logger.LogError("Intro.GenerateMiniCrewIcons failed");
-            Logger.LogError(ex);
+            Logger.LogError("[GenerateMiniCrewIcons] Intro.GenerateMiniCrewIcons failed: {0}", ex.Message);
         }
     }
 
@@ -289,9 +288,7 @@ internal static class Intro
             __instance.ImpostorRules.SetActive(false);
             __instance.ImpostorName.gameObject.SetActive(false);
             __instance.ImpostorTitle.gameObject.SetActive(false);
-            var show = IntroCutscene.SelectTeamToShow(
-                (Func<NetworkedPlayerInfo, bool>)(pcd => !PlayerControl.LocalPlayer.IsTeamImpostor()
-                                                         || pcd.Role.TeamType == PlayerControl.LocalPlayer.Data.Role.TeamType));
+            var show = IntroCutscene.SelectTeamToShow((Func<NetworkedPlayerInfo, bool>)(pcd => !PlayerControl.LocalPlayer.IsTeamImpostor() || pcd.Role.TeamType == PlayerControl.LocalPlayer.Data.Role.TeamType));
             if (show == null || show.Count < 1)
             {
                 Logger.LogError("IntroCutscene :: CoBegin() :: teamToShow is EMPTY or NULL");
@@ -478,7 +475,7 @@ internal static class Intro
         {
             if ((DateTime.UtcNow - start).TotalMilliseconds > timeoutMs)
             {
-                Logger.LogError($"IntroCutscene :: CoBegin() timeout({timeoutMs}ms): LocalPlayer is null");
+                Logger.LogError("IntroCutscene :: CoBegin() timeout({0}ms): LocalPlayer is null", timeoutMs);
                 yield break;
             }
 
@@ -515,34 +512,34 @@ internal static class Intro
             roleInfo = infoEnumerator.Current;
         }
 
-        Logger.LogInfo("----------Role Assign-----------", "Settings");
+        Logger.LogInfo("[Settings] ----------Role Assign-----------");
         if (PlayerControl.LocalPlayer.AmOwner)
         {
             LogRoleAssign();
         }
         else
         {
-            Logger.LogInfo("The Role Assignments will be seen in host log file.", "Settings");
+            Logger.LogInfo("[Settings] The Role Assignments will be seen in host log file.");
 #if DEBUG
-            Logger.LogInfo("But this is a debug build, you can see the role assignments.", "Settings");
+            Logger.LogInfo("[Settings] But this is a debug build, you can see the role assignments.");
             LogRoleAssign();
 #endif
         }
 
-        Logger.LogInfo("-----------Platforms------------", "Settings");
+        Logger.LogInfo("[Settings] -----------Platforms------------");
         var pcEnumerator2 = PlayerControl.AllPlayerControls.GetFastEnumerator();
         while (pcEnumerator2.MoveNext())
         {
             var pc = pcEnumerator2.Current;
-            Logger.LogInfo($"{(pc.AmOwner ? "[*]" : ""),-3}{pc.PlayerId,-2}:{pc.Data.PlayerName.PadRightV2(20)}:{pc.GetPlatform().Replace("Standalone", "")}", "Settings");
+            Logger.LogInfo("[Settings] {0,-3}{1,-2}:{2}:{3}", pc.AmOwner ? "[*]" : "", pc.PlayerId.ToString(), pc.Data.PlayerName.PadRightV2(20), pc.GetPlatform().Replace("Standalone", ""));
         }
 
-        Logger.LogInfo("---------Game Settings----------", "Settings");
+        Logger.LogInfo("[Settings] ---------Game Settings----------");
         RebuildUs.OptionsPage = 0;
         var tmp = GameOptionsManager.Instance.CurrentGameOptions.ToHudString(GameData.Instance ? GameData.Instance.PlayerCount : 10).Split("\r\n");
         foreach (var t in tmp[1..^2])
         {
-            Logger.LogInfo(t, "Settings");
+            Logger.LogInfo("[Settings] {0}", t);
         }
 
         Logger.LogInfo("--------Advance Settings--------", "Settings");
@@ -550,7 +547,7 @@ internal static class Intro
         {
             if (o.Parent == null ? !o.GetString().Equals("0%") : o.Parent.Enabled)
             {
-                Logger.LogInfo($"{(o.Parent == null ? o.NameKey : $"┗ {o.NameKey}")}:{o.GetString().RemoveHtml()}", "Settings");
+                Logger.LogInfo("[Settings] {0}:{1}", o.Parent == null ? o.NameKey : string.Format("┗ {0}", o.NameKey), o.GetString().RemoveHtml());
             }
         }
 
@@ -563,7 +560,7 @@ internal static class Intro
             __instance.RoleBlurbText.color = roleInfo.Color;
 
             Logger.LogInfo("--------Intro Data--------", "Settings");
-            Logger.LogInfo(roleInfo.Color);
+            Logger.LogInfo(roleInfo.Color.ToString());
             Logger.LogInfo(roleInfo.Name);
             Logger.LogInfo(roleInfo.IntroDescription);
 
@@ -575,7 +572,7 @@ internal static class Intro
                 }
                 else
                 {
-                    __instance.RoleText.text = Tr.Get(TrKey.MadmatePrefix) + __instance.RoleText.text;
+                    __instance.RoleText.text = string.Format("{0}{1}", Tr.Get(TrKey.MadmatePrefix), __instance.RoleText.text);
                 }
 
                 __instance.YouAreText.color = Madmate.Color;
@@ -585,7 +582,7 @@ internal static class Intro
             }
         }
 
-        Logger.LogInfo("--------------------------------", "Settings");
+        Logger.LogInfo("[Settings] --------------------------------");
 
         var hasLovers = false;
         var loversEnumerator = infos.GetEnumerator();
@@ -601,7 +598,8 @@ internal static class Intro
         if (hasLovers)
         {
             var otherLover = PlayerControl.LocalPlayer.GetPartner();
-            __instance.RoleBlurbText.text += "\n" + Helpers.Cs(Lovers.Color, string.Format(Tr.Get(TrKey.LoversFlavorIntroDesc), otherLover?.Data?.PlayerName ?? ""));
+            // __instance.RoleBlurbText.text += string.Format("\n{0}", Helpers.Cs(Lovers.Color, string.Format(Tr.Get(TrKey.LoversFlavorIntroDesc), otherLover?.Data?.PlayerName ?? "")));
+            __instance.RoleBlurbText.text = string.Format("{0}\n{1}", __instance.RoleBlurbText.text, Helpers.Cs(Lovers.Color, string.Format(Tr.Get(TrKey.LoversFlavorIntroDesc), otherLover?.Data?.PlayerName ?? "")));
         }
 
         // 従来処理
@@ -639,7 +637,7 @@ internal static class Intro
         while (pcEnumerator.MoveNext())
         {
             var pc = pcEnumerator.Current;
-            Logger.LogInfo($"{(pc.AmOwner ? "[*]" : ""),-3}{pc.PlayerId,-2}:{pc.Data.PlayerName.PadRightV2(20)}:{RoleInfo.GetRolesString(pc, false, joinSeparator: " + ")}", "Settings");
+            Logger.LogInfo("[Settings] {0,-3}{1,-2}:{2}:{3}", pc.AmOwner ? "[*]" : "", pc.PlayerId, pc.Data.PlayerName.PadRightV2(20), RoleInfo.GetRolesString(pc, false, joinSeparator: " + "));
         }
     }
 }

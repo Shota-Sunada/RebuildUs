@@ -193,7 +193,7 @@ internal static class Airship
 
         if (console == null)
         {
-            Logger.LogError($"Console \"{consoleName}\" is null", "ActivateWiring");
+            Logger.LogError("[ActivateWiring] Console \"{0}\" is null", consoleName);
             return null;
         }
 
@@ -228,7 +228,7 @@ internal static class Airship
         var obj = GameObject.Find(objectName);
         if (obj == null)
         {
-            Logger.LogError($"Object \"{objectName}\" was not found!", "ActivateConsole");
+            Logger.LogError("[ActivateConsole] Object \"{0}\" was not found!", objectName);
             return null;
         }
 

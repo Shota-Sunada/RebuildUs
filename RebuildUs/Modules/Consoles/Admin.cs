@@ -300,7 +300,7 @@ internal static class Admin
                 }
                 else
                 {
-                    Logger.LogWarn("Couldn't find counter for:" + counterArea.RoomType);
+                    Logger.LogWarn("[AdminUpdate] Couldn't find counter for: {0}", counterArea.RoomType);
                 }
             }
             else

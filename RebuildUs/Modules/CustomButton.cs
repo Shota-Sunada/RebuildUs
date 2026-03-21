@@ -305,7 +305,7 @@ internal sealed class CustomButton
             }
             catch (Exception ex)
             {
-                Logger.LogError($"[CustomButton] HudUpdate error: {ex}");
+                Logger.LogError("[CustomButton] HudUpdate error: {0}", ex.Message);
             }
         }
     }
@@ -331,7 +331,7 @@ internal sealed class CustomButton
             }
             catch (Exception ex)
             {
-                Logger.LogError($"[CustomButton] MeetingEndedUpdate error: {ex}");
+                Logger.LogError("[CustomButton] MeetingEndedUpdate error: {0}", ex.Message);
             }
         }
     }
@@ -347,7 +347,7 @@ internal sealed class CustomButton
             }
             catch (Exception ex)
             {
-                Logger.LogError($"[CustomButton] ResetAllCooldowns error: {ex}");
+                Logger.LogError("[CustomButton] ResetAllCooldowns error: {0}", ex.Message);
             }
         }
     }

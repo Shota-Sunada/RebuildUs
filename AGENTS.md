@@ -151,14 +151,12 @@ RebuildUs/
 Use the internal `RebuildUs.Logger` class:
 
 ```csharp
-Logger.LogInfo("Message", "Tag");
-Logger.LogInfo("Player {0} connected", "Network", ["playerName"]);
-Logger.LogWarn("Warning", "Tag");
-Logger.LogError("Error", "Tag");
-Logger.LogDebug("Debug", "Tag");
+Logger.LogInfo("[TAG] Message", "Args");
+Logger.LogInfo(" Player {0} connected", "playerName");
+Logger.LogWarn("Warning", "Args");
+Logger.LogError("[TAG] Error", "Args");
+Logger.LogDebug("Debug", "Args");
 ```
-
-Always use the `tag` parameter to categorize logs.
 
 ## Error Handling
 

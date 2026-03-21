@@ -1,6 +1,6 @@
 # RebuildUs API
 
-このドキュメントは、Mod 側で利用できる `TimerBar` / `DeathPopup` API の仕様と使い方をまとめたものです。  
+このドキュメントは、Mod 側で利用できる `TimerBar` / `DeathPopup` API の仕様と使い方をまとめたものです。
 対象実装:
 
 - `RebuildUs/Modules/TimerBarManager.cs`
@@ -13,7 +13,7 @@
 
 ### 概要
 
-`TimerBarManager` は `HideAndSeekTimerBar` の見た目・挙動を Mod 側で上書きする管理クラスです。  
+`TimerBarManager` は `HideAndSeekTimerBar` の見た目・挙動を Mod 側で上書きする管理クラスです。
 次の2系統を持ちます。
 
 - パッチ経由でゲーム標準 `HideAndSeekTimerBar` を差し替える
@@ -78,11 +78,11 @@
 
 #### スケーリング方向・位置補正
 
-- `ShrinkFromRightToLeft` (default: `true`)  
+- `ShrinkFromRightToLeft` (default: `true`)
   - Normal/Final バーを「右から減る」挙動にする
-- `ShrinkChunkFromRightToLeft` (default: `false`)  
+- `ShrinkChunkFromRightToLeft` (default: `false`)
   - `ChunkBar` に同補正を適用するか
-- `AlignChunkWithTimerX` (default: `false`)  
+- `AlignChunkWithTimerX` (default: `false`)
   - `ChunkBar` 左端を `TimerBar` と揃える
 
 #### テキスト・進捗計算
@@ -102,7 +102,7 @@
 - `UpdateStandalone(float time, float maxTime, bool isFinalCountdown, bool pulseTaskComplete)`
 - `DestroyStandaloneBar()`
 
-内部では `HideAndSeekManager` の prefab を解決して生成します。  
+内部では `HideAndSeekManager` の prefab を解決して生成します。
 prefab が取得できない場合、`EnsureStandaloneBar()` / `UpdateStandalone()` は `false` を返します。
 
 ---
@@ -119,11 +119,11 @@ prefab が取得できない場合、`EnsureStandaloneBar()` / `UpdateStandalone
 
 #### Final 条件
 
-- `FinalStartsAtMinValue` (default: `true`)  
+- `FinalStartsAtMinValue` (default: `true`)
   - `true` の場合、`current <= MinValue` 到達時に Final 扱い
-- `FinalCondition` (`Func<float current, float min, float max, bool>`)  
+- `FinalCondition` (`Func<float current, float min, float max, bool>`)
   - `FinalStartsAtMinValue == false` の時のみ使用
-- `FinalStartThreshold` (default: `15f`)  
+- `FinalStartThreshold` (default: `15f`)
   - `FinalCondition == null` 時のデフォルト判定用
 
 #### FinalBar の個別 range
@@ -202,7 +202,7 @@ TimerBarManager.CustomTimer.FinalBarMaxValue = 15f;
 TimerBarManager.CustomTimer.MinReachedBehavior = TimerMinReachedBehavior.ResetToMax;
 TimerBarManager.CustomTimer.OnMinReached = ctx =>
 {
-    Logger.LogInfo($"Timer reached min: {ctx.CurrentValue}");
+    Logger.LogInfo("Timer reached min: {0}", ctx.CurrentValue);
 };
 
 TimerBarManager.StartCustomTimer();
@@ -234,7 +234,7 @@ TimerBarManager.StartCustomTimer();
 
 ### 概要
 
-`DeathPopup` は HideAndSeek の死亡ポップアップ生成を Mod 側から呼び出せるユーティリティです。  
+`DeathPopup` は HideAndSeek の死亡ポップアップ生成を Mod 側から呼び出せるユーティリティです。
 prefab / parent 解決に失敗した場合でも、可能なら vanilla の `LogicDeathPopup.OnPlayerDeath` へフォールバックします。
 
 対象実装: `RebuildUs/Modules/DeathPopup.cs`
@@ -282,7 +282,7 @@ if (result == DeathPopup.RESULT_SUCCESS)
 }
 else
 {
-    Logger.LogInfo($"DeathPopup failed: {DeathPopup.ExplainResult(result)}");
+    Logger.LogInfo("DeathPopup failed: {0}" DeathPopup.ExplainResult(result));
 }
 ```
 
@@ -300,5 +300,5 @@ else
 
 ## 補足
 
-この API は `internal` 実装に依存します。  
+この API は `internal` 実装に依存します。
 将来的にゲーム更新やリフレクション対象変更で挙動が変わる可能性があるため、使用時はログ監視を推奨します。

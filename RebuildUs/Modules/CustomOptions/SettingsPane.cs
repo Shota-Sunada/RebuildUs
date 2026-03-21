@@ -74,7 +74,7 @@ internal partial class CustomOption
                 DrawTab(__instance, CustomOptionType.Modifier);
                 break;
             default:
-                Logger.LogWarn($"Invalid Pane Page ID in SettingsPaneChangeTab: {id}");
+                Logger.LogWarn("[SetTab] Invalid Pane Page ID in SettingsPaneChangeTab: {0}", id);
                 break;
         }
     }

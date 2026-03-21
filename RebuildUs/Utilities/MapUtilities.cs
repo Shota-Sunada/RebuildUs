@@ -27,18 +27,16 @@ internal static class MapUtilities
 
     private static void GetSystems()
     {
-        Logger.LogInfo("GetSystems");
-
         if (!CachedShipStatus)
         {
-            Logger.LogInfo("NO CachedShipStatus");
+            Logger.LogInfo("[GetSystems] The CachedShipStatus is null. Using ShipStatus.Instance instead.");
             CachedShipStatus = ShipStatus.Instance;
         }
 
         var systems = CachedShipStatus.Systems;
         if (systems.Count <= 0)
         {
-            Logger.LogInfo("NO CachedShipStatus.Systems");
+            Logger.LogInfo("[GetSystems] The CachedShipStatus.Systems has no value.");
             return;
         }
 

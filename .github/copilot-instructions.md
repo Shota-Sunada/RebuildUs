@@ -30,7 +30,7 @@ The IL2CPP environment is highly sensitive to GC allocations and reflection over
 **Strict Rule:** Do not use `BepInEx.Logging.ManualLogSource` directly. Use the internal static `RebuildUs.Logger` class.
 
 - **Methods:** `LogInfo`, `LogMessage`, `LogWarn`, `LogError`, `LogFatal`, `LogDebug`.
-- **Tagging:** Always use the `tag` parameter to categorize logs (e.g., `Logger.LogInfo("Spawned", "PlayerManager")`).
+- **Tagging:** The `tag` parameter was deprecated. You can set the tag as head of messages with using `[]`. (e.g., `Logger.LogInfo("[PlayerManager] Spawned")`).
 - **Formatting:** Use overloads accepting `string text, string[] args` for variables to maintain efficiency.
 - **Minimal Logging:** Avoid verbose logs in Release builds. Keep the log surface area small.
 

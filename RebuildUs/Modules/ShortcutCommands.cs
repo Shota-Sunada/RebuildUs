@@ -92,7 +92,7 @@ internal static class ShortcutCommands
         }
         if (!Helpers.IsGameStarted)
         {
-            Logger.LogInfo("DeathPopup debug failed: game is not started.");
+            Logger.LogInfo("[DebugCommands] DeathPopup debug failed: game is not started.");
             return;
         }
 
@@ -100,17 +100,17 @@ internal static class ShortcutCommands
         var reason = DeathPopup.ExplainResult(result);
         if (result != DeathPopup.RESULT_SUCCESS)
         {
-            Logger.LogInfo($"DeathPopup debug result={result} ({reason})");
+            Logger.LogInfo("[DebugCommands] DeathPopup debug result={0} ({1})", result, reason);
             return;
         }
 
         if (popup == null)
         {
-            Logger.LogInfo("DeathPopup debug success via fallback path (popup instance unavailable for text verification).");
+            Logger.LogInfo("[DebugCommands] DeathPopup debug success via fallback path (popup instance unavailable for text verification).");
             return;
         }
 
-        Logger.LogInfo("DeathPopup debug success.");
+        Logger.LogInfo("[DebugCommands] DeathPopup debug success.");
     }
 
     internal static void OpenAirshipToilet()
@@ -129,7 +129,7 @@ internal static class ShortcutCommands
     {
         if (!Helpers.IsGameStarted)
         {
-            Logger.LogInfo("TimerBar debug failed: game is not started.");
+            Logger.LogInfo("[ToggleTimerBarDebug] TimerBar debug failed: game is not started.");
             return;
         }
 
@@ -153,7 +153,7 @@ internal static class ShortcutCommands
             TimerBarManager.Settings.TimeFormatter = (time, _, isFinal) =>
             {
                 var seconds = Mathf.CeilToInt(Mathf.Max(0f, time));
-                return isFinal ? $"FINAL {seconds}s" : $"ESCAPE {seconds}s";
+                return isFinal ? string.Format("FINAL {0}s", seconds) : string.Format("ESCAPE {0}s", seconds);
             };
 
             TimerBarManager.CustomTimer.MinValue = 0f;
@@ -169,27 +169,24 @@ internal static class ShortcutCommands
             TimerBarManager.CustomTimer.FinalCondition = null;
             TimerBarManager.CustomTimer.OnMinReached = ctx =>
             {
-                Logger.LogInfo(
-                    $"TimerBar custom timer reached min. current={ctx.CurrentValue:F2}, min={ctx.MinValue:F2}, max={ctx.MaxValue:F2}, isFinal={ctx.IsFinalCountdown}, behavior={TimerBarManager.CustomTimer.MinReachedBehavior}");
+                Logger.LogInfo("[ToggleTimerBarDebug] TimerBar custom timer reached min. current={0:F2}, min={1:F2}, max={2:F2}, isFinal={3}, behavior={4}", ctx.CurrentValue, ctx.MinValue, ctx.MaxValue, ctx.IsFinalCountdown, TimerBarManager.CustomTimer.MinReachedBehavior);
             };
 
             TimerBarManager.StartCustomTimer();
 
-            Logger.LogInfo("TimerBar debug enabled (works in non-HnS too). (Ctrl+F11 to dump stats)");
+            Logger.LogInfo("[ToggleTimerBarDebug] TimerBar debug enabled (works in non-HnS too). (Ctrl+F11 to dump stats)");
             return;
         }
 
         TimerBarManager.StopCustomTimer(hideBar: true);
         TimerBarManager.Settings.Reset();
-        Logger.LogInfo("TimerBar debug disabled.");
+        Logger.LogInfo("[ToggleTimerBarDebug] TimerBar debug disabled.");
     }
 
     private static void DumpTimerBarDebugStats()
     {
-        Logger.LogInfo(
-            $"TimerBar stats create={_timerBarCreateCount}, update={_timerBarUpdateCount}, updateTimer={_timerBarUpdateTimerCount}, finalHide={_timerBarFinalHideCount}, taskComplete={_timerBarTaskCompleteCount}, debugEnabled={_timerBarDebugEnabled}");
-        Logger.LogInfo(
-            $"TimerBar custom settings min={TimerBarManager.CustomTimer.MinValue}, max={TimerBarManager.CustomTimer.MaxValue}, finalAtMin={TimerBarManager.CustomTimer.FinalStartsAtMinValue}, finalMin={TimerBarManager.CustomTimer.FinalBarMinValue}, finalMax={TimerBarManager.CustomTimer.FinalBarMaxValue}, decreasePerSec={TimerBarManager.CustomTimer.DecreasePerSecond}, minBehavior={TimerBarManager.CustomTimer.MinReachedBehavior}");
+        Logger.LogInfo("[DumpTimerBarDebugStats] TimerBar stats create={0}, update={1}, updateTimer={2}, finalHide={3}, taskComplete={4}, debugEnabled={5}", _timerBarCreateCount, _timerBarUpdateCount, _timerBarUpdateTimerCount, _timerBarFinalHideCount, _timerBarTaskCompleteCount, _timerBarDebugEnabled);
+        Logger.LogInfo("[DumpTimerBarDebugStats] TimerBar custom settings min={0}, max={1}, finalAtMin={2}, finalMin={3}, finalMax={4}, decreasePerSec={5}, minBehavior={6}", TimerBarManager.CustomTimer.MinValue, TimerBarManager.CustomTimer.MaxValue, TimerBarManager.CustomTimer.FinalStartsAtMinValue, TimerBarManager.CustomTimer.FinalBarMinValue, TimerBarManager.CustomTimer.FinalBarMaxValue, TimerBarManager.CustomTimer.DecreasePerSecond, TimerBarManager.CustomTimer.MinReachedBehavior);
     }
 
     private static void EnsureTimerBarDebugHooks()
@@ -211,7 +208,7 @@ internal static class ShortcutCommands
     {
         if (!_timerBarDebugEnabled)
         {
-            Logger.LogInfo("TimerBar debug value decrease skipped: debug is disabled.");
+            Logger.LogInfo("[DecreaseTimerBarDebugValue] TimerBar debug value decrease skipped: debug is disabled.");
             return;
         }
 
@@ -219,11 +216,11 @@ internal static class ShortcutCommands
         var ok = TimerBarManager.DecreaseCustomTimer(debugDecreaseValue);
         if (ok)
         {
-            Logger.LogInfo($"TimerBar debug value decreased by {debugDecreaseValue} (Ctrl+F12).");
+            Logger.LogInfo("[DecreaseTimerBarDebugValue] TimerBar debug value decreased by {0} (Ctrl+F12).", debugDecreaseValue);
         }
         else
         {
-            Logger.LogInfo("TimerBar debug value decrease skipped: custom timer is not running.");
+            Logger.LogInfo("[DecreaseTimerBarDebugValue] TimerBar debug value decrease skipped: custom timer is not running.");
         }
     }
 }
