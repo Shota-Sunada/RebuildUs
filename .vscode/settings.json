@@ -32,6 +32,7 @@
     "polus",
     "poolable",
     "Prefs",
+    "Shapeshifted",
     "sidekicked",
     "Skeld",
     "Suicider",
@@ -40,6 +41,11 @@
     "untargetable",
     "untargetables",
     "Usables",
-    "Useables"
+    "Useables",
+    "Minigames",
+    "Behaviours",
+    "Survillance",
+    "Reshelve",
+    "Activatable"
   ]
 }
