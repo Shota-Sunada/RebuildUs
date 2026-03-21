@@ -361,6 +361,7 @@
   "MayorMaxRemoteMeetings": "遠隔ミーティング回数",
   "MayorMeetingButton": "遠隔でミーティングを開始できる",
   "MayorNumVotes": "票数",
+  "MayorRemoteButtonNum": "残り: {0}回",
   "MayorShortDesc": "自分の票が何倍もの力を持っている",
   "MayorTasksNeededToSeeVoteColors": "投票先を見るために必要な票の数",
   "Medic": "メディック",

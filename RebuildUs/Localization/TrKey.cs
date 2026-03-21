@@ -368,6 +368,7 @@ internal enum TrKey
     MayorMaxRemoteMeetings,
     MayorMeetingButton,
     MayorNumVotes,
+    MayorRemoteButtonNum,
     MayorShortDesc,
     MayorTasksNeededToSeeVoteColors,
     Medic,

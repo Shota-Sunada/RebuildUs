@@ -361,6 +361,7 @@
   "MayorMaxRemoteMeetings": "Max Number Of Remote Meeting",
   "MayorMeetingButton": "Has Remote Meeting Button",
   "MayorNumVotes": "Number Of Votes",
+  "MayorRemoteButtonNum": "Remains: {0}x",
   "MayorShortDesc": "Your vote counts multiple times",
   "MayorTasksNeededToSeeVoteColors": "Number Of Tasks To See Vote Colors",
   "Medic": "Medic",
