@@ -16,3 +16,7 @@ T:BepInEx.Logging.ManualLogSource;Use RebuildUs.Logger instead.
 M:BepInEx.Logging.ManualLogSource.LogInfo(System.Object);Use RebuildUs.Logger.LogInfo instead.
 M:BepInEx.Logging.ManualLogSource.LogWarning(System.Object);Use RebuildUs.Logger.LogWarn instead.
 M:BepInEx.Logging.ManualLogSource.LogError(System.Object);Use RebuildUs.Logger.LogError instead.
+
+# String Concat
+M:System.String.Concat(System.String,System.String);Use StringBuilder or string.Format for performance.
+M:System.String.Concat(System.String,System.String,System.String);Use StringBuilder for performance.

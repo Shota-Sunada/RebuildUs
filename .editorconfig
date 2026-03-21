@@ -310,5 +310,11 @@ resharper_web_config_module_not_resolved_highlighting = warning
 resharper_web_config_type_not_resolved_highlighting = warning
 resharper_web_config_wrong_module_highlighting = warning
 
+[*.cs]
+# string の + 連結を禁止 (CA1845 またはカスタムルールとして設定)
+# 標準ルールでは「ループ内での連結」などを対象にする CA1834 などがあります
+dotnet_diagnostic.CA1845.severity = error
+dotnet_diagnostic.CA1834.severity = error
+
 [*.{csproj,xml,json,resx,yml,vue,ts}]
 indent_size = 2

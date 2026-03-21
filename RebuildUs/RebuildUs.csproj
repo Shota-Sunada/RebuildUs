@@ -17,6 +17,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\RebuildUs.Analyzers\RebuildUs.Analyzers.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+  </ItemGroup>
+
+  <ItemGroup>
     <AdditionalFiles Include="BannedSymbols.txt" />
   </ItemGroup>
 
