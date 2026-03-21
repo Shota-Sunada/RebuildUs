@@ -6,3 +6,7 @@
 Rule ID | Category | Severity | Notes
 --------|----------|----------|-------
 RUS001 | Performance | Error | StringPlusAnalyzer
+RUS002 | Performance | Error | RebuildUsPerformanceAnalyzer
+RUS003 | Performance | Error | RebuildUsPerformanceAnalyzer
+RUS004 | Performance | Error | RebuildUsPerformanceAnalyzer
+RUS005 | Performance | Error | RebuildUsPerformanceAnalyzer
