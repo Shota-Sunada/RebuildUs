@@ -100,7 +100,8 @@ internal class EvilHacker : MultiRoleBase<EvilHacker>
     [RegisterCustomButton]
     internal static void MakeButtons(HudManager hm)
     {
-        _evilHackerButton = new(() =>
+        _evilHackerButton = new(
+            () =>
             {
                 PlayerControl.LocalPlayer.NetTransform.Halt();
                 Admin.IsEvilHackerAdmin = true;
@@ -134,7 +135,8 @@ internal class EvilHacker : MultiRoleBase<EvilHacker>
             Helpers.IsPolus,
             FastDestroyableSingleton<TranslationController>.Instance.GetString(StringNames.Admin));
 
-        _evilHackerCreatesMadmateButton = new(() =>
+        _evilHackerCreatesMadmateButton = new(
+            () =>
             {
                 using RPCSender sender = new(PlayerControl.LocalPlayer.NetId, CustomRPC.EvilHackerCreatesMadmate);
                 sender.Write(Local._currentTarget.PlayerId);

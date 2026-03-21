@@ -170,7 +170,8 @@ internal class Tracker : MultiRoleBase<Tracker>
     [RegisterCustomButton]
     internal static void MakeButtons(HudManager hm)
     {
-        _trackerTrackPlayerButton = new(() =>
+        _trackerTrackPlayerButton = new(
+            () =>
             {
                 using RPCSender sender = new(PlayerControl.LocalPlayer.NetId, CustomRPC.TrackerUsedTracker);
                 sender.Write(Local.CurrentTarget.PlayerId);
@@ -199,7 +200,8 @@ internal class Tracker : MultiRoleBase<Tracker>
             false,
             Tr.Get(TrKey.TrackerText));
 
-        _trackerTrackCorpsesButton = new(() =>
+        _trackerTrackCorpsesButton = new(
+            () =>
             {
                 CorpsesTrackingTimer = CorpsesTrackingDuration;
             },

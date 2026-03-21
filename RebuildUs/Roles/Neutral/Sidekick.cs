@@ -103,7 +103,8 @@ internal class Sidekick : SingleRoleBase<Sidekick>
     [RegisterCustomButton]
     internal static void MakeButtons(HudManager hm)
     {
-        _sidekickKillButton = new(() =>
+        _sidekickKillButton = new(
+            () =>
             {
                 if (Helpers.CheckMurderAttemptAndKill(Local.Player, Local._currentTarget) == MurderAttemptResult.SuppressKill)
                 {
@@ -126,7 +127,8 @@ internal class Sidekick : SingleRoleBase<Sidekick>
             false,
             FastDestroyableSingleton<TranslationController>.Instance.GetString(StringNames.KillLabel));
 
-        _sidekickSabotageLightsButton = new(() =>
+        _sidekickSabotageLightsButton = new(
+            () =>
             {
                 MapUtilities.CachedShipStatus.RpcUpdateSystem(SystemTypes.Sabotage, (byte)SystemTypes.Electrical);
             },

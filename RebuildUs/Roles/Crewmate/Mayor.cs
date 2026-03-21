@@ -46,7 +46,8 @@ internal class Mayor : MultiRoleBase<Mayor>
     [RegisterCustomButton]
     internal static void MakeButtons(HudManager hm)
     {
-        _mayorMeetingButton = new(() =>
+        _mayorMeetingButton = new(
+            () =>
             {
                 PlayerControl.LocalPlayer.NetTransform.Halt(); // Stop current movement
                 Local._remoteMeetingsLeft--;

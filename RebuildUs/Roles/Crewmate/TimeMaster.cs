@@ -114,7 +114,8 @@ internal class TimeMaster : SingleRoleBase<TimeMaster>
     [RegisterCustomButton]
     internal static void MakeButtons(HudManager hm)
     {
-        _timeMasterShieldButton = new(() =>
+        _timeMasterShieldButton = new(
+            () =>
             {
                 using RPCSender sender = new(PlayerControl.LocalPlayer.NetId, CustomRPC.TimeMasterShield);
                 RPCProcedure.TimeMasterShield();

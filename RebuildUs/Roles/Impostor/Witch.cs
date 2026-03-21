@@ -103,7 +103,8 @@ internal class Witch : MultiRoleBase<Witch>
     [RegisterCustomButton]
     internal static void MakeButtons(HudManager hm)
     {
-        WitchSpellButton = new(() =>
+        WitchSpellButton = new(
+            () =>
             {
                 if (_currentTarget != null)
                 {

@@ -50,7 +50,8 @@ internal class Lighter : MultiRoleBase<Lighter>
     internal static void MakeButtons(HudManager hm)
     {
         // Lighter light
-        _lighterButton = new(() =>
+        _lighterButton = new(
+            () =>
             {
                 var local = Local;
                 local?._lightActive = true;

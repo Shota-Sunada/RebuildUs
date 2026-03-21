@@ -135,26 +135,25 @@ internal class Jackal : SingleRoleBase<Jackal>
     [RegisterCustomButton]
     internal static void MakeButtons(HudManager hm)
     {
-        _jackalKillButton = new(() =>
+        _jackalKillButton = new(
+            () =>
             {
-                var local = Local;
-                if (local == null)
+                if (Local == null)
                 {
                     return;
                 }
-                if (Helpers.CheckMurderAttemptAndKill(local.Player, local._currentTarget) == MurderAttemptResult.SuppressKill)
+                if (Helpers.CheckMurderAttemptAndKill(Local.Player, Local._currentTarget) == MurderAttemptResult.SuppressKill)
                 {
                     return;
                 }
 
                 _jackalKillButton?.Timer = _jackalKillButton.MaxTimer;
-                local._currentTarget = null;
+                Local._currentTarget = null;
             },
             () => PlayerControl.LocalPlayer != null && PlayerControl.LocalPlayer.IsRole(RoleType.Jackal) && PlayerControl.LocalPlayer.IsAlive(),
             () =>
             {
-                var local = Local;
-                return local != null && local._currentTarget != null && PlayerControl.LocalPlayer.CanMove;
+                return Local != null && Local._currentTarget != null && PlayerControl.LocalPlayer.CanMove;
             },
             () =>
             {
@@ -169,27 +168,25 @@ internal class Jackal : SingleRoleBase<Jackal>
             FastDestroyableSingleton<TranslationController>.Instance.GetString(StringNames.KillLabel));
 
         // Jackal Sidekick Button
-        _jackalSidekickButton = new(() =>
+        _jackalSidekickButton = new(
+            () =>
             {
-                var local = Local;
-                if (local == null || local._currentTarget == null)
+                if (Local == null || Local._currentTarget == null)
                 {
                     return;
                 }
 
                 using RPCSender sender = new(PlayerControl.LocalPlayer.NetId, CustomRPC.JackalCreatesSidekick);
-                sender.Write(local._currentTarget.PlayerId);
-                RPCProcedure.JackalCreatesSidekick(local._currentTarget.PlayerId);
+                sender.Write(Local._currentTarget.PlayerId);
+                RPCProcedure.JackalCreatesSidekick(Local._currentTarget.PlayerId);
             },
             () =>
             {
-                var local = Local;
-                return local != null && local.CanSidekick && PlayerControl.LocalPlayer.IsRole(RoleType.Jackal) && PlayerControl.LocalPlayer.IsAlive();
+                return Local != null && Local.CanSidekick && PlayerControl.LocalPlayer.IsRole(RoleType.Jackal) && PlayerControl.LocalPlayer.IsAlive();
             },
             () =>
             {
-                var local = Local;
-                return local != null && local.CanSidekick && local._currentTarget != null && PlayerControl.LocalPlayer.CanMove;
+                return Local != null && Local.CanSidekick && Local._currentTarget != null && PlayerControl.LocalPlayer.CanMove;
             },
             () =>
             {
@@ -203,14 +200,12 @@ internal class Jackal : SingleRoleBase<Jackal>
             false,
             Tr.Get(TrKey.SidekickText));
 
-        _jackalSabotageLightsButton = new(() =>
+        _jackalSabotageLightsButton = new(
+            () =>
             {
                 MapUtilities.CachedShipStatus?.RpcUpdateSystem(SystemTypes.Sabotage, (byte)SystemTypes.Electrical);
             },
-            () => PlayerControl.LocalPlayer != null
-                  && PlayerControl.LocalPlayer.IsRole(RoleType.Jackal)
-                  && CanSabotageLights
-                  && PlayerControl.LocalPlayer.IsAlive(),
+            () => PlayerControl.LocalPlayer != null && PlayerControl.LocalPlayer.IsRole(RoleType.Jackal) && CanSabotageLights && PlayerControl.LocalPlayer.IsAlive(),
             () =>
             {
                 if (_jackalSabotageLightsButton == null)

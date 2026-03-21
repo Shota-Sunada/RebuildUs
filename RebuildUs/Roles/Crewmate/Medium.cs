@@ -121,7 +121,8 @@ internal class Medium : MultiRoleBase<Medium>
     [RegisterCustomButton]
     internal static void MakeButtons(HudManager hm)
     {
-        _mediumButton = new(() =>
+        _mediumButton = new(
+            () =>
             {
                 if (Local._target == null)
                 {

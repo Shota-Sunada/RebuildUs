@@ -93,7 +93,8 @@ internal class Sheriff : MultiRoleBase<Sheriff>
     internal static void MakeButtons(HudManager hm)
     {
         // Sheriff Kill
-        _sheriffKillButton = new(() =>
+        _sheriffKillButton = new(
+            () =>
             {
                 if (Local.NumShots <= 0)
                 {
@@ -134,10 +135,7 @@ internal class Sheriff : MultiRoleBase<Sheriff>
             },
             () =>
             {
-                return PlayerControl.LocalPlayer.IsRole(RoleType.Sheriff)
-                       && Local.NumShots > 0
-                       && PlayerControl.LocalPlayer?.Data?.IsDead == false
-                       && Local.CanKill;
+                return PlayerControl.LocalPlayer.IsRole(RoleType.Sheriff) && Local.NumShots > 0 && PlayerControl.LocalPlayer.IsAlive() && Local.CanKill;
             },
             () =>
             {
@@ -156,8 +154,7 @@ internal class Sheriff : MultiRoleBase<Sheriff>
             false,
             FastDestroyableSingleton<TranslationController>.Instance.GetString(StringNames.KillLabel));
 
-        SheriffNumShotsText = UnityObject.Instantiate(_sheriffKillButton.ActionButton.cooldownTimerText,
-            _sheriffKillButton.ActionButton.cooldownTimerText.transform.parent);
+        SheriffNumShotsText = UnityObject.Instantiate(_sheriffKillButton.ActionButton.cooldownTimerText, _sheriffKillButton.ActionButton.cooldownTimerText.transform.parent);
         SheriffNumShotsText.text = "";
         SheriffNumShotsText.enableWordWrapping = false;
         SheriffNumShotsText.transform.localScale = Vector3.one * 0.5f;

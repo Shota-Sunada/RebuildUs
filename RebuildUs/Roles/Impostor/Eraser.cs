@@ -63,7 +63,8 @@ internal class Eraser : MultiRoleBase<Eraser>
     [RegisterCustomButton]
     internal static void MakeButtons(HudManager hm)
     {
-        _eraserButton = new(() =>
+        _eraserButton = new(
+            () =>
             {
                 _eraserButton.MaxTimer += CooldownIncrease;
                 _eraserButton.Timer = _eraserButton.MaxTimer;

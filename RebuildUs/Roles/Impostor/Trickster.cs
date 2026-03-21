@@ -35,7 +35,8 @@ internal class Trickster : SingleRoleBase<Trickster>
     [RegisterCustomButton]
     internal static void MakeButtons(HudManager hm)
     {
-        _placeJackInTheBoxButton = new(() =>
+        _placeJackInTheBoxButton = new(
+            () =>
             {
                 _placeJackInTheBoxButton.Timer = _placeJackInTheBoxButton.MaxTimer;
 
@@ -50,9 +51,7 @@ internal class Trickster : SingleRoleBase<Trickster>
             },
             () =>
             {
-                return PlayerControl.LocalPlayer.IsRole(RoleType.Trickster)
-                       && PlayerControl.LocalPlayer.IsAlive()
-                       && !JackInTheBox.HasJackInTheBoxLimitReached();
+                return PlayerControl.LocalPlayer.IsRole(RoleType.Trickster) && PlayerControl.LocalPlayer.IsAlive() && !JackInTheBox.HasJackInTheBoxLimitReached();
             },
             () =>
             {
@@ -70,17 +69,15 @@ internal class Trickster : SingleRoleBase<Trickster>
             false,
             Tr.Get(TrKey.PlaceJackInTheBoxText));
 
-        _lightsOutButton = new(() =>
+        _lightsOutButton = new(
+            () =>
             {
                 using RPCSender sender = new(PlayerControl.LocalPlayer.NetId, CustomRPC.LightsOut);
                 RPCProcedure.LightsOut();
             },
             () =>
             {
-                return PlayerControl.LocalPlayer.IsRole(RoleType.Trickster)
-                       && PlayerControl.LocalPlayer.IsAlive()
-                       && JackInTheBox.HasJackInTheBoxLimitReached()
-                       && JackInTheBox.BoxesConvertedToVents;
+                return PlayerControl.LocalPlayer.IsRole(RoleType.Trickster) && PlayerControl.LocalPlayer.IsAlive() && JackInTheBox.HasJackInTheBoxLimitReached() && JackInTheBox.BoxesConvertedToVents;
             },
             () =>
             {

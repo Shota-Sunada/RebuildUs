@@ -122,7 +122,8 @@ internal class SecurityGuard : SingleRoleBase<SecurityGuard>
     [RegisterCustomButton]
     internal static void MakeButtons(HudManager hm)
     {
-        _securityGuardButton = new(() =>
+        _securityGuardButton = new(
+            () =>
             {
                 if (Local._ventTarget != null)
                 {
@@ -161,9 +162,7 @@ internal class SecurityGuard : SingleRoleBase<SecurityGuard>
             },
             () =>
             {
-                return PlayerControl.LocalPlayer.IsRole(RoleType.SecurityGuard)
-                       && PlayerControl.LocalPlayer.IsAlive()
-                       && Local.RemainingScrews >= Mathf.Min(VentPrice, CamPrice);
+                return PlayerControl.LocalPlayer.IsRole(RoleType.SecurityGuard) && PlayerControl.LocalPlayer.IsAlive() && Local.RemainingScrews >= Mathf.Min(VentPrice, CamPrice);
             },
             () =>
             {
@@ -180,13 +179,7 @@ internal class SecurityGuard : SingleRoleBase<SecurityGuard>
 
                 _securityGuardButtonScrewsText?.text = string.Format(Tr.Get(TrKey.SecurityGuardScrews), Local.RemainingScrews);
 
-                return Local._ventTarget != null
-                    ? Local.RemainingScrews >= VentPrice && PlayerControl.LocalPlayer.CanMove
-                    : !Helpers.IsMiraHq
-                      && !SubmergedCompatibility.IsSubmerged
-                      && MapSettings.CouldUseCameras
-                      && Local.RemainingScrews >= CamPrice
-                      && PlayerControl.LocalPlayer.CanMove;
+                return Local._ventTarget != null ? Local.RemainingScrews >= VentPrice && PlayerControl.LocalPlayer.CanMove : !Helpers.IsMiraHq && !SubmergedCompatibility.IsSubmerged && MapSettings.CouldUseCameras && Local.RemainingScrews >= CamPrice && PlayerControl.LocalPlayer.CanMove;
             },
             () =>
             {
@@ -200,14 +193,14 @@ internal class SecurityGuard : SingleRoleBase<SecurityGuard>
             false,
             Tr.Get(TrKey.PlaceCameraText));
 
-        _securityGuardButtonScrewsText = UnityObject.Instantiate(_securityGuardButton.ActionButton.cooldownTimerText,
-            _securityGuardButton.ActionButton.cooldownTimerText.transform.parent);
+        _securityGuardButtonScrewsText = UnityObject.Instantiate(_securityGuardButton.ActionButton.cooldownTimerText, _securityGuardButton.ActionButton.cooldownTimerText.transform.parent);
         _securityGuardButtonScrewsText.text = "";
         _securityGuardButtonScrewsText.enableWordWrapping = false;
         _securityGuardButtonScrewsText.transform.localScale = Vector3.one * 0.5f;
         _securityGuardButtonScrewsText.transform.localPosition += new Vector3(-0.05f, 0.7f, 0);
 
-        SecurityGuardCamButton = new(() =>
+        SecurityGuardCamButton = new(
+            () =>
             {
                 if (!Helpers.IsMiraHq)
                 {
@@ -324,10 +317,7 @@ internal class SecurityGuard : SingleRoleBase<SecurityGuard>
             },
             () =>
             {
-                return PlayerControl.LocalPlayer.IsRole(RoleType.SecurityGuard)
-                       && PlayerControl.LocalPlayer?.Data?.IsDead == false
-                       && Local.RemainingScrews < Mathf.Min(VentPrice, CamPrice)
-                       && !SubmergedCompatibility.IsSubmerged;
+                return PlayerControl.LocalPlayer.IsRole(RoleType.SecurityGuard) && PlayerControl.LocalPlayer.IsAlive() && Local.RemainingScrews < Mathf.Min(VentPrice, CamPrice) && !SubmergedCompatibility.IsSubmerged;
             },
             () =>
             {
@@ -369,8 +359,7 @@ internal class SecurityGuard : SingleRoleBase<SecurityGuard>
                 : FastDestroyableSingleton<TranslationController>.Instance.GetString(StringNames.SecurityCamsSystem));
 
         // Security Guard cam button charges
-        _securityGuardChargesText = UnityObject.Instantiate(SecurityGuardCamButton.ActionButton.cooldownTimerText,
-            SecurityGuardCamButton.ActionButton.cooldownTimerText.transform.parent);
+        _securityGuardChargesText = UnityObject.Instantiate(SecurityGuardCamButton.ActionButton.cooldownTimerText, SecurityGuardCamButton.ActionButton.cooldownTimerText.transform.parent);
         _securityGuardChargesText.text = "";
         _securityGuardChargesText.enableWordWrapping = false;
         _securityGuardChargesText.transform.localScale = Vector3.one * 0.5f;

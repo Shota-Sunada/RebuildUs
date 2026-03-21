@@ -50,7 +50,8 @@ internal class Morphing : MultiRoleBase<Morphing>
     [RegisterCustomButton]
     internal static void MakeButtons(HudManager hm)
     {
-        _morphingButton = new(() =>
+        _morphingButton = new(
+            () =>
             {
                 if (_sampledTarget != null)
                 {

@@ -77,7 +77,8 @@ internal class Vampire : SingleRoleBase<Vampire>
     [RegisterCustomButton]
     internal static void MakeButtons(HudManager hm)
     {
-        _vampireKillButton = new(() =>
+        _vampireKillButton = new(
+            () =>
             {
                 if (Local == null)
                 {
@@ -143,13 +144,12 @@ internal class Vampire : SingleRoleBase<Vampire>
             },
             () =>
             {
-                var local = Local;
-                if (local == null)
+                if (Local == null)
                 {
                     return false;
                 }
 
-                if (local.TargetNearGarlic && CanKillNearGarlics)
+                if (Local.TargetNearGarlic && CanKillNearGarlics)
                 {
                     _vampireKillButton.Sprite = hm.KillButton.graphic.sprite;
                     _vampireKillButton.ButtonText = FastDestroyableSingleton<TranslationController>.Instance.GetString(StringNames.KillLabel);
@@ -160,7 +160,7 @@ internal class Vampire : SingleRoleBase<Vampire>
                     _vampireKillButton.ButtonText = Tr.Get(TrKey.VampireText);
                 }
 
-                return local.CurrentTarget != null && PlayerControl.LocalPlayer.CanMove && (!local.TargetNearGarlic || CanKillNearGarlics);
+                return Local.CurrentTarget != null && PlayerControl.LocalPlayer.CanMove && (!Local.TargetNearGarlic || CanKillNearGarlics);
             },
             () =>
             {
@@ -182,7 +182,8 @@ internal class Vampire : SingleRoleBase<Vampire>
             false,
             Tr.Get(TrKey.VampireText));
 
-        _garlicButton = new(() =>
+        _garlicButton = new(
+            () =>
             {
                 PlayerPlacedGarlic = true;
                 var pos = PlayerControl.LocalPlayer.transform.position;

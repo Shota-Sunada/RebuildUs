@@ -76,7 +76,8 @@ internal class Warlock : MultiRoleBase<Warlock>
     [RegisterCustomButton]
     internal static void MakeButtons(HudManager hm)
     {
-        WarlockCurseButton = new(() =>
+        WarlockCurseButton = new(
+            () =>
             {
                 if (Local._curseVictim == null)
                 {
@@ -88,9 +89,7 @@ internal class Warlock : MultiRoleBase<Warlock>
                 }
                 else if (Local._curseVictim != null && Local._curseVictimTarget != null)
                 {
-                    var murder = Helpers.CheckMurderAttemptAndKill(Local._curseVictim,
-                        Local._curseVictimTarget,
-                        showAnimation: false);
+                    var murder = Helpers.CheckMurderAttemptAndKill(Local._curseVictim, Local._curseVictimTarget, showAnimation: false);
                     if (murder == MurderAttemptResult.SuppressKill)
                     {
                         return;
@@ -101,8 +100,7 @@ internal class Warlock : MultiRoleBase<Warlock>
                     if (RootTime > 0)
                     {
                         PlayerControl.LocalPlayer.moveable = false;
-                        PlayerControl.LocalPlayer.NetTransform
-                                     .Halt(); // Stop current movement so the warlock is not just running straight into the next object
+                        PlayerControl.LocalPlayer.NetTransform.Halt(); // Stop current movement so the warlock is not just running straight into the next object
                         FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(RootTime,
                             new Action<float>(p =>
                             {
@@ -126,8 +124,7 @@ internal class Warlock : MultiRoleBase<Warlock>
             },
             () =>
             {
-                return (Local._curseVictim == null && Local._currentTarget != null || Local._curseVictim != null && Local._curseVictimTarget != null)
-                       && PlayerControl.LocalPlayer.CanMove;
+                return (Local._curseVictim == null && Local._currentTarget != null || Local._curseVictim != null && Local._curseVictimTarget != null)&& PlayerControl.LocalPlayer.CanMove;
             },
             () =>
             {

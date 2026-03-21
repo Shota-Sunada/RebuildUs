@@ -63,10 +63,10 @@ internal class Medic : SingleRoleBase<Medic>
     [RegisterCustomButton]
     internal static void MakeButtons(HudManager hm)
     {
-        _medicShieldButton = new(() =>
+        _medicShieldButton = new(
+            () =>
             {
-                var local = Local;
-                if (local == null)
+                if (Local == null)
                 {
                     return;
                 }
@@ -75,22 +75,21 @@ internal class Medic : SingleRoleBase<Medic>
                     if (SetShieldAfterMeeting)
                     {
                         using RPCSender sender = new(PlayerControl.LocalPlayer.NetId, CustomRPC.SetFutureShielded);
-                        sender.Write(local._currentTarget.PlayerId);
-                        RPCProcedure.SetFutureShielded(local._currentTarget.PlayerId);
+                        sender.Write(Local._currentTarget.PlayerId);
+                        RPCProcedure.SetFutureShielded(Local._currentTarget.PlayerId);
                     }
                     else
                     {
                         using RPCSender sender = new(PlayerControl.LocalPlayer.NetId, CustomRPC.MedicSetShielded);
-                        sender.Write(local._currentTarget.PlayerId);
-                        RPCProcedure.MedicSetShielded(local._currentTarget.PlayerId);
+                        sender.Write(Local._currentTarget.PlayerId);
+                        RPCProcedure.MedicSetShielded(Local._currentTarget.PlayerId);
                     }
                 }
             },
             () => Local != null && !UsedShield && PlayerControl.LocalPlayer.IsAlive(),
             () =>
             {
-                var local = Local;
-                return !UsedShield && local != null && local._currentTarget && PlayerControl.LocalPlayer.CanMove;
+                return !UsedShield && Local != null && Local._currentTarget && PlayerControl.LocalPlayer.CanMove;
             },
             () => { },
             AssetLoader.ShieldButton,

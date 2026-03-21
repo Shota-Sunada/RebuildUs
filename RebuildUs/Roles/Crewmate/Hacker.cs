@@ -85,7 +85,8 @@ internal class Hacker : MultiRoleBase<Hacker>
     [RegisterCustomButton]
     internal static void MakeButtons(HudManager hm)
     {
-        _hackerButton = new(() => HackerTimer = Duration,
+        _hackerButton = new(
+            () => HackerTimer = Duration,
             () => PlayerControl.LocalPlayer.IsRole(RoleType.Hacker) && PlayerControl.LocalPlayer.IsAlive(),
             () => true,
             () =>
@@ -108,7 +109,8 @@ internal class Hacker : MultiRoleBase<Hacker>
             false,
             Tr.Get(TrKey.HackerText));
 
-        HackerAdminTableButton = new(() =>
+        HackerAdminTableButton = new(
+            () =>
             {
                 PlayerControl.LocalPlayer.NetTransform.Halt(); // Stop current movement
                 Local._chargesAdminTable--;
@@ -164,14 +166,14 @@ internal class Hacker : MultiRoleBase<Hacker>
             FastDestroyableSingleton<TranslationController>.Instance.GetString(StringNames.Admin));
 
         // Hacker Admin Table Charges
-        _hackerAdminTableChargesText = UnityObject.Instantiate(HackerAdminTableButton.ActionButton.cooldownTimerText,
-            HackerAdminTableButton.ActionButton.cooldownTimerText.transform.parent);
+        _hackerAdminTableChargesText = UnityObject.Instantiate(HackerAdminTableButton.ActionButton.cooldownTimerText, HackerAdminTableButton.ActionButton.cooldownTimerText.transform.parent);
         _hackerAdminTableChargesText.text = "";
         _hackerAdminTableChargesText.enableWordWrapping = false;
         _hackerAdminTableChargesText.transform.localScale = Vector3.one * 0.5f;
         _hackerAdminTableChargesText.transform.localPosition += new Vector3(-0.05f, 0.7f, 0);
 
-        HackerVitalsButton = new(() =>
+        HackerVitalsButton = new(
+            () =>
             {
                 if (!Helpers.IsMiraHq)
                 {
@@ -244,10 +246,7 @@ internal class Hacker : MultiRoleBase<Hacker>
 
                 Local._chargesVitals--;
             },
-            () => PlayerControl.LocalPlayer.IsRole(RoleType.Hacker)
-                  && MapSettings.CouldUseVitals
-                  && PlayerControl.LocalPlayer.IsAlive()
-                  && !Helpers.IsSkeld,
+            () => PlayerControl.LocalPlayer.IsRole(RoleType.Hacker) && MapSettings.CouldUseVitals && PlayerControl.LocalPlayer.IsAlive() && !Helpers.IsSkeld,
             () =>
             {
                 _hackerVitalsChargesText?.text = string.Format(Tr.Get(TrKey.HackerChargesText), Local._chargesVitals, ToolsNumber);
@@ -298,8 +297,7 @@ internal class Hacker : MultiRoleBase<Hacker>
                 : FastDestroyableSingleton<TranslationController>.Instance.GetString(StringNames.VitalsLabel));
 
         // Hacker Vitals Charges
-        _hackerVitalsChargesText = UnityObject.Instantiate(HackerVitalsButton.ActionButton.cooldownTimerText,
-            HackerVitalsButton.ActionButton.cooldownTimerText.transform.parent);
+        _hackerVitalsChargesText = UnityObject.Instantiate(HackerVitalsButton.ActionButton.cooldownTimerText, HackerVitalsButton.ActionButton.cooldownTimerText.transform.parent);
         _hackerVitalsChargesText.text = "";
         _hackerVitalsChargesText.enableWordWrapping = false;
         _hackerVitalsChargesText.transform.localScale = Vector3.one * 0.5f;

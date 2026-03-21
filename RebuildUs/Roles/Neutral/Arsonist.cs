@@ -125,7 +125,8 @@ internal class Arsonist : SingleRoleBase<Arsonist>
     [RegisterCustomButton]
     internal static void MakeButtons(HudManager hm)
     {
-        _arsonistButton = new(() =>
+        _arsonistButton = new(
+            () =>
             {
                 if (Local._currentTarget != null)
                 {
@@ -183,7 +184,8 @@ internal class Arsonist : SingleRoleBase<Arsonist>
             false,
             Tr.Get(TrKey.DouseText));
 
-        _arsonistIgniteButton = new(() =>
+        _arsonistIgniteButton = new(
+            () =>
             {
                 if (!Local._dousedEveryone)
                 {

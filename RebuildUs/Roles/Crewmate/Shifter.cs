@@ -71,7 +71,8 @@ internal class Shifter : MultiRoleBase<Shifter>
     [RegisterCustomButton]
     internal static void MakeButtons(HudManager hm)
     {
-        _shifterShiftButton = new(() =>
+        _shifterShiftButton = new(
+            () =>
             {
                 {
                     using RPCSender sender = new(PlayerControl.LocalPlayer.NetId, CustomRPC.SetFutureShifted);

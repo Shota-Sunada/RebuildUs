@@ -103,7 +103,8 @@ internal class Vulture : SingleRoleBase<Vulture>
     [RegisterCustomButton]
     internal static void MakeButtons(HudManager hm)
     {
-        _vultureEatButton = new(() =>
+        _vultureEatButton = new(
+            () =>
             {
                 var bodies = UnityObject.FindObjectsOfType<DeadBody>();
                 var local = PlayerControl.LocalPlayer;
@@ -164,8 +165,7 @@ internal class Vulture : SingleRoleBase<Vulture>
             false,
             Tr.Get(TrKey.VultureText));
 
-        _vultureNumCorpsesText = UnityObject.Instantiate(_vultureEatButton.ActionButton.cooldownTimerText,
-            _vultureEatButton.ActionButton.cooldownTimerText.transform.parent);
+        _vultureNumCorpsesText = UnityObject.Instantiate(_vultureEatButton.ActionButton.cooldownTimerText, _vultureEatButton.ActionButton.cooldownTimerText.transform.parent);
         _vultureNumCorpsesText.text = "";
         _vultureNumCorpsesText.enableWordWrapping = false;
         _vultureNumCorpsesText.transform.localScale = Vector3.one * 0.5f;

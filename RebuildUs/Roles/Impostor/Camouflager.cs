@@ -53,7 +53,8 @@ internal class Camouflager : SingleRoleBase<Camouflager>
     [RegisterCustomButton]
     internal static void MakeButtons(HudManager hm)
     {
-        _camouflagerButton = new(() =>
+        _camouflagerButton = new(
+            () =>
             {
                 {
                     using RPCSender sender = new(PlayerControl.LocalPlayer.NetId, CustomRPC.CamouflagerCamouflage);

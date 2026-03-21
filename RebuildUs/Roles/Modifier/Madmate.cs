@@ -242,7 +242,8 @@ internal class Madmate : ModifierBase<Madmate>
     [RegisterCustomButton]
     internal static void MakeButtons(HudManager hm)
     {
-        _suicideButton = new(() =>
+        _suicideButton = new(
+            () =>
             {
                 RPCProcedure.UncheckedMurderPlayer(PlayerControl.LocalPlayer.PlayerId, PlayerControl.LocalPlayer.PlayerId, 1);
             },

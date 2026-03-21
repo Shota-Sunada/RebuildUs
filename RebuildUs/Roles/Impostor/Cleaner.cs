@@ -32,7 +32,8 @@ internal class Cleaner : MultiRoleBase<Cleaner>
     [RegisterCustomButton]
     internal static void MakeButtons(HudManager hm)
     {
-        CleanerCleanButton = new(() =>
+        CleanerCleanButton = new(
+            () =>
             {
                 var truePosition = PlayerControl.LocalPlayer.GetTruePosition();
                 var maxDist = PlayerControl.LocalPlayer.MaxReportDistance;

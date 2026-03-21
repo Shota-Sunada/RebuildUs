@@ -147,7 +147,8 @@ internal static class Mafia
         [RegisterCustomButton]
         internal static void MakeButtons(HudManager hm)
         {
-            _janitorCleanButton = new(() =>
+            _janitorCleanButton = new(
+                () =>
                 {
                     var bodies = UnityObject.FindObjectsOfType<DeadBody>();
                     var local = PlayerControl.LocalPlayer;
