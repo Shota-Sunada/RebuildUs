@@ -14,20 +14,11 @@ internal class Morphing : MultiRoleBase<Morphing>
 
     public Morphing()
     {
-        // write value init here
         StaticRoleType = CurrentRoleType = RoleType.Morphing;
     }
 
-    // write configs here
-    private static float Cooldown
-    {
-        get => CustomOptionHolder.MorphingCooldown.GetFloat();
-    }
-
-    private static float Duration
-    {
-        get => CustomOptionHolder.MorphingDuration.GetFloat();
-    }
+    private static float Cooldown { get => CustomOptionHolder.MorphingCooldown.GetFloat(); }
+    private static float Duration { get => CustomOptionHolder.MorphingDuration.GetFloat(); }
 
     [CustomEvent(CustomEventType.OnIntroEnd)]
     internal void OnIntroEnd()
@@ -38,8 +29,7 @@ internal class Morphing : MultiRoleBase<Morphing>
     [CustomEvent(CustomEventType.FixedUpdate)]
     internal void FixedUpdate()
     {
-        var local = Local;
-        if (local == null)
+        if (Local == null)
         {
             return;
         }
@@ -116,7 +106,6 @@ internal class Morphing : MultiRoleBase<Morphing>
         _morphingButton.EffectDuration = Duration;
     }
 
-    // write functions here
     internal void HandleMorphing()
     {
         // first, if camouflager is active, don't do anything
@@ -155,7 +144,6 @@ internal class Morphing : MultiRoleBase<Morphing>
 
     internal static void Clear()
     {
-        // reset configs here
         Players.Clear();
         _currentTarget = null;
         _sampledTarget = null;

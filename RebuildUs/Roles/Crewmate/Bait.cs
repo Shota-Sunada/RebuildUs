@@ -12,26 +12,13 @@ internal class Bait : MultiRoleBase<Bait>
 
     public Bait()
     {
-        // write value init here
         StaticRoleType = CurrentRoleType = RoleType.Bait;
         _delay = ReportDelay;
     }
 
-    // write configs here
-    internal static bool HighlightAllVents
-    {
-        get => CustomOptionHolder.BaitHighlightAllVents.GetBool();
-    }
-
-    private static float ReportDelay
-    {
-        get => CustomOptionHolder.BaitReportDelay.GetFloat();
-    }
-
-    internal static bool ShowKillFlash
-    {
-        get => CustomOptionHolder.BaitShowKillFlash.GetBool();
-    }
+    internal static bool HighlightAllVents { get => CustomOptionHolder.BaitHighlightAllVents.GetBool(); }
+    private static float ReportDelay { get => CustomOptionHolder.BaitReportDelay.GetFloat(); }
+    internal static bool ShowKillFlash { get => CustomOptionHolder.BaitShowKillFlash.GetBool(); }
 
     [CustomEvent(CustomEventType.FixedUpdate)]
     internal void FixedUpdate()
@@ -112,11 +99,8 @@ internal class Bait : MultiRoleBase<Bait>
         _warningMessage = null;
     }
 
-    // write functions here
-
     internal static void Clear()
     {
-        // reset configs here
         Players.Clear();
     }
 }

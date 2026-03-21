@@ -6,7 +6,6 @@ internal class Sheriff : MultiRoleBase<Sheriff>
 {
     public static Color Color = new Color32(248, 205, 70, byte.MaxValue);
 
-    // write configs here
     private static CustomButton _sheriffKillButton;
     internal static TMP_Text SheriffNumShotsText;
     internal bool CanKill = SheriffCanKillNoDeadBody;
@@ -16,52 +15,20 @@ internal class Sheriff : MultiRoleBase<Sheriff>
 
     public Sheriff()
     {
-        // write value init here
         StaticRoleType = CurrentRoleType = RoleType.Sheriff;
         NumShots = MaxShots;
         CanKill = SheriffCanKillNoDeadBody;
         CurrentTarget = null;
     }
 
-    internal static float Cooldown
-    {
-        get => CustomOptionHolder.SheriffCooldown.GetFloat();
-    }
-
-    internal static int MaxShots
-    {
-        get => Mathf.RoundToInt(CustomOptionHolder.SheriffNumShots.GetFloat());
-    }
-
-    internal static bool CanKillNeutrals
-    {
-        get => CustomOptionHolder.SheriffCanKillNeutrals.GetBool();
-    }
-
-    internal static bool MisfireKillsTarget
-    {
-        get => CustomOptionHolder.SheriffMisfireKillsTarget.GetBool();
-    }
-
-    internal static bool SpyCanDieToSheriff
-    {
-        get => CustomOptionHolder.SpyCanDieToSheriff.GetBool();
-    }
-
-    internal static bool MadmateCanDieToSheriff
-    {
-        get => CustomOptionHolder.MadmateCanDieToSheriff.GetBool();
-    }
-
-    internal static bool CreatedMadmateCanDieToSheriff
-    {
-        get => CustomOptionHolder.CreatedMadmateCanDieToSheriff.GetBool();
-    }
-
-    internal static bool SheriffCanKillNoDeadBody
-    {
-        get => CustomOptionHolder.SheriffCanKillNoDeadBody.GetBool();
-    }
+    internal static float Cooldown { get => CustomOptionHolder.SheriffCooldown.GetFloat(); }
+    internal static int MaxShots { get => Mathf.RoundToInt(CustomOptionHolder.SheriffNumShots.GetFloat()); }
+    internal static bool CanKillNeutrals { get => CustomOptionHolder.SheriffCanKillNeutrals.GetBool(); }
+    internal static bool MisfireKillsTarget { get => CustomOptionHolder.SheriffMisfireKillsTarget.GetBool(); }
+    internal static bool SpyCanDieToSheriff { get => CustomOptionHolder.SpyCanDieToSheriff.GetBool(); }
+    internal static bool MadmateCanDieToSheriff { get => CustomOptionHolder.MadmateCanDieToSheriff.GetBool(); }
+    internal static bool CreatedMadmateCanDieToSheriff { get => CustomOptionHolder.CreatedMadmateCanDieToSheriff.GetBool(); }
+    internal static bool SheriffCanKillNoDeadBody { get => CustomOptionHolder.SheriffCanKillNoDeadBody.GetBool(); }
 
     [CustomEvent(CustomEventType.OnMeetingEnd)]
     internal void OnMeetingEnd()
@@ -190,7 +157,6 @@ internal class Sheriff : MultiRoleBase<Sheriff>
 
     internal static void Clear()
     {
-        // reset configs here
         Players.Clear();
     }
 }

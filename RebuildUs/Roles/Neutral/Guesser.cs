@@ -5,30 +5,11 @@ internal static class Guesser
     private static int _remainingShotsNiceGuesser;
     private static int _remainingShotsEvilGuesser;
 
-    internal static bool OnlyAvailableRoles
-    {
-        get => CustomOptionHolder.GuesserOnlyAvailableRoles.GetBool();
-    }
-
-    internal static bool HasMultipleShotsPerMeeting
-    {
-        get => CustomOptionHolder.GuesserHasMultipleShotsPerMeeting.GetBool();
-    }
-
-    internal static bool ShowInfoInGhostChat
-    {
-        get => CustomOptionHolder.GuesserShowInfoInGhostChat.GetBool();
-    }
-
-    internal static bool KillsThroughShield
-    {
-        get => CustomOptionHolder.GuesserKillsThroughShield.GetBool();
-    }
-
-    internal static bool EvilCanKillSpy
-    {
-        get => CustomOptionHolder.GuesserEvilCanKillSpy.GetBool();
-    }
+    internal static bool OnlyAvailableRoles { get => CustomOptionHolder.GuesserOnlyAvailableRoles.GetBool(); }
+    internal static bool HasMultipleShotsPerMeeting { get => CustomOptionHolder.GuesserHasMultipleShotsPerMeeting.GetBool(); }
+    internal static bool ShowInfoInGhostChat { get => CustomOptionHolder.GuesserShowInfoInGhostChat.GetBool(); }
+    internal static bool KillsThroughShield { get => CustomOptionHolder.GuesserKillsThroughShield.GetBool(); }
+    internal static bool EvilCanKillSpy { get => CustomOptionHolder.GuesserEvilCanKillSpy.GetBool(); }
 
     internal static void ClearAndReload()
     {
@@ -95,19 +76,15 @@ internal static class Guesser
     }
 
     [HarmonyPatch]
+    [RegisterRole(RoleType.NiceGuesser, RoleTeam.Crewmate, typeof(SingleRoleBase<NiceGuesser>), nameof(CustomOptionHolder.GuesserSpawnRate))]
     internal class NiceGuesser : SingleRoleBase<NiceGuesser>
     {
         public static Color Color = new Color32(255, 255, 0, byte.MaxValue);
 
-        // write configs here
-
         public NiceGuesser()
         {
-            // write value init here
             StaticRoleType = CurrentRoleType = RoleType.NiceGuesser;
         }
-
-        // write functions here
 
         internal static void Clear()
         {
@@ -122,15 +99,10 @@ internal static class Guesser
     {
         public static Color Color = Palette.ImpostorRed;
 
-        // write configs here
-
         public EvilGuesser()
         {
-            // write value init here
             StaticRoleType = CurrentRoleType = RoleType.EvilGuesser;
         }
-
-        // write functions here
 
         internal static void Clear()
         {

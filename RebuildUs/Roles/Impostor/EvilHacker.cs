@@ -14,77 +14,23 @@ internal class EvilHacker : MultiRoleBase<EvilHacker>
 
     public EvilHacker()
     {
-        // write value init here
         StaticRoleType = CurrentRoleType = RoleType.EvilHacker;
         CanCreateMadmate = CustomOptionHolder.EvilHackerCanCreateMadmate.GetBool();
     }
 
-    // write configs here
-
-    internal static bool CanHasBetterAdmin
-    {
-        get => CustomOptionHolder.EvilHackerCanHasBetterAdmin.GetBool();
-    }
-
-    internal static bool CanMoveEvenIfUsesAdmin
-    {
-        get => CustomOptionHolder.EvilHackerCanMoveEvenIfUsesAdmin.GetBool();
-    }
-
-    internal static bool CanInheritAbility
-    {
-        get => CustomOptionHolder.EvilHackerCanInheritAbility.GetBool();
-    }
-
-    internal static bool CanSeeDoorStatus
-    {
-        get => CustomOptionHolder.EvilHackerCanSeeDoorStatus.GetBool();
-    }
-
-    internal static bool CreatedMadmateCanDieToSheriff
-    {
-        get => CustomOptionHolder.CreatedMadmateCanDieToSheriff.GetBool();
-    }
-
-    internal static bool CreatedMadmateCanEnterVents
-    {
-        get => CustomOptionHolder.CreatedMadmateCanEnterVents.GetBool();
-    }
-
-    internal static bool CanCreateMadmateFromJackal
-    {
-        get => CustomOptionHolder.EvilHackerCanCreateMadmateFromJackal.GetBool();
-    }
-
-    internal static bool CreatedMadmateHasImpostorVision
-    {
-        get => CustomOptionHolder.CreatedMadmateHasImpostorVision.GetBool();
-    }
-
-    internal static bool CreatedMadmateCanSabotage
-    {
-        get => CustomOptionHolder.CreatedMadmateCanSabotage.GetBool();
-    }
-
-    internal static bool CreatedMadmateCanFixComm
-    {
-        get => CustomOptionHolder.CreatedMadmateCanFixComm.GetBool();
-    }
-
-    internal static int CreatedMadmateAbility
-    {
-        get => CustomOptionHolder.CreatedMadmateAbility.GetSelection();
-    }
-
-    internal static float CreatedMadmateNumTasks
-    {
-        get => CustomOptionHolder.CreatedMadmateNumTasks.GetFloat();
-    }
-
-    internal static bool CreatedMadmateExileCrewmate
-    {
-        get => CustomOptionHolder.CreatedMadmateExileCrewmate.GetBool();
-    }
+    internal static bool CanHasBetterAdmin { get => CustomOptionHolder.EvilHackerCanHasBetterAdmin.GetBool(); }
+    internal static bool CanMoveEvenIfUsesAdmin { get => CustomOptionHolder.EvilHackerCanMoveEvenIfUsesAdmin.GetBool(); }
+    internal static bool CanInheritAbility { get => CustomOptionHolder.EvilHackerCanInheritAbility.GetBool(); }
+    internal static bool CanSeeDoorStatus { get => CustomOptionHolder.EvilHackerCanSeeDoorStatus.GetBool(); }
+    internal static bool CreatedMadmateCanDieToSheriff { get => CustomOptionHolder.CreatedMadmateCanDieToSheriff.GetBool(); }
+    internal static bool CreatedMadmateCanEnterVents { get => CustomOptionHolder.CreatedMadmateCanEnterVents.GetBool(); }
+    internal static bool CanCreateMadmateFromJackal { get => CustomOptionHolder.EvilHackerCanCreateMadmateFromJackal.GetBool(); }
+    internal static bool CreatedMadmateHasImpostorVision { get => CustomOptionHolder.CreatedMadmateHasImpostorVision.GetBool(); }
+    internal static bool CreatedMadmateCanSabotage { get => CustomOptionHolder.CreatedMadmateCanSabotage.GetBool(); }
+    internal static bool CreatedMadmateCanFixComm { get => CustomOptionHolder.CreatedMadmateCanFixComm.GetBool(); }
+    internal static int CreatedMadmateAbility { get => CustomOptionHolder.CreatedMadmateAbility.GetSelection(); }
+    internal static float CreatedMadmateNumTasks { get => CustomOptionHolder.CreatedMadmateNumTasks.GetFloat(); }
+    internal static bool CreatedMadmateExileCrewmate { get => CustomOptionHolder.CreatedMadmateExileCrewmate.GetBool(); }
 
     [CustomEvent(CustomEventType.FixedUpdate)]
     internal void FixedUpdate()
@@ -167,7 +113,6 @@ internal class EvilHacker : MultiRoleBase<EvilHacker>
         _evilHackerCreatesMadmateButton.MaxTimer = 0f;
     }
 
-    // write functions here
     internal static bool IsInherited()
     {
         return CanInheritAbility && Exists && LivingPlayers.Count == 0 && PlayerControl.LocalPlayer.IsTeamImpostor();
@@ -175,7 +120,6 @@ internal class EvilHacker : MultiRoleBase<EvilHacker>
 
     internal static void Clear()
     {
-        // reset configs here
         Players.Clear();
     }
 }

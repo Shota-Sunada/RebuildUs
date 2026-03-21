@@ -14,7 +14,6 @@ internal class Mini : ModifierBase<Mini>
 
     public Mini()
     {
-        // write value init here
         StaticModifierType = CurrentModifierType = ModifierType.Mini;
     }
 
@@ -35,15 +34,8 @@ internal class Mini : ModifierBase<Mini>
         }
     }
 
-    internal static string Postfix
-    {
-        get => Tr.Get(TrKey.MiniPostfix);
-    }
-
-    internal static string FullName
-    {
-        get => Tr.Get(TrKey.Mini);
-    }
+    internal static string Postfix { get => Tr.Get(TrKey.MiniPostfix); }
+    internal static string FullName { get => Tr.Get(TrKey.Mini); }
 
     internal float GrowingProgress()
     {
@@ -64,8 +56,6 @@ internal class Mini : ModifierBase<Mini>
 
         return true;
     }
-
-    // write functions here
 
     internal static void Clear()
     {

@@ -8,30 +8,17 @@ internal class Engineer : MultiRoleBase<Engineer>
 
     private static CustomButton _engineerRepairButton;
 
-    // write configs here
     internal int RemainingFixes = 1;
 
     public Engineer()
     {
-        // write value init here
         StaticRoleType = CurrentRoleType = RoleType.Engineer;
         RemainingFixes = NumberOfFixes;
     }
 
-    private static int NumberOfFixes
-    {
-        get => (int)CustomOptionHolder.EngineerNumberOfFixes.GetFloat();
-    }
-
-    internal static bool HighlightForImpostors
-    {
-        get => CustomOptionHolder.EngineerHighlightForImpostors.GetBool();
-    }
-
-    internal static bool HighlightForTeamJackal
-    {
-        get => CustomOptionHolder.EngineerHighlightForTeamJackal.GetBool();
-    }
+    private static int NumberOfFixes { get => (int)CustomOptionHolder.EngineerNumberOfFixes.GetFloat(); }
+    internal static bool HighlightForImpostors { get => CustomOptionHolder.EngineerHighlightForImpostors.GetBool(); }
+    internal static bool HighlightForTeamJackal { get => CustomOptionHolder.EngineerHighlightForTeamJackal.GetBool(); }
 
     [RegisterCustomButton]
     internal static void MakeButtons(HudManager hm)
@@ -122,7 +109,6 @@ internal class Engineer : MultiRoleBase<Engineer>
 
     internal static void Clear()
     {
-        // reset configs here
         Players.Clear();
     }
 }

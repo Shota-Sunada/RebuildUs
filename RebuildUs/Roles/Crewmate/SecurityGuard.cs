@@ -24,53 +24,20 @@ internal class SecurityGuard : SingleRoleBase<SecurityGuard>
 
     public SecurityGuard()
     {
-        // write value init here
         StaticRoleType = CurrentRoleType = RoleType.SecurityGuard;
         PlacedCameras = 0;
         RemainingScrews = TotalScrews;
         _charges = CamMaxCharges;
     }
 
-    // write configs here
-    internal static float Cooldown
-    {
-        get => CustomOptionHolder.SecurityGuardCooldown.GetFloat();
-    }
-
-    internal static int TotalScrews
-    {
-        get => Mathf.RoundToInt(CustomOptionHolder.SecurityGuardTotalScrews.GetFloat());
-    }
-
-    internal static int CamPrice
-    {
-        get => Mathf.RoundToInt(CustomOptionHolder.SecurityGuardCamPrice.GetFloat());
-    }
-
-    internal static int VentPrice
-    {
-        get => Mathf.RoundToInt(CustomOptionHolder.SecurityGuardVentPrice.GetFloat());
-    }
-
-    internal static float CamDuration
-    {
-        get => CustomOptionHolder.SecurityGuardCamDuration.GetFloat();
-    }
-
-    internal static int CamMaxCharges
-    {
-        get => Mathf.RoundToInt(CustomOptionHolder.SecurityGuardCamMaxCharges.GetFloat());
-    }
-
-    internal static int CamRechargeTasksNumber
-    {
-        get => Mathf.RoundToInt(CustomOptionHolder.SecurityGuardCamRechargeTasksNumber.GetFloat());
-    }
-
-    internal static bool NoMove
-    {
-        get => CustomOptionHolder.SecurityGuardNoMove.GetBool();
-    }
+    internal static float Cooldown { get => CustomOptionHolder.SecurityGuardCooldown.GetFloat(); }
+    internal static int TotalScrews { get => Mathf.RoundToInt(CustomOptionHolder.SecurityGuardTotalScrews.GetFloat()); }
+    internal static int CamPrice { get => Mathf.RoundToInt(CustomOptionHolder.SecurityGuardCamPrice.GetFloat()); }
+    internal static int VentPrice { get => Mathf.RoundToInt(CustomOptionHolder.SecurityGuardVentPrice.GetFloat()); }
+    internal static float CamDuration { get => CustomOptionHolder.SecurityGuardCamDuration.GetFloat(); }
+    internal static int CamMaxCharges { get => Mathf.RoundToInt(CustomOptionHolder.SecurityGuardCamMaxCharges.GetFloat()); }
+    internal static int CamRechargeTasksNumber { get => Mathf.RoundToInt(CustomOptionHolder.SecurityGuardCamRechargeTasksNumber.GetFloat()); }
+    internal static bool NoMove { get => CustomOptionHolder.SecurityGuardNoMove.GetBool(); }
 
     [CustomEvent(CustomEventType.FixedUpdate)]
     internal void FixedUpdate()
@@ -382,8 +349,6 @@ internal class SecurityGuard : SingleRoleBase<SecurityGuard>
         }
         return AssetLoader.AnimatedVentSealed;
     }
-
-    // write functions here
 
     internal static void Clear()
     {

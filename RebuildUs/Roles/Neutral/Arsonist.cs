@@ -17,7 +17,6 @@ internal class Arsonist : SingleRoleBase<Arsonist>
 
     public Arsonist()
     {
-        // write value init here
         StaticRoleType = CurrentRoleType = RoleType.Arsonist;
         _dousedEveryone = false;
         _currentTarget = null;
@@ -25,21 +24,9 @@ internal class Arsonist : SingleRoleBase<Arsonist>
         DousedPlayers = [];
     }
 
-    // write configs here
-    private static float Cooldown
-    {
-        get => CustomOptionHolder.ArsonistCooldown.GetFloat();
-    }
-
-    private static float Duration
-    {
-        get => CustomOptionHolder.ArsonistDuration.GetFloat();
-    }
-
-    internal static bool CanBeLovers
-    {
-        get => CustomOptionHolder.ArsonistCanBeLovers.GetBool();
-    }
+    private static float Cooldown { get => CustomOptionHolder.ArsonistCooldown.GetFloat(); }
+    private static float Duration { get => CustomOptionHolder.ArsonistDuration.GetFloat(); }
+    internal static bool CanBeLovers { get => CustomOptionHolder.ArsonistCanBeLovers.GetBool(); }
 
     private bool DousedEveryoneAlive()
     {
@@ -271,8 +258,6 @@ internal class Arsonist : SingleRoleBase<Arsonist>
             }
         }
     }
-
-    // write functions here
 
     internal static void Clear()
     {

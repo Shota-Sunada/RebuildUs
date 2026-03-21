@@ -4,7 +4,6 @@ namespace RebuildUs.Roles.Neutral;
 [RegisterRole(RoleType.Sidekick, RoleTeam.Neutral, typeof(SingleRoleBase<Sidekick>), nameof(CustomOptionHolder.JackalSpawnRate))]
 internal class Sidekick : SingleRoleBase<Sidekick>
 {
-    // write configs here
     private static CustomButton _sidekickKillButton;
     private static CustomButton _sidekickSabotageLightsButton;
     private PlayerControl _currentTarget;
@@ -14,39 +13,15 @@ internal class Sidekick : SingleRoleBase<Sidekick>
 
     public Sidekick()
     {
-        // write value init here
         StaticRoleType = CurrentRoleType = RoleType.Sidekick;
     }
 
-    internal override Color RoleColor
-    {
-        get => Jackal.Color;
-    }
-
-    private static bool CanKill
-    {
-        get => CustomOptionHolder.SidekickCanKill.GetBool();
-    }
-
-    internal static bool CanUseVents
-    {
-        get => CustomOptionHolder.SidekickCanUseVents.GetBool();
-    }
-
-    private static bool CanSabotageLights
-    {
-        get => CustomOptionHolder.SidekickCanSabotageLights.GetBool();
-    }
-
-    internal static bool HasImpostorVision
-    {
-        get => CustomOptionHolder.SidekickHasImpostorVision.GetBool();
-    }
-
-    internal static bool PromotesToJackal
-    {
-        get => CustomOptionHolder.SidekickPromotesToJackal.GetBool();
-    }
+    internal override Color RoleColor { get => Jackal.Color; }
+    private static bool CanKill { get => CustomOptionHolder.SidekickCanKill.GetBool(); }
+    internal static bool CanUseVents { get => CustomOptionHolder.SidekickCanUseVents.GetBool(); }
+    private static bool CanSabotageLights { get => CustomOptionHolder.SidekickCanSabotageLights.GetBool(); }
+    internal static bool HasImpostorVision { get => CustomOptionHolder.SidekickHasImpostorVision.GetBool(); }
+    internal static bool PromotesToJackal { get => CustomOptionHolder.SidekickPromotesToJackal.GetBool(); }
 
     internal override void OnUpdateRoleColors()
     {
@@ -73,8 +48,7 @@ internal class Sidekick : SingleRoleBase<Sidekick>
     [CustomEvent(CustomEventType.FixedUpdate)]
     internal void FixedUpdate()
     {
-        var local = Local;
-        if (local == null)
+        if (Local == null)
         {
             return;
         }
@@ -161,8 +135,6 @@ internal class Sidekick : SingleRoleBase<Sidekick>
     {
         _sidekickKillButton.MaxTimer = Jackal.KillCooldown;
     }
-
-    // write functions here
 
     internal static void Clear()
     {

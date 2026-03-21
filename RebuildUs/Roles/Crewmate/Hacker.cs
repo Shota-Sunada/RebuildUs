@@ -24,40 +24,15 @@ internal class Hacker : MultiRoleBase<Hacker>
 
     public Hacker()
     {
-        // write value init here
         StaticRoleType = CurrentRoleType = RoleType.Hacker;
     }
 
-    // write configs here
-    private static float Cooldown
-    {
-        get => CustomOptionHolder.HackerCooldown.GetFloat();
-    }
-
-    private static float Duration
-    {
-        get => CustomOptionHolder.HackerHackingDuration.GetFloat();
-    }
-
-    internal static bool OnlyColorType
-    {
-        get => CustomOptionHolder.HackerOnlyColorType.GetBool();
-    }
-
-    private static float ToolsNumber
-    {
-        get => CustomOptionHolder.HackerToolsNumber.GetFloat();
-    }
-
-    private static int RechargeTasksNumber
-    {
-        get => Mathf.RoundToInt(CustomOptionHolder.HackerRechargeTasksNumber.GetFloat());
-    }
-
-    private static bool NoMove
-    {
-        get => CustomOptionHolder.HackerNoMove.GetBool();
-    }
+    private static float Cooldown { get => CustomOptionHolder.HackerCooldown.GetFloat(); }
+    private static float Duration { get => CustomOptionHolder.HackerHackingDuration.GetFloat(); }
+    internal static bool OnlyColorType { get => CustomOptionHolder.HackerOnlyColorType.GetBool(); }
+    private static float ToolsNumber { get => CustomOptionHolder.HackerToolsNumber.GetFloat(); }
+    private static int RechargeTasksNumber { get => Mathf.RoundToInt(CustomOptionHolder.HackerRechargeTasksNumber.GetFloat()); }
+    private static bool NoMove { get => CustomOptionHolder.HackerNoMove.GetBool(); }
 
     [CustomEvent(CustomEventType.FixedUpdate)]
     internal void FixedUpdate()
@@ -329,11 +304,8 @@ internal class Hacker : MultiRoleBase<Hacker>
         return button.Image;
     }
 
-    // write functions here
-
     internal static void Clear()
     {
-        // reset configs here
         HackerTimer = 0f;
         Players.Clear();
     }

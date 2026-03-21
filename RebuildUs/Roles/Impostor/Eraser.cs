@@ -8,30 +8,17 @@ internal class Eraser : MultiRoleBase<Eraser>
 
     private static CustomButton _eraserButton;
 
-    // write configs here
     internal static List<PlayerControl> FutureErased = [];
     internal PlayerControl CurrentTarget;
 
     public Eraser()
     {
-        // write value init here
         StaticRoleType = CurrentRoleType = RoleType.Eraser;
     }
 
-    internal static float Cooldown
-    {
-        get => CustomOptionHolder.EraserCooldown.GetFloat();
-    }
-
-    internal static float CooldownIncrease
-    {
-        get => CustomOptionHolder.EraserCooldownIncrease.GetFloat();
-    }
-
-    internal static bool CanEraseAnyone
-    {
-        get => CustomOptionHolder.EraserCanEraseAnyone.GetBool();
-    }
+    internal static float Cooldown { get => CustomOptionHolder.EraserCooldown.GetFloat(); }
+    internal static float CooldownIncrease { get => CustomOptionHolder.EraserCooldownIncrease.GetFloat(); }
+    internal static bool CanEraseAnyone { get => CustomOptionHolder.EraserCanEraseAnyone.GetBool(); }
 
     [CustomEvent(CustomEventType.FixedUpdate)]
     internal void FixedUpdate()
@@ -100,11 +87,8 @@ internal class Eraser : MultiRoleBase<Eraser>
         _eraserButton.MaxTimer = Cooldown;
     }
 
-    // write functions here
-
     internal static void Clear()
     {
-        // reset configs here
         Players.Clear();
         FutureErased = [];
     }

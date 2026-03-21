@@ -12,25 +12,12 @@ internal class Trickster : SingleRoleBase<Trickster>
 
     public Trickster()
     {
-        // write value init here
         StaticRoleType = CurrentRoleType = RoleType.Trickster;
     }
 
-    // write configs here
-    private static float PlaceBoxCooldown
-    {
-        get => CustomOptionHolder.TricksterPlaceBoxCooldown.GetFloat();
-    }
-
-    private static float LightsOutCooldown
-    {
-        get => CustomOptionHolder.TricksterLightsOutCooldown.GetFloat();
-    }
-
-    internal static float LightsOutDuration
-    {
-        get => CustomOptionHolder.TricksterLightsOutDuration.GetFloat();
-    }
+    private static float PlaceBoxCooldown { get => CustomOptionHolder.TricksterPlaceBoxCooldown.GetFloat(); }
+    private static float LightsOutCooldown { get => CustomOptionHolder.TricksterLightsOutCooldown.GetFloat(); }
+    internal static float LightsOutDuration { get => CustomOptionHolder.TricksterLightsOutDuration.GetFloat(); }
 
     [RegisterCustomButton]
     internal static void MakeButtons(HudManager hm)
@@ -112,11 +99,8 @@ internal class Trickster : SingleRoleBase<Trickster>
         _lightsOutButton.EffectDuration = LightsOutDuration;
     }
 
-    // write functions here
-
     internal static void Clear()
     {
-        // reset configs here
         LightsOutTimer = 0f;
 
         ModRoleManager.RemoveRole(Instance);

@@ -17,25 +17,12 @@ internal class Medium : MultiRoleBase<Medium>
 
     public Medium()
     {
-        // write value init here
         StaticRoleType = CurrentRoleType = RoleType.Medium;
     }
 
-    // write configs here
-    private static float Cooldown
-    {
-        get => CustomOptionHolder.MediumCooldown.GetFloat();
-    }
-
-    private static float Duration
-    {
-        get => CustomOptionHolder.MediumDuration.GetFloat();
-    }
-
-    private static bool OneTimeUse
-    {
-        get => CustomOptionHolder.MediumOneTimeUse.GetBool();
-    }
+    private static float Cooldown { get => CustomOptionHolder.MediumCooldown.GetFloat(); }
+    private static float Duration { get => CustomOptionHolder.MediumDuration.GetFloat(); }
+    private static bool OneTimeUse { get => CustomOptionHolder.MediumOneTimeUse.GetBool(); }
 
     [CustomEvent(CustomEventType.OnMeetingStart)]
     internal void OnMeetingStart()
@@ -266,11 +253,8 @@ internal class Medium : MultiRoleBase<Medium>
         _mediumButton.EffectDuration = Duration;
     }
 
-    // write functions here
-
     internal static void Clear()
     {
-        // reset configs here
         DeadBodies = [];
         FeatureDeadBodies = [];
         _souls = [];

@@ -16,19 +16,11 @@ internal class Shifter : MultiRoleBase<Shifter>
 
     public Shifter()
     {
-        // write value init here
         StaticRoleType = CurrentRoleType = RoleType.Shifter;
     }
 
-    internal static bool ShiftsModifiers
-    {
-        get => CustomOptionHolder.ShifterShiftsModifiers.GetBool();
-    }
-
-    internal static bool ShiftPastShifters
-    {
-        get => CustomOptionHolder.ShifterPastShifters.GetBool();
-    }
+    internal static bool ShiftsModifiers { get => CustomOptionHolder.ShifterShiftsModifiers.GetBool(); }
+    internal static bool ShiftPastShifters { get => CustomOptionHolder.ShifterPastShifters.GetBool(); }
 
     [CustomEvent(CustomEventType.FixedUpdate)]
     internal void FixedUpdate()
@@ -106,7 +98,6 @@ internal class Shifter : MultiRoleBase<Shifter>
 
     internal static void Clear()
     {
-        // reset configs here
         Players.Clear();
     }
 }

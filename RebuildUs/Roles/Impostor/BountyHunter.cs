@@ -16,37 +16,16 @@ internal class BountyHunter : SingleRoleBase<BountyHunter>
 
     public BountyHunter()
     {
-        // write value init here
         _arrowUpdateTimer = 0f;
         _bountyUpdateTimer = 0f;
         StaticRoleType = CurrentRoleType = RoleType.BountyHunter;
     }
 
-    // write configs here
-    private static int BountyDuration
-    {
-        get => (int)CustomOptionHolder.BountyHunterBountyDuration.GetFloat();
-    }
-
-    private static int ReducedCooldown
-    {
-        get => (int)CustomOptionHolder.BountyHunterReducedCooldown.GetFloat();
-    }
-
-    internal static int PunishmentTime
-    {
-        get => (int)CustomOptionHolder.BountyHunterPunishmentTime.GetFloat();
-    }
-
-    private static bool ShowArrow
-    {
-        get => CustomOptionHolder.BountyHunterShowArrow.GetBool();
-    }
-
-    private static int ArrowUpdateInterval
-    {
-        get => (int)CustomOptionHolder.BountyHunterArrowUpdateInterval.GetFloat();
-    }
+    private static int BountyDuration { get => (int)CustomOptionHolder.BountyHunterBountyDuration.GetFloat(); }
+    private static int ReducedCooldown { get => (int)CustomOptionHolder.BountyHunterReducedCooldown.GetFloat(); }
+    internal static int PunishmentTime { get => (int)CustomOptionHolder.BountyHunterPunishmentTime.GetFloat(); }
+    private static bool ShowArrow { get => CustomOptionHolder.BountyHunterShowArrow.GetBool(); }
+    private static int ArrowUpdateInterval { get => (int)CustomOptionHolder.BountyHunterArrowUpdateInterval.GetFloat(); }
 
     [CustomEvent(CustomEventType.OnMeetingEnd)]
     internal void OnMeetingEnd()

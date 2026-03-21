@@ -18,30 +18,13 @@ internal class Medic : SingleRoleBase<Medic>
 
     public Medic()
     {
-        // write value init here
         StaticRoleType = CurrentRoleType = RoleType.Medic;
     }
 
-    // write configs here
-    internal static int ShowShielded
-    {
-        get => CustomOptionHolder.MedicShowShielded.GetSelection();
-    }
-
-    internal static bool ShowAttemptToShielded
-    {
-        get => CustomOptionHolder.MedicShowAttemptToShielded.GetBool();
-    }
-
-    private static bool SetShieldAfterMeeting
-    {
-        get => CustomOptionHolder.MedicSetShieldAfterMeeting.GetBool();
-    }
-
-    internal static bool ShowAttemptToMedic
-    {
-        get => CustomOptionHolder.MedicShowAttemptToMedic.GetBool();
-    }
+    internal static int ShowShielded { get => CustomOptionHolder.MedicShowShielded.GetSelection(); }
+    internal static bool ShowAttemptToShielded { get => CustomOptionHolder.MedicShowAttemptToShielded.GetBool(); }
+    private static bool SetShieldAfterMeeting { get => CustomOptionHolder.MedicSetShieldAfterMeeting.GetBool(); }
+    internal static bool ShowAttemptToMedic { get => CustomOptionHolder.MedicShowAttemptToMedic.GetBool(); }
 
     [CustomEvent(CustomEventType.FixedUpdate)]
     internal void FixedUpdate()
@@ -106,8 +89,6 @@ internal class Medic : SingleRoleBase<Medic>
     {
         _medicShieldButton.MaxTimer = 0f;
     }
-
-    // write functions here
 
     internal static void Clear()
     {

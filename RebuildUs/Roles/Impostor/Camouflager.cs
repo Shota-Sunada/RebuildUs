@@ -12,7 +12,6 @@ internal class Camouflager : SingleRoleBase<Camouflager>
 
     public Camouflager()
     {
-        // write value init here
         StaticRoleType = CurrentRoleType = RoleType.Camouflager;
         CamouflageTimer = 0f;
 
@@ -28,21 +27,9 @@ internal class Camouflager : SingleRoleBase<Camouflager>
         };
     }
 
-    // write configs here
-    private static float Cooldown
-    {
-        get => CustomOptionHolder.CamouflagerCooldown.GetFloat();
-    }
-
-    private static float Duration
-    {
-        get => CustomOptionHolder.CamouflagerDuration.GetFloat();
-    }
-
-    private static bool RandomColors
-    {
-        get => CustomOptionHolder.CamouflagerRandomColors.GetBool();
-    }
+    private static float Cooldown { get => CustomOptionHolder.CamouflagerCooldown.GetFloat(); }
+    private static float Duration { get => CustomOptionHolder.CamouflagerDuration.GetFloat(); }
+    private static bool RandomColors { get => CustomOptionHolder.CamouflagerRandomColors.GetBool(); }
 
     [CustomEvent(CustomEventType.OnIntroEnd)]
     internal void OnIntroEnd()
@@ -91,7 +78,6 @@ internal class Camouflager : SingleRoleBase<Camouflager>
         _camouflagerButton.EffectDuration = Duration;
     }
 
-    // write functions here
     internal static void StartCamouflage()
     {
         CamouflageTimer = Duration;
@@ -111,7 +97,6 @@ internal class Camouflager : SingleRoleBase<Camouflager>
     internal static void ResetCamouflage()
     {
         CamouflageTimer = 0f;
-        var players = PlayerControl.AllPlayerControls.GetFastEnumerator();
         foreach (var p in PlayerControl.AllPlayerControls.GetFastEnumerator())
         {
             if (p == null)

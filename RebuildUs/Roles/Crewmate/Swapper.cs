@@ -14,31 +14,15 @@ internal class Swapper : SingleRoleBase<Swapper>
 
     public Swapper()
     {
-        // write value init here
         StaticRoleType = CurrentRoleType = RoleType.NiceSwapper;
         RemainSwaps = NumSwaps;
     }
 
-    public static Color Color
-    {
-        get => PlayerControl.LocalPlayer?.Data.Role.IsImpostor ?? false ? Palette.ImpostorRed : new Color32(134, 55, 86, byte.MaxValue);
-    }
+    public static Color Color { get => PlayerControl.LocalPlayer.IsTeamImpostor() ? Palette.ImpostorRed : new Color32(134, 55, 86, byte.MaxValue); }
 
-    // write configs here
-    internal static int NumSwaps
-    {
-        get => Mathf.RoundToInt(CustomOptionHolder.SwapperNumSwaps.GetFloat());
-    }
-
-    internal static bool CanCallEmergency
-    {
-        get => CustomOptionHolder.SwapperCanCallEmergency.GetBool();
-    }
-
-    internal static bool CanOnlySwapOthers
-    {
-        get => CustomOptionHolder.SwapperCanOnlySwapOthers.GetBool();
-    }
+    internal static int NumSwaps { get => Mathf.RoundToInt(CustomOptionHolder.SwapperNumSwaps.GetFloat()); }
+    internal static bool CanCallEmergency { get => CustomOptionHolder.SwapperCanCallEmergency.GetBool(); }
+    internal static bool CanOnlySwapOthers { get => CustomOptionHolder.SwapperCanOnlySwapOthers.GetBool(); }
 
     internal override void OnUpdateRoleColors()
     {
@@ -47,8 +31,6 @@ internal class Swapper : SingleRoleBase<Swapper>
             HudManagerPatch.SetPlayerNameColor(Player, RoleColor);
         }
     }
-
-    // write functions here
 
     internal static void Clear()
     {

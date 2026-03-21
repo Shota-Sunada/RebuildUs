@@ -8,25 +8,12 @@ internal class Spy : SingleRoleBase<Spy>
 
     public Spy()
     {
-        // write value init here
         StaticRoleType = CurrentRoleType = RoleType.Spy;
     }
 
-    // write configs here
-    internal static bool ImpostorsCanKillAnyone
-    {
-        get => CustomOptionHolder.SpyImpostorsCanKillAnyone.GetBool();
-    }
-
-    internal static bool CanEnterVents
-    {
-        get => CustomOptionHolder.SpyCanEnterVents.GetBool();
-    }
-
-    internal static bool HasImpostorVision
-    {
-        get => CustomOptionHolder.SpyHasImpostorVision.GetBool();
-    }
+    internal static bool ImpostorsCanKillAnyone { get => CustomOptionHolder.SpyImpostorsCanKillAnyone.GetBool(); }
+    internal static bool CanEnterVents { get => CustomOptionHolder.SpyCanEnterVents.GetBool(); }
+    internal static bool HasImpostorVision { get => CustomOptionHolder.SpyHasImpostorVision.GetBool(); }
 
     internal override void OnUpdateRoleColors()
     {
@@ -36,8 +23,6 @@ internal class Spy : SingleRoleBase<Spy>
             HudManagerPatch.SetPlayerNameColor(Player, RoleColor);
         }
     }
-
-    // write functions here
 
     internal static void Clear()
     {

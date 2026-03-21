@@ -11,30 +11,13 @@ internal class Lighter : MultiRoleBase<Lighter>
 
     public Lighter()
     {
-        // write value init here
         StaticRoleType = CurrentRoleType = RoleType.Lighter;
     }
 
-    // write configs here
-    internal static float ModeLightsOnVision
-    {
-        get => CustomOptionHolder.LighterModeLightsOnVision.GetFloat();
-    }
-
-    internal static float ModeLightsOffVision
-    {
-        get => CustomOptionHolder.LighterModeLightsOffVision.GetFloat();
-    }
-
-    private static float Cooldown
-    {
-        get => CustomOptionHolder.LighterCooldown.GetFloat();
-    }
-
-    private static float Duration
-    {
-        get => CustomOptionHolder.LighterDuration.GetFloat();
-    }
+    internal static float ModeLightsOnVision { get => CustomOptionHolder.LighterModeLightsOnVision.GetFloat(); }
+    internal static float ModeLightsOffVision { get => CustomOptionHolder.LighterModeLightsOffVision.GetFloat(); }
+    private static float Cooldown { get => CustomOptionHolder.LighterCooldown.GetFloat(); }
+    private static float Duration { get => CustomOptionHolder.LighterDuration.GetFloat(); }
 
     internal static bool IsLightActive(PlayerControl player)
     {
@@ -90,11 +73,8 @@ internal class Lighter : MultiRoleBase<Lighter>
         _lighterButton.EffectDuration = Duration;
     }
 
-    // write functions here
-
     internal static void Clear()
     {
-        // reset configs here
         Players.Clear();
     }
 }

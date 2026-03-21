@@ -14,20 +14,11 @@ internal class Warlock : MultiRoleBase<Warlock>
 
     public Warlock()
     {
-        // write value init here
         StaticRoleType = CurrentRoleType = RoleType.Warlock;
     }
 
-    // write configs here
-    private static float Cooldown
-    {
-        get => CustomOptionHolder.WarlockCooldown.GetFloat();
-    }
-
-    private static float RootTime
-    {
-        get => CustomOptionHolder.WarlockRootTime.GetFloat();
-    }
+    private static float Cooldown { get => CustomOptionHolder.WarlockCooldown.GetFloat(); }
+    private static float RootTime { get => CustomOptionHolder.WarlockRootTime.GetFloat(); }
 
     [CustomEvent(CustomEventType.FixedUpdate)]
     internal void FixedUpdate()
@@ -124,7 +115,7 @@ internal class Warlock : MultiRoleBase<Warlock>
             },
             () =>
             {
-                return (Local._curseVictim == null && Local._currentTarget != null || Local._curseVictim != null && Local._curseVictimTarget != null)&& PlayerControl.LocalPlayer.CanMove;
+                return (Local._curseVictim == null && Local._currentTarget != null || Local._curseVictim != null && Local._curseVictimTarget != null) && PlayerControl.LocalPlayer.CanMove;
             },
             () =>
             {
@@ -151,7 +142,6 @@ internal class Warlock : MultiRoleBase<Warlock>
 
     internal static void Clear()
     {
-        // reset configs here
         Players.Clear();
     }
 }

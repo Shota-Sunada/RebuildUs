@@ -18,30 +18,11 @@ internal static class Lovers
         new Color32(255, 0, 0, 255), // red
     ];
 
-    internal static bool BothDie
-    {
-        get => CustomOptionHolder.LoversBothDie.GetBool();
-    }
-
-    internal static bool SeparateTeam
-    {
-        get => CustomOptionHolder.LoversSeparateTeam.GetBool();
-    }
-
-    internal static bool TasksCount
-    {
-        get => CustomOptionHolder.LoversTasksCount.GetBool();
-    }
-
-    internal static bool EnableChat
-    {
-        get => CustomOptionHolder.LoversEnableChat.GetBool();
-    }
-
-    internal static bool HasTasks
-    {
-        get => TasksCount;
-    }
+    internal static bool BothDie { get => CustomOptionHolder.LoversBothDie.GetBool(); }
+    internal static bool SeparateTeam { get => CustomOptionHolder.LoversSeparateTeam.GetBool(); }
+    internal static bool TasksCount { get => CustomOptionHolder.LoversTasksCount.GetBool(); }
+    internal static bool EnableChat { get => CustomOptionHolder.LoversEnableChat.GetBool(); }
+    internal static bool HasTasks { get => TasksCount; }
 
     internal static string GetIcon(PlayerControl player)
     {

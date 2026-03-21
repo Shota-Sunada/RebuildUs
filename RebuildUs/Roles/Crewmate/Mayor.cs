@@ -9,7 +9,6 @@ internal class Mayor : MultiRoleBase<Mayor>
     private static CustomButton _mayorMeetingButton;
     internal static TMP_Text MayorRemoteButtonLeftText;
 
-    // write configs here
     private int _remoteMeetingsLeft = 0;
 
     public Mayor()
@@ -18,30 +17,11 @@ internal class Mayor : MultiRoleBase<Mayor>
         _remoteMeetingsLeft = MayorMaxRemoteMeetings;
     }
 
-    internal static int NumVotes
-    {
-        get => (int)CustomOptionHolder.MayorNumVotes.GetFloat();
-    }
-
-    internal static bool MayorCanSeeVoteColors
-    {
-        get => CustomOptionHolder.MayorCanSeeVoteColors.GetBool();
-    }
-
-    internal static int MayorTasksNeededToSeeVoteColors
-    {
-        get => (int)CustomOptionHolder.MayorTasksNeededToSeeVoteColors.GetFloat();
-    }
-
-    private static bool MayorHasMeetingButton
-    {
-        get => CustomOptionHolder.MayorMeetingButton.GetBool();
-    }
-
-    private static int MayorMaxRemoteMeetings
-    {
-        get => (int)CustomOptionHolder.MayorMaxRemoteMeetings.GetFloat();
-    }
+    internal static int NumVotes { get => (int)CustomOptionHolder.MayorNumVotes.GetFloat(); }
+    internal static bool MayorCanSeeVoteColors { get => CustomOptionHolder.MayorCanSeeVoteColors.GetBool(); }
+    internal static int MayorTasksNeededToSeeVoteColors { get => (int)CustomOptionHolder.MayorTasksNeededToSeeVoteColors.GetFloat(); }
+    private static bool MayorHasMeetingButton { get => CustomOptionHolder.MayorMeetingButton.GetBool(); }
+    private static int MayorMaxRemoteMeetings { get => (int)CustomOptionHolder.MayorMaxRemoteMeetings.GetFloat(); }
 
     [RegisterCustomButton]
     internal static void MakeButtons(HudManager hm)
@@ -104,7 +84,6 @@ internal class Mayor : MultiRoleBase<Mayor>
 
     internal static void Clear()
     {
-        // reset configs here
         Players.Clear();
     }
 }

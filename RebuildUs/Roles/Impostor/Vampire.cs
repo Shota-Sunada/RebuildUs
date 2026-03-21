@@ -18,56 +18,38 @@ internal class Vampire : SingleRoleBase<Vampire>
 
     public Vampire()
     {
-        // write value init here
         StaticRoleType = CurrentRoleType = RoleType.Vampire;
     }
 
-    // write configs here
-    internal static float Delay
-    {
-        get => CustomOptionHolder.VampireKillDelay.GetFloat();
-    }
-
-    internal static float Cooldown
-    {
-        get => CustomOptionHolder.VampireCooldown.GetFloat();
-    }
-
-    internal static bool CanKillNearGarlics
-    {
-        get => CustomOptionHolder.VampireCanKillNearGarlics.GetBool();
-    }
-
-    internal static bool GarlicsActive
-    {
-        get => CustomOptionHolder.VampireSpawnRate.GetSelection() > 0;
-    }
+    internal static float Delay { get => CustomOptionHolder.VampireKillDelay.GetFloat(); }
+    internal static float Cooldown { get => CustomOptionHolder.VampireCooldown.GetFloat(); }
+    internal static bool CanKillNearGarlics { get => CustomOptionHolder.VampireCanKillNearGarlics.GetBool(); }
+    internal static bool GarlicsActive { get => CustomOptionHolder.VampireSpawnRate.GetSelection() > 0; }
 
     [CustomEvent(CustomEventType.FixedUpdate)]
     internal void FixedUpdate()
     {
-        var local = Local;
-        if (local == null || Player.IsDead())
+        if (Local == null || Player.IsDead())
         {
             return;
         }
 
         // Update target selection
-        local.CurrentTarget = Helpers.SetTarget();
+        Local.CurrentTarget = Helpers.SetTarget();
 
-        local.TargetNearGarlic = false;
-        if (local.CurrentTarget != null)
+        Local.TargetNearGarlic = false;
+        if (Local.CurrentTarget != null)
         {
-            Helpers.SetPlayerOutline(local.CurrentTarget, RoleColor);
+            Helpers.SetPlayerOutline(Local.CurrentTarget, base.RoleColor);
 
-            var targetPos = local.CurrentTarget.GetTruePosition();
+            var targetPos = Local.CurrentTarget.GetTruePosition();
             var garlics = Garlic.Garlics;
             for (var i = 0; i < garlics.Count; i++)
             {
                 var garlic = garlics[i];
                 if (garlic?.GarlicObject != null && Vector2.Distance(targetPos, garlic.GarlicObject.transform.position) <= 2.5f)
                 {
-                    local.TargetNearGarlic = true;
+                    Local.TargetNearGarlic = true;
                     break;
                 }
             }
@@ -226,11 +208,8 @@ internal class Vampire : SingleRoleBase<Vampire>
         _garlicButton?.MaxTimer = 0f;
     }
 
-    // write functions here
-
     internal static void Clear()
     {
-        // reset configs here
         Bitten = null;
 
         ModRoleManager.RemoveRole(Instance);

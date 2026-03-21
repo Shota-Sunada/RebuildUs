@@ -44,82 +44,25 @@ internal class Madmate : ModifierBase<Madmate>
 
     public Madmate()
     {
-        // write value init here
         StaticModifierType = CurrentModifierType = ModifierType.Madmate;
     }
 
-    // write configs here
     private static CustomButton _suicideButton;
 
-    internal static bool CanEnterVents
-    {
-        get => CustomOptionHolder.MadmateCanEnterVents.GetBool();
-    }
-
-    internal static bool HasImpostorVision
-    {
-        get => CustomOptionHolder.MadmateHasImpostorVision.GetBool();
-    }
-
-    internal static bool CanSabotage
-    {
-        get => CustomOptionHolder.MadmateCanSabotage.GetBool();
-    }
-
-    internal static bool CanFixComm
-    {
-        get => CustomOptionHolder.MadmateCanFixComm.GetBool();
-    }
-
-    internal static MadmateType MadmateType
-    {
-        get => (MadmateType)CustomOptionHolder.MadmateType.GetSelection();
-    }
-
-    internal static MadmateAbility MadmateAbility
-    {
-        get => (MadmateAbility)CustomOptionHolder.MadmateAbility.GetSelection();
-    }
-
-    internal static RoleType FixedRole
-    {
-        get => CustomOptionHolder.MadmateFixedRole.Role;
-    }
-
-    internal static int NumCommonTasks
-    {
-        get => CustomOptionHolder.MadmateTasks.CommonTasksNum;
-    }
-
-    internal static int NumLongTasks
-    {
-        get => CustomOptionHolder.MadmateTasks.LongTasksNum;
-    }
-
-    internal static int NumShortTasks
-    {
-        get => CustomOptionHolder.MadmateTasks.ShortTasksNum;
-    }
-
-    internal static bool HasTasks
-    {
-        get => MadmateAbility == MadmateAbility.Fanatic;
-    }
-
-    internal static bool ExileCrewmate
-    {
-        get => CustomOptionHolder.MadmateExilePlayer.GetBool();
-    }
-
-    internal static string Prefix
-    {
-        get => Tr.Get(TrKey.MadmatePrefix);
-    }
-
-    internal static string FullName
-    {
-        get => Tr.Get(TrKey.Madmate);
-    }
+    internal static bool CanEnterVents { get => CustomOptionHolder.MadmateCanEnterVents.GetBool(); }
+    internal static bool HasImpostorVision { get => CustomOptionHolder.MadmateHasImpostorVision.GetBool(); }
+    internal static bool CanSabotage { get => CustomOptionHolder.MadmateCanSabotage.GetBool(); }
+    internal static bool CanFixComm { get => CustomOptionHolder.MadmateCanFixComm.GetBool(); }
+    internal static MadmateType MadmateType { get => (MadmateType)CustomOptionHolder.MadmateType.GetSelection(); }
+    internal static MadmateAbility MadmateAbility { get => (MadmateAbility)CustomOptionHolder.MadmateAbility.GetSelection(); }
+    internal static RoleType FixedRole { get => CustomOptionHolder.MadmateFixedRole.Role; }
+    internal static int NumCommonTasks { get => CustomOptionHolder.MadmateTasks.CommonTasksNum; }
+    internal static int NumLongTasks { get => CustomOptionHolder.MadmateTasks.LongTasksNum; }
+    internal static int NumShortTasks { get => CustomOptionHolder.MadmateTasks.ShortTasksNum; }
+    internal static bool HasTasks { get => MadmateAbility == MadmateAbility.Fanatic; }
+    internal static bool ExileCrewmate { get => CustomOptionHolder.MadmateExilePlayer.GetBool(); }
+    internal static string Prefix { get => Tr.Get(TrKey.MadmatePrefix); }
+    internal static string FullName { get => Tr.Get(TrKey.Madmate); }
 
     internal static List<PlayerControl> Candidates
     {
@@ -277,8 +220,6 @@ internal class Madmate : ModifierBase<Madmate>
         if (_suicideButton != null) _suicideButton.MaxTimer = 0f;
     }
 
-    // write functions here
-
     internal static bool KnowsImpostors(PlayerControl player)
     {
         return HasTasks && HasModifier(player) && TasksComplete(player);
@@ -310,7 +251,6 @@ internal class Madmate : ModifierBase<Madmate>
 
     internal static void Clear()
     {
-        // reset configs here
         Players.Clear();
     }
 }

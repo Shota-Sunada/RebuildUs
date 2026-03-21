@@ -10,7 +10,6 @@ internal class AntiTeleport : ModifierBase<AntiTeleport>
 
     public AntiTeleport()
     {
-        // write value init here
         StaticModifierType = CurrentModifierType = ModifierType.AntiTeleport;
     }
 
@@ -31,21 +30,11 @@ internal class AntiTeleport : ModifierBase<AntiTeleport>
         }
     }
 
-    internal static string Postfix
-    {
-        get => Tr.Get(TrKey.AntiTeleportPostfix);
-    }
-
-    internal static string FullName
-    {
-        get => Tr.Get(TrKey.AntiTeleport);
-    }
-
-    // write functions here
+    internal static string Postfix { get => Tr.Get(TrKey.AntiTeleportPostfix); }
+    internal static string FullName { get => Tr.Get(TrKey.AntiTeleport); }
 
     internal static void Clear()
     {
-        // reset configs here
         Players.Clear();
         Position = new();
     }

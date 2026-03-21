@@ -13,25 +13,12 @@ internal class TimeMaster : SingleRoleBase<TimeMaster>
 
     public TimeMaster()
     {
-        // write value init here
         StaticRoleType = CurrentRoleType = RoleType.TimeMaster;
     }
 
-    // write configs here
-    internal static float Cooldown
-    {
-        get => CustomOptionHolder.TimeMasterCooldown.GetFloat();
-    }
-
-    internal static float RewindTime
-    {
-        get => CustomOptionHolder.TimeMasterRewindTime.GetFloat();
-    }
-
-    internal static float ShieldDuration
-    {
-        get => CustomOptionHolder.TimeMasterShieldDuration.GetFloat();
-    }
+    internal static float Cooldown { get => CustomOptionHolder.TimeMasterCooldown.GetFloat(); }
+    internal static float RewindTime { get => CustomOptionHolder.TimeMasterRewindTime.GetFloat(); }
+    internal static float ShieldDuration { get => CustomOptionHolder.TimeMasterShieldDuration.GetFloat(); }
 
     [CustomEvent(CustomEventType.FixedUpdate)]
     internal void FixedUpdate()
@@ -162,8 +149,6 @@ internal class TimeMaster : SingleRoleBase<TimeMaster>
         _timeMasterShieldButton.IsEffectActive = false;
         _timeMasterShieldButton.ActionButton.cooldownTimerText.color = Palette.EnabledColor;
     }
-
-    // write functions here
 
     internal static void Clear()
     {

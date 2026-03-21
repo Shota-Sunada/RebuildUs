@@ -10,15 +10,10 @@ internal class Cleaner : MultiRoleBase<Cleaner>
 
     public Cleaner()
     {
-        // write value init here
         StaticRoleType = CurrentRoleType = RoleType.Cleaner;
     }
 
-    // write configs here
-    private static float Cooldown
-    {
-        get => CustomOptionHolder.CleanerCooldown.GetFloat();
-    }
+    private static float Cooldown { get => CustomOptionHolder.CleanerCooldown.GetFloat(); }
 
     [CustomEvent(CustomEventType.OnKill)]
     internal void OnKill(PlayerControl target)
@@ -91,11 +86,8 @@ internal class Cleaner : MultiRoleBase<Cleaner>
         CleanerCleanButton.MaxTimer = Cooldown;
     }
 
-    // write functions here
-
     internal static void Clear()
     {
-        // reset configs here
         Players.Clear();
     }
 }

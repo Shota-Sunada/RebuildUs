@@ -9,35 +9,14 @@ internal class Detective : MultiRoleBase<Detective>
 
     public Detective()
     {
-        // write value init here
         StaticRoleType = CurrentRoleType = RoleType.Detective;
     }
 
-    // write configs here
-    internal static bool AnonymousFootprints
-    {
-        get => CustomOptionHolder.DetectiveAnonymousFootprints.GetBool();
-    }
-
-    private static float FootprintInterval
-    {
-        get => CustomOptionHolder.DetectiveFootprintInterval.GetFloat();
-    }
-
-    internal static float FootprintDuration
-    {
-        get => CustomOptionHolder.DetectiveFootprintDuration.GetFloat();
-    }
-
-    internal static float ReportNameDuration
-    {
-        get => CustomOptionHolder.DetectiveReportNameDuration.GetFloat();
-    }
-
-    internal static float ReportColorDuration
-    {
-        get => CustomOptionHolder.DetectiveReportColorDuration.GetFloat();
-    }
+    internal static bool AnonymousFootprints { get => CustomOptionHolder.DetectiveAnonymousFootprints.GetBool(); }
+    private static float FootprintInterval { get => CustomOptionHolder.DetectiveFootprintInterval.GetFloat(); }
+    internal static float FootprintDuration { get => CustomOptionHolder.DetectiveFootprintDuration.GetFloat(); }
+    internal static float ReportNameDuration { get => CustomOptionHolder.DetectiveReportNameDuration.GetFloat(); }
+    internal static float ReportColorDuration { get => CustomOptionHolder.DetectiveReportColorDuration.GetFloat(); }
 
     [CustomEvent(CustomEventType.FixedUpdate)]
     internal void FixedUpdate()
@@ -62,11 +41,8 @@ internal class Detective : MultiRoleBase<Detective>
         }
     }
 
-    // write functions here
-
     internal static void Clear()
     {
-        // reset configs here
         Players.Clear();
     }
 }

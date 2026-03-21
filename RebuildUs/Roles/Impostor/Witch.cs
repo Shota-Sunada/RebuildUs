@@ -14,46 +14,20 @@ internal class Witch : MultiRoleBase<Witch>
 
     public Witch()
     {
-        // write value init here
         StaticRoleType = CurrentRoleType = RoleType.Witch;
     }
 
-    // write configs here
-    private static float Cooldown
-    {
-        get => CustomOptionHolder.WitchCooldown.GetFloat();
-    }
-
-    private static float AdditionalCooldown
-    {
-        get => CustomOptionHolder.WitchAdditionalCooldown.GetFloat();
-    }
-
-    private static bool CanSpellAnyone
-    {
-        get => CustomOptionHolder.WitchCanSpellAnyone.GetBool();
-    }
-
-    private static float SpellCastingDuration
-    {
-        get => CustomOptionHolder.WitchSpellCastingDuration.GetFloat();
-    }
-
-    private static bool TriggerBothCooldowns
-    {
-        get => CustomOptionHolder.WitchTriggerBothCooldowns.GetBool();
-    }
-
-    internal static bool VoteSavesTargets
-    {
-        get => CustomOptionHolder.WitchVoteSavesTargets.GetBool();
-    }
+    private static float Cooldown { get => CustomOptionHolder.WitchCooldown.GetFloat(); }
+    private static float AdditionalCooldown { get => CustomOptionHolder.WitchAdditionalCooldown.GetFloat(); }
+    private static bool CanSpellAnyone { get => CustomOptionHolder.WitchCanSpellAnyone.GetBool(); }
+    private static float SpellCastingDuration { get => CustomOptionHolder.WitchSpellCastingDuration.GetFloat(); }
+    private static bool TriggerBothCooldowns { get => CustomOptionHolder.WitchTriggerBothCooldowns.GetBool(); }
+    internal static bool VoteSavesTargets { get => CustomOptionHolder.WitchVoteSavesTargets.GetBool(); }
 
     [CustomEvent(CustomEventType.FixedUpdate)]
     internal void FixedUpdate()
     {
-        var local = Local;
-        if (local == null)
+        if (Local == null)
         {
             return;
         }
@@ -183,11 +157,8 @@ internal class Witch : MultiRoleBase<Witch>
         WitchSpellButton.EffectDuration = SpellCastingDuration;
     }
 
-    // write functions here
-
     internal static void Clear()
     {
-        // reset configs here
         Players.Clear();
         FutureSpelled = [];
         _currentTarget = null;

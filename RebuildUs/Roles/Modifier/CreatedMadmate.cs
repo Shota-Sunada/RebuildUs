@@ -6,57 +6,20 @@ internal class CreatedMadmate : ModifierBase<CreatedMadmate>
 {
     public CreatedMadmate()
     {
-        // write value init here
         StaticModifierType = CurrentModifierType = ModifierType.CreatedMadmate;
     }
 
-    // write configs here
     private static CustomButton _suicideButton;
 
-    internal static bool CanEnterVents
-    {
-        get => CustomOptionHolder.CreatedMadmateCanEnterVents.GetBool();
-    }
-
-    internal static bool HasImpostorVision
-    {
-        get => CustomOptionHolder.CreatedMadmateHasImpostorVision.GetBool();
-    }
-
-    internal static bool CanSabotage
-    {
-        get => CustomOptionHolder.CreatedMadmateCanSabotage.GetBool();
-    }
-
-    internal static bool CanFixComm
-    {
-        get => CustomOptionHolder.CreatedMadmateCanFixComm.GetBool();
-    }
-
-    internal static CreatedMadmateType MadmateType
-    {
-        get => CreatedMadmateType.Simple;
-    }
-
-    internal static CreatedMadmateAbility MadmateAbility
-    {
-        get => (CreatedMadmateAbility)CustomOptionHolder.CreatedMadmateAbility.GetSelection();
-    }
-
-    internal static int NumTasks
-    {
-        get => (int)CustomOptionHolder.CreatedMadmateNumTasks.GetFloat();
-    }
-
-    internal static bool HasTasks
-    {
-        get => MadmateAbility == CreatedMadmateAbility.Fanatic;
-    }
-
-    internal static bool ExileCrewmate
-    {
-        get => CustomOptionHolder.CreatedMadmateExileCrewmate.GetBool();
-    }
+    internal static bool CanEnterVents { get => CustomOptionHolder.CreatedMadmateCanEnterVents.GetBool(); }
+    internal static bool HasImpostorVision { get => CustomOptionHolder.CreatedMadmateHasImpostorVision.GetBool(); }
+    internal static bool CanSabotage { get => CustomOptionHolder.CreatedMadmateCanSabotage.GetBool(); }
+    internal static bool CanFixComm { get => CustomOptionHolder.CreatedMadmateCanFixComm.GetBool(); }
+    internal static CreatedMadmateType MadmateType { get => CreatedMadmateType.Simple; }
+    internal static CreatedMadmateAbility MadmateAbility { get => (CreatedMadmateAbility)CustomOptionHolder.CreatedMadmateAbility.GetSelection(); }
+    internal static int NumTasks { get => (int)CustomOptionHolder.CreatedMadmateNumTasks.GetFloat(); }
+    internal static bool HasTasks { get => MadmateAbility == CreatedMadmateAbility.Fanatic; }
+    internal static bool ExileCrewmate { get => CustomOptionHolder.CreatedMadmateExileCrewmate.GetBool(); }
 
     internal override void OnUpdateRoleColors()
     {
@@ -154,11 +117,8 @@ internal class CreatedMadmate : ModifierBase<CreatedMadmate>
         return counter >= totalTasks;
     }
 
-    // write functions here
-
     internal static void Clear()
     {
-        // reset configs here
         Players.Clear();
     }
 

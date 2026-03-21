@@ -14,39 +14,15 @@ internal class LastImpostor : ModifierBase<LastImpostor>
 
     public LastImpostor()
     {
-        // write value init here
         StaticModifierType = CurrentModifierType = ModifierType.LastImpostor;
     }
 
-    internal static bool IsEnable
-    {
-        get => CustomOptionHolder.LastImpostorEnable.GetBool();
-    }
-
-    internal static int MaxKillCounter
-    {
-        get => (int)CustomOptionHolder.LastImpostorNumKills.GetFloat();
-    }
-
-    internal static int SelectedFunction
-    {
-        get => CustomOptionHolder.LastImpostorFunctions.GetSelection();
-    }
-
-    internal static DivineResults DivineResult
-    {
-        get => (DivineResults)CustomOptionHolder.LastImpostorResults.GetSelection();
-    }
-
-    internal static string Postfix
-    {
-        get => Tr.Get(TrKey.LastImpostorPostfix);
-    }
-
-    internal static string FullName
-    {
-        get => Tr.Get(TrKey.LastImpostor);
-    }
+    internal static bool IsEnable { get => CustomOptionHolder.LastImpostorEnable.GetBool(); }
+    internal static int MaxKillCounter { get => (int)CustomOptionHolder.LastImpostorNumKills.GetFloat(); }
+    internal static int SelectedFunction { get => CustomOptionHolder.LastImpostorFunctions.GetSelection(); }
+    internal static DivineResults DivineResult { get => (DivineResults)CustomOptionHolder.LastImpostorResults.GetSelection(); }
+    internal static string Postfix { get => Tr.Get(TrKey.LastImpostorPostfix); }
+    internal static string FullName { get => Tr.Get(TrKey.LastImpostor); }
 
     [CustomEvent(CustomEventType.OnKill)]
     internal void OnKill(PlayerControl target)
@@ -77,8 +53,6 @@ internal class LastImpostor : ModifierBase<LastImpostor>
                 Divine(p);
             };
         }
-
-    ;
 
         Func<bool> LastImpostorHasButton(byte index)
         {
@@ -208,11 +182,8 @@ internal class LastImpostor : ModifierBase<LastImpostor>
         }
     }
 
-    // write functions here
-
     internal static void Clear()
     {
-        // reset configs here
         Players.Clear();
         KillCounter = 0;
         NumUsed = 0;

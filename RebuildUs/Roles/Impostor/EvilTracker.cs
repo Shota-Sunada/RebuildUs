@@ -17,40 +17,15 @@ internal class EvilTracker : MultiRoleBase<EvilTracker>
 
     public EvilTracker()
     {
-        // write value init here
         StaticRoleType = CurrentRoleType = RoleType.Tracker;
     }
 
-    // write configs here
-    internal static float Cooldown
-    {
-        get => CustomOptionHolder.EvilTrackerCooldown.GetFloat();
-    }
-
-    internal static bool ResetTargetAfterMeeting
-    {
-        get => CustomOptionHolder.EvilTrackerResetTargetAfterMeeting.GetBool();
-    }
-
-    internal static bool CanSeeDeathFlash
-    {
-        get => CustomOptionHolder.EvilTrackerCanSeeDeathFlash.GetBool();
-    }
-
-    internal static bool CanSeeTargetTask
-    {
-        get => CustomOptionHolder.EvilTrackerCanSeeTargetTask.GetBool();
-    }
-
-    internal static bool CanSeeTargetPosition
-    {
-        get => CustomOptionHolder.EvilTrackerCanSeeTargetPosition.GetBool();
-    }
-
-    internal static bool CanSetTargetOnMeeting
-    {
-        get => CustomOptionHolder.EvilTrackerCanSetTargetOnMeeting.GetBool();
-    }
+    internal static float Cooldown { get => CustomOptionHolder.EvilTrackerCooldown.GetFloat(); }
+    internal static bool ResetTargetAfterMeeting { get => CustomOptionHolder.EvilTrackerResetTargetAfterMeeting.GetBool(); }
+    internal static bool CanSeeDeathFlash { get => CustomOptionHolder.EvilTrackerCanSeeDeathFlash.GetBool(); }
+    internal static bool CanSeeTargetTask { get => CustomOptionHolder.EvilTrackerCanSeeTargetTask.GetBool(); }
+    internal static bool CanSeeTargetPosition { get => CustomOptionHolder.EvilTrackerCanSeeTargetPosition.GetBool(); }
+    internal static bool CanSetTargetOnMeeting { get => CustomOptionHolder.EvilTrackerCanSetTargetOnMeeting.GetBool(); }
 
     [CustomEvent(CustomEventType.OnMeetingStart)]
     internal void OnMeetingStart()
@@ -64,8 +39,7 @@ internal class EvilTracker : MultiRoleBase<EvilTracker>
     [CustomEvent(CustomEventType.FixedUpdate)]
     internal void FixedUpdate()
     {
-        var local = Local;
-        if (local != null)
+        if (Local != null)
         {
             ArrowUpdate();
 
@@ -109,11 +83,8 @@ internal class EvilTracker : MultiRoleBase<EvilTracker>
         TrackerButton.MaxTimer = Cooldown;
     }
 
-    // write functions here
-
     internal static void Clear()
     {
-        // reset configs here
         Players.Clear();
         Target = null;
         CurrentTarget = null;

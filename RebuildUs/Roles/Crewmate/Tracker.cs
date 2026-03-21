@@ -21,35 +21,14 @@ internal class Tracker : MultiRoleBase<Tracker>
 
     public Tracker()
     {
-        // write value init here
         StaticRoleType = CurrentRoleType = RoleType.Tracker;
     }
 
-    // write configs here
-    internal static float UpdateInterval
-    {
-        get => CustomOptionHolder.TrackerUpdateInterval.GetFloat();
-    }
-
-    internal static bool ResetTargetAfterMeeting
-    {
-        get => CustomOptionHolder.TrackerResetTargetAfterMeeting.GetBool();
-    }
-
-    internal static bool CanTrackCorpses
-    {
-        get => CustomOptionHolder.TrackerCanTrackCorpses.GetBool();
-    }
-
-    internal static float CorpsesTrackingCooldown
-    {
-        get => CustomOptionHolder.TrackerCorpsesTrackingCooldown.GetFloat();
-    }
-
-    internal static float CorpsesTrackingDuration
-    {
-        get => CustomOptionHolder.TrackerCorpsesTrackingDuration.GetFloat();
-    }
+    internal static float UpdateInterval { get => CustomOptionHolder.TrackerUpdateInterval.GetFloat(); }
+    internal static bool ResetTargetAfterMeeting { get => CustomOptionHolder.TrackerResetTargetAfterMeeting.GetBool(); }
+    internal static bool CanTrackCorpses { get => CustomOptionHolder.TrackerCanTrackCorpses.GetBool(); }
+    internal static float CorpsesTrackingCooldown { get => CustomOptionHolder.TrackerCorpsesTrackingCooldown.GetFloat(); }
+    internal static float CorpsesTrackingDuration { get => CustomOptionHolder.TrackerCorpsesTrackingDuration.GetFloat(); }
 
     [CustomEvent(CustomEventType.OnMeetingEnd)]
     internal void OnMeetingEnd()
@@ -242,7 +221,6 @@ internal class Tracker : MultiRoleBase<Tracker>
         _trackerTrackCorpsesButton.EffectDuration = CorpsesTrackingDuration;
     }
 
-    // write functions here
     internal void ResetTracked()
     {
         CurrentTarget = Tracked = null;
@@ -256,7 +234,6 @@ internal class Tracker : MultiRoleBase<Tracker>
 
     internal static void Clear()
     {
-        // reset configs here
         DeadBodyPositions = [];
         foreach (var p in Players)
         {

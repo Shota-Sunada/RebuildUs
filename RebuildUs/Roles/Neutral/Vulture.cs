@@ -16,32 +16,15 @@ internal class Vulture : SingleRoleBase<Vulture>
 
     public Vulture()
     {
-        // write value init here
         StaticRoleType = CurrentRoleType = RoleType.Vulture;
         EatenBodies = 0;
         _localArrows = [];
     }
 
-    // write configs here
-    private static float Cooldown
-    {
-        get => CustomOptionHolder.VultureCooldown.GetFloat();
-    }
-
-    internal static int NumberToWin
-    {
-        get => (int)CustomOptionHolder.VultureNumberToWin.GetFloat();
-    }
-
-    internal static bool CanUseVents
-    {
-        get => CustomOptionHolder.VultureCanUseVents.GetBool();
-    }
-
-    private static bool ShowArrows
-    {
-        get => CustomOptionHolder.VultureShowArrows.GetBool();
-    }
+    private static float Cooldown { get => CustomOptionHolder.VultureCooldown.GetFloat(); }
+    internal static int NumberToWin { get => (int)CustomOptionHolder.VultureNumberToWin.GetFloat(); }
+    internal static bool CanUseVents { get => CustomOptionHolder.VultureCanUseVents.GetBool(); }
+    private static bool ShowArrows { get => CustomOptionHolder.VultureShowArrows.GetBool(); }
 
     [CustomEvent(CustomEventType.FixedUpdate)]
     internal void FixedUpdate()

@@ -21,51 +21,18 @@ internal class Jackal : SingleRoleBase<Jackal>
 
     public Jackal()
     {
-        // write value init here
         StaticRoleType = CurrentRoleType = RoleType.Jackal;
         CanSidekick = CanCreateSidekick;
     }
 
-    // write configs here
-    internal static float KillCooldown
-    {
-        get => CustomOptionHolder.JackalKillCooldown.GetFloat();
-    }
-
-    private static bool CanSabotageLights
-    {
-        get => CustomOptionHolder.JackalCanSabotageLights.GetBool();
-    }
-
-    internal static bool CanUseVents
-    {
-        get => CustomOptionHolder.JackalCanUseVents.GetBool();
-    }
-
-    internal static bool HasImpostorVision
-    {
-        get => CustomOptionHolder.JackalHasImpostorVision.GetBool();
-    }
-
-    internal static bool CanCreateSidekick
-    {
-        get => CustomOptionHolder.JackalCanCreateSidekick.GetBool();
-    }
-
-    private static float CreateSidekickCooldown
-    {
-        get => CustomOptionHolder.JackalCreateSidekickCooldown.GetFloat();
-    }
-
-    internal static bool JackalPromotedFromSidekickCanCreateSidekick
-    {
-        get => CustomOptionHolder.JackalPromotedFromSidekickCanCreateSidekick.GetBool();
-    }
-
-    internal static bool CanCreateSidekickFromImpostor
-    {
-        get => CustomOptionHolder.JackalCanCreateSidekickFromImpostor.GetBool();
-    }
+    internal static float KillCooldown { get => CustomOptionHolder.JackalKillCooldown.GetFloat(); }
+    private static bool CanSabotageLights { get => CustomOptionHolder.JackalCanSabotageLights.GetBool(); }
+    internal static bool CanUseVents { get => CustomOptionHolder.JackalCanUseVents.GetBool(); }
+    internal static bool HasImpostorVision { get => CustomOptionHolder.JackalHasImpostorVision.GetBool(); }
+    internal static bool CanCreateSidekick { get => CustomOptionHolder.JackalCanCreateSidekick.GetBool(); }
+    private static float CreateSidekickCooldown { get => CustomOptionHolder.JackalCreateSidekickCooldown.GetFloat(); }
+    internal static bool JackalPromotedFromSidekickCanCreateSidekick { get => CustomOptionHolder.JackalPromotedFromSidekickCanCreateSidekick.GetBool(); }
+    internal static bool CanCreateSidekickFromImpostor { get => CustomOptionHolder.JackalCanCreateSidekickFromImpostor.GetBool(); }
 
     internal override void OnUpdateRoleColors()
     {
@@ -92,8 +59,7 @@ internal class Jackal : SingleRoleBase<Jackal>
     [CustomEvent(CustomEventType.FixedUpdate)]
     internal void FixedUpdate()
     {
-        var local = Local;
-        if (local == null)
+        if (Local == null)
         {
             return;
         }
@@ -240,7 +206,6 @@ internal class Jackal : SingleRoleBase<Jackal>
         _jackalSidekickButton?.MaxTimer = CreateSidekickCooldown;
     }
 
-    // write functions here
     internal static void RemoveCurrentJackal()
     {
         if (Instance == null)

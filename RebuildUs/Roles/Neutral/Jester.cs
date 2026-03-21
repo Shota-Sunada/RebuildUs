@@ -10,30 +10,15 @@ internal class Jester : SingleRoleBase<Jester>
 
     public Jester()
     {
-        // write value init here
         StaticRoleType = CurrentRoleType = RoleType.Jester;
     }
 
-    internal static bool CanCallEmergency
-    {
-        get => CustomOptionHolder.JesterCanCallEmergency.GetBool();
-    }
-
-    internal static bool CanSabotage
-    {
-        get => CustomOptionHolder.JesterCanSabotage.GetBool();
-    }
-
-    internal static bool HasImpostorVision
-    {
-        get => CustomOptionHolder.JesterHasImpostorVision.GetBool();
-    }
-
-    // write functions here
+    internal static bool CanCallEmergency { get => CustomOptionHolder.JesterCanCallEmergency.GetBool(); }
+    internal static bool CanSabotage { get => CustomOptionHolder.JesterCanSabotage.GetBool(); }
+    internal static bool HasImpostorVision { get => CustomOptionHolder.JesterHasImpostorVision.GetBool(); }
 
     internal static void Clear()
     {
-        // reset configs here
         TriggerJesterWin = false;
 
         ModRoleManager.RemoveRole(Instance);

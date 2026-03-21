@@ -10,25 +10,12 @@ internal class Seer : MultiRoleBase<Seer>
 
     public Seer()
     {
-        // write value init here
         StaticRoleType = CurrentRoleType = RoleType.Seer;
     }
 
-    // write configs here
-    internal static int Mode
-    {
-        get => CustomOptionHolder.SeerMode.GetSelection();
-    }
-
-    internal static bool LimitSoulDuration
-    {
-        get => CustomOptionHolder.SeerLimitSoulDuration.GetBool();
-    }
-
-    internal static float SoulDuration
-    {
-        get => CustomOptionHolder.SeerSoulDuration.GetFloat();
-    }
+    internal static int Mode { get => CustomOptionHolder.SeerMode.GetSelection(); }
+    internal static bool LimitSoulDuration { get => CustomOptionHolder.SeerLimitSoulDuration.GetBool(); }
+    internal static float SoulDuration { get => CustomOptionHolder.SeerSoulDuration.GetFloat(); }
 
     [CustomEvent(CustomEventType.OnMeetingEnd)]
     internal void OnMeetingEnd()
@@ -69,11 +56,8 @@ internal class Seer : MultiRoleBase<Seer>
         }
     }
 
-    // write functions here
-
     internal static void Clear()
     {
-        // reset configs here
         Players.Clear();
         DeadBodyPositions = [];
     }

@@ -6,29 +6,16 @@ internal class Snitch : SingleRoleBase<Snitch>
 {
     public static Color Color = new Color32(184, 251, 79, byte.MaxValue);
 
-    // write configs here
     internal static List<Arrow> LocalArrows = [];
 
     public Snitch()
     {
-        // write value init here
         StaticRoleType = CurrentRoleType = RoleType.Snitch;
     }
 
-    internal static int LeftTasksForReveal
-    {
-        get => Mathf.RoundToInt(CustomOptionHolder.SnitchLeftTasksForReveal.GetFloat());
-    }
-
-    internal static bool IncludeTeamJackal
-    {
-        get => CustomOptionHolder.SnitchIncludeTeamJackal.GetBool();
-    }
-
-    internal static bool TeamJackalUseDifferentArrowColor
-    {
-        get => CustomOptionHolder.SnitchTeamJackalUseDifferentArrowColor.GetBool();
-    }
+    internal static int LeftTasksForReveal { get => Mathf.RoundToInt(CustomOptionHolder.SnitchLeftTasksForReveal.GetFloat()); }
+    internal static bool IncludeTeamJackal { get => CustomOptionHolder.SnitchIncludeTeamJackal.GetBool(); }
+    internal static bool TeamJackalUseDifferentArrowColor { get => CustomOptionHolder.SnitchTeamJackalUseDifferentArrowColor.GetBool(); }
 
     [CustomEvent(CustomEventType.FixedUpdate)]
     internal void FixedUpdate()
@@ -102,8 +89,6 @@ internal class Snitch : SingleRoleBase<Snitch>
             }
         }
     }
-
-    // write functions here
 
     internal static void Clear()
     {

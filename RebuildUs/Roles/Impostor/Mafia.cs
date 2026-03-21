@@ -24,22 +24,16 @@ internal static class Mafia
     {
         public Godfather()
         {
-            // write value init here
             StaticRoleType = CurrentRoleType = RoleType.Godfather;
         }
 
-        internal override string NameTag
-        {
-            get => PlayerControl.LocalPlayer.IsTeamImpostor() ? string.Format(" ({0})", Tr.Get(TrKey.MafiaG)) : "";
-        }
+        internal override string NameTag { get => PlayerControl.LocalPlayer.IsTeamImpostor() ? string.Format(" ({0})", Tr.Get(TrKey.MafiaG)) : ""; }
 
         [CustomEvent(CustomEventType.OnDeath)]
         internal void OnDeath(PlayerControl killer)
         {
             IsGodfatherDead = true;
         }
-
-        // write functions here
 
         internal static void Clear()
         {
@@ -54,44 +48,20 @@ internal static class Mafia
     {
         public Mafioso()
         {
-            // write value init here
             StaticRoleType = CurrentRoleType = RoleType.Mafioso;
         }
 
-        // write configs here
-
-        internal static bool CanSabotage
-        {
-            get => CanKill || CustomOptionHolder.MafiosoCanSabotage.GetBool();
-        }
-
-        internal static bool CanRepair
-        {
-            get => CanKill || CustomOptionHolder.MafiosoCanRepair.GetBool();
-        }
-
-        internal static bool CanVent
-        {
-            get => CanKill || CustomOptionHolder.MafiosoCanVent.GetBool();
-        }
-
-        internal static bool CanKill
-        {
-            get => !Godfather.Exists || IsGodfatherDead;
-        }
-
-        internal override string NameTag
-        {
-            get => PlayerControl.LocalPlayer.IsTeamImpostor() ? string.Format(" ({0})", Tr.Get(TrKey.MafiaM)) : "";
-        }
+        internal static bool CanSabotage { get => CanKill || CustomOptionHolder.MafiosoCanSabotage.GetBool(); }
+        internal static bool CanRepair { get => CanKill || CustomOptionHolder.MafiosoCanRepair.GetBool(); }
+        internal static bool CanVent { get => CanKill || CustomOptionHolder.MafiosoCanVent.GetBool(); }
+        internal static bool CanKill { get => !Godfather.Exists || IsGodfatherDead; }
+        internal override string NameTag { get => PlayerControl.LocalPlayer.IsTeamImpostor() ? string.Format(" ({0})", Tr.Get(TrKey.MafiaM)) : ""; }
 
         [CustomEvent(CustomEventType.OnDeath)]
         internal void OnDeath(PlayerControl killer)
         {
             IsMafiosoDead = true;
         }
-
-        // write functions here
 
         internal static void Clear()
         {
@@ -104,39 +74,18 @@ internal static class Mafia
     [RegisterRole(RoleType.Janitor, RoleTeam.Impostor, typeof(SingleRoleBase<Janitor>), nameof(CustomOptionHolder.MafiaSpawnRate))]
     internal class Janitor : SingleRoleBase<Janitor>
     {
-        // write configs here
         private static CustomButton _janitorCleanButton;
 
         public Janitor()
         {
-            // write value init here
             StaticRoleType = CurrentRoleType = RoleType.Janitor;
         }
 
-        private static float Cooldown
-        {
-            get => CustomOptionHolder.JanitorCooldown.GetFloat();
-        }
-
-        internal static bool CanSabotage
-        {
-            get => CustomOptionHolder.JanitorCanSabotage.GetBool();
-        }
-
-        internal static bool CanRepair
-        {
-            get => CustomOptionHolder.JanitorCanRepair.GetBool();
-        }
-
-        internal static bool CanVent
-        {
-            get => CustomOptionHolder.JanitorCanVent.GetBool();
-        }
-
-        internal override string NameTag
-        {
-            get => PlayerControl.LocalPlayer.IsTeamImpostor() ? string.Format(" ({0})", Tr.Get(TrKey.MafiaJ)) : "";
-        }
+        private static float Cooldown { get => CustomOptionHolder.JanitorCooldown.GetFloat(); }
+        internal static bool CanSabotage { get => CustomOptionHolder.JanitorCanSabotage.GetBool(); }
+        internal static bool CanRepair { get => CustomOptionHolder.JanitorCanRepair.GetBool(); }
+        internal static bool CanVent { get => CustomOptionHolder.JanitorCanVent.GetBool(); }
+        internal override string NameTag { get => PlayerControl.LocalPlayer.IsTeamImpostor() ? string.Format(" ({0})", Tr.Get(TrKey.MafiaJ)) : ""; }
 
         [CustomEvent(CustomEventType.OnDeath)]
         internal void OnDeath(PlayerControl killer)
@@ -202,8 +151,6 @@ internal static class Mafia
         {
             _janitorCleanButton.MaxTimer = Cooldown;
         }
-
-        // write functions here
 
         internal static void Clear()
         {
