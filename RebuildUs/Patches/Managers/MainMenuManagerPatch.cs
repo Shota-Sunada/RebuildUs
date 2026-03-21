@@ -27,7 +27,7 @@ internal static class MainMenuManagerPatch
 
             if (!RebuildUs.Instance.CanBootThisMod)
             {
-                sb.Append("\n<size=150%>").Append(Tr.Get(TrKey.AmongUsIsNotRequiredVersion)).Append("</size>");
+                sb.Append("\n<size=150%><color=#FF0000>").Append(Tr.Get(TrKey.AmongUsIsNotRequiredVersion)).Append("</color></size>");
             }
 
             GameObject credits = new("RUModCredits");
