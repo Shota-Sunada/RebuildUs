@@ -278,7 +278,7 @@ internal sealed class HatsLoader : MonoBehaviour
         {
             return;
         }
-        var fileURL = $"{repoUrl}/hats/{fileName.Replace(" ", "%20")}";
+        var fileURL = string.Format("{0}/hats/{1}", repoUrl, fileName.Replace(" ", "%20"));
         toDownload.Add((fileURL, localPath, expectedHash, safeName));
     }
 
@@ -290,7 +290,7 @@ internal sealed class HatsLoader : MonoBehaviour
             var segments = uri.AbsolutePath.Split('/', StringSplitOptions.RemoveEmptyEntries);
             if (segments.Length >= 2)
             {
-                return $"{segments[0]}-{segments[1]}";
+                return string.Format("{0}-{1}", segments[0], segments[1]);
             }
         }
         catch

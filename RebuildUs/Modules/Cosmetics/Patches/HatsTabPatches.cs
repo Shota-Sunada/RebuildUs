@@ -141,19 +141,16 @@ internal static class HatsTabPatches
                     hatsTab.StartCoroutine(Effects.Lerp(0.1f,
                         new Action<float>(p =>
                         {
-                            description.SetText($"{hat.name}\nby {ext.Author}");
+                            description.SetText(string.Format("{0}\nby {1}", hat.name, ext.Author));
                         })));
                 }
             }
 
             colorChip.transform.localPosition = new(xPos, yPos, -1f);
-            colorChip.Inner.SetHat(hat,
-                hatsTab.HasLocalPlayer() ? PlayerControl.LocalPlayer.Data.DefaultOutfit.ColorId : DataManager.Player.Customization.Color);
+            colorChip.Inner.SetHat(hat, hatsTab.HasLocalPlayer() ? PlayerControl.LocalPlayer.Data.DefaultOutfit.ColorId : DataManager.Player.Customization.Color);
             colorChip.Inner.transform.localPosition = hat.ChipOffset;
             colorChip.Tag = hat;
-            colorChip.SelectionHighlight.gameObject.SetActive(hat
-                                                              == FastDestroyableSingleton<HatManager>.Instance.GetHatById(DataManager.Player.Customization
-                                                                                                                                 .Hat));
+            colorChip.SelectionHighlight.gameObject.SetActive(hat == FastDestroyableSingleton<HatManager>.Instance.GetHatById(DataManager.Player.Customization.Hat));
             hatsTab.ColorChips.Add(colorChip);
         }
 

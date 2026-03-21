@@ -236,7 +236,7 @@ internal partial class CustomOption
                 continue;
             }
 
-            option.Entry = Instance.Config.Bind($"Preset{Preset}", option.Id.ToString(), option.DefaultSelection);
+            option.Entry = Instance.Config.Bind(string.Format("Preset{0}", Preset), option.Id.ToString(), option.DefaultSelection);
             option.SetSelectionIndex(Mathf.Clamp(option.Entry.Value, 0, option.GetSelections().Length - 1));
             option.SyncOptionBehaviourValue();
         }
@@ -323,8 +323,8 @@ internal partial class CustomOption
 
         return sel switch
         {
-            "On" => "<color=#FFFF00FF>" + Tr.Get(TrKey.On) + "</color>",
-            "Off" => "<color=#CCCCCCFF>" + Tr.Get(TrKey.Off) + "</color>",
+            "On" => string.Format("<color=#FFFF00FF>{0}</color>", Tr.Get(TrKey.On)),
+            "Off" => string.Format("<color=#CCCCCCFF>{0}</color>", Tr.Get(TrKey.Off)),
             _ => sel,
         };
     }
@@ -952,7 +952,7 @@ internal partial class CustomOption
 
     internal static string OptionToString(CustomOption option)
     {
-        return option == null ? "" : $"{option.GetName()}: {option.GetString()}";
+        return option == null ? "" : string.Format("{0}: {1}", option.GetName(), option.GetString());
     }
 
     internal static string OptionsToString(CustomOption option, bool skipFirst = false)
@@ -1000,7 +1000,7 @@ internal class CustomOption<T> : CustomOption
 
         if (id != 0)
         {
-            Entry = Instance.Config.Bind($"Preset{Preset}", id.ToString(), DefaultSelection);
+            Entry = Instance.Config.Bind(string.Format("Preset{0}", Preset), id.ToString(), DefaultSelection);
             Selection = Mathf.Clamp(Entry.Value, 0, selections.Length - 1);
         }
         else

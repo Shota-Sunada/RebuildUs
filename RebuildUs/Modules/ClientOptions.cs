@@ -208,7 +208,7 @@ internal static class ClientOptions
             button.Text.font = UnityObject.Instantiate(_titleText.font);
             button.Text.GetComponent<RectTransform>().sizeDelta = new(2, 2);
 
-            button.name = info.Title.Replace(" ", "") + "Toggle";
+            button.name = new StringBuilder(info.Title.Replace(" ", "")).Append("Toggle").ToString();
             button.gameObject.SetActive(true);
 
             var passiveButton = button.GetComponent<PassiveButton>();

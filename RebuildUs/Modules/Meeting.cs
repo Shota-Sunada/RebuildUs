@@ -523,7 +523,7 @@ internal static class Meeting
                     {
                         return;
                     }
-                    text.text = prefix + message + "</color>";
+                    text.text = string.Format("{0}{1}</color>", prefix, message);
                     text?.color = Color.white;
                 }));
             // yield return new WaitForSeconds(2f);

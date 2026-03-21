@@ -21,7 +21,9 @@ internal static unsafe class FastDestroyableSingleton<T> where T : MonoBehaviour
         {
             IntPtr objectPointer;
             IL2CPP.il2cpp_field_static_get_value(FieldPtr, &objectPointer);
+#pragma warning disable RUS005 // Standard Singleton access is slow
             return objectPointer == IntPtr.Zero ? DestroyableSingleton<T>.Instance : CreateObject(objectPointer);
+#pragma warning restore RUS005 // Standard Singleton access is slow
         }
     }
 

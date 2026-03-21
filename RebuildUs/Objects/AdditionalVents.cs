@@ -41,7 +41,7 @@ internal sealed class AdditionalVents
         MapUtilities.CachedShipStatus.AllVents = newVents;
 
         _vent.gameObject.SetActive(true);
-        _vent.name = "AdditionalVent_" + _vent.Id;
+        _vent.name = string.Format("AdditionalVent_{0}", _vent.Id);
         _allVents.Add(this);
     }
 

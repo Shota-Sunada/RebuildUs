@@ -6,6 +6,7 @@ internal static class PlayerControlExtensions
 {
     private static readonly StringBuilder RoleStringBuilder = new();
     private static readonly StringBuilder InfoStringBuilder = new();
+    private static readonly StringBuilder RoleStringBuilder2 = new();
     private static readonly Dictionary<byte, PlayerVoteArea> VoteAreaStates = [];
 
     private static readonly Vector3 ColorBlindMeetingPos = new(0.3384f, 0.23334f, -0.11f);
@@ -113,7 +114,7 @@ internal static class PlayerControlExtensions
                                     }
                                 }
 
-                                statusText = Helpers.Cs(Arsonist.Color, $" ({dousedSurvivors}/{totalSurvivors})");
+                                statusText = Helpers.Cs(Arsonist.Color, string.Format(" ({0}/{1})", dousedSurvivors, totalSurvivors));
                             }
                         }
                         else if (p.IsRole(RoleType.Vulture))
@@ -121,7 +122,7 @@ internal static class PlayerControlExtensions
                             var role = Vulture.Instance;
                             if (role != null)
                             {
-                                statusText = Helpers.Cs(Vulture.Color, $" ({role.EatenBodies}/{Vulture.NumberToWin})");
+                                statusText = Helpers.Cs(Vulture.Color, string.Format(" ({0}/{1})", role.EatenBodies, Vulture.NumberToWin));
                             }
                         }
                     }
@@ -165,11 +166,12 @@ internal static class PlayerControlExtensions
                     var mInfo = "";
                     if (p == player)
                     {
-                        var roles = (p.Data.IsDead ? roleGhost : roleBase) + statusText;
+                        RoleStringBuilder2.Clear();
+                        RoleStringBuilder2.Append(p.Data.IsDead ? roleGhost : roleBase).Append(statusText);
                         if (p.IsRole(RoleType.NiceSwapper))
                         {
                             InfoStringBuilder.Clear();
-                            InfoStringBuilder.Append(roles).Append("<color=#FAD934FF> (").Append(Swapper.RemainSwaps).Append(")</color>");
+                            InfoStringBuilder.Append(RoleStringBuilder2).Append("<color=#FAD934FF> (").Append(Swapper.RemainSwaps).Append(")</color>");
                             pInfo = InfoStringBuilder.ToString();
                         }
                         else
@@ -177,12 +179,12 @@ internal static class PlayerControlExtensions
                             if (p.IsTeamCrewmate() || p.IsRole(RoleType.Arsonist) || p.IsRole(RoleType.Vulture))
                             {
                                 InfoStringBuilder.Clear();
-                                InfoStringBuilder.Append(roles).Append(' ').Append(taskText);
+                                InfoStringBuilder.Append(RoleStringBuilder2).Append(' ').Append(taskText);
                                 pInfo = InfoStringBuilder.ToString();
                             }
                             else
                             {
-                                pInfo = roles;
+                                pInfo = RoleStringBuilder2.ToString();
                             }
                         }
 
@@ -195,17 +197,14 @@ internal static class PlayerControlExtensions
                                 if (tabText != null)
                                 {
                                     InfoStringBuilder.Clear();
-                                    InfoStringBuilder
-                                        .Append(FastDestroyableSingleton<TranslationController>.Instance.GetString(StringNames.Tasks))
-                                        .Append(' ')
-                                        .Append(taskText);
+                                    InfoStringBuilder.Append(FastDestroyableSingleton<TranslationController>.Instance.GetString(StringNames.Tasks)).Append(' ').Append(taskText);
                                     tabText.SetText(InfoStringBuilder.ToString());
                                 }
                             }
                         }
 
                         InfoStringBuilder.Clear();
-                        InfoStringBuilder.Append(roles).Append(' ').Append(taskText);
+                        InfoStringBuilder.Append(RoleStringBuilder2).Append(' ').Append(taskText);
                         mInfo = InfoStringBuilder.ToString().Trim();
                     }
                     else if (MapSettings.GhostsSeeRoles && MapSettings.GhostsSeeInformation)
@@ -484,7 +483,7 @@ internal static class PlayerControlExtensions
             }
             else if (player.CurrentOutfitType == PlayerOutfitType.Shapeshifted)
             {
-                name = $"{player.CurrentOutfit.PlayerName} ({player.Data.DefaultOutfit.PlayerName})";
+                name = string.Format("{0} ({1})", player.CurrentOutfit.PlayerName, player.Data.DefaultOutfit.PlayerName);
             }
 
             RoleStringBuilder.Append(name).Append(" (").Append(player.GetRoleName()).Append(')');

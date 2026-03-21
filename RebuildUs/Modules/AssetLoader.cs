@@ -29,7 +29,7 @@ internal static class AssetLoader
 #nullable enable
     private static T? LoadAsset<T>(this AssetBundle assetBundle, string name) where T : UnityObject
     {
-        return assetBundle.LoadAsset(name, Il2CppType.Of<T>())?.CastFast<T>() ?? throw new($"The asset was not found: {name}");
+        return assetBundle.LoadAsset(name, Il2CppType.Of<T>())?.CastFast<T>() ?? throw new(string.Format("The asset was not found: {0}", name));
     }
 #nullable disable
 

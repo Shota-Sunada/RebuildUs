@@ -222,6 +222,7 @@ internal static class KeyBindingMenu
         }));
     }
 
+    private static StringBuilder WaitingTextSb = new();
     internal static void Update()
     {
         if (_activeInput != null)
@@ -237,10 +238,8 @@ internal static class KeyBindingMenu
 
                 if (_waitingText && _activeInput != null)
                 {
-                    _waitingText.text = new StringBuilder(Tr.GetDynamic($"{_activeInput.Identifier}"))
-                                        .Append("\n")
-                                        .Append(Tr.Get(TrKey.PressAnyKey))
-                                        .ToString();
+                    WaitingTextSb.Clear();
+                    _waitingText.text = WaitingTextSb.Append(Tr.GetDynamic(_activeInput.Identifier)).Append('\n').Append(Tr.Get(TrKey.PressAnyKey)).ToString();
                 }
             }
 
@@ -305,7 +304,7 @@ internal static class KeyBindingMenu
                 var button = ModButtons[i];
 
                 var keyText = _activeInput == input ? Tr.Get(TrKey.PressAnyKey) : input.Key.ToString();
-                button.Text.text = new StringBuilder(Tr.GetDynamic($"{input.Identifier}")).Append(": ").Append(keyText).ToString();
+                button.Text.text = new StringBuilder(Tr.GetDynamic(input.Identifier)).Append(": ").Append(keyText).ToString();
             }
 
             return;
@@ -343,7 +342,7 @@ internal static class KeyBindingMenu
             button.gameObject.SetActive(true);
 
             var keyText = _activeInput == input ? Tr.Get(TrKey.PressAnyKey) : input.Key.ToString();
-            button.Text.text = new StringBuilder(Tr.GetDynamic($"{input.Identifier}")).Append(": ").Append(keyText).ToString();
+            button.Text.text = new StringBuilder(Tr.GetDynamic(input.Identifier)).Append(": ").Append(keyText).ToString();
 
             var passiveButton = button.GetComponent<PassiveButton>();
             passiveButton.OnClick = new();

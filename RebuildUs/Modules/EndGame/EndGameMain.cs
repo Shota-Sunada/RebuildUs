@@ -359,13 +359,11 @@ internal static partial class EndGameMain
             poolablePlayer.cosmetics.nameText.color = UnityEngine.Color.white;
             poolablePlayer.cosmetics.nameText.lineSpacing *= 0.7f;
             poolablePlayer.cosmetics.nameText.transform.localScale = new(1f / vector.x, 1f / vector.y, 1f / vector.z);
-            poolablePlayer.cosmetics.nameText.transform.localPosition = new(poolablePlayer.cosmetics.nameText.transform.localPosition.x,
-                poolablePlayer.cosmetics.nameText.transform.localPosition.y - 0.7f,
-                -15f);
+            poolablePlayer.cosmetics.nameText.transform.localPosition = new(poolablePlayer.cosmetics.nameText.transform.localPosition.x, poolablePlayer.cosmetics.nameText.transform.localPosition.y - 0.7f, -15f);
 
             if (playerRolesDict.TryGetValue(cachedPlayerData2.PlayerName, out var data))
             {
-                poolablePlayer.cosmetics.nameText.text = cachedPlayerData2.PlayerName + data.NameSuffix + $"\n<size=80%>{data.RoleNames}</size>";
+                poolablePlayer.cosmetics.nameText.text = string.Format("{0}{1}\n<size=80%>{2}</size>", cachedPlayerData2.PlayerName, data.NameSuffix, data.RoleNames);
             }
             else
             {
@@ -468,7 +466,7 @@ internal static partial class EndGameMain
             }
         }
 
-        TextRenderer.text = extraText.Length > 0 ? string.Format(Tr.GetDynamic(bonusText + "Extra"), extraText) : Tr.GetDynamic(bonusText);
+        TextRenderer.text = extraText.Length > 0 ? string.Format(Tr.GetDynamic(string.Format("{0}Extra", bonusText)), extraText) : Tr.GetDynamic(bonusText);
 
         if (MapSettings.ShowRoleSummary)
         {

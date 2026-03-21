@@ -982,11 +982,10 @@ internal static class Map
                 var pooledMapIcon = __instance.icons.Get<PooledMapIcon>();
                 pooledMapIcon.transform.localScale = new(pooledMapIcon.NormalSize, pooledMapIcon.NormalSize, pooledMapIcon.NormalSize);
                 pooledMapIcon.rend.color = Color.yellow;
-                pooledMapIcon.name = $"{i}";
+                pooledMapIcon.name = i.ToString();
                 pooledMapIcon.lastMapTaskStep = 0;
                 pooledMapIcon.transform.localPosition = localPosition;
-                var text = $"{i}";
-                __instance.data.Add(text, pooledMapIcon);
+                __instance.data.Add(i.ToString(), pooledMapIcon);
             }
             catch (Exception ex)
             {

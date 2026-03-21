@@ -62,6 +62,7 @@ internal static class RoleColorRegistry
         return Color.white;
     }
 
+    private static StringBuilder WrapTextSb = new();
     internal static string WrapRoleText(RoleType roleType, string text, Color fallbackColor)
     {
         var index = (byte)roleType;
@@ -70,7 +71,8 @@ internal static class RoleColorRegistry
             RegisterRoleColor(roleType, fallbackColor);
         }
 
-        return string.Concat(RoleOpenTags[index], text, CLOSE_TAG);
+        WrapTextSb.Clear();
+        return WrapTextSb.Append(RoleOpenTags[index]).Append(text).Append( CLOSE_TAG).ToString();
     }
 
     internal static string WrapModifierText(ModifierType modifierType, string text, Color fallbackColor)
@@ -81,7 +83,8 @@ internal static class RoleColorRegistry
             RegisterModifierColor(modifierType, fallbackColor);
         }
 
-        return string.Concat(ModifierOpenTags[index], text, CLOSE_TAG);
+        WrapTextSb.Clear();
+        return WrapTextSb.Append(ModifierOpenTags[index]).Append(text).Append(CLOSE_TAG).ToString();
     }
 
     private static string BuildOpenTag(Color color)

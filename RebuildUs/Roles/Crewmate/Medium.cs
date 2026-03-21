@@ -163,7 +163,8 @@ internal class Medium : MultiRoleBase<Medium>
                 {
                     return;
                 }
-                var msg = "";
+
+                var msgSb = new StringBuilder();
 
                 var randomNumber = RebuildUs.Rnd.Next(4);
                 if (Local._target.KillerIfExisting != null)
@@ -178,18 +179,23 @@ internal class Medium : MultiRoleBase<Medium>
                     ? Tr.Get(TrKey.DetectiveColorLight)
                     : Tr.Get(TrKey.DetectiveColorDark);
                 var timeSinceDeath = (float)(MeetingStartTime - Local._target.TimeOfDeath).TotalMilliseconds;
-                var name = " (" + Local._target.Player.Data.PlayerName + ")";
+                var name = string.Format(" ({0})", Local._target.Player.Data.PlayerName);
 
-                msg = randomNumber == 0
-                    ?
-                    string.Format(Tr.Get(TrKey.MediumQuestion1), RoleInfo.GetRolesString(Local._target.Player, false, includeHidden: true)) + name
-                    : randomNumber == 1
-                        ? string.Format(Tr.Get(TrKey.MediumQuestion2), typeOfColor) + name
-                        : randomNumber == 2
-                            ? string.Format(Tr.Get(TrKey.MediumQuestion3), Math.Round(timeSinceDeath / 1000)) + name
-                            : string.Format(Tr.Get(TrKey.MediumQuestion4),
-                                  RoleInfo.GetRolesString(Local._target.KillerIfExisting, false, includeHidden: true))
-                              + name;
+                switch (randomNumber)
+                {
+                    case 0:
+                        msgSb.Append(string.Format(Tr.Get(TrKey.MediumQuestion1), RoleInfo.GetRolesString(Local._target.Player, false, includeHidden: true))).Append(name);
+                        break;
+                    case 1:
+                        msgSb.Append(string.Format(Tr.Get(TrKey.MediumQuestion2), typeOfColor)).Append(name);
+                        break;
+                    case 2:
+                        msgSb.Append(string.Format(Tr.Get(TrKey.MediumQuestion3), Math.Round(timeSinceDeath / 1000))).Append(name);
+                        break;
+                    default:
+                        msgSb.Append(string.Format(Tr.Get(TrKey.MediumQuestion4), RoleInfo.GetRolesString(Local._target.KillerIfExisting, false, includeHidden: true))).Append(name);
+                        break;
+                }
 
                 // Excludes mini
 
@@ -198,7 +204,7 @@ internal class Medium : MultiRoleBase<Medium>
                 {
                     DataManager.Settings.Multiplayer.CensorChat = false;
                 }
-                FastDestroyableSingleton<HudManager>.Instance.Chat.AddChat(PlayerControl.LocalPlayer, msg);
+                FastDestroyableSingleton<HudManager>.Instance.Chat.AddChat(PlayerControl.LocalPlayer, msgSb.ToString());
                 DataManager.Settings.Multiplayer.CensorChat = censorChat;
 
                 // Remove soul

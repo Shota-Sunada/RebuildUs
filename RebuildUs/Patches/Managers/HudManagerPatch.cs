@@ -140,7 +140,7 @@ internal static class HudManagerPatch
                 }
                 else if (player.CurrentOutfitType == PlayerOutfitType.Shapeshifted)
                 {
-                    finalName = $"{player.CurrentOutfit.PlayerName} ({player.Data.DefaultOutfit.PlayerName})";
+                    finalName = string.Format("{0} ({1})", player.CurrentOutfit.PlayerName, player.Data.DefaultOutfit.PlayerName);
                 }
             }
 
@@ -217,7 +217,7 @@ internal static class HudManagerPatch
                     }
                     else if (target.CurrentOutfitType == PlayerOutfitType.Shapeshifted)
                     {
-                        baseName = $"{target.CurrentOutfit?.PlayerName} ({target.Data.DefaultOutfit?.PlayerName})";
+                        baseName = string.Format("{0} ({1})", target.CurrentOutfit?.PlayerName, target.Data.DefaultOutfit?.PlayerName);
                     }
                 }
 

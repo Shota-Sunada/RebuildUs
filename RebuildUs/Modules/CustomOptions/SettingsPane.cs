@@ -386,7 +386,7 @@ internal partial class CustomOption
             {
                 min = max;
             }
-            val += min == max ? $"{max}" : $"{min} - {max}";
+            val += min == max ? max.ToString() : string.Format("{0} - {1}", min, max);
         }
 
         if (option == CustomOptionHolder.NeutralRolesCountMin)
@@ -398,7 +398,7 @@ internal partial class CustomOption
             {
                 min = max;
             }
-            val = min == max ? $"{max}" : $"{min} - {max}";
+            val = min == max ? max.ToString() : string.Format("{0} - {1}", min, max);
         }
 
         if (option == CustomOptionHolder.ImpostorRolesCountMin)
@@ -414,7 +414,7 @@ internal partial class CustomOption
             {
                 min = max;
             }
-            val = min == max ? $"{max}" : $"{min} - {max}";
+            val = min == max ? max.ToString() : string.Format("{0} - {1}", min, max);
         }
 
         if (option == CustomOptionHolder.ModifiersCountMin)
@@ -426,7 +426,7 @@ internal partial class CustomOption
             {
                 min = max;
             }
-            val = min == max ? $"{max}" : $"{min} - {max}";
+            val = min == max ? max.ToString() : string.Format("{0} - {1}", min, max);
         }
 
         return new(name, val);

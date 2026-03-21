@@ -812,7 +812,7 @@ internal static partial class RPCProcedure
 
         var camera = UnityObject.Instantiate(referenceCamera);
         camera.transform.position = new(position.x, position.y, referenceCamera.transform.position.z - 1f);
-        camera.CamName = $"Security Camera {sg.PlacedCameras}";
+        camera.CamName = string.Format("Security Camera {0}", sg.PlacedCameras);
         camera.Offset = new(0f, 0f, camera.Offset.z);
 
         camera.NewName = roomType switch
@@ -918,7 +918,7 @@ internal static partial class RPCProcedure
                 vent.myRend.sprite = AssetLoader.CentralLowerBlocked;
             }
             vent.myRend.color = new(1f, 1f, 1f, 0.5f);
-            vent.name = "FutureSealedVent_" + vent.name;
+            vent.name = string.Format("FutureSealedVent_{0}", vent.name);
         }
 
         MapSettings.VentsToSeal.Add(vent);

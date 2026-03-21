@@ -54,7 +54,7 @@ internal static class Tr
             {
                 foreach (var property in category.Value.EnumerateObject())
                 {
-                    var key = category.Key == "General" ? property.Name : $"{category.Key}.{property.Name}";
+                    var key = category.Key == "General" ? property.Name : string.Format("{0}.{1}", category.Key, property.Name);
                     target[key] = property.Value.GetString() ?? "";
                 }
             }

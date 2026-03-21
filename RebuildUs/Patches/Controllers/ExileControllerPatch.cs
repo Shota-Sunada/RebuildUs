@@ -173,7 +173,7 @@ internal static class ExileControllerPatch
                 vent.myRend.sprite = AssetLoader.CentralLowerBlocked;
             }
             vent.myRend.color = Color.white;
-            vent.name = "SealedVent_" + vent.name;
+            vent.name = string.Format("SealedVent_{0}", vent.name);
         }
 
         MapSettings.VentsToSeal = [];

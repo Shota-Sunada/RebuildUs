@@ -39,7 +39,7 @@ internal sealed class CustomRoleSelectionOption : CustomGeneralOption<string>
         DefaultSelection = index >= 0 ? index : 0;
         if (Id != 0)
         {
-            Entry = RebuildUs.Instance.Config.Bind($"Preset{Preset}", Id.ToString(), DefaultSelection);
+            Entry = RebuildUs.Instance.Config.Bind(string.Format("Preset{0}", Preset), Id.ToString(), DefaultSelection);
             Selection = Mathf.Clamp(Entry.Value, 0, strings.Length - 1);
         }
         else

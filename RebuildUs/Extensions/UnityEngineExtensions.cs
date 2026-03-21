@@ -12,6 +12,6 @@ internal static class UnityEngineExtensions
 
     internal static Transform FindEx(this Transform transform, string name)
     {
-        return transform.Find(name) ?? throw new($"The Transform {name} was not found");
+        return transform.Find(name) ?? throw new(string.Format("The Transform {0} was not found", name));
     }
 }

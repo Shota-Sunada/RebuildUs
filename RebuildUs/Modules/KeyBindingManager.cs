@@ -96,7 +96,7 @@ internal static class KeyBindingManager
         kit = new("KeyBindCharacters2");
         for (var i = 0; i < 12; i++)
         {
-            _ = new KeyCodeData(KeyCode.F1 + i, "F" + (i + 1), kit, i);
+            _ = new KeyCodeData(KeyCode.F1 + i, string.Format("F{0}", i + 1), kit, i);
         }
     }
 

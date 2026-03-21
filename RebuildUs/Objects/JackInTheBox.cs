@@ -64,7 +64,7 @@ internal sealed class JackInTheBox
         MapUtilities.CachedShipStatus.AllVents = newVents;
 
         _vent.gameObject.SetActive(false);
-        _vent.name = "JackInTheBoxVent_" + _vent.Id;
+        _vent.name = string.Format("JackInTheBoxVent_{0}", _vent.Id);
 
         // Only render the box for the Trickster
         if (!BoxesConvertedToVents && !PlayerControl.LocalPlayer.IsRole(RoleType.Trickster))

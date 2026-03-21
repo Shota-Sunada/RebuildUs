@@ -614,8 +614,7 @@ internal abstract class CustomOverlays
     {
         internal static void Postfix(KeyboardJoystick __instance)
         {
-            var cc = DestroyableSingleton<ChatController>.Instance;
-            var isChatOpen = cc != null && cc.IsOpenOrOpening;
+            var isChatOpen = FastDestroyableSingleton<HudManager>.Instance.Chat.IsOpenOrOpening;
 
             if (Input.GetKeyDown(KeyCode.H) && Helpers.IsGameStarted && !isChatOpen)
             {

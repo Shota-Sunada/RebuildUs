@@ -30,7 +30,7 @@ internal static class Mafia
 
         internal override string NameTag
         {
-            get => PlayerControl.LocalPlayer?.Data.Role.IsImpostor ?? false ? $" ({Tr.Get(TrKey.MafiaG)})" : "";
+            get => PlayerControl.LocalPlayer.IsTeamImpostor() ? string.Format(" ({0})", Tr.Get(TrKey.MafiaG)) : "";
         }
 
         [CustomEvent(CustomEventType.OnDeath)]
@@ -82,7 +82,7 @@ internal static class Mafia
 
         internal override string NameTag
         {
-            get => PlayerControl.LocalPlayer?.Data.Role.IsImpostor ?? false ? $" ({Tr.Get(TrKey.MafiaM)})" : "";
+            get => PlayerControl.LocalPlayer.IsTeamImpostor() ? string.Format(" ({0})", Tr.Get(TrKey.MafiaM)) : "";
         }
 
         [CustomEvent(CustomEventType.OnDeath)]
@@ -135,7 +135,7 @@ internal static class Mafia
 
         internal override string NameTag
         {
-            get => PlayerControl.LocalPlayer?.Data.Role.IsImpostor ?? false ? $" ({Tr.Get(TrKey.MafiaJ)})" : "";
+            get => PlayerControl.LocalPlayer.IsTeamImpostor() ? string.Format(" ({0})", Tr.Get(TrKey.MafiaJ)) : "";
         }
 
         [CustomEvent(CustomEventType.OnDeath)]
