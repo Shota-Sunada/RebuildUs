@@ -10,5 +10,4 @@ internal sealed class PlayerRoleInfo
     internal int TasksCompleted { get; set; }
     internal int TasksTotal { get; set; }
     internal FinalStatus Status { get; set; }
-    internal int PlayerId { get; set; }
 }

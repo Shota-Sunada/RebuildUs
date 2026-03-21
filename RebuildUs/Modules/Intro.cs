@@ -189,6 +189,8 @@ internal static class Intro
             {
                 MapData.LoadAssets(AmongUsClient.Instance);
             }
+
+            PlayerStore.OnGameStarted();
         }
         catch (Exception ex)
         {

@@ -68,10 +68,9 @@ internal static partial class EndGameMain
                 tasksCompleted = tasksTotal;
             }
 
-            AdditionalTempData.PlayerRoles.Add(new()
+            AdditionalTempData.PlayerRoles.Add(player.PlayerId, new()
             {
                 PlayerName = player.Data.PlayerName,
-                PlayerId = player.PlayerId,
                 ColorId = player.Data.DefaultOutfit.ColorId,
                 NameSuffix = Lovers.GetIcon(player),
                 Roles = roles,
@@ -125,7 +124,7 @@ internal static partial class EndGameMain
         var playerRoles = AdditionalTempData.PlayerRoles;
         foreach (var t in playerRoles)
         {
-            if (t.Status != FinalStatus.Alive)
+            if (t.Value.Status != FinalStatus.Alive)
             {
                 continue;
             }
@@ -283,7 +282,7 @@ internal static partial class EndGameMain
             {
                 foreach (var pr in playerRoles)
                 {
-                    if (pr.PlayerName != wpd.PlayerName || pr.Status == FinalStatus.Alive)
+                    if (pr.Value.PlayerName != wpd.PlayerName || pr.Value.Status == FinalStatus.Alive)
                     {
                         continue;
                     }

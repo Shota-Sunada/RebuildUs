@@ -86,12 +86,12 @@ internal static partial class EndGameMain
         var playerRoles = AdditionalTempData.PlayerRoles;
         foreach (var data in playerRoles)
         {
-            if (data.Status == FinalStatus.Disconnected)
+            if (data.Value.Status == FinalStatus.Disconnected)
             {
                 var found = false;
                 foreach (var cpd in list)
                 {
-                    if (cpd.PlayerName == data.PlayerName)
+                    if (cpd.PlayerName == data.Value.PlayerName)
                     {
                         found = true;
                         break;
@@ -100,12 +100,12 @@ internal static partial class EndGameMain
 
                 if (!found)
                 {
-                    var cpd = EndGameResult.CachedLocalPlayer.PlayerName == data.PlayerName ? EndGameResult.CachedLocalPlayer : null;
+                    var cpd = EndGameResult.CachedLocalPlayer.PlayerName == data.Value.PlayerName ? EndGameResult.CachedLocalPlayer : null;
                     if (cpd == null)
                     {
                         foreach (var p in PlayerControl.AllPlayerControls.GetFastEnumerator())
                         {
-                            if (p.Data.PlayerName == data.PlayerName)
+                            if (p.Data.PlayerName == data.Value.PlayerName)
                             {
                                 cpd = new CachedPlayerData(p.Data);
                                 break;
@@ -124,9 +124,9 @@ internal static partial class EndGameMain
         Dictionary<string, PlayerRoleInfo> playerRolesDict = [];
         foreach (var pr in playerRoles)
         {
-            if (pr != null)
+            if (pr.Value != null)
             {
-                playerRolesDict[pr.PlayerName] = pr;
+                playerRolesDict[pr.Value.PlayerName] = pr.Value;
             }
         }
 
@@ -284,7 +284,12 @@ internal static partial class EndGameMain
 
                 StringBuilder roleSummaryText = new();
                 roleSummaryText.AppendLine(Tr.Get(TrKey.RoleSummaryText));
-                AdditionalTempData.PlayerRoles.Sort((x, y) =>
+                var tempL = new List<PlayerRoleInfo>();
+                foreach (var tmp in AdditionalTempData.PlayerRoles.Values)
+                {
+                    tempL.Add(tmp);
+                }
+                tempL.Sort((x, y) =>
                 {
                     var roleX = x.Roles.Count > 0 ? x.Roles[0] : null;
                     var roleY = y.Roles.Count > 0 ? y.Roles[0] : null;
@@ -300,20 +305,68 @@ internal static partial class EndGameMain
                 });
                 Logger.LogInfo("[Result] {0}", TextRenderer.text);
                 Logger.LogInfo("[Result] ---------- Game Result -----------");
-                foreach (var data in AdditionalTempData.PlayerRoles)
+
+                var lines = new Dictionary<byte, string>();
+
+                foreach (var (key, value) in PlayerStore.AllPlayerDataOnStarted)
                 {
-                    if (data.PlayerName == "")
+                    if (AdditionalTempData.PlayerRoles.TryGetValue(key, out var data))
                     {
-                        continue;
+                        if (data.PlayerName == "")
+                        {
+                            continue;
+                        }
+                        var taskInfo = data.TasksTotal > 0 ? string.Format("<color=#FAD934FF>{0}/{1}</color>", data.TasksCompleted, data.TasksTotal) : "";
+                        var status = Tr.GetDynamic(Enum.GetName(data.Status));
+                        var result = string.Format("{0}<pos=18.5%>{1}<pos=25%>{2}<pos=34%>{3}", string.Format("{0}{1}", data.PlayerName, data.NameSuffix), taskInfo, status, data.RoleNames);
+                        lines[key] = result;
+                        // roleSummaryText.AppendLine(result);
+                        Logger.LogInfo("[Result] {0}", result);
                     }
-                    var taskInfo = data.TasksTotal > 0 ? string.Format("<color=#FAD934FF>{0}/{1}</color>", data.TasksCompleted, data.TasksTotal) : "";
-                    var aliveDead = Tr.GetDynamic(Enum.GetName(data.Status));
-                    var result = string.Format("{0}<pos=18.5%>{1}<pos=25%>{2}<pos=34%>{3}", string.Format("{0}{1}", data.PlayerName, data.NameSuffix), taskInfo, aliveDead, data.RoleNames);
-                    roleSummaryText.AppendLine(result);
-                    Logger.LogInfo("[Result] {0}", result);
+                    else
+                    {
+                        var status = Tr.Get(TrKey.Disconnected);
+                        var result = string.Format("{0}<pos=18.5%> <pos=25%>{1}<pos=34%>{2}", value.Name, status, value.Roles);
+                        lines[key] = result;
+                        Logger.LogInfo("[Result] {0}", result);
+                    }
                 }
 
+                // foreach (var data in AdditionalTempData.PlayerRoles)
+                // {
+                //     if (data.Value.PlayerName == "")
+                //     {
+                //         continue;
+                //     }
+                //     var taskInfo = data.Value.TasksTotal > 0 ? string.Format("<color=#FAD934FF>{0}/{1}</color>", data.Value.TasksCompleted, data.Value.TasksTotal) : "";
+                //     var aliveDead = Tr.GetDynamic(Enum.GetName(data.Value.Status));
+                //     var result = string.Format("{0}<pos=18.5%>{1}<pos=25%>{2}<pos=34%>{3}", string.Format("{0}{1}", data.Value.PlayerName, data.Value.NameSuffix), taskInfo, aliveDead, data.Value.RoleNames);
+                //     lines[data.Key] = result;
+                //     // roleSummaryText.AppendLine(result);
+                //     Logger.LogInfo("[Result] {0}", result);
+                // }
+
                 Logger.LogInfo("[Result] --------------------------------");
+
+                var hostId = AmongUsClient.Instance.HostId;
+                var sortedKeys = new List<byte>(lines.Count);
+                foreach (var key in lines.Keys)
+                {
+                    sortedKeys.Add(key);
+                }
+
+                var keysArray = sortedKeys.ToArray();
+                Array.Sort(keysArray, (x, y) =>
+                {
+                    if (x == hostId) return -1;
+                    if (y == hostId) return 1;
+                    return x.CompareTo(y);
+                });
+
+                foreach (var key in keysArray)
+                {
+                    roleSummaryText.AppendLine(lines[key]);
+                }
 
                 var roleSummaryTextMesh = roleSummary.GetComponent<TMP_Text>();
                 roleSummaryTextMesh.alignment = TextAlignmentOptions.TopLeft;
