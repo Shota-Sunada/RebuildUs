@@ -11,7 +11,6 @@ internal static class IntroCutscenePatch
     internal static void OnDestroyPrefix(IntroCutscene __instance)
     {
         Intro.GenerateMiniCrewIcons(__instance);
-        LastImpostor.OnIntroDestroy(__instance);
     }
 
     [HarmonyPrefix]

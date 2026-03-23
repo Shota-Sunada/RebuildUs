@@ -162,29 +162,6 @@ internal class RoleInfo(TrKey nameKey, Color color, CustomOption baseOption, Rol
             return sb.ToString();
         }
 
-        if (p.HasModifier(ModifierType.LastImpostor))
-        {
-            var hasImpostor = false;
-            for (var i = 0; i < roleInfo.Count; i++)
-            {
-                if (roleInfo[i].RoleType == RoleType.Impostor)
-                {
-                    hasImpostor = true;
-                    break;
-                }
-            }
-
-            if (hasImpostor)
-            {
-                return useColors ? Helpers.Cs(LastImpostor.Color, LastImpostor.FullName) : LastImpostor.FullName;
-            }
-
-            var postfix = useColors ? Helpers.Cs(LastImpostor.Color, LastImpostor.Postfix) : LastImpostor.Postfix;
-            AppendNames();
-            sb.Append(postfix);
-            return sb.ToString();
-        }
-
         if (p.HasModifier(ModifierType.AntiTeleport))
         {
             var postfix = useColors ? Helpers.Cs(AntiTeleport.Color, AntiTeleport.Postfix) : AntiTeleport.Postfix;

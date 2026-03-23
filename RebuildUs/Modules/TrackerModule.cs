@@ -53,13 +53,8 @@ internal static class TrackerModule
                 spriteRenderer.sprite = AssetLoader.Arrow;
                 spriteRenderer.color = Palette.CrewmateBlue;
 
-                var isGuesserButton = Guesser.IsGuesser(PlayerControl.LocalPlayer.PlayerId)
-                                    && PlayerControl.LocalPlayer.IsAlive()
-                                    && Guesser.RemainingShots(PlayerControl.LocalPlayer) > 0;
-                var isLastImpostorButton = PlayerControl.LocalPlayer.HasModifier(ModifierType.LastImpostor)
-                                        && PlayerControl.LocalPlayer.IsAlive()
-                                        && LastImpostor.CanGuess();
-                if (isGuesserButton || isLastImpostorButton)
+                var isGuesserButton = Guesser.IsGuesser(PlayerControl.LocalPlayer.PlayerId) && PlayerControl.LocalPlayer.IsAlive() && Guesser.RemainingShots(PlayerControl.LocalPlayer) > 0;
+                if (isGuesserButton)
                 {
                     GuesserModule.CreateGuesserButton(__instance);
                 }

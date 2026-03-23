@@ -120,12 +120,6 @@ internal static class GameHistory
             Helpers.ShowFlash(new(42f / 255f, 187f / 255f, 245f / 255f));
         }
 
-        // // impostor promote to last impostor
-        if (target.IsTeamImpostor() && AmongUsClient.Instance.AmHost)
-        {
-            LastImpostor.PromoteToLastImpostor();
-        }
-
         killer.OnKill(target);
         target.OnDeath(killer);
     }
@@ -144,11 +138,5 @@ internal static class GameHistory
         }
 
         player.OnDeath(null);
-
-        // impostor promote to last impostor
-        if (player.IsTeamImpostor() && AmongUsClient.Instance.AmHost)
-        {
-            LastImpostor.PromoteToLastImpostor();
-        }
     }
 }

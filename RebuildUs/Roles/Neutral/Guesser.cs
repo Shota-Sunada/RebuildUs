@@ -44,32 +44,13 @@ internal static class Guesser
         else if (player.IsRole(RoleType.EvilGuesser))
         {
             remainingShots = _remainingShotsEvilGuesser;
-            if (player.HasModifier(ModifierType.LastImpostor) && LastImpostor.CanGuess())
-            {
-                remainingShots += LastImpostor.RemainingShots;
-            }
 
             if (!shoot)
             {
                 return remainingShots;
             }
-            // ラストインポスターの弾数を優先的に消費させる
-            if (player.HasModifier(ModifierType.LastImpostor) && LastImpostor.CanGuess())
-            {
-                LastImpostor.RemainingShots = Mathf.Max(0, LastImpostor.RemainingShots - 1);
-            }
-            else
-            {
-                _remainingShotsEvilGuesser = Mathf.Max(0, _remainingShotsEvilGuesser - 1);
-            }
-        }
-        else if (player.HasModifier(ModifierType.LastImpostor) && LastImpostor.CanGuess())
-        {
-            remainingShots = LastImpostor.RemainingShots;
-            if (shoot)
-            {
-                LastImpostor.RemainingShots = Mathf.Max(0, LastImpostor.RemainingShots - 1);
-            }
+
+            _remainingShotsEvilGuesser = Mathf.Max(0, _remainingShotsEvilGuesser - 1);
         }
 
         return remainingShots;

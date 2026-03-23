@@ -213,9 +213,6 @@ internal static partial class RPCProcedure
             case CustomRPC.PlaceGarlic:
                 PlaceGarlic(reader.ReadSingle(), reader.ReadSingle());
                 break;
-            case CustomRPC.ImpostorPromotesToLastImpostor:
-                ImpostorPromotesToLastImpostor(reader.ReadByte());
-                break;
             case CustomRPC.ShifterShift:
                 ShifterShift(reader.ReadByte());
                 break;
@@ -224,9 +221,6 @@ internal static partial class RPCProcedure
                 break;
             case CustomRPC.SetShifterType:
                 SetShifterType(reader.ReadBoolean());
-                break;
-            case CustomRPC.FortuneTellerUsedDivine:
-                FortuneTellerUsedDivine(reader.ReadByte(), reader.ReadByte());
                 break;
             case CustomRPC.SheriffKill:
                 SheriffKill(reader.ReadByte(), reader.ReadByte(), reader.ReadBoolean());

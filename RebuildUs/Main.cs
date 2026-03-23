@@ -195,7 +195,6 @@ public class RebuildUs : BasePlugin
         // Modifier
         AntiTeleport.Clear();
         CreatedMadmate.Clear();
-        LastImpostor.Clear();
         Lovers.Clear();
         Madmate.Clear();
         Mini.Clear();

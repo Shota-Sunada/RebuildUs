@@ -977,12 +977,6 @@ internal static partial class RPCProcedure
         _ = new Garlic(new Vector3(x, y));
     }
 
-    internal static void ImpostorPromotesToLastImpostor(byte targetId)
-    {
-        var player = Helpers.PlayerById(targetId);
-        player.AddModifier(ModifierType.LastImpostor);
-    }
-
     internal static void ShifterShift(byte targetId)
     {
         if (Shifter.Players.Count == 0)
@@ -1065,11 +1059,6 @@ internal static partial class RPCProcedure
     internal static void SetShifterType(bool isNeutral)
     {
         Shifter.IsNeutral = isNeutral;
-    }
-
-    internal static void FortuneTellerUsedDivine(byte killerId, byte targetId)
-    {
-        LastImpostor.NumUsed += 1;
     }
 
     private static void SheriffKillRequest(byte sheriffId, byte targetId)

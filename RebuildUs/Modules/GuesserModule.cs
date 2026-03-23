@@ -75,7 +75,7 @@ internal static class GuesserModule
         for (var i = 0; i < roleInfos.Count; i++)
         {
             var roleInfo = roleInfos[i];
-            var guesserRole = PlayerControl.LocalPlayer.IsRole(RoleType.NiceGuesser) ? RoleType.NiceGuesser : (PlayerControl.LocalPlayer.IsRole(RoleType.EvilGuesser) || PlayerControl.LocalPlayer.HasModifier(ModifierType.LastImpostor)) ? RoleType.EvilGuesser : RoleType.NiceGuesser;
+            var guesserRole = PlayerControl.LocalPlayer.IsRole(RoleType.NiceGuesser) ? RoleType.NiceGuesser : PlayerControl.LocalPlayer.IsRole(RoleType.EvilGuesser) ? RoleType.EvilGuesser : RoleType.NiceGuesser;
 
             if (roleInfo == null || roleInfo.RoleType == guesserRole || (Guesser.OnlyAvailableRoles && !roleInfo.Enabled) || (!Guesser.EvilCanKillSpy && guesserRole == RoleType.EvilGuesser && roleInfo.RoleType == RoleType.Spy)) continue;
 

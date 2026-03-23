@@ -375,12 +375,6 @@ internal static class CustomOptionHolder
         MadmateCanFixComm = CustomOption.Normal(4011, CustomOptionType.Modifier, TrKey.MadmateCanFixComm, true, MadmateSpawnRate);
         MadmateExilePlayer = CustomOption.Normal(4012, CustomOptionType.Modifier, TrKey.MadmateExileCrewmate, false, MadmateSpawnRate);
 
-        LastImpostorEnable = CustomOption.Normal(4010, CustomOptionType.Modifier, TrKey.LastImpostorEnable, true, header: lastImpostorHeader);
-        LastImpostorFunctions = CustomOption.Normal(4011, CustomOptionType.Modifier, TrKey.LastImpostorFunctions, [Tr.Get(TrKey.LastImpostorDivine), Tr.Get(TrKey.LastImpostorGuesser)], 0, LastImpostorEnable);
-        LastImpostorNumKills = CustomOption.Normal(4012, CustomOptionType.Modifier, TrKey.LastImpostorNumKills, 3f, 0f, 10f, 1f, LastImpostorEnable);
-        LastImpostorResults = CustomOption.Normal(4013, CustomOptionType.Modifier, TrKey.FortuneTellerResults, [Tr.Get(TrKey.FortuneTellerResultCrew), Tr.Get(TrKey.FortuneTellerResultTeam), Tr.Get(TrKey.FortuneTellerResultRole)], 0, LastImpostorEnable);
-        LastImpostorNumShots = CustomOption.Normal(4014, CustomOptionType.Modifier, TrKey.LastImpostorNumShots, 1f, 1f, 15f, 1f, LastImpostorEnable);
-
         LoversSpawnRate = new(4020, CustomOptionType.Modifier, RoleType.Lovers, Lovers.Color, 1);
         LoversImpLoverRate = CustomOption.Normal(4021, CustomOptionType.Modifier, TrKey.LoversImpLoverRate, Rates, 0, LoversSpawnRate);
         LoversNumCouples = CustomOption.Normal(4022, CustomOptionType.Modifier, TrKey.LoversNumCouples, 1f, 1f, 7f, 1f, LoversSpawnRate, format: TrKey.UnitCouples);
@@ -759,12 +753,6 @@ internal static class CustomOptionHolder
     internal static CustomOption MadmateAbility;
     internal static CustomTasksOption MadmateTasks;
     internal static CustomOption MadmateExilePlayer;
-
-    internal static CustomOption LastImpostorEnable;
-    internal static CustomOption LastImpostorNumKills;
-    internal static CustomOption LastImpostorFunctions;
-    internal static CustomOption LastImpostorResults;
-    internal static CustomOption LastImpostorNumShots;
 
     internal static CustomRoleOption LoversSpawnRate;
     internal static CustomOption LoversNumCouples;

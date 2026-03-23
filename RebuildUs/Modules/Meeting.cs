@@ -360,7 +360,7 @@ internal static class Meeting
             if (lp != null)
             {
                 var numGuesses = Guesser.RemainingShots(lp);
-                if ((Guesser.IsGuesser(lp.PlayerId) || lp.HasModifier(ModifierType.LastImpostor)) && lp.IsAlive() && numGuesses > 0)
+                if (Guesser.IsGuesser(lp.PlayerId) && lp.IsAlive() && numGuesses > 0)
                 {
                     InfoStringBuilder.AppendFormat(Tr.Get(TrKey.GuesserGuessesLeft), numGuesses);
                     InfoStringBuilder.AppendLine();

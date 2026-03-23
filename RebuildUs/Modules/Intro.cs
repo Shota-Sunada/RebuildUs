@@ -170,12 +170,6 @@ internal static class Intro
                 }
             }
 
-            // 最初から一人の場合はLast Impostorになる
-            if (AmongUsClient.Instance?.AmHost == true)
-            {
-                LastImpostor.PromoteToLastImpostor();
-            }
-
             // タスクパネルの表示優先度を上げる
             var taskPanel = hud?.TaskStuff;
             if (taskPanel != null)
