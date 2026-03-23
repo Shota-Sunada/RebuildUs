@@ -15,23 +15,28 @@ internal static class CustomServer
             CreateSettingFile();
         }
 
-        using var stream = new FileStream(CUSTOM_SERVER_FILE_PATH, FileMode.Open);
-        ServerData = JsonSerializer.Deserialize<CustomServerType>(CUSTOM_SERVER_FILE_PATH);
+        var json = File.ReadAllText(CUSTOM_SERVER_FILE_PATH);
+        ServerData = JsonSerializer.Deserialize<CustomServerType>(json);
+
+        Logger.LogInfo("[CustomServer] Read Json: {0}", json);
+        Logger.LogInfo("[CustomServer] IP: {0}, Port: {1}", ServerData.IP, ServerData.Port);
     }
 
     private static void CreateSettingFile()
     {
-        var json = JsonSerializer.Serialize(ServerData, new JsonSerializerOptions { WriteIndented = true, });
+        var json = "{\n\t\"IP\": \"127.0.0.1\",\n\t\"Port\": 22023\n}";
         File.WriteAllText(CUSTOM_SERVER_FILE_PATH, json);
     }
 }
 
-internal class CustomServerType
+public class CustomServerType
 {
-    internal string IP;
-    internal ushort Port;
+    public string IP { get; set; } = "127.0.0.1";
+    public ushort Port { get; set; } = 22023;
 
-    internal CustomServerType(string ip, ushort port)
+    public CustomServerType() { }
+
+    public CustomServerType(string ip, ushort port)
     {
         IP = ip;
         Port = port;
