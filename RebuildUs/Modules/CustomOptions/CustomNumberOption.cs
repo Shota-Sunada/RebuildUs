@@ -11,7 +11,8 @@ internal sealed class CustomNumberOption : CustomOption<float>
                                 bool hideIfParentEnabled,
                                 TrKey format,
                                 Color color,
-                                CustomOptionHeader header = null) : base(id,
+                                CustomOptionHeader header = null) :
+        base(id,
         type,
         nameKey,
         selections,

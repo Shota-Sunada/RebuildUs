@@ -5,7 +5,8 @@ internal class CustomRoleOption : CustomGeneralOption<string>
     internal bool IsRoleEnabled;
     internal CustomNumberOption NumberOfRoleOption;
 
-    internal CustomRoleOption(int baseId, CustomOptionType type, RoleType roleType, Color color, int max = 15, bool roleEnabled = true) : base(baseId,
+    internal CustomRoleOption(int baseId, CustomOptionType type, RoleType roleType, Color color, int max = 15, bool roleEnabled = true) :
+    base(baseId,
         type,
         Enum.TryParse(Enum.GetName(roleType), out TrKey key) ? key : TrKey.None,
         Helpers.CastArray<string>(CustomOptionHolder.Rates),
