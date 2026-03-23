@@ -35,8 +35,7 @@ internal class EvilHacker : MultiRoleBase<EvilHacker>
     [CustomEvent(CustomEventType.FixedUpdate)]
     internal void FixedUpdate()
     {
-        var local = Local;
-        if (local != null)
+        if (Local != null)
         {
             _currentTarget = Helpers.SetTarget(true);
             Helpers.SetPlayerOutline(_currentTarget, RoleColor);
