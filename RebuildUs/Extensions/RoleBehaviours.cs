@@ -35,8 +35,8 @@ internal static class RoleBehaviours
         internal bool CanMoveInVents()
         {
             return !player.IsRole(RoleType.Spy)
-                   && !player.HasModifier(ModifierType.Madmate)
-                   && !player.HasModifier(ModifierType.CreatedMadmate);
+                && !player.HasModifier(ModifierType.Madmate)
+                && !player.HasModifier(ModifierType.CreatedMadmate);
         }
 
         internal bool CanSabotage()
@@ -58,23 +58,22 @@ internal static class RoleBehaviours
         internal bool HasFakeTasks()
         {
             return player.IsNeutral() && !player.NeutralHasTasks()
-                   || player.HasModifier(ModifierType.CreatedMadmate) && !CreatedMadmate.HasTasks
-                   || player.HasModifier(ModifierType.Madmate) && !Madmate.HasTasks
-                   || player.IsLovers() && Lovers.SeparateTeam && !Lovers.TasksCount;
+                || player.HasModifier(ModifierType.CreatedMadmate) && !CreatedMadmate.HasTasks
+                || player.HasModifier(ModifierType.Madmate) && !Madmate.HasTasks
+                || player.IsLovers() && Lovers.SeparateTeam && !Lovers.TasksCount;
         }
 
         internal bool IsNeutral()
         {
-            return player != null
-                   && (player.IsRole(RoleType.Jackal)
-                       || player.IsRole(RoleType.Sidekick)
-                       || Jackal.FormerJackals.Contains(player)
-                       || player.IsRole(RoleType.Arsonist)
-                       || player.IsRole(RoleType.Jester)
-                       ||
-                       // player.IsRole(RoleType.Opportunist) ||
-                       player.IsRole(RoleType.Vulture)
-                       || player.IsRole(RoleType.Shifter) && Shifter.IsNeutral);
+            return player != null && (
+                player.IsRole(RoleType.Jackal) ||
+                player.IsRole(RoleType.Sidekick) ||
+                Jackal.FormerJackals.Contains(player) ||
+                player.IsRole(RoleType.Arsonist) ||
+                player.IsRole(RoleType.Jester) ||
+                // player.IsRole(RoleType.Opportunist) ||
+                player.IsRole(RoleType.Vulture) ||
+                player.IsRole(RoleType.Shifter) && Shifter.IsNeutral);
         }
 
         internal bool NeutralHasTasks()

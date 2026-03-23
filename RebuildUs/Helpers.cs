@@ -129,14 +129,6 @@ internal static class Helpers
         return allHeld && anyJustPressed;
     }
 
-    internal static bool HasFakeTasks(this PlayerControl player)
-    {
-        return player.IsNeutral() && !player.NeutralHasTasks()
-            || player.HasModifier(ModifierType.CreatedMadmate) && !CreatedMadmate.HasTasks
-            || player.HasModifier(ModifierType.Madmate) && !Madmate.HasTasks
-            || player.IsLovers() && Lovers.SeparateTeam && !Lovers.TasksCount;
-    }
-
     internal static PlayerControl PlayerById(byte id)
     {
         foreach (var player in PlayerControl.AllPlayerControls.GetFastEnumerator())
