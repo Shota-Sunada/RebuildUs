@@ -692,6 +692,6 @@ MayorRemoteButtonNum,Remains: {0}x,残り: {0}回
 UnitSeconds,s,秒
 UnitCouples," Couples",組
 UnitShots,x,発
-UnitPlayers,x,
-UnitTimes,x,
-UnitScrews,x,
+UnitPlayers,x,人
+UnitTimes,x,回
+UnitScrews,x,本
