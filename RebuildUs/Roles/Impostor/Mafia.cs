@@ -22,6 +22,8 @@ internal static class Mafia
     [RegisterRole(RoleType.Godfather, RoleTeam.Impostor, typeof(SingleRoleBase<Godfather>), nameof(CustomOptionHolder.MafiaSpawnRate))]
     internal class Godfather : SingleRoleBase<Godfather>
     {
+        public static Color Color => Mafia.Color;
+
         public Godfather()
         {
             StaticRoleType = CurrentRoleType = RoleType.Godfather;
@@ -46,6 +48,8 @@ internal static class Mafia
     [RegisterRole(RoleType.Mafioso, RoleTeam.Impostor, typeof(SingleRoleBase<Mafioso>), nameof(CustomOptionHolder.MafiaSpawnRate))]
     internal class Mafioso : SingleRoleBase<Mafioso>
     {
+        public static Color Color => Mafia.Color;
+
         public Mafioso()
         {
             StaticRoleType = CurrentRoleType = RoleType.Mafioso;
@@ -74,6 +78,8 @@ internal static class Mafia
     [RegisterRole(RoleType.Janitor, RoleTeam.Impostor, typeof(SingleRoleBase<Janitor>), nameof(CustomOptionHolder.MafiaSpawnRate))]
     internal class Janitor : SingleRoleBase<Janitor>
     {
+        public static Color Color => Mafia.Color;
+
         private static CustomButton _janitorCleanButton;
 
         public Janitor()
