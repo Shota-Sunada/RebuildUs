@@ -58,7 +58,7 @@
     },
     {
       "label": "Sync Translations",
-      "command": "go run Tools/TranslateSync/translate_sync.go",
+      "command": "bash SyncTranslation.sh",
       "group": {
         "kind": "build",
         "isDefault": true
@@ -66,7 +66,7 @@
     },
     {
       "label": "Add Translations",
-      "command": "go run Tools/AddTranslation/add_translation.go",
+      "command": "bash AddTranslation.sh",
       "group": {
         "kind": "build",
         "isDefault": true
@@ -122,7 +122,7 @@
     },
     {
       "label": "Format Translation Json",
-      "command": "dotnet cake build.cake --target=FormatTranslations",
+      "command": "bash FormatTranslations.sh",
       "group": {
         "kind": "build",
         "isDefault": true
