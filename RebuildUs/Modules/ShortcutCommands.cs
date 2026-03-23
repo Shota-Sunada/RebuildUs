@@ -22,16 +22,12 @@ internal static class ShortcutCommands
             GameManager.Instance.RpcEndGame((GameOverReason)CustomGameOverReason.ForceEnd, false);
         }
 
-        if ((Helpers.GetKeysDown(KeyCode.LeftControl, KeyCode.F6) || Helpers.GetKeysDown(KeyCode.RightControl, KeyCode.F6))
-            && MeetingHud.Instance
-            && Helpers.IsGameStarted)
+        if ((Helpers.GetKeysDown(KeyCode.LeftControl, KeyCode.F6) || Helpers.GetKeysDown(KeyCode.RightControl, KeyCode.F6)) && MeetingHud.Instance && Helpers.IsGameStarted)
         {
             MeetingHud.Instance.RpcClose();
         }
 
-        if ((Helpers.GetKeysDown(KeyCode.LeftControl, KeyCode.F7) || Helpers.GetKeysDown(KeyCode.RightControl, KeyCode.F7))
-            && !MeetingHud.Instance
-            && Helpers.IsGameStarted)
+        if ((Helpers.GetKeysDown(KeyCode.LeftControl, KeyCode.F7) || Helpers.GetKeysDown(KeyCode.RightControl, KeyCode.F7)) && !MeetingHud.Instance && Helpers.IsGameStarted)
         {
             MapUtilities.CachedShipStatus.StartMeeting(PlayerControl.LocalPlayer, PlayerControl.LocalPlayer.Data);
         }
