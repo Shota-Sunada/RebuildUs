@@ -185,6 +185,8 @@ internal static class Intro
             }
 
             PlayerStore.OnGameStarted();
+
+            GameHistory.TimeStarted = DateTime.Now;
         }
         catch (Exception ex)
         {

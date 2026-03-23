@@ -271,7 +271,8 @@ internal static partial class EndGameMain
             }
         }
 
-        TextRenderer.text = extraText.Length > 0 ? string.Format(Tr.GetDynamic(string.Format("{0}Extra", bonusText)), extraText) : Tr.GetDynamic(bonusText);
+        var winnerText = extraText.Length > 0 ? string.Format(Tr.GetDynamic(string.Format("{0}Extra", bonusText)), extraText) : Tr.GetDynamic(bonusText);
+        TextRenderer.text = winnerText;
 
         if (MapSettings.ShowRoleSummary)
         {
@@ -283,7 +284,8 @@ internal static partial class EndGameMain
                 roleSummary.transform.localScale = new(1f, 1f, 1f);
 
                 StringBuilder roleSummaryText = new();
-                roleSummaryText.AppendLine(Tr.Get(TrKey.RoleSummaryText));
+                roleSummaryText.AppendLine(string.Format(Tr.Get(TrKey.GameIsOverBecause), winnerText));
+                roleSummaryText.AppendLine("<size=50%> </size>");
                 var tempL = new List<PlayerRoleInfo>();
                 foreach (var tmp in AdditionalTempData.PlayerRoles.Values)
                 {
@@ -307,6 +309,11 @@ internal static partial class EndGameMain
                 Logger.LogInfo("[Result] ---------- Game Result -----------");
 
                 var lines = new Dictionary<byte, string>();
+                var winners = new HashSet<string>(StringComparer.Ordinal);
+                foreach (var winner in EndGameResult.CachedWinners.GetFastEnumerator())
+                {
+                    winners.Add(winner.PlayerName);
+                }
 
                 foreach (var (key, value) in PlayerStore.AllPlayerDataOnStarted)
                 {
@@ -318,7 +325,8 @@ internal static partial class EndGameMain
                         }
                         var taskInfo = data.TasksTotal > 0 ? string.Format("<color=#FAD934FF>{0}/{1}</color>", data.TasksCompleted, data.TasksTotal) : "";
                         var status = Tr.GetDynamic(Enum.GetName(data.Status));
-                        var result = string.Format("{0}<pos=18.5%>{1}<pos=25%>{2}<pos=34%>{3}", string.Format("{0}{1}", data.PlayerName, data.NameSuffix), taskInfo, status, data.RoleNames);
+                        var star = winners.Contains(data.PlayerName) && AdditionalTempData.GameOverReason != (GameOverReason)CustomGameOverReason.ForceEnd ? "★" : "";
+                        var result = string.Format("{0}<pos=2.5%>{1}<pos=24%>{2}<pos=32%>{3}<pos=40%>{4}", star, string.Format("{0}{1}", data.PlayerName, data.NameSuffix), taskInfo, status, data.RoleNames);
                         lines[key] = result;
                         // roleSummaryText.AppendLine(result);
                         Logger.LogInfo("[Result] {0}", result);
@@ -326,7 +334,7 @@ internal static partial class EndGameMain
                     else
                     {
                         var status = Tr.Get(TrKey.Disconnected);
-                        var result = string.Format("{0}<pos=18.5%> <pos=25%>{1}<pos=34%>{2}", value.Name, status, value.Roles);
+                        var result = string.Format("<pos=2.5%>{0}<pos=32%>{1}<pos=40%>{2}", value.Name, status, value.Roles);
                         lines[key] = result;
                         Logger.LogInfo("[Result] {0}", result);
                     }
@@ -362,11 +370,16 @@ internal static partial class EndGameMain
                     if (y == hostId) return 1;
                     return x.CompareTo(y);
                 });
+                roleSummaryText.AppendLine(string.Format("<pos=2.5%>{0}<pos=24%>{1}<pos=32%>{2}<pos=40%>{3}", Tr.Get(TrKey.ResultName), Tr.Get(TrKey.ResultTask), Tr.Get(TrKey.ResultStatus), Tr.Get(TrKey.ResultRoles)));
 
                 foreach (var key in keysArray)
                 {
                     roleSummaryText.AppendLine(lines[key]);
                 }
+
+                roleSummaryText.AppendLine("<size=50%> </size>");
+                roleSummaryText.Append(Tr.Get(TrKey.GameTime));
+                roleSummaryText.AppendLine((DateTime.Now - GameHistory.TimeStarted).ToString(@"hh\:mm\:ss"));
 
                 var roleSummaryTextMesh = roleSummary.GetComponent<TMP_Text>();
                 roleSummaryTextMesh.alignment = TextAlignmentOptions.TopLeft;

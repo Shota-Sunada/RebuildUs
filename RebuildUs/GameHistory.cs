@@ -15,6 +15,7 @@ internal static class GameHistory
     internal static readonly List<(Vector3 pos, bool canMove)> LocalPlayerPositions = [];
     internal static readonly List<DeadPlayer> DeadPlayers = [];
     internal static readonly Dictionary<int, FinalStatus> FinalStatuses = [];
+    internal static DateTime TimeStarted;
 
     private static bool _resetToCrewmate;
     private static bool _resetToDead;

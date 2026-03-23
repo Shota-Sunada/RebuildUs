@@ -477,7 +477,6 @@ RestrictPerTurn,Time Per Round,ターン毎
 RestrictVitals,Restrict Vitals,バイタルを制限
 RestrictVitalsText,Show Remaining Time Of Vitals,バイタルの残り時間を表示
 RestrictVitalsTime,Restrict Vitals Time,バイタルの閲覧時間を制限
-RoleSummaryText,Players and roles at the end of the game:,最終結果:
 RolesGeneral,Roles General,ロール総合
 RoyalGreen,Royal Green,ロイヤルグリーン
 Sabotage,Sabotage,サボ
@@ -695,3 +694,9 @@ UnitShots,x,発
 UnitPlayers,x,人
 UnitTimes,x,回
 UnitScrews,x,本
+GameTime,"Game Time: ","ゲーム時間: "
+ResultName,Name,名前
+ResultTask,Task,タスク
+ResultStatus,Status,状態
+ResultRoles,Roles,役職
+GameIsOverBecause,GAME OVER. REASON: "{0}","「{0}」によりゲーム終了"
