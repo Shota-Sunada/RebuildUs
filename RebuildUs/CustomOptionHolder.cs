@@ -15,7 +15,6 @@ internal static class CustomOptionHolder
         var polusOptionsHeader = new CustomOptionHeader(50003, CustomOptionType.General, TrKey.PolusOptions);
         var airshipOptionsHeader = new CustomOptionHeader(50004, CustomOptionType.General, TrKey.AirshipOptions);
         var randomMapHeader = new CustomOptionHeader(50005, CustomOptionType.General, TrKey.RandomMap);
-        var lastImpostorHeader = new CustomOptionHeader(50006, CustomOptionType.Modifier, TrKey.LastImpostor);
 
         #region MOD OPTIONS
 
