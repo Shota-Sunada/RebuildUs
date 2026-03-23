@@ -57,10 +57,10 @@ internal partial class CustomOption
     internal Color Color;
     internal int DefaultSelection;
     internal ConfigEntry<int> Entry;
-    internal string Format;
+    internal TrKey Format;
     internal bool UseSpawnChanceLabel;
 
-    protected CustomOption(int id, CustomOptionType type, TrKey nameKey, CustomOption parent, bool hideIfParentEnabled, string format, Color color, CustomOptionHeader header = null)
+    protected CustomOption(int id, CustomOptionType type, TrKey nameKey, CustomOption parent, bool hideIfParentEnabled, TrKey format, Color color, CustomOptionHeader header = null)
     {
         Id = id;
         Type = type;
@@ -200,27 +200,27 @@ internal partial class CustomOption
     }
 
     // Factory methods
-    internal static CustomToggleOption Normal(int id, CustomOptionType type, TrKey nameKey, bool defaultValue, CustomOption parent = null, CustomOptionHeader header = null, Color? color = null, bool hideIfParentEnabled = false, string format = "")
+    internal static CustomToggleOption Normal(int id, CustomOptionType type, TrKey nameKey, bool defaultValue, CustomOption parent = null, CustomOptionHeader header = null, Color? color = null, bool hideIfParentEnabled = false, TrKey format = TrKey.None)
     {
         return new CustomToggleOption(id, type, nameKey, defaultValue, parent, hideIfParentEnabled, format, ResolveColor(color), header);
     }
 
-    internal static CustomNumberOption Normal(int id, CustomOptionType type, TrKey nameKey, float defaultValue, float min, float max, float step, CustomOption parent = null, CustomOptionHeader header = null, Color? color = null, bool hideIfParentEnabled = false, string format = "")
+    internal static CustomNumberOption Normal(int id, CustomOptionType type, TrKey nameKey, float defaultValue, float min, float max, float step, CustomOption parent = null, CustomOptionHeader header = null, Color? color = null, bool hideIfParentEnabled = false, TrKey format = TrKey.None)
     {
         return new CustomNumberOption(id, type, nameKey, CreateNumberSelections(min, max, step), defaultValue, parent, hideIfParentEnabled, format, ResolveColor(color), header);
     }
 
-    internal static CustomGeneralOption<T> Normal<T>(int id, CustomOptionType type, TrKey nameKey, T[] selections, T defaultValue, CustomOption parent = null, CustomOptionHeader header = null, Color? color = null, bool hideIfParentEnabled = false, string format = "")
+    internal static CustomGeneralOption<T> Normal<T>(int id, CustomOptionType type, TrKey nameKey, T[] selections, T defaultValue, CustomOption parent = null, CustomOptionHeader header = null, Color? color = null, bool hideIfParentEnabled = false, TrKey format = TrKey.None)
     {
         return new CustomGeneralOption<T>(id, type, nameKey, selections, defaultValue, parent, hideIfParentEnabled, format, ResolveColor(color), header);
     }
 
-    internal static CustomGeneralOption<string> Normal(int id, CustomOptionType type, TrKey nameKey, string[] selections, int defaultSelection, CustomOption parent = null, CustomOptionHeader header = null, Color? color = null, bool hideIfParentEnabled = false, string format = "")
+    internal static CustomGeneralOption<string> Normal(int id, CustomOptionType type, TrKey nameKey, string[] selections, int defaultSelection, CustomOption parent = null, CustomOptionHeader header = null, Color? color = null, bool hideIfParentEnabled = false, TrKey format = TrKey.None)
     {
         return new CustomGeneralOption<string>(id, type, nameKey, selections, defaultSelection, parent, hideIfParentEnabled, format, ResolveColor(color), header);
     }
 
-    internal static CustomPlayerOption Player(int id, CustomOptionType type, TrKey nameKey, int[] playerIds, int defaultSelection, CustomOption parent = null, CustomOptionHeader header = null, Color? color = null, bool hideIfParentEnabled = false, string format = "")
+    internal static CustomPlayerOption Player(int id, CustomOptionType type, TrKey nameKey, int[] playerIds, int defaultSelection, CustomOption parent = null, CustomOptionHeader header = null, Color? color = null, bool hideIfParentEnabled = false, TrKey format = TrKey.None)
     {
         return new CustomPlayerOption(id, type, nameKey, playerIds, defaultSelection, parent, hideIfParentEnabled, format, ResolveColor(color), header);
     }
@@ -989,11 +989,11 @@ internal class CustomOption<T> : CustomOption
     internal int Selection;
     internal T[] Selections;
 
-    public CustomOption(int id, CustomOptionType type, TrKey nameKey, T[] selections, T defaultValue, CustomOption parent, bool hideIfParentEnabled, string format, Color color, CustomOptionHeader header = null)
+    public CustomOption(int id, CustomOptionType type, TrKey nameKey, T[] selections, T defaultValue, CustomOption parent, bool hideIfParentEnabled, TrKey format, Color color, CustomOptionHeader header = null)
     : this(id, type, nameKey, selections, Array.IndexOf(selections, defaultValue), parent, hideIfParentEnabled, format, color, header)
     { }
 
-    public CustomOption(int id, CustomOptionType type, TrKey nameKey, T[] selections, int defaultSelection, CustomOption parent, bool hideIfParentEnabled, string format, Color color, CustomOptionHeader header = null) : base(id, type, nameKey, parent, hideIfParentEnabled, format, color, header)
+    public CustomOption(int id, CustomOptionType type, TrKey nameKey, T[] selections, int defaultSelection, CustomOption parent, bool hideIfParentEnabled, TrKey format, Color color, CustomOptionHeader header = null) : base(id, type, nameKey, parent, hideIfParentEnabled, format, color, header)
     {
         Selections = selections;
         DefaultSelection = Mathf.Clamp(defaultSelection, 0, selections.Length - 1);

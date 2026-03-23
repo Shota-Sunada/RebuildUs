@@ -12,7 +12,7 @@ internal class CustomRoleOption : CustomGeneralOption<string>
         CustomOptionHolder.Rates.Length > 0 ? (CustomOptionHolder.Rates[0] as string) ?? string.Empty : string.Empty,
         null,
         false,
-        "",
+        TrKey.None,
         color,
         new CustomOptionHeader(baseId, type, Enum.TryParse(Enum.GetName(roleType), out TrKey key2) ? key2 : TrKey.None, color))
     {
@@ -37,7 +37,7 @@ internal class CustomRoleOption : CustomGeneralOption<string>
         CustomOptionHolder.Rates.Length > 0 ? (CustomOptionHolder.Rates[0] as string) ?? string.Empty : string.Empty,
         null,
         false,
-        "",
+        TrKey.None,
         color,
         new CustomOptionHeader(baseId, type, nameKey, color))
     {

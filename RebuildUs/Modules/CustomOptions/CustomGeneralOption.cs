@@ -9,7 +9,7 @@ internal class CustomGeneralOption<T> : CustomOption<T>
                                  T defaultValue,
                                  CustomOption parent,
                                  bool hideIfParentEnabled,
-                                 string format,
+                                 TrKey format,
                                  Color color,
                                  CustomOptionHeader header = null)
         : base(id, type, nameKey, selections, defaultValue, parent, hideIfParentEnabled, format, color, header) { }
@@ -21,7 +21,7 @@ internal class CustomGeneralOption<T> : CustomOption<T>
                                  int defaultSelection,
                                  CustomOption parent,
                                  bool hideIfParentEnabled,
-                                 string format,
+                                 TrKey format,
                                  Color color,
                                  CustomOptionHeader header = null)
         : base(id, type, nameKey, selections, defaultSelection, parent, hideIfParentEnabled, format, color, header) { }

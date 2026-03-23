@@ -8,7 +8,7 @@ internal sealed class CustomToggleOption : CustomOption<bool>
                                 bool defaultValue,
                                 CustomOption parent,
                                 bool hideIfParentEnabled,
-                                string format,
+                                TrKey format,
                                 Color color,
                                 CustomOptionHeader header = null) : base(id,
         type,

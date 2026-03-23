@@ -12,7 +12,7 @@ internal sealed class CustomRoleSelectionOption : CustomGeneralOption<string>
         string.Empty,
         parent,
         false,
-        "",
+        TrKey.None,
         Color.white)
     {
         if (roleTypes == null)

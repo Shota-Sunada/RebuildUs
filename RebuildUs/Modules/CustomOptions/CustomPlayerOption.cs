@@ -9,7 +9,7 @@ internal sealed class CustomPlayerOption : CustomOption<int>
                                 int defaultSelection,
                                 CustomOption parent,
                                 bool hideIfParentEnabled,
-                                string format,
+                                TrKey format,
                                 Color color,
                                 CustomOptionHeader header = null) : base(id,
         type,

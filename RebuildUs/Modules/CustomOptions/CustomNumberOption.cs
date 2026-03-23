@@ -9,7 +9,7 @@ internal sealed class CustomNumberOption : CustomOption<float>
                                 float defaultValue,
                                 CustomOption parent,
                                 bool hideIfParentEnabled,
-                                string format,
+                                TrKey format,
                                 Color color,
                                 CustomOptionHeader header = null) : base(id,
         type,
@@ -38,9 +38,7 @@ internal sealed class CustomNumberOption : CustomOption<float>
         numberOption.OnValueChanged = new Action<OptionBehaviour>(_ => { });
         ApplyTitleText(numberOption.TitleText);
         numberOption.Value = GetFloat();
-        numberOption.ValueText.text = !string.IsNullOrEmpty(Format)
-            ? GetFloat().ToString(Format)
-            : GetValue()?.ToString() ?? string.Empty;
+        numberOption.ValueText.text = string.Format("{0}{1}", GetValue()?.ToString() ?? string.Empty, Format == TrKey.None ? string.Empty : Tr.Get(Format));
     }
 
     internal override void SyncOptionBehaviourValue()
@@ -51,8 +49,6 @@ internal sealed class CustomNumberOption : CustomOption<float>
         }
 
         numberOption.Value = GetFloat();
-        numberOption.ValueText.text = !string.IsNullOrEmpty(Format)
-            ? GetFloat().ToString(Format)
-            : GetValue()?.ToString() ?? string.Empty;
+        numberOption.ValueText.text = string.Format("{0}{1}", GetValue()?.ToString() ?? string.Empty, Format == TrKey.None ? string.Empty : Tr.Get(Format));
     }
 }
