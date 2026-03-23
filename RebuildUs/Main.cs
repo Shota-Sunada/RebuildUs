@@ -69,7 +69,6 @@ public class RebuildUs : BasePlugin
     internal static RebuildUs Instance;
 
     internal static int OptionsPage = 0;
-    internal static IRegionInfo[] DefaultRegions;
     private Harmony Harmony { get; } = new(MOD_ID);
     internal Version Version { get; } = Version.Parse(MOD_VERSION);
 
@@ -85,9 +84,6 @@ public class RebuildUs : BasePlugin
     internal static ConfigEntry<bool> BetterSabotageMap { get; private set; }
     internal static ConfigEntry<bool> TransparentMap { get; private set; }
     internal static ConfigEntry<bool> HideFakeTasks { get; private set; }
-
-    internal static ConfigEntry<string> Ip { get; set; }
-    internal static ConfigEntry<ushort> Port { get; set; }
 
     internal static Random Rnd
     {
@@ -125,26 +121,19 @@ public class RebuildUs : BasePlugin
         HideFakeTasks = Config.Bind("Custom", "Hide Fake Tasks", false);
 
         KeyBindingManager.Initialize(Config);
-
-        Ip = Config.Bind("Custom", "Custom Server IP", "127.0.0.1");
-        Port = Config.Bind("Custom", "Custom Server Port", (ushort)22023);
-        DefaultRegions = ServerManager.DefaultRegions;
-
+        CustomServer.Initialize();
         AssetLoader.LoadAssets();
-
         Tr.Initialize();
         CustomOptionHolder.Load();
         RoleInfo.Load();
         CustomColors.Load();
         UpdateRegions();
+        SubmergedCompatibility.Initialize();
+        ModEventDispatcher.Initialize();
 
         RefreshRnd((int)DateTime.Now.Ticks);
 
         Harmony.PatchAll();
-
-        SubmergedCompatibility.Initialize();
-
-        ModEventDispatcher.Initialize();
 
         Logger.LogMessage("[Main] \"Rebuild Us\" was completely loaded! Enjoy the modifications!");
     }
@@ -293,11 +282,9 @@ public class RebuildUs : BasePlugin
 
         IRegionInfo[] regions =
         [
-            new DnsRegionInfo(Ip.Value, "Custom", StringNames.NoTranslation, Ip.Value, Port.Value, false).CastFast<IRegionInfo>(),
+            new DnsRegionInfo(CustomServer.ServerData.IP, "Custom", StringNames.NoTranslation, CustomServer.ServerData.IP, CustomServer.ServerData.Port, false).CastFast<IRegionInfo>(),
         ];
-#nullable enable
         var currentRegion = serverManager.CurrentRegion;
-#nullable disable
         foreach (var region in regions)
         {
             if (region == null)
