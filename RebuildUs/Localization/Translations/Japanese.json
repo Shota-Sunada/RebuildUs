@@ -1,6 +1,6 @@
 {
   "ActivateRoles": "Mod役職を有効化",
-  "AdditionalEmergencyCooldown": "誰かが死ぬまで緊急会議のクールダウンを増加",
+  "AdditionalEmergencyCooldown": "指定人数が死ぬまで緊急会議のクールダウンを増加",
   "AdditionalEmergencyCooldownTime": "追加クールダウン",
   "AdminRanOut": "アドミン: 時間切れ",
   "AdminText": "アドミン: 残り{0}秒",

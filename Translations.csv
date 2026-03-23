@@ -1,6 +1,6 @@
 Key,English,Japanese
 ActivateRoles,Enable Mod Roles And Block Vanilla Roles,Mod役職を有効化
-AdditionalEmergencyCooldown,Additional Emergency Cooldown Until Several Players Are Dead,誰かが死ぬまで緊急会議のクールダウンを増加
+AdditionalEmergencyCooldown,Additional Emergency Cooldown Until Several Players Are Dead,指定人数が死ぬまで緊急会議のクールダウンを増加
 AdditionalEmergencyCooldownTime,Additional Cooldown Time,追加クールダウン
 AdminRanOut,Admin: ran out of time,アドミン: 時間切れ
 AdminText,Admin: {0} sec remaining,アドミン: 残り{0}秒

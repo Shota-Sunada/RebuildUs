@@ -63,7 +63,7 @@ internal static class CustomOptionHolder
         // ShieldFirstKill = CustomOption.Normal(35, CustomOptionType.General, "ShieldFirstKill", false);
         DontFinishGame = CustomOption.Normal(36, CustomOptionType.General, TrKey.DontFinishGame, false);
 
-        AdditionalEmergencyCooldown = CustomOption.Normal(55, CustomOptionType.General, TrKey.AdditionalEmergencyCooldown, 0f, 0f, 15f, 1f, format: TrKey.UnitSeconds);
+        AdditionalEmergencyCooldown = CustomOption.Normal(55, CustomOptionType.General, TrKey.AdditionalEmergencyCooldown, 0f, 0f, 15f, 1f, format: TrKey.UnitPlayers);
         AdditionalEmergencyCooldownTime = CustomOption.Normal(56, CustomOptionType.General, TrKey.AdditionalEmergencyCooldownTime, 10f, 0f, 60f, 1f, AdditionalEmergencyCooldown, format: TrKey.UnitSeconds);
 
         RestrictDevices = CustomOption.Normal(60, CustomOptionType.General, TrKey.RestrictDevices, [Tr.Get(TrKey.Off), Tr.Get(TrKey.RestrictPerTurn), Tr.Get(TrKey.RestrictPerGame)], 0);
