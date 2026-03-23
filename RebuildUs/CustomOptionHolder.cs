@@ -155,7 +155,7 @@ internal static class CustomOptionHolder
 
         TimeMasterSpawnRate = new(1050, CustomOptionType.Crewmate, RoleType.TimeMaster, TimeMaster.Color, 1);
         TimeMasterCooldown = CustomOption.Normal(1051, CustomOptionType.Crewmate, TrKey.TimeMasterCooldown, 30f, 2.5f, 120f, 2.5f, TimeMasterSpawnRate, format: TrKey.UnitSeconds);
-        TimeMasterRewindTime = CustomOption.Normal(1052, CustomOptionType.Crewmate, TrKey.TimeMasterRewindTime, 3f, 1f, 10f, 1f, TimeMasterSpawnRate, format: TrKey.UnitTimes);
+        TimeMasterRewindTime = CustomOption.Normal(1052, CustomOptionType.Crewmate, TrKey.TimeMasterRewindTime, 3f, 1f, 10f, 1f, TimeMasterSpawnRate, format: TrKey.UnitSeconds);
         TimeMasterShieldDuration = CustomOption.Normal(1053, CustomOptionType.Crewmate, TrKey.TimeMasterShieldDuration, 3f, 1f, 20f, 1f, TimeMasterSpawnRate, format: TrKey.UnitSeconds);
 
         DetectiveSpawnRate = new(1060, CustomOptionType.Crewmate, RoleType.Detective, Detective.Color, 1);
