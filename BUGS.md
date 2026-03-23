@@ -44,9 +44,6 @@ Hacker
 Tracker
 翻訳修正
 
-Snitch
-翻訳修正
-
 Lighter
 単位修正
 停電時照明サイズが変わらない
@@ -54,9 +51,6 @@ Lighter
 SecurityGuard
 最大数翻訳修正
 移動可能オプション削除
-
-Bait
-犯人警告オプションが機能していない
 
 BountyHunter
 ミス時キルクが正常に動作していない

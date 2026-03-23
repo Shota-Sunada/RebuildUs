@@ -228,6 +228,9 @@ internal static partial class RPCProcedure
             case CustomRPC.SheriffKillRequest:
                 SheriffKillRequest(reader.ReadByte(), reader.ReadByte());
                 break;
+            case CustomRPC.BaitOnKilled:
+                BaitOnKilled(reader.ReadByte());
+                break;
         }
     }
 }

@@ -80,6 +80,7 @@ internal enum CustomRPC : byte
     SubmergedSubmarineBoxCatSystem = 144,
     SheriffKill = 145,
     SheriffKillRequest = 146,
+    BaitOnKilled,
 
     SubmergedSetCustomData = 210,
     SubmergedRequestChangeFloor = 211,

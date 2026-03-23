@@ -115,12 +115,6 @@ internal static class GameHistory
         //     PlayerControl.LocalPlayer.SetKillTimer(PlayerControl.GameOptions.KillCooldown * multiplier);
         // }
 
-        // Show flash on bait kill to the killer if enabled
-        if (target.IsRole(RoleType.Bait) && Bait.ShowKillFlash && !killer.IsRole(RoleType.Bait) && killer == PlayerControl.LocalPlayer)
-        {
-            Helpers.ShowFlash(new(42f / 255f, 187f / 255f, 245f / 255f));
-        }
-
         killer.OnKill(target);
         target.OnDeath(killer);
     }

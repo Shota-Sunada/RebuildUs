@@ -1,3 +1,5 @@
+using BepInEx.Unity.IL2CPP.Utils;
+
 namespace RebuildUs.Roles.Crewmate;
 
 [HarmonyPatch]
@@ -17,60 +19,43 @@ internal class Bait : MultiRoleBase<Bait>
     }
 
     internal static bool HighlightAllVents { get => CustomOptionHolder.BaitHighlightAllVents.GetBool(); }
-    private static float ReportDelay { get => CustomOptionHolder.BaitReportDelay.GetFloat(); }
-    internal static bool ShowKillFlash { get => CustomOptionHolder.BaitShowKillFlash.GetBool(); }
+    internal static float ReportDelay { get => CustomOptionHolder.BaitReportDelay.GetFloat(); }
+    internal static bool NotifyToMurder { get => CustomOptionHolder.BaitShowKillFlash.GetBool(); }
 
-    [CustomEvent(CustomEventType.FixedUpdate)]
-    internal void FixedUpdate()
+    [CustomEvent(CustomEventType.OnDeath)]
+    internal void OnDeath(PlayerControl killer)
     {
-        if (Player == null)
+        if (killer == null)
         {
             return;
         }
 
-        // Bait report
-        if (!Player.Data.IsDead || _reported)
+        if (Player == PlayerControl.LocalPlayer)
         {
-            return;
-        }
-        DeadPlayer baitDeadPlayer = null;
-        var deadPlayers = GameHistory.DeadPlayers;
-        if (deadPlayers != null)
-        {
-            foreach (var dp in deadPlayers)
+            if (NotifyToMurder)
             {
-                if (dp.Player == null || dp.Player.PlayerId != Player.PlayerId)
-                {
-                    continue;
-                }
-                baitDeadPlayer = dp;
-                break;
+                using var sender = new RPCSender(Player.NetId, CustomRPC.BaitOnKilled);
+                sender.Write(killer.PlayerId);
+                RPCProcedure.BaitOnKilled(killer.PlayerId);
             }
-        }
 
-        if (baitDeadPlayer != null && baitDeadPlayer.KillerIfExisting != null)
+            // 通報コルーチンを開始
+            FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(ReportCoroutine(killer));
+        }
+    }
+
+    private IEnumerator ReportCoroutine(PlayerControl killer)
+    {
+        yield return new WaitForSeconds(ReportDelay);
+
+        if (_reported || Helpers.IsGameOver)
         {
-            // Show warning to the killer
-            if (baitDeadPlayer.KillerIfExisting == PlayerControl.LocalPlayer)
-            {
-                _warningMessage ??= new("BaitWarning", _delay);
-            }
+            yield break;
         }
 
-        if (Player != PlayerControl.LocalPlayer)
-        {
-            return;
-        }
-
-        _delay -= Time.fixedDeltaTime;
-
-        if (baitDeadPlayer == null || baitDeadPlayer.KillerIfExisting == null || !(_delay <= 0f))
-        {
-            return;
-        }
         Helpers.HandleVampireBiteOnBodyReport(); // Manually call Vampire handling, since the CmdReportDeadBody Prefix won't be called
 
-        var reporter = baitDeadPlayer.KillerIfExisting.PlayerId;
+        var reporter = killer.PlayerId;
         if (Player.HasModifier(ModifierType.Madmate))
         {
             List<PlayerControl> candidates = [];

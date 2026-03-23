@@ -6,7 +6,7 @@ internal sealed class CustomMessage
 
     private static readonly Color YellowColor = new(0.988f, 0.729f, 0.012f, 1f);
 
-    internal CustomMessage(string message, float duration)
+    internal CustomMessage(TrKey message, float duration)
     {
         var roomTracker = FastDestroyableSingleton<HudManager>.Instance?.roomTracker;
         if (roomTracker != null)
@@ -15,7 +15,7 @@ internal sealed class CustomMessage
 
             UnityObject.DestroyImmediate(gameObject.GetComponent<RoomTracker>());
             var text = gameObject.GetComponent<TMP_Text>();
-            text.text = Tr.GetDynamic(message);
+            text.text = Tr.Get(message);
 
             // Use local position to place it in the player's view instead of the world location
             gameObject.transform.localPosition = new(0, -1.8f, gameObject.transform.localPosition.z);

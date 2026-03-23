@@ -40,11 +40,11 @@ ArsonistWin,Arsonist Win,アーソニスト 勝利
 ArsonistWinExtra,Arsonist & {0} Win,アーソニスト & {0}勝利
 Bait,Bait,ベイト
 BaitFullDesc,"The Bait is a Crewmate that if killed, forces the killer to self report the body (you can configure a delay in the options).\nAdditionally, the Bait can see if someone is inside a vent (depending on the options the exact vent gets an outline or all vents do).",ベイトは、キルされた直後、もしくは数秒後に殺害者自身で強制的に通報させることができるクルーメイトである。\nまた、誰かがベントを使用しているときに、ベントが青く光る。
-BaitHighlightAllVents,Highlight All Vents If A Vent Is Occupied,ベント使用時、全てのベントが黄色く光る
+BaitHighlightAllVents,Highlight All Vents If A Vent Is Occupied,ベントが使用されている時、全てのベントが光る
 BaitIntroDesc,Bait your enemies,敵を罠にはめよう
 BaitReportDelay,Bait Report Delay,通報遅延
 BaitShortDesc,Bait your enemies,敵を罠にはめよう
-BaitShowKillFlash,Warn The Killer With A Flash,死亡時、犯人に警告する
+BaitShowKillFlash,Warn The Killer With A Flash and Message,フラッシュと文字で犯人に警告する
 BaitWarning,You killed a Bait!!,ベイトを殺しちゃった!!
 BetterSabotageMap,Better Sabotage Map,改良版サボタージュマップ
 BlockSkippingInEmergencyMeetings,Block Skipping in Meetings,ミーティングでスキップを無効化
@@ -547,7 +547,7 @@ SnitchIncludeTeamJackal,Include Team Jackal,ジャッカル陣営にもバレる
 SnitchIntroDesc,Finish your tasks to find the <color=#FF1919FF>Impostors</color>,タスクを早く済ませて<color=#FF1919FF>インポスター</color>を暴こう
 SnitchLeftTasksForReveal,Task Count Where The Snitch Will Be Revealed,敵陣営にバレるタスク残量
 SnitchShortDesc,Finish your tasks,タスクを早く済ませよう
-SnitchTeamJackalUseDifferentArrowColor,Use Different Arrow Color For Team Jackal,ジャッカル陣営には別の矢印を表示する
+SnitchTeamJackalUseDifferentArrowColor,Use Different Arrow Color For Team Jackal,ジャッカル陣営には別の矢印の色を使用
 SpawnChance,Spawn Chance,スポーン確率
 Spelled,Spelled,呪殺
 Spy,Spy,スパイ

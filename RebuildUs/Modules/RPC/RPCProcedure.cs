@@ -1,4 +1,5 @@
 using Assets.CoreScripts;
+using Epic.OnlineServices;
 using PowerTools;
 using Action = Il2CppSystem.Action;
 
@@ -628,7 +629,7 @@ internal static partial class RPCProcedure
         // If the local player is impostor indicate lights out
         if (PlayerControl.LocalPlayer.HasImpostorVision())
         {
-            _ = new CustomMessage("TricksterLightsOutText", Trickster.LightsOutDuration);
+            _ = new CustomMessage(TrKey.TricksterLightsOutText, Trickster.LightsOutDuration);
         }
     }
 
@@ -1112,5 +1113,19 @@ internal static partial class RPCProcedure
         }
 
         sheriff.MurderPlayer(target);
+    }
+
+    internal static void BaitOnKilled(byte killerId)
+    {
+        var killer = Helpers.PlayerById(killerId);
+        if (killer != null)
+        {
+            // Show warning to the killer
+            if (killer == PlayerControl.LocalPlayer)
+            {
+                _ = new CustomMessage(TrKey.BaitWarning, Bait.ReportDelay);
+                Helpers.ShowFlash(new(42f / 255f, 187f / 255f, 245f / 255f));
+            }
+        }
     }
 }
