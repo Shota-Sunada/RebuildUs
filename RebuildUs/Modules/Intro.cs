@@ -212,8 +212,7 @@ internal static class Intro
         List<PlayerControl> players = [.. PlayerControl.AllPlayerControls.GetFastEnumerator()];
         players.Shuffle();
 
-        Il2CppSystem.Collections.Generic.List<PlayerControl>
-            fakeImpostorTeam = new(); // The local player always has to be the first one in the list (to be displayed in the center)
+        Il2CppSystem.Collections.Generic.List<PlayerControl> fakeImpostorTeam = new(); // The local player always has to be the first one in the list (to be displayed in the center)
         fakeImpostorTeam.Add(PlayerControl.LocalPlayer);
 
         foreach (var p in players)
