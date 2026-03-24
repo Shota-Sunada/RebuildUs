@@ -1,7 +1,7 @@
 Sheriff
 第三陣営のキルチェック未動作
 
-Engineer
+Engineer 修
 残り回数表示
 停電修復できない
 ベント状態が逆転

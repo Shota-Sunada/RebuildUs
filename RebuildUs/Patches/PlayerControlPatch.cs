@@ -366,6 +366,8 @@ internal static class PlayerControlPatch
         hudManager.SabotageButton.gameObject.SetActive(true);
     }
 
+    private static readonly HashSet<int> _ventsWithPlayers = [];
+
     private static void PlayersUpdate(PlayerControl __instance)
     {
         if (__instance == null || __instance != PlayerControl.LocalPlayer)
@@ -377,6 +379,11 @@ internal static class PlayerControlPatch
         var impostorHighlight = Engineer.HighlightForImpostors && __instance.IsTeamImpostor();
         var isBait = __instance.IsRole(RoleType.Bait) && __instance.IsAlive();
 
+        if (!jackalHighlight && !impostorHighlight && !isBait)
+        {
+            return;
+        }
+
         var shipStatus = MapUtilities.CachedShipStatus;
         if (shipStatus == null || shipStatus.AllVents == null)
         {
@@ -384,57 +391,55 @@ internal static class PlayerControlPatch
         }
         var allVents = shipStatus.AllVents;
 
-        // Engineer check
-        var anyEngineerInVent = false;
-        if (jackalHighlight || impostorHighlight)
-        {
-            var engineers = Engineer.AllPlayers;
-            foreach (var t in engineers)
-            {
-                if (t.inVent)
-                {
-                    continue;
-                }
-                anyEngineerInVent = true;
-                break;
-            }
-        }
-
-        // Bait check
-        HashSet<int> ventsWithPlayers = [];
+        // Common Player check
+        _ventsWithPlayers.Clear();
         var anyPlayerInVent = false;
-        if (isBait)
+        var anyEngineerInVent = false;
+
+        foreach (var player in PlayerControl.AllPlayerControls.GetFastEnumerator())
         {
-            foreach (var player in PlayerControl.AllPlayerControls.GetFastEnumerator())
+            if (player == null || !player.inVent)
             {
-                if (player == null || !player.inVent)
+                continue;
+            }
+
+            anyPlayerInVent = true;
+
+            // Engineer check
+            if (!anyEngineerInVent && (jackalHighlight || impostorHighlight))
+            {
+                if (player.IsRole(RoleType.Engineer))
+                {
+                    anyEngineerInVent = true;
+                }
+            }
+
+            if (!isBait)
+            {
+                continue;
+            }
+
+            var playerPos = player.GetTruePosition();
+            Vent closestVent = null;
+            var minDistance = float.MaxValue;
+            foreach (var v in allVents)
+            {
+                if (v == null)
                 {
                     continue;
                 }
-
-                anyPlayerInVent = true;
-                var playerPos = player.GetTruePosition();
-                Vent closestVent = null;
-                var minDistance = float.MaxValue;
-                foreach (var v in allVents)
+                var dist = Vector2.Distance(v.transform.position, playerPos);
+                if (!(dist < minDistance))
                 {
-                    if (v == null)
-                    {
-                        continue;
-                    }
-                    var dist = Vector2.Distance(v.transform.position, playerPos);
-                    if (!(dist < minDistance))
-                    {
-                        continue;
-                    }
-                    minDistance = dist;
-                    closestVent = v;
+                    continue;
                 }
+                minDistance = dist;
+                closestVent = v;
+            }
 
-                if (closestVent != null)
-                {
-                    ventsWithPlayers.Add(closestVent.Id);
-                }
+            if (closestVent != null)
+            {
+                _ventsWithPlayers.Add(closestVent.Id);
             }
         }
 
@@ -469,7 +474,7 @@ internal static class PlayerControlPatch
                         highlightColor = Bait.Color;
                     }
                 }
-                else if (ventsWithPlayers.Contains(vent.Id))
+                else if (_ventsWithPlayers.Contains(vent.Id))
                 {
                     highlight = true;
                     highlightColor = Bait.Color;
