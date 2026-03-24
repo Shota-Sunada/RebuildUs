@@ -694,6 +694,7 @@ UnitShots,x,発
 UnitPlayers,x,人
 UnitTimes,x,回
 UnitScrews,x,本
+UnitMultiplies,x,x
 GameTime,"Game Time: ","ゲーム時間: "
 ResultName,Name,名前
 ResultTask,Task,タスク

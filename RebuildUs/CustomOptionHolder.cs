@@ -191,8 +191,8 @@ internal static class CustomOptionHolder
         SnitchTeamJackalUseDifferentArrowColor = CustomOption.Normal(1103, CustomOptionType.Crewmate, TrKey.SnitchTeamJackalUseDifferentArrowColor, true, SnitchIncludeTeamJackal);
 
         LighterSpawnRate = new(1110, CustomOptionType.Crewmate, RoleType.Lighter, Lighter.Color);
-        LighterModeLightsOnVision = CustomOption.Normal(1111, CustomOptionType.Crewmate, TrKey.LighterModeLightsOnVision, 2f, 0.25f, 5f, 0.25f, LighterSpawnRate, format: TrKey.UnitSeconds);
-        LighterModeLightsOffVision = CustomOption.Normal(1112, CustomOptionType.Crewmate, TrKey.LighterModeLightsOffVision, 0.75f, 0.25f, 5f, 0.25f, LighterSpawnRate, format: TrKey.UnitSeconds);
+        LighterModeLightsOnVision = CustomOption.Normal(1111, CustomOptionType.Crewmate, TrKey.LighterModeLightsOnVision, 2f, 0.25f, 5f, 0.25f, LighterSpawnRate, format: TrKey.UnitMultiplies);
+        LighterModeLightsOffVision = CustomOption.Normal(1112, CustomOptionType.Crewmate, TrKey.LighterModeLightsOffVision, 0.75f, 0.25f, 5f, 0.25f, LighterSpawnRate, format: TrKey.UnitMultiplies);
         LighterCooldown = CustomOption.Normal(1113, CustomOptionType.Crewmate, TrKey.LighterCooldown, 30f, 5f, 120f, 5f, LighterSpawnRate, format: TrKey.UnitSeconds);
         LighterDuration = CustomOption.Normal(1114, CustomOptionType.Crewmate, TrKey.LighterDuration, 5f, 2.5f, 60f, 2.5f, LighterSpawnRate, format: TrKey.UnitSeconds);
         // lighterCanSeeNinja = CustomOption.Normal(1115, CustomOptionType.Crewmate, "lighterCanSeeNinja", true, lighterSpawnRate);
@@ -205,7 +205,7 @@ internal static class CustomOptionHolder
         SecurityGuardCamDuration = CustomOption.Normal(1125, CustomOptionType.Crewmate, TrKey.SecurityGuardCamDuration, 10f, 2.5f, 60f, 2.5f, SecurityGuardSpawnRate, format: TrKey.UnitSeconds);
         SecurityGuardCamMaxCharges = CustomOption.Normal(1126, CustomOptionType.Crewmate, TrKey.SecurityGuardCamMaxCharges, 5f, 1f, 30f, 1f, SecurityGuardSpawnRate, format: TrKey.UnitTimes);
         SecurityGuardCamRechargeTasksNumber = CustomOption.Normal(1127, CustomOptionType.Crewmate, TrKey.SecurityGuardCamRechargeTasksNumber, 3f, 1f, 10f, 1f, SecurityGuardSpawnRate);
-        
+
         SwapperSpawnRate = new(1130, CustomOptionType.Neutral, TrKey.Swapper, Swapper.Color, 1);
         SwapperIsImpRate = CustomOption.Normal(1131, CustomOptionType.Neutral, TrKey.SwapperIsImpRate, Rates, 0, SwapperSpawnRate);
         SwapperNumSwaps = CustomOption.Normal(1132, CustomOptionType.Neutral, TrKey.SwapperNumSwaps, 2f, 1f, 15f, 1f, SwapperSpawnRate, format: TrKey.UnitTimes);

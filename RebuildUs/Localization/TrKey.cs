@@ -657,6 +657,7 @@ internal enum TrKey
     TricksterShortDesc,
     Turquoise,
     UnitCouples,
+    UnitMultiplies,
     UnitPlayers,
     UnitScrews,
     UnitSeconds,
