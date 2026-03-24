@@ -37,7 +37,6 @@ internal class SecurityGuard : SingleRoleBase<SecurityGuard>
     internal static float CamDuration { get => CustomOptionHolder.SecurityGuardCamDuration.GetFloat(); }
     internal static int CamMaxCharges { get => Mathf.RoundToInt(CustomOptionHolder.SecurityGuardCamMaxCharges.GetFloat()); }
     internal static int CamRechargeTasksNumber { get => Mathf.RoundToInt(CustomOptionHolder.SecurityGuardCamRechargeTasksNumber.GetFloat()); }
-    internal static bool NoMove { get => CustomOptionHolder.SecurityGuardNoMove.GetBool(); }
 
     [CustomEvent(CustomEventType.FixedUpdate)]
     internal void FixedUpdate()
@@ -275,11 +274,6 @@ internal class SecurityGuard : SingleRoleBase<SecurityGuard>
                 }
 
                 Local._charges--;
-
-                if (NoMove)
-                {
-                    PlayerControl.LocalPlayer.moveable = false;
-                }
                 PlayerControl.LocalPlayer.NetTransform.Halt(); // Stop current movement
             },
             () =>

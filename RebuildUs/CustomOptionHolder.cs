@@ -205,8 +205,7 @@ internal static class CustomOptionHolder
         SecurityGuardCamDuration = CustomOption.Normal(1125, CustomOptionType.Crewmate, TrKey.SecurityGuardCamDuration, 10f, 2.5f, 60f, 2.5f, SecurityGuardSpawnRate, format: TrKey.UnitSeconds);
         SecurityGuardCamMaxCharges = CustomOption.Normal(1126, CustomOptionType.Crewmate, TrKey.SecurityGuardCamMaxCharges, 5f, 1f, 30f, 1f, SecurityGuardSpawnRate, format: TrKey.UnitTimes);
         SecurityGuardCamRechargeTasksNumber = CustomOption.Normal(1127, CustomOptionType.Crewmate, TrKey.SecurityGuardCamRechargeTasksNumber, 3f, 1f, 10f, 1f, SecurityGuardSpawnRate);
-        SecurityGuardNoMove = CustomOption.Normal(1128, CustomOptionType.Crewmate, TrKey.SecurityGuardNoMove, true, SecurityGuardSpawnRate);
-
+        
         SwapperSpawnRate = new(1130, CustomOptionType.Neutral, TrKey.Swapper, Swapper.Color, 1);
         SwapperIsImpRate = CustomOption.Normal(1131, CustomOptionType.Neutral, TrKey.SwapperIsImpRate, Rates, 0, SwapperSpawnRate);
         SwapperNumSwaps = CustomOption.Normal(1132, CustomOptionType.Neutral, TrKey.SwapperNumSwaps, 2f, 1f, 15f, 1f, SwapperSpawnRate, format: TrKey.UnitTimes);
@@ -584,7 +583,6 @@ internal static class CustomOptionHolder
     internal static CustomOption SecurityGuardCamDuration;
     internal static CustomOption SecurityGuardCamMaxCharges;
     internal static CustomOption SecurityGuardCamRechargeTasksNumber;
-    internal static CustomOption SecurityGuardNoMove;
 
     internal static CustomRoleOption SwapperSpawnRate;
     internal static CustomOption SwapperIsImpRate;
