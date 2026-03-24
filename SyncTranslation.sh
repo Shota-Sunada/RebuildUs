@@ -1,1 +1,0 @@
-go run Tools/TranslateSync/translate_sync.go
