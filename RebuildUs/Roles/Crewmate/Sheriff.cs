@@ -145,9 +145,7 @@ internal class Sheriff : MultiRoleBase<Sheriff>
             || SpyCanDieToSheriff && target.IsRole(RoleType.Spy)
             || MadmateCanDieToSheriff && target.HasModifier(ModifierType.Madmate)
             || CreatedMadmateCanDieToSheriff && target.HasModifier(ModifierType.CreatedMadmate)
-            || CanKillNeutrals && target.IsNeutral()
-            || target.IsRole(RoleType.Jackal)
-            || target.IsRole(RoleType.Sidekick))
+            || CanKillNeutrals && target.IsNeutral())
         {
             return false;
         }

@@ -1,4 +1,4 @@
-Sheriff
+Sheriff 修
 第三陣営のキルチェック未動作
 
 Engineer 修
