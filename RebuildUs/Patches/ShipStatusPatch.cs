@@ -27,7 +27,6 @@ internal static class ShipStatusPatch
         }
 
         // If player is Lighter with ability active
-
         if (PlayerControl.LocalPlayer.IsRole(RoleType.Lighter) && Lighter.IsLightActive(PlayerControl.LocalPlayer))
         {
             var unLerp = Mathf.InverseLerp(__instance.MinLightRadius, __instance.MaxLightRadius, GetNeutralLightRadius(__instance, true));
@@ -36,7 +35,6 @@ internal static class ShipStatusPatch
         }
 
         // If there is a Trickster with their ability active
-
         if (Trickster.Exists && Trickster.LightsOutTimer > 0f)
         {
             var lerpValue = 1f;
@@ -54,7 +52,6 @@ internal static class ShipStatusPatch
         }
 
         // Default light radius
-
         __result = GetNeutralLightRadius(__instance, false);
 
         return false;
