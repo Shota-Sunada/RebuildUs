@@ -687,7 +687,7 @@ RndPcg64,PCG64,PCG64
 DontFinishGame,Do not Finish Game,ゲームを終了しない
 DontFinishGameMode,GAME WILL BE NOT FINISHED,ゲームを終了しないモード
 AmongUsIsNotRequiredVersion,PLEASE UPDATE YOUR AMONG US,ゲームをアップデートしてください
-MayorRemoteButtonNum,Remains: {0}x,残り: {0}回
+RemainButtonNum,Remains: {0}x,残り: {0}回
 UnitSeconds,s,秒
 UnitCouples," Couples",組
 UnitShots,x,発

@@ -7,6 +7,7 @@ internal class Engineer : MultiRoleBase<Engineer>
     public static Color Color = new Color32(0, 40, 245, byte.MaxValue);
 
     private static CustomButton _engineerRepairButton;
+    internal static TMP_Text EngineerRemainText;
 
     internal int RemainingFixes = 1;
 
@@ -89,6 +90,7 @@ internal class Engineer : MultiRoleBase<Engineer>
                     break;
                 }
 
+                EngineerRemainText?.text = Local.RemainingFixes > 0 ? string.Format(Tr.Get(TrKey.RemainButtonNum), Local.RemainingFixes) : "";
                 return sabotageActive && Local.RemainingFixes > 0 && PlayerControl.LocalPlayer.CanMove;
             },
             () => { },
@@ -99,6 +101,12 @@ internal class Engineer : MultiRoleBase<Engineer>
             AbilitySlot.CrewmateAbilityPrimary,
             false,
             Tr.Get(TrKey.RepairText));
+
+        EngineerRemainText = UnityObject.Instantiate(_engineerRepairButton.ActionButton.cooldownTimerText, _engineerRepairButton.ActionButton.cooldownTimerText.transform.parent);
+        EngineerRemainText.text = "";
+        EngineerRemainText.enableWordWrapping = false;
+        EngineerRemainText.transform.localScale = Vector3.one * 0.5f;
+        EngineerRemainText.transform.localPosition += new Vector3(-0.05f, 0.7f, 0);
     }
 
     [SetCustomButtonTimer]

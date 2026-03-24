@@ -51,7 +51,7 @@ internal class Mayor : MultiRoleBase<Mayor>
                     }
                 }
 
-                MayorRemoteButtonLeftText?.text = Local._remoteMeetingsLeft > 0 ? string.Format(Tr.Get(TrKey.MayorRemoteButtonNum), Local._remoteMeetingsLeft) : "";
+                MayorRemoteButtonLeftText?.text = Local._remoteMeetingsLeft > 0 ? string.Format(Tr.Get(TrKey.RemainButtonNum), Local._remoteMeetingsLeft) : "";
                 return !sabotageActive && PlayerControl.LocalPlayer.CanMove && Local._remoteMeetingsLeft > 0;
             },
             () =>

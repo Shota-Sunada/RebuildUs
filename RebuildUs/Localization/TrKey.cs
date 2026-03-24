@@ -370,7 +370,7 @@ internal enum TrKey
     MayorMaxRemoteMeetings,
     MayorMeetingButton,
     MayorNumVotes,
-    MayorRemoteButtonNum,
+    RemainButtonNum,
     MayorShortDesc,
     MayorTasksNeededToSeeVoteColors,
     Medic,
