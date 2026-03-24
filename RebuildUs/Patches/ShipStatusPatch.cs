@@ -66,7 +66,7 @@ internal static class ShipStatusPatch
 
         if (isImpostor)
         {
-            return shipStatus.MaxLightRadius * GameOptionsManager.Instance.currentNormalGameOptions.ImpostorLightMod;
+            return shipStatus.MaxLightRadius * Helpers.Get(FloatOptionNames.ImpostorLightMod);
         }
 
         var lerpValue = 1.0f;
@@ -76,8 +76,7 @@ internal static class ShipStatusPatch
             lerpValue = _cachedSwitchSystem.Value / 255f;
         }
 
-        return Mathf.Lerp(shipStatus.MinLightRadius, shipStatus.MaxLightRadius, lerpValue)
-               * GameOptionsManager.Instance.currentNormalGameOptions.CrewLightMod;
+        return Mathf.Lerp(shipStatus.MinLightRadius, shipStatus.MaxLightRadius, lerpValue) * Helpers.Get(FloatOptionNames.CrewLightMod);
     }
 
     private static void UpdateCachedSystems(ShipStatus instance)
