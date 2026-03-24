@@ -3,9 +3,11 @@ using Il2CppInterop.Runtime.Attributes;
 
 namespace RebuildUs.Objects;
 
-internal sealed class FootprintHolder : MonoBehaviour
+internal sealed class FootprintHolder(IntPtr ptr) : MonoBehaviour(ptr)
 {
-    private static readonly float UpdateDt = 0.10f;
+    private static FootprintHolder _instance;
+
+    private const float UPDATE_DT = 0.10f;
     private readonly List<Footprint> _activeFootprints = [];
 
     private readonly ConcurrentBag<Footprint> _pool = [];
@@ -16,12 +18,10 @@ internal sealed class FootprintHolder : MonoBehaviour
         ClassInjector.RegisterTypeInIl2Cpp<FootprintHolder>();
     }
 
-    internal FootprintHolder(IntPtr ptr) : base(ptr) { }
-
-    internal static FootprintHolder Instance
+    public static FootprintHolder Instance
     {
-        get => field ? field : field = new GameObject("FootprintHolder").AddComponent<FootprintHolder>();
-        set;
+        get => _instance ? _instance : _instance = new GameObject("FootprintHolder").AddComponent<FootprintHolder>();
+        set => _instance = value;
     }
 
     private static bool AnonymousFootprints
@@ -36,7 +36,7 @@ internal sealed class FootprintHolder : MonoBehaviour
 
     private void Start()
     {
-        InvokeRepeating(nameof(FootprintUpdate), UpdateDt, UpdateDt);
+        InvokeRepeating(nameof(FootprintUpdate), UPDATE_DT, UPDATE_DT);
     }
 
     private void OnDestroy()
@@ -45,17 +45,14 @@ internal sealed class FootprintHolder : MonoBehaviour
     }
 
     [HideFromIl2Cpp]
-    internal void MakeFootprint(PlayerControl player)
+    public void MakeFootprint(PlayerControl player)
     {
-        if (!_pool.TryTake(out var print))
-        {
-            print = new();
-        }
+        if (!_pool.TryTake(out var print)) print = new();
 
         print.Lifetime = FootprintDuration;
 
         var pos = player.transform.position;
-        pos.z = pos.y / 1000f + 0.001f;
+        pos.z = (pos.y / 1000f) + 0.001f;
         print.Transform.SetPositionAndRotation(pos, Quaternion.EulerRotation(0, 0, RebuildUs.Rnd.Next(0, 360)));
         print.GameObject.SetActive(true);
         print.Owner = player;
@@ -65,7 +62,7 @@ internal sealed class FootprintHolder : MonoBehaviour
 
     private void FootprintUpdate()
     {
-        var dt = UpdateDt;
+        var dt = UPDATE_DT;
         _toRemove.Clear();
         foreach (var activeFootprint in _activeFootprints)
         {
@@ -82,10 +79,7 @@ internal sealed class FootprintHolder : MonoBehaviour
             {
                 color = Palette.PlayerColors[6];
             }
-            else if (activeFootprint.Owner.IsRole(RoleType.Morphing)
-                     && Morphing.MorphTimer > 0
-                     && Morphing.MorphTarget
-                     && Morphing.MorphTarget.Data != null)
+            else if (activeFootprint.Owner.IsRole(RoleType.Morphing) && Morphing.MorphTimer > 0 && Morphing.MorphTarget && Morphing.MorphTarget.Data != null)
             {
                 color = Palette.PlayerColors[Morphing.MorphTarget.Data.DefaultOutfit.ColorId];
             }
@@ -108,21 +102,18 @@ internal sealed class FootprintHolder : MonoBehaviour
         }
     }
 
-    private sealed class Footprint
+    private class Footprint
     {
-        internal readonly GameObject GameObject;
-        internal readonly SpriteRenderer Renderer;
-        internal readonly Transform Transform;
-        internal NetworkedPlayerInfo Data;
-        internal float Lifetime;
-        internal PlayerControl Owner;
+        public readonly GameObject GameObject;
+        public readonly SpriteRenderer Renderer;
+        public readonly Transform Transform;
+        public NetworkedPlayerInfo Data;
+        public float Lifetime;
+        public PlayerControl Owner;
 
-        internal Footprint()
+        public Footprint()
         {
-            GameObject = new("Footprint")
-            {
-                layer = 8,
-            };
+            GameObject = new("Footprint") { layer = 8 };
             Transform = GameObject.transform;
             Renderer = GameObject.AddComponent<SpriteRenderer>();
             Renderer.sprite = AssetLoader.Footprint;
