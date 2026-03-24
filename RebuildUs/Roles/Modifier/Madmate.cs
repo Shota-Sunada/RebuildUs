@@ -217,7 +217,7 @@ internal class Madmate : ModifierBase<Madmate>
     [SetCustomButtonTimer]
     internal static void SetButtonCooldowns()
     {
-        if (_suicideButton != null) _suicideButton.MaxTimer = 0f;
+        _suicideButton.MaxTimer = 0f;
     }
 
     internal static bool KnowsImpostors(PlayerControl player)

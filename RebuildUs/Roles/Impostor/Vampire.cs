@@ -199,13 +199,10 @@ internal class Vampire : SingleRoleBase<Vampire>
     [SetCustomButtonTimer]
     internal static void SetButtonCooldowns()
     {
-        if (_vampireKillButton != null)
-        {
-            _vampireKillButton.MaxTimer = Cooldown;
-            _vampireKillButton.EffectDuration = Delay;
-        }
+        _vampireKillButton.MaxTimer = Cooldown;
+        _vampireKillButton.EffectDuration = Delay;
 
-        _garlicButton?.MaxTimer = 0f;
+        _garlicButton.Timer = _garlicButton.MaxTimer = 0f;
     }
 
     internal static void Clear()

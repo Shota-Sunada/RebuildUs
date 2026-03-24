@@ -199,7 +199,7 @@ internal class Arsonist : SingleRoleBase<Arsonist>
     [SetCustomButtonTimer]
     internal static void SetButtonCooldowns()
     {
-        _arsonistButton?.MaxTimer = Cooldown;
+        _arsonistButton.MaxTimer = Cooldown;
         _arsonistIgniteButton.Timer = _arsonistIgniteButton.MaxTimer = 0f;
         Local?.UpdateStatus();
     }

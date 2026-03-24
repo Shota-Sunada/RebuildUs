@@ -202,8 +202,8 @@ internal class Jackal : SingleRoleBase<Jackal>
     [SetCustomButtonTimer]
     internal static void SetButtonCooldowns()
     {
-        _jackalKillButton?.MaxTimer = KillCooldown;
-        _jackalSidekickButton?.MaxTimer = CreateSidekickCooldown;
+        _jackalKillButton.MaxTimer = KillCooldown;
+        _jackalSidekickButton.MaxTimer = CreateSidekickCooldown;
     }
 
     internal static void RemoveCurrentJackal()
