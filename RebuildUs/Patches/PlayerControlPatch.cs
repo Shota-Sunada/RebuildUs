@@ -220,7 +220,7 @@ internal static class PlayerControlPatch
             FastDestroyableSingleton<AchievementManager>.Instance.OnMurder(__instance.AmOwner, target.AmOwner, __instance.CurrentOutfitType == PlayerOutfitType.Shapeshifted, __instance.shapeshiftTargetPlayerId, target.PlayerId);
             // DISABLE ORIGINAL CO_PERFORM_KILL
             // __instance.MyPhysics.StartCoroutine(__instance.KillAnimations.Random().CoPerformKill(__instance, target));
-            __instance.MyPhysics.StartCoroutine(KillAnimationPatch                                                .CoPerformKill(__instance.KillAnimations.Random(), __instance, target).WrapToIl2Cpp());
+            __instance.MyPhysics.StartCoroutine(KillAnimationPatch.CoPerformKill(__instance.KillAnimations.Random(), __instance, target).WrapToIl2Cpp());
             Logger.LogDebug("[MurderPlayerPrefix] {0} succeeded in murdering {1}", __instance.PlayerId, target.PlayerId);
         }
         // ORIGINAL MURDER_PLAYER

@@ -55,13 +55,6 @@ SecurityGuard
 BountyHunter
 ミス時キルクが正常に動作していない
 
-Mafia
-色が白
-
-Janitor/Mafioso
-サボボタンが無効 (使用可能)
-サボボタンのオプションが機能不全
-
 EvilHacker
 ドアの状態が解除されない
 開きながら動けないなら、サボタージュマップ開いたときにHaltする

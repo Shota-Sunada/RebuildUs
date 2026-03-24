@@ -38,11 +38,95 @@ internal static class HudManagerPatch
         }
     }
 
-    [HarmonyPostfix]
+    [HarmonyPrefix]
     [HarmonyPatch(typeof(HudManager), nameof(HudManager.SetHudActive), typeof(PlayerControl), typeof(RoleBehaviour), typeof(bool))]
-    internal static void SetHudActivePostfix(HudManager __instance)
+    internal static bool SetHudActivePrefix(HudManager __instance, PlayerControl localPlayer, RoleBehaviour role, bool isActive)
     {
+        if (role != null && role.Ability != null && role.Ability.AbilityType != AbilityTypes.MeetingOnly)
+        {
+            __instance.AbilityButton.ToggleVisible(isActive);
+        }
+        else
+        {
+            __instance.AbilityButton.ToggleVisible(false);
+        }
+
+        if (role != null && role.SecondaryAbility != null && role.SecondaryAbility.AbilityType != AbilityTypes.MeetingOnly)
+        {
+            __instance.SecondaryAbilityButton.ToggleVisible(isActive);
+        }
+        else
+        {
+            __instance.SecondaryAbilityButton.ToggleVisible(false);
+        }
+
+        if (isActive)
+        {
+            __instance.UseButton.Refresh();
+            if (role != null && role.Ability != null && role.Ability.AbilityType != AbilityTypes.MeetingOnly)
+            {
+                __instance.AbilityButton.Refresh(role.Ability);
+            }
+            if (role != null && role.SecondaryAbility != null && role.SecondaryAbility.AbilityType != AbilityTypes.MeetingOnly)
+            {
+                __instance.SecondaryAbilityButton.Refresh(role.SecondaryAbility);
+            }
+        }
+        else
+        {
+            __instance.UseButton.ToggleVisible(false);
+            __instance.PetButton.ToggleVisible(false);
+        }
+
+        __instance.ReportButton.ToggleVisible(isActive && !localPlayer.IsDead() && GameManager.Instance.CanReportBodies() && ShipStatus.Instance != null);
+        __instance.KillButton.ToggleVisible(isActive && role.IsImpostor && role.CanUseKillButton && !localPlayer.IsDead());
+        // __instance.SabotageButton.ToggleVisible(isActive && role.IsImpostor);
+        __instance.AdminButton.ToggleVisible(isActive && role.IsImpostor);
+        // __instance.ImpostorVentButton.ToggleVisible(isActive && !flag && role.IsImpostor && GameOptionsManager.Instance.CurrentGameOptions.GameMode != GameModes.HideNSeek);
+        // __instance.TaskPanel.gameObject.SetActive(isActive);
+        __instance.roomTracker.gameObject.SetActive(isActive);
+        __instance.joystick?.ToggleVisuals(isActive);
+        __instance.ToggleRightJoystick(isActive);
+
+        // OVERRIDDEN BY REBUILD US
         __instance.TaskPanel.gameObject.SetActive(true);
+        __instance.SabotageButton.ToggleVisible(isActive && localPlayer.CanSabotage());
+        __instance.ImpostorVentButton.ToggleVisible(isActive && !localPlayer.IsDead() && localPlayer.CanUseVents() && Helpers.IsNormal);
+
+        return false;
+    }
+
+    [HarmonyPrefix]
+    [HarmonyPatch(typeof(HudManager), nameof(HudManager.ToggleMapVisible))]
+    internal static bool ToggleMapVisible(HudManager __instance, MapOptions options)
+    {
+        if (MapBehaviour.Instance && MapBehaviour.Instance.gameObject.activeSelf)
+        {
+            MapBehaviour.Instance.Close();
+        }
+        else
+        {
+            if (__instance.IsIntroDisplayed || !ShipStatus.Instance)
+            {
+                return false;
+            }
+
+            __instance.InitMap();
+            // MapBehaviour.Instance.Show(options);
+            __instance.MapButton.SelectButton(true);
+
+            if (PlayerControl.LocalPlayer.IsRole(RoleType.Mafioso) && !(Mafia.Mafioso.CanSabotage || Mafia.IsGodfatherDead)
+            || PlayerControl.LocalPlayer.IsRole(RoleType.Janitor) && !Mafia.Janitor.CanSabotage)
+            {
+                MapBehaviour.Instance.Show(new() { Mode = MapOptions.Modes.Normal, AllowMovementWhileMapOpen = true });
+            }
+            else
+            {
+                MapBehaviour.Instance.Show(options);
+            }
+        }
+
+        return false;
     }
 
     [HarmonyPrefix]

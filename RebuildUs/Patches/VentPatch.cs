@@ -5,11 +5,7 @@ internal static class VentPatch
 {
     [HarmonyPrefix]
     [HarmonyPatch(typeof(Vent), nameof(Vent.CanUse))]
-    internal static bool CanUsePrefix(Vent __instance,
-                                      ref float __result,
-                                      [HarmonyArgument(0)] NetworkedPlayerInfo pc,
-                                      [HarmonyArgument(1)] out bool canUse,
-                                      [HarmonyArgument(2)] out bool couldUse)
+    internal static bool CanUsePrefix(Vent __instance, ref float __result, [HarmonyArgument(0)] NetworkedPlayerInfo pc, [HarmonyArgument(1)] out bool canUse, [HarmonyArgument(2)] out bool couldUse)
     {
         var num = float.MaxValue;
         var @object = pc.Object;

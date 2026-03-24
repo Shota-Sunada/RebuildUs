@@ -13,20 +13,12 @@ internal static class RoleBehaviours
                 || Spy.CanEnterVents && player.IsRole(RoleType.Spy)
                 || Madmate.CanEnterVents && player.HasModifier(ModifierType.Madmate)
                 || CreatedMadmate.CanEnterVents && player.HasModifier(ModifierType.CreatedMadmate)
-                || Vulture.CanUseVents && player.IsRole(RoleType.Vulture))
+                || Vulture.CanUseVents && player.IsRole(RoleType.Vulture)
+                || player.IsTeamImpostor() && !player.IsRole(RoleType.Mafioso) && !player.IsRole(RoleType.Janitor)
+                || player.IsRole(RoleType.Mafioso) && (Mafia.Mafioso.CanVent || Mafia.IsGodfatherDead)
+                || player.IsRole(RoleType.Janitor) && Mafia.Janitor.CanVent)
             {
                 roleCouldUse = true;
-            }
-            else if (player.Data?.Role != null && player.Data.Role.CanVent)
-            {
-                if (!Mafia.Janitor.CanVent && player.IsRole(RoleType.Janitor) || !Mafia.Mafioso.CanVent && player.IsRole(RoleType.Mafioso))
-                {
-                    roleCouldUse = false;
-                }
-                else
-                {
-                    roleCouldUse = true;
-                }
             }
 
             return roleCouldUse;
@@ -43,11 +35,11 @@ internal static class RoleBehaviours
         {
             var roleCouldUse = false;
             if (Madmate.CanSabotage && player.HasModifier(ModifierType.Madmate)
-                || CreatedMadmate.CanSabotage && player.HasModifier(ModifierType.CreatedMadmate)
-                || Jester.CanSabotage && player.IsRole(RoleType.Jester)
-                || Mafia.Mafioso.CanSabotage && player.IsRole(RoleType.Mafioso)
-                || Mafia.Janitor.CanSabotage && player.IsRole(RoleType.Janitor)
-                || player.Data?.Role != null && player.Data.Role.IsImpostor)
+            || CreatedMadmate.CanSabotage && player.HasModifier(ModifierType.CreatedMadmate)
+            || Jester.CanSabotage && player.IsRole(RoleType.Jester)
+            || (Mafia.Mafioso.CanSabotage || Mafia.IsGodfatherDead) && player.IsRole(RoleType.Mafioso)
+            || Mafia.Janitor.CanSabotage && player.IsRole(RoleType.Janitor)
+            || player.IsTeamImpostor() && !player.IsRole(RoleType.Mafioso) && !player.IsRole(RoleType.Janitor))
             {
                 roleCouldUse = true;
             }

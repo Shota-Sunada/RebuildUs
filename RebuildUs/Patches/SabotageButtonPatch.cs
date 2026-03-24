@@ -3,24 +3,23 @@ namespace RebuildUs.Patches;
 [HarmonyPatch]
 internal static class SabotageButtonPatch
 {
-    [HarmonyPostfix]
-    [HarmonyPatch(typeof(SabotageButton), nameof(SabotageButton.Refresh))]
-    internal static void RefreshPostfix()
-    {
-        var localPlayer = PlayerControl.LocalPlayer;
-        if (localPlayer == null)
-        {
-            return;
-        }
+    // [HarmonyPostfix]
+    // [HarmonyPatch(typeof(SabotageButton), nameof(SabotageButton.Refresh))]
+    // internal static void RefreshPostfix()
+    // {
+    //     if (PlayerControl.LocalPlayer == null)
+    //     {
+    //         return;
+    //     }
 
-        // Mafia disable sabotage button for Janitor and sometimes for Mafioso
-        var blockSabotageJanitor = localPlayer.IsRole(RoleType.Janitor);
-        var blockSabotageMafioso = localPlayer.IsRole(RoleType.Mafioso) && !Mafia.IsGodfatherDead;
-        if (blockSabotageJanitor || blockSabotageMafioso)
-        {
-            FastDestroyableSingleton<HudManager>.Instance.SabotageButton.SetDisabled();
-        }
-    }
+    //     // Mafia disable sabotage button for Janitor and sometimes for Mafioso
+    //     var blockSabotageJanitor = PlayerControl.LocalPlayer.IsRole(RoleType.Janitor) && Mafia.Janitor.CanSabotage;
+    //     var blockSabotageMafioso = PlayerControl.LocalPlayer.IsRole(RoleType.Mafioso) && Mafia.Mafioso.CanSabotage && !Mafia.IsGodfatherDead;
+    //     if (blockSabotageJanitor || blockSabotageMafioso)
+    //     {
+    //         FastDestroyableSingleton<HudManager>.Instance.SabotageButton.SetDisabled();
+    //     }
+    // }
 
     [HarmonyPrefix]
     [HarmonyPatch(typeof(SabotageButton), nameof(SabotageButton.DoClick))]
