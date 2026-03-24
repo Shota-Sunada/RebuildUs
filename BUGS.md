@@ -44,6 +44,9 @@ Hacker
 Tracker
 翻訳修正
 
+Snitch 修
+翻訳修正
+
 Lighter
 単位修正
 停電時照明サイズが変わらない
@@ -52,8 +55,18 @@ SecurityGuard
 最大数翻訳修正
 移動可能オプション削除
 
+Bait 修
+犯人警告オプションが機能していない
+
 BountyHunter
 ミス時キルクが正常に動作していない
+
+Mafia 修
+色が白
+
+Janitor/Mafioso 修
+サボボタンが無効 (使用可能)
+サボボタンのオプションが機能不全
 
 EvilHacker
 ドアの状態が解除されない
