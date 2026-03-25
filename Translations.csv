@@ -54,7 +54,7 @@ BountyHunterArrowUpdateInterval,Arrow Update Interval,矢印更新間隔
 BountyHunterBountyDuration,Duration After Which Bounty Changes,標的が切り替わる時間
 BountyHunterFullDesc,"The Bounty Hunter is an Impostor, that continuously get bounties (the targeted player doesn't get notified).\nThe target of the Bounty Hunter swaps after every meeting and after a configurable amount of time.\nIf the Bounty Hunter kills their target, their kill cooldown will be a lot less than usual.\nKilling a player that's not their current target results in an increased kill cooldown.\nDepending on the options, there'll be an arrow pointing towards the current target.",バウンティハンターは標的を持つインポスターである。\n標的を殺すと、キルクールが大幅に短くなる一方、標的以外を殺すと、キルクールが大幅に長くなる。\n標的は、会議後や一定時間経過後に自動的に変化する。
 BountyHunterIntroDesc,Hunt your Bounty down,標的を確実に仕留めよう
-BountyHunterPunishmentTime,Additional Cooldown After Killing Others,標的以外を殺害した後のキルクール
+BountyHunterPunishmentTime,Additional Cooldown After Killing Others,標的以外を殺害した後の追加キルクール
 BountyHunterReducedCooldown,Cooldown After Killing Bounty,標的を殺害した後のキルクール
 BountyHunterShortDesc,Hunt your Bounty down,標的を確実に仕留めよう
 BountyHunterShowArrow,Show Arrow Pointing Towards The Bounty,標的に矢印を表示
