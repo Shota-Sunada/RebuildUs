@@ -602,14 +602,14 @@ TimeRemaining,Remaining: {0},残り: {0}
 TimeShieldText,[BLANK],タイムシールド
 Torched,Torched,放火
 Tracker,Tracker,トラッカー
-TrackerCorpseCooldown,Corpses Tracking Cooldown,死体トラッキングクールダウン
-TrackerCorpseDuration,Corpses Tracking Duration,死体トラッキング持続時間
+TrackerCorpseCooldown,Corpses Tracking Cooldown,死体検索クールダウン
+TrackerCorpseDuration,Corpses Tracking Duration,死体検索持続時間
 TrackerFullDesc,The Tracker can select one player to track.\nDepending on the options the Tracker can track a different person after each meeting or the Tracker tracks the same person for the whole game.\nAn arrow points to the last tracked position of the player.\nThe arrow updates it's position every few seconds (configurable).,トラッカーは他のクルーメイトを追跡することができるクルーメイトである。\n追跡対象は設定次第でどこかのタイミングでリセットされる。\nまた、設定次第で死体の位置を検索することができる。
 TrackerIntroDesc,Track the <color=#FF1919FF>Impostors</color> down,<color=#FF1919FF>インポスター</color>を追いかけよう
 TrackerResetTargetAfterMeeting,Reset Target After Meeting,ミーティング後にターゲットをリセット
 TrackerShortDesc,Track the Impostors down,インポスターを追いかけよう
 TrackerText,[BLANK],トラッキング
-TrackerTrackCorpses,Tracker Can Track Corpses,死体をトラッキングできる
+TrackerTrackCorpses,Tracker Can Track Corpses,死体を検索できる
 TrackerUpdateInterval,Update Interval,更新間隔
 TransparentMap,Transparent Map,透過マップ
 Trickster,Trickster,トリックスター
