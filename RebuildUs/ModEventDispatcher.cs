@@ -19,20 +19,40 @@ internal static class ModEventDispatcher
     private static readonly Dictionary<Type, EventDelegates<PlayerRole>> RoleDelegatesCache = [];
     private static readonly Dictionary<Type, EventDelegates<PlayerModifier>> ModifierDelegatesCache = [];
 
-    // Custom Button Attributes Management
-    internal static readonly List<Action<HudManager>> CustomButtonRegistrations = [];
-    internal static readonly List<Action> CustomButtonTimers = [];
+    // Cache for creating buttons in specific contexts
+    internal static readonly List<Action<HudManager>> GlobalButtonRegistrations = [];
+    internal static readonly Dictionary<RoleType, List<Action<HudManager>>> RoleButtonRegistrations = [];
+    internal static readonly Dictionary<ModifierType, List<Action<HudManager>>> ModifierButtonRegistrations = [];
+
+    internal static readonly List<Action> GlobalButtonTimers = [];
+    internal static readonly Dictionary<RoleType, List<Action>> RoleButtonTimers = [];
+    internal static readonly Dictionary<ModifierType, List<Action>> ModifierButtonTimers = [];
+
+    internal static readonly HashSet<RoleType> GeneratedRoleButtons = [];
+    internal static readonly HashSet<ModifierType> GeneratedModifierButtons = [];
 
     internal static void Initialize()
     {
         RoleDelegatesCache.Clear();
         ModifierDelegatesCache.Clear();
-        CustomButtonRegistrations.Clear();
-        CustomButtonTimers.Clear();
+
+        GlobalButtonRegistrations.Clear();
+        RoleButtonRegistrations.Clear();
+        ModifierButtonRegistrations.Clear();
+
+        GlobalButtonTimers.Clear();
+        RoleButtonTimers.Clear();
+        ModifierButtonTimers.Clear();
+
+        GeneratedRoleButtons.Clear();
+        GeneratedModifierButtons.Clear();
 
         foreach (var type in Assembly.GetExecutingAssembly().GetTypes())
         {
             if (type.IsAbstract) continue;
+
+            var roleAttrs = new List<RegisterRoleAttribute>(type.GetCustomAttributes<RegisterRoleAttribute>());
+            var modAttrs = new List<RegisterModifierAttribute>(type.GetCustomAttributes<RegisterModifierAttribute>());
 
             if (typeof(PlayerRole).IsAssignableFrom(type))
             {
@@ -46,20 +66,68 @@ internal static class ModEventDispatcher
 
             foreach (var method in type.GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static))
             {
-                if (method.GetCustomAttribute<RegisterCustomButtonAttribute>() != null)
+                var hasCustomButton = false;
+                foreach (var _ in method.GetCustomAttributes<RegisterCustomButtonAttribute>()) { hasCustomButton = true; break; }
+                if (hasCustomButton)
                 {
                     var parameters = method.GetParameters();
                     if (parameters.Length == 1 && parameters[0].ParameterType == typeof(HudManager))
                     {
-                        CustomButtonRegistrations.Add((Action<HudManager>)Delegate.CreateDelegate(typeof(Action<HudManager>), method));
+                        var action = (Action<HudManager>)Delegate.CreateDelegate(typeof(Action<HudManager>), method);
+                        if (roleAttrs.Count > 0)
+                        {
+                            foreach (var roleAttr in roleAttrs)
+                            {
+                                if (!RoleButtonRegistrations.ContainsKey(roleAttr.RoleType))
+                                    RoleButtonRegistrations[roleAttr.RoleType] = [];
+                                RoleButtonRegistrations[roleAttr.RoleType].Add(action);
+                            }
+                        }
+                        else if (modAttrs.Count > 0)
+                        {
+                            foreach (var modAttr in modAttrs)
+                            {
+                                if (!ModifierButtonRegistrations.ContainsKey(modAttr.ModifierType))
+                                    ModifierButtonRegistrations[modAttr.ModifierType] = [];
+                                ModifierButtonRegistrations[modAttr.ModifierType].Add(action);
+                            }
+                        }
+                        else
+                        {
+                            GlobalButtonRegistrations.Add(action);
+                        }
                     }
                 }
 
-                if (method.GetCustomAttribute<SetCustomButtonTimerAttribute>() != null)
+                var hasCustomButtonTimer = false;
+                foreach (var _ in method.GetCustomAttributes<SetCustomButtonTimerAttribute>()) { hasCustomButtonTimer = true; break; }
+                if (hasCustomButtonTimer)
                 {
                     if (method.GetParameters().Length == 0)
                     {
-                        CustomButtonTimers.Add((Action)Delegate.CreateDelegate(typeof(Action), method));
+                        var action = (Action)Delegate.CreateDelegate(typeof(Action), method);
+                        if (roleAttrs.Count > 0)
+                        {
+                            foreach (var roleAttr in roleAttrs)
+                            {
+                                if (!RoleButtonTimers.ContainsKey(roleAttr.RoleType))
+                                    RoleButtonTimers[roleAttr.RoleType] = [];
+                                RoleButtonTimers[roleAttr.RoleType].Add(action);
+                            }
+                        }
+                        else if (modAttrs.Count > 0)
+                        {
+                            foreach (var modAttr in modAttrs)
+                            {
+                                if (!ModifierButtonTimers.ContainsKey(modAttr.ModifierType))
+                                    ModifierButtonTimers[modAttr.ModifierType] = [];
+                                ModifierButtonTimers[modAttr.ModifierType].Add(action);
+                            }
+                        }
+                        else
+                        {
+                            GlobalButtonTimers.Add(action);
+                        }
                     }
                 }
             }
@@ -73,7 +141,8 @@ internal static class ModEventDispatcher
 
         foreach (var method in methods)
         {
-            var attr = method.GetCustomAttribute<CustomEventAttribute>();
+            CustomEventAttribute attr = null;
+            foreach (var a in method.GetCustomAttributes<CustomEventAttribute>()) { attr = a; break; }
             if (attr == null) continue;
 
             var parameters = method.GetParameters();
@@ -172,4 +241,90 @@ internal static class ModEventDispatcher
     internal static void DispatchOnDeath(PlayerModifier mod, PlayerControl killer) => ModifierDelegatesCache.GetValueOrDefault(mod.GetType())?.OnDeath?.Invoke(mod, killer);
     internal static void DispatchOnFinishShipStatusBegin(PlayerModifier mod) => ModifierDelegatesCache.GetValueOrDefault(mod.GetType())?.OnFinishShipStatusBegin?.Invoke(mod);
     internal static void DispatchHandleDisconnect(PlayerModifier mod, PlayerControl player, DisconnectReasons reason) => ModifierDelegatesCache.GetValueOrDefault(mod.GetType())?.HandleDisconnect?.Invoke(mod, player, reason);
+
+    // --- Dynamic Button Generation ---
+
+    internal static void TryCreateButtonsForRole(RoleType roleType)
+    {
+        var hudManager = FastDestroyableSingleton<HudManager>.Instance;
+        if (hudManager == null) return;
+        if (GeneratedRoleButtons.Contains(roleType)) return;
+
+        GeneratedRoleButtons.Add(roleType);
+
+        if (RoleButtonRegistrations.TryGetValue(roleType, out var registrations))
+        {
+            foreach (var act in registrations)
+            {
+                try
+                {
+                    act(hudManager);
+                }
+                catch (Exception e)
+                {
+                    Logger.LogError("[ModEventDispatcher] Error generating Role Button for {0}: {1}", roleType.ToString(), e.Message);
+                }
+            }
+        }
+
+        if (RoleButtonTimers.TryGetValue(roleType, out var timers))
+        {
+            foreach (var timerAct in timers)
+            {
+                try
+                {
+                    timerAct();
+                }
+                catch (Exception e)
+                {
+                    Logger.LogError("[ModEventDispatcher] Error setting Role Button Timer for {0}: {1}", roleType.ToString(), e.Message);
+                }
+            }
+        }
+    }
+
+    internal static void TryCreateButtonsForModifier(ModifierType modType)
+    {
+        var hudManager = FastDestroyableSingleton<HudManager>.Instance;
+        if (hudManager == null) return;
+        if (GeneratedModifierButtons.Contains(modType)) return;
+
+        GeneratedModifierButtons.Add(modType);
+
+        if (ModifierButtonRegistrations.TryGetValue(modType, out var registrations))
+        {
+            foreach (var act in registrations)
+            {
+                try
+                {
+                    act(hudManager);
+                }
+                catch (Exception e)
+                {
+                    Logger.LogError("[ModEventDispatcher] Error generating Modifier Button for {0}: {1}", modType.ToString(), e.Message);
+                }
+            }
+        }
+
+        if (ModifierButtonTimers.TryGetValue(modType, out var timers))
+        {
+            foreach (var timerAct in timers)
+            {
+                try
+                {
+                    timerAct();
+                }
+                catch (Exception e)
+                {
+                    Logger.LogError("[ModEventDispatcher] Error setting Modifier Button Timer for {0}: {1}", modType.ToString(), e.Message);
+                }
+            }
+        }
+    }
+
+    internal static void ClearGeneratedButtons()
+    {
+        GeneratedRoleButtons.Clear();
+        GeneratedModifierButtons.Clear();
+    }
 }

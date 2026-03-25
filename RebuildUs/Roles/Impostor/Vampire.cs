@@ -7,7 +7,6 @@ internal class Vampire : SingleRoleBase<Vampire>
     public static Color Color = Palette.ImpostorRed;
 
     private static CustomButton _vampireKillButton;
-    private static CustomButton _garlicButton;
     internal static bool PlayerPlacedGarlic;
 
     // States
@@ -163,37 +162,6 @@ internal class Vampire : SingleRoleBase<Vampire>
             },
             false,
             Tr.Get(TrKey.VampireText));
-
-        _garlicButton = new(
-            () =>
-            {
-                PlayerPlacedGarlic = true;
-                var pos = PlayerControl.LocalPlayer.transform.position;
-
-                using (RPCSender sender = new(PlayerControl.LocalPlayer.NetId, CustomRPC.PlaceGarlic))
-                {
-                    sender.Write(pos.x);
-                    sender.Write(pos.y);
-                }
-
-                RPCProcedure.PlaceGarlic(pos.x, pos.y);
-            },
-            () =>
-            {
-                return !PlayerPlacedGarlic && PlayerControl.LocalPlayer.IsAlive() && GarlicsActive && !PlayerControl.LocalPlayer.IsGm();
-            },
-            () =>
-            {
-                return PlayerControl.LocalPlayer.CanMove && !PlayerPlacedGarlic;
-            },
-            () => { },
-            AssetLoader.GarlicButton,
-            ButtonPosition.Layout,
-            hm,
-            hm.UseButton,
-            AbilitySlot.CommonAbilityPrimary,
-            true,
-            Tr.Get(TrKey.GarlicText));
     }
 
     [SetCustomButtonTimer]
@@ -201,8 +169,6 @@ internal class Vampire : SingleRoleBase<Vampire>
     {
         _vampireKillButton.MaxTimer = Cooldown;
         _vampireKillButton.EffectDuration = Delay;
-
-        _garlicButton.Timer = _garlicButton.MaxTimer = 0f;
     }
 
     internal static void Clear()

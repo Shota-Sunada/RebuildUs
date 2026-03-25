@@ -246,7 +246,9 @@ public class RebuildUs : BasePlugin
 
     internal static void MakeButtons(HudManager hm)
     {
-        foreach (var action in ModEventDispatcher.CustomButtonRegistrations)
+        ModEventDispatcher.ClearGeneratedButtons();
+
+        foreach (var action in ModEventDispatcher.GlobalButtonRegistrations)
         {
             try
             {
@@ -257,11 +259,31 @@ public class RebuildUs : BasePlugin
                 Logger.LogError("[MakeButtons] Error in MakeButtons: {0}", ex.ToString());
             }
         }
+
+        UpdateLocalPlayerButtons();
+    }
+
+    internal static void UpdateLocalPlayerButtons()
+    {
+        var localPlayer = PlayerControl.LocalPlayer;
+        if (localPlayer == null) return;
+
+        var role = ModRoleManager.GetRole(localPlayer);
+        if (role != null)
+        {
+            ModEventDispatcher.TryCreateButtonsForRole(role.CurrentRoleType);
+        }
+
+        var modifiers = PlayerModifier.GetModifiers(localPlayer);
+        foreach (var mod in modifiers)
+        {
+            ModEventDispatcher.TryCreateButtonsForModifier(mod.CurrentModifierType);
+        }
     }
 
     internal static void SetButtonCooldowns()
     {
-        foreach (var action in ModEventDispatcher.CustomButtonTimers)
+        foreach (var action in ModEventDispatcher.GlobalButtonTimers)
         {
             try
             {

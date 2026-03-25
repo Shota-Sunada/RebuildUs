@@ -88,6 +88,10 @@ internal static class ModRoleManager
         if (role.Player != null)
         {
             PlayerRoleCache[role.Player.PlayerId] = null;
+            if (role.Player == PlayerControl.LocalPlayer)
+            {
+                ModEventDispatcher.TryCreateButtonsForRole(role.CurrentRoleType);
+            }
         }
     }
 
@@ -187,6 +191,18 @@ internal abstract class SingleRoleBase<T> : PlayerRole where T : SingleRoleBase<
         ModRoleManager.RemoveFromCache(p2.PlayerId);
 
         Instance.Player = Instance.Player == p1 ? p2 : p1;
+
+        if (PlayerControl.LocalPlayer != null)
+        {
+            if (PlayerControl.LocalPlayer == p1 || PlayerControl.LocalPlayer == p2)
+            {
+                var currentRole = ModRoleManager.GetRole(PlayerControl.LocalPlayer);
+                if (currentRole != null)
+                {
+                    ModEventDispatcher.TryCreateButtonsForRole(currentRole.CurrentRoleType);
+                }
+            }
+        }
     }
 }
 
@@ -369,6 +385,18 @@ internal abstract class MultiRoleBase<T> : PlayerRole where T : MultiRoleBase<T>
             else if (t.Player == p2)
             {
                 t.Player = p1;
+            }
+        }
+
+        if (PlayerControl.LocalPlayer != null)
+        {
+            if (PlayerControl.LocalPlayer == p1 || PlayerControl.LocalPlayer == p2)
+            {
+                var currentRole = ModRoleManager.GetRole(PlayerControl.LocalPlayer);
+                if (currentRole != null)
+                {
+                    ModEventDispatcher.TryCreateButtonsForRole(currentRole.CurrentRoleType);
+                }
             }
         }
     }
