@@ -28,6 +28,7 @@ internal class SecurityGuard : SingleRoleBase<SecurityGuard>
         PlacedCameras = 0;
         RemainingScrews = TotalScrews;
         _charges = CamMaxCharges;
+        _rechargedTasks = CamRechargeTasksNumber;
     }
 
     internal static float Cooldown { get => CustomOptionHolder.SecurityGuardCooldown.GetFloat(); }
