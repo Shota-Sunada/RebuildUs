@@ -34,6 +34,7 @@ internal static class GameStart
         // Reset dictionaries and flags
         PlayerVersions.Clear();
         VersionSent = false;
+        AdditionalTempData.HasGameEndProcessed = false;
         // Reset kicking timer
         KickingTimer = 0f;
 

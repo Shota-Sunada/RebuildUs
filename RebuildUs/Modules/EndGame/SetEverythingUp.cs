@@ -244,11 +244,11 @@ internal static partial class EndGameMain
             default:
                 switch (AdditionalTempData.GameOverReason)
                 {
-                    case GameOverReason.CrewmatesByTask or GameOverReason.CrewmatesByVote:
+                    case GameOverReason.CrewmatesByTask or GameOverReason.CrewmatesByVote or GameOverReason.CrewmateDisconnect:
                         bonusText = "CrewmateWin";
                         TextRenderer.color = Palette.CrewmateBlue;
                         break;
-                    case GameOverReason.ImpostorsByKill or GameOverReason.ImpostorsBySabotage or GameOverReason.ImpostorsByVote:
+                    case GameOverReason.ImpostorsByKill or GameOverReason.ImpostorsBySabotage or GameOverReason.ImpostorsByVote or GameOverReason.ImpostorDisconnect:
                         bonusText = "ImpostorWin";
                         TextRenderer.color = Palette.ImpostorRed;
                         break;

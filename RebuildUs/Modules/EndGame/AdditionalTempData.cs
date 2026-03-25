@@ -7,6 +7,7 @@ internal abstract class AdditionalTempData
     internal static readonly Dictionary<byte, PlayerRoleInfo> PlayerRoles = [];
     internal static readonly bool IsGm = false;
     internal static GameOverReason GameOverReason;
+    internal static bool HasGameEndProcessed = false;
     internal static float Timer;
 
     internal static void Clear()
@@ -15,5 +16,6 @@ internal abstract class AdditionalTempData
         AdditionalWinConditions.Clear();
         WinCondition = WinCondition.Default;
         Timer = 0;
+        HasGameEndProcessed = false;
     }
 }

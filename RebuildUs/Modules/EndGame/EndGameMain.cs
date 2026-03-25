@@ -22,6 +22,11 @@ internal static partial class EndGameMain
 
     internal static void OnGameEndPrefix(ref EndGameResult endGameResult)
     {
+        if (AdditionalTempData.HasGameEndProcessed)
+        {
+            return;
+        }
+
         Camouflager.ResetCamouflage();
         Morphing.ResetMorph();
 
@@ -34,10 +39,16 @@ internal static partial class EndGameMain
 
     internal static void OnGameEndPostfix(AmongUsClient __instance, [HarmonyArgument(0)] ref EndGameResult endGameResult)
     {
+        if (AdditionalTempData.HasGameEndProcessed)
+        {
+            return;
+        }
+
         Logger.LogInfo("========== GAME ENDED ==========");
 
         var gameOverReason = AdditionalTempData.GameOverReason;
         AdditionalTempData.Clear();
+        AdditionalTempData.HasGameEndProcessed = true;
 
         RoleType[] excludeRoles = [];
         foreach (var player in PlayerControl.AllPlayerControls.GetFastEnumerator())
