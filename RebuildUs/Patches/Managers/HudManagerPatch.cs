@@ -316,7 +316,9 @@ internal static class HudManagerPatch
                 }
 
                 // Detective / Hacker
-                if (MapSettings.ShowLighterDarker && meetingShow)
+                if ((MapSettings.ShowLighterDarker && meetingShow)
+                    || PlayerControl.LocalPlayer.IsRole(RoleType.Detective)
+                    || PlayerControl.LocalPlayer.IsRole(RoleType.Medium))
                 {
                     TagStringBuilder
                         .Append(" (")
