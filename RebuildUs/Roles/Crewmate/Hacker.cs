@@ -25,6 +25,7 @@ internal class Hacker : MultiRoleBase<Hacker>
     public Hacker()
     {
         StaticRoleType = CurrentRoleType = RoleType.Hacker;
+        _rechargedTasks = RechargeTasksNumber;
     }
 
     private static float Cooldown { get => CustomOptionHolder.HackerCooldown.GetFloat(); }
