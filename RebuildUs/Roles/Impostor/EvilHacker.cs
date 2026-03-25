@@ -57,6 +57,11 @@ internal class EvilHacker : MultiRoleBase<EvilHacker>
                     ShowLivePlayerPosition = true,
                     IncludeDeadBodies = true,
                 });
+
+                if (!CanMoveEvenIfUsesAdmin)
+                {
+                    PlayerControl.LocalPlayer.NetTransform.Halt();
+                }
             },
             () =>
             {
