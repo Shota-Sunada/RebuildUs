@@ -11,6 +11,7 @@ internal class Morphing : MultiRoleBase<Morphing>
     private static PlayerControl _sampledTarget;
     internal static PlayerControl MorphTarget;
     internal static float MorphTimer;
+    private static readonly Vector3 IconOffset = new(0f, 0.2f, -10f);
 
     public Morphing()
     {
@@ -33,8 +34,39 @@ internal class Morphing : MultiRoleBase<Morphing>
         {
             return;
         }
+
+        if (Player.IsDead() && _sampledTarget != null)
+        {
+            if (MapSettings.PlayerIcons.TryGetValue(_sampledTarget.PlayerId, out var deadIcon) && deadIcon != null && deadIcon.gameObject != null)
+            {
+                deadIcon.gameObject.SetActive(false);
+            }
+            _sampledTarget = null;
+        }
+
         _currentTarget = Helpers.SetTarget();
         Helpers.SetPlayerOutline(_currentTarget, RoleColor);
+
+        // Update Sampled Player Icon
+        if (FastDestroyableSingleton<HudManager>.Instance != null && _morphingButton != null && _morphingButton.ActionButton != null)
+        {
+            if (_sampledTarget != null && !MeetingHud.Instance)
+            {
+                if (MapSettings.PlayerIcons.TryGetValue(_sampledTarget.PlayerId, out var icon) && icon != null && icon.gameObject != null)
+                {
+                    icon.transform.position = _morphingButton.ActionButton.transform.position + IconOffset; // Slight offset
+                    icon.transform.localScale = Vector3.one * 0.35f;
+                    icon.gameObject.SetActive(true);
+                }
+            }
+            else
+            {
+                if (_sampledTarget != null && MapSettings.PlayerIcons.TryGetValue(_sampledTarget.PlayerId, out var icon) && icon != null && icon.gameObject != null)
+                {
+                    icon.gameObject.SetActive(false);
+                }
+            }
+        }
     }
 
     [RegisterCustomButton]
@@ -51,6 +83,10 @@ internal class Morphing : MultiRoleBase<Morphing>
                         sender.Write(Local.Player.PlayerId);
                     }
                     RPCProcedure.MorphingMorph(_sampledTarget.PlayerId, Local.Player.PlayerId);
+                    if (MapSettings.PlayerIcons.TryGetValue(_sampledTarget.PlayerId, out var icon) && icon != null && icon.gameObject != null)
+                    {
+                        icon.gameObject.SetActive(false);
+                    }
                     _sampledTarget = null;
                     _morphingButton.EffectDuration = Duration;
                 }
@@ -72,6 +108,10 @@ internal class Morphing : MultiRoleBase<Morphing>
             },
             () =>
             {
+                if (_sampledTarget != null && MapSettings.PlayerIcons.TryGetValue(_sampledTarget.PlayerId, out var icon) && icon != null && icon.gameObject != null)
+                {
+                    icon.gameObject.SetActive(false);
+                }
                 _morphingButton.Timer = _morphingButton.MaxTimer;
                 _morphingButton.Sprite = AssetLoader.SampleButton;
                 _morphingButton.ButtonText = Tr.Get(TrKey.SampleText);
@@ -146,6 +186,10 @@ internal class Morphing : MultiRoleBase<Morphing>
     {
         Players.Clear();
         _currentTarget = null;
+        if (_sampledTarget != null && MapSettings.PlayerIcons.TryGetValue(_sampledTarget.PlayerId, out var icon) && icon != null && icon.gameObject != null)
+        {
+            icon.gameObject.SetActive(false);
+        }
         _sampledTarget = null;
         MorphTarget = null;
         MorphTimer = 0;
