@@ -48,8 +48,7 @@ internal class BountyHunter : SingleRoleBase<BountyHunter>
         {
             return;
         }
-        CooldownText = UnityObject.Instantiate(FastDestroyableSingleton<HudManager>.Instance.KillButton.cooldownTimerText,
-            FastDestroyableSingleton<HudManager>.Instance.transform);
+        CooldownText = UnityObject.Instantiate(FastDestroyableSingleton<HudManager>.Instance.KillButton.cooldownTimerText, FastDestroyableSingleton<HudManager>.Instance.transform);
         CooldownText.alignment = TextAlignmentOptions.Center;
         var bottomLeft = AspectPosition.ComputePosition(AspectPosition.EdgeAlignments.LeftBottom, new(0.9f, 0.7f, -10f));
         CooldownText.transform.localPosition = bottomLeft + new Vector3(0f, -0.35f, -0.1f);
