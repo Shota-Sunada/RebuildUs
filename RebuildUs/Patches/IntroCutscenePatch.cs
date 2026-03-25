@@ -37,15 +37,12 @@ internal static class IntroCutscenePatch
 
     [HarmonyPrefix]
     [HarmonyPatch(typeof(IntroCutscene), nameof(IntroCutscene.BeginImpostor))]
-    internal static void BeginImpostorPrefix(IntroCutscene __instance, ref Il2CppSystem.Collections.Generic.List<PlayerControl> yourTeam)
+    internal static bool BeginImpostorPrefix(IntroCutscene __instance, ref Il2CppSystem.Collections.Generic.List<PlayerControl> yourTeam)
     {
         Intro.SetupIntroTeamIcons(__instance, ref yourTeam);
-    }
-
-    [HarmonyPostfix]
-    [HarmonyPatch(typeof(IntroCutscene), nameof(IntroCutscene.BeginImpostor))]
-    internal static void BeginImpostorPostfix(IntroCutscene __instance, ref Il2CppSystem.Collections.Generic.List<PlayerControl> yourTeam)
-    {
+        Intro.BeginImpostor(__instance, ref yourTeam);
         Intro.SetupIntroTeam(__instance, ref yourTeam);
+
+        return false;
     }
 }

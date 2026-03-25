@@ -637,4 +637,29 @@ internal static class Intro
             Logger.LogInfo("[Settings] {0,-3}{1,-2}:{2}:{3}", pc.AmOwner ? "[*]" : "", pc.PlayerId, pc.Data.PlayerName.PadRightV2(20), RoleInfo.GetRolesString(pc, false, joinSeparator: " + "));
         }
     }
+
+    internal static void BeginImpostor(IntroCutscene __instance, ref Il2CppSystem.Collections.Generic.List<PlayerControl> yourTeam)
+    {
+        __instance.TeamTitle.text = FastDestroyableSingleton<TranslationController>.Instance.GetString(StringNames.Impostor);
+        __instance.TeamTitle.color = Palette.ImpostorRed;
+        for (var index = 0; index < yourTeam.Count; ++index)
+        {
+            var playerControl = yourTeam[index];
+            if (playerControl)
+            {
+                var data = playerControl.Data;
+                if (data != null)
+                {
+                    var player = __instance.CreatePlayer(index, 1, data, true);
+                    // INTRO NAME FIX FOR SPY
+                    player.SetNameColor(Palette.ImpostorRed);
+                    // INTRO NAME FIX FOR SPY
+                    if (index == 0 && data.PlayerId == PlayerControl.LocalPlayer.PlayerId)
+                    {
+                        __instance.ourCrewmate = player;
+                    }
+                }
+            }
+        }
+    }
 }
