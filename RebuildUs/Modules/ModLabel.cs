@@ -6,7 +6,6 @@ internal static class ModLabel
 
     private static GameObject Object;
     private static TextMeshPro ModText;
-    private static AspectPosition Position;
 
     internal static bool IsInitialized => Object != null;
 
@@ -17,7 +16,7 @@ internal static class ModLabel
         Object = UnityObject.Instantiate(FastDestroyableSingleton<HudManager>.Instance.roomTracker.gameObject.transform.parent.FindChild("PingTrackerTMP").gameObject, FastDestroyableSingleton<HudManager>.Instance.roomTracker.gameObject.transform.parent);
         Object.name = "RebuildUs_TMP";
         ModText = Object.GetComponent<TextMeshPro>();
-        Position = Object.GetComponent<AspectPosition>();
+        Object.GetComponent<AspectPosition>().Destroy();
         Object.GetComponent<PingTracker>().Destroy(); ;
     }
 
@@ -44,7 +43,10 @@ internal static class ModLabel
             {
                 ModText.text = newText;
             }
-            Position.DistanceFromEdge = MeetingHud.Instance ? new(1.4f, 0f, 0f) : new(1.55f, 0f, 0f);
+
+            ModText.alignment = TextAlignmentOptions.BottomLeft;
+            ModText.transform.localPosition = new(-FastDestroyableSingleton<HudManager>.Instance.SettingsButton.gameObject.transform.localPosition.x - 0.95f, -2.4f, 0f);
+
         }
         else
         {
@@ -68,11 +70,9 @@ internal static class ModLabel
             {
                 ModText.text = newText;
             }
-            ModText.alignment = TextAlignmentOptions.Left;
-            ModText.verticalAlignment = VerticalAlignmentOptions.Top;
-            ModText.horizontalAlignment = HorizontalAlignmentOptions.Left;
-            Position.Alignment = AspectPosition.EdgeAlignments.LeftTop;
-            Position.DistanceFromEdge = new(0.5f, 0f, 0f);
+
+            ModText.alignment = TextAlignmentOptions.TopLeft;
+            ModText.transform.localPosition = new(-FastDestroyableSingleton<HudManager>.Instance.SettingsButton.gameObject.transform.localPosition.x - 0.95f, 3.0f, 0f);
         }
     }
 }
