@@ -80,12 +80,12 @@ internal sealed class AdditionalVents
         //     vents2.vent.Left = vents1.vent;
         // }
 
-        Logger.LogMessage("[AddAdditionalVents] Done.");
+        Logger.LogInfo("[AddAdditionalVents] Done.");
     }
 
     internal static void ClearAndReload()
     {
-        Logger.LogMessage("[AdditionalVentsClearAndReload] Reloading.");
+        Logger.LogInfo("[AdditionalVentsClearAndReload] Reloading.");
         _flag = false;
         _allVents = [];
     }
