@@ -111,10 +111,9 @@ internal static class ShortcutCommands
 
     internal static void OpenAirshipToilet()
     {
-        if (!Input.GetKeyDown(KeyCode.P))
-        {
-            return;
-        }
+        if (!Helpers.IsAirship) return;
+        if (!Input.GetKeyDown(KeyCode.P)) return;
+
         MapUtilities.CachedShipStatus.RpcUpdateSystem(SystemTypes.Doors, 79);
         MapUtilities.CachedShipStatus.RpcUpdateSystem(SystemTypes.Doors, 80);
         MapUtilities.CachedShipStatus.RpcUpdateSystem(SystemTypes.Doors, 81);
