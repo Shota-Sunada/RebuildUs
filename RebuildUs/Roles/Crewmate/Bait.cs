@@ -7,15 +7,12 @@ namespace RebuildUs.Roles.Crewmate;
 internal class Bait : MultiRoleBase<Bait>
 {
     public static Color Color = new Color32(0, 247, 255, byte.MaxValue);
-    private float _delay;
 
     private bool _reported;
-    private CustomMessage _warningMessage;
 
     public Bait()
     {
         StaticRoleType = CurrentRoleType = RoleType.Bait;
-        _delay = ReportDelay;
     }
 
     internal static bool HighlightAllVents { get => CustomOptionHolder.BaitHighlightAllVents.GetBool(); }
@@ -81,7 +78,6 @@ internal class Bait : MultiRoleBase<Bait>
         }
         RPCProcedure.UncheckedCmdReportDeadBody(reporter, Player.PlayerId);
         _reported = true;
-        _warningMessage = null;
     }
 
     internal static void Clear()
