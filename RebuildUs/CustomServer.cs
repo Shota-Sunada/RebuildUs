@@ -18,7 +18,7 @@ internal static class CustomServer
         var json = File.ReadAllText(CUSTOM_SERVER_FILE_PATH);
         ServerData = JsonSerializer.Deserialize<CustomServerType>(json);
 
-        Logger.LogInfo("[CustomServer] Read Json: {0}", json);
+        // Logger.LogInfo("[CustomServer] Read Json: {0}", json);
         Logger.LogInfo("[CustomServer] IP: {0}, Port: {1}", ServerData.IP, ServerData.Port);
     }
 
