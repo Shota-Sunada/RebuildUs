@@ -317,8 +317,7 @@ internal static class Meeting
         var isGuesser = Guesser.IsGuesser(PlayerControl.LocalPlayer.PlayerId)
                         && PlayerControl.LocalPlayer.IsAlive()
                         && Guesser.RemainingShots(PlayerControl.LocalPlayer) > 0;
-        var isLastImpostorButton = !TrackerModule.IsTrackerButtonActive();
-        if (isGuesser || isLastImpostorButton)
+        if (isGuesser)
         {
             GuesserModule.CreateGuesserButton(__instance);
         }
