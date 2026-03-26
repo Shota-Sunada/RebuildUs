@@ -351,6 +351,26 @@ internal sealed class CustomButton
         }
     }
 
+    internal static void DestroyAllButtons()
+    {
+        for (var i = Buttons.Count - 1; i >= 0; i--)
+        {
+            try
+            {
+                if (Buttons[i].ActionButton != null && Buttons[i].ActionButton.gameObject != null)
+                {
+                    UnityObject.Destroy(Buttons[i].ActionButton.gameObject);
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.LogError("[CustomButton] DestroyAllButtons error: {0}", ex.Message);
+            }
+        }
+
+        Buttons.Clear();
+    }
+
     internal void SetActive(bool isActive)
     {
         if (_lastIsActive == isActive)

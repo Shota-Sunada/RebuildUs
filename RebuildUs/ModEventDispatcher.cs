@@ -326,5 +326,6 @@ internal static class ModEventDispatcher
     {
         GeneratedRoleButtons.Clear();
         GeneratedModifierButtons.Clear();
+        CustomButton.DestroyAllButtons();
     }
 }
