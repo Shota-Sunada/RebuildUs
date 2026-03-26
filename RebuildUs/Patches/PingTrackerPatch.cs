@@ -35,7 +35,7 @@ internal static class PingTrackerPatch
             {
                 __instance.text.text = newText;
             }
-            position.DistanceFromEdge = MeetingHud.Instance ? new(1.4f, 0f, 0) : new(1.55f, 0f, 0);
+            position.DistanceFromEdge = MeetingHud.Instance ? new(1.4f, 0.5f, 0) : new(1.55f, 0.5f, 0);
         }
         else
         {
