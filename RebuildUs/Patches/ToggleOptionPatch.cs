@@ -14,7 +14,6 @@ internal static class ToggleOptionPatch
     [HarmonyPatch(typeof(ToggleOption), nameof(ToggleOption.Toggle))]
     internal static bool TogglePrefix(ToggleOption __instance)
     {
-        CustomOption.ToggleOptionToggle(__instance);
-        return false;
+        return CustomOption.ToggleOptionToggle(__instance);
     }
 }

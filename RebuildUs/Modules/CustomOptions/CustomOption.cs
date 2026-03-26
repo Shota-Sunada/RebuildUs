@@ -925,14 +925,15 @@ internal partial class CustomOption
         return false;
     }
 
-    internal static void ToggleOptionToggle(ToggleOption __instance)
+    internal static bool ToggleOptionToggle(ToggleOption __instance)
     {
         if (!OptionsByBehaviour.TryGetValue(__instance, out var option))
         {
-            return;
+            return true;
         }
 
         option.ToggleSelection(option.GetOptionIcon());
+        return false;
     }
 
     internal static bool NumberOptionInitialize(NumberOption __instance)
