@@ -724,3 +724,5 @@ BattleRoyaleTimeLimit,Time Limit,時間制限
 HotPotatoTimeLimit,Time Limit,時間制限
 HotPotatoExplodeTime,Time Until Explosion,爆発までの時間
 SettingPageInfo,"Press ""<"" and "">"" to change page. ({0}/{1})",「<」と「>」キーでページを切り替えます。({0}/{1})
+BattleRoyale,Battle Royale,
+HotPotato,Hot Potato,

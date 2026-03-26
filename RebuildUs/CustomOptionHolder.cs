@@ -17,6 +17,9 @@ internal static class CustomOptionHolder
         var randomMapHeader = new CustomOptionHeader(50005, CustomOptionType.General, TrKey.RandomMap);
         var gameModeHeader = new CustomOptionHeader(50006, CustomOptionType.General, TrKey.GameMode);
 
+        var battleRoyaleHeader = new CustomOptionHeader(50010, CustomOptionType.General, TrKey.BattleRoyale);
+        var hotPotatoHeader = new CustomOptionHeader(50011, CustomOptionType.General, TrKey.HotPotato);
+
         #region MOD OPTIONS
 
         PresetSelection = CustomOption.Normal(0, CustomOptionType.General, TrKey.Preset, Presets, 0, header: presetHeader);
@@ -393,13 +396,13 @@ internal static class CustomOptionHolder
 
         #region BATTLE ROYALE
 
-        BattleRoyaleTimeLimit = CustomOption.Normal(5001, CustomOptionType.BattleRoyale, TrKey.BattleRoyaleTimeLimit, 300f, 60f, 1800f, 60f, format: TrKey.UnitSeconds);
+        BattleRoyaleTimeLimit = CustomOption.Normal(5001, CustomOptionType.BattleRoyale, TrKey.BattleRoyaleTimeLimit, 300f, 60f, 1800f, 60f, header: battleRoyaleHeader, format: TrKey.UnitSeconds);
 
         #endregion
 
         #region HOT POTATO
 
-        HotPotatoTimeLimit = CustomOption.Normal(6001, CustomOptionType.HotPotato, TrKey.HotPotatoTimeLimit, 300f, 60f, 1800f, 60f, format: TrKey.UnitSeconds);
+        HotPotatoTimeLimit = CustomOption.Normal(6001, CustomOptionType.HotPotato, TrKey.HotPotatoTimeLimit, 300f, 60f, 1800f, 60f, header: hotPotatoHeader, format: TrKey.UnitSeconds);
         HotPotatoExplodeTime = CustomOption.Normal(6002, CustomOptionType.HotPotato, TrKey.HotPotatoExplodeTime, 30f, 10f, 120f, 5f, format: TrKey.UnitSeconds);
 
         #endregion
