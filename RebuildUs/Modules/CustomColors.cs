@@ -4,13 +4,13 @@ namespace RebuildUs.Modules;
 
 internal static class CustomColors
 {
-    private const int COLOR_BASE_ID_NUMBER = 50000;
+    internal const int COLOR_BASE_ID_NUMBER = 50000;
 
-    private static readonly Dictionary<int, string> ColorStrings = [];
-    internal static readonly List<int> LighterColors = [3, 4, 5, 7, 10, 11, 13, 14, 17];
+    internal static readonly Dictionary<int, TrKey> ColorStrings = [];
+    internal static readonly List<int> LIGHTER_COLORS = [3, 4, 5, 7, 10, 11, 13, 14, 17];
     private static uint _pickableColors = (uint)Palette.ColorNames.Length;
 
-    private static readonly int[] Order =
+    private static readonly int[] ORDER =
     [
         7, 37, 14, 5, 33, 41, 25,
         4, 30, 0, 35, 3, 27, 17,
@@ -222,32 +222,21 @@ internal static class CustomColors
         foreach (var cc in colors)
         {
             longList.Add((StringNames)id);
-            ColorStrings[id++] = Tr.Get(cc.NameKey);
+            ColorStrings[id] = cc.NameKey;
             colorList.Add(cc.Color);
             shadowList.Add(cc.Shadow);
             if (cc.IsLighterColor)
             {
-                LighterColors.Add(colorList.Count - 1);
+                LIGHTER_COLORS.Add(colorList.Count - 1);
             }
+
+            Logger.LogInfo("[CustomColor] Registered Mod Color! Id:{0} Name: {1}, Color: {2}, IsLighterColor: {3}", id, Tr.Get(cc.NameKey), cc.Color, cc.IsLighterColor);
+            id++;
         }
 
         Palette.ColorNames = longList.ToArray();
         Palette.PlayerColors = colorList.ToArray();
         Palette.ShadowColors = shadowList.ToArray();
-    }
-
-    internal static bool GetColorName(ref string __result, [HarmonyArgument(0)] StringNames name)
-    {
-        if ((int)name >= COLOR_BASE_ID_NUMBER && ColorStrings.TryGetValue((int)name, out var text))
-        {
-            if (text != null)
-            {
-                __result = text;
-                return false;
-            }
-        }
-
-        return true;
     }
 
     internal static bool ChatNotificationSetup(ChatNotification __instance, PlayerControl sender, string text)
@@ -297,9 +286,9 @@ internal static class CustomColors
         var chips = __instance.ColorChips;
 
         const int cols = 7; // TODO: Design an algorithm to dynamically position chips to optimally fill space
-        for (var i = 0; i < Order.Length; i++)
+        for (var i = 0; i < ORDER.Length; i++)
         {
-            var pos = Order[i];
+            var pos = ORDER[i];
             if (pos < 0 || pos >= chips.Count)
             {
                 continue;
@@ -310,7 +299,7 @@ internal static class CustomColors
             chip.transform.localScale *= 0.76f;
         }
 
-        for (var j = Order.Length; j < chips.Count; j++)
+        for (var j = ORDER.Length; j < chips.Count; j++)
         {
             // If number isn't in order, hide it
             var chip = chips[j];

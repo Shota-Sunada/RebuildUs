@@ -182,7 +182,7 @@ internal static class Helpers
 
     internal static bool IsLighterColor(int colorId)
     {
-        return CustomColors.LighterColors.Contains(colorId);
+        return CustomColors.LIGHTER_COLORS.Contains(colorId);
     }
 
     internal static bool MushroomSabotageActive()

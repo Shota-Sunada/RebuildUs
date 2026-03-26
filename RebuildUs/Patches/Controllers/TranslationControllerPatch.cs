@@ -7,58 +7,40 @@ internal static class TranslationControllerPatch
 
     [HarmonyPrefix]
     [HarmonyPriority(Priority.Last)]
-    [HarmonyPatch(typeof(TranslationController),
-        nameof(TranslationController.GetString),
-        typeof(StringNames),
-        typeof(Il2CppReferenceArray<CppObject>))]
+    [HarmonyPatch(typeof(TranslationController), nameof(TranslationController.GetString), typeof(StringNames), typeof(Il2CppReferenceArray<CppObject>))]
     internal static bool GetStringPrefix(ref string __result, StringNames id)
     {
-        if ((int)id < CustomOption.CUSTOM_OPTION_PRE_ID)
+        var idInt = (int)id;
+        if (idInt >= CustomOption.CUSTOM_OPTION_PRE_ID)
         {
-            return true;
-        }
-
-        // For now only do this in custom options.
-        var idInt = (int)id - CustomOption.CUSTOM_OPTION_PRE_ID;
-        CustomOption opt = null;
-        foreach (var o in CustomOption.AllOptions)
-        {
-            if (o.Id != idInt)
+            var optId = idInt - CustomOption.CUSTOM_OPTION_PRE_ID;
+            foreach (var o in CustomOption.AllOptions)
             {
-                continue;
+                if (o.Id == optId)
+                {
+                    __result = Helpers.Cs(o.Color, Tr.Get(o.NameKey)) ?? "";
+                    return false;
+                }
             }
-            opt = o;
-            break;
-        }
 
-        if (opt == null)
-        {
             __result = "Unknown Option";
             return false;
         }
 
-        var ourString = Helpers.Cs(opt.Color, Tr.Get(opt.NameKey)) ?? "";
+        if (idInt >= CustomColors.COLOR_BASE_ID_NUMBER)
+        {
+            if (CustomColors.ColorStrings.TryGetValue(idInt, out var key))
+            {
+                __result = Tr.Get(key) ?? "Unknown Color";
+                return false;
+            }
+        }
 
-        __result = ourString;
-        return false;
-    }
-
-    [HarmonyPrefix]
-    [HarmonyPriority(Priority.Last)]
-    [HarmonyPatch(typeof(TranslationController),
-        nameof(TranslationController.GetString),
-        typeof(StringNames),
-        typeof(Il2CppReferenceArray<CppObject>))]
-    internal static bool GetColorNamePrefix(ref string __result, [HarmonyArgument(0)] StringNames name)
-    {
-        return CustomColors.GetColorName(ref __result, name);
+        return true;
     }
 
     [HarmonyPostfix]
-    [HarmonyPatch(typeof(TranslationController),
-        nameof(TranslationController.GetString),
-        typeof(StringNames),
-        typeof(Il2CppReferenceArray<CppObject>))]
+    [HarmonyPatch(typeof(TranslationController), nameof(TranslationController.GetString), typeof(StringNames), typeof(Il2CppReferenceArray<CppObject>))]
     internal static void GetStringPostfix(ref string __result, [HarmonyArgument(0)] StringNames id)
     {
         try
