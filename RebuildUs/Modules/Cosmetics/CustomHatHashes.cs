@@ -3,17 +3,17 @@ namespace RebuildUs.Modules.Cosmetics;
 internal class CustomHatHashes
 {
     [JsonPropertyName("reshasha")]
-    internal string ResHashA { get; set; }
+    public string ResHashA { get; set; }
 
     [JsonPropertyName("reshashb")]
-    internal string ResHashB { get; set; }
+    public string ResHashB { get; set; }
 
     [JsonPropertyName("reshashbf")]
-    internal string ResHashBf { get; set; }
+    public string ResHashBf { get; set; }
 
     [JsonPropertyName("reshashc")]
-    internal string ResHashC { get; set; }
+    public string ResHashC { get; set; }
 
     [JsonPropertyName("reshashf")]
-    internal string ResHashF { get; set; }
+    public string ResHashF { get; set; }
 }

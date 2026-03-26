@@ -101,28 +101,30 @@ internal static class HatsTabPatches
         for (var i = 0; i < hats.Count; i++)
         {
             (var hat, var ext) = hats[i];
+            var hatCopy = hat;
+            var extCopy = ext;
             var xPos = hatsTab.XRange.Lerp(i % hatsTab.NumPerRow / (hatsTab.NumPerRow - 1f));
             var yPos = offset - i / hatsTab.NumPerRow * (isDefaultPackage ? 1f : 1.5f) * hatsTab.YOffset;
             var colorChip = UnityObject.Instantiate(hatsTab.ColorTabPrefab, hatsTab.scroller.Inner);
             if (ActiveInputManager.currentControlType == ActiveInputManager.InputType.Keyboard)
             {
-                colorChip.Button.OnMouseOver.AddListener((Action)(() => hatsTab.SelectHat(hat)));
+                colorChip.Button.OnMouseOver.AddListener((Action)(() => hatsTab.SelectHat(hatCopy)));
                 colorChip.Button.OnMouseOut.AddListener(
                     (Action)(() => hatsTab.SelectHat(FastDestroyableSingleton<HatManager>.Instance.GetHatById(DataManager.Player.Customization.Hat))));
                 colorChip.Button.OnClick.AddListener((Action)hatsTab.ClickEquip);
             }
             else
             {
-                colorChip.Button.OnClick.AddListener((Action)(() => hatsTab.SelectHat(hat)));
+                colorChip.Button.OnClick.AddListener((Action)(() => hatsTab.SelectHat(hatCopy)));
             }
 
             colorChip.Button.ClickMask = hatsTab.scroller.Hitbox;
             colorChip.Inner.SetMaskType(PlayerMaterial.MaskType.SimpleUI);
-            hatsTab.UpdateMaterials(colorChip.Inner.FrontLayer, hat);
+            hatsTab.UpdateMaterials(colorChip.Inner.FrontLayer, hatCopy);
             var background = colorChip.transform.FindChild("Background");
             var foreground = colorChip.transform.FindChild("ForeGround");
 
-            if (ext != null)
+            if (extCopy != null)
             {
                 if (background != null)
                 {
@@ -141,13 +143,13 @@ internal static class HatsTabPatches
                     hatsTab.StartCoroutine(Effects.Lerp(0.1f,
                         new Action<float>(p =>
                         {
-                            description.SetText(string.Format("{0}\nby {1}", hat.name, ext.Author));
+                            description.SetText(string.Format("{0}\nby {1}", hatCopy.name, extCopy.Author));
                         })));
                 }
             }
 
             colorChip.transform.localPosition = new(xPos, yPos, -1f);
-            colorChip.Inner.SetHat(hat, hatsTab.HasLocalPlayer() ? PlayerControl.LocalPlayer.Data.DefaultOutfit.ColorId : DataManager.Player.Customization.Color);
+            colorChip.Inner.SetHat(hatCopy, hatsTab.HasLocalPlayer() ? PlayerControl.LocalPlayer.Data.DefaultOutfit.ColorId : DataManager.Player.Customization.Color);
             colorChip.Inner.transform.localPosition = hat.ChipOffset;
             colorChip.Tag = hat;
             colorChip.SelectionHighlight.gameObject.SetActive(hat == FastDestroyableSingleton<HatManager>.Instance.GetHatById(DataManager.Player.Customization.Hat));
