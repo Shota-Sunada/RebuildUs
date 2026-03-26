@@ -24,6 +24,7 @@ global using RebuildUs.Extensions;
 global using RebuildUs.Localization;
 global using RebuildUs.Modules;
 global using RebuildUs.Modules.Consoles;
+global using RebuildUs.Modules.CustomGameModes;
 global using RebuildUs.Modules.CustomOptions;
 global using RebuildUs.Modules.EndGame;
 global using RebuildUs.Modules.Random;
@@ -125,6 +126,7 @@ public class RebuildUs : BasePlugin
         AssetLoader.LoadAssets();
         Tr.Initialize();
         CustomOptionHolder.Load();
+        GameModeManager.InitTesting();
         RoleInfo.Load();
         CustomColors.Load();
         UpdateRegions();

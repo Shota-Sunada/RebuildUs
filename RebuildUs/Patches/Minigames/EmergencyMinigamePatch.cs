@@ -17,8 +17,14 @@ internal static class EmergencyMinigamePatch
 
         var roleCanCallEmergency = true;
         var statusTextKey = TrKey.None;
+        var customStatusText = string.Empty;
 
-        if (lp.IsRole(RoleType.Jester) && !Jester.CanCallEmergency)
+        if (GameModeManager.CurrentGameMode != null && !GameModeManager.CurrentGameMode.CanCallMeeting)
+        {
+            roleCanCallEmergency = false;
+            customStatusText = "Meetings are disabled";
+        }
+        else if (lp.IsRole(RoleType.Jester) && !Jester.CanCallEmergency)
         {
             roleCanCallEmergency = false;
             statusTextKey = TrKey.JesterMeetingButton;
@@ -32,7 +38,7 @@ internal static class EmergencyMinigamePatch
 
         if (!roleCanCallEmergency)
         {
-            __instance.StatusText.text = Tr.Get(statusTextKey);
+            __instance.StatusText.text = string.IsNullOrEmpty(customStatusText) ? Tr.Get(statusTextKey) : customStatusText;
             __instance.NumberText.text = string.Empty;
             __instance.ClosedLid.gameObject.SetActive(true);
             __instance.OpenLid.gameObject.SetActive(false);

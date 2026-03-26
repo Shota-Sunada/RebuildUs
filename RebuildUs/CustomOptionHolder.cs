@@ -1,4 +1,4 @@
-namespace RebuildUs;
+﻿namespace RebuildUs;
 
 internal static class CustomOptionHolder
 {
@@ -15,11 +15,13 @@ internal static class CustomOptionHolder
         var polusOptionsHeader = new CustomOptionHeader(50003, CustomOptionType.General, TrKey.PolusOptions);
         var airshipOptionsHeader = new CustomOptionHeader(50004, CustomOptionType.General, TrKey.AirshipOptions);
         var randomMapHeader = new CustomOptionHeader(50005, CustomOptionType.General, TrKey.RandomMap);
+        var gameModeHeader = new CustomOptionHeader(50006, CustomOptionType.General, TrKey.GameMode);
 
         #region MOD OPTIONS
 
         PresetSelection = CustomOption.Normal(0, CustomOptionType.General, TrKey.Preset, Presets, 0, header: presetHeader);
         ActivateRoles = CustomOption.Normal(1, CustomOptionType.General, TrKey.ActivateRoles, true);
+        GameModeSelection = CustomOption.Normal(9, CustomOptionType.General, TrKey.GameMode, [Tr.Get(TrKey.GameModeNormal), Tr.Get(TrKey.GameModeBattleRoyale), Tr.Get(TrKey.GameModeHotPotato)], 0, header: gameModeHeader);
         RandomNumberAlgorithm = CustomOption.Normal(3, CustomOptionType.General, TrKey.RandomNumberAlgorithm, [Tr.Get(TrKey.RndDotnet), Tr.Get(TrKey.RndMT), Tr.Get(TrKey.RndXoshiro256), Tr.Get(TrKey.RndXoshiro256Ss), Tr.Get(TrKey.RndPcg64)], 0);
         EnableRandomRandomNumberAlgorithm = CustomOption.Normal(2, CustomOptionType.General, TrKey.RandomRandomNumberAlgorithm, false);
         EnableRandomRandomNumberAlgorithmDotnet = CustomOption.Normal(4, CustomOptionType.General, TrKey.EnableRandomRandomNumberAlgorithmDotnet, true, EnableRandomRandomNumberAlgorithm);
@@ -389,6 +391,19 @@ internal static class CustomOptionHolder
 
         #endregion
 
+        #region BATTLE ROYALE
+
+        BattleRoyaleTimeLimit = CustomOption.Normal(5001, CustomOptionType.BattleRoyale, TrKey.BattleRoyaleTimeLimit, 300f, 60f, 1800f, 60f, format: TrKey.UnitSeconds);
+
+        #endregion
+
+        #region HOT POTATO
+
+        HotPotatoTimeLimit = CustomOption.Normal(6001, CustomOptionType.HotPotato, TrKey.HotPotatoTimeLimit, 300f, 60f, 1800f, 60f, format: TrKey.UnitSeconds);
+        HotPotatoExplodeTime = CustomOption.Normal(6002, CustomOptionType.HotPotato, TrKey.HotPotatoExplodeTime, 30f, 10f, 120f, 5f, format: TrKey.UnitSeconds);
+
+        #endregion
+
         BlockedRolePairings.Add((byte)RoleType.Vulture, [(byte)RoleType.Cleaner]);
         BlockedRolePairings.Add((byte)RoleType.Cleaner, [(byte)RoleType.Vulture]);
     }
@@ -397,6 +412,7 @@ internal static class CustomOptionHolder
 
     internal static CustomOption PresetSelection;
     internal static CustomOption ActivateRoles;
+    internal static CustomOption GameModeSelection;
     internal static CustomOption RandomNumberAlgorithm;
     internal static CustomOption EnableRandomRandomNumberAlgorithm;
     internal static CustomOption EnableRandomRandomNumberAlgorithmDotnet;
@@ -498,6 +514,19 @@ internal static class CustomOptionHolder
     internal static CustomOption RandomMapEnableAirShip;
     internal static CustomOption RandomMapEnableFungle;
     internal static CustomOption RandomMapEnableSubmerged;
+
+    #endregion
+
+    #region BATTLE ROYALE
+
+    internal static CustomOption BattleRoyaleTimeLimit;
+
+    #endregion
+
+    #region HOT POTATO
+
+    internal static CustomOption HotPotatoTimeLimit;
+    internal static CustomOption HotPotatoExplodeTime;
 
     #endregion
 

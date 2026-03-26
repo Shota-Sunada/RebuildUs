@@ -430,6 +430,13 @@ internal static class HudManagerPatch
         {
             return;
         }
+
+        if (GameModeManager.CurrentGameMode != null && !GameModeManager.CurrentGameMode.CanCallMeeting)
+        {
+            __instance.ReportButton.Hide();
+            return;
+        }
+
         if (MeetingHud.Instance)
         {
             __instance.ReportButton.Hide();

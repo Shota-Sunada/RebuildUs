@@ -14,7 +14,7 @@ internal sealed class Garlic
         _garlicButton = new(
             () =>
             {
-                Roles.Impostor.Vampire.PlayerPlacedGarlic = true;
+                Vampire.PlayerPlacedGarlic = true;
                 var pos = PlayerControl.LocalPlayer.transform.position;
 
                 using (RPCSender sender = new(PlayerControl.LocalPlayer.NetId, CustomRPC.PlaceGarlic))
@@ -27,11 +27,11 @@ internal sealed class Garlic
             },
             () =>
             {
-                return !Roles.Impostor.Vampire.PlayerPlacedGarlic && PlayerControl.LocalPlayer.IsAlive() && Roles.Impostor.Vampire.GarlicsActive && !PlayerControl.LocalPlayer.IsGm();
+                return !Vampire.PlayerPlacedGarlic && PlayerControl.LocalPlayer.IsAlive() && Vampire.GarlicsActive && !PlayerControl.LocalPlayer.IsGm();
             },
             () =>
             {
-                return PlayerControl.LocalPlayer.CanMove && !Roles.Impostor.Vampire.PlayerPlacedGarlic;
+                return PlayerControl.LocalPlayer.CanMove && !Vampire.PlayerPlacedGarlic;
             },
             () => { },
             AssetLoader.GarlicButton,

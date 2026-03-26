@@ -23,7 +23,7 @@ internal static class LobbyViewSettingsPanePatch
     [HarmonyPatch(typeof(LobbyViewSettingsPane), nameof(LobbyViewSettingsPane.Update))]
     internal static void UpdatePostfix(LobbyViewSettingsPane __instance)
     {
-        // CustomOption.SettingsPaneUpdate(__instance);
+        CustomOption.SettingsPaneUpdate(__instance);
     }
 
     [HarmonyPostfix]

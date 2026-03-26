@@ -24,4 +24,11 @@ internal static class GameSettingMenuPatch
     {
         CustomOption.SettingMenuStart(__instance);
     }
+
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(GameSettingMenu), nameof(GameSettingMenu.Update))]
+    internal static void UpdatePostfix(GameSettingMenu __instance)
+    {
+        CustomOption.UpdateSettingMenuUpdate(__instance);
+    }
 }

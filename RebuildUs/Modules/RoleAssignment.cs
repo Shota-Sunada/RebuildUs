@@ -912,13 +912,13 @@ internal static class RoleAssignment
         {
             if (RebuildUs.Rnd.Next(1, 101) <= CustomOptionHolder.MadmateSpawnRate.Rate * 10)
             {
-                var candidates = Roles.Modifier.Madmate.Candidates;
+                var candidates = Madmate.Candidates;
                 if (candidates.Count <= 0)
                 {
                     break;
                 }
 
-                if (Roles.Modifier.Madmate.MadmateType == Roles.Modifier.MadmateType.Simple)
+                if (Madmate.MadmateType == MadmateType.Simple)
                 {
                     if (data.MaxCrewmateRoles <= 0) break;
                     SetModifierToRandomPlayer((byte)ModifierType.Madmate, candidates);
@@ -936,7 +936,7 @@ internal static class RoleAssignment
         {
             if (RebuildUs.Rnd.Next(1, 101) <= CustomOptionHolder.AntiTeleportSpawnRate.Rate * 10)
             {
-                var candidates = Roles.Modifier.AntiTeleport.Candidates;
+                var candidates = AntiTeleport.Candidates;
                 if (candidates.Count <= 0)
                 {
                     break;
@@ -951,7 +951,7 @@ internal static class RoleAssignment
         {
             if (RebuildUs.Rnd.Next(1, 101) <= CustomOptionHolder.MiniSpawnRate.Rate * 10)
             {
-                var candidates = Roles.Modifier.Mini.Candidates;
+                var candidates = Mini.Candidates;
                 if (candidates.Count <= 0)
                 {
                     break;

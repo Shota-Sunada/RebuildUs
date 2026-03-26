@@ -289,7 +289,7 @@ internal abstract class ModifierBase<T> : PlayerModifier where T : ModifierBase<
 
         if (PlayerControl.LocalPlayer != null && (PlayerControl.LocalPlayer == p1 || PlayerControl.LocalPlayer == p2))
         {
-            var myMods = PlayerModifier.GetModifiers(PlayerControl.LocalPlayer);
+            var myMods = GetModifiers(PlayerControl.LocalPlayer);
             foreach (var m in myMods)
             {
                 ModEventDispatcher.TryCreateButtonsForModifier(m.CurrentModifierType);

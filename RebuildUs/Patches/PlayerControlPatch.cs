@@ -122,6 +122,11 @@ internal static class PlayerControlPatch
     {
         Logger.LogInfo("[ReportDeadBodyPrefix] Customized.");
 
+        if (GameModeManager.CurrentGameMode != null && !GameModeManager.CurrentGameMode.CanCallMeeting)
+        {
+            return false;
+        }
+
         Helpers.HandleVampireBiteOnBodyReport();
 
         return !__instance.IsGm();

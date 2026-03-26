@@ -701,3 +701,26 @@ ResultTask,Task,タスク
 ResultStatus,Status,状態
 ResultRoles,Roles,役職
 GameIsOverBecause,GAME OVER. REASON: "{0}","「{0}」によりゲーム終了"
+TabBattleRoyale,Battle Royale,バトルロイヤル
+TabHotPotato,Hot Potato,ホットポテト
+BattleRoyaleOptions,Battle Royale Options,バトルロイヤル設定
+HotPotatoOptions,Hot Potato Options,ホットポテト設定
+GameModes,Game Modes,ゲームモード
+EnableBattleRoyale,Enable Battle Royale,バトルロイヤルを有効化
+BattleRoyaleSpawnRate,Spawn Rate,発生確率
+EnableHotPotato,Enable Hot Potato,ホットポテトを有効化
+HotPotatoTimer,Timer,タイマー
+HotPotatoCooldown,Pass Cooldown,受け渡しクールダウン
+UnitPercent,%,%
+BattleRoyaleSettingsButton,Battle Royale,バトルロイヤル
+HotPotatoSettingsButton,Hot Potato,ホットポテト
+BattleRoyaleSettings,This is the settings of Battle Royale Game Mode.,バトルロイヤルゲームモードの設定です。
+HotPotatoSettings,This is the settings of Hot Potato Game Mode.,ホットポテトゲームモードの設定です。
+GameMode,Game Mode,ゲームモード
+GameModeNormal,Normal,ノーマル
+GameModeBattleRoyale,Battle Royale,バトルロイヤル
+GameModeHotPotato,Hot Potato,ホットポテト
+BattleRoyaleTimeLimit,Time Limit,時間制限
+HotPotatoTimeLimit,Time Limit,時間制限
+HotPotatoExplodeTime,Time Until Explosion,爆発までの時間
+SettingPageInfo,"Press ""<"" and "">"" to change page. ({0}/{1})",「<」と「>」キーでページを切り替えます。({0}/{1})

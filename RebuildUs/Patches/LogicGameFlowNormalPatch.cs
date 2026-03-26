@@ -14,6 +14,12 @@ internal static class LogicGameFlowNormalPatch
 
         var statistics = new PlayerStatistics();
 
+        if (GameModeManager.CurrentGameMode != null)
+        {
+            if (GameModeManager.CurrentGameMode.CheckWinCondition(statistics)) return false;
+            if (GameModeManager.CurrentGameMode.DisableNormalWinConditions) return false;
+        }
+
         if (EndGameMain.CheckAndEndGameForMiniLose()) return false;
         if (EndGameMain.CheckAndEndGameForJesterWin()) return false;
         if (EndGameMain.CheckAndEndGameForArsonistWin()) return false;

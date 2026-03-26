@@ -599,6 +599,11 @@ internal static class Intro
             __instance.RoleBlurbText.text = string.Format("{0}\n{1}", __instance.RoleBlurbText.text, Helpers.Cs(Lovers.Color, string.Format(Tr.Get(TrKey.LoversFlavorIntroDesc), otherLover?.Data?.PlayerName ?? "")));
         }
 
+        if (GameModeManager.CurrentGameMode != null)
+        {
+            GameModeManager.CurrentGameMode.OnSetupRole(__instance);
+        }
+
         // 従来処理
         SoundManager.Instance.PlaySound(PlayerControl.LocalPlayer?.Data?.Role?.IntroSound, false);
         __instance.YouAreText.gameObject.SetActive(true);
