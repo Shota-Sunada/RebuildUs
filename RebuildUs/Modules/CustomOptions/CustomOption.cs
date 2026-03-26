@@ -60,7 +60,7 @@ internal partial class CustomOption
     internal readonly List<CustomOption> Children = [];
     internal readonly bool HideIfParentEnabled;
 
-    internal static readonly List<GameObject> BUTTONS_HOST = [];
+    internal static readonly List<(GameObject obj, string label)> BUTTONS_HOST = [];
     internal static int MAX_PAGE_HOST => (BUTTONS_HOST.Count + MAX_BUTTON_PER_PAGE - 1) / MAX_BUTTON_PER_PAGE;
 
     internal readonly int Id;
@@ -690,42 +690,49 @@ internal partial class CustomOption
 
         BUTTONS_HOST.Clear();
 
-        BUTTONS_HOST.Add(_generalButton = CreateSettingButton(__instance, "RUGeneralSettingsButton", Tr.Get(TrKey.GeneralSettingsButton), OptionPage.GeneralSettings));
+        BUTTONS_HOST.Add((_generalButton = CreateSettingButton(__instance, "RUGeneralSettingsButton", Tr.Get(TrKey.GeneralSettingsButton), OptionPage.GeneralSettings), Tr.Get(TrKey.GeneralSettingsButton)));
         _generalTab = CreateSettingTab(__instance, "RUGeneralSettingsTab", CustomOptionType.General);
-        BUTTONS_HOST.Add(_impostorButton = CreateSettingButton(__instance, "RUImpostorSettingsButton", Tr.Get(TrKey.ImpostorSettingsButton), OptionPage.ImpostorSettings));
+        BUTTONS_HOST.Add((_impostorButton = CreateSettingButton(__instance, "RUImpostorSettingsButton", Tr.Get(TrKey.ImpostorSettingsButton), OptionPage.ImpostorSettings), Tr.Get(TrKey.ImpostorSettingsButton)));
         _impostorTab = CreateSettingTab(__instance, "RUGeneralImpostorTab", CustomOptionType.Impostor);
-        BUTTONS_HOST.Add(_crewmateButton = CreateSettingButton(__instance, "RUCrewmateSettingsButton", Tr.Get(TrKey.CrewmateSettingsButton), OptionPage.CrewmateSettings));
+        BUTTONS_HOST.Add((_crewmateButton = CreateSettingButton(__instance, "RUCrewmateSettingsButton", Tr.Get(TrKey.CrewmateSettingsButton), OptionPage.CrewmateSettings), Tr.Get(TrKey.CrewmateSettingsButton)));
         _crewmateTab = CreateSettingTab(__instance, "RUCrewmateSettingsTab", CustomOptionType.Crewmate);
-        BUTTONS_HOST.Add(_neutralButton = CreateSettingButton(__instance, "RUNeutralSettingsButton", Tr.Get(TrKey.NeutralSettingsButton), OptionPage.NeutralSettings));
+        BUTTONS_HOST.Add((_neutralButton = CreateSettingButton(__instance, "RUNeutralSettingsButton", Tr.Get(TrKey.NeutralSettingsButton), OptionPage.NeutralSettings), Tr.Get(TrKey.NeutralSettingsButton)));
         _neutralTab = CreateSettingTab(__instance, "RUNeutralSettingsTab", CustomOptionType.Neutral);
-        BUTTONS_HOST.Add(_modifierButton = CreateSettingButton(__instance, "RUModifierSettingsButton", Tr.Get(TrKey.ModifierSettingsButton), OptionPage.ModifierSettings));
+        BUTTONS_HOST.Add((_modifierButton = CreateSettingButton(__instance, "RUModifierSettingsButton", Tr.Get(TrKey.ModifierSettingsButton), OptionPage.ModifierSettings), Tr.Get(TrKey.ModifierSettingsButton)));
         _modifierTab = CreateSettingTab(__instance, "RUModifierSettingsTab", CustomOptionType.Modifier);
-        BUTTONS_HOST.Add(_battleRoyaleButton = CreateSettingButton(__instance, "RUBattleRoyaleSettingsButton", Tr.Get(TrKey.BattleRoyaleSettingsButton), OptionPage.BattleRoyaleSettings));
+        BUTTONS_HOST.Add((_battleRoyaleButton = CreateSettingButton(__instance, "RUBattleRoyaleSettingsButton", Tr.Get(TrKey.BattleRoyaleSettingsButton), OptionPage.BattleRoyaleSettings), Tr.Get(TrKey.BattleRoyaleSettingsButton)));
         _battleRoyaleTab = CreateSettingTab(__instance, "RUBattleRoyaleSettingsTab", CustomOptionType.BattleRoyale);
-        BUTTONS_HOST.Add(_hotPotatoButton = CreateSettingButton(__instance, "RUHotPotatoSettingsButton", Tr.Get(TrKey.HotPotatoSettingsButton), OptionPage.HotPotatoSettings));
+        BUTTONS_HOST.Add((_hotPotatoButton = CreateSettingButton(__instance, "RUHotPotatoSettingsButton", Tr.Get(TrKey.HotPotatoSettingsButton), OptionPage.HotPotatoSettings), Tr.Get(TrKey.HotPotatoSettingsButton)));
         _hotPotatoTab = CreateSettingTab(__instance, "RUHotPotatoSettingsTab", CustomOptionType.HotPotato);
 
         _currentSettingPage = 0;
-        RefreshSettingButtonVisibility();
+        RefreshSettingButtonVisibility(__instance);
 
         __instance.GameSettingsButton.SelectButton(true);
         __instance.StartCoroutine(Effects.Lerp(1f, new Action<float>(_ => { __instance.MenuDescriptionText.text = FastDestroyableSingleton<TranslationController>.Instance.GetString(StringNames.GameSettingsDescription); })));
     }
 
-    private static void RefreshSettingButtonVisibility()
+    private static void RefreshSettingButtonVisibility(GameSettingMenu __instance)
     {
         _pageCountText?.text = string.Format(Tr.Get(TrKey.SettingPageInfo), _currentSettingPage + 1, MAX_PAGE_HOST);
 
         var startIdx = _currentSettingPage * MAX_BUTTON_PER_PAGE;
-        for (var i = 0; i < BUTTONS_HOST.Count; i++)
+        var i = 0;
+        foreach (var (obj, label) in BUTTONS_HOST)
         {
-            if (BUTTONS_HOST[i] == null)
+            if (obj == null)
             {
                 continue;
             }
 
             var isActive = i >= startIdx && i < startIdx + MAX_BUTTON_PER_PAGE;
-            BUTTONS_HOST[i].SetActive(isActive);
+            obj.SetActive(isActive);
+            __instance.StartCoroutine(Effects.Lerp(1f, new Action<float>(_ =>
+            {
+                obj.transform.FindChild("FontPlacer").GetComponentInChildren<TextMeshPro>().text = label;
+            })));
+
+            i++;
         }
     }
 
@@ -736,7 +743,7 @@ internal partial class CustomOption
             if (_currentSettingPage > 0)
             {
                 _currentSettingPage--;
-                RefreshSettingButtonVisibility();
+                RefreshSettingButtonVisibility(__instance);
             }
         }
         else if (Input.GetKeyDown(CHANGE_PAGE_NEXT_KEY))
@@ -744,18 +751,18 @@ internal partial class CustomOption
             if (_currentSettingPage + 1 < MAX_PAGE_HOST)
             {
                 _currentSettingPage++;
-                RefreshSettingButtonVisibility();
+                RefreshSettingButtonVisibility(__instance);
             }
         }
     }
 
-    private static GameObject CreateSettingButton(GameSettingMenu __instance, string name, string buttonText, OptionPage id)
+    private static GameObject CreateSettingButton(GameSettingMenu __instance, string name, string label, OptionPage id)
     {
         var template = __instance.GameSettingsButton.gameObject;
         var buttonObj = UnityObject.Instantiate(template, template.transform.parent);
         buttonObj.transform.localPosition += Vector3.down * 0.5f * (((int)id - 3) % MAX_BUTTON_PER_PAGE + 1);
         buttonObj.name = name;
-        __instance.StartCoroutine(Effects.Lerp(2f, new Action<float>(_ => { buttonObj.transform.FindChild("FontPlacer").GetComponentInChildren<TextMeshPro>().text = buttonText; })));
+        __instance.StartCoroutine(Effects.Lerp(1f, new Action<float>(_ => { buttonObj.transform.FindChild("FontPlacer").GetComponentInChildren<TextMeshPro>().text = label; })));
         var buttonPb = buttonObj.GetComponent<PassiveButton>();
         buttonPb.OnClick.RemoveAllListeners();
         buttonPb.OnClick.AddListener((Action)(() => { __instance.ChangeTab((int)id, false); }));

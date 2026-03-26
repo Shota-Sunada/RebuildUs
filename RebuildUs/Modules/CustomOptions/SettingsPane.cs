@@ -26,7 +26,7 @@ internal partial class CustomOption
     private static GameObject _hotPotatoPaneButton;
     private static int _currentPanePage;
 
-    internal static List<GameObject> BUTTONS_PANE = [];
+    internal static List<(GameObject obj, string label)> BUTTONS_PANE = [];
     internal static int MAX_PAGE_PANE => (BUTTONS_PANE.Count + MAX_BUTTON_PER_PAGE - 1) / MAX_BUTTON_PER_PAGE;
 
     internal static void SetTab(LobbyViewSettingsPane __instance, PanePage id)
@@ -349,37 +349,40 @@ internal partial class CustomOption
         _pageCountTextPane.fontSizeMin = 5.0f;
         __instance.StartCoroutine(Effects.Lerp(1f, new Action<float>(_ => { _pageCountTextPane?.text = string.Format(Tr.Get(TrKey.SettingPageInfo), _currentPanePage + 1, MAX_PAGE_PANE); })));
 
-        BUTTONS_PANE.Add(_generalPaneButton = CreateCustomButton(__instance, PanePage.General, "RUSettings", Tr.Get(TrKey.TabGeneral), CustomOptionType.General));
-        BUTTONS_PANE.Add(_overviewPaneButton = CreateCustomButton(__instance, PanePage.Overview, "RoleOverview", Tr.Get(TrKey.TabRolesOverview), (CustomOptionType)99));
-        BUTTONS_PANE.Add(_impostorPaneButton = CreateCustomButton(__instance, PanePage.Impostor, "ImpostorSettings", Tr.Get(TrKey.TabImpostor), CustomOptionType.Impostor));
-        BUTTONS_PANE.Add(_crewmatePaneButton = CreateCustomButton(__instance, PanePage.Crewmate, "CrewmateSettings", Tr.Get(TrKey.TabCrewmate), CustomOptionType.Crewmate));
-        BUTTONS_PANE.Add(_neutralPaneButton = CreateCustomButton(__instance, PanePage.Neutral, "NeutralSettings", Tr.Get(TrKey.TabNeutral), CustomOptionType.Neutral));
-        BUTTONS_PANE.Add(_modifierPaneButton = CreateCustomButton(__instance, PanePage.Modifier, "ModifierSettings", Tr.Get(TrKey.TabModifiers), CustomOptionType.Modifier));
-        BUTTONS_PANE.Add(_battleRoyalePaneButton = CreateCustomButton(__instance, PanePage.BattleRoyale, "BattleRoyaleSettings", Tr.Get(TrKey.TabBattleRoyale), CustomOptionType.BattleRoyale));
-        BUTTONS_PANE.Add(_hotPotatoPaneButton = CreateCustomButton(__instance, PanePage.HotPotato, "HotPotatoSettings", Tr.Get(TrKey.TabHotPotato), CustomOptionType.HotPotato));
+        BUTTONS_PANE.Add((_generalPaneButton = CreateCustomButton(__instance, PanePage.General, "RUSettings", Tr.Get(TrKey.TabGeneral), CustomOptionType.General), Tr.Get(TrKey.TabGeneral)));
+        BUTTONS_PANE.Add((_overviewPaneButton = CreateCustomButton(__instance, PanePage.Overview, "RoleOverview", Tr.Get(TrKey.TabRolesOverview), (CustomOptionType)99), Tr.Get(TrKey.TabRolesOverview)));
+        BUTTONS_PANE.Add((_impostorPaneButton = CreateCustomButton(__instance, PanePage.Impostor, "ImpostorSettings", Tr.Get(TrKey.TabImpostor), CustomOptionType.Impostor), Tr.Get(TrKey.TabImpostor)));
+        BUTTONS_PANE.Add((_crewmatePaneButton = CreateCustomButton(__instance, PanePage.Crewmate, "CrewmateSettings", Tr.Get(TrKey.TabCrewmate), CustomOptionType.Crewmate), Tr.Get(TrKey.TabCrewmate)));
+        BUTTONS_PANE.Add((_neutralPaneButton = CreateCustomButton(__instance, PanePage.Neutral, "NeutralSettings", Tr.Get(TrKey.TabNeutral), CustomOptionType.Neutral), Tr.Get(TrKey.TabNeutral)));
+        BUTTONS_PANE.Add((_modifierPaneButton = CreateCustomButton(__instance, PanePage.Modifier, "ModifierSettings", Tr.Get(TrKey.TabModifiers), CustomOptionType.Modifier), Tr.Get(TrKey.TabModifiers)));
+        BUTTONS_PANE.Add((_battleRoyalePaneButton = CreateCustomButton(__instance, PanePage.BattleRoyale, "BattleRoyaleSettings", Tr.Get(TrKey.TabBattleRoyale), CustomOptionType.BattleRoyale), Tr.Get(TrKey.TabBattleRoyale)));
+        BUTTONS_PANE.Add((_hotPotatoPaneButton = CreateCustomButton(__instance, PanePage.HotPotato, "HotPotatoSettings", Tr.Get(TrKey.TabHotPotato), CustomOptionType.HotPotato), Tr.Get(TrKey.TabHotPotato)));
 
         _currentPanePage = 0;
-        RefreshPaneButtonVisibility();
+        RefreshPaneButtonVisibility(__instance);
     }
 
-    private static void RefreshPaneButtonVisibility()
+    private static void RefreshPaneButtonVisibility(LobbyViewSettingsPane __instance)
     {
         _pageCountTextPane?.text = string.Format(Tr.Get(TrKey.SettingPageInfo), _currentPanePage + 1, MAX_PAGE_PANE);
 
         var startIdx = _currentPanePage * MAX_BUTTON_PER_PAGE;
-        for (var i = 0; i < BUTTONS_PANE.Count; i++)
+        var i = 0;
+        foreach (var (obj, label) in BUTTONS_PANE)
         {
-            if (BUTTONS_PANE[i] == null)
+            if (obj == null)
             {
                 continue;
             }
 
             var isActive = i >= startIdx && i < startIdx + MAX_BUTTON_PER_PAGE;
-            BUTTONS_PANE[i].SetActive(isActive);
-            // if (isActive)
-            // {
-            //     BUTTONS_PANE[i].transform.localPosition = new(-7.25f + (i - startIdx) * 1.75f, 2.5f, -2f);
-            // }
+            obj.SetActive(isActive);
+            __instance.StartCoroutine(Effects.Lerp(2f, new Action<float>(_ =>
+            {
+                obj.transform.FindChild("FontPlacer").GetComponentInChildren<TextMeshPro>().text = label;
+            })));
+
+            i++;
         }
     }
 
@@ -390,7 +393,7 @@ internal partial class CustomOption
             if (_currentPanePage > 0)
             {
                 _currentPanePage--;
-                RefreshPaneButtonVisibility();
+                RefreshPaneButtonVisibility(__instance);
             }
         }
         else if (Input.GetKeyDown(CHANGE_PAGE_NEXT_KEY))
@@ -398,18 +401,18 @@ internal partial class CustomOption
             if ((_currentPanePage + 1) * MAX_BUTTON_PER_PAGE < BUTTONS_PANE.Count)
             {
                 _currentPanePage++;
-                RefreshPaneButtonVisibility();
+                RefreshPaneButtonVisibility(__instance);
             }
         }
     }
 
-    private static GameObject CreateCustomButton(LobbyViewSettingsPane __instance, PanePage id, string buttonName, string buttonText, CustomOptionType optionType)
+    private static GameObject CreateCustomButton(LobbyViewSettingsPane __instance, PanePage id, string buttonName, string buttonLabel, CustomOptionType optionType)
     {
         var template = __instance.taskTabButton.gameObject;
         var buttonObj = UnityObject.Instantiate(template, template.transform.parent);
         buttonObj.transform.localPosition += Vector3.right * 1.75f * (((int)id - 2) % 5 + 1);
         buttonObj.name = buttonName;
-        __instance.StartCoroutine(Effects.Lerp(2f, new Action<float>(_ => { buttonObj.transform.FindChild("FontPlacer").GetComponentInChildren<TextMeshPro>().text = buttonText; })));
+        __instance.StartCoroutine(Effects.Lerp(1f, new Action<float>(_ => { buttonObj.transform.FindChild("FontPlacer").GetComponentInChildren<TextMeshPro>().text = buttonLabel; })));
         var buttonPb = buttonObj.GetComponent<PassiveButton>();
         buttonPb.OnClick.RemoveAllListeners();
         buttonPb.OnClick.AddListener((Action)(() => { __instance.ChangeTab((StringNames)id); }));
