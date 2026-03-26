@@ -13,12 +13,7 @@ internal enum CustomEventType
 }
 
 [AttributeUsage(AttributeTargets.Method)]
-internal class CustomEventAttribute : Attribute
+internal class CustomEventAttribute(CustomEventType eventType) : Attribute
 {
-    public CustomEventType EventType { get; }
-
-    public CustomEventAttribute(CustomEventType eventType)
-    {
-        EventType = eventType;
-    }
+    public CustomEventType EventType { get; } = eventType;
 }

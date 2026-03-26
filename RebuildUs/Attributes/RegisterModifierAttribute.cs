@@ -1,22 +1,10 @@
 namespace RebuildUs.Attributes;
 
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = true, Inherited = false)]
-internal sealed class RegisterModifierAttribute : Attribute
+internal sealed class RegisterModifierAttribute(ModifierType modifierType, Type classType, string spawnRatePropertyName, string modifierColorPropertyName = "Color") : Attribute
 {
-    public ModifierType ModifierType { get; }
-    public Type ClassType { get; }
-    public string NameColorPropertyName { get; }
-    public string SpawnRatePropertyName { get; }
-
-    public RegisterModifierAttribute(
-        ModifierType modifierType,
-        Type classType,
-        string spawnRatePropertyName,
-        string modifierColorPropertyName = "Color")
-    {
-        ModifierType = modifierType;
-        ClassType = classType;
-        NameColorPropertyName = modifierColorPropertyName;
-        SpawnRatePropertyName = spawnRatePropertyName;
-    }
+    public ModifierType ModifierType { get; } = modifierType;
+    public Type ClassType { get; } = classType;
+    public string NameColorPropertyName { get; } = modifierColorPropertyName;
+    public string SpawnRatePropertyName { get; } = spawnRatePropertyName;
 }
