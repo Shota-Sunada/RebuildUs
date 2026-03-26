@@ -67,5 +67,6 @@ internal static class MorphHandler
         pc.MorphToPlayer(pc);
         // Munou.reMorph(pc.PlayerId);
         pc.CurrentOutfitType = PlayerOutfitType.Default;
+        pc.SetColorBlindTag();
     }
 }

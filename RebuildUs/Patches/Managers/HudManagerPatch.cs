@@ -215,6 +215,7 @@ internal static class HudManagerPatch
             if (hideName)
             {
                 finalName = "";
+                player.cosmetics.SetEnabledColorblind(false);
             }
             else if (isLocalDead)
             {

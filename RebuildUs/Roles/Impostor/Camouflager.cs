@@ -80,6 +80,8 @@ internal class Camouflager : SingleRoleBase<Camouflager>
 
     internal static void StartCamouflage()
     {
+        PlayerControl.LocalPlayer.cosmetics.SetEnabledColorblind(false);
+
         CamouflageTimer = Duration;
 
         _data.ColorId = RandomColors ? (byte)RebuildUs.Rnd.Next(0, Palette.PlayerColors.Length) : 6;
