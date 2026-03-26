@@ -142,6 +142,7 @@ internal static class HudManagerPatch
     {
         RebuildUs.MakeButtons(__instance);
         RebuildUs.SetButtonCooldowns();
+        ModLabel.Initialize();
     }
 
     private static void UpdatePlayerNamesAndColors()
