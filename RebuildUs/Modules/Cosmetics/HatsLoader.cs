@@ -173,6 +173,7 @@ internal sealed class HatsLoader : MonoBehaviour
         }
     }
 
+    [HideFromIl2Cpp]
     private async Task ProcessRepoAsync(string repoUrl, string targetDir, ConcurrentBag<(string url, string localPath, string expectedHash, string fileName)> toDownload)
     {
         repoUrl = repoUrl.Trim();
@@ -228,6 +229,7 @@ internal sealed class HatsLoader : MonoBehaviour
         }
     }
 
+    [HideFromIl2Cpp]
     private async Task DownloadItemAsync((string url, string localPath, string expectedHash, string fileName) item, SemaphoreSlim semaphore, int total, Action onCompleted)
     {
         await semaphore.WaitAsync();
@@ -256,11 +258,8 @@ internal sealed class HatsLoader : MonoBehaviour
         }
     }
 
-    private void ProcessHatFile(string repoUrl,
-                                string repoDir,
-                                string fileName,
-                                string expectedHash,
-                                ConcurrentBag<(string url, string localPath, string expectedHash, string fileName)> toDownload)
+    [HideFromIl2Cpp]
+    private void ProcessHatFile(string repoUrl, string repoDir, string fileName, string expectedHash, ConcurrentBag<(string url, string localPath, string expectedHash, string fileName)> toDownload)
     {
         if (string.IsNullOrEmpty(fileName))
         {
