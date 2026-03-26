@@ -53,8 +53,6 @@ internal partial class CustomOption
     private static GameObject _modifierTab;
     private static GameObject _battleRoyaleTab;
     private static GameObject _hotPotatoTab;
-    private static readonly int StencilComp = Shader.PropertyToID("_StencilComp");
-    private static readonly int Stencil = Shader.PropertyToID("_Stencil");
     protected static int Preset;
     private static int _currentSettingPage;
     internal readonly List<CustomOption> Children = [];
@@ -843,8 +841,8 @@ internal partial class CustomOption
 
             foreach (var tmp in ob.GetComponentsInChildren<TextMeshPro>(true))
             {
-                tmp.fontMaterial.SetFloat(StencilComp, 3f);
-                tmp.fontMaterial.SetFloat(Stencil, 20);
+                tmp.fontMaterial.SetFloat(Shaders.StencilComp, 3f);
+                tmp.fontMaterial.SetFloat(Shaders.Stencil, 20);
             }
 
             option.InitializeOptionBehaviour(ob);

@@ -522,12 +522,12 @@ internal static class PlayerControlExtensions
                 var mat = target.cosmetics.currentBodySprite.BodySprite.material;
                 if (hasVisibleShield)
                 {
-                    mat.SetFloat("_Outline", 1f);
-                    mat.SetColor("_OutlineColor", Medic.ShieldedColor);
+                    mat.SetFloat(Shaders.Outline, 1f);
+                    mat.SetColor(Shaders.OutlineColor, Medic.ShieldedColor);
                 }
                 else
                 {
-                    mat.SetFloat("_Outline", 0f);
+                    mat.SetFloat(Shaders.Outline, 0f);
                 }
             }
         }

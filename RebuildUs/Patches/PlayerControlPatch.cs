@@ -8,10 +8,6 @@ internal static class PlayerControlPatch
 {
     private static float _timer;
 
-    private static readonly int Outline = Shader.PropertyToID("_Outline");
-    private static readonly int OutlineColor = Shader.PropertyToID("_OutlineColor");
-    private static readonly int AddColor = Shader.PropertyToID("_AddColor");
-
     [HarmonyPostfix]
     [HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.HandleRpc))]
     internal static void HandleRpcPostfix(byte callId, MessageReader reader)
@@ -488,15 +484,15 @@ internal static class PlayerControlPatch
 
             if (highlight)
             {
-                mat.SetFloat(Outline, 1f);
-                mat.SetColor(OutlineColor, highlightColor);
+                mat.SetFloat(Shaders.Outline, 1f);
+                mat.SetColor(Shaders.OutlineColor, highlightColor);
             }
             else
             {
                 // Only remove outline if it's not being set by something else (Check alpha of AddColor as a proxy)
-                if (mat.HasProperty(AddColor) && mat.GetColor(AddColor).a == 0f)
+                if (mat.HasProperty(Shaders.AddColor) && mat.GetColor(Shaders.AddColor).a == 0f)
                 {
-                    mat.SetFloat(Outline, 0f);
+                    mat.SetFloat(Shaders.Outline, 0f);
                 }
             }
         }

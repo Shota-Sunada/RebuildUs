@@ -7,7 +7,6 @@ internal static class KillAnimationPatch
     internal static bool AvoidNextKillMovement;
 
     private static int? _colorId;
-    private static readonly int BodyColor = Shader.PropertyToID("_BodyColor");
 
     internal static IEnumerator CoPerformKill(KillAnimation __instance, PlayerControl source, PlayerControl target)
     {
@@ -93,7 +92,7 @@ internal static class KillAnimationPatch
     [HarmonyPatch(typeof(KillAnimation), nameof(KillAnimation.SetMovement), typeof(PlayerControl), typeof(bool))]
     internal static void SetMovementPrefix(PlayerControl source, bool canMove)
     {
-        var color = source.cosmetics.currentBodySprite.BodySprite.material.GetColor(BodyColor);
+        var color = source.cosmetics.currentBodySprite.BodySprite.material.GetColor(Shaders.Color);
         if (!Morphing.Exists || !source.IsRole(RoleType.Morphing))
         {
             return;

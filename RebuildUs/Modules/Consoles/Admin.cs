@@ -31,9 +31,6 @@ internal static class Admin
 
     private static Material _defaultMat;
     private static Material _newMat;
-    private static readonly int BodyColor = Shader.PropertyToID("_BodyColor");
-    private static readonly int BackColor = Shader.PropertyToID("_BackColor");
-    private static readonly int VisorColor = Shader.PropertyToID("_VisorColor");
 
     private static bool FilterAdmin(SystemTypes type)
     {
@@ -254,7 +251,6 @@ internal static class Admin
                             {
                                 continue;
                             }
-                            // Color color = component.myRend.material.GetColor("_BodyColor");
                             Color color = Palette.PlayerColors[component.Data.DefaultOutfit.ColorId];
                             if (Hacker.OnlyColorType)
                             {
@@ -407,7 +403,6 @@ internal static class Admin
         List<Color> deadBodyColors = [];
         foreach (var p in PlayerControl.AllPlayerControls.GetFastEnumerator())
         {
-            // var color = p.myRend.material.GetColor("_BodyColor");
             var color = Palette.PlayerColors[p.Data.DefaultOutfit.ColorId];
             if (p.IsTeamImpostor())
             {
@@ -440,18 +435,18 @@ internal static class Admin
             {
                 renderer.material = _newMat;
                 var color = colors[i];
-                renderer.material.SetColor(BodyColor, color);
+                renderer.material.SetColor(Shaders.BodyColor, color);
                 var id = Palette.PlayerColors.IndexOf(color);
                 if (id < 0)
                 {
-                    renderer.material.SetColor(BackColor, color);
+                    renderer.material.SetColor(Shaders.BackColor, color);
                 }
                 else
                 {
-                    renderer.material.SetColor(BackColor, Palette.ShadowColors[id]);
+                    renderer.material.SetColor(Shaders.BackColor, Palette.ShadowColors[id]);
                 }
 
-                renderer.material.SetColor(VisorColor, Palette.VisorColor);
+                renderer.material.SetColor(Shaders.VisorColor, Palette.VisorColor);
             }
             else if ((PlayerControl.LocalPlayer.IsRole(RoleType.EvilHacker) || EvilHacker.IsInherited()) && EvilHacker.CanHasBetterAdmin)
             {
@@ -461,34 +456,34 @@ internal static class Admin
                 {
                     color = Palette.ImpostorRed;
 
-                    renderer.material.SetColor(BodyColor, color);
+                    renderer.material.SetColor(Shaders.BodyColor, color);
                     var id = Palette.PlayerColors.IndexOf(color);
                     if (id < 0)
                     {
-                        renderer.material.SetColor(BackColor, color);
+                        renderer.material.SetColor(Shaders.BackColor, color);
                     }
                     else
                     {
-                        renderer.material.SetColor(BackColor, Palette.ShadowColors[id]);
+                        renderer.material.SetColor(Shaders.BackColor, Palette.ShadowColors[id]);
                     }
 
-                    renderer.material.SetColor(VisorColor, Palette.VisorColor);
+                    renderer.material.SetColor(Shaders.VisorColor, Palette.VisorColor);
                 }
                 else if (deadBodyColors.Contains(color))
                 {
                     color = Palette.Black;
-                    renderer.material.SetColor(BodyColor, color);
+                    renderer.material.SetColor(Shaders.BodyColor, color);
                     var id = Palette.PlayerColors.IndexOf(color);
                     if (id < 0)
                     {
-                        renderer.material.SetColor(BackColor, color);
+                        renderer.material.SetColor(Shaders.BackColor, color);
                     }
                     else
                     {
-                        renderer.material.SetColor(BackColor, Palette.ShadowColors[id]);
+                        renderer.material.SetColor(Shaders.BackColor, Palette.ShadowColors[id]);
                     }
 
-                    renderer.material.SetColor(VisorColor, Palette.VisorColor);
+                    renderer.material.SetColor(Shaders.VisorColor, Palette.VisorColor);
                 }
                 else
                 {

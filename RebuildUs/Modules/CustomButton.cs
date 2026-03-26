@@ -34,7 +34,6 @@ internal sealed class CustomButton
     internal static readonly List<CustomButton> Buttons = [];
 
     internal static bool StopCountdown = true;
-    private static readonly int Desat = Shader.PropertyToID("_Desat");
     private readonly Func<bool> _couldUse;
     private readonly Func<bool> _hasButton;
     private readonly KeyCode? _hotkey;
@@ -426,10 +425,10 @@ internal sealed class CustomButton
             }
 
             if (ActionButton.graphic.material != null
-                && ActionButton.graphic.material.HasProperty(Desat)
-                && !Mathf.Approximately(ActionButton.graphic.material.GetFloat(Desat), targetDesat))
+                && ActionButton.graphic.material.HasProperty(Shaders.Desat)
+                && !Mathf.Approximately(ActionButton.graphic.material.GetFloat(Shaders.Desat), targetDesat))
             {
-                ActionButton.graphic.material.SetFloat(Desat, targetDesat);
+                ActionButton.graphic.material.SetFloat(Shaders.Desat, targetDesat);
             }
         }
 

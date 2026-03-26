@@ -8,7 +8,6 @@ internal static partial class EndGameMain
     internal static bool IsO2Win;
 
     internal static TMP_Text TextRenderer;
-    private static readonly int Color = Shader.PropertyToID("_Color");
 
     internal static bool CrewmateCantWinByTaskWithoutLivingPlayer(ref bool __result)
     {

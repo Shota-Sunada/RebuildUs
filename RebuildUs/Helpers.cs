@@ -422,8 +422,8 @@ internal static class Helpers
         }
 
         var mat = target.cosmetics.currentBodySprite.BodySprite.material;
-        mat.SetFloat("_Outline", 1f);
-        mat.SetColor("_OutlineColor", color);
+        mat.SetFloat(Shaders.Outline, 1f);
+        mat.SetColor(Shaders.OutlineColor, color);
     }
 
     internal static void ShareGameVersion(int targetId = -1)

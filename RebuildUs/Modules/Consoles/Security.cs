@@ -9,7 +9,6 @@ internal static class SecurityCamera
     private static readonly StringBuilder SecurityStringBuilder = new();
 
     private static TextMeshPro _timeRemaining;
-    private static readonly int MainTex = Shader.PropertyToID("_MainTex");
 
     internal static void ResetData()
     {
@@ -201,7 +200,7 @@ internal static class SecurityCamera
                 __instance.SabText[i].gameObject.SetActive(false);
                 if (_page * 4 + i < __instance.textures.Length)
                 {
-                    __instance.ViewPorts[i].material.SetTexture(MainTex, __instance.textures[_page * 4 + i]);
+                    __instance.ViewPorts[i].material.SetTexture(Shaders.MainTex, __instance.textures[_page * 4 + i]);
                 }
                 else
                 {

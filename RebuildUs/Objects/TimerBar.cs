@@ -6,7 +6,6 @@ internal sealed class TimerBar
     private static readonly FieldInfo TimerBarField = AccessTools.Field(typeof(HideAndSeekTimerBar), "timerBar");
     private static readonly FieldInfo TimerBarRendererField = AccessTools.Field(typeof(HideAndSeekTimerBar), "timerBarRenderer");
     private static readonly FieldInfo ChunkBarField = AccessTools.Field(typeof(HideAndSeekTimerBar), "chunkBar");
-    private static readonly int ColorId = Shader.PropertyToID("_Color");
     private readonly Vector3 _defaultChunkLocalPosition;
     private readonly Vector3 _defaultChunkLocalScale;
     private readonly Vector3 _defaultLocalPosition;
@@ -240,7 +239,7 @@ internal sealed class TimerBar
         {
             return;
         }
-        runtimeMaterial.SetColor(ColorId, color);
+        runtimeMaterial.SetColor(Shaders.Color, color);
     }
 
     private static Material CreateRuntimeMaterial(MeshRenderer renderer)
