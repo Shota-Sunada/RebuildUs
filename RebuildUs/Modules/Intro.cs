@@ -539,7 +539,7 @@ internal static class Intro
             Logger.LogInfo("[Settings] {0}", t);
         }
 
-        Logger.LogInfo("--------Advance Settings--------", "Settings");
+        Logger.LogInfo("[Settings] --------Advance Settings--------");
         foreach (var o in CustomOption.AllOptions)
         {
             if (o.Parent == null ? !o.GetString().Equals("0%") : o.Parent.Enabled)
