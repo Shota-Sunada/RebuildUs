@@ -435,18 +435,18 @@ internal static class Admin
             {
                 renderer.material = _newMat;
                 var color = colors[i];
-                renderer.material.SetColor(Shaders.BodyColor, color);
+                renderer.material.SetColor("_BodyColor", color);
                 var id = Palette.PlayerColors.IndexOf(color);
                 if (id < 0)
                 {
-                    renderer.material.SetColor(Shaders.BackColor, color);
+                    renderer.material.SetColor("_BackColor", color);
                 }
                 else
                 {
-                    renderer.material.SetColor(Shaders.BackColor, Palette.ShadowColors[id]);
+                    renderer.material.SetColor("_BackColor", Palette.ShadowColors[id]);
                 }
 
-                renderer.material.SetColor(Shaders.VisorColor, Palette.VisorColor);
+                renderer.material.SetColor("_VisorColor", Palette.VisorColor);
             }
             else if ((PlayerControl.LocalPlayer.IsRole(RoleType.EvilHacker) || EvilHacker.IsInherited()) && EvilHacker.CanHasBetterAdmin)
             {
@@ -456,34 +456,34 @@ internal static class Admin
                 {
                     color = Palette.ImpostorRed;
 
-                    renderer.material.SetColor(Shaders.BodyColor, color);
+                    renderer.material.SetColor("_BodyColor", color);
                     var id = Palette.PlayerColors.IndexOf(color);
                     if (id < 0)
                     {
-                        renderer.material.SetColor(Shaders.BackColor, color);
+                        renderer.material.SetColor("_BackColor", color);
                     }
                     else
                     {
-                        renderer.material.SetColor(Shaders.BackColor, Palette.ShadowColors[id]);
+                        renderer.material.SetColor("_BackColor", Palette.ShadowColors[id]);
                     }
 
-                    renderer.material.SetColor(Shaders.VisorColor, Palette.VisorColor);
+                    renderer.material.SetColor("_VisorColor", Palette.VisorColor);
                 }
                 else if (deadBodyColors.Contains(color))
                 {
                     color = Palette.Black;
-                    renderer.material.SetColor(Shaders.BodyColor, color);
+                    renderer.material.SetColor("_BodyColor", color);
                     var id = Palette.PlayerColors.IndexOf(color);
                     if (id < 0)
                     {
-                        renderer.material.SetColor(Shaders.BackColor, color);
+                        renderer.material.SetColor("_BackColor", color);
                     }
                     else
                     {
-                        renderer.material.SetColor(Shaders.BackColor, Palette.ShadowColors[id]);
+                        renderer.material.SetColor("_BackColor", Palette.ShadowColors[id]);
                     }
 
-                    renderer.material.SetColor(Shaders.VisorColor, Palette.VisorColor);
+                    renderer.material.SetColor("_VisorColor", Palette.VisorColor);
                 }
                 else
                 {

@@ -31,7 +31,7 @@ internal static partial class EndGameMain
                 DataManager.Player.Stats.IncrementWinStats(EndGameResult.CachedGameOverReason, (MapNames)GameManager.Instance.LogicOptions.MapId, EndGameResult.CachedLocalPlayer.RoleWhenAlive);
                 FastDestroyableSingleton<AchievementManager>.Instance.SetWinMap(GameManager.Instance.LogicOptions.MapId);
                 __instance.WinText.text = FastDestroyableSingleton<TranslationController>.Instance.GetString(StringNames.Victory);
-                __instance.BackgroundBar.material.SetColor(Shaders.Color, Palette.CrewmateBlue);
+                __instance.BackgroundBar.material.SetColor("_Color", Palette.CrewmateBlue);
 
                 CachedPlayerData cachedPlayerData = null;
                 foreach (var cpd in EndGameResult.CachedWinners.GetFastEnumerator())
@@ -198,57 +198,57 @@ internal static partial class EndGameMain
             case WinCondition.JesterWin:
                 bonusText = "JesterWin";
                 TextRenderer.color = Jester.Color;
-                __instance.BackgroundBar.material.SetColor(Shaders.Color, Jester.Color);
+                __instance.BackgroundBar.material.SetColor("_Color", Jester.Color);
                 break;
             case WinCondition.ArsonistWin:
                 bonusText = "ArsonistWin";
                 TextRenderer.color = Arsonist.Color;
-                __instance.BackgroundBar.material.SetColor(Shaders.Color, Arsonist.Color);
+                __instance.BackgroundBar.material.SetColor("_Color", Arsonist.Color);
                 break;
             case WinCondition.VultureWin:
                 bonusText = "VultureWin";
                 TextRenderer.color = Vulture.Color;
-                __instance.BackgroundBar.material.SetColor(Shaders.Color, Vulture.Color);
+                __instance.BackgroundBar.material.SetColor("_Color", Vulture.Color);
                 break;
             case WinCondition.JackalWin:
                 bonusText = "JackalWin";
                 TextRenderer.color = Jackal.Color;
-                __instance.BackgroundBar.material.SetColor(Shaders.Color, Jackal.Color);
+                __instance.BackgroundBar.material.SetColor("_Color", Jackal.Color);
                 break;
             case WinCondition.MiniLose:
                 bonusText = "MiniDied";
                 TextRenderer.color = Mini.Color;
-                __instance.BackgroundBar.material.SetColor(Shaders.Color, Palette.DisabledGrey);
+                __instance.BackgroundBar.material.SetColor("_Color", Palette.DisabledGrey);
                 break;
             case WinCondition.LoversTeamWin:
                 bonusText = "CrewmateWin";
                 TextRenderer.color = Lovers.Color;
-                __instance.BackgroundBar.material.SetColor(Shaders.Color, Lovers.Color);
+                __instance.BackgroundBar.material.SetColor("_Color", Lovers.Color);
                 break;
             case WinCondition.LoversSoloWin:
                 bonusText = "LoversWin";
                 TextRenderer.color = Lovers.Color;
-                __instance.BackgroundBar.material.SetColor(Shaders.Color, Lovers.Color);
+                __instance.BackgroundBar.material.SetColor("_Color", Lovers.Color);
                 break;
             case WinCondition.EveryoneDied:
                 bonusText = "EveryoneDied";
                 TextRenderer.color = Palette.DisabledGrey;
-                __instance.BackgroundBar.material.SetColor(Shaders.Color, Palette.DisabledGrey);
+                __instance.BackgroundBar.material.SetColor("_Color", Palette.DisabledGrey);
                 break;
             case WinCondition.ForceEnd:
                 bonusText = "ForceEnd";
                 TextRenderer.color = Palette.DisabledGrey;
-                __instance.BackgroundBar.material.SetColor(Shaders.Color, Palette.DisabledGrey);
+                __instance.BackgroundBar.material.SetColor("_Color", Palette.DisabledGrey);
                 break;
             case WinCondition.BattleRoyaleLastOneStanding:
                 bonusText = "BattleRoyaleLastOneStanding";
                 TextRenderer.color = BattleRoyaleMode.BattleRoyaleColor;
-                __instance.BackgroundBar.material.SetColor(Shaders.Color, BattleRoyaleMode.BattleRoyaleColor);
+                __instance.BackgroundBar.material.SetColor("_Color", BattleRoyaleMode.BattleRoyaleColor);
                 break;
             case WinCondition.BattleRoyaleTimeUp:
                 bonusText = "BattleRoyaleTimeUp";
                 TextRenderer.color = Palette.DisabledGrey;
-                __instance.BackgroundBar.material.SetColor(Shaders.Color, Palette.DisabledGrey);
+                __instance.BackgroundBar.material.SetColor("_Color", Palette.DisabledGrey);
                 break;
             case WinCondition.Default:
             default:

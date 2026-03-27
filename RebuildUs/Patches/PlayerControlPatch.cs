@@ -491,15 +491,15 @@ internal static class PlayerControlPatch
 
             if (highlight)
             {
-                mat.SetFloat(Shaders.Outline, 1f);
-                mat.SetColor(Shaders.OutlineColor, highlightColor);
+                mat.SetFloat("_Outline", 1f);
+                mat.SetColor("_OutlineColor", highlightColor);
             }
             else
             {
                 // Only remove outline if it's not being set by something else (Check alpha of AddColor as a proxy)
-                if (mat.HasProperty(Shaders.AddColor) && mat.GetColor(Shaders.AddColor).a == 0f)
+                if (mat.HasProperty("_AddColor") && mat.GetColor("_AddColor").a == 0f)
                 {
-                    mat.SetFloat(Shaders.Outline, 0f);
+                    mat.SetFloat("_Outline", 0f);
                 }
             }
         }

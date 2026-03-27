@@ -92,7 +92,7 @@ internal static class KillAnimationPatch
     [HarmonyPatch(typeof(KillAnimation), nameof(KillAnimation.SetMovement), typeof(PlayerControl), typeof(bool))]
     internal static void SetMovementPrefix(PlayerControl source, bool canMove)
     {
-        var color = source.cosmetics.currentBodySprite.BodySprite.material.GetColor(Shaders.Color);
+        var color = source.cosmetics.currentBodySprite.BodySprite.material.GetColor("_Color");
         if (!Morphing.Exists || !source.IsRole(RoleType.Morphing))
         {
             return;

@@ -16,7 +16,7 @@ internal static class UseButtonPatch
             __instance.buttonLabelText.text = Tr.Get(TrKey.ButtonBlocked);
             __instance.enabled = false;
             __instance.graphic.color = Palette.DisabledClear;
-            __instance.graphic.material.SetFloat(Shaders.Desat, 0f);
+            __instance.graphic.material.SetFloat("_Desat", 0f);
             return false;
         }
 

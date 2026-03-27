@@ -200,7 +200,7 @@ internal static class SecurityCamera
                 __instance.SabText[i].gameObject.SetActive(false);
                 if (_page * 4 + i < __instance.textures.Length)
                 {
-                    __instance.ViewPorts[i].material.SetTexture(Shaders.MainTex, __instance.textures[_page * 4 + i]);
+                    __instance.ViewPorts[i].material.SetTexture("_MainTex", __instance.textures[_page * 4 + i]);
                 }
                 else
                 {

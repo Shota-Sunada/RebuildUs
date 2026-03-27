@@ -338,10 +338,10 @@ internal sealed class CustomButton
             }
 
             if (ActionButton.graphic.material != null
-                && ActionButton.graphic.material.HasProperty(Shaders.Desat)
-                && !Mathf.Approximately(ActionButton.graphic.material.GetFloat(Shaders.Desat), targetDesat))
+                && ActionButton.graphic.material.HasProperty("_Desat")
+                && !Mathf.Approximately(ActionButton.graphic.material.GetFloat("_Desat"), targetDesat))
             {
-                ActionButton.graphic.material.SetFloat(Shaders.Desat, targetDesat);
+                ActionButton.graphic.material.SetFloat("_Desat", targetDesat);
             }
         }
 

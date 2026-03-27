@@ -841,8 +841,8 @@ internal partial class CustomOption
 
             foreach (var tmp in ob.GetComponentsInChildren<TextMeshPro>(true))
             {
-                tmp.fontMaterial.SetFloat(Shaders.StencilComp, 3f);
-                tmp.fontMaterial.SetFloat(Shaders.Stencil, 20);
+                tmp.fontMaterial.SetFloat("_StencilComp", 3f);
+                tmp.fontMaterial.SetFloat("_Stencil", 20);
             }
 
             option.InitializeOptionBehaviour(ob);

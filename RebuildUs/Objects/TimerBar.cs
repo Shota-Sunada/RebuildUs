@@ -239,7 +239,7 @@ internal sealed class TimerBar
         {
             return;
         }
-        runtimeMaterial.SetColor(Shaders.Color, color);
+        runtimeMaterial.SetColor("_Color", color);
     }
 
     private static Material CreateRuntimeMaterial(MeshRenderer renderer)
