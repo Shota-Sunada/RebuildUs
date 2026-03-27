@@ -150,6 +150,7 @@ internal static class ShipStatusPatch
     [HarmonyPatch(typeof(ShipStatus), nameof(ShipStatus.SpawnPlayer))]
     internal static void SpawnPlayerPostfix(ShipStatus __instance, PlayerControl player, int numPlayers, bool initialSpawn)
     {
+        CustomButton.StopCountdown = false;
         if (!AmongUsClient.Instance.AmHost) return;
         if (Helpers.IsAirship || SubmergedCompatibility.IsSubmerged) return;
         if (CustomOptionHolder.RandomSpawn.GetBool()
@@ -184,7 +185,5 @@ internal static class ShipStatusPatch
                 RPCProcedure.RandomSpawn(player.Data.PlayerId, mapId, index);
             }
         }
-
-        CustomButton.StopCountdown = false;
     }
 }

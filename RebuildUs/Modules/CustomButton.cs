@@ -62,108 +62,19 @@ internal sealed class CustomButton
     internal Sprite Sprite;
     internal float Timer;
 
-    private CustomButton(Action onClick,
-                         Func<bool> hasButton,
-                         Func<bool> couldUse,
-                         Action onMeetingEnds,
-                         Sprite sprite,
-                         ButtonPosition position,
-                         HudManager hudManager,
-                         ActionButton textTemplate,
-                         KeyCode? hotkey,
-                         bool hasEffect,
-                         float effectDuration,
-                         Action onEffectEnds,
-                         bool mirror = false,
-                         string buttonText = "") : this(onClick,
-        hasButton,
-        couldUse,
-        onMeetingEnds,
-        sprite,
-        position,
-        hudManager,
-        textTemplate,
-        hotkey,
-        null,
-        hasEffect,
-        effectDuration,
-        onEffectEnds,
-        mirror,
-        buttonText)
+    private CustomButton(Action onClick, Func<bool> hasButton, Func<bool> couldUse, Action onMeetingEnds, Sprite sprite, ButtonPosition position, HudManager hudManager, ActionButton textTemplate, KeyCode? hotkey, bool hasEffect, float effectDuration, Action onEffectEnds, bool mirror = false, string buttonText = "")
+    : this(onClick, hasButton, couldUse, onMeetingEnds, sprite, position, hudManager, textTemplate, hotkey, null, hasEffect, effectDuration, onEffectEnds, mirror, buttonText)
     { }
 
-    internal CustomButton(Action onClick,
-                          Func<bool> hasButton,
-                          Func<bool> couldUse,
-                          Action onMeetingEnds,
-                          Sprite sprite,
-                          ButtonPosition position,
-                          HudManager hudManager,
-                          ActionButton textTemplate,
-                          AbilitySlot? slot,
-                          bool hasEffect,
-                          float effectDuration,
-                          Action onEffectEnds,
-                          bool mirror = false,
-                          string buttonText = "") : this(onClick,
-        hasButton,
-        couldUse,
-        onMeetingEnds,
-        sprite,
-        position,
-        hudManager,
-        textTemplate,
-        null,
-        slot,
-        hasEffect,
-        effectDuration,
-        onEffectEnds,
-        mirror,
-        buttonText)
+    internal CustomButton(Action onClick, Func<bool> hasButton, Func<bool> couldUse, Action onMeetingEnds, Sprite sprite, ButtonPosition position, HudManager hudManager, ActionButton textTemplate, AbilitySlot? slot, bool hasEffect, float effectDuration, Action onEffectEnds, bool mirror = false, string buttonText = "")
+    : this(onClick, hasButton, couldUse, onMeetingEnds, sprite, position, hudManager, textTemplate, null, slot, hasEffect, effectDuration, onEffectEnds, mirror, buttonText)
     { }
 
-    internal CustomButton(Action onClick,
-                          Func<bool> hasButton,
-                          Func<bool> couldUse,
-                          Action onMeetingEnds,
-                          Sprite sprite,
-                          ButtonPosition position,
-                          HudManager hudManager,
-                          ActionButton textTemplate,
-                          AbilitySlot? slot,
-                          bool mirror = false,
-                          string buttonText = "") : this(onClick,
-        hasButton,
-        couldUse,
-        onMeetingEnds,
-        sprite,
-        position,
-        hudManager,
-        textTemplate,
-        null,
-        slot,
-        false,
-        0f,
-        () => { },
-        mirror,
-        buttonText)
+    internal CustomButton(Action onClick, Func<bool> hasButton, Func<bool> couldUse, Action onMeetingEnds, Sprite sprite, ButtonPosition position, HudManager hudManager, ActionButton textTemplate, AbilitySlot? slot, bool mirror = false, string buttonText = "")
+    : this(onClick, hasButton, couldUse, onMeetingEnds, sprite, position, hudManager, textTemplate, null, slot, false, 0f, () => { }, mirror, buttonText)
     { }
 
-    private CustomButton(Action onClick,
-                         Func<bool> hasButton,
-                         Func<bool> couldUse,
-                         Action onMeetingEnds,
-                         Sprite sprite,
-                         ButtonPosition position,
-                         HudManager hudManager,
-                         ActionButton textTemplate,
-                         KeyCode? hotkey,
-                         AbilitySlot? slot,
-                         bool hasEffect,
-                         float effectDuration,
-                         Action onEffectEnds,
-                         bool mirror = false,
-                         string buttonText = "")
+    private CustomButton(Action onClick, Func<bool> hasButton, Func<bool> couldUse, Action onMeetingEnds, Sprite sprite, ButtonPosition position, HudManager hudManager, ActionButton textTemplate, KeyCode? hotkey, AbilitySlot? slot, bool hasEffect, float effectDuration, Action onEffectEnds, bool mirror = false, string buttonText = "")
     {
         _hudManager = hudManager;
         _onClick = onClick;
@@ -239,34 +150,12 @@ internal sealed class CustomButton
             ActionButton.transform.SetParent(hudManager.AbilityButton.transform.parent, false);
         }
 
-        SetActive(false);
+        Update();
     }
 
 #nullable enable
-    internal CustomButton(Action onClick,
-                          Func<bool> hasButton,
-                          Func<bool> couldUse,
-                          Action onMeetingEnds,
-                          Sprite sprite,
-                          ButtonPosition position,
-                          HudManager hudManager,
-                          ActionButton? textTemplate,
-                          KeyCode? hotkey,
-                          bool mirror = false,
-                          string buttonText = "") : this(onClick,
-        hasButton,
-        couldUse,
-        onMeetingEnds,
-        sprite,
-        position,
-        hudManager,
-        textTemplate,
-        hotkey,
-        false,
-        0f,
-        () => { },
-        mirror,
-        buttonText)
+    internal CustomButton(Action onClick, Func<bool> hasButton, Func<bool> couldUse, Action onMeetingEnds, Sprite sprite, ButtonPosition position, HudManager hudManager, ActionButton? textTemplate, KeyCode? hotkey, bool mirror = false, string buttonText = "")
+    : this(onClick, hasButton, couldUse, onMeetingEnds, sprite, position, hudManager, textTemplate, hotkey, false, 0f, () => { }, mirror, buttonText)
     { }
 #nullable disable
 
@@ -389,13 +278,11 @@ internal sealed class CustomButton
     {
         if (PlayerControl.LocalPlayer?.Data == null || MeetingHud.Instance || ExileController.Instance || _hasButton == null || !_hasButton())
         {
-            SetActive(false);
+            if (_lastIsActive) SetActive(false);
             return;
         }
 
-        var useActive = _hudManager?.UseButton != null && _hudManager.UseButton.isActiveAndEnabled;
-        var petActive = _hudManager?.PetButton != null && _hudManager.PetButton.isActiveAndEnabled;
-        SetActive(useActive || petActive);
+        if (!_lastIsActive) SetActive(true);
 
         if (ActionButton?.graphic != null && ActionButton.graphic.sprite != Sprite)
         {
@@ -407,7 +294,7 @@ internal sealed class CustomButton
             _lastButtonText = ButtonText;
         }
 
-        if (ActionButton?.buttonLabelText != null)
+        if (ActionButton?.buttonLabelText != null && ActionButton.buttonLabelText.enabled != SHOW_BUTTON_TEXT)
         {
             ActionButton.buttonLabelText.enabled = SHOW_BUTTON_TEXT;
         }
@@ -426,10 +313,16 @@ internal sealed class CustomButton
                     pos = new(xpos, pos.y, pos.z);
                 }
 
-                ActionButton.transform.localPosition = pos + PositionOffset;
+                if (ActionButton.transform.localPosition != pos + PositionOffset)
+                {
+                    ActionButton.transform.localPosition = pos + PositionOffset;
+                }
             }
 
-            ActionButton.transform.localScale = LocalScale;
+            if (ActionButton.transform.localScale != LocalScale)
+            {
+                ActionButton.transform.localScale = LocalScale;
+            }
         }
 
         var couldUse = _couldUse != null && _couldUse();
