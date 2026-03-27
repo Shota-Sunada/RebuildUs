@@ -1,5 +1,6 @@
 using Assets.CoreScripts;
 using Epic.OnlineServices;
+using Il2CppSystem.Linq.Expressions.Interpreter;
 using PowerTools;
 using Action = Il2CppSystem.Action;
 
@@ -27,6 +28,8 @@ internal static partial class RPCProcedure
         AdditionalVents.ClearAndReload();
         SpawnIn.Reset();
         Map.ResetRealTasks();
+
+        BattleRoyaleMode.IsTimeUp = false;
 
         KillAnimationPatch.HideNextAnimation = false;
         KillAnimationPatch.AvoidNextKillMovement = false;
@@ -280,6 +283,10 @@ internal static partial class RPCProcedure
 
     internal static void FinishShipStatusBegin()
     {
+        if (GameModeManager.CurrentGameMode != CustomGamemode.Normal)
+        {
+            GameModeManager.CurrentGameModeInstance?.OnGameStart();
+        }
         PlayerControl.LocalPlayer.OnFinishShipStatusBegin();
     }
 
@@ -758,34 +765,52 @@ internal static partial class RPCProcedure
         }
     }
 
-    internal static void PolusRandomSpawn(byte playerId, byte locId)
+    internal static void RandomSpawn(byte playerId, byte mapId, byte index)
     {
         FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(3f,
             new Action<float>(p =>
             {
                 // Delayed action
-                if (!Mathf.Approximately(p, 1f))
-                {
-                    return;
-                }
-                Vector2 initialSpawnCenter = new(16.64f, -2.46f);
-                Vector2 meetingSpawnCenter = new(17.4f, -16.286f);
-                Vector2 electricalSpawn = new(5.53f, -9.84f);
-                Vector2 o2Spawn = new(3.28f, -21.67f);
-                Vector2 specimenSpawn = new(36.54f, -20.84f);
-                Vector2 laboratorySpawn = new(34.91f, -6.50f);
-                var loc = locId switch
-                {
-                    0 => initialSpawnCenter,
-                    1 => meetingSpawnCenter,
-                    2 => electricalSpawn,
-                    3 => o2Spawn,
-                    4 => specimenSpawn,
-                    5 => laboratorySpawn,
-                    _ => initialSpawnCenter,
-                };
+                if (!Mathf.Approximately(p, 1f)) return;
+
                 var player = Helpers.PlayerById(playerId);
-                player?.transform.position = loc;
+                switch (mapId)
+                {
+                    case 0: // Skeld
+                        var skeldSpawns = RandomSpawnPositions.SKELD_POSITIONS;
+                        if (skeldSpawns != null && skeldSpawns.Length > 0)
+                        {
+                            var randomSkeldSpawn = skeldSpawns[index];
+                            player?.transform.position = new(randomSkeldSpawn.x, randomSkeldSpawn.y);
+                        }
+                        break;
+                    case 1: // Mira HQ
+                        var miraSpawns = RandomSpawnPositions.MIRA_POSITIONS;
+                        if (miraSpawns != null && miraSpawns.Length > 0)
+                        {
+                            var randomMiraSpawn = miraSpawns[index];
+                            player?.transform.position = new(randomMiraSpawn.x, randomMiraSpawn.y);
+                        }
+                        break;
+                    case 2: // Polus
+                        var polusSpawns = RandomSpawnPositions.POLUS_POSITIONS;
+                        if (polusSpawns != null && polusSpawns.Length > 0)
+                        {
+                            var randomPolusSpawn = polusSpawns[index];
+                            player?.transform.position = new(randomPolusSpawn.x, randomPolusSpawn.y);
+                        }
+                        break;
+                    case 5: // Fungle
+                        var fungleSpawns = RandomSpawnPositions.FUNGLE_POSITIONS;
+                        if (fungleSpawns != null && fungleSpawns.Length > 0)
+                        {
+                            var randomFungleSpawn = fungleSpawns[index];
+                            player?.transform.position = new(randomFungleSpawn.x, randomFungleSpawn.y);
+                        }
+                        break;
+                    default:
+                        return;
+                }
             })));
     }
 
@@ -1127,5 +1152,49 @@ internal static partial class RPCProcedure
                 Helpers.ShowFlash(new(42f / 255f, 187f / 255f, 245f / 255f));
             }
         }
+    }
+
+    internal static void ShowDeathPopup(byte playerId)
+    {
+        var player = Helpers.PlayerById(playerId);
+        if (player != null)
+        {
+            var result = DeathPopup.TryShow(player);
+            if (result == DeathPopup.RESULT_SUCCESS)
+            {
+                Logger.LogInfo("DeathPopup success.");
+            }
+            else
+            {
+                Logger.LogInfo("DeathPopup failed: {0}", DeathPopup.ExplainResult(result));
+            }
+        }
+    }
+
+    internal static void ReloadCurrentGameMode()
+    {
+        switch (CustomOptionHolder.GameModeSelection.GetSelection())
+        {
+            default:
+            case 0:
+                GameModeManager.SetGameMode(CustomGamemode.Normal);
+                break;
+            case 1:
+                GameModeManager.SetGameMode(CustomGamemode.HideNSeek);
+                break;
+            case 2:
+                GameModeManager.SetGameMode(CustomGamemode.BattleRoyale);
+                break;
+            case 3:
+                GameModeManager.SetGameMode(CustomGamemode.HotPotato);
+                break;
+        }
+    }
+
+    internal static void BattleRoyaleSearchPlayers()
+    {
+        _ = new CustomMessage(TrKey.BattleRoyaleSomeoneSearchYou, 5f);
+        // BattleRoyaleMode.ResetButtonCooldown();
+        // BattleRoyaleMode.CommonUsageLeft--;
     }
 }

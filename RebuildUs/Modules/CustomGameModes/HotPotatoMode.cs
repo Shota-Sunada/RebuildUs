@@ -2,12 +2,11 @@ namespace RebuildUs.Modules.CustomGameModes;
 
 internal class HotPotatoMode : GameModeBase
 {
-    public override string InternalName => "HotPotato";
+    public override CustomGamemode Gamemode => CustomGamemode.HotPotato;
 
     // Meetings disabled in Hot Potato
     public override bool CanCallMeeting => false;
-
-    public override bool DisableNormalWinConditions => true;
+    public override Color GameModeColor => new Color32(197, 185, 64, 255);
 
     public override bool OnBeginIntro(IntroCutscene instance, ref Il2CppSystem.Collections.Generic.List<PlayerControl> teamToDisplay)
     {
@@ -24,11 +23,5 @@ internal class HotPotatoMode : GameModeBase
         instance.RoleText.color = new Color(1f, 0.5f, 0f); // Orange
         instance.RoleBlurbText.text = "Don't hold the potato when the timer runs out!";
         return true;
-    }
-
-    public override bool CheckWinCondition(PlayerStatistics stats)
-    {
-        // Add hot potato specific win checks here later
-        return false;
     }
 }

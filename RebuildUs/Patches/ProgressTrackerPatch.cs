@@ -14,6 +14,11 @@ internal static class ProgressTrackerPatch
     [HarmonyPatch(nameof(ProgressTracker.FixedUpdate))]
     internal static bool FixedUpdatePostfix(ProgressTracker __instance)
     {
+        if (GameModeManager.CurrentGameMode != CustomGamemode.Normal)
+        {
+            __instance.gameObject.SetActive(false);
+        }
+
         return true;
     }
 }

@@ -115,6 +115,11 @@ internal static class GameHistory
         //     PlayerControl.LocalPlayer.SetKillTimer(PlayerControl.GameOptions.KillCooldown * multiplier);
         // }
 
+        if (GameModeManager.CurrentGameMode == CustomGamemode.BattleRoyale)
+        {
+            GameModeManager.CurrentGameModeInstance?.OnKill(target);
+        }
+
         killer.OnKill(target);
         target.OnDeath(killer);
     }

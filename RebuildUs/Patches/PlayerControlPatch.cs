@@ -118,7 +118,7 @@ internal static class PlayerControlPatch
     {
         Logger.LogInfo("[ReportDeadBodyPrefix] Customized.");
 
-        if (GameModeManager.CurrentGameMode != null && !GameModeManager.CurrentGameMode.CanCallMeeting)
+        if (GameModeManager.CurrentGameMode != CustomGamemode.Normal && !GameModeManager.CurrentGameModeInstance.CanCallMeeting)
         {
             return false;
         }
@@ -304,37 +304,44 @@ internal static class PlayerControlPatch
         }
 
         PlayerControl target;
-        if (specialTeamRedExists)
+        if (GameModeManager.CurrentGameMode == CustomGamemode.BattleRoyale)
         {
-            if (Spy.ImpostorsCanKillAnyone)
-            {
-                target = Helpers.SetTarget(false, true);
-            }
-            else
-            {
-                List<PlayerControl> listP = [];
-
-                if (Spy.Exists)
-                {
-                    listP.Add(Spy.PlayerControl);
-                }
-
-                if (Sidekick.Exists && Sidekick.Instance.WasTeamRed)
-                {
-                    listP.Add(Sidekick.PlayerControl);
-                }
-
-                if (Jackal.Exists && Jackal.Instance.WasTeamRed)
-                {
-                    listP.Add(Jackal.PlayerControl);
-                }
-
-                target = Helpers.SetTarget(true, true, listP);
-            }
+            target = Helpers.SetTarget();
         }
         else
         {
-            target = Helpers.SetTarget(true, true);
+            if (specialTeamRedExists)
+            {
+                if (Spy.ImpostorsCanKillAnyone)
+                {
+                    target = Helpers.SetTarget(false, true);
+                }
+                else
+                {
+                    List<PlayerControl> listP = [];
+
+                    if (Spy.Exists)
+                    {
+                        listP.Add(Spy.PlayerControl);
+                    }
+
+                    if (Sidekick.Exists && Sidekick.Instance.WasTeamRed)
+                    {
+                        listP.Add(Sidekick.PlayerControl);
+                    }
+
+                    if (Jackal.Exists && Jackal.Instance.WasTeamRed)
+                    {
+                        listP.Add(Jackal.PlayerControl);
+                    }
+
+                    target = Helpers.SetTarget(true, true, listP);
+                }
+            }
+            else
+            {
+                target = Helpers.SetTarget(true, true);
+            }
         }
 
         FastDestroyableSingleton<HudManager>.Instance.KillButton.SetTarget(target);

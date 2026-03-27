@@ -80,22 +80,42 @@ internal static class MeetingHudPatch
     [HarmonyPatch(typeof(MeetingHud), nameof(MeetingHud.Close))]
     internal static void ClosePostfix(MeetingHud __instance)
     {
-        if (!Helpers.IsPolus || !CustomOptionHolder.PolusRandomSpawn.GetBool())
+        if (!AmongUsClient.Instance.AmHost) return;
+        if (Helpers.IsAirship || SubmergedCompatibility.IsSubmerged) return;
+        if (CustomOptionHolder.RandomSpawn.GetBool()
+            || GameModeManager.CurrentGameMode is CustomGamemode.BattleRoyale)
         {
-            return;
-        }
-        if (!AmongUsClient.Instance.AmHost)
-        {
-            return;
-        }
-        var rand = RebuildUs.Rnd;
-        foreach (var player in PlayerControl.AllPlayerControls.GetFastEnumerator())
-        {
-            var randVal = rand.Next(0, 6);
-            using RPCSender sender = new(PlayerControl.LocalPlayer.NetId, CustomRPC.PolusRandomSpawn);
-            sender.Write(player.Data.PlayerId);
-            sender.Write((byte)randVal);
-            RPCProcedure.PolusRandomSpawn(player.Data.PlayerId, (byte)randVal);
+            var mapId = ByteOptionNames.MapId.Get();
+            foreach (var player in PlayerControl.AllPlayerControls.GetFastEnumerator())
+            {
+                if (player.Data != null)
+                {
+                    byte index;
+                    switch (mapId)
+                    {
+                        case 0:
+                            index = (byte)RebuildUs.Rnd.Next(RandomSpawnPositions.SKELD_POSITIONS.Length);
+                            break;
+                        case 1:
+                            index = (byte)RebuildUs.Rnd.Next(RandomSpawnPositions.MIRA_POSITIONS.Length);
+                            break;
+                        case 2:
+                            index = (byte)RebuildUs.Rnd.Next(RandomSpawnPositions.POLUS_POSITIONS.Length);
+                            break;
+                        case 5:
+                            index = (byte)RebuildUs.Rnd.Next(RandomSpawnPositions.FUNGLE_POSITIONS.Length);
+                            break;
+                        default:
+                            return;
+                    }
+
+                    using RPCSender sender = new(PlayerControl.LocalPlayer.NetId, CustomRPC.RandomSpawn);
+                    sender.Write(player.Data.PlayerId);
+                    sender.Write(mapId);
+                    sender.Write(index);
+                    RPCProcedure.RandomSpawn(player.Data.PlayerId, mapId, index);
+                }
+            }
         }
     }
 

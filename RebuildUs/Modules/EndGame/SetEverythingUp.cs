@@ -52,7 +52,7 @@ internal static partial class EndGameMain
             {
                 DataManager.Player.Stats.IncrementGameResultStat(EndGameResult.CachedGameOverReason, GameResultStat.Losses);
                 __instance.WinText.text = FastDestroyableSingleton<TranslationController>.Instance.GetString(StringNames.Defeat);
-                __instance.WinText.color = UnityEngine.Color.red;
+                __instance.WinText.color = Color.red;
             }
         }
 
@@ -240,6 +240,16 @@ internal static partial class EndGameMain
                 TextRenderer.color = Palette.DisabledGrey;
                 __instance.BackgroundBar.material.SetColor(Shaders.Color, Palette.DisabledGrey);
                 break;
+            case WinCondition.BattleRoyaleLastOneStanding:
+                bonusText = "BattleRoyaleLastOneStanding";
+                TextRenderer.color = BattleRoyaleMode.BattleRoyaleColor;
+                __instance.BackgroundBar.material.SetColor(Shaders.Color, BattleRoyaleMode.BattleRoyaleColor);
+                break;
+            case WinCondition.BattleRoyaleTimeUp:
+                bonusText = "BattleRoyaleTimeUp";
+                TextRenderer.color = Palette.DisabledGrey;
+                __instance.BackgroundBar.material.SetColor(Shaders.Color, Palette.DisabledGrey);
+                break;
             case WinCondition.Default:
             default:
                 switch (AdditionalTempData.GameOverReason)
@@ -315,44 +325,61 @@ internal static partial class EndGameMain
                     winners.Add(winner.PlayerName);
                 }
 
-                foreach (var (key, value) in PlayerStore.AllPlayerDataOnStarted)
+                switch (GameModeManager.CurrentGameMode)
                 {
-                    if (AdditionalTempData.PlayerRoles.TryGetValue(key, out var data))
-                    {
-                        if (data.PlayerName == "")
+                    default:
+                    case CustomGamemode.Normal:
+                        foreach (var (key, value) in PlayerStore.AllPlayerDataOnStarted)
                         {
-                            continue;
+                            if (AdditionalTempData.PlayerRoles.TryGetValue(key, out var data))
+                            {
+                                if (data.PlayerName == "")
+                                {
+                                    continue;
+                                }
+                                var taskInfo = data.TasksTotal > 0 ? string.Format("<color=#FAD934FF>{0}/{1}</color>", data.TasksCompleted, data.TasksTotal) : "";
+                                var status = Tr.GetDynamic(Enum.GetName(data.Status));
+                                var star = winners.Contains(data.PlayerName) && AdditionalTempData.GameOverReason != (GameOverReason)CustomGameOverReason.ForceEnd ? "★" : "";
+                                var result = string.Format("{0}<pos=2.5%>{1}{2}<pos=24%>{3}<pos=32%>{4}<pos=40%>{5}", star, data.PlayerName, data.NameSuffix, taskInfo, status, data.RoleNames);
+                                lines[key] = result;
+                                Logger.LogInfo("[Result] {0}", result);
+                            }
+                            else
+                            {
+                                var status = Tr.Get(TrKey.Disconnected);
+                                var result = string.Format("<pos=2.5%>{0}<pos=32%>{1}<pos=40%>{2}", value.Name, status, value.Roles);
+                                lines[key] = result;
+                                Logger.LogInfo("[Result] {0}", result);
+                            }
                         }
-                        var taskInfo = data.TasksTotal > 0 ? string.Format("<color=#FAD934FF>{0}/{1}</color>", data.TasksCompleted, data.TasksTotal) : "";
-                        var status = Tr.GetDynamic(Enum.GetName(data.Status));
-                        var star = winners.Contains(data.PlayerName) && AdditionalTempData.GameOverReason != (GameOverReason)CustomGameOverReason.ForceEnd ? "★" : "";
-                        var result = string.Format("{0}<pos=2.5%>{1}<pos=24%>{2}<pos=32%>{3}<pos=40%>{4}", star, string.Format("{0}{1}", data.PlayerName, data.NameSuffix), taskInfo, status, data.RoleNames);
-                        lines[key] = result;
-                        // roleSummaryText.AppendLine(result);
-                        Logger.LogInfo("[Result] {0}", result);
-                    }
-                    else
-                    {
-                        var status = Tr.Get(TrKey.Disconnected);
-                        var result = string.Format("<pos=2.5%>{0}<pos=32%>{1}<pos=40%>{2}", value.Name, status, value.Roles);
-                        lines[key] = result;
-                        Logger.LogInfo("[Result] {0}", result);
-                    }
+                        roleSummaryText.AppendLine(string.Format("<pos=2.5%>{0}<pos=24%>{1}<pos=32%>{2}<pos=40%>{3}", Tr.Get(TrKey.ResultName), Tr.Get(TrKey.ResultTask), Tr.Get(TrKey.ResultStatus), Tr.Get(TrKey.ResultRoles)));
+                        break;
+                    case CustomGamemode.BattleRoyale:
+                        foreach (var (key, value) in PlayerStore.AllPlayerDataOnStarted)
+                        {
+                            if (AdditionalTempData.PlayerRoles.TryGetValue(key, out var data))
+                            {
+                                if (data.PlayerName == "")
+                                {
+                                    continue;
+                                }
+                                var status = Tr.GetDynamic(Enum.GetName(data.Status));
+                                var star = winners.Contains(data.PlayerName) && AdditionalTempData.GameOverReason != (GameOverReason)CustomGameOverReason.ForceEnd ? "★" : "";
+                                var result = string.Format("{0}<pos=2.5%>{1}{2}<pos=24%>{3}", star, data.PlayerName, data.NameSuffix, status);
+                                lines[key] = result;
+                                Logger.LogInfo("[Result] {0}", result);
+                            }
+                            else
+                            {
+                                var status = Tr.Get(TrKey.Disconnected);
+                                var result = string.Format("<pos=2.5%>{0}<pos=24%>{1}", value.Name, status);
+                                lines[key] = result;
+                                Logger.LogInfo("[Result] {0}", result);
+                            }
+                        }
+                        roleSummaryText.AppendLine(string.Format("<pos=2.5%>{0}<pos=24%>{1}", Tr.Get(TrKey.ResultName), Tr.Get(TrKey.ResultStatus)));
+                        break;
                 }
-
-                // foreach (var data in AdditionalTempData.PlayerRoles)
-                // {
-                //     if (data.Value.PlayerName == "")
-                //     {
-                //         continue;
-                //     }
-                //     var taskInfo = data.Value.TasksTotal > 0 ? string.Format("<color=#FAD934FF>{0}/{1}</color>", data.Value.TasksCompleted, data.Value.TasksTotal) : "";
-                //     var aliveDead = Tr.GetDynamic(Enum.GetName(data.Value.Status));
-                //     var result = string.Format("{0}<pos=18.5%>{1}<pos=25%>{2}<pos=34%>{3}", string.Format("{0}{1}", data.Value.PlayerName, data.Value.NameSuffix), taskInfo, aliveDead, data.Value.RoleNames);
-                //     lines[data.Key] = result;
-                //     // roleSummaryText.AppendLine(result);
-                //     Logger.LogInfo("[Result] {0}", result);
-                // }
 
                 Logger.LogInfo("[Result] --------------------------------");
 
@@ -370,7 +397,6 @@ internal static partial class EndGameMain
                     if (y == hostId) return 1;
                     return x.CompareTo(y);
                 });
-                roleSummaryText.AppendLine(string.Format("<pos=2.5%>{0}<pos=24%>{1}<pos=32%>{2}<pos=40%>{3}", Tr.Get(TrKey.ResultName), Tr.Get(TrKey.ResultTask), Tr.Get(TrKey.ResultStatus), Tr.Get(TrKey.ResultRoles)));
 
                 foreach (var key in keysArray)
                 {
@@ -383,7 +409,7 @@ internal static partial class EndGameMain
 
                 var roleSummaryTextMesh = roleSummary.GetComponent<TMP_Text>();
                 roleSummaryTextMesh.alignment = TextAlignmentOptions.TopLeft;
-                roleSummaryTextMesh.color = UnityEngine.Color.white;
+                roleSummaryTextMesh.color = Color.white;
                 roleSummaryTextMesh.outlineWidth *= 1.2f;
                 roleSummaryTextMesh.fontSizeMin = 1.25f;
                 roleSummaryTextMesh.fontSizeMax = 1.25f;
@@ -396,5 +422,6 @@ internal static partial class EndGameMain
         }
 
         AdditionalTempData.Clear();
+        RPCProcedure.ResetVariables();
     }
 }

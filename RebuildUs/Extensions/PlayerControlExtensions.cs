@@ -80,7 +80,7 @@ internal static class PlayerControlExtensions
                         }
                     }
 
-                    (var completed, var total) = TasksHandler.TaskInfo(p.Data);
+                    var (completed, total) = TasksHandler.TaskInfo(p.Data);
                     var roleBase = RoleInfo.GetRolesString(p, true, false);
                     var roleGhost = RoleInfo.GetRolesString(p, true, MapSettings.GhostsSeeModifier);
 
@@ -374,9 +374,7 @@ internal static class PlayerControlExtensions
                 return true;
             }
 
-            return GameHistory.FinalStatuses != null
-                   && GameHistory.FinalStatuses.TryGetValue(player.PlayerId, out var status)
-                   && status != FinalStatus.Alive;
+            return GameHistory.FinalStatuses != null && GameHistory.FinalStatuses.TryGetValue(player.PlayerId, out var status) && status != FinalStatus.Alive;
         }
 
         internal bool IsAlive()
@@ -589,19 +587,31 @@ internal static class PlayerControlExtensions
         var labelTransform = source.transform.parent.Find(name);
         var label = labelTransform?.GetComponent<TextMeshPro>();
 
-        if (label == null)
+        if (GameModeManager.CurrentGameMode == CustomGamemode.Normal)
         {
-            label = Object.Instantiate(source, source.transform.parent);
             if (label == null)
             {
-                return null;
+                label = Object.Instantiate(source, source.transform.parent);
+                if (label == null)
+                {
+                    return null;
+                }
+                label.transform.localPosition += Vector3.up * yOffset;
+                label.fontSize *= fontScale;
+                label.gameObject.name = name;
+                label.color = label.color.SetAlpha(1f);
             }
-            label.transform.localPosition += Vector3.up * yOffset;
-            label.fontSize *= fontScale;
-            label.gameObject.name = name;
-            label.color = label.color.SetAlpha(1f);
-        }
 
-        return label;
+            return label;
+        }
+        else
+        {
+            if (label != null)
+            {
+                Object.Destroy(label.gameObject);
+            }
+
+            return null;
+        }
     }
 }

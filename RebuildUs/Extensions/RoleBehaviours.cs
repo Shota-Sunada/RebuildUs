@@ -6,6 +6,8 @@ internal static class RoleBehaviours
     {
         internal bool CanUseVents()
         {
+            if (GameModeManager.CurrentGameMode != CustomGamemode.Normal) return false;
+
             var roleCouldUse = false;
             if (player.IsRole(RoleType.Engineer)
                 || Jackal.CanUseVents && player.IsRole(RoleType.Jackal)
@@ -33,6 +35,8 @@ internal static class RoleBehaviours
 
         internal bool CanSabotage()
         {
+            if (GameModeManager.CurrentGameMode != CustomGamemode.Normal) return false;
+
             var roleCouldUse = false;
             if (Madmate.CanSabotage && player.HasModifier(ModifierType.Madmate)
             || CreatedMadmate.CanSabotage && player.HasModifier(ModifierType.CreatedMadmate)

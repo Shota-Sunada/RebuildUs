@@ -2,7 +2,7 @@ namespace RebuildUs.Objects;
 
 internal abstract class SpecimenVital
 {
-    private static readonly Vector3 Pos = new(35.39f, -22.10f, 1.0f);
+    private static readonly Vector3 Pos = new(35.6f, -18.5f, 1.0f);
     private static bool _flag;
 
     internal static void ClearAndReload()

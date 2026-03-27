@@ -12,4 +12,7 @@ internal enum WinCondition
     LoversSoloWin,
     EveryoneDied,
     ForceEnd,
+
+    BattleRoyaleLastOneStanding,
+    BattleRoyaleTimeUp,
 }

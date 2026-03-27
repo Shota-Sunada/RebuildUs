@@ -126,7 +126,7 @@ public class RebuildUs : BasePlugin
         AssetLoader.LoadAssets();
         Tr.Initialize();
         CustomOptionHolder.Load();
-        GameModeManager.InitTesting();
+        GameModeManager.Initialize();
         RoleInfo.Load();
         CustomColors.Load();
         UpdateRegions();
@@ -196,6 +196,10 @@ public class RebuildUs : BasePlugin
 
     internal static void FixedUpdate(PlayerControl player)
     {
+        if (GameModeManager.CurrentGameMode != CustomGamemode.Normal)
+        {
+            GameModeManager.CurrentGameModeInstance?.OnPlayerUpdate(player);
+        }
         ModRoleManager.AllRoles.DoIf(x => x.Player == player, ModEventDispatcher.DispatchFixedUpdate);
         PlayerModifier.AllModifiers.DoIf(x => x.Player == player, ModEventDispatcher.DispatchFixedUpdate);
     }

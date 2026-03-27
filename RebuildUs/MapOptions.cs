@@ -37,7 +37,7 @@ internal static class MapSettings
 
     internal static bool ShowVentsOnMap = true;
     internal static bool ShowChatNotifications = true;
-    internal static CustomGamemode GameMode = CustomGamemode.Classic;
+    internal static CustomGamemode GameMode = CustomGamemode.Normal;
 
     // Updating values
     internal static int MeetingsCount;

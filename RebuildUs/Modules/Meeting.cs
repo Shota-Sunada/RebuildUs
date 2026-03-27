@@ -388,7 +388,7 @@ internal static class Meeting
 
     internal static bool StartMeetingPrefix(PlayerControl __instance, [HarmonyArgument(0)] NetworkedPlayerInfo meetingTarget)
     {
-        if (GameModeManager.CurrentGameMode != null && !GameModeManager.CurrentGameMode.CanCallMeeting)
+        if (GameModeManager.CurrentGameMode != CustomGamemode.Normal && !GameModeManager.CurrentGameModeInstance.CanCallMeeting)
         {
             return false;
         }
@@ -651,8 +651,8 @@ internal static class Meeting
         {
             return;
         }
-        var deadPlayer = GameHistory.GetDeadPlayer(target.PlayerId);
 
+        var deadPlayer = GameHistory.GetDeadPlayer(target.PlayerId);
         if (deadPlayer == null || deadPlayer.KillerIfExisting == null)
         {
             return;

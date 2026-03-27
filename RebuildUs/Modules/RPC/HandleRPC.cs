@@ -180,8 +180,8 @@ internal static partial class RPCProcedure
             case CustomRPC.ShareRealTasks:
                 ShareRealTasks(reader);
                 break;
-            case CustomRPC.PolusRandomSpawn:
-                PolusRandomSpawn(reader.ReadByte(), reader.ReadByte());
+            case CustomRPC.RandomSpawn:
+                RandomSpawn(reader.ReadByte(), reader.ReadByte(), reader.ReadByte());
                 break;
             case CustomRPC.Synchronize:
                 Synchronize(reader.ReadByte(), reader.ReadInt32());
@@ -230,6 +230,15 @@ internal static partial class RPCProcedure
                 break;
             case CustomRPC.BaitOnKilled:
                 BaitOnKilled(reader.ReadByte());
+                break;
+            case CustomRPC.ShowDeathPopup:
+                ShowDeathPopup(reader.ReadByte());
+                break;
+            case CustomRPC.ReloadCurrentGameMode:
+                ReloadCurrentGameMode();
+                break;
+            case CustomRPC.BattleRoyaleSearchPlayers:
+                BattleRoyaleSearchPlayers();
                 break;
         }
     }

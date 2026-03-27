@@ -11,6 +11,7 @@ internal static class IntroCutscenePatch
     internal static void OnDestroyPrefix(IntroCutscene __instance)
     {
         Intro.GenerateMiniCrewIcons(__instance);
+        GameModeManager.OnIntroDestroyed();
     }
 
     [HarmonyPrefix]
@@ -25,7 +26,7 @@ internal static class IntroCutscenePatch
     [HarmonyPatch(typeof(IntroCutscene), nameof(IntroCutscene.BeginCrewmate))]
     internal static bool BeginCrewmatePrefix(IntroCutscene __instance, ref Il2CppSystem.Collections.Generic.List<PlayerControl> teamToDisplay)
     {
-        if (GameModeManager.CurrentGameMode != null && GameModeManager.CurrentGameMode.OnBeginIntro(__instance, ref teamToDisplay))
+        if (GameModeManager.CurrentGameMode != CustomGamemode.Normal && GameModeManager.CurrentGameModeInstance.OnBeginIntro(__instance, ref teamToDisplay))
         {
             return false;
         }
@@ -38,7 +39,7 @@ internal static class IntroCutscenePatch
     [HarmonyPatch(typeof(IntroCutscene), nameof(IntroCutscene.BeginCrewmate))]
     internal static void BeginCrewmatePostfix(IntroCutscene __instance, ref Il2CppSystem.Collections.Generic.List<PlayerControl> teamToDisplay)
     {
-        if (GameModeManager.CurrentGameMode != null) return;
+        if (GameModeManager.CurrentGameMode != CustomGamemode.Normal) return;
 
         Intro.SetupIntroTeam(__instance, ref teamToDisplay);
     }
@@ -47,7 +48,7 @@ internal static class IntroCutscenePatch
     [HarmonyPatch(typeof(IntroCutscene), nameof(IntroCutscene.BeginImpostor))]
     internal static bool BeginImpostorPrefix(IntroCutscene __instance, ref Il2CppSystem.Collections.Generic.List<PlayerControl> yourTeam)
     {
-        if (GameModeManager.CurrentGameMode != null && GameModeManager.CurrentGameMode.OnBeginIntro(__instance, ref yourTeam))
+        if (GameModeManager.CurrentGameMode != CustomGamemode.Normal && GameModeManager.CurrentGameModeInstance.OnBeginIntro(__instance, ref yourTeam))
         {
             return false;
         }

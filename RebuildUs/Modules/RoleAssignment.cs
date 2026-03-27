@@ -26,6 +26,9 @@ internal static class RoleAssignment
             LobbyBehaviour.Instance.Despawn();
         }
 
+        using var _ = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.ReloadCurrentGameMode);
+        RPCProcedure.ReloadCurrentGameMode();
+
         if (!ShipStatus.Instance)
         {
             var index = Mathf.Clamp(ByteOptionNames.MapId.Get(), 0, Constants.MapNames.Length - 1);
@@ -131,7 +134,20 @@ internal static class RoleAssignment
         }
 
         FastDestroyableSingleton<LoadingBarManager>.Instance?.ToggleLoadingBar(false);
-        FastDestroyableSingleton<RoleManager>.Instance?.SelectRoles();
+
+        switch (GameModeManager.CurrentGameMode)
+        {
+            default:
+            case CustomGamemode.Normal:
+                FastDestroyableSingleton<RoleManager>.Instance?.SelectRoles();
+                break;
+            case CustomGamemode.BattleRoyale:
+                foreach (var p in GameData.Instance.AllPlayers.GetFastEnumerator())
+                {
+                    p.Object.RpcSetRole(RoleTypes.Impostor, false);
+                }
+                break;
+        }
 
         // 独自処理開始
         yield return WaitForLocalPlayer().WrapToIl2Cpp();
@@ -149,16 +165,27 @@ internal static class RoleAssignment
         }
         yield return WaitResetVariables().WrapToIl2Cpp();
 
-        if (!FastDestroyableSingleton<TutorialManager>.InstanceExists
-            && CustomOptionHolder.ActivateRoles.GetBool()) // Don't assign Roles in Tutorial or if deactivated
+        if (!FastDestroyableSingleton<TutorialManager>.InstanceExists) // Don't assign Roles in Tutorial
         {
             try
             {
-                AssignRoles();
+                // Assign mode-specific roles first or instead
+                if (GameModeManager.CurrentGameMode != CustomGamemode.Normal)
+                {
+                    GameModeManager.CurrentGameModeInstance?.AssignRoles();
+                }
+                else
+                {
+                    // Assign standard custom roles if permitted by the current game mode
+                    if (CustomOptionHolder.ActivateRoles.GetBool())
+                    {
+                        AssignRoles();
+                    }
+                }
             }
             catch (Exception ex)
             {
-                Logger.LogError("AssignRoles failed in CoStartGameHost.\n{0}", ex.Message);
+                Logger.LogError("Role assignment failed in CoStartGameHost.\n{0}", ex.Message);
             }
 
             {

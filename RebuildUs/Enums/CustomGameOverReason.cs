@@ -9,4 +9,7 @@ internal enum CustomGameOverReason
     MiniLose,
     LoversWin,
     ForceEnd,
+
+    BattleRoyaleLastOneStanding,
+    BattleRoyaleTimeUp,
 }

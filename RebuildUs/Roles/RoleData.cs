@@ -46,7 +46,7 @@ internal static class RoleData
                 Func<Color> getColor = () => RoleColorRegistry.GetRoleColor(roleType, resolvedColor);
 
                 // SpawnRateを取得するためのFuncを作成
-                Func<CustomOption> getOption = () =>
+                CustomOption getOption()
                 {
                     try
                     {
@@ -68,7 +68,7 @@ internal static class RoleData
                         Logger.LogError("[RoleData] Failed to get option for {0} ({1}): {2}", attr.RoleType, attr.SpawnRatePropertyName, e.Message);
                     }
                     return null;
-                };
+                }
 
                 roles.Add(new RoleRegistration(roleType, roleTeam, classType, getColor, getOption));
             }

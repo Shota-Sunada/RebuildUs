@@ -139,6 +139,14 @@ internal static class TimerBarManager
 
     internal static void TickCustomTimer(float deltaTime)
     {
+        if (GameModeManager.CurrentGameMode != CustomGamemode.Normal)
+        {
+            if (GameModeManager.CurrentGameModeInstance?.UseTimerBar ?? false)
+            {
+                GameModeManager.CurrentGameModeInstance.OnTimerBarUpdate(deltaTime);
+            }
+        }
+
         if (!_customTimerRunning)
         {
             return;

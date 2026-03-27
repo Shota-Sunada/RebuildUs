@@ -16,7 +16,7 @@ internal class RoleInfo(TrKey nameKey, Color color, CustomOption baseOption, Rol
     internal virtual string IntroDescription { get => Tr.GetDynamic(string.Format("{0}IntroDesc", NameKey)); }
     internal virtual string ShortDescription { get => Tr.GetDynamic(string.Format("{0}ShortDesc", NameKey)); }
     internal virtual string FullDescription { get => Tr.GetDynamic(string.Format("{0}FullDesc", NameKey)); }
-    internal virtual string RoleOptions { get => CustomOption.OptionsToString(_baseOption); }
+    internal virtual string RoleOptions { get => _baseOption != null ? CustomOption.OptionsToString(_baseOption) : ""; }
 
     internal bool Enabled { get => Helpers.RolesEnabled && (_baseOption == null || _baseOption.Enabled); }
 

@@ -2,29 +2,30 @@ namespace RebuildUs.Modules.CustomGameModes;
 
 internal static class GameModeManager
 {
-    private static readonly Dictionary<string, GameModeBase> _gameModes = new();
+    private static readonly Dictionary<CustomGamemode, GameModeBase> _gameModes = new();
 
-    public static GameModeBase CurrentGameMode { get; private set; }
+    public static CustomGamemode CurrentGameMode { get; private set; }
+    public static GameModeBase CurrentGameModeInstance => _gameModes.ContainsKey(CurrentGameMode) ? _gameModes[CurrentGameMode] : null;
 
     internal static void Register(GameModeBase gameMode)
     {
-        _gameModes[gameMode.InternalName] = gameMode;
+        _gameModes[gameMode.Gamemode] = gameMode;
     }
 
-    public static void SetGameMode(string name)
+    public static void SetGameMode(CustomGamemode gamemode)
     {
-        if (name == null || !_gameModes.ContainsKey(name))
+        if (!_gameModes.ContainsKey(gamemode))
         {
-            CurrentGameMode = null;
+            CurrentGameMode = CustomGamemode.Normal;
         }
         else
         {
-            CurrentGameMode = _gameModes[name];
+            CurrentGameMode = gamemode;
         }
     }
 
     // Temporary logic to setup game mode for testing, since options aren't added yet.
-    public static void InitTesting()
+    public static void Initialize()
     {
         Register(new BattleRoyaleMode());
         Register(new HotPotatoMode());
@@ -32,6 +33,14 @@ internal static class GameModeManager
         // For now, uncomment one of these to test:
         // SetGameMode("BattleRoyale");
         // SetGameMode("HotPotato");
-        SetGameMode(null); // Defaults to standard normal mode
+        SetGameMode(CustomGamemode.Normal); // Defaults to standard normal mode
+    }
+
+    internal static void OnIntroDestroyed()
+    {
+        if (CurrentGameMode != CustomGamemode.Normal)
+        {
+            CurrentGameModeInstance?.OnIntroDestroyed();
+        }
     }
 }

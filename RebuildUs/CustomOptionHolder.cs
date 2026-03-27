@@ -24,7 +24,7 @@ internal static class CustomOptionHolder
 
         PresetSelection = CustomOption.Normal(0, CustomOptionType.General, TrKey.Preset, Presets, 0, header: presetHeader);
         ActivateRoles = CustomOption.Normal(1, CustomOptionType.General, TrKey.ActivateRoles, true);
-        GameModeSelection = CustomOption.Normal(9, CustomOptionType.General, TrKey.GameMode, [Tr.Get(TrKey.GameModeNormal), Tr.Get(TrKey.GameModeBattleRoyale), Tr.Get(TrKey.GameModeHotPotato)], 0, header: gameModeHeader);
+        GameModeSelection = CustomOption.Normal(9, CustomOptionType.General, TrKey.GameMode, [Tr.Get(TrKey.GameModeNormal), Tr.Get(TrKey.GameModeHideNSeek), Tr.Get(TrKey.GameModeBattleRoyale), Tr.Get(TrKey.GameModeHotPotato)], 0, header: gameModeHeader);
         RandomNumberAlgorithm = CustomOption.Normal(3, CustomOptionType.General, TrKey.RandomNumberAlgorithm, [Tr.Get(TrKey.RndDotnet), Tr.Get(TrKey.RndMT), Tr.Get(TrKey.RndXoshiro256), Tr.Get(TrKey.RndXoshiro256Ss), Tr.Get(TrKey.RndPcg64)], 0);
         EnableRandomRandomNumberAlgorithm = CustomOption.Normal(2, CustomOptionType.General, TrKey.RandomRandomNumberAlgorithm, false);
         EnableRandomRandomNumberAlgorithmDotnet = CustomOption.Normal(4, CustomOptionType.General, TrKey.EnableRandomRandomNumberAlgorithmDotnet, true, EnableRandomRandomNumberAlgorithm);
@@ -67,6 +67,7 @@ internal static class CustomOptionHolder
         // BlockSabotageFromDeadImpostors = CustomOption.Normal(34, CustomOptionType.General, "BlockSabotageFromDeadImpostors", false);
         // ShieldFirstKill = CustomOption.Normal(35, CustomOptionType.General, "ShieldFirstKill", false);
         DontFinishGame = CustomOption.Normal(36, CustomOptionType.General, TrKey.DontFinishGame, false);
+        RandomSpawn = CustomOption.Normal(37, CustomOptionType.General, TrKey.RandomSpawn, false);
 
         AdditionalEmergencyCooldown = CustomOption.Normal(55, CustomOptionType.General, TrKey.AdditionalEmergencyCooldown, 0f, 0f, 15f, 1f, format: TrKey.UnitPlayers);
         AdditionalEmergencyCooldownTime = CustomOption.Normal(56, CustomOptionType.General, TrKey.AdditionalEmergencyCooldownTime, 10f, 0f, 60f, 1f, AdditionalEmergencyCooldown, format: TrKey.UnitSeconds);
@@ -88,7 +89,6 @@ internal static class CustomOptionHolder
 
         PolusAdditionalVents = CustomOption.Normal(70, CustomOptionType.General, TrKey.PolusAdditionalVents, true, header: polusOptionsHeader);
         PolusSpecimenVital = CustomOption.Normal(71, CustomOptionType.General, TrKey.PolusSpecimenVital, true);
-        PolusRandomSpawn = CustomOption.Normal(72, CustomOptionType.General, TrKey.PolusRandomSpawn, true);
 
         #endregion
 
@@ -397,6 +397,10 @@ internal static class CustomOptionHolder
         #region BATTLE ROYALE
 
         BattleRoyaleTimeLimit = CustomOption.Normal(5001, CustomOptionType.BattleRoyale, TrKey.BattleRoyaleTimeLimit, 300f, 60f, 1800f, 60f, header: battleRoyaleHeader, format: TrKey.UnitSeconds);
+        BattleRoyaleKillCooldown = CustomOption.Normal(5003, CustomOptionType.BattleRoyale, TrKey.BattleRoyaleKillCooldown, 1f, 1f, 5f, 0.5f, format: TrKey.UnitSeconds);
+        BattleRoyaleVisionRange = CustomOption.Normal(5004, CustomOptionType.BattleRoyale, TrKey.BattleRoyaleVisionRange, 1.5f, 0.25f, 2.0f, 0.25f, format: TrKey.UnitMultiplies);
+        // BattleRoyaleButtonCooldown = CustomOption.Normal(5005, CustomOptionType.BattleRoyale, TrKey.BattleRoyaleButtonCooldown, 10f, 5f, 30f, 1f, format: TrKey.UnitSeconds);
+        // BattleRoyaleButtonUsage = CustomOption.Normal(5006, CustomOptionType.BattleRoyale, TrKey.BattleRoyaleButtonUsage, 1f, 1f, 3f, 1f, format: TrKey.UnitTimes);
 
         #endregion
 
@@ -460,6 +464,7 @@ internal static class CustomOptionHolder
     // internal static CustomOption BlockSabotageFromDeadImpostors;
     // internal static CustomOption ShieldFirstKill;
     internal static CustomOption DontFinishGame;
+    internal static CustomOption RandomSpawn;
 
     internal static CustomOption AdditionalEmergencyCooldown;
     internal static CustomOption AdditionalEmergencyCooldownTime;
@@ -481,7 +486,6 @@ internal static class CustomOptionHolder
 
     internal static CustomOption PolusAdditionalVents;
     internal static CustomOption PolusSpecimenVital;
-    internal static CustomOption PolusRandomSpawn;
 
     #endregion
 
@@ -523,6 +527,10 @@ internal static class CustomOptionHolder
     #region BATTLE ROYALE
 
     internal static CustomOption BattleRoyaleTimeLimit;
+    internal static CustomOption BattleRoyaleKillCooldown;
+    internal static CustomOption BattleRoyaleVisionRange;
+    // internal static CustomOption BattleRoyaleButtonCooldown;
+    // internal static CustomOption BattleRoyaleButtonUsage;
 
     #endregion
 

@@ -2,13 +2,11 @@ namespace RebuildUs.Roles;
 
 internal static class RoleHelpers
 {
-    private static readonly
-        Dictionary<RoleType, (MethodInfo exists, MethodInfo isRole, MethodInfo setRole, MethodInfo eraseRole, MethodInfo swapRole)> MethodCache = [];
+    private static readonly Dictionary<RoleType, (MethodInfo exists, MethodInfo isRole, MethodInfo setRole, MethodInfo eraseRole, MethodInfo swapRole)> MethodCache = [];
 
     private static (MethodInfo exists, MethodInfo isRole, MethodInfo setRole, MethodInfo eraseRole, MethodInfo swapRole) GetMethods(RoleType roleType)
     {
-        if (MethodCache.TryGetValue(roleType,
-                out var cached))
+        if (MethodCache.TryGetValue(roleType, out var cached))
         {
             return cached;
         }

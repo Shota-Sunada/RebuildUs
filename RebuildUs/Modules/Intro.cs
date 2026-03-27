@@ -313,7 +313,10 @@ internal static class Intro
 
             yield return __instance.ShowTeam(show, 3f);
             // 独自処理挿入
-            yield return SetupRole(__instance);
+            if (!(GameModeManager.CurrentGameModeInstance?.SkipShowRole ?? false))
+            {
+                yield return SetupRole(__instance);
+            }
         }
         else
         {
@@ -599,9 +602,9 @@ internal static class Intro
             __instance.RoleBlurbText.text = string.Format("{0}\n{1}", __instance.RoleBlurbText.text, Helpers.Cs(Lovers.Color, string.Format(Tr.Get(TrKey.LoversFlavorIntroDesc), otherLover?.Data?.PlayerName ?? "")));
         }
 
-        if (GameModeManager.CurrentGameMode != null)
+        if (GameModeManager.CurrentGameMode != CustomGamemode.Normal)
         {
-            GameModeManager.CurrentGameMode.OnSetupRole(__instance);
+            GameModeManager.CurrentGameModeInstance?.OnSetupRole(__instance);
         }
 
         // 従来処理

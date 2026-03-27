@@ -89,7 +89,7 @@ internal static class HudManagerPatch
         __instance.ToggleRightJoystick(isActive);
 
         // OVERRIDDEN BY REBUILD US
-        __instance.TaskPanel.gameObject.SetActive(true);
+        __instance.TaskPanel.gameObject.SetActive(GameModeManager.CurrentGameMode == CustomGamemode.Normal);
         __instance.SabotageButton.ToggleVisible(isActive && localPlayer.CanSabotage());
         __instance.ImpostorVentButton.ToggleVisible(isActive && !localPlayer.IsDead() && localPlayer.CanUseVents() && Helpers.IsNormal);
 
@@ -115,14 +115,21 @@ internal static class HudManagerPatch
             // MapBehaviour.Instance.Show(options);
             __instance.MapButton.SelectButton(true);
 
-            if (PlayerControl.LocalPlayer.IsRole(RoleType.Mafioso) && !(Mafia.Mafioso.CanSabotage || Mafia.IsGodfatherDead)
-            || PlayerControl.LocalPlayer.IsRole(RoleType.Janitor) && !Mafia.Janitor.CanSabotage)
+            if (GameModeManager.CurrentGameMode == CustomGamemode.Normal)
             {
-                MapBehaviour.Instance.Show(new() { Mode = MapOptions.Modes.Normal, AllowMovementWhileMapOpen = true });
+                if (PlayerControl.LocalPlayer.IsRole(RoleType.Mafioso) && !(Mafia.Mafioso.CanSabotage || Mafia.IsGodfatherDead)
+                || PlayerControl.LocalPlayer.IsRole(RoleType.Janitor) && !Mafia.Janitor.CanSabotage)
+                {
+                    MapBehaviour.Instance.Show(new() { Mode = MapOptions.Modes.Normal, AllowMovementWhileMapOpen = true });
+                }
+                else
+                {
+                    MapBehaviour.Instance.Show(options);
+                }
             }
             else
             {
-                MapBehaviour.Instance.Show(options);
+                MapBehaviour.Instance.Show(new() { Mode = MapOptions.Modes.Normal, AllowMovementWhileMapOpen = true });
             }
         }
 
@@ -433,7 +440,7 @@ internal static class HudManagerPatch
             return;
         }
 
-        if (GameModeManager.CurrentGameMode != null && !GameModeManager.CurrentGameMode.CanCallMeeting)
+        if (GameModeManager.CurrentGameMode != CustomGamemode.Normal && !GameModeManager.CurrentGameModeInstance.CanCallMeeting)
         {
             __instance.ReportButton.Hide();
             return;

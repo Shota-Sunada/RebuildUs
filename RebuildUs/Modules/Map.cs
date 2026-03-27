@@ -375,7 +375,7 @@ internal static class Map
             return;
         }
         var taskPanel = taskDisplay.FindChild("TaskPanel");
-        taskPanel?.gameObject.SetActive(true);
+        taskPanel?.gameObject.SetActive(GameModeManager.CurrentGameMode == CustomGamemode.Normal);
     }
 
     internal static bool IsOpenStopped(ref bool __result, MapBehaviour __instance)

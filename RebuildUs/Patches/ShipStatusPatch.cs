@@ -14,45 +14,54 @@ internal static class ShipStatusPatch
     [HarmonyPatch(typeof(ShipStatus), nameof(ShipStatus.CalculateLightRadius))]
     internal static bool CalculateLightRadiusPrefix(ref float __result, ShipStatus __instance, NetworkedPlayerInfo player)
     {
-        if (!__instance.Systems.ContainsKey(SystemTypes.Electrical) && !Helpers.IsFungle || Helpers.IsHideNSeekMode)
+        switch (GameModeManager.CurrentGameMode)
         {
-            return true;
+            default:
+            case CustomGamemode.Normal:
+                if (!__instance.Systems.ContainsKey(SystemTypes.Electrical) && !Helpers.IsFungle || Helpers.IsHideNSeekMode)
+                {
+                    return true;
+                }
+
+                // If player is a role which has Impostor vision
+                if (player.Object.HasImpostorVision())
+                {
+                    __result = GetNeutralLightRadius(__instance, true);
+                    return false;
+                }
+
+                // If player is Lighter with ability active
+                if (PlayerControl.LocalPlayer.IsRole(RoleType.Lighter) && Lighter.IsLightActive(PlayerControl.LocalPlayer))
+                {
+                    var unLerp = Mathf.InverseLerp(__instance.MinLightRadius, __instance.MaxLightRadius, GetNeutralLightRadius(__instance, true));
+                    __result = Mathf.Lerp(__instance.MaxLightRadius * Lighter.ModeLightsOffVision, __instance.MaxLightRadius * Lighter.ModeLightsOnVision, unLerp);
+                    return false;
+                }
+
+                // If there is a Trickster with their ability active
+                if (Trickster.Exists && Trickster.LightsOutTimer > 0f)
+                {
+                    var lerpValue = 1f;
+                    if (Trickster.LightsOutDuration - Trickster.LightsOutTimer < 0.5f)
+                    {
+                        lerpValue = Mathf.Clamp01((Trickster.LightsOutDuration - Trickster.LightsOutTimer) * 2);
+                    }
+                    else if (Trickster.LightsOutTimer < 0.5)
+                    {
+                        lerpValue = Mathf.Clamp01(Trickster.LightsOutTimer * 2);
+                    }
+
+                    __result = Mathf.Lerp(__instance.MinLightRadius, __instance.MaxLightRadius, 1 - lerpValue) * FloatOptionNames.CrewLightMod.Get();
+                    return false;
+                }
+
+                // Default light radius
+                __result = GetNeutralLightRadius(__instance, false);
+                break;
+            case CustomGamemode.BattleRoyale:
+                __result = CustomOptionHolder.BattleRoyaleVisionRange.GetFloat();
+                break;
         }
-
-        // If player is a role which has Impostor vision
-        if (player.Object.HasImpostorVision())
-        {
-            __result = GetNeutralLightRadius(__instance, true);
-            return false;
-        }
-
-        // If player is Lighter with ability active
-        if (PlayerControl.LocalPlayer.IsRole(RoleType.Lighter) && Lighter.IsLightActive(PlayerControl.LocalPlayer))
-        {
-            var unLerp = Mathf.InverseLerp(__instance.MinLightRadius, __instance.MaxLightRadius, GetNeutralLightRadius(__instance, true));
-            __result = Mathf.Lerp(__instance.MaxLightRadius * Lighter.ModeLightsOffVision, __instance.MaxLightRadius * Lighter.ModeLightsOnVision, unLerp);
-            return false;
-        }
-
-        // If there is a Trickster with their ability active
-        if (Trickster.Exists && Trickster.LightsOutTimer > 0f)
-        {
-            var lerpValue = 1f;
-            if (Trickster.LightsOutDuration - Trickster.LightsOutTimer < 0.5f)
-            {
-                lerpValue = Mathf.Clamp01((Trickster.LightsOutDuration - Trickster.LightsOutTimer) * 2);
-            }
-            else if (Trickster.LightsOutTimer < 0.5)
-            {
-                lerpValue = Mathf.Clamp01(Trickster.LightsOutTimer * 2);
-            }
-
-            __result = Mathf.Lerp(__instance.MinLightRadius, __instance.MaxLightRadius, 1 - lerpValue) * FloatOptionNames.CrewLightMod.Get();
-            return false;
-        }
-
-        // Default light radius
-        __result = GetNeutralLightRadius(__instance, false);
 
         return false;
     }
@@ -137,21 +146,42 @@ internal static class ShipStatusPatch
         }
     }
 
-    // 動作確認しました
     [HarmonyPostfix]
     [HarmonyPatch(typeof(ShipStatus), nameof(ShipStatus.SpawnPlayer))]
     internal static void SpawnPlayerPostfix(ShipStatus __instance, PlayerControl player, int numPlayers, bool initialSpawn)
     {
-        // Polusの湧き位置をランダムにする
-        if (Helpers.IsPolus && CustomOptionHolder.PolusRandomSpawn.GetBool())
+        if (!AmongUsClient.Instance.AmHost) return;
+        if (Helpers.IsAirship || SubmergedCompatibility.IsSubmerged) return;
+        if (CustomOptionHolder.RandomSpawn.GetBool()
+            || GameModeManager.CurrentGameMode is CustomGamemode.BattleRoyale)
         {
-            if (AmongUsClient.Instance.AmHost && player.Data != null)
+            if (player.Data != null)
             {
-                var randVal = (byte)RebuildUs.Rnd.Next(0, 6);
-                using RPCSender sender = new(PlayerControl.LocalPlayer.NetId, CustomRPC.PolusRandomSpawn);
+                var mapId = ByteOptionNames.MapId.Get();
+                byte index;
+                switch (mapId)
+                {
+                    case 0:
+                        index = (byte)RebuildUs.Rnd.Next(RandomSpawnPositions.SKELD_POSITIONS.Length);
+                        break;
+                    case 1:
+                        index = (byte)RebuildUs.Rnd.Next(RandomSpawnPositions.MIRA_POSITIONS.Length);
+                        break;
+                    case 2:
+                        index = (byte)RebuildUs.Rnd.Next(RandomSpawnPositions.POLUS_POSITIONS.Length);
+                        break;
+                    case 5:
+                        index = (byte)RebuildUs.Rnd.Next(RandomSpawnPositions.FUNGLE_POSITIONS.Length);
+                        break;
+                    default:
+                        return;
+                }
+
+                using RPCSender sender = new(PlayerControl.LocalPlayer.NetId, CustomRPC.RandomSpawn);
                 sender.Write(player.Data.PlayerId);
-                sender.Write(randVal);
-                RPCProcedure.PolusRandomSpawn(player.Data.PlayerId, randVal);
+                sender.Write(mapId);
+                sender.Write(index);
+                RPCProcedure.RandomSpawn(player.Data.PlayerId, mapId, index);
             }
         }
 

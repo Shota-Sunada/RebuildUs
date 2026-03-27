@@ -160,7 +160,7 @@ internal static partial class EndGameMain
         RPCProcedure.UncheckedEndGame((byte)reason, IsO2Win);
     }
 
-    private static void UncheckedEndGame(CustomGameOverReason reason)
+    internal static void UncheckedEndGame(CustomGameOverReason reason)
     {
         UncheckedEndGame((GameOverReason)reason);
     }
