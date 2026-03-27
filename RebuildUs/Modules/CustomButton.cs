@@ -100,7 +100,7 @@ internal sealed class CustomButton
         GameObject baseObj = new("KeyBindGuide");
         baseObj.transform.SetParent(ActionButton.transform);
         baseObj.transform.localScale = Vector3.one;
-        baseObj.transform.localPosition = new(-0.35f, -0.35f, -1f);
+        baseObj.transform.localPosition = new(-0.55f, -0.35f, -1f);
 
         _keyBackground = baseObj.AddComponent<SpriteRenderer>();
         _keyBackground.sprite = AssetLoader.KeyBindBackground;
