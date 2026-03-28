@@ -1,6 +1,6 @@
 using UnityEngine.Events;
 
-namespace RebuildUs.Modules;
+namespace RebuildUs.Objects;
 
 internal struct ButtonPosition
 {
