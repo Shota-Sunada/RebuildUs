@@ -6,7 +6,7 @@ internal class Hacker : MultiRoleBase<Hacker>
 {
     public static Color Color = new Color32(117, 250, 76, byte.MaxValue);
 
-    private static CustomButton _hackerButton;
+    private static CustomButton HackerButton;
     internal static CustomButton HackerVitalsButton;
     internal static CustomButton HackerAdminTableButton;
     private static TMP_Text _hackerAdminTableChargesText;
@@ -61,15 +61,16 @@ internal class Hacker : MultiRoleBase<Hacker>
     [RegisterCustomButton]
     internal static void MakeButtons(HudManager hm)
     {
-        _hackerButton = new(
+        HackerButton = new(
+            nameof(HackerButton),
             () => HackerTimer = Duration,
             () => PlayerControl.LocalPlayer.IsRole(RoleType.Hacker) && PlayerControl.LocalPlayer.IsAlive(),
             () => true,
             () =>
             {
-                _hackerButton.Timer = _hackerButton.MaxTimer;
-                _hackerButton.IsEffectActive = false;
-                _hackerButton.ActionButton.cooldownTimerText.color = Palette.EnabledColor;
+                HackerButton.Timer = HackerButton.MaxTimer;
+                HackerButton.IsEffectActive = false;
+                HackerButton.ActionButton.cooldownTimerText.color = Palette.EnabledColor;
             },
             AssetLoader.HackerButton,
             ButtonPosition.Layout,
@@ -80,12 +81,13 @@ internal class Hacker : MultiRoleBase<Hacker>
             0f,
             () =>
             {
-                _hackerButton.Timer = _hackerButton.MaxTimer;
+                HackerButton.Timer = HackerButton.MaxTimer;
             },
             false,
             Tr.Get(TrKey.HackerText));
 
         HackerAdminTableButton = new(
+            nameof(HackerAdminTableButton),
             () =>
             {
                 PlayerControl.LocalPlayer.NetTransform.Halt(); // Stop current movement
@@ -111,7 +113,6 @@ internal class Hacker : MultiRoleBase<Hacker>
                 _hackerVitalsChargesText?.text = text;
 
                 return Local._chargesAdminTable > 0 && MapSettings.CanUseAdmin;
-                ;
             },
             () =>
             {
@@ -149,6 +150,7 @@ internal class Hacker : MultiRoleBase<Hacker>
         _hackerAdminTableChargesText.transform.localPosition += new Vector3(-0.05f, 0.7f, 0);
 
         HackerVitalsButton = new(
+            nameof(HackerVitalsButton),
             () =>
             {
                 if (!Helpers.IsMiraHq)
@@ -283,10 +285,10 @@ internal class Hacker : MultiRoleBase<Hacker>
     [SetCustomButtonTimer]
     internal static void SetButtonCooldowns()
     {
-        _hackerButton.MaxTimer = Cooldown;
+        HackerButton.MaxTimer = Cooldown;
         HackerVitalsButton.MaxTimer = Cooldown;
         HackerAdminTableButton.MaxTimer = Cooldown;
-        _hackerButton.EffectDuration = Duration;
+        HackerButton.EffectDuration = Duration;
         HackerVitalsButton.EffectDuration = Duration;
         HackerAdminTableButton.EffectDuration = Duration;
     }

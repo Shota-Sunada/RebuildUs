@@ -7,8 +7,8 @@ internal class Arsonist : SingleRoleBase<Arsonist>
     public static Color Color = new Color32(238, 112, 46, byte.MaxValue);
 
     internal static bool TriggerArsonistWin;
-    private static CustomButton _arsonistButton;
-    private static CustomButton _arsonistIgniteButton;
+    private static CustomButton ArsonistButton;
+    private static CustomButton ArsonistIgniteButton;
     private readonly List<PlayerControl> _untargetablesCache = [];
     internal readonly List<PlayerControl> DousedPlayers = [];
     private PlayerControl _currentTarget;
@@ -32,7 +32,7 @@ internal class Arsonist : SingleRoleBase<Arsonist>
     {
         foreach (var p in PlayerControl.AllPlayerControls.GetFastEnumerator())
         {
-            if (p.IsRole(RoleType.Arsonist) || p.Data.IsDead || p.Data.Disconnected || p.IsGm())
+            if (p.IsRole(RoleType.Arsonist) || p.IsDead() || p.IsGm())
             {
                 continue;
             }
@@ -72,8 +72,7 @@ internal class Arsonist : SingleRoleBase<Arsonist>
     [CustomEvent(CustomEventType.FixedUpdate)]
     internal void FixedUpdate()
     {
-        var local = Local;
-        if (local == null)
+        if (Local == null)
         {
             return;
         }
@@ -112,7 +111,8 @@ internal class Arsonist : SingleRoleBase<Arsonist>
     [RegisterCustomButton]
     internal static void MakeButtons(HudManager hm)
     {
-        _arsonistButton = new(
+        ArsonistButton = new(
+            nameof(ArsonistButton),
             () =>
             {
                 if (Local._currentTarget != null)
@@ -123,20 +123,19 @@ internal class Arsonist : SingleRoleBase<Arsonist>
             () => PlayerControl.LocalPlayer.IsRole(RoleType.Arsonist) && !Local._dousedEveryone && PlayerControl.LocalPlayer.IsAlive(),
             () =>
             {
-                if (!_arsonistButton.IsEffectActive || Local._douseTarget == Local._currentTarget)
+                if (ArsonistButton?.IsEffectActive == true && Local._douseTarget != Local._currentTarget)
                 {
-                    return PlayerControl.LocalPlayer.CanMove && Local._currentTarget != null;
+                    Local._douseTarget = null;
+                    ArsonistButton?.Timer = 0f;
+                    ArsonistButton?.IsEffectActive = false;
                 }
-                Local._douseTarget = null;
-                _arsonistButton.Timer = 0f;
-                _arsonistButton.IsEffectActive = false;
 
                 return PlayerControl.LocalPlayer.CanMove && Local._currentTarget != null;
             },
             () =>
             {
-                _arsonistButton.Timer = _arsonistButton.MaxTimer;
-                _arsonistButton.IsEffectActive = false;
+                ArsonistButton.Timer = ArsonistButton.MaxTimer;
+                ArsonistButton.IsEffectActive = false;
                 Local._douseTarget = null;
                 Local.UpdateStatus();
             },
@@ -158,7 +157,7 @@ internal class Arsonist : SingleRoleBase<Arsonist>
 
                 Local._douseTarget = null;
                 Local.UpdateStatus();
-                _arsonistButton.Timer = Local._dousedEveryone ? 0 : _arsonistButton.MaxTimer;
+                ArsonistButton.Timer = Local._dousedEveryone ? 0 : ArsonistButton.MaxTimer;
 
                 foreach (var p in Local.DousedPlayers)
                 {
@@ -171,7 +170,8 @@ internal class Arsonist : SingleRoleBase<Arsonist>
             false,
             Tr.Get(TrKey.DouseText));
 
-        _arsonistIgniteButton = new(
+        ArsonistIgniteButton = new(
+            nameof(ArsonistIgniteButton),
             () =>
             {
                 if (!Local._dousedEveryone)
@@ -184,7 +184,7 @@ internal class Arsonist : SingleRoleBase<Arsonist>
             () => PlayerControl.LocalPlayer.IsRole(RoleType.Arsonist) && Local._dousedEveryone && PlayerControl.LocalPlayer.IsAlive(),
             () =>
             {
-                return PlayerControl.LocalPlayer.CanMove && Local._dousedEveryone;
+                return PlayerControl.LocalPlayer.CanMove && Local._dousedEveryone && !TriggerArsonistWin;
             },
             () => { },
             AssetLoader.IgniteButton,
@@ -199,9 +199,16 @@ internal class Arsonist : SingleRoleBase<Arsonist>
     [SetCustomButtonTimer]
     internal static void SetButtonCooldowns()
     {
-        _arsonistButton.MaxTimer = Cooldown;
-        _arsonistIgniteButton.Timer = _arsonistIgniteButton.MaxTimer = 0f;
+        ArsonistButton.MaxTimer = Cooldown;
+        ArsonistIgniteButton.Timer = ArsonistIgniteButton.MaxTimer = 0f;
         Local?.UpdateStatus();
+    }
+
+    private static bool TEST(object obj)
+    {
+        Logger.LogInfo("Object is null: {0}", obj == null);
+
+        return obj == null;
     }
 
     private void UpdateStatus()

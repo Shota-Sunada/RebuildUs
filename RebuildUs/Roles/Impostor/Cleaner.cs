@@ -28,6 +28,7 @@ internal class Cleaner : MultiRoleBase<Cleaner>
     internal static void MakeButtons(HudManager hm)
     {
         CleanerCleanButton = new(
+            nameof(CleanerCleanButton),
             () =>
             {
                 var truePosition = PlayerControl.LocalPlayer.GetTruePosition();

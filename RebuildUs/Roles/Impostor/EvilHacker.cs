@@ -5,8 +5,8 @@ namespace RebuildUs.Roles.Impostor;
 internal class EvilHacker : MultiRoleBase<EvilHacker>
 {
     public static Color Color = Palette.ImpostorRed;
-    private static CustomButton _evilHackerButton;
-    private static CustomButton _evilHackerCreatesMadmateButton;
+    private static CustomButton EvilHackerButton;
+    private static CustomButton EvilHackerCreatesMadmateButton;
 
     private PlayerControl _currentTarget;
     internal bool CanCreateMadmate;
@@ -45,7 +45,8 @@ internal class EvilHacker : MultiRoleBase<EvilHacker>
     [RegisterCustomButton]
     internal static void MakeButtons(HudManager hm)
     {
-        _evilHackerButton = new(
+        EvilHackerButton = new(
+            nameof(EvilHackerButton),
             () =>
             {
                 PlayerControl.LocalPlayer.NetTransform.Halt();
@@ -85,7 +86,8 @@ internal class EvilHacker : MultiRoleBase<EvilHacker>
             Helpers.IsPolus,
             FastDestroyableSingleton<TranslationController>.Instance.GetString(StringNames.Admin));
 
-        _evilHackerCreatesMadmateButton = new(
+        EvilHackerCreatesMadmateButton = new(
+            nameof(EvilHackerCreatesMadmateButton),
             () =>
             {
                 using RPCSender sender = new(PlayerControl.LocalPlayer.NetId, CustomRPC.EvilHackerCreatesMadmate);
@@ -113,8 +115,8 @@ internal class EvilHacker : MultiRoleBase<EvilHacker>
     [SetCustomButtonTimer]
     internal static void SetButtonCooldowns()
     {
-        _evilHackerButton.MaxTimer = 0f;
-        _evilHackerCreatesMadmateButton.MaxTimer = 0f;
+        EvilHackerButton.MaxTimer = 0f;
+        EvilHackerCreatesMadmateButton.MaxTimer = 0f;
     }
 
     internal static bool IsInherited()

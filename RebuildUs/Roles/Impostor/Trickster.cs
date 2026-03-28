@@ -6,8 +6,8 @@ internal class Trickster : SingleRoleBase<Trickster>
 {
     public static Color Color = Palette.ImpostorRed;
 
-    private static CustomButton _placeJackInTheBoxButton;
-    private static CustomButton _lightsOutButton;
+    private static CustomButton PlaceJackInTheBoxButton;
+    private static CustomButton LightsOutButton;
     internal static float LightsOutTimer;
 
     public Trickster()
@@ -22,10 +22,11 @@ internal class Trickster : SingleRoleBase<Trickster>
     [RegisterCustomButton]
     internal static void MakeButtons(HudManager hm)
     {
-        _placeJackInTheBoxButton = new(
+        PlaceJackInTheBoxButton = new(
+            nameof(PlaceJackInTheBoxButton),
             () =>
             {
-                _placeJackInTheBoxButton.Timer = _placeJackInTheBoxButton.MaxTimer;
+                PlaceJackInTheBoxButton.Timer = PlaceJackInTheBoxButton.MaxTimer;
 
                 var pos = PlayerControl.LocalPlayer.transform.position;
                 var buff = new byte[sizeof(float) * 2];
@@ -46,7 +47,7 @@ internal class Trickster : SingleRoleBase<Trickster>
             },
             () =>
             {
-                _placeJackInTheBoxButton.Timer = _placeJackInTheBoxButton.MaxTimer;
+                PlaceJackInTheBoxButton.Timer = PlaceJackInTheBoxButton.MaxTimer;
             },
             AssetLoader.PlaceJackInTheBoxButton,
             ButtonPosition.Layout,
@@ -56,7 +57,8 @@ internal class Trickster : SingleRoleBase<Trickster>
             false,
             Tr.Get(TrKey.PlaceJackInTheBoxText));
 
-        _lightsOutButton = new(
+        LightsOutButton = new(
+            nameof(LightsOutButton),
             () =>
             {
                 using RPCSender sender = new(PlayerControl.LocalPlayer.NetId, CustomRPC.LightsOut);
@@ -72,9 +74,9 @@ internal class Trickster : SingleRoleBase<Trickster>
             },
             () =>
             {
-                _lightsOutButton.Timer = _lightsOutButton.MaxTimer;
-                _lightsOutButton.IsEffectActive = false;
-                _lightsOutButton.ActionButton.graphic.color = Palette.EnabledColor;
+                LightsOutButton.Timer = LightsOutButton.MaxTimer;
+                LightsOutButton.IsEffectActive = false;
+                LightsOutButton.ActionButton.graphic.color = Palette.EnabledColor;
             },
             AssetLoader.LightsOutButton,
             ButtonPosition.Layout,
@@ -85,7 +87,7 @@ internal class Trickster : SingleRoleBase<Trickster>
             LightsOutDuration,
             () =>
             {
-                _lightsOutButton.Timer = _lightsOutButton.MaxTimer;
+                LightsOutButton.Timer = LightsOutButton.MaxTimer;
             },
             false,
             Tr.Get(TrKey.LightsOutText));
@@ -94,9 +96,9 @@ internal class Trickster : SingleRoleBase<Trickster>
     [SetCustomButtonTimer]
     internal static void SetButtonCooldowns()
     {
-        _placeJackInTheBoxButton.MaxTimer = PlaceBoxCooldown;
-        _lightsOutButton.MaxTimer = LightsOutCooldown;
-        _lightsOutButton.EffectDuration = LightsOutDuration;
+        PlaceJackInTheBoxButton.MaxTimer = PlaceBoxCooldown;
+        LightsOutButton.MaxTimer = LightsOutCooldown;
+        LightsOutButton.EffectDuration = LightsOutDuration;
     }
 
     internal static void Clear()

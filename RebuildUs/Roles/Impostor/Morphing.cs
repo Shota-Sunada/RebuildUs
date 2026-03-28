@@ -6,7 +6,7 @@ internal class Morphing : MultiRoleBase<Morphing>
 {
     public static Color Color = Palette.ImpostorRed;
 
-    private static CustomButton _morphingButton;
+    private static CustomButton MorphingButton;
     private static PlayerControl _currentTarget;
     private static PlayerControl _sampledTarget;
     internal static PlayerControl MorphTarget;
@@ -48,13 +48,13 @@ internal class Morphing : MultiRoleBase<Morphing>
         Helpers.SetPlayerOutline(_currentTarget, RoleColor);
 
         // Update Sampled Player Icon
-        if (FastDestroyableSingleton<HudManager>.Instance != null && _morphingButton != null && _morphingButton.ActionButton != null)
+        if (FastDestroyableSingleton<HudManager>.Instance != null && MorphingButton != null && MorphingButton.ActionButton != null)
         {
             if (_sampledTarget != null && !MeetingHud.Instance)
             {
                 if (MapSettings.PlayerIcons.TryGetValue(_sampledTarget.PlayerId, out var icon) && icon != null && icon.gameObject != null)
                 {
-                    icon.transform.position = _morphingButton.ActionButton.transform.position + IconOffset; // Slight offset
+                    icon.transform.position = MorphingButton.ActionButton.transform.position + IconOffset; // Slight offset
                     icon.transform.localScale = Vector3.one * 0.35f;
                     icon.gameObject.SetActive(true);
                 }
@@ -72,7 +72,8 @@ internal class Morphing : MultiRoleBase<Morphing>
     [RegisterCustomButton]
     internal static void MakeButtons(HudManager hm)
     {
-        _morphingButton = new(
+        MorphingButton = new(
+            nameof(MorphingButton),
             () =>
             {
                 if (_sampledTarget != null)
@@ -88,14 +89,14 @@ internal class Morphing : MultiRoleBase<Morphing>
                         icon.gameObject.SetActive(false);
                     }
                     _sampledTarget = null;
-                    _morphingButton.EffectDuration = Duration;
+                    MorphingButton.EffectDuration = Duration;
                 }
                 else if (_currentTarget != null)
                 {
                     _sampledTarget = _currentTarget;
-                    _morphingButton.Sprite = AssetLoader.MorphButton;
-                    _morphingButton.ButtonText = Tr.Get(TrKey.MorphText);
-                    _morphingButton.EffectDuration = 1f;
+                    MorphingButton.Sprite = AssetLoader.MorphButton;
+                    MorphingButton.ButtonText = Tr.Get(TrKey.MorphText);
+                    MorphingButton.EffectDuration = 1f;
                 }
             },
             () =>
@@ -112,11 +113,11 @@ internal class Morphing : MultiRoleBase<Morphing>
                 {
                     icon.gameObject.SetActive(false);
                 }
-                _morphingButton.Timer = _morphingButton.MaxTimer;
-                _morphingButton.Sprite = AssetLoader.SampleButton;
-                _morphingButton.ButtonText = Tr.Get(TrKey.SampleText);
-                _morphingButton.IsEffectActive = false;
-                _morphingButton.ActionButton.cooldownTimerText.color = Palette.EnabledColor;
+                MorphingButton.Timer = MorphingButton.MaxTimer;
+                MorphingButton.Sprite = AssetLoader.SampleButton;
+                MorphingButton.ButtonText = Tr.Get(TrKey.SampleText);
+                MorphingButton.IsEffectActive = false;
+                MorphingButton.ActionButton.cooldownTimerText.color = Palette.EnabledColor;
                 _sampledTarget = null;
             },
             AssetLoader.SampleButton,
@@ -130,9 +131,9 @@ internal class Morphing : MultiRoleBase<Morphing>
             {
                 if (_sampledTarget == null)
                 {
-                    _morphingButton.Timer = _morphingButton.MaxTimer;
-                    _morphingButton.Sprite = AssetLoader.SampleButton;
-                    _morphingButton.ButtonText = Tr.Get(TrKey.SampleText);
+                    MorphingButton.Timer = MorphingButton.MaxTimer;
+                    MorphingButton.Sprite = AssetLoader.SampleButton;
+                    MorphingButton.ButtonText = Tr.Get(TrKey.SampleText);
                 }
             },
             false,
@@ -142,8 +143,8 @@ internal class Morphing : MultiRoleBase<Morphing>
     [SetCustomButtonTimer]
     internal static void SetButtonCooldowns()
     {
-        _morphingButton.MaxTimer = Cooldown;
-        _morphingButton.EffectDuration = Duration;
+        MorphingButton.MaxTimer = Cooldown;
+        MorphingButton.EffectDuration = Duration;
     }
 
     internal void HandleMorphing()

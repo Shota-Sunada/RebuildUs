@@ -6,8 +6,8 @@ internal class Tracker : MultiRoleBase<Tracker>
 {
     public static Color Color = new Color32(100, 58, 220, byte.MaxValue);
 
-    private static CustomButton _trackerTrackPlayerButton;
-    private static CustomButton _trackerTrackCorpsesButton;
+    private static CustomButton TrackerTrackPlayerButton;
+    private static CustomButton TrackerTrackCorpsesButton;
     internal static List<Vector3> DeadBodyPositions = [];
 
     internal static float CorpsesTrackingTimer;
@@ -149,7 +149,8 @@ internal class Tracker : MultiRoleBase<Tracker>
     [RegisterCustomButton]
     internal static void MakeButtons(HudManager hm)
     {
-        _trackerTrackPlayerButton = new(
+        TrackerTrackPlayerButton = new(
+            nameof(TrackerTrackPlayerButton),
             () =>
             {
                 using RPCSender sender = new(PlayerControl.LocalPlayer.NetId, CustomRPC.TrackerUsedTracker);
@@ -179,7 +180,8 @@ internal class Tracker : MultiRoleBase<Tracker>
             false,
             Tr.Get(TrKey.TrackerText));
 
-        _trackerTrackCorpsesButton = new(
+        TrackerTrackCorpsesButton = new(
+            nameof(TrackerTrackCorpsesButton),
             () =>
             {
                 CorpsesTrackingTimer = CorpsesTrackingDuration;
@@ -194,9 +196,9 @@ internal class Tracker : MultiRoleBase<Tracker>
             },
             () =>
             {
-                _trackerTrackCorpsesButton.Timer = _trackerTrackCorpsesButton.MaxTimer;
-                _trackerTrackCorpsesButton.IsEffectActive = false;
-                _trackerTrackCorpsesButton.ActionButton.cooldownTimerText.color = Palette.EnabledColor;
+                TrackerTrackCorpsesButton.Timer = TrackerTrackCorpsesButton.MaxTimer;
+                TrackerTrackCorpsesButton.IsEffectActive = false;
+                TrackerTrackCorpsesButton.ActionButton.cooldownTimerText.color = Palette.EnabledColor;
             },
             AssetLoader.PathfindButton,
             ButtonPosition.Layout,
@@ -207,7 +209,7 @@ internal class Tracker : MultiRoleBase<Tracker>
             CorpsesTrackingDuration,
             () =>
             {
-                _trackerTrackCorpsesButton.Timer = _trackerTrackCorpsesButton.MaxTimer;
+                TrackerTrackCorpsesButton.Timer = TrackerTrackCorpsesButton.MaxTimer;
             },
             false,
             Tr.Get(TrKey.PathfindText));
@@ -216,9 +218,9 @@ internal class Tracker : MultiRoleBase<Tracker>
     [SetCustomButtonTimer]
     internal static void SetButtonCooldowns()
     {
-        _trackerTrackPlayerButton.MaxTimer = 0f;
-        _trackerTrackCorpsesButton.MaxTimer = CorpsesTrackingCooldown;
-        _trackerTrackCorpsesButton.EffectDuration = CorpsesTrackingDuration;
+        TrackerTrackPlayerButton.MaxTimer = 0f;
+        TrackerTrackCorpsesButton.MaxTimer = CorpsesTrackingCooldown;
+        TrackerTrackCorpsesButton.EffectDuration = CorpsesTrackingDuration;
     }
 
     internal void ResetTracked()

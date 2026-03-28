@@ -6,7 +6,7 @@ internal class SecurityGuard : SingleRoleBase<SecurityGuard>
 {
     public static Color Color = new Color32(195, 178, 95, byte.MaxValue);
 
-    private static CustomButton _securityGuardButton;
+    private static CustomButton SecurityGuardButton;
     internal static CustomButton SecurityGuardCamButton;
     private static TMP_Text _securityGuardButtonScrewsText;
     private static TMP_Text _securityGuardChargesText;
@@ -89,7 +89,8 @@ internal class SecurityGuard : SingleRoleBase<SecurityGuard>
     [RegisterCustomButton]
     internal static void MakeButtons(HudManager hm)
     {
-        _securityGuardButton = new(
+        SecurityGuardButton = new(
+            nameof(SecurityGuardButton),
             () =>
             {
                 if (Local._ventTarget != null)
@@ -125,7 +126,7 @@ internal class SecurityGuard : SingleRoleBase<SecurityGuard>
                     RPCProcedure.PlaceCamera(pos.x, pos.y, roomId);
                 }
 
-                _securityGuardButton.Timer = _securityGuardButton.MaxTimer;
+                SecurityGuardButton.Timer = SecurityGuardButton.MaxTimer;
             },
             () =>
             {
@@ -135,13 +136,13 @@ internal class SecurityGuard : SingleRoleBase<SecurityGuard>
             {
                 if (Local._ventTarget == null && !Helpers.IsMiraHq && !SubmergedCompatibility.IsSubmerged)
                 {
-                    _securityGuardButton.ButtonText = Tr.Get(TrKey.PlaceCameraText);
-                    _securityGuardButton.Sprite = AssetLoader.PlaceCameraButton;
+                    SecurityGuardButton?.ButtonText = Tr.Get(TrKey.PlaceCameraText);
+                    SecurityGuardButton?.Sprite = AssetLoader.PlaceCameraButton;
                 }
                 else
                 {
-                    _securityGuardButton.ButtonText = Tr.Get(TrKey.CloseVentText);
-                    _securityGuardButton.Sprite = AssetLoader.CloseVentButton;
+                    SecurityGuardButton?.ButtonText = Tr.Get(TrKey.CloseVentText);
+                    SecurityGuardButton?.Sprite = AssetLoader.CloseVentButton;
                 }
 
                 _securityGuardButtonScrewsText?.text = string.Format(Tr.Get(TrKey.SecurityGuardScrews), Local.RemainingScrews);
@@ -150,7 +151,7 @@ internal class SecurityGuard : SingleRoleBase<SecurityGuard>
             },
             () =>
             {
-                _securityGuardButton.Timer = _securityGuardButton.MaxTimer;
+                SecurityGuardButton.Timer = SecurityGuardButton.MaxTimer;
             },
             AssetLoader.PlaceCameraButton,
             ButtonPosition.Layout,
@@ -160,13 +161,14 @@ internal class SecurityGuard : SingleRoleBase<SecurityGuard>
             false,
             Tr.Get(TrKey.PlaceCameraText));
 
-        _securityGuardButtonScrewsText = UnityObject.Instantiate(_securityGuardButton.ActionButton.cooldownTimerText, _securityGuardButton.ActionButton.cooldownTimerText.transform.parent);
+        _securityGuardButtonScrewsText = UnityObject.Instantiate(SecurityGuardButton.ActionButton.cooldownTimerText, SecurityGuardButton.ActionButton.cooldownTimerText.transform.parent);
         _securityGuardButtonScrewsText.text = "";
         _securityGuardButtonScrewsText.enableWordWrapping = false;
         _securityGuardButtonScrewsText.transform.localScale = Vector3.one * 0.5f;
         _securityGuardButtonScrewsText.transform.localPosition += new Vector3(-0.05f, 0.7f, 0);
 
         SecurityGuardCamButton = new(
+            nameof(SecurityGuardCamButton),
             () =>
             {
                 if (!Helpers.IsMiraHq)
@@ -284,10 +286,10 @@ internal class SecurityGuard : SingleRoleBase<SecurityGuard>
             () =>
             {
                 _securityGuardChargesText?.text = string.Format(Tr.Get(TrKey.HackerChargesText), Local._charges, CamMaxCharges);
-                SecurityGuardCamButton.ActionButton.graphic.sprite = Helpers.IsMiraHq
+                SecurityGuardCamButton?.ActionButton.graphic.sprite = Helpers.IsMiraHq
                     ? FastDestroyableSingleton<HudManager>.Instance.UseButton.fastUseSettings[ImageNames.DoorLogsButton].Image
                     : FastDestroyableSingleton<HudManager>.Instance.UseButton.fastUseSettings[ImageNames.CamsButton].Image;
-                SecurityGuardCamButton.ActionButton.OverrideText(Helpers.IsMiraHq
+                SecurityGuardCamButton?.ActionButton.OverrideText(Helpers.IsMiraHq
                     ? FastDestroyableSingleton<TranslationController>.Instance.GetString(StringNames.SecurityLogsSystem)
                     : FastDestroyableSingleton<TranslationController>.Instance.GetString(StringNames.SecurityCamsSystem));
                 return PlayerControl.LocalPlayer.CanMove && Local._charges > 0;
@@ -331,7 +333,7 @@ internal class SecurityGuard : SingleRoleBase<SecurityGuard>
     [SetCustomButtonTimer]
     internal static void SetButtonCooldowns()
     {
-        _securityGuardButton.MaxTimer = Cooldown;
+        SecurityGuardButton.MaxTimer = Cooldown;
         SecurityGuardCamButton.MaxTimer = Cooldown;
         SecurityGuardCamButton.EffectDuration = CamDuration;
     }

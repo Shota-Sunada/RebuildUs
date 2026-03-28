@@ -6,7 +6,7 @@ internal class Sheriff : MultiRoleBase<Sheriff>
 {
     public static Color Color = new Color32(248, 205, 70, byte.MaxValue);
 
-    private static CustomButton _sheriffKillButton;
+    private static CustomButton SheriffKillButton;
     internal static TMP_Text SheriffNumShotsText;
     internal bool CanKill = SheriffCanKillNoDeadBody;
     internal PlayerControl CurrentTarget;
@@ -60,7 +60,8 @@ internal class Sheriff : MultiRoleBase<Sheriff>
     internal static void MakeButtons(HudManager hm)
     {
         // Sheriff Kill
-        _sheriffKillButton = new(
+        SheriffKillButton = new(
+            nameof(SheriffKillButton),
             () =>
             {
                 if (Local.NumShots <= 0)
@@ -97,7 +98,7 @@ internal class Sheriff : MultiRoleBase<Sheriff>
                     }
                 }
 
-                _sheriffKillButton.Timer = _sheriffKillButton.MaxTimer;
+                SheriffKillButton.Timer = SheriffKillButton.MaxTimer;
                 Local.CurrentTarget = null;
             },
             () =>
@@ -111,7 +112,7 @@ internal class Sheriff : MultiRoleBase<Sheriff>
             },
             () =>
             {
-                _sheriffKillButton.Timer = _sheriffKillButton.MaxTimer;
+                SheriffKillButton.Timer = SheriffKillButton.MaxTimer;
             },
             hm.KillButton.graphic.sprite,
             ButtonPosition.Layout,
@@ -121,7 +122,7 @@ internal class Sheriff : MultiRoleBase<Sheriff>
             false,
             FastDestroyableSingleton<TranslationController>.Instance.GetString(StringNames.KillLabel));
 
-        SheriffNumShotsText = UnityObject.Instantiate(_sheriffKillButton.ActionButton.cooldownTimerText, _sheriffKillButton.ActionButton.cooldownTimerText.transform.parent);
+        SheriffNumShotsText = UnityObject.Instantiate(SheriffKillButton.ActionButton.cooldownTimerText, SheriffKillButton.ActionButton.cooldownTimerText.transform.parent);
         SheriffNumShotsText.text = "";
         SheriffNumShotsText.enableWordWrapping = false;
         SheriffNumShotsText.transform.localScale = Vector3.one * 0.5f;
@@ -131,7 +132,7 @@ internal class Sheriff : MultiRoleBase<Sheriff>
     [SetCustomButtonTimer]
     internal static void SetButtonCooldowns()
     {
-        _sheriffKillButton.MaxTimer = Cooldown;
+        SheriffKillButton.MaxTimer = Cooldown;
     }
 
     internal static bool CheckKill(PlayerControl target)

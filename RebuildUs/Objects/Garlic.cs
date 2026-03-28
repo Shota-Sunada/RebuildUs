@@ -2,7 +2,7 @@ namespace RebuildUs.Objects;
 
 internal sealed class Garlic
 {
-    private static CustomButton _garlicButton;
+    private static CustomButton GarlicButton;
     internal static List<Garlic> Garlics = [];
     private readonly GameObject _background;
 
@@ -11,7 +11,8 @@ internal sealed class Garlic
     [RegisterCustomButton]
     internal static void MakeButtons(HudManager hm)
     {
-        _garlicButton = new(
+        GarlicButton = new(
+            nameof(GarlicButton),
             () =>
             {
                 Vampire.PlayerPlacedGarlic = true;
@@ -46,7 +47,7 @@ internal sealed class Garlic
     [SetCustomButtonTimer]
     internal static void SetButtonCooldowns()
     {
-        _garlicButton.Timer = _garlicButton.MaxTimer = 0f;
+        GarlicButton.Timer = GarlicButton.MaxTimer = 0f;
     }
 
     internal Garlic(Vector2 p)

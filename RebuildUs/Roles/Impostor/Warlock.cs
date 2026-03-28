@@ -68,6 +68,7 @@ internal class Warlock : MultiRoleBase<Warlock>
     internal static void MakeButtons(HudManager hm)
     {
         WarlockCurseButton = new(
+            nameof(WarlockCurseButton),
             () =>
             {
                 if (Local._curseVictim == null)

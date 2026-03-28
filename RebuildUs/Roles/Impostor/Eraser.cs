@@ -6,7 +6,7 @@ internal class Eraser : MultiRoleBase<Eraser>
 {
     public static Color Color = Palette.ImpostorRed;
 
-    private static CustomButton _eraserButton;
+    private static CustomButton EraserButton;
 
     internal static List<PlayerControl> FutureErased = [];
     internal PlayerControl CurrentTarget;
@@ -50,11 +50,12 @@ internal class Eraser : MultiRoleBase<Eraser>
     [RegisterCustomButton]
     internal static void MakeButtons(HudManager hm)
     {
-        _eraserButton = new(
+        EraserButton = new(
+            nameof(EraserButton),
             () =>
             {
-                _eraserButton.MaxTimer += CooldownIncrease;
-                _eraserButton.Timer = _eraserButton.MaxTimer;
+                EraserButton.MaxTimer += CooldownIncrease;
+                EraserButton.Timer = EraserButton.MaxTimer;
 
                 using RPCSender sender = new(PlayerControl.LocalPlayer.NetId, CustomRPC.SetFutureErased);
                 sender.Write(Local.CurrentTarget.PlayerId);
@@ -70,7 +71,7 @@ internal class Eraser : MultiRoleBase<Eraser>
             },
             () =>
             {
-                _eraserButton.Timer = _eraserButton.MaxTimer;
+                EraserButton.Timer = EraserButton.MaxTimer;
             },
             AssetLoader.EraserButton,
             ButtonPosition.Layout,
@@ -84,7 +85,7 @@ internal class Eraser : MultiRoleBase<Eraser>
     [SetCustomButtonTimer]
     internal static void SetButtonCooldowns()
     {
-        _eraserButton.MaxTimer = Cooldown;
+        EraserButton.MaxTimer = Cooldown;
     }
 
     internal static void Clear()

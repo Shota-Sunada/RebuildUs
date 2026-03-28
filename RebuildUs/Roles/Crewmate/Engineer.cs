@@ -6,7 +6,7 @@ internal class Engineer : MultiRoleBase<Engineer>
 {
     public static Color Color = new Color32(0, 40, 245, byte.MaxValue);
 
-    private static CustomButton _engineerRepairButton;
+    private static CustomButton EngineerRepairButton;
     internal static TMP_Text EngineerRemainText;
 
     internal int RemainingFixes = 1;
@@ -24,10 +24,11 @@ internal class Engineer : MultiRoleBase<Engineer>
     [RegisterCustomButton]
     internal static void MakeButtons(HudManager hm)
     {
-        _engineerRepairButton = new(
+        EngineerRepairButton = new(
+            nameof(EngineerRepairButton),
             () =>
             {
-                _engineerRepairButton.Timer = 0f;
+                EngineerRepairButton.Timer = 0f;
 
                 using RPCSender sender = new(PlayerControl.LocalPlayer.NetId, CustomRPC.EngineerUsedRepair);
                 sender.Write(PlayerControl.LocalPlayer.PlayerId);
@@ -102,7 +103,7 @@ internal class Engineer : MultiRoleBase<Engineer>
             false,
             Tr.Get(TrKey.RepairText));
 
-        EngineerRemainText = UnityObject.Instantiate(_engineerRepairButton.ActionButton.cooldownTimerText, _engineerRepairButton.ActionButton.cooldownTimerText.transform.parent);
+        EngineerRemainText = UnityObject.Instantiate(EngineerRepairButton.ActionButton.cooldownTimerText, EngineerRepairButton.ActionButton.cooldownTimerText.transform.parent);
         EngineerRemainText.text = "";
         EngineerRemainText.enableWordWrapping = false;
         EngineerRemainText.transform.localScale = Vector3.one * 0.5f;
@@ -112,7 +113,7 @@ internal class Engineer : MultiRoleBase<Engineer>
     [SetCustomButtonTimer]
     internal static void SetButtonCooldowns()
     {
-        _engineerRepairButton.MaxTimer = 0f;
+        EngineerRepairButton.MaxTimer = 0f;
     }
 
     internal static void Clear()

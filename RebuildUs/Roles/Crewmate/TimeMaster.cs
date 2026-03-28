@@ -6,7 +6,7 @@ internal class TimeMaster : SingleRoleBase<TimeMaster>
 {
     public static Color Color = new Color32(112, 142, 239, byte.MaxValue);
 
-    private static CustomButton _timeMasterShieldButton;
+    private static CustomButton TimeMasterShieldButton;
 
     internal static bool ShieldActive = false;
     internal static bool IsRewinding;
@@ -101,7 +101,8 @@ internal class TimeMaster : SingleRoleBase<TimeMaster>
     [RegisterCustomButton]
     internal static void MakeButtons(HudManager hm)
     {
-        _timeMasterShieldButton = new(
+        TimeMasterShieldButton = new(
+            nameof(TimeMasterShieldButton),
             () =>
             {
                 using RPCSender sender = new(PlayerControl.LocalPlayer.NetId, CustomRPC.TimeMasterShield);
@@ -117,9 +118,9 @@ internal class TimeMaster : SingleRoleBase<TimeMaster>
             },
             () =>
             {
-                _timeMasterShieldButton.Timer = _timeMasterShieldButton.MaxTimer;
-                _timeMasterShieldButton.IsEffectActive = false;
-                _timeMasterShieldButton.ActionButton.cooldownTimerText.color = Palette.EnabledColor;
+                TimeMasterShieldButton.Timer = TimeMasterShieldButton.MaxTimer;
+                TimeMasterShieldButton.IsEffectActive = false;
+                TimeMasterShieldButton.ActionButton.cooldownTimerText.color = Palette.EnabledColor;
             },
             AssetLoader.TimeShieldButton,
             ButtonPosition.Layout,
@@ -130,7 +131,7 @@ internal class TimeMaster : SingleRoleBase<TimeMaster>
             ShieldDuration,
             () =>
             {
-                _timeMasterShieldButton.Timer = _timeMasterShieldButton.MaxTimer;
+                TimeMasterShieldButton.Timer = TimeMasterShieldButton.MaxTimer;
             },
             false,
             Tr.Get(TrKey.TimeShieldText));
@@ -139,15 +140,15 @@ internal class TimeMaster : SingleRoleBase<TimeMaster>
     [SetCustomButtonTimer]
     internal static void SetButtonCooldowns()
     {
-        _timeMasterShieldButton.MaxTimer = Cooldown;
-        _timeMasterShieldButton.EffectDuration = ShieldDuration;
+        TimeMasterShieldButton.MaxTimer = Cooldown;
+        TimeMasterShieldButton.EffectDuration = ShieldDuration;
     }
 
     internal static void ResetTimeMasterButton()
     {
-        _timeMasterShieldButton.Timer = _timeMasterShieldButton.MaxTimer;
-        _timeMasterShieldButton.IsEffectActive = false;
-        _timeMasterShieldButton.ActionButton.cooldownTimerText.color = Palette.EnabledColor;
+        TimeMasterShieldButton.Timer = TimeMasterShieldButton.MaxTimer;
+        TimeMasterShieldButton.IsEffectActive = false;
+        TimeMasterShieldButton.ActionButton.cooldownTimerText.color = Palette.EnabledColor;
     }
 
     internal static void Clear()

@@ -6,9 +6,9 @@ internal class Jackal : SingleRoleBase<Jackal>
 {
     public static Color Color = new Color32(0, 180, 235, byte.MaxValue);
 
-    private static CustomButton _jackalKillButton;
-    private static CustomButton _jackalSidekickButton;
-    private static CustomButton _jackalSabotageLightsButton;
+    private static CustomButton JackalKillButton;
+    private static CustomButton JackalSidekickButton;
+    private static CustomButton JackalSabotageLightsButton;
     internal static List<PlayerControl> FormerJackals = [];
     private PlayerControl _currentTarget;
     internal bool CanSidekick;
@@ -101,7 +101,8 @@ internal class Jackal : SingleRoleBase<Jackal>
     [RegisterCustomButton]
     internal static void MakeButtons(HudManager hm)
     {
-        _jackalKillButton = new(
+        JackalKillButton = new(
+            nameof(JackalKillButton),
             () =>
             {
                 if (Local == null)
@@ -113,7 +114,7 @@ internal class Jackal : SingleRoleBase<Jackal>
                     return;
                 }
 
-                _jackalKillButton?.Timer = _jackalKillButton.MaxTimer;
+                JackalKillButton?.Timer = JackalKillButton.MaxTimer;
                 Local._currentTarget = null;
             },
             () => PlayerControl.LocalPlayer != null && PlayerControl.LocalPlayer.IsRole(RoleType.Jackal) && PlayerControl.LocalPlayer.IsAlive(),
@@ -123,7 +124,7 @@ internal class Jackal : SingleRoleBase<Jackal>
             },
             () =>
             {
-                _jackalKillButton?.Timer = _jackalKillButton.MaxTimer;
+                JackalKillButton?.Timer = JackalKillButton.MaxTimer;
             },
             hm.KillButton.graphic.sprite,
             ButtonPosition.Layout,
@@ -134,7 +135,8 @@ internal class Jackal : SingleRoleBase<Jackal>
             FastDestroyableSingleton<TranslationController>.Instance.GetString(StringNames.KillLabel));
 
         // Jackal Sidekick Button
-        _jackalSidekickButton = new(
+        JackalSidekickButton = new(
+            nameof(JackalSidekickButton),
             () =>
             {
                 if (Local == null || Local._currentTarget == null)
@@ -156,7 +158,7 @@ internal class Jackal : SingleRoleBase<Jackal>
             },
             () =>
             {
-                _jackalSidekickButton?.Timer = _jackalSidekickButton.MaxTimer;
+                JackalSidekickButton?.Timer = JackalSidekickButton.MaxTimer;
             },
             AssetLoader.SidekickButton,
             ButtonPosition.Layout,
@@ -166,7 +168,8 @@ internal class Jackal : SingleRoleBase<Jackal>
             false,
             Tr.Get(TrKey.SidekickText));
 
-        _jackalSabotageLightsButton = new(
+        JackalSabotageLightsButton = new(
+            nameof(JackalSabotageLightsButton),
             () =>
             {
                 MapUtilities.CachedShipStatus?.RpcUpdateSystem(SystemTypes.Sabotage, (byte)SystemTypes.Electrical);
@@ -174,21 +177,19 @@ internal class Jackal : SingleRoleBase<Jackal>
             () => PlayerControl.LocalPlayer != null && PlayerControl.LocalPlayer.IsRole(RoleType.Jackal) && CanSabotageLights && PlayerControl.LocalPlayer.IsAlive(),
             () =>
             {
-                if (_jackalSabotageLightsButton == null)
-                {
-                    return false;
-                }
-                if (Helpers.SabotageTimer() > _jackalSabotageLightsButton.Timer || Helpers.SabotageActive())
+                if (JackalSabotageLightsButton == null) return false;
+
+                if (Helpers.SabotageTimer() > JackalSabotageLightsButton?.Timer || Helpers.SabotageActive())
                 {
                     // this will give imps time to do another sabotage.
-                    _jackalSabotageLightsButton.Timer = Helpers.SabotageTimer() + 5f;
+                    JackalSabotageLightsButton?.Timer = Helpers.SabotageTimer() + 5f;
                 }
 
                 return Helpers.CanUseSabotage();
             },
             () =>
             {
-                _jackalSabotageLightsButton?.Timer = Helpers.SabotageTimer() + 5f;
+                JackalSabotageLightsButton?.Timer = Helpers.SabotageTimer() + 5f;
             },
             AssetLoader.LightsOutButton,
             ButtonPosition.Layout,
@@ -202,8 +203,8 @@ internal class Jackal : SingleRoleBase<Jackal>
     [SetCustomButtonTimer]
     internal static void SetButtonCooldowns()
     {
-        _jackalKillButton.MaxTimer = KillCooldown;
-        _jackalSidekickButton.MaxTimer = CreateSidekickCooldown;
+        JackalKillButton.MaxTimer = KillCooldown;
+        JackalSidekickButton.MaxTimer = CreateSidekickCooldown;
     }
 
     internal static void RemoveCurrentJackal()

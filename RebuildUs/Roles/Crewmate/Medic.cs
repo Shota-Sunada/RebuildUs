@@ -9,7 +9,7 @@ internal class Medic : SingleRoleBase<Medic>
     public static Color Color = new Color32(126, 251, 194, byte.MaxValue);
 
     internal static Color ShieldedColor = new Color32(0, 221, 255, byte.MaxValue);
-    private static CustomButton _medicShieldButton;
+    private static CustomButton MedicShieldButton;
     internal static PlayerControl Shielded;
     internal static PlayerControl FutureShielded;
     internal static bool UsedShield;
@@ -46,14 +46,15 @@ internal class Medic : SingleRoleBase<Medic>
     [RegisterCustomButton]
     internal static void MakeButtons(HudManager hm)
     {
-        _medicShieldButton = new(
+        MedicShieldButton = new(
+            nameof(MedicShieldButton),
             () =>
             {
                 if (Local == null)
                 {
                     return;
                 }
-                _medicShieldButton.Timer = 0f;
+                MedicShieldButton.Timer = 0f;
                 {
                     if (SetShieldAfterMeeting)
                     {
@@ -87,7 +88,7 @@ internal class Medic : SingleRoleBase<Medic>
     [SetCustomButtonTimer]
     internal static void SetButtonCooldowns()
     {
-        _medicShieldButton.MaxTimer = 0f;
+        MedicShieldButton.MaxTimer = 0f;
     }
 
     internal static void Clear()

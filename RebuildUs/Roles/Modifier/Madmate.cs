@@ -47,7 +47,7 @@ internal class Madmate : ModifierBase<Madmate>
         StaticModifierType = CurrentModifierType = ModifierType.Madmate;
     }
 
-    private static CustomButton _suicideButton;
+    private static CustomButton SuicideButton;
 
     internal static bool CanEnterVents { get => CustomOptionHolder.MadmateCanEnterVents.GetBool(); }
     internal static bool HasImpostorVision { get => CustomOptionHolder.MadmateHasImpostorVision.GetBool(); }
@@ -185,14 +185,19 @@ internal class Madmate : ModifierBase<Madmate>
     [RegisterCustomButton]
     internal static void MakeButtons(HudManager hm)
     {
-        _suicideButton = new(
+        SuicideButton = new(
+            nameof(SuicideButton),
             () =>
             {
+                using var sender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.UncheckedMurderPlayer);
+                sender.Write(PlayerControl.LocalPlayer.PlayerId);
+                sender.Write(PlayerControl.LocalPlayer.PlayerId);
+                sender.Write(1);
                 RPCProcedure.UncheckedMurderPlayer(PlayerControl.LocalPlayer.PlayerId, PlayerControl.LocalPlayer.PlayerId, 1);
             },
             () =>
             {
-                return PlayerControl.LocalPlayer.HasModifier(ModifierType.Madmate) && MadmateAbility == MadmateAbility.Suicider && PlayerControl.LocalPlayer?.Data?.IsDead == false;
+                return PlayerControl.LocalPlayer.HasModifier(ModifierType.Madmate) && MadmateAbility == MadmateAbility.Suicider && PlayerControl.LocalPlayer.IsAlive();
             },
             () =>
             {
@@ -200,7 +205,7 @@ internal class Madmate : ModifierBase<Madmate>
             },
             () =>
             {
-                _suicideButton.Timer = _suicideButton.MaxTimer;
+                SuicideButton.Timer = SuicideButton.MaxTimer;
             },
             hm.KillButton.graphic.sprite,
             ButtonPosition.Layout,
@@ -217,7 +222,7 @@ internal class Madmate : ModifierBase<Madmate>
     [SetCustomButtonTimer]
     internal static void SetButtonCooldowns()
     {
-        _suicideButton.MaxTimer = 0f;
+        SuicideButton.MaxTimer = 0f;
     }
 
     internal static bool KnowsImpostors(PlayerControl player)

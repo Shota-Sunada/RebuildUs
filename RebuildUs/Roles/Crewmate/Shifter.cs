@@ -6,7 +6,7 @@ internal class Shifter : MultiRoleBase<Shifter>
 {
     public static Color Color = new Color32(102, 102, 102, byte.MaxValue);
 
-    private static CustomButton _shifterShiftButton;
+    private static CustomButton ShifterShiftButton;
     internal static readonly List<int> PastShifters = [];
 
     internal static PlayerControl FutureShift;
@@ -63,7 +63,8 @@ internal class Shifter : MultiRoleBase<Shifter>
     [RegisterCustomButton]
     internal static void MakeButtons(HudManager hm)
     {
-        _shifterShiftButton = new(
+        ShifterShiftButton = new(
+            nameof(ShifterShiftButton),
             () =>
             {
                 {
@@ -93,7 +94,7 @@ internal class Shifter : MultiRoleBase<Shifter>
     [SetCustomButtonTimer]
     internal static void SetButtonCooldowns()
     {
-        _shifterShiftButton.MaxTimer = 0f;
+        ShifterShiftButton.MaxTimer = 0f;
     }
 
     internal static void Clear()

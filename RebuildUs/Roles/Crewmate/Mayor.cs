@@ -6,7 +6,7 @@ internal class Mayor : MultiRoleBase<Mayor>
 {
     public static Color Color = new Color32(32, 77, 66, byte.MaxValue);
 
-    private static CustomButton _mayorMeetingButton;
+    private static CustomButton MayorMeetingButton;
     internal static TMP_Text MayorRemoteButtonLeftText;
 
     private int _remoteMeetingsLeft = 0;
@@ -26,7 +26,8 @@ internal class Mayor : MultiRoleBase<Mayor>
     [RegisterCustomButton]
     internal static void MakeButtons(HudManager hm)
     {
-        _mayorMeetingButton = new(
+        MayorMeetingButton = new(
+            nameof(MayorMeetingButton),
             () =>
             {
                 PlayerControl.LocalPlayer.NetTransform.Halt(); // Stop current movement
@@ -35,12 +36,12 @@ internal class Mayor : MultiRoleBase<Mayor>
                 sender.Write(PlayerControl.LocalPlayer.PlayerId);
                 sender.Write(byte.MaxValue);
                 RPCProcedure.UncheckedCmdReportDeadBody(PlayerControl.LocalPlayer.PlayerId, byte.MaxValue);
-                _mayorMeetingButton.Timer = 1f;
+                MayorMeetingButton.Timer = 1f;
             },
             () => PlayerControl.LocalPlayer.IsRole(RoleType.Mayor) && PlayerControl.LocalPlayer.IsAlive() && MayorHasMeetingButton,
             () =>
             {
-                _mayorMeetingButton.ActionButton.OverrideText(string.Format(Tr.Get(TrKey.Emergency), Local._remoteMeetingsLeft));
+                MayorMeetingButton?.ActionButton.OverrideText(Tr.Get(TrKey.Emergency));
                 var sabotageActive = false;
                 foreach (var task in PlayerControl.LocalPlayer.myTasks.GetFastEnumerator())
                 {
@@ -56,7 +57,7 @@ internal class Mayor : MultiRoleBase<Mayor>
             },
             () =>
             {
-                _mayorMeetingButton.Timer = _mayorMeetingButton.MaxTimer;
+                MayorMeetingButton.Timer = MayorMeetingButton.MaxTimer;
             },
             AssetLoader.EmergencyButton,
             ButtonPosition.Layout,
@@ -69,7 +70,7 @@ internal class Mayor : MultiRoleBase<Mayor>
             false,
             Tr.Get(TrKey.Meeting));
 
-        MayorRemoteButtonLeftText = UnityObject.Instantiate(_mayorMeetingButton.ActionButton.cooldownTimerText, _mayorMeetingButton.ActionButton.cooldownTimerText.transform.parent);
+        MayorRemoteButtonLeftText = UnityObject.Instantiate(MayorMeetingButton.ActionButton.cooldownTimerText, MayorMeetingButton.ActionButton.cooldownTimerText.transform.parent);
         MayorRemoteButtonLeftText.text = "";
         MayorRemoteButtonLeftText.enableWordWrapping = false;
         MayorRemoteButtonLeftText.transform.localScale = Vector3.one * 0.5f;
@@ -79,7 +80,7 @@ internal class Mayor : MultiRoleBase<Mayor>
     [SetCustomButtonTimer]
     internal static void SetButtonCooldowns()
     {
-        _mayorMeetingButton.MaxTimer = Int32OptionNames.EmergencyCooldown.Get();
+        MayorMeetingButton.MaxTimer = Int32OptionNames.EmergencyCooldown.Get();
     }
 
     internal static void Clear()

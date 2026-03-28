@@ -80,7 +80,7 @@ internal static class Mafia
     {
         public static Color Color => Mafia.Color;
 
-        private static CustomButton _janitorCleanButton;
+        private static CustomButton JanitorCleanButton;
 
         public Janitor()
         {
@@ -102,7 +102,8 @@ internal static class Mafia
         [RegisterCustomButton]
         internal static void MakeButtons(HudManager hm)
         {
-            _janitorCleanButton = new(
+            JanitorCleanButton = new(
+                nameof(JanitorCleanButton),
                 () =>
                 {
                     var bodies = UnityObject.FindObjectsOfType<DeadBody>();
@@ -133,7 +134,7 @@ internal static class Mafia
                         sender.Write(playerInfo.PlayerId);
                         RPCProcedure.CleanBody(playerInfo.PlayerId);
 
-                        _janitorCleanButton.Timer = _janitorCleanButton.MaxTimer;
+                        JanitorCleanButton.Timer = JanitorCleanButton.MaxTimer;
                         break;
                     }
                 },
@@ -141,7 +142,7 @@ internal static class Mafia
                 () => hm.ReportButton.graphic.color == Palette.EnabledColor && PlayerControl.LocalPlayer.CanMove,
                 () =>
                 {
-                    _janitorCleanButton.Timer = _janitorCleanButton.MaxTimer;
+                    JanitorCleanButton.Timer = JanitorCleanButton.MaxTimer;
                 },
                 AssetLoader.CleanButton,
                 ButtonPosition.Layout,
@@ -155,7 +156,7 @@ internal static class Mafia
         [SetCustomButtonTimer]
         internal static void SetButtonCooldowns()
         {
-            _janitorCleanButton.MaxTimer = Cooldown;
+            JanitorCleanButton.MaxTimer = Cooldown;
         }
 
         internal static void Clear()

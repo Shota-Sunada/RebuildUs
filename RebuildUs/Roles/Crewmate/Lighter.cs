@@ -6,7 +6,7 @@ internal class Lighter : MultiRoleBase<Lighter>
 {
     public static Color Color = new Color32(238, 229, 190, byte.MaxValue);
 
-    private static CustomButton _lighterButton;
+    private static CustomButton LighterButton;
     private bool _lightActive;
 
     public Lighter()
@@ -33,21 +33,20 @@ internal class Lighter : MultiRoleBase<Lighter>
     internal static void MakeButtons(HudManager hm)
     {
         // Lighter light
-        _lighterButton = new(
+        LighterButton = new(
+            nameof(LighterButton),
             () =>
             {
-                var local = Local;
-                local?._lightActive = true;
+                Local?._lightActive = true;
             },
             () => Local != null && PlayerControl.LocalPlayer?.Data?.IsDead == false,
             () => PlayerControl.LocalPlayer.CanMove,
             () =>
             {
-                var local = Local;
-                local?._lightActive = false;
-                _lighterButton.Timer = _lighterButton.MaxTimer;
-                _lighterButton.IsEffectActive = false;
-                _lighterButton.ActionButton.graphic.color = Palette.EnabledColor;
+                Local?._lightActive = false;
+                LighterButton.Timer = LighterButton.MaxTimer;
+                LighterButton.IsEffectActive = false;
+                LighterButton.ActionButton.graphic.color = Palette.EnabledColor;
             },
             AssetLoader.LighterButton,
             ButtonPosition.Layout,
@@ -60,7 +59,7 @@ internal class Lighter : MultiRoleBase<Lighter>
             {
                 var local = Local;
                 local?._lightActive = false;
-                _lighterButton.Timer = _lighterButton.MaxTimer;
+                LighterButton.Timer = LighterButton.MaxTimer;
             },
             false,
             Tr.Get(TrKey.LighterText));
@@ -69,8 +68,8 @@ internal class Lighter : MultiRoleBase<Lighter>
     [SetCustomButtonTimer]
     internal static void SetButtonCooldowns()
     {
-        _lighterButton.MaxTimer = Cooldown;
-        _lighterButton.EffectDuration = Duration;
+        LighterButton.MaxTimer = Cooldown;
+        LighterButton.EffectDuration = Duration;
     }
 
     internal static void Clear()

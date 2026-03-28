@@ -78,6 +78,7 @@ internal class Witch : MultiRoleBase<Witch>
     internal static void MakeButtons(HudManager hm)
     {
         WitchSpellButton = new(
+            nameof(WitchSpellButton),
             () =>
             {
                 if (_currentTarget != null)
@@ -88,13 +89,12 @@ internal class Witch : MultiRoleBase<Witch>
             () => PlayerControl.LocalPlayer.IsRole(RoleType.Witch) && PlayerControl.LocalPlayer.IsAlive(),
             () =>
             {
-                if (!WitchSpellButton.IsEffectActive || _spellCastingTarget == _currentTarget)
+                if (WitchSpellButton?.IsEffectActive == true && _spellCastingTarget != _currentTarget)
                 {
-                    return PlayerControl.LocalPlayer.CanMove && _currentTarget != null;
+                    _spellCastingTarget = null;
+                    WitchSpellButton.Timer = 0f;
+                    WitchSpellButton.IsEffectActive = false;
                 }
-                _spellCastingTarget = null;
-                WitchSpellButton.Timer = 0f;
-                WitchSpellButton.IsEffectActive = false;
 
                 return PlayerControl.LocalPlayer.CanMove && _currentTarget != null;
             },

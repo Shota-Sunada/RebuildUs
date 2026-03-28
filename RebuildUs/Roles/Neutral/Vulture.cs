@@ -8,7 +8,7 @@ internal class Vulture : SingleRoleBase<Vulture>
 
     internal static bool TriggerVultureWin;
 
-    private static CustomButton _vultureEatButton;
+    private static CustomButton VultureEatButton;
     private static TMP_Text _vultureNumCorpsesText;
     private readonly List<Arrow> _localArrows;
     private float _timeUntilUpdate;
@@ -34,8 +34,7 @@ internal class Vulture : SingleRoleBase<Vulture>
             return;
         }
 
-        var local = Local;
-        if (local == null)
+        if (Local == null)
         {
             return;
         }
@@ -86,7 +85,8 @@ internal class Vulture : SingleRoleBase<Vulture>
     [RegisterCustomButton]
     internal static void MakeButtons(HudManager hm)
     {
-        _vultureEatButton = new(
+        VultureEatButton = new(
+            nameof(VultureEatButton),
             () =>
             {
                 var bodies = UnityObject.FindObjectsOfType<DeadBody>();
@@ -117,7 +117,7 @@ internal class Vulture : SingleRoleBase<Vulture>
                     sender.Write(playerInfo.PlayerId);
                     RPCProcedure.VultureEat(playerInfo.PlayerId);
 
-                    _vultureEatButton.Timer = _vultureEatButton.MaxTimer;
+                    VultureEatButton.Timer = VultureEatButton.MaxTimer;
                     break;
                 }
 
@@ -138,7 +138,7 @@ internal class Vulture : SingleRoleBase<Vulture>
             },
             () =>
             {
-                _vultureEatButton.Timer = _vultureEatButton.MaxTimer;
+                VultureEatButton.Timer = VultureEatButton.MaxTimer;
             },
             AssetLoader.VultureButton,
             ButtonPosition.Layout,
@@ -148,7 +148,7 @@ internal class Vulture : SingleRoleBase<Vulture>
             false,
             Tr.Get(TrKey.VultureText));
 
-        _vultureNumCorpsesText = UnityObject.Instantiate(_vultureEatButton.ActionButton.cooldownTimerText, _vultureEatButton.ActionButton.cooldownTimerText.transform.parent);
+        _vultureNumCorpsesText = UnityObject.Instantiate(VultureEatButton.ActionButton.cooldownTimerText, VultureEatButton.ActionButton.cooldownTimerText.transform.parent);
         _vultureNumCorpsesText.text = "";
         _vultureNumCorpsesText.enableWordWrapping = false;
         _vultureNumCorpsesText.transform.localScale = Vector3.one * 0.5f;
@@ -158,7 +158,7 @@ internal class Vulture : SingleRoleBase<Vulture>
     [SetCustomButtonTimer]
     internal static void SetButtonCooldowns()
     {
-        _vultureEatButton.MaxTimer = Cooldown;
+        VultureEatButton.MaxTimer = Cooldown;
     }
 
     internal static void Clear()

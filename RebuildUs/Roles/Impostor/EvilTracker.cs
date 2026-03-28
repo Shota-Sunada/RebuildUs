@@ -52,6 +52,7 @@ internal class EvilTracker : MultiRoleBase<EvilTracker>
     internal static void MakeButtons(HudManager hm)
     {
         TrackerButton = new(
+            nameof(TrackerButton),
             () =>
             {
                 Target = CurrentTarget;

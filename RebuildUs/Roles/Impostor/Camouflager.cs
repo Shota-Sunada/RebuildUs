@@ -6,7 +6,7 @@ internal class Camouflager : SingleRoleBase<Camouflager>
 {
     public static Color Color = Palette.ImpostorRed;
 
-    private static CustomButton _camouflagerButton;
+    private static CustomButton CamouflagerButton;
     internal static float CamouflageTimer;
     private static NetworkedPlayerInfo.PlayerOutfit _data;
 
@@ -40,7 +40,8 @@ internal class Camouflager : SingleRoleBase<Camouflager>
     [RegisterCustomButton]
     internal static void MakeButtons(HudManager hm)
     {
-        _camouflagerButton = new(
+        CamouflagerButton = new(
+            nameof(CamouflagerButton),
             () =>
             {
                 {
@@ -52,9 +53,9 @@ internal class Camouflager : SingleRoleBase<Camouflager>
             () => PlayerControl.LocalPlayer.CanMove,
             () =>
             {
-                _camouflagerButton.Timer = _camouflagerButton.MaxTimer;
-                _camouflagerButton.IsEffectActive = false;
-                _camouflagerButton.ActionButton.cooldownTimerText.color = Palette.EnabledColor;
+                CamouflagerButton.Timer = CamouflagerButton.MaxTimer;
+                CamouflagerButton.IsEffectActive = false;
+                CamouflagerButton.ActionButton.cooldownTimerText.color = Palette.EnabledColor;
             },
             AssetLoader.CamouflageButton,
             ButtonPosition.Layout,
@@ -65,7 +66,7 @@ internal class Camouflager : SingleRoleBase<Camouflager>
             Duration,
             () =>
             {
-                _camouflagerButton.Timer = _camouflagerButton.MaxTimer;
+                CamouflagerButton.Timer = CamouflagerButton.MaxTimer;
             },
             false,
             Tr.Get(TrKey.CamoText));
@@ -74,8 +75,8 @@ internal class Camouflager : SingleRoleBase<Camouflager>
     [SetCustomButtonTimer]
     internal static void SetButtonCooldowns()
     {
-        _camouflagerButton.MaxTimer = Cooldown;
-        _camouflagerButton.EffectDuration = Duration;
+        CamouflagerButton.MaxTimer = Cooldown;
+        CamouflagerButton.EffectDuration = Duration;
     }
 
     internal static void StartCamouflage()

@@ -4,8 +4,8 @@ namespace RebuildUs.Roles.Neutral;
 [RegisterRole(RoleType.Sidekick, RoleTeam.Neutral, typeof(SingleRoleBase<Sidekick>), nameof(CustomOptionHolder.JackalSpawnRate))]
 internal class Sidekick : SingleRoleBase<Sidekick>
 {
-    private static CustomButton _sidekickKillButton;
-    private static CustomButton _sidekickSabotageLightsButton;
+    private static CustomButton SidekickKillButton;
+    private static CustomButton SidekickSabotageLightsButton;
     private PlayerControl _currentTarget;
     internal bool WasImpostor = false;
     internal bool WasSpy = false;
@@ -77,21 +77,22 @@ internal class Sidekick : SingleRoleBase<Sidekick>
     [RegisterCustomButton]
     internal static void MakeButtons(HudManager hm)
     {
-        _sidekickKillButton = new(
+        SidekickKillButton = new(
+            nameof(SidekickKillButton),
             () =>
             {
                 if (Helpers.CheckMurderAttemptAndKill(Local.Player, Local._currentTarget) == MurderAttemptResult.SuppressKill)
                 {
                     return;
                 }
-                _sidekickKillButton.Timer = _sidekickKillButton.MaxTimer;
+                SidekickKillButton.Timer = SidekickKillButton.MaxTimer;
                 Local._currentTarget = null;
             },
             () => CanKill && PlayerControl.LocalPlayer.IsRole(RoleType.Sidekick) && PlayerControl.LocalPlayer.IsAlive(),
             () => Local._currentTarget && PlayerControl.LocalPlayer.CanMove,
             () =>
             {
-                _sidekickKillButton.Timer = _sidekickKillButton.MaxTimer;
+                SidekickKillButton.Timer = SidekickKillButton.MaxTimer;
             },
             hm.KillButton.graphic.sprite,
             ButtonPosition.Layout,
@@ -101,7 +102,8 @@ internal class Sidekick : SingleRoleBase<Sidekick>
             false,
             FastDestroyableSingleton<TranslationController>.Instance.GetString(StringNames.KillLabel));
 
-        _sidekickSabotageLightsButton = new(
+        SidekickSabotageLightsButton = new(
+            nameof(SidekickSabotageLightsButton),
             () =>
             {
                 MapUtilities.CachedShipStatus.RpcUpdateSystem(SystemTypes.Sabotage, (byte)SystemTypes.Electrical);
@@ -109,17 +111,17 @@ internal class Sidekick : SingleRoleBase<Sidekick>
             () => PlayerControl.LocalPlayer.IsRole(RoleType.Sidekick) && CanSabotageLights && PlayerControl.LocalPlayer.IsAlive(),
             () =>
             {
-                if (Helpers.SabotageTimer() > _sidekickSabotageLightsButton.Timer || Helpers.SabotageActive())
+                if (Helpers.SabotageTimer() > SidekickSabotageLightsButton?.Timer || Helpers.SabotageActive())
                 {
                     // this will give imps time to do another sabotage.
-                    _sidekickSabotageLightsButton.Timer = Helpers.SabotageTimer() + 5f;
+                    SidekickSabotageLightsButton?.Timer = Helpers.SabotageTimer() + 5f;
                 }
 
                 return Helpers.CanUseSabotage();
             },
             () =>
             {
-                _sidekickSabotageLightsButton.Timer = Helpers.SabotageTimer() + 5f;
+                SidekickSabotageLightsButton.Timer = Helpers.SabotageTimer() + 5f;
             },
             AssetLoader.LightsOutButton,
             ButtonPosition.Layout,
@@ -133,7 +135,7 @@ internal class Sidekick : SingleRoleBase<Sidekick>
     [SetCustomButtonTimer]
     internal static void SetButtonCooldowns()
     {
-        _sidekickKillButton.MaxTimer = Jackal.KillCooldown;
+        SidekickKillButton.MaxTimer = Jackal.KillCooldown;
     }
 
     internal static void Clear()

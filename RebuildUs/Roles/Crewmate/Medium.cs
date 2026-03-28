@@ -6,7 +6,7 @@ internal class Medium : MultiRoleBase<Medium>
 {
     public static Color Color = new Color32(98, 120, 115, byte.MaxValue);
 
-    private static CustomButton _mediumButton;
+    private static CustomButton MediumButton;
     internal static List<(DeadPlayer deadPlayer, Vector3 pos)> DeadBodies = [];
     internal static List<(DeadPlayer deadPlayer, Vector3 pos)> FeatureDeadBodies = [];
     private static List<SpriteRenderer> _souls = [];
@@ -108,7 +108,8 @@ internal class Medium : MultiRoleBase<Medium>
     [RegisterCustomButton]
     internal static void MakeButtons(HudManager hm)
     {
-        _mediumButton = new(
+        MediumButton = new(
+            nameof(MediumButton),
             () =>
             {
                 if (Local._target == null)
@@ -116,25 +117,24 @@ internal class Medium : MultiRoleBase<Medium>
                     return;
                 }
                 Local._soulTarget = Local._target;
-                _mediumButton.HasEffect = true;
+                MediumButton.HasEffect = true;
             },
             () => PlayerControl.LocalPlayer.IsRole(RoleType.Medium) && PlayerControl.LocalPlayer.IsAlive(),
             () =>
             {
-                if (!_mediumButton.IsEffectActive || Local._target == Local._soulTarget)
+                if (MediumButton?.IsEffectActive == true && Local._target != Local._soulTarget)
                 {
-                    return Local._target != null && PlayerControl.LocalPlayer.CanMove;
+                    Local._soulTarget = null;
+                    MediumButton.Timer = 0f;
+                    MediumButton.IsEffectActive = false;
                 }
-                Local._soulTarget = null;
-                _mediumButton.Timer = 0f;
-                _mediumButton.IsEffectActive = false;
 
                 return Local._target != null && PlayerControl.LocalPlayer.CanMove;
             },
             () =>
             {
-                _mediumButton.Timer = _mediumButton.MaxTimer;
-                _mediumButton.IsEffectActive = false;
+                MediumButton.Timer = MediumButton.MaxTimer;
+                MediumButton.IsEffectActive = false;
                 Local._soulTarget = null;
             },
             AssetLoader.MediumButton,
@@ -146,7 +146,7 @@ internal class Medium : MultiRoleBase<Medium>
             Duration,
             () =>
             {
-                _mediumButton.Timer = _mediumButton.MaxTimer;
+                MediumButton.Timer = MediumButton.MaxTimer;
                 if (Local._target == null || Local._target.Player == null)
                 {
                     return;
@@ -249,8 +249,8 @@ internal class Medium : MultiRoleBase<Medium>
     [SetCustomButtonTimer]
     internal static void SetButtonCooldowns()
     {
-        _mediumButton.MaxTimer = Cooldown;
-        _mediumButton.EffectDuration = Duration;
+        MediumButton.MaxTimer = Cooldown;
+        MediumButton.EffectDuration = Duration;
     }
 
     internal static void Clear()

@@ -6,7 +6,7 @@ internal class Vampire : SingleRoleBase<Vampire>
 {
     public static Color Color = Palette.ImpostorRed;
 
-    private static CustomButton _vampireKillButton;
+    private static CustomButton VampireKillButton;
     internal static bool PlayerPlacedGarlic;
 
     // States
@@ -58,7 +58,8 @@ internal class Vampire : SingleRoleBase<Vampire>
     [RegisterCustomButton]
     internal static void MakeButtons(HudManager hm)
     {
-        _vampireKillButton = new(
+        VampireKillButton = new(
+            nameof(VampireKillButton),
             () =>
             {
                 if (Local == null)
@@ -79,8 +80,8 @@ internal class Vampire : SingleRoleBase<Vampire>
                         }
                         RPCProcedure.UncheckedMurderPlayer(Local.Player.PlayerId, Local.CurrentTarget.PlayerId, byte.MaxValue);
 
-                        _vampireKillButton.HasEffect = false; // Block effect on this click
-                        _vampireKillButton.Timer = _vampireKillButton.MaxTimer;
+                        VampireKillButton.HasEffect = false; // Block effect on this click
+                        VampireKillButton.Timer = VampireKillButton.MaxTimer;
                     }
                     else
                     {
@@ -110,13 +111,13 @@ internal class Vampire : SingleRoleBase<Vampire>
                                 }
                             })));
 
-                        _vampireKillButton.HasEffect = true; // Trigger effect on this click
+                        VampireKillButton.HasEffect = true; // Trigger effect on this click
                     }
                 }
                 else if (murder == MurderAttemptResult.BlankKill)
                 {
-                    _vampireKillButton.Timer = _vampireKillButton.MaxTimer;
-                    _vampireKillButton.HasEffect = false;
+                    VampireKillButton.Timer = VampireKillButton.MaxTimer;
+                    VampireKillButton.HasEffect = false;
                 }
             },
             () =>
@@ -132,22 +133,22 @@ internal class Vampire : SingleRoleBase<Vampire>
 
                 if (Local.TargetNearGarlic && CanKillNearGarlics)
                 {
-                    _vampireKillButton.Sprite = hm.KillButton.graphic.sprite;
-                    _vampireKillButton.ButtonText = FastDestroyableSingleton<TranslationController>.Instance.GetString(StringNames.KillLabel);
+                    VampireKillButton?.Sprite = hm.KillButton.graphic.sprite;
+                    VampireKillButton?.ButtonText = FastDestroyableSingleton<TranslationController>.Instance.GetString(StringNames.KillLabel);
                 }
                 else
                 {
-                    _vampireKillButton.Sprite = AssetLoader.VampireButton;
-                    _vampireKillButton.ButtonText = Tr.Get(TrKey.VampireText);
+                    VampireKillButton?.Sprite = AssetLoader.VampireButton;
+                    VampireKillButton?.ButtonText = Tr.Get(TrKey.VampireText);
                 }
 
                 return Local.CurrentTarget != null && PlayerControl.LocalPlayer.CanMove && (!Local.TargetNearGarlic || CanKillNearGarlics);
             },
             () =>
             {
-                _vampireKillButton.Timer = _vampireKillButton.MaxTimer;
-                _vampireKillButton.IsEffectActive = false;
-                _vampireKillButton.ActionButton.cooldownTimerText.color = Palette.EnabledColor;
+                VampireKillButton.Timer = VampireKillButton.MaxTimer;
+                VampireKillButton.IsEffectActive = false;
+                VampireKillButton.ActionButton.cooldownTimerText.color = Palette.EnabledColor;
             },
             AssetLoader.VampireButton,
             ButtonPosition.Layout,
@@ -158,7 +159,7 @@ internal class Vampire : SingleRoleBase<Vampire>
             0f,
             () =>
             {
-                _vampireKillButton.Timer = _vampireKillButton.MaxTimer;
+                VampireKillButton.Timer = VampireKillButton.MaxTimer;
             },
             false,
             Tr.Get(TrKey.VampireText));
@@ -167,8 +168,8 @@ internal class Vampire : SingleRoleBase<Vampire>
     [SetCustomButtonTimer]
     internal static void SetButtonCooldowns()
     {
-        _vampireKillButton.MaxTimer = Cooldown;
-        _vampireKillButton.EffectDuration = Delay;
+        VampireKillButton.MaxTimer = Cooldown;
+        VampireKillButton.EffectDuration = Delay;
     }
 
     internal static void Clear()
