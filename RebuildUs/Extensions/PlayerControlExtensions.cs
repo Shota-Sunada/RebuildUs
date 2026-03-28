@@ -80,94 +80,17 @@ internal static class PlayerControlExtensions
                         }
                     }
 
-                    var (completed, total) = TasksHandler.TaskInfo(p.Data);
                     var roleBase = RoleInfo.GetRolesString(p, true, false);
                     var roleGhost = RoleInfo.GetRolesString(p, true, MapSettings.GhostsSeeModifier);
 
-                    var statusText = "";
-                    if (p == player || player.Data.IsDead && MapSettings.GhostsSeeInformation)
-                    {
-                        if (p.IsRole(RoleType.Arsonist))
-                        {
-                            var role = Arsonist.Instance;
-                            if (role != null)
-                            {
-                                var dousedSurvivors = 0;
-                                foreach (var dousedPlayer in role.DousedPlayers)
-                                {
-                                    if (dousedPlayer?.Data != null && !dousedPlayer.Data.IsDead && !dousedPlayer.Data.Disconnected)
-                                    {
-                                        dousedSurvivors++;
-                                    }
-                                }
-
-                                var totalSurvivors = 0;
-                                foreach (var targetPlayer in PlayerControl.AllPlayerControls.GetFastEnumerator())
-                                {
-                                    if (targetPlayer?.Data != null
-                                        && !targetPlayer.Data.IsDead
-                                        && !targetPlayer.Data.Disconnected
-                                        && !targetPlayer.IsRole(RoleType.Arsonist)
-                                        && !targetPlayer.IsGm())
-                                    {
-                                        totalSurvivors++;
-                                    }
-                                }
-
-                                statusText = Helpers.Cs(Arsonist.Color, string.Format(" ({0}/{1})", dousedSurvivors, totalSurvivors));
-                            }
-                        }
-                        else if (p.IsRole(RoleType.Vulture))
-                        {
-                            var role = Vulture.Instance;
-                            if (role != null)
-                            {
-                                statusText = Helpers.Cs(Vulture.Color, string.Format(" ({0}/{1})", role.EatenBodies, Vulture.NumberToWin));
-                            }
-                        }
-                    }
-
-                    var taskText = "";
-                    if (total > 0)
-                    {
-                        InfoStringBuilder.Clear();
-
-                        var commsActive = false;
-                        if (MapUtilities.CachedShipStatus != null && MapUtilities.Systems.TryGetValue(SystemTypes.Comms, out var comms))
-                        {
-                            var activatable = comms.CastFast<IActivatable>();
-                            if (activatable != null)
-                            {
-                                commsActive = activatable.IsActive;
-                            }
-                        }
-
-                        if (commsActive)
-                        {
-                            InfoStringBuilder.Append("<color=#808080FF>(?/?)</color>");
-                        }
-                        else
-                        {
-                            var color = completed == total ? "#00FF00FF" : "#FAD934FF";
-                            InfoStringBuilder
-                                .Append("<color=")
-                                .Append(color)
-                                .Append(">(")
-                                .Append(completed)
-                                .Append('/')
-                                .Append(total)
-                                .Append(")</color>");
-                        }
-
-                        taskText = InfoStringBuilder.ToString();
-                    }
+                    var taskText = TaskDisplayManager.GetTaskInfoText(p);
 
                     var pInfo = "";
                     var mInfo = "";
                     if (p == player)
                     {
                         RoleStringBuilder2.Clear();
-                        RoleStringBuilder2.Append(p.Data.IsDead ? roleGhost : roleBase).Append(statusText);
+                        RoleStringBuilder2.Append(p.Data.IsDead ? roleGhost : roleBase);
                         if (p.IsRole(RoleType.NiceSwapper))
                         {
                             InfoStringBuilder.Clear();
@@ -210,15 +133,13 @@ internal static class PlayerControlExtensions
                     else if (MapSettings.GhostsSeeRoles && MapSettings.GhostsSeeInformation)
                     {
                         InfoStringBuilder.Clear();
-                        InfoStringBuilder.Append(roleGhost).Append(statusText).Append(' ').Append(taskText);
+                        InfoStringBuilder.Append(roleGhost).Append(' ').Append(taskText);
                         pInfo = InfoStringBuilder.ToString().Trim();
                         mInfo = pInfo;
                     }
                     else if (MapSettings.GhostsSeeInformation)
                     {
-                        InfoStringBuilder.Clear();
-                        InfoStringBuilder.Append(taskText).Append(statusText);
-                        pInfo = InfoStringBuilder.ToString().Trim();
+                        pInfo = taskText;
                         mInfo = pInfo;
                     }
                     else if (MapSettings.GhostsSeeRoles)

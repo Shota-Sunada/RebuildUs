@@ -337,7 +337,7 @@ internal static partial class EndGameMain
                                 {
                                     continue;
                                 }
-                                var taskInfo = data.TasksTotal > 0 ? string.Format("<color=#FAD934FF>{0}/{1}</color>", data.TasksCompleted, data.TasksTotal) : "";
+                                var taskInfo = TaskDisplayManager.GetTaskInfoText(key);
                                 var status = Tr.GetDynamic(Enum.GetName(data.Status));
                                 var star = winners.Contains(data.PlayerName) && AdditionalTempData.GameOverReason != (GameOverReason)CustomGameOverReason.ForceEnd ? "★" : "";
                                 var result = string.Format("{0}<pos=2.5%>{1}{2}<pos=24%>{3}<pos=32%>{4}<pos=40%>{5}", star, data.PlayerName, data.NameSuffix, taskInfo, status, data.RoleNames);
