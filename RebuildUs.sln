@@ -11,8 +11,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RebuildUs.Impostor", "Rebui
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RebuildUs.Analyzers", "RebuildUs.Analyzers\RebuildUs.Analyzers.csproj", "{BC9FF509-FD80-415F-B050-A2C98E1D49F9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RebuildUs.Discord", "RebuildUs.Discord\RebuildUs.Discord.csproj", "{4D7A2859-F260-4C85-9EA0-7E21EBD784FF}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -71,18 +69,6 @@ Global
 		{BC9FF509-FD80-415F-B050-A2C98E1D49F9}.Release|x64.Build.0 = Release|Any CPU
 		{BC9FF509-FD80-415F-B050-A2C98E1D49F9}.Release|x86.ActiveCfg = Release|Any CPU
 		{BC9FF509-FD80-415F-B050-A2C98E1D49F9}.Release|x86.Build.0 = Release|Any CPU
-		{4D7A2859-F260-4C85-9EA0-7E21EBD784FF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4D7A2859-F260-4C85-9EA0-7E21EBD784FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4D7A2859-F260-4C85-9EA0-7E21EBD784FF}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{4D7A2859-F260-4C85-9EA0-7E21EBD784FF}.Debug|x64.Build.0 = Debug|Any CPU
-		{4D7A2859-F260-4C85-9EA0-7E21EBD784FF}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{4D7A2859-F260-4C85-9EA0-7E21EBD784FF}.Debug|x86.Build.0 = Debug|Any CPU
-		{4D7A2859-F260-4C85-9EA0-7E21EBD784FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4D7A2859-F260-4C85-9EA0-7E21EBD784FF}.Release|Any CPU.Build.0 = Release|Any CPU
-		{4D7A2859-F260-4C85-9EA0-7E21EBD784FF}.Release|x64.ActiveCfg = Release|Any CPU
-		{4D7A2859-F260-4C85-9EA0-7E21EBD784FF}.Release|x64.Build.0 = Release|Any CPU
-		{4D7A2859-F260-4C85-9EA0-7E21EBD784FF}.Release|x86.ActiveCfg = Release|Any CPU
-		{4D7A2859-F260-4C85-9EA0-7E21EBD784FF}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
