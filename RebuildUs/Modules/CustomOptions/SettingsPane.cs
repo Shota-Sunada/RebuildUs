@@ -12,6 +12,7 @@ internal enum PanePage
     Modifier = 7,
     BattleRoyale = 8,
     HotPotato = 9,
+    HideNSeek = 10,
 }
 
 internal partial class CustomOption
@@ -24,6 +25,7 @@ internal partial class CustomOption
     private static GameObject _modifierPaneButton;
     private static GameObject _battleRoyalePaneButton;
     private static GameObject _hotPotatoPaneButton;
+    private static GameObject _hideNSeekPaneButton;
     private static int _currentPanePage;
 
     internal static List<(GameObject obj, string label)> BUTTONS_PANE = [];
@@ -39,6 +41,7 @@ internal partial class CustomOption
         var modifierPaneButton = _modifierPaneButton.GetComponent<PassiveButton>();
         var battleRoyalePaneButton = _battleRoyalePaneButton.GetComponent<PassiveButton>();
         var hotPotatoPaneButton = _hotPotatoPaneButton.GetComponent<PassiveButton>();
+        var hideNSeekPaneButton = _hideNSeekPaneButton.GetComponent<PassiveButton>();
 
         generalPaneButton.SelectButton(false);
         overviewPaneButton.SelectButton(false);
@@ -48,6 +51,7 @@ internal partial class CustomOption
         modifierPaneButton.SelectButton(false);
         battleRoyalePaneButton.SelectButton(false);
         hotPotatoPaneButton.SelectButton(false);
+        hideNSeekPaneButton.SelectButton(false);
         __instance.taskTabButton.SelectButton(false);
         __instance.rolesTabButton.SelectButton(false);
 
@@ -92,6 +96,10 @@ internal partial class CustomOption
             case PanePage.HotPotato:
                 hotPotatoPaneButton.SelectButton(true);
                 DrawTab(__instance, CustomOptionType.HotPotato);
+                break;
+            case PanePage.HideNSeek:
+                hideNSeekPaneButton.SelectButton(true);
+                DrawTab(__instance, CustomOptionType.HideNSeek);
                 break;
             default:
                 Logger.LogWarn("[SetTab] Invalid Pane Page ID in SettingsPaneChangeTab: {0}", id);
@@ -159,8 +167,7 @@ internal partial class CustomOption
                 }
             }
 
-            if (option.Parent != null
-                     && (option.Parent.GetSelectionIndex() == 0 || option.Parent.Parent != null && option.Parent.Parent.GetSelectionIndex() == 0))
+            if (option.Parent != null && (option.Parent.GetSelectionIndex() == 0 || option.Parent.Parent != null && option.Parent.Parent.GetSelectionIndex() == 0))
             {
                 // Hides options, for which the parent is disabled!
                 continue;
@@ -357,6 +364,7 @@ internal partial class CustomOption
         BUTTONS_PANE.Add((_modifierPaneButton = CreateCustomButton(__instance, PanePage.Modifier, "ModifierSettings", Tr.Get(TrKey.TabModifiers), CustomOptionType.Modifier), Tr.Get(TrKey.TabModifiers)));
         BUTTONS_PANE.Add((_battleRoyalePaneButton = CreateCustomButton(__instance, PanePage.BattleRoyale, "BattleRoyaleSettings", Tr.Get(TrKey.TabBattleRoyale), CustomOptionType.BattleRoyale), Tr.Get(TrKey.TabBattleRoyale)));
         BUTTONS_PANE.Add((_hotPotatoPaneButton = CreateCustomButton(__instance, PanePage.HotPotato, "HotPotatoSettings", Tr.Get(TrKey.TabHotPotato), CustomOptionType.HotPotato), Tr.Get(TrKey.TabHotPotato)));
+        BUTTONS_PANE.Add((_hideNSeekPaneButton = CreateCustomButton(__instance, PanePage.HideNSeek, "HideNSeekSettings", Tr.Get(TrKey.TabHideNSeek), CustomOptionType.HideNSeek), Tr.Get(TrKey.TabHideNSeek)));
 
         _currentPanePage = 0;
         RefreshPaneButtonVisibility(__instance);

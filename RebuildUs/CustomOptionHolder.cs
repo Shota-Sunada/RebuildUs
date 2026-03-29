@@ -1,4 +1,4 @@
-﻿namespace RebuildUs;
+namespace RebuildUs;
 
 internal static class CustomOptionHolder
 {
@@ -17,6 +17,7 @@ internal static class CustomOptionHolder
         var randomMapHeader = new CustomOptionHeader(50005, CustomOptionType.General, TrKey.RandomMap);
         var gameModeHeader = new CustomOptionHeader(50006, CustomOptionType.General, TrKey.GameMode);
 
+        var hideNSeekHeader = new CustomOptionHeader(50012, CustomOptionType.HideNSeek, TrKey.HideNSeek);
         var battleRoyaleHeader = new CustomOptionHeader(50010, CustomOptionType.General, TrKey.BattleRoyale);
         var hotPotatoHeader = new CustomOptionHeader(50011, CustomOptionType.General, TrKey.HotPotato);
 
@@ -394,6 +395,26 @@ internal static class CustomOptionHolder
 
         #endregion
 
+        #region HIDE AND SEEK
+
+        HideNSeekHideTime = CustomOption.Normal(7001, CustomOptionType.HideNSeek, TrKey.HideNSeekHideTime, 220f, 160f, 300f, 20f, header: hideNSeekHeader, format: TrKey.UnitSeconds);
+        HideNSeekCrewmateVision = CustomOption.Normal(7002, CustomOptionType.HideNSeek, TrKey.HideNSeekCrewmateVision, 0.5f, 0.25f, 1f, 0.05f, format: TrKey.UnitMultiplies);
+        HideNSeekMaxVentUses = CustomOption.Normal(7003, CustomOptionType.HideNSeek, TrKey.HideNSeekMaxVentUses, 3f, 0f, 5f, 1f, format: TrKey.UnitTimes);
+        HideNSeekFlashlightMode = CustomOption.Normal(7004, CustomOptionType.HideNSeek, TrKey.HideNSeekFlashlightMode, false);
+        HideNSeekMaxTimeInVent = CustomOption.Normal(7005, CustomOptionType.HideNSeek, TrKey.HideNSeekMaxTimeInVent, 5f, 1f, 10f, 1f, format: TrKey.UnitSeconds);
+        HideNSeekCrewmateFlashlightSize = CustomOption.Normal(7006, CustomOptionType.HideNSeek, TrKey.HideNSeekCrewmateFlashlightSize, 0.4f, 0.1f, 0.5f, 0.05f, format: TrKey.UnitMultiplies);
+        // HideNSeekImpostor = CustomOption.Player(7007, CustomOptionType.HideNSeek, TrKey.HideNSeekImpostor, true);
+        HideNSeekImpostorFlashlightSize = CustomOption.Normal(7008, CustomOptionType.HideNSeek, TrKey.HideNSeekImpostorFlashlightSize, 0.3f, 0.1f, 0.5f, 0.05f, format: TrKey.UnitMultiplies);
+        HideNSeekImpostorVision = CustomOption.Normal(7009, CustomOptionType.HideNSeek, TrKey.HideNSeekImpostorVision, 0.3f, 0.25f, 1f, 0.05f, format: TrKey.UnitMultiplies);
+        HideNSeekFinalHideTime = CustomOption.Normal(7010, CustomOptionType.HideNSeek, TrKey.HideNSeekFinalHideTime, 40f, 30f, 120f, 5f, format: TrKey.UnitSeconds);
+        HideNSeekFinalHidePings = CustomOption.Normal(7011, CustomOptionType.HideNSeek, TrKey.HideNSeekFinalHidePings, true);
+        HideNSeekFinalHideImpostorSpeed = CustomOption.Normal(7012, CustomOptionType.HideNSeek, TrKey.HideNSeekFinalHideImpostorSpeed, 1.5f, 1.0f, 3.0f, 0.05f, format: TrKey.UnitMultiplies);
+        HideNSeekPingInterval = CustomOption.Normal(7013, CustomOptionType.HideNSeek, TrKey.HideNSeekPingInterval, 5f, 3f, 10f, 1f, format: TrKey.UnitSeconds);
+        HideNSeekFinalHideSeekMap = CustomOption.Normal(7014, CustomOptionType.HideNSeek, TrKey.HideNSeekFinalHideSeekMap, true);
+        HideNSeekTasks = new CustomTasksOption((7015, 7016, 7017), CustomOptionType.HideNSeek, (2, 1, 2));
+
+        #endregion
+
         #region BATTLE ROYALE
 
         BattleRoyaleTimeLimit = CustomOption.Normal(5001, CustomOptionType.BattleRoyale, TrKey.BattleRoyaleTimeLimit, 300f, 60f, 1800f, 60f, header: battleRoyaleHeader, format: TrKey.UnitSeconds);
@@ -521,6 +542,25 @@ internal static class CustomOptionHolder
     internal static CustomOption RandomMapEnableAirShip;
     internal static CustomOption RandomMapEnableFungle;
     internal static CustomOption RandomMapEnableSubmerged;
+
+    #endregion
+
+    #region HIDE AND SEEK
+
+    internal static CustomOption HideNSeekHideTime;
+    internal static CustomOption HideNSeekCrewmateVision;
+    internal static CustomOption HideNSeekMaxVentUses;
+    internal static CustomOption HideNSeekFlashlightMode;
+    internal static CustomOption HideNSeekMaxTimeInVent;
+    internal static CustomOption HideNSeekCrewmateFlashlightSize;
+    internal static CustomOption HideNSeekImpostorFlashlightSize;
+    internal static CustomOption HideNSeekImpostorVision;
+    internal static CustomOption HideNSeekFinalHideTime;
+    internal static CustomOption HideNSeekFinalHidePings;
+    internal static CustomOption HideNSeekFinalHideImpostorSpeed;
+    internal static CustomOption HideNSeekPingInterval;
+    internal static CustomOption HideNSeekFinalHideSeekMap;
+    internal static CustomTasksOption HideNSeekTasks;
 
     #endregion
 

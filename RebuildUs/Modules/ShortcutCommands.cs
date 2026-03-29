@@ -19,6 +19,8 @@ internal static class ShortcutCommands
 
         if (Helpers.GetKeysDown(KeyCode.LeftControl, KeyCode.F5) || Helpers.GetKeysDown(KeyCode.RightControl, KeyCode.F5))
         {
+            if (!Helpers.IsGameStarted) return;
+            if (FastDestroyableSingleton<HudManager>.Instance.IsIntroDisplayed) return;
             GameManager.Instance.RpcEndGame((GameOverReason)CustomGameOverReason.ForceEnd, false);
         }
 

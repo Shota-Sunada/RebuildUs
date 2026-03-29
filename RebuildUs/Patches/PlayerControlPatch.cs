@@ -553,4 +553,39 @@ internal static class PlayerControlPatch
         p.transform.localScale = new(scale, scale, 1f);
         collider.radius = correctedColliderRadius;
     }
+
+    [HarmonyPrefix]
+    [HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.CompleteTask))]
+    internal static bool CompleteTaskPrefix(PlayerControl __instance, uint idx)
+    {
+        PlayerTask task = null;
+        foreach (var t in __instance.myTasks.GetFastEnumerator())
+        {
+            if (t.Id == idx)
+            {
+                task = t;
+                break;
+            }
+        }
+
+        if (task)
+        {
+            if (__instance.AmOwner && __instance.Data.Role.Role == RoleTypes.Scientist && (__instance.Data.Role as ScientistRole).Recharge())
+            {
+                DataManager.Player.Stats.IncrementStat(StatID.Role_Scientist_ChargesGained);
+            }
+            GameData.Instance.CompleteTask(__instance, idx);
+            FastDestroyableSingleton<DebugAnalytics>.Instance.Analytics.TaskCompleted(__instance.Data, task);
+            task.Complete();
+            Logger.LogDebug("Player {0} completed task {1}", __instance.PlayerId, task.TaskType);
+        }
+        else
+        {
+            Logger.LogWarn("{0}: Server didn't have task: {1}", __instance.PlayerId, idx);
+        }
+
+        GameManager.Instance.FinishTask(task);
+
+        return false;
+    }
 }

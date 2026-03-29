@@ -115,21 +115,22 @@ internal static class HudManagerPatch
             // MapBehaviour.Instance.Show(options);
             __instance.MapButton.SelectButton(true);
 
-            if (GameModeManager.CurrentGameMode == CustomGamemode.Normal)
+            switch (GameModeManager.CurrentGameMode)
             {
-                if (PlayerControl.LocalPlayer.IsRole(RoleType.Mafioso) && !(Mafia.Mafioso.CanSabotage || Mafia.IsGodfatherDead)
-                || PlayerControl.LocalPlayer.IsRole(RoleType.Janitor) && !Mafia.Janitor.CanSabotage)
-                {
+                case CustomGamemode.Normal:
+                    if (PlayerControl.LocalPlayer.IsRole(RoleType.Mafioso) && !(Mafia.Mafioso.CanSabotage || Mafia.IsGodfatherDead)
+                    || PlayerControl.LocalPlayer.IsRole(RoleType.Janitor) && !Mafia.Janitor.CanSabotage)
+                    {
+                        MapBehaviour.Instance.Show(new() { Mode = MapOptions.Modes.Normal, AllowMovementWhileMapOpen = true });
+                    }
+                    else
+                    {
+                        MapBehaviour.Instance.Show(options);
+                    }
+                    break;
+                default:
                     MapBehaviour.Instance.Show(new() { Mode = MapOptions.Modes.Normal, AllowMovementWhileMapOpen = true });
-                }
-                else
-                {
-                    MapBehaviour.Instance.Show(options);
-                }
-            }
-            else
-            {
-                MapBehaviour.Instance.Show(new() { Mode = MapOptions.Modes.Normal, AllowMovementWhileMapOpen = true });
+                    break;
             }
         }
 

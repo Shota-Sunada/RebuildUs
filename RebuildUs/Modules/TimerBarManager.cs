@@ -216,6 +216,8 @@ internal static class TimerBarManager
         }
     }
 
+    internal static bool UpdateTimer(float time, float maxTime) => UpdateTimer(_standaloneBar, time, maxTime);
+
     internal static bool UpdateTimer(HideAndSeekTimerBar instance, float time, float maxTime)
     {
         if (!Settings.Enabled || !Settings.OverrideUpdateTimer)
@@ -238,6 +240,8 @@ internal static class TimerBarManager
             return true;
         }
     }
+
+    internal static bool StartFinalHide() => StartFinalHide(_standaloneBar);
 
     internal static bool StartFinalHide(HideAndSeekTimerBar instance)
     {

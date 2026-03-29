@@ -27,6 +27,7 @@ internal static class GameModeManager
     // Temporary logic to setup game mode for testing, since options aren't added yet.
     public static void Initialize()
     {
+        Register(new HideNSeekMode());
         Register(new BattleRoyaleMode());
         Register(new HotPotatoMode());
 

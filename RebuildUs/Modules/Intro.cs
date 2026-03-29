@@ -276,7 +276,125 @@ internal static class Intro
         Logger.LogInfo("IntroCutscene :: CoBegin() :: Starting intro cutscene");
         SoundManager.Instance?.PlaySound(__instance.IntroStinger, false);
 
-        if (Helpers.IsNormal)
+        if (GameModeManager.CurrentGameMode == CustomGamemode.HideNSeek)
+        {
+            Logger.LogInfo("IntroCutscene :: CoBegin() :: Game Mode: Hide and Seek");
+            __instance.LogPlayerRoleData();
+            __instance.HideAndSeekPanels.SetActive(true);
+            if (PlayerControl.LocalPlayer.IsTeamImpostor())
+            {
+                __instance.CrewmateRules.SetActive(false);
+                __instance.ImpostorRules.SetActive(true);
+            }
+            else
+            {
+                __instance.CrewmateRules.SetActive(true);
+                __instance.ImpostorRules.SetActive(false);
+            }
+            var show = IntroCutscene.SelectTeamToShow((Func<NetworkedPlayerInfo, bool>)(pcd => PlayerControl.LocalPlayer.IsTeamImpostor() != pcd.Role.IsImpostor));
+            if (show == null || show.Count < 1) Logger.LogError("IntroCutscene :: CoBegin() :: teamToShow is EMPTY or NULL");
+            PlayerControl impostor = null;
+            foreach (var p in PlayerControl.AllPlayerControls.GetFastEnumerator())
+            {
+                if (p.IsTeamImpostor())
+                {
+                    impostor = p;
+                    break;
+                }
+            }
+            if (impostor == null) Logger.LogError("IntroCutscene :: CoBegin() :: impostor is NULL");
+            GameManager.Instance.SetSpecialCosmetics(impostor);
+            __instance.ImpostorName.gameObject.SetActive(true);
+            __instance.ImpostorTitle.gameObject.SetActive(true);
+            __instance.BackgroundBar.enabled = false;
+            __instance.TeamTitle.gameObject.SetActive(false);
+            if (impostor != null) __instance.ImpostorName.text = impostor.Data.PlayerName;
+            else __instance.ImpostorName.text = "???";
+            yield return new WaitForSecondsRealtime(0.1f);
+            PoolablePlayer playerSlot = null;
+            if (impostor != null)
+            {
+                playerSlot = __instance.CreatePlayer(1, 1, impostor.Data, false);
+                playerSlot.SetBodyType(PlayerBodyTypes.Normal);
+                playerSlot.SetFlipX(false);
+                playerSlot.transform.localPosition = __instance.impostorPos;
+                playerSlot.transform.localScale = Vector3.one * __instance.impostorScale;
+            }
+            yield return MapUtilities.CachedShipStatus.CosmeticsCache.PopulateFromPlayers();
+            yield return new WaitForSecondsRealtime(6f);
+            playerSlot?.gameObject.SetActive(false);
+            __instance.HideAndSeekPanels.SetActive(false);
+            __instance.CrewmateRules.SetActive(false);
+            __instance.ImpostorRules.SetActive(false);
+            // var logicOptions = GameManager.Instance.LogicOptions as LogicOptionsHnS;
+            if (GameManager.Instance.GetLogicComponent<LogicHnSMusic>() is LogicHnSMusic logicComponent)
+            {
+                logicComponent.StartMusicWithIntro();
+            }
+
+            if (PlayerControl.LocalPlayer.IsTeamImpostor())
+            {
+                var crewmateLeadTime = HideNSeekMode.CREWMATE_LEAD_TIME;
+                __instance.HideAndSeekTimerText.gameObject.SetActive(true);
+                PoolablePlayer poolablePlayer;
+                AnimationClip anim;
+                if (AprilFoolsMode.ShouldHorseAround())
+                {
+                    poolablePlayer = __instance.HorseWrangleVisualSuit;
+                    poolablePlayer.gameObject.SetActive(true);
+                    poolablePlayer.SetBodyType(PlayerBodyTypes.Seeker);
+                    anim = __instance.HnSSeekerSpawnHorseAnim;
+                    __instance.HorseWrangleVisualPlayer.SetBodyType(PlayerBodyTypes.Normal);
+                    __instance.HorseWrangleVisualPlayer.UpdateFromPlayerData(PlayerControl.LocalPlayer.Data, PlayerControl.LocalPlayer.CurrentOutfitType, PlayerMaterial.MaskType.None, false);
+                }
+                else if (AprilFoolsMode.ShouldLongAround())
+                {
+                    poolablePlayer = __instance.HideAndSeekPlayerVisual;
+                    poolablePlayer.gameObject.SetActive(true);
+                    poolablePlayer.SetBodyType(PlayerBodyTypes.LongSeeker);
+                    anim = __instance.HnSSeekerSpawnLongAnim;
+                }
+                else
+                {
+                    poolablePlayer = __instance.HideAndSeekPlayerVisual;
+                    poolablePlayer.gameObject.SetActive(true);
+                    poolablePlayer.SetBodyType(PlayerBodyTypes.Seeker);
+                    anim = __instance.HnSSeekerSpawnAnim;
+                }
+                poolablePlayer.SetBodyCosmeticsVisible(false);
+                poolablePlayer.UpdateFromPlayerData(PlayerControl.LocalPlayer.Data, PlayerControl.LocalPlayer.CurrentOutfitType, PlayerMaterial.MaskType.None, false);
+                var component = poolablePlayer.GetComponent<SpriteAnim>();
+                poolablePlayer.gameObject.SetActive(true);
+                poolablePlayer.ToggleName(false);
+                component.Play(anim);
+                while ((double)crewmateLeadTime > 0.0)
+                {
+                    __instance.HideAndSeekTimerText.text = Mathf.RoundToInt(crewmateLeadTime).ToString();
+                    crewmateLeadTime -= Time.deltaTime;
+                    yield return null;
+                }
+            }
+            else
+            {
+                MapUtilities.CachedShipStatus.HideCountdown = HideNSeekMode.CREWMATE_LEAD_TIME;
+                if (AprilFoolsMode.ShouldHorseAround())
+                {
+                    impostor?.AnimateCustom(__instance.HnSSeekerSpawnHorseInGameAnim);
+                }
+                else if (AprilFoolsMode.ShouldLongAround())
+                {
+                    impostor?.AnimateCustom(__instance.HnSSeekerSpawnLongInGameAnim);
+                }
+                else if (impostor != null)
+                {
+                    impostor.AnimateCustom(__instance.HnSSeekerSpawnAnim);
+                    impostor.cosmetics.SetBodyCosmeticsVisible(false);
+                }
+            }
+            impostor = null;
+            playerSlot = null;
+        }
+        else
         {
             Logger.LogInfo("IntroCutscene :: CoBegin() :: Game Mode: Normal");
             __instance.LogPlayerRoleData();
@@ -317,150 +435,6 @@ internal static class Intro
             {
                 yield return SetupRole(__instance);
             }
-        }
-        else
-        {
-            Logger.LogInfo("IntroCutscene :: CoBegin() :: Game Mode: Hide and Seek");
-            __instance.LogPlayerRoleData();
-            __instance.HideAndSeekPanels.SetActive(true);
-            if (PlayerControl.LocalPlayer.IsTeamImpostor())
-            {
-                __instance.CrewmateRules.SetActive(false);
-                __instance.ImpostorRules.SetActive(true);
-            }
-            else
-            {
-                __instance.CrewmateRules.SetActive(true);
-                __instance.ImpostorRules.SetActive(false);
-            }
-
-            var show = IntroCutscene.SelectTeamToShow(
-                (Func<NetworkedPlayerInfo, bool>)(pcd => PlayerControl.LocalPlayer.IsTeamImpostor() != pcd.Role.IsImpostor));
-            if (show == null || show.Count < 1)
-            {
-                Logger.LogError("IntroCutscene :: CoBegin() :: teamToShow is EMPTY or NULL");
-                show = new();
-                show.Add(PlayerControl.LocalPlayer);
-            }
-
-            var impostor = PlayerControl.AllPlayerControls.Find(
-                (Il2CppSystem.Predicate<PlayerControl>)(pc => pc != null && pc.Data != null && pc.Data.Role.IsImpostor));
-            if (impostor == null)
-            {
-                Logger.LogError("IntroCutscene :: CoBegin() :: impostor is NULL");
-            }
-
-            if (impostor != null)
-            {
-                GameManager.Instance?.SetSpecialCosmetics(impostor);
-            }
-            __instance.ImpostorName.gameObject.SetActive(true);
-            __instance.ImpostorTitle.gameObject.SetActive(true);
-            __instance.BackgroundBar.enabled = false;
-            __instance.TeamTitle.gameObject.SetActive(false);
-            __instance.ImpostorName.text = impostor != null ? impostor.Data.PlayerName : "???";
-            yield return new WaitForSecondsRealtime(0.1f);
-            PoolablePlayer playerSlot = null;
-            if (impostor != null)
-            {
-                playerSlot = __instance.CreatePlayer(1, 1, impostor.Data, false);
-                playerSlot.SetBodyType(PlayerBodyTypes.Normal);
-                playerSlot.SetFlipX(false);
-                playerSlot.transform.localPosition = __instance.impostorPos;
-                playerSlot.transform.localScale = Vector3.one * __instance.impostorScale;
-            }
-
-            if (MapUtilities.CachedShipStatus?.CosmeticsCache != null)
-            {
-                yield return MapUtilities.CachedShipStatus.CosmeticsCache.PopulateFromPlayers();
-            }
-            yield return new WaitForSecondsRealtime(6f);
-
-            playerSlot?.gameObject.SetActive(false);
-
-            __instance.HideAndSeekPanels.SetActive(false);
-            __instance.CrewmateRules.SetActive(false);
-            __instance.ImpostorRules.SetActive(false);
-            var logicOptions = GameManager.Instance.LogicOptions as LogicOptionsHnS;
-            if (GameManager.Instance.GetLogicComponent<LogicHnSMusic>() is LogicHnSMusic logicComponent)
-            {
-                logicComponent.StartMusicWithIntro();
-            }
-            if (PlayerControl.LocalPlayer.IsTeamImpostor())
-            {
-                if (logicOptions != null)
-                {
-                    float crewmateLeadTime = logicOptions.GetCrewmateLeadTime();
-                    __instance.HideAndSeekTimerText.gameObject.SetActive(true);
-                    PoolablePlayer poolablePlayer;
-                    AnimationClip anim;
-                    if (AprilFoolsMode.ShouldHorseAround())
-                    {
-                        poolablePlayer = __instance.HorseWrangleVisualSuit;
-                        poolablePlayer.gameObject.SetActive(true);
-                        poolablePlayer.SetBodyType(PlayerBodyTypes.Seeker);
-                        anim = __instance.HnSSeekerSpawnHorseAnim;
-                        __instance.HorseWrangleVisualPlayer.SetBodyType(PlayerBodyTypes.Normal);
-                        __instance.HorseWrangleVisualPlayer.UpdateFromPlayerData(PlayerControl.LocalPlayer.Data,
-                            PlayerControl.LocalPlayer.CurrentOutfitType,
-                            PlayerMaterial.MaskType.None,
-                            false);
-                    }
-                    else if (AprilFoolsMode.ShouldLongAround())
-                    {
-                        poolablePlayer = __instance.HideAndSeekPlayerVisual;
-                        poolablePlayer.gameObject.SetActive(true);
-                        poolablePlayer.SetBodyType(PlayerBodyTypes.LongSeeker);
-                        anim = __instance.HnSSeekerSpawnLongAnim;
-                    }
-                    else
-                    {
-                        poolablePlayer = __instance.HideAndSeekPlayerVisual;
-                        poolablePlayer.gameObject.SetActive(true);
-                        poolablePlayer.SetBodyType(PlayerBodyTypes.Seeker);
-                        anim = __instance.HnSSeekerSpawnAnim;
-                    }
-
-                    poolablePlayer.SetBodyCosmeticsVisible(false);
-                    poolablePlayer.UpdateFromPlayerData(PlayerControl.LocalPlayer.Data,
-                        PlayerControl.LocalPlayer.CurrentOutfitType,
-                        PlayerMaterial.MaskType.None,
-                        false);
-                    var component = poolablePlayer.GetComponent<SpriteAnim>();
-                    poolablePlayer.gameObject.SetActive(true);
-                    poolablePlayer.ToggleName(false);
-                    component.Play(anim);
-                    while (crewmateLeadTime > 0.0)
-                    {
-                        __instance.HideAndSeekTimerText.text = Mathf.RoundToInt(crewmateLeadTime).ToString();
-                        crewmateLeadTime -= Time.deltaTime;
-                        yield return null;
-                    }
-                }
-            }
-            else
-            {
-                if (logicOptions != null && MapUtilities.CachedShipStatus != null)
-                {
-                    MapUtilities.CachedShipStatus.HideCountdown = logicOptions.GetCrewmateLeadTime();
-                }
-                if (AprilFoolsMode.ShouldHorseAround())
-                {
-                    impostor?.AnimateCustom(__instance.HnSSeekerSpawnHorseInGameAnim);
-                }
-                else if (AprilFoolsMode.ShouldLongAround())
-                {
-                    impostor?.AnimateCustom(__instance.HnSSeekerSpawnLongInGameAnim);
-                }
-                else if (impostor != null)
-                {
-                    impostor.AnimateCustom(__instance.HnSSeekerSpawnAnim);
-                    impostor.cosmetics.SetBodyCosmeticsVisible(false);
-                }
-            }
-
-            impostor = null;
-            playerSlot = null;
         }
 
         MapUtilities.CachedShipStatus?.StartSFX();

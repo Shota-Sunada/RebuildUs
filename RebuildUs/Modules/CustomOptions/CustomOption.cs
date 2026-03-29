@@ -11,6 +11,7 @@ internal enum CustomOptionType
     Modifier,
     BattleRoyale,
     HotPotato,
+    HideNSeek,
 }
 
 internal enum OptionPage
@@ -25,6 +26,7 @@ internal enum OptionPage
     ModifierSettings = 7,
     BattleRoyaleSettings = 8,
     HotPotatoSettings = 9,
+    HideNSeekSettings = 10,
 }
 
 internal partial class CustomOption
@@ -46,6 +48,8 @@ internal partial class CustomOption
     private static GameObject _modifierButton;
     private static GameObject _battleRoyaleButton;
     private static GameObject _hotPotatoButton;
+    private static GameObject _hideNSeekButton;
+
     private static GameObject _generalTab;
     private static GameObject _impostorTab;
     private static GameObject _crewmateTab;
@@ -53,6 +57,8 @@ internal partial class CustomOption
     private static GameObject _modifierTab;
     private static GameObject _battleRoyaleTab;
     private static GameObject _hotPotatoTab;
+    private static GameObject _hideNSeekTab;
+
     protected static int Preset;
     private static int _currentSettingPage;
     internal readonly List<CustomOption> Children = [];
@@ -458,6 +464,14 @@ internal partial class CustomOption
                 UpdateGameOptionsMenu(CustomOptionType.HotPotato, tab);
             }
         }
+        else if (_hideNSeekTab.active)
+        {
+            var tab = _hideNSeekTab.GetComponent<GameOptionsMenu>();
+            if (tab != null)
+            {
+                UpdateGameOptionsMenu(CustomOptionType.HideNSeek, tab);
+            }
+        }
     }
 
     internal static bool ChangeTabPrefix(GameSettingMenu __instance, OptionPage tabNum, bool previewOnly)
@@ -479,6 +493,7 @@ internal partial class CustomOption
             _modifierTab.SetActive(false);
             _battleRoyaleTab.SetActive(false);
             _hotPotatoTab.SetActive(false);
+            _hideNSeekTab.SetActive(false);
             __instance.GamePresetsButton.SelectButton(false);
             __instance.GameSettingsButton.SelectButton(false);
             __instance.RoleSettingsButton.SelectButton(false);
@@ -489,6 +504,8 @@ internal partial class CustomOption
             _modifierButton.GetComponent<PassiveButton>().SelectButton(false);
             _battleRoyaleButton.GetComponent<PassiveButton>().SelectButton(false);
             _hotPotatoButton.GetComponent<PassiveButton>().SelectButton(false);
+            _hideNSeekButton.GetComponent<PassiveButton>().SelectButton(false);
+
             switch (tabNum)
             {
                 case OptionPage.Presets:
@@ -541,6 +558,11 @@ internal partial class CustomOption
                     _hotPotatoButton.GetComponent<PassiveButton>().SelectButton(true);
                     _hotPotatoTab.gameObject.SetActive(true);
                     __instance.MenuDescriptionText.text = Tr.Get(TrKey.HotPotatoSettings);
+                    break;
+                case OptionPage.HideNSeekSettings:
+                    _hideNSeekButton.GetComponent<PassiveButton>().SelectButton(true);
+                    _hideNSeekTab.gameObject.SetActive(true);
+                    __instance.MenuDescriptionText.text = Tr.Get(TrKey.HideNSeekSettings);
                     break;
                 default:
                     Logger.LogWarn("[ChangeTabPrefix] Invalid Option Page ID in ChangeTabPrefix: {0}", tabNum);
@@ -702,6 +724,8 @@ internal partial class CustomOption
         _battleRoyaleTab = CreateSettingTab(__instance, "RUBattleRoyaleSettingsTab", CustomOptionType.BattleRoyale);
         BUTTONS_HOST.Add((_hotPotatoButton = CreateSettingButton(__instance, "RUHotPotatoSettingsButton", Tr.Get(TrKey.HotPotatoSettingsButton), OptionPage.HotPotatoSettings), Tr.Get(TrKey.HotPotatoSettingsButton)));
         _hotPotatoTab = CreateSettingTab(__instance, "RUHotPotatoSettingsTab", CustomOptionType.HotPotato);
+        BUTTONS_HOST.Add((_hideNSeekButton = CreateSettingButton(__instance, "RUHideNSeekSettingsButton", Tr.Get(TrKey.HideNSeekSettingsButton), OptionPage.HideNSeekSettings), Tr.Get(TrKey.HideNSeekSettingsButton)));
+        _hideNSeekTab = CreateSettingTab(__instance, "RUHideNSeekSettingsTab", CustomOptionType.HideNSeek);
 
         _currentSettingPage = 0;
         RefreshSettingButtonVisibility(__instance);
