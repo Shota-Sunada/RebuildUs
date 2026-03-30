@@ -1,0 +1,1200 @@
+using Assets.CoreScripts;
+using Epic.OnlineServices;
+using Il2CppSystem.Linq.Expressions.Interpreter;
+using PowerTools;
+using Action = Il2CppSystem.Action;
+
+namespace RebuildUs.Network.RPC;
+
+internal static partial class RPCProcedure
+{
+    internal static void ResetVariables()
+    {
+        RoleAssignment.IsAssigned = false;
+        Garlic.ClearGarlics();
+        JackInTheBox.ClearJackInTheBoxes();
+        MapSettings.ClearAndReloadMapOptions();
+        RebuildUs.ClearAndReloadRoles();
+        GameHistory.ClearGameHistory();
+        EndGameMain.IsO2Win = false;
+        RebuildUs.SetButtonCooldowns();
+        Admin.ResetData();
+        SecurityCamera.ResetData();
+        Vitals.ResetData();
+        Map.Reset();
+        DeathPopup.Reset();
+        CustomOverlays.ResetOverlays();
+        SpecimenVital.ClearAndReload();
+        AdditionalVents.ClearAndReload();
+        SpawnIn.Reset();
+        Map.ResetRealTasks();
+
+        BattleRoyaleMode.IsTimeUp = false;
+
+        KillAnimationPatch.HideNextAnimation = false;
+        KillAnimationPatch.AvoidNextKillMovement = false;
+
+        using RPCSender sender = new(PlayerControl.LocalPlayer.NetId, CustomRPC.FinishResetVariables);
+        sender.Write(PlayerControl.LocalPlayer.PlayerId);
+        FinishResetVariables(PlayerControl.LocalPlayer.PlayerId);
+    }
+
+    private static void ShareOptions(MessageReader reader)
+    {
+        var amount = reader.ReadByte();
+        for (var i = 0; i < amount; i++)
+        {
+            var id = reader.ReadPackedUInt32();
+            var selection = reader.ReadPackedUInt32();
+            if (CustomOption.AllOptionsById.TryGetValue((int)id, out var option))
+            {
+                option.UpdateSelection((int)selection, option.GetOptionIcon());
+            }
+        }
+    }
+
+    private static void WorkaroundSetRoles(byte numberOfRoles, MessageReader reader)
+    {
+        for (var i = 0; i < numberOfRoles; i++)
+        {
+            var playerId = (byte)reader.ReadPackedUInt32();
+            var roleId = (byte)reader.ReadPackedUInt32();
+            try
+            {
+                SetRole(roleId, playerId);
+            }
+            catch (Exception e)
+            {
+                Logger.LogError("[WorkaroundSetRoles] Error while deserializing roles: {0}", e.Message);
+            }
+        }
+    }
+
+    internal static void SetRole(byte roleId, byte playerId)
+    {
+        var player = Helpers.PlayerById(playerId);
+        if (player == null)
+        {
+            return;
+        }
+        Logger.LogInfo("[SetRole] {0}({1}): {2}", player.Data.PlayerName, playerId, Enum.GetName(typeof(RoleType), roleId));
+        player.SetRole((RoleType)roleId);
+    }
+
+    internal static void AddModifier(byte modId, byte playerId)
+    {
+        var player = Helpers.PlayerById(playerId);
+        if (player == null)
+        {
+            return;
+        }
+        Logger.LogInfo("[AddModifier] {0}({1}): {2}", player.Data.PlayerName, playerId, Enum.GetName(typeof(RoleType), modId));
+        player.AddModifier((ModifierType)modId);
+    }
+
+    internal static void VersionHandshake(int major, int minor, int build, int revision, int clientId, Guid guid)
+    {
+        GameStart.PlayerVersions[clientId] = new(major, minor, build, revision, guid);
+    }
+
+    internal static void FinishSetRole()
+    {
+        RoleAssignment.IsAssigned = true;
+    }
+
+    internal static void UpdateMeeting(byte targetId, bool dead = true)
+    {
+        if (!MeetingHud.Instance)
+        {
+            return;
+        }
+        foreach (var pva in MeetingHud.Instance.playerStates)
+        {
+            if (pva.TargetPlayerId == targetId)
+            {
+                pva.SetDead(pva.DidReport, dead);
+                pva.Overlay.gameObject.SetActive(dead);
+            }
+
+            // Give players back their vote if target is shot dead
+            if (!Helpers.RefundVotes || !dead)
+            {
+                continue;
+            }
+            if (pva.VotedFor != targetId)
+            {
+                continue;
+            }
+            pva.UnsetVote();
+            var voteAreaPlayer = Helpers.PlayerById(pva.TargetPlayerId);
+            if (!voteAreaPlayer.AmOwner)
+            {
+                continue;
+            }
+            MeetingHud.Instance.ClearVote();
+        }
+
+        if (AmongUsClient.Instance.AmHost)
+        {
+            MeetingHud.Instance.CheckForEndVoting();
+        }
+    }
+
+    internal static void UncheckedCmdReportDeadBody(byte sourceId, byte targetId)
+    {
+        var source = Helpers.PlayerById(sourceId);
+        var target = targetId == byte.MaxValue ? null : Helpers.PlayerById(targetId).Data;
+        source?.ReportDeadBody(target);
+    }
+
+    internal static void UseUncheckedVent(int ventId, byte playerId, byte isEnter)
+    {
+        var player = Helpers.PlayerById(playerId);
+        if (player == null)
+        {
+            return;
+        }
+        // Fill dummy MessageReader and call MyPhysics.HandleRpc as the coroutines cannot be accessed
+        MessageReader reader = new();
+        var bytes = BitConverter.GetBytes(ventId);
+        if (!BitConverter.IsLittleEndian)
+        {
+            Array.Reverse(bytes);
+        }
+
+        reader.Buffer = bytes;
+        reader.Length = bytes.Length;
+
+        JackInTheBox.StartAnimation(ventId);
+        player.MyPhysics.HandleRpc(isEnter != 0 ? (byte)19 : (byte)20, reader);
+    }
+
+    internal static void UncheckedMurderPlayer(byte sourceId, byte targetId, byte showAnimation)
+    {
+        if (!Helpers.IsGameStarted)
+        {
+            return;
+        }
+        var source = Helpers.PlayerById(sourceId);
+        var target = Helpers.PlayerById(targetId);
+        if (source == null || target == null)
+        {
+            return;
+        }
+        if (showAnimation == 0)
+        {
+            KillAnimationPatch.HideNextAnimation = true;
+        }
+        source.MurderPlayer(target);
+    }
+
+    internal static void UncheckedExilePlayer(byte targetId)
+    {
+        var target = Helpers.PlayerById(targetId);
+        target?.Exiled();
+    }
+
+    internal static void DynamicMapOption(byte mapId)
+    {
+        GameOptionsManager.Instance.currentNormalGameOptions.SetByte(ByteOptionNames.MapId, mapId);
+    }
+
+    internal static void ShareGamemode(byte gameMode)
+    {
+        MapSettings.GameMode = (CustomGamemode)gameMode;
+        GameStart.SendGamemode = false;
+    }
+
+    private static void SetGameStarting()
+    {
+        GameStart.StartingTimer = 5f;
+    }
+
+    private static void StopStart()
+    {
+        StopStartSound();
+        if (AmongUsClient.Instance.AmHost)
+        {
+            FastDestroyableSingleton<GameStartManager>.Instance.ResetStartState();
+        }
+    }
+
+    private static void StopStartSound()
+    {
+        SoundManager.Instance.StopSound(FastDestroyableSingleton<GameStartManager>.Instance.gameStartSound);
+    }
+
+    private static void FinishResetVariables(byte playerId)
+    {
+        var checkList = RoleAssignment.CheckList;
+        if (checkList == null)
+        {
+            return;
+        }
+        if (checkList.ContainsKey(playerId))
+        {
+            checkList[playerId] = true;
+        }
+    }
+
+    internal static void SetLovers(byte playerId1, byte playerId2)
+    {
+        Lovers.AddCouple(Helpers.PlayerById(playerId1), Helpers.PlayerById(playerId2));
+    }
+
+    private static void OverrideNativeRole(byte playerId, byte roleType)
+    {
+        var player = Helpers.PlayerById(playerId);
+        player.roleAssigned = false;
+        FastDestroyableSingleton<RoleManager>.Instance.SetRole(player, (RoleTypes)roleType);
+    }
+
+    internal static void UncheckedEndGame(byte reason, bool isO2Win = false)
+    {
+        EndGameMain.IsO2Win = isO2Win;
+        AmongUsClient.Instance.GameState = InnerNetClient.GameStates.Ended;
+        var obj2 = AmongUsClient.Instance.allClients;
+        lock (obj2) AmongUsClient.Instance.allClients.Clear();
+
+        var obj = AmongUsClient.Instance.Dispatcher;
+        lock (obj)
+        {
+            AmongUsClient.Instance.Dispatcher.Add(new System.Action(() =>
+            {
+                GameManager.Instance.enabled = false;
+                GameManager.Instance.ShouldCheckForGameEnd = false;
+                AmongUsClient.Instance.OnGameEnd(new((GameOverReason)reason, false));
+
+                if (AmongUsClient.Instance.AmHost)
+                {
+                    GameManager.Instance.RpcEndGame((GameOverReason)reason, false);
+                }
+            }));
+        }
+    }
+
+    internal static void UncheckedSetTasks(byte playerId, byte[] taskTypeIds)
+    {
+        var player = Helpers.PlayerById(playerId);
+        player.ClearAllTasks();
+
+        player.Data.SetTasks(taskTypeIds);
+    }
+
+    internal static void FinishShipStatusBegin()
+    {
+        if (GameModeManager.CurrentGameMode != CustomGamemode.Normal)
+        {
+            GameModeManager.CurrentGameModeInstance?.OnGameStart();
+        }
+        PlayerControl.LocalPlayer.OnFinishShipStatusBegin();
+    }
+
+    internal static void EngineerFixLights()
+    {
+        var switchSystem = MapUtilities.Systems[SystemTypes.Electrical].CastFast<SwitchSystem>();
+        switchSystem.ActualSwitches = switchSystem.ExpectedSwitches;
+    }
+
+    internal static void EngineerFixSubmergedOxygen()
+    {
+        SubmergedCompatibility.RepairOxygen();
+    }
+
+    internal static void EngineerUsedRepair(byte engineerId)
+    {
+        var engineerPlayer = Helpers.PlayerById(engineerId);
+        if (engineerPlayer == null)
+        {
+            return;
+        }
+        var engineer = Engineer.GetRole(engineerPlayer);
+        if (engineer != null)
+        {
+            engineer.RemainingFixes--;
+        }
+    }
+
+    internal static void ArsonistDouse(byte playerId)
+    {
+        var arsonist = Arsonist.Instance;
+        if (arsonist == null)
+        {
+            return;
+        }
+        var target = Helpers.PlayerById(playerId);
+        if (target != null)
+        {
+            arsonist.DousedPlayers.Add(target);
+        }
+    }
+
+    internal static void ArsonistWin()
+    {
+        Arsonist.TriggerArsonistWin = true;
+        foreach (var p in PlayerControl.AllPlayerControls.GetFastEnumerator())
+        {
+            if (p == null || !p.IsAlive() || p.IsRole(RoleType.Arsonist))
+            {
+                continue;
+            }
+            p.Exiled();
+            GameHistory.FinalStatuses[p.PlayerId] = FinalStatus.Torched;
+        }
+    }
+
+    internal static void CleanBody(byte playerId)
+    {
+        DeadBody[] array = UnityObject.FindObjectsOfType<DeadBody>();
+        foreach (var t in array)
+        {
+            var info = GameData.Instance.GetPlayerById(t.ParentId);
+            if (info != null && info.PlayerId == playerId)
+            {
+                UnityObject.Destroy(t.gameObject);
+            }
+        }
+    }
+
+    internal static void VultureEat(byte playerId)
+    {
+        CleanBody(playerId);
+        var vulture = Vulture.Instance;
+        if (vulture != null)
+        {
+            vulture.EatenBodies++;
+        }
+    }
+
+    internal static void VultureWin()
+    {
+        Vulture.TriggerVultureWin = true;
+    }
+
+    internal static void ErasePlayerRoles(byte playerId, bool ignoreLovers = false, bool clearNeutralTasks = true)
+    {
+        var player = Helpers.PlayerById(playerId);
+        if (player == null)
+        {
+            return;
+        }
+
+        // Don't give a former neutral role tasks because that destroys the balance.
+        if (player.IsNeutral() && clearNeutralTasks)
+        {
+            player.ClearAllTasks();
+        }
+
+        player.EraseAllRoles();
+        player.EraseAllModifiers();
+
+        if (!ignoreLovers && player.IsLovers())
+        {
+            // The whole Lover couple is being erased
+            Lovers.EraseCouple(player);
+        }
+    }
+
+    internal static void JackalCreatesSidekick(byte targetId)
+    {
+        var target = Helpers.PlayerById(targetId);
+        var jackal = Jackal.Instance;
+        if (target == null)
+        {
+            return;
+        }
+
+        if (!Jackal.CanCreateSidekickFromImpostor && target.Data.Role.IsImpostor)
+        {
+            jackal?.FakeSidekick = target;
+        }
+        else
+        {
+            var wasSpy = target.IsRole(RoleType.Spy);
+            var wasImpostor = target.IsTeamImpostor(); // This can only be reached if impostors can be sidekicked.
+            FastDestroyableSingleton<RoleManager>.Instance.SetRole(target, RoleTypes.Crewmate);
+            ErasePlayerRoles(target.PlayerId, true);
+            if (target.SetRole(RoleType.Sidekick))
+            {
+                var sidekick = Sidekick.Instance;
+                if (sidekick != null)
+                {
+                    if (wasSpy || wasImpostor)
+                    {
+                        sidekick.WasTeamRed = true;
+                    }
+                    sidekick.WasSpy = wasSpy;
+                    sidekick.WasImpostor = wasImpostor;
+                }
+            }
+
+            if (target.PlayerId == PlayerControl.LocalPlayer.PlayerId)
+            {
+                PlayerControl.LocalPlayer.moveable = true;
+            }
+        }
+
+        if (jackal != null)
+        {
+            jackal.CanSidekick = false;
+            jackal.MySidekick = target;
+        }
+    }
+
+    internal static void SidekickPromotes()
+    {
+        var sidekick = Sidekick.Instance;
+        if (sidekick == null)
+        {
+            return;
+        }
+
+        var wasTeamRed = sidekick.WasTeamRed;
+        var wasImpostor = sidekick.WasImpostor;
+        var wasSpy = sidekick.WasSpy;
+        Jackal.RemoveCurrentJackal();
+        FastDestroyableSingleton<RoleManager>.Instance.SetRole(sidekick.Player, RoleTypes.Crewmate);
+        ErasePlayerRoles(sidekick.Player.PlayerId, true);
+        if (sidekick.Player.SetRole(RoleType.Jackal))
+        {
+            var newJackal = Jackal.Instance;
+            if (newJackal != null)
+            {
+                newJackal.CanSidekick = Jackal.JackalPromotedFromSidekickCanCreateSidekick;
+                newJackal.WasTeamRed = wasTeamRed;
+                newJackal.WasImpostor = wasImpostor;
+                newJackal.WasSpy = wasSpy;
+            }
+        }
+
+        Sidekick.Clear();
+    }
+
+    internal static void MedicSetShielded(byte shieldedId)
+    {
+        Medic.UsedShield = true;
+        Medic.Shielded = Helpers.PlayerById(shieldedId);
+        Medic.FutureShielded = null;
+    }
+
+    internal static void ShieldedMurderAttempt()
+    {
+        if (!Medic.Exists || Medic.Shielded == null)
+        {
+            return;
+        }
+
+        var isShieldedAndShow = Medic.Shielded == PlayerControl.LocalPlayer && Medic.ShowAttemptToShielded;
+        var isMedicAndShow = PlayerControl.LocalPlayer.IsRole(RoleType.Medic) && Medic.ShowAttemptToMedic;
+
+        if (!isShieldedAndShow && !isMedicAndShow || FastDestroyableSingleton<HudManager>.Instance?.FullScreen == null)
+        {
+            return;
+        }
+        var c = Palette.ImpostorRed;
+        Helpers.ShowFlash(new(c.r, c.g, c.b));
+    }
+
+    internal static void SetFutureShielded(byte playerId)
+    {
+        Medic.FutureShielded = Helpers.PlayerById(playerId);
+        Medic.UsedShield = true;
+    }
+
+    internal static void TimeMasterRewindTime()
+    {
+        TimeMaster.ShieldActive = false; // Shield is no longer active when rewinding
+        if (PlayerControl.LocalPlayer.IsRole(RoleType.TimeMaster))
+        {
+            TimeMaster.ResetTimeMasterButton();
+        }
+
+        var hm = FastDestroyableSingleton<HudManager>.Instance;
+        hm.FullScreen.color = new(0f, 0.5f, 0.8f, 0.3f);
+        hm.FullScreen.enabled = true;
+        hm.FullScreen.gameObject.SetActive(true);
+        hm.StartCoroutine(Effects.Lerp(TimeMaster.RewindTime / 2,
+            new Action<float>(p =>
+            {
+                if (Mathf.Approximately(p, 1f))
+                {
+                    hm.FullScreen.enabled = false;
+                }
+            })));
+
+        if (!TimeMaster.Exists || PlayerControl.LocalPlayer.IsRole(RoleType.TimeMaster))
+        {
+            return; // Time Master himself does not rewind
+        }
+        if (PlayerControl.LocalPlayer.IsGm())
+        {
+            return; // GM does not rewind
+        }
+
+        TimeMaster.IsRewinding = true;
+
+        if (MapBehaviour.Instance)
+        {
+            MapBehaviour.Instance.Close();
+        }
+
+        if (Minigame.Instance)
+        {
+            Minigame.Instance.ForceClose();
+        }
+
+        PlayerControl.LocalPlayer.moveable = false;
+    }
+
+    internal static void TimeMasterShield()
+    {
+        TimeMaster.ShieldActive = true;
+        FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(TimeMaster.ShieldDuration,
+            new Action<float>(p =>
+            {
+                if (Mathf.Approximately(p, 1f))
+                {
+                    TimeMaster.ShieldActive = false;
+                }
+            })));
+    }
+
+    internal static void GuesserShoot(byte killerId, byte dyingTargetId, byte guessedTargetId, byte guessedRoleType)
+    {
+        var killer = Helpers.PlayerById(killerId);
+        var dyingTarget = Helpers.PlayerById(dyingTargetId);
+        if (dyingTarget == null)
+        {
+            return;
+        }
+        dyingTarget.Exiled();
+        var dyingLoverPartner = Lovers.BothDie ? dyingTarget.GetPartner() : null; // Lover check
+
+        if (killer != null)
+        {
+            Guesser.RemainingShots(killer, true);
+        }
+
+        if (Constants.ShouldPlaySfx())
+        {
+            SoundManager.Instance.PlaySound(dyingTarget.KillSfx, false, 0.8f);
+        }
+
+        if (FastDestroyableSingleton<HudManager>.Instance != null && killer != null)
+        {
+            if (PlayerControl.LocalPlayer == dyingTarget)
+            {
+                FastDestroyableSingleton<HudManager>.Instance.KillOverlay.ShowKillAnimation(killer.Data, dyingTarget.Data);
+            }
+            else if (dyingLoverPartner != null && PlayerControl.LocalPlayer == dyingLoverPartner)
+            {
+                FastDestroyableSingleton<HudManager>.Instance.KillOverlay.ShowKillAnimation(dyingLoverPartner.Data, dyingLoverPartner.Data);
+            }
+        }
+
+        var guessedTarget = Helpers.PlayerById(guessedTargetId);
+        if (Guesser.ShowInfoInGhostChat && PlayerControl.LocalPlayer.Data.IsDead && guessedTarget != null)
+        {
+            RoleInfo roleInfo = null;
+            foreach (var r in RoleInfo.AllRoleInfos)
+            {
+                if ((byte)r.RoleType == guessedRoleType)
+                {
+                    roleInfo = r;
+                    break;
+                }
+            }
+
+            if (roleInfo == null)
+            {
+                return;
+            }
+            var msg = string.Format(Tr.Get(TrKey.GuesserGuessChat), roleInfo.Name, guessedTarget.Data.PlayerName);
+            if (AmongUsClient.Instance.AmClient && FastDestroyableSingleton<HudManager>.Instance)
+            {
+                FastDestroyableSingleton<HudManager>.Instance.Chat.AddChat(killer, msg);
+            }
+
+            if (msg.Contains("who", StringComparison.OrdinalIgnoreCase))
+            {
+                FastDestroyableSingleton<UnityTelemetry>.Instance.SendWho();
+            }
+        }
+    }
+
+    internal static void PlaceJackInTheBox(byte[] buff)
+    {
+        var position = Vector3.zero;
+        position.x = BitConverter.ToSingle(buff, 0 * sizeof(float));
+        position.y = BitConverter.ToSingle(buff, 1 * sizeof(float));
+        _ = new JackInTheBox(position);
+    }
+
+    internal static void LightsOut()
+    {
+        Trickster.LightsOutTimer = Trickster.LightsOutDuration;
+        // If the local player is impostor indicate lights out
+        if (PlayerControl.LocalPlayer.HasImpostorVision())
+        {
+            _ = new CustomMessage(TrKey.TricksterLightsOutText, Trickster.LightsOutDuration);
+        }
+    }
+
+    internal static void EvilHackerCreatesMadmate(byte targetId, byte evilHackerId)
+    {
+        var targetPlayer = Helpers.PlayerById(targetId);
+        var evilHackerPlayer = Helpers.PlayerById(evilHackerId);
+        if (targetPlayer == null || evilHackerPlayer == null)
+        {
+            return;
+        }
+        var evilHacker = EvilHacker.GetRole(evilHackerPlayer);
+        if (evilHacker == null)
+        {
+            return;
+        }
+        if (!EvilHacker.CanCreateMadmateFromJackal && targetPlayer.IsRole(RoleType.Jackal))
+        {
+            evilHacker.FakeMadmate = targetPlayer;
+        }
+        else
+        {
+            // Jackalバグ対応
+            List<PlayerControl> tmpFormerJackals = [.. Jackal.FormerJackals];
+
+            // タスクがないプレイヤーがMadmateになった場合はショートタスクを必要数割り当てる
+            if (targetPlayer.HasFakeTasks())
+            {
+                if (CreatedMadmate.HasTasks)
+                {
+                    targetPlayer.ClearAllTasks();
+                    targetPlayer.GenerateAndAssignTasks(0, CreatedMadmate.NumTasks, 0);
+                }
+            }
+
+            FastDestroyableSingleton<RoleManager>.Instance.SetRole(targetPlayer, RoleTypes.Crewmate);
+            ErasePlayerRoles(targetPlayer.PlayerId, true, false);
+
+            // Jackalバグ対応
+            Jackal.FormerJackals = tmpFormerJackals;
+
+            targetPlayer.AddModifier(ModifierType.CreatedMadmate);
+        }
+
+        evilHacker.CanCreateMadmate = false;
+    }
+
+    internal static void UseAdminTime(float time)
+    {
+        MapSettings.RestrictAdminTime -= time;
+    }
+
+    internal static void UseCameraTime(float time)
+    {
+        MapSettings.RestrictCamerasTime -= time;
+    }
+
+    internal static void UseVitalsTime(float time)
+    {
+        MapSettings.RestrictVitalsTime -= time;
+    }
+
+    internal static void TrackerUsedTracker(byte targetId, byte trackerId)
+    {
+        var trackerPlayer = Helpers.PlayerById(trackerId);
+        if (trackerPlayer == null)
+        {
+            return;
+        }
+        var tracker = Tracker.GetRole(trackerPlayer);
+        if (tracker == null)
+        {
+            return;
+        }
+
+        tracker.UsedTracker = true;
+        tracker.Tracked = Helpers.PlayerById(targetId);
+    }
+
+    internal static void SetFutureErased(byte playerId)
+    {
+        var player = Helpers.PlayerById(playerId);
+        Eraser.FutureErased ??= [];
+        if (player != null)
+        {
+            Eraser.FutureErased.Add(player);
+        }
+    }
+
+    internal static void VampireSetBitten(byte targetId, byte performReset)
+    {
+        if (performReset != 0)
+        {
+            Vampire.Bitten = null;
+            return;
+        }
+
+        if (!Vampire.Exists)
+        {
+            return;
+        }
+        var player = Helpers.PlayerById(targetId);
+        if (player != null && !player.Data.IsDead)
+        {
+            Vampire.Bitten = player;
+        }
+    }
+
+    private static void ShareRealTasks(MessageReader reader)
+    {
+        var count = reader.ReadByte();
+        for (var i = 0; i < count; i++)
+        {
+            var playerId = reader.ReadByte();
+            var x = reader.ReadSingle();
+            var y = reader.ReadSingle();
+            Vector2 pos = new(x, y);
+
+            if (!Map.RealTasks.TryGetValue(playerId, out var list))
+            {
+                list = new();
+                Map.RealTasks[playerId] = list;
+            }
+
+            list.Add(pos);
+        }
+    }
+
+    internal static void RandomSpawn(byte playerId, byte mapId, byte index)
+    {
+        FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(3f,
+            new Action<float>(p =>
+            {
+                // Delayed action
+                if (!Mathf.Approximately(p, 1f)) return;
+
+                var player = Helpers.PlayerById(playerId);
+                switch (mapId)
+                {
+                    case 0: // Skeld
+                        var skeldSpawns = RandomSpawnPositions.SKELD_POSITIONS;
+                        if (skeldSpawns != null && skeldSpawns.Length > 0)
+                        {
+                            var randomSkeldSpawn = skeldSpawns[index];
+                            player?.transform.position = new(randomSkeldSpawn.x, randomSkeldSpawn.y);
+                        }
+                        break;
+                    case 1: // Mira HQ
+                        var miraSpawns = RandomSpawnPositions.MIRA_POSITIONS;
+                        if (miraSpawns != null && miraSpawns.Length > 0)
+                        {
+                            var randomMiraSpawn = miraSpawns[index];
+                            player?.transform.position = new(randomMiraSpawn.x, randomMiraSpawn.y);
+                        }
+                        break;
+                    case 2: // Polus
+                        var polusSpawns = RandomSpawnPositions.POLUS_POSITIONS;
+                        if (polusSpawns != null && polusSpawns.Length > 0)
+                        {
+                            var randomPolusSpawn = polusSpawns[index];
+                            player?.transform.position = new(randomPolusSpawn.x, randomPolusSpawn.y);
+                        }
+                        break;
+                    case 5: // Fungle
+                        var fungleSpawns = RandomSpawnPositions.FUNGLE_POSITIONS;
+                        if (fungleSpawns != null && fungleSpawns.Length > 0)
+                        {
+                            var randomFungleSpawn = fungleSpawns[index];
+                            player?.transform.position = new(randomFungleSpawn.x, randomFungleSpawn.y);
+                        }
+                        break;
+                    default:
+                        return;
+                }
+            })));
+    }
+
+    internal static void Synchronize(byte playerId, int tag)
+    {
+        SpawnIn.SynchronizeData.Synchronize((SynchronizeTag)tag, playerId);
+    }
+
+    internal static void PlaceCamera(float x, float y, byte roomId)
+    {
+        var sg = SecurityGuard.Instance;
+
+        var referenceCamera = UnityObject.FindObjectOfType<SurvCamera>();
+        if (referenceCamera == null)
+        {
+            return; // Mira HQ
+        }
+
+        sg.RemainingScrews -= SecurityGuard.CamPrice;
+        sg.PlacedCameras++;
+
+        Vector3 position = new(x, y);
+
+        var roomType = (SystemTypes)roomId;
+
+        var camera = UnityObject.Instantiate(referenceCamera);
+        camera.transform.position = new(position.x, position.y, referenceCamera.transform.position.z - 1f);
+        camera.CamName = string.Format("Security Camera {0}", sg.PlacedCameras);
+        camera.Offset = new(0f, 0f, camera.Offset.z);
+
+        camera.NewName = roomType switch
+        {
+            SystemTypes.Hallway => StringNames.Hallway,
+            SystemTypes.Storage => StringNames.Storage,
+            SystemTypes.Cafeteria => StringNames.Cafeteria,
+            SystemTypes.Reactor => StringNames.Reactor,
+            SystemTypes.UpperEngine => StringNames.UpperEngine,
+            SystemTypes.Nav => StringNames.Nav,
+            SystemTypes.Admin => StringNames.Admin,
+            SystemTypes.Electrical => StringNames.Electrical,
+            SystemTypes.LifeSupp => StringNames.LifeSupp,
+            SystemTypes.Shields => StringNames.Shields,
+            SystemTypes.MedBay => StringNames.MedBay,
+            SystemTypes.Security => StringNames.Security,
+            SystemTypes.Weapons => StringNames.Weapons,
+            SystemTypes.LowerEngine => StringNames.LowerEngine,
+            SystemTypes.Comms => StringNames.Comms,
+            SystemTypes.Decontamination => StringNames.Decontamination,
+            SystemTypes.Launchpad => StringNames.Launchpad,
+            SystemTypes.LockerRoom => StringNames.LockerRoom,
+            SystemTypes.Laboratory => StringNames.Laboratory,
+            SystemTypes.Balcony => StringNames.Balcony,
+            SystemTypes.Office => StringNames.Office,
+            SystemTypes.Greenhouse => StringNames.Greenhouse,
+            SystemTypes.Dropship => StringNames.Dropship,
+            SystemTypes.Decontamination2 => StringNames.Decontamination2,
+            SystemTypes.Outside => StringNames.Outside,
+            SystemTypes.Specimens => StringNames.Specimens,
+            SystemTypes.BoilerRoom => StringNames.BoilerRoom,
+            SystemTypes.VaultRoom => StringNames.VaultRoom,
+            SystemTypes.Cockpit => StringNames.Cockpit,
+            SystemTypes.Armory => StringNames.Armory,
+            SystemTypes.Kitchen => StringNames.Kitchen,
+            SystemTypes.ViewingDeck => StringNames.ViewingDeck,
+            SystemTypes.HallOfPortraits => StringNames.HallOfPortraits,
+            SystemTypes.CargoBay => StringNames.CargoBay,
+            SystemTypes.Ventilation => StringNames.Ventilation,
+            SystemTypes.Showers => StringNames.Showers,
+            SystemTypes.Engine => StringNames.Engine,
+            SystemTypes.Brig => StringNames.Brig,
+            SystemTypes.MeetingRoom => StringNames.MeetingRoom,
+            SystemTypes.Records => StringNames.Records,
+            SystemTypes.Lounge => StringNames.Lounge,
+            SystemTypes.GapRoom => StringNames.GapRoom,
+            SystemTypes.MainHall => StringNames.MainHall,
+            SystemTypes.Medical => StringNames.Medical,
+            _ => StringNames.ExitButton,
+        };
+        if (Helpers.IsPolus && Helpers.IsAirship)
+        {
+            camera.transform.localRotation = new(0, 0, 1, 1); // Polus and Airship
+        }
+
+        if (PlayerControl.LocalPlayer.IsRole(RoleType.SecurityGuard))
+        {
+            camera.gameObject.SetActive(true);
+            camera.gameObject.GetComponent<SpriteRenderer>().color = new(1f, 1f, 1f, 0.5f);
+        }
+        else
+        {
+            camera.gameObject.SetActive(false);
+        }
+
+        MapSettings.CamerasToAdd.Add(camera);
+    }
+
+    internal static void SealVent(int ventId)
+    {
+        var sg = SecurityGuard.Instance;
+
+        Vent vent = null;
+        var allVents = MapUtilities.CachedShipStatus.AllVents;
+        foreach (var v in allVents)
+        {
+            if (v == null || v.Id != ventId)
+            {
+                continue;
+            }
+            vent = v;
+            break;
+        }
+
+        if (vent == null)
+        {
+            return;
+        }
+
+        sg.RemainingScrews -= SecurityGuard.VentPrice;
+        if (PlayerControl.LocalPlayer.IsRole(RoleType.SecurityGuard))
+        {
+            var animator = vent.GetComponent<SpriteAnim>();
+            animator?.Stop();
+            vent.EnterVentAnim = vent.ExitVentAnim = null;
+            vent.myRend.sprite = animator == null ? AssetLoader.StaticVentSealed : AssetLoader.AnimatedVentSealed;
+            if (SubmergedCompatibility.IsSubmerged && vent.Id == 0)
+            {
+                vent.myRend.sprite = AssetLoader.CentralUpperBlocked;
+            }
+            if (SubmergedCompatibility.IsSubmerged && vent.Id == 14)
+            {
+                vent.myRend.sprite = AssetLoader.CentralLowerBlocked;
+            }
+            vent.myRend.color = new(1f, 1f, 1f, 0.5f);
+            vent.name = string.Format("FutureSealedVent_{0}", vent.name);
+        }
+
+        MapSettings.VentsToSeal.Add(vent);
+    }
+
+    internal static void MorphingMorph(byte playerId, byte morphId)
+    {
+        var morphPlayer = Helpers.PlayerById(morphId);
+        var target = Helpers.PlayerById(playerId);
+        if (morphPlayer == null || target == null)
+        {
+            return;
+        }
+        Morphing.GetRole(morphPlayer).StartMorph(target);
+    }
+
+    internal static void CamouflagerCamouflage()
+    {
+        if (!Camouflager.Exists)
+        {
+            return;
+        }
+        Camouflager.StartCamouflage();
+    }
+
+    internal static void SwapperSwap(byte playerId1, byte playerId2)
+    {
+        if (!MeetingHud.Instance)
+        {
+            return;
+        }
+        Swapper.PlayerId1 = playerId1;
+        Swapper.PlayerId2 = playerId2;
+    }
+
+    private static void SwapperAnimate() { }
+
+    internal static void SetFutureSpelled(byte playerId)
+    {
+        var player = Helpers.PlayerById(playerId);
+        Witch.FutureSpelled ??= [];
+        if (player != null)
+        {
+            Witch.FutureSpelled.Add(player);
+        }
+    }
+
+    internal static void WitchSpellCast(byte playerId)
+    {
+        UncheckedExilePlayer(playerId);
+        GameHistory.FinalStatuses[playerId] = FinalStatus.Spelled;
+    }
+
+    internal static void PlaceGarlic(float x, float y)
+    {
+        _ = new Garlic(new Vector3(x, y));
+    }
+
+    internal static void ShifterShift(byte targetId)
+    {
+        if (Shifter.Players.Count == 0)
+        {
+            return;
+        }
+        var oldShifter = Shifter.Players[0];
+        var player = Helpers.PlayerById(targetId);
+        if (player == null || oldShifter == null)
+        {
+            return;
+        }
+
+        var oldShifterPlayer = oldShifter.Player;
+        Shifter.FutureShift = null;
+
+        // Suicide (exile) when impostor or impostor variants
+        if (!Shifter.IsNeutral
+            && (player.Data.Role.IsImpostor
+                || player.IsNeutral()
+                || player.HasModifier(ModifierType.Madmate)
+                || player.HasModifier(ModifierType.CreatedMadmate)))
+        {
+            oldShifterPlayer.Exiled();
+            GameHistory.FinalStatuses[oldShifterPlayer.PlayerId] = FinalStatus.Suicide;
+            return;
+        }
+
+        if (Shifter.ShiftsModifiers)
+        {
+            // Switch shield
+            if (Medic.Shielded != null && Medic.Shielded == player)
+            {
+                Medic.Shielded = oldShifterPlayer;
+            }
+            else if (Medic.Shielded != null && Medic.Shielded == oldShifterPlayer)
+            {
+                Medic.Shielded = player;
+            }
+
+            player.SwapModifiers(oldShifterPlayer);
+            Lovers.SwapLovers(oldShifterPlayer, player);
+        }
+
+        // Shift roles (now a true swap)
+        player.SwapRoles(oldShifterPlayer);
+
+        if (Shifter.IsNeutral)
+        {
+            Shifter.PastShifters.Add(oldShifterPlayer.PlayerId);
+
+            if (player.Data.Role.IsImpostor)
+            {
+                FastDestroyableSingleton<RoleManager>.Instance.SetRole(player, RoleTypes.Crewmate);
+                FastDestroyableSingleton<RoleManager>.Instance.SetRole(oldShifterPlayer, RoleTypes.Impostor);
+            }
+        }
+        else
+        {
+            // For Crewmate Shifter, the original target (who now has the Shifter role due to the swap) should lose it and become a plain Crewmate.
+            player.EraseRole(RoleType.Shifter);
+        }
+
+        // Set cooldowns to max for both players
+        if (PlayerControl.LocalPlayer == oldShifterPlayer || PlayerControl.LocalPlayer == player)
+        {
+            CustomButton.ResetAllCooldowns();
+        }
+    }
+
+    internal static void SetFutureShifted(byte playerId)
+    {
+        if (Shifter.IsNeutral && !Shifter.ShiftPastShifters && Shifter.PastShifters.Contains(playerId))
+        {
+            return;
+        }
+        Shifter.FutureShift = Helpers.PlayerById(playerId);
+    }
+
+    internal static void SetShifterType(bool isNeutral)
+    {
+        Shifter.IsNeutral = isNeutral;
+    }
+
+    private static void SheriffKillRequest(byte sheriffId, byte targetId)
+    {
+        if (!AmongUsClient.Instance.AmHost)
+        {
+            return;
+        }
+        var sheriff = Helpers.PlayerById(sheriffId);
+        var target = Helpers.PlayerById(targetId);
+        if (sheriff == null || target == null)
+        {
+            return;
+        }
+
+        var misfire = Sheriff.CheckKill(target);
+
+        using RPCSender killSender = new(sheriff.NetId, CustomRPC.SheriffKill);
+        killSender.Write(sheriffId);
+        killSender.Write(targetId);
+        killSender.Write(misfire);
+
+        SheriffKill(sheriffId, targetId, misfire);
+    }
+
+    internal static void SheriffKill(byte sheriffId, byte targetId, bool misfire)
+    {
+        var sheriff = Helpers.PlayerById(sheriffId);
+        var target = Helpers.PlayerById(targetId);
+        if (sheriff == null || target == null)
+        {
+            return;
+        }
+
+        var role = Sheriff.GetRole(sheriff);
+        if (role != null)
+        {
+            role.NumShots--;
+        }
+
+        if (misfire)
+        {
+            sheriff.MurderPlayer(sheriff);
+            GameHistory.FinalStatuses[sheriffId] = FinalStatus.Misfire;
+
+            if (!Sheriff.MisfireKillsTarget)
+            {
+                return;
+            }
+            GameHistory.FinalStatuses[targetId] = FinalStatus.Misfire;
+        }
+
+        sheriff.MurderPlayer(target);
+    }
+
+    internal static void BaitOnKilled(byte killerId)
+    {
+        var killer = Helpers.PlayerById(killerId);
+        if (killer != null)
+        {
+            // Show warning to the killer
+            if (killer == PlayerControl.LocalPlayer)
+            {
+                _ = new CustomMessage(TrKey.BaitWarning, Bait.ReportDelay);
+                Helpers.ShowFlash(new(42f / 255f, 187f / 255f, 245f / 255f));
+            }
+        }
+    }
+
+    internal static void ShowDeathPopup(byte playerId)
+    {
+        var player = Helpers.PlayerById(playerId);
+        if (player != null)
+        {
+            var result = DeathPopup.TryShow(player);
+            if (result == DeathPopup.RESULT_SUCCESS)
+            {
+                Logger.LogInfo("DeathPopup success.");
+            }
+            else
+            {
+                Logger.LogInfo("DeathPopup failed: {0}", DeathPopup.ExplainResult(result));
+            }
+        }
+    }
+
+    internal static void ReloadCurrentGameMode()
+    {
+        switch (CustomOptionHolder.GameModeSelection.GetSelection())
+        {
+            default:
+            case 0:
+                GameModeManager.SetGameMode(CustomGamemode.Normal);
+                break;
+            case 1:
+                GameModeManager.SetGameMode(CustomGamemode.HideNSeek);
+                break;
+            case 2:
+                GameModeManager.SetGameMode(CustomGamemode.BattleRoyale);
+                break;
+            case 3:
+                GameModeManager.SetGameMode(CustomGamemode.HotPotato);
+                break;
+        }
+    }
+
+    internal static void BattleRoyaleSearchPlayers()
+    {
+        _ = new CustomMessage(TrKey.BattleRoyaleSomeoneSearchYou, 5f);
+        // BattleRoyaleMode.ResetButtonCooldown();
+        // BattleRoyaleMode.CommonUsageLeft--;
+    }
+}

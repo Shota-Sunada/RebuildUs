@@ -1,5 +1,5 @@
 using BepInEx.Unity.IL2CPP.Utils.Collections;
-using RebuildUs.Modules.Cosmetics;
+using RebuildUs.Features.Cosmetics;
 
 namespace RebuildUs.Patches;
 
