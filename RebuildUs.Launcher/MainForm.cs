@@ -635,6 +635,26 @@ public partial class MainForm : Form
             }
         }
     }
+
+    private void OpenDirectoryButton_Click(object sender, EventArgs e)
+    {
+        if (InstalledModPath != null)
+        {
+            var dir = Path.GetDirectoryName(InstalledModPath);
+            if (Directory.Exists(dir))
+            {
+                Process.Start(new ProcessStartInfo
+                {
+                    FileName = dir,
+                    UseShellExecute = true
+                });
+            }
+            else
+            {
+                MessageBox.Show("インストールされたディレクトリが見つかりません。");
+            }
+        }
+    }
 }
 
 public class GitHubRelease
