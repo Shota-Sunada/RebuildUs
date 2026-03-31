@@ -13,6 +13,7 @@ internal static class CustomHatManager
         "https://raw.githubusercontent.com/TheOtherRolesAU/TheOtherHats/master",
         "https://raw.githubusercontent.com/hinakkyu/TheOtherHats/master",
         "https://raw.githubusercontent.com/yukinogatari/TheOtherHats-GM/main",
+        "https://raw.githubusercontent.com/Shota-Sunada/RebuildHats/main",
     ];
 
     internal static readonly List<CustomHat> UnregisteredHats = [];
