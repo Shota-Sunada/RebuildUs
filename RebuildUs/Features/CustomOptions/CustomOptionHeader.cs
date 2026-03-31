@@ -3,17 +3,15 @@ namespace RebuildUs.Features.CustomOptions;
 internal sealed class CustomOptionHeader
 {
     internal static readonly List<CustomOptionHeader> AllHeaders = [];
-    private static readonly Dictionary<CustomOptionType, List<CustomOptionHeader>> HeadersByType = [];
+    private static readonly Dictionary<COType, List<CustomOptionHeader>> HeadersByType = [];
 
-    internal readonly int Id;
-    internal readonly CustomOptionType Type;
+    internal readonly COType Type;
     internal readonly TrKey NameKey;
     internal readonly Color Color;
     internal readonly List<CustomOption> Options = [];
 
-    internal CustomOptionHeader(int id, CustomOptionType type, TrKey nameKey, Color? color = null)
+    internal CustomOptionHeader(COType type, TrKey nameKey, Color? color = null)
     {
-        Id = id;
         Type = type;
         NameKey = nameKey;
         Color = color ?? Color.white;

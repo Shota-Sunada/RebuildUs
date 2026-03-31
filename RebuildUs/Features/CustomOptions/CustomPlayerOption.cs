@@ -2,26 +2,8 @@ namespace RebuildUs.Features.CustomOptions;
 
 internal sealed class CustomPlayerOption : CustomOption<int>
 {
-    internal CustomPlayerOption(int id,
-                                CustomOptionType type,
-                                TrKey nameKey,
-                                int[] playerIds,
-                                int defaultSelection,
-                                CustomOption parent,
-                                bool hideIfParentEnabled,
-                                TrKey format,
-                                Color color,
-                                CustomOptionHeader header = null) :
-        base(id,
-        type,
-        nameKey,
-        playerIds,
-        defaultSelection,
-        parent,
-        hideIfParentEnabled,
-        format,
-        color,
-        header)
+    internal CustomPlayerOption(COID id, COType type, TrKey nameKey, int[] playerIds, int defaultSelection, CustomOption parent, bool hideIfParentEnabled, TrKey format, Color color, CustomOptionHeader header = null)
+    : base(id, type, nameKey, playerIds, defaultSelection, parent, hideIfParentEnabled, format, color, header)
     { }
 
     internal override OptionBehaviour CreateOptionBehaviour(GameOptionsMenu menu)

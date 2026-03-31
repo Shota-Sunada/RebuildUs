@@ -11,6 +11,8 @@ internal abstract class CustomOverlays
 
     private const float TEXT_Z = -910f;
 
+    private static readonly int[] IGNORE_OPTIONS_ID = [0, 10, 11, 12, 13, 14, 15, 16, 17];
+
     // private static SpriteRenderer MeetingUnderlay;
     private static SpriteRenderer _infoUnderlay;
     private static TextMeshPro _infoOverlayTitle;
@@ -159,7 +161,7 @@ internal abstract class CustomOverlays
         _infoOverlayRulesRight.text = RebuildUs.OptionsPage + 1 < _optionsData.Count ? _optionsData[RebuildUs.OptionsPage + 1] : string.Empty;
     }
 
-    private static void AppendRoleCount(ref StringBuilder sb, string key, CustomOption minOpt, CustomOption maxOpt)
+    private static void AppendRoleCount(ref StringBuilder sb, TrKey key, CustomOption minOpt, CustomOption maxOpt)
     {
         var min = minOpt.GetSelection();
         var max = maxOpt.GetSelection();
@@ -168,7 +170,7 @@ internal abstract class CustomOverlays
             min = max;
         }
 
-        sb.Append(Helpers.Cs(new(204f / 255f, 204f / 255f, 0, 1f), Tr.GetDynamic(key))).Append(": ");
+        sb.Append(Helpers.Cs(new(204f / 255f, 204f / 255f, 0, 1f), Tr.Get(key))).Append(": ");
         if (min == max)
         {
             sb.Append(max);
@@ -349,35 +351,58 @@ internal abstract class CustomOverlays
         _optionsData.AddRange(SplitToPages(sb.ToString(), MAX_LINES - 1));
 
         // Part 3: Custom Options Groups
-        sb.Clear();
-        sb.Append(CustomOption.OptionsToString(CustomOptionHolder.MaxNumberOfMeetings)).Append("\n\n")
-            .Append(CustomOption.OptionsToString(CustomOptionHolder.AirshipOptimize)).Append("\n\n")
-            .Append(CustomOption.OptionsToString(CustomOptionHolder.RandomMap))
-            .Append('\f');
-        _optionsData.AddRange(SplitToPages(sb.ToString(), MAX_LINES - 1));
+        // sb.Clear();
+        // sb.Append(CustomOption.OptionsToString(CustomOptionHolder.MaxNumberOfMeetings)).Append("\n")
+        //     .Append(CustomOption.OptionsToString(CustomOptionHolder.AirshipOptimize)).Append("\n")
+        //     .Append(CustomOption.OptionsToString(CustomOptionHolder.RandomMap))
+        //     .Append('\f');
+        // _optionsData.AddRange(SplitToPages(sb.ToString(), MAX_LINES - 1));
 
         // Part 4: Detailed Custom Options
         List<string> entries = [CustomOption.OptionToString(CustomOptionHolder.PresetSelection)];
         sb.Clear();
-        AppendRoleCount(ref sb, "CrewmateRoles", CustomOptionHolder.CrewmateRolesCountMin, CustomOptionHolder.CrewmateRolesCountMax);
-        AppendRoleCount(ref sb, "NeutralRoles", CustomOptionHolder.NeutralRolesCountMin, CustomOptionHolder.NeutralRolesCountMax);
-        AppendRoleCount(ref sb, "ImpostorRoles", CustomOptionHolder.ImpostorRolesCountMin, CustomOptionHolder.ImpostorRolesCountMax);
+        AppendRoleCount(ref sb, TrKey.CrewmateRoles, CustomOptionHolder.CrewmateRolesCountMin, CustomOptionHolder.CrewmateRolesCountMax);
+        AppendRoleCount(ref sb, TrKey.NeutralRoles, CustomOptionHolder.NeutralRolesCountMin, CustomOptionHolder.NeutralRolesCountMax);
+        AppendRoleCount(ref sb, TrKey.ImpostorRoles, CustomOptionHolder.ImpostorRolesCountMin, CustomOptionHolder.ImpostorRolesCountMax);
+        AppendRoleCount(ref sb, TrKey.Modifiers, CustomOptionHolder.ModifiersCountMin, CustomOptionHolder.ModifiersCountMax);
         entries.Add(sb.ToString().TrimEnd());
 
         foreach (var option in CustomOption.AllOptions)
         {
-            if (IsCommonOption(option))
-            {
-                continue;
-            }
+            if (IsCommonOption(option)) continue;
+            if (option.Parent != null) continue;
 
-            if (option.Parent != null || !option.Enabled)
-            {
-                continue;
-            }
             sb.Clear();
-            sb.AppendLine(CustomOption.OptionToString(option));
-            AddChildren(option, sb);
+            switch (GameModeManager.CurrentGameMode)
+            {
+                default:
+                case CustomGamemode.Normal:
+                    if (option.Type is COType.General or COType.Impostor or COType.Neutral or COType.Crewmate or COType.Modifier)
+                    {
+                        sb.AppendLine(option.ToString());
+                        // sb.AppendLine(CustomOption.OptionToString(option));
+                        // AddChildren(option, sb);
+                    }
+                    break;
+                case CustomGamemode.HideNSeek:
+                    if (option.Type is COType.General or COType.HideNSeek)
+                    {
+                        sb.AppendLine(option.ToString());
+                    }
+                    break;
+                case CustomGamemode.BattleRoyale:
+                    if (option.Type is COType.General or COType.BattleRoyale)
+                    {
+                        sb.AppendLine(option.ToString());
+                    }
+                    break;
+                case CustomGamemode.HotPotato:
+                    if (option.Type is COType.General or COType.HotPotato)
+                    {
+                        sb.AppendLine(option.ToString());
+                    }
+                    break;
+            }
 
             var entryText = sb.ToString().TrimEnd();
             var lines = CountLines(entryText);
@@ -411,7 +436,7 @@ internal abstract class CustomOverlays
                 }
             }
 
-            sb.Append(e).Append("\n\n");
+            sb.AppendLine(e);
             currentLineCount += lines + 1;
         }
 
@@ -432,7 +457,9 @@ internal abstract class CustomOverlays
             || option == CustomOptionHolder.NeutralRolesCountMin
             || option == CustomOptionHolder.NeutralRolesCountMax
             || option == CustomOptionHolder.ImpostorRolesCountMin
-            || option == CustomOptionHolder.ImpostorRolesCountMax;
+            || option == CustomOptionHolder.ImpostorRolesCountMax
+            || option == CustomOptionHolder.ModifiersCountMin
+            || option == CustomOptionHolder.ModifiersCountMax;
     }
 
     private static void AddChildren(CustomOption option, StringBuilder sb, bool indent = true)

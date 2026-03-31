@@ -4,16 +4,8 @@ internal sealed class CustomRoleSelectionOption : CustomGeneralOption<string>
 {
     private readonly RoleType[] _roleTypes;
 
-    internal CustomRoleSelectionOption(int id, CustomOptionType type, TrKey nameKey, RoleType[] roleTypes = null, CustomOption parent = null) : base(
-        id,
-        type,
-        nameKey,
-        [],
-        string.Empty,
-        parent,
-        false,
-        TrKey.None,
-        Color.white)
+    internal CustomRoleSelectionOption(COID id, COType type, TrKey nameKey, RoleType[] roleTypes = null, CustomOption parent = null)
+    : base(id, type, nameKey, [], string.Empty, parent, false, TrKey.None, Color.white)
     {
         if (roleTypes == null)
         {

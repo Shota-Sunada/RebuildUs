@@ -13,7 +13,7 @@ internal static class TranslationControllerPatch
         var idInt = (int)id;
         if (idInt >= CustomOption.CUSTOM_OPTION_PRE_ID)
         {
-            var optId = idInt - CustomOption.CUSTOM_OPTION_PRE_ID;
+            var optId = (COID)(idInt - CustomOption.CUSTOM_OPTION_PRE_ID);
             foreach (var o in CustomOption.AllOptions)
             {
                 if (o.Id == optId)

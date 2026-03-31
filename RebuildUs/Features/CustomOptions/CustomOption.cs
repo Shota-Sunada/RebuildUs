@@ -2,7 +2,7 @@ using static RebuildUs.RebuildUs;
 
 namespace RebuildUs.Features.CustomOptions;
 
-internal enum CustomOptionType
+internal enum COType
 {
     General,
     Impostor,
@@ -38,8 +38,8 @@ internal partial class CustomOption
     internal const KeyCode CHANGE_PAGE_NEXT_KEY = KeyCode.Period;
 
     internal static readonly List<CustomOption> AllOptions = [];
-    internal static readonly Dictionary<int, CustomOption> AllOptionsById = [];
-    private static readonly Dictionary<CustomOptionType, List<CustomOption>> OptionsByType = [];
+    internal static readonly Dictionary<COID, CustomOption> AllOptionsById = [];
+    private static readonly Dictionary<COType, List<CustomOption>> OptionsByType = [];
     private static readonly Dictionary<OptionBehaviour, CustomOption> OptionsByBehaviour = [];
     private static GameObject _generalButton;
     private static GameObject _impostorButton;
@@ -67,11 +67,11 @@ internal partial class CustomOption
     internal static readonly List<(GameObject obj, string label)> BUTTONS_HOST = [];
     internal static int MAX_PAGE_HOST => (BUTTONS_HOST.Count + MAX_BUTTON_PER_PAGE - 1) / MAX_BUTTON_PER_PAGE;
 
-    internal readonly int Id;
+    internal readonly COID Id;
     internal readonly TrKey NameKey;
     internal readonly CustomOptionHeader Header;
     internal readonly CustomOption Parent;
-    internal readonly CustomOptionType Type;
+    internal readonly COType Type;
 
     protected OptionBehaviour _optionBehavior;
     internal Color Color;
@@ -80,7 +80,7 @@ internal partial class CustomOption
     internal TrKey Format;
     internal bool UseSpawnChanceLabel;
 
-    protected CustomOption(int id, CustomOptionType type, TrKey nameKey, CustomOption parent, bool hideIfParentEnabled, TrKey format, Color color, CustomOptionHeader header = null)
+    protected CustomOption(COID id, COType type, TrKey nameKey, CustomOption parent, bool hideIfParentEnabled, TrKey format, Color color, CustomOptionHeader header = null)
     {
         Id = id;
         Type = type;
@@ -113,20 +113,11 @@ internal partial class CustomOption
 
     protected CustomOption() { }
 
-    internal virtual bool Enabled
-    {
-        get => Helpers.RolesEnabled && GetBool();
-    }
+    internal virtual bool Enabled { get => Helpers.RolesEnabled && GetBool(); }
 
-    protected virtual object GetValue()
-    {
-        return null;
-    }
+    protected virtual object GetValue() { return null; }
 
-    protected virtual int GetSelectionIndex()
-    {
-        return 0;
-    }
+    protected virtual int GetSelectionIndex() { return 0; }
 
     protected virtual void SetSelectionIndex(int index) { }
 
@@ -220,32 +211,32 @@ internal partial class CustomOption
     }
 
     // Factory methods
-    internal static CustomToggleOption Normal(int id, CustomOptionType type, TrKey nameKey, bool defaultValue, CustomOption parent = null, CustomOptionHeader header = null, Color? color = null, bool hideIfParentEnabled = false, TrKey format = TrKey.None)
+    internal static CustomToggleOption Normal(COID id, COType type, TrKey nameKey, bool defaultValue, CustomOption parent = null, CustomOptionHeader header = null, Color? color = null, bool hideIfParentEnabled = false, TrKey format = TrKey.None)
     {
         return new CustomToggleOption(id, type, nameKey, defaultValue, parent, hideIfParentEnabled, format, ResolveColor(color), header);
     }
 
-    internal static CustomNumberOption Normal(int id, CustomOptionType type, TrKey nameKey, float defaultValue, float min, float max, float step, CustomOption parent = null, CustomOptionHeader header = null, Color? color = null, bool hideIfParentEnabled = false, TrKey format = TrKey.None)
+    internal static CustomNumberOption Normal(COID id, COType type, TrKey nameKey, float defaultValue, float min, float max, float step, CustomOption parent = null, CustomOptionHeader header = null, Color? color = null, bool hideIfParentEnabled = false, TrKey format = TrKey.None)
     {
         return new CustomNumberOption(id, type, nameKey, CreateNumberSelections(min, max, step), defaultValue, parent, hideIfParentEnabled, format, ResolveColor(color), header);
     }
 
-    internal static CustomGeneralOption<T> Normal<T>(int id, CustomOptionType type, TrKey nameKey, T[] selections, T defaultValue, CustomOption parent = null, CustomOptionHeader header = null, Color? color = null, bool hideIfParentEnabled = false, TrKey format = TrKey.None)
+    internal static CustomGeneralOption<T> Normal<T>(COID id, COType type, TrKey nameKey, T[] selections, T defaultValue, CustomOption parent = null, CustomOptionHeader header = null, Color? color = null, bool hideIfParentEnabled = false, TrKey format = TrKey.None)
     {
         return new CustomGeneralOption<T>(id, type, nameKey, selections, defaultValue, parent, hideIfParentEnabled, format, ResolveColor(color), header);
     }
 
-    internal static CustomGeneralOption<string> Normal(int id, CustomOptionType type, TrKey nameKey, string[] selections, int defaultSelection, CustomOption parent = null, CustomOptionHeader header = null, Color? color = null, bool hideIfParentEnabled = false, TrKey format = TrKey.None)
+    internal static CustomGeneralOption<string> Normal(COID id, COType type, TrKey nameKey, string[] selections, int defaultSelection, CustomOption parent = null, CustomOptionHeader header = null, Color? color = null, bool hideIfParentEnabled = false, TrKey format = TrKey.None)
     {
         return new CustomGeneralOption<string>(id, type, nameKey, selections, defaultSelection, parent, hideIfParentEnabled, format, ResolveColor(color), header);
     }
 
-    internal static CustomTrOption Normal(int id, CustomOptionType type, TrKey nameKey, TrKey[] selections, int defaultSelection, CustomOption parent = null, CustomOptionHeader header = null, Color? color = null, bool hideIfParentEnabled = false, TrKey format = TrKey.None)
+    internal static CustomTrOption Normal(COID id, COType type, TrKey nameKey, TrKey[] selections, int defaultSelection, CustomOption parent = null, CustomOptionHeader header = null, Color? color = null, bool hideIfParentEnabled = false, TrKey format = TrKey.None)
     {
         return new CustomTrOption(id, type, nameKey, selections, defaultSelection, parent, hideIfParentEnabled, format, ResolveColor(color), header);
     }
 
-    internal static CustomPlayerOption Player(int id, CustomOptionType type, TrKey nameKey, int[] playerIds, int defaultSelection, CustomOption parent = null, CustomOptionHeader header = null, Color? color = null, bool hideIfParentEnabled = false, TrKey format = TrKey.None)
+    internal static CustomPlayerOption Player(COID id, COType type, TrKey nameKey, int[] playerIds, int defaultSelection, CustomOption parent = null, CustomOptionHeader header = null, Color? color = null, bool hideIfParentEnabled = false, TrKey format = TrKey.None)
     {
         return new CustomPlayerOption(id, type, nameKey, playerIds, defaultSelection, parent, hideIfParentEnabled, format, ResolveColor(color), header);
     }
@@ -271,16 +262,16 @@ internal partial class CustomOption
         {
             return;
         }
-        UpdateGameOptionsMenu(CustomOptionType.General, _generalTab.GetComponent<GameOptionsMenu>());
-        UpdateGameOptionsMenu(CustomOptionType.Impostor, _impostorTab.GetComponent<GameOptionsMenu>());
-        UpdateGameOptionsMenu(CustomOptionType.Crewmate, _crewmateTab.GetComponent<GameOptionsMenu>());
-        UpdateGameOptionsMenu(CustomOptionType.Neutral, _neutralTab.GetComponent<GameOptionsMenu>());
-        UpdateGameOptionsMenu(CustomOptionType.Modifier, _modifierTab.GetComponent<GameOptionsMenu>());
+        UpdateGameOptionsMenu(COType.General, _generalTab.GetComponent<GameOptionsMenu>());
+        UpdateGameOptionsMenu(COType.Impostor, _impostorTab.GetComponent<GameOptionsMenu>());
+        UpdateGameOptionsMenu(COType.Crewmate, _crewmateTab.GetComponent<GameOptionsMenu>());
+        UpdateGameOptionsMenu(COType.Neutral, _neutralTab.GetComponent<GameOptionsMenu>());
+        UpdateGameOptionsMenu(COType.Modifier, _modifierTab.GetComponent<GameOptionsMenu>());
     }
 
     private static void ShareOptionChange(uint optionId)
     {
-        if (!AllOptionsById.TryGetValue((int)optionId, out var option))
+        if (!AllOptionsById.TryGetValue((COID)optionId, out var option))
         {
             return;
         }
@@ -342,19 +333,19 @@ internal partial class CustomOption
         return GetSelectionIndex() + 1;
     }
 
-    internal string GetString()
+    internal string GetValueString()
     {
         var sel = GetValue()?.ToString() ?? "";
 
         return sel switch
         {
-            "On" => string.Format("<color=#FFFF00FF>{0}</color>", Tr.Get(TrKey.On)),
-            "Off" => string.Format("<color=#CCCCCCFF>{0}</color>", Tr.Get(TrKey.Off)),
+            "True" => string.Format("<color=#FFFF00FF>{0}</color>", Tr.Get(TrKey.On)),
+            "False" => string.Format("<color=#CCCCCCFF>{0}</color>", Tr.Get(TrKey.Off)),
             _ => sel,
         };
     }
 
-    private string GetName()
+    private string GetOptionName()
     {
         return Helpers.Cs(Color, Tr.Get(NameKey));
     }
@@ -418,7 +409,7 @@ internal partial class CustomOption
             var tab = _generalTab.GetComponent<GameOptionsMenu>();
             if (tab != null)
             {
-                UpdateGameOptionsMenu(CustomOptionType.General, tab);
+                UpdateGameOptionsMenu(COType.General, tab);
             }
         }
         else if (_impostorTab.active)
@@ -426,7 +417,7 @@ internal partial class CustomOption
             var tab = _impostorTab.GetComponent<GameOptionsMenu>();
             if (tab != null)
             {
-                UpdateGameOptionsMenu(CustomOptionType.Impostor, tab);
+                UpdateGameOptionsMenu(COType.Impostor, tab);
             }
         }
         else if (_crewmateTab.active)
@@ -434,7 +425,7 @@ internal partial class CustomOption
             var tab = _crewmateTab.GetComponent<GameOptionsMenu>();
             if (tab != null)
             {
-                UpdateGameOptionsMenu(CustomOptionType.Crewmate, tab);
+                UpdateGameOptionsMenu(COType.Crewmate, tab);
             }
         }
         else if (_neutralTab.active)
@@ -442,7 +433,7 @@ internal partial class CustomOption
             var tab = _neutralTab.GetComponent<GameOptionsMenu>();
             if (tab != null)
             {
-                UpdateGameOptionsMenu(CustomOptionType.Neutral, tab);
+                UpdateGameOptionsMenu(COType.Neutral, tab);
             }
         }
         else if (_modifierTab.active)
@@ -450,7 +441,7 @@ internal partial class CustomOption
             var tab = _modifierTab.GetComponent<GameOptionsMenu>();
             if (tab != null)
             {
-                UpdateGameOptionsMenu(CustomOptionType.Modifier, tab);
+                UpdateGameOptionsMenu(COType.Modifier, tab);
             }
         }
         else if (_battleRoyaleTab.active)
@@ -458,7 +449,7 @@ internal partial class CustomOption
             var tab = _battleRoyaleTab.GetComponent<GameOptionsMenu>();
             if (tab != null)
             {
-                UpdateGameOptionsMenu(CustomOptionType.BattleRoyale, tab);
+                UpdateGameOptionsMenu(COType.BattleRoyale, tab);
             }
         }
         else if (_hotPotatoTab.active)
@@ -466,7 +457,7 @@ internal partial class CustomOption
             var tab = _hotPotatoTab.GetComponent<GameOptionsMenu>();
             if (tab != null)
             {
-                UpdateGameOptionsMenu(CustomOptionType.HotPotato, tab);
+                UpdateGameOptionsMenu(COType.HotPotato, tab);
             }
         }
         else if (_hideNSeekTab.active)
@@ -474,7 +465,7 @@ internal partial class CustomOption
             var tab = _hideNSeekTab.GetComponent<GameOptionsMenu>();
             if (tab != null)
             {
-                UpdateGameOptionsMenu(CustomOptionType.HideNSeek, tab);
+                UpdateGameOptionsMenu(COType.HideNSeek, tab);
             }
         }
     }
@@ -716,21 +707,21 @@ internal partial class CustomOption
         BUTTONS_HOST.Clear();
 
         BUTTONS_HOST.Add((_generalButton = CreateSettingButton(__instance, "RUGeneralSettingsButton", Tr.Get(TrKey.GeneralSettingsButton), OptionPage.GeneralSettings), Tr.Get(TrKey.GeneralSettingsButton)));
-        _generalTab = CreateSettingTab(__instance, "RUGeneralSettingsTab", CustomOptionType.General);
+        _generalTab = CreateSettingTab(__instance, "RUGeneralSettingsTab", COType.General);
         BUTTONS_HOST.Add((_impostorButton = CreateSettingButton(__instance, "RUImpostorSettingsButton", Tr.Get(TrKey.ImpostorSettingsButton), OptionPage.ImpostorSettings), Tr.Get(TrKey.ImpostorSettingsButton)));
-        _impostorTab = CreateSettingTab(__instance, "RUGeneralImpostorTab", CustomOptionType.Impostor);
+        _impostorTab = CreateSettingTab(__instance, "RUGeneralImpostorTab", COType.Impostor);
         BUTTONS_HOST.Add((_crewmateButton = CreateSettingButton(__instance, "RUCrewmateSettingsButton", Tr.Get(TrKey.CrewmateSettingsButton), OptionPage.CrewmateSettings), Tr.Get(TrKey.CrewmateSettingsButton)));
-        _crewmateTab = CreateSettingTab(__instance, "RUCrewmateSettingsTab", CustomOptionType.Crewmate);
+        _crewmateTab = CreateSettingTab(__instance, "RUCrewmateSettingsTab", COType.Crewmate);
         BUTTONS_HOST.Add((_neutralButton = CreateSettingButton(__instance, "RUNeutralSettingsButton", Tr.Get(TrKey.NeutralSettingsButton), OptionPage.NeutralSettings), Tr.Get(TrKey.NeutralSettingsButton)));
-        _neutralTab = CreateSettingTab(__instance, "RUNeutralSettingsTab", CustomOptionType.Neutral);
+        _neutralTab = CreateSettingTab(__instance, "RUNeutralSettingsTab", COType.Neutral);
         BUTTONS_HOST.Add((_modifierButton = CreateSettingButton(__instance, "RUModifierSettingsButton", Tr.Get(TrKey.ModifierSettingsButton), OptionPage.ModifierSettings), Tr.Get(TrKey.ModifierSettingsButton)));
-        _modifierTab = CreateSettingTab(__instance, "RUModifierSettingsTab", CustomOptionType.Modifier);
+        _modifierTab = CreateSettingTab(__instance, "RUModifierSettingsTab", COType.Modifier);
         BUTTONS_HOST.Add((_battleRoyaleButton = CreateSettingButton(__instance, "RUBattleRoyaleSettingsButton", Tr.Get(TrKey.BattleRoyaleSettingsButton), OptionPage.BattleRoyaleSettings), Tr.Get(TrKey.BattleRoyaleSettingsButton)));
-        _battleRoyaleTab = CreateSettingTab(__instance, "RUBattleRoyaleSettingsTab", CustomOptionType.BattleRoyale);
+        _battleRoyaleTab = CreateSettingTab(__instance, "RUBattleRoyaleSettingsTab", COType.BattleRoyale);
         BUTTONS_HOST.Add((_hotPotatoButton = CreateSettingButton(__instance, "RUHotPotatoSettingsButton", Tr.Get(TrKey.HotPotatoSettingsButton), OptionPage.HotPotatoSettings), Tr.Get(TrKey.HotPotatoSettingsButton)));
-        _hotPotatoTab = CreateSettingTab(__instance, "RUHotPotatoSettingsTab", CustomOptionType.HotPotato);
+        _hotPotatoTab = CreateSettingTab(__instance, "RUHotPotatoSettingsTab", COType.HotPotato);
         BUTTONS_HOST.Add((_hideNSeekButton = CreateSettingButton(__instance, "RUHideNSeekSettingsButton", Tr.Get(TrKey.HideNSeekSettingsButton), OptionPage.HideNSeekSettings), Tr.Get(TrKey.HideNSeekSettingsButton)));
-        _hideNSeekTab = CreateSettingTab(__instance, "RUHideNSeekSettingsTab", CustomOptionType.HideNSeek);
+        _hideNSeekTab = CreateSettingTab(__instance, "RUHideNSeekSettingsTab", COType.HideNSeek);
 
         _currentSettingPage = 0;
         RefreshSettingButtonVisibility(__instance);
@@ -800,7 +791,7 @@ internal partial class CustomOption
         return buttonObj;
     }
 
-    private static GameObject CreateSettingTab(GameSettingMenu __instance, string name, CustomOptionType optionType)
+    private static GameObject CreateSettingTab(GameSettingMenu __instance, string name, COType optionType)
     {
         var template = __instance.GameSettingsTab.gameObject;
         var tabObj = UnityObject.Instantiate(template, template.transform.parent);
@@ -893,7 +884,7 @@ internal partial class CustomOption
         }
     }
 
-    private static void UpdateGameOptionsMenu(CustomOptionType optionType, GameOptionsMenu menu)
+    private static void UpdateGameOptionsMenu(COType optionType, GameOptionsMenu menu)
     {
         var children = menu.Children;
         foreach (var t in children)
@@ -1083,9 +1074,33 @@ internal partial class CustomOption
         return true;
     }
 
+    private readonly StringBuilder ToStringBuilder = new();
+    public override string ToString()
+    {
+        if (this is null) return string.Empty;
+
+        ToStringBuilder.Clear();
+        ToStringBuilder.Append(GetOptionName()).Append(": ").Append(GetValueString());
+
+        if (Children.Count > 0)
+        {
+            for (var i = 0; i < Children.Count; i++)
+            {
+                if (Children[i] is not null)
+                {
+                    ToStringBuilder.Append('\n');
+                    ToStringBuilder.Append(i + 1 == Children.Count ? "┗" : "┣");
+                    ToStringBuilder.Append(Children[i].ToString());
+                }
+            }
+        }
+
+        return ToStringBuilder.ToString();
+    }
+
     internal static string OptionToString(CustomOption option)
     {
-        return option == null ? "" : string.Format("{0}: {1}", option.GetName(), option.GetString());
+        return option == null ? "" : string.Format("{0}: {1}", option.GetOptionName(), option.GetValueString());
     }
 
     internal static string OptionsToString(CustomOption option, bool skipFirst = false)
@@ -1122,11 +1137,11 @@ internal class CustomOption<T> : CustomOption
     internal int Selection;
     internal T[] Selections;
 
-    public CustomOption(int id, CustomOptionType type, TrKey nameKey, T[] selections, T defaultValue, CustomOption parent, bool hideIfParentEnabled, TrKey format, Color color, CustomOptionHeader header = null)
+    public CustomOption(COID id, COType type, TrKey nameKey, T[] selections, T defaultValue, CustomOption parent, bool hideIfParentEnabled, TrKey format, Color color, CustomOptionHeader header = null)
     : this(id, type, nameKey, selections, Array.IndexOf(selections, defaultValue), parent, hideIfParentEnabled, format, color, header)
     { }
 
-    public CustomOption(int id, CustomOptionType type, TrKey nameKey, T[] selections, int defaultSelection, CustomOption parent, bool hideIfParentEnabled, TrKey format, Color color, CustomOptionHeader header = null) : base(id, type, nameKey, parent, hideIfParentEnabled, format, color, header)
+    public CustomOption(COID id, COType type, TrKey nameKey, T[] selections, int defaultSelection, CustomOption parent, bool hideIfParentEnabled, TrKey format, Color color, CustomOptionHeader header = null) : base(id, type, nameKey, parent, hideIfParentEnabled, format, color, header)
     {
         Selections = selections;
         DefaultSelection = Mathf.Clamp(defaultSelection, 0, selections.Length - 1);
@@ -1172,9 +1187,9 @@ internal class CustomOption<T> : CustomOption
 
 internal class CustomTrOption : CustomOption<TrKey>
 {
-    public CustomTrOption(int id, CustomOptionType type, TrKey nameKey, TrKey[] selections, int defaultSelection, CustomOption parent, bool hideIfParentEnabled, TrKey format, Color color, CustomOptionHeader header = null) : base(id, type, nameKey, selections, defaultSelection, parent, hideIfParentEnabled, format, color, header)
-    {
-    }
+    public CustomTrOption(COID id, COType type, TrKey nameKey, TrKey[] selections, int defaultSelection, CustomOption parent, bool hideIfParentEnabled, TrKey format, Color color, CustomOptionHeader header = null)
+    : base(id, type, nameKey, selections, defaultSelection, parent, hideIfParentEnabled, format, color, header)
+    { }
 
     protected override object GetValue()
     {

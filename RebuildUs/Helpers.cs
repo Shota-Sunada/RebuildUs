@@ -746,11 +746,11 @@ internal static class Helpers
     {
         return option.Type switch
         {
-            CustomOptionType.General => RoleTypes.Crewmate,
-            CustomOptionType.Crewmate => RoleTypes.Scientist,
-            CustomOptionType.Impostor => RoleTypes.Shapeshifter,
-            CustomOptionType.Neutral => RoleTypes.Noisemaker,
-            CustomOptionType.Modifier => RoleTypes.GuardianAngel,
+            COType.General => RoleTypes.Crewmate,
+            COType.Crewmate => RoleTypes.Scientist,
+            COType.Impostor => RoleTypes.Shapeshifter,
+            COType.Neutral => RoleTypes.Noisemaker,
+            COType.Modifier => RoleTypes.GuardianAngel,
             _ => RoleTypes.Crewmate,
         };
     }

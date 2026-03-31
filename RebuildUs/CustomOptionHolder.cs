@@ -9,417 +9,417 @@ internal static class CustomOptionHolder
 
     internal static void Load()
     {
-        var presetHeader = new CustomOptionHeader(50000, CustomOptionType.General, TrKey.Preset);
-        var rolesGeneralHeader = new CustomOptionHeader(50001, CustomOptionType.General, TrKey.RolesGeneral);
-        var gameOptionsHeader = new CustomOptionHeader(50002, CustomOptionType.General, TrKey.GameOptions);
-        var polusOptionsHeader = new CustomOptionHeader(50003, CustomOptionType.General, TrKey.PolusOptions);
-        var airshipOptionsHeader = new CustomOptionHeader(50004, CustomOptionType.General, TrKey.AirshipOptions);
-        var randomMapHeader = new CustomOptionHeader(50005, CustomOptionType.General, TrKey.RandomMap);
-        var gameModeHeader = new CustomOptionHeader(50006, CustomOptionType.General, TrKey.GameMode);
+        var presetHeader = new CustomOptionHeader(COType.General, TrKey.Preset);
+        var rolesGeneralHeader = new CustomOptionHeader(COType.General, TrKey.RolesGeneral);
+        var gameOptionsHeader = new CustomOptionHeader(COType.General, TrKey.GameOptions);
+        var polusOptionsHeader = new CustomOptionHeader(COType.General, TrKey.PolusOptions);
+        var airshipOptionsHeader = new CustomOptionHeader(COType.General, TrKey.AirshipOptions);
+        var randomMapHeader = new CustomOptionHeader(COType.General, TrKey.RandomMap);
+        var gameModeHeader = new CustomOptionHeader(COType.General, TrKey.GameMode);
 
-        var hideNSeekHeader = new CustomOptionHeader(50012, CustomOptionType.HideNSeek, TrKey.HideNSeek);
-        var battleRoyaleHeader = new CustomOptionHeader(50010, CustomOptionType.General, TrKey.BattleRoyale);
-        var hotPotatoHeader = new CustomOptionHeader(50011, CustomOptionType.General, TrKey.HotPotato);
+        var hideNSeekHeader = new CustomOptionHeader(COType.HideNSeek, TrKey.HideNSeek);
+        var battleRoyaleHeader = new CustomOptionHeader(COType.General, TrKey.BattleRoyale);
+        var hotPotatoHeader = new CustomOptionHeader(COType.General, TrKey.HotPotato);
 
         #region MOD OPTIONS
 
-        PresetSelection = CustomOption.Normal(0, CustomOptionType.General, TrKey.Preset, Presets, 0, header: presetHeader);
-        ActivateRoles = CustomOption.Normal(1, CustomOptionType.General, TrKey.ActivateRoles, true);
-        GameModeSelection = CustomOption.Normal(9, CustomOptionType.General, TrKey.GameMode, [TrKey.GameModeNormal, TrKey.GameModeHideNSeek, TrKey.GameModeBattleRoyale, TrKey.GameModeHotPotato], 0, header: gameModeHeader);
-        RandomNumberAlgorithm = CustomOption.Normal(3, CustomOptionType.General, TrKey.RandomNumberAlgorithm, [TrKey.RndDotnet, TrKey.RndMT, TrKey.RndXoshiro256, TrKey.RndXoshiro256Ss, TrKey.RndPcg64], 0);
-        EnableRandomRandomNumberAlgorithm = CustomOption.Normal(2, CustomOptionType.General, TrKey.RandomRandomNumberAlgorithm, false);
-        EnableRandomRandomNumberAlgorithmDotnet = CustomOption.Normal(4, CustomOptionType.General, TrKey.EnableRandomRandomNumberAlgorithmDotnet, true, EnableRandomRandomNumberAlgorithm);
-        EnableRandomRandomNumberAlgorithmMT = CustomOption.Normal(5, CustomOptionType.General, TrKey.EnableRandomRandomNumberAlgorithmMT, true, EnableRandomRandomNumberAlgorithm);
-        EnableRandomRandomNumberAlgorithmXorshiro256Pp = CustomOption.Normal(6, CustomOptionType.General, TrKey.EnableRandomRandomNumberAlgorithmXorshiro256PP, true, EnableRandomRandomNumberAlgorithm);
-        EnableRandomRandomNumberAlgorithmXorshiro256Ss = CustomOption.Normal(7, CustomOptionType.General, TrKey.EnableRandomRandomNumberAlgorithmXorshiro256SS, true, EnableRandomRandomNumberAlgorithm);
-        EnableRandomRandomNumberAlgorithmPcg64 = CustomOption.Normal(8, CustomOptionType.General, TrKey.EnableRandomRandomNumberAlgorithmPcg64, true, EnableRandomRandomNumberAlgorithm);
+        PresetSelection = CustomOption.Normal(COID.PresetSelection, COType.General, TrKey.Preset, Presets, 0, header: presetHeader);
+        ActivateRoles = CustomOption.Normal(COID.ActivateRoles, COType.General, TrKey.ActivateRoles, true);
+        GameModeSelection = CustomOption.Normal(COID.GameModeSelection, COType.General, TrKey.GameMode, [TrKey.GameModeNormal, TrKey.GameModeHideNSeek, TrKey.GameModeBattleRoyale, TrKey.GameModeHotPotato], 0, header: gameModeHeader);
+        RandomNumberAlgorithm = CustomOption.Normal(COID.RandomNumberAlgorithm, COType.General, TrKey.RandomNumberAlgorithm, [TrKey.RndDotnet, TrKey.RndMT, TrKey.RndXoshiro256, TrKey.RndXoshiro256Ss, TrKey.RndPcg64], 0);
+        EnableRandomRandomNumberAlgorithm = CustomOption.Normal(COID.EnableRandomRandomNumberAlgorithm, COType.General, TrKey.RandomRandomNumberAlgorithm, false);
+        EnableRandomRandomNumberAlgorithmDotnet = CustomOption.Normal(COID.EnableRandomRandomNumberAlgorithmDotnet, COType.General, TrKey.EnableRandomRandomNumberAlgorithmDotnet, true, EnableRandomRandomNumberAlgorithm);
+        EnableRandomRandomNumberAlgorithmMT = CustomOption.Normal(COID.EnableRandomRandomNumberAlgorithmMT, COType.General, TrKey.EnableRandomRandomNumberAlgorithmMT, true, EnableRandomRandomNumberAlgorithm);
+        EnableRandomRandomNumberAlgorithmXorshiro256Pp = CustomOption.Normal(COID.EnableRandomRandomNumberAlgorithmXorshiro256Pp, COType.General, TrKey.EnableRandomRandomNumberAlgorithmXorshiro256PP, true, EnableRandomRandomNumberAlgorithm);
+        EnableRandomRandomNumberAlgorithmXorshiro256Ss = CustomOption.Normal(COID.EnableRandomRandomNumberAlgorithmXorshiro256Ss, COType.General, TrKey.EnableRandomRandomNumberAlgorithmXorshiro256SS, true, EnableRandomRandomNumberAlgorithm);
+        EnableRandomRandomNumberAlgorithmPcg64 = CustomOption.Normal(COID.EnableRandomRandomNumberAlgorithmPcg64, COType.General, TrKey.EnableRandomRandomNumberAlgorithmPcg64, true, EnableRandomRandomNumberAlgorithm);
 
         #endregion
 
         #region GENERAL OPTIONS
 
-        CrewmateRolesCountMin = CustomOption.Normal(10, CustomOptionType.General, TrKey.CrewmateRolesCountMin, 0f, 0f, 15f, 1f, header: rolesGeneralHeader, format: TrKey.UnitPlayers);
-        CrewmateRolesCountMax = CustomOption.Normal(11, CustomOptionType.General, TrKey.CrewmateRolesCountMax, 0f, 0f, 15f, 1f, format: TrKey.UnitPlayers);
-        ImpostorRolesCountMin = CustomOption.Normal(12, CustomOptionType.General, TrKey.ImpostorRolesCountMin, 0f, 0f, 15f, 1f, format: TrKey.UnitPlayers);
-        ImpostorRolesCountMax = CustomOption.Normal(13, CustomOptionType.General, TrKey.ImpostorRolesCountMax, 0f, 0f, 15f, 1f, format: TrKey.UnitPlayers);
-        NeutralRolesCountMin = CustomOption.Normal(14, CustomOptionType.General, TrKey.NeutralRolesCountMin, 0f, 0f, 15f, 1f, format: TrKey.UnitPlayers);
-        NeutralRolesCountMax = CustomOption.Normal(15, CustomOptionType.General, TrKey.NeutralRolesCountMax, 0f, 0f, 15f, 1f, format: TrKey.UnitPlayers);
-        ModifiersCountMin = CustomOption.Normal(16, CustomOptionType.General, TrKey.ModifiersCountMin, 0f, 0f, 15f, 1f, format: TrKey.UnitPlayers);
-        ModifiersCountMax = CustomOption.Normal(17, CustomOptionType.General, TrKey.ModifiersCountMax, 0f, 0f, 15f, 1f, format: TrKey.UnitPlayers);
+        CrewmateRolesCountMin = CustomOption.Normal(COID.CrewmateRolesCountMin, COType.General, TrKey.CrewmateRolesCountMin, 0f, 0f, 15f, 1f, header: rolesGeneralHeader, format: TrKey.UnitPlayers);
+        CrewmateRolesCountMax = CustomOption.Normal(COID.CrewmateRolesCountMax, COType.General, TrKey.CrewmateRolesCountMax, 0f, 0f, 15f, 1f, format: TrKey.UnitPlayers);
+        ImpostorRolesCountMin = CustomOption.Normal(COID.ImpostorRolesCountMin, COType.General, TrKey.ImpostorRolesCountMin, 0f, 0f, 15f, 1f, format: TrKey.UnitPlayers);
+        ImpostorRolesCountMax = CustomOption.Normal(COID.ImpostorRolesCountMax, COType.General, TrKey.ImpostorRolesCountMax, 0f, 0f, 15f, 1f, format: TrKey.UnitPlayers);
+        NeutralRolesCountMin = CustomOption.Normal(COID.NeutralRolesCountMin, COType.General, TrKey.NeutralRolesCountMin, 0f, 0f, 15f, 1f, format: TrKey.UnitPlayers);
+        NeutralRolesCountMax = CustomOption.Normal(COID.NeutralRolesCountMax, COType.General, TrKey.NeutralRolesCountMax, 0f, 0f, 15f, 1f, format: TrKey.UnitPlayers);
+        ModifiersCountMin = CustomOption.Normal(COID.ModifiersCountMin, COType.General, TrKey.ModifiersCountMin, 0f, 0f, 15f, 1f, format: TrKey.UnitPlayers);
+        ModifiersCountMax = CustomOption.Normal(COID.ModifiersCountMax, COType.General, TrKey.ModifiersCountMax, 0f, 0f, 15f, 1f, format: TrKey.UnitPlayers);
 
         #endregion
 
         #region GAME OPTIONS
 
-        MaxNumberOfMeetings = CustomOption.Normal(20, CustomOptionType.General, TrKey.MaxNumberOfMeetings, 10, 0, 15, 1, header: gameOptionsHeader, format: TrKey.UnitTimes);
-        BlockSkippingInEmergencyMeetings = CustomOption.Normal(21, CustomOptionType.General, TrKey.BlockSkippingInEmergencyMeetings, false);
-        NoVoteIsSelfVote = CustomOption.Normal(22, CustomOptionType.General, TrKey.NoVoteIsSelfVote, false);
-        HidePlayerNames = CustomOption.Normal(23, CustomOptionType.General, TrKey.HidePlayerNames, false);
-        AllowParallelMedBayScans = CustomOption.Normal(24, CustomOptionType.General, TrKey.AllowParallelMedBayScans, false);
-        HideOutOfSightNametags = CustomOption.Normal(25, CustomOptionType.General, TrKey.HideOutOfSightNametags, true);
-        RefundVotesOnDeath = CustomOption.Normal(26, CustomOptionType.General, TrKey.RefundVotesOnDeath, true);
-        DelayBeforeMeeting = CustomOption.Normal(27, CustomOptionType.General, TrKey.DelayBeforeMeeting, 0f, 0f, 10f, 0.25f, format: TrKey.UnitSeconds);
-        DisableVentAnimation = CustomOption.Normal(28, CustomOptionType.General, TrKey.DisableVentAnimation, false);
-        StopCooldownOnFixingElecSabotage = CustomOption.Normal(29, CustomOptionType.General, TrKey.StopCooldownOnFixingElecSabotage, true);
-        EnableHawkMode = CustomOption.Normal(30, CustomOptionType.General, TrKey.EnableHawkMode, true);
-        CanWinByTaskWithoutLivingPlayer = CustomOption.Normal(31, CustomOptionType.General, TrKey.CanWinByTaskLivingPlayer, true);
+        MaxNumberOfMeetings = CustomOption.Normal(COID.MaxNumberOfMeetings, COType.General, TrKey.MaxNumberOfMeetings, 10, 0, 15, 1, header: gameOptionsHeader, format: TrKey.UnitTimes);
+        BlockSkippingInEmergencyMeetings = CustomOption.Normal(COID.BlockSkippingInEmergencyMeetings, COType.General, TrKey.BlockSkippingInEmergencyMeetings, false);
+        NoVoteIsSelfVote = CustomOption.Normal(COID.NoVoteIsSelfVote, COType.General, TrKey.NoVoteIsSelfVote, false);
+        HidePlayerNames = CustomOption.Normal(COID.HidePlayerNames, COType.General, TrKey.HidePlayerNames, false);
+        AllowParallelMedBayScans = CustomOption.Normal(COID.AllowParallelMedBayScans, COType.General, TrKey.AllowParallelMedBayScans, false);
+        HideOutOfSightNametags = CustomOption.Normal(COID.HideOutOfSightNametags, COType.General, TrKey.HideOutOfSightNametags, true);
+        RefundVotesOnDeath = CustomOption.Normal(COID.RefundVotesOnDeath, COType.General, TrKey.RefundVotesOnDeath, true);
+        DelayBeforeMeeting = CustomOption.Normal(COID.DelayBeforeMeeting, COType.General, TrKey.DelayBeforeMeeting, 0f, 0f, 10f, 0.25f, format: TrKey.UnitSeconds);
+        DisableVentAnimation = CustomOption.Normal(COID.DisableVentAnimation, COType.General, TrKey.DisableVentAnimation, false);
+        StopCooldownOnFixingElecSabotage = CustomOption.Normal(COID.StopCooldownOnFixingElecSabotage, COType.General, TrKey.StopCooldownOnFixingElecSabotage, true);
+        EnableHawkMode = CustomOption.Normal(COID.EnableHawkMode, COType.General, TrKey.EnableHawkMode, true);
+        CanWinByTaskWithoutLivingPlayer = CustomOption.Normal(COID.CanWinByTaskWithoutLivingPlayer, COType.General, TrKey.CanWinByTaskLivingPlayer, true);
         // DeadPlayerCanSeeCooldown = CustomOption.Normal(32, CustomOptionType.General, "DeadPlayerCanSeeCooldown", true);
-        ImpostorCanIgnoreCommSabotage = CustomOption.Normal(33, CustomOptionType.General, TrKey.ImpostorCanIgnoreCommSabotage, false);
+        ImpostorCanIgnoreCommSabotage = CustomOption.Normal(COID.ImpostorCanIgnoreCommSabotage, COType.General, TrKey.ImpostorCanIgnoreCommSabotage, false);
         // BlockSabotageFromDeadImpostors = CustomOption.Normal(34, CustomOptionType.General, "BlockSabotageFromDeadImpostors", false);
         // ShieldFirstKill = CustomOption.Normal(35, CustomOptionType.General, "ShieldFirstKill", false);
-        DontFinishGame = CustomOption.Normal(36, CustomOptionType.General, TrKey.DontFinishGame, false);
-        RandomSpawn = CustomOption.Normal(37, CustomOptionType.General, TrKey.RandomSpawn, false);
+        DontFinishGame = CustomOption.Normal(COID.DontFinishGame, COType.General, TrKey.DontFinishGame, false);
+        RandomSpawn = CustomOption.Normal(COID.RandomSpawn, COType.General, TrKey.RandomSpawn, false);
 
-        AdditionalEmergencyCooldown = CustomOption.Normal(55, CustomOptionType.General, TrKey.AdditionalEmergencyCooldown, 0f, 0f, 15f, 1f, format: TrKey.UnitPlayers);
-        AdditionalEmergencyCooldownTime = CustomOption.Normal(56, CustomOptionType.General, TrKey.AdditionalEmergencyCooldownTime, 10f, 0f, 60f, 1f, AdditionalEmergencyCooldown, format: TrKey.UnitSeconds);
+        AdditionalEmergencyCooldown = CustomOption.Normal(COID.AdditionalEmergencyCooldown, COType.General, TrKey.AdditionalEmergencyCooldown, 0f, 0f, 15f, 1f, format: TrKey.UnitPlayers);
+        AdditionalEmergencyCooldownTime = CustomOption.Normal(COID.AdditionalEmergencyCooldownTime, COType.General, TrKey.AdditionalEmergencyCooldownTime, 10f, 0f, 60f, 1f, AdditionalEmergencyCooldown, format: TrKey.UnitSeconds);
 
-        RestrictDevices = CustomOption.Normal(60, CustomOptionType.General, TrKey.RestrictDevices, [TrKey.Off, TrKey.RestrictPerTurn, TrKey.RestrictPerGame], 0);
-        RestrictAdmin = CustomOption.Normal(61, CustomOptionType.General, TrKey.RestrictAdmin, true, RestrictDevices);
-        RestrictAdminTime = CustomOption.Normal(62, CustomOptionType.General, TrKey.RestrictAdminTime, 30f, 0f, 600f, 1f, RestrictAdmin, format: TrKey.UnitSeconds);
-        RestrictAdminText = CustomOption.Normal(63, CustomOptionType.General, TrKey.RestrictAdminText, true, RestrictAdmin);
-        RestrictCameras = CustomOption.Normal(64, CustomOptionType.General, TrKey.RestrictCameras, true, RestrictDevices);
-        RestrictCamerasTime = CustomOption.Normal(65, CustomOptionType.General, TrKey.RestrictCamerasTime, 30f, 0f, 600f, 1f, RestrictCameras, format: TrKey.UnitSeconds);
-        RestrictCamerasText = CustomOption.Normal(66, CustomOptionType.General, TrKey.RestrictCamerasText, true, RestrictCameras);
-        RestrictVitals = CustomOption.Normal(67, CustomOptionType.General, TrKey.RestrictVitals, true, RestrictDevices);
-        RestrictVitalsTime = CustomOption.Normal(68, CustomOptionType.General, TrKey.RestrictVitalsTime, 30f, 0f, 600f, 1f, RestrictVitals, format: TrKey.UnitSeconds);
-        RestrictVitalsText = CustomOption.Normal(69, CustomOptionType.General, TrKey.RestrictVitalsText, true, RestrictVitals);
+        RestrictDevices = CustomOption.Normal(COID.RestrictDevices, COType.General, TrKey.RestrictDevices, [TrKey.Off, TrKey.RestrictPerTurn, TrKey.RestrictPerGame], 0);
+        RestrictAdmin = CustomOption.Normal(COID.RestrictAdmin, COType.General, TrKey.RestrictAdmin, true, RestrictDevices);
+        RestrictAdminTime = CustomOption.Normal(COID.RestrictAdminTime, COType.General, TrKey.RestrictAdminTime, 30f, 0f, 600f, 1f, RestrictAdmin, format: TrKey.UnitSeconds);
+        RestrictAdminText = CustomOption.Normal(COID.RestrictAdminText, COType.General, TrKey.RestrictAdminText, true, RestrictAdmin);
+        RestrictCameras = CustomOption.Normal(COID.RestrictCameras, COType.General, TrKey.RestrictCameras, true, RestrictDevices);
+        RestrictCamerasTime = CustomOption.Normal(COID.RestrictCamerasTime, COType.General, TrKey.RestrictCamerasTime, 30f, 0f, 600f, 1f, RestrictCameras, format: TrKey.UnitSeconds);
+        RestrictCamerasText = CustomOption.Normal(COID.RestrictCamerasText, COType.General, TrKey.RestrictCamerasText, true, RestrictCameras);
+        RestrictVitals = CustomOption.Normal(COID.RestrictVitals, COType.General, TrKey.RestrictVitals, true, RestrictDevices);
+        RestrictVitalsTime = CustomOption.Normal(COID.RestrictVitalsTime, COType.General, TrKey.RestrictVitalsTime, 30f, 0f, 600f, 1f, RestrictVitals, format: TrKey.UnitSeconds);
+        RestrictVitalsText = CustomOption.Normal(COID.RestrictVitalsText, COType.General, TrKey.RestrictVitalsText, true, RestrictVitals);
 
         #endregion
 
         #region POLUS OPTIONS
 
-        PolusAdditionalVents = CustomOption.Normal(70, CustomOptionType.General, TrKey.PolusAdditionalVents, true, header: polusOptionsHeader);
-        PolusSpecimenVital = CustomOption.Normal(71, CustomOptionType.General, TrKey.PolusSpecimenVital, true);
+        PolusAdditionalVents = CustomOption.Normal(COID.PolusAdditionalVents, COType.General, TrKey.PolusAdditionalVents, true, header: polusOptionsHeader);
+        PolusSpecimenVital = CustomOption.Normal(COID.PolusSpecimenVital, COType.General, TrKey.PolusSpecimenVital, true);
 
         #endregion
 
         #region AIRSHIP OPTIONS
 
-        AirshipOptimize = CustomOption.Normal(80, CustomOptionType.General, TrKey.AirshipOptimize, false, header: airshipOptionsHeader);
-        AirshipEnableWallCheck = CustomOption.Normal(81, CustomOptionType.General, TrKey.AirshipEnableWallCheck, true);
-        AirshipReactorDuration = CustomOption.Normal(82, CustomOptionType.General, TrKey.AirshipReactorDuration, 60f, 0f, 600f, 1f, format: TrKey.UnitSeconds);
-        AirshipRandomSpawn = CustomOption.Normal(83, CustomOptionType.General, TrKey.AirshipRandomSpawn, false);
-        AirshipAdditionalSpawn = CustomOption.Normal(84, CustomOptionType.General, TrKey.AirshipAdditionalSpawn, true);
-        AirshipSynchronizedSpawning = CustomOption.Normal(85, CustomOptionType.General, TrKey.AirshipSynchronizedSpawning, true);
-        AirshipSetOriginalCooldown = CustomOption.Normal(86, CustomOptionType.General, TrKey.AirshipSetOriginalCooldown, false);
-        AirshipInitialDoorCooldown = CustomOption.Normal(87, CustomOptionType.General, TrKey.AirshipInitialDoorCooldown, 0f, 0f, 60f, 1f, format: TrKey.UnitSeconds);
-        AirshipInitialSabotageCooldown = CustomOption.Normal(88, CustomOptionType.General, TrKey.AirshipInitialSabotageCooldown, 15f, 0f, 60f, 1f, format: TrKey.UnitSeconds);
-        AirshipOldAdmin = CustomOption.Normal(89, CustomOptionType.General, TrKey.AirshipOldAdmin, false);
-        AirshipRestrictedAdmin = CustomOption.Normal(90, CustomOptionType.General, TrKey.AirshipRestrictedAdmin, false);
-        AirshipDisableGapSwitchBoard = CustomOption.Normal(91, CustomOptionType.General, TrKey.AirshipDisableGapSwitchBoard, false);
-        AirshipDisableMovingPlatform = CustomOption.Normal(92, CustomOptionType.General, TrKey.AirshipDisableMovingPlatform, false);
-        AirshipAdditionalLadder = CustomOption.Normal(93, CustomOptionType.General, TrKey.AirshipAdditionalLadder, false);
-        AirshipOneWayLadder = CustomOption.Normal(94, CustomOptionType.General, TrKey.AirshipOneWayLadder, false);
-        AirshipReplaceSafeTask = CustomOption.Normal(95, CustomOptionType.General, TrKey.AirshipReplaceSafeTask, false);
-        AirshipAdditionalWireTask = CustomOption.Normal(96, CustomOptionType.General, TrKey.AirshipAdditionalWireTask, false);
+        AirshipOptimize = CustomOption.Normal(COID.AirshipOptimize, COType.General, TrKey.AirshipOptimize, false, header: airshipOptionsHeader);
+        AirshipEnableWallCheck = CustomOption.Normal(COID.AirshipEnableWallCheck, COType.General, TrKey.AirshipEnableWallCheck, true);
+        AirshipReactorDuration = CustomOption.Normal(COID.AirshipReactorDuration, COType.General, TrKey.AirshipReactorDuration, 60f, 0f, 600f, 1f, format: TrKey.UnitSeconds);
+        AirshipRandomSpawn = CustomOption.Normal(COID.AirshipRandomSpawn, COType.General, TrKey.AirshipRandomSpawn, false);
+        AirshipAdditionalSpawn = CustomOption.Normal(COID.AirshipAdditionalSpawn, COType.General, TrKey.AirshipAdditionalSpawn, true);
+        AirshipSynchronizedSpawning = CustomOption.Normal(COID.AirshipSynchronizedSpawning, COType.General, TrKey.AirshipSynchronizedSpawning, true);
+        AirshipSetOriginalCooldown = CustomOption.Normal(COID.AirshipSetOriginalCooldown, COType.General, TrKey.AirshipSetOriginalCooldown, false);
+        AirshipInitialDoorCooldown = CustomOption.Normal(COID.AirshipInitialDoorCooldown, COType.General, TrKey.AirshipInitialDoorCooldown, 0f, 0f, 60f, 1f, format: TrKey.UnitSeconds);
+        AirshipInitialSabotageCooldown = CustomOption.Normal(COID.AirshipInitialSabotageCooldown, COType.General, TrKey.AirshipInitialSabotageCooldown, 15f, 0f, 60f, 1f, format: TrKey.UnitSeconds);
+        AirshipOldAdmin = CustomOption.Normal(COID.AirshipOldAdmin, COType.General, TrKey.AirshipOldAdmin, false);
+        AirshipRestrictedAdmin = CustomOption.Normal(COID.AirshipRestrictedAdmin, COType.General, TrKey.AirshipRestrictedAdmin, false);
+        AirshipDisableGapSwitchBoard = CustomOption.Normal(COID.AirshipDisableGapSwitchBoard, COType.General, TrKey.AirshipDisableGapSwitchBoard, false);
+        AirshipDisableMovingPlatform = CustomOption.Normal(COID.AirshipDisableMovingPlatform, COType.General, TrKey.AirshipDisableMovingPlatform, false);
+        AirshipAdditionalLadder = CustomOption.Normal(COID.AirshipAdditionalLadder, COType.General, TrKey.AirshipAdditionalLadder, false);
+        AirshipOneWayLadder = CustomOption.Normal(COID.AirshipOneWayLadder, COType.General, TrKey.AirshipOneWayLadder, false);
+        AirshipReplaceSafeTask = CustomOption.Normal(COID.AirshipReplaceSafeTask, COType.General, TrKey.AirshipReplaceSafeTask, false);
+        AirshipAdditionalWireTask = CustomOption.Normal(COID.AirshipAdditionalWireTask, COType.General, TrKey.AirshipAdditionalWireTask, false);
 
         #endregion
 
         #region MAP OPTIONS
 
-        RandomMap = CustomOption.Normal(100, CustomOptionType.General, TrKey.RandomMap, false, header: randomMapHeader);
-        RandomMapEnableSkeld = CustomOption.Normal(101, CustomOptionType.General, TrKey.RandomMapEnableSkeld, true, RandomMap);
-        RandomMapEnableMiraHq = CustomOption.Normal(102, CustomOptionType.General, TrKey.RandomMapEnableMiraHQ, true, RandomMap);
-        RandomMapEnablePolus = CustomOption.Normal(103, CustomOptionType.General, TrKey.RandomMapEnablePolus, true, RandomMap);
-        RandomMapEnableDleks = CustomOption.Normal(104, CustomOptionType.General, TrKey.RandomMapEnableDleks, true, RandomMap);
-        RandomMapEnableAirShip = CustomOption.Normal(105, CustomOptionType.General, TrKey.RandomMapEnableAirShip, true, RandomMap);
-        RandomMapEnableFungle = CustomOption.Normal(106, CustomOptionType.General, TrKey.RandomMapEnableFungle, true, RandomMap);
-        RandomMapEnableSubmerged = CustomOption.Normal(107, CustomOptionType.General, TrKey.RandomMapEnableSubmerged, true, RandomMap);
+        RandomMap = CustomOption.Normal(COID.RandomMap, COType.General, TrKey.RandomMap, false, header: randomMapHeader);
+        RandomMapEnableSkeld = CustomOption.Normal(COID.RandomMapEnableSkeld, COType.General, TrKey.RandomMapEnableSkeld, true, RandomMap);
+        RandomMapEnableMiraHq = CustomOption.Normal(COID.RandomMapEnableMiraHq, COType.General, TrKey.RandomMapEnableMiraHQ, true, RandomMap);
+        RandomMapEnablePolus = CustomOption.Normal(COID.RandomMapEnablePolus, COType.General, TrKey.RandomMapEnablePolus, true, RandomMap);
+        RandomMapEnableDleks = CustomOption.Normal(COID.RandomMapEnableDleks, COType.General, TrKey.RandomMapEnableDleks, true, RandomMap);
+        RandomMapEnableAirShip = CustomOption.Normal(COID.RandomMapEnableAirShip, COType.General, TrKey.RandomMapEnableAirShip, true, RandomMap);
+        RandomMapEnableFungle = CustomOption.Normal(COID.RandomMapEnableFungle, COType.General, TrKey.RandomMapEnableFungle, true, RandomMap);
+        RandomMapEnableSubmerged = CustomOption.Normal(COID.RandomMapEnableSubmerged, COType.General, TrKey.RandomMapEnableSubmerged, true, RandomMap);
 
         #endregion
 
         #region ROLES CREWMATE
 
-        MayorSpawnRate = new(1000, CustomOptionType.Crewmate, RoleType.Mayor, Mayor.Color);
-        MayorNumVotes = CustomOption.Normal(1001, CustomOptionType.Crewmate, TrKey.MayorNumVotes, 2f, 2f, 10f, 1f, MayorSpawnRate, format: TrKey.UnitTimes);
-        MayorCanSeeVoteColors = CustomOption.Normal(1002, CustomOptionType.Crewmate, TrKey.MayorCanSeeVoteColors, false, MayorSpawnRate);
-        MayorTasksNeededToSeeVoteColors = CustomOption.Normal(1003, CustomOptionType.Crewmate, TrKey.MayorTasksNeededToSeeVoteColors, 3f, 1f, 10f, 1f, MayorCanSeeVoteColors);
-        MayorMeetingButton = CustomOption.Normal(1004, CustomOptionType.Crewmate, TrKey.MayorMeetingButton, true, MayorSpawnRate);
-        MayorMaxRemoteMeetings = CustomOption.Normal(1005, CustomOptionType.Crewmate, TrKey.MayorMaxRemoteMeetings, 1f, 0f, 10f, 1f, MayorMeetingButton, format: TrKey.UnitTimes);
+        MayorSpawnRate = new(COID.MayorSpawnRate, COType.Crewmate, RoleType.Mayor, Mayor.Color);
+        MayorNumVotes = CustomOption.Normal(COID.MayorNumVotes, COType.Crewmate, TrKey.MayorNumVotes, 2f, 2f, 10f, 1f, MayorSpawnRate, format: TrKey.UnitTimes);
+        MayorCanSeeVoteColors = CustomOption.Normal(COID.MayorCanSeeVoteColors, COType.Crewmate, TrKey.MayorCanSeeVoteColors, false, MayorSpawnRate);
+        MayorTasksNeededToSeeVoteColors = CustomOption.Normal(COID.MayorTasksNeededToSeeVoteColors, COType.Crewmate, TrKey.MayorTasksNeededToSeeVoteColors, 3f, 1f, 10f, 1f, MayorCanSeeVoteColors);
+        MayorMeetingButton = CustomOption.Normal(COID.MayorMeetingButton, COType.Crewmate, TrKey.MayorMeetingButton, true, MayorSpawnRate);
+        MayorMaxRemoteMeetings = CustomOption.Normal(COID.MayorMaxRemoteMeetings, COType.Crewmate, TrKey.MayorMaxRemoteMeetings, 1f, 0f, 10f, 1f, MayorMeetingButton, format: TrKey.UnitTimes);
 
-        EngineerSpawnRate = new(1010, CustomOptionType.Crewmate, RoleType.Engineer, Engineer.Color);
-        EngineerNumberOfFixes = CustomOption.Normal(1011, CustomOptionType.Crewmate, TrKey.EngineerNumberOfFixes, 1f, 0f, 3f, 1f, EngineerSpawnRate, format: TrKey.UnitTimes);
-        EngineerHighlightForImpostors = CustomOption.Normal(1012, CustomOptionType.Crewmate, TrKey.EngineerHighlightForImpostors, true, EngineerSpawnRate);
-        EngineerHighlightForTeamJackal = CustomOption.Normal(1013, CustomOptionType.Crewmate, TrKey.EngineerHighlightForTeamJackal, true, EngineerSpawnRate);
+        EngineerSpawnRate = new(COID.EngineerSpawnRate, COType.Crewmate, RoleType.Engineer, Engineer.Color);
+        EngineerNumberOfFixes = CustomOption.Normal(COID.EngineerNumberOfFixes, COType.Crewmate, TrKey.EngineerNumberOfFixes, 1f, 0f, 3f, 1f, EngineerSpawnRate, format: TrKey.UnitTimes);
+        EngineerHighlightForImpostors = CustomOption.Normal(COID.EngineerHighlightForImpostors, COType.Crewmate, TrKey.EngineerHighlightForImpostors, true, EngineerSpawnRate);
+        EngineerHighlightForTeamJackal = CustomOption.Normal(COID.EngineerHighlightForTeamJackal, COType.Crewmate, TrKey.EngineerHighlightForTeamJackal, true, EngineerSpawnRate);
 
-        SpySpawnRate = new(1020, CustomOptionType.Crewmate, RoleType.Spy, Spy.Color, 1);
-        SpyCanDieToSheriff = CustomOption.Normal(1021, CustomOptionType.Crewmate, TrKey.SpyCanDieToSheriff, false, SpySpawnRate);
-        SpyImpostorsCanKillAnyone = CustomOption.Normal(1022, CustomOptionType.Crewmate, TrKey.SpyImpostorsCanKillAnyone, true, SpySpawnRate);
-        SpyCanEnterVents = CustomOption.Normal(1023, CustomOptionType.Crewmate, TrKey.SpyCanEnterVents, false, SpySpawnRate);
-        SpyHasImpostorVision = CustomOption.Normal(1024, CustomOptionType.Crewmate, TrKey.SpyHasImpostorVision, false, SpySpawnRate);
+        SpySpawnRate = new(COID.SpySpawnRate, COType.Crewmate, RoleType.Spy, Spy.Color, 1);
+        SpyCanDieToSheriff = CustomOption.Normal(COID.SpyCanDieToSheriff, COType.Crewmate, TrKey.SpyCanDieToSheriff, false, SpySpawnRate);
+        SpyImpostorsCanKillAnyone = CustomOption.Normal(COID.SpyImpostorsCanKillAnyone, COType.Crewmate, TrKey.SpyImpostorsCanKillAnyone, true, SpySpawnRate);
+        SpyCanEnterVents = CustomOption.Normal(COID.SpyCanEnterVents, COType.Crewmate, TrKey.SpyCanEnterVents, false, SpySpawnRate);
+        SpyHasImpostorVision = CustomOption.Normal(COID.SpyHasImpostorVision, COType.Crewmate, TrKey.SpyHasImpostorVision, false, SpySpawnRate);
 
-        MedicSpawnRate = new(1030, CustomOptionType.Crewmate, RoleType.Medic, Medic.Color, 1);
-        MedicShowShielded = CustomOption.Normal(1031, CustomOptionType.Crewmate, TrKey.MedicShowShielded, [TrKey.MedicShowShieldedAll, TrKey.MedicShowShieldedBoth, TrKey.MedicShowShieldedMedic], 0, MedicSpawnRate);
-        MedicShowAttemptToShielded = CustomOption.Normal(1032, CustomOptionType.Crewmate, TrKey.MedicShowAttemptToShielded, false, MedicSpawnRate);
-        MedicSetShieldAfterMeeting = CustomOption.Normal(1033, CustomOptionType.Crewmate, TrKey.MedicSetShieldAfterMeeting, false, MedicSpawnRate);
-        MedicShowAttemptToMedic = CustomOption.Normal(1034, CustomOptionType.Crewmate, TrKey.MedicSeesMurderAttempt, false, MedicSpawnRate);
+        MedicSpawnRate = new(COID.MedicSpawnRate, COType.Crewmate, RoleType.Medic, Medic.Color, 1);
+        MedicShowShielded = CustomOption.Normal(COID.MedicShowShielded, COType.Crewmate, TrKey.MedicShowShielded, [TrKey.MedicShowShieldedAll, TrKey.MedicShowShieldedBoth, TrKey.MedicShowShieldedMedic], 0, MedicSpawnRate);
+        MedicShowAttemptToShielded = CustomOption.Normal(COID.MedicShowAttemptToShielded, COType.Crewmate, TrKey.MedicShowAttemptToShielded, false, MedicSpawnRate);
+        MedicSetShieldAfterMeeting = CustomOption.Normal(COID.MedicSetShieldAfterMeeting, COType.Crewmate, TrKey.MedicSetShieldAfterMeeting, false, MedicSpawnRate);
+        MedicShowAttemptToMedic = CustomOption.Normal(COID.MedicShowAttemptToMedic, COType.Crewmate, TrKey.MedicSeesMurderAttempt, false, MedicSpawnRate);
 
-        SeerSpawnRate = new(1040, CustomOptionType.Crewmate, RoleType.Seer, Seer.Color, 1);
-        SeerMode = CustomOption.Normal(1041, CustomOptionType.Crewmate, TrKey.SeerMode, [TrKey.SeerModeBoth, TrKey.SeerModeFlash, TrKey.SeerModeSouls], 0, SeerSpawnRate);
-        SeerLimitSoulDuration = CustomOption.Normal(1042, CustomOptionType.Crewmate, TrKey.SeerLimitSoulDuration, false, SeerSpawnRate);
-        SeerSoulDuration = CustomOption.Normal(1043, CustomOptionType.Crewmate, TrKey.SeerSoulDuration, 15f, 0f, 120f, 5f, SeerLimitSoulDuration, format: TrKey.UnitSeconds);
+        SeerSpawnRate = new(COID.SeerSpawnRate, COType.Crewmate, RoleType.Seer, Seer.Color, 1);
+        SeerMode = CustomOption.Normal(COID.SeerMode, COType.Crewmate, TrKey.SeerMode, [TrKey.SeerModeBoth, TrKey.SeerModeFlash, TrKey.SeerModeSouls], 0, SeerSpawnRate);
+        SeerLimitSoulDuration = CustomOption.Normal(COID.SeerLimitSoulDuration, COType.Crewmate, TrKey.SeerLimitSoulDuration, false, SeerSpawnRate);
+        SeerSoulDuration = CustomOption.Normal(COID.SeerSoulDuration, COType.Crewmate, TrKey.SeerSoulDuration, 15f, 0f, 120f, 5f, SeerLimitSoulDuration, format: TrKey.UnitSeconds);
 
-        TimeMasterSpawnRate = new(1050, CustomOptionType.Crewmate, RoleType.TimeMaster, TimeMaster.Color, 1);
-        TimeMasterCooldown = CustomOption.Normal(1051, CustomOptionType.Crewmate, TrKey.TimeMasterCooldown, 30f, 2.5f, 120f, 2.5f, TimeMasterSpawnRate, format: TrKey.UnitSeconds);
-        TimeMasterRewindTime = CustomOption.Normal(1052, CustomOptionType.Crewmate, TrKey.TimeMasterRewindTime, 3f, 1f, 10f, 1f, TimeMasterSpawnRate, format: TrKey.UnitSeconds);
-        TimeMasterShieldDuration = CustomOption.Normal(1053, CustomOptionType.Crewmate, TrKey.TimeMasterShieldDuration, 3f, 1f, 20f, 1f, TimeMasterSpawnRate, format: TrKey.UnitSeconds);
+        TimeMasterSpawnRate = new(COID.TimeMasterSpawnRate, COType.Crewmate, RoleType.TimeMaster, TimeMaster.Color, 1);
+        TimeMasterCooldown = CustomOption.Normal(COID.TimeMasterCooldown, COType.Crewmate, TrKey.TimeMasterCooldown, 30f, 2.5f, 120f, 2.5f, TimeMasterSpawnRate, format: TrKey.UnitSeconds);
+        TimeMasterRewindTime = CustomOption.Normal(COID.TimeMasterRewindTime, COType.Crewmate, TrKey.TimeMasterRewindTime, 3f, 1f, 10f, 1f, TimeMasterSpawnRate, format: TrKey.UnitSeconds);
+        TimeMasterShieldDuration = CustomOption.Normal(COID.TimeMasterShieldDuration, COType.Crewmate, TrKey.TimeMasterShieldDuration, 3f, 1f, 20f, 1f, TimeMasterSpawnRate, format: TrKey.UnitSeconds);
 
-        DetectiveSpawnRate = new(1060, CustomOptionType.Crewmate, RoleType.Detective, Detective.Color, 1);
-        DetectiveAnonymousFootprints = CustomOption.Normal(1061, CustomOptionType.Crewmate, TrKey.DetectiveAnonymousFootprints, false, DetectiveSpawnRate);
-        DetectiveFootprintInterval = CustomOption.Normal(1062, CustomOptionType.Crewmate, TrKey.DetectiveFootprintInterval, 0.5f, 0.25f, 10f, 0.25f, DetectiveSpawnRate, format: TrKey.UnitSeconds);
-        DetectiveFootprintDuration = CustomOption.Normal(1063, CustomOptionType.Crewmate, TrKey.DetectiveFootprintDuration, 5f, 0.25f, 10f, 0.25f, DetectiveSpawnRate, format: TrKey.UnitSeconds);
-        DetectiveReportNameDuration = CustomOption.Normal(1064, CustomOptionType.Crewmate, TrKey.DetectiveReportNameDuration, 10f, 0, 60, 2.5f, DetectiveSpawnRate, format: TrKey.UnitSeconds);
-        DetectiveReportColorDuration = CustomOption.Normal(1065, CustomOptionType.Crewmate, TrKey.DetectiveReportColorDuration, 20, 0, 120, 2.5f, DetectiveSpawnRate, format: TrKey.UnitSeconds);
+        DetectiveSpawnRate = new(COID.DetectiveSpawnRate, COType.Crewmate, RoleType.Detective, Detective.Color, 1);
+        DetectiveAnonymousFootprints = CustomOption.Normal(COID.DetectiveAnonymousFootprints, COType.Crewmate, TrKey.DetectiveAnonymousFootprints, false, DetectiveSpawnRate);
+        DetectiveFootprintInterval = CustomOption.Normal(COID.DetectiveFootprintInterval, COType.Crewmate, TrKey.DetectiveFootprintInterval, 0.5f, 0.25f, 10f, 0.25f, DetectiveSpawnRate, format: TrKey.UnitSeconds);
+        DetectiveFootprintDuration = CustomOption.Normal(COID.DetectiveFootprintDuration, COType.Crewmate, TrKey.DetectiveFootprintDuration, 5f, 0.25f, 10f, 0.25f, DetectiveSpawnRate, format: TrKey.UnitSeconds);
+        DetectiveReportNameDuration = CustomOption.Normal(COID.DetectiveReportNameDuration, COType.Crewmate, TrKey.DetectiveReportNameDuration, 10f, 0, 60, 2.5f, DetectiveSpawnRate, format: TrKey.UnitSeconds);
+        DetectiveReportColorDuration = CustomOption.Normal(COID.DetectiveReportColorDuration, COType.Crewmate, TrKey.DetectiveReportColorDuration, 20, 0, 120, 2.5f, DetectiveSpawnRate, format: TrKey.UnitSeconds);
 
-        MediumSpawnRate = new(1070, CustomOptionType.Crewmate, RoleType.Medium, Medium.Color, 1);
-        MediumCooldown = CustomOption.Normal(1071, CustomOptionType.Crewmate, TrKey.MediumCooldown, 30f, 5f, 120f, 5f, MediumSpawnRate, format: TrKey.UnitSeconds);
-        MediumDuration = CustomOption.Normal(1072, CustomOptionType.Crewmate, TrKey.MediumDuration, 3f, 0f, 15f, 1f, MediumSpawnRate, format: TrKey.UnitSeconds);
-        MediumOneTimeUse = CustomOption.Normal(1073, CustomOptionType.Crewmate, TrKey.MediumOneTimeUse, false, MediumSpawnRate);
+        MediumSpawnRate = new(COID.MediumSpawnRate, COType.Crewmate, RoleType.Medium, Medium.Color, 1);
+        MediumCooldown = CustomOption.Normal(COID.MediumCooldown, COType.Crewmate, TrKey.MediumCooldown, 30f, 5f, 120f, 5f, MediumSpawnRate, format: TrKey.UnitSeconds);
+        MediumDuration = CustomOption.Normal(COID.MediumDuration, COType.Crewmate, TrKey.MediumDuration, 3f, 0f, 15f, 1f, MediumSpawnRate, format: TrKey.UnitSeconds);
+        MediumOneTimeUse = CustomOption.Normal(COID.MediumOneTimeUse, COType.Crewmate, TrKey.MediumOneTimeUse, false, MediumSpawnRate);
 
-        HackerSpawnRate = new(1080, CustomOptionType.Crewmate, RoleType.Hacker, Hacker.Color, 1);
-        HackerCooldown = CustomOption.Normal(1081, CustomOptionType.Crewmate, TrKey.HackerCooldown, 30f, 5f, 60f, 5f, HackerSpawnRate, format: TrKey.UnitSeconds);
-        HackerHackingDuration = CustomOption.Normal(1082, CustomOptionType.Crewmate, TrKey.HackerHackingDuration, 10f, 2.5f, 60f, 2.5f, HackerSpawnRate, format: TrKey.UnitSeconds);
-        HackerOnlyColorType = CustomOption.Normal(1083, CustomOptionType.Crewmate, TrKey.HackerOnlyColorType, false, HackerSpawnRate);
-        HackerToolsNumber = CustomOption.Normal(1084, CustomOptionType.Crewmate, TrKey.HackerToolsNumber, 5f, 1f, 30f, 1f, HackerSpawnRate, format: TrKey.UnitTimes);
-        HackerRechargeTasksNumber = CustomOption.Normal(1085, CustomOptionType.Crewmate, TrKey.HackerRechargeTasksNumber, 2f, 1f, 5f, 1f, HackerSpawnRate);
-        HackerNoMove = CustomOption.Normal(1086, CustomOptionType.Crewmate, TrKey.HackerNoMove, true, HackerSpawnRate);
+        HackerSpawnRate = new(COID.HackerSpawnRate, COType.Crewmate, RoleType.Hacker, Hacker.Color, 1);
+        HackerCooldown = CustomOption.Normal(COID.HackerCooldown, COType.Crewmate, TrKey.HackerCooldown, 30f, 5f, 60f, 5f, HackerSpawnRate, format: TrKey.UnitSeconds);
+        HackerHackingDuration = CustomOption.Normal(COID.HackerHackingDuration, COType.Crewmate, TrKey.HackerHackingDuration, 10f, 2.5f, 60f, 2.5f, HackerSpawnRate, format: TrKey.UnitSeconds);
+        HackerOnlyColorType = CustomOption.Normal(COID.HackerOnlyColorType, COType.Crewmate, TrKey.HackerOnlyColorType, false, HackerSpawnRate);
+        HackerToolsNumber = CustomOption.Normal(COID.HackerToolsNumber, COType.Crewmate, TrKey.HackerToolsNumber, 5f, 1f, 30f, 1f, HackerSpawnRate, format: TrKey.UnitTimes);
+        HackerRechargeTasksNumber = CustomOption.Normal(COID.HackerRechargeTasksNumber, COType.Crewmate, TrKey.HackerRechargeTasksNumber, 2f, 1f, 5f, 1f, HackerSpawnRate);
+        HackerNoMove = CustomOption.Normal(COID.HackerNoMove, COType.Crewmate, TrKey.HackerNoMove, true, HackerSpawnRate);
 
-        TrackerSpawnRate = new(1090, CustomOptionType.Crewmate, RoleType.Tracker, Tracker.Color, 1);
-        TrackerUpdateInterval = CustomOption.Normal(1091, CustomOptionType.Crewmate, TrKey.TrackerUpdateInterval, 5f, 1f, 30f, 1f, TrackerSpawnRate, format: TrKey.UnitSeconds);
-        TrackerResetTargetAfterMeeting = CustomOption.Normal(1092, CustomOptionType.Crewmate, TrKey.TrackerResetTargetAfterMeeting, false, TrackerSpawnRate);
-        TrackerCanTrackCorpses = CustomOption.Normal(1093, CustomOptionType.Crewmate, TrKey.TrackerTrackCorpses, true, TrackerSpawnRate);
-        TrackerCorpsesTrackingCooldown = CustomOption.Normal(1094, CustomOptionType.Crewmate, TrKey.TrackerCorpseCooldown, 30f, 0f, 120f, 5f, TrackerCanTrackCorpses, format: TrKey.UnitSeconds);
-        TrackerCorpsesTrackingDuration = CustomOption.Normal(1095, CustomOptionType.Crewmate, TrKey.TrackerCorpseDuration, 5f, 2.5f, 30f, 2.5f, TrackerCanTrackCorpses, format: TrKey.UnitSeconds);
+        TrackerSpawnRate = new(COID.TrackerSpawnRate, COType.Crewmate, RoleType.Tracker, Tracker.Color, 1);
+        TrackerUpdateInterval = CustomOption.Normal(COID.TrackerUpdateInterval, COType.Crewmate, TrKey.TrackerUpdateInterval, 5f, 1f, 30f, 1f, TrackerSpawnRate, format: TrKey.UnitSeconds);
+        TrackerResetTargetAfterMeeting = CustomOption.Normal(COID.TrackerResetTargetAfterMeeting, COType.Crewmate, TrKey.TrackerResetTargetAfterMeeting, false, TrackerSpawnRate);
+        TrackerCanTrackCorpses = CustomOption.Normal(COID.TrackerCanTrackCorpses, COType.Crewmate, TrKey.TrackerTrackCorpses, true, TrackerSpawnRate);
+        TrackerCorpsesTrackingCooldown = CustomOption.Normal(COID.TrackerCorpsesTrackingCooldown, COType.Crewmate, TrKey.TrackerCorpseCooldown, 30f, 0f, 120f, 5f, TrackerCanTrackCorpses, format: TrKey.UnitSeconds);
+        TrackerCorpsesTrackingDuration = CustomOption.Normal(COID.TrackerCorpsesTrackingDuration, COType.Crewmate, TrKey.TrackerCorpseDuration, 5f, 2.5f, 30f, 2.5f, TrackerCanTrackCorpses, format: TrKey.UnitSeconds);
 
-        SnitchSpawnRate = new(1100, CustomOptionType.Crewmate, RoleType.Snitch, Snitch.Color, 1);
-        SnitchLeftTasksForReveal = CustomOption.Normal(1101, CustomOptionType.Crewmate, TrKey.SnitchLeftTasksForReveal, 1f, 0f, 5f, 1f, SnitchSpawnRate);
-        SnitchIncludeTeamJackal = CustomOption.Normal(1102, CustomOptionType.Crewmate, TrKey.SnitchIncludeTeamJackal, false, SnitchSpawnRate);
-        SnitchTeamJackalUseDifferentArrowColor = CustomOption.Normal(1103, CustomOptionType.Crewmate, TrKey.SnitchTeamJackalUseDifferentArrowColor, true, SnitchIncludeTeamJackal);
+        SnitchSpawnRate = new(COID.SnitchSpawnRate, COType.Crewmate, RoleType.Snitch, Snitch.Color, 1);
+        SnitchLeftTasksForReveal = CustomOption.Normal(COID.SnitchLeftTasksForReveal, COType.Crewmate, TrKey.SnitchLeftTasksForReveal, 1f, 0f, 5f, 1f, SnitchSpawnRate);
+        SnitchIncludeTeamJackal = CustomOption.Normal(COID.SnitchIncludeTeamJackal, COType.Crewmate, TrKey.SnitchIncludeTeamJackal, false, SnitchSpawnRate);
+        SnitchTeamJackalUseDifferentArrowColor = CustomOption.Normal(COID.SnitchTeamJackalUseDifferentArrowColor, COType.Crewmate, TrKey.SnitchTeamJackalUseDifferentArrowColor, true, SnitchIncludeTeamJackal);
 
-        LighterSpawnRate = new(1110, CustomOptionType.Crewmate, RoleType.Lighter, Lighter.Color);
-        LighterModeLightsOnVision = CustomOption.Normal(1111, CustomOptionType.Crewmate, TrKey.LighterModeLightsOnVision, 2f, 0.25f, 5f, 0.25f, LighterSpawnRate, format: TrKey.UnitMultiplies);
-        LighterModeLightsOffVision = CustomOption.Normal(1112, CustomOptionType.Crewmate, TrKey.LighterModeLightsOffVision, 0.75f, 0.25f, 5f, 0.25f, LighterSpawnRate, format: TrKey.UnitMultiplies);
-        LighterCooldown = CustomOption.Normal(1113, CustomOptionType.Crewmate, TrKey.LighterCooldown, 30f, 5f, 120f, 5f, LighterSpawnRate, format: TrKey.UnitSeconds);
-        LighterDuration = CustomOption.Normal(1114, CustomOptionType.Crewmate, TrKey.LighterDuration, 5f, 2.5f, 60f, 2.5f, LighterSpawnRate, format: TrKey.UnitSeconds);
+        LighterSpawnRate = new(COID.LighterSpawnRate, COType.Crewmate, RoleType.Lighter, Lighter.Color);
+        LighterModeLightsOnVision = CustomOption.Normal(COID.LighterModeLightsOnVision, COType.Crewmate, TrKey.LighterModeLightsOnVision, 2f, 0.25f, 5f, 0.25f, LighterSpawnRate, format: TrKey.UnitMultiplies);
+        LighterModeLightsOffVision = CustomOption.Normal(COID.LighterModeLightsOffVision, COType.Crewmate, TrKey.LighterModeLightsOffVision, 0.75f, 0.25f, 5f, 0.25f, LighterSpawnRate, format: TrKey.UnitMultiplies);
+        LighterCooldown = CustomOption.Normal(COID.LighterCooldown, COType.Crewmate, TrKey.LighterCooldown, 30f, 5f, 120f, 5f, LighterSpawnRate, format: TrKey.UnitSeconds);
+        LighterDuration = CustomOption.Normal(COID.LighterDuration, COType.Crewmate, TrKey.LighterDuration, 5f, 2.5f, 60f, 2.5f, LighterSpawnRate, format: TrKey.UnitSeconds);
         // lighterCanSeeNinja = CustomOption.Normal(1115, CustomOptionType.Crewmate, "lighterCanSeeNinja", true, lighterSpawnRate);
 
-        SecurityGuardSpawnRate = new(1120, CustomOptionType.Crewmate, RoleType.SecurityGuard, SecurityGuard.Color, 1);
-        SecurityGuardCooldown = CustomOption.Normal(1121, CustomOptionType.Crewmate, TrKey.SecurityGuardCooldown, 30f, 2.5f, 60f, 2.5f, SecurityGuardSpawnRate, format: TrKey.UnitSeconds);
-        SecurityGuardTotalScrews = CustomOption.Normal(1122, CustomOptionType.Crewmate, TrKey.SecurityGuardTotalScrews, 7f, 1f, 15f, 1f, SecurityGuardSpawnRate, format: TrKey.UnitScrews);
-        SecurityGuardCamPrice = CustomOption.Normal(1123, CustomOptionType.Crewmate, TrKey.SecurityGuardCamPrice, 2f, 1f, 15f, 1f, SecurityGuardSpawnRate, format: TrKey.UnitScrews);
-        SecurityGuardVentPrice = CustomOption.Normal(1124, CustomOptionType.Crewmate, TrKey.SecurityGuardVentPrice, 1f, 1f, 15f, 1f, SecurityGuardSpawnRate, format: TrKey.UnitScrews);
-        SecurityGuardCamDuration = CustomOption.Normal(1125, CustomOptionType.Crewmate, TrKey.SecurityGuardCamDuration, 10f, 2.5f, 60f, 2.5f, SecurityGuardSpawnRate, format: TrKey.UnitSeconds);
-        SecurityGuardCamMaxCharges = CustomOption.Normal(1126, CustomOptionType.Crewmate, TrKey.SecurityGuardCamMaxCharges, 5f, 1f, 30f, 1f, SecurityGuardSpawnRate, format: TrKey.UnitTimes);
-        SecurityGuardCamRechargeTasksNumber = CustomOption.Normal(1127, CustomOptionType.Crewmate, TrKey.SecurityGuardCamRechargeTasksNumber, 3f, 1f, 10f, 1f, SecurityGuardSpawnRate);
+        SecurityGuardSpawnRate = new(COID.SecurityGuardSpawnRate, COType.Crewmate, RoleType.SecurityGuard, SecurityGuard.Color, 1);
+        SecurityGuardCooldown = CustomOption.Normal(COID.SecurityGuardCooldown, COType.Crewmate, TrKey.SecurityGuardCooldown, 30f, 2.5f, 60f, 2.5f, SecurityGuardSpawnRate, format: TrKey.UnitSeconds);
+        SecurityGuardTotalScrews = CustomOption.Normal(COID.SecurityGuardTotalScrews, COType.Crewmate, TrKey.SecurityGuardTotalScrews, 7f, 1f, 15f, 1f, SecurityGuardSpawnRate, format: TrKey.UnitScrews);
+        SecurityGuardCamPrice = CustomOption.Normal(COID.SecurityGuardCamPrice, COType.Crewmate, TrKey.SecurityGuardCamPrice, 2f, 1f, 15f, 1f, SecurityGuardSpawnRate, format: TrKey.UnitScrews);
+        SecurityGuardVentPrice = CustomOption.Normal(COID.SecurityGuardVentPrice, COType.Crewmate, TrKey.SecurityGuardVentPrice, 1f, 1f, 15f, 1f, SecurityGuardSpawnRate, format: TrKey.UnitScrews);
+        SecurityGuardCamDuration = CustomOption.Normal(COID.SecurityGuardCamDuration, COType.Crewmate, TrKey.SecurityGuardCamDuration, 10f, 2.5f, 60f, 2.5f, SecurityGuardSpawnRate, format: TrKey.UnitSeconds);
+        SecurityGuardCamMaxCharges = CustomOption.Normal(COID.SecurityGuardCamMaxCharges, COType.Crewmate, TrKey.SecurityGuardCamMaxCharges, 5f, 1f, 30f, 1f, SecurityGuardSpawnRate, format: TrKey.UnitTimes);
+        SecurityGuardCamRechargeTasksNumber = CustomOption.Normal(COID.SecurityGuardCamRechargeTasksNumber, COType.Crewmate, TrKey.SecurityGuardCamRechargeTasksNumber, 3f, 1f, 10f, 1f, SecurityGuardSpawnRate);
 
-        SwapperSpawnRate = new(1130, CustomOptionType.Neutral, TrKey.Swapper, Swapper.Color, 1);
-        SwapperIsImpRate = CustomOption.Normal(1131, CustomOptionType.Neutral, TrKey.SwapperIsImpRate, Rates, 0, SwapperSpawnRate);
-        SwapperNumSwaps = CustomOption.Normal(1132, CustomOptionType.Neutral, TrKey.SwapperNumSwaps, 2f, 1f, 15f, 1f, SwapperSpawnRate, format: TrKey.UnitTimes);
-        SwapperCanCallEmergency = CustomOption.Normal(1133, CustomOptionType.Neutral, TrKey.SwapperCanCallEmergency, false, SwapperSpawnRate);
-        SwapperCanOnlySwapOthers = CustomOption.Normal(1134, CustomOptionType.Neutral, TrKey.SwapperCanOnlySwapOthers, false, SwapperSpawnRate);
+        SwapperSpawnRate = new(COID.SwapperSpawnRate, COType.Neutral, TrKey.Swapper, Swapper.Color, 1);
+        SwapperIsImpRate = CustomOption.Normal(COID.SwapperIsImpRate, COType.Neutral, TrKey.SwapperIsImpRate, Rates, 0, SwapperSpawnRate);
+        SwapperNumSwaps = CustomOption.Normal(COID.SwapperNumSwaps, COType.Neutral, TrKey.SwapperNumSwaps, 2f, 1f, 15f, 1f, SwapperSpawnRate, format: TrKey.UnitTimes);
+        SwapperCanCallEmergency = CustomOption.Normal(COID.SwapperCanCallEmergency, COType.Neutral, TrKey.SwapperCanCallEmergency, false, SwapperSpawnRate);
+        SwapperCanOnlySwapOthers = CustomOption.Normal(COID.SwapperCanOnlySwapOthers, COType.Neutral, TrKey.SwapperCanOnlySwapOthers, false, SwapperSpawnRate);
 
-        BaitSpawnRate = new(1140, CustomOptionType.Crewmate, RoleType.Bait, Bait.Color, 1);
-        BaitHighlightAllVents = CustomOption.Normal(1141, CustomOptionType.Crewmate, TrKey.BaitHighlightAllVents, false, BaitSpawnRate);
-        BaitReportDelay = CustomOption.Normal(1142, CustomOptionType.Crewmate, TrKey.BaitReportDelay, 0f, 0f, 10f, 1f, BaitSpawnRate, format: TrKey.UnitSeconds);
-        BaitShowKillFlash = CustomOption.Normal(1143, CustomOptionType.Crewmate, TrKey.BaitShowKillFlash, true, BaitSpawnRate);
+        BaitSpawnRate = new(COID.BaitSpawnRate, COType.Crewmate, RoleType.Bait, Bait.Color, 1);
+        BaitHighlightAllVents = CustomOption.Normal(COID.BaitHighlightAllVents, COType.Crewmate, TrKey.BaitHighlightAllVents, false, BaitSpawnRate);
+        BaitReportDelay = CustomOption.Normal(COID.BaitReportDelay, COType.Crewmate, TrKey.BaitReportDelay, 0f, 0f, 10f, 1f, BaitSpawnRate, format: TrKey.UnitSeconds);
+        BaitShowKillFlash = CustomOption.Normal(COID.BaitShowKillFlash, COType.Crewmate, TrKey.BaitShowKillFlash, true, BaitSpawnRate);
 
-        ShifterSpawnRate = new(1150, CustomOptionType.Neutral, RoleType.Shifter, Shifter.Color, 1);
-        ShifterIsNeutralRate = CustomOption.Normal(1151, CustomOptionType.Neutral, TrKey.ShifterIsNeutralRate, Rates, 0, ShifterSpawnRate);
-        ShifterShiftsModifiers = CustomOption.Normal(1152, CustomOptionType.Neutral, TrKey.ShifterShiftsModifiers, false, ShifterSpawnRate);
-        ShifterPastShifters = CustomOption.Normal(1153, CustomOptionType.Neutral, TrKey.ShifterPastShifters, false, ShifterSpawnRate);
+        ShifterSpawnRate = new(COID.ShifterSpawnRate, COType.Neutral, RoleType.Shifter, Shifter.Color, 1);
+        ShifterIsNeutralRate = CustomOption.Normal(COID.ShifterIsNeutralRate, COType.Neutral, TrKey.ShifterIsNeutralRate, Rates, 0, ShifterSpawnRate);
+        ShifterShiftsModifiers = CustomOption.Normal(COID.ShifterShiftsModifiers, COType.Neutral, TrKey.ShifterShiftsModifiers, false, ShifterSpawnRate);
+        ShifterPastShifters = CustomOption.Normal(COID.ShifterPastShifters, COType.Neutral, TrKey.ShifterPastShifters, false, ShifterSpawnRate);
 
-        SheriffSpawnRate = new(1160, CustomOptionType.Crewmate, RoleType.Sheriff, Sheriff.Color);
-        SheriffCooldown = CustomOption.Normal(1161, CustomOptionType.Crewmate, TrKey.SheriffCooldown, 30f, 2.5f, 60f, 2.5f, SheriffSpawnRate, format: TrKey.UnitSeconds);
-        SheriffNumShots = CustomOption.Normal(1162, CustomOptionType.Crewmate, TrKey.SheriffNumShots, 2f, 1f, 15f, 1f, SheriffSpawnRate, format: TrKey.UnitShots);
-        SheriffMisfireKillsTarget = CustomOption.Normal(1163, CustomOptionType.Crewmate, TrKey.SheriffMisfireKillsTarget, false, SheriffSpawnRate);
-        SheriffCanKillNoDeadBody = CustomOption.Normal(1164, CustomOptionType.Crewmate, TrKey.SheriffCanKillNoDeadBody, true, SheriffSpawnRate);
-        SheriffCanKillNeutrals = CustomOption.Normal(1165, CustomOptionType.Crewmate, TrKey.SheriffCanKillNeutrals, false, SheriffSpawnRate);
+        SheriffSpawnRate = new(COID.SheriffSpawnRate, COType.Crewmate, RoleType.Sheriff, Sheriff.Color);
+        SheriffCooldown = CustomOption.Normal(COID.SheriffCooldown, COType.Crewmate, TrKey.SheriffCooldown, 30f, 2.5f, 60f, 2.5f, SheriffSpawnRate, format: TrKey.UnitSeconds);
+        SheriffNumShots = CustomOption.Normal(COID.SheriffNumShots, COType.Crewmate, TrKey.SheriffNumShots, 2f, 1f, 15f, 1f, SheriffSpawnRate, format: TrKey.UnitShots);
+        SheriffMisfireKillsTarget = CustomOption.Normal(COID.SheriffMisfireKillsTarget, COType.Crewmate, TrKey.SheriffMisfireKillsTarget, false, SheriffSpawnRate);
+        SheriffCanKillNoDeadBody = CustomOption.Normal(COID.SheriffCanKillNoDeadBody, COType.Crewmate, TrKey.SheriffCanKillNoDeadBody, true, SheriffSpawnRate);
+        SheriffCanKillNeutrals = CustomOption.Normal(COID.SheriffCanKillNeutrals, COType.Crewmate, TrKey.SheriffCanKillNeutrals, false, SheriffSpawnRate);
 
         #endregion
 
         #region ROLES IMPOSTOR
 
-        BountyHunterSpawnRate = new(2000, CustomOptionType.Impostor, RoleType.BountyHunter, BountyHunter.Color, 1);
-        BountyHunterBountyDuration = CustomOption.Normal(2001, CustomOptionType.Impostor, TrKey.BountyHunterBountyDuration, 60f, 10f, 180f, 10f, BountyHunterSpawnRate, format: TrKey.UnitSeconds);
-        BountyHunterReducedCooldown = CustomOption.Normal(20002, CustomOptionType.Impostor, TrKey.BountyHunterReducedCooldown, 2.5f, 2.5f, 30f, 2.5f, BountyHunterSpawnRate, format: TrKey.UnitSeconds);
-        BountyHunterPunishmentTime = CustomOption.Normal(2003, CustomOptionType.Impostor, TrKey.BountyHunterPunishmentTime, 20f, 0f, 60f, 2.5f, BountyHunterSpawnRate, format: TrKey.UnitSeconds);
-        BountyHunterShowArrow = CustomOption.Normal(2004, CustomOptionType.Impostor, TrKey.BountyHunterShowArrow, true, BountyHunterSpawnRate);
-        BountyHunterArrowUpdateInterval = CustomOption.Normal(2005, CustomOptionType.Impostor, TrKey.BountyHunterArrowUpdateInterval, 15f, 2.5f, 60f, 2.5f, BountyHunterShowArrow, format: TrKey.UnitSeconds);
+        BountyHunterSpawnRate = new(COID.BountyHunterSpawnRate, COType.Impostor, RoleType.BountyHunter, BountyHunter.Color, 1);
+        BountyHunterBountyDuration = CustomOption.Normal(COID.BountyHunterBountyDuration, COType.Impostor, TrKey.BountyHunterBountyDuration, 60f, 10f, 180f, 10f, BountyHunterSpawnRate, format: TrKey.UnitSeconds);
+        BountyHunterReducedCooldown = CustomOption.Normal(COID.BountyHunterReducedCooldown, COType.Impostor, TrKey.BountyHunterReducedCooldown, 2.5f, 2.5f, 30f, 2.5f, BountyHunterSpawnRate, format: TrKey.UnitSeconds);
+        BountyHunterPunishmentTime = CustomOption.Normal(COID.BountyHunterPunishmentTime, COType.Impostor, TrKey.BountyHunterPunishmentTime, 20f, 0f, 60f, 2.5f, BountyHunterSpawnRate, format: TrKey.UnitSeconds);
+        BountyHunterShowArrow = CustomOption.Normal(COID.BountyHunterShowArrow, COType.Impostor, TrKey.BountyHunterShowArrow, true, BountyHunterSpawnRate);
+        BountyHunterArrowUpdateInterval = CustomOption.Normal(COID.BountyHunterArrowUpdateInterval, COType.Impostor, TrKey.BountyHunterArrowUpdateInterval, 15f, 2.5f, 60f, 2.5f, BountyHunterShowArrow, format: TrKey.UnitSeconds);
 
-        MafiaSpawnRate = new(2010, CustomOptionType.Impostor, TrKey.Mafia, Mafia.Color, 1);
-        MafiosoCanSabotage = CustomOption.Normal(2011, CustomOptionType.Impostor, TrKey.MafiosoCanSabotage, false, MafiaSpawnRate);
-        MafiosoCanRepair = CustomOption.Normal(2012, CustomOptionType.Impostor, TrKey.MafiosoCanRepair, false, MafiaSpawnRate);
-        MafiosoCanVent = CustomOption.Normal(2013, CustomOptionType.Impostor, TrKey.MafiosoCanVent, false, MafiaSpawnRate);
-        JanitorCooldown = CustomOption.Normal(2014, CustomOptionType.Impostor, TrKey.JanitorCooldown, 30f, 2.5f, 60f, 2.5f, MafiaSpawnRate, format: TrKey.UnitSeconds);
-        JanitorCanSabotage = CustomOption.Normal(2015, CustomOptionType.Impostor, TrKey.JanitorCanSabotage, false, MafiaSpawnRate);
-        JanitorCanRepair = CustomOption.Normal(2016, CustomOptionType.Impostor, TrKey.JanitorCanRepair, false, MafiaSpawnRate);
-        JanitorCanVent = CustomOption.Normal(2017, CustomOptionType.Impostor, TrKey.JanitorCanVent, false, MafiaSpawnRate);
+        MafiaSpawnRate = new(COID.MafiaSpawnRate, COType.Impostor, TrKey.Mafia, Mafia.Color, 1);
+        MafiosoCanSabotage = CustomOption.Normal(COID.MafiosoCanSabotage, COType.Impostor, TrKey.MafiosoCanSabotage, false, MafiaSpawnRate);
+        MafiosoCanRepair = CustomOption.Normal(COID.MafiosoCanRepair, COType.Impostor, TrKey.MafiosoCanRepair, false, MafiaSpawnRate);
+        MafiosoCanVent = CustomOption.Normal(COID.MafiosoCanVent, COType.Impostor, TrKey.MafiosoCanVent, false, MafiaSpawnRate);
+        JanitorCooldown = CustomOption.Normal(COID.JanitorCooldown, COType.Impostor, TrKey.JanitorCooldown, 30f, 2.5f, 60f, 2.5f, MafiaSpawnRate, format: TrKey.UnitSeconds);
+        JanitorCanSabotage = CustomOption.Normal(COID.JanitorCanSabotage, COType.Impostor, TrKey.JanitorCanSabotage, false, MafiaSpawnRate);
+        JanitorCanRepair = CustomOption.Normal(COID.JanitorCanRepair, COType.Impostor, TrKey.JanitorCanRepair, false, MafiaSpawnRate);
+        JanitorCanVent = CustomOption.Normal(COID.JanitorCanVent, COType.Impostor, TrKey.JanitorCanVent, false, MafiaSpawnRate);
 
-        TricksterSpawnRate = new(2020, CustomOptionType.Impostor, RoleType.Trickster, Trickster.Color, 1);
-        TricksterPlaceBoxCooldown = CustomOption.Normal(2021, CustomOptionType.Impostor, TrKey.TricksterPlaceBoxCooldown, 10f, 2.5f, 30f, 2.5f, TricksterSpawnRate, format: TrKey.UnitSeconds);
-        TricksterLightsOutCooldown = CustomOption.Normal(2022, CustomOptionType.Impostor, TrKey.TricksterLightsOutCooldown, 30f, 5f, 60f, 5f, TricksterSpawnRate, format: TrKey.UnitSeconds);
-        TricksterLightsOutDuration = CustomOption.Normal(2023, CustomOptionType.Impostor, TrKey.TricksterLightsOutDuration, 15f, 5f, 60f, 2.5f, TricksterSpawnRate, format: TrKey.UnitSeconds);
+        TricksterSpawnRate = new(COID.TricksterSpawnRate, COType.Impostor, RoleType.Trickster, Trickster.Color, 1);
+        TricksterPlaceBoxCooldown = CustomOption.Normal(COID.TricksterPlaceBoxCooldown, COType.Impostor, TrKey.TricksterPlaceBoxCooldown, 10f, 2.5f, 30f, 2.5f, TricksterSpawnRate, format: TrKey.UnitSeconds);
+        TricksterLightsOutCooldown = CustomOption.Normal(COID.TricksterLightsOutCooldown, COType.Impostor, TrKey.TricksterLightsOutCooldown, 30f, 5f, 60f, 5f, TricksterSpawnRate, format: TrKey.UnitSeconds);
+        TricksterLightsOutDuration = CustomOption.Normal(COID.TricksterLightsOutDuration, COType.Impostor, TrKey.TricksterLightsOutDuration, 15f, 5f, 60f, 2.5f, TricksterSpawnRate, format: TrKey.UnitSeconds);
 
-        EvilHackerSpawnRate = new(2030, CustomOptionType.Impostor, RoleType.EvilHacker, EvilHacker.Color, 1);
-        EvilHackerCanHasBetterAdmin = CustomOption.Normal(2031, CustomOptionType.Impostor, TrKey.EvilHackerCanHasBetterAdmin, false, EvilHackerSpawnRate);
-        EvilHackerCanMoveEvenIfUsesAdmin = CustomOption.Normal(2032, CustomOptionType.Impostor, TrKey.EvilHackerCanMoveEvenIfUsesAdmin, true, EvilHackerSpawnRate);
-        EvilHackerCanInheritAbility = CustomOption.Normal(2033, CustomOptionType.Impostor, TrKey.EvilHackerCanInheritAbility, false, EvilHackerSpawnRate);
-        EvilHackerCanSeeDoorStatus = CustomOption.Normal(2034, CustomOptionType.Impostor, TrKey.EvilHackerCanSeeDoorStatus, true, EvilHackerSpawnRate);
-        EvilHackerCanCreateMadmate = CustomOption.Normal(2035, CustomOptionType.Impostor, TrKey.EvilHackerCanCreateMadmate, false, EvilHackerSpawnRate);
-        CreatedMadmateCanDieToSheriff = CustomOption.Normal(2036, CustomOptionType.Impostor, TrKey.CreatedMadmateCanDieToSheriff, false, EvilHackerCanCreateMadmate);
-        CreatedMadmateCanEnterVents = CustomOption.Normal(2037, CustomOptionType.Impostor, TrKey.CreatedMadmateCanEnterVents, false, EvilHackerCanCreateMadmate);
-        EvilHackerCanCreateMadmateFromJackal = CustomOption.Normal(2038, CustomOptionType.Impostor, TrKey.EvilHackerCanCreateMadmateFromJackal, false, EvilHackerCanCreateMadmate);
-        CreatedMadmateHasImpostorVision = CustomOption.Normal(2039, CustomOptionType.Impostor, TrKey.CreatedMadmateHasImpostorVision, false, EvilHackerCanCreateMadmate);
-        CreatedMadmateCanSabotage = CustomOption.Normal(2040, CustomOptionType.Impostor, TrKey.CreatedMadmateCanSabotage, false, EvilHackerCanCreateMadmate);
-        CreatedMadmateCanFixComm = CustomOption.Normal(2041, CustomOptionType.Impostor, TrKey.CreatedMadmateCanFixComm, true, EvilHackerCanCreateMadmate);
-        CreatedMadmateAbility = CustomOption.Normal(2042, CustomOptionType.Impostor, TrKey.MadmateAbility, [TrKey.MadmateNone, TrKey.MadmateFanatic, TrKey.Suicider], 0, EvilHackerCanCreateMadmate);
-        CreatedMadmateNumTasks = CustomOption.Normal(2043, CustomOptionType.Impostor, TrKey.CreatedMadmateNumTasks, 4f, 1f, 20f, 1f, CreatedMadmateAbility);
-        CreatedMadmateExileCrewmate = CustomOption.Normal(2044, CustomOptionType.Impostor, TrKey.CreatedMadmateExileCrewmate, false, EvilHackerCanCreateMadmate);
+        EvilHackerSpawnRate = new(COID.EvilHackerSpawnRate, COType.Impostor, RoleType.EvilHacker, EvilHacker.Color, 1);
+        EvilHackerCanHasBetterAdmin = CustomOption.Normal(COID.EvilHackerCanHasBetterAdmin, COType.Impostor, TrKey.EvilHackerCanHasBetterAdmin, false, EvilHackerSpawnRate);
+        EvilHackerCanMoveEvenIfUsesAdmin = CustomOption.Normal(COID.EvilHackerCanMoveEvenIfUsesAdmin, COType.Impostor, TrKey.EvilHackerCanMoveEvenIfUsesAdmin, true, EvilHackerSpawnRate);
+        EvilHackerCanInheritAbility = CustomOption.Normal(COID.EvilHackerCanInheritAbility, COType.Impostor, TrKey.EvilHackerCanInheritAbility, false, EvilHackerSpawnRate);
+        EvilHackerCanSeeDoorStatus = CustomOption.Normal(COID.EvilHackerCanSeeDoorStatus, COType.Impostor, TrKey.EvilHackerCanSeeDoorStatus, true, EvilHackerSpawnRate);
+        EvilHackerCanCreateMadmate = CustomOption.Normal(COID.EvilHackerCanCreateMadmate, COType.Impostor, TrKey.EvilHackerCanCreateMadmate, false, EvilHackerSpawnRate);
+        CreatedMadmateCanDieToSheriff = CustomOption.Normal(COID.CreatedMadmateCanDieToSheriff, COType.Impostor, TrKey.CreatedMadmateCanDieToSheriff, false, EvilHackerCanCreateMadmate);
+        CreatedMadmateCanEnterVents = CustomOption.Normal(COID.CreatedMadmateCanEnterVents, COType.Impostor, TrKey.CreatedMadmateCanEnterVents, false, EvilHackerCanCreateMadmate);
+        EvilHackerCanCreateMadmateFromJackal = CustomOption.Normal(COID.EvilHackerCanCreateMadmateFromJackal, COType.Impostor, TrKey.EvilHackerCanCreateMadmateFromJackal, false, EvilHackerCanCreateMadmate);
+        CreatedMadmateHasImpostorVision = CustomOption.Normal(COID.CreatedMadmateHasImpostorVision, COType.Impostor, TrKey.CreatedMadmateHasImpostorVision, false, EvilHackerCanCreateMadmate);
+        CreatedMadmateCanSabotage = CustomOption.Normal(COID.CreatedMadmateCanSabotage, COType.Impostor, TrKey.CreatedMadmateCanSabotage, false, EvilHackerCanCreateMadmate);
+        CreatedMadmateCanFixComm = CustomOption.Normal(COID.CreatedMadmateCanFixComm, COType.Impostor, TrKey.CreatedMadmateCanFixComm, true, EvilHackerCanCreateMadmate);
+        CreatedMadmateAbility = CustomOption.Normal(COID.CreatedMadmateAbility, COType.Impostor, TrKey.MadmateAbility, [TrKey.MadmateNone, TrKey.MadmateFanatic, TrKey.Suicider], 0, EvilHackerCanCreateMadmate);
+        CreatedMadmateNumTasks = CustomOption.Normal(COID.CreatedMadmateNumTasks, COType.Impostor, TrKey.CreatedMadmateNumTasks, 4f, 1f, 20f, 1f, CreatedMadmateAbility);
+        CreatedMadmateExileCrewmate = CustomOption.Normal(COID.CreatedMadmateExileCrewmate, COType.Impostor, TrKey.CreatedMadmateExileCrewmate, false, EvilHackerCanCreateMadmate);
 
-        EvilTrackerSpawnRate = new(2050, CustomOptionType.Impostor, RoleType.EvilTracker, EvilTracker.Color, 3);
-        EvilTrackerCooldown = CustomOption.Normal(2051, CustomOptionType.Impostor, TrKey.EvilTrackerCooldown, 10f, 0f, 60f, 1f, EvilTrackerSpawnRate, format: TrKey.UnitSeconds);
-        EvilTrackerResetTargetAfterMeeting = CustomOption.Normal(2052, CustomOptionType.Impostor, TrKey.EvilTrackerResetTargetAfterMeeting, true, EvilTrackerSpawnRate);
-        EvilTrackerCanSeeDeathFlash = CustomOption.Normal(2053, CustomOptionType.Impostor, TrKey.EvilTrackerCanSeeDeathFlash, true, EvilTrackerSpawnRate);
-        EvilTrackerCanSeeTargetTask = CustomOption.Normal(2054, CustomOptionType.Impostor, TrKey.EvilTrackerCanSeeTargetTask, true, EvilTrackerSpawnRate);
-        EvilTrackerCanSeeTargetPosition = CustomOption.Normal(2055, CustomOptionType.Impostor, TrKey.EvilTrackerCanSeeTargetPosition, true, EvilTrackerSpawnRate);
-        EvilTrackerCanSetTargetOnMeeting = CustomOption.Normal(2056, CustomOptionType.Impostor, TrKey.EvilTrackerCanSetTargetOnMeeting, true, EvilTrackerSpawnRate);
+        EvilTrackerSpawnRate = new(COID.EvilTrackerSpawnRate, COType.Impostor, RoleType.EvilTracker, EvilTracker.Color, 3);
+        EvilTrackerCooldown = CustomOption.Normal(COID.EvilTrackerCooldown, COType.Impostor, TrKey.EvilTrackerCooldown, 10f, 0f, 60f, 1f, EvilTrackerSpawnRate, format: TrKey.UnitSeconds);
+        EvilTrackerResetTargetAfterMeeting = CustomOption.Normal(COID.EvilTrackerResetTargetAfterMeeting, COType.Impostor, TrKey.EvilTrackerResetTargetAfterMeeting, true, EvilTrackerSpawnRate);
+        EvilTrackerCanSeeDeathFlash = CustomOption.Normal(COID.EvilTrackerCanSeeDeathFlash, COType.Impostor, TrKey.EvilTrackerCanSeeDeathFlash, true, EvilTrackerSpawnRate);
+        EvilTrackerCanSeeTargetTask = CustomOption.Normal(COID.EvilTrackerCanSeeTargetTask, COType.Impostor, TrKey.EvilTrackerCanSeeTargetTask, true, EvilTrackerSpawnRate);
+        EvilTrackerCanSeeTargetPosition = CustomOption.Normal(COID.EvilTrackerCanSeeTargetPosition, COType.Impostor, TrKey.EvilTrackerCanSeeTargetPosition, true, EvilTrackerSpawnRate);
+        EvilTrackerCanSetTargetOnMeeting = CustomOption.Normal(COID.EvilTrackerCanSetTargetOnMeeting, COType.Impostor, TrKey.EvilTrackerCanSetTargetOnMeeting, true, EvilTrackerSpawnRate);
 
-        EraserSpawnRate = new(2060, CustomOptionType.Impostor, RoleType.Eraser, Eraser.Color, 1);
-        EraserCooldown = CustomOption.Normal(2061, CustomOptionType.Impostor, TrKey.EraserCooldown, 30f, 5f, 120f, 5f, EraserSpawnRate, format: TrKey.UnitSeconds);
-        EraserCooldownIncrease = CustomOption.Normal(2062, CustomOptionType.Impostor, TrKey.EraserCooldownIncrease, 10f, 0f, 120f, 2.5f, EraserSpawnRate, format: TrKey.UnitSeconds);
-        EraserCanEraseAnyone = CustomOption.Normal(2063, CustomOptionType.Impostor, TrKey.EraserCanEraseAnyone, false, EraserSpawnRate);
+        EraserSpawnRate = new(COID.EraserSpawnRate, COType.Impostor, RoleType.Eraser, Eraser.Color, 1);
+        EraserCooldown = CustomOption.Normal(COID.EraserCooldown, COType.Impostor, TrKey.EraserCooldown, 30f, 5f, 120f, 5f, EraserSpawnRate, format: TrKey.UnitSeconds);
+        EraserCooldownIncrease = CustomOption.Normal(COID.EraserCooldownIncrease, COType.Impostor, TrKey.EraserCooldownIncrease, 10f, 0f, 120f, 2.5f, EraserSpawnRate, format: TrKey.UnitSeconds);
+        EraserCanEraseAnyone = CustomOption.Normal(COID.EraserCanEraseAnyone, COType.Impostor, TrKey.EraserCanEraseAnyone, false, EraserSpawnRate);
 
-        MorphingSpawnRate = new(2070, CustomOptionType.Impostor, RoleType.Morphing, Morphing.Color, 1);
-        MorphingCooldown = CustomOption.Normal(2071, CustomOptionType.Impostor, TrKey.MorphingCooldown, 30f, 2.5f, 60f, 2.5f, MorphingSpawnRate, format: TrKey.UnitSeconds);
-        MorphingDuration = CustomOption.Normal(2072, CustomOptionType.Impostor, TrKey.MorphingDuration, 10f, 1f, 20f, 0.5f, MorphingSpawnRate, format: TrKey.UnitSeconds);
+        MorphingSpawnRate = new(COID.MorphingSpawnRate, COType.Impostor, RoleType.Morphing, Morphing.Color, 1);
+        MorphingCooldown = CustomOption.Normal(COID.MorphingCooldown, COType.Impostor, TrKey.MorphingCooldown, 30f, 2.5f, 60f, 2.5f, MorphingSpawnRate, format: TrKey.UnitSeconds);
+        MorphingDuration = CustomOption.Normal(COID.MorphingDuration, COType.Impostor, TrKey.MorphingDuration, 10f, 1f, 20f, 0.5f, MorphingSpawnRate, format: TrKey.UnitSeconds);
 
-        CamouflagerSpawnRate = new(2080, CustomOptionType.Impostor, RoleType.Camouflager, Camouflager.Color, 1);
-        CamouflagerCooldown = CustomOption.Normal(2081, CustomOptionType.Impostor, TrKey.CamouflagerCooldown, 30f, 2.5f, 60f, 2.5f, CamouflagerSpawnRate, format: TrKey.UnitSeconds);
-        CamouflagerDuration = CustomOption.Normal(2082, CustomOptionType.Impostor, TrKey.CamouflagerDuration, 10f, 1f, 20f, 0.5f, CamouflagerSpawnRate, format: TrKey.UnitSeconds);
-        CamouflagerRandomColors = CustomOption.Normal(2083, CustomOptionType.Impostor, TrKey.CamouflagerRandomColors, false, CamouflagerSpawnRate);
+        CamouflagerSpawnRate = new(COID.CamouflagerSpawnRate, COType.Impostor, RoleType.Camouflager, Camouflager.Color, 1);
+        CamouflagerCooldown = CustomOption.Normal(COID.CamouflagerCooldown, COType.Impostor, TrKey.CamouflagerCooldown, 30f, 2.5f, 60f, 2.5f, CamouflagerSpawnRate, format: TrKey.UnitSeconds);
+        CamouflagerDuration = CustomOption.Normal(COID.CamouflagerDuration, COType.Impostor, TrKey.CamouflagerDuration, 10f, 1f, 20f, 0.5f, CamouflagerSpawnRate, format: TrKey.UnitSeconds);
+        CamouflagerRandomColors = CustomOption.Normal(COID.CamouflagerRandomColors, COType.Impostor, TrKey.CamouflagerRandomColors, false, CamouflagerSpawnRate);
 
-        CleanerSpawnRate = new(2090, CustomOptionType.Impostor, RoleType.Cleaner, Cleaner.Color, 1);
-        CleanerCooldown = CustomOption.Normal(2091, CustomOptionType.Impostor, TrKey.CleanerCooldown, 30f, 2.5f, 60f, 2.5f, CleanerSpawnRate, format: TrKey.UnitSeconds);
+        CleanerSpawnRate = new(COID.CleanerSpawnRate, COType.Impostor, RoleType.Cleaner, Cleaner.Color, 1);
+        CleanerCooldown = CustomOption.Normal(COID.CleanerCooldown, COType.Impostor, TrKey.CleanerCooldown, 30f, 2.5f, 60f, 2.5f, CleanerSpawnRate, format: TrKey.UnitSeconds);
 
-        WarlockSpawnRate = new(2100, CustomOptionType.Impostor, RoleType.Warlock, Warlock.Color, 1);
-        WarlockCooldown = CustomOption.Normal(2101, CustomOptionType.Impostor, TrKey.WarlockCooldown, 30f, 2.5f, 60f, 2.5f, WarlockSpawnRate, format: TrKey.UnitSeconds);
-        WarlockRootTime = CustomOption.Normal(2102, CustomOptionType.Impostor, TrKey.WarlockRootTime, 5f, 0f, 15f, 1f, WarlockSpawnRate, format: TrKey.UnitSeconds);
+        WarlockSpawnRate = new(COID.WarlockSpawnRate, COType.Impostor, RoleType.Warlock, Warlock.Color, 1);
+        WarlockCooldown = CustomOption.Normal(COID.WarlockCooldown, COType.Impostor, TrKey.WarlockCooldown, 30f, 2.5f, 60f, 2.5f, WarlockSpawnRate, format: TrKey.UnitSeconds);
+        WarlockRootTime = CustomOption.Normal(COID.WarlockRootTime, COType.Impostor, TrKey.WarlockRootTime, 5f, 0f, 15f, 1f, WarlockSpawnRate, format: TrKey.UnitSeconds);
 
-        WitchSpawnRate = new(2110, CustomOptionType.Impostor, RoleType.Witch, Witch.Color, 1);
-        WitchCooldown = CustomOption.Normal(2111, CustomOptionType.Impostor, TrKey.WitchSpellCooldown, 30f, 2.5f, 120f, 2.5f, WitchSpawnRate, format: TrKey.UnitSeconds);
-        WitchAdditionalCooldown = CustomOption.Normal(2112, CustomOptionType.Impostor, TrKey.WitchAdditionalCooldown, 10f, 0f, 60f, 5f, WitchSpawnRate, format: TrKey.UnitSeconds);
-        WitchCanSpellAnyone = CustomOption.Normal(2113, CustomOptionType.Impostor, TrKey.WitchCanSpellAnyone, false, WitchSpawnRate);
-        WitchSpellCastingDuration = CustomOption.Normal(2114, CustomOptionType.Impostor, TrKey.WitchSpellDuration, 1f, 0f, 10f, 1f, WitchSpawnRate, format: TrKey.UnitSeconds);
-        WitchTriggerBothCooldowns = CustomOption.Normal(2115, CustomOptionType.Impostor, TrKey.WitchTriggerBoth, true, WitchSpawnRate);
-        WitchVoteSavesTargets = CustomOption.Normal(2116, CustomOptionType.Impostor, TrKey.WitchSaveTargets, true, WitchSpawnRate);
+        WitchSpawnRate = new(COID.WitchSpawnRate, COType.Impostor, RoleType.Witch, Witch.Color, 1);
+        WitchCooldown = CustomOption.Normal(COID.WitchCooldown, COType.Impostor, TrKey.WitchSpellCooldown, 30f, 2.5f, 120f, 2.5f, WitchSpawnRate, format: TrKey.UnitSeconds);
+        WitchAdditionalCooldown = CustomOption.Normal(COID.WitchAdditionalCooldown, COType.Impostor, TrKey.WitchAdditionalCooldown, 10f, 0f, 60f, 5f, WitchSpawnRate, format: TrKey.UnitSeconds);
+        WitchCanSpellAnyone = CustomOption.Normal(COID.WitchCanSpellAnyone, COType.Impostor, TrKey.WitchCanSpellAnyone, false, WitchSpawnRate);
+        WitchSpellCastingDuration = CustomOption.Normal(COID.WitchSpellCastingDuration, COType.Impostor, TrKey.WitchSpellDuration, 1f, 0f, 10f, 1f, WitchSpawnRate, format: TrKey.UnitSeconds);
+        WitchTriggerBothCooldowns = CustomOption.Normal(COID.WitchTriggerBothCooldowns, COType.Impostor, TrKey.WitchTriggerBoth, true, WitchSpawnRate);
+        WitchVoteSavesTargets = CustomOption.Normal(COID.WitchVoteSavesTargets, COType.Impostor, TrKey.WitchSaveTargets, true, WitchSpawnRate);
 
-        VampireSpawnRate = new(2120, CustomOptionType.Impostor, RoleType.Vampire, Vampire.Color, 1);
-        VampireKillDelay = CustomOption.Normal(2121, CustomOptionType.Impostor, TrKey.VampireKillDelay, 10f, 1f, 20f, 1f, VampireSpawnRate, format: TrKey.UnitSeconds);
-        VampireCooldown = CustomOption.Normal(2122, CustomOptionType.Impostor, TrKey.VampireCooldown, 30f, 2.5f, 60f, 2.5f, VampireSpawnRate, format: TrKey.UnitSeconds);
-        VampireCanKillNearGarlics = CustomOption.Normal(2123, CustomOptionType.Impostor, TrKey.VampireCanKillNearGarlics, true, VampireSpawnRate);
+        VampireSpawnRate = new(COID.VampireSpawnRate, COType.Impostor, RoleType.Vampire, Vampire.Color, 1);
+        VampireKillDelay = CustomOption.Normal(COID.VampireKillDelay, COType.Impostor, TrKey.VampireKillDelay, 10f, 1f, 20f, 1f, VampireSpawnRate, format: TrKey.UnitSeconds);
+        VampireCooldown = CustomOption.Normal(COID.VampireCooldown, COType.Impostor, TrKey.VampireCooldown, 30f, 2.5f, 60f, 2.5f, VampireSpawnRate, format: TrKey.UnitSeconds);
+        VampireCanKillNearGarlics = CustomOption.Normal(COID.VampireCanKillNearGarlics, COType.Impostor, TrKey.VampireCanKillNearGarlics, true, VampireSpawnRate);
 
         #endregion
 
         #region ROLES NEUTRAL
 
-        JesterSpawnRate = new(3000, CustomOptionType.Neutral, RoleType.Jester, Jester.Color, 1);
-        JesterCanCallEmergency = CustomOption.Normal(3001, CustomOptionType.Neutral, TrKey.JesterCanCallEmergency, true, JesterSpawnRate);
-        JesterCanSabotage = CustomOption.Normal(3002, CustomOptionType.Neutral, TrKey.JesterCanSabotage, true, JesterSpawnRate);
-        JesterHasImpostorVision = CustomOption.Normal(3003, CustomOptionType.Neutral, TrKey.JesterHasImpostorVision, false, JesterSpawnRate);
+        JesterSpawnRate = new(COID.JesterSpawnRate, COType.Neutral, RoleType.Jester, Jester.Color, 1);
+        JesterCanCallEmergency = CustomOption.Normal(COID.JesterCanCallEmergency, COType.Neutral, TrKey.JesterCanCallEmergency, true, JesterSpawnRate);
+        JesterCanSabotage = CustomOption.Normal(COID.JesterCanSabotage, COType.Neutral, TrKey.JesterCanSabotage, true, JesterSpawnRate);
+        JesterHasImpostorVision = CustomOption.Normal(COID.JesterHasImpostorVision, COType.Neutral, TrKey.JesterHasImpostorVision, false, JesterSpawnRate);
 
-        ArsonistSpawnRate = new(3010, CustomOptionType.Neutral, RoleType.Arsonist, Arsonist.Color, 1);
-        ArsonistCooldown = CustomOption.Normal(3011, CustomOptionType.Neutral, TrKey.ArsonistCooldown, 12.5f, 2.5f, 60f, 2.5f, ArsonistSpawnRate, format: TrKey.UnitSeconds);
-        ArsonistDuration = CustomOption.Normal(3012, CustomOptionType.Neutral, TrKey.ArsonistDuration, 3f, 0f, 10f, 1f, ArsonistSpawnRate, format: TrKey.UnitSeconds);
-        ArsonistCanBeLovers = CustomOption.Normal(3013, CustomOptionType.Neutral, TrKey.ArsonistCanBeLovers, false, ArsonistSpawnRate);
+        ArsonistSpawnRate = new(COID.ArsonistSpawnRate, COType.Neutral, RoleType.Arsonist, Arsonist.Color, 1);
+        ArsonistCooldown = CustomOption.Normal(COID.ArsonistCooldown, COType.Neutral, TrKey.ArsonistCooldown, 12.5f, 2.5f, 60f, 2.5f, ArsonistSpawnRate, format: TrKey.UnitSeconds);
+        ArsonistDuration = CustomOption.Normal(COID.ArsonistDuration, COType.Neutral, TrKey.ArsonistDuration, 3f, 0f, 10f, 1f, ArsonistSpawnRate, format: TrKey.UnitSeconds);
+        ArsonistCanBeLovers = CustomOption.Normal(COID.ArsonistCanBeLovers, COType.Neutral, TrKey.ArsonistCanBeLovers, false, ArsonistSpawnRate);
 
-        VultureSpawnRate = new(3020, CustomOptionType.Neutral, RoleType.Vulture, Vulture.Color, 1);
-        VultureCooldown = CustomOption.Normal(3021, CustomOptionType.Neutral, TrKey.VultureCooldown, 15f, 2.5f, 60f, 2.5f, VultureSpawnRate, format: TrKey.UnitSeconds);
-        VultureNumberToWin = CustomOption.Normal(3022, CustomOptionType.Neutral, TrKey.VultureNumberToWin, 4f, 1f, 12f, 1f, VultureSpawnRate, format: TrKey.UnitTimes);
-        VultureCanUseVents = CustomOption.Normal(3023, CustomOptionType.Neutral, TrKey.VultureCanUseVents, true, VultureSpawnRate);
-        VultureShowArrows = CustomOption.Normal(3024, CustomOptionType.Neutral, TrKey.VultureShowArrows, true, VultureSpawnRate);
+        VultureSpawnRate = new(COID.VultureSpawnRate, COType.Neutral, RoleType.Vulture, Vulture.Color, 1);
+        VultureCooldown = CustomOption.Normal(COID.VultureCooldown, COType.Neutral, TrKey.VultureCooldown, 15f, 2.5f, 60f, 2.5f, VultureSpawnRate, format: TrKey.UnitSeconds);
+        VultureNumberToWin = CustomOption.Normal(COID.VultureNumberToWin, COType.Neutral, TrKey.VultureNumberToWin, 4f, 1f, 12f, 1f, VultureSpawnRate, format: TrKey.UnitTimes);
+        VultureCanUseVents = CustomOption.Normal(COID.VultureCanUseVents, COType.Neutral, TrKey.VultureCanUseVents, true, VultureSpawnRate);
+        VultureShowArrows = CustomOption.Normal(COID.VultureShowArrows, COType.Neutral, TrKey.VultureShowArrows, true, VultureSpawnRate);
 
-        JackalSpawnRate = new(3030, CustomOptionType.Neutral, RoleType.Jackal, Jackal.Color, 1);
-        JackalKillCooldown = CustomOption.Normal(3031, CustomOptionType.Neutral, TrKey.JackalKillCooldown, 30f, 10f, 60f, 2.5f, JackalSpawnRate, format: TrKey.UnitSeconds);
-        JackalCanSabotageLights = CustomOption.Normal(3032, CustomOptionType.Neutral, TrKey.JackalCanSabotageLights, true, JackalSpawnRate);
-        JackalCanUseVents = CustomOption.Normal(3033, CustomOptionType.Neutral, TrKey.JackalCanUseVents, true, JackalSpawnRate);
-        JackalHasImpostorVision = CustomOption.Normal(3034, CustomOptionType.Neutral, TrKey.JackalHasImpostorVision, false, JackalSpawnRate);
-        JackalCanCreateSidekick = CustomOption.Normal(3035, CustomOptionType.Neutral, TrKey.JackalCanCreateSidekick, false, JackalSpawnRate);
-        JackalCreateSidekickCooldown = CustomOption.Normal(3036, CustomOptionType.Neutral, TrKey.JackalCreateSidekickCooldown, 30f, 10f, 60f, 2.5f, JackalCanCreateSidekick, format: TrKey.UnitSeconds);
-        SidekickCanKill = CustomOption.Normal(3038, CustomOptionType.Neutral, TrKey.SidekickCanKill, false, JackalCanCreateSidekick);
-        SidekickCanUseVents = CustomOption.Normal(3039, CustomOptionType.Neutral, TrKey.SidekickCanUseVents, true, JackalCanCreateSidekick);
-        SidekickCanSabotageLights = CustomOption.Normal(3040, CustomOptionType.Neutral, TrKey.SidekickCanSabotageLights, true, JackalCanCreateSidekick);
-        SidekickHasImpostorVision = CustomOption.Normal(3041, CustomOptionType.Neutral, TrKey.SidekickHasImpostorVision, false, JackalCanCreateSidekick);
-        SidekickPromotesToJackal = CustomOption.Normal(3037, CustomOptionType.Neutral, TrKey.SidekickPromotesToJackal, false, JackalCanCreateSidekick);
-        JackalPromotedFromSidekickCanCreateSidekick = CustomOption.Normal(3042, CustomOptionType.Neutral, TrKey.JackalPromotedFromSidekickCanCreateSidekick, false, SidekickPromotesToJackal);
-        JackalCanCreateSidekickFromImpostor = CustomOption.Normal(3043, CustomOptionType.Neutral, TrKey.JackalCanCreateSidekickFromImpostor, false, JackalCanCreateSidekick);
+        JackalSpawnRate = new(COID.JackalSpawnRate, COType.Neutral, RoleType.Jackal, Jackal.Color, 1);
+        JackalKillCooldown = CustomOption.Normal(COID.JackalKillCooldown, COType.Neutral, TrKey.JackalKillCooldown, 30f, 10f, 60f, 2.5f, JackalSpawnRate, format: TrKey.UnitSeconds);
+        JackalCanSabotageLights = CustomOption.Normal(COID.JackalCanSabotageLights, COType.Neutral, TrKey.JackalCanSabotageLights, true, JackalSpawnRate);
+        JackalCanUseVents = CustomOption.Normal(COID.JackalCanUseVents, COType.Neutral, TrKey.JackalCanUseVents, true, JackalSpawnRate);
+        JackalHasImpostorVision = CustomOption.Normal(COID.JackalHasImpostorVision, COType.Neutral, TrKey.JackalHasImpostorVision, false, JackalSpawnRate);
+        JackalCanCreateSidekick = CustomOption.Normal(COID.JackalCanCreateSidekick, COType.Neutral, TrKey.JackalCanCreateSidekick, false, JackalSpawnRate);
+        JackalCreateSidekickCooldown = CustomOption.Normal(COID.JackalCreateSidekickCooldown, COType.Neutral, TrKey.JackalCreateSidekickCooldown, 30f, 10f, 60f, 2.5f, JackalCanCreateSidekick, format: TrKey.UnitSeconds);
+        SidekickCanKill = CustomOption.Normal(COID.SidekickCanKill, COType.Neutral, TrKey.SidekickCanKill, false, JackalCanCreateSidekick);
+        SidekickCanUseVents = CustomOption.Normal(COID.SidekickCanUseVents, COType.Neutral, TrKey.SidekickCanUseVents, true, JackalCanCreateSidekick);
+        SidekickCanSabotageLights = CustomOption.Normal(COID.SidekickCanSabotageLights, COType.Neutral, TrKey.SidekickCanSabotageLights, true, JackalCanCreateSidekick);
+        SidekickHasImpostorVision = CustomOption.Normal(COID.SidekickHasImpostorVision, COType.Neutral, TrKey.SidekickHasImpostorVision, false, JackalCanCreateSidekick);
+        SidekickPromotesToJackal = CustomOption.Normal(COID.SidekickPromotesToJackal, COType.Neutral, TrKey.SidekickPromotesToJackal, false, JackalCanCreateSidekick);
+        JackalPromotedFromSidekickCanCreateSidekick = CustomOption.Normal(COID.JackalPromotedFromSidekickCanCreateSidekick, COType.Neutral, TrKey.JackalPromotedFromSidekickCanCreateSidekick, false, SidekickPromotesToJackal);
+        JackalCanCreateSidekickFromImpostor = CustomOption.Normal(COID.JackalCanCreateSidekickFromImpostor, COType.Neutral, TrKey.JackalCanCreateSidekickFromImpostor, false, JackalCanCreateSidekick);
 
-        GuesserSpawnRate = new(3050, CustomOptionType.Neutral, TrKey.Guesser, Guesser.NiceGuesser.Color, 1);
-        GuesserIsImpGuesserRate = CustomOption.Normal(3051, CustomOptionType.Neutral, TrKey.GuesserIsImpGuesserRate, Rates, 0, GuesserSpawnRate);
-        GuesserSpawnBothRate = CustomOption.Normal(3052, CustomOptionType.Neutral, TrKey.GuesserSpawnBothRate, Rates, 0, GuesserSpawnRate);
-        GuesserNumberOfShots = CustomOption.Normal(3053, CustomOptionType.Neutral, TrKey.GuesserNumberOfShots, 2f, 1f, 15f, 1f, GuesserSpawnRate, format: TrKey.UnitShots);
-        GuesserOnlyAvailableRoles = CustomOption.Normal(3054, CustomOptionType.Neutral, TrKey.GuesserOnlyAvailableRoles, true, GuesserSpawnRate);
-        GuesserHasMultipleShotsPerMeeting = CustomOption.Normal(3055, CustomOptionType.Neutral, TrKey.GuesserHasMultipleShotsPerMeeting, false, GuesserSpawnRate);
-        GuesserShowInfoInGhostChat = CustomOption.Normal(3056, CustomOptionType.Neutral, TrKey.GuesserToGhostChat, true, GuesserSpawnRate);
-        GuesserKillsThroughShield = CustomOption.Normal(3057, CustomOptionType.Neutral, TrKey.GuesserPierceShield, true, GuesserSpawnRate);
-        GuesserEvilCanKillSpy = CustomOption.Normal(3058, CustomOptionType.Neutral, TrKey.GuesserEvilCanKillSpy, true, GuesserSpawnRate);
+        GuesserSpawnRate = new(COID.GuesserSpawnRate, COType.Neutral, TrKey.Guesser, Guesser.NiceGuesser.Color, 1);
+        GuesserIsImpGuesserRate = CustomOption.Normal(COID.GuesserIsImpGuesserRate, COType.Neutral, TrKey.GuesserIsImpGuesserRate, Rates, 0, GuesserSpawnRate);
+        GuesserSpawnBothRate = CustomOption.Normal(COID.GuesserSpawnBothRate, COType.Neutral, TrKey.GuesserSpawnBothRate, Rates, 0, GuesserSpawnRate);
+        GuesserNumberOfShots = CustomOption.Normal(COID.GuesserNumberOfShots, COType.Neutral, TrKey.GuesserNumberOfShots, 2f, 1f, 15f, 1f, GuesserSpawnRate, format: TrKey.UnitShots);
+        GuesserOnlyAvailableRoles = CustomOption.Normal(COID.GuesserOnlyAvailableRoles, COType.Neutral, TrKey.GuesserOnlyAvailableRoles, true, GuesserSpawnRate);
+        GuesserHasMultipleShotsPerMeeting = CustomOption.Normal(COID.GuesserHasMultipleShotsPerMeeting, COType.Neutral, TrKey.GuesserHasMultipleShotsPerMeeting, false, GuesserSpawnRate);
+        GuesserShowInfoInGhostChat = CustomOption.Normal(COID.GuesserShowInfoInGhostChat, COType.Neutral, TrKey.GuesserToGhostChat, true, GuesserSpawnRate);
+        GuesserKillsThroughShield = CustomOption.Normal(COID.GuesserKillsThroughShield, COType.Neutral, TrKey.GuesserPierceShield, true, GuesserSpawnRate);
+        GuesserEvilCanKillSpy = CustomOption.Normal(COID.GuesserEvilCanKillSpy, COType.Neutral, TrKey.GuesserEvilCanKillSpy, true, GuesserSpawnRate);
 
         #endregion
 
         #region MODIFIERS
 
-        MadmateSpawnRate = new(4000, CustomOptionType.Modifier, ModifierType.Madmate, Madmate.Color);
-        MadmateType = CustomOption.Normal(4001, CustomOptionType.Modifier, TrKey.MadmateType, [TrKey.MadmateDefault, TrKey.MadmateWithRole, TrKey.MadmateRandom], 0, MadmateSpawnRate);
-        MadmateFixedRole = new(4002, CustomOptionType.Modifier, TrKey.MadmateFixedRole, Madmate.ValidRoles, MadmateType);
-        MadmateAbility = CustomOption.Normal(4003, CustomOptionType.Modifier, TrKey.MadmateAbility, [TrKey.MadmateNone, TrKey.MadmateFanatic, TrKey.Suicider], 0, MadmateSpawnRate);
-        MadmateTasks = new((4004, 4005, 4006), CustomOptionType.Modifier, (1, 1, 3), MadmateAbility);
-        MadmateCanDieToSheriff = CustomOption.Normal(4007, CustomOptionType.Modifier, TrKey.MadmateCanDieToSheriff, false, MadmateSpawnRate);
-        MadmateCanEnterVents = CustomOption.Normal(4008, CustomOptionType.Modifier, TrKey.MadmateCanEnterVents, false, MadmateSpawnRate);
-        MadmateHasImpostorVision = CustomOption.Normal(4009, CustomOptionType.Modifier, TrKey.MadmateHasImpostorVision, false, MadmateSpawnRate);
-        MadmateCanSabotage = CustomOption.Normal(4010, CustomOptionType.Modifier, TrKey.MadmateCanSabotage, false, MadmateSpawnRate);
-        MadmateCanFixComm = CustomOption.Normal(4011, CustomOptionType.Modifier, TrKey.MadmateCanFixComm, true, MadmateSpawnRate);
-        MadmateExilePlayer = CustomOption.Normal(4012, CustomOptionType.Modifier, TrKey.MadmateExileCrewmate, false, MadmateSpawnRate);
+        MadmateSpawnRate = new(COID.MadmateSpawnRate, COType.Modifier, ModifierType.Madmate, Madmate.Color);
+        MadmateType = CustomOption.Normal(COID.MadmateType, COType.Modifier, TrKey.MadmateType, [TrKey.MadmateDefault, TrKey.MadmateWithRole, TrKey.MadmateRandom], 0, MadmateSpawnRate);
+        MadmateFixedRole = new(COID.MadmateFixedRole, COType.Modifier, TrKey.MadmateFixedRole, Madmate.ValidRoles, MadmateType);
+        MadmateAbility = CustomOption.Normal(COID.MadmateAbility, COType.Modifier, TrKey.MadmateAbility, [TrKey.MadmateNone, TrKey.MadmateFanatic, TrKey.Suicider], 0, MadmateSpawnRate);
+        MadmateTasks = new((COID.MadmateTasksCommon, COID.MadmateTasksShort, COID.MadmateTasksLong), COType.Modifier, (1, 1, 3), MadmateAbility);
+        MadmateCanDieToSheriff = CustomOption.Normal(COID.MadmateCanDieToSheriff, COType.Modifier, TrKey.MadmateCanDieToSheriff, false, MadmateSpawnRate);
+        MadmateCanEnterVents = CustomOption.Normal(COID.MadmateCanEnterVents, COType.Modifier, TrKey.MadmateCanEnterVents, false, MadmateSpawnRate);
+        MadmateHasImpostorVision = CustomOption.Normal(COID.MadmateHasImpostorVision, COType.Modifier, TrKey.MadmateHasImpostorVision, false, MadmateSpawnRate);
+        MadmateCanSabotage = CustomOption.Normal(COID.MadmateCanSabotage, COType.Modifier, TrKey.MadmateCanSabotage, false, MadmateSpawnRate);
+        MadmateCanFixComm = CustomOption.Normal(COID.MadmateCanFixComm, COType.Modifier, TrKey.MadmateCanFixComm, true, MadmateSpawnRate);
+        MadmateExilePlayer = CustomOption.Normal(COID.MadmateExilePlayer, COType.Modifier, TrKey.MadmateExileCrewmate, false, MadmateSpawnRate);
 
-        LoversSpawnRate = new(4020, CustomOptionType.Modifier, RoleType.Lovers, Lovers.Color, 1);
-        LoversImpLoverRate = CustomOption.Normal(4021, CustomOptionType.Modifier, TrKey.LoversImpLoverRate, Rates, 0, LoversSpawnRate);
-        LoversNumCouples = CustomOption.Normal(4022, CustomOptionType.Modifier, TrKey.LoversNumCouples, 1f, 1f, 7f, 1f, LoversSpawnRate, format: TrKey.UnitCouples);
-        LoversBothDie = CustomOption.Normal(4023, CustomOptionType.Modifier, TrKey.LoversBothDie, true, LoversSpawnRate);
-        LoversCanHaveAnotherRole = CustomOption.Normal(4024, CustomOptionType.Modifier, TrKey.LoversCanHaveAnotherRole, true, LoversSpawnRate);
-        LoversSeparateTeam = CustomOption.Normal(4025, CustomOptionType.Modifier, TrKey.LoversSeparateTeam, true, LoversSpawnRate);
-        LoversTasksCount = CustomOption.Normal(4026, CustomOptionType.Modifier, TrKey.LoversTasksCount, false, LoversSpawnRate);
-        LoversEnableChat = CustomOption.Normal(4027, CustomOptionType.Modifier, TrKey.LoversEnableChat, true, LoversSpawnRate);
+        LoversSpawnRate = new(COID.LoversSpawnRate, COType.Modifier, RoleType.Lovers, Lovers.Color, 1);
+        LoversImpLoverRate = CustomOption.Normal(COID.LoversImpLoverRate, COType.Modifier, TrKey.LoversImpLoverRate, Rates, 0, LoversSpawnRate);
+        LoversNumCouples = CustomOption.Normal(COID.LoversNumCouples, COType.Modifier, TrKey.LoversNumCouples, 1f, 1f, 7f, 1f, LoversSpawnRate, format: TrKey.UnitCouples);
+        LoversBothDie = CustomOption.Normal(COID.LoversBothDie, COType.Modifier, TrKey.LoversBothDie, true, LoversSpawnRate);
+        LoversCanHaveAnotherRole = CustomOption.Normal(COID.LoversCanHaveAnotherRole, COType.Modifier, TrKey.LoversCanHaveAnotherRole, true, LoversSpawnRate);
+        LoversSeparateTeam = CustomOption.Normal(COID.LoversSeparateTeam, COType.Modifier, TrKey.LoversSeparateTeam, true, LoversSpawnRate);
+        LoversTasksCount = CustomOption.Normal(COID.LoversTasksCount, COType.Modifier, TrKey.LoversTasksCount, false, LoversSpawnRate);
+        LoversEnableChat = CustomOption.Normal(COID.LoversEnableChat, COType.Modifier, TrKey.LoversEnableChat, true, LoversSpawnRate);
 
-        MiniSpawnRate = new(180, CustomOptionType.Modifier, ModifierType.Mini, Mini.Color);
-        MiniGrowingUpDuration = CustomOption.Normal(181, CustomOptionType.Modifier, TrKey.MiniGrowingUpDuration, 400f, 100f, 1500f, 100f, MiniSpawnRate, format: TrKey.UnitSeconds);
+        MiniSpawnRate = new(COID.MiniSpawnRate, COType.Modifier, ModifierType.Mini, Mini.Color);
+        MiniGrowingUpDuration = CustomOption.Normal(COID.MiniGrowingUpDuration, COType.Modifier, TrKey.MiniGrowingUpDuration, 400f, 100f, 1500f, 100f, MiniSpawnRate, format: TrKey.UnitSeconds);
 
-        AntiTeleportSpawnRate = new(4030, CustomOptionType.Modifier, ModifierType.AntiTeleport, AntiTeleport.Color);
+        AntiTeleportSpawnRate = new(COID.AntiTeleportSpawnRate, COType.Modifier, ModifierType.AntiTeleport, AntiTeleport.Color);
 
         #endregion
 
         #region HIDE AND SEEK
 
-        HideNSeekHideTime = CustomOption.Normal(7001, CustomOptionType.HideNSeek, TrKey.HideNSeekHideTime, 220f, 160f, 300f, 20f, header: hideNSeekHeader, format: TrKey.UnitSeconds);
-        HideNSeekCrewmateVision = CustomOption.Normal(7002, CustomOptionType.HideNSeek, TrKey.HideNSeekCrewmateVision, 0.5f, 0.25f, 1f, 0.05f, format: TrKey.UnitMultiplies);
-        HideNSeekMaxVentUses = CustomOption.Normal(7003, CustomOptionType.HideNSeek, TrKey.HideNSeekMaxVentUses, 3f, 0f, 5f, 1f, format: TrKey.UnitTimes);
-        HideNSeekFlashlightMode = CustomOption.Normal(7004, CustomOptionType.HideNSeek, TrKey.HideNSeekFlashlightMode, false);
-        HideNSeekMaxTimeInVent = CustomOption.Normal(7005, CustomOptionType.HideNSeek, TrKey.HideNSeekMaxTimeInVent, 5f, 1f, 10f, 1f, format: TrKey.UnitSeconds);
-        HideNSeekCrewmateFlashlightSize = CustomOption.Normal(7006, CustomOptionType.HideNSeek, TrKey.HideNSeekCrewmateFlashlightSize, 0.4f, 0.1f, 0.5f, 0.05f, format: TrKey.UnitMultiplies);
+        HideNSeekHideTime = CustomOption.Normal(COID.HideNSeekHideTime, COType.HideNSeek, TrKey.HideNSeekHideTime, 220f, 160f, 300f, 20f, header: hideNSeekHeader, format: TrKey.UnitSeconds);
+        HideNSeekCrewmateVision = CustomOption.Normal(COID.HideNSeekCrewmateVision, COType.HideNSeek, TrKey.HideNSeekCrewmateVision, 0.5f, 0.25f, 1f, 0.05f, format: TrKey.UnitMultiplies);
+        HideNSeekMaxVentUses = CustomOption.Normal(COID.HideNSeekMaxVentUses, COType.HideNSeek, TrKey.HideNSeekMaxVentUses, 3f, 0f, 5f, 1f, format: TrKey.UnitTimes);
+        HideNSeekFlashlightMode = CustomOption.Normal(COID.HideNSeekFlashlightMode, COType.HideNSeek, TrKey.HideNSeekFlashlightMode, false);
+        HideNSeekMaxTimeInVent = CustomOption.Normal(COID.HideNSeekMaxTimeInVent, COType.HideNSeek, TrKey.HideNSeekMaxTimeInVent, 5f, 1f, 10f, 1f, format: TrKey.UnitSeconds);
+        HideNSeekCrewmateFlashlightSize = CustomOption.Normal(COID.HideNSeekCrewmateFlashlightSize, COType.HideNSeek, TrKey.HideNSeekCrewmateFlashlightSize, 0.4f, 0.1f, 0.5f, 0.05f, format: TrKey.UnitMultiplies);
         // HideNSeekImpostor = CustomOption.Player(7007, CustomOptionType.HideNSeek, TrKey.HideNSeekImpostor, true);
-        HideNSeekImpostorFlashlightSize = CustomOption.Normal(7008, CustomOptionType.HideNSeek, TrKey.HideNSeekImpostorFlashlightSize, 0.3f, 0.1f, 0.5f, 0.05f, format: TrKey.UnitMultiplies);
-        HideNSeekImpostorVision = CustomOption.Normal(7009, CustomOptionType.HideNSeek, TrKey.HideNSeekImpostorVision, 0.3f, 0.25f, 1f, 0.05f, format: TrKey.UnitMultiplies);
-        HideNSeekFinalHideTime = CustomOption.Normal(7010, CustomOptionType.HideNSeek, TrKey.HideNSeekFinalHideTime, 40f, 30f, 120f, 5f, format: TrKey.UnitSeconds);
-        HideNSeekFinalHidePings = CustomOption.Normal(7011, CustomOptionType.HideNSeek, TrKey.HideNSeekFinalHidePings, true);
-        HideNSeekFinalHideImpostorSpeed = CustomOption.Normal(7012, CustomOptionType.HideNSeek, TrKey.HideNSeekFinalHideImpostorSpeed, 1.5f, 1.0f, 3.0f, 0.05f, format: TrKey.UnitMultiplies);
-        HideNSeekPingInterval = CustomOption.Normal(7013, CustomOptionType.HideNSeek, TrKey.HideNSeekPingInterval, 5f, 3f, 10f, 1f, format: TrKey.UnitSeconds);
-        HideNSeekFinalHideSeekMap = CustomOption.Normal(7014, CustomOptionType.HideNSeek, TrKey.HideNSeekFinalHideSeekMap, true);
-        HideNSeekTasks = new CustomTasksOption((7015, 7016, 7017), CustomOptionType.HideNSeek, (2, 1, 2));
+        HideNSeekImpostorFlashlightSize = CustomOption.Normal(COID.HideNSeekImpostorFlashlightSize, COType.HideNSeek, TrKey.HideNSeekImpostorFlashlightSize, 0.3f, 0.1f, 0.5f, 0.05f, format: TrKey.UnitMultiplies);
+        HideNSeekImpostorVision = CustomOption.Normal(COID.HideNSeekImpostorVision, COType.HideNSeek, TrKey.HideNSeekImpostorVision, 0.3f, 0.25f, 1f, 0.05f, format: TrKey.UnitMultiplies);
+        HideNSeekFinalHideTime = CustomOption.Normal(COID.HideNSeekFinalHideTime, COType.HideNSeek, TrKey.HideNSeekFinalHideTime, 40f, 30f, 120f, 5f, format: TrKey.UnitSeconds);
+        HideNSeekFinalHidePings = CustomOption.Normal(COID.HideNSeekFinalHidePings, COType.HideNSeek, TrKey.HideNSeekFinalHidePings, true);
+        HideNSeekFinalHideImpostorSpeed = CustomOption.Normal(COID.HideNSeekFinalHideImpostorSpeed, COType.HideNSeek, TrKey.HideNSeekFinalHideImpostorSpeed, 1.5f, 1.0f, 3.0f, 0.05f, format: TrKey.UnitMultiplies);
+        HideNSeekPingInterval = CustomOption.Normal(COID.HideNSeekPingInterval, COType.HideNSeek, TrKey.HideNSeekPingInterval, 5f, 3f, 10f, 1f, format: TrKey.UnitSeconds);
+        HideNSeekFinalHideSeekMap = CustomOption.Normal(COID.HideNSeekFinalHideSeekMap, COType.HideNSeek, TrKey.HideNSeekFinalHideSeekMap, true);
+        HideNSeekTasks = new CustomTasksOption((COID.HideNSeekTasksCommon, COID.HideNSeekTasksShort, COID.HideNSeekTasksLong), COType.HideNSeek, (2, 1, 2));
 
         #endregion
 
         #region BATTLE ROYALE
 
-        BattleRoyaleTimeLimit = CustomOption.Normal(5001, CustomOptionType.BattleRoyale, TrKey.BattleRoyaleTimeLimit, 300f, 60f, 1800f, 60f, header: battleRoyaleHeader, format: TrKey.UnitSeconds);
-        BattleRoyaleKillCooldown = CustomOption.Normal(5003, CustomOptionType.BattleRoyale, TrKey.BattleRoyaleKillCooldown, 1f, 1f, 5f, 0.5f, format: TrKey.UnitSeconds);
-        BattleRoyaleVisionRange = CustomOption.Normal(5004, CustomOptionType.BattleRoyale, TrKey.BattleRoyaleVisionRange, 1.5f, 0.25f, 2.0f, 0.25f, format: TrKey.UnitMultiplies);
+        BattleRoyaleTimeLimit = CustomOption.Normal(COID.BattleRoyaleTimeLimit, COType.BattleRoyale, TrKey.BattleRoyaleTimeLimit, 300f, 60f, 1800f, 60f, header: battleRoyaleHeader, format: TrKey.UnitSeconds);
+        BattleRoyaleKillCooldown = CustomOption.Normal(COID.BattleRoyaleKillCooldown, COType.BattleRoyale, TrKey.BattleRoyaleKillCooldown, 1f, 1f, 5f, 0.5f, format: TrKey.UnitSeconds);
+        BattleRoyaleVisionRange = CustomOption.Normal(COID.BattleRoyaleVisionRange, COType.BattleRoyale, TrKey.BattleRoyaleVisionRange, 1.5f, 0.25f, 2.0f, 0.25f, format: TrKey.UnitMultiplies);
         // BattleRoyaleButtonCooldown = CustomOption.Normal(5005, CustomOptionType.BattleRoyale, TrKey.BattleRoyaleButtonCooldown, 10f, 5f, 30f, 1f, format: TrKey.UnitSeconds);
         // BattleRoyaleButtonUsage = CustomOption.Normal(5006, CustomOptionType.BattleRoyale, TrKey.BattleRoyaleButtonUsage, 1f, 1f, 3f, 1f, format: TrKey.UnitTimes);
 
@@ -427,8 +427,8 @@ internal static class CustomOptionHolder
 
         #region HOT POTATO
 
-        HotPotatoTimeLimit = CustomOption.Normal(6001, CustomOptionType.HotPotato, TrKey.HotPotatoTimeLimit, 300f, 60f, 1800f, 60f, header: hotPotatoHeader, format: TrKey.UnitSeconds);
-        HotPotatoExplodeTime = CustomOption.Normal(6002, CustomOptionType.HotPotato, TrKey.HotPotatoExplodeTime, 30f, 10f, 120f, 5f, format: TrKey.UnitSeconds);
+        HotPotatoTimeLimit = CustomOption.Normal(COID.HotPotatoTimeLimit, COType.HotPotato, TrKey.HotPotatoTimeLimit, 300f, 60f, 1800f, 60f, header: hotPotatoHeader, format: TrKey.UnitSeconds);
+        HotPotatoExplodeTime = CustomOption.Normal(COID.HotPotatoExplodeTime, COType.HotPotato, TrKey.HotPotatoExplodeTime, 30f, 10f, 120f, 5f, format: TrKey.UnitSeconds);
 
         #endregion
 

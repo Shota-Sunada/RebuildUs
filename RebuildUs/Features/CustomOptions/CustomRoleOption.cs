@@ -5,17 +5,8 @@ internal class CustomRoleOption : CustomGeneralOption<string>
     internal bool IsRoleEnabled;
     internal CustomNumberOption NumberOfRoleOption;
 
-    internal CustomRoleOption(int baseId, CustomOptionType type, RoleType roleType, Color color, int max = 15, bool roleEnabled = true) :
-    base(baseId,
-        type,
-        Enum.TryParse(Enum.GetName(roleType), out TrKey key) ? key : TrKey.None,
-        Helpers.CastArray<string>(CustomOptionHolder.Rates),
-        CustomOptionHolder.Rates.Length > 0 ? (CustomOptionHolder.Rates[0] as string) ?? string.Empty : string.Empty,
-        null,
-        false,
-        TrKey.None,
-        color,
-        new CustomOptionHeader(baseId, type, Enum.TryParse(Enum.GetName(roleType), out TrKey key2) ? key2 : TrKey.None, color))
+    internal CustomRoleOption(COID baseId, COType type, RoleType roleType, Color color, int max = 15, bool roleEnabled = true)
+    : base(baseId, type, Enum.TryParse(Enum.GetName(roleType), out TrKey key) ? key : TrKey.None, Helpers.CastArray<string>(CustomOptionHolder.Rates), CustomOptionHolder.Rates.Length > 0 ? CustomOptionHolder.Rates[0] ?? string.Empty : string.Empty, null, false, TrKey.None, color, new CustomOptionHeader(type, Enum.TryParse(Enum.GetName(roleType), out TrKey key2) ? key2 : TrKey.None, color))
     {
         IsRoleEnabled = roleEnabled;
         UseSpawnChanceLabel = true;
@@ -31,16 +22,8 @@ internal class CustomRoleOption : CustomGeneralOption<string>
         }
     }
 
-    internal CustomRoleOption(int baseId, CustomOptionType type, TrKey nameKey, Color color, int max = 15, bool roleEnabled = true) : base(baseId,
-        type,
-        nameKey,
-        Helpers.CastArray<string>(CustomOptionHolder.Rates),
-        CustomOptionHolder.Rates.Length > 0 ? (CustomOptionHolder.Rates[0] as string) ?? string.Empty : string.Empty,
-        null,
-        false,
-        TrKey.None,
-        color,
-        new CustomOptionHeader(baseId, type, nameKey, color))
+    internal CustomRoleOption(COID baseId, COType type, TrKey nameKey, Color color, int max = 15, bool roleEnabled = true)
+    : base(baseId, type, nameKey, Helpers.CastArray<string>(CustomOptionHolder.Rates), CustomOptionHolder.Rates.Length > 0 ? CustomOptionHolder.Rates[0] ?? string.Empty : string.Empty, null, false, TrKey.None, color, new CustomOptionHeader(type, nameKey, color))
     {
         IsRoleEnabled = roleEnabled;
         UseSpawnChanceLabel = true;

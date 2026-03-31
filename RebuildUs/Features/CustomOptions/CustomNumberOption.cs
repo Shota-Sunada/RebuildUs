@@ -2,26 +2,8 @@ namespace RebuildUs.Features.CustomOptions;
 
 internal sealed class CustomNumberOption : CustomOption<float>
 {
-    internal CustomNumberOption(int id,
-                                CustomOptionType type,
-                                TrKey nameKey,
-                                float[] selections,
-                                float defaultValue,
-                                CustomOption parent,
-                                bool hideIfParentEnabled,
-                                TrKey format,
-                                Color color,
-                                CustomOptionHeader header = null) :
-        base(id,
-        type,
-        nameKey,
-        selections,
-        defaultValue,
-        parent,
-        hideIfParentEnabled,
-        format,
-        color,
-        header)
+    internal CustomNumberOption(COID id, COType type, TrKey nameKey, float[] selections, float defaultValue, CustomOption parent, bool hideIfParentEnabled, TrKey format, Color color, CustomOptionHeader header = null)
+    : base(id, type, nameKey, selections, defaultValue, parent, hideIfParentEnabled, format, color, header)
     { }
 
     internal override OptionBehaviour CreateOptionBehaviour(GameOptionsMenu menu)

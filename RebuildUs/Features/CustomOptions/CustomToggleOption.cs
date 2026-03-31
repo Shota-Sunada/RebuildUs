@@ -2,25 +2,8 @@ namespace RebuildUs.Features.CustomOptions;
 
 internal sealed class CustomToggleOption : CustomOption<bool>
 {
-    internal CustomToggleOption(int id,
-                                CustomOptionType type,
-                                TrKey nameKey,
-                                bool defaultValue,
-                                CustomOption parent,
-                                bool hideIfParentEnabled,
-                                TrKey format,
-                                Color color,
-                                CustomOptionHeader header = null) :
-        base(id,
-        type,
-        nameKey,
-        [false, true],
-        defaultValue,
-        parent,
-        hideIfParentEnabled,
-        format,
-        color,
-        header)
+    internal CustomToggleOption(COID id, COType type, TrKey nameKey, bool defaultValue, CustomOption parent, bool hideIfParentEnabled, TrKey format, Color color, CustomOptionHeader header = null)
+    : base(id, type, nameKey, [false, true], defaultValue, parent, hideIfParentEnabled, format, color, header)
     { }
 
     internal override OptionBehaviour CreateOptionBehaviour(GameOptionsMenu menu)

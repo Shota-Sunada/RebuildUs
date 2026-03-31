@@ -46,7 +46,7 @@ internal static partial class RPCProcedure
         {
             var id = reader.ReadPackedUInt32();
             var selection = reader.ReadPackedUInt32();
-            if (CustomOption.AllOptionsById.TryGetValue((int)id, out var option))
+            if (CustomOption.AllOptionsById.TryGetValue((COID)id, out var option))
             {
                 option.UpdateSelection((int)selection, option.GetOptionIcon());
             }

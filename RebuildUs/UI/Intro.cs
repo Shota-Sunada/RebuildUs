@@ -519,9 +519,9 @@ internal static class Intro
         Logger.LogInfo("[Settings] --------Advance Settings--------");
         foreach (var o in CustomOption.AllOptions)
         {
-            if (o.Parent == null ? !o.GetString().Equals("0%") : o.Parent.Enabled)
+            if (o.Parent == null ? !o.GetValueString().Equals("0%") : o.Parent.Enabled)
             {
-                Logger.LogInfo("[Settings] {0}:{1}", o.Parent == null ? o.NameKey : string.Format("┗ {0}", o.NameKey), o.GetString().RemoveHtml());
+                Logger.LogInfo("[Settings] {0}:{1}", o.Parent == null ? o.NameKey : string.Format("┗ {0}", o.NameKey), o.GetValueString().RemoveHtml());
             }
         }
 

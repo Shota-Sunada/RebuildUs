@@ -67,7 +67,7 @@ internal partial class CustomOption
                 break;
             case PanePage.General:
                 generalPaneButton.SelectButton(true);
-                DrawTab(__instance, CustomOptionType.General);
+                DrawTab(__instance, COType.General);
                 break;
             case PanePage.Overview:
                 overviewPaneButton.SelectButton(true);
@@ -75,31 +75,31 @@ internal partial class CustomOption
                 break;
             case PanePage.Impostor:
                 impostorPaneButton.SelectButton(true);
-                DrawTab(__instance, CustomOptionType.Impostor);
+                DrawTab(__instance, COType.Impostor);
                 break;
             case PanePage.Crewmate:
                 crewmatePaneButton.SelectButton(true);
-                DrawTab(__instance, CustomOptionType.Crewmate);
+                DrawTab(__instance, COType.Crewmate);
                 break;
             case PanePage.Neutral:
                 neutralPaneButton.SelectButton(true);
-                DrawTab(__instance, CustomOptionType.Neutral);
+                DrawTab(__instance, COType.Neutral);
                 break;
             case PanePage.Modifier:
                 modifierPaneButton.SelectButton(true);
-                DrawTab(__instance, CustomOptionType.Modifier);
+                DrawTab(__instance, COType.Modifier);
                 break;
             case PanePage.BattleRoyale:
                 battleRoyalePaneButton.SelectButton(true);
-                DrawTab(__instance, CustomOptionType.BattleRoyale);
+                DrawTab(__instance, COType.BattleRoyale);
                 break;
             case PanePage.HotPotato:
                 hotPotatoPaneButton.SelectButton(true);
-                DrawTab(__instance, CustomOptionType.HotPotato);
+                DrawTab(__instance, COType.HotPotato);
                 break;
             case PanePage.HideNSeek:
                 hideNSeekPaneButton.SelectButton(true);
-                DrawTab(__instance, CustomOptionType.HideNSeek);
+                DrawTab(__instance, COType.HideNSeek);
                 break;
             default:
                 Logger.LogWarn("[SetTab] Invalid Pane Page ID in SettingsPaneChangeTab: {0}", id);
@@ -120,7 +120,7 @@ internal partial class CustomOption
         __instance.scrollBar.ScrollToTop();
     }
 
-    private static void DrawTab(LobbyViewSettingsPane __instance, CustomOptionType type)
+    private static void DrawTab(LobbyViewSettingsPane __instance, COType type)
     {
         if (!OptionsByType.TryGetValue(type, out var options))
         {
@@ -215,7 +215,7 @@ internal partial class CustomOption
             viewSettingsInfoPanel.titleText.text = Tr.Get(viewName);
 
             if (option.UseSpawnChanceLabel
-                && option.Type is CustomOptionType.Neutral or CustomOptionType.Crewmate or CustomOptionType.Impostor or CustomOptionType.Modifier)
+                && option.Type is COType.Neutral or COType.Crewmate or COType.Impostor or COType.Modifier)
             {
                 viewSettingsInfoPanel.titleText.text = Tr.Get(TrKey.SpawnChance);
             }
@@ -232,7 +232,7 @@ internal partial class CustomOption
     private static void DrawOverviewTab(LobbyViewSettingsPane __instance)
     {
         List<CustomOption> options = [];
-        CustomOptionType[] targetTypes = [CustomOptionType.Impostor, CustomOptionType.Crewmate, CustomOptionType.Neutral, CustomOptionType.Modifier];
+        COType[] targetTypes = [COType.Impostor, COType.Crewmate, COType.Neutral, COType.Modifier];
         foreach (var type in targetTypes)
         {
             foreach (var option in AllOptions)
@@ -249,7 +249,7 @@ internal partial class CustomOption
         var singles = 1;
         var headers = 0;
         var lines = 0;
-        var currentType = (CustomOptionType)(-1);
+        var currentType = (COType)(-1);
 
         foreach (var option in options)
         {
@@ -272,10 +272,10 @@ internal partial class CustomOption
                 categoryHeaderMasked.SetHeader(StringNames.ImpostorsCategory, 61);
                 categoryHeaderMasked.Title.text = currentType switch
                 {
-                    CustomOptionType.Impostor => Tr.Get(TrKey.ImpostorRoles),
-                    CustomOptionType.Neutral => Tr.Get(TrKey.NeutralRoles),
-                    CustomOptionType.Crewmate => Tr.Get(TrKey.CrewmateRoles),
-                    CustomOptionType.Modifier => Tr.Get(TrKey.Modifiers),
+                    COType.Impostor => Tr.Get(TrKey.ImpostorRoles),
+                    COType.Neutral => Tr.Get(TrKey.NeutralRoles),
+                    COType.Crewmate => Tr.Get(TrKey.CrewmateRoles),
+                    COType.Modifier => Tr.Get(TrKey.Modifiers),
                     _ => Tr.Get(TrKey.Others),
                 };
                 categoryHeaderMasked.Title.outlineColor = Color.white;
@@ -321,7 +321,7 @@ internal partial class CustomOption
             viewSettingsInfoPanel.titleText.text = Helpers.Cs(option.Color, Tr.Get(optName));
             viewSettingsInfoPanel.titleText.outlineColor = Color.white;
             viewSettingsInfoPanel.titleText.outlineWidth = 0.1f;
-            if (option.Type == CustomOptionType.Modifier)
+            if (option.Type == COType.Modifier)
             {
                 viewSettingsInfoPanel.settingText.text = viewSettingsInfoPanel.settingText.text;
             }
@@ -356,15 +356,15 @@ internal partial class CustomOption
         _pageCountTextPane.fontSizeMin = 5.0f;
         __instance.StartCoroutine(Effects.Lerp(1f, new Action<float>(_ => { _pageCountTextPane?.text = string.Format(Tr.Get(TrKey.SettingPageInfo), _currentPanePage + 1, MAX_PAGE_PANE); })));
 
-        BUTTONS_PANE.Add((_generalPaneButton = CreateCustomButton(__instance, PanePage.General, "RUSettings", Tr.Get(TrKey.TabGeneral), CustomOptionType.General), Tr.Get(TrKey.TabGeneral)));
-        BUTTONS_PANE.Add((_overviewPaneButton = CreateCustomButton(__instance, PanePage.Overview, "RoleOverview", Tr.Get(TrKey.TabRolesOverview), (CustomOptionType)99), Tr.Get(TrKey.TabRolesOverview)));
-        BUTTONS_PANE.Add((_impostorPaneButton = CreateCustomButton(__instance, PanePage.Impostor, "ImpostorSettings", Tr.Get(TrKey.TabImpostor), CustomOptionType.Impostor), Tr.Get(TrKey.TabImpostor)));
-        BUTTONS_PANE.Add((_crewmatePaneButton = CreateCustomButton(__instance, PanePage.Crewmate, "CrewmateSettings", Tr.Get(TrKey.TabCrewmate), CustomOptionType.Crewmate), Tr.Get(TrKey.TabCrewmate)));
-        BUTTONS_PANE.Add((_neutralPaneButton = CreateCustomButton(__instance, PanePage.Neutral, "NeutralSettings", Tr.Get(TrKey.TabNeutral), CustomOptionType.Neutral), Tr.Get(TrKey.TabNeutral)));
-        BUTTONS_PANE.Add((_modifierPaneButton = CreateCustomButton(__instance, PanePage.Modifier, "ModifierSettings", Tr.Get(TrKey.TabModifiers), CustomOptionType.Modifier), Tr.Get(TrKey.TabModifiers)));
-        BUTTONS_PANE.Add((_battleRoyalePaneButton = CreateCustomButton(__instance, PanePage.BattleRoyale, "BattleRoyaleSettings", Tr.Get(TrKey.TabBattleRoyale), CustomOptionType.BattleRoyale), Tr.Get(TrKey.TabBattleRoyale)));
-        BUTTONS_PANE.Add((_hotPotatoPaneButton = CreateCustomButton(__instance, PanePage.HotPotato, "HotPotatoSettings", Tr.Get(TrKey.TabHotPotato), CustomOptionType.HotPotato), Tr.Get(TrKey.TabHotPotato)));
-        BUTTONS_PANE.Add((_hideNSeekPaneButton = CreateCustomButton(__instance, PanePage.HideNSeek, "HideNSeekSettings", Tr.Get(TrKey.TabHideNSeek), CustomOptionType.HideNSeek), Tr.Get(TrKey.TabHideNSeek)));
+        BUTTONS_PANE.Add((_generalPaneButton = CreateCustomButton(__instance, PanePage.General, "RUSettings", Tr.Get(TrKey.TabGeneral), COType.General), Tr.Get(TrKey.TabGeneral)));
+        BUTTONS_PANE.Add((_overviewPaneButton = CreateCustomButton(__instance, PanePage.Overview, "RoleOverview", Tr.Get(TrKey.TabRolesOverview), (COType)99), Tr.Get(TrKey.TabRolesOverview)));
+        BUTTONS_PANE.Add((_impostorPaneButton = CreateCustomButton(__instance, PanePage.Impostor, "ImpostorSettings", Tr.Get(TrKey.TabImpostor), COType.Impostor), Tr.Get(TrKey.TabImpostor)));
+        BUTTONS_PANE.Add((_crewmatePaneButton = CreateCustomButton(__instance, PanePage.Crewmate, "CrewmateSettings", Tr.Get(TrKey.TabCrewmate), COType.Crewmate), Tr.Get(TrKey.TabCrewmate)));
+        BUTTONS_PANE.Add((_neutralPaneButton = CreateCustomButton(__instance, PanePage.Neutral, "NeutralSettings", Tr.Get(TrKey.TabNeutral), COType.Neutral), Tr.Get(TrKey.TabNeutral)));
+        BUTTONS_PANE.Add((_modifierPaneButton = CreateCustomButton(__instance, PanePage.Modifier, "ModifierSettings", Tr.Get(TrKey.TabModifiers), COType.Modifier), Tr.Get(TrKey.TabModifiers)));
+        BUTTONS_PANE.Add((_battleRoyalePaneButton = CreateCustomButton(__instance, PanePage.BattleRoyale, "BattleRoyaleSettings", Tr.Get(TrKey.TabBattleRoyale), COType.BattleRoyale), Tr.Get(TrKey.TabBattleRoyale)));
+        BUTTONS_PANE.Add((_hotPotatoPaneButton = CreateCustomButton(__instance, PanePage.HotPotato, "HotPotatoSettings", Tr.Get(TrKey.TabHotPotato), COType.HotPotato), Tr.Get(TrKey.TabHotPotato)));
+        BUTTONS_PANE.Add((_hideNSeekPaneButton = CreateCustomButton(__instance, PanePage.HideNSeek, "HideNSeekSettings", Tr.Get(TrKey.TabHideNSeek), COType.HideNSeek), Tr.Get(TrKey.TabHideNSeek)));
 
         _currentPanePage = 0;
         RefreshPaneButtonVisibility(__instance);
@@ -414,7 +414,7 @@ internal partial class CustomOption
         }
     }
 
-    private static GameObject CreateCustomButton(LobbyViewSettingsPane __instance, PanePage id, string buttonName, string buttonLabel, CustomOptionType optionType)
+    private static GameObject CreateCustomButton(LobbyViewSettingsPane __instance, PanePage id, string buttonName, string buttonLabel, COType optionType)
     {
         var template = __instance.taskTabButton.gameObject;
         var buttonObj = UnityObject.Instantiate(template, template.transform.parent);
