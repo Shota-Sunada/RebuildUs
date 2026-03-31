@@ -15,6 +15,8 @@ internal static class ShipStatusPatch
         {
             default:
             case CustomGamemode.Normal:
+                if (!__instance.Systems.ContainsKey(SystemTypes.Electrical) && !Helpers.IsFungle || Helpers.IsHideNSeekMode) return true;
+
                 // If player is a role which has Impostor vision
                 if (player.Object.HasImpostorVision())
                 {
