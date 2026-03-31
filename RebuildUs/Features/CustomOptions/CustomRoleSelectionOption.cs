@@ -31,13 +31,18 @@ internal sealed class CustomRoleSelectionOption : CustomGeneralOption<string>
         DefaultSelection = index >= 0 ? index : 0;
         if (Id != 0)
         {
-            Entry = RebuildUs.Instance.Config.Bind(string.Format("Preset{0}", Preset), Id.ToString(), DefaultSelection);
-            Selection = Mathf.Clamp(Entry.Value, 0, strings.Length - 1);
+            var presetData = CustomOptionPresetManager.LoadPreset(Preset);
+            var value = DefaultSelection;
+            if (presetData.TryGetValue(Id.ToString(), out var savedIndex))
+            {
+                value = savedIndex;
+            }
+            Selection = Mathf.Clamp(value, 0, strings.Length - 1);
         }
         else
         {
-            Entry = RebuildUs.Instance.Config.Bind("General", "Selected Preset", DefaultSelection);
-            Selection = Mathf.Clamp(Entry.Value, 0, strings.Length - 1);
+            var savedIndex = CustomOptionPresetManager.LoadCurrentPresetIndex(DefaultSelection);
+            Selection = Mathf.Clamp(savedIndex, 0, strings.Length - 1);
             Preset = Selection;
         }
     }

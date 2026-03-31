@@ -41,6 +41,14 @@ internal static class Lovers
         return "";
     }
 
+    internal static void ActivateChat(HudManager hm)
+    {
+        if (hm?.Chat?.isActiveAndEnabled == false && (PlayerControl.LocalPlayer.IsLovers() && EnableChat))
+        {
+            hm?.Chat?.SetVisible(true);
+        }
+    }
+
     internal static void AddCouple(PlayerControl player1, PlayerControl player2)
     {
         List<Color> availableColors = [.. LoverIconColors];

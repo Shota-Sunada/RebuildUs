@@ -11,6 +11,7 @@ global using BepInEx.Unity.IL2CPP;
 global using UnityEngine;
 global using TMPro;
 global using System.Text;
+global using System.Text.Json;
 global using System.Reflection;
 global using System.Collections;
 global using System.Text.Json.Serialization;
@@ -61,7 +62,7 @@ public class RebuildUs : BasePlugin
 {
     private const string MOD_ID = "com.shota-sunada.rebuild-us";
     internal const string MOD_NAME = "Rebuild Us";
-    internal const string MOD_VERSION = "2.1.0";
+    internal const string MOD_VERSION = "2.2.0";
     internal const string MOD_DEVELOPER = "Shota Sunada";
 
     private const string REACTOR_GUID = "gg.reactor-sunada.api";

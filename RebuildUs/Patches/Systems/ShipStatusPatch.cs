@@ -3,9 +3,6 @@ namespace RebuildUs.Patches;
 [HarmonyPatch]
 internal static class ShipStatusPatch
 {
-    private static SwitchSystem _cachedSwitchSystem;
-    private static ShipStatus _lastShipStatus;
-
     private static int _originalNumCommonTasksOption;
     private static int _originalNumShortTasksOption;
     private static int _originalNumLongTasksOption;
@@ -18,23 +15,18 @@ internal static class ShipStatusPatch
         {
             default:
             case CustomGamemode.Normal:
-                if (!__instance.Systems.ContainsKey(SystemTypes.Electrical) && !Helpers.IsFungle || Helpers.IsHideNSeekMode)
-                {
-                    return true;
-                }
-
                 // If player is a role which has Impostor vision
                 if (player.Object.HasImpostorVision())
                 {
-                    __result = GetNeutralLightRadius(__instance, true);
+                    __result = GetNeutralLightRadius(true);
                     return false;
                 }
 
                 // If player is Lighter with ability active
                 if (PlayerControl.LocalPlayer.IsRole(RoleType.Lighter) && Lighter.IsLightActive(PlayerControl.LocalPlayer))
                 {
-                    var unLerp = Mathf.InverseLerp(__instance.MinLightRadius, __instance.MaxLightRadius, GetNeutralLightRadius(__instance, true));
-                    __result = Mathf.Lerp(__instance.MaxLightRadius * Lighter.ModeLightsOffVision, __instance.MaxLightRadius * Lighter.ModeLightsOnVision, unLerp);
+                    var unLerp = Mathf.InverseLerp(MapUtilities.CachedShipStatus.MinLightRadius, MapUtilities.CachedShipStatus.MaxLightRadius, GetNeutralLightRadius(true));
+                    __result = Mathf.Lerp(MapUtilities.CachedShipStatus.MaxLightRadius * Lighter.ModeLightsOffVision, MapUtilities.CachedShipStatus.MaxLightRadius * Lighter.ModeLightsOnVision, unLerp);
                     return false;
                 }
 
@@ -42,7 +34,7 @@ internal static class ShipStatusPatch
                 if (Trickster.Exists && Trickster.LightsOutTimer > 0f)
                 {
                     var lerpValue = 1f;
-                    if (Trickster.LightsOutDuration - Trickster.LightsOutTimer < 0.5f)
+                    if ((Trickster.LightsOutDuration - Trickster.LightsOutTimer) < 0.5f)
                     {
                         lerpValue = Mathf.Clamp01((Trickster.LightsOutDuration - Trickster.LightsOutTimer) * 2);
                     }
@@ -51,12 +43,12 @@ internal static class ShipStatusPatch
                         lerpValue = Mathf.Clamp01(Trickster.LightsOutTimer * 2);
                     }
 
-                    __result = Mathf.Lerp(__instance.MinLightRadius, __instance.MaxLightRadius, 1 - lerpValue) * FloatOptionNames.CrewLightMod.Get();
+                    __result = Mathf.Lerp(MapUtilities.CachedShipStatus.MinLightRadius, MapUtilities.CachedShipStatus.MaxLightRadius, 1 - lerpValue) * FloatOptionNames.CrewLightMod.Get();
                     return false;
                 }
 
                 // Default light radius
-                __result = GetNeutralLightRadius(__instance, false);
+                __result = GetNeutralLightRadius(false);
                 break;
             case CustomGamemode.BattleRoyale:
                 __result = CustomOptionHolder.BattleRoyaleVisionRange.GetFloat();
@@ -66,7 +58,7 @@ internal static class ShipStatusPatch
         return false;
     }
 
-    private static float GetNeutralLightRadius(ShipStatus shipStatus, bool isImpostor)
+    private static float GetNeutralLightRadius(bool isImpostor)
     {
         if (SubmergedCompatibility.IsSubmerged)
         {
@@ -75,31 +67,16 @@ internal static class ShipStatusPatch
 
         if (isImpostor)
         {
-            return shipStatus.MaxLightRadius * Helpers.Get(FloatOptionNames.ImpostorLightMod);
+            return MapUtilities.CachedShipStatus.MaxLightRadius * Helpers.Get(FloatOptionNames.ImpostorLightMod);
         }
 
         var lerpValue = 1.0f;
-        UpdateCachedSystems(shipStatus);
-        if (_cachedSwitchSystem != null)
+        if (MapUtilities.Systems.TryGetValue(SystemTypes.Electrical, out var system))
         {
-            lerpValue = _cachedSwitchSystem.Value / 255f;
+            lerpValue = system.CastFast<SwitchSystem>().Value / 255f;
         }
 
-        return Mathf.Lerp(shipStatus.MinLightRadius, shipStatus.MaxLightRadius, lerpValue) * Helpers.Get(FloatOptionNames.CrewLightMod);
-    }
-
-    private static void UpdateCachedSystems(ShipStatus instance)
-    {
-        if (_lastShipStatus == instance && _cachedSwitchSystem != null)
-        {
-            return;
-        }
-        _lastShipStatus = instance;
-        _cachedSwitchSystem = null;
-        if (instance != null && instance.Systems != null && instance.Systems.TryGetValue(SystemTypes.Electrical, out var system))
-        {
-            _cachedSwitchSystem = system.CastFast<SwitchSystem>();
-        }
+        return Mathf.Lerp(MapUtilities.CachedShipStatus.MinLightRadius, MapUtilities.CachedShipStatus.MaxLightRadius, lerpValue) * Helpers.Get(FloatOptionNames.CrewLightMod);
     }
 
     [HarmonyPrefix]

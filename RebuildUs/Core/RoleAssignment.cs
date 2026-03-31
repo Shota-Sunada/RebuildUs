@@ -344,7 +344,7 @@ internal static class RoleAssignment
             _blockLovers.Add((byte)RoleType.Snitch);
         }
 
-        if (!CustomOptionHolder.ArsonistCanBeLovers.GetBool())
+        if (!Arsonist.CanBeLovers)
         {
             _blockLovers.Add((byte)RoleType.Arsonist);
         }
@@ -431,15 +431,15 @@ internal static class RoleAssignment
             {
                 // ここで例外的な役職を個別に弾く
                 case RoleType.Godfather
-                     or RoleType.Mafioso
-                     or RoleType.Janitor
-                     or RoleType.NiceGuesser
-                     or RoleType.EvilGuesser
-                     or RoleType.NiceSwapper
-                     or RoleType.EvilSwapper
-                     or RoleType.Shifter
-                     or RoleType.Lovers
-                     or RoleType.Sidekick:
+                    or RoleType.Mafioso
+                    or RoleType.Janitor
+                    or RoleType.NiceGuesser
+                    or RoleType.EvilGuesser
+                    or RoleType.NiceSwapper
+                    or RoleType.EvilSwapper
+                    or RoleType.Shifter
+                    or RoleType.Lovers
+                    or RoleType.Sidekick:
                 // Spyはインポスターが1人以下の時は出現しない
                 case RoleType.Spy when impostors.Count <= 1:
                     continue;

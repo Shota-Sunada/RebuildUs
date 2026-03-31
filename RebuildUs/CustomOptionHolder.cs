@@ -326,11 +326,13 @@ internal static class CustomOptionHolder
         JesterCanCallEmergency = CustomOption.Normal(COID.JesterCanCallEmergency, COType.Neutral, TrKey.JesterCanCallEmergency, true, JesterSpawnRate);
         JesterCanSabotage = CustomOption.Normal(COID.JesterCanSabotage, COType.Neutral, TrKey.JesterCanSabotage, true, JesterSpawnRate);
         JesterHasImpostorVision = CustomOption.Normal(COID.JesterHasImpostorVision, COType.Neutral, TrKey.JesterHasImpostorVision, false, JesterSpawnRate);
+        JesterCanFixSabotage = CustomOption.Normal(COID.JesterCanFixSabotage, COType.Neutral, TrKey.JesterCanFixSabotage, false, JesterSpawnRate);
 
         ArsonistSpawnRate = new(COID.ArsonistSpawnRate, COType.Neutral, RoleType.Arsonist, Arsonist.Color, 1);
         ArsonistCooldown = CustomOption.Normal(COID.ArsonistCooldown, COType.Neutral, TrKey.ArsonistCooldown, 12.5f, 2.5f, 60f, 2.5f, ArsonistSpawnRate, format: TrKey.UnitSeconds);
         ArsonistDuration = CustomOption.Normal(COID.ArsonistDuration, COType.Neutral, TrKey.ArsonistDuration, 3f, 0f, 10f, 1f, ArsonistSpawnRate, format: TrKey.UnitSeconds);
         ArsonistCanBeLovers = CustomOption.Normal(COID.ArsonistCanBeLovers, COType.Neutral, TrKey.ArsonistCanBeLovers, false, ArsonistSpawnRate);
+        ArsonistCanFixSabotage = CustomOption.Normal(COID.ArsonistCanFixSabotage, COType.Neutral, TrKey.ArsonistCanFixSabotage, false, ArsonistSpawnRate);
 
         VultureSpawnRate = new(COID.VultureSpawnRate, COType.Neutral, RoleType.Vulture, Vulture.Color, 1);
         VultureCooldown = CustomOption.Normal(COID.VultureCooldown, COType.Neutral, TrKey.VultureCooldown, 15f, 2.5f, 60f, 2.5f, VultureSpawnRate, format: TrKey.UnitSeconds);
@@ -778,11 +780,13 @@ internal static class CustomOptionHolder
     internal static CustomOption JesterCanCallEmergency;
     internal static CustomOption JesterCanSabotage;
     internal static CustomOption JesterHasImpostorVision;
+    internal static CustomOption JesterCanFixSabotage;
 
     internal static CustomRoleOption ArsonistSpawnRate;
     internal static CustomOption ArsonistCooldown;
     internal static CustomOption ArsonistDuration;
     internal static CustomOption ArsonistCanBeLovers;
+    internal static CustomOption ArsonistCanFixSabotage;
 
     internal static CustomRoleOption VultureSpawnRate;
     internal static CustomOption VultureCooldown;

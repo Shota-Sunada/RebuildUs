@@ -217,8 +217,10 @@ internal static class RoleHelpers
             PlayerModifier.AllModifiers.DoIf(x => x.Player == player, x => ModEventDispatcher.DispatchOnDeath(x, killer));
 
             // Lover suicide trigger on exile/death
-            // if (player.isLovers())
-            //     Lovers.killLovers(player, killer);
+            if (player.IsLovers())
+            {
+                Lovers.KillLovers(player, killer);
+            }
 
             if (MeetingHud.Instance?.state != MeetingHud.VoteStates.Animating)
             {

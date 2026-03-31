@@ -333,6 +333,8 @@ internal static class PlayerControlExtensions
             return (player.IsRole(RoleType.Jackal) || isFormerJackal) && Jackal.HasImpostorVision
                 || player.IsRole(RoleType.Sidekick) && Sidekick.HasImpostorVision
                 || player.IsRole(RoleType.Spy) && Spy.HasImpostorVision
+                || player.HasModifier(ModifierType.Madmate) && Madmate.HasImpostorVision
+                || player.HasModifier(ModifierType.CreatedMadmate) && EvilHacker.CreatedMadmateHasImpostorVision
                 || player.IsRole(RoleType.Jester) && Jester.HasImpostorVision;
         }
 

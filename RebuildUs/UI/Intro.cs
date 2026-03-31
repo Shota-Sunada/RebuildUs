@@ -478,7 +478,7 @@ internal static class Intro
             yield break;
         }
 
-        var infos = RoleInfo.GetRoleInfoForPlayer(PlayerControl.LocalPlayer, false, [RoleType.Lovers]);
+        var infos = RoleInfo.GetRoleInfoForPlayer(PlayerControl.LocalPlayer, false, []);
         RoleInfo roleInfo = null;
         var infoEnumerator = infos.GetEnumerator();
         if (infoEnumerator.MoveNext())
@@ -572,8 +572,8 @@ internal static class Intro
         if (hasLovers)
         {
             var otherLover = PlayerControl.LocalPlayer.GetPartner();
-            // __instance.RoleBlurbText.text += string.Format("\n{0}", Helpers.Cs(Lovers.Color, string.Format(Tr.Get(TrKey.LoversFlavorIntroDesc), otherLover?.Data?.PlayerName ?? "")));
-            __instance.RoleBlurbText.text = string.Format("{0}\n{1}", __instance.RoleBlurbText.text, Helpers.Cs(Lovers.Color, string.Format(Tr.Get(TrKey.LoversFlavorIntroDesc), otherLover?.Data?.PlayerName ?? "")));
+            __instance.RoleBlurbText.text += string.Format("\n{0}", Helpers.Cs(Lovers.Color, string.Format(Tr.Get(TrKey.LoversFlavorIntroDesc), otherLover?.Data?.PlayerName ?? "")));
+            // __instance.RoleBlurbText.text = string.Format("{0}\n{1}", __instance.RoleBlurbText.text, Helpers.Cs(Lovers.Color, string.Format(Tr.Get(TrKey.LoversFlavorIntroDesc), otherLover?.Data?.PlayerName ?? "")));
         }
 
         if (GameModeManager.CurrentGameMode != CustomGamemode.Normal)

@@ -17,19 +17,6 @@ internal sealed class PlayerStatistics
     internal int TeamImpostorLovers { get; set; }
     internal int TeamJackalLovers { get; set; }
 
-    private bool IsLover(NetworkedPlayerInfo p)
-    {
-        foreach (var couple in Lovers.Couples)
-        {
-            if (p.PlayerId == couple.Lover1.PlayerId || p.PlayerId == couple.Lover2.PlayerId)
-            {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
     private void GetPlayerCounts()
     {
         var numJackalAlive = 0;
@@ -44,8 +31,7 @@ internal sealed class PlayerStatistics
         var jackalLovers = 0;
 
         HashSet<byte> loversId = [];
-        var couples = Lovers.Couples;
-        foreach (var couple in couples)
+        foreach (var couple in Lovers.Couples)
         {
             if (couple == null)
             {
@@ -61,31 +47,17 @@ internal sealed class PlayerStatistics
 
         foreach (var playerInfo in GameData.Instance.AllPlayers.GetFastEnumerator())
         {
-            if (playerInfo == null)
-            {
-                continue;
-            }
+            if (playerInfo == null) continue;
             var obj = playerInfo.Object;
 
-            if (playerInfo.Disconnected)
-            {
-                continue;
-            }
-            if (obj != null && obj.IsTeamCrewmate())
-            {
-                numCrewmate++;
-            }
-            if (playerInfo.IsDead || obj != null && obj.IsGm())
-            {
-                continue;
-            }
+            if (playerInfo.Disconnected) continue;
+            if (obj != null && obj.IsTeamCrewmate()) numCrewmate++;
+            if (playerInfo.IsDead || obj != null && obj.IsGm()) continue;
+
             numTotalAlive++;
 
             var lover = loversId.Contains(playerInfo.PlayerId);
-            if (lover)
-            {
-                numLoversAlive++;
-            }
+            if (lover) numLoversAlive++;
 
             if (playerInfo.Role.IsImpostor)
             {

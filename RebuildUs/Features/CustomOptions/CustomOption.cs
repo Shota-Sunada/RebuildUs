@@ -76,7 +76,6 @@ internal partial class CustomOption
     protected OptionBehaviour _optionBehavior;
     internal Color Color;
     internal int DefaultSelection;
-    internal ConfigEntry<int> Entry;
     internal TrKey Format;
     internal bool UseSpawnChanceLabel;
 
@@ -245,6 +244,7 @@ internal partial class CustomOption
     private static void SwitchPreset(int newPreset)
     {
         Preset = newPreset;
+        var presetData = CustomOptionPresetManager.LoadPreset(Preset);
         foreach (var option in AllOptions)
         {
             if (option.Id == 0)
@@ -252,8 +252,12 @@ internal partial class CustomOption
                 continue;
             }
 
-            option.Entry = Instance.Config.Bind(string.Format("Preset{0}", Preset), option.Id.ToString(), option.DefaultSelection);
-            option.SetSelectionIndex(Mathf.Clamp(option.Entry.Value, 0, option.GetSelections().Length - 1));
+            var selection = option.DefaultSelection;
+            if (presetData.TryGetValue(option.Id.ToString(), out var savedIndex))
+            {
+                selection = savedIndex;
+            }
+            option.SetSelectionIndex(Mathf.Clamp(selection, 0, option.GetSelections().Length - 1));
             option.SyncOptionBehaviourValue();
         }
 
@@ -303,6 +307,17 @@ internal partial class CustomOption
                 sender.WritePacked(Convert.ToUInt32(option.GetSelectionIndex()));
             }
         }
+    }
+
+    private static void SaveToPreset()
+    {
+        var presetData = new Dictionary<string, int>();
+        foreach (var option in AllOptions)
+        {
+            if (option.Id == 0) continue;
+            presetData[option.Id.ToString()] = option.GetSelectionIndex();
+        }
+        CustomOptionPresetManager.SavePreset(Preset, presetData);
     }
 
     // Getter
@@ -384,10 +399,9 @@ internal partial class CustomOption
 
         if (AmongUsClient.Instance?.AmHost == true && PlayerControl.LocalPlayer)
         {
-            Entry?.Value = GetSelectionIndex();
-
             if (Id == 0)
             {
+                CustomOptionPresetManager.SaveCurrentPresetIndex(GetSelectionIndex());
                 if (GetSelectionIndex() != Preset)
                 {
                     SwitchPreset(GetSelectionIndex());
@@ -396,6 +410,7 @@ internal partial class CustomOption
             }
             else
             {
+                SaveToPreset();
                 ShareOptionChange((uint)Id);
             }
         }
@@ -1032,10 +1047,7 @@ internal partial class CustomOption
             return;
         }
 
-        foreach (var option in AllOptions)
-        {
-            option.Entry?.Value = option.GetSelectionIndex();
-        }
+        SaveToPreset();
 
         GameManager.Instance.LogicOptions.SyncOptions();
         ShareOptionSelections();
@@ -1148,13 +1160,18 @@ internal class CustomOption<T> : CustomOption
 
         if (id != 0)
         {
-            Entry = Instance.Config.Bind(string.Format("Preset{0}", Preset), id.ToString(), DefaultSelection);
-            Selection = Mathf.Clamp(Entry.Value, 0, selections.Length - 1);
+            var presetData = CustomOptionPresetManager.LoadPreset(Preset);
+            var value = DefaultSelection;
+            if (presetData.TryGetValue(id.ToString(), out var savedIndex))
+            {
+                value = savedIndex;
+            }
+            Selection = Mathf.Clamp(value, 0, selections.Length - 1);
         }
         else
         {
-            Entry = Instance.Config.Bind("General", "Selected Preset", DefaultSelection);
-            Selection = Mathf.Clamp(Entry.Value, 0, selections.Length - 1);
+            var savedIndex = CustomOptionPresetManager.LoadCurrentPresetIndex(DefaultSelection);
+            Selection = Mathf.Clamp(savedIndex, 0, selections.Length - 1);
             Preset = Selection;
         }
     }

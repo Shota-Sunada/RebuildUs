@@ -12,10 +12,7 @@ internal static class HudManagerPatch
     [HarmonyPatch(typeof(HudManager), nameof(HudManager.Update))]
     internal static void UpdatePostfix(HudManager __instance)
     {
-        if (!Helpers.IsGameStarted)
-        {
-            return;
-        }
+        if (!Helpers.IsGameStarted) return;
 
         try
         {
@@ -31,6 +28,8 @@ internal static class HudManagerPatch
             Hacker.HackerTimer -= Time.deltaTime;
             Trickster.LightsOutTimer -= Time.deltaTime;
             Tracker.CorpsesTrackingTimer -= Time.deltaTime;
+
+            Lovers.ActivateChat(__instance);
         }
         catch (Exception ex)
         {

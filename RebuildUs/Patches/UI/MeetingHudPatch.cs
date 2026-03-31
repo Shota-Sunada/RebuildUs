@@ -43,10 +43,7 @@ internal static class MeetingHudPatch
 
     [HarmonyPostfix]
     [HarmonyPatch(typeof(MeetingHud), nameof(MeetingHud.VotingComplete))]
-    internal static void VotingCompletePostfix(MeetingHud __instance,
-                                               Il2CppStructArray<MeetingHud.VoterState> states,
-                                               NetworkedPlayerInfo exiled,
-                                               bool tie)
+    internal static void VotingCompletePostfix(MeetingHud __instance, Il2CppStructArray<MeetingHud.VoterState> states, NetworkedPlayerInfo exiled, bool tie)
     {
         Meeting.VotingComplete(__instance, states, exiled, tie);
     }

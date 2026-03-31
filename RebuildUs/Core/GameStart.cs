@@ -321,6 +321,7 @@ internal static class GameStart
         else
         {
             CustomOption.CoSpawnSyncSettings();
+            CustomOptionPresetManager.SaveAllPresets();
         }
 
         if (!CustomOptionHolder.RandomMap.GetBool() || !continueStart)

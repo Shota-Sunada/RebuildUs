@@ -374,16 +374,10 @@ internal static partial class RPCProcedure
     internal static void ErasePlayerRoles(byte playerId, bool ignoreLovers = false, bool clearNeutralTasks = true)
     {
         var player = Helpers.PlayerById(playerId);
-        if (player == null)
-        {
-            return;
-        }
+        if (player == null) return;
 
         // Don't give a former neutral role tasks because that destroys the balance.
-        if (player.IsNeutral() && clearNeutralTasks)
-        {
-            player.ClearAllTasks();
-        }
+        if (player.IsNeutral() && clearNeutralTasks) player.ClearAllTasks();
 
         player.EraseAllRoles();
         player.EraseAllModifiers();
@@ -1164,6 +1158,7 @@ internal static partial class RPCProcedure
             {
                 Logger.LogInfo("DeathPopup success.");
             }
+            else if (result == DeathPopup.RESULT_PLAYER_ALREADY_SHOWN) { }
             else
             {
                 Logger.LogInfo("DeathPopup failed: {0}", DeathPopup.ExplainResult(result));

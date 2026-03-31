@@ -370,7 +370,7 @@ internal abstract class CustomOverlays
         foreach (var option in CustomOption.AllOptions)
         {
             if (IsCommonOption(option)) continue;
-            if (option.Parent != null) continue;
+            if (option.Parent != null || !option.Enabled) continue;
 
             sb.Clear();
             switch (GameModeManager.CurrentGameMode)

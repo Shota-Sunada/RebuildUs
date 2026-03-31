@@ -13,9 +13,12 @@ internal static class DeathPopup
     private const int RESULT_MISSING_PARENT = 1 << 3;
     private const int RESULT_FALLBACK_UNAVAILABLE = 1 << 4;
     private const int RESULT_INSTANTIATION_FAILED = 1 << 5;
+    internal const int RESULT_PLAYER_ALREADY_SHOWN = 1 << 6;
 
     private static readonly FieldInfo AnyDeathPopupPrefabField = FindDeathPopupField(typeof(HideAndSeekManager));
     private static readonly FieldInfo LogicPopupPrefabField = FindDeathPopupField(typeof(LogicHnSDeathPopup));
+
+    private static List<byte> ShownPlayerIds = [];
 
     private static FieldInfo FindDeathPopupField(Type type)
     {
@@ -42,6 +45,7 @@ internal static class DeathPopup
         _cachedPrefab = null;
         _cachedParent = null;
         _lastPrefabResolveFrame = -RESOLVE_RETRY_INTERVAL_FRAMES;
+        ShownPlayerIds = [];
     }
 
     internal static int TryShow(PlayerControl deadPlayer)
@@ -78,6 +82,12 @@ internal static class DeathPopup
         {
             return RESULT_INVALID_DEATH_INDEX;
         }
+        if (ShownPlayerIds.Contains(deadPlayer.PlayerId))
+        {
+            return RESULT_PLAYER_ALREADY_SHOWN;
+        }
+
+        ShownPlayerIds.Add(deadPlayer.PlayerId);
 
         var prefab = GetOrResolvePrefab();
         var parent = GetOrResolveParent();
@@ -114,8 +124,7 @@ internal static class DeathPopup
         return resolveError | RESULT_FALLBACK_UNAVAILABLE;
     }
 
-    internal static HideAndSeekDeathPopup ResolvePrefab(HideAndSeekManager hideAndSeekManager = null,
-                                                        HideAndSeekManager hideAndSeekManagerPrefab = null)
+    internal static HideAndSeekDeathPopup ResolvePrefab(HideAndSeekManager hideAndSeekManager = null, HideAndSeekManager hideAndSeekManagerPrefab = null)
     {
         if (hideAndSeekManager != null)
         {
@@ -264,6 +273,10 @@ internal static class DeathPopup
         if ((result & RESULT_INSTANTIATION_FAILED) != 0)
         {
             sb.Append("instantiation-failed,");
+        }
+        if ((result & RESULT_PLAYER_ALREADY_SHOWN) != 0)
+        {
+            sb.Append("player-already-shown,");
         }
         if (sb.Length > 0)
         {

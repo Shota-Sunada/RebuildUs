@@ -58,10 +58,8 @@ internal static class ExileControllerPatch
             // We need to send the RPC from the host here, to make sure that the order of shifting and erasing is correct (for that reason the futureShifted and futureErased are being synced)
             foreach (var target in Eraser.FutureErased)
             {
-                if (target == null || !target.CanBeErased())
-                {
-                    continue;
-                }
+                if (target == null || !target.CanBeErased()) continue;
+
                 using RPCSender sender = new(PlayerControl.LocalPlayer.NetId, CustomRPC.ErasePlayerRoles);
                 sender.Write(target.PlayerId);
                 RPCProcedure.ErasePlayerRoles(target.PlayerId);
@@ -81,10 +79,7 @@ internal static class ExileControllerPatch
         {
             var exiledPlayer = player?.Object;
             var exiledIsWitch = exiledPlayer != null && exiledPlayer.IsRole(RoleType.Witch);
-            var witchDiesWithExiledLover = exiledPlayer != null
-                                            && Lovers.BothDie
-                                            && exiledPlayer.IsLovers()
-                                            && exiledPlayer.GetPartner()?.IsRole(RoleType.Witch) == true;
+            var witchDiesWithExiledLover = exiledPlayer != null && Lovers.BothDie && exiledPlayer.IsLovers() && exiledPlayer.GetPartner()?.IsRole(RoleType.Witch) == true;
 
             if ((witchDiesWithExiledLover || exiledIsWitch) && Witch.VoteSavesTargets)
             {

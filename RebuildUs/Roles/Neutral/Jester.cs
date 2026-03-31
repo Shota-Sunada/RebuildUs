@@ -16,6 +16,7 @@ internal class Jester : SingleRoleBase<Jester>
     internal static bool CanCallEmergency { get => CustomOptionHolder.JesterCanCallEmergency.GetBool(); }
     internal static bool CanSabotage { get => CustomOptionHolder.JesterCanSabotage.GetBool(); }
     internal static bool HasImpostorVision { get => CustomOptionHolder.JesterHasImpostorVision.GetBool(); }
+    internal static bool CanFixSabotage { get => CustomOptionHolder.JesterHasImpostorVision.GetBool(); }
 
     internal static void Clear()
     {

@@ -116,6 +116,15 @@ internal static partial class EndGameMain
                 if (Jackal.Exists) notWinners.Add(Jackal.PlayerControl);
                 if (Sidekick.Exists) notWinners.Add(Sidekick.PlayerControl);
 
+                if (Lovers.SeparateTeam)
+                {
+                    foreach (var couple in Lovers.Couples)
+                    {
+                        notWinners.Add(couple.Lover1);
+                        notWinners.Add(couple.Lover2);
+                    }
+                }
+
                 var sabotageWin = gameOverReason is GameOverReason.ImpostorsBySabotage;
                 var impostorWin = gameOverReason is GameOverReason.ImpostorsByVote or GameOverReason.ImpostorsByKill or GameOverReason.ImpostorDisconnect;
                 var crewmateWin = gameOverReason is GameOverReason.CrewmatesByVote or GameOverReason.CrewmatesByTask or GameOverReason.CrewmateDisconnect;

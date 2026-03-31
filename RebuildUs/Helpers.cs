@@ -478,26 +478,11 @@ internal static class Helpers
 
     internal static bool HidePlayerName(PlayerControl source, PlayerControl target)
     {
-        if (source == target)
-        {
-            return false;
-        }
-        if (source == null || target == null)
-        {
-            return true;
-        }
-        if (source.IsDead())
-        {
-            return false;
-        }
-        if (target.IsDead())
-        {
-            return true;
-        }
-        if (Camouflager.CamouflageTimer > 0f)
-        {
-            return true;
-        }
+        if (source == target) return false;
+        if (source == null || target == null) return true;
+        if (source.IsDead()) return false;
+        if (target.IsDead()) return true;
+        if (Camouflager.CamouflageTimer > 0f) return true;
 
         if (MapSettings.HideOutOfSightNametags && IsGameStarted && MapUtilities.CachedShipStatus != null)
         {
@@ -505,33 +490,13 @@ internal static class Helpers
             var distance = Vector3.Distance(source.transform.position, target.transform.position);
             var blocked = PhysicsHelpers.AnythingBetween(source.GetTruePosition(), target.GetTruePosition(), Constants.ShadowMask, false);
 
-            if (distance > MapUtilities.CachedShipStatus.CalculateLightRadius(source.Data) * distMod || blocked)
-            {
-                return true;
-            }
+            if (distance > MapUtilities.CachedShipStatus.CalculateLightRadius(source.Data) * distMod || blocked) return true;
         }
 
-        if (!MapSettings.HidePlayerNames)
-        {
-            return false;
-        }
-        if (source.IsTeamImpostor()
-            && (target.IsTeamImpostor()
-                || target.IsRole(RoleType.Spy)
-                || target.IsRole(RoleType.Sidekick) && Sidekick.Instance.WasTeamRed
-                || target.IsRole(RoleType.Jackal) && Jackal.Instance.WasTeamRed))
-        {
-            return false;
-        }
-        if (source.GetPartner() == target)
-        {
-            return false;
-        }
-        if ((source.IsRole(RoleType.Jackal) || source.IsRole(RoleType.Sidekick))
-            && (target.IsRole(RoleType.Jackal) || target.IsRole(RoleType.Sidekick) || target == Jackal.Instance.FakeSidekick))
-        {
-            return false;
-        }
+        if (!MapSettings.HidePlayerNames) return false;
+        if (source.IsTeamImpostor() && (target.IsTeamImpostor() || target.IsRole(RoleType.Spy) || target.IsRole(RoleType.Sidekick) && Sidekick.Instance.WasTeamRed || target.IsRole(RoleType.Jackal) && Jackal.Instance.WasTeamRed)) return false;
+        if (source.GetPartner() == target) return false;
+        if ((source.IsRole(RoleType.Jackal) || source.IsRole(RoleType.Sidekick)) && (target.IsRole(RoleType.Jackal) || target.IsRole(RoleType.Sidekick) || target == Jackal.Instance.FakeSidekick)) return false;
 
         return true;
     }
@@ -768,35 +733,14 @@ internal static class Helpers
         var isReactor = taskType is TaskTypes.StopCharles or TaskTypes.ResetSeismic or TaskTypes.ResetReactor;
         var isO2 = taskType == TaskTypes.RestoreOxy;
 
-        if (pc.IsRole(RoleType.NiceSwapper) && (isLights || isComms))
-        {
-            return true;
-        }
-
-        if (pc.HasModifier(ModifierType.Madmate) && (isLights || isComms && !Madmate.CanFixComm))
-        {
-            return true;
-        }
-
-        if (pc.HasModifier(ModifierType.CreatedMadmate) && (isLights || isComms && !CreatedMadmate.CanFixComm))
-        {
-            return true;
-        }
-
-        if (pc.IsGm() && (isLights || isComms || isReactor || isO2))
-        {
-            return true;
-        }
-
-        if (pc.IsRole(RoleType.Mafioso) && !Mafia.Mafioso.CanRepair && (isLights || isComms))
-        {
-            return true;
-        }
-
-        if (pc.IsRole(RoleType.Janitor) && !Mafia.Janitor.CanRepair && (isLights || isComms))
-        {
-            return true;
-        }
+        if (pc.IsRole(RoleType.NiceSwapper) && (isLights || isComms)) return true;
+        if (pc.HasModifier(ModifierType.Madmate) && (isLights || isComms && !Madmate.CanFixComm)) return true;
+        if (pc.HasModifier(ModifierType.CreatedMadmate) && (isLights || isComms && !CreatedMadmate.CanFixComm)) return true;
+        if (pc.IsGm() && (isLights || isComms || isReactor || isO2)) return true;
+        if (pc.IsRole(RoleType.Mafioso) && !Mafia.Mafioso.CanRepair && (isLights || isComms)) return true;
+        if (pc.IsRole(RoleType.Janitor) && !Mafia.Janitor.CanRepair && (isLights || isComms)) return true;
+        if (pc.IsRole(RoleType.Jester) && !Jester.CanFixSabotage && (isLights || isComms || isReactor || isO2)) return true;
+        if (pc.IsRole(RoleType.Arsonist) && !Arsonist.CanFixSabotage && (isLights || isComms || isReactor || isO2)) return true;
 
         return false;
     }

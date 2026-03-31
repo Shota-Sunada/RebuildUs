@@ -15,7 +15,10 @@ internal static class AmongUsClientPatch
 
     [HarmonyPrefix]
     [HarmonyPatch(typeof(AmongUsClient), nameof(AmongUsClient.ExitGame))]
-    internal static void ExitGamePrefix() { }
+    internal static void ExitGamePrefix()
+    {
+        CustomOptionPresetManager.SaveAllPresets();
+    }
 
     [HarmonyPrefix]
     [HarmonyPatch(typeof(AmongUsClient), nameof(AmongUsClient.OnGameEnd))]

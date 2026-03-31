@@ -246,7 +246,9 @@ internal static class Meeting
         // Lovers.notAckedExiledIsLover = false;
         if (exiled != null)
         {
-            // Lovers.notAckedExiledIsLover = ((Lovers.lover1 != null && Lovers.lover1.PlayerId == exiled.PlayerId) || (Lovers.lover2 != null && Lovers.lover2.PlayerId == exiled.PlayerId));
+            GameHistory.FinalStatuses[exiled.PlayerId] = FinalStatus.Exiled;
+            var isLovers = exiled.Object.IsLovers();
+            if (isLovers) GameHistory.FinalStatuses[exiled.Object.GetPartner().PlayerId] = FinalStatus.Suicide;
         }
 
         // // Mini

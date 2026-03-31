@@ -1,5 +1,6 @@
 namespace RebuildUs.Enums;
 
+// 必ず一番下に追記してください！
 internal enum COID : uint
 {
     PresetSelection,
@@ -309,4 +310,6 @@ internal enum COID : uint
     BattleRoyaleVisionRange,
     HotPotatoTimeLimit,
     HotPotatoExplodeTime,
+    JesterCanFixSabotage,
+    ArsonistCanFixSabotage,
 }

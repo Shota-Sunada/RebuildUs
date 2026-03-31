@@ -27,6 +27,7 @@ internal class Arsonist : SingleRoleBase<Arsonist>
     private static float Cooldown { get => CustomOptionHolder.ArsonistCooldown.GetFloat(); }
     private static float Duration { get => CustomOptionHolder.ArsonistDuration.GetFloat(); }
     internal static bool CanBeLovers { get => CustomOptionHolder.ArsonistCanBeLovers.GetBool(); }
+    internal static bool CanFixSabotage { get => CustomOptionHolder.ArsonistCanFixSabotage.GetBool(); }
 
     private bool DousedEveryoneAlive()
     {
