@@ -240,6 +240,11 @@ internal partial class CustomOption
         return new CustomGeneralOption<string>(id, type, nameKey, selections, defaultSelection, parent, hideIfParentEnabled, format, ResolveColor(color), header);
     }
 
+    internal static CustomTrOption Normal(int id, CustomOptionType type, TrKey nameKey, TrKey[] selections, int defaultSelection, CustomOption parent = null, CustomOptionHeader header = null, Color? color = null, bool hideIfParentEnabled = false, TrKey format = TrKey.None)
+    {
+        return new CustomTrOption(id, type, nameKey, selections, defaultSelection, parent, hideIfParentEnabled, format, ResolveColor(color), header);
+    }
+
     internal static CustomPlayerOption Player(int id, CustomOptionType type, TrKey nameKey, int[] playerIds, int defaultSelection, CustomOption parent = null, CustomOptionHeader header = null, Color? color = null, bool hideIfParentEnabled = false, TrKey format = TrKey.None)
     {
         return new CustomPlayerOption(id, type, nameKey, playerIds, defaultSelection, parent, hideIfParentEnabled, format, ResolveColor(color), header);
@@ -1162,5 +1167,27 @@ internal class CustomOption<T> : CustomOption
     protected override object[] GetSelections()
     {
         return [.. Selections];
+    }
+}
+
+internal class CustomTrOption : CustomOption<TrKey>
+{
+    public CustomTrOption(int id, CustomOptionType type, TrKey nameKey, TrKey[] selections, int defaultSelection, CustomOption parent, bool hideIfParentEnabled, TrKey format, Color color, CustomOptionHeader header = null) : base(id, type, nameKey, selections, defaultSelection, parent, hideIfParentEnabled, format, color, header)
+    {
+    }
+
+    protected override object GetValue()
+    {
+        return Tr.Get(Selections[Selection]);
+    }
+
+    protected override object[] GetSelections()
+    {
+        var translations = new object[Selections.Length];
+        for (var i = 0; i < Selections.Length; i++)
+        {
+            translations[i] = Tr.Get(Selections[i]);
+        }
+        return translations;
     }
 }
