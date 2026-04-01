@@ -365,14 +365,8 @@ internal static class HudManagerPatch
 
     private static void UpdateImpostorKillButton(HudManager __instance)
     {
-        if (__instance == null || __instance.KillButton == null)
-        {
-            return;
-        }
-        if (PlayerControl.LocalPlayer?.Data?.Role?.IsImpostor != true)
-        {
-            return;
-        }
+        if (__instance == null || __instance.KillButton == null) return;
+        if (!PlayerControl.LocalPlayer.IsTeamImpostor()) return;
         if (MeetingHud.Instance)
         {
             __instance.KillButton.Hide();

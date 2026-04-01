@@ -4,6 +4,8 @@ namespace RebuildUs.Roles.Neutral;
 [RegisterRole(RoleType.Sidekick, RoleTeam.Neutral, typeof(SingleRoleBase<Sidekick>), nameof(CustomOptionHolder.JackalSpawnRate))]
 internal class Sidekick : SingleRoleBase<Sidekick>
 {
+    public static Color Color = Jackal.Color;
+
     private static CustomButton SidekickKillButton;
     private static CustomButton SidekickSabotageLightsButton;
     private PlayerControl _currentTarget;
@@ -29,14 +31,9 @@ internal class Sidekick : SingleRoleBase<Sidekick>
         if (Player == lp)
         {
             HudManagerPatch.SetPlayerNameColor(Player, RoleColor);
-            if (!Jackal.Exists)
+            if (Jackal.Exists && Jackal.PlayerControl)
             {
-                return;
-            }
-
-            if (Jackal.Local.Player)
-            {
-                HudManagerPatch.SetPlayerNameColor(Jackal.Local.Player, RoleColor);
+                HudManagerPatch.SetPlayerNameColor(Jackal.PlayerControl, RoleColor);
             }
         }
         else if (lp.IsTeamImpostor() && WasTeamRed)
