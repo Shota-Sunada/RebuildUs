@@ -85,6 +85,8 @@ internal enum CustomRPC : byte
     ShowDeathPopup,
     ReloadCurrentGameMode,
     BattleRoyaleSearchPlayers,
+    BakeryBomb,
+    SetBakeryIsBomb,
 
     SubmergedSetCustomData = 210,
     SubmergedRequestChangeFloor = 211,

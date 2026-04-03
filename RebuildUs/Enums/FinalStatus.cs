@@ -12,4 +12,5 @@ internal enum FinalStatus
     Misfire,
     Disconnected,
     Dead,
+    Exploded,
 }

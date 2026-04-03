@@ -312,4 +312,7 @@ internal enum COID : uint
     HotPotatoExplodeTime,
     JesterCanFixSabotage,
     ArsonistCanFixSabotage,
+    BakerySpawnRate,
+    BakeryBombRate,
+    BakeryBombType,
 }

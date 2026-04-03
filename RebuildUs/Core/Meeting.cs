@@ -259,6 +259,11 @@ internal static class Meeting
         // {
         //     UnityEngine.Object.Destroy(Snitch.text);
         // }
+
+        if (Bakery.Exists)
+        {
+            
+        }
     }
 
     internal static bool Select(ref bool __result, MeetingHud __instance, [HarmonyArgument(0)] int suspectStateIdx)

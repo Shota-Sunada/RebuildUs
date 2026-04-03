@@ -762,3 +762,14 @@ HideNSeekSettingsButton,Hide and Seek,かくれんぼ
 JesterCanFixSabotage,Can Fix Sabotage,サボタージュを直せる
 ArsonistCanFixSabotage,Can Fix Sabotage,サボタージュを直せる
 LoversFullDesc,Win with your alive partner.,パートナーと共に最後まで生存して、勝利しよう。
+BakeryBombRate,Chance Bread Is Bomb,パンが爆弾になる確率
+BakeryBombType,Bomb Type,爆弾の種類
+BakeryBombSuicide,Bakery Dead,パン屋死亡
+BakeryBombShip,Everyone Dead,全員死亡
+DeliciousBread,You got a delicious bread from bakery!,パン屋がおいしいパンを焼きました！
+BreadWasBomb,OMG! BREAD EXPLODED!!,ああっ！パンが爆発しちゃった！
+Bakery,Bakery,パン屋
+BakeryIntroDesc,bake bread to get some attention.,パンを焼いて存在をアピールしよう
+BakeryShortDesc,bake bread to get some attention.,パンを焼いて存在をアピールしよう
+BakeryFullDesc,"The Baker can bake bread at the end of a meeting while alive.\nDepending on the settings, the bread can become a bomb and put the ship in danger.",パン屋は生きている間、会議終了時にパンを焼くことができます。\n設定次第でパンが爆弾になり、船を危険に晒します。
+Exploded,Exploded,爆発

@@ -235,6 +235,10 @@ internal static class CustomOptionHolder
         SheriffCanKillNoDeadBody = CustomOption.Normal(COID.SheriffCanKillNoDeadBody, COType.Crewmate, TrKey.SheriffCanKillNoDeadBody, true, SheriffSpawnRate);
         SheriffCanKillNeutrals = CustomOption.Normal(COID.SheriffCanKillNeutrals, COType.Crewmate, TrKey.SheriffCanKillNeutrals, false, SheriffSpawnRate);
 
+        BakerySpawnRate = new(COID.BakerySpawnRate, COType.Crewmate, RoleType.Bakery, Bakery.Color, 1);
+        BakeryBombRate = CustomOption.Normal(COID.BakeryBombRate, COType.Crewmate, TrKey.BakeryBombRate, 0f, 0f, 100f, 5f, BakerySpawnRate, format: TrKey.UnitPercent);
+        BakeryBombType = CustomOption.Normal(COID.BakeryBombType, COType.Crewmate, TrKey.BakeryBombType, [TrKey.BakeryBombSuicide, TrKey.BakeryBombShip], 0, BakeryBombRate);
+
         #endregion
 
         #region ROLES IMPOSTOR
@@ -688,6 +692,10 @@ internal static class CustomOptionHolder
     internal static CustomOption SheriffCanKillNeutrals;
     internal static CustomOption SheriffMisfireKillsTarget;
     internal static CustomOption SheriffCanKillNoDeadBody;
+
+    internal static CustomRoleOption BakerySpawnRate;
+    internal static CustomOption BakeryBombRate;
+    internal static CustomOption BakeryBombType;
 
     #endregion
 

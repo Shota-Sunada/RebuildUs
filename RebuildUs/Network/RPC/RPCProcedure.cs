@@ -1,4 +1,5 @@
 using Assets.CoreScripts;
+using BepInEx.Unity.IL2CPP.Utils.Collections;
 using Epic.OnlineServices;
 using Il2CppSystem.Linq.Expressions.Interpreter;
 using PowerTools;
@@ -1191,5 +1192,28 @@ internal static partial class RPCProcedure
         _ = new CustomMessage(TrKey.BattleRoyaleSomeoneSearchYou, 5f);
         // BattleRoyaleMode.ResetButtonCooldown();
         // BattleRoyaleMode.CommonUsageLeft--;
+    }
+
+    internal static void SetBakeryIsBomb(bool isBomb)
+    {
+        Bakery.WasBomb = isBomb;
+    }
+
+    internal static void BakeryBomb()
+    {
+        switch (Bakery.BombType)
+        {
+            case 0:
+                Bakery.PlayerControl.Exiled();
+                GameHistory.FinalStatuses[Bakery.PlayerControl.PlayerId] = FinalStatus.Exploded;
+                break;
+            case 1:
+                foreach (var p in PlayerControl.AllPlayerControls.GetFastEnumerator())
+                {
+                    p.Exiled();
+                    GameHistory.FinalStatuses[p.PlayerId] = FinalStatus.Exploded;
+                }
+                break;
+        }
     }
 }

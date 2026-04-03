@@ -1,3 +1,4 @@
+using BepInEx.Unity.IL2CPP.Utils.Collections;
 using PowerTools;
 
 namespace RebuildUs.Patches;
@@ -180,53 +181,86 @@ internal static class ExileControllerPatch
         }
     }
 
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(ExileController), nameof(ExileController.Begin))]
+    internal static void ExileControllerBeginPostfix(ExileController __instance)
+    {
+        if (!Bakery.Exists) return;
+        if (Bakery.PlayerControl.IsDead()) return;
+
+        if (AmongUsClient.Instance.AmHost)
+        {
+            var isBomb = RebuildUs.Rnd.Next(0, 101) <= Bakery.BombRate;
+            using var sender = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.SetBakeryIsBomb);
+            sender.Write(isBomb);
+            RPCProcedure.SetBakeryIsBomb(isBomb);
+        }
+        __instance.StartCoroutine(BakeryBehaviour(__instance, Bakery.WasBomb).WrapToIl2Cpp());
+    }
+
+    internal static IEnumerator BakeryBehaviour(ExileController __instance, bool isBomb)
+    {
+        if (isBomb)
+        {
+            var text = UnityObject.Instantiate(__instance.Text, __instance.Text.transform);
+            text.text = Tr.Get(TrKey.BreadWasBomb);
+            text.gameObject.SetActive(true);
+            text.transform.localPosition = Vector3.down * __instance.ImpostorText.transform.localPosition.y;
+
+            Bakery.WasBomb = true;
+
+            yield return new WaitForSeconds(GetWaitTime(__instance));
+            SoundManager.Instance.PlaySound(AssetLoader.BakeryExplode, false, 100f);
+        }
+        else
+        {
+            __instance.completeString = new StringBuilder(__instance.completeString).Append('\n').Append(Tr.Get(TrKey.DeliciousBread)).ToString();
+            __instance.ImpostorText.transform.localPosition += Vector3.down * 0.3f;
+        }
+
+        yield break;
+    }
+
+    private static float GetWaitTime(ExileController __instance)
+    {
+        return ByteOptionNames.MapId.Get() switch
+        {
+            0 or 3 => __instance.Duration * 0.3f,
+            1 => __instance.Duration * 0.5f,
+            2 => __instance.Duration * 0.5f,
+            4 => 1.75f,
+            5 => 0.2f,
+            6 => !__instance.initData.networkedPlayer ? 4.25f : 6f,
+            _ => __instance.Duration,
+        };
+    }
+
     private static PlayerControl PickRandomCrewmate(int exiledPlayerId)
     {
         var numAliveCrewmates = 0;
         // count alive crewmates
         foreach (var player in PlayerControl.AllPlayerControls.GetFastEnumerator())
         {
-            if (player.IsTeamImpostor())
-            {
-                continue;
-            }
-            if (player.IsDead())
-            {
-                continue;
-            }
-            if (player.PlayerId == exiledPlayerId)
-            {
-                continue;
-            }
+            if (player.IsTeamImpostor()) continue;
+            if (player.IsDead()) continue;
+            if (player.PlayerId == exiledPlayerId) continue;
+
             numAliveCrewmates++;
         }
 
-        if (numAliveCrewmates == 0)
-        {
-            return null;
-        }
+        if (numAliveCrewmates == 0) return null;
+
         // get random number range 0, num of alive crewmates
         var targetPlayerIndex = RebuildUs.Rnd.Next(0, numAliveCrewmates);
         var currentPlayerIndex = 0;
         // return the player
         foreach (var player in PlayerControl.AllPlayerControls.GetFastEnumerator())
         {
-            if (player.IsTeamImpostor())
-            {
-                continue;
-            }
-            if (player.IsDead())
-            {
-                continue;
-            }
-            if (player.PlayerId == exiledPlayerId)
-            {
-                continue;
-            }
-            if (currentPlayerIndex == targetPlayerIndex)
-            {
-                return player;
-            }
+            if (player.IsTeamImpostor()) continue;
+            if (player.IsDead()) continue;
+            if (player.PlayerId == exiledPlayerId) continue;
+            if (currentPlayerIndex == targetPlayerIndex) return player;
+
             currentPlayerIndex++;
         }
 
@@ -259,10 +293,13 @@ internal static class ExileControllerPatch
             }
         }
 
-        if (!SubmergedCompatibility.IsSubmerged)
+        if (Bakery.WasBomb)
         {
-            return;
+            using var _ = new RPCSender(PlayerControl.LocalPlayer.NetId, CustomRPC.BakeryBomb);
+            RPCProcedure.BakeryBomb();
         }
+
+        if (!SubmergedCompatibility.IsSubmerged) return;
         var fullscreen = GameObject.Find("FullScreen500(Clone)");
         if (fullscreen)
         {

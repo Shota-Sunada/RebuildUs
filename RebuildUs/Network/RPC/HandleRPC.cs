@@ -4,10 +4,7 @@ internal static partial class RPCProcedure
 {
     internal static void Handle(CustomRPC callId, MessageReader reader)
     {
-        if (callId < CustomRPC.ResetVariables)
-        {
-            return;
-        }
+        if (callId < CustomRPC.ResetVariables) return;
 
         // Logger.LogInfo($"RPC Called: {(byte)callId}. {Enum.GetName(callId)}");
 
@@ -239,6 +236,12 @@ internal static partial class RPCProcedure
                 break;
             case CustomRPC.BattleRoyaleSearchPlayers:
                 BattleRoyaleSearchPlayers();
+                break;
+            case CustomRPC.BakeryBomb:
+                BakeryBomb();
+                break;
+            case CustomRPC.SetBakeryIsBomb:
+                SetBakeryIsBomb(reader.ReadBoolean());
                 break;
         }
     }

@@ -21,6 +21,7 @@ internal enum RoleType : byte
     SecurityGuard,
     Bait,
     Medium,
+    Bakery,
     FortuneTeller,
 
     // Impostor

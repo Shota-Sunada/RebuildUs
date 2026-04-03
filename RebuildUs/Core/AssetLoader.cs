@@ -17,6 +17,7 @@ internal static class AssetLoader
         LoadSpriteAssets();
         LoadLocationAssets();
         LoadKeyBindAssets();
+        LoadSoundsAssets();
     }
 
     private static byte[] ReadFully(this Stream input)
@@ -40,17 +41,7 @@ internal static class AssetLoader
             return sprite.DontUnload();
         }
 
-        return sprite == null
-            ? null
-            : Sprite
-              .Create(sprite.texture,
-                  sprite.rect,
-                  new(sprite.pivot.x / sprite.rect.width, sprite.pivot.y / sprite.rect.height),
-                  pixelsPerUnit,
-                  0,
-                  SpriteMeshType.FullRect,
-                  sprite.border)
-              .DontUnload();
+        return sprite == null ? null : Sprite.Create(sprite.texture, sprite.rect, new(sprite.pivot.x / sprite.rect.width, sprite.pivot.y / sprite.rect.height), pixelsPerUnit, 0, SpriteMeshType.FullRect, sprite.border).DontUnload();
     }
 
     private static T DontUnload<T>(this T obj) where T : UnityObject
@@ -59,6 +50,20 @@ internal static class AssetLoader
 
         return obj;
     }
+
+    #region Sounds
+
+    internal static AudioClip BakeryExplode;
+
+    private static void LoadSoundsAssets()
+    {
+        var resource = Assembly.GetExecutingAssembly().GetManifestResourceStream("RebuildUs.Resources.sounds");
+        var ab = AssetBundle.LoadFromMemory(resource.ReadFully());
+
+        BakeryExplode = ab.LoadAsset<AudioClip>("BakeryExplode.mp3").DontUnload();
+    }
+
+    #endregion
 
     #region Animations
 
