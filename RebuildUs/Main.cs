@@ -90,15 +90,16 @@ public class RebuildUs : BasePlugin
     internal static ConfigEntry<bool> BetterSabotageMap { get; private set; }
     internal static ConfigEntry<bool> TransparentMap { get; private set; }
     internal static ConfigEntry<bool> HideFakeTasks { get; private set; }
+    internal static ConfigEntry<string> WebhookUrl { get; private set; }
 
     internal static Random Rnd
     {
         get => RandomMain.Rnd;
     }
 
-    internal static void RefreshRnd(int seed)
+    internal static void RefreshRnd(TrKey rnd, int seed)
     {
-        RandomMain.RefreshRnd(seed);
+        RandomMain.RefreshRnd(rnd, seed);
     }
 
     public override void Load()
@@ -125,6 +126,7 @@ public class RebuildUs : BasePlugin
         BetterSabotageMap = Config.Bind("Custom", "Better Sabotage Map", false);
         TransparentMap = Config.Bind("Custom", "Transparent Map", false);
         HideFakeTasks = Config.Bind("Custom", "Hide Fake Tasks", false);
+        WebhookUrl = Config.Bind("Custom", "Discord Webhook URL", "");
 
         KeyBindingManager.Initialize(Config);
         CustomServer.Initialize();
@@ -138,7 +140,8 @@ public class RebuildUs : BasePlugin
         SubmergedCompatibility.Initialize();
         ModEventDispatcher.Initialize();
 
-        RefreshRnd((int)DateTime.Now.Ticks);
+        RefreshRnd(RandomMain.RNAs[CustomOptionHolder.RandomNumberAlgorithm.GetSelection()], (int)DateTime.Now.Ticks);
+        Logger.LogInfo("[SetEverythingUp] Discord Webhook URL: {0}", RebuildUs.WebhookUrl.Value);
 
         Harmony.PatchAll();
 

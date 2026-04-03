@@ -3,16 +3,20 @@ namespace RebuildUs.Core.Random;
 internal static class RandomMain
 {
     internal static System.Random Rnd { get; private set; } = new MersenneTwister((int)DateTime.Now.Ticks);
+    internal static readonly TrKey[] RNAs = [TrKey.RndDotnet, TrKey.RndMT, TrKey.RndXoshiro256, TrKey.RndXoshiro256Ss, TrKey.RndPcg64];
 
-    internal static void RefreshRnd(int seed)
+    internal static TrKey CurrentAlgorithm = TrKey.RndDotnet;
+
+    internal static void RefreshRnd(TrKey rnd, int seed)
     {
-        Rnd = CustomOptionHolder.RandomNumberAlgorithm.GetSelection() switch
+        CurrentAlgorithm = rnd;
+        Rnd = rnd switch
         {
-            0 => new(seed),
-            1 => new MersenneTwister(seed),
-            2 => new Xoshiro256PlusPlus(seed),
-            3 => new Xoshiro256StarStar(seed),
-            4 => new Pcg64(seed),
+            TrKey.RndDotnet => new(seed),
+            TrKey.RndMT => new MersenneTwister(seed),
+            TrKey.RndXoshiro256 => new Xoshiro256PlusPlus(seed),
+            TrKey.RndXoshiro256Ss => new Xoshiro256StarStar(seed),
+            TrKey.RndPcg64 => new Pcg64(seed),
             _ => new Xoshiro256PlusPlus(seed),
         };
     }

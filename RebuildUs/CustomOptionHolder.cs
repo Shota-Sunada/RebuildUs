@@ -26,13 +26,14 @@ internal static class CustomOptionHolder
         PresetSelection = CustomOption.Normal(COID.PresetSelection, COType.General, TrKey.Preset, Presets, 0, header: presetHeader);
         ActivateRoles = CustomOption.Normal(COID.ActivateRoles, COType.General, TrKey.ActivateRoles, true);
         GameModeSelection = CustomOption.Normal(COID.GameModeSelection, COType.General, TrKey.GameMode, [TrKey.GameModeNormal, TrKey.GameModeHideNSeek, TrKey.GameModeBattleRoyale, TrKey.GameModeHotPotato], 0, header: gameModeHeader);
-        RandomNumberAlgorithm = CustomOption.Normal(COID.RandomNumberAlgorithm, COType.General, TrKey.RandomNumberAlgorithm, [TrKey.RndDotnet, TrKey.RndMT, TrKey.RndXoshiro256, TrKey.RndXoshiro256Ss, TrKey.RndPcg64], 0);
+        RandomNumberAlgorithm = CustomOption.Normal(COID.RandomNumberAlgorithm, COType.General, TrKey.RandomNumberAlgorithm, RandomMain.RNAs, 0);
         EnableRandomRandomNumberAlgorithm = CustomOption.Normal(COID.EnableRandomRandomNumberAlgorithm, COType.General, TrKey.RandomRandomNumberAlgorithm, false);
         EnableRandomRandomNumberAlgorithmDotnet = CustomOption.Normal(COID.EnableRandomRandomNumberAlgorithmDotnet, COType.General, TrKey.EnableRandomRandomNumberAlgorithmDotnet, true, EnableRandomRandomNumberAlgorithm);
         EnableRandomRandomNumberAlgorithmMT = CustomOption.Normal(COID.EnableRandomRandomNumberAlgorithmMT, COType.General, TrKey.EnableRandomRandomNumberAlgorithmMT, true, EnableRandomRandomNumberAlgorithm);
         EnableRandomRandomNumberAlgorithmXorshiro256Pp = CustomOption.Normal(COID.EnableRandomRandomNumberAlgorithmXorshiro256Pp, COType.General, TrKey.EnableRandomRandomNumberAlgorithmXorshiro256PP, true, EnableRandomRandomNumberAlgorithm);
         EnableRandomRandomNumberAlgorithmXorshiro256Ss = CustomOption.Normal(COID.EnableRandomRandomNumberAlgorithmXorshiro256Ss, COType.General, TrKey.EnableRandomRandomNumberAlgorithmXorshiro256SS, true, EnableRandomRandomNumberAlgorithm);
         EnableRandomRandomNumberAlgorithmPcg64 = CustomOption.Normal(COID.EnableRandomRandomNumberAlgorithmPcg64, COType.General, TrKey.EnableRandomRandomNumberAlgorithmPcg64, true, EnableRandomRandomNumberAlgorithm);
+        SendEmbedToDiscord = CustomOption.Normal(COID.SendEmbedToDiscord, COType.General, TrKey.SendEmbedToDiscord, false);
 
         #endregion
 
@@ -454,6 +455,7 @@ internal static class CustomOptionHolder
     internal static CustomOption EnableRandomRandomNumberAlgorithmXorshiro256Pp;
     internal static CustomOption EnableRandomRandomNumberAlgorithmXorshiro256Ss;
     internal static CustomOption EnableRandomRandomNumberAlgorithmPcg64;
+    internal static CustomOption SendEmbedToDiscord;
 
     #endregion
 

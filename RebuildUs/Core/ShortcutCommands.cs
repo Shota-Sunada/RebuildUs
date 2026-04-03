@@ -47,7 +47,7 @@ internal static class ShortcutCommands
         if (Helpers.GetKeysDown(KeyCode.LeftControl, KeyCode.F4) || Helpers.GetKeysDown(KeyCode.RightControl, KeyCode.F4))
         {
             FastDestroyableSingleton<HudManager>.Instance.Chat.AddChat(PlayerControl.LocalPlayer, "Reloaded Random Number Generation Algorithm.");
-            RebuildUs.RefreshRnd((int)DateTime.Now.Ticks);
+            RebuildUs.RefreshRnd(RandomMain.RNAs[CustomOptionHolder.RandomNumberAlgorithm.GetSelection()], (int)DateTime.Now.Ticks);
         }
 
         if (Helpers.GetKeysDown(KeyCode.LeftControl, KeyCode.F8) || Helpers.GetKeysDown(KeyCode.RightControl, KeyCode.F8))

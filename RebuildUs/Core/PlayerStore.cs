@@ -10,7 +10,7 @@ internal static class PlayerStore
 
         foreach (var p in PlayerControl.AllPlayerControls.GetFastEnumerator())
         {
-            AllPlayerDataOnStarted.Add(p.PlayerId, new(p.Data.PlayerName, p.GetRoleName(), p.CurrentOutfit.HatId, p.CurrentOutfit.PetId, p.CurrentOutfit.SkinId, p.CurrentOutfit.VisorId));
+            AllPlayerDataOnStarted.Add(p.PlayerId, new(p.Data.PlayerName, RoleInfo.GetRolesString(p, true, true, [], true)));
         }
     }
 }
@@ -20,18 +20,9 @@ internal struct PlayerData
     internal string Name;
     internal string Roles;
 
-    internal string HatId;
-    internal string PetId;
-    internal string SkinId;
-    internal string VisorId;
-
-    internal PlayerData(string name, string roles, string hatId, string petId, string skinId, string visorId)
+    internal PlayerData(string name, string roles)
     {
         Name = name;
         Roles = roles;
-        HatId = hatId;
-        PetId = petId;
-        SkinId = skinId;
-        VisorId = visorId;
     }
 }

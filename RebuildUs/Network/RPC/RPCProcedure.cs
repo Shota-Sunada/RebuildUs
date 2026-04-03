@@ -35,6 +35,38 @@ internal static partial class RPCProcedure
         KillAnimationPatch.HideNextAnimation = false;
         KillAnimationPatch.AvoidNextKillMovement = false;
 
+        if (CustomOptionHolder.EnableRandomRandomNumberAlgorithm.GetBool())
+        {
+            var candidates = new List<TrKey>();
+            if (CustomOptionHolder.EnableRandomRandomNumberAlgorithmDotnet.GetBool())
+            {
+                candidates.Add(TrKey.RndDotnet);
+            }
+            if (CustomOptionHolder.EnableRandomRandomNumberAlgorithmMT.GetBool())
+            {
+                candidates.Add(TrKey.RndMT);
+            }
+            if (CustomOptionHolder.EnableRandomRandomNumberAlgorithmXorshiro256Pp.GetBool())
+            {
+                candidates.Add(TrKey.RndXoshiro256);
+            }
+            if (CustomOptionHolder.EnableRandomRandomNumberAlgorithmXorshiro256Ss.GetBool())
+            {
+                candidates.Add(TrKey.RndXoshiro256Ss);
+            }
+            if (CustomOptionHolder.EnableRandomRandomNumberAlgorithmPcg64.GetBool())
+            {
+                candidates.Add(TrKey.RndPcg64);
+            }
+
+            var index = RebuildUs.Rnd.Next(candidates.Count);
+            RebuildUs.RefreshRnd(candidates[index], (int)DateTime.Now.Ticks);
+        }
+        else
+        {
+            RebuildUs.RefreshRnd(RandomMain.RNAs[CustomOptionHolder.RandomNumberAlgorithm.GetSelection()], (int)DateTime.Now.Ticks);
+        }
+
         using RPCSender sender = new(PlayerControl.LocalPlayer.NetId, CustomRPC.FinishResetVariables);
         sender.Write(PlayerControl.LocalPlayer.PlayerId);
         FinishResetVariables(PlayerControl.LocalPlayer.PlayerId);

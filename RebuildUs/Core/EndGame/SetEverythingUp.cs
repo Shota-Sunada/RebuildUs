@@ -1,3 +1,4 @@
+using AsmResolver.DotNet.Signatures;
 using Assets.CoreScripts;
 
 namespace RebuildUs.Core.EndGame;
@@ -284,6 +285,12 @@ internal static partial class EndGameMain
         var winnerText = extraText.Length > 0 ? string.Format(Tr.GetDynamic(string.Format("{0}Extra", bonusText)), extraText) : Tr.GetDynamic(bonusText);
         TextRenderer.text = winnerText;
 
+        var winners = new HashSet<string>(StringComparer.Ordinal);
+        foreach (var winner in EndGameResult.CachedWinners.GetFastEnumerator())
+        {
+            winners.Add(winner.PlayerName);
+        }
+
         if (MapSettings.ShowRoleSummary)
         {
             if (Camera.main != null)
@@ -319,12 +326,6 @@ internal static partial class EndGameMain
                 Logger.LogInfo("[Result] ---------- Game Result -----------");
 
                 var lines = new Dictionary<byte, string>();
-                var winners = new HashSet<string>(StringComparer.Ordinal);
-                foreach (var winner in EndGameResult.CachedWinners.GetFastEnumerator())
-                {
-                    winners.Add(winner.PlayerName);
-                }
-
                 switch (GameModeManager.CurrentGameMode)
                 {
                     default:
@@ -333,10 +334,8 @@ internal static partial class EndGameMain
                         {
                             if (AdditionalTempData.PlayerRoles.TryGetValue(key, out var data))
                             {
-                                if (data.PlayerName == "")
-                                {
-                                    continue;
-                                }
+                                if (data.PlayerName == "") continue;
+
                                 var taskInfo = TaskDisplayManager.GetTaskInfoText(key);
                                 var status = Tr.GetDynamic(Enum.GetName(data.Status));
                                 var star = winners.Contains(data.PlayerName) && AdditionalTempData.GameOverReason != (GameOverReason)CustomGameOverReason.ForceEnd ? "★" : "";
@@ -359,10 +358,8 @@ internal static partial class EndGameMain
                         {
                             if (AdditionalTempData.PlayerRoles.TryGetValue(key, out var data))
                             {
-                                if (data.PlayerName == "")
-                                {
-                                    continue;
-                                }
+                                if (data.PlayerName == "") continue;
+
                                 var status = Tr.GetDynamic(Enum.GetName(data.Status));
                                 var star = winners.Contains(data.PlayerName) && AdditionalTempData.GameOverReason != (GameOverReason)CustomGameOverReason.ForceEnd ? "★" : "";
                                 var result = string.Format("{0}<pos=2.5%>{1}{2}<pos=24%>{3}", star, data.PlayerName, data.NameSuffix, status);
@@ -406,6 +403,8 @@ internal static partial class EndGameMain
                 roleSummaryText.AppendLine("<size=50%> </size>");
                 roleSummaryText.Append(Tr.Get(TrKey.GameTime));
                 roleSummaryText.AppendLine((DateTime.Now - GameHistory.TimeStarted).ToString(@"hh\:mm\:ss"));
+                roleSummaryText.Append(Tr.Get(TrKey.RNAUsed));
+                roleSummaryText.AppendLine(Tr.Get(RandomMain.CurrentAlgorithm));
 
                 var roleSummaryTextMesh = roleSummary.GetComponent<TMP_Text>();
                 roleSummaryTextMesh.alignment = TextAlignmentOptions.TopLeft;
@@ -419,6 +418,75 @@ internal static partial class EndGameMain
                 roleSummaryTextMeshRectTransform.anchoredPosition = new(position.x + 3.5f, position.y - 0.1f);
                 roleSummaryTextMesh.text = roleSummaryText.ToString();
             }
+        }
+
+        if (AmongUsClient.Instance.AmHost && CustomOptionHolder.SendEmbedToDiscord.GetBool())
+        {
+            var fields = new List<Field>();
+            switch (GameModeManager.CurrentGameMode)
+            {
+                default:
+                case CustomGamemode.Normal:
+                    foreach (var (key, value) in PlayerStore.AllPlayerDataOnStarted)
+                    {
+                        if (AdditionalTempData.PlayerRoles.TryGetValue(key, out var data))
+                        {
+                            if (data.PlayerName == "") continue;
+
+                            var taskInfo = TaskDisplayManager.GetTaskInfoText(key);
+                            var status = Tr.GetDynamic(Enum.GetName(data.Status));
+                            var star = winners.Contains(data.PlayerName) && AdditionalTempData.GameOverReason != (GameOverReason)CustomGameOverReason.ForceEnd ? "★ " : "";
+                            fields.Add(new Field()
+                            {
+                                Name = string.Format("{0}{1}{2}", star, data.PlayerName, data.NameSuffix),
+                                Value = new StringBuilder(Helpers.RemoveHtml(data.RoleNames)).Append(' ').AppendLine(taskInfo).Append(status).ToString(),
+                                Inline = true,
+                            });
+                        }
+                        else
+                        {
+                            var status = Tr.Get(TrKey.Disconnected);
+                            fields.Add(new Field()
+                            {
+                                Name = value.Name,
+                                Value = new StringBuilder(value.Roles).Append('\n').Append(status).ToString(),
+                                Inline = true,
+                            });
+                        }
+                    }
+                    break;
+                case CustomGamemode.BattleRoyale:
+                    foreach (var (key, value) in PlayerStore.AllPlayerDataOnStarted)
+                    {
+                        if (AdditionalTempData.PlayerRoles.TryGetValue(key, out var data))
+                        {
+                            if (data.PlayerName == "") continue;
+
+                            var status = Tr.GetDynamic(Enum.GetName(data.Status));
+                            var star = winners.Contains(data.PlayerName) && AdditionalTempData.GameOverReason != (GameOverReason)CustomGameOverReason.ForceEnd ? "★ " : "";
+                            fields.Add(new Field()
+                            {
+                                Name = string.Format("{0}{1}{2}", star, data.PlayerName, data.NameSuffix),
+                                Value = status,
+                                Inline = true,
+                            });
+                        }
+                        else
+                        {
+                            var status = Tr.Get(TrKey.Disconnected);
+                            fields.Add(new Field()
+                            {
+                                Name = value.Name,
+                                Value = status,
+                                Inline = true,
+                            });
+                        }
+                    }
+                    break;
+            }
+
+            using var result =  DiscordWebhook.SendResult(winnerText, GameModeManager.CurrentGameMode, [.. fields]);
+            Logger.LogInfo("[SetEverythingUp] Discord Webhook send result: {0}", result);
         }
 
         AdditionalTempData.Clear();

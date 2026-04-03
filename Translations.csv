@@ -773,3 +773,7 @@ BakeryIntroDesc,bake bread to get some attention.,パンを焼いて存在をア
 BakeryShortDesc,bake bread to get some attention.,パンを焼いて存在をアピールしよう
 BakeryFullDesc,"The Baker can bake bread at the end of a meeting while alive.\nDepending on the settings, the bread can become a bomb and put the ship in danger.",パン屋は生きている間、会議終了時にパンを焼くことができます。\n設定次第でパンが爆弾になり、船を危険に晒します。
 Exploded,Exploded,爆発
+RNAUsed,"Random Number Algorithm: ","乱数アルゴリズム: "
+WebhookGameIsOver,The game has ended.,ゲームが終了しました。
+WebhookResult,Result,最終結果
+SendEmbedToDiscord,Use Final Status Webhook For Discord,Discordに最終結果を送信する

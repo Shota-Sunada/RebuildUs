@@ -300,7 +300,6 @@ internal static class RoleAssignment
 
     private static void AssignRoles()
     {
-        RebuildUs.RefreshRnd((int)DateTime.Now.Ticks);
         // if (CustomOptionHolder.gmEnabled.getBool() && CustomOptionHolder.gmIsHost.getBool())
         // {
         //     var host = AmongUsClient.Instance?.GetHost().Character;

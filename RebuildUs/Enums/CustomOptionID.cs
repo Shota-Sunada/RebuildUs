@@ -315,4 +315,5 @@ internal enum COID : uint
     BakerySpawnRate,
     BakeryBombRate,
     BakeryBombType,
+    SendEmbedToDiscord,
 }
